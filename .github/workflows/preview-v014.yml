@@ -43,7 +43,7 @@ jobs:
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d             -s "$RUNNER_TEMP/v0.13-index.pck"             "$RUNNER_TEMP/v0.13-to-v0.14-transparency.xdelta"             "$build_dir/index.pck"
           echo "47cfd4a6b4f18f87e8a2c881db3a51fe1cd03af0668059d7ec3f3d80ceec5caa  $build_dir/index.pck" | sha256sum -c -
 
-          perl -0pi -e 's/onProgress: updateProgress,\n/onProgress: updateProgress,\n\t\t\targs: ["--qa-surface-camp"],\n/' "$build_dir/index.html"
+          perl -0pi -e 's/onProgress: updateProgress,\n/onProgress: updateProgress,\n\t\t\targs: ["--", "--qa-surface-camp"],\n/' "$build_dir/index.html"
           grep -F -- '--qa-surface-camp' "$build_dir/index.html"
 
       - name: Install browser
