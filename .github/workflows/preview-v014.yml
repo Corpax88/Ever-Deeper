@@ -1,0 +1,119 @@
+name: Validate Godot v0.14 transparency preview
+
+on:
+  push:
+    branches: ["preview/v0.14-transparency"]
+
+permissions:
+  contents: read
+
+jobs:
+  visual-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Reconstruct v0.14 preview package
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_dir="$RUNNER_TEMP/ever-deeper-web"
+          tool_dir="$RUNNER_TEMP/tools"
+          base_url="https://corpax88.github.io/Ever-Deeper"
+          mkdir -p "$build_dir" "$tool_dir"
+
+          for file in             index.html             index.apple-touch-icon.png             index.audio.position.worklet.js             index.audio.worklet.js             index.icon.png             index.js             index.png             index.wasm
+          do
+            curl -L --fail --retry 4 --retry-all-errors "$base_url/$file" -o "$build_dir/$file"
+          done
+
+          curl -L --fail --retry 4 --retry-all-errors "$base_url/index.pck" -o "$RUNNER_TEMP/v0.13-index.pck"
+          echo "0f546b3cee288d9a3d036df140169e262ac3e1dd967b14dbf70e1d3172bea5fe  $RUNNER_TEMP/v0.13-index.pck" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.13-to-v0.14-transparency.xdelta.part* > "$RUNNER_TEMP/v0.13-to-v0.14-transparency.xdelta"
+          echo "ab611ab3db14799d645b76656e16e8cc6e108be78973d38f9208e7f3e56d5c98  $RUNNER_TEMP/v0.13-to-v0.14-transparency.xdelta" | sha256sum -c -
+
+          curl -L --fail --retry 4 --retry-all-errors             https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz             -o "$tool_dir/xdelta3.tar.gz"
+          echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
+          tar --no-same-owner -xzf "$tool_dir/xdelta3.tar.gz" -C "$tool_dir"
+          chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d             -s "$RUNNER_TEMP/v0.13-index.pck"             "$RUNNER_TEMP/v0.13-to-v0.14-transparency.xdelta"             "$build_dir/index.pck"
+          echo "47cfd4a6b4f18f87e8a2c881db3a51fe1cd03af0668059d7ec3f3d80ceec5caa  $build_dir/index.pck" | sha256sum -c -
+
+          perl -0pi -e 's/onProgress: updateProgress,\n/onProgress: updateProgress,\n\t\t\targs: ["--qa-surface-camp"],\n/' "$build_dir/index.html"
+          grep -F -- '--qa-surface-camp' "$build_dir/index.html"
+
+      - name: Install browser
+        shell: bash
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Render iPhone landscape surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/ever-deeper-web"
+          python3 -m http.server 4180 --bind 127.0.0.1 > "$RUNNER_TEMP/server.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/server.pid"
+          cd "$GITHUB_WORKSPACE"
+
+          node <<'NODE'
+          const fs = require('fs');
+          const { chromium } = require('playwright');
+
+          (async () => {
+            const logs = [];
+            const browser = await chromium.launch({ headless: true });
+            const context = await browser.newContext({
+              viewport: { width: 956, height: 440 },
+              screen: { width: 956, height: 440 },
+              deviceScaleFactor: 1,
+              hasTouch: true,
+              isMobile: true,
+              userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 26_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1'
+            });
+            const page = await context.newPage();
+            page.on('console', message => logs.push(`console:${message.type()}:${message.text()}`));
+            page.on('pageerror', error => logs.push(`pageerror:${error.message}`));
+            await page.goto('http://127.0.0.1:4180/', { waitUntil: 'domcontentloaded', timeout: 120000 });
+            await page.waitForFunction(() => document.getElementById('status') === null, null, { timeout: 240000 });
+            await page.waitForTimeout(5000);
+
+            const metrics = await page.evaluate(() => {
+              const canvas = document.getElementById('canvas');
+              const rect = canvas.getBoundingClientRect();
+              return {
+                width: window.innerWidth,
+                height: window.innerHeight,
+                canvas: [rect.x, rect.y, rect.width, rect.height],
+                portrait: window.matchMedia('(orientation: portrait)').matches,
+                rotateVisible: document.getElementById('rotate-guard').classList.contains('is-visible')
+              };
+            });
+            logs.push(`metrics:${JSON.stringify(metrics)}`);
+            if (metrics.portrait || metrics.rotateVisible) throw new Error('Landscape guard is incorrectly active');
+            if (metrics.canvas[2] < 950 || metrics.canvas[3] < 434) throw new Error('Canvas does not fill iPhone landscape viewport');
+
+            await page.screenshot({ path: process.env.RUNNER_TEMP + '/ever-deeper-v014-surface.png' });
+            fs.writeFileSync(process.env.RUNNER_TEMP + '/browser.log', logs.join('\n') + '\n');
+            await browser.close();
+          })().catch(error => {
+            fs.writeFileSync(process.env.RUNNER_TEMP + '/browser.log', String(error.stack || error) + '\n');
+            process.exit(1);
+          });
+          NODE
+
+      - name: Upload visual proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-v014-visual-proof
+          path: |
+            ${{ runner.temp }}/ever-deeper-v014-surface.png
+            ${{ runner.temp }}/browser.log
+            ${{ runner.temp }}/server.log
+          retention-days: 1
