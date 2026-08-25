@@ -1,4 +1,4 @@
-name: Deploy Godot iPhone landscape v0.14
+name: Deploy Godot iPhone landscape v0.15
 
 on:
   push:
@@ -110,12 +110,22 @@ jobs:
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$RUNNER_TEMP/v0.13-index.pck" \
             "$RUNNER_TEMP/v0.13-to-v0.14-transparency.xdelta" \
+            "$RUNNER_TEMP/v0.14-index.pck"
+          echo "47cfd4a6b4f18f87e8a2c881db3a51fe1cd03af0668059d7ec3f3d80ceec5caa  $RUNNER_TEMP/v0.14-index.pck" | sha256sum -c -
+
+          cp "$GITHUB_WORKSPACE/.github/itch-patch/v0.14-to-v0.15-foreground.xdelta" \
+            "$RUNNER_TEMP/v0.14-to-v0.15-foreground.xdelta"
+          echo "98f75ff7a1e6c42b914acfaafb8e23fde1330341034926c010db63f9d9ca4d29  $RUNNER_TEMP/v0.14-to-v0.15-foreground.xdelta" | sha256sum -c -
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.14-index.pck" \
+            "$RUNNER_TEMP/v0.14-to-v0.15-foreground.xdelta" \
             "$build_dir/index.pck"
           cat "$GITHUB_WORKSPACE"/.github/itch-patch/index-landscape.png.part* \
             > "$build_dir/index.png"
           cp "$GITHUB_WORKSPACE/.github/itch-patch/index.html" "$build_dir/index.html"
 
-          echo "47cfd4a6b4f18f87e8a2c881db3a51fe1cd03af0668059d7ec3f3d80ceec5caa  $build_dir/index.pck" | sha256sum -c -
+          echo "d917acf7482e0a1d1e4da927303db3162c243adb4387d69d0212db039d051942  $build_dir/index.pck" | sha256sum -c -
           echo "ef39123a4df97f032814983cd6d8ee3531795fae4dbdbce37889df77873bdd1e  $build_dir/index.html" | sha256sum -c -
           echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
@@ -168,7 +178,7 @@ jobs:
           chmod +x "$RUNNER_TEMP/butler/linux-amd64/butler"
           "$RUNNER_TEMP/butler/linux-amd64/butler" version
 
-      - name: Publish transparency fix to itch.io
+      - name: Publish foreground placement fix to itch.io
         shell: bash
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
@@ -178,4 +188,4 @@ jobs:
           "$RUNNER_TEMP/butler/linux-amd64/butler" push \
             "$RUNNER_TEMP/ever-deeper-web" \
             corpax88/ever-deeper-playtest:html5 \
-            --userversion 0.14.0-transparency-fix
+            --userversion 0.15.0-foreground-placement
