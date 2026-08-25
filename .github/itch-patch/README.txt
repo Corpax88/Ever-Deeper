@@ -1,0 +1,7 @@
+Ever Deeper Godot landscape deployment payload
+
+Base itch CDN upload: 18924146
+Base PCK SHA-256: cebdde9655d17cca69f891578f71f6f46b598c79c7022d28b9ee3d893a19c3b5
+Patch SHA-256: 58abd171cffc9a785e1d4355f3eefb4ba262ab9c43b46f35f50aeb6fd2e42089
+Output PCK SHA-256: f2d720655e2a8c3b711376e4d51db302edbc160e5a0f16cc99d03569a9f0ce6e
+Output index SHA-256: 1c2b2cd03c42bf93bdb5285a452772e92ac6b58ccc090b17b88ba1d2fa6f4178

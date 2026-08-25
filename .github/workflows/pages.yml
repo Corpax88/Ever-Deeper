@@ -1,4 +1,4 @@
-name: Deploy Ever Deeper to GitHub Pages
+name: Deploy Godot landscape
 
 on:
   push:
@@ -12,64 +12,117 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install browser
-        run: npx playwright install --with-deps chromium
-
-      - name: Runtime smoke test
-        run: npm run test:smoke
-
-      - name: Release browser tests
+      - name: Reconstruct verified Godot web build
+        shell: bash
         run: |
-          python3 -m http.server 4180 --bind 127.0.0.1 > /tmp/ever-deeper-server.log 2>&1 &
-          server_pid=$!
-          trap 'kill "$server_pid"' EXIT
-          for attempt in {1..20}; do
-            curl --fail --silent http://127.0.0.1:4180/ > /dev/null && break
-            sleep 0.25
-          done
-          npm run test:release
+          set -euo pipefail
 
-  deploy:
-    needs: test
+          build_dir="$RUNNER_TEMP/ever-deeper-web"
+          tool_dir="$RUNNER_TEMP/tools"
+          base_url="https://html-classic.itch.zone/html/18924146"
+          mkdir -p "$build_dir" "$tool_dir"
+
+          for file in \
+            index.apple-touch-icon.png \
+            index.audio.position.worklet.js \
+            index.audio.worklet.js \
+            index.icon.png \
+            index.js \
+            index.png \
+            index.wasm
+          do
+            curl -L --fail --retry 4 --retry-all-errors \
+              "$base_url/$file" -o "$build_dir/$file"
+          done
+
+          curl -L --fail --retry 4 --retry-all-errors \
+            "$base_url/index.pck" -o "$RUNNER_TEMP/live-index.pck"
+          echo "cebdde9655d17cca69f891578f71f6f46b598c79c7022d28b9ee3d893a19c3b5  $RUNNER_TEMP/live-index.pck" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/live-to-v0.10.xdelta.part* \
+            > "$RUNNER_TEMP/live-to-v0.10.xdelta"
+          echo "58abd171cffc9a785e1d4355f3eefb4ba262ab9c43b46f35f50aeb6fd2e42089  $RUNNER_TEMP/live-to-v0.10.xdelta" | sha256sum -c -
+
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
+            -o "$tool_dir/xdelta3.tar.gz"
+          echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
+          tar --no-same-owner -xzf "$tool_dir/xdelta3.tar.gz" -C "$tool_dir"
+          chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/live-index.pck" \
+            "$RUNNER_TEMP/live-to-v0.10.xdelta" \
+            "$build_dir/index.pck"
+          cp "$GITHUB_WORKSPACE/.github/itch-patch/index.html" "$build_dir/index.html"
+
+          echo "f2d720655e2a8c3b711376e4d51db302edbc160e5a0f16cc99d03569a9f0ce6e  $build_dir/index.pck" | sha256sum -c -
+          echo "1c2b2cd03c42bf93bdb5285a452772e92ac6b58ccc090b17b88ba1d2fa6f4178  $build_dir/index.html" | sha256sum -c -
+          test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+
+      - name: Upload GitHub Pages package
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/ever-deeper-web
+
+      - name: Upload itch package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-itch-build
+          path: ${{ runner.temp }}/ever-deeper-web
+          compression-level: 0
+          retention-days: 1
+
+  deploy-pages:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
-        with:
-          name: ever-deeper-pages-${{ github.run_id }}-${{ github.run_attempt }}
-          path: "."
-
-      - name: Deploy to GitHub Pages
+      - name: Deploy GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  deploy-itch:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download itch package
+        uses: actions/download-artifact@v4
         with:
-          artifact_name: ever-deeper-pages-${{ github.run_id }}-${{ github.run_attempt }}
+          name: ever-deeper-itch-build
+          path: ${{ runner.temp }}/ever-deeper-web
+
+      - name: Install official itch.io Butler
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/butler"
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default \
+            -o "$RUNNER_TEMP/butler.zip"
+          unzip -q "$RUNNER_TEMP/butler.zip" -d "$RUNNER_TEMP/butler"
+          chmod +x "$RUNNER_TEMP/butler/butler"
+          "$RUNNER_TEMP/butler/butler" version
+
+      - name: Publish landscape build to itch.io
+        shell: bash
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "${BUTLER_API_KEY:-}"
+          "$RUNNER_TEMP/butler/butler" push \
+            "$RUNNER_TEMP/ever-deeper-web" \
+            corpax88/ever-deeper-playtest:html5 \
+            --userversion 0.10.0-landscape
