@@ -131,8 +131,9 @@ jobs:
             -o "$RUNNER_TEMP/butler.zip"
           echo "f2cae7d24eba0605048f71d0cc056f65c3b7ff9f73724f504c731cf3645bef08  $RUNNER_TEMP/butler.zip" | sha256sum -c -
           unzip -q "$RUNNER_TEMP/butler.zip" -d "$RUNNER_TEMP/butler"
-          chmod +x "$RUNNER_TEMP/butler/butler"
-          "$RUNNER_TEMP/butler/butler" version
+          test -f "$RUNNER_TEMP/butler/linux-amd64/butler"
+          chmod +x "$RUNNER_TEMP/butler/linux-amd64/butler"
+          "$RUNNER_TEMP/butler/linux-amd64/butler" version
 
       - name: Publish iPhone landscape build to itch.io
         shell: bash
@@ -141,7 +142,7 @@ jobs:
         run: |
           set -euo pipefail
           test -n "${BUTLER_API_KEY:-}"
-          "$RUNNER_TEMP/butler/butler" push \
+          "$RUNNER_TEMP/butler/linux-amd64/butler" push \
             "$RUNNER_TEMP/ever-deeper-web" \
             corpax88/ever-deeper-playtest:html5 \
             --userversion 0.11.0-iphone-landscape
