@@ -1,4 +1,4 @@
-name: Deploy Godot iPhone landscape v0.13
+name: Deploy Godot iPhone landscape v0.14
 
 on:
   push:
@@ -100,12 +100,22 @@ jobs:
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$RUNNER_TEMP/v0.12-index.pck" \
             "$RUNNER_TEMP/v0.12-to-v0.13-clean-hud.xdelta" \
+            "$RUNNER_TEMP/v0.13-index.pck"
+          echo "0f546b3cee288d9a3d036df140169e262ac3e1dd967b14dbf70e1d3172bea5fe  $RUNNER_TEMP/v0.13-index.pck" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.13-to-v0.14-transparency.xdelta.part* \
+            > "$RUNNER_TEMP/v0.13-to-v0.14-transparency.xdelta"
+          echo "ab611ab3db14799d645b76656e16e8cc6e108be78973d38f9208e7f3e56d5c98  $RUNNER_TEMP/v0.13-to-v0.14-transparency.xdelta" | sha256sum -c -
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.13-index.pck" \
+            "$RUNNER_TEMP/v0.13-to-v0.14-transparency.xdelta" \
             "$build_dir/index.pck"
           cat "$GITHUB_WORKSPACE"/.github/itch-patch/index-landscape.png.part* \
             > "$build_dir/index.png"
           cp "$GITHUB_WORKSPACE/.github/itch-patch/index.html" "$build_dir/index.html"
 
-          echo "0f546b3cee288d9a3d036df140169e262ac3e1dd967b14dbf70e1d3172bea5fe  $build_dir/index.pck" | sha256sum -c -
+          echo "47cfd4a6b4f18f87e8a2c881db3a51fe1cd03af0668059d7ec3f3d80ceec5caa  $build_dir/index.pck" | sha256sum -c -
           echo "ef39123a4df97f032814983cd6d8ee3531795fae4dbdbce37889df77873bdd1e  $build_dir/index.html" | sha256sum -c -
           echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
@@ -158,7 +168,7 @@ jobs:
           chmod +x "$RUNNER_TEMP/butler/linux-amd64/butler"
           "$RUNNER_TEMP/butler/linux-amd64/butler" version
 
-      - name: Publish clean iPhone HUD build to itch.io
+      - name: Publish transparency fix to itch.io
         shell: bash
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
@@ -168,4 +178,4 @@ jobs:
           "$RUNNER_TEMP/butler/linux-amd64/butler" push \
             "$RUNNER_TEMP/ever-deeper-web" \
             corpax88/ever-deeper-playtest:html5 \
-            --userversion 0.13.0-clean-hud-loader
+            --userversion 0.14.0-transparency-fix
