@@ -1,0 +1,119 @@
+name: Validate Godot v0.15 foreground placement
+
+on:
+  push:
+    branches: ["preview/v0.15-foreground"]
+
+permissions:
+  contents: read
+
+jobs:
+  visual-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Reconstruct v0.15 preview package
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_dir="$RUNNER_TEMP/ever-deeper-web"
+          tool_dir="$RUNNER_TEMP/tools"
+          base_url="https://corpax88.github.io/Ever-Deeper"
+          mkdir -p "$build_dir" "$tool_dir"
+
+          for file in \
+            index.html \
+            index.apple-touch-icon.png \
+            index.audio.position.worklet.js \
+            index.audio.worklet.js \
+            index.icon.png \
+            index.js \
+            index.png \
+            index.wasm
+          do
+            curl -L --fail --retry 4 --retry-all-errors "$base_url/$file" -o "$build_dir/$file"
+          done
+
+          curl -L --fail --retry 4 --retry-all-errors "$base_url/index.pck" -o "$RUNNER_TEMP/v0.14-index.pck"
+          echo "47cfd4a6b4f18f87e8a2c881db3a51fe1cd03af0668059d7ec3f3d80ceec5caa  $RUNNER_TEMP/v0.14-index.pck" | sha256sum -c -
+
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
+            -o "$tool_dir/xdelta3.tar.gz"
+          echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
+          tar --no-same-owner -xzf "$tool_dir/xdelta3.tar.gz" -C "$tool_dir"
+          chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.14-index.pck" \
+            "$GITHUB_WORKSPACE/.github/itch-patch/v0.14-to-v0.15-foreground.xdelta" \
+            "$build_dir/index.pck"
+          echo "d917acf7482e0a1d1e4da927303db3162c243adb4387d69d0212db039d051942  $build_dir/index.pck" | sha256sum -c -
+
+          perl -0pi -e 's/onProgress: updateProgress,\n/onProgress: updateProgress,\n\t\t\targs: ["--", "--qa-surface-camp"],\n/' "$build_dir/index.html"
+          grep -F -- '--qa-surface-camp' "$build_dir/index.html"
+
+      - name: Install browser
+        shell: bash
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Render landscape foreground
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/ever-deeper-web"
+          python3 -m http.server 4180 --bind 127.0.0.1 > "$RUNNER_TEMP/server.log" 2>&1 &
+          cd "$GITHUB_WORKSPACE"
+
+          node <<'NODE'
+          const fs = require('fs');
+          const { chromium } = require('playwright');
+
+          (async () => {
+            const logs = [];
+            const browser = await chromium.launch({ headless: true });
+            for (const [name, width, height] of [
+              ['iphone', 956, 440],
+              ['user-aspect', 1432, 708]
+            ]) {
+              const context = await browser.newContext({
+                viewport: { width, height },
+                screen: { width, height },
+                deviceScaleFactor: 1,
+                hasTouch: true,
+                isMobile: true,
+                userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 26_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1'
+              });
+              const page = await context.newPage();
+              page.on('console', message => logs.push(`${name}:console:${message.type()}:${message.text()}`));
+              page.on('pageerror', error => logs.push(`${name}:pageerror:${error.message}`));
+              await page.goto('http://127.0.0.1:4180/', { waitUntil: 'domcontentloaded', timeout: 120000 });
+              await page.waitForFunction(() => document.getElementById('status') === null, null, { timeout: 240000 });
+              await page.waitForTimeout(5000);
+              await page.screenshot({ path: `${process.env.RUNNER_TEMP}/ever-deeper-v015-${name}.png` });
+              await context.close();
+            }
+            fs.writeFileSync(process.env.RUNNER_TEMP + '/browser.log', logs.join('\n') + '\n');
+            await browser.close();
+          })().catch(error => {
+            fs.writeFileSync(process.env.RUNNER_TEMP + '/browser.log', String(error.stack || error) + '\n');
+            process.exit(1);
+          });
+          NODE
+
+      - name: Upload visual proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-v015-foreground-proof
+          path: |
+            ${{ runner.temp }}/ever-deeper-v015-iphone.png
+            ${{ runner.temp }}/ever-deeper-v015-user-aspect.png
+            ${{ runner.temp }}/browser.log
+            ${{ runner.temp }}/server.log
+          retention-days: 1
