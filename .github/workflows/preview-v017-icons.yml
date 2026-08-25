@@ -1,0 +1,227 @@
+name: Validate Godot v0.17 landscape icons
+
+on:
+  push:
+    branches: ["preview/v0.17-landscape-icons"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Reconstruct verified v0.17 preview package
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          build_dir="$RUNNER_TEMP/ever-deeper-web"
+          tool_dir="$RUNNER_TEMP/tools"
+          base_url="https://corpax88.github.io/Ever-Deeper"
+          patch_file="$GITHUB_WORKSPACE/.github/itch-patch/v0.16-to-v0.17-landscape-icons.xdelta"
+          mkdir -p "$build_dir" "$tool_dir"
+
+          for file in \
+            index.html \
+            index.apple-touch-icon.png \
+            index.audio.position.worklet.js \
+            index.audio.worklet.js \
+            index.icon.png \
+            index.js \
+            index.png \
+            index.wasm
+          do
+            curl -L --fail --retry 4 --retry-all-errors \
+              "$base_url/$file" -o "$build_dir/$file"
+          done
+
+          curl -L --fail --retry 4 --retry-all-errors \
+            "$base_url/index.pck" -o "$RUNNER_TEMP/v016-index.pck"
+          echo "ce5874625a06636e15f15bda63be0dc1a653cb63f5bffdcc07fa192fba54a050  $RUNNER_TEMP/v016-index.pck" | sha256sum -c -
+
+          test -f "$patch_file"
+          echo "1d4848bf6627f10deea028150d1060df525abf06a6da96d8baf137b8eae2abe3  $patch_file" | sha256sum -c -
+
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
+            -o "$tool_dir/xdelta3.tar.gz"
+          echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
+          tar --no-same-owner -xzf "$tool_dir/xdelta3.tar.gz" -C "$tool_dir"
+          chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v016-index.pck" \
+            "$patch_file" \
+            "$build_dir/index.pck"
+          echo "7f5f33fae90463af6cf60be291d3f209e6e4de5813a89da4391b78427e70ba5c  $build_dir/index.pck" | sha256sum -c -
+          test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+
+      - name: Install browser
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Capture iPhone landscape icon and version proofs
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          build_dir="$RUNNER_TEMP/ever-deeper-web"
+          proof_dir="$RUNNER_TEMP/ever-deeper-v017-proof"
+          mkdir -p "$proof_dir"
+
+          cd "$build_dir"
+          python3 -m http.server 4180 --bind 127.0.0.1 > "$proof_dir/server.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          curl --fail --retry 30 --retry-delay 1 --retry-connrefused \
+            http://127.0.0.1:4180/index.html >/dev/null
+
+          cd "$GITHUB_WORKSPACE"
+          BUILD_DIR="$build_dir" PROOF_DIR="$proof_dir" node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const { chromium } = require('playwright');
+
+          const cases = [
+            ['gate-interact', '--qa-gate'],
+            ['assay-gold', '--qa-assay'],
+            ['forge-build', '--qa-forge'],
+            ['mine-guide', '--qa-mine-entrance'],
+            ['hub-top-icons', '--qa-hub'],
+            ['version-menu', '--qa-version-menu'],
+          ];
+          const buildDir = process.env.BUILD_DIR;
+          const proofDir = process.env.PROOF_DIR;
+          const browserLog = path.join(proofDir, 'browser.log');
+          const resultsFile = path.join(proofDir, 'qa-results.json');
+          const logs = [];
+          const results = [];
+
+          function flush() {
+            fs.writeFileSync(browserLog, logs.join('\n') + (logs.length ? '\n' : ''));
+            fs.writeFileSync(resultsFile, JSON.stringify(results, null, 2) + '\n');
+          }
+
+          (async () => {
+            const sourceHtml = fs.readFileSync(path.join(buildDir, 'index.html'), 'utf8');
+            const anchor = 'onProgress: updateProgress,';
+            if (sourceHtml.split(anchor).length !== 2) {
+              throw new Error('Expected exactly one Godot argument injection anchor');
+            }
+
+            for (const [name, flag] of cases) {
+              const caseHtml = sourceHtml.replace(
+                anchor,
+                `${anchor}\n\t\t\targs: ["--", "${flag}", "--expected-version=0.17.0"],`
+              );
+              fs.writeFileSync(path.join(buildDir, `qa-${name}.html`), caseHtml);
+            }
+
+            const browser = await chromium.launch({ headless: true });
+            try {
+              for (const [name, flag] of cases) {
+                const result = {
+                  name, flag, ok: false, versionOk: false,
+                  consoleErrors: 0, pageErrors: 0, requestFailures: 0,
+                };
+                results.push(result);
+                logs.push(`${name}:begin:${flag}`);
+
+                const context = await browser.newContext({
+                  viewport: { width: 956, height: 440 },
+                  screen: { width: 956, height: 440 },
+                  deviceScaleFactor: 1,
+                  hasTouch: true,
+                  isMobile: true,
+                  userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 26_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1',
+                });
+                const page = await context.newPage();
+                page.on('console', message => {
+                  const line = `${name}:console:${message.type()}:${message.text()}`;
+                  logs.push(line);
+                  if (message.text().includes('EVER_DEEPER_VERSION_OK version=0.17.0')) {
+                    result.versionOk = true;
+                  }
+                  if (message.type() === 'error') result.consoleErrors += 1;
+                });
+                page.on('pageerror', error => {
+                  logs.push(`${name}:pageerror:${error.stack || error.message}`);
+                  result.pageErrors += 1;
+                });
+                page.on('requestfailed', request => {
+                  logs.push(`${name}:requestfailed:${request.url()}:${request.failure()?.errorText || 'unknown'}`);
+                  result.requestFailures += 1;
+                });
+
+                try {
+                  await page.goto(`http://127.0.0.1:4180/qa-${name}.html`, {
+                    waitUntil: 'domcontentloaded', timeout: 120000,
+                  });
+                  await page.waitForFunction(
+                    () => document.getElementById('status') === null,
+                    null,
+                    { timeout: 240000 }
+                  );
+                  const canvas = page.locator('#canvas');
+                  await canvas.waitFor({ state: 'visible', timeout: 30000 });
+                  await canvas.focus();
+                  await page.waitForTimeout(6000);
+                  await page.screenshot({ path: path.join(proofDir, `${name}.png`) });
+
+                  if (!result.versionOk) {
+                    throw new Error(`${name} did not report the expected v0.17.0 identity`);
+                  }
+                  if (result.consoleErrors + result.pageErrors + result.requestFailures > 0) {
+                    throw new Error(
+                      `${name} emitted ${result.consoleErrors} console error(s), ` +
+                      `${result.pageErrors} page error(s), and ` +
+                      `${result.requestFailures} request failure(s)`
+                    );
+                  }
+                  result.ok = true;
+                  logs.push(`${name}:complete`);
+                } catch (error) {
+                  result.failure = String(error.stack || error);
+                  logs.push(`${name}:failure:${result.failure}`);
+                } finally {
+                  flush();
+                  await context.close();
+                }
+              }
+            } finally {
+              await browser.close();
+            }
+            flush();
+            const failed = results.filter(result => !result.ok);
+            if (failed.length > 0) {
+              throw new Error(`QA failed for: ${failed.map(result => result.name).join(', ')}`);
+            }
+          })().catch(error => {
+            logs.push(`fatal:${error.stack || error}`);
+            flush();
+            process.exit(1);
+          });
+          NODE
+
+      - name: Upload visual proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-v017-landscape-icons-proof
+          path: |
+            ${{ runner.temp }}/ever-deeper-v017-proof/*.png
+            ${{ runner.temp }}/ever-deeper-v017-proof/browser.log
+            ${{ runner.temp }}/ever-deeper-v017-proof/qa-results.json
+            ${{ runner.temp }}/ever-deeper-v017-proof/server.log
+          if-no-files-found: warn
+          compression-level: 0
+          retention-days: 3
