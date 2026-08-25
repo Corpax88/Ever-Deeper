@@ -1,4 +1,4 @@
-name: Deploy Godot iPhone landscape v0.15
+name: Deploy Godot iPhone landscape v0.16
 
 on:
   push:
@@ -120,12 +120,22 @@ jobs:
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$RUNNER_TEMP/v0.14-index.pck" \
             "$RUNNER_TEMP/v0.14-to-v0.15-foreground.xdelta" \
+            "$RUNNER_TEMP/v0.15-index.pck"
+          echo "d917acf7482e0a1d1e4da927303db3162c243adb4387d69d0212db039d051942  $RUNNER_TEMP/v0.15-index.pck" | sha256sum -c -
+
+          cp "$GITHUB_WORKSPACE/.github/itch-patch/v0.15-to-v0.16-independent-mountains.xdelta" \
+            "$RUNNER_TEMP/v0.15-to-v0.16-independent-mountains.xdelta"
+          echo "4eba9afc71f2a25404bf3050ea2a640216816c1f616225a0992b752fc088bc28  $RUNNER_TEMP/v0.15-to-v0.16-independent-mountains.xdelta" | sha256sum -c -
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.15-index.pck" \
+            "$RUNNER_TEMP/v0.15-to-v0.16-independent-mountains.xdelta" \
             "$build_dir/index.pck"
           cat "$GITHUB_WORKSPACE"/.github/itch-patch/index-landscape.png.part* \
             > "$build_dir/index.png"
           cp "$GITHUB_WORKSPACE/.github/itch-patch/index.html" "$build_dir/index.html"
 
-          echo "d917acf7482e0a1d1e4da927303db3162c243adb4387d69d0212db039d051942  $build_dir/index.pck" | sha256sum -c -
+          echo "ce5874625a06636e15f15bda63be0dc1a653cb63f5bffdcc07fa192fba54a050  $build_dir/index.pck" | sha256sum -c -
           echo "ef39123a4df97f032814983cd6d8ee3531795fae4dbdbce37889df77873bdd1e  $build_dir/index.html" | sha256sum -c -
           echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
@@ -178,7 +188,7 @@ jobs:
           chmod +x "$RUNNER_TEMP/butler/linux-amd64/butler"
           "$RUNNER_TEMP/butler/linux-amd64/butler" version
 
-      - name: Publish foreground placement fix to itch.io
+      - name: Publish independent mountains fix to itch.io
         shell: bash
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
@@ -188,4 +198,4 @@ jobs:
           "$RUNNER_TEMP/butler/linux-amd64/butler" push \
             "$RUNNER_TEMP/ever-deeper-web" \
             corpax88/ever-deeper-playtest:html5 \
-            --userversion 0.15.0-foreground-placement
+            --userversion 0.16.0-independent-mountains
