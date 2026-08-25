@@ -1,4 +1,4 @@
-name: Deploy Godot landscape
+name: Deploy Godot iPhone landscape
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Reconstruct verified Godot web build
+      - name: Reconstruct verified Godot iPhone build
         shell: bash
         run: |
           set -euo pipefail
@@ -44,6 +44,14 @@ jobs:
               "$base_url/$file" -o "$build_dir/$file"
           done
 
+          echo "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5  $build_dir/index.apple-touch-icon.png" | sha256sum -c -
+          echo "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8  $build_dir/index.audio.position.worklet.js" | sha256sum -c -
+          echo "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3  $build_dir/index.audio.worklet.js" | sha256sum -c -
+          echo "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec  $build_dir/index.icon.png" | sha256sum -c -
+          echo "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba  $build_dir/index.js" | sha256sum -c -
+          echo "06d3678b294967a7d6a4ed93d783ae6d7f604f54bd952372010b05d85d3046d2  $build_dir/index.png" | sha256sum -c -
+          echo "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0  $build_dir/index.wasm" | sha256sum -c -
+
           curl -L --fail --retry 4 --retry-all-errors \
             "$base_url/index.pck" -o "$RUNNER_TEMP/live-index.pck"
           echo "cebdde9655d17cca69f891578f71f6f46b598c79c7022d28b9ee3d893a19c3b5  $RUNNER_TEMP/live-index.pck" | sha256sum -c -
@@ -51,6 +59,10 @@ jobs:
           cat "$GITHUB_WORKSPACE"/.github/itch-patch/live-to-v0.10.xdelta.part* \
             > "$RUNNER_TEMP/live-to-v0.10.xdelta"
           echo "58abd171cffc9a785e1d4355f3eefb4ba262ab9c43b46f35f50aeb6fd2e42089  $RUNNER_TEMP/live-to-v0.10.xdelta" | sha256sum -c -
+
+          cp "$GITHUB_WORKSPACE/.github/itch-patch/v0.10-to-v0.11-iphone.xdelta" \
+            "$RUNNER_TEMP/v0.10-to-v0.11-iphone.xdelta"
+          echo "74447d6ffca73aeaa71453a5cfcb01e9857afda72f7f187151101373d3e193c6  $RUNNER_TEMP/v0.10-to-v0.11-iphone.xdelta" | sha256sum -c -
 
           curl -L --fail --retry 4 --retry-all-errors \
             https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
@@ -62,11 +74,17 @@ jobs:
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$RUNNER_TEMP/live-index.pck" \
             "$RUNNER_TEMP/live-to-v0.10.xdelta" \
+            "$RUNNER_TEMP/v0.10-index.pck"
+          echo "f2d720655e2a8c3b711376e4d51db302edbc160e5a0f16cc99d03569a9f0ce6e  $RUNNER_TEMP/v0.10-index.pck" | sha256sum -c -
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.10-index.pck" \
+            "$RUNNER_TEMP/v0.10-to-v0.11-iphone.xdelta" \
             "$build_dir/index.pck"
           cp "$GITHUB_WORKSPACE/.github/itch-patch/index.html" "$build_dir/index.html"
 
-          echo "f2d720655e2a8c3b711376e4d51db302edbc160e5a0f16cc99d03569a9f0ce6e  $build_dir/index.pck" | sha256sum -c -
-          echo "1c2b2cd03c42bf93bdb5285a452772e92ac6b58ccc090b17b88ba1d2fa6f4178  $build_dir/index.html" | sha256sum -c -
+          echo "c574622d304f771064991bff51e7daac0619e6f09133cef0e363d526696a1818  $build_dir/index.pck" | sha256sum -c -
+          echo "e00d1154794fd828a8e731ad24459d69104db2ac5fb0cd3febc4a0637c8ba105  $build_dir/index.html" | sha256sum -c -
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
 
       - name: Upload GitHub Pages package
@@ -109,13 +127,14 @@ jobs:
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/butler"
           curl -L --fail --retry 4 --retry-all-errors \
-            https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default \
+            https://github.com/itchio/butler/releases/download/v15.30.0/butler-linux-amd64.zip \
             -o "$RUNNER_TEMP/butler.zip"
+          echo "f2cae7d24eba0605048f71d0cc056f65c3b7ff9f73724f504c731cf3645bef08  $RUNNER_TEMP/butler.zip" | sha256sum -c -
           unzip -q "$RUNNER_TEMP/butler.zip" -d "$RUNNER_TEMP/butler"
           chmod +x "$RUNNER_TEMP/butler/butler"
           "$RUNNER_TEMP/butler/butler" version
 
-      - name: Publish landscape build to itch.io
+      - name: Publish iPhone landscape build to itch.io
         shell: bash
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
@@ -125,4 +144,4 @@ jobs:
           "$RUNNER_TEMP/butler/butler" push \
             "$RUNNER_TEMP/ever-deeper-web" \
             corpax88/ever-deeper-playtest:html5 \
-            --userversion 0.10.0-landscape
+            --userversion 0.11.0-iphone-landscape
