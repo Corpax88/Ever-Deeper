@@ -1,4 +1,4 @@
-name: Deploy Godot iPhone landscape
+name: Deploy Godot iPhone landscape v0.12
 
 on:
   push:
@@ -80,11 +80,21 @@ jobs:
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$RUNNER_TEMP/v0.10-index.pck" \
             "$RUNNER_TEMP/v0.10-to-v0.11-iphone.xdelta" \
+            "$RUNNER_TEMP/v0.11-index.pck"
+          echo "c574622d304f771064991bff51e7daac0619e6f09133cef0e363d526696a1818  $RUNNER_TEMP/v0.11-index.pck" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.11-to-v0.12-iphone.xdelta.part* \
+            > "$RUNNER_TEMP/v0.11-to-v0.12-iphone.xdelta"
+          echo "65074e53debfe0ac00a121a4d38fccb0dbed42d582f2a820d5052156e1db5e90  $RUNNER_TEMP/v0.11-to-v0.12-iphone.xdelta" | sha256sum -c -
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.11-index.pck" \
+            "$RUNNER_TEMP/v0.11-to-v0.12-iphone.xdelta" \
             "$build_dir/index.pck"
           cp "$GITHUB_WORKSPACE/.github/itch-patch/index.html" "$build_dir/index.html"
 
-          echo "c574622d304f771064991bff51e7daac0619e6f09133cef0e363d526696a1818  $build_dir/index.pck" | sha256sum -c -
-          echo "e00d1154794fd828a8e731ad24459d69104db2ac5fb0cd3febc4a0637c8ba105  $build_dir/index.html" | sha256sum -c -
+          echo "1466646e6c597561f9567d51920d7715d6609f201338d25b2d0df81878e6c468  $build_dir/index.pck" | sha256sum -c -
+          echo "ee42c2cce18b6afae7812ee1e523f4fbd253f8b9be9e8bff8ed653cc9b6ea266  $build_dir/index.html" | sha256sum -c -
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
 
       - name: Upload GitHub Pages package
@@ -145,4 +155,4 @@ jobs:
           "$RUNNER_TEMP/butler/linux-amd64/butler" push \
             "$RUNNER_TEMP/ever-deeper-web" \
             corpax88/ever-deeper-playtest:html5 \
-            --userversion 0.11.0-iphone-landscape
+            --userversion 0.12.0-iphone-controls-portals
