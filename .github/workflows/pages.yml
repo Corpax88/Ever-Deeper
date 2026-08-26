@@ -1,4 +1,4 @@
-name: Deploy Godot iPhone landscape v0.23
+name: Deploy Godot iPhone landscape v0.24
 
 on:
   push:
@@ -200,13 +200,23 @@ jobs:
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$RUNNER_TEMP/v0.22-index.pck" \
             "$RUNNER_TEMP/v0.22-to-v0.23-color-text-soft-rails.xdelta" \
+            "$RUNNER_TEMP/v0.23-index.pck"
+          echo "4cfd2c9f4f6963d61cf450c60f9e9c33838f96b3c5faff7d9169b0bc8fac5597  $RUNNER_TEMP/v0.23-index.pck" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.23-to-v0.24-full-performance.xdelta.part* \
+            > "$RUNNER_TEMP/v0.23-to-v0.24-full-performance.xdelta"
+          echo "0db1587aadc2d5a1959fe2fe1bd83fcb302b0e617b0443f008a34a7f689574f6  $RUNNER_TEMP/v0.23-to-v0.24-full-performance.xdelta" | sha256sum -c -
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.23-index.pck" \
+            "$RUNNER_TEMP/v0.23-to-v0.24-full-performance.xdelta" \
             "$build_dir/index.pck"
           cat "$GITHUB_WORKSPACE"/.github/itch-patch/index-landscape.png.part* \
             > "$build_dir/index.png"
           cp "$GITHUB_WORKSPACE/.github/itch-patch/index.html" "$build_dir/index.html"
 
-          echo "4cfd2c9f4f6963d61cf450c60f9e9c33838f96b3c5faff7d9169b0bc8fac5597  $build_dir/index.pck" | sha256sum -c -
-          echo "ef39123a4df97f032814983cd6d8ee3531795fae4dbdbce37889df77873bdd1e  $build_dir/index.html" | sha256sum -c -
+          echo "ce831b43b31cbcece6dcaaf2e7864a43ba1a2789e9f37bc0c5aa5080c20c4fb5  $build_dir/index.pck" | sha256sum -c -
+          echo "ddee66e86007b719a16663332c8154d0f95107b2eea88b08030227c7abbf6a87  $build_dir/index.html" | sha256sum -c -
           echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
 
@@ -258,7 +268,7 @@ jobs:
           chmod +x "$RUNNER_TEMP/butler/linux-amd64/butler"
           "$RUNNER_TEMP/butler/linux-amd64/butler" version
 
-      - name: Publish color pickup text and soft route steering to itch.io
+      - name: Publish full journey performance pass to itch.io
         shell: bash
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
@@ -268,4 +278,4 @@ jobs:
           "$RUNNER_TEMP/butler/linux-amd64/butler" push \
             "$RUNNER_TEMP/ever-deeper-web" \
             corpax88/ever-deeper-playtest:html5 \
-            --userversion 0.23.0-color-text-soft-rails
+            --userversion 0.24.0-full-journey-performance
