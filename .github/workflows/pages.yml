@@ -1,4 +1,4 @@
-name: Deploy Godot iPhone landscape v0.18
+name: Deploy Godot iPhone landscape v0.19
 
 on:
   push:
@@ -150,12 +150,22 @@ jobs:
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$RUNNER_TEMP/v0.17-index.pck" \
             "$RUNNER_TEMP/v0.17-to-v0.18-input-loot.xdelta" \
+            "$RUNNER_TEMP/v0.18-index.pck"
+          echo "d319c7d6d7c480561ee0308a9b8bb3110c9623f9bbc296ca457080010f276640  $RUNNER_TEMP/v0.18-index.pck" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.18-to-v0.19-surface-performance.xdelta.part* \
+            > "$RUNNER_TEMP/v0.18-to-v0.19-surface-performance.xdelta"
+          echo "f49735858b804fc6e20ec12e03b274d828c2e4162ca4b34d4bafce2630231527  $RUNNER_TEMP/v0.18-to-v0.19-surface-performance.xdelta" | sha256sum -c -
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.18-index.pck" \
+            "$RUNNER_TEMP/v0.18-to-v0.19-surface-performance.xdelta" \
             "$build_dir/index.pck"
           cat "$GITHUB_WORKSPACE"/.github/itch-patch/index-landscape.png.part* \
             > "$build_dir/index.png"
           cp "$GITHUB_WORKSPACE/.github/itch-patch/index.html" "$build_dir/index.html"
 
-          echo "d319c7d6d7c480561ee0308a9b8bb3110c9623f9bbc296ca457080010f276640  $build_dir/index.pck" | sha256sum -c -
+          echo "b60c7f84c8bcde92d1e7347fcc63aa3869acaea67db0ae23cfb847493bd536c4  $build_dir/index.pck" | sha256sum -c -
           echo "ef39123a4df97f032814983cd6d8ee3531795fae4dbdbce37889df77873bdd1e  $build_dir/index.html" | sha256sum -c -
           echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
@@ -208,7 +218,7 @@ jobs:
           chmod +x "$RUNNER_TEMP/butler/linux-amd64/butler"
           "$RUNNER_TEMP/butler/linux-amd64/butler" version
 
-      - name: Publish mining input safety and visible loot to itch.io
+      - name: Publish surface performance fix to itch.io
         shell: bash
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
@@ -218,4 +228,4 @@ jobs:
           "$RUNNER_TEMP/butler/linux-amd64/butler" push \
             "$RUNNER_TEMP/ever-deeper-web" \
             corpax88/ever-deeper-playtest:html5 \
-            --userversion 0.18.0-input-loot
+            --userversion 0.19.0-surface-performance
