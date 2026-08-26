@@ -1,4 +1,4 @@
-name: Deploy Godot iPhone landscape v0.19
+name: Deploy Godot iPhone landscape v0.20
 
 on:
   push:
@@ -160,12 +160,22 @@ jobs:
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$RUNNER_TEMP/v0.18-index.pck" \
             "$RUNNER_TEMP/v0.18-to-v0.19-surface-performance.xdelta" \
+            "$RUNNER_TEMP/v0.19-index.pck"
+          echo "b60c7f84c8bcde92d1e7347fcc63aa3869acaea67db0ae23cfb847493bd536c4  $RUNNER_TEMP/v0.19-index.pck" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.19-to-v0.20-seam-portals.xdelta.part* \
+            > "$RUNNER_TEMP/v0.19-to-v0.20-seam-portals.xdelta"
+          echo "3f7af05b3c6409ffb4f2df88cd88a636a992af45980a815b6acb5200ab28b83c  $RUNNER_TEMP/v0.19-to-v0.20-seam-portals.xdelta" | sha256sum -c -
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.19-index.pck" \
+            "$RUNNER_TEMP/v0.19-to-v0.20-seam-portals.xdelta" \
             "$build_dir/index.pck"
           cat "$GITHUB_WORKSPACE"/.github/itch-patch/index-landscape.png.part* \
             > "$build_dir/index.png"
           cp "$GITHUB_WORKSPACE/.github/itch-patch/index.html" "$build_dir/index.html"
 
-          echo "b60c7f84c8bcde92d1e7347fcc63aa3869acaea67db0ae23cfb847493bd536c4  $build_dir/index.pck" | sha256sum -c -
+          echo "fd7ecee23d93ee083792c0b4e799d39d6305ed18f82ebbd35dc017ccde993b33  $build_dir/index.pck" | sha256sum -c -
           echo "ef39123a4df97f032814983cd6d8ee3531795fae4dbdbce37889df77873bdd1e  $build_dir/index.html" | sha256sum -c -
           echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
@@ -218,7 +228,7 @@ jobs:
           chmod +x "$RUNNER_TEMP/butler/linux-amd64/butler"
           "$RUNNER_TEMP/butler/linux-amd64/butler" version
 
-      - name: Publish surface performance fix to itch.io
+      - name: Publish seam portals to itch.io
         shell: bash
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
@@ -228,4 +238,4 @@ jobs:
           "$RUNNER_TEMP/butler/linux-amd64/butler" push \
             "$RUNNER_TEMP/ever-deeper-web" \
             corpax88/ever-deeper-playtest:html5 \
-            --userversion 0.19.0-surface-performance
+            --userversion 0.20.0-seam-portals
