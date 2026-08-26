@@ -1,4 +1,4 @@
-name: Deploy Godot iPhone landscape v0.24
+name: Deploy Godot iPhone landscape v0.25
 
 on:
   push:
@@ -210,12 +210,22 @@ jobs:
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$RUNNER_TEMP/v0.23-index.pck" \
             "$RUNNER_TEMP/v0.23-to-v0.24-full-performance.xdelta" \
+            "$RUNNER_TEMP/v0.24-index.pck"
+          echo "ce831b43b31cbcece6dcaaf2e7864a43ba1a2789e9f37bc0c5aa5080c20c4fb5  $RUNNER_TEMP/v0.24-index.pck" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.24-to-v0.25-two-hour-polish.xdelta.part* \
+            > "$RUNNER_TEMP/v0.24-to-v0.25-two-hour-polish.xdelta"
+          echo "833e120ed6c0a73862f85c64def758cafe0352d8fab71664c9cad05d7b6696e5  $RUNNER_TEMP/v0.24-to-v0.25-two-hour-polish.xdelta" | sha256sum -c -
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.24-index.pck" \
+            "$RUNNER_TEMP/v0.24-to-v0.25-two-hour-polish.xdelta" \
             "$build_dir/index.pck"
           cat "$GITHUB_WORKSPACE"/.github/itch-patch/index-landscape.png.part* \
             > "$build_dir/index.png"
           cp "$GITHUB_WORKSPACE/.github/itch-patch/index.html" "$build_dir/index.html"
 
-          echo "ce831b43b31cbcece6dcaaf2e7864a43ba1a2789e9f37bc0c5aa5080c20c4fb5  $build_dir/index.pck" | sha256sum -c -
+          echo "8e1cf7cc07dfb892269159db32ab920b006e61a00520232d1a05a5b3f5ae209c  $build_dir/index.pck" | sha256sum -c -
           echo "ddee66e86007b719a16663332c8154d0f95107b2eea88b08030227c7abbf6a87  $build_dir/index.html" | sha256sum -c -
           echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
@@ -268,7 +278,7 @@ jobs:
           chmod +x "$RUNNER_TEMP/butler/linux-amd64/butler"
           "$RUNNER_TEMP/butler/linux-amd64/butler" version
 
-      - name: Publish full journey performance pass to itch.io
+      - name: Publish two-hour iPhone polish pass to itch.io
         shell: bash
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
@@ -278,4 +288,4 @@ jobs:
           "$RUNNER_TEMP/butler/linux-amd64/butler" push \
             "$RUNNER_TEMP/ever-deeper-web" \
             corpax88/ever-deeper-playtest:html5 \
-            --userversion 0.24.0-full-journey-performance
+            --userversion 0.25.0-two-hour-iphone-polish
