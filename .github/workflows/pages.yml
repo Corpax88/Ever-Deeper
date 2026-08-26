@@ -1,4 +1,4 @@
-name: Deploy Godot iPhone landscape v0.20
+name: Deploy Godot iPhone landscape v0.21
 
 on:
   push:
@@ -170,12 +170,22 @@ jobs:
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$RUNNER_TEMP/v0.19-index.pck" \
             "$RUNNER_TEMP/v0.19-to-v0.20-seam-portals.xdelta" \
+            "$RUNNER_TEMP/v0.20-index.pck"
+          echo "fd7ecee23d93ee083792c0b4e799d39d6305ed18f82ebbd35dc017ccde993b33  $RUNNER_TEMP/v0.20-index.pck" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.20-to-v0.21-road-world.xdelta.part* \
+            > "$RUNNER_TEMP/v0.20-to-v0.21-road-world.xdelta"
+          echo "07b38331669817fff2fe3ae34f4d5085da41cd17b5f46fdf41cccff2551ae3f3  $RUNNER_TEMP/v0.20-to-v0.21-road-world.xdelta" | sha256sum -c -
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.20-index.pck" \
+            "$RUNNER_TEMP/v0.20-to-v0.21-road-world.xdelta" \
             "$build_dir/index.pck"
           cat "$GITHUB_WORKSPACE"/.github/itch-patch/index-landscape.png.part* \
             > "$build_dir/index.png"
           cp "$GITHUB_WORKSPACE/.github/itch-patch/index.html" "$build_dir/index.html"
 
-          echo "fd7ecee23d93ee083792c0b4e799d39d6305ed18f82ebbd35dc017ccde993b33  $build_dir/index.pck" | sha256sum -c -
+          echo "692a7e2c9bb77353b924f92f0241da364c6270dee8b54e11d4166d4de616c998  $build_dir/index.pck" | sha256sum -c -
           echo "ef39123a4df97f032814983cd6d8ee3531795fae4dbdbce37889df77873bdd1e  $build_dir/index.html" | sha256sum -c -
           echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
@@ -228,7 +238,7 @@ jobs:
           chmod +x "$RUNNER_TEMP/butler/linux-amd64/butler"
           "$RUNNER_TEMP/butler/linux-amd64/butler" version
 
-      - name: Publish seam portals to itch.io
+      - name: Publish road-bound world to itch.io
         shell: bash
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
@@ -238,4 +248,4 @@ jobs:
           "$RUNNER_TEMP/butler/linux-amd64/butler" push \
             "$RUNNER_TEMP/ever-deeper-web" \
             corpax88/ever-deeper-playtest:html5 \
-            --userversion 0.20.0-seam-portals
+            --userversion 0.21.0-road-world
