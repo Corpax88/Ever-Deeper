@@ -1,4 +1,4 @@
-name: Deploy Godot iPhone landscape v0.21
+name: Deploy Godot iPhone landscape v0.22
 
 on:
   push:
@@ -180,12 +180,22 @@ jobs:
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$RUNNER_TEMP/v0.20-index.pck" \
             "$RUNNER_TEMP/v0.20-to-v0.21-road-world.xdelta" \
+            "$RUNNER_TEMP/v0.21-index.pck"
+          echo "692a7e2c9bb77353b924f92f0241da364c6270dee8b54e11d4166d4de616c998  $RUNNER_TEMP/v0.21-index.pck" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.21-to-v0.22-pickup-light-paths.xdelta.part* \
+            > "$RUNNER_TEMP/v0.21-to-v0.22-pickup-light-paths.xdelta"
+          echo "a88d66c38efc733f102f239663822f66f36b35f849651e8d42f164f6e8b6b087  $RUNNER_TEMP/v0.21-to-v0.22-pickup-light-paths.xdelta" | sha256sum -c -
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.21-index.pck" \
+            "$RUNNER_TEMP/v0.21-to-v0.22-pickup-light-paths.xdelta" \
             "$build_dir/index.pck"
           cat "$GITHUB_WORKSPACE"/.github/itch-patch/index-landscape.png.part* \
             > "$build_dir/index.png"
           cp "$GITHUB_WORKSPACE/.github/itch-patch/index.html" "$build_dir/index.html"
 
-          echo "692a7e2c9bb77353b924f92f0241da364c6270dee8b54e11d4166d4de616c998  $build_dir/index.pck" | sha256sum -c -
+          echo "b33f339b6f18562abe3466df6489b3a617aea82801cec51d602c9d3c93c80674  $build_dir/index.pck" | sha256sum -c -
           echo "ef39123a4df97f032814983cd6d8ee3531795fae4dbdbce37889df77873bdd1e  $build_dir/index.html" | sha256sum -c -
           echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
@@ -238,7 +248,7 @@ jobs:
           chmod +x "$RUNNER_TEMP/butler/linux-amd64/butler"
           "$RUNNER_TEMP/butler/linux-amd64/butler" version
 
-      - name: Publish road-bound world to itch.io
+      - name: Publish pickup, headlamp, and path polish to itch.io
         shell: bash
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
@@ -248,4 +258,4 @@ jobs:
           "$RUNNER_TEMP/butler/linux-amd64/butler" push \
             "$RUNNER_TEMP/ever-deeper-web" \
             corpax88/ever-deeper-playtest:html5 \
-            --userversion 0.21.0-road-world
+            --userversion 0.22.0-pickup-headlamp-paths
