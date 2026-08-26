@@ -1,4 +1,4 @@
-name: Deploy Godot iPhone landscape v0.17
+name: Deploy Godot iPhone landscape v0.18
 
 on:
   push:
@@ -140,12 +140,22 @@ jobs:
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$RUNNER_TEMP/v0.16-index.pck" \
             "$RUNNER_TEMP/v0.16-to-v0.17-landscape-icons.xdelta" \
+            "$RUNNER_TEMP/v0.17-index.pck"
+          echo "7f5f33fae90463af6cf60be291d3f209e6e4de5813a89da4391b78427e70ba5c  $RUNNER_TEMP/v0.17-index.pck" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.17-to-v0.18-input-loot.xdelta.part* \
+            > "$RUNNER_TEMP/v0.17-to-v0.18-input-loot.xdelta"
+          echo "87d3f77b021887ebda7899280bd278da51445c597f31b60dead168a6ba409738  $RUNNER_TEMP/v0.17-to-v0.18-input-loot.xdelta" | sha256sum -c -
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.17-index.pck" \
+            "$RUNNER_TEMP/v0.17-to-v0.18-input-loot.xdelta" \
             "$build_dir/index.pck"
           cat "$GITHUB_WORKSPACE"/.github/itch-patch/index-landscape.png.part* \
             > "$build_dir/index.png"
           cp "$GITHUB_WORKSPACE/.github/itch-patch/index.html" "$build_dir/index.html"
 
-          echo "7f5f33fae90463af6cf60be291d3f209e6e4de5813a89da4391b78427e70ba5c  $build_dir/index.pck" | sha256sum -c -
+          echo "d319c7d6d7c480561ee0308a9b8bb3110c9623f9bbc296ca457080010f276640  $build_dir/index.pck" | sha256sum -c -
           echo "ef39123a4df97f032814983cd6d8ee3531795fae4dbdbce37889df77873bdd1e  $build_dir/index.html" | sha256sum -c -
           echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
@@ -198,7 +208,7 @@ jobs:
           chmod +x "$RUNNER_TEMP/butler/linux-amd64/butler"
           "$RUNNER_TEMP/butler/linux-amd64/butler" version
 
-      - name: Publish landscape icon normalization to itch.io
+      - name: Publish mining input safety and visible loot to itch.io
         shell: bash
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
@@ -208,5 +218,4 @@ jobs:
           "$RUNNER_TEMP/butler/linux-amd64/butler" push \
             "$RUNNER_TEMP/ever-deeper-web" \
             corpax88/ever-deeper-playtest:html5 \
-            --userversion 0.17.0-landscape-icons
-
+            --userversion 0.18.0-input-loot
