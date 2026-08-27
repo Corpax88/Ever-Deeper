@@ -19,7 +19,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat .github/testdata/button_parts/part* > "$RUNNER_TEMP/the-button.b64"
+          cat .github/testdata/button_parts/part* | tr -d '[:space:]' > "$RUNNER_TEMP/the-button.b64"
           echo "7f3a0c001eb506e3058fc821e1b42e0c78569acd7715c614fcd03fe9abda5fc8  $RUNNER_TEMP/the-button.b64" | sha256sum -c -
           base64 -d "$RUNNER_TEMP/the-button.b64" > "$RUNNER_TEMP/the-button.zip"
           echo "cb9837bd47bd4f8832dc921a6c9a0118c33d01ab062359de9b6c081fec75f55b  $RUNNER_TEMP/the-button.zip" | sha256sum -c -
