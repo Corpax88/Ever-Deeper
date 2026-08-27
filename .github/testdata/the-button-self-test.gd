@@ -2,7 +2,7 @@ extends SceneTree
 
 var failed := false
 
-func _initialize() -> void:
+func _init() -> void:
     call_deferred("_run")
 
 func check(condition: bool, message: String) -> void:
