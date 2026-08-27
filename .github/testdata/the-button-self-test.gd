@@ -27,15 +27,17 @@ func _run() -> void:
     var scene = packed.instantiate()
     root.add_child(scene)
     await process_frame
+    await process_frame
 
     check(scene.main_button != null, "main button exists")
-    check(scene.successes >= 0, "progress state initialized")
+    check(scene.behaviors.size() >= 20, "adaptive behavior pool loaded")
+    check(scene.modifiers.size() >= 10, "modifier pool loaded")
 
-    scene.current_mode = 0
-    scene.mode_rounds_left = 2
+    scene.current_behavior = "plain"
     var before: int = scene.successes
     scene._on_button_pressed()
-    check(scene.successes == before + 1, "normal press counts as success")
+    await process_frame
+    check(scene.successes == before + 1, "plain press counts as success")
 
     scene.attempts = 10
     scene.misses = 0
@@ -55,13 +57,16 @@ func _run() -> void:
     scene._update_profile()
     check(scene.current_profile == "MISCLICKER", "misclick pattern is detected")
 
-    scene.current_mode = 3
-    scene.mode_rounds_left = 2
-    before = scene.successes
-    scene.double_first_ms = 0
-    scene._on_button_pressed()
-    scene._on_button_pressed()
-    check(scene.successes == before + 1, "double-tap challenge succeeds")
+    var combos := {}
+    scene.attempts = 30
+    scene.misses = 2
+    set_intervals(scene, [0.7,0.8,0.9,0.7,0.8,0.9])
+    scene._update_profile()
+    for i in range(800):
+        var behavior: String = scene._choose_behavior()
+        var mods: Array[String] = scene._choose_modifiers(behavior)
+        combos[behavior + ":" + ",".join(mods)] = true
+    check(combos.size() >= 30, "composer generates varied combinations")
 
     print("SELFTEST_RESULT=", "FAIL" if failed else "PASS")
     quit(1 if failed else 0)
