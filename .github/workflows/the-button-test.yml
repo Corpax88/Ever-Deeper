@@ -53,5 +53,13 @@ jobs:
           PROJ="$RUNNER_TEMP/prototype/the-button-prototype"
           mkdir -p "$PROJ/tests"
           cp .github/testdata/the-button-self-test.gd "$PROJ/tests/self_test.gd"
-          "$GODOT" --headless --path "$PROJ" --script res://tests/self_test.gd 2>&1 | tee "$RUNNER_TEMP/selftest.log"
+          set +e
+          timeout 20s "$GODOT" --headless --verbose --path "$PROJ" --script res://tests/self_test.gd 2>&1 | tee "$RUNNER_TEMP/selftest.log"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -eq 124 ]; then
+            echo 'SELFTEST_TIMEOUT'
+            exit 124
+          fi
+          [ "$status" -eq 0 ]
           grep -q 'SELFTEST_RESULT=PASS' "$RUNNER_TEMP/selftest.log"
