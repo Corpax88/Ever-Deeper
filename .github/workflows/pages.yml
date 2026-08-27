@@ -220,13 +220,23 @@ jobs:
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$RUNNER_TEMP/v0.24-index.pck" \
             "$RUNNER_TEMP/v0.24-to-v0.25-two-hour-polish.xdelta" \
+            "$RUNNER_TEMP/v0.25-polish-index.pck"
+          echo "8e1cf7cc07dfb892269159db32ab920b006e61a00520232d1a05a5b3f5ae209c  $RUNNER_TEMP/v0.25-polish-index.pck" | sha256sum -c -
+
+          cp "$GITHUB_WORKSPACE/.github/itch-patch/v0.25-polish-final.xdelta" \
+            "$RUNNER_TEMP/v0.25-polish-final.xdelta"
+          echo "e26e1cce1e832b40a78fd72eb7ca6d06420e5b9a2f866af349ec50ff5901f4d1  $RUNNER_TEMP/v0.25-polish-final.xdelta" | sha256sum -c -
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.25-polish-index.pck" \
+            "$RUNNER_TEMP/v0.25-polish-final.xdelta" \
             "$build_dir/index.pck"
           cat "$GITHUB_WORKSPACE"/.github/itch-patch/index-landscape.png.part* \
             > "$build_dir/index.png"
           cp "$GITHUB_WORKSPACE/.github/itch-patch/index.html" "$build_dir/index.html"
 
-          echo "8e1cf7cc07dfb892269159db32ab920b006e61a00520232d1a05a5b3f5ae209c  $build_dir/index.pck" | sha256sum -c -
-          echo "ddee66e86007b719a16663332c8154d0f95107b2eea88b08030227c7abbf6a87  $build_dir/index.html" | sha256sum -c -
+          echo "6eaa7d0c72e5dc99c57d1a72fa13511ee0c9fd3a44330ac1a7fcef2920032472  $build_dir/index.pck" | sha256sum -c -
+          echo "c189890cce07aae7c4b87c73ba27e4b61b30060216685d53d40951a9132076cf  $build_dir/index.html" | sha256sum -c -
           echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
 
@@ -288,4 +298,4 @@ jobs:
           "$RUNNER_TEMP/butler/linux-amd64/butler" push \
             "$RUNNER_TEMP/ever-deeper-web" \
             corpax88/ever-deeper-playtest:html5 \
-            --userversion 0.25.0-two-hour-iphone-polish
+            --userversion 0.25.0-two-hour-iphone-polish-final
