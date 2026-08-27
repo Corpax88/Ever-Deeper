@@ -2,6 +2,9 @@ extends SceneTree
 
 var failed := false
 
+func _init() -> void:
+    call_deferred("_run")
+
 func check(condition: bool, message: String) -> void:
     if condition:
         print("PASS: ", message)
@@ -9,7 +12,12 @@ func check(condition: bool, message: String) -> void:
         failed = true
         push_error("FAIL: " + message)
 
-func _init() -> void:
+func set_intervals(scene, values: Array) -> void:
+    scene.intervals.clear()
+    for value in values:
+        scene.intervals.append(float(value))
+
+func _run() -> void:
     var packed := load("res://main.tscn")
     check(packed != null, "main scene loads")
     if packed == null:
@@ -18,6 +26,8 @@ func _init() -> void:
 
     var scene = packed.instantiate()
     root.add_child(scene)
+    await process_frame
+
     check(scene.main_button != null, "main button exists")
     check(scene.successes >= 0, "progress state initialized")
 
@@ -29,19 +39,19 @@ func _init() -> void:
 
     scene.attempts = 10
     scene.misses = 0
-    scene.intervals = [0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10]
+    set_intervals(scene, [0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10])
     scene._update_profile()
     check(scene.current_profile == "AUTOCLICKER", "autoclicker pattern is detected")
 
     scene.attempts = 10
     scene.misses = 0
-    scene.intervals = [2.0, 2.1, 2.0, 2.2, 2.0, 2.1]
+    set_intervals(scene, [2.0, 2.1, 2.0, 2.2, 2.0, 2.1])
     scene._update_profile()
     check(scene.current_profile == "HESITATOR", "hesitation pattern is detected")
 
     scene.attempts = 10
     scene.misses = 4
-    scene.intervals = [0.8, 0.9, 0.8, 0.9, 0.8, 0.9]
+    set_intervals(scene, [0.8, 0.9, 0.8, 0.9, 0.8, 0.9])
     scene._update_profile()
     check(scene.current_profile == "MISCLICKER", "misclick pattern is detected")
 
