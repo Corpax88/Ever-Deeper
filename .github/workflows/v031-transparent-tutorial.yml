@@ -1,6 +1,9 @@
-name: Deploy Ever Deeper v0.30 minimap and tutorial
+name: Deploy Ever Deeper v0.31 transparent tutorial
 
 on:
+  workflow_run:
+    workflows: ["Deploy Ever Deeper v0.26 playtest"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -10,7 +13,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages-v030"
+  group: "pages-v031"
   cancel-in-progress: true
 
 jobs:
@@ -18,7 +21,7 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check out v0.30 patch
+      - name: Check out v0.31 patch
         uses: actions/checkout@v4
 
       - name: Download verified v0.26 build
@@ -51,7 +54,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ steps.latest.outputs.run_id }}
 
-      - name: Apply verified v0.30 minimap and tutorial patch
+      - name: Apply verified v0.31 transparent tutorial patch
         shell: bash
         run: |
           set -euo pipefail
@@ -63,9 +66,9 @@ jobs:
           test -f "$build_dir/wtf-director.js"
           echo "6eaa7d0c72e5dc99c57d1a72fa13511ee0c9fd3a44330ac1a7fcef2920032472  $build_dir/index.pck" | sha256sum -c -
 
-          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.26-to-v0.30-minimap-tutorial.xdelta.part* \
-            > "$RUNNER_TEMP/v0.26-to-v0.30-minimap-tutorial.xdelta"
-          echo "642d9b098dda1cd0018c9200e62f4296d0bdecfd30b5dc125b6a3ccbc80c4c03  $RUNNER_TEMP/v0.26-to-v0.30-minimap-tutorial.xdelta" | sha256sum -c -
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.26-to-v0.31-transparent-tutorial.xdelta.part* \
+            > "$RUNNER_TEMP/v0.26-to-v0.31-transparent-tutorial.xdelta"
+          echo "50461dd3799a6dc9e80d3b3c3ea2c5bc333a8fe9bfd150b6441cd21d3e2971de  $RUNNER_TEMP/v0.26-to-v0.31-transparent-tutorial.xdelta" | sha256sum -c -
 
           curl -L --fail --retry 4 --retry-all-errors \
             https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
@@ -76,10 +79,10 @@ jobs:
 
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$build_dir/index.pck" \
-            "$RUNNER_TEMP/v0.26-to-v0.30-minimap-tutorial.xdelta" \
-            "$RUNNER_TEMP/v0.30-index.pck"
-          mv "$RUNNER_TEMP/v0.30-index.pck" "$build_dir/index.pck"
-          echo "7f7a664770ed8d990ad8ce3b55b8e049c5289a051dfa1902e926dc2440001328  $build_dir/index.pck" | sha256sum -c -
+            "$RUNNER_TEMP/v0.26-to-v0.31-transparent-tutorial.xdelta" \
+            "$RUNNER_TEMP/v0.31-index.pck"
+          mv "$RUNNER_TEMP/v0.31-index.pck" "$build_dir/index.pck"
+          echo "d20f9cda1e781dbfa18cc8669cdcb83aaaa3bdaefeb6279558325ae486de184e  $build_dir/index.pck" | sha256sum -c -
 
           python3 - "$build_dir/index.html" <<'PY'
           from pathlib import Path
@@ -92,12 +95,12 @@ jobs:
               raise SystemExit("unexpected v0.26 PCK size marker")
           if html.count(old_badge) != 1:
               raise SystemExit("unexpected v0.26 build label")
-          html = html.replace(old_size, '"index.pck":64587308', 1)
-          html = html.replace(old_badge, 'v0.30.0', 1)
+          html = html.replace(old_size, '"index.pck":64586300', 1)
+          html = html.replace(old_badge, 'v0.31.0', 1)
           path.write_text(html, encoding="utf-8")
           PY
-          echo "69f90121543e32333a052057bc41dae067df7daee28096919dd4132113187aa9  $build_dir/index.html" | sha256sum -c -
-          grep -q 'v0.30.0' "$build_dir/index.html"
+          echo "40712905402c90ef942ac1f27a63ee0180dd2e1abd5f93ce57b305913c497704  $build_dir/index.html" | sha256sum -c -
+          grep -q 'v0.31.0' "$build_dir/index.html"
           grep -q '__EVER_DEEPER_WTF_DIRECTOR__' "$build_dir/wtf-director.js"
           grep -q 'pointer-events:none!important' "$build_dir/wtf-director.js"
           grep -q "root.setAttribute('inert', '')" "$build_dir/wtf-director.js"
@@ -116,7 +119,7 @@ jobs:
       - name: Upload reusable web package
         uses: actions/upload-artifact@v4
         with:
-          name: ever-deeper-v030-web-build
+          name: ever-deeper-v031-web-build
           path: ${{ runner.temp }}/ever-deeper-web
           compression-level: 0
           retention-days: 1
