@@ -1,0 +1,140 @@
+name: Deploy Ever Deeper v0.26 playtest
+
+on:
+  workflow_run:
+    workflows: ["Deploy Godot iPhone landscape v0.25"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  augment:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out playtest layer
+        uses: actions/checkout@v4
+
+      - name: Download verified v0.25 build
+        if: ${{ github.event_name == 'workflow_run' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-itch-build
+          path: ${{ runner.temp }}/ever-deeper-web
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Resolve latest successful base build for manual runs
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        id: latest
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          run_id="$(gh api 'repos/${{ github.repository }}/actions/workflows/pages.yml/runs?branch=main&status=success&per_page=1' --jq '.workflow_runs[0].id')"
+          test -n "$run_id"
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+
+      - name: Download base build for manual runs
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-itch-build
+          path: ${{ runner.temp }}/ever-deeper-web
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.latest.outputs.run_id }}
+
+      - name: Apply adaptive playtest layer
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_dir="$RUNNER_TEMP/ever-deeper-web"
+          test -f "$build_dir/index.html"
+          test -f "$build_dir/index.pck"
+          test -f "$build_dir/index.wasm"
+          node --check .github/itch-patch/wtf-director.js
+          cp .github/itch-patch/wtf-director.js "$build_dir/wtf-director.js"
+          python3 - "$build_dir/index.html" <<'PY'
+          from pathlib import Path
+          import sys
+          path = Path(sys.argv[1])
+          html = path.read_text(encoding='utf-8')
+          tag = '<script src="wtf-director.js"></script>'
+          if tag not in html:
+              if '</body>' not in html:
+                  raise SystemExit('index.html has no closing body tag')
+              html = html.replace('</body>', f'\t\t{tag}\n\t</body>', 1)
+          path.write_text(html, encoding='utf-8')
+          PY
+          grep -q '<script src="wtf-director.js"></script>' "$build_dir/index.html"
+          grep -q '__EVER_DEEPER_WTF_DIRECTOR__' "$build_dir/wtf-director.js"
+          test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 10
+
+      - name: Upload GitHub Pages package
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/ever-deeper-web
+
+      - name: Upload itch package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-v026-itch-build
+          path: ${{ runner.temp }}/ever-deeper-web
+          compression-level: 0
+          retention-days: 1
+
+  deploy-pages:
+    needs: augment
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  deploy-itch:
+    needs: augment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download itch package
+        uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-v026-itch-build
+          path: ${{ runner.temp }}/ever-deeper-web
+
+      - name: Install official itch.io Butler
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/butler"
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://github.com/itchio/butler/releases/download/v15.30.0/butler-linux-amd64.zip \
+            -o "$RUNNER_TEMP/butler.zip"
+          echo "f2cae7d24eba0605048f71d0cc056f65c3b7ff9f73724f504c731cf3645bef08  $RUNNER_TEMP/butler.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/butler.zip" -d "$RUNNER_TEMP/butler"
+          chmod +x "$RUNNER_TEMP/butler/linux-amd64/butler"
+          "$RUNNER_TEMP/butler/linux-amd64/butler" version
+
+      - name: Publish v0.26 playtest to itch.io
+        shell: bash
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "${BUTLER_API_KEY:-}"
+          "$RUNNER_TEMP/butler/linux-amd64/butler" push \
+            "$RUNNER_TEMP/ever-deeper-web" \
+            corpax88/ever-deeper-playtest:html5 \
+            --userversion 0.26.0-adaptive-playtest-1
