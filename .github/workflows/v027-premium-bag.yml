@@ -1,0 +1,165 @@
+name: Deploy Ever Deeper v0.27 premium bag
+
+on:
+  workflow_run:
+    workflows: ["Deploy Ever Deeper v0.26 playtest"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages-v027"
+  cancel-in-progress: true
+
+jobs:
+  patch:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out v0.27 patch
+        uses: actions/checkout@v4
+
+      - name: Download verified v0.26 build
+        if: ${{ github.event_name == 'workflow_run' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-v026-itch-build
+          path: ${{ runner.temp }}/ever-deeper-web
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Resolve latest successful v0.26 build for manual runs
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        id: latest
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          run_id="$(gh api 'repos/${{ github.repository }}/actions/workflows/v026-playtest.yml/runs?branch=main&status=success&per_page=1' --jq '.workflow_runs[0].id')"
+          test -n "$run_id"
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+
+      - name: Download v0.26 build for manual runs
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-v026-itch-build
+          path: ${{ runner.temp }}/ever-deeper-web
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.latest.outputs.run_id }}
+
+      - name: Apply verified v0.27 premium bag patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_dir="$RUNNER_TEMP/ever-deeper-web"
+          tool_dir="$RUNNER_TEMP/tools"
+          mkdir -p "$tool_dir"
+          test -f "$build_dir/index.html"
+          test -f "$build_dir/index.pck"
+          test -f "$build_dir/wtf-director.js"
+          echo "6eaa7d0c72e5dc99c57d1a72fa13511ee0c9fd3a44330ac1a7fcef2920032472  $build_dir/index.pck" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.26-to-v0.27-premium-bag.xdelta.part* \
+            > "$RUNNER_TEMP/v0.26-to-v0.27-premium-bag.xdelta"
+          echo "f1964984a2e1721cb9056ebe313274f162be258c462c8447032a59a43e58d2ff  $RUNNER_TEMP/v0.26-to-v0.27-premium-bag.xdelta" | sha256sum -c -
+
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
+            -o "$tool_dir/xdelta3.tar.gz"
+          echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
+          tar --no-same-owner -xzf "$tool_dir/xdelta3.tar.gz" -C "$tool_dir"
+          chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$build_dir/index.pck" \
+            "$RUNNER_TEMP/v0.26-to-v0.27-premium-bag.xdelta" \
+            "$RUNNER_TEMP/v0.27-index.pck"
+          mv "$RUNNER_TEMP/v0.27-index.pck" "$build_dir/index.pck"
+          echo "4a10b29b3dcc537d1cf62adadcb99a223445a4b93c1445a54213f8bb01e82365  $build_dir/index.pck" | sha256sum -c -
+
+          python3 - "$build_dir/index.html" <<'PY'
+          from pathlib import Path
+          import sys
+          path = Path(sys.argv[1])
+          html = path.read_text(encoding="utf-8")
+          old_size = '"index.pck":64698616'
+          old_badge = 'v0.26.0 · WTF-2'
+          if html.count(old_size) != 1:
+              raise SystemExit("unexpected v0.26 PCK size marker")
+          if html.count(old_badge) != 1:
+              raise SystemExit("unexpected v0.26 build label")
+          html = html.replace(old_size, '"index.pck":63437876', 1)
+          html = html.replace(old_badge, 'v0.27.0', 1)
+          path.write_text(html, encoding="utf-8")
+          PY
+          echo "e10b7aa35f0cdd01adbe5f1af51ffb89b0c8af8411f687d42b677dc002fa437a  $build_dir/index.html" | sha256sum -c -
+          grep -q 'v0.27.0' "$build_dir/index.html"
+          grep -q '__EVER_DEEPER_WTF_DIRECTOR__' "$build_dir/wtf-director.js"
+          node --check "$build_dir/wtf-director.js"
+          test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 10
+
+      - name: Upload GitHub Pages package
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/ever-deeper-web
+
+      - name: Upload itch package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-v027-itch-build
+          path: ${{ runner.temp }}/ever-deeper-web
+          compression-level: 0
+          retention-days: 1
+
+  deploy-pages:
+    needs: patch
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  deploy-itch:
+    needs: patch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download itch package
+        uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-v027-itch-build
+          path: ${{ runner.temp }}/ever-deeper-web
+
+      - name: Install official itch.io Butler
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/butler"
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://github.com/itchio/butler/releases/download/v15.30.0/butler-linux-amd64.zip \
+            -o "$RUNNER_TEMP/butler.zip"
+          echo "f2cae7d24eba0605048f71d0cc056f65c3b7ff9f73724f504c731cf3645bef08  $RUNNER_TEMP/butler.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/butler.zip" -d "$RUNNER_TEMP/butler"
+          chmod +x "$RUNNER_TEMP/butler/linux-amd64/butler"
+          "$RUNNER_TEMP/butler/linux-amd64/butler" version
+
+      - name: Publish v0.27 premium bag build to itch.io
+        shell: bash
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "${BUTLER_API_KEY:-}"
+          "$RUNNER_TEMP/butler/linux-amd64/butler" push \
+            "$RUNNER_TEMP/ever-deeper-web" \
+            corpax88/ever-deeper-playtest:html5 \
+            --userversion 0.27.0-premium-bag
