@@ -70,6 +70,16 @@ jobs:
           path = Path(sys.argv[1])
           html = path.read_text(encoding='utf-8')
           tag = '<script src="wtf-director.js"></script>'
+          badge = '<div id="ed-build-label" aria-hidden="true">v0.26.0 · WTF-1</div>'
+          badge_style = '<style>#ed-build-label{position:fixed;right:max(10px,env(safe-area-inset-right,0px));bottom:max(8px,env(safe-area-inset-bottom,0px));z-index:69;pointer-events:none;color:rgba(255,244,216,.48);font:700 10px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.08em;text-shadow:0 1px 3px #000}</style>'
+          if badge_style not in html:
+              if '</head>' not in html:
+                  raise SystemExit('index.html has no closing head tag')
+              html = html.replace('</head>', f'\t\t{badge_style}\n\t</head>', 1)
+          if badge not in html:
+              if '</body>' not in html:
+                  raise SystemExit('index.html has no closing body tag')
+              html = html.replace('</body>', f'\t\t{badge}\n\t</body>', 1)
           if tag not in html:
               if '</body>' not in html:
                   raise SystemExit('index.html has no closing body tag')
@@ -77,6 +87,7 @@ jobs:
           path.write_text(html, encoding='utf-8')
           PY
           grep -q '<script src="wtf-director.js"></script>' "$build_dir/index.html"
+          grep -q 'v0.26.0 · WTF-1' "$build_dir/index.html"
           grep -q '__EVER_DEEPER_WTF_DIRECTOR__' "$build_dir/wtf-director.js"
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 10
 
