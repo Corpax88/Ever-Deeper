@@ -1,0 +1,30 @@
+name: Export verified xdelta tool
+
+on:
+  push:
+    branches: ["tooling/godot-4-7-2-export"]
+    paths: [".github/workflows/export-xdelta-tool.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download verified xdelta3
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
+            -o "$RUNNER_TEMP/xdelta3.tar.gz"
+          echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $RUNNER_TEMP/xdelta3.tar.gz" | sha256sum -c -
+      - name: Upload verified xdelta3
+        uses: actions/upload-artifact@v4
+        with:
+          name: xdelta3-3.2.0-linux
+          path: ${{ runner.temp }}/xdelta3.tar.gz
+          compression-level: 0
+          retention-days: 1
