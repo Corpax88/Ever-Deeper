@@ -1,6 +1,9 @@
-name: Deploy Ever Deeper v0.28 scale and clean drops
+name: Deploy Ever Deeper v0.29 sprite-only touch-safe
 
 on:
+  workflow_run:
+    workflows: ["Deploy Ever Deeper v0.26 playtest"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -10,18 +13,28 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages-v028"
+  group: "pages-v029"
   cancel-in-progress: true
 
 jobs:
   patch:
-    if: ${{ github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check out v0.28 patch
+      - name: Check out v0.29 patch
         uses: actions/checkout@v4
 
+      - name: Download verified v0.26 build
+        if: ${{ github.event_name == 'workflow_run' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-v026-web-build
+          path: ${{ runner.temp }}/ever-deeper-web
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
       - name: Resolve latest successful v0.26 build for manual runs
+        if: ${{ github.event_name == 'workflow_dispatch' }}
         id: latest
         shell: bash
         env:
@@ -33,6 +46,7 @@ jobs:
           echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
 
       - name: Download v0.26 build for manual runs
+        if: ${{ github.event_name == 'workflow_dispatch' }}
         uses: actions/download-artifact@v4
         with:
           name: ever-deeper-v026-web-build
@@ -40,7 +54,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ steps.latest.outputs.run_id }}
 
-      - name: Apply verified v0.28 scale and clean-drop patch
+      - name: Apply verified v0.29 sprite-only touch-safe patch
         shell: bash
         run: |
           set -euo pipefail
@@ -52,9 +66,9 @@ jobs:
           test -f "$build_dir/wtf-director.js"
           echo "6eaa7d0c72e5dc99c57d1a72fa13511ee0c9fd3a44330ac1a7fcef2920032472  $build_dir/index.pck" | sha256sum -c -
 
-          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.26-to-v0.28-scale-clean-drops.xdelta.part* \
-            > "$RUNNER_TEMP/v0.26-to-v0.28-scale-clean-drops.xdelta"
-          echo "d8f8bb36aeb94bc79730c678dedd1f5b44cb4189c0f4faedff0fbfb3dfe913ec  $RUNNER_TEMP/v0.26-to-v0.28-scale-clean-drops.xdelta" | sha256sum -c -
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.26-to-v0.29-sprite-only-touch-safe.xdelta.part* \
+            > "$RUNNER_TEMP/v0.26-to-v0.29-sprite-only-touch-safe.xdelta"
+          echo "241dd9b4fb554389c30c2795ffb3b61efd857cae5644975a61a6d3e229f83c99  $RUNNER_TEMP/v0.26-to-v0.29-sprite-only-touch-safe.xdelta" | sha256sum -c -
 
           curl -L --fail --retry 4 --retry-all-errors \
             https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
@@ -65,10 +79,10 @@ jobs:
 
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$build_dir/index.pck" \
-            "$RUNNER_TEMP/v0.26-to-v0.28-scale-clean-drops.xdelta" \
-            "$RUNNER_TEMP/v0.28-index.pck"
-          mv "$RUNNER_TEMP/v0.28-index.pck" "$build_dir/index.pck"
-          echo "804bbd4d939009fb73498dbe3942aaf2def22e4ee07c286365e66192f227f3ba  $build_dir/index.pck" | sha256sum -c -
+            "$RUNNER_TEMP/v0.26-to-v0.29-sprite-only-touch-safe.xdelta" \
+            "$RUNNER_TEMP/v0.29-index.pck"
+          mv "$RUNNER_TEMP/v0.29-index.pck" "$build_dir/index.pck"
+          echo "90791898ec8c62286fdda576bd296d5b94931171004c926d9e82504eed61ef3c  $build_dir/index.pck" | sha256sum -c -
 
           python3 - "$build_dir/index.html" <<'PY'
           from pathlib import Path
@@ -81,13 +95,19 @@ jobs:
               raise SystemExit("unexpected v0.26 PCK size marker")
           if html.count(old_badge) != 1:
               raise SystemExit("unexpected v0.26 build label")
-          html = html.replace(old_size, '"index.pck":63740668', 1)
-          html = html.replace(old_badge, 'v0.28.0', 1)
+          html = html.replace(old_size, '"index.pck":63740156', 1)
+          html = html.replace(old_badge, 'v0.29.0', 1)
           path.write_text(html, encoding="utf-8")
           PY
-          echo "287edf6d1e36d585c754c1d68f7de0f3da1d90299194d54658e29bef60e7b3ba  $build_dir/index.html" | sha256sum -c -
-          grep -q 'v0.28.0' "$build_dir/index.html"
+          echo "94c458b6303d0f74a752fd1da31c18de5efbc73f158023964f5a18f7ff373c79  $build_dir/index.html" | sha256sum -c -
+          grep -q 'v0.29.0' "$build_dir/index.html"
           grep -q '__EVER_DEEPER_WTF_DIRECTOR__' "$build_dir/wtf-director.js"
+          grep -q 'pointer-events:none!important' "$build_dir/wtf-director.js"
+          grep -q "root.setAttribute('inert', '')" "$build_dir/wtf-director.js"
+          if grep -q 'background:rgba(3,7,5,.93)' "$build_dir/wtf-director.js"; then
+            echo "opaque WTF message panel still present" >&2
+            exit 1
+          fi
           node --check "$build_dir/wtf-director.js"
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 10
 
@@ -99,7 +119,7 @@ jobs:
       - name: Upload reusable web package
         uses: actions/upload-artifact@v4
         with:
-          name: ever-deeper-v028-web-build
+          name: ever-deeper-v029-web-build
           path: ${{ runner.temp }}/ever-deeper-web
           compression-level: 0
           retention-days: 1

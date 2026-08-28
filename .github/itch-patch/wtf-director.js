@@ -8,12 +8,14 @@ const STORAGE_KEY = 'ever_deeper_wtf_director_v1';
 const root = document.createElement('div');
 root.id = 'ed-wtf-root';
 root.setAttribute('aria-hidden', 'true');
-root.style.cssText = ['position:fixed','inset:0','z-index:70','pointer-events:none','overflow:hidden','font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif'].join(';');
+root.setAttribute('inert', '');
+root.style.cssText = ['position:fixed','inset:0','z-index:70','pointer-events:none!important','overflow:hidden','font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif'].join(';');
 document.body.appendChild(root);
 
 const style = document.createElement('style');
 style.textContent = `
-#ed-wtf-root .ed-wtf-msg{position:absolute;max-width:min(78vw,620px);padding:12px 17px;border-radius:12px;background:rgba(3,7,5,.93);border:2px solid rgba(255,222,143,.58);color:rgba(255,248,229,.99);font-size:clamp(15px,2.15vw,20px);font-weight:800;letter-spacing:.035em;line-height:1.3;text-shadow:0 2px 6px #000;box-shadow:0 10px 34px rgba(0,0,0,.68),0 0 20px rgba(255,214,120,.08);opacity:0;transform:translateY(8px);transition:opacity .28s ease,transform .28s ease}
+#ed-wtf-root,#ed-wtf-root *{pointer-events:none!important;touch-action:none!important;user-select:none!important;-webkit-user-select:none!important}
+#ed-wtf-root .ed-wtf-msg{position:absolute;max-width:min(78vw,620px);padding:0;border-radius:0;background:transparent;border:0;color:rgba(255,248,229,.99);font-size:clamp(15px,2.15vw,20px);font-weight:800;letter-spacing:.035em;line-height:1.3;text-shadow:0 2px 6px #000;box-shadow:none;opacity:0;transform:translateY(8px);transition:opacity .28s ease,transform .28s ease}
 #ed-wtf-root .ed-wtf-msg.show{opacity:1;transform:translateY(0)}
 #ed-wtf-root .ed-wtf-whisper{position:absolute;color:rgba(255,244,216,.78);font-size:clamp(12px,1.55vw,16px);font-weight:750;letter-spacing:.12em;text-transform:uppercase;text-shadow:0 2px 6px #000,0 0 12px rgba(0,0,0,.8);opacity:0;transition:opacity .55s ease}
 #ed-wtf-root .ed-wtf-whisper.show{opacity:1}
@@ -69,7 +71,7 @@ function message(text, where='bottom', ttl=4600) {
   ttl = Math.max(ttl, 4200);
   const el = document.createElement('div'); el.className = 'ed-wtf-msg'; el.textContent = text;
   const x = where === 'left' ? 5 : where === 'right' ? 95 : 50;
-  el.style.left = `${x}%`; el.style.bottom = where === 'top' ? 'auto' : 'max(12vh, calc(env(safe-area-inset-bottom, 0px) + 58px))';
+  el.style.left = `${x}%`; el.style.bottom = where === 'top' ? 'auto' : 'max(32vh, calc(env(safe-area-inset-bottom, 0px) + 140px))';
   if (where === 'top') el.style.top = 'max(10vh, calc(env(safe-area-inset-top, 0px) + 44px))';
   el.style.transform = `translate(${x === 50 ? '-50%' : x > 50 ? '-100%' : '0'},8px)`;
   add(el, ttl + 650);
