@@ -1,0 +1,280 @@
+	var variance := _variance_recent(intervals, avg, 10)
+	var reaction_avg := _average_recent(reaction_times, 8)
+
+	if intervals.size() >= 6 and avg < 0.20 and variance < 0.006:
+		current_profile = "AUTOCLICKER"
+	elif avg > 0.0 and avg < 0.43:
+		current_profile = "SPAMMER"
+	elif avg > 1.65:
+		current_profile = "HESITATOR"
+	elif miss_rate > 0.25:
+		current_profile = "MISCLICKER"
+	elif attempts >= 10 and miss_rate < 0.07 and reaction_avg > 0.0 and reaction_avg < 0.72:
+		current_profile = "SURGEON"
+	elif intervals.size() >= 6 and variance < 0.018:
+		current_profile = "RHYTHMIC"
+	else:
+		current_profile = "HUMAN"
+
+func _average_recent(values: Array[float], amount: int) -> float:
+	if values.is_empty():
+		return 0.0
+	var start := maxi(0, values.size() - amount)
+	var total := 0.0
+	var count := 0
+	for i in range(start, values.size()):
+		total += values[i]
+		count += 1
+	return total / maxi(1, count)
+
+func _variance_recent(values: Array[float], avg: float, amount: int) -> float:
+	if values.size() < 2:
+		return 999.0
+	var start := maxi(0, values.size() - amount)
+	var total := 0.0
+	var count := 0
+	for i in range(start, values.size()):
+		var d := values[i] - avg
+		total += d * d
+		count += 1
+	return total / maxi(1, count)
+
+func _reaction_for_success() -> String:
+	if successes == 1: return "Okay. One."
+	if successes == 2: return "You can still stop."
+	if successes == 3: return "No? Fine."
+	if successes == 7: return "I'm getting a read on you."
+	if successes == 17: return "You have habits."
+	if successes == 41: return "I know what you hate now."
+	if successes == 100: return "100. This is now a relationship."
+	if successes == 250: return "I genuinely expected you to leave."
+	if successes % 53 == 0: return "That number felt important. It wasn't."
+	match current_profile:
+		"SPAMMER": return _pick_fresh(["Fast.", "Predictable finger.", "Again before thinking. Classic."])
+		"HESITATOR": return _pick_fresh(["Eventually.", "You really considered that one.", "Decision made."])
+		"MISCLICKER": return _pick_fresh(["You found me.", "Accuracy achieved.", "Against the odds."])
+		"SURGEON": return _pick_fresh(["Too clean.", "Precise. Annoying.", "You're making this difficult."])
+		"RHYTHMIC": return _pick_fresh(["Same beat again.", "I hear the pattern.", "Nice rhythm."])
+		_:
+			return _pick_fresh(["Again?", "Noted.", "Rude.", "Fine.", "I felt that.", "You're still here.", "Keep going then."])
+
+func _counter_line(kind: String) -> String:
+	match current_profile:
+		"AUTOCLICKER": return _pick_fresh(["That rhythm is suspicious.", "Let's break the machine rhythm.", "Cute pattern."])
+		"SPAMMER": return _pick_fresh(["Fast finger. New problem.", "You like speed. I noticed.", "Let's slow that down."])
+		"HESITATOR": return _pick_fresh(["Thinking again?", "Take your time. Actually don't.", "You wait. I move."])
+		"MISCLICKER": return _pick_fresh(["Accuracy isn't really your thing.", "Need more targets?", "Let's test that aim."])
+		"SURGEON": return _pick_fresh(["Perfect aim is boring.", "Precise? Fixable.", "Let's make it smaller."])
+		"RHYTHMIC": return _pick_fresh(["I know the beat now.", "Pattern detected.", "Let's ruin your timing."])
+		_:
+			match kind:
+				"move": return _pick_fresh(["New location.", "Find me.", "Over here."])
+				"tiny": return _pick_fresh(["Still easy?", "Smaller.", "Eyes open."])
+				"decoys": return _pick_fresh(["Which one?", "Pick carefully.", "They're all very convincing."])
+				"bounce": return _pick_fresh(["Catch.", "Moving target.", "Go on."])
+				"spam": return _pick_fresh(["Slowly.", "Control yourself.", "One thoughtful press."])
+				_: return "New rule."
+
+func _hesitation_line() -> String:
+	return _pick_fresh(["Still there?", "I can wait longer than you.", "This is getting awkward.", "Did your finger fall asleep?", "You're overthinking a button."])
+
+func _memory_line() -> String:
+	if current_profile == "SPAMMER": return "You always get faster when you're annoyed."
+	if current_profile == "HESITATOR": return "You pause longer after I move."
+	if current_profile == "MISCLICKER": return "I've counted the misses. You don't want the number."
+	if current_profile == "SURGEON": return "Your accuracy is becoming inconvenient."
+	if best_streak > 8: return "Your best streak is %d. I remember." % best_streak
+	return "I remember more than the counter does."
+
+func _update_hud() -> void:
+	count_label.text = "WINS  %d" % successes
+	read_label.text = "READ  %s" % current_profile
+	chaos_label.text = "STREAK  %d" % streak
+
+func _say(line: String) -> void:
+	if speech == null or line == "":
+		return
+	speech.text = line
+	var tween := create_tween()
+	speech.modulate.a = 0.32
+	tween.tween_property(speech, "modulate:a", 1.0, 0.11)
+
+func _pick_fresh(values: Array) -> String:
+	var candidates: Array = []
+	for value in values:
+		if not recent_lines.has(str(value)):
+			candidates.append(value)
+	if candidates.is_empty():
+		candidates = values
+	var line := str(candidates[rng.randi_range(0, candidates.size() - 1)])
+	recent_lines.append(line)
+	if recent_lines.size() > 8:
+		recent_lines.pop_front()
+	return line
+
+func _punch_button() -> void:
+	main_button.pivot_offset = main_button.size * 0.5
+	var tween := create_tween()
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(main_button, "scale", main_button.scale * 0.88, 0.055)
+	tween.tween_property(main_button, "scale", Vector2.ONE, 0.17)
+
+func _spawn_impact() -> void:
+	var pop := Label.new()
+	pop.text = _pick(["+1", "HA", "NO", "WHY", "OK", "HM"])
+	pop.add_theme_font_size_override("font_size", 29)
+	pop.add_theme_color_override("font_color", accent)
+	pop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	arena.add_child(pop)
+	pop.global_position = main_button.global_position + Vector2(main_button.size.x * 0.55, -10)
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(pop, "position:y", pop.position.y - 78, 0.48)
+	tween.tween_property(pop, "modulate:a", 0.0, 0.48)
+	tween.chain().tween_callback(pop.queue_free)
+
+func _clear_decoys() -> void:
+	for decoy in decoys:
+		if is_instance_valid(decoy):
+			decoy.queue_free()
+	decoys.clear()
+
+func _clear_extras() -> void:
+	for node in extra_labels:
+		if is_instance_valid(node):
+			node.queue_free()
+	extra_labels.clear()
+	speech.modulate = Color.WHITE
+	title_label.text = "THE BUTTON"
+
+func _teleport_button() -> void:
+	_place_random(main_button)
+
+func _place_random(control: Control) -> void:
+	if arena == null or arena.size.x <= 10 or arena.size.y <= 10:
+		return
+	var max_x := maxf(12.0, arena.size.x - control.size.x - 18.0)
+	var max_y := maxf(12.0, arena.size.y - control.size.y - 18.0)
+	control.position = Vector2(rng.randf_range(14.0, max_x), rng.randf_range(14.0, max_y))
+
+func _place_button_center() -> void:
+	if arena == null or main_button == null:
+		return
+	main_button.position = (arena.size - main_button.size) * 0.5
+
+func _place_in_corner() -> void:
+	var margin := 16.0
+	var positions := [
+		Vector2(margin, margin),
+		Vector2(maxf(margin, arena.size.x - main_button.size.x - margin), margin),
+		Vector2(margin, maxf(margin, arena.size.y - main_button.size.y - margin)),
+		Vector2(maxf(margin, arena.size.x - main_button.size.x - margin), maxf(margin, arena.size.y - main_button.size.y - margin))
+	]
+	main_button.position = positions[rng.randi_range(0, positions.size() - 1)]
+
+func _move_bouncing(delta: float) -> void:
+	if arena.size.x <= 10 or arena.size.y <= 10:
+		return
+	main_button.position += bounce_velocity * delta
+	var limit := arena.size - main_button.size
+	if main_button.position.x <= 10:
+		main_button.position.x = 10
+		bounce_velocity.x = abs(bounce_velocity.x)
+	elif main_button.position.x >= limit.x - 10:
+		main_button.position.x = limit.x - 10
+		bounce_velocity.x = -abs(bounce_velocity.x)
+	if main_button.position.y <= 10:
+		main_button.position.y = 10
+		bounce_velocity.y = abs(bounce_velocity.y)
+	elif main_button.position.y >= limit.y - 10:
+		main_button.position.y = limit.y - 10
+		bounce_velocity.y = -abs(bounce_velocity.y)
+
+func _on_viewport_changed() -> void:
+	_clamp_button_to_arena()
+
+func _clamp_button_to_arena() -> void:
+	if arena == null or main_button == null:
+		return
+	var limit := arena.size - main_button.size
+	main_button.position.x = clamp(main_button.position.x, 8.0, maxf(8.0, limit.x - 8.0))
+	main_button.position.y = clamp(main_button.position.y, 8.0, maxf(8.0, limit.y - 8.0))
+
+func _stat_seen(name: String) -> void:
+	if not behavior_stats.has(name): return
+	behavior_stats[name]["seen"] = int(behavior_stats[name].get("seen", 0)) + 1
+
+func _stat_ok(name: String) -> void:
+	if not behavior_stats.has(name): return
+	behavior_stats[name]["ok"] = int(behavior_stats[name].get("ok", 0)) + 1
+
+func _stat_fail(name: String) -> void:
+	if not behavior_stats.has(name): return
+	behavior_stats[name]["fail"] = int(behavior_stats[name].get("fail", 0)) + 1
+
+func _save_memory() -> void:
+	var data := {
+		"successes": successes,
+		"attempts": attempts,
+		"misses": misses,
+		"best_streak": best_streak,
+		"intervals": intervals.slice(maxi(0, intervals.size() - 18), intervals.size()),
+		"reaction_times": reaction_times.slice(maxi(0, reaction_times.size() - 12), reaction_times.size()),
+		"behavior_stats": behavior_stats,
+		"seen_rare": seen_rare,
+	}
+	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	if file:
+		file.store_string(JSON.stringify(data))
+
+func _load_memory() -> void:
+	if not FileAccess.file_exists(SAVE_PATH):
+		return
+	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	if file == null:
+		return
+	var parsed = JSON.parse_string(file.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return
+	successes = int(parsed.get("successes", 0))
+	attempts = int(parsed.get("attempts", 0))
+	misses = int(parsed.get("misses", 0))
+	best_streak = int(parsed.get("best_streak", 0))
+	intervals.clear()
+	for value in parsed.get("intervals", []): intervals.append(float(value))
+	reaction_times.clear()
+	for value in parsed.get("reaction_times", []): reaction_times.append(float(value))
+	var loaded_stats = parsed.get("behavior_stats", {})
+	if typeof(loaded_stats) == TYPE_DICTIONARY:
+		for name in behaviors:
+			if loaded_stats.has(name) and typeof(loaded_stats[name]) == TYPE_DICTIONARY:
+				behavior_stats[name] = loaded_stats[name]
+	var loaded_rare = parsed.get("seen_rare", {})
+	if typeof(loaded_rare) == TYPE_DICTIONARY:
+		seen_rare = loaded_rare
+	returning_player = successes > 0
+	_update_profile()
+
+func _forget_everything() -> void:
+	if FileAccess.file_exists(SAVE_PATH):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_PATH))
+	successes = 0
+	attempts = 0
+	misses = 0
+	streak = 0
+	best_streak = 0
+	intervals.clear()
+	reaction_times.clear()
+	recent_behaviors.clear()
+	recent_lines.clear()
+	seen_rare.clear()
+	_init_stats()
+	current_profile = "UNKNOWN"
+	last_attempt_ms = 0
+	last_success_ms = 0
+	_cleanup_challenge()
+	_update_hud()
+	_say("Who are you?")
+	_compose_next(false)
+

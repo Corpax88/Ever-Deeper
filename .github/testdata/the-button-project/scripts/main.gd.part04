@@ -1,0 +1,2 @@
+func _pick(values: Array) -> String:
+	return str(values[rng.randi_range(0, values.size() - 1)])

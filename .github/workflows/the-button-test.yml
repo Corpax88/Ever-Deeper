@@ -15,14 +15,18 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Verify exact prototype artifact
+      - name: Reconstruct exact Godot project
         shell: bash
         run: |
           set -euo pipefail
-          cp .github/testdata/the-button-adaptive.zip "$RUNNER_TEMP/the-button.zip"
-          echo "cb9837bd47bd4f8832dc921a6c9a0118c33d01ab062359de9b6c081fec75f55b  $RUNNER_TEMP/the-button.zip" | sha256sum -c -
-          unzip -q "$RUNNER_TEMP/the-button.zip" -d "$RUNNER_TEMP/prototype"
-          test -f "$RUNNER_TEMP/prototype/the-button-prototype/project.godot"
+          PROJ="$RUNNER_TEMP/the-button-prototype"
+          mkdir -p "$PROJ/scripts"
+          cp .github/testdata/the-button-project/project.godot "$PROJ/project.godot"
+          cp .github/testdata/the-button-project/main.tscn "$PROJ/main.tscn"
+          cat .github/testdata/the-button-project/scripts/main.gd.part* > "$PROJ/scripts/main.gd"
+          echo "341a0a9d60b4b7e00125c56b41fcee5dfc987035dfaef25a03d1f29370579dcf  $PROJ/project.godot" | sha256sum -c -
+          echo "2c2f3bb1b1a610ad695f4a05dd6012033ce6dc0c6a158824d4d7db1ff64ad5f4  $PROJ/main.tscn" | sha256sum -c -
+          echo "32b892ce77ecca2c544dbf2ab8f02e0eedcceb1b4c2d3a126a7572980ae866d5  $PROJ/scripts/main.gd" | sha256sum -c -
 
       - name: Download Godot 4.7.2 stable
         shell: bash
@@ -40,7 +44,7 @@ jobs:
         run: |
           set -euo pipefail
           GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
-          PROJ="$RUNNER_TEMP/prototype/the-button-prototype"
+          PROJ="$RUNNER_TEMP/the-button-prototype"
           "$GODOT" --headless --path "$PROJ" --editor --quit 2>&1 | tee "$RUNNER_TEMP/editor.log"
           ! grep -E 'SCRIPT ERROR|Parse Error' "$RUNNER_TEMP/editor.log"
           "$GODOT" --headless --path "$PROJ" --quit-after 2 2>&1 | tee "$RUNNER_TEMP/boot.log"
@@ -51,7 +55,7 @@ jobs:
         run: |
           set -euo pipefail
           GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
-          PROJ="$RUNNER_TEMP/prototype/the-button-prototype"
+          PROJ="$RUNNER_TEMP/the-button-prototype"
           mkdir -p "$PROJ/tests"
           cp .github/testdata/the-button-self-test.gd "$PROJ/tests/self_test.gd"
           set +e

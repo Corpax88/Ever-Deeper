@@ -1,0 +1,280 @@
+extends Control
+
+# THE BUTTON — adaptive build.
+# Every successful interaction re-scores the player and composes a fresh challenge.
+
+const SAVE_PATH := "user://the_button_save.json"
+const BASE_BUTTON_SIZE := Vector2(350.0, 180.0)
+const MIN_BUTTON_SIZE := Vector2(86.0, 52.0)
+const DOUBLE_WINDOW_MS := 430
+const HOLD_MIN := 0.78
+const HOLD_MAX := 1.28
+
+var rng := RandomNumberGenerator.new()
+
+var background: ColorRect
+var title_label: Label
+var subtitle_label: Label
+var speech: Label
+var speech_panel: PanelContainer
+var arena: Control
+var main_button: Button
+var count_label: Label
+var read_label: Label
+var chaos_label: Label
+var forget_button: Button
+
+var successes := 0
+var attempts := 0
+var misses := 0
+var streak := 0
+var best_streak := 0
+var last_attempt_ms := 0
+var last_success_ms := 0
+var spawn_ms := 0
+var intervals: Array[float] = []
+var reaction_times: Array[float] = []
+var current_profile := "UNKNOWN"
+var returning_player := false
+
+var current_behavior := "plain"
+var current_modifiers: Array[String] = []
+var recent_behaviors: Array[String] = []
+var recent_lines: Array[String] = []
+var behavior_stats: Dictionary = {}
+var seen_rare: Dictionary = {}
+
+var hold_started_ms := 0
+var hold_target := 0.95
+var double_first_ms := 0
+var wait_allowed_ms := 0
+var wait_token := 0
+var suppress_next_pressed := false
+var dodge_escapes_left := 0
+var shrink_clicks_left := 0
+var sequence_left := 0
+var sequence_expected := 0
+var fake_lock := false
+var bounce_velocity := Vector2.ZERO
+var mode_clock := 0.0
+var pulse_clock := 0.0
+var jitter_clock := 0.0
+var decoys: Array[Button] = []
+var extra_labels: Array[Control] = []
+
+var button_normal := Color("#f4f0df")
+var button_hover := Color("#fff9e9")
+var button_pressed := Color("#d9d4c4")
+var ink := Color("#161820")
+var accent := Color("#ff4d67")
+var muted := Color("#8c92a3")
+
+var behaviors := [
+	"plain", "teleport", "tiny", "huge", "double", "hold", "decoys", "wait",
+	"bounce", "anti_spam", "dodge", "fade", "corner", "shrink", "sequence",
+	"fake_lock", "wrong_label", "moving_decoys", "late_move", "pulse_target"
+]
+
+var modifiers := [
+	"tilt", "dim", "jitter", "soft_move", "narrow", "wide", "color_shift",
+	"small_text", "quiet", "restless", "offcenter"
+]
+
+func _ready() -> void:
+	rng.randomize()
+	_init_stats()
+	_build_ui()
+	_load_memory()
+	_update_profile()
+	_update_hud()
+	get_viewport().size_changed.connect(_on_viewport_changed)
+	call_deferred("_start_session")
+
+func _init_stats() -> void:
+	for name in behaviors:
+		behavior_stats[name] = {"ok": 0, "fail": 0, "seen": 0}
+
+func _build_ui() -> void:
+	background = ColorRect.new()
+	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	background.color = Color("#0c0e15")
+	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(background)
+	move_child(background, 0)
+
+	title_label = Label.new()
+	title_label.text = "THE BUTTON"
+	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title_label.add_theme_font_size_override("font_size", 52)
+	title_label.add_theme_color_override("font_color", Color("#f7f2e8"))
+	title_label.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	title_label.offset_top = 56
+	title_label.offset_bottom = 128
+	title_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(title_label)
+
+	subtitle_label = Label.new()
+	subtitle_label.text = "it pays attention"
+	subtitle_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	subtitle_label.add_theme_font_size_override("font_size", 20)
+	subtitle_label.add_theme_color_override("font_color", muted)
+	subtitle_label.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	subtitle_label.offset_top = 126
+	subtitle_label.offset_bottom = 162
+	subtitle_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(subtitle_label)
+
+	speech_panel = PanelContainer.new()
+	speech_panel.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	speech_panel.anchor_left = 0.07
+	speech_panel.anchor_right = 0.93
+	speech_panel.offset_top = 194
+	speech_panel.offset_bottom = 318
+	speech_panel.add_theme_stylebox_override("panel", _panel_style(Color("#151823"), 28, Color("#252a38"), 2))
+	add_child(speech_panel)
+
+	speech = Label.new()
+	speech.text = "..."
+	speech.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	speech.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	speech.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	speech.add_theme_font_size_override("font_size", 29)
+	speech.add_theme_color_override("font_color", Color("#f7f2e8"))
+	speech_panel.add_child(speech)
+
+	var hud := HBoxContainer.new()
+	hud.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	hud.anchor_left = 0.06
+	hud.anchor_right = 0.94
+	hud.offset_top = 344
+	hud.offset_bottom = 404
+	hud.alignment = BoxContainer.ALIGNMENT_CENTER
+	hud.add_theme_constant_override("separation", 32)
+	add_child(hud)
+
+	count_label = _hud_label()
+	read_label = _hud_label()
+	chaos_label = _hud_label()
+	hud.add_child(count_label)
+	hud.add_child(read_label)
+	hud.add_child(chaos_label)
+
+	arena = Control.new()
+	arena.name = "Arena"
+	arena.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	arena.offset_left = 42
+	arena.offset_right = -42
+	arena.offset_top = 432
+	arena.offset_bottom = -205
+	arena.mouse_filter = Control.MOUSE_FILTER_PASS
+	arena.clip_contents = true
+	add_child(arena)
+
+	var arena_border := Panel.new()
+	arena_border.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	arena_border.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	arena_border.add_theme_stylebox_override("panel", _panel_style(Color("#10131c"), 38, Color("#202533"), 2))
+	arena.add_child(arena_border)
+
+	main_button = Button.new()
+	main_button.name = "TheButton"
+	main_button.text = "PRESS"
+	main_button.focus_mode = Control.FOCUS_NONE
+	main_button.custom_minimum_size = Vector2.ONE
+	main_button.size = BASE_BUTTON_SIZE
+	main_button.add_theme_font_size_override("font_size", 38)
+	main_button.add_theme_color_override("font_color", ink)
+	main_button.add_theme_color_override("font_hover_color", ink)
+	main_button.add_theme_color_override("font_pressed_color", ink)
+	_apply_button_style()
+	main_button.pressed.connect(_on_button_pressed)
+	main_button.button_down.connect(_on_button_down)
+	main_button.button_up.connect(_on_button_up)
+	arena.add_child(main_button)
+
+	forget_button = Button.new()
+	forget_button.text = "MAKE IT FORGET"
+	forget_button.focus_mode = Control.FOCUS_NONE
+	forget_button.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	forget_button.anchor_left = 0.31
+	forget_button.anchor_right = 0.69
+	forget_button.offset_top = -112
+	forget_button.offset_bottom = -56
+	forget_button.add_theme_font_size_override("font_size", 17)
+	forget_button.add_theme_color_override("font_color", muted)
+	forget_button.add_theme_color_override("font_hover_color", Color("#ffffff"))
+	forget_button.add_theme_stylebox_override("normal", _panel_style(Color("#0c0e15"), 16, Color("#242937"), 1))
+	forget_button.add_theme_stylebox_override("hover", _panel_style(Color("#171a24"), 16, Color("#343b4d"), 1))
+	forget_button.add_theme_stylebox_override("pressed", _panel_style(Color("#202431"), 16, Color("#343b4d"), 1))
+	forget_button.pressed.connect(_forget_everything)
+	add_child(forget_button)
+
+func _hud_label() -> Label:
+	var label := Label.new()
+	label.add_theme_font_size_override("font_size", 18)
+	label.add_theme_color_override("font_color", muted)
+	return label
+
+func _panel_style(color: Color, radius: int, border_color: Color, width: int) -> StyleBoxFlat:
+	var box := StyleBoxFlat.new()
+	box.bg_color = color
+	box.corner_radius_top_left = radius
+	box.corner_radius_top_right = radius
+	box.corner_radius_bottom_left = radius
+	box.corner_radius_bottom_right = radius
+	box.border_width_left = width
+	box.border_width_top = width
+	box.border_width_right = width
+	box.border_width_bottom = width
+	box.border_color = border_color
+	return box
+
+func _apply_button_style() -> void:
+	main_button.add_theme_stylebox_override("normal", _panel_style(button_normal, 38, Color("#ffffff"), 3))
+	main_button.add_theme_stylebox_override("hover", _panel_style(button_hover, 38, Color("#ffffff"), 4))
+	main_button.add_theme_stylebox_override("pressed", _panel_style(button_pressed, 38, Color("#ffffff"), 2))
+
+func _start_session() -> void:
+	_place_button_center()
+	spawn_ms = Time.get_ticks_msec()
+	if returning_player:
+		_say(_pick_fresh(["Oh. You came back.", "I remembered you.", "Round two? Cute.", "You again."]))
+	else:
+		_say(_pick_fresh(["Don't.", "One button. That's all.", "Go on then.", "This seems safe."]))
+	_compose_next(false)
+
+func _process(delta: float) -> void:
+	mode_clock += delta
+	pulse_clock += delta
+	jitter_clock += delta
+
+	if current_behavior == "bounce":
+		_move_bouncing(delta)
+	elif current_behavior == "late_move" and mode_clock > 0.82:
+		mode_clock = 0.0
+		_teleport_button()
+	elif current_behavior == "pulse_target":
+		var s := 1.0 + sin(pulse_clock * 5.2) * 0.14
+		main_button.scale = Vector2(s, s)
+
+	if current_modifiers.has("jitter") and jitter_clock > 0.11:
+		jitter_clock = 0.0
+		main_button.position += Vector2(rng.randf_range(-5.0, 5.0), rng.randf_range(-5.0, 5.0))
+		_clamp_button_to_arena()
+	if current_modifiers.has("restless") and mode_clock > 0.56 and current_behavior not in ["bounce", "late_move"]:
+		mode_clock = 0.0
+		_teleport_button()
+
+	if hold_started_ms > 0 and current_behavior == "hold":
+		var held := (Time.get_ticks_msec() - hold_started_ms) / 1000.0
+		main_button.text = "%d%%" % int(clamp(held / hold_target, 0.0, 1.0) * 100.0)
+
+	if last_success_ms > 0:
+		var idle_for := (Time.get_ticks_msec() - last_success_ms) / 1000.0
+		if idle_for > 6.0 and int(idle_for) % 7 == 0:
+			_say(_hesitation_line())
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_SPACE:
+		_on_button_pressed()
+		get_viewport().set_input_as_handled()

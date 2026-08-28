@@ -1,0 +1,280 @@
+		return
+
+	var pressed := false
+	var point := Vector2.ZERO
+	if event is InputEventMouseButton:
+		pressed = event.pressed and event.button_index == MOUSE_BUTTON_LEFT
+		point = event.position
+	elif event is InputEventScreenTouch:
+		pressed = event.pressed
+		point = event.position
+	if not pressed:
+		return
+	if main_button.get_global_rect().has_point(point):
+		return
+	for decoy in decoys:
+		if is_instance_valid(decoy) and decoy.get_global_rect().has_point(point):
+			return
+	_attempt_record()
+	misses += 1
+	streak = 0
+	_stat_fail(current_behavior)
+	_update_profile()
+	_update_hud()
+	if rng.randf() < 0.70:
+		_say(_pick_fresh(["That wasn't me.", "You missed a rectangle.", "Interesting aim.", "The empty space appreciates that.", "Technically, you clicked something."]))
+
+func _on_button_down() -> void:
+	if current_behavior == "dodge" and dodge_escapes_left > 0:
+		dodge_escapes_left -= 1
+		_teleport_button()
+		_say(_pick_fresh(["No.", "Almost.", "Too slow.", "Again."]))
+		return
+	if current_behavior == "hold":
+		hold_started_ms = Time.get_ticks_msec()
+		main_button.text = "HOLD"
+
+func _on_button_up() -> void:
+	if current_behavior != "hold" or hold_started_ms == 0:
+		return
+	suppress_next_pressed = true
+	var held := (Time.get_ticks_msec() - hold_started_ms) / 1000.0
+	hold_started_ms = 0
+	_attempt_record()
+	if held >= hold_target:
+		_success(_pick_fresh(["Fine.", "You can follow instructions.", "Annoyingly competent."]))
+	else:
+		misses += 1
+		streak = 0
+		_stat_fail("hold")
+		_say(_pick_fresh(["I said HOLD.", "That was a tap wearing a coat.", "Longer."]))
+		main_button.text = "HOLD"
+		_update_profile()
+		_update_hud()
+
+func _on_button_pressed() -> void:
+	if suppress_next_pressed:
+		suppress_next_pressed = false
+		return
+	if current_behavior == "hold":
+		return
+	_attempt_record()
+
+	match current_behavior:
+		"double":
+			_handle_double()
+		"anti_spam":
+			_handle_anti_spam()
+		"wait":
+			_handle_wait()
+		"fake_lock":
+			_handle_fake_lock()
+		"sequence":
+			_handle_sequence()
+		"shrink":
+			_handle_shrink()
+		_:
+			_success()
+
+func _attempt_record() -> void:
+	var now := Time.get_ticks_msec()
+	attempts += 1
+	if last_attempt_ms > 0:
+		var gap := (now - last_attempt_ms) / 1000.0
+		intervals.append(gap)
+		if intervals.size() > 30:
+			intervals.pop_front()
+	last_attempt_ms = now
+	_update_profile()
+
+func _success(custom_line: String = "") -> void:
+	var now := Time.get_ticks_msec()
+	if spawn_ms > 0:
+		reaction_times.append((now - spawn_ms) / 1000.0)
+		if reaction_times.size() > 24:
+			reaction_times.pop_front()
+	successes += 1
+	streak += 1
+	best_streak = maxi(best_streak, streak)
+	last_success_ms = now
+	_stat_ok(current_behavior)
+	if custom_line != "":
+		_say(custom_line)
+	else:
+		_say(_reaction_for_success())
+	_punch_button()
+	_spawn_impact()
+	_update_profile()
+	_update_hud()
+	_save_memory()
+	_maybe_rare_event()
+	_compose_next(true)
+
+func _compose_next(announce: bool) -> void:
+	_cleanup_challenge()
+	_update_profile()
+	current_behavior = _choose_behavior()
+	current_modifiers = _choose_modifiers(current_behavior)
+	_stat_seen(current_behavior)
+	recent_behaviors.append(current_behavior)
+	if recent_behaviors.size() > 5:
+		recent_behaviors.pop_front()
+	_prepare_behavior(announce)
+	_apply_modifiers()
+	spawn_ms = Time.get_ticks_msec()
+
+func _cleanup_challenge() -> void:
+	_clear_decoys()
+	_clear_extras()
+	wait_token += 1
+	main_button.visible = true
+	main_button.disabled = false
+	main_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	main_button.size = BASE_BUTTON_SIZE
+	main_button.scale = Vector2.ONE
+	main_button.rotation = 0.0
+	main_button.modulate = Color.WHITE
+	main_button.text = "PRESS"
+	main_button.add_theme_font_size_override("font_size", 38)
+	button_normal = Color("#f4f0df")
+	button_hover = Color("#fff9e9")
+	button_pressed = Color("#d9d4c4")
+	_apply_button_style()
+	double_first_ms = 0
+	hold_started_ms = 0
+	dodge_escapes_left = 0
+	shrink_clicks_left = 0
+	sequence_left = 0
+	sequence_expected = 0
+	fake_lock = false
+	bounce_velocity = Vector2.ZERO
+	mode_clock = 0.0
+	pulse_clock = 0.0
+	jitter_clock = 0.0
+
+func _choose_behavior() -> String:
+	var weights: Dictionary = {}
+	for name in behaviors:
+		var w := 1.0
+		var stat: Dictionary = behavior_stats[name]
+		var seen := int(stat.get("seen", 0))
+		var ok := int(stat.get("ok", 0))
+		var fail := int(stat.get("fail", 0))
+		var total := ok + fail
+		var weakness := float(fail + 1) / float(total + 2)
+		w *= 0.75 + weakness * 2.1
+		if seen == 0:
+			w *= 1.65
+		if recent_behaviors.has(name):
+			w *= 0.20
+		if not recent_behaviors.is_empty() and recent_behaviors.back() == name:
+			w *= 0.08
+		if successes < 3 and name not in ["plain", "teleport", "tiny", "double", "hold"]:
+			w *= 0.28
+		match current_profile:
+			"AUTOCLICKER":
+				if name in ["anti_spam", "wait", "dodge", "late_move", "sequence"]: w *= 3.0
+			"SPAMMER":
+				if name in ["anti_spam", "dodge", "wait", "bounce", "sequence"]: w *= 2.5
+			"HESITATOR":
+				if name in ["teleport", "late_move", "pulse_target", "tiny"]: w *= 2.2
+			"MISCLICKER":
+				if name in ["decoys", "moving_decoys", "tiny", "corner"]: w *= 2.4
+			"SURGEON":
+				if name in ["tiny", "dodge", "moving_decoys", "bounce"]: w *= 2.4
+			"RHYTHMIC":
+				if name in ["wait", "double", "sequence", "late_move"]: w *= 2.2
+		weights[name] = maxf(0.01, w * rng.randf_range(0.82, 1.18))
+	return _weighted_pick(weights)
+
+func _choose_modifiers(behavior: String) -> Array[String]:
+	var chosen: Array[String] = []
+	var chance := clampf(0.28 + successes * 0.006, 0.28, 0.78)
+	if rng.randf() > chance:
+		return chosen
+	var candidates: Array[String] = []
+	for m in modifiers:
+		if _modifier_compatible(m, behavior):
+			candidates.append(m)
+	if candidates.is_empty():
+		return chosen
+	chosen.append(candidates[rng.randi_range(0, candidates.size() - 1)])
+	if successes > 12 and rng.randf() < 0.36:
+		var remaining := candidates.filter(func(x): return not chosen.has(x))
+		if not remaining.is_empty():
+			chosen.append(remaining[rng.randi_range(0, remaining.size() - 1)])
+	return chosen
+
+func _modifier_compatible(modifier: String, behavior: String) -> bool:
+	if modifier == "restless" and behavior in ["bounce", "late_move", "dodge", "wait"]:
+		return false
+	if modifier in ["narrow", "wide"] and behavior in ["tiny", "huge", "shrink"]:
+		return false
+	if modifier == "soft_move" and behavior in ["bounce", "late_move", "dodge"]:
+		return false
+	return true
+
+func _weighted_pick(weights: Dictionary) -> String:
+	var total := 0.0
+	for value in weights.values():
+		total += float(value)
+	var roll := rng.randf() * total
+	for key in weights.keys():
+		roll -= float(weights[key])
+		if roll <= 0.0:
+			return str(key)
+	return "plain"
+
+func _prepare_behavior(announce: bool) -> void:
+	match current_behavior:
+		"plain":
+			_place_button_center()
+			main_button.text = _pick(["PRESS", "AGAIN", "GO ON", "SURE"])
+		"teleport":
+			_teleport_button()
+			main_button.text = "PRESS"
+			if announce: _say(_counter_line("move"))
+		"tiny":
+			main_button.size = Vector2(rng.randf_range(90.0, 145.0), rng.randf_range(54.0, 82.0))
+			main_button.add_theme_font_size_override("font_size", 21)
+			_teleport_button()
+			main_button.text = "ME"
+			if announce: _say(_counter_line("tiny"))
+		"huge":
+			main_button.size = Vector2(maxf(300.0, arena.size.x * rng.randf_range(0.66, 0.90)), rng.randf_range(190.0, 280.0))
+			_place_button_center()
+			main_button.text = _pick(["ALL BUTTON", "MISS THIS", "TOO EASY?"])
+			if announce: _say(_pick_fresh(["There. Bigger.", "Surely you can't miss this.", "I made it easier. Suspiciously."]))
+		"double":
+			_place_button_center()
+			main_button.text = "TWICE"
+			if announce: _say(_pick_fresh(["Two. Quickly.", "Double.", "One won't count."]))
+		"hold":
+			_place_button_center()
+			hold_target = rng.randf_range(HOLD_MIN, HOLD_MAX)
+			main_button.text = "HOLD"
+			if announce: _say(_pick_fresh(["Hold it.", "Do not tap.", "Patience. Briefly."]))
+		"decoys":
+			_spawn_decoys(false)
+			if announce: _say(_counter_line("decoys"))
+		"moving_decoys":
+			_spawn_decoys(true)
+			if announce: _say(_pick_fresh(["Now they all look confident.", "Pick one.", "Surely this is fair."]))
+		"wait":
+			_place_button_center()
+			var token := wait_token
+			wait_allowed_ms = Time.get_ticks_msec() + rng.randi_range(650, 2100)
+			main_button.text = "WAIT"
+			main_button.disabled = true
+			if announce: _say(_pick_fresh(["Don't.", "Wait.", "Hands off."]))
+			get_tree().create_timer((wait_allowed_ms - Time.get_ticks_msec()) / 1000.0).timeout.connect(_arm_wait_button.bind(token))
+		"bounce":
+			_place_button_center()
+			bounce_velocity = Vector2(rng.randf_range(250, 470), rng.randf_range(210, 390))
+			if rng.randf() < 0.5: bounce_velocity.x *= -1
+			if rng.randf() < 0.5: bounce_velocity.y *= -1
+			main_button.text = "GET IT"
+			if announce: _say(_counter_line("bounce"))
+		"anti_spam":
+			_teleport_button()
+			main_button.text = "SLOW"
