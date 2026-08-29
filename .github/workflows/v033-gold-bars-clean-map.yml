@@ -1,4 +1,4 @@
-name: Deploy Ever Deeper v0.35 distinct depth stations
+name: Deploy Ever Deeper v0.36 Starforge identities
 
 on:
   workflow_run:
@@ -13,7 +13,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages-v035"
+  group: "pages-v036"
   cancel-in-progress: true
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check out v0.35 patch
+      - name: Check out v0.36 patch
         uses: actions/checkout@v4
 
       - name: Download verified v0.26 build
@@ -54,7 +54,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ steps.latest.outputs.run_id }}
 
-      - name: Apply verified v0.35 depth station patch
+      - name: Apply verified v0.36 Starforge patch
         shell: bash
         run: |
           set -euo pipefail
@@ -74,9 +74,9 @@ jobs:
             > "$RUNNER_TEMP/v0.31-to-v0.32-light-buffs-minimap.xdelta"
           echo "f9bc2d33bf3c23440f2c0186d88bfccdbd952b5bd5b41f01b7df8a893b49ddfe  $RUNNER_TEMP/v0.31-to-v0.32-light-buffs-minimap.xdelta" | sha256sum -c -
 
-          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.32-to-v0.35-distinct-stations.xdelta.part* \
-            > "$RUNNER_TEMP/v0.32-to-v0.35-distinct-stations.xdelta"
-          echo "4e21d446343797459371192a4d0e004625b2c217a8a9f904f2d63db1d441d023  $RUNNER_TEMP/v0.32-to-v0.35-distinct-stations.xdelta" | sha256sum -c -
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.32-to-v0.36-starforge-identity.xdelta.part* \
+            > "$RUNNER_TEMP/v0.32-to-v0.36-starforge-identity.xdelta"
+          echo "7e160f06883bfee149f3113e98a2c9ca4d1ec2050717c80e147e9aad9d4d5456  $RUNNER_TEMP/v0.32-to-v0.36-starforge-identity.xdelta" | sha256sum -c -
 
           curl -L --fail --retry 4 --retry-all-errors \
             https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
@@ -99,10 +99,10 @@ jobs:
 
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$RUNNER_TEMP/v0.32-index.pck" \
-            "$RUNNER_TEMP/v0.32-to-v0.35-distinct-stations.xdelta" \
-            "$RUNNER_TEMP/v0.35-index.pck"
-          mv "$RUNNER_TEMP/v0.35-index.pck" "$build_dir/index.pck"
-          echo "3640f989d283820eb250a1f60c8f2923979517f950f3491c746d38b885c10770  $build_dir/index.pck" | sha256sum -c -
+            "$RUNNER_TEMP/v0.32-to-v0.36-starforge-identity.xdelta" \
+            "$RUNNER_TEMP/v0.36-index.pck"
+          mv "$RUNNER_TEMP/v0.36-index.pck" "$build_dir/index.pck"
+          echo "979f562273734296d723e4ddcbfc42067c8b26098095ac2ad258f0c4621275f8  $build_dir/index.pck" | sha256sum -c -
 
           python3 - "$build_dir/index.html" <<'PY'
           from pathlib import Path
@@ -113,12 +113,12 @@ jobs:
           old_badge = 'v0.26.0 · WTF-2'
           if html.count(old_size) != 1 or html.count(old_badge) != 1:
               raise SystemExit("unexpected v0.26 web markers")
-          html = html.replace(old_size, '"index.pck":66522496', 1)
-          html = html.replace(old_badge, 'v0.35.0', 1)
+          html = html.replace(old_size, '"index.pck":66532352', 1)
+          html = html.replace(old_badge, 'v0.36.0', 1)
           path.write_text(html, encoding="utf-8")
           PY
-          echo "cfcd4e240364b0afbaabbc7b5f27dbb3f973c0dc75cd6d3d7926d686a4a0a822  $build_dir/index.html" | sha256sum -c -
-          grep -q 'v0.35.0' "$build_dir/index.html"
+          echo "3579e1a15a98d87ed532cdb8d8f9c01bc72fb680244fb223f578270be5eb504b  $build_dir/index.html" | sha256sum -c -
+          grep -q 'v0.36.0' "$build_dir/index.html"
           grep -q 'pointer-events:none!important' "$build_dir/wtf-director.js"
           node --check "$build_dir/wtf-director.js"
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 10
@@ -131,7 +131,7 @@ jobs:
       - name: Upload reusable web package
         uses: actions/upload-artifact@v4
         with:
-          name: ever-deeper-v035-web-build
+          name: ever-deeper-v036-web-build
           path: ${{ runner.temp }}/ever-deeper-web
           compression-level: 0
           retention-days: 1
