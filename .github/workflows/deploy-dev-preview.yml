@@ -1,0 +1,167 @@
+name: Deploy Ever Deeper DEV preview
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/dev-build/index.html'
+      - '.github/dev-patch/dev-v0410-dev1.xdelta.part*'
+      - '.github/workflows/deploy-dev-preview.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-dev-preview
+  cancel-in-progress: true
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out DEV release inputs
+        uses: actions/checkout@v4
+
+      - name: Download and verify production build
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_dir="$RUNNER_TEMP/ever-deeper-pages"
+          base_url="https://corpax88.github.io/Ever-Deeper"
+          mkdir -p "$build_dir"
+
+          for file in \
+            index.apple-touch-icon.png \
+            index.audio.position.worklet.js \
+            index.audio.worklet.js \
+            index.icon.png \
+            index.js \
+            index.png \
+            index.wasm \
+            index.html \
+            index.pck
+          do
+            curl -L --fail --retry 4 --retry-all-errors \
+              "$base_url/$file?dev-release=$GITHUB_SHA" -o "$build_dir/$file"
+          done
+
+          echo "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5  $build_dir/index.apple-touch-icon.png" | sha256sum -c -
+          echo "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8  $build_dir/index.audio.position.worklet.js" | sha256sum -c -
+          echo "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3  $build_dir/index.audio.worklet.js" | sha256sum -c -
+          echo "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec  $build_dir/index.icon.png" | sha256sum -c -
+          echo "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba  $build_dir/index.js" | sha256sum -c -
+          echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
+          echo "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0  $build_dir/index.wasm" | sha256sum -c -
+          echo "b8d243ff614dab1033c4951023bda93f0edbb77261ddfdbef0ccfe5627aee97f  $build_dir/index.html" | sha256sum -c -
+          echo "7d563fdab69acdc49a5811ad21547c6429ac1ad5c41aad5411313d469c74d366  $build_dir/index.pck" | sha256sum -c -
+          test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+
+      - name: Build isolated DEV subdirectory
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_dir="$RUNNER_TEMP/ever-deeper-pages"
+          dev_dir="$build_dir/dev"
+          tool_dir="$RUNNER_TEMP/tools"
+          mkdir -p "$dev_dir" "$tool_dir"
+
+          for file in \
+            index.apple-touch-icon.png \
+            index.audio.position.worklet.js \
+            index.audio.worklet.js \
+            index.icon.png \
+            index.js \
+            index.png \
+            index.wasm
+          do
+            cp "$build_dir/$file" "$dev_dir/$file"
+          done
+          cp "$GITHUB_WORKSPACE/.github/dev-build/index.html" "$dev_dir/index.html"
+
+          cat "$GITHUB_WORKSPACE"/.github/dev-patch/dev-v0410-dev1.xdelta.part* \
+            > "$RUNNER_TEMP/dev-v0410-dev1.xdelta"
+          echo "00719be323598d23f9206ed8dbadbb382ec5a3d30ec99fd2f66693a591767807  $RUNNER_TEMP/dev-v0410-dev1.xdelta" | sha256sum -c -
+
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
+            -o "$tool_dir/xdelta3.tar.gz"
+          echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
+          tar --no-same-owner -xzf "$tool_dir/xdelta3.tar.gz" -C "$tool_dir"
+          chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$build_dir/index.pck" \
+            "$RUNNER_TEMP/dev-v0410-dev1.xdelta" \
+            "$dev_dir/index.pck"
+
+          echo "cb375e9053afc41a03bf3a0befee5a989a64969f4cfc4fbeca4a45a25c90ad04  $dev_dir/index.pck" | sha256sum -c -
+          echo "21d05ef2d6fd5d33150c84318e8a0267866977c3d272ce8195ef40db8a31d00d  $dev_dir/index.html" | sha256sum -c -
+          test "$(stat -c %s "$dev_dir/index.pck")" -eq 96154180
+          grep -q '"index.pck":96154180' "$dev_dir/index.html"
+          grep -q 'v0.41.0-dev.1' "$dev_dir/index.html"
+          node --check "$dev_dir/index.js"
+          test "$(find "$dev_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+
+      - name: Upload combined GitHub Pages package
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/ever-deeper-pages
+
+      - name: Upload reusable DEV web package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-v0410-dev1-web
+          path: ${{ runner.temp }}/ever-deeper-pages/dev
+          compression-level: 0
+          retention-days: 14
+
+  deploy-pages:
+    needs: package
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy production plus DEV preview
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  deploy-itch-dev:
+    needs: package
+    runs-on: ubuntu-latest
+    env:
+      BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+    steps:
+      - name: Download verified DEV package
+        if: env.BUTLER_API_KEY != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-v0410-dev1-web
+          path: ${{ runner.temp }}/ever-deeper-dev
+
+      - name: Publish when the itch DEV project exists
+        if: env.BUTLER_API_KEY != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default \
+            -o "$RUNNER_TEMP/butler.zip"
+          unzip -q "$RUNNER_TEMP/butler.zip" -d "$RUNNER_TEMP/butler"
+          chmod +x "$RUNNER_TEMP/butler/butler"
+
+          set +e
+          "$RUNNER_TEMP/butler/butler" push \
+            "$RUNNER_TEMP/ever-deeper-dev" \
+            corpax88/ever-deeper-dev:html5 \
+            --userversion 0.41.0-dev.1
+          push_status=$?
+          set -e
+          if [ "$push_status" -ne 0 ]; then
+            echo "::notice::itch DEV project does not exist yet; Pages DEV preview is still deployed"
+            exit 0
+          fi
+          "$RUNNER_TEMP/butler/butler" status corpax88/ever-deeper-dev:html5
