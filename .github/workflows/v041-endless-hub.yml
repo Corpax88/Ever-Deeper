@@ -1,0 +1,166 @@
+name: Deploy Ever Deeper v0.41 endless hub
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/v041-endless-hub.yml'
+      - '.github/itch-patch/v0.37-to-v0.41-endless-hub.xdelta.part*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-v041
+  cancel-in-progress: true
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out v0.41 release patch
+        uses: actions/checkout@v4
+
+      - name: Download verified v0.37 web build
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_dir="$RUNNER_TEMP/ever-deeper-web"
+          base_url="https://corpax88.github.io/Ever-Deeper"
+          mkdir -p "$build_dir"
+
+          for file in \
+            index.apple-touch-icon.png \
+            index.audio.position.worklet.js \
+            index.audio.worklet.js \
+            index.icon.png \
+            index.js \
+            index.png \
+            index.wasm \
+            index.html \
+            index.pck \
+            wtf-director.js
+          do
+            curl -L --fail --retry 4 --retry-all-errors \
+              "$base_url/$file?release=v041-$GITHUB_SHA" -o "$build_dir/$file"
+          done
+
+          echo "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5  $build_dir/index.apple-touch-icon.png" | sha256sum -c -
+          echo "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8  $build_dir/index.audio.position.worklet.js" | sha256sum -c -
+          echo "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3  $build_dir/index.audio.worklet.js" | sha256sum -c -
+          echo "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec  $build_dir/index.icon.png" | sha256sum -c -
+          echo "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba  $build_dir/index.js" | sha256sum -c -
+          echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
+          echo "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0  $build_dir/index.wasm" | sha256sum -c -
+          echo "e33b04ff4bca7645c085def53cd794afd4d3a9fdaa505114a638e33431e84ad3  $build_dir/index.html" | sha256sum -c -
+          echo "36eb4fa6f805d259f6129d9329bf7caa19b2e48c6d6bfae42317c635e0992ef0  $build_dir/index.pck" | sha256sum -c -
+          echo "e0cb2cb7c9b715366274e2fe0adcc4b69e6b39aa632fe9eb25cd7ea37fa2468a  $build_dir/wtf-director.js" | sha256sum -c -
+          test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 10
+
+      - name: Apply verified v0.41 endless hub patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_dir="$RUNNER_TEMP/ever-deeper-web"
+          tool_dir="$RUNNER_TEMP/tools"
+          mkdir -p "$tool_dir"
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.37-to-v0.41-endless-hub.xdelta.part* \
+            > "$RUNNER_TEMP/v0.37-to-v0.41-endless-hub.xdelta"
+          echo "7b75eaa62aff897e56a9892318fbb1e9739af37823086556a5fb169d8911b95e  $RUNNER_TEMP/v0.37-to-v0.41-endless-hub.xdelta" | sha256sum -c -
+
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
+            -o "$tool_dir/xdelta3.tar.gz"
+          echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
+          tar --no-same-owner -xzf "$tool_dir/xdelta3.tar.gz" -C "$tool_dir"
+          chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$build_dir/index.pck" \
+            "$RUNNER_TEMP/v0.37-to-v0.41-endless-hub.xdelta" \
+            "$RUNNER_TEMP/v0.41-index.pck"
+          mv "$RUNNER_TEMP/v0.41-index.pck" "$build_dir/index.pck"
+          echo "7d563fdab69acdc49a5811ad21547c6429ac1ad5c41aad5411313d469c74d366  $build_dir/index.pck" | sha256sum -c -
+          test "$(stat -c %s "$build_dir/index.pck")" -eq 96128464
+
+          python3 - "$build_dir/index.html" <<'PY'
+          from pathlib import Path
+          import sys
+
+          path = Path(sys.argv[1])
+          html = path.read_text(encoding="utf-8")
+          replacements = (
+              ('"index.pck":66532832', '"index.pck":96128464'),
+              ('v0.37.0', 'v0.41.0'),
+              ('\n\t\t\t<script src="wtf-director.js"></script>', ''),
+          )
+          for old, new in replacements:
+              if html.count(old) != 1:
+                  raise SystemExit(f"unexpected v0.37 marker: {old}")
+              html = html.replace(old, new, 1)
+          path.write_text(html, encoding="utf-8")
+          PY
+
+          rm "$build_dir/wtf-director.js"
+          echo "b8d243ff614dab1033c4951023bda93f0edbb77261ddfdbef0ccfe5627aee97f  $build_dir/index.html" | sha256sum -c -
+          grep -q '"index.pck":96128464' "$build_dir/index.html"
+          grep -q 'v0.41.0' "$build_dir/index.html"
+          ! grep -q 'wtf-director.js' "$build_dir/index.html"
+          node --check "$build_dir/index.js"
+          test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+
+      - name: Upload GitHub Pages package
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/ever-deeper-web
+
+      - name: Upload reusable web package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-v041-web-build
+          path: ${{ runner.temp }}/ever-deeper-web
+          compression-level: 0
+          retention-days: 7
+
+  deploy-pages:
+    needs: patch
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  deploy-itch:
+    needs: patch
+    runs-on: ubuntu-latest
+    env:
+      BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+    steps:
+      - name: Download verified v0.41 web package
+        if: env.BUTLER_API_KEY != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-v041-web-build
+          path: ${{ runner.temp }}/ever-deeper-web
+
+      - name: Publish v0.41 to itch.io
+        if: env.BUTLER_API_KEY != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default \
+            -o "$RUNNER_TEMP/butler.zip"
+          unzip -q "$RUNNER_TEMP/butler.zip" -d "$RUNNER_TEMP/butler"
+          chmod +x "$RUNNER_TEMP/butler/butler"
+          "$RUNNER_TEMP/butler/butler" push \
+            "$RUNNER_TEMP/ever-deeper-web" \
+            corpax88/ever-deeper-playtest:html5 \
+            --userversion 0.41.0
