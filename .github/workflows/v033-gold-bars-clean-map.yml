@@ -2,7 +2,7 @@ name: Deploy Ever Deeper v0.33 gold bars clean map
 
 on:
   workflow_run:
-    workflows: ["Deploy Ever Deeper v0.32 light buffs minimap"]
+    workflows: ["Deploy Ever Deeper v0.26 playtest"]
     types: [completed]
   workflow_dispatch:
 
@@ -24,16 +24,16 @@ jobs:
       - name: Check out v0.33 patch
         uses: actions/checkout@v4
 
-      - name: Download verified v0.32 build
+      - name: Download verified v0.26 build
         if: ${{ github.event_name == 'workflow_run' }}
         uses: actions/download-artifact@v4
         with:
-          name: ever-deeper-v032-web-build
+          name: ever-deeper-v026-web-build
           path: ${{ runner.temp }}/ever-deeper-web
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
 
-      - name: Resolve latest successful v0.32 build for manual runs
+      - name: Resolve latest successful v0.26 build for manual runs
         if: ${{ github.event_name == 'workflow_dispatch' }}
         id: latest
         shell: bash
@@ -41,15 +41,15 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          run_id="$(gh api 'repos/${{ github.repository }}/actions/workflows/v032-light-buffs-minimap.yml/runs?branch=main&status=success&per_page=1' --jq '.workflow_runs[0].id')"
+          run_id="$(gh api 'repos/${{ github.repository }}/actions/workflows/v026-playtest.yml/runs?branch=main&status=success&per_page=1' --jq '.workflow_runs[0].id')"
           test -n "$run_id"
           echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
 
-      - name: Download v0.32 build for manual runs
+      - name: Download v0.26 build for manual runs
         if: ${{ github.event_name == 'workflow_dispatch' }}
         uses: actions/download-artifact@v4
         with:
-          name: ever-deeper-v032-web-build
+          name: ever-deeper-v026-web-build
           path: ${{ runner.temp }}/ever-deeper-web
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ steps.latest.outputs.run_id }}
@@ -64,7 +64,15 @@ jobs:
           test -f "$build_dir/index.html"
           test -f "$build_dir/index.pck"
           test -f "$build_dir/wtf-director.js"
-          echo "2618d6239950292eb9eb33632242c6de46d5de35e725f5305130c50a7740a8bf  $build_dir/index.pck" | sha256sum -c -
+          echo "6eaa7d0c72e5dc99c57d1a72fa13511ee0c9fd3a44330ac1a7fcef2920032472  $build_dir/index.pck" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.26-to-v0.31-transparent-tutorial.xdelta.part* \
+            > "$RUNNER_TEMP/v0.26-to-v0.31-transparent-tutorial.xdelta"
+          echo "50461dd3799a6dc9e80d3b3c3ea2c5bc333a8fe9bfd150b6441cd21d3e2971de  $RUNNER_TEMP/v0.26-to-v0.31-transparent-tutorial.xdelta" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.31-to-v0.32-light-buffs-minimap.xdelta.part* \
+            > "$RUNNER_TEMP/v0.31-to-v0.32-light-buffs-minimap.xdelta"
+          echo "f9bc2d33bf3c23440f2c0186d88bfccdbd952b5bd5b41f01b7df8a893b49ddfe  $RUNNER_TEMP/v0.31-to-v0.32-light-buffs-minimap.xdelta" | sha256sum -c -
 
           cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.32-to-v0.33-gold-bars-clean-map.xdelta.part* \
             > "$RUNNER_TEMP/v0.32-to-v0.33-gold-bars-clean-map.xdelta"
@@ -79,6 +87,18 @@ jobs:
 
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$build_dir/index.pck" \
+            "$RUNNER_TEMP/v0.26-to-v0.31-transparent-tutorial.xdelta" \
+            "$RUNNER_TEMP/v0.31-index.pck"
+          echo "d20f9cda1e781dbfa18cc8669cdcb83aaaa3bdaefeb6279558325ae486de184e  $RUNNER_TEMP/v0.31-index.pck" | sha256sum -c -
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.31-index.pck" \
+            "$RUNNER_TEMP/v0.31-to-v0.32-light-buffs-minimap.xdelta" \
+            "$RUNNER_TEMP/v0.32-index.pck"
+          echo "2618d6239950292eb9eb33632242c6de46d5de35e725f5305130c50a7740a8bf  $RUNNER_TEMP/v0.32-index.pck" | sha256sum -c -
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/v0.32-index.pck" \
             "$RUNNER_TEMP/v0.32-to-v0.33-gold-bars-clean-map.xdelta" \
             "$RUNNER_TEMP/v0.33-index.pck"
           mv "$RUNNER_TEMP/v0.33-index.pck" "$build_dir/index.pck"
@@ -89,10 +109,10 @@ jobs:
           import sys
           path = Path(sys.argv[1])
           html = path.read_text(encoding="utf-8")
-          old_size = '"index.pck":65295060'
-          old_badge = 'v0.32.0'
+          old_size = '"index.pck":64698616'
+          old_badge = 'v0.26.0 · WTF-2'
           if html.count(old_size) != 1 or html.count(old_badge) != 1:
-              raise SystemExit("unexpected v0.32 web markers")
+              raise SystemExit("unexpected v0.26 web markers")
           html = html.replace(old_size, '"index.pck":65540800', 1)
           html = html.replace(old_badge, 'v0.33.0', 1)
           path.write_text(html, encoding="utf-8")
