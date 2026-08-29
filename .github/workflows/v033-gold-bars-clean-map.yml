@@ -1,4 +1,4 @@
-name: Deploy Ever Deeper v0.33 gold bars clean map
+name: Deploy Ever Deeper v0.34 Moonglass chest hotfix
 
 on:
   workflow_run:
@@ -13,7 +13,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages-v033"
+  group: "pages-v034"
   cancel-in-progress: true
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check out v0.33 patch
+      - name: Check out v0.34 patch
         uses: actions/checkout@v4
 
       - name: Download verified v0.26 build
@@ -54,7 +54,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ steps.latest.outputs.run_id }}
 
-      - name: Apply verified v0.33 gold bars clean map patch
+      - name: Apply verified v0.34 Moonglass chest hotfix
         shell: bash
         run: |
           set -euo pipefail
@@ -74,9 +74,9 @@ jobs:
             > "$RUNNER_TEMP/v0.31-to-v0.32-light-buffs-minimap.xdelta"
           echo "f9bc2d33bf3c23440f2c0186d88bfccdbd952b5bd5b41f01b7df8a893b49ddfe  $RUNNER_TEMP/v0.31-to-v0.32-light-buffs-minimap.xdelta" | sha256sum -c -
 
-          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.32-to-v0.33-gold-bars-clean-map.xdelta.part* \
-            > "$RUNNER_TEMP/v0.32-to-v0.33-gold-bars-clean-map.xdelta"
-          echo "638eae2a97625eaa49a9c67158b02a7a92b0ce9e4bf41a3f9b99dcc2db71d90b  $RUNNER_TEMP/v0.32-to-v0.33-gold-bars-clean-map.xdelta" | sha256sum -c -
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.32-to-v0.34-moonglass-chest-hotfix.xdelta.part* \
+            > "$RUNNER_TEMP/v0.32-to-v0.34-moonglass-chest-hotfix.xdelta"
+          echo "11e373e99ca35145101d88e1a4e7ffadd82e1a1530f03dc868708d113a1e768c  $RUNNER_TEMP/v0.32-to-v0.34-moonglass-chest-hotfix.xdelta" | sha256sum -c -
 
           curl -L --fail --retry 4 --retry-all-errors \
             https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
@@ -99,10 +99,10 @@ jobs:
 
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$RUNNER_TEMP/v0.32-index.pck" \
-            "$RUNNER_TEMP/v0.32-to-v0.33-gold-bars-clean-map.xdelta" \
-            "$RUNNER_TEMP/v0.33-index.pck"
-          mv "$RUNNER_TEMP/v0.33-index.pck" "$build_dir/index.pck"
-          echo "f12f4a8e11207aaa45d882c704e8dd0b4c1de29b569d1f46df83b004c75b02b5  $build_dir/index.pck" | sha256sum -c -
+            "$RUNNER_TEMP/v0.32-to-v0.34-moonglass-chest-hotfix.xdelta" \
+            "$RUNNER_TEMP/v0.34-index.pck"
+          mv "$RUNNER_TEMP/v0.34-index.pck" "$build_dir/index.pck"
+          echo "f7f813ef8c7cb94e9bdea445934b16e45c6d1d280a591b0d873b3f71fc42baef  $build_dir/index.pck" | sha256sum -c -
 
           python3 - "$build_dir/index.html" <<'PY'
           from pathlib import Path
@@ -113,12 +113,12 @@ jobs:
           old_badge = 'v0.26.0 · WTF-2'
           if html.count(old_size) != 1 or html.count(old_badge) != 1:
               raise SystemExit("unexpected v0.26 web markers")
-          html = html.replace(old_size, '"index.pck":65540800', 1)
-          html = html.replace(old_badge, 'v0.33.0', 1)
+          html = html.replace(old_size, '"index.pck":65541776', 1)
+          html = html.replace(old_badge, 'v0.34.0', 1)
           path.write_text(html, encoding="utf-8")
           PY
-          echo "b878e3d9140c4e754a7c34362f3667fe85396975c554b325f457642a20dd2869  $build_dir/index.html" | sha256sum -c -
-          grep -q 'v0.33.0' "$build_dir/index.html"
+          echo "958ab18f71e6461b6549ea0c999a372ace26d126869d9827c36e3dd1e811d9a3  $build_dir/index.html" | sha256sum -c -
+          grep -q 'v0.34.0' "$build_dir/index.html"
           grep -q 'pointer-events:none!important' "$build_dir/wtf-director.js"
           node --check "$build_dir/wtf-director.js"
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 10
@@ -131,7 +131,7 @@ jobs:
       - name: Upload reusable web package
         uses: actions/upload-artifact@v4
         with:
-          name: ever-deeper-v033-web-build
+          name: ever-deeper-v034-web-build
           path: ${{ runner.temp }}/ever-deeper-web
           compression-level: 0
           retention-days: 1
