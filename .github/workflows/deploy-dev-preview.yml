@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/dev-build/index.html'
-      - '.github/dev-patch/dev-v0410-dev1.xdelta.part*'
+      - '.github/dev-patch/dev-v0410-dev1-to-dev2.xdelta.part*'
       - '.github/workflows/deploy-dev-preview.yml'
   workflow_dispatch:
 
@@ -85,6 +85,10 @@ jobs:
             > "$RUNNER_TEMP/dev-v0410-dev1.xdelta"
           echo "00719be323598d23f9206ed8dbadbb382ec5a3d30ec99fd2f66693a591767807  $RUNNER_TEMP/dev-v0410-dev1.xdelta" | sha256sum -c -
 
+          cat "$GITHUB_WORKSPACE"/.github/dev-patch/dev-v0410-dev1-to-dev2.xdelta.part* \
+            > "$RUNNER_TEMP/dev-v0410-dev1-to-dev2.xdelta"
+          echo "982b51a5c41ba8c9516419443da7f6dff140025420fda7ae923bc57ac9957652  $RUNNER_TEMP/dev-v0410-dev1-to-dev2.xdelta" | sha256sum -c -
+
           curl -L --fail --retry 4 --retry-all-errors \
             https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
             -o "$tool_dir/xdelta3.tar.gz"
@@ -95,13 +99,21 @@ jobs:
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$build_dir/index.pck" \
             "$RUNNER_TEMP/dev-v0410-dev1.xdelta" \
+            "$RUNNER_TEMP/dev-v0410-dev1.pck"
+
+          echo "cb375e9053afc41a03bf3a0befee5a989a64969f4cfc4fbeca4a45a25c90ad04  $RUNNER_TEMP/dev-v0410-dev1.pck" | sha256sum -c -
+          test "$(stat -c %s "$RUNNER_TEMP/dev-v0410-dev1.pck")" -eq 96154180
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$RUNNER_TEMP/dev-v0410-dev1.pck" \
+            "$RUNNER_TEMP/dev-v0410-dev1-to-dev2.xdelta" \
             "$dev_dir/index.pck"
 
-          echo "cb375e9053afc41a03bf3a0befee5a989a64969f4cfc4fbeca4a45a25c90ad04  $dev_dir/index.pck" | sha256sum -c -
-          echo "21d05ef2d6fd5d33150c84318e8a0267866977c3d272ce8195ef40db8a31d00d  $dev_dir/index.html" | sha256sum -c -
-          test "$(stat -c %s "$dev_dir/index.pck")" -eq 96154180
-          grep -q '"index.pck":96154180' "$dev_dir/index.html"
-          grep -q 'v0.41.0-dev.1' "$dev_dir/index.html"
+          echo "94f08d4669323099b3f3df5c5ff4b2a3e0e9720cb2a1774ef6c1832ce2fbab40  $dev_dir/index.pck" | sha256sum -c -
+          echo "ea24e02744f8f98184095a2c88191d993e8e44ab0d629fec4dc0c305d363b603  $dev_dir/index.html" | sha256sum -c -
+          test "$(stat -c %s "$dev_dir/index.pck")" -eq 96157444
+          grep -q '"index.pck":96157444' "$dev_dir/index.html"
+          grep -q 'v0.41.0-dev.2' "$dev_dir/index.html"
           node --check "$dev_dir/index.js"
           test "$(find "$dev_dir" -maxdepth 1 -type f | wc -l)" -eq 9
 
@@ -113,7 +125,7 @@ jobs:
       - name: Upload reusable DEV web package
         uses: actions/upload-artifact@v4
         with:
-          name: ever-deeper-v0410-dev1-web
+          name: ever-deeper-v0410-dev2-web
           path: ${{ runner.temp }}/ever-deeper-pages/dev
           compression-level: 0
           retention-days: 14
@@ -139,7 +151,7 @@ jobs:
         if: env.BUTLER_API_KEY != ''
         uses: actions/download-artifact@v4
         with:
-          name: ever-deeper-v0410-dev1-web
+          name: ever-deeper-v0410-dev2-web
           path: ${{ runner.temp }}/ever-deeper-dev
 
       - name: Publish when the itch DEV project exists
@@ -157,7 +169,7 @@ jobs:
           "$RUNNER_TEMP/butler/butler" push \
             "$RUNNER_TEMP/ever-deeper-dev" \
             corpax88/ever-deeper-dev:html5 \
-            --userversion 0.41.0-dev.1
+            --userversion 0.41.0-dev.2
           push_status=$?
           set -e
           if [ "$push_status" -ne 0 ]; then
