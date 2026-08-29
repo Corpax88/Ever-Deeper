@@ -1,0 +1,136 @@
+name: Deploy Ever Deeper v0.32 light buffs minimap
+
+on:
+  workflow_run:
+    workflows: ["Deploy Ever Deeper v0.31 transparent tutorial"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages-v032"
+  cancel-in-progress: true
+
+jobs:
+  patch:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out v0.32 patch
+        uses: actions/checkout@v4
+
+      - name: Download verified v0.31 build
+        if: ${{ github.event_name == 'workflow_run' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-v031-web-build
+          path: ${{ runner.temp }}/ever-deeper-web
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Resolve latest successful v0.31 build for manual runs
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        id: latest
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          run_id="$(gh api 'repos/${{ github.repository }}/actions/workflows/v031-transparent-tutorial.yml/runs?branch=main&status=success&per_page=1' --jq '.workflow_runs[0].id')"
+          test -n "$run_id"
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+
+      - name: Download v0.31 build for manual runs
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-v031-web-build
+          path: ${{ runner.temp }}/ever-deeper-web
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.latest.outputs.run_id }}
+
+      - name: Apply verified v0.32 light buffs minimap patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_dir="$RUNNER_TEMP/ever-deeper-web"
+          tool_dir="$RUNNER_TEMP/tools"
+          mkdir -p "$tool_dir"
+          test -f "$build_dir/index.html"
+          test -f "$build_dir/index.pck"
+          test -f "$build_dir/wtf-director.js"
+          echo "d20f9cda1e781dbfa18cc8669cdcb83aaaa3bdaefeb6279558325ae486de184e  $build_dir/index.pck" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/itch-patch/v0.31-to-v0.32-light-buffs-minimap.xdelta.part* \
+            > "$RUNNER_TEMP/v0.31-to-v0.32-light-buffs-minimap.xdelta"
+          echo "f9bc2d33bf3c23440f2c0186d88bfccdbd952b5bd5b41f01b7df8a893b49ddfe  $RUNNER_TEMP/v0.31-to-v0.32-light-buffs-minimap.xdelta" | sha256sum -c -
+
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
+            -o "$tool_dir/xdelta3.tar.gz"
+          echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
+          tar --no-same-owner -xzf "$tool_dir/xdelta3.tar.gz" -C "$tool_dir"
+          chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
+
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$build_dir/index.pck" \
+            "$RUNNER_TEMP/v0.31-to-v0.32-light-buffs-minimap.xdelta" \
+            "$RUNNER_TEMP/v0.32-index.pck"
+          mv "$RUNNER_TEMP/v0.32-index.pck" "$build_dir/index.pck"
+          echo "2618d6239950292eb9eb33632242c6de46d5de35e725f5305130c50a7740a8bf  $build_dir/index.pck" | sha256sum -c -
+
+          python3 - "$build_dir/index.html" <<'PY'
+          from pathlib import Path
+          import sys
+          path = Path(sys.argv[1])
+          html = path.read_text(encoding="utf-8")
+          old_size = '"index.pck":64586300'
+          old_badge = 'v0.31.0'
+          if html.count(old_size) != 1:
+              raise SystemExit("unexpected v0.31 PCK size marker")
+          if html.count(old_badge) != 1:
+              raise SystemExit("unexpected v0.31 build label")
+          html = html.replace(old_size, '"index.pck":65295060', 1)
+          html = html.replace(old_badge, 'v0.32.0', 1)
+          path.write_text(html, encoding="utf-8")
+          PY
+          echo "a3f6fcba638b3ee816365a32d0f933050936752547942a5d759eae60508d9719  $build_dir/index.html" | sha256sum -c -
+          grep -q 'v0.32.0' "$build_dir/index.html"
+          grep -q '__EVER_DEEPER_WTF_DIRECTOR__' "$build_dir/wtf-director.js"
+          grep -q 'pointer-events:none!important' "$build_dir/wtf-director.js"
+          grep -q "root.setAttribute('inert', '')" "$build_dir/wtf-director.js"
+          if grep -q 'background:rgba(3,7,5,.93)' "$build_dir/wtf-director.js"; then
+            echo "opaque WTF message panel still present" >&2
+            exit 1
+          fi
+          node --check "$build_dir/wtf-director.js"
+          test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 10
+
+      - name: Upload GitHub Pages package
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/ever-deeper-web
+
+      - name: Upload reusable web package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-v032-web-build
+          path: ${{ runner.temp }}/ever-deeper-web
+          compression-level: 0
+          retention-days: 1
+
+  deploy-pages:
+    needs: patch
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
