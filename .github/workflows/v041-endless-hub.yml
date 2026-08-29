@@ -164,3 +164,5 @@ jobs:
             "$RUNNER_TEMP/ever-deeper-web" \
             corpax88/ever-deeper-playtest:html5 \
             --userversion 0.41.0
+          "$RUNNER_TEMP/butler/butler" status \
+            corpax88/ever-deeper-playtest:html5
