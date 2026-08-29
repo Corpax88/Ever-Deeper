@@ -1,9 +1,6 @@
 name: Deploy Ever Deeper v0.31 transparent tutorial
 
 on:
-  workflow_run:
-    workflows: ["Deploy Ever Deeper v0.26 playtest"]
-    types: [completed]
   workflow_dispatch:
 
 permissions:

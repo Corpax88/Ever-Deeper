@@ -1,9 +1,6 @@
 name: Deploy Ever Deeper v0.32 light buffs minimap
 
 on:
-  workflow_run:
-    workflows: ["Deploy Ever Deeper v0.31 transparent tutorial"]
-    types: [completed]
   workflow_dispatch:
 
 permissions:
