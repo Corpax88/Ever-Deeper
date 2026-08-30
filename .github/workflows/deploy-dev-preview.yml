@@ -1,14 +1,13 @@
-name: Deploy Ever Deeper DEV preview
+name: Deploy Ever Deeper v0.42 production + DEV preview
 
 on:
   push:
     branches: [main]
     paths:
+      - '.github/prod-build/index.html'
+      - '.github/release-patch/v0410-to-v0420.xdelta.part*'
       - '.github/dev-build/index.html'
-      - '.github/dev-patch/dev-v0410-dev1-to-dev2.xdelta.part*'
-      - '.github/dev-patch/dev-v0410-dev2-to-dev3.xdelta.part*'
-      - '.github/dev-patch/dev-v0410-dev3-to-dev4.xdelta.part*'
-      - '.github/dev-patch/dev-v0410-dev4-to-dev5.xdelta.part*'
+      - '.github/dev-patch/prod-v0420-to-dev-v0410-dev5.xdelta.part*'
       - '.github/workflows/deploy-dev-preview.yml'
   workflow_dispatch:
 
@@ -18,17 +17,17 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages-dev-preview
+  group: pages-ever-deeper
   cancel-in-progress: true
 
 jobs:
   package:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out DEV release inputs
+      - name: Check out production and DEV release inputs
         uses: actions/checkout@v4
 
-      - name: Download and verify production build
+      - name: Download and verify current production runtime
         shell: bash
         run: |
           set -euo pipefail
@@ -48,7 +47,7 @@ jobs:
             index.pck
           do
             curl -L --fail --retry 4 --retry-all-errors \
-              "$base_url/$file?dev-release=$GITHUB_SHA" -o "$build_dir/$file"
+              "$base_url/$file?release=$GITHUB_SHA" -o "$build_dir/$file"
           done
 
           echo "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5  $build_dir/index.apple-touch-icon.png" | sha256sum -c -
@@ -58,18 +57,75 @@ jobs:
           echo "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba  $build_dir/index.js" | sha256sum -c -
           echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
           echo "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0  $build_dir/index.wasm" | sha256sum -c -
-          echo "b8d243ff614dab1033c4951023bda93f0edbb77261ddfdbef0ccfe5627aee97f  $build_dir/index.html" | sha256sum -c -
-          echo "7d563fdab69acdc49a5811ad21547c6429ac1ad5c41aad5411313d469c74d366  $build_dir/index.pck" | sha256sum -c -
+          node --check "$build_dir/index.js"
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
 
-      - name: Build isolated DEV subdirectory
+      - name: Build verified v0.42 production and preserved DEV preview
         shell: bash
         run: |
           set -euo pipefail
           build_dir="$RUNNER_TEMP/ever-deeper-pages"
+          production_dir="$RUNNER_TEMP/ever-deeper-production"
           dev_dir="$build_dir/dev"
           tool_dir="$RUNNER_TEMP/tools"
-          mkdir -p "$dev_dir" "$tool_dir"
+          mkdir -p "$production_dir" "$dev_dir" "$tool_dir"
+
+          cat "$GITHUB_WORKSPACE"/.github/release-patch/v0410-to-v0420.xdelta.part* \
+            > "$RUNNER_TEMP/v0410-to-v0420.xdelta"
+          echo "9afadbb938ef173b1f98bcfa93a70c62917c5acc824bb41bba4d81865f2e3948  $RUNNER_TEMP/v0410-to-v0420.xdelta" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/dev-patch/prod-v0420-to-dev-v0410-dev5.xdelta.part* \
+            > "$RUNNER_TEMP/prod-v0420-to-dev-v0410-dev5.xdelta"
+          echo "60458cf2ad39e1d1d2881fdd802b71de02be66c07048e7362fc78957adb564c3  $RUNNER_TEMP/prod-v0420-to-dev-v0410-dev5.xdelta" | sha256sum -c -
+
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
+            -o "$tool_dir/xdelta3.tar.gz"
+          echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
+          tar --no-same-owner -xzf "$tool_dir/xdelta3.tar.gz" -C "$tool_dir"
+          chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
+
+          current_pck_sha="$(sha256sum "$build_dir/index.pck" | cut -d ' ' -f 1)"
+          case "$current_pck_sha" in
+            7d563fdab69acdc49a5811ad21547c6429ac1ad5c41aad5411313d469c74d366)
+              echo "b8d243ff614dab1033c4951023bda93f0edbb77261ddfdbef0ccfe5627aee97f  $build_dir/index.html" | sha256sum -c -
+              test "$(stat -c %s "$build_dir/index.pck")" -eq 96128464
+              "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+                -s "$build_dir/index.pck" \
+                "$RUNNER_TEMP/v0410-to-v0420.xdelta" \
+                "$RUNNER_TEMP/v0420-index.pck"
+              mv "$RUNNER_TEMP/v0420-index.pck" "$build_dir/index.pck"
+              ;;
+            65a13e3af4a64ce247071cd2d5a75cb14e89bcc0664462753862e212a84549be)
+              echo "a92a9931fee6f05ab2d315e7032ced52f9b8a29c89d50c309a41ff8d3dd0be35  $build_dir/index.html" | sha256sum -c -
+              ;;
+            *)
+              echo "::error::Unexpected live production PCK: $current_pck_sha"
+              exit 1
+              ;;
+          esac
+
+          cp "$GITHUB_WORKSPACE/.github/prod-build/index.html" "$build_dir/index.html"
+          echo "65a13e3af4a64ce247071cd2d5a75cb14e89bcc0664462753862e212a84549be  $build_dir/index.pck" | sha256sum -c -
+          echo "a92a9931fee6f05ab2d315e7032ced52f9b8a29c89d50c309a41ff8d3dd0be35  $build_dir/index.html" | sha256sum -c -
+          test "$(stat -c %s "$build_dir/index.pck")" -eq 96220476
+          grep -q '"index.pck":96220476' "$build_dir/index.html"
+          grep -q 'v0.42.0' "$build_dir/index.html"
+          ! grep -q 'DEV BUILD' "$build_dir/index.html"
+
+          for file in \
+            index.apple-touch-icon.png \
+            index.audio.position.worklet.js \
+            index.audio.worklet.js \
+            index.icon.png \
+            index.js \
+            index.png \
+            index.wasm \
+            index.html \
+            index.pck
+          do
+            cp "$build_dir/$file" "$production_dir/$file"
+          done
 
           for file in \
             index.apple-touch-icon.png \
@@ -84,68 +140,9 @@ jobs:
           done
           cp "$GITHUB_WORKSPACE/.github/dev-build/index.html" "$dev_dir/index.html"
 
-          cat "$GITHUB_WORKSPACE"/.github/dev-patch/dev-v0410-dev1.xdelta.part* \
-            > "$RUNNER_TEMP/dev-v0410-dev1.xdelta"
-          echo "00719be323598d23f9206ed8dbadbb382ec5a3d30ec99fd2f66693a591767807  $RUNNER_TEMP/dev-v0410-dev1.xdelta" | sha256sum -c -
-
-          cat "$GITHUB_WORKSPACE"/.github/dev-patch/dev-v0410-dev1-to-dev2.xdelta.part* \
-            > "$RUNNER_TEMP/dev-v0410-dev1-to-dev2.xdelta"
-          echo "982b51a5c41ba8c9516419443da7f6dff140025420fda7ae923bc57ac9957652  $RUNNER_TEMP/dev-v0410-dev1-to-dev2.xdelta" | sha256sum -c -
-
-          cat "$GITHUB_WORKSPACE"/.github/dev-patch/dev-v0410-dev2-to-dev3.xdelta.part* \
-            > "$RUNNER_TEMP/dev-v0410-dev2-to-dev3.xdelta"
-          echo "4f515df708ef5652d682ca902530f6acee30481ea4bd62a37d6ff53eea1c3d15  $RUNNER_TEMP/dev-v0410-dev2-to-dev3.xdelta" | sha256sum -c -
-
-          cat "$GITHUB_WORKSPACE"/.github/dev-patch/dev-v0410-dev3-to-dev4.xdelta.part* \
-            > "$RUNNER_TEMP/dev-v0410-dev3-to-dev4.xdelta"
-          echo "08bb46b0102c68ff69e40f290eac460f225440e463bb446aa5c57441644c6b69  $RUNNER_TEMP/dev-v0410-dev3-to-dev4.xdelta" | sha256sum -c -
-
-          cat "$GITHUB_WORKSPACE"/.github/dev-patch/dev-v0410-dev4-to-dev5.xdelta.part* \
-            > "$RUNNER_TEMP/dev-v0410-dev4-to-dev5.xdelta"
-          echo "8875ddc5cf26c93096325ef8686895ad6ebc8a84459e9507b0798a4ce1d02696  $RUNNER_TEMP/dev-v0410-dev4-to-dev5.xdelta" | sha256sum -c -
-
-          curl -L --fail --retry 4 --retry-all-errors \
-            https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
-            -o "$tool_dir/xdelta3.tar.gz"
-          echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
-          tar --no-same-owner -xzf "$tool_dir/xdelta3.tar.gz" -C "$tool_dir"
-          chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
-
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$build_dir/index.pck" \
-            "$RUNNER_TEMP/dev-v0410-dev1.xdelta" \
-            "$RUNNER_TEMP/dev-v0410-dev1.pck"
-
-          echo "cb375e9053afc41a03bf3a0befee5a989a64969f4cfc4fbeca4a45a25c90ad04  $RUNNER_TEMP/dev-v0410-dev1.pck" | sha256sum -c -
-          test "$(stat -c %s "$RUNNER_TEMP/dev-v0410-dev1.pck")" -eq 96154180
-
-          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
-            -s "$RUNNER_TEMP/dev-v0410-dev1.pck" \
-            "$RUNNER_TEMP/dev-v0410-dev1-to-dev2.xdelta" \
-            "$RUNNER_TEMP/dev-v0410-dev2.pck"
-
-          echo "94f08d4669323099b3f3df5c5ff4b2a3e0e9720cb2a1774ef6c1832ce2fbab40  $RUNNER_TEMP/dev-v0410-dev2.pck" | sha256sum -c -
-          test "$(stat -c %s "$RUNNER_TEMP/dev-v0410-dev2.pck")" -eq 96157444
-
-          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
-            -s "$RUNNER_TEMP/dev-v0410-dev2.pck" \
-            "$RUNNER_TEMP/dev-v0410-dev2-to-dev3.xdelta" \
-            "$RUNNER_TEMP/dev-v0410-dev3.pck"
-
-          echo "e2ebf85e8d3675edbaff58df7aca94afc095ee0cdd3e153acfe673972ffd6a8f  $RUNNER_TEMP/dev-v0410-dev3.pck" | sha256sum -c -
-          test "$(stat -c %s "$RUNNER_TEMP/dev-v0410-dev3.pck")" -eq 96230896
-
-          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
-            -s "$RUNNER_TEMP/dev-v0410-dev3.pck" \
-            "$RUNNER_TEMP/dev-v0410-dev3-to-dev4.xdelta" \
-            "$RUNNER_TEMP/dev-v0410-dev4.pck"
-
-          echo "7fdbac9090ee92d19118b8ef05c57494b24db2b27a3b0e9584b1ba8c5414ce3f  $RUNNER_TEMP/dev-v0410-dev4.pck" | sha256sum -c -
-          test "$(stat -c %s "$RUNNER_TEMP/dev-v0410-dev4.pck")" -eq 96232736
-
-          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
-            -s "$RUNNER_TEMP/dev-v0410-dev4.pck" \
-            "$RUNNER_TEMP/dev-v0410-dev4-to-dev5.xdelta" \
+            "$RUNNER_TEMP/prod-v0420-to-dev-v0410-dev5.xdelta" \
             "$dev_dir/index.pck"
 
           echo "4a094b826defee12f4b59d909dfb940fc4b8f3226f7d7b02eee66ceb3052d04d  $dev_dir/index.pck" | sha256sum -c -
@@ -153,13 +150,22 @@ jobs:
           test "$(stat -c %s "$dev_dir/index.pck")" -eq 96235488
           grep -q '"index.pck":96235488' "$dev_dir/index.html"
           grep -q 'v0.41.0-dev.5' "$dev_dir/index.html"
-          node --check "$dev_dir/index.js"
+          test "$(find "$production_dir" -maxdepth 1 -type f | wc -l)" -eq 9
           test "$(find "$dev_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+          test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
 
       - name: Upload combined GitHub Pages package
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ runner.temp }}/ever-deeper-pages
+
+      - name: Upload reusable v0.42 production package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-v042-web
+          path: ${{ runner.temp }}/ever-deeper-production
+          compression-level: 0
+          retention-days: 14
 
       - name: Upload reusable DEV web package
         uses: actions/upload-artifact@v4
@@ -176,9 +182,38 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy production plus DEV preview
+      - name: Deploy v0.42 production plus DEV preview
         id: deployment
         uses: actions/deploy-pages@v4
+
+  deploy-itch-production:
+    needs: package
+    runs-on: ubuntu-latest
+    env:
+      BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+    steps:
+      - name: Download verified v0.42 production package
+        if: env.BUTLER_API_KEY != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-v042-web
+          path: ${{ runner.temp }}/ever-deeper-production
+
+      - name: Publish v0.42 production to itch.io
+        if: env.BUTLER_API_KEY != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default \
+            -o "$RUNNER_TEMP/butler.zip"
+          unzip -q "$RUNNER_TEMP/butler.zip" -d "$RUNNER_TEMP/butler"
+          chmod +x "$RUNNER_TEMP/butler/butler"
+          "$RUNNER_TEMP/butler/butler" push \
+            "$RUNNER_TEMP/ever-deeper-production" \
+            corpax88/ever-deeper-playtest:html5 \
+            --userversion 0.42.0
+          "$RUNNER_TEMP/butler/butler" status corpax88/ever-deeper-playtest:html5
 
   deploy-itch-dev:
     needs: package
