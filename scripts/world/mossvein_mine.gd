@@ -85,9 +85,18 @@ const RESOURCE_NODE_ASSETS: = {
 	"astralite": "res://assets/starfall/astralite-node.png", "crownstone": "res://assets/starfall/crownstone-node.png"
 }
 const BARRIER_ASSETS: = {
-	"moon_prism_gate": "res://assets/moonglass/prismatic-fault.png", "moon_star_lock": "res://assets/moonglass/starbound-geode.png", 
-	"ember_bulkhead": "res://assets/emberdeep/cinder-bulkhead.png", "ember_crucible_lock": "res://assets/emberdeep/crucible-seal.png", 
-	"star_bridge_lock": "res://assets/starfall/astral-bridge-lock.png", "star_crown_lock": "res://assets/starfall/crownstone-ward.png"
+	"moon_prism_gate": "res://assets/moonglass/prismatic-fault-barrier-core.png", 
+	"moon_star_lock": "res://assets/moonglass/starbound-geode-barrier-core.png", 
+	"ember_bulkhead": "res://assets/emberdeep/cinder-bulkhead-barrier-core.png", 
+	"ember_crucible_lock": "res://assets/emberdeep/crucible-seal-barrier-core.png", 
+	"star_bridge_lock": "res://assets/starfall/astral-bridge-lock-barrier-core.png", 
+	"star_crown_lock": "res://assets/starfall/crownstone-ward-barrier-core.png", 
+}
+const BARRIER_ACCENTS: = {
+	"mossMine": "d98d2f", 
+	"moonMine": "58d4ef", 
+	"emberMine": "ff6b25", 
+	"starMine": "a978ff", 
 }
 const DEPTH_SHAFT_ASSETS: = {
 	"mossMine": "res://assets/rootwound/depth-shaft.png", 
@@ -1774,19 +1783,27 @@ func _draw_concealed_cell(cell: Vector2i) -> void :
 func _draw_block(cell: Vector2i, block: Dictionary) -> void :
 	var rect: = Rect2(Vector2(cell) * TILE_SIZE, Vector2.ONE * TILE_SIZE).grow(0.7)
 	var kind: = String(block.kind)
-	var base_color: = Color("10130f") if kind == "bedrock" else Color(String(GameData.data.ROCK_TYPES.get(kind, {"color": mine.wall}).color))
+	var bedrock: = kind == "bedrock"
+	var base_color: = Color("10130f") if bedrock else Color(String(GameData.data.ROCK_TYPES.get(kind, {"color": mine.wall}).color))
 	if String(block.role) in ["terrain", "resource"]:
 		base_color = Color(String(GameData.data.MINE_DIRT_COLORS.get(mine_id, mine.wall)))
-	draw_rect(rect, base_color.darkened(0.22), true)
-	var noise: = fposmod(sin(float(cell.x * 31 + cell.y * 17)) * 43758.5453, 1.0)
-	draw_circle(rect.position + Vector2(8.0 + noise * 26.0, 9.0 + (1.0 - noise) * 25.0), 1.1 + noise, Color(0.78, 0.68, 0.48, 0.11))
+	if bedrock:
+		# Bedrock is one fused foundation mass.  Keep its top quiet and broad so the
+		# 48 px gameplay grid never reads as a field of individual mineable tiles.
+		var plate_noise: = _bedrock_plate_noise(cell, 0)
+		var plate: = Color("111410").lerp(Color("252923"), 0.10 + plate_noise * 0.08)
+		draw_rect(rect, plate, true)
+	else:
+		draw_rect(rect, base_color.darkened(0.22), true)
+		var noise: = fposmod(sin(float(cell.x * 31 + cell.y * 17)) * 43758.5453, 1.0)
+		draw_circle(rect.position + Vector2(8.0 + noise * 26.0, 9.0 + (1.0 - noise) * 25.0), 1.1 + noise, Color(0.78, 0.68, 0.48, 0.11))
 	var open_sides: = _open_block_sides(cell)
 	var seam: Texture2D = _resource_node_texture(kind) if String(block.role) == "resource" else _resource_texture(kind)
 	if (kind != "stone" or String(block.role) != "terrain") and open_sides.has(true) and kind != "bedrock":
 		var inset: = 2.0 if String(block.role) == "resource" else 5.0
 		draw_texture_rect(seam, rect.grow( - inset), false, Color(0.98, 0.98, 0.96, 0.96))
 	var hp_ratio: = float(block.hp) / maxf(1.0, float(block.max_hp))
-	if hp_ratio < 0.999:
+	if kind != "bedrock" and hp_ratio < 0.999:
 		var center: = rect.get_center()
 		draw_line(rect.position + Vector2(9, 8), center, Color(0.08, 0.05, 0.03, 0.8), 3.0)
 		draw_line(center, rect.end - Vector2(7, 9), Color(0.08, 0.05, 0.03, 0.8), 3.0)
@@ -1816,29 +1833,359 @@ func _draw_barrier_art() -> void :
 	for barrier_value in mine.barriers:
 		var barrier: Dictionary = Dictionary(barrier_value)
 		var barrier_id: = String(barrier.id)
-		if not BARRIER_ASSETS.has(barrier_id) or not _role_has_blocks(barrier_id):
+		if not _role_has_blocks(barrier_id):
 			continue
-		var rect: = Rect2(float(barrier.x), float(barrier.y), float(barrier.w), float(barrier.h)).grow(13.0)
-		draw_texture_rect(_texture(String(BARRIER_ASSETS[barrier_id])), rect, false, Color(1, 1, 1, 0.94))
+		var rect: = Rect2(float(barrier.x), float(barrier.y), float(barrier.w), float(barrier.h))
+		_draw_premium_barrier(barrier, rect)
 
 
 func _draw_barrier_backplates() -> void :
 	for barrier_value in mine.barriers:
 		var barrier: Dictionary = Dictionary(barrier_value)
 		var barrier_id: = String(barrier.id)
-		if BARRIER_ASSETS.has(barrier_id) or not _role_has_blocks(barrier_id):
+		if not _role_has_blocks(barrier_id):
 			continue
 		var rect: = Rect2(float(barrier.x), float(barrier.y), float(barrier.w), float(barrier.h))
-		var locked: = RunState.pickaxe_level < int(barrier.requiresPickaxe)
-		var edge: = Color("98784a") if locked else Color(String(mine.detail))
-		draw_rect(rect, Color(0.025, 0.032, 0.024, 0.92), true)
-		draw_texture_rect(wall_texture, rect.grow(-3.0), false, Color(0.42, 0.44, 0.39, 0.48))
-		draw_rect(rect.grow(-5.0), Color(edge, 0.68), false, 3.0)
-		var plaque: = Rect2(rect.position + Vector2(-34.0, -32.0), Vector2(rect.size.x + 68.0, 24.0))
-		draw_rect(plaque, Color(0.018, 0.023, 0.018, 0.94), true)
-		draw_rect(plaque, Color("7e673b"), false, 1.0)
-		var label: = "%s REQUIRED" % String(GameData.data.PICKAXES[int(barrier.requiresPickaxe)].name).to_upper() if locked else "BREAK · %s" % String(barrier.label).to_upper()
-		draw_string(ThemeDB.fallback_font, plaque.position + Vector2(0.0, 16.0), label, HORIZONTAL_ALIGNMENT_CENTER, plaque.size.x, 8, edge)
+		var vertical: = rect.size.y >= rect.size.x
+		var along: = Vector2.DOWN if vertical else Vector2.RIGHT
+		var across: = Vector2.RIGHT if vertical else Vector2.DOWN
+		var length: = rect.size.y if vertical else rect.size.x
+		var thickness: = rect.size.x if vertical else rect.size.y
+		var center: = rect.get_center()
+		var wall: = Color(String(mine.wall)).darkened(0.46)
+		var shadow_half_length: = length * 0.5 + 14.0
+		var shadow_half_width: = thickness * 0.5 + 15.0
+		var shadow: = _barrier_quad(center, along, across, shadow_half_length, shadow_half_width)
+		draw_colored_polygon(shadow, Color(wall, 0.94))
+		for end_sign_value in [-1.0, 1.0]:
+			var end_sign: float = float(end_sign_value)
+			var root: = center + along * end_sign * (length * 0.5 + 5.0)
+			draw_circle(root, thickness * 0.54, Color(wall, 0.9))
+
+
+func _draw_premium_barrier(barrier: Dictionary, rect: Rect2) -> void :
+	var barrier_id: = String(barrier.id)
+	var required: = int(barrier.requiresPickaxe)
+	var locked: = int(RunState.pickaxe_level) < required
+	var vertical: = rect.size.y >= rect.size.x
+	var along: = Vector2.DOWN if vertical else Vector2.RIGHT
+	var across: = Vector2.RIGHT if vertical else Vector2.DOWN
+	var length: = rect.size.y if vertical else rect.size.x
+	var thickness: = rect.size.x if vertical else rect.size.y
+	var center: = rect.get_center()
+	var seed: = absi(barrier_id.hash())
+	var wall: = Color(String(mine.wall))
+	var edge: = Color(String(mine.get("wallEdge", mine.detail)))
+	var stone_dark: = wall.darkened(0.34)
+	var stone_mid: = wall.lerp(edge, 0.34).lightened(0.05)
+	var stone_light: = edge.lightened(0.11)
+	var accent: = Color(String(BARRIER_ACCENTS.get(mine_id, mine.detail)))
+	var row_count: = maxi(4, ceili(length / 43.0))
+	var row_step: = length / float(row_count)
+	for row in row_count:
+		for column in 2:
+			var stagger: = -0.5 if column == 0 else 0.5
+			var row_noise: = _barrier_noise(seed, row * 13 + column * 7)
+			var cross_noise: = _barrier_noise(seed, row * 17 + column * 11 + 71)
+			var position: = (
+				center
+				+ along * (-length * 0.5 + (float(row) + 0.5) * row_step + (row_noise - 0.5) * 5.0)
+				+ across * (stagger * thickness * 0.48 + (cross_noise - 0.5) * 5.0)
+			)
+			_draw_barrier_stone(
+				position, along, across, row_step * (0.68 + row_noise * 0.08), 
+				thickness * (0.39 + cross_noise * 0.045), stone_dark, stone_mid, stone_light, 
+				seed + row * 29 + column * 101
+			)
+	# Wider end stones visually grow the barrier into both adjoining cave walls.
+	for end_index in 2:
+		var end_sign: = -1.0 if end_index == 0 else 1.0
+		for shoulder in 3:
+			var shoulder_noise: = _barrier_noise(seed, 311 + end_index * 37 + shoulder * 19)
+			var shoulder_position: = (
+				center
+				+ along * end_sign * (length * 0.5 + 4.0 + shoulder_noise * 5.0)
+				+ across * (float(shoulder - 1) * thickness * 0.43)
+			)
+			_draw_barrier_stone(
+				shoulder_position, along, across, 24.0 + shoulder_noise * 5.0, 
+				thickness * 0.34, stone_dark, stone_mid, stone_light, 
+				seed + 503 + end_index * 83 + shoulder * 41
+			)
+	if required > 1:
+		_draw_barrier_bracing(center, along, across, length, thickness, required, locked, accent, barrier_id)
+	var integrity: = _barrier_integrity(barrier_id)
+	if integrity < 0.98:
+		_draw_barrier_fractures(center, along, across, length, thickness, integrity, accent, seed)
+
+
+func _draw_barrier_stone(
+	center: Vector2, 
+	along: Vector2, 
+	across: Vector2, 
+	along_radius: float, 
+	across_radius: float, 
+	dark: Color, 
+	mid: Color, 
+	light: Color, 
+	seed: int
+) -> void :
+	var points: = PackedVector2Array()
+	for point_index in 8:
+		var angle: = TAU * float(point_index) / 8.0
+		var shape_noise: = 0.82 + _barrier_noise(seed, point_index * 23 + 5) * 0.24
+		points.append(
+			center
+			+ across * cos(angle) * across_radius * shape_noise
+			+ along * sin(angle) * along_radius * shape_noise
+		)
+	var shadow_points: = PackedVector2Array()
+	for point in points:
+		shadow_points.append(point + along * 2.5 + across * 1.5)
+	draw_colored_polygon(shadow_points, Color(dark.darkened(0.4), 0.88))
+	var shade: = _barrier_noise(seed, 271)
+	var body_color: = mid.lerp(dark, shade * 0.32)
+	draw_colored_polygon(points, Color(body_color, 0.99))
+	# Broad, uneven tonal planes keep the masonry in the painterly world style
+	# while preserving the authored outer silhouette.
+	var crown: = (
+		center
+		- along * along_radius * (0.1 + _barrier_noise(seed, 283) * 0.16)
+		- across * across_radius * (0.06 + _barrier_noise(seed, 293) * 0.14)
+	)
+	var upper_plane: = PackedVector2Array([points[4], points[5], points[6], points[7], crown])
+	var lit_plane: = PackedVector2Array([points[7], points[0], points[1], crown])
+	var lower_plane: = PackedVector2Array([points[1], points[2], points[3], crown])
+	var deep_plane: = PackedVector2Array([points[3], points[4], crown])
+	draw_colored_polygon(upper_plane, Color(light.lerp(body_color, 0.48), 0.24 + shade * 0.06))
+	draw_colored_polygon(lit_plane, Color(light.lerp(body_color, 0.64), 0.14))
+	draw_colored_polygon(lower_plane, Color(dark, 0.2 + shade * 0.1))
+	draw_colored_polygon(deep_plane, Color(dark.darkened(0.18), 0.17))
+	var outline: = PackedVector2Array(points)
+	outline.append(points[0])
+	draw_polyline(outline, Color(dark, 0.86), 2.1, true)
+	draw_line(crown, points[7], Color(light, 0.36), 1.05, true)
+	draw_line(crown, points[1], Color(light, 0.25), 0.9, true)
+	draw_line(crown, points[3], Color(dark, 0.48), 1.15, true)
+	draw_line(crown, points[5], Color(dark, 0.34), 0.9, true)
+	var fracture_noise: = _barrier_noise(seed, 347)
+	if fracture_noise > 0.48:
+		var fracture_mid: = crown + along * along_radius * (0.16 + fracture_noise * 0.15)
+		var fracture_end: = fracture_mid + across * across_radius * (fracture_noise - 0.5) * 0.62 + along * along_radius * 0.2
+		draw_polyline(PackedVector2Array([crown, fracture_mid, fracture_end]), Color(dark.darkened(0.28), 0.52), 0.85, true)
+	_draw_barrier_stone_detail(center, along, across, along_radius, across_radius, light, seed)
+
+
+func _draw_barrier_stone_detail(
+	center: Vector2, 
+	along: Vector2, 
+	across: Vector2, 
+	along_radius: float, 
+	across_radius: float, 
+	light: Color, 
+	seed: int
+) -> void :
+	var detail_noise: = _barrier_noise(seed, 401)
+	if detail_noise < 0.43:
+		return
+	var detail_color: Color
+	match mine_id:
+		"moonMine":
+			detail_color = Color("78d7e8")
+		"emberMine":
+			detail_color = Color("d76a31")
+		"starMine":
+			detail_color = Color("9b85d7")
+		_:
+			detail_color = Color("7d8a50")
+	var detail_position: = (
+		center
+		+ along * (detail_noise - 0.62) * along_radius * 0.66
+		+ across * (_barrier_noise(seed, 419) - 0.5) * across_radius * 0.9
+	)
+	if mine_id == "mossMine":
+		draw_circle(detail_position, 1.15 + detail_noise, Color(detail_color, 0.34))
+		draw_circle(detail_position + across * 3.1 + along * 1.2, 0.8, Color(detail_color.lightened(0.12), 0.24))
+	else:
+		var glint_length: = 3.5 + detail_noise * 4.0
+		draw_line(
+			detail_position - along * glint_length * 0.5, 
+			detail_position + along * glint_length * 0.5 + across * 1.8, 
+			Color(detail_color.lerp(light, 0.16), 0.25), 
+			0.85, 
+			true
+		)
+
+
+func _draw_barrier_bracing(
+	center: Vector2, 
+	along: Vector2, 
+	across: Vector2, 
+	length: float, 
+	thickness: float, 
+	required: int, 
+	locked: bool, 
+	accent: Color, 
+	barrier_id: String
+) -> void :
+	var metal_dark: = Color("17191a")
+	var metal: = Color("34383a").lerp(accent.darkened(0.5), 0.12)
+	var metal_edge: = Color("737779")
+	var beam_start: = center - along * (length * 0.5 - 13.0)
+	var beam_end: = center + along * (length * 0.5 - 13.0)
+	for rail_sign_value in [-1.0, 1.0]:
+		var rail_sign: float = float(rail_sign_value)
+		var offset: = across * rail_sign * thickness * 0.28
+		_draw_barrier_beam(beam_start + offset, beam_end + offset, across, metal_dark, metal, metal_edge, 8.0)
+	var brace_count: = 2 if required <= 2 else 3
+	for brace_index in brace_count:
+		var ratio: = (float(brace_index) + 1.0) / (float(brace_count) + 1.0)
+		var brace_center: = center - along * length * 0.5 + along * length * ratio
+		_draw_barrier_beam(
+			brace_center - across * (thickness * 0.5 + 7.0), 
+			brace_center + across * (thickness * 0.5 + 7.0), 
+			along, metal_dark, metal, metal_edge, 8.5
+		)
+		for rivet_sign_value in [-1.0, 1.0]:
+			var rivet_sign: float = float(rivet_sign_value)
+			var rivet: = brace_center + across * rivet_sign * thickness * 0.37
+			draw_circle(rivet, 3.2, metal_dark)
+			draw_circle(rivet - along * 0.8 - across * 0.5, 1.35, Color(metal_edge, 0.82))
+	_draw_barrier_lock(center, along, across, length, thickness, locked, accent, barrier_id)
+
+
+func _draw_barrier_beam(
+	start: Vector2, 
+	finish: Vector2, 
+	highlight_offset: Vector2, 
+	dark: Color, 
+	metal: Color, 
+	edge: Color, 
+	width: float
+) -> void :
+	draw_line(start, finish, Color(dark, 0.98), width + 4.0, true)
+	draw_line(start, finish, Color(metal, 0.99), width, true)
+	draw_line(start - highlight_offset * 1.35, finish - highlight_offset * 1.35, Color(edge, 0.62), 1.25, true)
+
+
+func _draw_barrier_lock(
+	center: Vector2, 
+	along: Vector2, 
+	across: Vector2, 
+	length: float, 
+	thickness: float, 
+	locked: bool, 
+	accent: Color, 
+	barrier_id: String
+) -> void :
+	var glow_alpha: = 0.18 if locked else 0.1
+	for radius in [25.0, 19.0, 13.0]:
+		draw_circle(center, radius, Color(accent, glow_alpha * (1.0 - (radius - 13.0) / 20.0)))
+	if BARRIER_ASSETS.has(barrier_id):
+		var core_texture: Texture2D = _texture(String(BARRIER_ASSETS[barrier_id]))
+		var source_size: = Vector2(core_texture.get_size())
+		var core_height: = minf(length * 0.64, 182.0)
+		var core_width: = core_height * source_size.x / maxf(1.0, source_size.y)
+		var max_width: = thickness * 0.58
+		if core_width > max_width:
+			core_width = max_width
+			core_height = core_width * source_size.y / maxf(1.0, source_size.x)
+		var core_size: = Vector2(core_width, core_height)
+		var core_tint: = Color(1, 1, 1, 0.98 if locked else 0.72)
+		if along.is_equal_approx(Vector2.DOWN):
+			draw_texture_rect(core_texture, Rect2(center - core_size * 0.5, core_size), false, core_tint)
+		else:
+			draw_set_transform(center, PI * 0.5, Vector2.ONE)
+			draw_texture_rect(core_texture, Rect2(-core_size * 0.5, core_size), false, core_tint)
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	var outer: = _barrier_diamond(center, along, across, 25.0, 25.0)
+	var inner: = _barrier_diamond(center, along, across, 17.0, 17.0)
+	draw_colored_polygon(outer, Color("17191a"))
+	draw_polyline(_closed_polygon(outer), Color("74797b"), 2.1, true)
+	draw_colored_polygon(inner, Color("292d2e"))
+	draw_polyline(_closed_polygon(inner), Color(accent, 0.62 if locked else 0.36), 1.6, true)
+	draw_circle(center, 8.3, Color("121516"))
+	draw_circle(center, 5.8, Color(accent, 0.96 if locked else 0.48))
+	var rune: = PackedVector2Array([
+		center + across * -3.4 + along * -3.8, 
+		center + across * 3.5 + along * -3.8, 
+		center + across * 3.5 + along * 2.5, 
+		center + across * -1.0 + along * 2.5, 
+		center + across * -1.0 + along * -0.6, 
+		center + across * 1.4 + along * -0.6, 
+	])
+	draw_polyline(rune, Color(accent.lightened(0.28), 0.94 if locked else 0.55), 1.55, true)
+
+
+func _draw_barrier_fractures(
+	center: Vector2, 
+	along: Vector2, 
+	across: Vector2, 
+	length: float, 
+	thickness: float, 
+	integrity: float, 
+	accent: Color, 
+	seed: int
+) -> void :
+	var fracture_count: = clampi(ceili((1.0 - integrity) * 7.0), 1, 6)
+	for fracture_index in fracture_count:
+		var along_noise: = _barrier_noise(seed, 701 + fracture_index * 31)
+		var across_noise: = _barrier_noise(seed, 733 + fracture_index * 43)
+		var origin: = (
+			center
+			+ along * (along_noise - 0.5) * length * 0.72
+			+ across * (across_noise - 0.5) * thickness * 0.54
+		)
+		var bend: = origin + along * (5.0 + along_noise * 6.0) + across * (across_noise - 0.5) * 9.0
+		var finish: = bend + along * (4.0 + across_noise * 5.0) - across * (along_noise - 0.5) * 10.0
+		draw_polyline(PackedVector2Array([origin, bend, finish]), Color("100c09"), 2.4, true)
+		draw_polyline(PackedVector2Array([origin, bend, finish]), Color(accent, 0.28), 0.8, true)
+
+
+func _barrier_integrity(barrier_id: String) -> float:
+	var maximum: = 0.0
+	var current: = 0.0
+	for rock_value in mine.rocks:
+		var rock: Array = Array(rock_value)
+		if rock.size() < 4 or String(rock[3]) != barrier_id:
+			continue
+		var kind: = String(rock[0])
+		var max_hp: = float(Dictionary(GameData.data.ROCK_TYPES[kind]).hp)
+		maximum += max_hp
+		var cell: = Vector2i(floori(float(rock[1]) / TILE_SIZE), floori(float(rock[2]) / TILE_SIZE))
+		if blocks.has(cell):
+			current += float(Dictionary(blocks[cell]).get("hp", 0))
+	return clampf(current / maximum, 0.0, 1.0) if maximum > 0.0 else 1.0
+
+
+func _barrier_quad(center: Vector2, along: Vector2, across: Vector2, half_length: float, half_width: float) -> PackedVector2Array:
+	return PackedVector2Array([
+		center - along * half_length - across * half_width, 
+		center - along * half_length + across * half_width, 
+		center + along * half_length + across * half_width, 
+		center + along * half_length - across * half_width, 
+	])
+
+
+func _barrier_diamond(center: Vector2, along: Vector2, across: Vector2, along_radius: float, across_radius: float) -> PackedVector2Array:
+	return PackedVector2Array([
+		center - along * along_radius, 
+		center + across * across_radius, 
+		center + along * along_radius, 
+		center - across * across_radius, 
+	])
+
+
+func _closed_polygon(points: PackedVector2Array) -> PackedVector2Array:
+	var closed: = PackedVector2Array(points)
+	if not points.is_empty():
+		closed.append(points[0])
+	return closed
+
+
+func _barrier_noise(seed: int, channel: int) -> float:
+	var value: = float(seed * 15731 + channel * 789221)
+	return fposmod(sin(value * 0.000173) * 43758.5453, 1.0)
 
 
 func _draw_route_markers_and_labels() -> void :
@@ -1956,6 +2303,13 @@ func _is_barrier_role(role: String) -> bool:
 
 
 func _draw_wall_face(cell: Vector2i, side: int, bedrock: bool) -> void :
+	if bedrock:
+		_draw_bedrock_face(cell, side)
+	else:
+		_draw_natural_wall_face(cell, side)
+
+
+func _wall_edge_basis(cell: Vector2i, side: int) -> Dictionary:
 	var rect: = Rect2(Vector2(cell) * TILE_SIZE, Vector2.ONE * TILE_SIZE)
 	var edge_start: Vector2
 	var tangent: Vector2
@@ -1977,39 +2331,136 @@ func _draw_wall_face(cell: Vector2i, side: int, bedrock: bool) -> void :
 			edge_start = rect.position
 			tangent = Vector2.DOWN
 			outward = Vector2.LEFT
+	return {"start": edge_start, "tangent": tangent, "outward": outward}
+
+
+func _draw_natural_wall_face(cell: Vector2i, side: int) -> void :
+	var basis: = _wall_edge_basis(cell, side)
+	var edge_start: Vector2 = Vector2(basis.start)
+	var tangent: Vector2 = Vector2(basis.tangent)
+	var outward: Vector2 = Vector2(basis.outward)
 	var outer_points: = PackedVector2Array()
 	var inner_points: = PackedVector2Array()
 	for sample in 5:
 		var ratio: = float(sample) * 0.25
 		var outer_noise: = _wall_edge_noise(cell, side, sample, 0)
 		var depth_noise: = _wall_edge_noise(cell, side, sample, 1)
-		outer_points.append(edge_start + tangent * (TILE_SIZE * ratio) + outward * (1.2 + outer_noise * 3.6))
-		inner_points.append(edge_start + tangent * (TILE_SIZE * ratio) - outward * (9.5 + depth_noise * 4.0))
+		outer_points.append(edge_start + tangent * (TILE_SIZE * ratio) + outward * (3.0 + outer_noise * 7.5))
+		inner_points.append(edge_start + tangent * (TILE_SIZE * ratio) - outward * (13.5 + depth_noise * 8.5))
 	var ribbon: = PackedVector2Array(outer_points)
 	for index in range(inner_points.size() - 1, -1, -1):
 		ribbon.append(inner_points[index])
 	var wall_color: = Color(String(mine.wall))
 	var edge_color: = Color(String(mine.get("wallEdge", mine.detail)))
-	var shadow: = Color("171916") if bedrock else wall_color.darkened(0.42)
-	var stone: = Color("343833") if bedrock else wall_color.lerp(edge_color, 0.32).lightened(0.03)
-	var ridge: = Color("737970") if bedrock else edge_color.lightened(0.08)
-	var highlight: = Color("b5bcb1") if bedrock else Color(String(mine.detail)).lerp(Color.WHITE, 0.08)
-	draw_polyline(outer_points, Color(shadow, 0.92), 7.0, true)
-	draw_colored_polygon(ribbon, Color(stone, 0.98))
-	draw_polyline(inner_points, Color(shadow, 0.72), 2.2, true)
-	draw_polyline(outer_points, Color(ridge, 0.9), 2.4, true)
+	var shadow: = wall_color.darkened(0.52)
+	var stone: = wall_color.lerp(edge_color, 0.34).lightened(0.025)
+	var ridge: = edge_color.lightened(0.06)
+	var highlight: = Color(String(mine.detail)).lerp(Color.WHITE, 0.05)
+	var shadow_points: = PackedVector2Array()
+	for point in outer_points:
+		shadow_points.append(point + outward * 3.8)
+	draw_polyline(shadow_points, Color(shadow, 0.78), 9.0, true)
+	draw_colored_polygon(ribbon, Color(stone, 0.99))
+	# Broad, adjoining facets make the face read as rock grown into the wall.  The
+	# shared boundary samples keep every facet continuous across neighbouring cells.
 	for sample in range(4):
-		if _wall_edge_noise(cell, side, sample, 2) < 0.34:
+		var facet_noise: = _wall_edge_noise(cell, side, sample, 4)
+		var facet: = PackedVector2Array([
+			outer_points[sample], outer_points[sample + 1],
+			inner_points[sample + 1], inner_points[sample],
+		])
+		var facet_color: = stone.lightened((facet_noise - 0.5) * 0.105)
+		draw_colored_polygon(facet, Color(facet_color, 0.68))
+		if facet_noise > 0.58:
+			var crease_start: Vector2 = outer_points[sample].lerp(inner_points[sample], 0.48)
+			var crease_end: Vector2 = outer_points[sample + 1].lerp(inner_points[sample + 1], 0.67)
+			draw_line(crease_start, crease_end, Color(shadow, 0.34), 1.1, true)
+	draw_polyline(inner_points, Color(shadow, 0.5), 2.8, true)
+	for sample in range(4):
+		if _wall_edge_noise(cell, side, sample, 2) < 0.46:
 			continue
-		var start_point: = outer_points[sample] - outward * 0.7
-		var end_point: = outer_points[sample + 1] - outward * 0.7
-		draw_line(start_point, end_point, Color(highlight, 0.34), 0.9, true)
-	for sample in range(1, 4):
-		var chip_noise: = _wall_edge_noise(cell, side, sample, 3)
-		if chip_noise < 0.38:
-			continue
-		var chip_position: = edge_start + tangent * (TILE_SIZE * float(sample) * 0.25) - outward * (4.4 + chip_noise * 3.5)
-		draw_circle(chip_position, 0.9 + chip_noise * 1.2, Color(ridge, 0.5))
+		var start_point: Vector2 = outer_points[sample].lerp(inner_points[sample], 0.06)
+		var end_point: Vector2 = outer_points[sample + 1].lerp(inner_points[sample + 1], 0.06)
+		draw_line(start_point, end_point, Color(highlight, 0.28), 1.1, true)
+	_draw_embedded_wall_stone(cell, side, edge_start, tangent, outward, stone, ridge, 0)
+	if _wall_edge_noise(cell, side, 2, 7) > 0.52:
+		_draw_embedded_wall_stone(cell, side, edge_start, tangent, outward, stone, ridge, 1)
+
+
+func _draw_embedded_wall_stone(
+	cell: Vector2i,
+	side: int,
+	edge_start: Vector2,
+	tangent: Vector2,
+	outward: Vector2,
+	stone: Color,
+	ridge: Color,
+	stone_index: int
+) -> void :
+	var along_noise: = _wall_edge_noise(cell, side, stone_index + 1, 5)
+	var shape_noise: = _wall_edge_noise(cell, side, stone_index + 2, 6)
+	var along: = 0.18 + along_noise * 0.62
+	var center: = edge_start + tangent * (TILE_SIZE * along) - outward * (5.8 + shape_noise * 4.0)
+	var half_width: = 4.8 + shape_noise * 4.4
+	var half_depth: = 3.8 + along_noise * 3.2
+	var rock: = PackedVector2Array([
+		center - tangent * half_width + outward * half_depth * 0.12,
+		center - tangent * half_width * 0.46 + outward * half_depth,
+		center + tangent * half_width * 0.38 + outward * half_depth * 0.82,
+		center + tangent * half_width - outward * half_depth * 0.18,
+		center + tangent * half_width * 0.28 - outward * half_depth,
+		center - tangent * half_width * 0.55 - outward * half_depth * 0.72,
+	])
+	var rock_color: = stone.lerp(ridge, 0.18 + shape_noise * 0.16).lightened((along_noise - 0.5) * 0.08)
+	draw_colored_polygon(rock, Color(rock_color, 0.92))
+	draw_line(rock[1], rock[2], Color(ridge, 0.24), 0.9, true)
+	draw_line(rock[3], rock[4], Color(stone.darkened(0.35), 0.3), 1.0, true)
+
+
+func _draw_bedrock_face(cell: Vector2i, side: int) -> void :
+	var basis: = _wall_edge_basis(cell, side)
+	var edge_start: Vector2 = Vector2(basis.start)
+	var tangent: Vector2 = Vector2(basis.tangent)
+	var outward: Vector2 = Vector2(basis.outward)
+	var outer_points: = PackedVector2Array()
+	var inner_points: = PackedVector2Array()
+	for sample in 5:
+		var ratio: = float(sample) * 0.25
+		var outer_noise: = _wall_edge_noise(cell, side, sample, 8)
+		var depth_noise: = _wall_edge_noise(cell, side, sample, 9)
+		outer_points.append(edge_start + tangent * (TILE_SIZE * ratio) + outward * (2.0 + outer_noise * 3.0))
+		inner_points.append(edge_start + tangent * (TILE_SIZE * ratio) - outward * (25.0 + depth_noise * 10.0))
+	var face: = PackedVector2Array(outer_points)
+	for index in range(inner_points.size() - 1, -1, -1):
+		face.append(inner_points[index])
+	var outer_shadow: = PackedVector2Array()
+	for point in outer_points:
+		outer_shadow.append(point + outward * 8.0)
+	draw_polyline(outer_shadow, Color(0.004, 0.005, 0.004, 0.82), 18.0, true)
+	var foundation: = Color("242821").lerp(Color("343932"), _bedrock_plate_noise(cell, side + 1) * 0.12)
+	draw_colored_polygon(face, Color(foundation, 1.0))
+	# Wide tonal strata continue from tile to tile.  They deliberately avoid chips,
+	# bright rims and damage cracks: this is a permanent geological mass.
+	for layer in range(2):
+		var stratum: = PackedVector2Array()
+		var depth_ratio: = 0.34 + float(layer) * 0.34
+		for sample in 5:
+			stratum.append(outer_points[sample].lerp(inner_points[sample], depth_ratio))
+		var stratum_color: = Color("596057") if layer == 0 else Color("080a08")
+		var alpha: = 0.18 if layer == 0 else 0.26
+		draw_polyline(stratum, Color(stratum_color, alpha), 4.8 if layer == 0 else 6.2, true)
+	var outer_plane: = PackedVector2Array()
+	for point in outer_points:
+		outer_plane.append(point - outward * 0.8)
+	draw_polyline(outer_plane, Color("6f756b", 0.24), 1.4, true)
+
+
+func _bedrock_plate_noise(cell: Vector2i, channel: int) -> float:
+	# Quantising to broad 4x3 regions keeps variation larger than the mining grid.
+	var region_x: = floori(float(cell.x) / 4.0)
+	var region_y: = floori(float(cell.y) / 3.0)
+	var seed: = float(region_x * 19349663 + region_y * 83492791 + channel * 265443576)
+	return fposmod(sin(seed * 0.0000137) * 43758.5453, 1.0)
 
 
 func _wall_edge_noise(cell: Vector2i, side: int, sample: int, channel: int) -> float:
@@ -2036,15 +2487,27 @@ func _draw_wall_corner_caps(cell: Vector2i, open_sides: Array[bool], bedrock: bo
 		[2, 1, rect.end],
 		[2, 3, Vector2(rect.position.x, rect.end.y)],
 	]
-	var edge_color: = Color("737970") if bedrock else Color(String(mine.get("wallEdge", mine.detail))).lightened(0.04)
-	var fill_color: = Color("343833") if bedrock else Color(String(mine.wall)).lerp(edge_color, 0.28)
+	var edge_color: = Color("697068") if bedrock else Color(String(mine.get("wallEdge", mine.detail))).lightened(0.04)
+	var fill_color: = Color("2b302a") if bedrock else Color(String(mine.wall)).lerp(edge_color, 0.3)
 	for pair_value in corner_pairs:
 		var pair: Array = Array(pair_value)
 		if not bool(open_sides[int(pair[0])]) or not bool(open_sides[int(pair[1])]):
 			continue
 		var corner: Vector2 = Vector2(pair[2])
-		draw_circle(corner, 5.2, Color(fill_color, 0.98))
-		draw_arc(corner, 4.7, 0.0, TAU, 10, Color(edge_color, 0.72), 1.3, true)
+		var radius: = 14.0 if bedrock else 9.2
+		var shadow_points: = PackedVector2Array()
+		var stone_points: = PackedVector2Array()
+		for point_index in 8:
+			var angle: = float(point_index) * TAU / 8.0
+			var noise: = _wall_edge_noise(cell, int(pair[0]), point_index % 5, 10 + int(pair[1]))
+			var direction: = Vector2(cos(angle), sin(angle))
+			shadow_points.append(corner + direction * (radius + 3.0 + noise * 2.5))
+			stone_points.append(corner + direction * (radius * (0.78 + noise * 0.22)))
+		draw_colored_polygon(shadow_points, Color(0.006, 0.007, 0.006, 0.76))
+		draw_colored_polygon(stone_points, Color(fill_color, 0.99))
+		if not bedrock:
+			draw_line(stone_points[1], stone_points[3], Color(edge_color, 0.28), 1.0, true)
+			draw_line(stone_points[4], stone_points[6], Color(fill_color.darkened(0.38), 0.42), 1.2, true)
 
 
 func _draw_target() -> void :

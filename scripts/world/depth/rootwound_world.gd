@@ -627,6 +627,12 @@ func _build_terrain() -> void :
 		for index_value in RunState.dug_cells(mine_id, DEPTH):
 			var index: = int(index_value)
 			if index >= 0 and index < terrain_hp.size():
+				var cell: = Vector2i(index % cols, floori(float(index) / float(cols)))
+				# The outer ring is the permanent world shell.  Older saves may
+				# contain dug perimeter cells from before bedrock was explicit;
+				# ignore those entries so the boundary can never reopen.
+				if _terrain_is_bedrock(cell):
+					continue
 				dug_indices[index] = true
 				terrain_hp[index] = 0
 
@@ -765,7 +771,7 @@ func _clear_circle(center: Vector2, radius: float) -> void :
 	for row in range(min_row, max_row + 1):
 		for col in range(min_col, max_col + 1):
 			var cell: = Vector2i(col, row)
-			if _cell_center(cell).distance_to(center) <= radius:
+			if not _terrain_is_bedrock(cell) and _cell_center(cell).distance_to(center) <= radius:
 				terrain_hp[_cell_index(cell)] = 0
 
 
@@ -944,6 +950,10 @@ func _reset_heat_streak() -> void :
 
 func _hit_terrain(cell: Vector2i) -> bool:
 	if not _terrain_is_solid(cell):
+		return false
+	if _terrain_is_bedrock(cell):
+		AudioDirector.play_blocked()
+		message_changed.emit("ANCIENT BEDROCK · the world shell cannot be mined")
 		return false
 	if not _has_deep_tool():
 		AudioDirector.play_blocked()
@@ -1718,7 +1728,7 @@ func _apply_depth_crusher_wave(center: Vector2i, tool: Dictionary) -> void :
 			if x_offset == 0 and y_offset == 0:
 				continue
 			var cell: = center + Vector2i(x_offset, y_offset)
-			if not _terrain_is_solid(cell):
+			if not _terrain_is_solid(cell) or _terrain_is_bedrock(cell):
 				continue
 			var index: = _cell_index(cell)
 			var distance: = maxi(absi(x_offset), absi(y_offset))
@@ -1813,14 +1823,21 @@ func _normalized_tool(stats: Dictionary) -> Dictionary:
 
 
 func _terrain_is_solid(cell: Vector2i) -> bool:
-	return _cell_in_bounds(cell) and terrain_hp[_cell_index(cell)] > 0
+	return _cell_in_bounds(cell) and (_terrain_is_bedrock(cell) or terrain_hp[_cell_index(cell)] > 0)
 
 
 func _visual_is_solid(cell: Vector2i) -> bool:
 	if not _cell_in_bounds(cell):
 		return false
 	var index: = _cell_index(cell)
-	return terrain_hp[index] > 0 or concealed_cells.has(index)
+	return _terrain_is_bedrock(cell) or terrain_hp[index] > 0 or concealed_cells.has(index)
+
+
+func _terrain_is_bedrock(cell: Vector2i) -> bool:
+	return (
+		_cell_in_bounds(cell)
+		and (cell.x == 0 or cell.y == 0 or cell.x == cols - 1 or cell.y == rows - 1)
+	)
 
 
 func _cell_in_bounds(cell: Vector2i) -> bool:
@@ -2032,6 +2049,7 @@ func _draw() -> void :
 			if _visual_is_solid(cell):
 				_draw_terrain_edge_details(cell)
 	_draw_pocket_landmarks()
+	_draw_drill_gates()
 	_draw_resources()
 	_draw_depth_landmarks()
 	for impact in impacts:
@@ -2043,17 +2061,55 @@ func _draw() -> void :
 
 func _draw_terrain_top(cell: Vector2i) -> void :
 	var rect: = Rect2(Vector2(cell) * TILE_SIZE, Vector2.ONE * TILE_SIZE).grow(0.7)
+	if _terrain_is_bedrock(cell):
+		_draw_bedrock_top(cell, rect)
+		return
 	draw_rect(rect, _profile_color("dirt", "211710"), true)
-	draw_texture_rect(floor_texture, rect, false, Color(0.82, 0.78, 0.72, 0.72))
+	draw_texture_rect_region(
+		floor_texture,
+		rect,
+		_terrain_texture_region(cell),
+		Color(0.82, 0.78, 0.72, 0.72)
+	)
 	var noise: = fposmod(sin(float(cell.x * 31 + cell.y * 17)) * 43758.5453, 1.0)
-	draw_circle(rect.position + Vector2(8.0 + noise * 26.0, 9.0 + (1.0 - noise) * 25.0), 1.0 + noise, Color(0.93, 0.67, 0.39, 0.13))
+	var fleck: = rect.position + Vector2(8.0 + noise * 26.0, 9.0 + (1.0 - noise) * 25.0)
+	draw_colored_polygon(PackedVector2Array([
+		fleck + Vector2(-1.8, 0.7), fleck + Vector2(-0.4, -1.5),
+		fleck + Vector2(1.7, -0.6), fleck + Vector2(1.1, 1.4),
+	]), Color(0.93, 0.67, 0.39, 0.13))
+
+
+func _terrain_texture_region(cell: Vector2i) -> Rect2:
+	var source_width: = maxi(roundi(floor_texture.get_width()), roundi(TILE_SIZE))
+	var source_height: = maxi(roundi(floor_texture.get_height()), roundi(TILE_SIZE))
+	var span_x: = maxi(1, source_width - roundi(TILE_SIZE) + 1)
+	var span_y: = maxi(1, source_height - roundi(TILE_SIZE) + 1)
+	var key: = absi(cell.x * 92821 + cell.y * 68917 + int(mine_id.hash()))
+	return Rect2(
+		Vector2(float(key % span_x), float((key / 13) % span_y)),
+		Vector2.ONE * TILE_SIZE
+	)
+
+
+func _draw_bedrock_top(cell: Vector2i, rect: Rect2) -> void :
+	var base: = Color("101210").lerp(_profile_color("dirt", "211710"), 0.16)
+	draw_rect(rect, base, true)
+	draw_texture_rect_region(
+		floor_texture,
+		rect,
+		_terrain_texture_region(cell),
+		Color(0.42, 0.46, 0.43, 0.14)
+	)
 
 
 func _draw_terrain_edge_details(cell: Vector2i) -> void :
 	var index: = _cell_index(cell)
-	if terrain_hp[index] <= 0:
+	var bedrock: = _terrain_is_bedrock(cell)
+	if terrain_hp[index] <= 0 and not bedrock:
 		return
-	var rect: = Rect2(Vector2(cell) * TILE_SIZE, Vector2.ONE * TILE_SIZE).grow(0.7)
+	# Edge endpoints stay on the exact tile lattice so neighbouring profiles
+	# share vertices.  Only the top fill grows to hide raster hairlines.
+	var rect: = Rect2(Vector2(cell) * TILE_SIZE, Vector2.ONE * TILE_SIZE)
 	var noise: = fposmod(sin(float(cell.x * 31 + cell.y * 17)) * 43758.5453, 1.0)
 	var open_sides: = [
 		not _visual_is_solid(cell + Vector2i.UP), 
@@ -2069,13 +2125,13 @@ func _draw_terrain_edge_details(cell: Vector2i) -> void :
 		if bool(open_sides[side]):
 			_draw_excavation_edge(cell, rect, side, noise)
 	var hp_ratio: = float(terrain_hp[index]) / maxf(1.0, float(terrain_max_hp))
-	if hp_ratio < 0.999:
+	if not bedrock and hp_ratio < 0.999:
 		var damage: = 1.0 - hp_ratio
 		var center: = rect.get_center()
 		draw_line(rect.position + Vector2(9, 8), center, Color(0.07, 0.035, 0.02, 0.84), 1.5 + damage * 2.3)
 		if damage > 0.45:
 			draw_line(center, rect.end - Vector2(7, 9), Color(0.07, 0.035, 0.02, 0.84), 1.5 + damage * 2.3)
-	if open_sides.has(true):
+	if not bedrock and open_sides.has(true):
 		_draw_mineral_hint(cell, open_sides)
 
 
@@ -2085,33 +2141,87 @@ func _draw_wall_ribbon(cell: Vector2i, rect: Rect2, side: int, noise: float) -> 
 	var outward_directions: = [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]
 	var start: Vector2 = starts[side]
 	var finish: Vector2 = ends[side]
-	var tangent: = (finish - start).normalized()
 	var outward: Vector2 = outward_directions[side]
+	if _terrain_is_bedrock(cell):
+		_draw_permanent_bedrock_face(cell, start, finish, outward, side)
+		return
 	var inward: = -outward
-	var bedrock: = not _cell_in_bounds(cell + Vector2i(outward))
-	var edge: = Color("676b64") if bedrock else _profile_color("wallEdge", "a2764d")
-	var dirt: = Color("151713") if bedrock else _profile_color("dirt", "211710")
-	var face: = dirt.lerp(edge, 0.28).lightened((noise - 0.5) * 0.07)
-	var shadow: = Color(0.008, 0.007, 0.006, 0.84)
-	var overlap: = tangent * 1.2
+	var outer: = _terrain_edge_profile(start, finish, outward, side, 2.2, 5.8, 0)
+	var inner: = _terrain_edge_profile(start, finish, inward, side, 7.8, 5.2, 17)
+	var shadow_outer: = _offset_edge_profile(outer, outward * 8.5)
+	var dirt: = _profile_color("dirt", "211710")
+	var edge: = _profile_color("wallEdge", "a2764d")
+	var face: = dirt.lerp(edge, 0.24).lightened((noise - 0.5) * 0.07)
+	draw_colored_polygon(_edge_strip_polygon(shadow_outer, outer), Color(0.008, 0.007, 0.006, 0.86))
+	draw_colored_polygon(_edge_strip_polygon(outer, inner), Color(face, 0.97))
+	draw_polyline(inner, Color(dirt.darkened(0.34), 0.66), 3.8, true)
+	_draw_wall_ribbon_detail(cell, start, finish, outward, side, false)
 
-	# Every segment has exactly the tile length plus a tiny overlap.  Adjacent
-	# segments therefore read as one continuous cut instead of repeated props.
-	draw_colored_polygon(PackedVector2Array([
-		start - overlap,
-		finish + overlap,
-		finish + overlap + outward * 12.0,
-		start - overlap + outward * 12.0,
-	]), shadow)
-	draw_colored_polygon(PackedVector2Array([
-		start - overlap + inward * 7.5,
-		finish + overlap + inward * 7.5,
-		finish + overlap + outward * 2.5,
-		start - overlap + outward * 2.5,
-	]), Color(face, 0.96))
-	draw_line(start - overlap + inward * 5.5, finish + overlap + inward * 5.5, Color(dirt.darkened(0.28), 0.72), 3.5, true)
-	draw_line(start - overlap + outward * 7.5, finish + overlap + outward * 7.5, Color(0.01, 0.009, 0.008, 0.34), 5.0, true)
-	_draw_wall_ribbon_detail(cell, start, finish, outward, side, bedrock)
+
+func _draw_permanent_bedrock_face(
+	cell: Vector2i,
+	start: Vector2,
+	finish: Vector2,
+	outward: Vector2,
+	side: int
+) -> void :
+	var inward: = -outward
+	var outer: = _terrain_edge_profile(start, finish, outward, side, 2.0, 3.8, 83)
+	var inner: = _terrain_edge_profile(start, finish, inward, side, 24.0, 7.5, 127)
+	var shadow_outer: = _offset_edge_profile(outer, outward * 13.0)
+	var base: = Color("111310").lerp(_profile_color("dirt", "211710"), 0.12)
+	var plate: = base.lerp(Color("555b55"), 0.34)
+	draw_colored_polygon(_edge_strip_polygon(shadow_outer, outer), Color(0.004, 0.005, 0.004, 0.94))
+	draw_colored_polygon(_edge_strip_polygon(outer, inner), Color(plate, 0.99))
+	draw_polyline(inner, Color(0.025, 0.03, 0.027, 0.74), 5.0, true)
+	# Broad, calm strata communicate ancient fused rock.  There are no damage
+	# cracks on permanent bedrock because it must never invite mining.
+	var stratum: = _terrain_edge_profile(start, finish, inward, side, 13.0, 2.4, 211)
+	draw_polyline(stratum, Color(0.32, 0.35, 0.33, 0.15), 5.4, true)
+
+
+func _terrain_edge_profile(
+	start: Vector2,
+	finish: Vector2,
+	direction: Vector2,
+	side: int,
+	base: float,
+	amplitude: float,
+	salt: int
+) -> PackedVector2Array:
+	var result: = PackedVector2Array()
+	var axis: = 0 if side % 2 == 0 else 1
+	for step in 5:
+		var point: = start.lerp(finish, float(step) / 4.0)
+		var roughness: = _terrain_edge_noise(point, axis, salt)
+		result.append(point + direction * (base + roughness * amplitude))
+	return result
+
+
+func _terrain_edge_noise(point: Vector2, axis: int, salt: int) -> float:
+	var sample_x: = roundi(point.x / (TILE_SIZE * 0.25))
+	var sample_y: = roundi(point.y / (TILE_SIZE * 0.25))
+	var key: = absi(
+		sample_x * 92821 + sample_y * 68917 + axis * 31337
+		+ salt * 1999 + int(mine_id.hash())
+	)
+	return fposmod(sin(float(key)) * 43758.5453, 1.0)
+
+
+func _offset_edge_profile(points: PackedVector2Array, offset: Vector2) -> PackedVector2Array:
+	var result: = PackedVector2Array()
+	for point in points:
+		result.append(point + offset)
+	return result
+
+
+func _edge_strip_polygon(first: PackedVector2Array, second: PackedVector2Array) -> PackedVector2Array:
+	var result: = PackedVector2Array()
+	for point in first:
+		result.append(point)
+	for index in range(second.size() - 1, -1, -1):
+		result.append(second[index])
+	return result
 
 
 func _draw_wall_ribbon_detail(
@@ -2122,53 +2232,86 @@ func _draw_wall_ribbon_detail(
 	side: int,
 	bedrock: bool
 ) -> void :
+	if bedrock:
+		return
 	var key: = absi(cell.x * 92821 + cell.y * 68917 + side * 31337)
 	if key % 3 != 0:
 		return
-	var along: = 0.22 + float(key % 53) / 100.0
-	var position: = start.lerp(finish, clampf(along, 0.22, 0.75)) - outward * (2.5 + float(key % 3))
-	var edge: = Color("858a81") if bedrock else _profile_color("wallEdge", "a2764d")
-	var detail: = Color("a9aca4") if bedrock else _profile_color("detail", "f0c47d")
-	var radius: = 1.7 + float(key % 4) * 0.38
-	draw_circle(position, radius + 1.3, Color(0.012, 0.01, 0.009, 0.62))
-	draw_circle(position, radius, Color(edge.lerp(detail, 0.28), 0.48))
-	if key % 5 == 0:
-		var tangent: = (finish - start).normalized()
-		draw_line(position - tangent * 4.0, position + tangent * 5.0 + outward * 1.5, Color(detail, 0.24), 1.2, true)
+	var stone_count: = 2 if key % 11 == 0 else 1
+	for stone_index in stone_count:
+		var stone_key: = key + stone_index * 48611
+		var along: = 0.22 + float(stone_key % 55) / 100.0
+		var position: = start.lerp(finish, clampf(along, 0.22, 0.77)) - outward * (3.2 + float(stone_key % 4))
+		var radius: = 5.2 + float(stone_key % 5) * 0.6
+		var points: = _angular_stone_points(position, radius, stone_key)
+		var closed: = points.duplicate()
+		closed.append(points[0])
+		var edge: = _profile_color("wallEdge", "a2764d")
+		var detail: = _profile_color("detail", "f0c47d")
+		draw_colored_polygon(points, Color(edge.lerp(detail, 0.22), 0.6))
+		draw_polyline(closed, Color(0.012, 0.01, 0.009, 0.68), 1.45, true)
+
+
+func _angular_stone_points(center: Vector2, radius: float, key: int) -> PackedVector2Array:
+	var points: = PackedVector2Array()
+	for vertex in 6:
+		var angle: = TAU * float(vertex) / 6.0 + float(key % 17) * 0.019
+		var scale: = 0.72 + _terrain_edge_noise(
+			center + Vector2(float(vertex) * 3.0, float(key % 11)),
+			vertex % 2,
+			key + vertex
+		) * 0.42
+		points.append(center + Vector2(cos(angle), sin(angle)) * radius * scale)
+	return points
 
 
 func _draw_wall_corner_joins(cell: Vector2i, rect: Rect2, open_sides: Array, noise: float) -> void :
 	var corners: = [rect.position, rect.position + Vector2(rect.size.x, 0), rect.end, rect.position + Vector2(0, rect.size.y)]
 	var pairs: = [[3, 0], [0, 1], [1, 2], [2, 3]]
-	var offsets: = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
 	for corner_index in 4:
 		var pair: Array = pairs[corner_index]
 		if not bool(open_sides[int(pair[0])]) or not bool(open_sides[int(pair[1])]):
 			continue
-		var bedrock: = (
-			not _cell_in_bounds(cell + offsets[int(pair[0])])
-			or not _cell_in_bounds(cell + offsets[int(pair[1])])
-		)
-		var edge: = Color("676b64") if bedrock else _profile_color("wallEdge", "a2764d")
-		var dirt: = Color("151713") if bedrock else _profile_color("dirt", "211710")
+		var bedrock: = _terrain_is_bedrock(cell)
+		var edge: = Color("555b55") if bedrock else _profile_color("wallEdge", "a2764d")
+		var dirt: = Color("111310") if bedrock else _profile_color("dirt", "211710")
 		var face: = dirt.lerp(edge, 0.28).lightened((noise - 0.5) * 0.07)
 		var point: Vector2 = corners[corner_index]
-		draw_circle(point, 9.0, Color(0.008, 0.007, 0.006, 0.82))
-		draw_circle(point, 5.2, Color(face, 0.96))
+		var key: = absi(cell.x * 77213 + cell.y * 48611 + corner_index * 31337)
+		var shadow_points: = _angular_stone_points(point, 17.0 if bedrock else 10.5, key)
+		var face_points: = _angular_stone_points(point, 12.0 if bedrock else 6.7, key + 19)
+		draw_colored_polygon(shadow_points, Color(0.006, 0.007, 0.006, 0.88))
+		draw_colored_polygon(face_points, Color(face, 0.98))
 
 
 func _draw_excavation_edge(cell: Vector2i, rect: Rect2, side: int, noise: float) -> void :
 	var starts: = [rect.position, rect.position + Vector2(rect.size.x, 0), rect.end, rect.position + Vector2(0, rect.size.y)]
 	var ends: = [rect.position + Vector2(rect.size.x, 0), rect.end, rect.position + Vector2(0, rect.size.y), rect.position]
-	var offsets: = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
+	var outward_directions: = [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]
 	var start: Vector2 = starts[side]
 	var finish: Vector2 = ends[side]
-	var bedrock: = not _cell_in_bounds(cell + offsets[side])
-	var edge: = Color("858a81") if bedrock else _profile_color("wallEdge", "a2764d")
-	var detail: = Color("a9aca4") if bedrock else _profile_color("detail", "f0c47d")
+	var bedrock: = _terrain_is_bedrock(cell)
+	var outer: = _terrain_edge_profile(
+		start,
+		finish,
+		outward_directions[side],
+		side,
+		2.0 if bedrock else 2.2,
+		3.8 if bedrock else 5.8,
+		83 if bedrock else 0
+	)
+	var edge: = Color("70766f") if bedrock else _profile_color("wallEdge", "a2764d")
+	var detail: = Color("a8ada7") if bedrock else _profile_color("detail", "f0c47d")
 	var ridge: = edge.lerp(detail, 0.12 + noise * 0.08)
-	draw_line(start, finish, Color(0.01, 0.009, 0.008, 0.94), 5.2, true)
-	draw_line(start, finish, Color(ridge, 0.82), 2.2, true)
+	draw_polyline(outer, Color(0.008, 0.009, 0.008, 0.96), 7.2 if bedrock else 5.6, true)
+	# A broken highlight keeps the edge readable without turning it back into a
+	# smooth pipe.  The massive world shell gets a broader, quieter ridge.
+	draw_polyline(
+		PackedVector2Array([outer[1], outer[2], outer[3]]),
+		Color(ridge, 0.58 if bedrock else 0.78),
+		2.8 if bedrock else 2.0,
+		true
+	)
 
 
 func _draw_mineral_hint(cell: Vector2i, open_sides: Array) -> void :
@@ -2177,7 +2320,7 @@ func _draw_mineral_hint(cell: Vector2i, open_sides: Array) -> void :
 	var rock_index: = -1
 	for value in rocks_by_cell[cell]:
 		var candidate_index: = int(value)
-		if not bool(rocks[candidate_index].broken):
+		if not bool(rocks[candidate_index].broken) and not bool(rocks[candidate_index].drill_gated):
 			rock_index = candidate_index
 			break
 	if rock_index < 0:
@@ -2203,6 +2346,250 @@ func _draw_mineral_hint(cell: Vector2i, open_sides: Array) -> void :
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
+func _draw_drill_gates() -> void :
+	var visible_rect: = _resource_visible_rect(Vector2(170, 180))
+	var gate_indices: Dictionary = {}
+	var gates_near_view: Dictionary = {}
+	for rock_index in rocks.size():
+		var rock: Dictionary = Dictionary(rocks[rock_index])
+		if not bool(rock.drill_gated) or bool(rock.broken):
+			continue
+		var gate_id: = String(rock.deposit_id)
+		if gate_id.is_empty():
+			continue
+		if not gate_indices.has(gate_id):
+			gate_indices[gate_id] = []
+		var indices: Array = Array(gate_indices[gate_id])
+		indices.append(rock_index)
+		gate_indices[gate_id] = indices
+		if visible_rect.has_point(Vector2(rock.position)) and _drill_gate_segment_visible(rock):
+			gates_near_view[gate_id] = true
+
+	var gate_ids: Array = gate_indices.keys()
+	gate_ids.sort()
+	for gate_id_value in gate_ids:
+		var gate_id: = String(gate_id_value)
+		if bool(gates_near_view.get(gate_id, false)):
+			_draw_drill_gate(gate_id, Array(gate_indices[gate_id]))
+
+
+func _drill_gate_segment_visible(rock: Dictionary) -> bool:
+	var cavern_id: = String(rock.cavern_id)
+	if not cavern_id.is_empty() and not _cavern_is_discovered(cavern_id):
+		return false
+	var cell: = Vector2i(rock.cell)
+	if not _terrain_is_solid(cell):
+		return true
+	for offset in [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]:
+		if not _visual_is_solid(cell + offset):
+			return true
+	return false
+
+
+func _draw_drill_gate(gate_id: String, indices: Array) -> void :
+	if indices.is_empty():
+		return
+	var positions: Array[Vector2] = []
+	var kind: = String(rocks[int(indices[0])].type)
+	var required_drill: = int(rocks[int(indices[0])].requires_drill_level)
+	for index_value in indices:
+		positions.append(Vector2(rocks[int(index_value)].position))
+
+	var min_position: = positions[0]
+	var max_position: = positions[0]
+	for position in positions:
+		min_position = min_position.min(position)
+		max_position = max_position.max(position)
+	var vertical: = (max_position.y - min_position.y) > (max_position.x - min_position.x)
+	var along: = Vector2.DOWN if vertical else Vector2.RIGHT
+	var across: = Vector2.RIGHT if vertical else Vector2.DOWN
+	positions.sort_custom(func(left: Vector2, right: Vector2) -> bool:
+		var left_along: = left.dot(along)
+		var right_along: = right.dot(along)
+		if not is_equal_approx(left_along, right_along):
+			return left_along < right_along
+		return left.dot(across) < right.dot(across)
+	)
+	var gate_center: = (min_position + max_position) * 0.5
+
+	var palette: = _drill_gate_palette(kind)
+	_draw_drill_gate_stone_body(positions, palette, gate_id, kind)
+	_draw_drill_gate_reinforcement(positions, palette, along, across, gate_center)
+	_draw_drill_gate_lock(gate_center, required_drill, palette)
+
+
+func _draw_drill_gate_stone_body(
+	positions: Array[Vector2], palette: Dictionary, gate_id: String, kind: String
+) -> void :
+	var shadow: Color = palette.shadow
+	var stone_dark: Color = palette.stone_dark
+	var stone: Color = palette.stone
+	var stone_light: Color = palette.stone_light
+	for position_index in range(1, positions.size()):
+		var start: = positions[position_index - 1]
+		var finish: = positions[position_index]
+		# Intact gate stones sit diagonally one tile apart.  A larger gap means a
+		# segment has been broken, so never paint a solid body across the opening.
+		if start.distance_to(finish) > TILE_SIZE * 1.55:
+			continue
+		draw_line(start + Vector2(5, 7), finish + Vector2(5, 7), Color(shadow, 0.88), 62.0, true)
+		draw_line(start, finish, Color(stone_dark, 0.98), 55.0, true)
+		draw_line(start, finish, Color(stone, 0.98), 45.0, true)
+
+	var texture: Texture2D = resource_textures.get(kind)
+	for position_index in positions.size():
+		var center: = positions[position_index]
+		var seed: = absi(hash([gate_id, position_index, roundi(center.x), roundi(center.y)]))
+		var rotation: = deg_to_rad(float(seed % 9) - 4.0)
+		var radius_x: = 27.0 + float(seed % 5)
+		var radius_y: = 25.0 + float((seed / 7) % 6)
+		var local_points: = PackedVector2Array([
+			Vector2(-radius_x * 0.84, -radius_y),
+			Vector2(radius_x * 0.18, -radius_y - 2.0),
+			Vector2(radius_x, -radius_y * 0.56),
+			Vector2(radius_x + 2.0, radius_y * 0.18),
+			Vector2(radius_x * 0.62, radius_y),
+			Vector2(-radius_x * 0.28, radius_y + 2.0),
+			Vector2(-radius_x, radius_y * 0.52),
+			Vector2(-radius_x - 2.0, -radius_y * 0.22),
+		])
+		var points: = PackedVector2Array()
+		var shadow_points: = PackedVector2Array()
+		for local_point in local_points:
+			var world_point: = center + Vector2(local_point).rotated(rotation)
+			points.append(world_point)
+			shadow_points.append(world_point + Vector2(5, 7))
+		draw_colored_polygon(shadow_points, Color(shadow, 0.94))
+		draw_colored_polygon(points, Color(stone_dark, 1.0))
+		var inset: = PackedVector2Array()
+		for point in points:
+			inset.append(center + (Vector2(point) - center) * 0.82)
+		draw_colored_polygon(inset, Color(stone, 0.98))
+		draw_polyline(PackedVector2Array([points[0], points[1], points[2], points[3]]), Color(stone_light, 0.56), 2.2, true)
+
+		if texture != null:
+			var pulse: = _resource_hit_pulse(center)
+			var source_size: = Vector2(texture.get_size())
+			var scale_factor: = minf(57.0 / source_size.x, 54.0 / source_size.y) * (1.0 + pulse * 0.07)
+			var size: = source_size * scale_factor
+			draw_set_transform(center, rotation, Vector2.ONE)
+			draw_texture_rect(texture, Rect2(-size * Vector2(0.5, 0.54), size), false, Color(0.93, 0.94, 0.91, 0.72))
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+func _draw_drill_gate_reinforcement(
+	positions: Array[Vector2],
+	palette: Dictionary,
+	along: Vector2,
+	across: Vector2,
+	gate_center: Vector2
+) -> void :
+	if positions.is_empty():
+		return
+	var center_projection: = gate_center.dot(along)
+	var run_start: = positions[0].dot(along)
+	var previous_projection: = run_start
+	for index in range(1, positions.size() + 1):
+		var at_end: = index == positions.size()
+		var projection: = previous_projection if at_end else positions[index].dot(along)
+		if at_end or projection - previous_projection > TILE_SIZE * 1.5:
+			_draw_drill_gate_rail_run(
+				run_start,
+				previous_projection,
+				center_projection,
+				gate_center,
+				along,
+				across,
+				palette
+			)
+			if not at_end:
+				run_start = projection
+		previous_projection = projection
+
+	for position in positions:
+		var brace_center: = gate_center + along * (position.dot(along) - center_projection)
+		var start: = brace_center - across * 23.0
+		var finish: = brace_center + across * 23.0
+		draw_line(start, finish, Color(palette.metal_dark, 1.0), 9.0, true)
+		draw_line(start, finish, Color(palette.metal, 1.0), 5.4, true)
+		draw_line(start, finish, Color(palette.metal_light, 0.48), 1.25, true)
+		for bolt_position in [start + across * 4.0, finish - across * 4.0]:
+			draw_circle(bolt_position, 4.2, Color(palette.metal_dark, 1.0))
+			draw_circle(bolt_position - Vector2(0.8, 0.8), 2.1, Color(palette.metal_light, 0.78))
+
+
+func _draw_drill_gate_rail_run(
+	start_projection: float,
+	finish_projection: float,
+	center_projection: float,
+	gate_center: Vector2,
+	along: Vector2,
+	across: Vector2,
+	palette: Dictionary
+) -> void :
+	if finish_projection - start_projection < 1.0:
+		return
+	var extension: = 11.0
+	var start_center: = gate_center + along * (start_projection - center_projection - extension)
+	var finish_center: = gate_center + along * (finish_projection - center_projection + extension)
+	for rail_sign_value in [-1.0, 1.0]:
+		var rail_sign: float = float(rail_sign_value)
+		var offset: = across * rail_sign * 16.0
+		var start: = start_center + offset
+		var finish: = finish_center + offset
+		draw_line(start, finish, Color(palette.metal_dark, 0.98), 8.5, true)
+		draw_line(start, finish, Color(palette.metal, 0.98), 5.2, true)
+		draw_line(start - across * 1.0, finish - across * 1.0, Color(palette.metal_light, 0.5), 1.2, true)
+
+
+func _draw_drill_gate_lock(center: Vector2, required_drill: int, palette: Dictionary) -> void :
+	draw_circle(center + Vector2(3, 5), 25.0, Color(palette.shadow, 0.92))
+	draw_circle(center, 28.0, Color(palette.rune, 0.11))
+	var plate: = PackedVector2Array()
+	for index in 8:
+		var angle: = -PI * 0.5 + float(index) * TAU / 8.0
+		plate.append(center + Vector2(cos(angle), sin(angle)) * (22.0 if index % 2 == 0 else 20.0))
+	draw_colored_polygon(plate, Color(palette.metal_dark, 1.0))
+	draw_polyline(PackedVector2Array(Array(plate) + [plate[0]]), Color(palette.metal_light, 0.76), 2.2, true)
+	draw_circle(center, 13.5, Color(palette.shadow, 0.84))
+	draw_arc(center, 11.5, 0.0, TAU, 24, Color(palette.rune, 0.94), 2.5, true)
+	if required_drill <= 1:
+		draw_line(center + Vector2(0, -8), center + Vector2(0, 8), Color(palette.rune, 0.98), 3.0, true)
+		draw_line(center + Vector2(-6, -2), center + Vector2(0, -8), Color(palette.rune, 0.98), 2.4, true)
+		draw_line(center + Vector2(6, -2), center + Vector2(0, -8), Color(palette.rune, 0.98), 2.4, true)
+	else:
+		var rune: = PackedVector2Array([
+			center + Vector2(0, -9), center + Vector2(7, 0), center + Vector2(0, 9),
+			center + Vector2(-7, 0), center + Vector2(0, -9),
+		])
+		draw_polyline(rune, Color(palette.rune, 0.98), 2.7, true)
+		draw_line(center + Vector2(-5, 0), center + Vector2(5, 0), Color(palette.rune, 0.98), 2.0, true)
+
+
+func _drill_gate_palette(kind: String) -> Dictionary:
+	var type_data: Dictionary = Dictionary(GameData.data.ROCK_TYPES[kind])
+	var mineral: = Color(String(type_data.edge))
+	var cavern_stone: = _profile_color("dirt", "211710").lerp(_profile_color("wallEdge", "a2764d"), 0.22)
+	var metal: = Color("48564f")
+	var metal_light: = Color("a7b7ae")
+	if kind == "phasecrystal":
+		metal = Color("485266")
+		metal_light = Color("b8c9dd")
+	elif kind == "infernium":
+		metal = Color("5b4033")
+		metal_light = Color("c29a77")
+	return {
+		"shadow": Color("090a09"),
+		"stone_dark": cavern_stone.darkened(0.38),
+		"stone": cavern_stone.lerp(Color(String(type_data.color)), 0.18).lightened(0.03),
+		"stone_light": cavern_stone.lerp(mineral, 0.34).lightened(0.08),
+		"metal_dark": metal.darkened(0.48),
+		"metal": metal,
+		"metal_light": metal_light,
+		"rune": mineral,
+	}
+
+
 func _draw_resources() -> void :
 	var margin: = Vector2(100, 120)
 	var visible_rect: = _resource_visible_rect(margin)
@@ -2212,6 +2599,8 @@ func _draw_resources() -> void :
 		var rock: = rocks[index]
 		var position: = Vector2(rock.position)
 		if not visible_rect.has_point(position):
+			continue
+		if bool(rock.drill_gated):
 			continue
 		var kind: = String(rock.type)
 		var texture: Texture2D = resource_textures.get(kind)
@@ -2410,9 +2799,14 @@ func _draw_target() -> void :
 	var label: = ""
 	if current_target_kind == "terrain" and _terrain_is_solid(current_target_cell):
 		center = _cell_center(current_target_cell)
-		var hits: = ceili(float(terrain_hp[_cell_index(current_target_cell)]) / maxf(1.0, float(_current_tool().power)))
-		label = "DEEPSTONE · %d HIT%s" % [hits, "" if hits == 1 else "S"] if _has_deep_tool() else "STARFORGE REQUIRED"
-		radius = 28.0
+		if _terrain_is_bedrock(current_target_cell):
+			color = Color("9ba19a")
+			label = "ANCIENT BEDROCK"
+			radius = 31.0
+		else:
+			var hits: = ceili(float(terrain_hp[_cell_index(current_target_cell)]) / maxf(1.0, float(_current_tool().power)))
+			label = "DEEPSTONE · %d HIT%s" % [hits, "" if hits == 1 else "S"] if _has_deep_tool() else "STARFORGE REQUIRED"
+			radius = 28.0
 	elif current_target_kind == "rock" and _rock_is_exposed(current_target_rock):
 		var rock: = rocks[current_target_rock]
 		var type_data: Dictionary = Dictionary(GameData.data.ROCK_TYPES[String(rock.type)])
