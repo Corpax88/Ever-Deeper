@@ -1,0 +1,88 @@
+name: Visual QA Ever Deeper v0.42.0-dev.7
+
+on:
+  push:
+    branches: [codex-visual-qa-dev7]
+    paths:
+      - '.github/workflows/visual-qa-dev7.yml'
+      - '.github/dev-build/index.html'
+      - '.github/dev-patch/prod-v0420-to-dev-v0420-dev7.xdelta.part*'
+      - 'tools/visual-qa/capture-web-visuals.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  capture-final-mobile-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out visual QA candidate
+        uses: actions/checkout@v4
+
+      - name: Reconstruct exact DEV candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_dir="$RUNNER_TEMP/ever-deeper-dev7"
+          tool_dir="$RUNNER_TEMP/tools"
+          base_url="https://corpax88.github.io/Ever-Deeper"
+          mkdir -p "$build_dir" "$tool_dir"
+
+          for file in \
+            index.apple-touch-icon.png \
+            index.audio.position.worklet.js \
+            index.audio.worklet.js \
+            index.icon.png \
+            index.js \
+            index.png \
+            index.wasm \
+            index.pck
+          do
+            curl -L --fail --retry 4 --retry-all-errors \
+              "$base_url/$file?visual_qa=$GITHUB_SHA" -o "$build_dir/$file"
+          done
+
+          echo "65a13e3af4a64ce247071cd2d5a75cb14e89bcc0664462753862e212a84549be  $build_dir/index.pck" | sha256sum -c -
+          test "$(stat -c %s "$build_dir/index.pck")" -eq 96220476
+          cp "$GITHUB_WORKSPACE/.github/dev-build/index.html" "$build_dir/index.html"
+
+          cat "$GITHUB_WORKSPACE"/.github/dev-patch/prod-v0420-to-dev-v0420-dev7.xdelta.part* \
+            > "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7.xdelta"
+          echo "242c695622a6c7b2fea79f709d89147d9cca3f18bfd7a4660529b482702c5c88  $RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7.xdelta" | sha256sum -c -
+
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
+            -o "$tool_dir/xdelta3.tar.gz"
+          echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
+          tar --no-same-owner -xzf "$tool_dir/xdelta3.tar.gz" -C "$tool_dir"
+          chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
+            -s "$build_dir/index.pck" \
+            "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7.xdelta" \
+            "$RUNNER_TEMP/dev7-index.pck"
+          mv "$RUNNER_TEMP/dev7-index.pck" "$build_dir/index.pck"
+
+          echo "486738a99093407665fc9770a005632e618b9eb29fd854fd0e66d49f0261c82c  $build_dir/index.pck" | sha256sum -c -
+          test "$(stat -c %s "$build_dir/index.pck")" -eq 103146556
+          grep -q '"index.pck":103146556' "$build_dir/index.html"
+          grep -q 'v0.42.0-dev.7' "$build_dir/index.html"
+
+      - name: Install capture browser
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Capture every cave and barrier state
+        run: |
+          node tools/visual-qa/capture-web-visuals.mjs \
+            --web-dir "$RUNNER_TEMP/ever-deeper-dev7" \
+            --output-dir "$RUNNER_TEMP/visual-captures"
+
+      - name: Upload visual evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-dev7-visual-qa
+          path: ${{ runner.temp }}/visual-captures
+          compression-level: 0
+          retention-days: 7
