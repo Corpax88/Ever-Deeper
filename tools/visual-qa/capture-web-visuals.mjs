@@ -92,7 +92,10 @@ function injectSuiteArgument(html) {
   if (!match) throw new Error("Could not find GODOT_CONFIG in final index.html");
   const config = JSON.parse(match[1]);
   const existingArgs = Array.isArray(config.args) ? config.args : [];
-  config.args = [...existingArgs.filter((arg) => arg !== SUITE_ARG), SUITE_ARG];
+  const suiteArgs = existingArgs.filter((arg) => arg !== SUITE_ARG);
+  // OS.get_cmdline_user_args() only exposes arguments after Godot's user separator.
+  if (!suiteArgs.includes("--")) suiteArgs.push("--");
+  config.args = [...suiteArgs, SUITE_ARG];
   return html.replace(pattern, `const GODOT_CONFIG = ${JSON.stringify(config)};`);
 }
 
