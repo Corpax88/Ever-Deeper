@@ -152,7 +152,7 @@ jobs:
             "$dev_dir/index.pck"
 
           echo "b60ed87288f3a3b85dd518c3e41b791ebe11682284e0558c5691983593c84ed2  $dev_dir/index.pck" | sha256sum -c -
-          echo "c22af85547d0cb9cefce6bd57b54106380568379f763da7aed4cc0b71463115c  $dev_dir/index.html" | sha256sum -c -
+          echo "9f6742ae89338e91797ecd3f28c4bc52d90a08c34f6a62d659c9ebb21f80d2c7  $dev_dir/index.html" | sha256sum -c -
           test "$(stat -c %s "$dev_dir/index.pck")" -eq 97691632
           grep -q '"index.pck":97691632' "$dev_dir/index.html"
           grep -q 'v0.42.0-dev.6' "$dev_dir/index.html"
