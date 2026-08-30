@@ -1,4 +1,4 @@
-name: Deploy Ever Deeper v0.42 production + v0.42.0-dev.3 preview
+name: Deploy Ever Deeper v0.42 production + v0.42.0-dev.4 preview
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - '.github/prod-build/index.html'
       - '.github/release-patch/v0410-to-v0420.xdelta.part*'
       - '.github/dev-build/index.html'
-      - '.github/dev-patch/prod-v0420-to-dev-v0420-dev3.xdelta.part*'
+      - '.github/dev-patch/prod-v0420-to-dev-v0420-dev4.xdelta.part*'
       - '.github/workflows/deploy-dev-preview.yml'
   workflow_dispatch:
     inputs:
@@ -66,7 +66,7 @@ jobs:
           node --check "$build_dir/index.js"
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
 
-      - name: Build verified v0.42 production and v0.42.0-dev.3 preview
+      - name: Build verified v0.42 production and v0.42.0-dev.4 preview
         shell: bash
         run: |
           set -euo pipefail
@@ -80,9 +80,9 @@ jobs:
             > "$RUNNER_TEMP/v0410-to-v0420.xdelta"
           echo "9afadbb938ef173b1f98bcfa93a70c62917c5acc824bb41bba4d81865f2e3948  $RUNNER_TEMP/v0410-to-v0420.xdelta" | sha256sum -c -
 
-          cat "$GITHUB_WORKSPACE"/.github/dev-patch/prod-v0420-to-dev-v0420-dev3.xdelta.part* \
-            > "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev3.xdelta"
-          echo "0ea401c8e2854532f13c3ec2d8c2f2807ff48cdb1b9e006a3dce181745c05cce  $RUNNER_TEMP/prod-v0420-to-dev-v0420-dev3.xdelta" | sha256sum -c -
+          cat "$GITHUB_WORKSPACE"/.github/dev-patch/prod-v0420-to-dev-v0420-dev4.xdelta.part* \
+            > "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev4.xdelta"
+          echo "b24dccd0981c7cd437baae713e02ffe75018aae0f8a6ce539a7547639dfb9f19  $RUNNER_TEMP/prod-v0420-to-dev-v0420-dev4.xdelta" | sha256sum -c -
 
           curl -L --fail --retry 4 --retry-all-errors \
             https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
@@ -148,14 +148,14 @@ jobs:
 
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$build_dir/index.pck" \
-            "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev3.xdelta" \
+            "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev4.xdelta" \
             "$dev_dir/index.pck"
 
-          echo "0bb22bcb16f17b302dfcddc342693c75345d303ce99dd72e9f9b36d9bf5de665  $dev_dir/index.pck" | sha256sum -c -
-          echo "3cdf12073fa57bba715d8a3e382d908b158d6fa94338c406ea04e5b04028711b  $dev_dir/index.html" | sha256sum -c -
-          test "$(stat -c %s "$dev_dir/index.pck")" -eq 97025244
-          grep -q '"index.pck":97025244' "$dev_dir/index.html"
-          grep -q 'v0.42.0-dev.3' "$dev_dir/index.html"
+          echo "21285c1931d080addfad218565490f599ed731e205ae21591239a30065e40222  $dev_dir/index.pck" | sha256sum -c -
+          echo "8c3dcf61bac624e2c119cf0a0cf8d2949385aff06808056e14e7d6ef9263b0a7  $dev_dir/index.html" | sha256sum -c -
+          test "$(stat -c %s "$dev_dir/index.pck")" -eq 97031436
+          grep -q '"index.pck":97031436' "$dev_dir/index.html"
+          grep -q 'v0.42.0-dev.4' "$dev_dir/index.html"
           test "$(find "$production_dir" -maxdepth 1 -type f | wc -l)" -eq 9
           test "$(find "$dev_dir" -maxdepth 1 -type f | wc -l)" -eq 9
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
@@ -176,7 +176,7 @@ jobs:
       - name: Upload reusable DEV web package
         uses: actions/upload-artifact@v4
         with:
-          name: ever-deeper-v0420-dev3-web
+          name: ever-deeper-v0420-dev4-web
           path: ${{ runner.temp }}/ever-deeper-pages/dev
           compression-level: 0
           retention-days: 14
@@ -232,7 +232,7 @@ jobs:
         if: env.BUTLER_API_KEY != ''
         uses: actions/download-artifact@v4
         with:
-          name: ever-deeper-v0420-dev3-web
+          name: ever-deeper-v0420-dev4-web
           path: ${{ runner.temp }}/ever-deeper-dev
 
       - name: Publish when the itch DEV project exists
@@ -250,7 +250,7 @@ jobs:
           "$RUNNER_TEMP/butler/butler" push \
             "$RUNNER_TEMP/ever-deeper-dev" \
             corpax88/ever-deeper-dev:html5 \
-            --userversion 0.42.0-dev.3
+            --userversion 0.42.0-dev.4
           push_status=$?
           set -e
           if [ "$push_status" -ne 0 ]; then
