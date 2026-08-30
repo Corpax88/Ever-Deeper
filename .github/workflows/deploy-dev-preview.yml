@@ -1,4 +1,4 @@
-name: Deploy Ever Deeper v0.42 production + DEV preview
+name: Deploy Ever Deeper v0.42 production + v0.42.0-dev.1 preview
 
 on:
   push:
@@ -7,9 +7,15 @@ on:
       - '.github/prod-build/index.html'
       - '.github/release-patch/v0410-to-v0420.xdelta.part*'
       - '.github/dev-build/index.html'
-      - '.github/dev-patch/prod-v0420-to-dev-v0410-dev5.xdelta.part*'
+      - '.github/dev-patch/prod-v0420-to-dev-v0420-dev1.xdelta.part*'
       - '.github/workflows/deploy-dev-preview.yml'
   workflow_dispatch:
+    inputs:
+      deploy_production:
+        description: Re-publish the unchanged v0.42.0 production package to itch.io
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -60,7 +66,7 @@ jobs:
           node --check "$build_dir/index.js"
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
 
-      - name: Build verified v0.42 production and preserved DEV preview
+      - name: Build verified v0.42 production and v0.42.0-dev.1 preview
         shell: bash
         run: |
           set -euo pipefail
@@ -74,9 +80,9 @@ jobs:
             > "$RUNNER_TEMP/v0410-to-v0420.xdelta"
           echo "9afadbb938ef173b1f98bcfa93a70c62917c5acc824bb41bba4d81865f2e3948  $RUNNER_TEMP/v0410-to-v0420.xdelta" | sha256sum -c -
 
-          cat "$GITHUB_WORKSPACE"/.github/dev-patch/prod-v0420-to-dev-v0410-dev5.xdelta.part* \
-            > "$RUNNER_TEMP/prod-v0420-to-dev-v0410-dev5.xdelta"
-          echo "60458cf2ad39e1d1d2881fdd802b71de02be66c07048e7362fc78957adb564c3  $RUNNER_TEMP/prod-v0420-to-dev-v0410-dev5.xdelta" | sha256sum -c -
+          cat "$GITHUB_WORKSPACE"/.github/dev-patch/prod-v0420-to-dev-v0420-dev1.xdelta.part* \
+            > "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev1.xdelta"
+          echo "62bd5caa57d0e3bd2d870c1c6162584bec2fc0aed0e740f1fea1ef856948720c  $RUNNER_TEMP/prod-v0420-to-dev-v0420-dev1.xdelta" | sha256sum -c -
 
           curl -L --fail --retry 4 --retry-all-errors \
             https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
@@ -142,14 +148,14 @@ jobs:
 
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$build_dir/index.pck" \
-            "$RUNNER_TEMP/prod-v0420-to-dev-v0410-dev5.xdelta" \
+            "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev1.xdelta" \
             "$dev_dir/index.pck"
 
-          echo "4a094b826defee12f4b59d909dfb940fc4b8f3226f7d7b02eee66ceb3052d04d  $dev_dir/index.pck" | sha256sum -c -
-          echo "bf459fb21a5b56b294c8615d3322ce503a456f741e083a203590e89f0cc7f02f  $dev_dir/index.html" | sha256sum -c -
-          test "$(stat -c %s "$dev_dir/index.pck")" -eq 96235488
-          grep -q '"index.pck":96235488' "$dev_dir/index.html"
-          grep -q 'v0.41.0-dev.5' "$dev_dir/index.html"
+          echo "bbbdbd0247436eace73088c1b8760b5270733ba15dec82dc6c5508eddda09ea9  $dev_dir/index.pck" | sha256sum -c -
+          echo "f413012052ec2ec6a17bd185a76881a018033cd9b19aaf86a66d9f7883cd8e9a  $dev_dir/index.html" | sha256sum -c -
+          test "$(stat -c %s "$dev_dir/index.pck")" -eq 96247648
+          grep -q '"index.pck":96247648' "$dev_dir/index.html"
+          grep -q 'v0.42.0-dev.1' "$dev_dir/index.html"
           test "$(find "$production_dir" -maxdepth 1 -type f | wc -l)" -eq 9
           test "$(find "$dev_dir" -maxdepth 1 -type f | wc -l)" -eq 9
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
@@ -170,7 +176,7 @@ jobs:
       - name: Upload reusable DEV web package
         uses: actions/upload-artifact@v4
         with:
-          name: ever-deeper-v0410-dev5-web
+          name: ever-deeper-v0420-dev1-web
           path: ${{ runner.temp }}/ever-deeper-pages/dev
           compression-level: 0
           retention-days: 14
@@ -189,6 +195,7 @@ jobs:
   deploy-itch-production:
     needs: package
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && inputs.deploy_production
     env:
       BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
     steps:
@@ -225,7 +232,7 @@ jobs:
         if: env.BUTLER_API_KEY != ''
         uses: actions/download-artifact@v4
         with:
-          name: ever-deeper-v0410-dev5-web
+          name: ever-deeper-v0420-dev1-web
           path: ${{ runner.temp }}/ever-deeper-dev
 
       - name: Publish when the itch DEV project exists
@@ -243,7 +250,7 @@ jobs:
           "$RUNNER_TEMP/butler/butler" push \
             "$RUNNER_TEMP/ever-deeper-dev" \
             corpax88/ever-deeper-dev:html5 \
-            --userversion 0.41.0-dev.5
+            --userversion 0.42.0-dev.1
           push_status=$?
           set -e
           if [ "$push_status" -ne 0 ]; then
