@@ -6,11 +6,13 @@ on:
     paths:
       - '.github/workflows/visual-qa-mossvein-first-cave.yml'
       - '.github/dev-patch/mossvein-first-cave.xdelta.part*'
+      - '.github/dev-patch/mossvein-corner-overlap-*.xdelta'
       - 'assets/mossvein/cave-edge-loop-v2.png'
       - 'assets/mossvein/cave-corner-v2.png'
       - 'assets/mossvein/permanent-edge-loop-v2.png'
       - 'assets/mossvein/permanent-corner-v2.png'
       - 'scripts/world/mossvein_mine.gd'
+      - 'scripts/world/cave_edge_asset_drawer.gd'
       - 'scripts/world/world_catalog.gd'
       - 'tools/visual-qa/capture-web-visuals.mjs'
 
@@ -29,7 +31,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          build_dir="$RUNNER_TEMP/ever-deeper-mossvein-candidate"
+          build_dir="$RUNNER_TEMP/ever-deeper-mossvein-base"
           tool_dir="$RUNNER_TEMP/tools"
           base_url="https://corpax88.github.io/Ever-Deeper"
           mkdir -p "$build_dir" "$tool_dir"
@@ -80,33 +82,74 @@ jobs:
           test "$(stat -c %s "$RUNNER_TEMP/mossvein-first-cave.xdelta")" -eq 1153042
 
           "$xdelta" -d -s "$RUNNER_TEMP/dev7.pck" \
-            "$RUNNER_TEMP/mossvein-first-cave.xdelta" "$build_dir/candidate.pck"
-          mv "$build_dir/candidate.pck" "$build_dir/index.pck"
-          echo "a70dbab1d3cb66afdd36fa43a5d1d6840ccd428af337ad8add4996d8dbf8520b  $build_dir/index.pck" | sha256sum -c -
-          test "$(stat -c %s "$build_dir/index.pck")" -eq 106383940
+            "$RUNNER_TEMP/mossvein-first-cave.xdelta" "$RUNNER_TEMP/current-candidate.pck"
+          echo "a70dbab1d3cb66afdd36fa43a5d1d6840ccd428af337ad8add4996d8dbf8520b  $RUNNER_TEMP/current-candidate.pck" | sha256sum -c -
+          test "$(stat -c %s "$RUNNER_TEMP/current-candidate.pck")" -eq 106383940
 
-          sed -i 's/"index.pck":105337792/"index.pck":106383940/' "$build_dir/index.html"
-          echo "97055ca7437890ecbe556df0790ff20c8eda894ed907b41e7fbaff6e6c2b4860  $build_dir/index.html" | sha256sum -c -
-          grep -q 'v0.42.0-dev.7' "$build_dir/index.html"
-          test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+          echo "3f279c92e5e909f2848c592373f0fa196bd7f04bc49158800d43e8f26f873b0f  $GITHUB_WORKSPACE/.github/dev-patch/mossvein-corner-overlap-before.xdelta" | sha256sum -c -
+          echo "c4ec5483c053fba2987ed3fb54354be0a15ab97bcfbce7a30a47b2f25827c84d  $GITHUB_WORKSPACE/.github/dev-patch/mossvein-corner-overlap-after.xdelta" | sha256sum -c -
+          echo "28b223a1fcc4cf4e3be54000f09faabd0ea193b50c9cc8d5aa0de6fa2d6ea84d  $GITHUB_WORKSPACE/.github/dev-patch/mossvein-corner-overlap-final.xdelta" | sha256sum -c -
+          test "$(stat -c %s "$GITHUB_WORKSPACE/.github/dev-patch/mossvein-corner-overlap-before.xdelta")" -eq 23919
+          test "$(stat -c %s "$GITHUB_WORKSPACE/.github/dev-patch/mossvein-corner-overlap-after.xdelta")" -eq 119783
+          test "$(stat -c %s "$GITHUB_WORKSPACE/.github/dev-patch/mossvein-corner-overlap-final.xdelta")" -eq 99704
+
+          for variant in before after final
+          do
+            variant_dir="$RUNNER_TEMP/ever-deeper-mossvein-$variant"
+            mkdir -p "$variant_dir"
+            "$xdelta" -d -s "$RUNNER_TEMP/current-candidate.pck" \
+              "$GITHUB_WORKSPACE/.github/dev-patch/mossvein-corner-overlap-$variant.xdelta" \
+              "$variant_dir/index.pck"
+            for file in \
+              index.apple-touch-icon.png \
+              index.audio.position.worklet.js \
+              index.audio.worklet.js \
+              index.icon.png \
+              index.js \
+              index.png \
+              index.wasm
+            do
+              cp "$build_dir/$file" "$variant_dir/$file"
+            done
+            size="$(stat -c %s "$variant_dir/index.pck")"
+            sed "s/\"index.pck\":105337792/\"index.pck\":$size/" \
+              "$GITHUB_WORKSPACE/.github/dev-build/index.html" > "$variant_dir/index.html"
+            grep -q 'v0.42.0-dev.7' "$variant_dir/index.html"
+            test "$(find "$variant_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+          done
+
+          echo "a8c095f7da04edaeca83b305830eb71754fbabc30cf75d8fbfa1dbaed3533b18  $RUNNER_TEMP/ever-deeper-mossvein-before/index.pck" | sha256sum -c -
+          echo "58da162d10611470229d481754d0048f802a0b8a8d89d4796f39cce20845a3a9  $RUNNER_TEMP/ever-deeper-mossvein-before/index.html" | sha256sum -c -
+          echo "8ace63c113daaaa8f9bf18f4445256add886018807faf0ebb5ff3e227cd99a3b  $RUNNER_TEMP/ever-deeper-mossvein-after/index.pck" | sha256sum -c -
+          echo "a72eb29693e15f289c6a6f4c10f21da6b454edd7ea42777c9d9fc1a7f54c510c  $RUNNER_TEMP/ever-deeper-mossvein-after/index.html" | sha256sum -c -
+          echo "4955fb0e48467eac8a0dc000075e04673e2d45df41744b70af27f17902bcbbfc  $RUNNER_TEMP/ever-deeper-mossvein-final/index.pck" | sha256sum -c -
+          echo "4f8d616acd1d788047b5f22276515db94d3735ec3011c99523aa1dcf1be9b140  $RUNNER_TEMP/ever-deeper-mossvein-final/index.html" | sha256sum -c -
 
       - name: Install capture browser
         run: |
           npm ci
           npx playwright install --with-deps chromium
 
-      - name: Capture target mobile viewport
+      - name: Capture mined-shape before and after plus final normal states
         run: |
           node tools/visual-qa/capture-web-visuals.mjs \
-            --web-dir "$RUNNER_TEMP/ever-deeper-mossvein-candidate" \
-            --output-dir "$RUNNER_TEMP/visual-captures" \
+            --web-dir "$RUNNER_TEMP/ever-deeper-mossvein-before" \
+            --output-dir "$RUNNER_TEMP/visual-captures/before-tight" \
+            --capture-limit 1
+          node tools/visual-qa/capture-web-visuals.mjs \
+            --web-dir "$RUNNER_TEMP/ever-deeper-mossvein-after" \
+            --output-dir "$RUNNER_TEMP/visual-captures/after-tight" \
+            --capture-limit 1
+          node tools/visual-qa/capture-web-visuals.mjs \
+            --web-dir "$RUNNER_TEMP/ever-deeper-mossvein-final" \
+            --output-dir "$RUNNER_TEMP/visual-captures/final-normal" \
             --capture-limit 3
 
       - name: Upload visual evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mossvein-first-cave-visual-qa
+          name: mossvein-corner-overlap-before-after
           path: ${{ runner.temp }}/visual-captures
           compression-level: 0
           retention-days: 7

@@ -59,7 +59,8 @@ static func draw_mineable_corner(
 	cell: Vector2i,
 	corner: int,
 	tile_size: float,
-	modulate: Color = Color.WHITE
+	modulate: Color = Color.WHITE,
+	compact_join: bool = false
 ) -> void:
 	_draw_corner(
 		canvas,
@@ -69,7 +70,8 @@ static func draw_mineable_corner(
 		tile_size,
 		tile_size,
 		tile_size * (10.0 / 48.0),
-		modulate
+		modulate,
+		compact_join
 	)
 
 
@@ -89,7 +91,8 @@ static func draw_bedrock_corner(
 		tile_size,
 		tile_size * 2.0,
 		tile_size * (18.0 / 48.0),
-		modulate
+		modulate,
+		false
 	)
 
 
@@ -136,7 +139,8 @@ static func _draw_corner(
 	tile_size: float,
 	depth: float,
 	inset: float,
-	modulate: Color
+	modulate: Color,
+	compact_join: bool
 ) -> void:
 	if texture == null or corner < 0 or corner > 3:
 		return
@@ -151,7 +155,34 @@ static func _draw_corner(
 	var origin := _corner_anchor(cell, corner, tile_size)
 	var rotation: float = float([0.0, PI * 0.5, PI, -PI * 0.5][corner])
 	canvas.draw_set_transform(origin, rotation, Vector2.ONE)
-	canvas.draw_texture_rect(texture, destination, false, modulate)
+	if compact_join:
+		# Tight mined shapes can expose three or four sides of one 48 px block.
+		# Drawing a complete 3x-tile L at every turn stacks several large rock
+		# masses over the same cell.  Keep the authored scale, but clip each cap
+		# to the actual join; the straight edge ribbons already supply both arms.
+		var seam_overlap := 2.0
+		var compact_destination := Rect2(
+			Vector2(-tile_size * 0.5 - seam_overlap, -inset - seam_overlap),
+			Vector2(
+				tile_size * 0.5 + inset + seam_overlap * 2.0,
+				tile_size * 0.5 + inset + seam_overlap * 2.0
+			)
+		).intersection(destination)
+		var texture_size := Vector2(texture.get_size())
+		var relative_position := compact_destination.position - destination.position
+		var source := Rect2(
+			Vector2(
+				relative_position.x / destination.size.x * texture_size.x,
+				relative_position.y / destination.size.y * texture_size.y
+			),
+			Vector2(
+				compact_destination.size.x / destination.size.x * texture_size.x,
+				compact_destination.size.y / destination.size.y * texture_size.y
+			)
+		)
+		canvas.draw_texture_rect_region(texture, compact_destination, source, modulate)
+	else:
+		canvas.draw_texture_rect(texture, destination, false, modulate)
 	canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 

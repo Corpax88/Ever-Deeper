@@ -2495,7 +2495,13 @@ func _draw_wall_corner_caps(cell: Vector2i, open_sides: Array[bool], bedrock: bo
 			)
 		else:
 			CaveEdgeAssetDrawer.draw_mineable_corner(
-				self, corner_texture, cell, corner, TILE_SIZE
+				self,
+				corner_texture,
+				cell,
+				corner,
+				TILE_SIZE,
+				Color.WHITE,
+				mine_id == "mossMine" and open_sides.count(true) >= 3
 			)
 
 
