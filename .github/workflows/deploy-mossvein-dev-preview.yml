@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/deploy-mossvein-dev-preview.yml'
       - '.github/dev-patch/mossvein-first-cave.xdelta.part*'
+      - '.github/dev-patch/mossvein-corner-overlap-final.xdelta'
   workflow_dispatch:
     inputs:
       dev_version:
@@ -111,13 +112,19 @@ jobs:
               echo "48d8f9156ab90883a3ab649367f90b5cceb520d6ca999e8a47fc6d09770ed4ef  $RUNNER_TEMP/mossvein-first-cave.xdelta" | sha256sum -c -
               test "$(stat -c %s "$RUNNER_TEMP/mossvein-first-cave.xdelta")" -eq 1153042
               test "$(find "$GITHUB_WORKSPACE/.github/dev-patch" -maxdepth 1 -name 'mossvein-first-cave.xdelta.part*' -type f | wc -l)" -eq 5
+              echo "28b223a1fcc4cf4e3be54000f09faabd0ea193b50c9cc8d5aa0de6fa2d6ea84d  $GITHUB_WORKSPACE/.github/dev-patch/mossvein-corner-overlap-final.xdelta" | sha256sum -c -
+              test "$(stat -c %s "$GITHUB_WORKSPACE/.github/dev-patch/mossvein-corner-overlap-final.xdelta")" -eq 99704
               "$xdelta" -d -s "$RUNNER_TEMP/dev7-index.pck" \
-                "$RUNNER_TEMP/mossvein-first-cave.xdelta" "$dev_dir/index.pck"
-              sed 's/"index.pck":105337792/"index.pck":106383940/' \
+                "$RUNNER_TEMP/mossvein-first-cave.xdelta" "$RUNNER_TEMP/mossvein-candidate.pck"
+              echo "a70dbab1d3cb66afdd36fa43a5d1d6840ccd428af337ad8add4996d8dbf8520b  $RUNNER_TEMP/mossvein-candidate.pck" | sha256sum -c -
+              test "$(stat -c %s "$RUNNER_TEMP/mossvein-candidate.pck")" -eq 106383940
+              "$xdelta" -d -s "$RUNNER_TEMP/mossvein-candidate.pck" \
+                "$GITHUB_WORKSPACE/.github/dev-patch/mossvein-corner-overlap-final.xdelta" "$dev_dir/index.pck"
+              sed 's/"index.pck":105337792/"index.pck":106384772/' \
                 "$GITHUB_WORKSPACE/.github/dev-build/index.html" > "$dev_dir/index.html"
-              echo "a70dbab1d3cb66afdd36fa43a5d1d6840ccd428af337ad8add4996d8dbf8520b  $dev_dir/index.pck" | sha256sum -c -
-              echo "97055ca7437890ecbe556df0790ff20c8eda894ed907b41e7fbaff6e6c2b4860  $dev_dir/index.html" | sha256sum -c -
-              test "$(stat -c %s "$dev_dir/index.pck")" -eq 106383940
+              echo "4955fb0e48467eac8a0dc000075e04673e2d45df41744b70af27f17902bcbbfc  $dev_dir/index.pck" | sha256sum -c -
+              echo "4f8d616acd1d788047b5f22276515db94d3735ec3011c99523aa1dcf1be9b140  $dev_dir/index.html" | sha256sum -c -
+              test "$(stat -c %s "$dev_dir/index.pck")" -eq 106384772
               ;;
             dev7_rollback)
               cp "$RUNNER_TEMP/dev7-index.pck" "$dev_dir/index.pck"
@@ -210,9 +217,9 @@ jobs:
 
           case "$DEPLOY_VERSION" in
             mossvein_candidate)
-              echo "97055ca7437890ecbe556df0790ff20c8eda894ed907b41e7fbaff6e6c2b4860  $RUNNER_TEMP/dev-index.html" | sha256sum -c -
-              echo "a70dbab1d3cb66afdd36fa43a5d1d6840ccd428af337ad8add4996d8dbf8520b  $RUNNER_TEMP/dev-index.pck" | sha256sum -c -
-              test "$(stat -c %s "$RUNNER_TEMP/dev-index.pck")" -eq 106383940
+              echo "4f8d616acd1d788047b5f22276515db94d3735ec3011c99523aa1dcf1be9b140  $RUNNER_TEMP/dev-index.html" | sha256sum -c -
+              echo "4955fb0e48467eac8a0dc000075e04673e2d45df41744b70af27f17902bcbbfc  $RUNNER_TEMP/dev-index.pck" | sha256sum -c -
+              test "$(stat -c %s "$RUNNER_TEMP/dev-index.pck")" -eq 106384772
               ;;
             dev7_rollback)
               echo "1d18a1d5cbfb02ef94c3606ff9620305f09968ad06dba08d5eb0d027e26b545b  $RUNNER_TEMP/dev-index.html" | sha256sum -c -
