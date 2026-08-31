@@ -20,6 +20,7 @@ const HeadlampBeamScript = preload("res://scripts/lighting/headlamp_beam.gd")
 const DropVisuals = preload("res://scripts/world/drop_visuals.gd")
 const CrusherDebrisScript = preload("res://scripts/world/crusher_debris.gd")
 const CrusherLootBurstScript = preload("res://scripts/world/crusher_loot_burst.gd")
+const CaveEdgeAssetDrawer = preload("res://scripts/world/cave_edge_asset_drawer.gd")
 
 const MINE_ID: = "mossMine"
 const SUPPORTED_MINE_IDS: = ["mossMine", "moonMine", "emberMine", "starMine"]
@@ -28,6 +29,7 @@ const TILE_SIZE: = 48.0
 const PLAYER_RADIUS: = 23.0
 const MINING_RANGE: = 116.0
 const REDRAW_INTERVAL: = 1.0 / 30.0
+const CAMERA_REDRAW_DISTANCE: = 8.0
 const ROCK_RESPAWN_CHECK_INTERVAL: = 0.1
 const SHAFT_CONTEXT_RADIUS: = 118.0
 const MINING_RUSH_DURATION: = 30.0
@@ -74,6 +76,35 @@ const UNIQUE_CAVERN_NAMES: = {
 }
 
 const LAMP_TEXTURE: = preload("res://assets/entrances/depth-work-lamp.png")
+const DEPTH_EDGE_ASSET_PATHS: = {
+	"mossMine": "res://assets/rootwound/cave-edge-loop-v1.png",
+	"moonMine": "res://assets/prismatic/cave-edge-loop-v1.png",
+	"emberMine": "res://assets/molten/cave-edge-loop-v1.png",
+	"starMine": "res://assets/voidstar/cave-edge-loop-v1.png",
+}
+const DEPTH_CORNER_ASSET_PATHS: = {
+	"mossMine": "res://assets/rootwound/cave-corner-v1.png",
+	"moonMine": "res://assets/prismatic/cave-corner-v1.png",
+	"emberMine": "res://assets/molten/cave-corner-v1.png",
+	"starMine": "res://assets/voidstar/cave-corner-v1.png",
+}
+const BEDROCK_EDGE_ASSET_PATH: = "res://assets/caves/ancient-bedrock-edge-loop-v1.png"
+const BEDROCK_CORNER_ASSET_PATH: = "res://assets/caves/ancient-bedrock-corner-v1.png"
+const DRILL_GATE_ASSET_PATHS: = {
+	"mossMine": [
+		"res://assets/mossvein/outer-rubble-barrier-v1.png",
+		"res://assets/mossvein/ironbound-collapse-barrier-v1.png",
+	],
+	"moonMine": [
+		"res://assets/moonglass/prismatic-fault-barrier-v2.png",
+		"res://assets/moonglass/starbound-geode-barrier-v2.png",
+	],
+	"emberMine": [
+		"res://assets/emberdeep/cinder-bulkhead-barrier-v2.png",
+		"res://assets/emberdeep/crucible-seal-barrier-v2.png",
+	],
+	"starMine": [],
+}
 
 @export var standalone_interaction_enabled: = false
 
@@ -125,13 +156,20 @@ var redraw_requested: = true
 var redraw_elapsed: = REDRAW_INTERVAL
 var rock_respawn_check_elapsed: = ROCK_RESPAWN_CHECK_INTERVAL
 var last_draw_cell: = Vector2i(-9999, -9999)
+var last_draw_camera_center: = Vector2(INF, INF)
+var last_draw_viewport_size: = Vector2.ZERO
+var last_draw_camera_zoom: = Vector2.ZERO
 var manual_depth_entrance: = Vector2.ZERO
 var manual_depth_entrance_enabled: = false
 var deep_tool_override_enabled: = false
 var deep_tool_override_value: = false
 var tool_stats_override: Dictionary = {}
 var floor_texture: Texture2D
-var wall_texture: Texture2D
+var cave_edge_texture: Texture2D
+var cave_corner_texture: Texture2D
+var bedrock_edge_texture: Texture2D
+var bedrock_corner_texture: Texture2D
+var drill_gate_textures: Array[Texture2D] = []
 var shaft_texture: Texture2D
 var sell_texture: Texture2D
 var forge_texture: Texture2D
@@ -446,6 +484,8 @@ func import_runtime_state(state: Dictionary) -> void :
 func _process(delta: float) -> void :
 	if not active:
 		return
+	if _camera_draw_bounds_changed():
+		_request_redraw()
 	if target_dirty:
 		_apply_target(_find_mine_target())
 		target_dirty = false
@@ -527,6 +567,9 @@ func _build_world() -> void :
 	current_target_rock = -1
 	target_dirty = true
 	last_draw_cell = Vector2i(-9999, -9999)
+	last_draw_camera_center = Vector2(INF, INF)
+	last_draw_viewport_size = Vector2.ZERO
+	last_draw_camera_zoom = Vector2.ZERO
 	configured_world_seed = int(RunState.world_seed)
 	interior_build_count += 1
 	if not active:
@@ -1869,7 +1912,13 @@ func _snap_to_cell_center(position: Vector2) -> Vector2:
 func _configure_depth_assets() -> void :
 	var paths: = _asset_contract_paths()
 	floor_texture = _load_depth_texture(String(paths.floor))
-	wall_texture = _load_depth_texture(String(paths.wall))
+	cave_edge_texture = _load_depth_texture(String(DEPTH_EDGE_ASSET_PATHS[mine_id]))
+	cave_corner_texture = _load_depth_texture(String(DEPTH_CORNER_ASSET_PATHS[mine_id]))
+	bedrock_edge_texture = _load_depth_texture(BEDROCK_EDGE_ASSET_PATH)
+	bedrock_corner_texture = _load_depth_texture(BEDROCK_CORNER_ASSET_PATH)
+	drill_gate_textures.clear()
+	for path_value in Array(DRILL_GATE_ASSET_PATHS.get(mine_id, [])):
+		drill_gate_textures.append(_load_depth_texture(String(path_value)))
 	shaft_texture = _load_depth_texture(String(paths.shaft))
 	sell_texture = _load_depth_texture(String(paths.sell))
 	forge_texture = _load_depth_texture(String(paths.forge))
@@ -1900,7 +1949,6 @@ func _asset_contract_paths() -> Dictionary:
 	if mine_id == "moonMine":
 		return {
 			"floor": "res://assets/prismatic/floor.png", 
-			"wall": "res://assets/prismatic/wall.png", 
 			"shaft": "res://assets/prismatic/depth-portal.png", 
 			"sell": "res://assets/stations/ore-exchange-v1.png", 
 			"forge": "res://assets/stations/drill-forge-workshop-v1.png", 
@@ -1930,7 +1978,6 @@ func _asset_contract_paths() -> Dictionary:
 	if mine_id == "emberMine":
 		return {
 			"floor": "res://assets/molten/floor.png", 
-			"wall": "res://assets/molten/wall.png", 
 			"shaft": "res://assets/molten/depth-portal.png", 
 			"sell": "res://assets/stations/ore-exchange-v1.png", 
 			"forge": "res://assets/stations/drill-forge-workshop-v1.png", 
@@ -1960,7 +2007,6 @@ func _asset_contract_paths() -> Dictionary:
 	if mine_id == "starMine":
 		return {
 			"floor": "res://assets/voidstar/floor.png", 
-			"wall": "res://assets/voidstar/wall.png", 
 			"shaft": "res://assets/voidstar/depth-portal.png", 
 			"sell": "res://assets/stations/ore-exchange-v1.png", 
 			"forge": "res://assets/stations/drill-forge-workshop-v1.png", 
@@ -1986,7 +2032,6 @@ func _asset_contract_paths() -> Dictionary:
 		}
 	return {
 		"floor": "res://assets/rootwound/floor.png", 
-		"wall": "res://assets/rootwound/wall.png", 
 		"shaft": "res://assets/rootwound/depth-shaft.png", 
 		"sell": "res://assets/stations/ore-exchange-v1.png", 
 		"forge": "res://assets/stations/drill-forge-workshop-v1.png", 
@@ -2029,15 +2074,15 @@ func _request_redraw() -> void :
 func _draw() -> void :
 	if mine.is_empty():
 		return
+	_remember_draw_camera_bounds()
 	draw_rect(Rect2(Vector2.ZERO, world_size), _profile_color("floor", "100e0c"), true)
 	draw_texture_rect(floor_texture, Rect2(Vector2.ZERO, world_size), true, Color(0.68, 0.66, 0.64, 0.9))
 	draw_rect(Rect2(Vector2.ZERO, world_size), Color(_profile_color("floor", "100e0c"), 0.3), true)
-	var view_radius: = Vector2(330, 490)
-	var start: = _world_to_cell(player.global_position - view_radius)
-	var finish: = _world_to_cell(player.global_position + view_radius)
-	# Terrain tops and excavation edges are separate passes.  A wall ribbon may
-	# overlap the neighbouring top by a few pixels, so drawing it inline with
-	# each cell made the next cell cut holes into the edge.
+	var visible_rect := _resource_visible_rect(Vector2.ONE * TILE_SIZE * 3.0)
+	var start: = _world_to_cell(visible_rect.position)
+	var finish: = _world_to_cell(visible_rect.end)
+	# Authored edge faces extend beyond their owning tile, so they need a second
+	# pass after every visible terrain top has been painted.
 	for row in range(maxi(0, start.y), mini(rows - 1, finish.y) + 1):
 		for col in range(maxi(0, start.x), mini(cols - 1, finish.x) + 1):
 			var cell: = Vector2i(col, row)
@@ -2107,10 +2152,7 @@ func _draw_terrain_edge_details(cell: Vector2i) -> void :
 	var bedrock: = _terrain_is_bedrock(cell)
 	if terrain_hp[index] <= 0 and not bedrock:
 		return
-	# Edge endpoints stay on the exact tile lattice so neighbouring profiles
-	# share vertices.  Only the top fill grows to hide raster hairlines.
 	var rect: = Rect2(Vector2(cell) * TILE_SIZE, Vector2.ONE * TILE_SIZE)
-	var noise: = fposmod(sin(float(cell.x * 31 + cell.y * 17)) * 43758.5453, 1.0)
 	var open_sides: = [
 		not _visual_is_solid(cell + Vector2i.UP), 
 		not _visual_is_solid(cell + Vector2i.RIGHT), 
@@ -2118,12 +2160,27 @@ func _draw_terrain_edge_details(cell: Vector2i) -> void :
 		not _visual_is_solid(cell + Vector2i.LEFT), 
 	]
 	for side in 4:
-		if bool(open_sides[side]):
-			_draw_wall_ribbon(cell, rect, side, noise)
-	_draw_wall_corner_joins(cell, rect, open_sides, noise)
-	for side in 4:
-		if bool(open_sides[side]):
-			_draw_excavation_edge(cell, rect, side, noise)
+		if not bool(open_sides[side]):
+			continue
+		if bedrock:
+			CaveEdgeAssetDrawer.draw_bedrock_edge(
+				self,
+				bedrock_edge_texture,
+				cell,
+				side,
+				TILE_SIZE,
+				absi(mine_id.hash()) % 11
+			)
+		else:
+			CaveEdgeAssetDrawer.draw_mineable_edge(
+				self,
+				cave_edge_texture,
+				cell,
+				side,
+				TILE_SIZE,
+				absi(mine_id.hash()) % 11
+			)
+	_draw_wall_corner_joins(cell, rect, open_sides, 0.0)
 	var hp_ratio: = float(terrain_hp[index]) / maxf(1.0, float(terrain_max_hp))
 	if not bedrock and hp_ratio < 0.999:
 		var damage: = 1.0 - hp_ratio
@@ -2265,23 +2322,21 @@ func _angular_stone_points(center: Vector2, radius: float, key: int) -> PackedVe
 	return points
 
 
-func _draw_wall_corner_joins(cell: Vector2i, rect: Rect2, open_sides: Array, noise: float) -> void :
-	var corners: = [rect.position, rect.position + Vector2(rect.size.x, 0), rect.end, rect.position + Vector2(0, rect.size.y)]
-	var pairs: = [[3, 0], [0, 1], [1, 2], [2, 3]]
-	for corner_index in 4:
-		var pair: Array = pairs[corner_index]
+func _draw_wall_corner_joins(cell: Vector2i, _rect: Rect2, open_sides: Array, _noise: float) -> void :
+	var adjacent_pairs := [[0, 1], [1, 2], [2, 3], [3, 0]]
+	var bedrock := _terrain_is_bedrock(cell)
+	for corner in 4:
+		var pair: Array = adjacent_pairs[corner]
 		if not bool(open_sides[int(pair[0])]) or not bool(open_sides[int(pair[1])]):
 			continue
-		var bedrock: = _terrain_is_bedrock(cell)
-		var edge: = Color("555b55") if bedrock else _profile_color("wallEdge", "a2764d")
-		var dirt: = Color("111310") if bedrock else _profile_color("dirt", "211710")
-		var face: = dirt.lerp(edge, 0.28).lightened((noise - 0.5) * 0.07)
-		var point: Vector2 = corners[corner_index]
-		var key: = absi(cell.x * 77213 + cell.y * 48611 + corner_index * 31337)
-		var shadow_points: = _angular_stone_points(point, 17.0 if bedrock else 10.5, key)
-		var face_points: = _angular_stone_points(point, 12.0 if bedrock else 6.7, key + 19)
-		draw_colored_polygon(shadow_points, Color(0.006, 0.007, 0.006, 0.88))
-		draw_colored_polygon(face_points, Color(face, 0.98))
+		if bedrock:
+			CaveEdgeAssetDrawer.draw_bedrock_corner(
+				self, bedrock_corner_texture, cell, corner, TILE_SIZE
+			)
+		else:
+			CaveEdgeAssetDrawer.draw_mineable_corner(
+				self, cave_corner_texture, cell, corner, TILE_SIZE
+			)
 
 
 func _draw_excavation_edge(cell: Vector2i, rect: Rect2, side: int, noise: float) -> void :
@@ -2352,7 +2407,7 @@ func _draw_drill_gates() -> void :
 	var gates_near_view: Dictionary = {}
 	for rock_index in rocks.size():
 		var rock: Dictionary = Dictionary(rocks[rock_index])
-		if not bool(rock.drill_gated) or bool(rock.broken):
+		if not bool(rock.drill_gated):
 			continue
 		var gate_id: = String(rock.deposit_id)
 		if gate_id.is_empty():
@@ -2362,6 +2417,8 @@ func _draw_drill_gates() -> void :
 		var indices: Array = Array(gate_indices[gate_id])
 		indices.append(rock_index)
 		gate_indices[gate_id] = indices
+		if bool(rock.broken):
+			continue
 		if visible_rect.has_point(Vector2(rock.position)) and _drill_gate_segment_visible(rock):
 			gates_near_view[gate_id] = true
 
@@ -2387,35 +2444,73 @@ func _drill_gate_segment_visible(rock: Dictionary) -> bool:
 
 
 func _draw_drill_gate(gate_id: String, indices: Array) -> void :
-	if indices.is_empty():
+	if indices.is_empty() or drill_gate_textures.is_empty():
 		return
-	var positions: Array[Vector2] = []
-	var kind: = String(rocks[int(indices[0])].type)
-	var required_drill: = int(rocks[int(indices[0])].requires_drill_level)
+	var entries: Array[Dictionary] = []
+	var min_position: = Vector2(INF, INF)
+	var max_position: = Vector2(-INF, -INF)
 	for index_value in indices:
-		positions.append(Vector2(rocks[int(index_value)].position))
-
-	var min_position: = positions[0]
-	var max_position: = positions[0]
-	for position in positions:
+		var rock_index: = int(index_value)
+		var position: = Vector2(rocks[rock_index].position)
+		entries.append({"index": rock_index, "position": position})
 		min_position = min_position.min(position)
 		max_position = max_position.max(position)
 	var vertical: = (max_position.y - min_position.y) > (max_position.x - min_position.x)
 	var along: = Vector2.DOWN if vertical else Vector2.RIGHT
 	var across: = Vector2.RIGHT if vertical else Vector2.DOWN
-	positions.sort_custom(func(left: Vector2, right: Vector2) -> bool:
-		var left_along: = left.dot(along)
-		var right_along: = right.dot(along)
+	entries.sort_custom(func(left: Dictionary, right: Dictionary) -> bool:
+		var left_position: = Vector2(left.position)
+		var right_position: = Vector2(right.position)
+		var left_along: = left_position.dot(along)
+		var right_along: = right_position.dot(along)
 		if not is_equal_approx(left_along, right_along):
 			return left_along < right_along
-		return left.dot(across) < right.dot(across)
+		return left_position.dot(across) < right_position.dot(across)
 	)
-	var gate_center: = (min_position + max_position) * 0.5
-
-	var palette: = _drill_gate_palette(kind)
-	_draw_drill_gate_stone_body(positions, palette, gate_id, kind)
-	_draw_drill_gate_reinforcement(positions, palette, along, across, gate_center)
-	_draw_drill_gate_lock(gate_center, required_drill, palette)
+	var first_projection: = Vector2(entries[0].position).dot(along)
+	var last_projection: = Vector2(entries[entries.size() - 1].position).dot(along)
+	var along_min: = first_projection - TILE_SIZE * 0.62
+	var along_max: = last_projection + TILE_SIZE * 0.62
+	var target_length: = maxf(TILE_SIZE, along_max - along_min)
+	var center_projection: = (along_min + along_max) * 0.5
+	var across_projection: = 0.0
+	for entry in entries:
+		across_projection += Vector2(entry.position).dot(across)
+	across_projection /= float(entries.size())
+	var gate_center: = along * center_projection + across * across_projection
+	var texture_index: = absi(gate_id.hash()) % drill_gate_textures.size()
+	var texture: Texture2D = drill_gate_textures[texture_index]
+	var source_size: = Vector2(texture.get_size())
+	var target_width: = target_length * source_size.x / maxf(1.0, source_size.y)
+	var rotation: = 0.0 if vertical else -PI * 0.5
+	var transform_scale: = Vector2.ONE if vertical else Vector2(-1.0, 1.0)
+	draw_set_transform(gate_center, rotation, transform_scale)
+	for entry_index in entries.size():
+		var entry: Dictionary = entries[entry_index]
+		var rock: Dictionary = Dictionary(rocks[int(entry.index)])
+		if bool(rock.broken) or not _drill_gate_segment_visible(rock):
+			continue
+		var projection: = Vector2(entry.position).dot(along)
+		var segment_start: = along_min
+		var segment_end: = along_max
+		if entry_index > 0:
+			var previous_projection: = Vector2(entries[entry_index - 1].position).dot(along)
+			segment_start = (previous_projection + projection) * 0.5
+		if entry_index + 1 < entries.size():
+			var next_projection: = Vector2(entries[entry_index + 1].position).dot(along)
+			segment_end = (projection + next_projection) * 0.5
+		var normalized_start: = (segment_start - along_min) / target_length
+		var normalized_height: = (segment_end - segment_start) / target_length
+		var source_rect: = Rect2(
+			Vector2(0.0, normalized_start * source_size.y),
+			Vector2(source_size.x, normalized_height * source_size.y)
+		)
+		var destination_rect: = Rect2(
+			Vector2(-target_width * 0.5, segment_start - center_projection),
+			Vector2(target_width, segment_end - segment_start)
+		)
+		draw_texture_rect_region(texture, destination_rect, source_rect)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 func _draw_drill_gate_stone_body(
@@ -2634,6 +2729,31 @@ func _resource_visible_rect(margin: Vector2) -> Rect2:
 		view_center - world_view_size * 0.5 - margin, 
 		world_view_size + margin * 2.0
 	)
+
+
+func _camera_draw_bounds_changed() -> bool:
+	var viewport_size := get_viewport_rect().size
+	var view_center := player.global_position
+	var camera_zoom := Vector2.ONE
+	if is_instance_valid(player.camera):
+		camera_zoom = Vector2(absf(player.camera.zoom.x), absf(player.camera.zoom.y))
+		if player.camera.enabled and player.camera.is_inside_tree():
+			view_center = player.camera.get_screen_center_position()
+	return (
+		view_center.distance_squared_to(last_draw_camera_center) >= CAMERA_REDRAW_DISTANCE * CAMERA_REDRAW_DISTANCE
+		or not viewport_size.is_equal_approx(last_draw_viewport_size)
+		or not camera_zoom.is_equal_approx(last_draw_camera_zoom)
+	)
+
+
+func _remember_draw_camera_bounds() -> void:
+	last_draw_viewport_size = get_viewport_rect().size
+	last_draw_camera_center = player.global_position
+	last_draw_camera_zoom = Vector2.ONE
+	if is_instance_valid(player.camera):
+		last_draw_camera_zoom = Vector2(absf(player.camera.zoom.x), absf(player.camera.zoom.y))
+		if player.camera.enabled and player.camera.is_inside_tree():
+			last_draw_camera_center = player.camera.get_screen_center_position()
 
 
 func _resource_hit_pulse(position: Vector2) -> float:

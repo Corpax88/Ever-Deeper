@@ -18,6 +18,7 @@ signal relic_hauled_to_hub(relic_id: String, discovery_depth: int)
 signal rope_state_changed(attached: bool, relic_id: String)
 
 const HeadlampBeamScript = preload("res://scripts/lighting/headlamp_beam.gd")
+const CaveEdgeAssetDrawer = preload("res://scripts/world/cave_edge_asset_drawer.gd")
 
 const RESOURCE_TEXTURE_PATHS := {
 	"lumenstone": "res://assets/endless/node-lumen-shard-v1.png",
@@ -47,12 +48,13 @@ const STRATUM_FLOOR_TEXTURE_PATHS := [
 	"res://assets/mossvein/cave-floor.png",
 ]
 const STRATUM_WALL_TEXTURE_PATHS := [
-	"res://assets/rootwound/wall.png",
-	"res://assets/moonglass/wall.png",
-	"res://assets/emberdeep/wall.png",
-	"res://assets/voidstar/wall.png",
-	"res://assets/mossvein/cave-wall.png",
+	"res://assets/caves/ancient-bedrock-edge-loop-v1.png",
+	"res://assets/caves/ancient-bedrock-edge-loop-v1.png",
+	"res://assets/caves/ancient-bedrock-edge-loop-v1.png",
+	"res://assets/caves/ancient-bedrock-edge-loop-v1.png",
+	"res://assets/caves/ancient-bedrock-edge-loop-v1.png",
 ]
+const BEDROCK_CORNER_TEXTURE_PATH := "res://assets/caves/ancient-bedrock-corner-v1.png"
 const SHAFT_TEXTURE_PATH := "res://assets/rootwound/depth-shaft.png"
 
 const TILE_SIZE := 64.0
@@ -75,6 +77,7 @@ const ROPE_POINT_RADIUS := 4.5
 const ROPE_LINEAR_DAMPING := 0.955
 const RELIC_LINEAR_DAMPING := 0.875
 const REDRAW_INTERVAL := 1.0 / 30.0
+const CAMERA_REDRAW_DISTANCE := 8.0
 const MINING_HIT_PROGRESS := 0.42
 const MINING_DURATION := 0.62
 const SITE_CONTEXT_RADIUS := 132.0
@@ -190,6 +193,7 @@ var native_relic_discovered := false
 
 var cave_floor_texture: Texture2D
 var cave_wall_texture: Texture2D
+var cave_wall_corner_texture: Texture2D
 var shaft_texture: Texture2D
 
 var rope_attached := false
@@ -216,6 +220,9 @@ var hazard_push_remaining := Vector2.ZERO
 var hazard_surge_count := 0
 var redraw_elapsed := REDRAW_INTERVAL
 var last_draw_cell := Vector2i(-9999, -9999)
+var last_draw_camera_center := Vector2(INF, INF)
+var last_draw_viewport_size := Vector2.ZERO
+var last_draw_camera_zoom := Vector2.ZERO
 var initialized := false
 var generation_count := 0
 var generated_depth := -1
@@ -427,6 +434,8 @@ func _physics_process(delta: float) -> void:
 		return
 	_apply_hazard_push(delta)
 	_update_haul_camera(delta)
+	if _camera_draw_bounds_changed():
+		queue_redraw()
 	if not rope_attached:
 		return
 	rope_accumulator += minf(maxf(0.0, delta), ROPE_FIXED_STEP * ROPE_MAX_STEPS_PER_FRAME)
@@ -474,6 +483,9 @@ func _generate_depth(depth: int, next_arrival: String) -> void:
 	generation_signature = _calculate_generation_signature()
 	generation_count += 1
 	last_draw_cell = Vector2i(-9999, -9999)
+	last_draw_camera_center = Vector2(INF, INF)
+	last_draw_viewport_size = Vector2.ZERO
+	last_draw_camera_zoom = Vector2.ZERO
 	redraw_elapsed = REDRAW_INTERVAL
 	queue_redraw()
 	_update_context(player.global_position)
@@ -2058,6 +2070,7 @@ func _load_stratum_textures() -> void:
 	var texture_index := current_depth % STRATUM_FLOOR_TEXTURE_PATHS.size()
 	cave_floor_texture = _load_texture(String(STRATUM_FLOOR_TEXTURE_PATHS[texture_index]))
 	cave_wall_texture = _load_texture(String(STRATUM_WALL_TEXTURE_PATHS[texture_index]))
+	cave_wall_corner_texture = _load_texture(BEDROCK_CORNER_TEXTURE_PATH)
 	if shaft_texture == null:
 		shaft_texture = _load_texture(SHAFT_TEXTURE_PATH)
 
@@ -2078,10 +2091,11 @@ func _floor_texture_region(cell: Vector2i) -> Rect2:
 func _draw() -> void:
 	if floor_cells.is_empty() or stratum.is_empty():
 		return
+	_remember_draw_camera_bounds()
 	draw_rect(Rect2(Vector2.ZERO, WORLD_SIZE), Color(stratum.wall).darkened(0.42), true)
-	var center := player.global_position if is_instance_valid(player) else WORLD_SIZE * 0.5
-	var min_cell := _world_to_cell(center - Vector2(820, 520))
-	var max_cell := _world_to_cell(center + Vector2(820, 520))
+	var visible_rect := _visual_visible_rect(Vector2.ONE * TILE_SIZE * 3.0)
+	var min_cell := _world_to_cell(visible_rect.position)
+	var max_cell := _world_to_cell(visible_rect.end)
 	min_cell.x = clampi(min_cell.x, 0, GRID_SIZE.x - 1)
 	min_cell.y = clampi(min_cell.y, 0, GRID_SIZE.y - 1)
 	max_cell.x = clampi(max_cell.x, 0, GRID_SIZE.x - 1)
@@ -2116,6 +2130,49 @@ func _draw() -> void:
 	_draw_shaft(down_shaft_position, false)
 
 
+func _visual_visible_rect(margin: Vector2) -> Rect2:
+	var viewport_size := get_viewport_rect().size
+	var view_center := player.global_position if is_instance_valid(player) else WORLD_SIZE * 0.5
+	var camera_zoom := Vector2.ONE
+	if is_instance_valid(player) and is_instance_valid(player.camera):
+		camera_zoom = Vector2(absf(player.camera.zoom.x), absf(player.camera.zoom.y))
+		if player.camera.enabled and player.camera.is_inside_tree():
+			view_center = player.camera.get_screen_center_position()
+	var world_view_size := Vector2(
+		viewport_size.x / maxf(0.01, camera_zoom.x),
+		viewport_size.y / maxf(0.01, camera_zoom.y)
+	)
+	return Rect2(
+		view_center - world_view_size * 0.5 - margin,
+		world_view_size + margin * 2.0
+	)
+
+
+func _camera_draw_bounds_changed() -> bool:
+	var viewport_size := get_viewport_rect().size
+	var view_center := player.global_position if is_instance_valid(player) else WORLD_SIZE * 0.5
+	var camera_zoom := Vector2.ONE
+	if is_instance_valid(player) and is_instance_valid(player.camera):
+		camera_zoom = Vector2(absf(player.camera.zoom.x), absf(player.camera.zoom.y))
+		if player.camera.enabled and player.camera.is_inside_tree():
+			view_center = player.camera.get_screen_center_position()
+	return (
+		view_center.distance_squared_to(last_draw_camera_center) >= CAMERA_REDRAW_DISTANCE * CAMERA_REDRAW_DISTANCE
+		or not viewport_size.is_equal_approx(last_draw_viewport_size)
+		or not camera_zoom.is_equal_approx(last_draw_camera_zoom)
+	)
+
+
+func _remember_draw_camera_bounds() -> void:
+	last_draw_viewport_size = get_viewport_rect().size
+	last_draw_camera_center = player.global_position if is_instance_valid(player) else WORLD_SIZE * 0.5
+	last_draw_camera_zoom = Vector2.ONE
+	if is_instance_valid(player) and is_instance_valid(player.camera):
+		last_draw_camera_zoom = Vector2(absf(player.camera.zoom.x), absf(player.camera.zoom.y))
+		if player.camera.enabled and player.camera.is_inside_tree():
+			last_draw_camera_center = player.camera.get_screen_center_position()
+
+
 func _draw_permanent_wall_mass(_cell: Vector2i, rect: Rect2) -> void:
 	var wall := Color(stratum.wall)
 	draw_rect(rect.grow(0.7), wall.darkened(0.06), true)
@@ -2145,43 +2202,9 @@ func _draw_wall_edges(cell: Vector2i, rect: Rect2) -> void:
 
 
 func _draw_permanent_wall_face(cell: Vector2i, rect: Rect2, side: int) -> void:
-	var starts := [
-		rect.position,
-		rect.position + Vector2(rect.size.x, 0.0),
-		rect.end,
-		rect.position + Vector2(0.0, rect.size.y),
-	]
-	var finishes := [
-		rect.position + Vector2(rect.size.x, 0.0),
-		rect.end,
-		rect.position + Vector2(0.0, rect.size.y),
-		rect.position,
-	]
-	var outward_directions := [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]
-	var start: Vector2 = starts[side]
-	var finish: Vector2 = finishes[side]
-	var outward: Vector2 = outward_directions[side]
-	var inward := -outward
-	var outer := _endless_edge_profile(start, finish, outward, side, 2.0, 5.4, 0)
-	var inner := _endless_edge_profile(start, finish, inward, side, 25.0, 8.0, 43)
-	var shadow_outer := _endless_offset_profile(outer, outward * 12.0)
-	var wall := Color(stratum.wall)
-	var edge := Color(stratum.wall_edge)
-	var face := wall.lerp(edge, 0.28).darkened(0.02)
-	draw_colored_polygon(
-		_endless_edge_strip(shadow_outer, outer),
-		Color(0.004, 0.006, 0.006, 0.94)
+	CaveEdgeAssetDrawer.draw_bedrock_edge(
+		self, cave_wall_texture, cell, side, TILE_SIZE, current_depth % 11
 	)
-	draw_colored_polygon(_endless_edge_strip(outer, inner), Color(face, 0.99))
-	draw_polyline(inner, Color(wall.darkened(0.38), 0.78), 5.2, true)
-	draw_polyline(outer, Color(0.004, 0.006, 0.006, 0.98), 7.4, true)
-	draw_polyline(
-		PackedVector2Array([outer[1], outer[2], outer[3]]),
-		Color(edge.lightened(0.08), 0.56),
-		2.8,
-		true
-	)
-	_draw_permanent_wall_strata(cell, start, finish, inward, side)
 
 
 func _draw_permanent_wall_strata(
@@ -2208,26 +2231,14 @@ func _draw_permanent_wall_strata(
 	)
 
 
-func _draw_permanent_wall_corners(cell: Vector2i, rect: Rect2, open_sides: Array) -> void:
-	var corners := [
-		rect.position,
-		rect.position + Vector2(rect.size.x, 0.0),
-		rect.end,
-		rect.position + Vector2(0.0, rect.size.y),
-	]
-	var pairs := [[3, 0], [0, 1], [1, 2], [2, 3]]
-	for corner_index in 4:
-		var pair: Array = pairs[corner_index]
+func _draw_permanent_wall_corners(cell: Vector2i, _rect: Rect2, open_sides: Array) -> void:
+	var adjacent_pairs := [[0, 1], [1, 2], [2, 3], [3, 0]]
+	for corner in 4:
+		var pair: Array = adjacent_pairs[corner]
 		if not bool(open_sides[int(pair[0])]) or not bool(open_sides[int(pair[1])]):
 			continue
-		var key := absi(cell.x * 77213 + cell.y * 48611 + corner_index * 31337 + generation_seed)
-		var point: Vector2 = corners[corner_index]
-		var shadow := _endless_angular_plate(point, 20.0, key)
-		var face := _endless_angular_plate(point, 13.5, key + 19)
-		draw_colored_polygon(shadow, Color(0.003, 0.005, 0.004, 0.94))
-		draw_colored_polygon(
-			face,
-			Color(Color(stratum.wall).lerp(Color(stratum.wall_edge), 0.31), 0.99)
+		CaveEdgeAssetDrawer.draw_bedrock_corner(
+			self, cave_wall_corner_texture, cell, corner, TILE_SIZE
 		)
 
 

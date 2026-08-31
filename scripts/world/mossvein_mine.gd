@@ -4,6 +4,7 @@ const HeadlampBeamScript = preload("res://scripts/lighting/headlamp_beam.gd")
 const DropVisuals = preload("res://scripts/world/drop_visuals.gd")
 const CrusherDebrisScript = preload("res://scripts/world/crusher_debris.gd")
 const CrusherLootBurstScript = preload("res://scripts/world/crusher_loot_burst.gd")
+const CaveEdgeAssetDrawer = preload("res://scripts/world/cave_edge_asset_drawer.gd")
 
 signal exit_context_changed(active: bool)
 signal depth_context_changed(active: bool)
@@ -16,6 +17,7 @@ const PLAYER_RADIUS: = 23.0
 const MINING_RANGE: = 116.0
 const CORNER_AIM_ASSIST: = PLAYER_RADIUS + 10.0
 const REDRAW_INTERVAL: = 1.0 / 30.0
+const CAMERA_REDRAW_DISTANCE: = 8.0
 const DEPTH_PORTAL_RADIUS: = 128.0
 const DEPTH_CONTEXT_RADIUS: = 118.0
 const DEPTH_PORTAL_RESOURCE_CLEARANCE: = 136.0
@@ -36,16 +38,20 @@ const WORK_LIGHT_REFRESH_DISTANCE: = 150.0
 const LAMP_TEXTURE: = preload("res://assets/entrances/depth-work-lamp.png")
 const MINE_ASSETS: = {
 	"mossMine": {
-		"floor": "res://assets/mossvein/cave-floor.png", "wall": "res://assets/mossvein/cave-wall.png", 
-		"bedrock": "res://assets/mossvein/unbreakable-wall.png", "entrance": "res://assets/entrances/mossvein-entrance.png", 
+		"floor": "res://assets/mossvein/cave-floor.png", "wall": "res://assets/mossvein/cave-edge-loop-v1.png", 
+		"corner": "res://assets/mossvein/cave-corner-v1.png",
+		"bedrock": "res://assets/caves/ancient-bedrock-edge-loop-v1.png", "entrance": "res://assets/entrances/mossvein-entrance.png", 
+		"bedrock_corner": "res://assets/caves/ancient-bedrock-corner-v1.png",
 		"impact": "res://assets/world-life/mossvein-impact.png", "style": "mossvein", 
 		"pocket": "res://assets/mossvein/magic-crystal-pocket.png", 
 		"cache": "res://assets/mossvein/buried-cache.png", 
 		"shrine": "res://assets/mossvein/mining-rush-shrine.png"
 	}, 
 	"moonMine": {
-		"floor": "res://assets/moonglass/floor.png", "wall": "res://assets/moonglass/wall.png", 
-		"bedrock": "res://assets/moonglass/unbreakable-wall.png", "entrance": "res://assets/entrances/moonglass-entrance.png", 
+		"floor": "res://assets/moonglass/floor.png", "wall": "res://assets/moonglass/cave-edge-loop-v1.png", 
+		"corner": "res://assets/moonglass/cave-corner-v1.png",
+		"bedrock": "res://assets/caves/ancient-bedrock-edge-loop-v1.png", "entrance": "res://assets/entrances/moonglass-entrance.png", 
+		"bedrock_corner": "res://assets/caves/ancient-bedrock-corner-v1.png",
 		"impact": "res://assets/world-life/moonglass-impact.png", "style": "moonglass", 
 		"pocket": "res://assets/moonglass/crystal-pocket.png", 
 		"cache": "res://assets/moonglass/buried-cache.png", 
@@ -53,8 +59,10 @@ const MINE_ASSETS: = {
 		"route_marker": "res://assets/moonglass/route-marker.png"
 	}, 
 	"emberMine": {
-		"floor": "res://assets/emberdeep/floor.png", "wall": "res://assets/emberdeep/wall.png", 
-		"bedrock": "res://assets/emberdeep/unbreakable-wall.png", "entrance": "res://assets/entrances/emberdeep-entrance.png", 
+		"floor": "res://assets/emberdeep/floor.png", "wall": "res://assets/emberdeep/cave-edge-loop-v1.png", 
+		"corner": "res://assets/emberdeep/cave-corner-v1.png",
+		"bedrock": "res://assets/caves/ancient-bedrock-edge-loop-v1.png", "entrance": "res://assets/entrances/emberdeep-entrance.png", 
+		"bedrock_corner": "res://assets/caves/ancient-bedrock-corner-v1.png",
 		"impact": "res://assets/world-life/emberdeep-impact.png", "style": "emberdeep", 
 		"pocket": "res://assets/emberdeep/crystal-pocket.png", 
 		"cache": "res://assets/emberdeep/buried-cache.png", 
@@ -62,8 +70,10 @@ const MINE_ASSETS: = {
 		"route_marker": "res://assets/emberdeep/route-marker.png"
 	}, 
 	"starMine": {
-		"floor": "res://assets/starfall/floor.png", "wall": "res://assets/starfall/wall.png", 
-		"bedrock": "res://assets/starfall/unbreakable-wall.png", "entrance": "res://assets/entrances/starfall-entrance.png", 
+		"floor": "res://assets/starfall/floor.png", "wall": "res://assets/starfall/cave-edge-loop-v1.png", 
+		"corner": "res://assets/starfall/cave-corner-v1.png",
+		"bedrock": "res://assets/caves/ancient-bedrock-edge-loop-v1.png", "entrance": "res://assets/entrances/starfall-entrance.png", 
+		"bedrock_corner": "res://assets/caves/ancient-bedrock-corner-v1.png",
 		"impact": "res://assets/world-life/starfall-impact.png", "style": "starfall", 
 		"pocket": "res://assets/starfall/crystal-pocket.png", 
 		"cache": "res://assets/starfall/buried-cache.png", 
@@ -85,12 +95,14 @@ const RESOURCE_NODE_ASSETS: = {
 	"astralite": "res://assets/starfall/astralite-node.png", "crownstone": "res://assets/starfall/crownstone-node.png"
 }
 const BARRIER_ASSETS: = {
-	"moon_prism_gate": "res://assets/moonglass/prismatic-fault-barrier-core.png", 
-	"moon_star_lock": "res://assets/moonglass/starbound-geode-barrier-core.png", 
-	"ember_bulkhead": "res://assets/emberdeep/cinder-bulkhead-barrier-core.png", 
-	"ember_crucible_lock": "res://assets/emberdeep/crucible-seal-barrier-core.png", 
-	"star_bridge_lock": "res://assets/starfall/astral-bridge-lock-barrier-core.png", 
-	"star_crown_lock": "res://assets/starfall/crownstone-ward-barrier-core.png", 
+	"outer_rubble": "res://assets/mossvein/outer-rubble-barrier-v1.png", 
+	"iron_seam": "res://assets/mossvein/ironbound-collapse-barrier-v1.png", 
+	"moon_prism_gate": "res://assets/moonglass/prismatic-fault-barrier-v2.png", 
+	"moon_star_lock": "res://assets/moonglass/starbound-geode-barrier-v2.png", 
+	"ember_bulkhead": "res://assets/emberdeep/cinder-bulkhead-barrier-v2.png", 
+	"ember_crucible_lock": "res://assets/emberdeep/crucible-seal-barrier-v2.png", 
+	"star_bridge_lock": "res://assets/starfall/astral-bridge-lock-barrier-v2.png", 
+	"star_crown_lock": "res://assets/starfall/crownstone-ward-barrier-v2.png", 
 }
 const BARRIER_ACCENTS: = {
 	"mossMine": "d98d2f", 
@@ -112,9 +124,12 @@ var mine_id: = "mossMine"
 var mine: Dictionary
 var mine_assets: Dictionary
 var texture_cache: Dictionary = {}
+var locked_barrier_texture_cache: Dictionary = {}
 var floor_texture: Texture2D
 var wall_texture: Texture2D
+var corner_texture: Texture2D
 var bedrock_texture: Texture2D
+var bedrock_corner_texture: Texture2D
 var entrance_texture: Texture2D
 var impact_texture: Texture2D
 var depth_shaft_texture: Texture2D
@@ -167,6 +182,9 @@ var target_dirty: = true
 var redraw_requested: = true
 var redraw_elapsed: = REDRAW_INTERVAL
 var last_draw_cell: = Vector2i(-9999, -9999)
+var last_draw_camera_center: = Vector2(INF, INF)
+var last_draw_viewport_size: = Vector2.ZERO
+var last_draw_camera_zoom: = Vector2.ZERO
 
 
 func _ready() -> void :
@@ -209,12 +227,19 @@ func load_mine(next_mine_id: String) -> void :
 
 
 func _configure_mine(next_mine_id: String) -> void :
+	# A mine switch replaces the complete visual set.  Drop references from the
+	# previous biome before loading the new one so authored 1024px corners and
+	# the generated locked-barrier variants do not accumulate during a journey.
+	texture_cache.clear()
+	locked_barrier_texture_cache.clear()
 	mine_id = next_mine_id
 	mine = GameData.mine(mine_id)
 	mine_assets = Dictionary(MINE_ASSETS[mine_id])
 	floor_texture = _texture(String(mine_assets.floor))
 	wall_texture = _texture(String(mine_assets.wall))
+	corner_texture = _texture(String(mine_assets.corner))
 	bedrock_texture = _texture(String(mine_assets.bedrock))
+	bedrock_corner_texture = _texture(String(mine_assets.bedrock_corner))
 	entrance_texture = _texture(String(mine_assets.entrance))
 	impact_texture = _texture(String(mine_assets.impact))
 	depth_shaft_texture = _texture(String(DEPTH_SHAFT_ASSETS[mine_id]))
@@ -237,6 +262,9 @@ func _configure_mine(next_mine_id: String) -> void :
 	current_target = Vector2i(-1, -1)
 	target_dirty = true
 	last_draw_cell = Vector2i(-9999, -9999)
+	last_draw_camera_center = Vector2(INF, INF)
+	last_draw_viewport_size = Vector2.ZERO
+	last_draw_camera_zoom = Vector2.ZERO
 	_rebuild_role_counts()
 	_migrate_legacy_barrier_progress()
 	_rebuild_resource_guide_cells()
@@ -340,6 +368,8 @@ func set_mine_held(held: bool) -> void :
 func _process(delta: float) -> void :
 	if not active:
 		return
+	if _camera_draw_bounds_changed():
+		_request_redraw()
 	if target_dirty:
 		var previous_target: = current_target
 		current_target = _find_mine_target()
@@ -1729,12 +1759,13 @@ func _cell_center(cell: Vector2i) -> Vector2:
 func _draw() -> void :
 	if mine.is_empty():
 		return
+	_remember_draw_camera_bounds()
 	draw_rect(Rect2(Vector2.ZERO, world_size), Color(String(mine.floor)), true)
 	draw_texture_rect(floor_texture, Rect2(Vector2.ZERO, world_size), true, Color(0.7, 0.72, 0.68, 0.94))
 	_draw_barrier_backplates()
-	var view_radius: = Vector2(310, 470)
-	var start: = _world_to_cell(player.global_position - view_radius)
-	var finish: = _world_to_cell(player.global_position + view_radius)
+	var visible_rect := _visual_visible_rect(Vector2.ONE * TILE_SIZE * 3.0)
+	var start: = _world_to_cell(visible_rect.position)
+	var finish: = _world_to_cell(visible_rect.end)
 	var visible_block_cells: Array[Vector2i] = []
 	for row in range(maxi(0, start.y), mini(rows - 1, finish.y) + 1):
 		for col in range(maxi(0, start.x), mini(cols - 1, finish.x) + 1):
@@ -1757,6 +1788,49 @@ func _draw() -> void :
 	for drop in drops:
 		_draw_drop(drop)
 	_draw_target()
+
+
+func _visual_visible_rect(margin: Vector2) -> Rect2:
+	var viewport_size := get_viewport_rect().size
+	var view_center := player.global_position
+	var camera_zoom := Vector2.ONE
+	if is_instance_valid(player.camera):
+		camera_zoom = Vector2(absf(player.camera.zoom.x), absf(player.camera.zoom.y))
+		if player.camera.enabled and player.camera.is_inside_tree():
+			view_center = player.camera.get_screen_center_position()
+	var world_view_size := Vector2(
+		viewport_size.x / maxf(0.01, camera_zoom.x),
+		viewport_size.y / maxf(0.01, camera_zoom.y)
+	)
+	return Rect2(
+		view_center - world_view_size * 0.5 - margin, 
+		world_view_size + margin * 2.0
+	)
+
+
+func _camera_draw_bounds_changed() -> bool:
+	var viewport_size := get_viewport_rect().size
+	var view_center := player.global_position
+	var camera_zoom := Vector2.ONE
+	if is_instance_valid(player.camera):
+		camera_zoom = Vector2(absf(player.camera.zoom.x), absf(player.camera.zoom.y))
+		if player.camera.enabled and player.camera.is_inside_tree():
+			view_center = player.camera.get_screen_center_position()
+	return (
+		view_center.distance_squared_to(last_draw_camera_center) >= CAMERA_REDRAW_DISTANCE * CAMERA_REDRAW_DISTANCE
+		or not viewport_size.is_equal_approx(last_draw_viewport_size)
+		or not camera_zoom.is_equal_approx(last_draw_camera_zoom)
+	)
+
+
+func _remember_draw_camera_bounds() -> void:
+	last_draw_viewport_size = get_viewport_rect().size
+	last_draw_camera_center = player.global_position
+	last_draw_camera_zoom = Vector2.ONE
+	if is_instance_valid(player.camera):
+		last_draw_camera_zoom = Vector2(absf(player.camera.zoom.x), absf(player.camera.zoom.y))
+		if player.camera.enabled and player.camera.is_inside_tree():
+			last_draw_camera_center = player.camera.get_screen_center_position()
 
 
 func _draw_concealed_discoveries(start: Vector2i, finish: Vector2i) -> void :
@@ -1840,83 +1914,92 @@ func _draw_barrier_art() -> void :
 
 
 func _draw_barrier_backplates() -> void :
-	for barrier_value in mine.barriers:
-		var barrier: Dictionary = Dictionary(barrier_value)
-		var barrier_id: = String(barrier.id)
-		if not _role_has_blocks(barrier_id):
-			continue
-		var rect: = Rect2(float(barrier.x), float(barrier.y), float(barrier.w), float(barrier.h))
-		var vertical: = rect.size.y >= rect.size.x
-		var along: = Vector2.DOWN if vertical else Vector2.RIGHT
-		var across: = Vector2.RIGHT if vertical else Vector2.DOWN
-		var length: = rect.size.y if vertical else rect.size.x
-		var thickness: = rect.size.x if vertical else rect.size.y
-		var center: = rect.get_center()
-		var wall: = Color(String(mine.wall)).darkened(0.46)
-		var shadow_half_length: = length * 0.5 + 14.0
-		var shadow_half_width: = thickness * 0.5 + 15.0
-		var shadow: = _barrier_quad(center, along, across, shadow_half_length, shadow_half_width)
-		draw_colored_polygon(shadow, Color(wall, 0.94))
-		for end_sign_value in [-1.0, 1.0]:
-			var end_sign: float = float(end_sign_value)
-			var root: = center + along * end_sign * (length * 0.5 + 5.0)
-			draw_circle(root, thickness * 0.54, Color(wall, 0.9))
+	# Full authored barrier assets supply their own stone mass, shoulders and shadow.
+	return
 
 
 func _draw_premium_barrier(barrier: Dictionary, rect: Rect2) -> void :
 	var barrier_id: = String(barrier.id)
-	var required: = int(barrier.requiresPickaxe)
-	var locked: = int(RunState.pickaxe_level) < required
-	var vertical: = rect.size.y >= rect.size.x
-	var along: = Vector2.DOWN if vertical else Vector2.RIGHT
-	var across: = Vector2.RIGHT if vertical else Vector2.DOWN
-	var length: = rect.size.y if vertical else rect.size.x
-	var thickness: = rect.size.x if vertical else rect.size.y
-	var center: = rect.get_center()
-	var seed: = absi(barrier_id.hash())
-	var wall: = Color(String(mine.wall))
-	var edge: = Color(String(mine.get("wallEdge", mine.detail)))
-	var stone_dark: = wall.darkened(0.34)
-	var stone_mid: = wall.lerp(edge, 0.34).lightened(0.05)
-	var stone_light: = edge.lightened(0.11)
-	var accent: = Color(String(BARRIER_ACCENTS.get(mine_id, mine.detail)))
-	var row_count: = maxi(4, ceili(length / 43.0))
-	var row_step: = length / float(row_count)
-	for row in row_count:
-		for column in 2:
-			var stagger: = -0.5 if column == 0 else 0.5
-			var row_noise: = _barrier_noise(seed, row * 13 + column * 7)
-			var cross_noise: = _barrier_noise(seed, row * 17 + column * 11 + 71)
-			var position: = (
-				center
-				+ along * (-length * 0.5 + (float(row) + 0.5) * row_step + (row_noise - 0.5) * 5.0)
-				+ across * (stagger * thickness * 0.48 + (cross_noise - 0.5) * 5.0)
-			)
-			_draw_barrier_stone(
-				position, along, across, row_step * (0.68 + row_noise * 0.08), 
-				thickness * (0.39 + cross_noise * 0.045), stone_dark, stone_mid, stone_light, 
-				seed + row * 29 + column * 101
-			)
-	# Wider end stones visually grow the barrier into both adjoining cave walls.
-	for end_index in 2:
-		var end_sign: = -1.0 if end_index == 0 else 1.0
-		for shoulder in 3:
-			var shoulder_noise: = _barrier_noise(seed, 311 + end_index * 37 + shoulder * 19)
-			var shoulder_position: = (
-				center
-				+ along * end_sign * (length * 0.5 + 4.0 + shoulder_noise * 5.0)
-				+ across * (float(shoulder - 1) * thickness * 0.43)
-			)
-			_draw_barrier_stone(
-				shoulder_position, along, across, 24.0 + shoulder_noise * 5.0, 
-				thickness * 0.34, stone_dark, stone_mid, stone_light, 
-				seed + 503 + end_index * 83 + shoulder * 41
-			)
-	if required > 1:
-		_draw_barrier_bracing(center, along, across, length, thickness, required, locked, accent, barrier_id)
+	if not BARRIER_ASSETS.has(barrier_id):
+		return
+	var asset_path := String(BARRIER_ASSETS[barrier_id])
+	var locked := int(RunState.pickaxe_level) < int(barrier.requiresPickaxe)
+	var texture: Texture2D = _locked_barrier_texture(asset_path) if locked else _texture(asset_path)
+	var source_size := Vector2(texture.get_size())
+	var vertical := rect.size.y >= rect.size.x
+	var target_length := rect.size.y if vertical else rect.size.x
+	var scale_factor := target_length / maxf(1.0, source_size.y)
+	var visual_size := source_size * scale_factor
+	var visual_rect := Rect2(rect.get_center() - visual_size * 0.5, visual_size)
+	if not vertical:
+		visual_size = Vector2(visual_size.y, visual_size.x)
+		visual_rect = Rect2(rect.get_center() - visual_size * 0.5, visual_size)
+	# Collision remains the complete barrier rectangle until the final role cell
+	# is mined.  Keep the authored silhouette complete for exactly the same
+	# lifetime so damage never creates a visible opening the player cannot enter.
+	if vertical:
+		draw_texture_rect(texture, visual_rect, false)
+	else:
+		draw_set_transform(rect.get_center(), -PI * 0.5, Vector2.ONE)
+		var local_size := Vector2(visual_rect.size.y, visual_rect.size.x)
+		draw_texture_rect(
+			texture,
+			Rect2(-local_size * 0.5, local_size),
+			false
+		)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	var integrity: = _barrier_integrity(barrier_id)
 	if integrity < 0.98:
-		_draw_barrier_fractures(center, along, across, length, thickness, integrity, accent, seed)
+		var along := Vector2.DOWN if vertical else Vector2.RIGHT
+		var across := Vector2.RIGHT if vertical else Vector2.DOWN
+		var length := rect.size.y if vertical else rect.size.x
+		var thickness := rect.size.x if vertical else rect.size.y
+		var accent := Color(String(BARRIER_ACCENTS.get(mine_id, mine.detail)))
+		_draw_barrier_fractures(
+			rect.get_center(), along, across, length, thickness, integrity, accent, absi(barrier_id.hash())
+		)
+
+
+func _barrier_role_cells(barrier_id: String, vertical: bool = true) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	for rock_value in mine.rocks:
+		var rock: Array = Array(rock_value)
+		if rock.size() < 4 or String(rock[3]) != barrier_id:
+			continue
+		result.append(
+			Vector2i(floori(float(rock[1]) / TILE_SIZE), floori(float(rock[2]) / TILE_SIZE))
+		)
+	result.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:
+		if vertical:
+			return a.y < b.y if a.y != b.y else a.x < b.x
+		return a.x < b.x if a.x != b.x else a.y < b.y
+	)
+	return result
+
+
+func _barrier_slice_boundaries(
+	original_cells: Array[Vector2i], visual_rect: Rect2, vertical: bool
+) -> PackedFloat32Array:
+	var outer_start := visual_rect.position.y if vertical else visual_rect.position.x
+	var outer_end := visual_rect.end.y if vertical else visual_rect.end.x
+	var result := PackedFloat32Array([outer_start])
+	for cell_index in range(1, original_cells.size()):
+		var previous_cell := original_cells[cell_index - 1]
+		var next_cell := original_cells[cell_index]
+		var previous_center := (
+			(float(previous_cell.y) + 0.5) * TILE_SIZE
+			if vertical
+			else (float(previous_cell.x) + 0.5) * TILE_SIZE
+		)
+		var next_center := (
+			(float(next_cell.y) + 0.5) * TILE_SIZE
+			if vertical
+			else (float(next_cell.x) + 0.5) * TILE_SIZE
+		)
+		var midpoint := clampf((previous_center + next_center) * 0.5, result[-1], outer_end)
+		result.append(midpoint)
+	result.append(outer_end)
+	return result
 
 
 func _draw_barrier_stone(
@@ -2335,56 +2418,9 @@ func _wall_edge_basis(cell: Vector2i, side: int) -> Dictionary:
 
 
 func _draw_natural_wall_face(cell: Vector2i, side: int) -> void :
-	var basis: = _wall_edge_basis(cell, side)
-	var edge_start: Vector2 = Vector2(basis.start)
-	var tangent: Vector2 = Vector2(basis.tangent)
-	var outward: Vector2 = Vector2(basis.outward)
-	var outer_points: = PackedVector2Array()
-	var inner_points: = PackedVector2Array()
-	for sample in 5:
-		var ratio: = float(sample) * 0.25
-		var outer_noise: = _wall_edge_noise(cell, side, sample, 0)
-		var depth_noise: = _wall_edge_noise(cell, side, sample, 1)
-		outer_points.append(edge_start + tangent * (TILE_SIZE * ratio) + outward * (3.0 + outer_noise * 7.5))
-		inner_points.append(edge_start + tangent * (TILE_SIZE * ratio) - outward * (13.5 + depth_noise * 8.5))
-	var ribbon: = PackedVector2Array(outer_points)
-	for index in range(inner_points.size() - 1, -1, -1):
-		ribbon.append(inner_points[index])
-	var wall_color: = Color(String(mine.wall))
-	var edge_color: = Color(String(mine.get("wallEdge", mine.detail)))
-	var shadow: = wall_color.darkened(0.52)
-	var stone: = wall_color.lerp(edge_color, 0.34).lightened(0.025)
-	var ridge: = edge_color.lightened(0.06)
-	var highlight: = Color(String(mine.detail)).lerp(Color.WHITE, 0.05)
-	var shadow_points: = PackedVector2Array()
-	for point in outer_points:
-		shadow_points.append(point + outward * 3.8)
-	draw_polyline(shadow_points, Color(shadow, 0.78), 9.0, true)
-	draw_colored_polygon(ribbon, Color(stone, 0.99))
-	# Broad, adjoining facets make the face read as rock grown into the wall.  The
-	# shared boundary samples keep every facet continuous across neighbouring cells.
-	for sample in range(4):
-		var facet_noise: = _wall_edge_noise(cell, side, sample, 4)
-		var facet: = PackedVector2Array([
-			outer_points[sample], outer_points[sample + 1],
-			inner_points[sample + 1], inner_points[sample],
-		])
-		var facet_color: = stone.lightened((facet_noise - 0.5) * 0.105)
-		draw_colored_polygon(facet, Color(facet_color, 0.68))
-		if facet_noise > 0.58:
-			var crease_start: Vector2 = outer_points[sample].lerp(inner_points[sample], 0.48)
-			var crease_end: Vector2 = outer_points[sample + 1].lerp(inner_points[sample + 1], 0.67)
-			draw_line(crease_start, crease_end, Color(shadow, 0.34), 1.1, true)
-	draw_polyline(inner_points, Color(shadow, 0.5), 2.8, true)
-	for sample in range(4):
-		if _wall_edge_noise(cell, side, sample, 2) < 0.46:
-			continue
-		var start_point: Vector2 = outer_points[sample].lerp(inner_points[sample], 0.06)
-		var end_point: Vector2 = outer_points[sample + 1].lerp(inner_points[sample + 1], 0.06)
-		draw_line(start_point, end_point, Color(highlight, 0.28), 1.1, true)
-	_draw_embedded_wall_stone(cell, side, edge_start, tangent, outward, stone, ridge, 0)
-	if _wall_edge_noise(cell, side, 2, 7) > 0.52:
-		_draw_embedded_wall_stone(cell, side, edge_start, tangent, outward, stone, ridge, 1)
+	CaveEdgeAssetDrawer.draw_mineable_edge(
+		self, wall_texture, cell, side, TILE_SIZE, absi(mine_id.hash()) % 11
+	)
 
 
 func _draw_embedded_wall_stone(
@@ -2418,41 +2454,9 @@ func _draw_embedded_wall_stone(
 
 
 func _draw_bedrock_face(cell: Vector2i, side: int) -> void :
-	var basis: = _wall_edge_basis(cell, side)
-	var edge_start: Vector2 = Vector2(basis.start)
-	var tangent: Vector2 = Vector2(basis.tangent)
-	var outward: Vector2 = Vector2(basis.outward)
-	var outer_points: = PackedVector2Array()
-	var inner_points: = PackedVector2Array()
-	for sample in 5:
-		var ratio: = float(sample) * 0.25
-		var outer_noise: = _wall_edge_noise(cell, side, sample, 8)
-		var depth_noise: = _wall_edge_noise(cell, side, sample, 9)
-		outer_points.append(edge_start + tangent * (TILE_SIZE * ratio) + outward * (2.0 + outer_noise * 3.0))
-		inner_points.append(edge_start + tangent * (TILE_SIZE * ratio) - outward * (25.0 + depth_noise * 10.0))
-	var face: = PackedVector2Array(outer_points)
-	for index in range(inner_points.size() - 1, -1, -1):
-		face.append(inner_points[index])
-	var outer_shadow: = PackedVector2Array()
-	for point in outer_points:
-		outer_shadow.append(point + outward * 8.0)
-	draw_polyline(outer_shadow, Color(0.004, 0.005, 0.004, 0.82), 18.0, true)
-	var foundation: = Color("242821").lerp(Color("343932"), _bedrock_plate_noise(cell, side + 1) * 0.12)
-	draw_colored_polygon(face, Color(foundation, 1.0))
-	# Wide tonal strata continue from tile to tile.  They deliberately avoid chips,
-	# bright rims and damage cracks: this is a permanent geological mass.
-	for layer in range(2):
-		var stratum: = PackedVector2Array()
-		var depth_ratio: = 0.34 + float(layer) * 0.34
-		for sample in 5:
-			stratum.append(outer_points[sample].lerp(inner_points[sample], depth_ratio))
-		var stratum_color: = Color("596057") if layer == 0 else Color("080a08")
-		var alpha: = 0.18 if layer == 0 else 0.26
-		draw_polyline(stratum, Color(stratum_color, alpha), 4.8 if layer == 0 else 6.2, true)
-	var outer_plane: = PackedVector2Array()
-	for point in outer_points:
-		outer_plane.append(point - outward * 0.8)
-	draw_polyline(outer_plane, Color("6f756b", 0.24), 1.4, true)
+	CaveEdgeAssetDrawer.draw_bedrock_edge(
+		self, bedrock_texture, cell, side, TILE_SIZE, absi(mine_id.hash()) % 11
+	)
 
 
 func _bedrock_plate_noise(cell: Vector2i, channel: int) -> float:
@@ -2480,34 +2484,19 @@ func _wall_edge_noise(cell: Vector2i, side: int, sample: int, channel: int) -> f
 
 
 func _draw_wall_corner_caps(cell: Vector2i, open_sides: Array[bool], bedrock: bool) -> void :
-	var rect: = Rect2(Vector2(cell) * TILE_SIZE, Vector2.ONE * TILE_SIZE)
-	var corner_pairs: = [
-		[0, 3, rect.position],
-		[0, 1, Vector2(rect.end.x, rect.position.y)],
-		[2, 1, rect.end],
-		[2, 3, Vector2(rect.position.x, rect.end.y)],
-	]
-	var edge_color: = Color("697068") if bedrock else Color(String(mine.get("wallEdge", mine.detail))).lightened(0.04)
-	var fill_color: = Color("2b302a") if bedrock else Color(String(mine.wall)).lerp(edge_color, 0.3)
-	for pair_value in corner_pairs:
-		var pair: Array = Array(pair_value)
+	var adjacent_pairs := [[0, 1], [1, 2], [2, 3], [3, 0]]
+	for corner in 4:
+		var pair: Array = adjacent_pairs[corner]
 		if not bool(open_sides[int(pair[0])]) or not bool(open_sides[int(pair[1])]):
 			continue
-		var corner: Vector2 = Vector2(pair[2])
-		var radius: = 14.0 if bedrock else 9.2
-		var shadow_points: = PackedVector2Array()
-		var stone_points: = PackedVector2Array()
-		for point_index in 8:
-			var angle: = float(point_index) * TAU / 8.0
-			var noise: = _wall_edge_noise(cell, int(pair[0]), point_index % 5, 10 + int(pair[1]))
-			var direction: = Vector2(cos(angle), sin(angle))
-			shadow_points.append(corner + direction * (radius + 3.0 + noise * 2.5))
-			stone_points.append(corner + direction * (radius * (0.78 + noise * 0.22)))
-		draw_colored_polygon(shadow_points, Color(0.006, 0.007, 0.006, 0.76))
-		draw_colored_polygon(stone_points, Color(fill_color, 0.99))
-		if not bedrock:
-			draw_line(stone_points[1], stone_points[3], Color(edge_color, 0.28), 1.0, true)
-			draw_line(stone_points[4], stone_points[6], Color(fill_color.darkened(0.38), 0.42), 1.2, true)
+		if bedrock:
+			CaveEdgeAssetDrawer.draw_bedrock_corner(
+				self, bedrock_corner_texture, cell, corner, TILE_SIZE
+			)
+		else:
+			CaveEdgeAssetDrawer.draw_mineable_corner(
+				self, corner_texture, cell, corner, TILE_SIZE
+			)
 
 
 func _draw_target() -> void :
@@ -2809,6 +2798,25 @@ func _texture(path: String) -> Texture2D:
 	var texture: = ResourceLoader.load(path) as Texture2D
 	texture_cache[path] = texture
 	return texture
+
+
+func _locked_barrier_texture(path: String) -> Texture2D:
+	if locked_barrier_texture_cache.has(path):
+		return locked_barrier_texture_cache[path]
+	var source := _texture(path)
+	var image := source.get_image()
+	if image == null or image.is_empty():
+		return source
+	if image.is_compressed() and image.decompress() != OK:
+		return source
+	# Preserve every authored pixel and its alpha while visibly suppressing the
+	# material's colour and light response until the required pickaxe is owned.
+	# Image.adjust_bcs uses multiplicative factors where 1.0 is neutral.  Keep
+	# the authored masonry readable while muting brightness, contrast and colour.
+	image.adjust_bcs(0.82, 0.96, 0.32)
+	var locked := ImageTexture.create_from_image(image)
+	locked_barrier_texture_cache[path] = locked
+	return locked
 
 
 func _resource_texture(kind: String) -> Texture2D:
