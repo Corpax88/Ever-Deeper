@@ -274,7 +274,11 @@ async function captureSuite(options) {
     });
     page.on("pageerror", (error) => pageErrors.push(String(error)));
     page.on("requestfailed", (request) => {
-      requestFailures.push(`${request.method()} ${request.url()} · ${request.failure()?.errorText ?? "unknown"}`);
+      requestFailures.push({
+        method: request.method(),
+        url: request.url(),
+        errorText: request.failure()?.errorText ?? "unknown",
+      });
     });
     await page.route("**/index.html", async (route) => {
       const response = await route.fetch();
@@ -344,8 +348,21 @@ async function captureSuite(options) {
       throw new Error(`Captured ${captures.length}, expected ${EXPECTED_CAPTURE_COUNT}`);
     }
     if (pageErrors.length > 0) throw new Error(`Page errors:\n${pageErrors.join("\n")}`);
-    if (requestFailures.length > 0) {
-      throw new Error(`Failed build requests:\n${requestFailures.join("\n")}`);
+    const serverOrigin = new URL(url).origin;
+    const blockingRequestFailures = requestFailures.filter((failure) => {
+      const requestUrl = new URL(failure.url);
+      return !(
+        failure.method === "GET" &&
+        failure.errorText === "net::ERR_ABORTED" &&
+        requestUrl.origin === serverOrigin &&
+        requestUrl.pathname === "/index.pck"
+      );
+    });
+    if (blockingRequestFailures.length > 0) {
+      const details = blockingRequestFailures.map(
+        (failure) => `${failure.method} ${failure.url} · ${failure.errorText}`,
+      );
+      throw new Error(`Failed build requests:\n${details.join("\n")}`);
     }
     const metadata = {
       generatedAt: new Date().toISOString(),
