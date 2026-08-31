@@ -76,17 +76,17 @@ jobs:
 
           cat "$GITHUB_WORKSPACE"/.github/dev-patch/mossvein-first-cave.xdelta.part* \
             > "$RUNNER_TEMP/mossvein-first-cave.xdelta"
-          echo "ddbe793bd68a18536828e2397fd7f5fbf7f421f43259dce86a0bcf5bdaab2944  $RUNNER_TEMP/mossvein-first-cave.xdelta" | sha256sum -c -
-          test "$(stat -c %s "$RUNNER_TEMP/mossvein-first-cave.xdelta")" -eq 1134825
+          echo "48d8f9156ab90883a3ab649367f90b5cceb520d6ca999e8a47fc6d09770ed4ef  $RUNNER_TEMP/mossvein-first-cave.xdelta" | sha256sum -c -
+          test "$(stat -c %s "$RUNNER_TEMP/mossvein-first-cave.xdelta")" -eq 1153042
 
           "$xdelta" -d -s "$RUNNER_TEMP/dev7.pck" \
             "$RUNNER_TEMP/mossvein-first-cave.xdelta" "$build_dir/candidate.pck"
           mv "$build_dir/candidate.pck" "$build_dir/index.pck"
-          echo "fd7aa006f3f1630ff4ca8e81191ec8d1a952270c2af6ec7ac83c84e670cde4d9  $build_dir/index.pck" | sha256sum -c -
-          test "$(stat -c %s "$build_dir/index.pck")" -eq 106365316
+          echo "a70dbab1d3cb66afdd36fa43a5d1d6840ccd428af337ad8add4996d8dbf8520b  $build_dir/index.pck" | sha256sum -c -
+          test "$(stat -c %s "$build_dir/index.pck")" -eq 106383940
 
-          sed -i 's/"index.pck":105337792/"index.pck":106365316/' "$build_dir/index.html"
-          echo "b7b639d6be762b2ee5748e7b62877d48610feca6632d103cc4b0c3573da7c295  $build_dir/index.html" | sha256sum -c -
+          sed -i 's/"index.pck":105337792/"index.pck":106383940/' "$build_dir/index.html"
+          echo "97055ca7437890ecbe556df0790ff20c8eda894ed907b41e7fbaff6e6c2b4860  $build_dir/index.html" | sha256sum -c -
           grep -q 'v0.42.0-dev.7' "$build_dir/index.html"
           test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
 
@@ -99,7 +99,8 @@ jobs:
         run: |
           node tools/visual-qa/capture-web-visuals.mjs \
             --web-dir "$RUNNER_TEMP/ever-deeper-mossvein-candidate" \
-            --output-dir "$RUNNER_TEMP/visual-captures"
+            --output-dir "$RUNNER_TEMP/visual-captures" \
+            --capture-limit 3
 
       - name: Upload visual evidence
         if: always()

@@ -31,6 +31,7 @@ function parseArguments(argv) {
     webDir: "",
     outputDir: "",
     timeoutMs: DEFAULT_TIMEOUT_MS,
+    captureLimit: EXPECTED_CAPTURE_COUNT,
   };
   for (let index = 0; index < argv.length; index += 1) {
     const token = argv[index];
@@ -44,6 +45,7 @@ function parseArguments(argv) {
     if (name === "--web-dir") options.webDir = readValue();
     else if (name === "--output-dir") options.outputDir = readValue();
     else if (name === "--timeout-ms") options.timeoutMs = Number(readValue());
+    else if (name === "--capture-limit") options.captureLimit = Number(readValue());
     else if (name === "--help" || name === "-h") options.help = true;
     else throw new Error(`Unknown argument: ${token}`);
   }
@@ -55,7 +57,8 @@ function usage() {
     "Usage:",
     "  node tools/visual-qa/capture-web-visuals.mjs \\",
     "    --web-dir /absolute/path/to/final-web-dev-build \\",
-    "    --output-dir /absolute/path/to/visual-captures",
+    "    --output-dir /absolute/path/to/visual-captures \\",
+    "    [--capture-limit 3]",
   ].join("\n");
 }
 
@@ -63,6 +66,13 @@ async function ensureInputs(options) {
   if (!options.webDir || !options.outputDir) throw new Error(usage());
   if (!Number.isFinite(options.timeoutMs) || options.timeoutMs <= 0) {
     throw new Error("--timeout-ms must be a positive number");
+  }
+  if (
+    !Number.isInteger(options.captureLimit) ||
+    options.captureLimit < 1 ||
+    options.captureLimit > EXPECTED_CAPTURE_COUNT
+  ) {
+    throw new Error(`--capture-limit must be an integer from 1 to ${EXPECTED_CAPTURE_COUNT}`);
   }
   options.webDir = path.resolve(options.webDir);
   options.outputDir = path.resolve(options.outputDir);
@@ -332,6 +342,13 @@ async function captureSuite(options) {
           throw new Error(`Wrong PNG dimensions for ${file}: ${dimensions.width}x${dimensions.height}`);
         }
         captures.push({ index, state, file, sha256: await sha256(filename) });
+        if (
+          options.captureLimit < EXPECTED_CAPTURE_COUNT &&
+          captures.length >= options.captureLimit
+        ) {
+          completed = true;
+          continue;
+        }
         await page.locator("#canvas").focus();
         await page.keyboard.press("Enter");
         continue;
@@ -344,8 +361,8 @@ async function captureSuite(options) {
         completed = true;
       }
     }
-    if (captures.length !== EXPECTED_CAPTURE_COUNT) {
-      throw new Error(`Captured ${captures.length}, expected ${EXPECTED_CAPTURE_COUNT}`);
+    if (captures.length !== options.captureLimit) {
+      throw new Error(`Captured ${captures.length}, expected ${options.captureLimit}`);
     }
     if (pageErrors.length > 0) throw new Error(`Page errors:\n${pageErrors.join("\n")}`);
     const serverOrigin = new URL(url).origin;
@@ -373,6 +390,7 @@ async function captureSuite(options) {
       generatedAt: new Date().toISOString(),
       viewport: VIEWPORT,
       captureCount: captures.length,
+      suiteCaptureCount: EXPECTED_CAPTURE_COUNT,
       pckSha256,
       htmlSha256,
       browserVersion: browser.version(),
