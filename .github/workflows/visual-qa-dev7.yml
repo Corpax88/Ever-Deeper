@@ -1,4 +1,4 @@
-name: Visual QA Ever Deeper v0.42.0-dev.7
+name: Build and visual QA Ever Deeper v0.42.0-dev.7
 
 on:
   push:
@@ -6,28 +6,64 @@ on:
     paths:
       - '.github/workflows/visual-qa-dev7.yml'
       - '.github/dev-build/index.html'
-      - '.github/dev-patch/prod-v0420-to-dev-v0420-dev7-final.xdelta.part*'
+      - 'project.godot'
+      - 'export_presets.cfg'
+      - 'data/**'
+      - 'assets/**'
+      - 'scripts/**'
       - 'tools/visual-qa/capture-web-visuals.mjs'
 
 permissions:
   contents: read
 
 jobs:
-  capture-final-mobile-build:
+  build-and-capture-mobile-candidate:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
-      - name: Check out visual QA candidate
+      - name: Check out candidate source
         uses: actions/checkout@v4
 
-      - name: Reconstruct exact DEV candidate
+      - name: Install verified Godot 4.7.2
         shell: bash
         run: |
           set -euo pipefail
+          tool_dir="$RUNNER_TEMP/godot"
+          mkdir -p "$tool_dir"
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip \
+            -o "$tool_dir/godot.zip"
+          echo "cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4  $tool_dir/godot.zip" | sha256sum -c -
+          unzip -q "$tool_dir/godot.zip" -d "$tool_dir"
+          chmod +x "$tool_dir/Godot_v4.7.2-stable_linux.x86_64"
+          "$tool_dir/Godot_v4.7.2-stable_linux.x86_64" --version
+          echo "$tool_dir" >> "$GITHUB_PATH"
+
+      - name: Import and verify the complete capture matrix natively
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          timeout 20m "$godot" --headless --editor --path "$GITHUB_WORKSPACE" --import
+          timeout 10m "$godot" --headless --audio-driver Dummy --path "$GITHUB_WORKSPACE" \
+            -- --visual-capture-suite --visual-capture-auto-ack \
+            | tee "$RUNNER_TEMP/native-visual-matrix.log"
+          grep -q 'EVER_DEEPER_VISUAL_CAPTURE_COMPLETE count=121' "$RUNNER_TEMP/native-visual-matrix.log"
+          test "$(grep -c 'EVER_DEEPER_VISUAL_CAPTURE_READY' "$RUNNER_TEMP/native-visual-matrix.log")" -eq 121
+
+      - name: Export the exact DEV pack and assemble web runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          godot="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
           build_dir="$RUNNER_TEMP/ever-deeper-dev7"
-          tool_dir="$RUNNER_TEMP/tools"
+          tool_dir="$RUNNER_TEMP/xdelta"
+          patch_dir="$RUNNER_TEMP/dev7-patch"
           base_url="https://corpax88.github.io/Ever-Deeper"
-          mkdir -p "$build_dir" "$tool_dir"
+          mkdir -p "$build_dir" "$tool_dir" "$patch_dir"
+
+          timeout 20m "$godot" --headless --path "$GITHUB_WORKSPACE" \
+            --export-pack "Web DEV" "$build_dir/index.pck"
 
           for file in \
             index.apple-touch-icon.png \
@@ -40,16 +76,35 @@ jobs:
             index.pck
           do
             curl -L --fail --retry 4 --retry-all-errors \
-              "$base_url/$file?visual_qa=$GITHUB_SHA" -o "$build_dir/$file"
+              "$base_url/$file?visual_build=$GITHUB_SHA" -o "$RUNNER_TEMP/production-$file"
           done
+          echo "65a13e3af4a64ce247071cd2d5a75cb14e89bcc0664462753862e212a84549be  $RUNNER_TEMP/production-index.pck" | sha256sum -c -
+          test "$(stat -c %s "$RUNNER_TEMP/production-index.pck")" -eq 96220476
 
-          echo "65a13e3af4a64ce247071cd2d5a75cb14e89bcc0664462753862e212a84549be  $build_dir/index.pck" | sha256sum -c -
-          test "$(stat -c %s "$build_dir/index.pck")" -eq 96220476
+          for file in \
+            index.apple-touch-icon.png \
+            index.audio.position.worklet.js \
+            index.audio.worklet.js \
+            index.icon.png \
+            index.js \
+            index.png \
+            index.wasm
+          do
+            mv "$RUNNER_TEMP/production-$file" "$build_dir/$file"
+          done
           cp "$GITHUB_WORKSPACE/.github/dev-build/index.html" "$build_dir/index.html"
-
-          cat "$GITHUB_WORKSPACE"/.github/dev-patch/prod-v0420-to-dev-v0420-dev7-final.xdelta.part* \
-            > "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-final.xdelta"
-          echo "65bd1215462d57a50b4050575a0ff2e96f7837c2dd986654dc1cf69dbde73401  $RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-final.xdelta" | sha256sum -c -
+          pck_size="$(stat -c %s "$build_dir/index.pck")"
+          PCK_SIZE="$pck_size" node - <<'NODE'
+          const fs = require('fs');
+          const filename = process.env.RUNNER_TEMP + '/ever-deeper-dev7/index.html';
+          const size = Number(process.env.PCK_SIZE);
+          const html = fs.readFileSync(filename, 'utf8');
+          const updated = html.replace(/"index\.pck":\d+/, `"index.pck":${size}`);
+          if (updated === html) throw new Error('index.pck size entry was not updated');
+          fs.writeFileSync(filename, updated);
+          NODE
+          grep -q "\"index.pck\":$pck_size" "$build_dir/index.html"
+          grep -q 'v0.42.0-dev.7' "$build_dir/index.html"
 
           curl -L --fail --retry 4 --retry-all-errors \
             https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
@@ -57,27 +112,61 @@ jobs:
           echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
           tar --no-same-owner -xzf "$tool_dir/xdelta3.tar.gz" -C "$tool_dir"
           chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
-          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
-            -s "$build_dir/index.pck" \
-            "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-final.xdelta" \
-            "$RUNNER_TEMP/dev7-index.pck"
-          mv "$RUNNER_TEMP/dev7-index.pck" "$build_dir/index.pck"
+          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -e -9 -S djw \
+            -s "$RUNNER_TEMP/production-index.pck" "$build_dir/index.pck" \
+            "$patch_dir/prod-v0420-to-dev-v0420-dev7-final.xdelta"
+          split -b 250000 -d -a 2 \
+            "$patch_dir/prod-v0420-to-dev-v0420-dev7-final.xdelta" \
+            "$patch_dir/prod-v0420-to-dev-v0420-dev7-final.xdelta.part"
 
-          echo "48a18ca67137bd124cfc39de746baa493e958b5a39025baae5d4418ab13e105e  $build_dir/index.pck" | sha256sum -c -
-          test "$(stat -c %s "$build_dir/index.pck")" -eq 105335712
-          grep -q '"index.pck":105335712' "$build_dir/index.html"
-          grep -q 'v0.42.0-dev.7' "$build_dir/index.html"
+          pck_sha="$(sha256sum "$build_dir/index.pck" | cut -d ' ' -f 1)"
+          html_sha="$(sha256sum "$build_dir/index.html" | cut -d ' ' -f 1)"
+          patch_sha="$(sha256sum "$patch_dir/prod-v0420-to-dev-v0420-dev7-final.xdelta" | cut -d ' ' -f 1)"
+          patch_size="$(stat -c %s "$patch_dir/prod-v0420-to-dev-v0420-dev7-final.xdelta")"
+          part_count="$(find "$patch_dir" -maxdepth 1 -name '*.part??' -type f | wc -l)"
+          PCK_SHA="$pck_sha" HTML_SHA="$html_sha" PATCH_SHA="$patch_sha" \
+          PCK_SIZE="$pck_size" PATCH_SIZE="$patch_size" PART_COUNT="$part_count" \
+            node - <<'NODE'
+          const fs = require('fs');
+          const metadata = {
+            pckSha256: process.env.PCK_SHA,
+            pckSize: Number(process.env.PCK_SIZE),
+            htmlSha256: process.env.HTML_SHA,
+            patchSha256: process.env.PATCH_SHA,
+            patchSize: Number(process.env.PATCH_SIZE),
+            partCount: Number(process.env.PART_COUNT),
+            productionPckSha256: '65a13e3af4a64ce247071cd2d5a75cb14e89bcc0664462753862e212a84549be',
+            sourceCommit: process.env.GITHUB_SHA,
+          };
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/candidate-metadata.json', JSON.stringify(metadata, null, 2) + '\n');
+          NODE
+          cp "$build_dir/index.html" "$RUNNER_TEMP/candidate-index.html"
+          cp "$build_dir/index.pck" "$RUNNER_TEMP/candidate-index.pck"
 
       - name: Install capture browser
         run: |
           npm ci
           npx playwright install --with-deps chromium
 
-      - name: Capture every cave and barrier state
+      - name: Capture every cave, wall and barrier state
         run: |
           node tools/visual-qa/capture-web-visuals.mjs \
             --web-dir "$RUNNER_TEMP/ever-deeper-dev7" \
             --output-dir "$RUNNER_TEMP/visual-captures"
+
+      - name: Upload exact candidate package and patch
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-dev7-candidate
+          path: |
+            ${{ runner.temp }}/candidate-index.html
+            ${{ runner.temp }}/candidate-index.pck
+            ${{ runner.temp }}/candidate-metadata.json
+            ${{ runner.temp }}/dev7-patch
+            ${{ runner.temp }}/native-visual-matrix.log
+          compression-level: 0
+          retention-days: 7
 
       - name: Upload visual evidence
         if: always()
