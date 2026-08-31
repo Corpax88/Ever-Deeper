@@ -8,10 +8,10 @@ import http from "node:http";
 import path from "node:path";
 
 const VIEWPORT = { width: 932, height: 430 };
-const EXPECTED_CAPTURE_COUNT = 97;
+const EXPECTED_CAPTURE_COUNT = 121;
 const SUITE_ARG = "--visual-capture-suite";
 const MARKER_PREFIX = "EVER_DEEPER_VISUAL_CAPTURE_";
-const DEFAULT_TIMEOUT_MS = 15 * 60 * 1000;
+const DEFAULT_TIMEOUT_MS = 30 * 60 * 1000;
 const NEXT_MARKER_TIMEOUT_MS = 60 * 1000;
 
 const MIME_TYPES = new Map([
