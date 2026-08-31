@@ -6,7 +6,7 @@ on:
     paths:
       - '.github/workflows/visual-qa-dev7.yml'
       - '.github/dev-build/index.html'
-      - '.github/dev-patch/prod-v0420-to-dev-v0420-dev7-authored.xdelta.part*'
+      - '.github/dev-patch/prod-v0420-to-dev-v0420-dev7-final.xdelta.part*'
       - 'tools/visual-qa/capture-web-visuals.mjs'
 
 permissions:
@@ -47,9 +47,9 @@ jobs:
           test "$(stat -c %s "$build_dir/index.pck")" -eq 96220476
           cp "$GITHUB_WORKSPACE/.github/dev-build/index.html" "$build_dir/index.html"
 
-          cat "$GITHUB_WORKSPACE"/.github/dev-patch/prod-v0420-to-dev-v0420-dev7-authored.xdelta.part* \
-            > "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-authored.xdelta"
-          echo "2304a1e8311927f4d8ccc3b4fd4b98505d14f44a54ab6c15e837195828bbed3b  $RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-authored.xdelta" | sha256sum -c -
+          cat "$GITHUB_WORKSPACE"/.github/dev-patch/prod-v0420-to-dev-v0420-dev7-final.xdelta.part* \
+            > "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-final.xdelta"
+          echo "28e177f964a7be32d968dada9eeef01a754fab857c237df38f575681a94d8744  $RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-final.xdelta" | sha256sum -c -
 
           curl -L --fail --retry 4 --retry-all-errors \
             https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
@@ -59,13 +59,13 @@ jobs:
           chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
           "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
             -s "$build_dir/index.pck" \
-            "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-authored.xdelta" \
+            "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-final.xdelta" \
             "$RUNNER_TEMP/dev7-index.pck"
           mv "$RUNNER_TEMP/dev7-index.pck" "$build_dir/index.pck"
 
-          echo "78112967af338740a1d4e0c4e555b506692fe80edfb9dc847a4605927495bf6a  $build_dir/index.pck" | sha256sum -c -
-          test "$(stat -c %s "$build_dir/index.pck")" -eq 105320656
-          grep -q '"index.pck":105320656' "$build_dir/index.html"
+          echo "0ea746020caf2e64fb07c30cde52bdcc4bd1f30fe580848222a3890f22f7d6af  $build_dir/index.pck" | sha256sum -c -
+          test "$(stat -c %s "$build_dir/index.pck")" -eq 105320176
+          grep -q '"index.pck":105320176' "$build_dir/index.html"
           grep -q 'v0.42.0-dev.7' "$build_dir/index.html"
 
       - name: Install capture browser
