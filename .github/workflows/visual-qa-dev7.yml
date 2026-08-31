@@ -49,7 +49,7 @@ jobs:
 
           cat "$GITHUB_WORKSPACE"/.github/dev-patch/prod-v0420-to-dev-v0420-dev7-final.xdelta.part* \
             > "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-final.xdelta"
-          echo "28e177f964a7be32d968dada9eeef01a754fab857c237df38f575681a94d8744  $RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-final.xdelta" | sha256sum -c -
+          echo "3369e1fca25b0c22debd6961f2df89f144d965e2dbf1ef9f808b5cc7c54ccfae  $RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-final.xdelta" | sha256sum -c -
 
           curl -L --fail --retry 4 --retry-all-errors \
             https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
@@ -63,9 +63,9 @@ jobs:
             "$RUNNER_TEMP/dev7-index.pck"
           mv "$RUNNER_TEMP/dev7-index.pck" "$build_dir/index.pck"
 
-          echo "0ea746020caf2e64fb07c30cde52bdcc4bd1f30fe580848222a3890f22f7d6af  $build_dir/index.pck" | sha256sum -c -
-          test "$(stat -c %s "$build_dir/index.pck")" -eq 105320176
-          grep -q '"index.pck":105320176' "$build_dir/index.html"
+          echo "a6cb1fe3d14113686f673dfc19224cef096f68b5c68aad9c01545f4ddf5133e1  $build_dir/index.pck" | sha256sum -c -
+          test "$(stat -c %s "$build_dir/index.pck")" -eq 105319664
+          grep -q '"index.pck":105319664' "$build_dir/index.html"
           grep -q 'v0.42.0-dev.7' "$build_dir/index.html"
 
       - name: Install capture browser
