@@ -11,8 +11,8 @@ const VIEWPORT = { width: 932, height: 430 };
 const EXPECTED_CAPTURE_COUNT = 121;
 const SUITE_ARG = "--visual-capture-suite";
 const MARKER_PREFIX = "EVER_DEEPER_VISUAL_CAPTURE_";
-const DEFAULT_TIMEOUT_MS = 30 * 60 * 1000;
 const NEXT_MARKER_TIMEOUT_MS = 60 * 1000;
+const DEFAULT_TIMEOUT_MS = NEXT_MARKER_TIMEOUT_MS;
 
 const MIME_TYPES = new Map([
   [".html", "text/html; charset=utf-8"],
@@ -287,11 +287,11 @@ async function captureSuite(options) {
     const seenStates = new Set();
     let began = false;
     let completed = false;
-    const suiteDeadline = Date.now() + options.timeoutMs;
     while (!completed) {
-      const remaining = suiteDeadline - Date.now();
-      if (remaining <= 0) throw new Error(`Capture suite exceeded ${options.timeoutMs} ms`);
-      const marker = await nextMarker(markerQueue, Math.min(NEXT_MARKER_TIMEOUT_MS, remaining));
+      // The complete matrix is deliberately exhaustive and can take longer on
+      // SwiftShader runners. Fail on a stalled state, not on healthy progress.
+      const marker = await nextMarker(markerQueue, Math.min(NEXT_MARKER_TIMEOUT_MS, options.timeoutMs));
+      process.stdout.write(`${marker}\n`);
       if (marker.startsWith(`${MARKER_PREFIX}FAILED`)) throw new Error(marker);
       if (marker.startsWith(`${MARKER_PREFIX}BEGIN`)) {
         const match = marker.match(/count=(\d+) viewport=(\d+)x(\d+)/);
