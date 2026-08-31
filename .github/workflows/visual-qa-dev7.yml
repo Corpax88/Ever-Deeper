@@ -39,6 +39,14 @@ jobs:
           "$tool_dir/Godot_v4.7.2-stable_linux.x86_64" --version
           echo "$tool_dir" >> "$GITHUB_PATH"
 
+      - name: Preserve the verified build tool
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-4.7.2-linux-x86_64
+          path: ${{ runner.temp }}/godot/Godot_v4.7.2-stable_linux.x86_64
+          compression-level: 0
+          retention-days: 1
+
       - name: Import and verify the complete capture matrix natively
         shell: bash
         run: |
