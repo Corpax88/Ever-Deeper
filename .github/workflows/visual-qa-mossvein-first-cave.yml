@@ -1,0 +1,111 @@
+name: Visual QA Mossvein first cave
+
+on:
+  push:
+    branches: [codex-mossvein-first-cave-qa]
+    paths:
+      - '.github/workflows/visual-qa-mossvein-first-cave.yml'
+      - '.github/dev-patch/mossvein-first-cave.xdelta.part*'
+      - 'assets/mossvein/cave-edge-loop-v2.png'
+      - 'assets/mossvein/cave-corner-v2.png'
+      - 'assets/mossvein/permanent-edge-loop-v2.png'
+      - 'assets/mossvein/permanent-corner-v2.png'
+      - 'scripts/world/mossvein_mine.gd'
+      - 'scripts/world/world_catalog.gd'
+      - 'tools/visual-qa/capture-web-visuals.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  capture-mobile-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out visual QA candidate
+        uses: actions/checkout@v4
+
+      - name: Reconstruct exact candidate without deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_dir="$RUNNER_TEMP/ever-deeper-mossvein-candidate"
+          tool_dir="$RUNNER_TEMP/tools"
+          base_url="https://corpax88.github.io/Ever-Deeper"
+          mkdir -p "$build_dir" "$tool_dir"
+
+          for file in \
+            index.apple-touch-icon.png \
+            index.audio.position.worklet.js \
+            index.audio.worklet.js \
+            index.icon.png \
+            index.js \
+            index.png \
+            index.wasm \
+            index.pck
+          do
+            curl -L --fail --retry 4 --retry-all-errors \
+              "$base_url/$file?visual_qa=$GITHUB_SHA" -o "$build_dir/$file"
+          done
+
+          echo "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5  $build_dir/index.apple-touch-icon.png" | sha256sum -c -
+          echo "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8  $build_dir/index.audio.position.worklet.js" | sha256sum -c -
+          echo "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3  $build_dir/index.audio.worklet.js" | sha256sum -c -
+          echo "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec  $build_dir/index.icon.png" | sha256sum -c -
+          echo "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba  $build_dir/index.js" | sha256sum -c -
+          echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
+          echo "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0  $build_dir/index.wasm" | sha256sum -c -
+          echo "65a13e3af4a64ce247071cd2d5a75cb14e89bcc0664462753862e212a84549be  $build_dir/index.pck" | sha256sum -c -
+          cp "$GITHUB_WORKSPACE/.github/dev-build/index.html" "$build_dir/index.html"
+
+          cat "$GITHUB_WORKSPACE"/.github/dev-patch/prod-v0420-to-dev-v0420-dev7-final.xdelta.part* \
+            > "$RUNNER_TEMP/prod-to-dev7.xdelta"
+          echo "d7e6d905786f519997130e4c0959b36e121e7bac87bd9689f07972ca9db4396a  $RUNNER_TEMP/prod-to-dev7.xdelta" | sha256sum -c -
+
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
+            -o "$tool_dir/xdelta3.tar.gz"
+          echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
+          tar --no-same-owner -xzf "$tool_dir/xdelta3.tar.gz" -C "$tool_dir"
+          chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
+          xdelta="$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
+
+          "$xdelta" -d -s "$build_dir/index.pck" \
+            "$RUNNER_TEMP/prod-to-dev7.xdelta" "$RUNNER_TEMP/dev7.pck"
+          echo "81d3e2f630fc54de00df87b1da5d98809b197725bb60c8087a55026306af2ca9  $RUNNER_TEMP/dev7.pck" | sha256sum -c -
+
+          cat "$GITHUB_WORKSPACE"/.github/dev-patch/mossvein-first-cave.xdelta.part* \
+            > "$RUNNER_TEMP/mossvein-first-cave.xdelta"
+          echo "ddbe793bd68a18536828e2397fd7f5fbf7f421f43259dce86a0bcf5bdaab2944  $RUNNER_TEMP/mossvein-first-cave.xdelta" | sha256sum -c -
+          test "$(stat -c %s "$RUNNER_TEMP/mossvein-first-cave.xdelta")" -eq 1134825
+
+          "$xdelta" -d -s "$RUNNER_TEMP/dev7.pck" \
+            "$RUNNER_TEMP/mossvein-first-cave.xdelta" "$build_dir/candidate.pck"
+          mv "$build_dir/candidate.pck" "$build_dir/index.pck"
+          echo "fd7aa006f3f1630ff4ca8e81191ec8d1a952270c2af6ec7ac83c84e670cde4d9  $build_dir/index.pck" | sha256sum -c -
+          test "$(stat -c %s "$build_dir/index.pck")" -eq 106365316
+
+          sed -i 's/"index.pck":105337792/"index.pck":106365316/' "$build_dir/index.html"
+          echo "b7b639d6be762b2ee5748e7b62877d48610feca6632d103cc4b0c3573da7c295  $build_dir/index.html" | sha256sum -c -
+          grep -q 'v0.42.0-dev.7' "$build_dir/index.html"
+          test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+
+      - name: Install capture browser
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Capture target mobile viewport
+        run: |
+          node tools/visual-qa/capture-web-visuals.mjs \
+            --web-dir "$RUNNER_TEMP/ever-deeper-mossvein-candidate" \
+            --output-dir "$RUNNER_TEMP/visual-captures"
+
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mossvein-first-cave-visual-qa
+          path: ${{ runner.temp }}/visual-captures
+          compression-level: 0
+          retention-days: 7

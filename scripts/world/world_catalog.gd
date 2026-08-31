@@ -217,10 +217,10 @@ const MINE_ASSETS: = {
 	"mossvein": {
 		"depth1": {
 			"floor": "res://assets/mossvein/cave-floor.png", 
-			"wall": "res://assets/mossvein/cave-edge-loop-v1.png", 
-			"corner": "res://assets/mossvein/cave-corner-v1.png",
-			"unbreakable_wall": "res://assets/caves/ancient-bedrock-edge-loop-v1.png", 
-			"unbreakable_corner": "res://assets/caves/ancient-bedrock-corner-v1.png",
+			"wall": "res://assets/mossvein/cave-edge-loop-v2.png",
+			"corner": "res://assets/mossvein/cave-corner-v2.png",
+			"unbreakable_wall": "res://assets/mossvein/permanent-edge-loop-v2.png",
+			"unbreakable_corner": "res://assets/mossvein/permanent-corner-v2.png",
 			"pocket": "res://assets/mossvein/magic-crystal-pocket.png", 
 			"cache": "res://assets/mossvein/buried-cache.png", 
 			"shrine": "res://assets/mossvein/mining-rush-shrine.png", 

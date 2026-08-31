@@ -38,10 +38,10 @@ const WORK_LIGHT_REFRESH_DISTANCE: = 150.0
 const LAMP_TEXTURE: = preload("res://assets/entrances/depth-work-lamp.png")
 const MINE_ASSETS: = {
 	"mossMine": {
-		"floor": "res://assets/mossvein/cave-floor.png", "wall": "res://assets/mossvein/cave-edge-loop-v1.png", 
-		"corner": "res://assets/mossvein/cave-corner-v1.png",
-		"bedrock": "res://assets/caves/ancient-bedrock-edge-loop-v1.png", "entrance": "res://assets/entrances/mossvein-entrance.png", 
-		"bedrock_corner": "res://assets/caves/ancient-bedrock-corner-v1.png",
+		"floor": "res://assets/mossvein/cave-floor.png", "wall": "res://assets/mossvein/cave-edge-loop-v2.png",
+		"corner": "res://assets/mossvein/cave-corner-v2.png",
+		"bedrock": "res://assets/mossvein/permanent-edge-loop-v2.png", "entrance": "res://assets/entrances/mossvein-entrance.png",
+		"bedrock_corner": "res://assets/mossvein/permanent-corner-v2.png",
 		"impact": "res://assets/world-life/mossvein-impact.png", "style": "mossvein", 
 		"pocket": "res://assets/mossvein/magic-crystal-pocket.png", 
 		"cache": "res://assets/mossvein/buried-cache.png", 
