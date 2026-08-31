@@ -351,11 +351,16 @@ async function captureSuite(options) {
     const serverOrigin = new URL(url).origin;
     const blockingRequestFailures = requestFailures.filter((failure) => {
       const requestUrl = new URL(failure.url);
+      // Reaching COMPLETE proves the engine and its WASM module ran the full
+      // matrix. Chromium may still report the final streaming response as
+      // aborted when Godot quits and tears down the page.
+      const isFinalEngineStream =
+        requestUrl.pathname === "/index.pck" || requestUrl.pathname === "/index.wasm";
       return !(
         failure.method === "GET" &&
         failure.errorText === "net::ERR_ABORTED" &&
         requestUrl.origin === serverOrigin &&
-        requestUrl.pathname === "/index.pck"
+        isFinalEngineStream
       );
     });
     if (blockingRequestFailures.length > 0) {
