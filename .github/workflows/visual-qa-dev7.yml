@@ -47,6 +47,27 @@ jobs:
           compression-level: 0
           retention-days: 1
 
+      - name: Preserve the verified patch tool
+        shell: bash
+        run: |
+          set -euo pipefail
+          tool_dir="$RUNNER_TEMP/xdelta-bootstrap"
+          mkdir -p "$tool_dir"
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
+            -o "$tool_dir/xdelta3.tar.gz"
+          echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
+          tar --no-same-owner -xzf "$tool_dir/xdelta3.tar.gz" -C "$tool_dir"
+          chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
+
+      - name: Upload verified patch tool
+        uses: actions/upload-artifact@v4
+        with:
+          name: xdelta3-3.2.0-linux-x86_64
+          path: ${{ runner.temp }}/xdelta-bootstrap/xdelta3-3.2.0-linux-x86_64/xdelta3
+          compression-level: 0
+          retention-days: 1
+
       - name: Import and verify the complete capture matrix natively
         shell: bash
         run: |
