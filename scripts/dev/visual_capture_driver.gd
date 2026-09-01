@@ -95,7 +95,7 @@ func run(main_node: Node) -> void :
 
 func _verify_build_contract() -> Dictionary:
 	var dev_feature: = OS.has_feature("ever_deeper_dev")
-	var expected_version: = "0.43.1-dev.2" if dev_feature else "0.43.1"
+	var expected_version: = "0.43.1-dev.3" if dev_feature else "0.43.1"
 	var expected_flavor: = "dev" if dev_feature else "production"
 	var actual_version: = String(PremiumMenuScript.release_version())
 	var developer_menu: Variant = _main.get("developer_menu")

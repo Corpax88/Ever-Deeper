@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<meta name="theme-color" content="#010302">
+		<title>Ever Deeper · DEV</title>
+		<style>
+:root {
+	--app-height: 100dvh;
+	--safe-top: env(safe-area-inset-top, 0px);
+	--safe-right: env(safe-area-inset-right, 0px);
+	--safe-bottom: env(safe-area-inset-bottom, 0px);
+	--safe-left: env(safe-area-inset-left, 0px);
+	color-scheme: dark;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100%;
+	height: 100%;
+	min-width: 100%;
+	min-height: 100%;
+	background: #010302;
+	overflow: hidden;
+	overscroll-behavior: none;
+	touch-action: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+body {
+	position: fixed;
+	inset: 0;
+	color: #f7ead0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+#app {
+	position: fixed;
+	inset: 0;
+	width: 100vw;
+	height: var(--app-height, 100vh);
+	background: #010302;
+	overflow: hidden;
+}
+
+#canvas {
+	position: absolute;
+	inset: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: none;
+	touch-action: none;
+	-webkit-tap-highlight-color: transparent;
+}
+
+#canvas:focus {
+	outline: none;
+}
+
+#status {
+	position: absolute;
+	inset: 0;
+	display: block;
+	background: #010302;
+	overflow: hidden;
+	visibility: hidden;
+	z-index: 10;
+}
+
+#status::after {
+	position: absolute;
+	inset: 0;
+	content: "";
+	background:
+		linear-gradient(180deg, rgba(1, 3, 2, 0.10) 42%, rgba(1, 3, 2, 0.82) 100%),
+		radial-gradient(circle at 50% 44%, transparent 22%, rgba(1, 3, 2, 0.34) 100%);
+	pointer-events: none;
+	z-index: 1;
+}
+
+#status-splash {
+	position: absolute;
+	inset: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	max-height: none;
+	margin: 0;
+	object-fit: contain;
+	object-position: center;
+	z-index: 0;
+}
+
+#status-splash.show-image--false {
+	display: none;
+}
+
+#status-splash.use-filter--false {
+	image-rendering: pixelated;
+}
+
+#status-label {
+	position: absolute;
+	left: max(24px, calc(var(--safe-left) + 16px));
+	right: max(24px, calc(var(--safe-right) + 16px));
+	bottom: max(52px, calc(var(--safe-bottom) + 42px));
+	margin: 0 auto;
+	color: rgba(255, 244, 216, 0.92);
+	font-size: clamp(12px, 1.6vw, 17px);
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-align: center;
+	text-shadow: 0 2px 7px #000;
+	text-transform: uppercase;
+	z-index: 2;
+}
+
+#status-progress {
+	position: absolute;
+	left: max(24px, calc(var(--safe-left) + 16px));
+	right: max(24px, calc(var(--safe-right) + 16px));
+	bottom: max(28px, calc(var(--safe-bottom) + 18px));
+	display: none;
+	width: min(520px, 68vw);
+	height: 8px;
+	margin: 0 auto;
+	border: 1px solid rgba(255, 204, 100, 0.42);
+	border-radius: 999px;
+	background: rgba(0, 0, 0, 0.58);
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.64);
+	overflow: hidden;
+	-webkit-appearance: none;
+	appearance: none;
+	z-index: 2;
+}
+
+#status-progress::-webkit-progress-bar {
+	background: rgba(0, 0, 0, 0.58);
+}
+
+#status-progress::-webkit-progress-value {
+	border-radius: 999px;
+	background: linear-gradient(90deg, #8d5b16, #ffd36c 58%, #fff0ae);
+}
+
+#status-progress::-moz-progress-bar {
+	border-radius: 999px;
+	background: linear-gradient(90deg, #8d5b16, #ffd36c 58%, #fff0ae);
+}
+
+#status[data-mode="progress"] #status-progress {
+	display: block;
+}
+
+#status[data-mode="notice"]::after {
+	background: rgba(1, 3, 2, 0.82);
+}
+
+#status[data-mode="notice"] #status-label,
+#status[data-mode="notice"] #status-progress {
+	display: none;
+}
+
+#status-notice {
+	position: absolute;
+	left: max(24px, calc(var(--safe-left) + 16px));
+	right: max(24px, calc(var(--safe-right) + 16px));
+	top: 50%;
+	display: none;
+	width: min(640px, calc(100vw - var(--safe-left) - var(--safe-right) - 48px));
+	max-height: calc(var(--app-height, 100vh) - var(--safe-top) - var(--safe-bottom) - 48px);
+	margin: 0 auto;
+	padding: clamp(18px, 3vw, 28px);
+	transform: translateY(-50%);
+	border: 1px solid rgba(255, 132, 92, 0.72);
+	border-radius: 16px;
+	background: rgba(38, 14, 12, 0.96);
+	box-shadow: 0 18px 60px rgba(0, 0, 0, 0.62);
+	color: #fff2e5;
+	font-size: clamp(14px, 2vw, 18px);
+	line-height: 1.45;
+	overflow: auto;
+	text-align: center;
+	-webkit-overflow-scrolling: touch;
+	z-index: 3;
+}
+
+#status[data-mode="notice"] #status-notice {
+	display: block;
+}
+
+#rotate-guard {
+	position: fixed;
+	inset: 0;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+	padding-top: max(24px, calc(var(--safe-top) + 16px));
+	padding-right: max(24px, calc(var(--safe-right) + 16px));
+	padding-bottom: max(24px, calc(var(--safe-bottom) + 16px));
+	padding-left: max(24px, calc(var(--safe-left) + 16px));
+	background:
+		radial-gradient(circle at 50% 36%, rgba(62, 50, 24, 0.58), transparent 42%),
+		#010302;
+	color: #f7ead0;
+	text-align: center;
+	z-index: 100;
+}
+
+#rotate-guard.is-visible {
+	display: flex;
+}
+
+.rotate-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 18px;
+	max-width: 360px;
+}
+
+.phone-outline {
+	position: relative;
+	width: 86px;
+	height: 48px;
+	border: 4px solid #ffd36c;
+	border-radius: 12px;
+	box-shadow: 0 0 22px rgba(255, 196, 73, 0.22);
+}
+
+.phone-outline::after {
+	position: absolute;
+	top: 50%;
+	right: 5px;
+	width: 5px;
+	height: 5px;
+	content: "";
+	transform: translateY(-50%);
+	border-radius: 50%;
+	background: #ffd36c;
+}
+
+.rotate-card strong {
+	font-size: clamp(21px, 6vw, 30px);
+	letter-spacing: 0.02em;
+}
+
+.rotate-card span {
+	color: rgba(247, 234, 208, 0.72);
+	font-size: clamp(14px, 4vw, 18px);
+	line-height: 1.4;
+}
+
+#noscript-notice {
+	position: fixed;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	padding: 32px;
+	background: #010302;
+	color: #fff2e5;
+	font: 600 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	text-align: center;
+	z-index: 200;
+}
+
+		</style>
+		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
+<link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
+
+			<style>#ed-build-label{position:fixed;left:50%;bottom:2px;transform:translateX(-50%);z-index:69;pointer-events:none;color:rgba(255,244,216,.48);font:800 9px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.08em;text-shadow:0 1px 4px #000}</style>
+	</head>
+	<body>
+		<div id="app">
+			<canvas id="canvas" aria-label="Ever Deeper">
+				Your browser does not support the canvas tag.
+			</canvas>
+
+			<div id="status" data-mode="progress" aria-live="polite">
+				<img id="status-splash" class="show-image--true fullsize--true use-filter--true" src="index.png" alt="">
+				<div id="status-label">Preparing the descent…</div>
+				<progress id="status-progress" aria-label="Loading progress"></progress>
+				<div id="status-notice" role="alert"></div>
+			</div>
+		</div>
+
+		<div id="rotate-guard" role="dialog" aria-modal="true" aria-labelledby="rotate-title" aria-describedby="rotate-copy">
+			<div class="rotate-card">
+				<div class="phone-outline" aria-hidden="true"></div>
+				<strong id="rotate-title">Rotate your phone</strong>
+				<span id="rotate-copy">Ever Deeper is built for landscape play.</span>
+			</div>
+		</div>
+
+		<noscript>
+			<div id="noscript-notice">JavaScript is required to play Ever Deeper.</div>
+		</noscript>
+
+		<script>
+(function () {
+	'use strict';
+	const nativeDpr = window.devicePixelRatio || 1;
+	const touchDevice = (navigator.maxTouchPoints || 0) > 0 || window.matchMedia('(pointer: coarse)').matches;
+	const effectiveDpr = touchDevice ? Math.min(nativeDpr, 1.5) : nativeDpr;
+	if (effectiveDpr < nativeDpr) {
+		try {
+			Object.defineProperty(window, 'devicePixelRatio', {
+				configurable: true,
+				get: function () { return effectiveDpr; }
+			});
+		} catch (_error) {
+			// The engine safely falls back to the browser-provided density.
+		}
+	}
+	window.__EVER_DEEPER_RENDER_DPR__ = { native: nativeDpr, effective: window.devicePixelRatio || nativeDpr };
+}());
+		</script>
+		<script src="index.js"></script>
+		<script>
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":108777516,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_THREADS_ENABLED = false;
+const engine = new Engine(GODOT_CONFIG);
+
+(function () {
+	'use strict';
+
+	const canvas = document.getElementById('canvas');
+	const statusOverlay = document.getElementById('status');
+	const statusProgress = document.getElementById('status-progress');
+	const statusLabel = document.getElementById('status-label');
+	const statusNotice = document.getElementById('status-notice');
+	const rotateGuard = document.getElementById('rotate-guard');
+	const portraitMedia = window.matchMedia('(orientation: portrait)');
+
+	let initializing = true;
+	let engineStartRequested = false;
+	let fatalError = false;
+	let resizeTimer = 0;
+
+	function syncViewportHeight() {
+		const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+		if (viewportHeight > 0) {
+			document.documentElement.style.setProperty('--app-height', `${Math.round(viewportHeight)}px`);
+		}
+	}
+
+	function isPortrait() {
+		return portraitMedia.matches || window.innerHeight > window.innerWidth;
+	}
+
+	function setStatusMode(mode) {
+		if (!statusOverlay || !initializing) {
+			return;
+		}
+		if (mode === 'hidden') {
+			statusOverlay.remove();
+			initializing = false;
+			return;
+		}
+		statusOverlay.dataset.mode = mode;
+		statusOverlay.style.visibility = 'visible';
+	}
+
+	function setStatusNotice(text) {
+		statusNotice.replaceChildren();
+		String(text).split('\n').forEach((line, index, lines) => {
+			statusNotice.appendChild(document.createTextNode(line));
+			if (index < lines.length - 1) {
+				statusNotice.appendChild(document.createElement('br'));
+			}
+		});
+	}
+
+	function displayFailureNotice(err) {
+		console.error(err);
+		fatalError = true;
+		rotateGuard.classList.remove('is-visible');
+		rotateGuard.setAttribute('aria-hidden', 'true');
+		if (err instanceof Error) {
+			setStatusNotice(err.message);
+		} else if (typeof err === 'string') {
+			setStatusNotice(err);
+		} else {
+			setStatusNotice('An unknown error occurred. Please reload and try again.');
+		}
+		setStatusMode('notice');
+	}
+
+	function updateProgress(current, total) {
+		if (current > 0 && total > 0) {
+			statusProgress.value = current;
+			statusProgress.max = total;
+			statusLabel.textContent = `Loading… ${Math.min(100, Math.round((current / total) * 100))}%`;
+		} else {
+			statusProgress.removeAttribute('value');
+			statusProgress.removeAttribute('max');
+			statusLabel.textContent = 'Preparing the descent…';
+		}
+	}
+
+	function startEngine() {
+		if (engineStartRequested || fatalError || isPortrait()) {
+			return;
+		}
+		engineStartRequested = true;
+		setStatusMode('progress');
+		updateProgress(0, 0);
+
+		const missing = Engine.getMissingFeatures({
+			threads: GODOT_THREADS_ENABLED,
+		});
+
+		if (missing.length !== 0) {
+			if (GODOT_CONFIG.serviceWorker && GODOT_CONFIG.ensureCrossOriginIsolationHeaders && 'serviceWorker' in navigator) {
+				statusLabel.textContent = 'Preparing browser support…';
+				let registrationPromise;
+				try {
+					registrationPromise = navigator.serviceWorker.getRegistration();
+				} catch (err) {
+					registrationPromise = Promise.reject(new Error('Service worker registration failed.'));
+				}
+
+				Promise.race([
+					registrationPromise.then((registration) => {
+						if (registration != null) {
+							return Promise.reject(new Error('Service worker already exists.'));
+						}
+						return engine.installServiceWorker();
+					}),
+					new Promise((resolve) => window.setTimeout(resolve, 2000)),
+				]).then(() => {
+					window.location.reload();
+				}).catch((err) => {
+					displayFailureNotice(err);
+				});
+			} else {
+				const missingMessage = 'This browser is missing features required to run Ever Deeper:\n';
+				displayFailureNotice(missingMessage + missing.join('\n'));
+			}
+			return;
+		}
+
+		engine.startGame({
+			canvas: canvas,
+			onProgress: updateProgress,
+		}).then(() => {
+			setStatusMode('hidden');
+		}, displayFailureNotice);
+	}
+
+	function syncOrientation() {
+		syncViewportHeight();
+		const portrait = isPortrait();
+		document.documentElement.classList.toggle('is-portrait', portrait);
+		if (!fatalError) {
+			rotateGuard.classList.toggle('is-visible', portrait);
+			rotateGuard.setAttribute('aria-hidden', portrait ? 'false' : 'true');
+		}
+		if (!portrait) {
+			window.clearTimeout(resizeTimer);
+			resizeTimer = window.setTimeout(startEngine, 160);
+		}
+	}
+
+	window.addEventListener('resize', syncOrientation, { passive: true });
+	window.addEventListener('orientationchange', syncOrientation, { passive: true });
+	if (window.visualViewport) {
+		window.visualViewport.addEventListener('resize', syncOrientation, { passive: true });
+	}
+	if (portraitMedia.addEventListener) {
+		portraitMedia.addEventListener('change', syncOrientation);
+	} else {
+		portraitMedia.addListener(syncOrientation);
+	}
+
+	setStatusMode('progress');
+	syncOrientation();
+}());
+		</script>
+			<div id="ed-build-label" aria-hidden="true">v0.43.1-dev.3</div>
+	</body>
+</html>

@@ -186,6 +186,7 @@ const PANEL_THEMES: = {
 var backdrop: Button
 var frame: PanelContainer
 var inner_frame: PanelContainer
+var safe_margin: MarginContainer
 var metal_fill: ColorRect
 var metal_material: ShaderMaterial
 var chrome_overlay: ForgedChrome
@@ -426,18 +427,18 @@ func _build_interface() -> void :
 	inner_frame.add_theme_stylebox_override("panel", _inner_frame_style())
 	frame.add_child(inner_frame)
 
-	var margin: = MarginContainer.new()
-	margin.name = "SafeMargin"
-	margin.add_theme_constant_override("margin_left", 25)
-	margin.add_theme_constant_override("margin_right", 25)
-	margin.add_theme_constant_override("margin_top", 23)
-	margin.add_theme_constant_override("margin_bottom", 22)
-	inner_frame.add_child(margin)
+	safe_margin = MarginContainer.new()
+	safe_margin.name = "SafeMargin"
+	safe_margin.add_theme_constant_override("margin_left", 25)
+	safe_margin.add_theme_constant_override("margin_right", 25)
+	safe_margin.add_theme_constant_override("margin_top", 23)
+	safe_margin.add_theme_constant_override("margin_bottom", 22)
+	inner_frame.add_child(safe_margin)
 
 	body = VBoxContainer.new()
 	body.name = "Body"
 	body.add_theme_constant_override("separation", 8)
-	margin.add_child(body)
+	safe_margin.add_child(body)
 
 	_build_header()
 	accent_line = ColorRect.new()
@@ -485,7 +486,7 @@ func _build_header() -> void :
 	titles.name = "Titles"
 	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	titles.alignment = BoxContainer.ALIGNMENT_CENTER
-	titles.add_theme_constant_override("separation", 1)
+	titles.add_theme_constant_override("separation", 4)
 	title_plaque.add_child(titles)
 	title_label = _label("Shop", 21, IVORY, HORIZONTAL_ALIGNMENT_CENTER, true)
 	title_label.name = "Title"
@@ -974,7 +975,7 @@ func _stat_row(stat: Dictionary) -> Control:
 	row_panel.custom_minimum_size.y = 38
 	row_panel.add_theme_stylebox_override("panel", _forged_plate_style(SURFACE_RAISED, IRON_EDGE, 7))
 	var row: = HBoxContainer.new()
-	row.add_theme_constant_override("separation", 6)
+	row.add_theme_constant_override("separation", 10)
 	row_panel.add_child(row)
 	var name_label: = _label(_display_text(String(stat.get("label", stat.get("id", "Stat")))), 11, MUTED, HORIZONTAL_ALIGNMENT_LEFT)
 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -994,7 +995,7 @@ func _cost_row(cost: Dictionary) -> Control:
 	var missing: = _cost_missing(cost)
 	row_panel.add_theme_stylebox_override("panel", _forged_plate_style(SURFACE_RAISED, IRON_MID if missing <= 0 else Color(DANGER, 0.68), 9))
 	var row: = HBoxContainer.new()
-	row.add_theme_constant_override("separation", 6)
+	row.add_theme_constant_override("separation", 10)
 	row_panel.add_child(row)
 	var icon_texture: = _texture_from_value(cost.get("icon", cost.get("icon_path", "")))
 	if icon_texture != null:
@@ -1122,6 +1123,9 @@ func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void :
 	var touch_target: = _touch_target_for(metrics)
 	var panel_width: = Rect2(metrics.get("panel_rect", Rect2())).size.x
 	var single_item: = _items.size() == 1
+	safe_margin.add_theme_constant_override(
+		"margin_bottom", 32 if _visual_theme_id == "forge" and iphone_landscape else 22
+	)
 	overview_panel.custom_minimum_size.x = (
 		clampf(panel_width * (0.46 if single_item else 0.42), 470.0, 590.0)
 		if iphone_landscape
@@ -1143,7 +1147,7 @@ func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void :
 	total_panel.custom_minimum_size.y = touch_target if iphone_landscape else MIN_TOUCH_TARGET
 	var hero_extent: = 372.0 if iphone_landscape and single_item and _visual_theme_id == "forge" else 390.0 if iphone_landscape and single_item else 168.0 if iphone_landscape else 320.0 if single_item else 190.0
 	hero_medallion.custom_minimum_size = Vector2(hero_extent, hero_extent)
-	var hero_icon_inset: = hero_extent * 0.19 if _visual_theme_id == "forge" else 12.0
+	var hero_icon_inset: = hero_extent * 0.11 if _visual_theme_id == "forge" else 12.0
 	hero_icon.offset_left = hero_icon_inset
 	hero_icon.offset_top = hero_icon_inset
 	hero_icon.offset_right = -hero_icon_inset
@@ -1481,14 +1485,18 @@ func _style_button(button: Button, primary: bool) -> void :
 	button.add_theme_color_override("font_color", IVORY if primary else STEEL)
 	button.add_theme_color_override("font_hover_color", Color.WHITE)
 	button.add_theme_color_override("font_pressed_color", Color.WHITE)
-	button.add_theme_color_override("font_disabled_color", Color("626166"))
+	button.add_theme_color_override("font_disabled_color", Color("aaa6a1") if _visual_theme_id == "forge" else Color("626166"))
 	if _visual_theme_id == "forge":
-		button.add_theme_stylebox_override("normal", _mossvein_action_style(10, Color("dbd5cf")) if primary else _mossvein_plate_style(10, Color("bab6b1")))
+		button.add_theme_color_override("font_outline_color", Color(INK, 0.94))
+		button.add_theme_constant_override("outline_size", 2)
+		button.add_theme_stylebox_override("normal", _mossvein_action_style(10, Color("fff0e2")) if primary else _mossvein_plate_style(10, Color("d2cec8")))
 		button.add_theme_stylebox_override("hover", _mossvein_action_style(10, Color.WHITE) if primary else _mossvein_plate_style(10, Color("f2e4d1")))
 		button.add_theme_stylebox_override("pressed", _mossvein_action_style(10, Color("9c7055")) if primary else _mossvein_plate_style(10, Color("82726a")))
 		button.add_theme_stylebox_override("focus", _mossvein_action_style(10, Color("fff1dc")) if primary else _mossvein_plate_style(10, Color("ffd3a3")))
-		button.add_theme_stylebox_override("disabled", _mossvein_action_style(10, Color(0.28, 0.27, 0.29, 0.72)) if primary else _mossvein_plate_style(10, Color(0.34, 0.34, 0.36, 0.74)))
+		button.add_theme_stylebox_override("disabled", _mossvein_plate_style(10, Color("858286") if primary else Color("68686c")))
 		return
+	button.remove_theme_color_override("font_outline_color")
+	button.remove_theme_constant_override("outline_size")
 	button.add_theme_stylebox_override("normal", _button_style(_accent_deep.darkened(0.12) if primary else SURFACE_RAISED, _accent if primary else IRON_MID, 3 if primary else 2, primary))
 	button.add_theme_stylebox_override("hover", _button_style(_accent.darkened(0.34) if primary else Color("2b2c30"), _accent_bright if primary else IRON_HIGH, 3, primary))
 	button.add_theme_stylebox_override("pressed", _button_style(_accent_deep.darkened(0.24) if primary else Color("121315"), _accent_bright, 3, primary))
@@ -1551,7 +1559,7 @@ func _forged_plate_style(background: Color, border: Color, padding: int, border_
 
 func _overview_panel_style() -> StyleBox:
 	if _visual_theme_id == "forge":
-		return _mossvein_plate_style(12, Color("d7d0c8"))
+		return _mossvein_plate_style(16, Color("d7d0c8"))
 	return _forged_plate_style(SURFACE, IRON_MID, 12)
 
 
@@ -1682,7 +1690,7 @@ func _header_style() -> StyleBoxFlat:
 
 func _header_title_style() -> StyleBox:
 	if _visual_theme_id == "forge":
-		return _mossvein_plate_style(6, Color("eee1d1"))
+		return _mossvein_plate_style(4, Color("eee1d1"))
 	var style: StyleBoxFlat = _forged_plate_style(Color("18181a"), IRON_MID, 6, 3) as StyleBoxFlat
 	style.border_width_top = 4
 	style.border_width_bottom = 4
