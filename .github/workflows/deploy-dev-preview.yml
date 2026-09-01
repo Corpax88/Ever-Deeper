@@ -284,7 +284,7 @@ jobs:
           set -e
           if [ "$dev_status" -ne 0 ]; then
             if grep -Eiq \
-              '(no such project/game|no such project|game not found|project[^[:space:]]* (does not exist|not found)|could not find (game|project))' \
+              '(no such project/game|no such project|game not found|invalid game|project[^[:space:]]* (does not exist|not found)|could not find (game|project))' \
               "$RUNNER_TEMP/butler-dev.log"
             then
               echo "::notice::itch DEV project is not provisioned; continuing with the required production release"
