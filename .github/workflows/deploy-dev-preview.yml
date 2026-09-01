@@ -1,13 +1,13 @@
-name: Release Ever Deeper v0.43.0 production and DEV
+name: Release Ever Deeper v0.43.1 production and DEV
 
 on:
   push:
     branches: [main]
     paths:
       - '.github/prod-build/index.html'
-      - '.github/release-patch/v0420-to-v0430.xdelta.part*'
+      - '.github/release-patch/v0430-to-v0431.xdelta.part*'
       - '.github/dev-build/index.html'
-      - '.github/dev-patch/prod-v0430-to-dev-v0430-dev1.xdelta.part*'
+      - '.github/dev-patch/prod-v0431-to-dev-v0431-dev1.xdelta.part*'
       - '.github/workflows/deploy-dev-preview.yml'
   workflow_dispatch:
 
@@ -34,28 +34,28 @@ env:
   RUNTIME_SPLASH_SHA256: c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f
   RUNTIME_WASM_SHA256: fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0
 
-  CURRENT_PROD_HTML_SHA256: a92a9931fee6f05ab2d315e7032ced52f9b8a29c89d50c309a41ff8d3dd0be35
-  CURRENT_PROD_PCK_SHA256: 65a13e3af4a64ce247071cd2d5a75cb14e89bcc0664462753862e212a84549be
-  CURRENT_PROD_PCK_SIZE: '96220476'
-  CURRENT_DEV_HTML_SHA256: 4f8d616acd1d788047b5f22276515db94d3735ec3011c99523aa1dcf1be9b140
-  CURRENT_DEV_PCK_SHA256: 4955fb0e48467eac8a0dc000075e04673e2d45df41744b70af27f17902bcbbfc
-  CURRENT_DEV_PCK_SIZE: '106384772'
+  CURRENT_PROD_HTML_SHA256: f1a8f9750cd6020f1e2a799a17eb8dd7002b78ced807565e9e9e32c1b073629b
+  CURRENT_PROD_PCK_SHA256: 97554f389ea297b8a6cb58345403234e3e044839ebb2b487843583976b028156
+  CURRENT_PROD_PCK_SIZE: '107879936'
+  CURRENT_DEV_HTML_SHA256: e111689c1eb72c1ffc47577d69ed9b54b2a19746dc12bfbcc49661f57282e1f6
+  CURRENT_DEV_PCK_SHA256: 50b64de316676fd83daeabe1fb9f36976cc6fdbe39a077cbc9a1ae3a6032fec5
+  CURRENT_DEV_PCK_SIZE: '107894932'
 
-  PROD_PATCH_SHA256: 2e4e84f1794508da2d75a68e22f5bbf4a8260d25f4620c295b6c0c07405702de
-  PROD_PATCH_SIZE: '12287318'
-  PROD_PATCH_PARTS: '50'
-  DEV_PATCH_SHA256: 5f5aded19a8599e6ea89f8df1700dc9ac06036c5468dfec042dcfd4591d8056e
-  DEV_PATCH_SIZE: '16074'
+  PROD_PATCH_SHA256: aba767c32106538854b4c3bb1b449ca04005e8c218b2d04c275d67c1948ec285
+  PROD_PATCH_SIZE: '341185'
+  PROD_PATCH_PARTS: '2'
+  DEV_PATCH_SHA256: 6d8f13ae0320854d66b3b2912b3c89459cffc5ac0ab03007f332745be4258d78
+  DEV_PATCH_SIZE: '15886'
   DEV_PATCH_PARTS: '1'
 
-  PROD_HTML_SHA256: f1a8f9750cd6020f1e2a799a17eb8dd7002b78ced807565e9e9e32c1b073629b
+  PROD_HTML_SHA256: 27c14d7c3f0917cbdb43b4509e40ef9a61928dc2c03052f13fb4d01731158b6a
   PROD_HTML_SIZE: '13446'
-  PROD_PCK_SHA256: 97554f389ea297b8a6cb58345403234e3e044839ebb2b487843583976b028156
-  PROD_PCK_SIZE: '107879936'
-  DEV_HTML_SHA256: e111689c1eb72c1ffc47577d69ed9b54b2a19746dc12bfbcc49661f57282e1f6
+  PROD_PCK_SHA256: cea26af47f58045e220fb5c2f96aefa4224dfe8573eb13340a997c114b07a4ac
+  PROD_PCK_SIZE: '107885104'
+  DEV_HTML_SHA256: 0795b19ce53bc06f403a37101e8b99bc32b1db41eb66e000ee52eef36bda5883
   DEV_HTML_SIZE: '13459'
-  DEV_PCK_SHA256: 50b64de316676fd83daeabe1fb9f36976cc6fdbe39a077cbc9a1ae3a6032fec5
-  DEV_PCK_SIZE: '107894932'
+  DEV_PCK_SHA256: d40678f149e6840e7e007c512b08a88f02d2273b9e30ae0e456581887ff20cb6
+  DEV_PCK_SIZE: '107900100'
 
 jobs:
   package:
@@ -69,7 +69,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          rollback_dir="$RUNNER_TEMP/ever-deeper-v0420-dev7-rollback"
+          rollback_dir="$RUNNER_TEMP/ever-deeper-v0430-rollback"
           production_dir="$rollback_dir/production"
           dev_dir="$rollback_dir/dev"
           cache_key="$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
@@ -121,41 +121,41 @@ jobs:
       - name: Stage verified pre-release rollback package
         uses: actions/upload-artifact@v4
         with:
-          name: ever-deeper-v0420-dev7-rollback
-          path: ${{ runner.temp }}/ever-deeper-v0420-dev7-rollback
+          name: ever-deeper-v0430-rollback
+          path: ${{ runner.temp }}/ever-deeper-v0430-rollback
           compression-level: 0
           retention-days: 30
           if-no-files-found: error
 
-      - name: Reconstruct and verify v0.43.0 production and DEV packages
+      - name: Reconstruct and verify v0.43.1 production and DEV packages
         shell: bash
         run: |
           set -euo pipefail
-          rollback_dir="$RUNNER_TEMP/ever-deeper-v0420-dev7-rollback"
+          rollback_dir="$RUNNER_TEMP/ever-deeper-v0430-rollback"
           current_prod_dir="$rollback_dir/production"
           pages_dir="$RUNNER_TEMP/ever-deeper-pages"
-          prod_dir="$RUNNER_TEMP/ever-deeper-v0430-production"
+          prod_dir="$RUNNER_TEMP/ever-deeper-v0431-production"
           dev_dir="$pages_dir/dev"
           tool_dir="$RUNNER_TEMP/tools"
           mkdir -p "$pages_dir" "$prod_dir" "$dev_dir" "$tool_dir"
 
           mapfile -t prod_parts < <(
             find "$GITHUB_WORKSPACE/.github/release-patch" -maxdepth 1 -type f \
-              -name 'v0420-to-v0430.xdelta.part*' -print | sort -V
+              -name 'v0430-to-v0431.xdelta.part*' -print | sort -V
           )
           test "${#prod_parts[@]}" -eq "$PROD_PATCH_PARTS"
-          cat "${prod_parts[@]}" > "$RUNNER_TEMP/v0420-to-v0430.xdelta"
-          echo "$PROD_PATCH_SHA256  $RUNNER_TEMP/v0420-to-v0430.xdelta" | sha256sum -c -
-          test "$(stat -c %s "$RUNNER_TEMP/v0420-to-v0430.xdelta")" -eq "$PROD_PATCH_SIZE"
+          cat "${prod_parts[@]}" > "$RUNNER_TEMP/v0430-to-v0431.xdelta"
+          echo "$PROD_PATCH_SHA256  $RUNNER_TEMP/v0430-to-v0431.xdelta" | sha256sum -c -
+          test "$(stat -c %s "$RUNNER_TEMP/v0430-to-v0431.xdelta")" -eq "$PROD_PATCH_SIZE"
 
           mapfile -t dev_parts < <(
             find "$GITHUB_WORKSPACE/.github/dev-patch" -maxdepth 1 -type f \
-              -name 'prod-v0430-to-dev-v0430-dev1.xdelta.part*' -print | sort -V
+              -name 'prod-v0431-to-dev-v0431-dev1.xdelta.part*' -print | sort -V
           )
           test "${#dev_parts[@]}" -eq "$DEV_PATCH_PARTS"
-          cat "${dev_parts[@]}" > "$RUNNER_TEMP/prod-v0430-to-dev-v0430-dev1.xdelta"
-          echo "$DEV_PATCH_SHA256  $RUNNER_TEMP/prod-v0430-to-dev-v0430-dev1.xdelta" | sha256sum -c -
-          test "$(stat -c %s "$RUNNER_TEMP/prod-v0430-to-dev-v0430-dev1.xdelta")" -eq "$DEV_PATCH_SIZE"
+          cat "${dev_parts[@]}" > "$RUNNER_TEMP/prod-v0431-to-dev-v0431-dev1.xdelta"
+          echo "$DEV_PATCH_SHA256  $RUNNER_TEMP/prod-v0431-to-dev-v0431-dev1.xdelta" | sha256sum -c -
+          test "$(stat -c %s "$RUNNER_TEMP/prod-v0431-to-dev-v0431-dev1.xdelta")" -eq "$DEV_PATCH_SIZE"
 
           curl -L --fail --retry 4 --retry-all-errors \
             https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
@@ -168,7 +168,7 @@ jobs:
           cp -a "$current_prod_dir/." "$pages_dir/"
           "$xdelta" -f -d \
             -s "$current_prod_dir/index.pck" \
-            "$RUNNER_TEMP/v0420-to-v0430.xdelta" \
+            "$RUNNER_TEMP/v0430-to-v0431.xdelta" \
             "$pages_dir/index.pck"
           cp "$GITHUB_WORKSPACE/.github/prod-build/index.html" "$pages_dir/index.html"
 
@@ -177,8 +177,8 @@ jobs:
           test "$(stat -c %s "$pages_dir/index.pck")" -eq "$PROD_PCK_SIZE"
           test "$(stat -c %s "$pages_dir/index.html")" -eq "$PROD_HTML_SIZE"
           grep -Fq "\"index.pck\":$PROD_PCK_SIZE" "$pages_dir/index.html"
-          grep -Fq 'v0.43.0' "$pages_dir/index.html"
-          ! grep -Fq 'v0.43.0-dev.1' "$pages_dir/index.html"
+          grep -Fq 'v0.43.1' "$pages_dir/index.html"
+          ! grep -Fq 'v0.43.1-dev.1' "$pages_dir/index.html"
           test "$(find "$pages_dir" -maxdepth 1 -type f | wc -l)" -eq 9
 
           cp -a "$pages_dir/." "$prod_dir/"
@@ -197,7 +197,7 @@ jobs:
           done
           "$xdelta" -d \
             -s "$pages_dir/index.pck" \
-            "$RUNNER_TEMP/prod-v0430-to-dev-v0430-dev1.xdelta" \
+            "$RUNNER_TEMP/prod-v0431-to-dev-v0431-dev1.xdelta" \
             "$dev_dir/index.pck"
           cp "$GITHUB_WORKSPACE/.github/dev-build/index.html" "$dev_dir/index.html"
 
@@ -206,7 +206,7 @@ jobs:
           test "$(stat -c %s "$dev_dir/index.pck")" -eq "$DEV_PCK_SIZE"
           test "$(stat -c %s "$dev_dir/index.html")" -eq "$DEV_HTML_SIZE"
           grep -Fq "\"index.pck\":$DEV_PCK_SIZE" "$dev_dir/index.html"
-          grep -Fq 'v0.43.0-dev.1' "$dev_dir/index.html"
+          grep -Fq 'v0.43.1-dev.1' "$dev_dir/index.html"
           test "$(find "$dev_dir" -maxdepth 1 -type f | wc -l)" -eq 9
           test "$(find "$prod_dir" -maxdepth 1 -type f | wc -l)" -eq 9
 
@@ -218,8 +218,8 @@ jobs:
       - name: Upload verified production package
         uses: actions/upload-artifact@v4
         with:
-          name: ever-deeper-v0430-production-web
-          path: ${{ runner.temp }}/ever-deeper-v0430-production
+          name: ever-deeper-v0431-production-web
+          path: ${{ runner.temp }}/ever-deeper-v0431-production
           compression-level: 0
           retention-days: 14
           if-no-files-found: error
@@ -227,7 +227,7 @@ jobs:
       - name: Upload verified DEV package
         uses: actions/upload-artifact@v4
         with:
-          name: ever-deeper-v0430-dev1-web
+          name: ever-deeper-v0431-dev1-web
           path: ${{ runner.temp }}/ever-deeper-pages/dev
           compression-level: 0
           retention-days: 14
@@ -243,14 +243,14 @@ jobs:
       - name: Download verified production package
         uses: actions/download-artifact@v4
         with:
-          name: ever-deeper-v0430-production-web
-          path: ${{ runner.temp }}/ever-deeper-v0430-production
+          name: ever-deeper-v0431-production-web
+          path: ${{ runner.temp }}/ever-deeper-v0431-production
 
       - name: Download verified DEV package
         uses: actions/download-artifact@v4
         with:
-          name: ever-deeper-v0430-dev1-web
-          path: ${{ runner.temp }}/ever-deeper-v0430-dev
+          name: ever-deeper-v0431-dev1-web
+          path: ${{ runner.temp }}/ever-deeper-v0431-dev
 
       - name: Publish DEV when its itch project exists, then publish production
         shell: bash
@@ -261,8 +261,8 @@ jobs:
             exit 1
           }
 
-          prod_dir="$RUNNER_TEMP/ever-deeper-v0430-production"
-          dev_dir="$RUNNER_TEMP/ever-deeper-v0430-dev"
+          prod_dir="$RUNNER_TEMP/ever-deeper-v0431-production"
+          dev_dir="$RUNNER_TEMP/ever-deeper-v0431-dev"
           echo "$PROD_PCK_SHA256  $prod_dir/index.pck" | sha256sum -c -
           echo "$PROD_HTML_SHA256  $prod_dir/index.html" | sha256sum -c -
           test "$(stat -c %s "$prod_dir/index.pck")" -eq "$PROD_PCK_SIZE"
@@ -279,7 +279,7 @@ jobs:
 
           set +e
           "$butler" push "$dev_dir" "$DEV_ITCH_CHANNEL" \
-            --userversion 0.43.0-dev.1 2>&1 | tee "$RUNNER_TEMP/butler-dev.log"
+            --userversion 0.43.1-dev.1 2>&1 | tee "$RUNNER_TEMP/butler-dev.log"
           dev_status=${PIPESTATUS[0]}
           set -e
           if [ "$dev_status" -ne 0 ]; then
@@ -297,7 +297,7 @@ jobs:
           fi
 
           "$butler" push "$prod_dir" "$PROD_ITCH_CHANNEL" \
-            --userversion 0.43.0
+            --userversion 0.43.1
           "$butler" status "$PROD_ITCH_CHANNEL"
 
   deploy-pages:
@@ -362,12 +362,12 @@ jobs:
           echo "$PROD_PCK_SHA256  $prod_dir/index.pck" | sha256sum -c -
           test "$(stat -c %s "$prod_dir/index.html")" -eq "$PROD_HTML_SIZE"
           test "$(stat -c %s "$prod_dir/index.pck")" -eq "$PROD_PCK_SIZE"
-          grep -Fq 'v0.43.0' "$prod_dir/index.html"
-          ! grep -Fq 'v0.43.0-dev.1' "$prod_dir/index.html"
+          grep -Fq 'v0.43.1' "$prod_dir/index.html"
+          ! grep -Fq 'v0.43.1-dev.1' "$prod_dir/index.html"
 
           verify_runtime "$dev_dir"
           echo "$DEV_HTML_SHA256  $dev_dir/index.html" | sha256sum -c -
           echo "$DEV_PCK_SHA256  $dev_dir/index.pck" | sha256sum -c -
           test "$(stat -c %s "$dev_dir/index.html")" -eq "$DEV_HTML_SIZE"
           test "$(stat -c %s "$dev_dir/index.pck")" -eq "$DEV_PCK_SIZE"
-          grep -Fq 'v0.43.0-dev.1' "$dev_dir/index.html"
+          grep -Fq 'v0.43.1-dev.1' "$dev_dir/index.html"
