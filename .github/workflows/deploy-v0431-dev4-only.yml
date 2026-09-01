@@ -1,0 +1,422 @@
+name: Deploy Ever Deeper v0.43.1-dev.4 DEV only
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/deploy-v0431-dev4-only.yml'
+      - '.github/dev-only/v0431-dev4/**'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-ever-deeper
+  cancel-in-progress: false
+
+env:
+  PAGES_BASE_URL: https://corpax88.github.io/Ever-Deeper
+  DEV_INPUT_DIR: .github/dev-only/v0431-dev4
+  DEV_MANIFEST_NAME: manifest.env
+  DEV_HTML_NAME: index.html
+  DEV_PATCH_PATTERN: dev-v0431-dev3-to-v0431-dev4.xdelta.part*
+  XDELTA_ARCHIVE_SHA256: 480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397
+
+  RUNTIME_APPLE_TOUCH_SHA256: 27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5
+  RUNTIME_APPLE_TOUCH_SIZE: '66421'
+  RUNTIME_AUDIO_POSITION_SHA256: be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8
+  RUNTIME_AUDIO_POSITION_SIZE: '2973'
+  RUNTIME_AUDIO_SHA256: 5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3
+  RUNTIME_AUDIO_SIZE: '7298'
+  RUNTIME_ICON_SHA256: 290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec
+  RUNTIME_ICON_SIZE: '470687'
+  RUNTIME_JS_SHA256: 33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba
+  RUNTIME_JS_SIZE: '279815'
+  RUNTIME_SPLASH_SHA256: c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f
+  RUNTIME_SPLASH_SIZE: '1981427'
+  RUNTIME_WASM_SHA256: fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0
+  RUNTIME_WASM_SIZE: '39514754'
+
+  BASE_ROOT_HTML_SHA256: 27c14d7c3f0917cbdb43b4509e40ef9a61928dc2c03052f13fb4d01731158b6a
+  BASE_ROOT_HTML_SIZE: '13446'
+  BASE_ROOT_PCK_SHA256: cea26af47f58045e220fb5c2f96aefa4224dfe8573eb13340a997c114b07a4ac
+  BASE_ROOT_PCK_SIZE: '107885104'
+  BASE_DEV_HTML_SHA256: 1568cffaee082a9cc651b0bdd6bc12c0f489349dc58eda229b17ebd22f82986d
+  BASE_DEV_HTML_SIZE: '13410'
+  BASE_DEV_PCK_SHA256: 0e38a0edebfeaccf2f238f1f82a3386dc7b81f35e047d48b3d85b9714a776526
+  BASE_DEV_PCK_SIZE: '108777516'
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    outputs:
+      target_dev_version: ${{ steps.manifest.outputs.target_dev_version }}
+      target_dev_html_sha256: ${{ steps.manifest.outputs.target_dev_html_sha256 }}
+      target_dev_html_size: ${{ steps.manifest.outputs.target_dev_html_size }}
+      target_dev_pck_sha256: ${{ steps.manifest.outputs.target_dev_pck_sha256 }}
+      target_dev_pck_size: ${{ steps.manifest.outputs.target_dev_pck_size }}
+    steps:
+      - name: Check out isolated DEV inputs
+        uses: actions/checkout@v4
+
+      - name: Read and validate the isolated target manifest
+        id: manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          input_dir="$GITHUB_WORKSPACE/$DEV_INPUT_DIR"
+          manifest="$input_dir/$DEV_MANIFEST_NAME"
+          html="$input_dir/$DEV_HTML_NAME"
+
+          test -d "$input_dir"
+          test -f "$manifest"
+          test ! -L "$manifest"
+          test -f "$html"
+          test ! -L "$html"
+          test "$(find "$input_dir" -maxdepth 1 -type l | wc -l)" -eq 0
+          test "$(find "$input_dir" -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 0
+
+          unexpected="$({
+            find "$input_dir" -maxdepth 1 -type f \
+              ! -name "$DEV_MANIFEST_NAME" \
+              ! -name "$DEV_HTML_NAME" \
+              ! -name "$DEV_PATCH_PATTERN" -print
+          } || true)"
+          test -z "$unexpected"
+
+          manifest_value() {
+            local key="$1"
+            local matches
+            matches="$(grep -Ec "^${key}=" "$manifest")"
+            test "$matches" -eq 1
+            grep -E "^${key}=" "$manifest" | cut -d= -f2-
+          }
+
+          target_dev_version="$(manifest_value TARGET_DEV_VERSION)"
+          target_dev_html_sha256="$(manifest_value TARGET_DEV_HTML_SHA256)"
+          target_dev_html_size="$(manifest_value TARGET_DEV_HTML_SIZE)"
+          target_dev_pck_sha256="$(manifest_value TARGET_DEV_PCK_SHA256)"
+          target_dev_pck_size="$(manifest_value TARGET_DEV_PCK_SIZE)"
+          target_patch_sha256="$(manifest_value TARGET_PATCH_SHA256)"
+          target_patch_size="$(manifest_value TARGET_PATCH_SIZE)"
+          target_patch_parts="$(manifest_value TARGET_PATCH_PARTS)"
+
+          test "$target_dev_version" = '0.43.1-dev.4'
+          [[ "$target_dev_html_sha256" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$target_dev_pck_sha256" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$target_patch_sha256" =~ ^[0-9a-f]{64}$ ]]
+          [[ "$target_dev_html_size" =~ ^[1-9][0-9]*$ ]]
+          [[ "$target_dev_pck_size" =~ ^[1-9][0-9]*$ ]]
+          [[ "$target_patch_size" =~ ^[1-9][0-9]*$ ]]
+          [[ "$target_patch_parts" =~ ^[1-9][0-9]*$ ]]
+
+          echo "$target_dev_html_sha256  $html" | sha256sum -c -
+          test "$(stat -c %s "$html")" -eq "$target_dev_html_size"
+          grep -Fq "\"index.pck\":$target_dev_pck_size" "$html"
+          grep -Fq 'v0.43.1-dev.4' "$html"
+
+          {
+            echo "target_dev_version=$target_dev_version"
+            echo "target_dev_html_sha256=$target_dev_html_sha256"
+            echo "target_dev_html_size=$target_dev_html_size"
+            echo "target_dev_pck_sha256=$target_dev_pck_sha256"
+            echo "target_dev_pck_size=$target_dev_pck_size"
+            echo "target_patch_sha256=$target_patch_sha256"
+            echo "target_patch_size=$target_patch_size"
+            echo "target_patch_parts=$target_patch_parts"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Download and verify the exact current root and DEV baselines
+        shell: bash
+        run: |
+          set -euo pipefail
+          baseline_dir="$RUNNER_TEMP/ever-deeper-v0431-dev3-baseline"
+          root_dir="$baseline_dir/root"
+          dev_dir="$baseline_dir/dev"
+          cache_key="$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          mkdir -p "$root_dir" "$dev_dir"
+
+          files=(
+            index.apple-touch-icon.png
+            index.audio.position.worklet.js
+            index.audio.worklet.js
+            index.icon.png
+            index.js
+            index.png
+            index.wasm
+            index.html
+            index.pck
+          )
+          for file in "${files[@]}"; do
+            curl --location --fail --silent --show-error \
+              --retry 12 --retry-delay 5 --retry-all-errors \
+              --proto '=https' --proto-redir '=https' \
+              "$PAGES_BASE_URL/$file?baseline=$cache_key" \
+              --output "$root_dir/$file"
+            curl --location --fail --silent --show-error \
+              --retry 12 --retry-delay 5 --retry-all-errors \
+              --proto '=https' --proto-redir '=https' \
+              "$PAGES_BASE_URL/dev/$file?baseline=$cache_key" \
+              --output "$dev_dir/$file"
+          done
+
+          verify_file() {
+            local expected_sha="$1"
+            local expected_size="$2"
+            local path="$3"
+            echo "$expected_sha  $path" | sha256sum -c -
+            test "$(stat -c %s "$path")" -eq "$expected_size"
+          }
+
+          verify_runtime() {
+            local target_dir="$1"
+            verify_file "$RUNTIME_APPLE_TOUCH_SHA256" "$RUNTIME_APPLE_TOUCH_SIZE" "$target_dir/index.apple-touch-icon.png"
+            verify_file "$RUNTIME_AUDIO_POSITION_SHA256" "$RUNTIME_AUDIO_POSITION_SIZE" "$target_dir/index.audio.position.worklet.js"
+            verify_file "$RUNTIME_AUDIO_SHA256" "$RUNTIME_AUDIO_SIZE" "$target_dir/index.audio.worklet.js"
+            verify_file "$RUNTIME_ICON_SHA256" "$RUNTIME_ICON_SIZE" "$target_dir/index.icon.png"
+            verify_file "$RUNTIME_JS_SHA256" "$RUNTIME_JS_SIZE" "$target_dir/index.js"
+            verify_file "$RUNTIME_SPLASH_SHA256" "$RUNTIME_SPLASH_SIZE" "$target_dir/index.png"
+            verify_file "$RUNTIME_WASM_SHA256" "$RUNTIME_WASM_SIZE" "$target_dir/index.wasm"
+            node --check "$target_dir/index.js"
+            test "$(find "$target_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+            test "$(find "$target_dir" -maxdepth 1 -type l | wc -l)" -eq 0
+          }
+
+          verify_runtime "$root_dir"
+          verify_file "$BASE_ROOT_HTML_SHA256" "$BASE_ROOT_HTML_SIZE" "$root_dir/index.html"
+          verify_file "$BASE_ROOT_PCK_SHA256" "$BASE_ROOT_PCK_SIZE" "$root_dir/index.pck"
+          grep -Fq 'v0.43.1' "$root_dir/index.html"
+          ! grep -Fq 'v0.43.1-dev.3' "$root_dir/index.html"
+
+          verify_runtime "$dev_dir"
+          verify_file "$BASE_DEV_HTML_SHA256" "$BASE_DEV_HTML_SIZE" "$dev_dir/index.html"
+          verify_file "$BASE_DEV_PCK_SHA256" "$BASE_DEV_PCK_SIZE" "$dev_dir/index.pck"
+          grep -Fq 'v0.43.1-dev.3' "$dev_dir/index.html"
+
+      - name: Upload verified pre-deploy rollback package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-v0431-dev3-pre-dev4-rollback
+          path: ${{ runner.temp }}/ever-deeper-v0431-dev3-baseline
+          compression-level: 0
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Reconstruct DEV v0.43.1-dev.4 and preserve the root byte-for-byte
+        shell: bash
+        env:
+          TARGET_DEV_VERSION: ${{ steps.manifest.outputs.target_dev_version }}
+          TARGET_DEV_HTML_SHA256: ${{ steps.manifest.outputs.target_dev_html_sha256 }}
+          TARGET_DEV_HTML_SIZE: ${{ steps.manifest.outputs.target_dev_html_size }}
+          TARGET_DEV_PCK_SHA256: ${{ steps.manifest.outputs.target_dev_pck_sha256 }}
+          TARGET_DEV_PCK_SIZE: ${{ steps.manifest.outputs.target_dev_pck_size }}
+          TARGET_PATCH_SHA256: ${{ steps.manifest.outputs.target_patch_sha256 }}
+          TARGET_PATCH_SIZE: ${{ steps.manifest.outputs.target_patch_size }}
+          TARGET_PATCH_PARTS: ${{ steps.manifest.outputs.target_patch_parts }}
+        run: |
+          set -euo pipefail
+          input_dir="$GITHUB_WORKSPACE/$DEV_INPUT_DIR"
+          baseline_dir="$RUNNER_TEMP/ever-deeper-v0431-dev3-baseline"
+          baseline_root_dir="$baseline_dir/root"
+          baseline_dev_dir="$baseline_dir/dev"
+          pages_dir="$RUNNER_TEMP/ever-deeper-pages"
+          staged_dev_dir="$pages_dir/dev"
+          tool_dir="$RUNNER_TEMP/xdelta3-v3.2.0"
+          patch_file="$RUNNER_TEMP/dev-v0431-dev3-to-v0431-dev4.xdelta"
+          candidate_pck="$RUNNER_TEMP/v0431-dev4-index.pck"
+          mkdir -p "$pages_dir" "$staged_dev_dir" "$tool_dir"
+
+          mapfile -t patch_parts < <(
+            find "$input_dir" -maxdepth 1 -type f \
+              -name "$DEV_PATCH_PATTERN" -print | sort -V
+          )
+          test "${#patch_parts[@]}" -eq "$TARGET_PATCH_PARTS"
+          cat "${patch_parts[@]}" > "$patch_file"
+          echo "$TARGET_PATCH_SHA256  $patch_file" | sha256sum -c -
+          test "$(stat -c %s "$patch_file")" -eq "$TARGET_PATCH_SIZE"
+
+          curl --location --fail --silent --show-error \
+            --retry 4 --retry-all-errors \
+            --proto '=https' --proto-redir '=https' \
+            https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
+            --output "$tool_dir/xdelta3.tar.gz"
+          echo "$XDELTA_ARCHIVE_SHA256  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
+          test "$(tar -tzf "$tool_dir/xdelta3.tar.gz" | grep -Fxc 'xdelta3-3.2.0-linux-x86_64/xdelta3')" -eq 1
+          tar --extract --gzip --file "$tool_dir/xdelta3.tar.gz" \
+            --directory "$tool_dir" --no-same-owner --no-same-permissions \
+            xdelta3-3.2.0-linux-x86_64/xdelta3
+          xdelta="$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
+          test -f "$xdelta"
+          chmod 0755 "$xdelta"
+          xdelta_version="$("$xdelta" -V 2>&1 || true)"
+          grep -Fq 'Xdelta version 3.2.0' <<<"$xdelta_version"
+
+          "$xdelta" -f -d \
+            -s "$baseline_dev_dir/index.pck" \
+            "$patch_file" \
+            "$candidate_pck"
+          echo "$TARGET_DEV_PCK_SHA256  $candidate_pck" | sha256sum -c -
+          test "$(stat -c %s "$candidate_pck")" -eq "$TARGET_DEV_PCK_SIZE"
+
+          cp -a "$baseline_root_dir/." "$pages_dir/"
+          cp -a "$baseline_dev_dir/." "$staged_dev_dir/"
+          cp "$input_dir/$DEV_HTML_NAME" "$staged_dev_dir/index.html"
+          cp "$candidate_pck" "$staged_dev_dir/index.pck"
+
+          files=(
+            index.apple-touch-icon.png
+            index.audio.position.worklet.js
+            index.audio.worklet.js
+            index.icon.png
+            index.js
+            index.png
+            index.wasm
+            index.html
+            index.pck
+          )
+          for file in "${files[@]}"; do
+            cmp --silent "$baseline_root_dir/$file" "$pages_dir/$file"
+          done
+
+          verify_file() {
+            local expected_sha="$1"
+            local expected_size="$2"
+            local path="$3"
+            echo "$expected_sha  $path" | sha256sum -c -
+            test "$(stat -c %s "$path")" -eq "$expected_size"
+          }
+
+          verify_runtime() {
+            local target_dir="$1"
+            verify_file "$RUNTIME_APPLE_TOUCH_SHA256" "$RUNTIME_APPLE_TOUCH_SIZE" "$target_dir/index.apple-touch-icon.png"
+            verify_file "$RUNTIME_AUDIO_POSITION_SHA256" "$RUNTIME_AUDIO_POSITION_SIZE" "$target_dir/index.audio.position.worklet.js"
+            verify_file "$RUNTIME_AUDIO_SHA256" "$RUNTIME_AUDIO_SIZE" "$target_dir/index.audio.worklet.js"
+            verify_file "$RUNTIME_ICON_SHA256" "$RUNTIME_ICON_SIZE" "$target_dir/index.icon.png"
+            verify_file "$RUNTIME_JS_SHA256" "$RUNTIME_JS_SIZE" "$target_dir/index.js"
+            verify_file "$RUNTIME_SPLASH_SHA256" "$RUNTIME_SPLASH_SIZE" "$target_dir/index.png"
+            verify_file "$RUNTIME_WASM_SHA256" "$RUNTIME_WASM_SIZE" "$target_dir/index.wasm"
+            node --check "$target_dir/index.js"
+            test "$(find "$target_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+            test "$(find "$target_dir" -maxdepth 1 -type l | wc -l)" -eq 0
+          }
+
+          verify_runtime "$pages_dir"
+          verify_file "$BASE_ROOT_HTML_SHA256" "$BASE_ROOT_HTML_SIZE" "$pages_dir/index.html"
+          verify_file "$BASE_ROOT_PCK_SHA256" "$BASE_ROOT_PCK_SIZE" "$pages_dir/index.pck"
+
+          verify_runtime "$staged_dev_dir"
+          verify_file "$TARGET_DEV_HTML_SHA256" "$TARGET_DEV_HTML_SIZE" "$staged_dev_dir/index.html"
+          verify_file "$TARGET_DEV_PCK_SHA256" "$TARGET_DEV_PCK_SIZE" "$staged_dev_dir/index.pck"
+          grep -Fq "\"index.pck\":$TARGET_DEV_PCK_SIZE" "$staged_dev_dir/index.html"
+          grep -Fq "v$TARGET_DEV_VERSION" "$staged_dev_dir/index.html"
+
+          test "$(find "$pages_dir" -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 1
+          test -d "$staged_dev_dir"
+          test "$(find "$pages_dir" -mindepth 1 -maxdepth 1 -type l | wc -l)" -eq 0
+
+      - name: Upload atomic root plus DEV Pages package
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/ever-deeper-pages
+
+      - name: Upload verified DEV v0.43.1-dev.4 package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-v0431-dev4-web
+          path: ${{ runner.temp }}/ever-deeper-pages/dev
+          compression-level: 0
+          retention-days: 14
+          if-no-files-found: error
+
+  deploy-pages:
+    needs: package
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy unchanged root plus DEV v0.43.1-dev.4
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  verify-deployment:
+    needs: [package, deploy-pages]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TARGET_DEV_VERSION: ${{ needs.package.outputs.target_dev_version }}
+      TARGET_DEV_HTML_SHA256: ${{ needs.package.outputs.target_dev_html_sha256 }}
+      TARGET_DEV_HTML_SIZE: ${{ needs.package.outputs.target_dev_html_size }}
+      TARGET_DEV_PCK_SHA256: ${{ needs.package.outputs.target_dev_pck_sha256 }}
+      TARGET_DEV_PCK_SIZE: ${{ needs.package.outputs.target_dev_pck_size }}
+    steps:
+      - name: Re-fetch and verify all 18 public files
+        shell: bash
+        run: |
+          set -euo pipefail
+          cache_key="$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          root_dir="$RUNNER_TEMP/public-root"
+          dev_dir="$RUNNER_TEMP/public-dev"
+          mkdir -p "$root_dir" "$dev_dir"
+
+          files=(
+            index.apple-touch-icon.png
+            index.audio.position.worklet.js
+            index.audio.worklet.js
+            index.icon.png
+            index.js
+            index.png
+            index.wasm
+            index.html
+            index.pck
+          )
+          for file in "${files[@]}"; do
+            curl --location --fail --silent --show-error \
+              --retry 20 --retry-delay 5 --retry-all-errors \
+              --proto '=https' --proto-redir '=https' \
+              "$PAGES_BASE_URL/$file?verify=$cache_key" \
+              --output "$root_dir/$file"
+            curl --location --fail --silent --show-error \
+              --retry 20 --retry-delay 5 --retry-all-errors \
+              --proto '=https' --proto-redir '=https' \
+              "$PAGES_BASE_URL/dev/$file?verify=$cache_key" \
+              --output "$dev_dir/$file"
+          done
+
+          verify_file() {
+            local expected_sha="$1"
+            local expected_size="$2"
+            local path="$3"
+            echo "$expected_sha  $path" | sha256sum -c -
+            test "$(stat -c %s "$path")" -eq "$expected_size"
+          }
+
+          verify_runtime() {
+            local target_dir="$1"
+            verify_file "$RUNTIME_APPLE_TOUCH_SHA256" "$RUNTIME_APPLE_TOUCH_SIZE" "$target_dir/index.apple-touch-icon.png"
+            verify_file "$RUNTIME_AUDIO_POSITION_SHA256" "$RUNTIME_AUDIO_POSITION_SIZE" "$target_dir/index.audio.position.worklet.js"
+            verify_file "$RUNTIME_AUDIO_SHA256" "$RUNTIME_AUDIO_SIZE" "$target_dir/index.audio.worklet.js"
+            verify_file "$RUNTIME_ICON_SHA256" "$RUNTIME_ICON_SIZE" "$target_dir/index.icon.png"
+            verify_file "$RUNTIME_JS_SHA256" "$RUNTIME_JS_SIZE" "$target_dir/index.js"
+            verify_file "$RUNTIME_SPLASH_SHA256" "$RUNTIME_SPLASH_SIZE" "$target_dir/index.png"
+            verify_file "$RUNTIME_WASM_SHA256" "$RUNTIME_WASM_SIZE" "$target_dir/index.wasm"
+            node --check "$target_dir/index.js"
+            test "$(find "$target_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+            test "$(find "$target_dir" -maxdepth 1 -type l | wc -l)" -eq 0
+          }
+
+          verify_runtime "$root_dir"
+          verify_file "$BASE_ROOT_HTML_SHA256" "$BASE_ROOT_HTML_SIZE" "$root_dir/index.html"
+          verify_file "$BASE_ROOT_PCK_SHA256" "$BASE_ROOT_PCK_SIZE" "$root_dir/index.pck"
+          grep -Fq 'v0.43.1' "$root_dir/index.html"
+          ! grep -Fq 'v0.43.1-dev.4' "$root_dir/index.html"
+
+          verify_runtime "$dev_dir"
+          verify_file "$TARGET_DEV_HTML_SHA256" "$TARGET_DEV_HTML_SIZE" "$dev_dir/index.html"
+          verify_file "$TARGET_DEV_PCK_SHA256" "$TARGET_DEV_PCK_SIZE" "$dev_dir/index.pck"
+          grep -Fq "\"index.pck\":$TARGET_DEV_PCK_SIZE" "$dev_dir/index.html"
+          grep -Fq "v$TARGET_DEV_VERSION" "$dev_dir/index.html"
