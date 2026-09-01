@@ -251,7 +251,8 @@ jobs:
           xdelta="$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
           test -f "$xdelta"
           chmod 0755 "$xdelta"
-          "$xdelta" -V | grep -Fq 'Xdelta version 3.2.0'
+          xdelta_version="$("$xdelta" -V 2>&1 || true)"
+          grep -Fq 'Xdelta version 3.2.0' <<<"$xdelta_version"
 
           "$xdelta" -f -d \
             -s "$baseline_dev_dir/index.pck" \
