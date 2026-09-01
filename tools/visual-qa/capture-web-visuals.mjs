@@ -8,7 +8,7 @@ import http from "node:http";
 import path from "node:path";
 
 const VIEWPORT = { width: 932, height: 430 };
-const EXPECTED_CAPTURE_COUNT = 121;
+const EXPECTED_CAPTURE_COUNT = 133;
 const SUITE_ARG = "--visual-capture-suite";
 const MARKER_PREFIX = "EVER_DEEPER_VISUAL_CAPTURE_";
 const NEXT_MARKER_TIMEOUT_MS = 60 * 1000;
@@ -240,14 +240,21 @@ async function captureSuite(options) {
   const { server, url } = await createStaticServer(options.webDir);
   let browser;
   try {
+    const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || undefined;
+    const constrainedFlags =
+      process.env.PLAYWRIGHT_CHROMIUM_SINGLE_PROCESS === "1"
+        ? ["--single-process", "--no-zygote", "--disable-dev-shm-usage", "--no-sandbox"]
+        : [];
     browser = await chromium.launch({
       headless: true,
+      executablePath,
       args: [
         "--enable-unsafe-swiftshader",
         "--enable-webgl",
         "--ignore-gpu-blocklist",
         "--use-angle=swiftshader",
         "--use-gl=angle",
+        ...constrainedFlags,
       ],
     });
     const context = await browser.newContext({

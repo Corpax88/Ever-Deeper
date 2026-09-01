@@ -1,6 +1,22 @@
 # Ever Deeper
 
-Current build: **Ever Deeper v0.38.1 - Crownseeker Reforged**
+## v0.43 assembled build workspace
+
+Current release: **Ever Deeper v0.43.1** / **DEV v0.43.1-dev.2**.
+
+This is the buildable Godot 4.7 workspace assembled from the deployed
+v0.42.0-dev.7 package, then updated through the v0.43.1 edge-contour hotfix
+and the DEV-only premium Mossvein Forge pass.
+It is not the original pre-export source snapshot. See
+`EVER_DEEPER_HANDOFF.md` for provenance, exact release inputs, verification,
+and continuation notes.
+
+The historical v0.38.1 development notes below are retained for context; their
+HTML/JavaScript run instructions do not describe the current Godot workspace.
+
+## Historical v0.38.1 notes
+
+Build: **Ever Deeper v0.38.1 - Crownseeker Reforged**
 
 Completing Starfall and extracting the first Singularity Core now unlocks a persistent Underground Hub beneath the final world. The Hub is a safe, non-mineable building scene with touch-first wall painting, removable lamps that shape the room lighting, real storage chests, a lift back to Starfall, and an offline elevator reserved for The Deep. Hub construction uses existing Stone and Gold, survives reloads, and never resets expedition progress.
 

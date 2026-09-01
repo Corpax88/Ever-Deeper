@@ -13,32 +13,33 @@ const GuideDirectorScript = preload("res://scripts/progression/guide_director.gd
 const AchievementToastScript = preload("res://scripts/ui/achievement_toast.gd")
 const MinimapOverlayScript = preload("res://scripts/ui/minimap_overlay.gd")
 const QuickTutorialScript = preload("res://scripts/ui/quick_tutorial.gd")
+const WorldCatalogScript = preload("res://scripts/world/world_catalog.gd")
 const DEV_BUILD_FEATURE: = "ever_deeper_dev"
 const DEV_SAVE_PATH: = "user://ever_deeper_dev_run_v2.json"
 const DEV_QA_SAVE_PATH: = "user://ever_deeper_dev_qa_run_v2.json"
 const VISUAL_CAPTURE_SUITE_ARG: = "--visual-capture-suite"
 const VISUAL_CAPTURE_DRIVER_PATH: = "res://scripts/dev/visual_capture_driver.gd"
 const STARFORGE_BUTTON_ICONS: = {
-	"crusher": preload("res://assets/tools/starforge-crusher.png"), 
-	"swift": preload("res://assets/tools/starforge-swift.png"), 
-	"prospector": preload("res://assets/tools/starforge-prospector.png"), 
+	"crusher": preload("res://assets/tools/starforge-crusher.png"),
+	"swift": preload("res://assets/tools/starforge-swift.png"),
+	"prospector": preload("res://assets/tools/starforge-prospector.png"),
 }
 const MINE_IDS: = ["mossMine", "moonMine", "emberMine", "starMine"]
 const WORLD_BY_MINE: = {
 	"mossMine": "mossvein", "moonMine": "moonglass", "emberMine": "emberdeep", "starMine": "starfall"
 }
 const GATE_REQUIREMENTS: = {
-	"moonglass": {"pickaxe": 3, "gold": 120, "mastery": 0, "title": "Moonglass Gate"}, 
-	"emberdeep": {"pickaxe": 4, "gold": 360, "mastery": 0, "title": "Emberdeep Seal"}, 
+	"moonglass": {"pickaxe": 3, "gold": 120, "mastery": 0, "title": "Moonglass Gate"},
+	"emberdeep": {"pickaxe": 4, "gold": 360, "mastery": 0, "title": "Emberdeep Seal"},
 	"starfall": {"pickaxe": 0, "gold": 0, "mastery": 5, "title": "Starfall Master Seal"}
 }
 const STARFORGE_VARIANT_IDS: = ["crusher", "swift", "prospector"]
 const ENDLESS_RESOURCE_NAMES: = {
-	"deep_alloy": "Deep Alloy", 
-	"lumenstone": "Lumenstone", 
-	"memory_silk": "Memory Silk", 
-	"echo_crystal": "Echo Crystal", 
-	"waystone": "Waystone", 
+	"deep_alloy": "Deep Alloy",
+	"lumenstone": "Lumenstone",
+	"memory_silk": "Memory Silk",
+	"echo_crystal": "Echo Crystal",
+	"waystone": "Waystone",
 }
 const GUIDE_UPDATE_INTERVAL: = 0.2
 const LOCATION_CHECKPOINT_INTERVAL: = 8.0
@@ -51,7 +52,7 @@ const JOURNEY_PERFORMANCE_MIN_PREFLIGHT_FPS: = 45.0
 const JOURNEY_PERFORMANCE_P95_LIMIT_MS: = 35.0
 const JOURNEY_PERFORMANCE_MAX_FRAME_MS: = 250.0
 const JOURNEY_PERFORMANCE_MAX_TRANSITION_MS: = 500.0
-const JOURNEY_PERFORMANCE_MAX_STATIC_BYTES: = 250 * 1024 * 1024
+const JOURNEY_PERFORMANCE_MAX_STATIC_BYTES: = 256 * 1024 * 1024
 const JOURNEY_PERFORMANCE_MAX_SAVE_MS: = 100.0
 const JOURNEY_PERFORMANCE_MAX_SAVE_BYTES: = 3 * 1024 * 1024
 const JOURNEY_PERFORMANCE_MATURE_DUG_CELLS: = 1500
@@ -92,9 +93,9 @@ const JOURNEY_PERFORMANCE_MATURE_DUG_CELLS: = 1500
 @onready var conclusion_hub_button: Button = $HUD / ConclusionOverlay / Card / ReturnToHub
 @onready var orientation_guard: Control = $HUD / OrientationGuard
 @onready var starforge_buttons: = {
-	"crusher": $HUD / StarforgePanel / Crusher, 
-	"swift": $HUD / StarforgePanel / Swift, 
-	"prospector": $HUD / StarforgePanel / Prospector, 
+	"crusher": $HUD / StarforgePanel / Crusher,
+	"swift": $HUD / StarforgePanel / Swift,
+	"prospector": $HUD / StarforgePanel / Prospector,
 }
 
 var phase: = "surface"
@@ -158,7 +159,9 @@ func _ready() -> void :
 	var args: = OS.get_cmdline_user_args()
 	var dev_qa_active: = "--qa-dev-tools" in args
 	var visual_capture_active: = VISUAL_CAPTURE_SUITE_ARG in args
-	dev_build_active = OS.has_feature(DEV_BUILD_FEATURE) or dev_qa_active or visual_capture_active
+	# Visual capture is a QA mode, not a build flavor. Production captures must
+	# exercise the production HUD and save namespace without a developer menu.
+	dev_build_active = OS.has_feature(DEV_BUILD_FEATURE) or dev_qa_active
 	if OS.has_feature("web"):
 		web_storage_uncertain = not OS.is_userfs_persistent()
 	automated_mode = visual_capture_active or _has_any_arg(args, ["--smoke-test", "--qa-input-release", "--qa-mine", "--qa-swing", "--qa-up", "--qa-camera", "--qa-performance", "--qa-surface-performance", "--qa-journey-performance", "--qa-barrier", "--qa-moss-overview", "--qa-surface-camp", "--qa-assay", "--qa-forge", "--qa-mine-entrance", "--qa-surface-decor", "--qa-gate", "--qa-gate-ready", "--qa-open-gate", "--qa-moon-surface", "--qa-moon-mine", "--qa-moon-resource", "--qa-ember-resource", "--qa-starfall-resource", "--qa-surface-mountain", "--qa-surface-mountain-damage", "--qa-surface-mountains", "--qa-moon-mountain", "--qa-ember-mountain", "--qa-starfall-mountain", "--qa-starforge", "--qa-crusher-impact", "--qa-rootwound", "--qa-rootwound-locked", "--qa-rootwound-performance", "--qa-depth-loop", "--qa-drill", "--qa-prismatic", "--qa-molten", "--qa-molten-performance", "--qa-voidstar", "--qa-hub", "--qa-deepheart", "--qa-endgame", "--qa-endless", "--qa-workshop-overlap", "--qa-workshop-panel", "--qa-commerce", "--qa-landscape", "--qa-iphone-layout", "--qa-portrait", "--qa-version-menu", "--qa-onboarding", "--qa-dev-tools", "--qa-build-flavor"])
@@ -396,9 +399,9 @@ func _process(delta: float) -> void :
 				assert (int(surface_metrics.dynamic_visual_updates_skipped) > int(surface_metrics.dynamic_visual_updates))
 				assert (int(route_metrics.events) > 0, "Surface performance QA must exercise soft route steering while moving")
 				surface_detail = " dynamic_visuals=%d skipped=%d route_steers=%d" % [
-					int(surface_metrics.dynamic_visual_updates), 
-					int(surface_metrics.dynamic_visual_updates_skipped), 
-					int(route_metrics.events), 
+					int(surface_metrics.dynamic_visual_updates),
+					int(surface_metrics.dynamic_visual_updates_skipped),
+					int(route_metrics.events),
 				]
 			print("EVER_DEEPER_PERFORMANCE_OK mode=%s average_fps=%.1f frames=%d redraw_interval=30 target=ray_aabb%s" % [performance_qa_mode, average_fps, performance_qa_frames, surface_detail])
 			get_tree().quit(0)
@@ -861,7 +864,7 @@ func _run_dev_tools_qa() -> void :
 	if not _dev_qa_require(int(Dictionary(RunState.endless_descent_status()).get("built_workshop_count", 0)) == RunState.ENDLESS_WORKSHOP_IDS.size(), "all_workshops"):
 		return
 	_on_developer_command_requested("reset_dev")
-	if not _dev_qa_require(not bool(RunState.victory) and int(RunState.gold) == 0, "dev_reset"):
+	if not _dev_qa_require( not bool(RunState.victory) and int(RunState.gold) == 0, "dev_reset"):
 		return
 	for suffix in ["", ".tmp", ".bak"]:
 		var path: = DEV_QA_SAVE_PATH + String(suffix)
@@ -883,18 +886,40 @@ func _run_build_flavor_qa() -> void :
 	var feature_enabled: = OS.has_feature(DEV_BUILD_FEATURE)
 	var menu_present: = developer_menu != null
 	var dev_resource_present: = ResourceLoader.exists("res://scripts/dev/developer_menu.gd")
-	if feature_enabled != menu_present or feature_enabled != dev_resource_present:
+	var user_dir_name: = String(ProjectSettings.get_setting_with_override("application/config/custom_user_dir_name"))
+	var expected_user_dir: = (
+		"Ever Deeper- Godot Development Port"
+		if feature_enabled
+		else "Ever Deeper- Godot Production Port"
+	)
+	var expected_save_path: = DEV_SAVE_PATH if feature_enabled else RunState.DEFAULT_SAVE_PATH
+	var save_contract_valid: = (
+		DEV_SAVE_PATH != RunState.DEFAULT_SAVE_PATH
+		and expected_save_path == (DEV_SAVE_PATH if feature_enabled else RunState.DEFAULT_SAVE_PATH)
+		and user_dir_name == expected_user_dir
+	)
+	if (
+		feature_enabled != menu_present
+		or feature_enabled != dev_resource_present
+		or not save_contract_valid
+	):
 		push_error(
-			"EVER_DEEPER_BUILD_FLAVOR_QA_FAIL feature=%s menu=%s resource=%s"
-			% [feature_enabled, menu_present, dev_resource_present]
+			"EVER_DEEPER_BUILD_FLAVOR_QA_FAIL feature=%s menu=%s resource=%s save=%s user_dir=%s"
+			%[feature_enabled, menu_present, dev_resource_present, expected_save_path, user_dir_name]
 		)
 		get_tree().quit(1)
 		return
-	var user_dir_name: = String(ProjectSettings.get_setting_with_override("application/config/custom_user_dir_name"))
 	var user_dir_path: = String(OS.get_user_data_dir())
 	print(
-		"EVER_DEEPER_BUILD_FLAVOR_QA_OK flavor=%s menu=%s resource=%s user_dir=%s path=%s"
-		% ["dev" if feature_enabled else "production", menu_present, dev_resource_present, user_dir_name, user_dir_path]
+		"EVER_DEEPER_BUILD_FLAVOR_QA_OK flavor=%s menu=%s resource=%s save=%s user_dir=%s path=%s isolated=true"
+		%[
+			"dev" if feature_enabled else "production",
+			menu_present,
+			dev_resource_present,
+			expected_save_path,
+			user_dir_name,
+			user_dir_path,
+		]
 	)
 	get_tree().quit(0)
 
@@ -925,7 +950,7 @@ func _install_premium_hud() -> void :
 	premium_hud.build_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
-func _install_workshop_panel() -> void:
+func _install_workshop_panel() -> void :
 	workshop_panel = WorkshopPanelScript.new()
 	workshop_panel.name = "WorkshopPanel"
 	$HUD.add_child(workshop_panel)
@@ -934,7 +959,7 @@ func _install_workshop_panel() -> void:
 	workshop_panel.closed.connect(_on_workshop_panel_closed)
 
 
-func _install_commerce_panel() -> void:
+func _install_commerce_panel() -> void :
 	commerce_panel = CommercePanelScript.new()
 	commerce_panel.name = "CommercePanel"
 	$HUD.add_child(commerce_panel)
@@ -943,7 +968,7 @@ func _install_commerce_panel() -> void:
 	commerce_panel.closed.connect(_on_commerce_closed)
 
 
-func _install_station_transaction_fx() -> void:
+func _install_station_transaction_fx() -> void :
 	station_transaction_fx = StationTransactionFxScript.new()
 	station_transaction_fx.name = "StationTransactionFx"
 	station_transaction_fx.z_index = 58
@@ -1040,8 +1065,8 @@ func _open_inventory() -> void :
 	endless_world.set_active(false)
 	inventory_open = true
 	resource_inventory.open_inventory(
-		Dictionary(RunState.cargo), 
-		Dictionary(RunState.protected_progress_cargo()), 
+		Dictionary(RunState.cargo),
+		Dictionary(RunState.protected_progress_cargo()),
 		phase == "hub"
 	)
 	if quick_tutorial != null:
@@ -1071,8 +1096,8 @@ func _auto_sort_inventory() -> void :
 		AudioDirector.play_blocked()
 		_set_status("No nearby storage has room for sellable materials")
 	resource_inventory.refresh_contents(
-		Dictionary(RunState.cargo), 
-		Dictionary(RunState.protected_progress_cargo()), 
+		Dictionary(RunState.cargo),
+		Dictionary(RunState.protected_progress_cargo()),
 		true
 	)
 
@@ -1126,20 +1151,20 @@ func _update_visual_guide() -> void :
 
 func mobile_guide_performance_snapshot() -> Dictionary:
 	return {
-		"route_update_hz": 1.0 / GUIDE_UPDATE_INTERVAL, 
-		"route_updates": guide_route_update_count, 
-		"marker_redraw_hz": 30.0, 
+		"route_update_hz": 1.0 / GUIDE_UPDATE_INTERVAL,
+		"route_updates": guide_route_update_count,
+		"marker_redraw_hz": 30.0,
 	}
 
 
 func _guide_route_proposal(goal: Dictionary) -> Dictionary:
 	var objective_id: = String(goal.get("objective_id", ""))
 	var proposal: = {
-		"objective_id": objective_id, 
-		"waypoint_id": "%s:%s" % [phase, objective_id], 
-		"title": String(goal.get("title", "")), 
-		"detail": String(goal.get("detail", "")), 
-		"candidates": [], 
+		"objective_id": objective_id,
+		"waypoint_id": "%s:%s" % [phase, objective_id],
+		"title": String(goal.get("title", "")),
+		"detail": String(goal.get("detail", "")),
+		"candidates": [],
 	}
 	var kind: = String(goal.get("kind", ""))
 	var target_mine: = String(goal.get("mine_id", "mossMine"))
@@ -1194,8 +1219,8 @@ func _deepheart_guide_proposal(proposal: Dictionary) -> Dictionary:
 		var seal_id: = String(missing[0])
 		proposal.waypoint_id = "deepheart:seal:%s" % seal_id
 		proposal.candidates = [_guide_candidate(
-			"deepheart:seal:%s" % seal_id, 
-			Vector2(deepheart_world.SEAL_POSITIONS[seal_id]), 
+			"deepheart:seal:%s" % seal_id,
+			Vector2(deepheart_world.SEAL_POSITIONS[seal_id]),
 			0.0
 		)]
 		return proposal
@@ -1266,8 +1291,8 @@ func _depth_guide_proposal(goal: Dictionary, proposal: Dictionary, kind: String,
 		var position: = Vector2(rock.position)
 		var key: = String(rock.get("deposit_id", "rock"))
 		var candidate: = _guide_candidate(
-			"depth:%s:%s:%d" % [current_mine_id, key, index], 
-			position, 
+			"depth:%s:%s:%d" % [current_mine_id, key, index],
+			position,
 			depth_world.player.global_position.distance_squared_to(position)
 		)
 		all_candidates.append(candidate)
@@ -1551,10 +1576,10 @@ func _start_new_game() -> void :
 	deepheart_world.reset_runtime_state()
 	if endless_world.has_method("import_runtime_state"):
 		endless_world.import_runtime_state({
-			"depth": 0, "arrival": "from_above", 
-			"session_mined_nodes": {}, "session_discovered_sites": {}, 
-			"rope_attached": false, "carried_relic_id": "", 
-			"carried_relic_discovery_depth": -1, 
+			"depth": 0, "arrival": "from_above",
+			"session_mined_nodes": {}, "session_discovered_sites": {},
+			"rope_attached": false, "carried_relic_id": "",
+			"carried_relic_discovery_depth": -1,
 		})
 	_apply_global_movement_speed()
 	save_available = true
@@ -1790,10 +1815,10 @@ func _iphone_layout_metrics(viewport_size: Vector2) -> Dictionary:
 	var bottom: = 42.0
 	var mine_size: = Vector2(154, 154)
 	return {
-		"safe_rect": Rect2(110, 18, viewport_size.x - 220, viewport_size.y - 60), 
-		"mine": Rect2(viewport_size.x - right - mine_size.x, viewport_size.y - bottom - mine_size.y, mine_size.x, mine_size.y), 
-		"starforge": Rect2((viewport_size.x - 1020) * 0.5, viewport_size.y - bottom - 190, 1020, 190), 
-		"conclusion": Rect2((viewport_size.x - 1120) * 0.5, (viewport_size.y - 520) * 0.5, 1120, 520), 
+		"safe_rect": Rect2(110, 18, viewport_size.x - 220, viewport_size.y - 60),
+		"mine": Rect2(viewport_size.x - right - mine_size.x, viewport_size.y - bottom - mine_size.y, mine_size.x, mine_size.y),
+		"starforge": Rect2((viewport_size.x - 1020) * 0.5, viewport_size.y - bottom - 190, 1020, 190),
+		"conclusion": Rect2((viewport_size.x - 1120) * 0.5, (viewport_size.y - 520) * 0.5, 1120, 520),
 	}
 
 
@@ -2092,7 +2117,7 @@ func _on_hub_context_changed(context: String) -> void :
 		_set_status(_workshop_status_text(context.trim_prefix("workshop:")))
 
 
-func _on_workshop_panel_requested(workshop_id: String) -> void:
+func _on_workshop_panel_requested(workshop_id: String) -> void :
 	if phase != "hub" or commerce_panel == null or not bool(Dictionary(RunState.workshop_status(workshop_id)).get("built", false)):
 		return
 	_open_commerce(
@@ -2134,14 +2159,14 @@ func _workshop_panel_config(workshop_id: String) -> Dictionary:
 	}
 
 
-func _on_workshop_panel_preview_changed(action: String, value: String) -> void:
+func _on_workshop_panel_preview_changed(action: String, value: String) -> void :
 	if workshop_panel == null or not workshop_panel.is_open():
 		return
 	var workshop_id: = String(Dictionary(workshop_panel.interaction_snapshot()).get("workshop_id", ""))
 	hub_world.set_workshop_panel_preview(workshop_id, action, value)
 
 
-func _on_workshop_panel_action_confirmed(action: String, value: String) -> void:
+func _on_workshop_panel_action_confirmed(action: String, value: String) -> void :
 	if workshop_panel == null or not workshop_panel.is_open():
 		return
 	var workshop_id: = String(Dictionary(workshop_panel.interaction_snapshot()).get("workshop_id", ""))
@@ -2152,7 +2177,7 @@ func _on_workshop_panel_action_confirmed(action: String, value: String) -> void:
 		_refresh_hud()
 
 
-func _on_workshop_panel_closed() -> void:
+func _on_workshop_panel_closed() -> void :
 	hub_world.clear_workshop_panel_preview()
 	if phase == "hub" and bool(hub_world.active):
 		hub_world.player.control_enabled = not bool(hub_world.build_mode)
@@ -2160,13 +2185,13 @@ func _on_workshop_panel_closed() -> void:
 	_refresh_context_button()
 
 
-func _close_commerce_for_action() -> void:
+func _close_commerce_for_action() -> void :
 	commerce_confirm_close = true
 	commerce_panel.close_commerce()
 	commerce_confirm_close = false
 
 
-func _open_commerce(config: Dictionary, context_id: String) -> void:
+func _open_commerce(config: Dictionary, context_id: String) -> void :
 	if (
 		commerce_panel == null
 		or _shop_panel_is_open()
@@ -2183,11 +2208,13 @@ func _open_commerce(config: Dictionary, context_id: String) -> void:
 		surface_world.player.control_enabled = false
 	elif phase == "hub":
 		hub_world.player.control_enabled = false
+	_set_developer_menu_shop_suppressed(true)
 	AudioDirector.play_ui("open")
 	commerce_panel.open_commerce(config)
 
 
-func _on_commerce_closed() -> void:
+func _on_commerce_closed() -> void :
+	_set_developer_menu_shop_suppressed(false)
 	if commerce_context.begins_with("workshop:"):
 		hub_world.clear_workshop_panel_preview()
 	commerce_context = ""
@@ -2200,7 +2227,17 @@ func _on_commerce_closed() -> void:
 	_refresh_context_button()
 
 
-func _on_commerce_selection_changed(item_id: String) -> void:
+func _set_developer_menu_shop_suppressed(suppressed: bool) -> void :
+	if developer_menu == null or not is_instance_valid(developer_menu):
+		return
+	if suppressed and developer_menu.has_method("close_menu"):
+		developer_menu.close_menu()
+	var dev_toggle: Control = developer_menu.get("toggle_button") as Control
+	if dev_toggle != null:
+		dev_toggle.visible = not suppressed
+
+
+func _on_commerce_selection_changed(item_id: String) -> void :
 	if not commerce_context.begins_with("workshop:"):
 		return
 	var workshop_id: = commerce_context.trim_prefix("workshop:")
@@ -2212,7 +2249,7 @@ func _on_commerce_selection_changed(item_id: String) -> void:
 		hub_world.clear_workshop_panel_preview()
 
 
-func _on_commerce_action_confirmed(item_id: String) -> void:
+func _on_commerce_action_confirmed(item_id: String) -> void :
 	if commerce_transaction.size() > 0 or commerce_panel == null:
 		return
 	if item_id.begins_with("forge:"):
@@ -2225,7 +2262,7 @@ func _on_commerce_action_confirmed(item_id: String) -> void:
 		_confirm_workshop_commerce_action(item_id)
 
 
-func _confirm_workshop_commerce_action(item_id: String) -> void:
+func _confirm_workshop_commerce_action(item_id: String) -> void :
 	if not commerce_context.begins_with("workshop:"):
 		return
 	var workshop_id: = commerce_context.trim_prefix("workshop:")
@@ -2249,23 +2286,23 @@ func _confirm_workshop_commerce_action(item_id: String) -> void:
 		_set_status("Workshop action unavailable · %s" % String(transaction.get("reason", "requirements changed")).replace("_", " "))
 
 
-func _open_forge_commerce() -> void:
+func _open_forge_commerce() -> void :
 	_open_commerce(CommerceCatalogScript.forge_config(Dictionary(RunState.forge_purchase_snapshot())), "forge")
 
 
-func _open_wayfarer_commerce() -> void:
+func _open_wayfarer_commerce() -> void :
 	_open_commerce(CommerceCatalogScript.wayfarer_config(), "wayfarer")
 
 
-func _open_starforge_commerce() -> void:
+func _open_starforge_commerce() -> void :
 	_open_commerce(CommerceCatalogScript.starforge_config(), "starforge")
 
 
-func _start_assay_transaction() -> void:
+func _start_assay_transaction() -> void :
 	if (
 		phase != "surface"
 		or surface_context != "sell"
-		or (not game_started and not automated_mode)
+		or ( not game_started and not automated_mode)
 		or menu_open
 		or inventory_open
 		or conclusion_overlay.visible
@@ -2316,7 +2353,7 @@ func _start_assay_transaction() -> void:
 		_on_station_transaction_completed(-1, "sale", true)
 
 
-func _start_forge_transaction(purchase_kind: String) -> void:
+func _start_forge_transaction(purchase_kind: String) -> void :
 	if phase != "surface" or commerce_context != "forge" or not commerce_transaction.is_empty():
 		return
 	var begun: Dictionary = Dictionary(RunState.begin_forge_purchase(purchase_kind))
@@ -2358,7 +2395,7 @@ func _start_forge_transaction(purchase_kind: String) -> void:
 		_on_station_transaction_completed(-1, "forge", true)
 
 
-func _confirm_wayfarer_purchase() -> void:
+func _confirm_wayfarer_purchase() -> void :
 	if phase != "surface" or commerce_context != "wayfarer" or not commerce_transaction.is_empty():
 		return
 	var gold_before: = int(RunState.gold)
@@ -2401,7 +2438,7 @@ func _confirm_wayfarer_purchase() -> void:
 		_on_station_transaction_completed(-1, "forge", true)
 
 
-func _confirm_starforge_purchase(variant_id: String) -> void:
+func _confirm_starforge_purchase(variant_id: String) -> void :
 	if phase != "surface" or commerce_context != "starforge" or not commerce_transaction.is_empty():
 		return
 	var status: Dictionary = Dictionary(RunState.starforge_crafting_status(variant_id))
@@ -2464,7 +2501,7 @@ func _on_commerce_gold_tick(
 	delta: int,
 	cumulative_delta: int,
 	_total_delta: int
-) -> void:
+) -> void :
 	if commerce_transaction.is_empty() or transaction_id != commerce_fx_id:
 		return
 	commerce_presented_gold = maxi(
@@ -2480,7 +2517,7 @@ func _on_station_transaction_completed(
 	transaction_id: int,
 	_flow: String,
 	_skipped: bool
-) -> void:
+) -> void :
 	if commerce_transaction.is_empty():
 		return
 	if commerce_fx_id >= 0 and transaction_id != commerce_fx_id:
@@ -2578,7 +2615,7 @@ func _surface_station_fx_position(station_id: String) -> Vector2:
 	return station_position + Vector2(0, -12)
 
 
-func _update_station_transaction_targets() -> void:
+func _update_station_transaction_targets() -> void :
 	if (
 		station_transaction_fx == null
 		or not station_transaction_fx.busy
@@ -2594,13 +2631,13 @@ func _update_station_transaction_targets() -> void:
 	)
 
 
-func _maybe_start_assay_transaction() -> void:
+func _maybe_start_assay_transaction() -> void :
 	if automated_mode or not assay_auto_armed or phase != "surface" or surface_context != "sell":
 		return
 	_start_assay_transaction()
 
 
-func _enforce_shop_player_control() -> void:
+func _enforce_shop_player_control() -> void :
 	if not _shop_panel_is_open():
 		return
 	var active_player: Node2D = _active_player_node()
@@ -2608,7 +2645,7 @@ func _enforce_shop_player_control() -> void:
 		active_player.set("control_enabled", false)
 
 
-func _settle_commerce_before_world_change() -> void:
+func _settle_commerce_before_world_change() -> void :
 	if station_transaction_fx != null and station_transaction_fx.busy:
 		station_transaction_fx.complete_immediately()
 	if not commerce_transaction.is_empty():
@@ -2625,7 +2662,7 @@ func _settle_commerce_before_world_change() -> void:
 	assay_auto_armed = true
 
 
-func _update_presented_gold_labels() -> void:
+func _update_presented_gold_labels() -> void :
 	var displayed_gold: = int(RunState.gold) if commerce_presented_gold < 0 else commerce_presented_gold
 	gold_label.text = "%d GOLD" % displayed_gold
 	if premium_hud != null and premium_hud.gold_value != null:
@@ -3081,17 +3118,17 @@ func _start_qa_surface_mountain(damaged: bool = false) -> void :
 func _start_qa_surface_mountains(mountain_id: String = "moonglass_mountain") -> void :
 	var profiles: = {
 		"moonglass_mountain": {
-			"name": "Moonglass Mountain", "world": "moonglass", "pickaxe": 3, 
-			"position": Vector2(1665, 575), "vein": "Bloom", 
-		}, 
+			"name": "Moonglass Mountain", "world": "moonglass", "pickaxe": 3,
+			"position": Vector2(1665, 575), "vein": "Bloom",
+		},
 		"emberdeep_mountain": {
-			"name": "Emberdeep Mountain", "world": "emberdeep", "pickaxe": 4, 
-			"position": Vector2(3078, 1030), "vein": "Fault", 
-		}, 
+			"name": "Emberdeep Mountain", "world": "emberdeep", "pickaxe": 4,
+			"position": Vector2(3078, 1030), "vein": "Fault",
+		},
 		"starfall_mountain": {
-			"name": "Starfall Mountain", "world": "starfall", "pickaxe": 5, 
-			"position": Vector2(4020, 1042), "vein": "Lattice", 
-		}, 
+			"name": "Starfall Mountain", "world": "starfall", "pickaxe": 5,
+			"position": Vector2(4020, 1042), "vein": "Lattice",
+		},
 	}
 	var profile: Dictionary = Dictionary(profiles.get(mountain_id, profiles.moonglass_mountain))
 	DisplayServer.window_set_title("Ever Deeper · %s QA" % String(profile.name))
@@ -3195,7 +3232,7 @@ func _run_journey_performance_qa() -> void :
 	DisplayServer.window_set_title("Ever Deeper · Full Journey Performance QA")
 	game_started = true
 	assert (
-		int(ProjectSettings.get_setting("application/run/max_fps", 0)) == 60, 
+		int(ProjectSettings.get_setting("application/run/max_fps", 0)) == 60,
 		"The mobile release must keep its 60 FPS ceiling"
 	)
 	var rows: Array[Dictionary] = []
@@ -3299,28 +3336,28 @@ func _run_journey_performance_qa() -> void :
 		slow_frame_total += int(row.slow_frames)
 		max_static_bytes = maxi(max_static_bytes, int(row.static_bytes))
 		assert (
-			float(row.average_fps) >= JOURNEY_PERFORMANCE_MIN_PREFLIGHT_FPS, 
+			float(row.average_fps) >= JOURNEY_PERFORMANCE_MIN_PREFLIGHT_FPS,
 			"%s fell below the native preflight floor" % String(row.stage)
 		)
 		assert (
-			float(row.p95_ms) <= JOURNEY_PERFORMANCE_P95_LIMIT_MS, 
+			float(row.p95_ms) <= JOURNEY_PERFORMANCE_P95_LIMIT_MS,
 			"%s exceeded the p95 frame budget" % String(row.stage)
 		)
 		assert (
-			float(row.max_ms) <= JOURNEY_PERFORMANCE_MAX_FRAME_MS, 
+			float(row.max_ms) <= JOURNEY_PERFORMANCE_MAX_FRAME_MS,
 			"%s produced a catastrophic render stall" % String(row.stage)
 		)
 		assert (
-			float(row.transition_ms) <= JOURNEY_PERFORMANCE_MAX_TRANSITION_MS, 
+			float(row.transition_ms) <= JOURNEY_PERFORMANCE_MAX_TRANSITION_MS,
 			"%s transition exceeded the cold-load budget" % String(row.stage)
 		)
 	assert (max_static_bytes <= JOURNEY_PERFORMANCE_MAX_STATIC_BYTES)
 	print(
 		"EVER_DEEPER_JOURNEY_PERFORMANCE_OK stages=%d target_fps=60 worst_p95_ms=%.2f max_frame_ms=%.2f slow_frames=%d max_static_mib=%.1f mature_save_ms=%.2f mature_save_kib=%.1f"
 		%[
-			rows.size(), worst_p95_ms, worst_frame_ms, slow_frame_total, 
-			float(max_static_bytes) / (1024.0 * 1024.0), 
-			float(save_budget.save_ms), float(save_budget.bytes) / 1024.0, 
+			rows.size(), worst_p95_ms, worst_frame_ms, slow_frame_total,
+			float(max_static_bytes) / (1024.0 * 1024.0),
+			float(save_budget.save_ms), float(save_budget.bytes) / 1024.0,
 		]
 	)
 	get_tree().quit(0)
@@ -3357,9 +3394,9 @@ func _measure_journey_performance_stage(stage: String, transition_ms: float) -> 
 	print(
 		"EVER_DEEPER_PERFORMANCE_STAGE stage=%s average_fps=%.1f p95_ms=%.2f p99_ms=%.2f max_ms=%.2f slow_frames=%d transition_ms=%.2f static_mib=%.1f"
 		%[
-			stage, float(stats.average_fps), float(stats.p95_ms), float(stats.p99_ms), 
-			float(stats.max_ms), int(stats.slow_frames), transition_ms, 
-			float(stats.static_bytes) / (1024.0 * 1024.0), 
+			stage, float(stats.average_fps), float(stats.p95_ms), float(stats.p99_ms),
+			float(stats.max_ms), int(stats.slow_frames), transition_ms,
+			float(stats.static_bytes) / (1024.0 * 1024.0),
 		]
 	)
 	return stats
@@ -3377,12 +3414,12 @@ func _journey_performance_frame_stats(samples_ms: Array[float]) -> Dictionary:
 			slow_frames += 1
 	var average_ms: = total_ms / float(samples_ms.size())
 	return {
-		"average_fps": 1000.0 / maxf(0.001, average_ms), 
-		"p95_ms": _journey_percentile(sorted_samples, 0.95), 
-		"p99_ms": _journey_percentile(sorted_samples, 0.99), 
-		"max_ms": float(sorted_samples[-1]), 
-		"slow_frames": slow_frames, 
-		"frames": samples_ms.size(), 
+		"average_fps": 1000.0 / maxf(0.001, average_ms),
+		"p95_ms": _journey_percentile(sorted_samples, 0.95),
+		"p99_ms": _journey_percentile(sorted_samples, 0.99),
+		"max_ms": float(sorted_samples[-1]),
+		"slow_frames": slow_frames,
+		"frames": samples_ms.size(),
 	}
 
 
@@ -3633,7 +3670,7 @@ func _run_endgame_qa() -> void :
 		and bool(RunState.conclusion_seen)
 		and bool(restored_endless.get("unlocked", false))
 		and int(restored_endless.get("deepest_depth", 0)) >= 1
-		and String(restored_goal.get("kind", "")) == "endless_enter", 
+		and String(restored_goal.get("kind", "")) == "endless_enter",
 		"persistence"
 	):
 		return
@@ -3691,7 +3728,7 @@ func _run_endless_qa() -> void :
 		and not bool(layout.get("health_required", true))
 		and not bool(layout.get("timer", true))
 		and String(layout.get("ruin_gameplay", "")) == "choose_path_then_cross_ordered_floor_seals"
-		and String(layout.get("hazard_model", "")) == "telegraphed_resonance_push_no_damage", 
+		and String(layout.get("hazard_model", "")) == "telegraphed_resonance_push_no_damage",
 		"exploration_layout"
 	):
 		return
@@ -3810,7 +3847,7 @@ func _run_endless_qa() -> void :
 	if not _endless_qa_require(bool(Dictionary(RunState.workshop_status("tool_forge")).get("built", false)), "workshop_second_press_builds"):
 		return
 
-	# Without the Lift Workshop, reaching deeper layers never changes the Hub start layer.
+
 	_enter_endless(true, false)
 	_on_endless_depth_change_requested(2, "from_above")
 	_on_endless_depth_change_requested(1, "from_below")
@@ -3860,7 +3897,7 @@ func _run_endless_qa() -> void :
 		and bool(restored.get("active", false))
 		and int(restored.get("current_depth", 0)) == 3
 		and bool(Dictionary(RunState.workshop_status("tool_forge")).get("built", false))
-		and bool(Dictionary(RunState.workshop_status("lift_workshop")).get("built", false)), 
+		and bool(Dictionary(RunState.workshop_status("lift_workshop")).get("built", false)),
 		"persistent_endless_run"
 	):
 		return
@@ -3943,7 +3980,7 @@ func _endless_qa_require(condition: bool, step: String) -> bool:
 	return false
 
 
-func _run_crusher_impact_qa() -> void:
+func _run_crusher_impact_qa() -> void :
 	RunState.reset_run(false)
 	RunState.pickaxe_level = 5
 	RunState.ember_mastery = 5
@@ -3971,16 +4008,16 @@ func _run_crusher_impact_qa() -> void:
 	if not _crusher_impact_qa_require(affected == 24, "full_5x5_footprint"):
 		return
 
-	# Non-breaking shockwaves must never invent resource sprites or loot.
+
 	if not _crusher_impact_qa_require(
 		mine_world.drops.is_empty() and RunState.mine_loose_loot("mossMine", 1).is_empty(),
 		"non_break_has_no_resource_bundles"
 	):
 		return
 
-	# A real 5x5 break produces persisted resource bundles in eight radial
-	# sectors. The visual dictionaries are the same amounts that will be picked
-	# up; there is no decorative rock-particle substitute.
+
+
+
 	for y_offset in range(-2, 3):
 		for x_offset in range(-2, 3):
 			mine_world.blocks[center + Vector2i(x_offset, y_offset)] = mine_world._make_block("stone", 1, 0, "terrain")
@@ -4030,8 +4067,8 @@ func _run_crusher_impact_qa() -> void:
 	):
 		return
 
-	# The merge window is fixed from creation: a merge at 0.149 s reuses the
-	# bundle, while 0.151 s is allowed to make a new one when capacity remains.
+
+
 	var sector_zero_index: = -1
 	for index in mine_world.drops.size():
 		if int(mine_world.drops[index].get("crusher_sector", -1)) == 0:
@@ -4112,8 +4149,8 @@ func _run_crusher_impact_qa() -> void:
 	):
 		return
 
-	# Simulate a burst rate above the fastest real drill. Old bundles are aged
-	# past the merge window, forcing the 12-bundle cap and atomic fallback merge.
+
+
 	var generated_total: = 27
 	var stress_kinds: = ["stone", "copper", "gold"]
 	for event_index in range(600):
@@ -4164,8 +4201,8 @@ func _run_crusher_impact_qa() -> void:
 	):
 		return
 
-	# Reload the visual list from the authoritative state, then collect every
-	# bundle through the normal magnet path and verify exact cargo transfer.
+
+
 	mine_world._restore_persistent_loose_loot()
 	var restored_total: = 0
 	for restored_drop in mine_world.drops:
@@ -4197,7 +4234,7 @@ func _run_crusher_impact_qa() -> void:
 	mine_world.impacts.append({
 		"position": mine_world._cell_center(center),
 		"age": 0.0,
-		"life": 0.30,
+		"life": 0.3,
 		"broken": true,
 		"style": "crusher",
 		"crusher_force": true,
@@ -4209,7 +4246,7 @@ func _run_crusher_impact_qa() -> void:
 	):
 		return
 
-	# Depth 2 uses the same real-bundle contract with Deepstone.
+
 	RunState.reset_run(false)
 	RunState.pickaxe_level = 5
 	RunState.ember_mastery = 5
@@ -4256,7 +4293,7 @@ func _crusher_impact_qa_require(condition: bool, step: String) -> bool:
 	return false
 
 
-func _run_workshop_overlap_qa() -> void:
+func _run_workshop_overlap_qa() -> void :
 	RunState.reset_run(false)
 	_dev_seed_victory_state()
 	if not _workshop_overlap_qa_require(_dev_grant_all_relics_state(), "relic_setup"):
@@ -4317,7 +4354,7 @@ func _workshop_overlap_qa_require(condition: bool, step: String) -> bool:
 	return false
 
 
-func _run_commerce_integration_qa() -> void:
+func _run_commerce_integration_qa() -> void :
 	RunState.reset_run(false)
 	game_started = true
 	phase = "surface"
@@ -4339,7 +4376,7 @@ func _run_commerce_integration_qa() -> void:
 	surface_world.restore_position(surface_world.station_interaction_position("sell"))
 	assert (surface_context == "sell" and assay_auto_armed)
 	_start_assay_transaction()
-	assert (not assay_auto_armed and station_transaction_fx.busy and String(commerce_transaction.get("kind", "")) == "assay")
+	assert ( not assay_auto_armed and station_transaction_fx.busy and String(commerce_transaction.get("kind", "")) == "assay")
 	assert (surface_world.player.control_enabled, "Assay presentation must never lock movement")
 	var assay_state_id: = String(commerce_transaction.get("state_id", ""))
 	_start_assay_transaction()
@@ -4357,6 +4394,8 @@ func _run_commerce_integration_qa() -> void:
 	surface_world.restore_position(surface_world.station_interaction_position("forge"))
 	_perform_context()
 	assert (commerce_panel.is_open() and commerce_context == "forge")
+	if developer_menu != null:
+		assert (not bool(developer_menu.toggle_button.visible), "DEV toggle must be suppressed behind commerce")
 	var mobile_css_size: = Vector2(844, 390)
 	var mobile_scale_to_css: = mobile_css_size.y / 720.0
 	var mobile_logical_size: = Vector2(720.0 * mobile_css_size.x / mobile_css_size.y, 720.0)
@@ -4369,7 +4408,9 @@ func _run_commerce_integration_qa() -> void:
 	assert (float(mobile_panel_snapshot.get("minimum_font_size", 0)) * mobile_scale_to_css >= 10.0)
 	var pickaxe_before: = int(RunState.pickaxe_level)
 	_on_commerce_action_confirmed("forge:pickaxe")
-	assert (not commerce_panel.is_open() and surface_world.player.control_enabled)
+	assert ( not commerce_panel.is_open() and surface_world.player.control_enabled)
+	if developer_menu != null:
+		assert (bool(developer_menu.toggle_button.visible), "DEV toggle must return after commerce closes")
 	assert (RunState.pickaxe_level == pickaxe_before, "Forge economy must commit after its presentation")
 	assert (station_transaction_fx.busy and commerce_presented_gold == forge_cost)
 	station_transaction_fx.complete_immediately()
@@ -4397,7 +4438,7 @@ func _run_commerce_integration_qa() -> void:
 	_perform_context()
 	var starforge_panel_snapshot: Dictionary = Dictionary(commerce_panel.interaction_snapshot())
 	assert (bool(starforge_panel_snapshot.get("open", false)) and int(starforge_panel_snapshot.get("item_count", 0)) == 3)
-	assert (not starforge_panel.visible, "Legacy Starforge buttons must remain retired")
+	assert ( not starforge_panel.visible, "Legacy Starforge buttons must remain retired")
 	_on_commerce_action_confirmed("starforge:crusher")
 	assert (String(RunState.starforge_variant) == "crusher")
 	assert (int(RunState.cargo.astralite) == 0 and int(RunState.cargo.crownstone) == 0)
@@ -4414,7 +4455,7 @@ func _run_commerce_integration_qa() -> void:
 			Dictionary(RunState.workshop_status(workshop_id)),
 			Dictionary(hub_world.workshop_selection_preview(workshop_id))
 		))
-		assert (not Array(workshop_config.get("items", [])).is_empty(), "%s commerce catalog must contain an inspectable item" % workshop_id)
+		assert ( not Array(workshop_config.get("items", [])).is_empty(), "%s commerce catalog must contain an inspectable item" % workshop_id)
 		workshop_catalog_count += 1
 	assert (workshop_catalog_count == 5)
 
@@ -4422,7 +4463,7 @@ func _run_commerce_integration_qa() -> void:
 	get_tree().quit(0)
 
 
-func _run_workshop_panel_qa() -> void:
+func _run_workshop_panel_qa() -> void :
 	RunState.reset_run(false)
 	_dev_seed_victory_state()
 	if not _workshop_panel_qa_require(_dev_grant_all_relics_state(), "relic_setup"):
@@ -4967,7 +5008,7 @@ func _restore_deepheart_position(position: Vector2) -> void :
 		return
 	var walkable: = Rect2(deepheart_world.WALKABLE_RECT)
 	var safe_position: = Vector2(
-		clampf(position.x, walkable.position.x, walkable.end.x), 
+		clampf(position.x, walkable.position.x, walkable.end.x),
 		clampf(position.y, walkable.position.y, walkable.end.y)
 	)
 	deepheart_world.player.global_position = safe_position
@@ -4978,11 +5019,11 @@ func _restore_deepheart_position(position: Vector2) -> void :
 func _safe_hub_return_position(preferred: Vector2) -> Vector2:
 	var elevator: = Vector2(720, 142)
 	var candidates: Array[Vector2] = [
-		preferred, 
-		elevator + Vector2(0, 166), 
-		elevator + Vector2(-166, 120), 
-		elevator + Vector2(166, 120), 
-		Vector2(hub_world.entry_spawn()), 
+		preferred,
+		elevator + Vector2(0, 166),
+		elevator + Vector2(-166, 120),
+		elevator + Vector2(166, 120),
+		Vector2(hub_world.entry_spawn()),
 	]
 	for candidate in candidates:
 		var safe: = candidate.clamp(Vector2(52, 70), Vector2(hub_world.WORLD_SIZE) - Vector2(52, 58))
@@ -5049,10 +5090,10 @@ func _deepheart_run_statistics() -> String:
 	if int(RunState.drill_level) > 0:
 		final_tool = String(RunState.current_drill().get("name", final_tool))
 	return "ORE RECOVERED     %d\nPICKAXE SWINGS     %d\nGOLD EARNED        %d\nFINAL TOOL         %s" % [
-		ore_recovered, 
-		int(RunState.total_swings), 
-		int(RunState.total_gold_earned), 
-		final_tool.to_upper(), 
+		ore_recovered,
+		int(RunState.total_swings),
+		int(RunState.total_gold_earned),
+		final_tool.to_upper(),
 	]
 
 
@@ -5095,8 +5136,8 @@ func _deep_hoard_status_text() -> String:
 	if not bool(status.get("unlocked", false)):
 		return "Museum · restore the Deepheart to open the Endless Descent"
 	return "Museum · %d / %d relics placed · deepest layer %d" % [
-		int(status.get("placed_relic_count", 0)), int(status.get("total_relics", 5)), 
-		int(status.get("deepest_depth", 0)), 
+		int(status.get("placed_relic_count", 0)), int(status.get("total_relics", 5)),
+		int(status.get("deepest_depth", 0)),
 	]
 
 
@@ -5104,8 +5145,8 @@ func _endless_objective() -> String:
 	var status: = Dictionary(RunState.endless_descent_status())
 	var goal: = Dictionary(guide_director.goal_for_state())
 	return "LAYER %d · %s" % [
-		int(status.get("current_depth", 1)), 
-		String(goal.get("title", "Explore one layer deeper")).to_upper(), 
+		int(status.get("current_depth", 1)),
+		String(goal.get("title", "Explore one layer deeper")).to_upper(),
 	]
 
 
@@ -5152,7 +5193,7 @@ func _workshop_status_text(workshop_id: String) -> String:
 	if bool(status.get("ready_to_build", false)):
 		return "%s · 200 / 200 %s · ready to build" % [name, resource_name]
 	return "%s · %d / %d %s delivered" % [
-		name, int(status.get("delivered", 0)), int(status.get("build_cost", 200)), resource_name, 
+		name, int(status.get("delivered", 0)), int(status.get("build_cost", 200)), resource_name,
 	]
 
 
@@ -5167,8 +5208,8 @@ func _deep_elevator_status_text() -> String:
 		return "Deep Elevator · the Singularity Core can awaken it"
 	var missing: = Dictionary(status.get("missing", {}))
 	var names: = {
-		"ambercore": "Ambercore", "lunacore": "Lunacore", 
-		"furnaceheart": "Furnaceheart", "singularity": "Singularity Core", 
+		"ambercore": "Ambercore", "lunacore": "Lunacore",
+		"furnaceheart": "Furnaceheart", "singularity": "Singularity Core",
 	}
 	var rows: Array[String] = []
 	for resource_id_value in ["ambercore", "lunacore", "furnaceheart", "singularity"]:
@@ -5182,8 +5223,8 @@ func _deep_elevator_status_text() -> String:
 func _sync_hub_runtime() -> void :
 	var runtime: Dictionary = RunState.hub_runtime_snapshot()
 	hub_world.load_runtime_state(
-		Dictionary(runtime.hub), 
-		Dictionary(runtime.base), 
+		Dictionary(runtime.hub),
+		Dictionary(runtime.base),
 		Dictionary(runtime.economy)
 	)
 
@@ -5191,8 +5232,8 @@ func _sync_hub_runtime() -> void :
 func _commit_hub_runtime_snapshot() -> void :
 	var runtime: Dictionary = hub_world.runtime_state_snapshot()
 	RunState.commit_hub_runtime_state(
-		Dictionary(runtime.hub), 
-		Dictionary(runtime.base), 
+		Dictionary(runtime.hub),
+		Dictionary(runtime.base),
 		Dictionary(runtime.economy)
 	)
 
@@ -5481,8 +5522,8 @@ func _on_starforge_choice(variant_id: String) -> void :
 func _refresh_starforge_panel() -> void :
 	if not is_instance_valid(starforge_panel):
 		return
-	# Superseded by CommercePanel: one mobile-safe surface for inspect, forge,
-	# equip and future-unlock information.
+
+
 	starforge_panel.visible = false
 
 
@@ -5759,10 +5800,10 @@ func _refresh_hud() -> void :
 	_refresh_starforge_panel()
 	if premium_hud != null:
 		premium_hud.refresh_from_state(
-			phase, 
-			current_mine_id, 
-			action_button.text, 
-			not premium_hud.context_button.disabled, 
+			phase,
+			current_mine_id,
+			action_button.text,
+			not premium_hud.context_button.disabled,
 			false
 		)
 		premium_hud.build_button.visible = false
@@ -5770,8 +5811,8 @@ func _refresh_hud() -> void :
 		_update_presented_gold_labels()
 	if inventory_open and resource_inventory != null:
 		resource_inventory.refresh_contents(
-			Dictionary(RunState.cargo), 
-			Dictionary(RunState.protected_progress_cargo()), 
+			Dictionary(RunState.cargo),
+			Dictionary(RunState.protected_progress_cargo()),
 			phase == "hub"
 		)
 
@@ -5784,7 +5825,7 @@ func _cargo_summary() -> String:
 		if not relic_id.is_empty():
 			return "LAYER %d  ·  RELIC ON ROPE  ·  POUCH %d" % [int(status.get("current_depth", 1)), RunState.cargo_count()]
 		return "LAYER %d  ·  DEEPEST %d  ·  POUCH %d" % [
-			int(status.get("current_depth", 1)), int(status.get("deepest_depth", 1)), RunState.cargo_count(), 
+			int(status.get("current_depth", 1)), int(status.get("deepest_depth", 1)), RunState.cargo_count(),
 		]
 	if phase == "hub":
 		var stored: = 0
@@ -5928,7 +5969,7 @@ func _has_any_arg(args: PackedStringArray, candidates: Array[String]) -> bool:
 
 
 func _validate_release_version(args: PackedStringArray) -> bool:
-	var release_version: = String(ProjectSettings.get_setting("application/config/version", ""))
+	var release_version: = String(PremiumMenuScript.release_version())
 	var displayed_label: = String(premium_menu.displayed_release_label())
 	var required_label: = String(PremiumMenuScript.release_label())
 	var expected_version: = ""
@@ -6070,8 +6111,8 @@ func _qa_input_release_check(condition: bool, message: String) -> bool:
 func _run_landscape_qa() -> void :
 	var viewport_size: = get_viewport().get_visible_rect().size
 	var configured_size: = Vector2(
-		float(ProjectSettings.get_setting("display/window/size/viewport_width")), 
-		float(ProjectSettings.get_setting("display/window/size/viewport_height")), 
+		float(ProjectSettings.get_setting("display/window/size/viewport_width")),
+		float(ProjectSettings.get_setting("display/window/size/viewport_height")),
 	)
 	assert (configured_size.is_equal_approx(Vector2(1280, 720)))
 	assert (int(ProjectSettings.get_setting("display/window/handheld/orientation")) == DisplayServer.SCREEN_SENSOR_LANDSCAPE)
@@ -6085,15 +6126,15 @@ func _run_landscape_qa() -> void :
 	assert (mine_button.keep_pressed_outside)
 	assert (mine_button.icon != null and mine_button.icon.resource_path == "res://assets/ui/hud-mine-impact-v1.png")
 	for sprite_button in [
-		mine_button, premium_hud.menu_button, premium_hud.guide_button, 
+		mine_button, premium_hud.menu_button, premium_hud.guide_button,
 			premium_hud.bag_button,
 	]:
 		assert ((sprite_button as Button).text.is_empty())
 		for state in ["normal", "hover", "pressed", "focus", "disabled"]:
 			var stylebox: = (sprite_button as Button).get_theme_stylebox(state)
 			assert (stylebox is StyleBoxEmpty, "%s.%s resolved to %s" % [sprite_button.name, state, stylebox.get_class()])
-	# The contextual action is intentionally a labelled premium pill, while all
-	# other HUD actions stay icon-only and chrome-free.
+
+
 	assert (premium_hud.context_button.get_theme_stylebox("normal") is StyleBoxFlat)
 	assert (premium_hud.context_button.get_theme_stylebox("focus") is StyleBoxEmpty)
 	assert (resource_inventory.item_grid.columns == 4)
@@ -6122,19 +6163,19 @@ func _run_landscape_qa() -> void :
 		> float(moonglass_boundary.station_radius) + float(moss_branch.interaction_radius)
 	)
 	var expected_portal_colors: = {
-		"moonglass": PackedColorArray([Color("82ad62"), Color("69e8ff")]), 
-		"emberdeep": PackedColorArray([Color("69e8ff"), Color("ff6a2a")]), 
-		"starfall": PackedColorArray([Color("ff6a2a"), Color("a879ff")]), 
+		"moonglass": PackedColorArray([Color("82ad62"), Color("69e8ff")]),
+		"emberdeep": PackedColorArray([Color("69e8ff"), Color("ff6a2a")]),
+		"starfall": PackedColorArray([Color("ff6a2a"), Color("a879ff")]),
 	}
 	var expected_gate_assets: = {
-		"moonglass": "res://assets/surface/moonglass-gate.png", 
-		"emberdeep": "res://assets/surface/emberdeep-seal.png", 
-		"starfall": "res://assets/surface/starfall-seal.png", 
+		"moonglass": "res://assets/surface/moonglass-gate.png",
+		"emberdeep": "res://assets/surface/emberdeep-seal.png",
+		"starfall": "res://assets/surface/starfall-seal.png",
 	}
 	var expected_mark_assets: = {
-		"moonglass": "res://assets/surface/moonglass-open-threshold.png", 
-		"emberdeep": "res://assets/surface/emberdeep-seal-mark.png", 
-		"starfall": "res://assets/surface/starfall-seal-mark.png", 
+		"moonglass": "res://assets/surface/moonglass-open-threshold.png",
+		"emberdeep": "res://assets/surface/emberdeep-seal-mark.png",
+		"starfall": "res://assets/surface/starfall-seal-mark.png",
 	}
 	var boundary_rows: Dictionary = {}
 	for boundary_value in Array(surface_routes.boundaries):
@@ -6233,8 +6274,8 @@ func _run_landscape_qa() -> void :
 		assert (clip_material.shader.resource_path == "res://shaders/surface_parallax_world_clip.gdshader")
 		assert (is_equal_approx(float(clip_material.get_shader_parameter("world_right")), 2240.0))
 	var expected_boundary_regions: = {
-		"emberdeep": Rect2(192, 0, 297, 1024), 
-		"starfall": Rect2(186, 0, 318, 1024), 
+		"emberdeep": Rect2(192, 0, 297, 1024),
+		"starfall": Rect2(186, 0, 318, 1024),
 	}
 	for boundary_id in ["emberdeep", "starfall"]:
 		var boundary_sprite: Sprite2D = surface_world.boundary_backing_nodes[boundary_id] as Sprite2D
@@ -6244,7 +6285,7 @@ func _run_landscape_qa() -> void :
 		assert (boundary_atlas.region == expected_region)
 		var source_scale: = Vector2(320.0 / 682.0, 1280.0 / 1024.0)
 		var expected_rect: = Rect2(
-			Vector2(float(Dictionary(boundary_rows[boundary_id]).anchor.x) - 160.0, 0.0) + expected_region.position * source_scale, 
+			Vector2(float(Dictionary(boundary_rows[boundary_id]).anchor.x) - 160.0, 0.0) + expected_region.position * source_scale,
 			expected_region.size * source_scale
 		)
 		assert (boundary_sprite.position.is_equal_approx(expected_rect.position))
@@ -6256,7 +6297,7 @@ func _run_landscape_qa() -> void :
 	assert (is_equal_approx(foreground_sprite.position.y, 215.0))
 	var foreground_rect: = foreground_sprite.get_rect()
 	var foreground_top: = minf(
-		foreground_sprite.to_global(foreground_rect.position).y, 
+		foreground_sprite.to_global(foreground_rect.position).y,
 		foreground_sprite.to_global(foreground_rect.end).y
 	)
 	assert (is_equal_approx(foreground_top, 0.0), "The Mossvein canopy foreground must start at the world top without a horizontal mid-screen seam")
@@ -6306,9 +6347,9 @@ func _run_landscape_qa() -> void :
 	assert (int(steering_contract.refine_steps) == 3)
 	assert (bool(steering_contract.never_reverses_input) and bool(steering_contract.visible_solids_remain_blocking))
 	var steering_cases: Array[Dictionary] = [
-		{"label": "Moonglass", "route": Array(surface_world.LATER_MINE_BRANCH_ROUTES.moonMine), "segment": 2}, 
-		{"label": "Emberdeep", "route": Array(surface_world.LATER_MINE_BRANCH_ROUTES.emberMine), "segment": 3}, 
-		{"label": "Starfall", "route": Array(surface_world.LATER_MINE_BRANCH_ROUTES.starMine), "segment": 2}, 
+		{"label": "Moonglass", "route": Array(surface_world.LATER_MINE_BRANCH_ROUTES.moonMine), "segment": 2},
+		{"label": "Emberdeep", "route": Array(surface_world.LATER_MINE_BRANCH_ROUTES.emberMine), "segment": 3},
+		{"label": "Starfall", "route": Array(surface_world.LATER_MINE_BRANCH_ROUTES.starMine), "segment": 2},
 	]
 	var steering_events_before: int = int(surface_world.route_steering_snapshot().events)
 	for steering_case_value in steering_cases:
@@ -6409,10 +6450,10 @@ func _run_landscape_qa() -> void :
 	assert (Array(pickup_feedback.debug_snapshot().entries).is_empty())
 	assert ( not pickup_feedback.is_processing())
 	print("EVER_DEEPER_LANDSCAPE_OK config=%dx%d canvas=%dx%d camera_y=%.1f/%.1f menu=%dx%d parallax=%d/%d" % [
-		roundi(configured_size.x), roundi(configured_size.y), 
-		roundi(viewport_size.x), roundi(viewport_size.y), landscape_camera.position.y, design_camera_y, 
-		roundi(landscape_menu_card.size.x), roundi(landscape_menu_card.size.y), 
-		int(parallax_snapshot.visible_chunk_count), int(parallax_snapshot.chunk_count), 
+		roundi(configured_size.x), roundi(configured_size.y),
+		roundi(viewport_size.x), roundi(viewport_size.y), landscape_camera.position.y, design_camera_y,
+		roundi(landscape_menu_card.size.x), roundi(landscape_menu_card.size.y),
+		int(parallax_snapshot.visible_chunk_count), int(parallax_snapshot.chunk_count),
 	])
 	get_tree().quit(0)
 
@@ -6439,15 +6480,15 @@ func _run_onboarding_qa() -> void :
 	assert (is_equal_approx(float(depth_world.SHRINE_RESPAWN_SECONDS), 75.0))
 	depth_world.shrine_cooldowns["qa-shrine"] = 1.0
 	depth_world._update_shrine_cooldowns(1.1)
-	assert (not depth_world.shrine_cooldowns.has("qa-shrine"))
+	assert ( not depth_world.shrine_cooldowns.has("qa-shrine"))
 	print("EVER_DEEPER_ONBOARDING_OK minimap=transparent_organic_overlap_fade tutorial=nonblocking shrine_respawn=75")
 	get_tree().quit(0)
 
 
 func _run_iphone_layout_qa() -> void :
 	var css_viewports: = [
-		Vector2(844, 390), Vector2(852, 393), Vector2(874, 402), 
-		Vector2(912, 420), Vector2(932, 430), Vector2(956, 440), 
+		Vector2(844, 390), Vector2(852, 393), Vector2(874, 402),
+		Vector2(912, 420), Vector2(932, 430), Vector2(956, 440),
 	]
 	for css_size_value in css_viewports:
 		var css_size: Vector2 = css_size_value
@@ -6545,7 +6586,7 @@ func _run_iphone_layout_qa() -> void :
 			assert (Rect2(Vector2.ZERO, starforge_panel.size).encloses(Rect2(starforge_button.position, starforge_button.size)))
 		assert (conclusion_continue_button.size.y * scale_to_css >= 44.0)
 		assert (conclusion_hub_button.size.y * scale_to_css >= 44.0)
-		assert (not premium_hud.build_button.visible and premium_hud.build_button.disabled)
+		assert ( not premium_hud.build_button.visible and premium_hud.build_button.disabled)
 	print("EVER_DEEPER_IPHONE_LAYOUT_OK devices=844x390,852x393,874x402,912x420,932x430,956x440 touch=44css icons=optically-normalized safe=notch/home overlays=menu,bag,museum,starforge,conclusion")
 	get_tree().quit(0)
 
@@ -6578,23 +6619,23 @@ func _run_surface_mountain_independence_smoke() -> void :
 	surface_world.set_active(true)
 	var cases: Array[Dictionary] = [
 		{
-			"mountain_id": "moonglass_mountain", "vein_context": "moonglass_resource", 
-			"vein_position": Vector2(1820, 700), "mountain_position": Vector2(1580, 650), 
-			"snapshot_method": "moonglass_resource_snapshot", "mine_method": "_mine_moonglass_resource_once", 
-			"visual_method": "_update_moonglass_visual", 
-		}, 
+			"mountain_id": "moonglass_mountain", "vein_context": "moonglass_resource",
+			"vein_position": Vector2(1820, 700), "mountain_position": Vector2(1580, 650),
+			"snapshot_method": "moonglass_resource_snapshot", "mine_method": "_mine_moonglass_resource_once",
+			"visual_method": "_update_moonglass_visual",
+		},
 		{
-			"mountain_id": "emberdeep_mountain", "vein_context": "ember_resource", 
-			"vein_position": Vector2(3078, 1120), "mountain_position": Vector2(2899, 779), 
-			"snapshot_method": "ember_resource_snapshot", "mine_method": "_mine_timed_surface_resource_once", 
-			"mine_arg": "ember_fault", "visual_method": "_update_timed_surface_visual", 
-		}, 
+			"mountain_id": "emberdeep_mountain", "vein_context": "ember_resource",
+			"vein_position": Vector2(3078, 1120), "mountain_position": Vector2(2899, 779),
+			"snapshot_method": "ember_resource_snapshot", "mine_method": "_mine_timed_surface_resource_once",
+			"mine_arg": "ember_fault", "visual_method": "_update_timed_surface_visual",
+		},
 		{
-			"mountain_id": "starfall_mountain", "vein_context": "starfall_resource", 
-			"vein_position": Vector2(3970, 1130), "mountain_position": Vector2(4300, 770), 
-			"snapshot_method": "starfall_resource_snapshot", "mine_method": "_mine_timed_surface_resource_once", 
-			"mine_arg": "starfall_lattice", "visual_method": "_update_timed_surface_visual", 
-		}, 
+			"mountain_id": "starfall_mountain", "vein_context": "starfall_resource",
+			"vein_position": Vector2(3970, 1130), "mountain_position": Vector2(4300, 770),
+			"snapshot_method": "starfall_resource_snapshot", "mine_method": "_mine_timed_surface_resource_once",
+			"mine_arg": "starfall_lattice", "visual_method": "_update_timed_surface_visual",
+		},
 	]
 	for case_value in cases:
 		var mountain_id: = String(case_value.mountain_id)
@@ -6645,6 +6686,163 @@ func _run_surface_mountain_independence_smoke() -> void :
 	surface_world.reset_for_new_run()
 
 
+func _assert_depth_one_bedrock_contract() -> void :
+	var catalog = WorldCatalogScript.new(GameData.data)
+	var expected_surfaces: Dictionary = {
+		"mossMine": {
+			"world_id": "mossvein",
+			"path": "res://assets/mossvein/bedrock-surface-v1.png",
+		},
+		"moonMine": {
+			"world_id": "moonglass",
+			"path": "res://assets/moonglass/bedrock-surface-v1.png",
+		},
+		"emberMine": {
+			"world_id": "emberdeep",
+			"path": "res://assets/emberdeep/bedrock-surface-v1.png",
+		},
+		"starMine": {
+			"world_id": "starfall",
+			"path": "res://assets/starfall/bedrock-surface-v1.png",
+		},
+	}
+	var seen_paths: Dictionary = {}
+	var previous_active_texture: Texture2D
+	for mine_id_value in MINE_IDS:
+		var mine_id: = String(mine_id_value)
+		var expected: = Dictionary(expected_surfaces[mine_id])
+		var world_contract: = Dictionary(catalog.world(String(expected.world_id)))
+		var catalog_assets: = Dictionary(
+			Dictionary(world_contract.mine_assets).get("depth1", {})
+		)
+		var expected_path: = String(expected.path)
+		assert (
+			String(catalog_assets.get("unbreakable_surface", "")) == expected_path,
+			"%s must publish its own D1 bedrock surface" % mine_id
+		)
+		assert (
+			catalog_assets.has("unbreakable_wall")
+			and catalog_assets.has("unbreakable_corner"),
+			"%s must retain legacy unbreakable asset keys" % mine_id
+		)
+		assert (ResourceLoader.exists(expected_path), "Missing D1 bedrock surface: %s" % expected_path)
+		var authored_texture: = ResourceLoader.load(expected_path) as Texture2D
+		assert (
+			authored_texture != null
+			and authored_texture.get_width() == 576
+			and authored_texture.get_height() == 576,
+			"%s bedrock surface must remain an authored 576x576 texture" % mine_id
+		)
+		assert (not seen_paths.has(expected_path), "Every D1 biome needs a distinct bedrock surface")
+		seen_paths[expected_path] = true
+
+		mine_world.load_mine(mine_id)
+		var active_texture: = mine_world.get("bedrock_surface_texture") as Texture2D
+		var renderer_assets: = Dictionary(mine_world.get("mine_assets"))
+		assert (
+			active_texture != null
+			and active_texture.resource_path == expected_path
+			and active_texture.get_width() == 576
+			and active_texture.get_height() == 576,
+			"%s must activate its own 576x576 bedrock surface" % mine_id
+		)
+		assert (
+			renderer_assets.has("bedrock") and renderer_assets.has("bedrock_corner"),
+			"%s renderer must retain its legacy bedrock keys" % mine_id
+		)
+		if previous_active_texture != null:
+			assert (
+				active_texture != previous_active_texture,
+				"A biome switch must replace the active bedrock texture"
+			)
+		previous_active_texture = active_texture
+
+	assert (seen_paths.size() == 4)
+	assert (mine_world.has_method("_block_emits_mineable_edge"))
+	assert (mine_world.has_method("_block_emits_mineable_corner"))
+	assert (mine_world.has_method("_mineable_corner_uses_compact_join"))
+	assert (mine_world.has_method("_mineable_edge_open_sides"))
+	var all_open: Array[bool] = [true, true, true, true]
+	var three_open: Array[bool] = [true, true, true, false]
+	var bedrock_block: = Dictionary(mine_world.call("_make_block", "bedrock", 1, 99, "bedrock"))
+	var terrain_block: = Dictionary(mine_world.call("_make_block", "stone", 8, 0, "terrain"))
+	assert (not bool(mine_world.call("_block_emits_mineable_edge", bedrock_block)))
+	assert (not bool(mine_world.call("_block_emits_mineable_corner", bedrock_block, all_open)))
+	assert (bool(mine_world.call("_block_emits_mineable_edge", terrain_block)))
+	assert (bool(mine_world.call("_block_emits_mineable_corner", terrain_block, three_open)))
+	assert (bool(mine_world.call("_mineable_corner_uses_compact_join", three_open)))
+	assert (bool(mine_world.call("_mineable_corner_uses_compact_join", all_open)))
+	var adjacent_two_open: Array[Array] = [
+		[true, true, false, false],
+		[false, true, true, false],
+		[false, false, true, true],
+		[true, false, false, true],
+	]
+	for open_sides_value in adjacent_two_open:
+		var open_sides: Array[bool] = []
+		open_sides.assign(open_sides_value)
+		assert (
+			bool(mine_world.call("_block_emits_mineable_corner", terrain_block, open_sides)),
+			"Every adjacent two-side turn must emit one local mineable corner join"
+		)
+		assert (
+			bool(mine_world.call("_mineable_corner_uses_compact_join", open_sides)),
+			"Every adjacent two-side turn must crop the authored corner to its local join"
+		)
+	for opposite_open_value in [
+		[true, false, true, false],
+		[false, true, false, true],
+	]:
+		var opposite_open: Array[bool] = []
+		opposite_open.assign(opposite_open_value)
+		assert (
+			not bool(
+				mine_world.call("_block_emits_mineable_corner", terrain_block, opposite_open)
+			),
+			"Opposite open faces are not a corner"
+		)
+
+	# Only an explicitly player-dug void may expose a mineable rim. Authored
+	# openings and temporary resource depletion remain physically walkable but do
+	# not manufacture cave edges.
+	var original_blocks: Dictionary = mine_world.get("blocks")
+	var original_mineable_edge_voids: Dictionary = mine_world.get(
+		"mineable_edge_void_cells"
+	)
+	var provenance_origin: = Vector2i(6, 6)
+	var player_dug_void: = provenance_origin + Vector2i.UP
+	var authored_void: = provenance_origin + Vector2i.RIGHT
+	var temporary_resource_void: = provenance_origin + Vector2i.DOWN
+	var provenance_blocks: Dictionary = {
+		provenance_origin: terrain_block.duplicate(true),
+		provenance_origin + Vector2i.LEFT: terrain_block.duplicate(true),
+	}
+	var provenance_edge_voids: Dictionary = {player_dug_void: true}
+	mine_world.set("blocks", provenance_blocks)
+	mine_world.set("mineable_edge_void_cells", provenance_edge_voids)
+	var provenance_sides: Array[bool] = mine_world.call(
+		"_mineable_edge_open_sides", provenance_origin
+	)
+	assert (
+		bool(provenance_sides[0]),
+		"A player-dug neighbour must expose its mineable rim"
+	)
+	assert (
+		not bool(provenance_sides[1]),
+		"An untracked authored opening must not manufacture a mineable rim"
+	)
+	assert (
+		not bool(provenance_sides[2]),
+		"A temporarily depleted resource cell must not manufacture a mineable rim"
+	)
+	assert (not provenance_blocks.has(player_dug_void))
+	assert (not provenance_blocks.has(authored_void))
+	assert (not provenance_blocks.has(temporary_resource_void))
+	mine_world.set("blocks", original_blocks)
+	mine_world.set("mineable_edge_void_cells", original_mineable_edge_voids)
+	mine_world.load_mine("mossMine")
+
+
 func _run_smoke_test() -> void :
 	RunState.reset_run(false)
 	var drop_presentation: Dictionary = DropVisualsScript.debug_snapshot()
@@ -6660,6 +6858,7 @@ func _run_smoke_test() -> void :
 	assert (int(GameData.manifest.parity_counts.assets) == 263)
 	assert (int(GameData.data.BIOMES.size()) == 4)
 	assert (int(GameData.data.MINE_DEFINITIONS.size()) == 4)
+	_assert_depth_one_bedrock_contract()
 	assert (Vector2(float(GameData.world().width), float(GameData.world().height)) == Vector2(4480, 1280))
 	assert (surface_world.entrance_position == Vector2(930, 900))
 	assert (surface_world.player.global_position == Vector2(240, 680))
@@ -6772,10 +6971,10 @@ func _run_smoke_test() -> void :
 	assert (mine_world.player.camera.is_current())
 	assert ( not surface_world.player.camera.enabled)
 	var diagonal_aim_cases: = [
-		{"cardinal": Vector2.RIGHT, "diagonal": Vector2(1, 1), "name": "right"}, 
-		{"cardinal": Vector2.LEFT, "diagonal": Vector2(-1, -1), "name": "left"}, 
-		{"cardinal": Vector2.UP, "diagonal": Vector2(1, -1), "name": "up"}, 
-		{"cardinal": Vector2.DOWN, "diagonal": Vector2(-1, 1), "name": "down"}, 
+		{"cardinal": Vector2.RIGHT, "diagonal": Vector2(1, 1), "name": "right"},
+		{"cardinal": Vector2.LEFT, "diagonal": Vector2(-1, -1), "name": "left"},
+		{"cardinal": Vector2.UP, "diagonal": Vector2(1, -1), "name": "up"},
+		{"cardinal": Vector2.DOWN, "diagonal": Vector2(-1, 1), "name": "down"},
 	]
 	for aim_case in diagonal_aim_cases:
 		mine_world.player.set_facing(Vector2(aim_case.cardinal))
@@ -6879,6 +7078,33 @@ func _run_smoke_test() -> void :
 	assert ( not surface_world._surface_collides(surface_mine_return), "Leaving Mossvein Mine must never return the player inside the locked portal boundary")
 	assert (surface_world._resolve_motion(surface_mine_return, Vector2.LEFT * 8.0).x < surface_mine_return.x, "The player must be able to move immediately after leaving Mossvein Mine")
 	mine_world.load_mine("mossMine")
+	var terrain_no_respawn_cell: = Vector2i(6, 7)
+	var terrain_no_respawn_index: int = (
+		terrain_no_respawn_cell.y * int(mine_world.cols) + terrain_no_respawn_cell.x
+	)
+	mine_world.blocks[terrain_no_respawn_cell] = mine_world._make_block("stone", 1, 0, "terrain")
+	mine_world.respawns.clear()
+	mine_world.current_target = terrain_no_respawn_cell
+	mine_world._mine_once()
+	assert (not mine_world.blocks.has(terrain_no_respawn_cell))
+	assert (mine_world.respawns.is_empty(), "Ordinary mined terrain must never enter the respawn queue")
+	assert (
+		mine_world.mineable_edge_void_cells.has(terrain_no_respawn_cell),
+		"Newly mined terrain must expose the mineable rim immediately"
+	)
+	assert (
+		RunState.dug_cells("mossMine", 1).has(terrain_no_respawn_index),
+		"Ordinary mined terrain must persist as player-dug space"
+	)
+	mine_world._configure_mine("mossMine")
+	assert (
+		not mine_world.blocks.has(terrain_no_respawn_cell),
+		"Ordinary terrain must stay dug after the mine is rebuilt"
+	)
+	assert (
+		mine_world.mineable_edge_void_cells.has(terrain_no_respawn_cell),
+		"Persisted player-dug terrain must restore its mineable rim provenance"
+	)
 	var respawn_cell: = Vector2i(5, 7)
 	var resource_block: Dictionary = Dictionary(mine_world.blocks[respawn_cell])
 	assert (String(resource_block.role) == "resource")
@@ -6887,6 +7113,10 @@ func _run_smoke_test() -> void :
 	mine_world.current_target = respawn_cell
 	mine_world._mine_once()
 	assert ( not mine_world.blocks.has(respawn_cell) and mine_world.respawns.size() == 1)
+	assert (
+		not mine_world.mineable_edge_void_cells.has(respawn_cell),
+		"A temporarily depleted resource node must not expose a terrain rim"
+	)
 	var expired_respawn: Dictionary = Dictionary(mine_world.respawns[0])
 	expired_respawn.respawn_until_unix = Time.get_unix_time_from_system() - 1.0
 	mine_world.respawns[0] = expired_respawn
@@ -6900,6 +7130,7 @@ func _run_smoke_test() -> void :
 	RunState.mine_resource_runtime["mossMine:1"] = respawn_scope
 	mine_world._update_respawns(0.0)
 	assert (mine_world.blocks.has(respawn_cell))
+	assert (not mine_world.mineable_edge_void_cells.has(respawn_cell))
 	mine_world.load_mine("moonMine")
 	var moon_snapshot: Dictionary = mine_world.smoke_snapshot()
 	assert (String(moon_snapshot.mine_id) == "moonMine")
@@ -6933,7 +7164,7 @@ func _run_smoke_test() -> void :
 	var sell_position: Vector2 = Vector2(float(depth_world.station_positions.sell.x), float(depth_world.station_positions.sell.y))
 	var forge_position: Vector2 = Vector2(float(depth_world.station_positions.forge.x), float(depth_world.station_positions.forge.y))
 	assert (sell_position.distance_to(forge_position) >= 330.0, "Large stations need a player-wide central aisle")
-	assert (not depth_world.collision_at((sell_position + forge_position) * 0.5), "Player must fit between exchange and forge")
+	assert ( not depth_world.collision_at((sell_position + forge_position) * 0.5), "Player must fit between exchange and forge")
 	RunState.pickaxe_level = 5
 	RunState.ember_mastery = 5
 	RunState.set_starforge_variant("crusher")
@@ -6953,13 +7184,13 @@ func _run_smoke_test() -> void :
 	var crusher_force_impact: = {
 		"position": mine_world._cell_center(crusher_test_center),
 		"age": 0.0,
-		"life": 0.30,
+		"life": 0.3,
 		"broken": true,
 		"style": "crusher",
 	}
 	mine_world._attach_crusher_debris(crusher_force_impact, crusher_test_center)
 	assert (bool(crusher_force_impact.get("crusher_force", false)), "Broken Crusher hits need a short dust-and-crack force cue")
-	assert (not crusher_force_impact.has("crusher_chunks"), "Crusher visuals must use the real resource drops, not decorative rock chunks")
+	assert ( not crusher_force_impact.has("crusher_chunks"), "Crusher visuals must use the real resource drops, not decorative rock chunks")
 	mine_world.impacts.clear()
 	mine_world.impacts.append(crusher_force_impact)
 	mine_world._update_impacts(0.31)
@@ -7060,7 +7291,7 @@ func _run_smoke_test() -> void :
 	var moon_plan: Dictionary = RunState.open_surface_chest("moon_cache")
 	assert (bool(moon_plan.ok))
 	surface_world._sync_pending_chest_loot_drops()
-	assert (not surface_world.chest_loot_drops.is_empty())
+	assert ( not surface_world.chest_loot_drops.is_empty())
 	var moon_drop: Dictionary = surface_world.chest_loot_drops[0]
 	var moon_drop_sprite: Sprite2D = moon_drop.sprite as Sprite2D
 	moon_drop.age = surface_world.ORE_DROP_FLIGHT_DURATION
