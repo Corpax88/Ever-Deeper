@@ -1,21 +1,15 @@
-name: Deploy Ever Deeper v0.42 production + v0.42.0-dev.7 preview
+name: Release Ever Deeper v0.43.0 production and DEV
 
 on:
   push:
     branches: [main]
     paths:
       - '.github/prod-build/index.html'
-      - '.github/release-patch/v0410-to-v0420.xdelta.part*'
+      - '.github/release-patch/v0420-to-v0430.xdelta.part*'
       - '.github/dev-build/index.html'
-      - '.github/dev-patch/prod-v0420-to-dev-v0420-dev7-final.xdelta.part*'
+      - '.github/dev-patch/prod-v0430-to-dev-v0430-dev1.xdelta.part*'
       - '.github/workflows/deploy-dev-preview.yml'
   workflow_dispatch:
-    inputs:
-      deploy_production:
-        description: Re-publish the unchanged v0.42.0 production package to itch.io
-        required: false
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -26,114 +20,169 @@ concurrency:
   group: pages-ever-deeper
   cancel-in-progress: true
 
+env:
+  PAGES_BASE_URL: https://corpax88.github.io/Ever-Deeper
+  PROD_ITCH_CHANNEL: corpax88/ever-deeper-playtest:html5
+  DEV_ITCH_CHANNEL: corpax88/ever-deeper-dev:html5
+  XDELTA_ARCHIVE_SHA256: 480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397
+
+  RUNTIME_APPLE_TOUCH_SHA256: 27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5
+  RUNTIME_AUDIO_POSITION_SHA256: be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8
+  RUNTIME_AUDIO_SHA256: 5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3
+  RUNTIME_ICON_SHA256: 290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec
+  RUNTIME_JS_SHA256: 33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba
+  RUNTIME_SPLASH_SHA256: c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f
+  RUNTIME_WASM_SHA256: fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0
+
+  CURRENT_PROD_HTML_SHA256: a92a9931fee6f05ab2d315e7032ced52f9b8a29c89d50c309a41ff8d3dd0be35
+  CURRENT_PROD_PCK_SHA256: 65a13e3af4a64ce247071cd2d5a75cb14e89bcc0664462753862e212a84549be
+  CURRENT_PROD_PCK_SIZE: '96220476'
+  CURRENT_DEV_HTML_SHA256: 4f8d616acd1d788047b5f22276515db94d3735ec3011c99523aa1dcf1be9b140
+  CURRENT_DEV_PCK_SHA256: 4955fb0e48467eac8a0dc000075e04673e2d45df41744b70af27f17902bcbbfc
+  CURRENT_DEV_PCK_SIZE: '106384772'
+
+  PROD_PATCH_SHA256: 2e4e84f1794508da2d75a68e22f5bbf4a8260d25f4620c295b6c0c07405702de
+  PROD_PATCH_SIZE: '12287318'
+  PROD_PATCH_PARTS: '50'
+  DEV_PATCH_SHA256: 5f5aded19a8599e6ea89f8df1700dc9ac06036c5468dfec042dcfd4591d8056e
+  DEV_PATCH_SIZE: '16074'
+  DEV_PATCH_PARTS: '1'
+
+  PROD_HTML_SHA256: f1a8f9750cd6020f1e2a799a17eb8dd7002b78ced807565e9e9e32c1b073629b
+  PROD_HTML_SIZE: '13446'
+  PROD_PCK_SHA256: 97554f389ea297b8a6cb58345403234e3e044839ebb2b487843583976b028156
+  PROD_PCK_SIZE: '107879936'
+  DEV_HTML_SHA256: e111689c1eb72c1ffc47577d69ed9b54b2a19746dc12bfbcc49661f57282e1f6
+  DEV_HTML_SIZE: '13459'
+  DEV_PCK_SHA256: 50b64de316676fd83daeabe1fb9f36976cc6fdbe39a077cbc9a1ae3a6032fec5
+  DEV_PCK_SIZE: '107894932'
+
 jobs:
   package:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
-      - name: Check out production and DEV release inputs
+      - name: Check out release inputs
         uses: actions/checkout@v4
 
-      - name: Download and verify current production runtime
+      - name: Download and verify current production and DEV baselines
         shell: bash
         run: |
           set -euo pipefail
-          build_dir="$RUNNER_TEMP/ever-deeper-pages"
-          base_url="https://corpax88.github.io/Ever-Deeper"
-          mkdir -p "$build_dir"
+          rollback_dir="$RUNNER_TEMP/ever-deeper-v0420-dev7-rollback"
+          production_dir="$rollback_dir/production"
+          dev_dir="$rollback_dir/dev"
+          cache_key="$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          mkdir -p "$production_dir" "$dev_dir"
 
-          for file in \
-            index.apple-touch-icon.png \
-            index.audio.position.worklet.js \
-            index.audio.worklet.js \
-            index.icon.png \
-            index.js \
-            index.png \
-            index.wasm \
-            index.html \
+          files=(
+            index.apple-touch-icon.png
+            index.audio.position.worklet.js
+            index.audio.worklet.js
+            index.icon.png
+            index.js
+            index.png
+            index.wasm
+            index.html
             index.pck
-          do
-            curl -L --fail --retry 4 --retry-all-errors \
-              "$base_url/$file?release=$GITHUB_SHA" -o "$build_dir/$file"
+          )
+          for file in "${files[@]}"; do
+            curl -L --fail --retry 12 --retry-delay 5 --retry-all-errors \
+              "$PAGES_BASE_URL/$file?baseline=$cache_key" \
+              -o "$production_dir/$file"
+            curl -L --fail --retry 12 --retry-delay 5 --retry-all-errors \
+              "$PAGES_BASE_URL/dev/$file?baseline=$cache_key" \
+              -o "$dev_dir/$file"
           done
 
-          echo "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5  $build_dir/index.apple-touch-icon.png" | sha256sum -c -
-          echo "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8  $build_dir/index.audio.position.worklet.js" | sha256sum -c -
-          echo "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3  $build_dir/index.audio.worklet.js" | sha256sum -c -
-          echo "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec  $build_dir/index.icon.png" | sha256sum -c -
-          echo "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba  $build_dir/index.js" | sha256sum -c -
-          echo "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f  $build_dir/index.png" | sha256sum -c -
-          echo "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0  $build_dir/index.wasm" | sha256sum -c -
-          node --check "$build_dir/index.js"
-          test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+          verify_runtime() {
+            local target_dir="$1"
+            echo "$RUNTIME_APPLE_TOUCH_SHA256  $target_dir/index.apple-touch-icon.png" | sha256sum -c -
+            echo "$RUNTIME_AUDIO_POSITION_SHA256  $target_dir/index.audio.position.worklet.js" | sha256sum -c -
+            echo "$RUNTIME_AUDIO_SHA256  $target_dir/index.audio.worklet.js" | sha256sum -c -
+            echo "$RUNTIME_ICON_SHA256  $target_dir/index.icon.png" | sha256sum -c -
+            echo "$RUNTIME_JS_SHA256  $target_dir/index.js" | sha256sum -c -
+            echo "$RUNTIME_SPLASH_SHA256  $target_dir/index.png" | sha256sum -c -
+            echo "$RUNTIME_WASM_SHA256  $target_dir/index.wasm" | sha256sum -c -
+            node --check "$target_dir/index.js"
+            test "$(find "$target_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+          }
 
-      - name: Build verified v0.42 production and v0.42.0-dev.7 preview
+          verify_runtime "$production_dir"
+          echo "$CURRENT_PROD_HTML_SHA256  $production_dir/index.html" | sha256sum -c -
+          echo "$CURRENT_PROD_PCK_SHA256  $production_dir/index.pck" | sha256sum -c -
+          test "$(stat -c %s "$production_dir/index.pck")" -eq "$CURRENT_PROD_PCK_SIZE"
+
+          verify_runtime "$dev_dir"
+          echo "$CURRENT_DEV_HTML_SHA256  $dev_dir/index.html" | sha256sum -c -
+          echo "$CURRENT_DEV_PCK_SHA256  $dev_dir/index.pck" | sha256sum -c -
+          test "$(stat -c %s "$dev_dir/index.pck")" -eq "$CURRENT_DEV_PCK_SIZE"
+
+      - name: Stage verified pre-release rollback package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-v0420-dev7-rollback
+          path: ${{ runner.temp }}/ever-deeper-v0420-dev7-rollback
+          compression-level: 0
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Reconstruct and verify v0.43.0 production and DEV packages
         shell: bash
         run: |
           set -euo pipefail
-          build_dir="$RUNNER_TEMP/ever-deeper-pages"
-          production_dir="$RUNNER_TEMP/ever-deeper-production"
-          dev_dir="$build_dir/dev"
+          rollback_dir="$RUNNER_TEMP/ever-deeper-v0420-dev7-rollback"
+          current_prod_dir="$rollback_dir/production"
+          pages_dir="$RUNNER_TEMP/ever-deeper-pages"
+          prod_dir="$RUNNER_TEMP/ever-deeper-v0430-production"
+          dev_dir="$pages_dir/dev"
           tool_dir="$RUNNER_TEMP/tools"
-          mkdir -p "$production_dir" "$dev_dir" "$tool_dir"
+          mkdir -p "$pages_dir" "$prod_dir" "$dev_dir" "$tool_dir"
 
-          cat "$GITHUB_WORKSPACE"/.github/release-patch/v0410-to-v0420.xdelta.part* \
-            > "$RUNNER_TEMP/v0410-to-v0420.xdelta"
-          echo "9afadbb938ef173b1f98bcfa93a70c62917c5acc824bb41bba4d81865f2e3948  $RUNNER_TEMP/v0410-to-v0420.xdelta" | sha256sum -c -
+          mapfile -t prod_parts < <(
+            find "$GITHUB_WORKSPACE/.github/release-patch" -maxdepth 1 -type f \
+              -name 'v0420-to-v0430.xdelta.part*' -print | sort -V
+          )
+          test "${#prod_parts[@]}" -eq "$PROD_PATCH_PARTS"
+          cat "${prod_parts[@]}" > "$RUNNER_TEMP/v0420-to-v0430.xdelta"
+          echo "$PROD_PATCH_SHA256  $RUNNER_TEMP/v0420-to-v0430.xdelta" | sha256sum -c -
+          test "$(stat -c %s "$RUNNER_TEMP/v0420-to-v0430.xdelta")" -eq "$PROD_PATCH_SIZE"
 
-          cat "$GITHUB_WORKSPACE"/.github/dev-patch/prod-v0420-to-dev-v0420-dev7-final.xdelta.part* \
-            > "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-final.xdelta"
-          echo "d7e6d905786f519997130e4c0959b36e121e7bac87bd9689f07972ca9db4396a  $RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-final.xdelta" | sha256sum -c -
-          test "$(stat -c %s "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-final.xdelta")" -eq 9717787
-          test "$(find "$GITHUB_WORKSPACE/.github/dev-patch" -maxdepth 1 -name 'prod-v0420-to-dev-v0420-dev7-final.xdelta.part*' -type f | wc -l)" -eq 39
+          mapfile -t dev_parts < <(
+            find "$GITHUB_WORKSPACE/.github/dev-patch" -maxdepth 1 -type f \
+              -name 'prod-v0430-to-dev-v0430-dev1.xdelta.part*' -print | sort -V
+          )
+          test "${#dev_parts[@]}" -eq "$DEV_PATCH_PARTS"
+          cat "${dev_parts[@]}" > "$RUNNER_TEMP/prod-v0430-to-dev-v0430-dev1.xdelta"
+          echo "$DEV_PATCH_SHA256  $RUNNER_TEMP/prod-v0430-to-dev-v0430-dev1.xdelta" | sha256sum -c -
+          test "$(stat -c %s "$RUNNER_TEMP/prod-v0430-to-dev-v0430-dev1.xdelta")" -eq "$DEV_PATCH_SIZE"
 
           curl -L --fail --retry 4 --retry-all-errors \
             https://github.com/jmacd/xdelta/releases/download/v3.2.0/xdelta3-3.2.0-linux-x86_64.tar.gz \
             -o "$tool_dir/xdelta3.tar.gz"
-          echo "480295c7a41fea6503659f19ddc61676c0df4834e2292846ba97de30c68c2397  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
+          echo "$XDELTA_ARCHIVE_SHA256  $tool_dir/xdelta3.tar.gz" | sha256sum -c -
           tar --no-same-owner -xzf "$tool_dir/xdelta3.tar.gz" -C "$tool_dir"
           chmod +x "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
+          xdelta="$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3"
 
-          current_pck_sha="$(sha256sum "$build_dir/index.pck" | cut -d ' ' -f 1)"
-          case "$current_pck_sha" in
-            7d563fdab69acdc49a5811ad21547c6429ac1ad5c41aad5411313d469c74d366)
-              echo "b8d243ff614dab1033c4951023bda93f0edbb77261ddfdbef0ccfe5627aee97f  $build_dir/index.html" | sha256sum -c -
-              test "$(stat -c %s "$build_dir/index.pck")" -eq 96128464
-              "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
-                -s "$build_dir/index.pck" \
-                "$RUNNER_TEMP/v0410-to-v0420.xdelta" \
-                "$RUNNER_TEMP/v0420-index.pck"
-              mv "$RUNNER_TEMP/v0420-index.pck" "$build_dir/index.pck"
-              ;;
-            65a13e3af4a64ce247071cd2d5a75cb14e89bcc0664462753862e212a84549be)
-              echo "a92a9931fee6f05ab2d315e7032ced52f9b8a29c89d50c309a41ff8d3dd0be35  $build_dir/index.html" | sha256sum -c -
-              ;;
-            *)
-              echo "::error::Unexpected live production PCK: $current_pck_sha"
-              exit 1
-              ;;
-          esac
+          cp -a "$current_prod_dir/." "$pages_dir/"
+          "$xdelta" -f -d \
+            -s "$current_prod_dir/index.pck" \
+            "$RUNNER_TEMP/v0420-to-v0430.xdelta" \
+            "$pages_dir/index.pck"
+          cp "$GITHUB_WORKSPACE/.github/prod-build/index.html" "$pages_dir/index.html"
 
-          cp "$GITHUB_WORKSPACE/.github/prod-build/index.html" "$build_dir/index.html"
-          echo "65a13e3af4a64ce247071cd2d5a75cb14e89bcc0664462753862e212a84549be  $build_dir/index.pck" | sha256sum -c -
-          echo "a92a9931fee6f05ab2d315e7032ced52f9b8a29c89d50c309a41ff8d3dd0be35  $build_dir/index.html" | sha256sum -c -
-          test "$(stat -c %s "$build_dir/index.pck")" -eq 96220476
-          grep -q '"index.pck":96220476' "$build_dir/index.html"
-          grep -q 'v0.42.0' "$build_dir/index.html"
-          ! grep -q 'DEV BUILD' "$build_dir/index.html"
+          echo "$PROD_PCK_SHA256  $pages_dir/index.pck" | sha256sum -c -
+          echo "$PROD_HTML_SHA256  $pages_dir/index.html" | sha256sum -c -
+          test "$(stat -c %s "$pages_dir/index.pck")" -eq "$PROD_PCK_SIZE"
+          test "$(stat -c %s "$pages_dir/index.html")" -eq "$PROD_HTML_SIZE"
+          grep -Fq "\"index.pck\":$PROD_PCK_SIZE" "$pages_dir/index.html"
+          grep -Fq 'v0.43.0' "$pages_dir/index.html"
+          ! grep -Fq 'v0.43.0-dev.1' "$pages_dir/index.html"
+          test "$(find "$pages_dir" -maxdepth 1 -type f | wc -l)" -eq 9
 
-          for file in \
-            index.apple-touch-icon.png \
-            index.audio.position.worklet.js \
-            index.audio.worklet.js \
-            index.icon.png \
-            index.js \
-            index.png \
-            index.wasm \
-            index.html \
-            index.pck
-          do
-            cp "$build_dir/$file" "$production_dir/$file"
-          done
+          cp -a "$pages_dir/." "$prod_dir/"
+          rm -rf "$prod_dir/dev"
 
           for file in \
             index.apple-touch-icon.png \
@@ -144,119 +193,181 @@ jobs:
             index.png \
             index.wasm
           do
-            cp "$build_dir/$file" "$dev_dir/$file"
+            cp "$pages_dir/$file" "$dev_dir/$file"
           done
+          "$xdelta" -d \
+            -s "$pages_dir/index.pck" \
+            "$RUNNER_TEMP/prod-v0430-to-dev-v0430-dev1.xdelta" \
+            "$dev_dir/index.pck"
           cp "$GITHUB_WORKSPACE/.github/dev-build/index.html" "$dev_dir/index.html"
 
-          "$tool_dir/xdelta3-3.2.0-linux-x86_64/xdelta3" -d \
-            -s "$build_dir/index.pck" \
-            "$RUNNER_TEMP/prod-v0420-to-dev-v0420-dev7-final.xdelta" \
-            "$dev_dir/index.pck"
-
-          echo "81d3e2f630fc54de00df87b1da5d98809b197725bb60c8087a55026306af2ca9  $dev_dir/index.pck" | sha256sum -c -
-          echo "1d18a1d5cbfb02ef94c3606ff9620305f09968ad06dba08d5eb0d027e26b545b  $dev_dir/index.html" | sha256sum -c -
-          test "$(stat -c %s "$dev_dir/index.pck")" -eq 105337792
-          grep -q '"index.pck":105337792' "$dev_dir/index.html"
-          grep -q 'v0.42.0-dev.7' "$dev_dir/index.html"
-          test "$(find "$production_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+          echo "$DEV_PCK_SHA256  $dev_dir/index.pck" | sha256sum -c -
+          echo "$DEV_HTML_SHA256  $dev_dir/index.html" | sha256sum -c -
+          test "$(stat -c %s "$dev_dir/index.pck")" -eq "$DEV_PCK_SIZE"
+          test "$(stat -c %s "$dev_dir/index.html")" -eq "$DEV_HTML_SIZE"
+          grep -Fq "\"index.pck\":$DEV_PCK_SIZE" "$dev_dir/index.html"
+          grep -Fq 'v0.43.0-dev.1' "$dev_dir/index.html"
           test "$(find "$dev_dir" -maxdepth 1 -type f | wc -l)" -eq 9
-          test "$(find "$build_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+          test "$(find "$prod_dir" -maxdepth 1 -type f | wc -l)" -eq 9
 
-      - name: Upload combined GitHub Pages package
+      - name: Upload atomic Pages package
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ runner.temp }}/ever-deeper-pages
 
-      - name: Upload reusable v0.42 production package
+      - name: Upload verified production package
         uses: actions/upload-artifact@v4
         with:
-          name: ever-deeper-v042-web
-          path: ${{ runner.temp }}/ever-deeper-production
+          name: ever-deeper-v0430-production-web
+          path: ${{ runner.temp }}/ever-deeper-v0430-production
           compression-level: 0
           retention-days: 14
+          if-no-files-found: error
 
-      - name: Upload reusable DEV web package
+      - name: Upload verified DEV package
         uses: actions/upload-artifact@v4
         with:
-          name: ever-deeper-v0420-dev7-web
+          name: ever-deeper-v0430-dev1-web
           path: ${{ runner.temp }}/ever-deeper-pages/dev
           compression-level: 0
           retention-days: 14
+          if-no-files-found: error
 
-  deploy-pages:
+  deploy-itch:
     needs: package
     runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+    steps:
+      - name: Download verified production package
+        uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-v0430-production-web
+          path: ${{ runner.temp }}/ever-deeper-v0430-production
+
+      - name: Download verified DEV package
+        uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-v0430-dev1-web
+          path: ${{ runner.temp }}/ever-deeper-v0430-dev
+
+      - name: Publish DEV when its itch project exists, then publish production
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${BUTLER_API_KEY:-}" || {
+            echo "::error::BUTLER_API_KEY is required for the production release"
+            exit 1
+          }
+
+          prod_dir="$RUNNER_TEMP/ever-deeper-v0430-production"
+          dev_dir="$RUNNER_TEMP/ever-deeper-v0430-dev"
+          echo "$PROD_PCK_SHA256  $prod_dir/index.pck" | sha256sum -c -
+          echo "$PROD_HTML_SHA256  $prod_dir/index.html" | sha256sum -c -
+          test "$(stat -c %s "$prod_dir/index.pck")" -eq "$PROD_PCK_SIZE"
+          echo "$DEV_PCK_SHA256  $dev_dir/index.pck" | sha256sum -c -
+          echo "$DEV_HTML_SHA256  $dev_dir/index.html" | sha256sum -c -
+          test "$(stat -c %s "$dev_dir/index.pck")" -eq "$DEV_PCK_SIZE"
+
+          curl -L --fail --retry 4 --retry-all-errors \
+            https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default \
+            -o "$RUNNER_TEMP/butler.zip"
+          unzip -q "$RUNNER_TEMP/butler.zip" -d "$RUNNER_TEMP/butler"
+          chmod +x "$RUNNER_TEMP/butler/butler"
+          butler="$RUNNER_TEMP/butler/butler"
+
+          set +e
+          "$butler" push "$dev_dir" "$DEV_ITCH_CHANNEL" \
+            --userversion 0.43.0-dev.1 2>&1 | tee "$RUNNER_TEMP/butler-dev.log"
+          dev_status=${PIPESTATUS[0]}
+          set -e
+          if [ "$dev_status" -ne 0 ]; then
+            if grep -Eiq \
+              '(no such project/game|no such project|game not found|project[^[:space:]]* (does not exist|not found)|could not find (game|project))' \
+              "$RUNNER_TEMP/butler-dev.log"
+            then
+              echo "::notice::itch DEV project is not provisioned; continuing with the required production release"
+            else
+              echo "::error::Unexpected itch DEV publication failure"
+              exit "$dev_status"
+            fi
+          else
+            "$butler" status "$DEV_ITCH_CHANNEL"
+          fi
+
+          "$butler" push "$prod_dir" "$PROD_ITCH_CHANNEL" \
+            --userversion 0.43.0
+          "$butler" status "$PROD_ITCH_CHANNEL"
+
+  deploy-pages:
+    needs: deploy-itch
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy v0.42 production plus DEV preview
+      - name: Deploy production root and DEV together
         id: deployment
         uses: actions/deploy-pages@v4
 
-  deploy-itch-production:
-    needs: package
+  verify-deployment:
+    needs: deploy-pages
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' && inputs.deploy_production
-    env:
-      BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+    timeout-minutes: 30
     steps:
-      - name: Download verified v0.42 production package
-        if: env.BUTLER_API_KEY != ''
-        uses: actions/download-artifact@v4
-        with:
-          name: ever-deeper-v042-web
-          path: ${{ runner.temp }}/ever-deeper-production
-
-      - name: Publish v0.42 production to itch.io
-        if: env.BUTLER_API_KEY != ''
+      - name: Re-fetch and verify the exact public production and DEV packages
         shell: bash
         run: |
           set -euo pipefail
-          curl -L --fail --retry 4 --retry-all-errors \
-            https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default \
-            -o "$RUNNER_TEMP/butler.zip"
-          unzip -q "$RUNNER_TEMP/butler.zip" -d "$RUNNER_TEMP/butler"
-          chmod +x "$RUNNER_TEMP/butler/butler"
-          "$RUNNER_TEMP/butler/butler" push \
-            "$RUNNER_TEMP/ever-deeper-production" \
-            corpax88/ever-deeper-playtest:html5 \
-            --userversion 0.42.0
-          "$RUNNER_TEMP/butler/butler" status corpax88/ever-deeper-playtest:html5
+          cache_key="$GITHUB_SHA-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          prod_dir="$RUNNER_TEMP/public-production"
+          dev_dir="$RUNNER_TEMP/public-dev"
+          mkdir -p "$prod_dir" "$dev_dir"
 
-  deploy-itch-dev:
-    needs: package
-    runs-on: ubuntu-latest
-    env:
-      BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
-    steps:
-      - name: Download verified DEV package
-        if: env.BUTLER_API_KEY != ''
-        uses: actions/download-artifact@v4
-        with:
-          name: ever-deeper-v0420-dev7-web
-          path: ${{ runner.temp }}/ever-deeper-dev
+          files=(
+            index.apple-touch-icon.png
+            index.audio.position.worklet.js
+            index.audio.worklet.js
+            index.icon.png
+            index.js
+            index.png
+            index.wasm
+            index.html
+            index.pck
+          )
+          for file in "${files[@]}"; do
+            curl -L --fail --retry 20 --retry-delay 5 --retry-all-errors \
+              "$PAGES_BASE_URL/$file?verify=$cache_key" -o "$prod_dir/$file"
+            curl -L --fail --retry 20 --retry-delay 5 --retry-all-errors \
+              "$PAGES_BASE_URL/dev/$file?verify=$cache_key" -o "$dev_dir/$file"
+          done
 
-      - name: Publish when the itch DEV project exists
-        if: env.BUTLER_API_KEY != ''
-        shell: bash
-        run: |
-          set -euo pipefail
-          curl -L --fail --retry 4 --retry-all-errors \
-            https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default \
-            -o "$RUNNER_TEMP/butler.zip"
-          unzip -q "$RUNNER_TEMP/butler.zip" -d "$RUNNER_TEMP/butler"
-          chmod +x "$RUNNER_TEMP/butler/butler"
+          verify_runtime() {
+            local target_dir="$1"
+            echo "$RUNTIME_APPLE_TOUCH_SHA256  $target_dir/index.apple-touch-icon.png" | sha256sum -c -
+            echo "$RUNTIME_AUDIO_POSITION_SHA256  $target_dir/index.audio.position.worklet.js" | sha256sum -c -
+            echo "$RUNTIME_AUDIO_SHA256  $target_dir/index.audio.worklet.js" | sha256sum -c -
+            echo "$RUNTIME_ICON_SHA256  $target_dir/index.icon.png" | sha256sum -c -
+            echo "$RUNTIME_JS_SHA256  $target_dir/index.js" | sha256sum -c -
+            echo "$RUNTIME_SPLASH_SHA256  $target_dir/index.png" | sha256sum -c -
+            echo "$RUNTIME_WASM_SHA256  $target_dir/index.wasm" | sha256sum -c -
+            node --check "$target_dir/index.js"
+            test "$(find "$target_dir" -maxdepth 1 -type f | wc -l)" -eq 9
+          }
 
-          set +e
-          "$RUNNER_TEMP/butler/butler" push \
-            "$RUNNER_TEMP/ever-deeper-dev" \
-            corpax88/ever-deeper-dev:html5 \
-            --userversion 0.42.0-dev.7
-          push_status=$?
-          set -e
-          if [ "$push_status" -ne 0 ]; then
-            echo "::notice::itch DEV project does not exist yet; Pages DEV preview is still deployed"
-            exit 0
-          fi
-          "$RUNNER_TEMP/butler/butler" status corpax88/ever-deeper-dev:html5
+          verify_runtime "$prod_dir"
+          echo "$PROD_HTML_SHA256  $prod_dir/index.html" | sha256sum -c -
+          echo "$PROD_PCK_SHA256  $prod_dir/index.pck" | sha256sum -c -
+          test "$(stat -c %s "$prod_dir/index.html")" -eq "$PROD_HTML_SIZE"
+          test "$(stat -c %s "$prod_dir/index.pck")" -eq "$PROD_PCK_SIZE"
+          grep -Fq 'v0.43.0' "$prod_dir/index.html"
+          ! grep -Fq 'v0.43.0-dev.1' "$prod_dir/index.html"
+
+          verify_runtime "$dev_dir"
+          echo "$DEV_HTML_SHA256  $dev_dir/index.html" | sha256sum -c -
+          echo "$DEV_PCK_SHA256  $dev_dir/index.pck" | sha256sum -c -
+          test "$(stat -c %s "$dev_dir/index.html")" -eq "$DEV_HTML_SIZE"
+          test "$(stat -c %s "$dev_dir/index.pck")" -eq "$DEV_PCK_SIZE"
+          grep -Fq 'v0.43.0-dev.1' "$dev_dir/index.html"
