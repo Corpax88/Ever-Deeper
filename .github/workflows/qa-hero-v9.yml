@@ -1,0 +1,39 @@
+name: Verify native dad hero in the final DEV build
+on:
+  push:
+    branches: [codex-hero-v9]
+    paths: ['.github/hero-v9/**', '.github/workflows/qa-hero-v9.yml', 'tools/visual-qa/capture-hero-v9.mjs']
+permissions:
+  contents: read
+jobs:
+  visual-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reconstruct and verify the exact candidate
+        run: python3 .github/hero-v9/prepare_candidate.py "$RUNNER_TEMP/hero-web"
+      - name: Install the existing browser test dependencies
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Capture affected worlds, tools, outfits and directions at 932x430
+        run: node tools/visual-qa/capture-hero-v9.mjs --web-dir "$RUNNER_TEMP/hero-web" --output-dir "$RUNNER_TEMP/hero-qa/stills"
+      - name: Record real walking, stops and mining damage in all directions
+        run: node tools/visual-qa/capture-hero-v9.mjs --motion --web-dir "$RUNNER_TEMP/hero-web" --output-dir "$RUNNER_TEMP/hero-qa/motion"
+      - name: Make a phone-compatible video
+        run: ffmpeg -y -i "$RUNNER_TEMP/hero-qa/motion/hero-motion.webm" -c:v libx264 -pix_fmt yuv420p -movflags +faststart "$RUNNER_TEMP/hero-qa/hero-in-game.mp4"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hero-v9-visual-evidence
+          path: ${{ runner.temp }}/hero-qa
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hero-v9-exact-web-candidate
+          path: ${{ runner.temp }}/hero-web
+          retention-days: 14
