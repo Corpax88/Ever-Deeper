@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "reviewed_at": "2026-09-06T14:13:39.893547+00:00",
+  "reviewer": "Codex",
+  "pck_sha256": "5c6e8fc5412778a126298ed2b0cdf2f1301cf110ababb33b2e1be0734a66971c",
+  "html_sha256": "bf2d57dea8da3b3d3641fb62f9bbe3d1f30a666635a2cc058c05087833e022ed",
+  "viewport": [
+    932,
+    430
+  ],
+  "capture_count": 193,
+  "motion_damage_checks": 12,
+  "qa_commit": "796c5a0911c1d2752715d469d6bde88e5b20c340",
+  "scene_run": 34037568499,
+  "motion_run": 34037568556,
+  "exact_candidate_artifact": 9990695967,
+  "scene_artifacts": [
+    9990870918,
+    9990889282,
+    9990819168,
+    9990844474
+  ],
+  "motion_artifact": 9990694445,
+  "visual_review": {
+    "reference": "Approved round dad mockup: black square glasses, natural ears, broad coat and arms, short legs; actual native v8/v9 geometry retained.",
+    "method": "Manually inspected all 193 final Web screenshots in 17 contact sheets, plus full-resolution and enlarged hero samples, and sampled the full 122.44-second actual Web motion recording. Compared silhouette and material details with the approved reference and native renders.",
+    "coverage": [
+      "Depth 1 terrain, corners, barriers and transitions in all four biomes",
+      "Depth 2 edges, bedrock, gates intact/partial/cleared and transitions",
+      "Five Endless layers and permanent walls",
+      "All eleven equipment appearances, idle/walk/impact; worn, Crusher and Deepcore in four directions",
+      "All five coat palettes; Surface, Hub and Deepheart",
+      "Actual gameplay movement and mining damage in four directions for worn, Crusher and Deepcore"
+    ],
+    "findings": [
+      "Corrected double-textured color modulation; original texture and cloth palette now render once.",
+      "Round body, thick sleeves, short legs and textured equipment remain readable at target viewport.",
+      "No detached hands, invalid atlas frames, exposed sprite borders or trouser/boot clipping apparent in reviewed gameplay evidence.",
+      "Hero remained grounded and visible across reviewed terrain and transitions."
+    ],
+    "limitations": [
+      "Chromium WebGL2 SwiftShader evidence is not a physical iPhone performance measurement.",
+      "Contact-sheet and sampled video inspection does not imply exhaustive inspection of every runtime frame."
+    ]
+  }
+}
