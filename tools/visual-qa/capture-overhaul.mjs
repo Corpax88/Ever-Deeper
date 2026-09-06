@@ -287,6 +287,7 @@ async function captureSuite(options) {
     const requestFailures = [];
     page.on("console", (message) => {
       const text = message.text();
+      if (GAMEPLAY && /OVERHAUL_|SCRIPT ERROR|Parse Error/.test(text)) process.stdout.write(text+"\n");
       if (/SCRIPT ERROR|Parse Error|Failed to load/.test(text)) pageErrors.push(text);
       if (text.startsWith("EVER_DEEPER_HERO_MOTION_DAMAGE")) motionHits.push(text);
       if (text.startsWith("EVER_DEEPER_HERO_STATE ")) heroStates.push(JSON.parse(text.slice("EVER_DEEPER_HERO_STATE ".length)));
