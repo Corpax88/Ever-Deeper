@@ -1,0 +1,39 @@
+name: Capture the exact hero build in bounded scene groups
+on:
+  push:
+    branches: [codex-hero-v9]
+    paths: ['.github/workflows/qa-hero-v9-ranges.yml', 'tools/visual-qa/capture-hero-v9-range.mjs']
+permissions:
+  contents: read
+jobs:
+  scenes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {start: 1, end: 49}
+          - {start: 50, end: 97}
+          - {start: 98, end: 145}
+          - {start: 146, end: 193}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python3 .github/hero-v9/prepare_candidate.py "$RUNNER_TEMP/hero-web"
+      - run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Capture the assigned original fixtures
+        env:
+          CAPTURE_START: ${{ matrix.start }}
+          CAPTURE_END: ${{ matrix.end }}
+        run: timeout --signal=TERM 35m node tools/visual-qa/capture-hero-v9-range.mjs --web-dir "$RUNNER_TEMP/hero-web" --output-dir "$RUNNER_TEMP/hero-scenes"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hero-v9-scenes-${{ matrix.start }}-${{ matrix.end }}
+          path: ${{ runner.temp }}/hero-scenes
+          retention-days: 14
