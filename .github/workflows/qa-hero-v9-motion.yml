@@ -1,0 +1,28 @@
+name: Inspect native dad movement independently
+on:
+  push:
+    branches: [codex-hero-v9]
+    paths: ['.github/workflows/qa-hero-v9-motion.yml']
+permissions:
+  contents: read
+jobs:
+  motion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python3 .github/hero-v9/prepare_candidate.py "$RUNNER_TEMP/hero-web"
+      - run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - run: node tools/visual-qa/capture-hero-v9.mjs --motion --web-dir "$RUNNER_TEMP/hero-web" --output-dir "$RUNNER_TEMP/hero-motion"
+      - run: ffmpeg -y -i "$RUNNER_TEMP/hero-motion/hero-motion.webm" -c:v libx264 -pix_fmt yuv420p -movflags +faststart "$RUNNER_TEMP/hero-motion/hero-in-game.mp4"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hero-v9-motion-evidence
+          path: ${{ runner.temp }}/hero-motion
+          retention-days: 14
