@@ -1,8 +1,6 @@
 name: Verify native dad hero in the final DEV build
 on:
-  push:
-    branches: [codex-hero-v9]
-    paths: ['.github/hero-v9/**', '.github/workflows/qa-hero-v9.yml', 'tools/visual-qa/capture-hero-v9.mjs']
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:

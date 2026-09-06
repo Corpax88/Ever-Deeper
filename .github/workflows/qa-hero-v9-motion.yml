@@ -16,6 +16,7 @@ jobs:
           node-version: '22'
       - run: python3 .github/hero-v9/prepare_candidate.py "$RUNNER_TEMP/hero-web"
       - run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg
           npm ci
           npx playwright install --with-deps chromium
       - run: node tools/visual-qa/capture-hero-v9-motion.mjs --motion --web-dir "$RUNNER_TEMP/hero-web" --output-dir "$RUNNER_TEMP/hero-motion"

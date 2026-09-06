@@ -13,6 +13,7 @@ def download(url,expected,path):
             time.sleep(2**retry)
 for name,expected in base['dev'].items():download('https://corpax88.github.io/Ever-Deeper/dev/'+name,expected,out/name)
 subprocess.run([sys.executable,str(source/'apply_delta.py'),str(out/'index.pck'),str(source/'delta'),str(out/'index.pck')],check=True)
+subprocess.run([sys.executable,str(source/'apply_delta.py'),str(out/'index.pck'),str(source/'fix-delta'),str(out/'index.pck')],check=True)
 shutil.copyfile(source/'index.html',out/'index.html')
 for name,expected in target['files'].items():
     data=(out/name).read_bytes();assert len(data)==expected['size'] and sha(data)==expected['sha256'],name

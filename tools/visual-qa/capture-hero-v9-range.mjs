@@ -100,7 +100,7 @@ function injectSuiteArgument(html) {
   const suiteArgs = existingArgs.filter((arg) => arg !== SUITE_ARG);
   // OS.get_cmdline_user_args() only exposes arguments after Godot's user separator.
   if (!suiteArgs.includes("--")) suiteArgs.push("--");
-  config.args = [...suiteArgs, SUITE_ARG, MOTION ? "--hero-motion" : "--hero-capture"];
+  config.args = [...suiteArgs, SUITE_ARG, "--hero-capture", `--capture-start=${RANGE_START}`, `--capture-end=${RANGE_END}`];
   return html.replace(pattern, `const GODOT_CONFIG = ${JSON.stringify(config)};`);
 }
 
@@ -322,7 +322,7 @@ async function captureSuite(options) {
         if (!match) throw new Error(`Malformed BEGIN marker: ${marker}`);
         const [, count, width, height] = match.map(Number);
         EXPECTED_CAPTURE_COUNT = count;
-        if (count < (MOTION ? 1 : 100) || count > 300 || width !== VIEWPORT.width || height !== VIEWPORT.height) {
+        if (count < 1 || count > 300 || width !== VIEWPORT.width || height !== VIEWPORT.height) {
           throw new Error(`Unexpected capture contract: ${marker}`);
         }
         began = true;
@@ -335,21 +335,20 @@ async function captureSuite(options) {
         const state = match[1];
         const index = Number(match[2]);
         const total = Number(match[3]);
-        if (total !== EXPECTED_CAPTURE_COUNT || index !== seenStates.size + 1) {
+        if (total !== EXPECTED_CAPTURE_COUNT || index !== captures.length + 1) {
           throw new Error(`Out-of-order capture marker: ${marker}`);
         }
         if (seenStates.has(state)) throw new Error(`Duplicate capture state: ${state}`);
         seenStates.add(state);
-        if (index < RANGE_START) {
-          await page.locator("#canvas").focus();
-          await page.keyboard.press("Enter");
-          continue;
-        }
         await page.locator("#canvas").waitFor({ state: "visible" });
-        await page.evaluate(
-          () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
-        );
-        const file = `${String(index).padStart(3, "0")}_${state}.png`;
+        let frameDeadline;
+        try {
+          await Promise.race([
+            page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))),
+            new Promise((_, reject) => { frameDeadline = setTimeout(() => reject(new Error(`Render frame timeout at ${state}`)), 30000); }),
+          ]);
+        } finally { clearTimeout(frameDeadline); }
+        const file = `${String(index + RANGE_START - 1).padStart(3, "0")}_${state}.png`;
         const filename = path.join(options.outputDir, file);
         await page.screenshot({ path: filename, animations: "disabled" });
         const image = await fs.readFile(filename);
@@ -357,9 +356,8 @@ async function captureSuite(options) {
         if (dimensions.width !== VIEWPORT.width || dimensions.height !== VIEWPORT.height) {
           throw new Error(`Wrong PNG dimensions for ${file}: ${dimensions.width}x${dimensions.height}`);
         }
-        captures.push({ index, state, file, sha256: await sha256(filename) });
-        process.stdout.write(`CAPTURED ${index}/${EXPECTED_CAPTURE_COUNT} ${state}\n`);
-        if (index === RANGE_END) { completed = true; break; }
+        captures.push({ index: index + RANGE_START - 1, state, file, sha256: await sha256(filename) });
+        process.stdout.write(`CAPTURED ${index + RANGE_START - 1}/193 ${state}\n`);
         await page.locator("#canvas").focus();
         await page.keyboard.press("Enter");
         continue;
@@ -373,7 +371,8 @@ async function captureSuite(options) {
       }
     }
     if (video) { await page.close(); await video.saveAs(path.join(options.outputDir, "hero-motion.webm")); }
-    if (captures.length !== RANGE_END - RANGE_START + 1) {
+    if (EXPECTED_CAPTURE_COUNT !== RANGE_END - RANGE_START + 1) throw new Error("Wrong range size");
+    if (captures.length !== EXPECTED_CAPTURE_COUNT) {
       throw new Error(`Captured ${captures.length}, expected ${EXPECTED_CAPTURE_COUNT}`);
     }
     if (MOTION && motionHits.length !== 12) throw new Error(`Expected 12 real damage checks, got ${motionHits.length}`);
@@ -404,7 +403,7 @@ async function captureSuite(options) {
       viewport: VIEWPORT,
       captureCount: captures.length,
       range: [RANGE_START, RANGE_END],
-      fullMatrixCount: EXPECTED_CAPTURE_COUNT,
+      fullMatrixCount: 193,
       motionHits,
       heroStates,
       pckSha256,
