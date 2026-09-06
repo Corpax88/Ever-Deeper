@@ -310,6 +310,8 @@ async function captureSuite(options) {
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: NEXT_MARKER_TIMEOUT_MS });
 
     if (GAMEPLAY) {
+      await page.bringToFront();
+      await page.locator("#canvas").focus();
       const result = await nextMarker(markerQueue, 10 * 60 * 1000);
       if (!/^EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=\d+ failures=\[\]$/.test(result)) throw new Error(result);
       if (pageErrors.length) throw new Error(pageErrors.join("\n"));
