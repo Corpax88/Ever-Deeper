@@ -1,0 +1,53 @@
+name: Deploy Ever Deeper v0.45.0 LIVE production
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/deploy-v0450-live.yml']
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages-ever-deeper
+  cancel-in-progress: false
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch the exact candidate that passed visual QA
+        uses: actions/download-artifact@v4
+        with:
+          name: production-exact-web-candidate-1
+          run-id: 34062664521
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - name: Verify reviewed production and preserve DEV
+        run: python3 .github/live-v0450/prepare_release.py "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/site" "$RUNNER_TEMP/rollback"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-before-v0450-live-rollback
+          path: ${{ runner.temp }}/rollback
+          retention-days: 30
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/site
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish the verified atomic Pages package
+        id: deployment
+        uses: actions/deploy-pages@v4
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify all 18 public files after publication
+        run: python3 .github/live-v0450/prepare_release.py --verify-public

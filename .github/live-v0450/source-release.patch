@@ -1,0 +1,22 @@
+--- a/project.godot
++++ b/project.godot
+@@ -11,7 +11,7 @@
+ [application]
+ 
+ config/name="Ever Deeper"
+-config/version="0.43.1"
++config/version="0.45.0"
+ run/main_scene="res://scenes/main/main.tscn"
+ config/use_custom_user_dir=true
+ config/custom_user_dir_name="Ever Deeper- Godot Production Port"
+--- a/scripts/dev/visual_capture_driver.gd
++++ b/scripts/dev/visual_capture_driver.gd
+@@ -130,7 +130,7 @@
+ 
+ func _verify_build_contract() -> Dictionary:
+ 	var dev_feature: = OS.has_feature("ever_deeper_dev")
+-	var expected_version: = "0.45.0-dev.1" if dev_feature else "0.43.1"
++	var expected_version: = "0.45.0-dev.1" if dev_feature else "0.45.0"
+ 	var expected_flavor: = "dev" if dev_feature else "production"
+ 	var actual_version: = String(PremiumMenuScript.release_version())
+ 	var developer_menu: Variant = _main.get("developer_menu")
