@@ -1,0 +1,45 @@
+name: Package the verified hero motion build
+on:
+  push:
+    branches: [codex-hero-v9]
+    paths: ['.github/workflows/package-hero-v9-evidence.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 .github/hero-v9/prepare_candidate.py "$RUNNER_TEMP/hero-web"
+      - uses: actions/download-artifact@v4
+        with:
+          name: hero-v9-motion-evidence
+          run-id: 34035195277
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/hero-motion
+      - name: Verify the successful motion test against this exact build
+        run: |
+          python3 - <<'PY'
+          import os,json,hashlib
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP']);m=json.loads((root/'hero-motion/manifest.json').read_text());c=json.loads(Path('.github/hero-v9/candidate.json').read_text())
+          assert m['captureCount']==1 and len(m['motionHits'])==12
+          assert m['viewport']=={'width':932,'height':430}
+          assert m['pckSha256']==c['files']['index.pck']['sha256']==hashlib.sha256((root/'hero-web/index.pck').read_bytes()).hexdigest()
+          assert m['htmlSha256']==c['files']['index.html']['sha256']
+          print('All 12 damage checks belong to the exact candidate.')
+          PY
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: ffmpeg -y -i "$RUNNER_TEMP/hero-motion/hero-motion.webm" -c:v libx264 -pix_fmt yuv420p -movflags +faststart "$RUNNER_TEMP/hero-motion/hero-in-game.mp4"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hero-v9-motion-evidence
+          path: ${{ runner.temp }}/hero-motion
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hero-v9-exact-web-candidate
+          path: ${{ runner.temp }}/hero-web
+          retention-days: 14
