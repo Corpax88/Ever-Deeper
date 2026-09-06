@@ -292,7 +292,7 @@ async function captureSuite(options) {
       if (text.startsWith("EVER_DEEPER_HERO_MOTION_DAMAGE")) motionHits.push(text);
       if (text.startsWith("EVER_DEEPER_HERO_STATE ")) heroStates.push(JSON.parse(text.slice("EVER_DEEPER_HERO_STATE ".length)));
       if (text.includes(MARKER_PREFIX)) markerQueue.push(text.slice(text.indexOf(MARKER_PREFIX)));
-      if (GAMEPLAY && text.startsWith("EVER_DEEPER_OVERHAUL_GAMEPLAY_")) markerQueue.push(text);
+      if (GAMEPLAY && /^EVER_DEEPER_OVERHAUL_(GAMEPLAY_|INPUT_READY )/.test(text)) markerQueue.push(text);
     });
     page.on("pageerror", (error) => pageErrors.push(String(error)));
     page.on("requestfailed", (request) => {
@@ -312,7 +312,27 @@ async function captureSuite(options) {
     if (GAMEPLAY) {
       await page.bringToFront();
       await page.locator("#canvas").focus();
-      const result = await nextMarker(markerQueue, 10 * 60 * 1000);
+      let result;
+      const cdp = await context.newCDPSession(page);
+      while (true) {
+        result = await nextMarker(markerQueue, 10 * 60 * 1000);
+        if (!result.startsWith("EVER_DEEPER_OVERHAUL_INPUT_READY ")) break;
+        const input = JSON.parse(result.slice("EVER_DEEPER_OVERHAUL_INPUT_READY ".length));
+        const box = await page.locator("#canvas").boundingBox();
+        const x = box.x + input.x / input.width * box.width;
+        const y = box.y + input.y / input.height * box.height;
+        if (x < box.x || y < box.y || x >= box.x + box.width || y >= box.y + box.height) throw new Error("Gesture outside canvas");
+        if (input.kind === "tap") await page.touchscreen.tap(x,y);
+        else {
+          await cdp.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{x,y}]});
+          if (input.kind === "drag_return") {
+            await cdp.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:x+48/input.width*box.width,y}]});
+            await cdp.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x,y}]});
+          }
+          await cdp.send("Input.dispatchTouchEvent",{type:input.kind === "cancel" ? "touchCancel" : "touchEnd",touchPoints:[]});
+        }
+        await page.keyboard.press("Enter");
+      }
       if (!/^EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=\d+ failures=\[\]$/.test(result)) throw new Error(result);
       if (pageErrors.length) throw new Error(pageErrors.join("\n"));
       await fs.writeFile(path.join(options.outputDir,"gameplay.json"),JSON.stringify({result,pckSha256,htmlSha256,viewport:VIEWPORT,browser:browser.version(),webgl},null,2));
