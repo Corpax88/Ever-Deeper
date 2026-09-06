@@ -11,6 +11,7 @@ for name,expected in base['files'].items():
    if attempt==4:raise
    time.sleep(2**attempt)
 subprocess.run([sys.executable,str(source/'apply_delta.py'),str(out/'index.pck'),str(source/'delta'),str(out/'index.pck')],check=True)
+subprocess.run([sys.executable,str(source/'apply_delta.py'),str(out/'index.pck'),str(source/'refine-delta'),str(out/'index.pck')],check=True)
 (out/'index.html').write_bytes((source/'index.html').read_bytes())
 for name,expected in target['files'].items():
  data=(out/name).read_bytes();assert len(data)==expected['size'] and hashlib.sha256(data).hexdigest()==expected['sha256'],name
