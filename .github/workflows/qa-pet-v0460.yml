@@ -1,0 +1,60 @@
+name: Inspect mole companion v0.46.0-dev.1
+on:
+  push:
+    branches: [codex-pet-v0460]
+    paths: ['.github/pet-v0460/**', '.github/workflows/qa-pet-v0460.yml', 'tools/visual-qa/capture-pet.mjs']
+permissions:
+  contents: read
+jobs:
+  gameplay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python3 .github/pet-v0460/prepare_candidate.py "$RUNNER_TEMP/surface-web"
+      - run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - run: OVERHAUL_GAMEPLAY=1 node tools/visual-qa/capture-pet.mjs --web-dir "$RUNNER_TEMP/surface-web" --output-dir "$RUNNER_TEMP/gameplay-evidence"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: overhaul-gameplay-evidence
+          path: ${{ runner.temp }}/gameplay-evidence
+          retention-days: 14
+  surface:
+    needs: gameplay
+    strategy:
+      fail-fast: false
+      matrix:
+        batch: [{start: 1, end: 3}, {start: 4, end: 6}, {start: 7, end: 9}, {start: 10, end: 12}]
+    env:
+      CAPTURE_START: ${{ matrix.batch.start }}
+      CAPTURE_END: ${{ matrix.batch.end }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python3 .github/pet-v0460/prepare_candidate.py "$RUNNER_TEMP/surface-web"
+      - run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - run: node tools/visual-qa/capture-pet.mjs --web-dir "$RUNNER_TEMP/surface-web" --output-dir "$RUNNER_TEMP/surface-evidence"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: overhaul-visual-evidence-${{ matrix.batch.start }}
+          path: ${{ runner.temp }}/surface-evidence
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: matrix.batch.start == 1
+        with:
+          name: pet-exact-web-candidate-${{ matrix.batch.start }}
+          path: ${{ runner.temp }}/surface-web
+          retention-days: 14
