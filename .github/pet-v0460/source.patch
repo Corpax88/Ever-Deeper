@@ -1,0 +1,953 @@
+--- a/scripts/main.gd
++++ b/scripts/main.gd
+@@ -988,7 +988,12 @@
+ 
+ 
+ func _shop_panel_is_open() -> bool:
+-	return _workshop_panel_is_open() or _commerce_panel_is_open()
++	return _workshop_panel_is_open() or _commerce_panel_is_open() or _companion_panel_is_open()
++
++
++func _companion_panel_is_open() -> bool:
++	var interface=get_node_or_null("CompanionInterface")
++	return interface!=null and interface.journal!=null and interface.journal.is_open()
+ 
+ 
+ func _install_minimap() -> void :
+@@ -2221,7 +2226,10 @@
+ 		hub_world.player.control_enabled = false
+ 	_set_developer_menu_shop_suppressed(true)
+ 	AudioDirector.play_ui("open")
+-	commerce_panel.open_commerce(config)
++	if context_id=="companion":
++		get_node("CompanionInterface").journal.open_journal()
++	else:
++		commerce_panel.open_commerce(config)
+ 
+ 
+ func _on_commerce_closed() -> void :
+@@ -2669,6 +2677,7 @@
+ 
+ 
+ func _settle_commerce_before_world_change() -> void :
++	if _companion_panel_is_open(): get_node("CompanionInterface").journal.close_journal()
+ 	if station_transaction_fx != null and station_transaction_fx.busy:
+ 		station_transaction_fx.complete_immediately()
+ 	if not commerce_transaction.is_empty():
+--- a/scripts/dev/visual_capture_driver.gd
++++ b/scripts/dev/visual_capture_driver.gd
+@@ -130,7 +130,7 @@
+ 
+ func _verify_build_contract() -> Dictionary:
+ 	var dev_feature: = OS.has_feature("ever_deeper_dev")
+-	var expected_version: = "0.45.0-dev.1" if dev_feature else "0.45.0"
++	var expected_version: = "0.46.0-dev.1" if dev_feature else "0.45.0"
+ 	var expected_flavor: = "dev" if dev_feature else "production"
+ 	var actual_version: = String(PremiumMenuScript.release_version())
+ 	var developer_menu: Variant = _main.get("developer_menu")
+@@ -1472,6 +1472,14 @@
+ 			mole.set("action",String(state.action))
+ 			mole.set("animation_clock",float(state.frame)/8.0)
+ 			mole.set("action_clock",float(state.frame)*(0.18 if String(state.action)=="pickup" else 0.21)+0.01)
++		if String(state.kind)=="overhaul_pet":
++			if String(state.get("variant",""))=="cooldown": mole.shake_cooldown=5.0
++			if String(state.get("variant",""))=="pet": mole.call("pet")
++			if String(state.get("tab",""))=="hud":
++				mole.call("_react","Got 3! +3 paws",3.0)
++				mole.bubble.text=mole.feedback;mole.bubble.visible=true
++				mole.guide_kind="ore_nose";mole.guide_point=mole.global_position+Vector2(400,0);mole.guide_time=20.0
++				mole.call("_ping",mole.global_position+Vector2(110,0))
+ 		mole.call("_draw_pose")
+ 	_capture_player.set_physics_process(false)
+ 	_capture_world.set_process(false)
+@@ -1662,6 +1670,7 @@
+ 
+ 
+ func _build_overhaul_states() -> Array[Dictionary]:
++	if "--pet-capture" in OS.get_cmdline_user_args(): return _build_pet_states()
+ 	var states: Array[Dictionary] = []
+ 	# Read the reported shop regression first, then every affected existing fixture.
+ 	for state in _build_capture_states():
+@@ -1703,6 +1712,7 @@
+ 
+ func _prepare_overhaul_extra(state: Dictionary) -> bool:
+ 	match String(state.kind):
++		"overhaul_pet": return _prepare_pet_state(state)
+ 		"overhaul_depth_shop":
+ 			var world: Node = _load_d2(String(state.mine_id))
+ 			if world==null: return false
+@@ -1768,3 +1778,36 @@
+ 			world.queue_redraw()
+ 			return true
+ 	return false
++
++func _build_pet_states() -> Array[Dictionary]:
++	var states: Array[Dictionary]=[]
++	for item in [["fresh","together"],["fresh","how"],["fresh","skills"],["ready","skills"],["learned","skills"],["bottom","skills"],["learned","together"],["cooldown","together"],["pet","together"]]:
++		states.append({"id":"pet_"+item[0]+"_"+item[1],"kind":"overhaul_pet","variant":item[0],"tab":item[1],"location":"mine"})
++	for location in ["mine","depth","surface"]:
++		states.append({"id":"pet_hud_"+location,"kind":"overhaul_pet","variant":"learned","tab":"hud","location":location})
++	return states
++
++func _prepare_pet_state(state: Dictionary) -> bool:
++	var world: Node
++	match String(state.location):
++		"mine": world=_load_d1("mossMine")
++		"depth": world=_load_d2("mossMine")
++		"surface":
++			_reset_run();_main.call("_dev_jump_surface");world=_main.get("surface_world")
++	if world==null: return false
++	var variant: String=state.variant
++	RunState.overhaul_progress={"companion_xp":0,"skills":{}}
++	RunState.gold=0
++	if variant!="fresh":
++		RunState.gold=500;RunState.overhaul_progress.companion_xp=90
++	if variant in ["learned","bottom","cooldown","pet"]:
++		for skill in MoleSkills.SKILLS: RunState.overhaul_progress.skills[skill.id]=1
++	_frame_world(world,world.player.global_position,world.player.global_position+Vector2.LEFT*48.0)
++	var ui: Node=_main.get_node("CompanionInterface")
++	ui.last_world_identity=String(_main.phase)+":"+String(_main.current_mine_id)+":"+str(RunState.endless_current_depth)
++	if String(state.tab)!="hud":
++		ui.open_skills()
++		ui.journal.select_tab(String(state.tab))
++		if variant=="bottom": ui.journal.scroll.set_deferred("scroll_vertical",2000)
++		if variant=="pet": ui.journal.call("_pet")
++	return true
+--- a/scripts/ui/premium_menu.gd
++++ b/scripts/ui/premium_menu.gd
+@@ -12,7 +12,7 @@
+ const MUTED: = Color("789384")
+ const INK: = Color("07120d")
+ const IPHONE_LANDSCAPE_ASPECT: = 1.95
+-const DEV_RELEASE_VERSION: = "0.45.0-dev.1"
++const DEV_RELEASE_VERSION: = "0.46.0-dev.1"
+ 
+ 
+ static func release_version() -> String:
+--- a/scripts/qa/overhaul_qa.gd
++++ b/scripts/qa/overhaul_qa.gd
+@@ -26,6 +26,7 @@
+ 	_test_surface_and_guide()
+ 	_test_endless_dig()
+ 	_test_companion()
++	_test_pet_revision()
+ 	await _test_path_and_touch()
+ 	print("EVER_DEEPER_OVERHAUL_GAMEPLAY_%s checks=%d failures=%s" % ["OK" if failures.is_empty() else "FAILED",checks,JSON.stringify(failures)])
+ 	return failures.is_empty()
+@@ -294,8 +295,8 @@
+ 	var portrait_point: Vector2=ui.button.get_global_transform_with_canvas()*(ui.button.size*0.5)
+ 	check(ui.button.is_visible_in_tree(),"Companion portrait is available on the touch HUD")
+ 	await _send_gesture(portrait_point,"tap")
+-	check(mole.mode=="follow" and main.call("_commerce_panel_is_open") and String(main.commerce_context)=="companion","UI tap opens skills without commanding companion")
+-	main.commerce_panel.close_commerce()
++	check(mole.mode=="follow" and main.call("_companion_panel_is_open") and not main.call("_commerce_panel_is_open") and String(main.commerce_context)=="companion","UI tap opens skills without commanding companion")
++	ui.journal.close_journal()
+ 	var point: Vector2=world.call("_cell_center",center+Vector2i(0,1))
+ 	check(not mole.command(point),"Earthshaker is locked before learning")
+ 	RunState.overhaul_progress={"skills":{"shake":1}}
+@@ -303,7 +304,7 @@
+ 	check(mole.command(point),"Learned Earthshaker accepts ordinary wall")
+ 	for step in range(180): mole.call("_physics_process",1.0/60.0)
+ 	check(mole.dug_total>=1 and mole.dug_total<=4,"Earthshaker opens at most 2x2 ordinary cells")
+-	check(mole.shake_cooldown>10.0,"Earthshaker has a real recharge")
++	check(mole.shake_cooldown>0.0 and mole.shake_cooldown<=8.0,"Earthshaker has a real recharge")
+ 
+ func _send_gesture(point: Vector2,kind: String) -> void:
+ 	if OS.has_feature("web"):
+@@ -382,3 +383,68 @@
+ 		RunState.drill_level=level
+ 		var next: Dictionary=guide.goal_for_state()
+ 		check(String(next.get("subtitle",next.get("detail",""))).contains("Depth 2"),"Guide names exact depth for drill "+str(level+1))
++
++func _test_pet_revision() -> void:
++	var world: Node=driver.call("_load_d1","mossMine")
++	world.set_process(false)
++	world.player.set_physics_process(false)
++	world.player.control_enabled=true
++	var mole: MoleCompanion=world.get_node("MoleCompanion")
++	mole.set_physics_process(false)
++	mole.call("_spawn_beside_hero")
++	var before: int=MoleSkills.bond()
++	RunState.record_mined("copper",5)
++	check(MoleSkills.bond()==before+5,"Hero mining earns paw points even when hero claims the drops")
++	check(not RunState.record_mined("fake_ore",20) and MoleSkills.bond()==before+5,"Invalid mining cannot award paw points")
++	var save: Dictionary=RunState.serialize()
++	RunState.overhaul_progress={}
++	check(RunState.deserialize(save) and MoleSkills.bond()==before+5,"New paw progress persists in existing save schema")
++	RunState.overhaul_progress={"skills":{"long_beam":1,"big_paws":1,"trailrunner":1,"shake":1}}
++	mole.call("_think")
++	check(is_equal_approx(mole.lamp.base_beam_length,440.0),"Long Beam doubles actual light reach")
++	var origin: Vector2=mole.global_position
++	var cell: Vector2i=world.call("_world_to_cell",origin)
++	world.call("_spawn_drop",cell,"copper",2)
++	world.drops[-1].position=origin+Vector2(75,0)
++	world.drops[-1].age=1.0
++	var before_ore: int=int(RunState.cargo.copper)
++	mole.action="pickup";mole.action_clock=0.0
++	mole.call("_update_action",0.51)
++	check(int(RunState.cargo.copper)==before_ore+2,"Big Paws really collects an ore cluster 75 units away")
++	mole.call("_update_action",0.10)
++	check(int(RunState.cargo.copper)==before_ore+2,"Celebration cannot duplicate pickup")
++	check(mole.feedback.contains("Got 2"),"Pickup explains its actual result")
++	mole.mode="hold";mole.hold_time=6.5;mole.call("_think")
++	check(mole.mode!="hold","Mole resumes helping after lighting a commanded spot")
++	mole.recall();mole.shake_cooldown=3.0
++	check(not mole.shake_nearby(),"Command cannot bypass dig recharge")
++	var ui: Node=main.get_node("CompanionInterface")
++	ui.open_skills()
++	check(ui.journal.visible and not main.commerce_panel.visible,"Companion owns a separate journal, not the shop")
++	check(not world.player.control_enabled and not ui.call("_ground_input_enabled"),"Journal pauses movement and prevents commands behind it")
++	for tab in ["together","skills","how"]:
++		ui.journal.select_tab(tab)
++		check(ui.journal.tab==tab and ui.journal.body.get_child_count()>0,"Journal tab renders "+tab)
++	ui.journal.close_journal()
++	check(world.player.control_enabled and not main.call("_shop_panel_is_open"),"Closing journal restores world controls")
++	RunState.overhaul_progress={"skills":{"teamwork":1}}
++	world.mine.barriers=[]
++	var target: Vector2i=Vector2i(12,12)
++	world.blocks[target]=world.call("_make_block","stone",20,0,"terrain")
++	world.blocks.erase(target+Vector2i.LEFT)
++	world.player.global_position=world.call("_cell_center",target+Vector2i.LEFT)
++	world.player.set_facing(Vector2.RIGHT)
++	mole.global_position=world.player.global_position
++	mole.mode="fetch";mole.action="idle";mole.assist_cooldown=0.0
++	world.external_mine_held=true
++	var dug_before: int=mole.dug_total
++	mole.call("_think")
++	check(mole.action=="shake" and mole.assist_action,"Teamwork gets a turn even while fetching")
++	check(world.blocks.has(target),"Teamwork waits for animation impact")
++	mole.call("_update_action",0.45)
++	check(not world.blocks.has(target) and mole.dug_total==dug_before+1,"Teamwork opens exactly one ordinary block at impact")
++	mole.call("_update_action",0.1)
++	check(mole.dug_total==dug_before+1 and mole.assist_cooldown>0.0,"Teamwork cannot credit twice or bypass recharge")
++	world.external_mine_held=false
++	RunState.overhaul_progress={}
++	check(not mole.scout("homeward"),"Unlearned command cannot bypass its skill")
+--- a/scripts/state/run_state.gd
++++ b/scripts/state/run_state.gd
+@@ -340,6 +340,8 @@
+ 		if not mined.has(kind):
+ 			mined[kind] = 0
+ 		mined[kind] = int(mined.get(kind, 0)) + amount
++		if kind in RESOURCE_IDS:
++			overhaul_progress["companion_xp"] = mini(10000000, int(overhaul_progress.get("companion_xp",0)) + amount)
+ 	_state_changed()
+ 	resource_collected.emit(kind, amount)
+ 
+@@ -348,6 +350,8 @@
+ 	if amount <= 0 or kind not in RESOURCE_IDS:
+ 		return false
+ 	mined[kind] = int(mined.get(kind, 0)) + amount
++	# Earn through mining even when the hero reaches the drop before the mole.
++	overhaul_progress["companion_xp"] = mini(10000000, int(overhaul_progress.get("companion_xp",0)) + amount)
+ 	_state_changed()
+ 	return true
+ 
+--- a/scripts/companion/mole_skills.gd
++++ b/scripts/companion/mole_skills.gd
+@@ -3,15 +3,15 @@
+ 
+ const SKILLS: Array[Dictionary] = [
+ 	{"id":"lantern","name":"Little Lantern","detail":"A warm helmet beam lights the tunnel beside you.","gold":0,"bond":0,"requires":""},
+-	{"id":"fetch","name":"Fetch","detail":"Finds loose ore, picks it up and secures it in the shared pouch. Tap the ground to send your companion.","gold":0,"bond":0,"requires":""},
+-	{"id":"trailrunner","name":"Trailrunner","detail":"Moves 35% faster when following you or fetching ore.","gold":35,"bond":5,"requires":"fetch"},
+-	{"id":"big_paws","name":"Big Paws","detail":"Gathers nearby pieces together with more than twice the normal pickup reach.","gold":60,"bond":10,"requires":"fetch"},
+-	{"id":"ore_nose","name":"Ore Nose","detail":"Scouts the nearest exposed ore vein and lights a safe place beside it.","gold":90,"bond":15,"requires":"big_paws"},
+-	{"id":"long_beam","name":"Long Beam","detail":"Lights the tunnel 50% farther ahead.","gold":75,"bond":12,"requires":"lantern"},
+-	{"id":"shake","name":"Earthshaker","detail":"Tap a nearby wall: one mighty shake opens up to 2×2 ordinary terrain cells. 14 second recharge. Sealed gates and bedrock remain solid.","gold":140,"bond":25,"requires":"big_paws"},
+-	{"id":"teamwork","name":"Teamwork","detail":"Helps open one ordinary wall cell every 4 seconds while you mine beside it.","gold":210,"bond":35,"requires":"shake"},
+-	{"id":"echo","name":"Echo Scout","detail":"Points out the descent or passage hidden in this area, so you know which way to explore.","gold":170,"bond":25,"requires":"long_beam"},
+-	{"id":"homeward","name":"Homeward","detail":"Leads the way to this area's return shaft, following open tunnels and lighting the route.","gold":240,"bond":40,"requires":"echo"},
++	{"id":"fetch","name":"Fetch","detail":"Automatically collects loose ore nearby. Ore goes straight into your backpack. Tap open ground to send your mole there.","gold":0,"bond":0,"requires":""},
++	{"id":"trailrunner","name":"Trailrunner","detail":"Runs 60% faster while fetching and following. Faster feet bring ore back sooner.","gold":35,"bond":5,"requires":"fetch"},
++	{"id":"big_paws","name":"Big Paws","detail":"Scoops up a whole nearby cluster with more than triple the pickup reach. Works automatically.","gold":60,"bond":10,"requires":"fetch"},
++	{"id":"ore_nose","name":"Ore Nose","detail":"Automatically sniffs out exposed ore every 10 seconds. Tap Find ore to send your mole beside a marked vein.","gold":90,"bond":15,"requires":"big_paws"},
++	{"id":"long_beam","name":"Long Beam","detail":"Twice the helmet-light reach, so you can see farther down the tunnel. Always on after learning.","gold":75,"bond":12,"requires":"lantern"},
++	{"id":"shake","name":"Earthshaker","detail":"Tap a nearby wall: one mighty shake opens up to 2×2 ordinary terrain cells. 8 second recharge. Sealed gates and bedrock remain solid.","gold":140,"bond":25,"requires":"big_paws"},
++	{"id":"teamwork","name":"Teamwork","detail":"Helps open one ordinary wall cell every 2.5 seconds while you mine beside it.","gold":210,"bond":35,"requires":"shake"},
++	{"id":"echo","name":"Echo Scout","detail":"Marks the way deeper and points toward it for 20 seconds, even when the entrance is off-screen.","gold":170,"bond":25,"requires":"long_beam"},
++	{"id":"homeward","name":"Homeward","detail":"Leads you toward the return shaft, waits for you to catch up, and keeps the destination marked.","gold":240,"bond":40,"requires":"echo"},
+ ]
+ 
+ static func has_skill(id: String) -> bool:
+@@ -22,7 +22,7 @@
+ 
+ static func earn(amount: int) -> void:
+ 	if amount <= 0: return
+-	RunState.overhaul_progress["companion_xp"] = bond() + amount
++	RunState.overhaul_progress["companion_xp"] = mini(10000000,bond() + amount)
+ 	RunState.call("_state_changed")
+ 
+ static func learn(id: String) -> bool:
+--- a/scripts/companion/mole_companion.gd
++++ b/scripts/companion/mole_companion.gd
+@@ -28,6 +28,20 @@
+ var marker_time: float = 0.0
+ var collected_total: int = 0
+ var dug_total: int = 0
++var feeling: String = "Right beside you"
++var feedback: String = ""
++var feedback_time: float = 0.0
++var bubble: Label
++var hold_time: float = 0.0
++var sniff_clock: float = 3.0
++var last_sniff: Vector2 = Vector2(INF,INF)
++var guide_kind: String = ""
++var guide_point: Vector2 = Vector2(INF,INF)
++var guide_time: float = 0.0
++var idle_clock: float = 0.0
++var assist_action: bool = false
++var failed_loot: Dictionary = {}
++
+ 
+ func _ready() -> void:
+ 	world = get_parent()
+@@ -54,6 +68,17 @@
+ 	marker.z_index = 11
+ 	marker.visible = false
+ 	world.add_child.call_deferred(marker)
++	bubble = Label.new()
++	bubble.position = Vector2(-90,-130)
++	bubble.z_index=30
++	bubble.size = Vector2(180,28)
++	bubble.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
++	bubble.add_theme_font_size_override("font_size",15)
++	bubble.add_theme_color_override("font_color",Color("fff0c5"))
++	bubble.add_theme_color_override("font_outline_color",Color("422d25"))
++	bubble.add_theme_constant_override("outline_size",5)
++	bubble.mouse_filter = Control.MOUSE_FILTER_IGNORE
++	add_child(bubble)
+ 	visible = false
+ 
+ func _physics_process(delta: float) -> void:
+@@ -66,6 +91,18 @@
+ 	if not was_active or global_position.distance_to(hero.global_position)>1000.0:
+ 		_spawn_beside_hero()
+ 	was_active = true
++	if failed_loot.size()>80: failed_loot.clear()
++	if not bool(hero.get("control_enabled")):
++		_draw_pose()
++		return
++	feedback_time = maxf(0.0,feedback_time-delta)
++	bubble.visible = feedback_time>0.0
++	bubble.text = feedback
++	bubble.position.y = -130.0 - sin(minf(feedback_time,1.0)*PI)*5.0
++	guide_time = maxf(0.0,guide_time-delta)
++	if guide_time<=0.0: guide_kind=""
++	hold_time += delta if mode=="hold" else 0.0
++	idle_clock += delta if action=="idle" else 0.0
+ 	shake_cooldown = maxf(0.0,shake_cooldown-delta)
+ 	assist_cooldown = maxf(0.0,assist_cooldown-delta)
+ 	marker_time = maxf(0.0,marker_time-delta)
+@@ -96,6 +133,8 @@
+ 		_begin_shake()
+ 	elif mode in ["command","scout","homeward"]:
+ 		mode="hold"
++		hold_time=0.0
++		_react("Here we are!",2.0)
+ 	if action not in ["pickup","shake"]:
+ 		action = "walk" if moving else "idle"
+ 	_draw_pose()
+@@ -106,23 +145,33 @@
+ 		if not _blocked(hero.global_position+offset):
+ 			global_position=hero.global_position+offset
+ 			break
++	failed_loot.clear()
++	last_sniff=Vector2(INF,INF)
++	guide_time=0.0
++	guide_kind=""
+ 	recall()
+ 
+ func recall() -> void:
+ 	mode="follow"
+ 	action="idle"
+ 	loot_id=""
++	assist_action=false
+ 	route.clear()
+ 	route_goal=Vector2(INF,INF)
+ 	destination=hero.global_position
+ 
+ func command(point: Vector2) -> bool:
+-	if point.distance_to(hero.global_position)>680.0: return false
++	if point.distance_to(hero.global_position)>680.0:
++		_react("A little closer?",2.2)
++		return false
+ 	if _blocked(point):
+ 		if not Skills.has_skill("shake") or shake_cooldown>0.0 or not world.has_method("companion_can_dig") or not world.call("companion_can_dig",point):
++			_react("Learning to dig!" if not Skills.has_skill("shake") else "Resting paws: %ds" % ceili(shake_cooldown) if shake_cooldown>0.0 else "Too tough for my paws",2.4)
+ 			return false
+ 		var landing: Vector2 = _nearby_floor(point)
+-		if not is_finite(landing.x): return false
++		if not is_finite(landing.x):
++			_react("Need an open path",2.0)
++			return false
+ 		destination=landing
+ 		task_point=point
+ 		mode="dig"
+@@ -134,12 +183,35 @@
+ 	route.clear()
+ 	route_goal=Vector2(INF,INF)
+ 	_ping(point)
++	_react("Digging time!" if mode=="dig" else "On my way!",1.8)
+ 	return true
+ 
+ func _think() -> void:
+-	var range_value: float = 330.0 if Skills.has_skill("long_beam") else 220.0
++	var range_value: float = 440.0 if Skills.has_skill("long_beam") else 220.0
+ 	if lamp.base_beam_length != range_value: lamp.configure(Color("ffe0a0"),facing,0.0,range_value)
+-	if mode=="hold" and hero.global_position.distance_to(global_position)>400.0: recall()
++	if mode in ["follow","fetch","hold"] and Skills.has_skill("teamwork") and assist_cooldown<=0.0 and (bool(world.get("external_mine_held")) or Input.is_action_pressed("mine")):
++		var point: Vector2 = hero.global_position+Vector2(hero.get("facing_vector"))*52.0
++		if global_position.distance_to(point)<170.0 and world.has_method("companion_can_dig") and bool(world.call("companion_can_dig",point)):
++			assist_action=true
++			assist_cooldown=2.5
++			action="shake"
++			action_clock=0.0
++			task_point=point
++			facing=(point-global_position).normalized()
++			return
++	if mode=="hold" and (hold_time>6.0 or hero.global_position.distance_to(global_position)>300.0): recall()
++	sniff_clock-=0.30
++	if Skills.has_skill("ore_nose") and sniff_clock<=0.0 and mode in ["follow","hold"]:
++		sniff_clock=10.0
++		if world.has_method("companion_ore_target"):
++			var ore: Vector2=world.call("companion_ore_target",global_position)
++			if is_finite(ore.x) and (not is_finite(last_sniff.x) or ore.distance_to(last_sniff)>16.0):
++				last_sniff=ore
++				guide_kind="ore_nose"
++				guide_point=ore
++				guide_time=12.0
++				_ping(ore)
++				_react("Sniff sniff... ore!",2.4)
+ 	if mode=="fetch":
+ 		var found: bool = false
+ 		for drop in _loot():
+@@ -148,26 +220,16 @@
+ 				found=true
+ 				break
+ 		if not found: recall()
+-	if mode=="follow":
+-		destination=hero.global_position
+-		var best: float = 300.0 if Skills.has_skill("ore_nose") else 190.0
++	if mode in ["follow","hold"]:
++		if mode=="follow": destination=hero.global_position
++		var best: float = 440.0 if Skills.has_skill("ore_nose") else 280.0
+ 		for drop in _loot():
+ 			var distance: float = global_position.distance_to(Vector2(drop.position))
+-			if distance<best and float(drop.get("age",1.0))>0.65 and not _blocked(Vector2(drop.position)):
++			if int(failed_loot.get(String(drop.id),0))<Time.get_ticks_msec() and distance<best and float(drop.get("age",1.0))>0.15 and not _blocked(Vector2(drop.position)):
+ 				best=distance
+ 				loot_id=String(drop.id)
+ 				destination=Vector2(drop.position)
+ 				mode="fetch"
+-		if mode=="follow" and Skills.has_skill("teamwork") and assist_cooldown<=0.0 and bool(world.get("external_mine_held")):
+-			var point: Vector2 = hero.global_position+Vector2(hero.get("facing_vector"))*52.0
+-			if global_position.distance_to(point)<115.0 and world.has_method("companion_dig"):
+-				var count: int = int(world.call("companion_dig",point,false))
+-				if count>0:
+-					dug_total+=count
+-					assist_cooldown=4.0
+-					action="shake"
+-					action_clock=0.0
+-					task_point=point
+ 
+ func _loot() -> Array:
+ 	return world.call("companion_loot_candidates") if world.has_method("companion_loot_candidates") else []
+@@ -182,21 +244,36 @@
+ 
+ func shake_nearby() -> bool:
+ 	if not Skills.has_skill("shake") or shake_cooldown>0.0: return false
+-	var point: Vector2 = global_position+facing*48.0
+-	return command(point)
++	var best: Vector2=Vector2(INF,INF)
++	var distance: float=INF
++	for y in range(-3,4):
++		for x in range(-3,4):
++			var point: Vector2=hero.global_position+Vector2(x,y)*40.0
++			if world.has_method("companion_can_dig") and world.call("companion_can_dig",point) and is_finite(_nearby_floor(point).x):
++				var score: float=point.distance_to(hero.global_position)
++				if score<distance: best=point; distance=score
++	if not is_finite(best.x):
++		_react("Tap an ordinary wall",2.4)
++		return false
++	return command(best)
+ 
+ func _update_action(delta: float) -> void:
+ 	var previous: float = action_clock
+ 	action_clock += delta
+ 	if action=="pickup" and previous<0.50 and action_clock>=0.50:
+-		var radius: float = 64.0 if Skills.has_skill("big_paws") else 28.0
++		var radius: float = 100.0 if Skills.has_skill("big_paws") else 32.0
+ 		var collected: int = int(world.call("companion_collect_loot",global_position,radius)) if world.has_method("companion_collect_loot") else 0
+ 		collected_total += collected
+ 		Skills.earn(collected)
+-	if action=="shake" and mode=="dig" and previous<0.44 and action_clock>=0.44:
+-		var count: int = int(world.call("companion_dig",task_point,true)) if world.has_method("companion_dig") else 0
++		if collected>0: _react("Got %d! +%d paws" % [collected,collected],2.2)
++		elif not loot_id.is_empty(): failed_loot[loot_id]=Time.get_ticks_msec()+10000
++	if action=="shake" and (mode=="dig" or assist_action) and previous<0.44 and action_clock>=0.44:
++		var count: int = int(world.call("companion_dig",task_point,not assist_action)) if world.has_method("companion_dig") else 0
+ 		dug_total+=count
+-		shake_cooldown=14.0 if count>0 else 1.0
++		if not assist_action: shake_cooldown=8.0 if count>0 else 1.0
++		if count>0:
++			_react("Teamwork!" if assist_action else "%d blocks!" % count,2.2)
++			AudioDirector.play_mining("stone",true,false)
+ 	if action_clock>=(0.72 if action=="pickup" else 0.84): recall()
+ 
+ func _draw_pose() -> void:
+@@ -211,6 +288,12 @@
+ 		sprite.texture=SHAKE
+ 		frame=mini(3,int(action_clock/0.21))
+ 	sprite.frame=row*4+frame
++	# Small whole-body gestures layer over the existing authored directional frames.
++	var breath: float=sin(animation_clock*2.6)*0.016 if action=="idle" else 0.0
++	var happy: float=maxf(0.0,sin(feedback_time*9.0))*2.0 if feedback_time>0.0 else 0.0
++	sprite.scale=Vector2(1.0-breath*0.4,1.0+breath)*(74.0/256.0)
++	sprite.position.y=-happy
++	sprite.rotation=sin(animation_clock*2.0)*0.035 if action=="idle" and fmod(idle_clock,9.0)>6.5 else 0.0
+ 	# Helmet light follows the lamp in each real directional frame.
+ 	lamp.position=Vector2(10 if row==1 else -10 if row==3 else 0,-56 if row!=2 else -61)
+ 	if action=="pickup" and frame in [1,2]: lamp.position.y+=16.0
+@@ -250,13 +333,20 @@
+ 			route=_path_to(destination)
+ 			route_goal=destination
+ 		if route.is_empty():
+-			if mode!="follow": recall()
++			if mode!="follow":
++				if mode=="fetch": failed_loot[loot_id]=Time.get_ticks_msec()+10000
++				_react("Need an open path",2.0)
++				recall()
+ 			return
+ 		while not route.is_empty() and global_position.distance_to(route[0])<0.5: route.pop_front()
+ 		if route.is_empty(): return
+ 		next=route[0]
+ 	else: route.clear()
+-	var speed: float = 218.0*(1.35 if Skills.has_skill("trailrunner") else 1.0)
++	if mode=="homeward" and global_position.distance_to(hero.global_position)>175.0:
++		feeling="Waiting for you"
++		return
++	var speed: float = 280.0*(1.60 if Skills.has_skill("trailrunner") else 1.0)
++	if mode=="follow" and global_position.distance_to(hero.global_position)>240.0: speed=maxf(speed,580.0)
+ 	var offset: Vector2 = next-global_position
+ 	var step: Vector2 = offset.limit_length(speed*delta)
+ 	if not _segment_clear(global_position,global_position+step):
+@@ -301,17 +391,22 @@
+ 	return result
+ 
+ func scout(kind: String) -> bool:
++	if not Skills.has_skill(kind): return false
+ 	var point: Vector2 = Vector2(INF,INF)
+ 	if kind=="ore_nose" and world.has_method("companion_ore_target"):
+ 		point=world.call("companion_ore_target",global_position)
+ 	elif kind in ["echo","homeward"]:
+ 		if world.has_method("_is_floor"): point=world.get("up_shaft_position") if kind=="homeward" else world.get("down_shaft_position")
+-		elif world.has_method("_terrain_is_solid"): point=world.get("depth_entrance")
++		elif world.has_method("_terrain_is_solid"): point=world.call("entry_spawn") if kind=="homeward" else world.get("depth_entrance")
+ 		elif world.has_method("_entry_spawn"):
+ 			point=world.call("_entry_spawn") if kind=="homeward" else world.get("depth_entrance")
+ 		elif world.has_method("guide_target"): point=world.call("guide_target","hubEntrance")
+ 	if not is_finite(point.x): return false
++	guide_kind=kind
++	guide_point=point
++	guide_time=20.0 if kind!="homeward" else 120.0
+ 	_ping(point)
++	_react("This way home!" if kind=="homeward" else "A way deeper!" if kind=="echo" else "I smell ore!",2.5)
+ 	facing=(point-global_position).normalized()
+ 	if kind=="echo":
+ 		mode="hold"
+@@ -328,8 +423,33 @@
+ func _ping(point: Vector2) -> void:
+ 	if not is_instance_valid(marker): return
+ 	marker.global_position=point+Vector2(0,-25)
+-	marker_time=8.0
++	marker_time=20.0
+ 	marker.visible=true
+ 
+ func debug_snapshot() -> Dictionary:
+ 	return {"mode":mode,"action":action,"position":global_position,"destination":destination,"collected":collected_total,"dug":dug_total,"frame":sprite.frame,"light":lamp.debug_snapshot(),"shake_cooldown":shake_cooldown}
++
++func _react(message: String, duration: float=2.0) -> void:
++	feedback=message
++	feedback_time=duration
++
++func pet() -> void:
++	_react("Happy little paws!",2.5)
++
++func status_text() -> String:
++	if action=="pickup": return "Scooping up ore"
++	if action=="shake": return "Helping you dig!" if assist_action else "Earthshaker!"
++	match mode:
++		"fetch": return "Fetching loose ore"
++		"dig": return "Off to dig"
++		"command": return "On my way"
++		"scout": return "Following my nose"
++		"homeward": return "Waiting for you" if global_position.distance_to(hero.global_position)>175.0 else "Leading you home"
++		"hold": return "Lighting this spot"
++	return "Right beside you"
++
++func direction_hint() -> String:
++	if guide_time<=0.0 or not is_finite(guide_point.x): return ""
++	var offset: Vector2=guide_point-hero.global_position
++	var arrow: String="Right" if absf(offset.x)>absf(offset.y) and offset.x>0 else "Left" if absf(offset.x)>absf(offset.y) else "Down" if offset.y>0 else "Up"
++	return ("Ore" if guide_kind=="ore_nose" else "Home" if guide_kind=="homeward" else "Passage")+" · "+arrow+" · "+str(roundi(offset.length()/48.0))+" steps"
+--- a/scripts/companion/companion_interface.gd
++++ b/scripts/companion/companion_interface.gd
+@@ -2,6 +2,8 @@
+ 
+ const Skills = preload("res://scripts/companion/mole_skills.gd")
+ var main: Node
++var journal: CompanionJournal
++var activity: Label
+ var button: TextureButton
+ var touch_start: Vector2 = Vector2(INF,INF)
+ var touch_index: int = -1
+@@ -22,7 +24,20 @@
+ 	button.tooltip_text="Mining companion · skills and commands"
+ 	button.pressed.connect(open_skills)
+ 	add_child(button)
+-	main.commerce_panel.action_confirmed.connect(_on_action)
++	journal=preload("res://scripts/companion/companion_journal.gd").new()
++	journal.name="CompanionJournal"
++	journal.owner_ui=self
++	add_child(journal)
++	journal.closed.connect(main._on_commerce_closed)
++	journal.command_requested.connect(_command_skill)
++	activity=Label.new()
++	activity.mouse_filter=Control.MOUSE_FILTER_IGNORE
++	activity.horizontal_alignment=HORIZONTAL_ALIGNMENT_LEFT
++	activity.add_theme_font_size_override("font_size",16)
++	activity.add_theme_color_override("font_color",Color("fff0c5"))
++	activity.add_theme_color_override("font_outline_color",Color("38261e"))
++	activity.add_theme_constant_override("outline_size",5)
++	add_child(activity)
+ 	# Empty ground belongs to the movement pad; let the regular GUI reserve buttons.
+ 	main.movement_pad.gui_input.connect(_on_world_gui_input)
+ 	# Web maps touchcancel to an ordinary release. Keep the browser's cancellation.
+@@ -38,6 +53,9 @@
+ 	var extent: float=90.0 if mobile else 52.0
+ 	button.position=Vector2(440.0 if mobile else 184.0,18.0 if mobile else 8.0)
+ 	button.size=Vector2.ONE*extent
++	activity.position=button.position+Vector2(extent+10,12)
++	activity.size=Vector2(230 if mobile else 150,72)
++	activity.add_theme_font_size_override("font_size",16 if mobile else 12)
+ 
+ func _process(_delta: float) -> void:
+ 	var identity: String=String(main.phase)+":"+String(main.current_mine_id)+":"+str(RunState.endless_current_depth)
+@@ -49,6 +67,13 @@
+ 		if mole!=null: mole.call_deferred("_spawn_beside_hero")
+ 	button.visible=bool(main.game_started) and not bool(main.menu_open) and not bool(main.inventory_open) and not bool(main.conclusion_overlay.visible) and not main.call("_shop_panel_is_open") and not bool(main.orientation_guard_active)
+ 
++	activity.visible=button.visible
++	var active: MoleCompanion=active_mole()
++	if active!=null and activity.visible:
++		activity.text=active.direction_hint()
++		if activity.text.is_empty(): activity.text=active.status_text()
++		if Skills.has_skill("shake"): activity.text+="\n"+("Dig ready" if active.shake_cooldown<=0.0 else "Dig in %ds" % ceili(active.shake_cooldown))
++
+ func active_mole() -> MoleCompanion:
+ 	var world: Node=main.get(String(main.phase)+"_world")
+ 	return world.get_node_or_null("MoleCompanion") if is_instance_valid(world) else null
+@@ -56,23 +81,19 @@
+ func open_skills() -> void:
+ 	main.call("_open_commerce",Skills.config(),"companion")
+ 
+-func _on_action(id: String) -> void:
+-	if String(main.commerce_context)!="companion" or not id.begins_with("mole:"): return
+-	var skill: String=id.trim_prefix("mole:")
+-	if not Skills.has_skill(skill):
+-		if Skills.learn(skill): AudioDirector.play_economy("upgrade")
+-		else: AudioDirector.play_blocked()
+-		main.commerce_panel.refresh(Skills.config(id))
+-		return
++func _command_skill(skill: String) -> void:
++	if not Skills.has_skill(skill): return
+ 	var mole: MoleCompanion=active_mole()
+ 	if mole==null: return
+-	main.commerce_panel.close_commerce()
++	journal.close_journal()
+ 	match skill:
+-		"fetch": mole.recall()
++		"fetch":
++			mole.recall()
++			mole.call("_react","Right beside you!",2.0)
+ 		"shake":
+-			if not mole.shake_nearby(): main.call("_set_status","Tap a nearby ordinary wall to send your mole digging")
++			if not mole.shake_nearby(): mole.call("_react","Tap an ordinary wall",2.4)
+ 		"ore_nose","echo","homeward":
+-			if not mole.scout(skill): main.call("_set_status","No reachable target here yet · explore a little farther")
++			if not mole.scout(skill): mole.call("_react","Nothing reachable yet",2.4)
+ 
+ func _on_web_touch_cancel(arguments: Array) -> void:
+ 	var changed: JavaScriptObject=arguments[0].changedTouches
+--- /dev/null
++++ b/scripts/companion/companion_journal.gd
+@@ -0,0 +1,268 @@
++class_name CompanionJournal
++extends Control
++
++signal closed
++signal command_requested(command: String)
++const Skills = preload("res://scripts/companion/mole_skills.gd")
++const INK = Color("49382c")
++const GREEN = Color("536443")
++const MUTED = Color("7c6955")
++const FONT = preload("res://assets/ui/fonts/DejaVuSans.ttf")
++const TITLE = preload("res://assets/ui/fonts/DejaVuSerif-Bold.ttf")
++var owner_ui: Node
++var paper: TextureRect
++var content: Control
++var portrait: TextureButton
++var title_label: Label
++var mood: Label
++var points: Label
++var tally: Label
++var tab: String="together"
++var tabs: Array[Button]=[]
++var body: Control
++var status: Label
++var clock: float=0.0
++var refresh_clock: float=0.0
++var response: String=""
++var scroll: ScrollContainer
++var notice: Label
++
++func _ready() -> void:
++	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
++	mouse_filter=Control.MOUSE_FILTER_STOP
++	var shade=ColorRect.new()
++	shade.color=Color(0.08,0.06,0.035,0.73)
++	shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
++	add_child(shade)
++	paper=TextureRect.new()
++	paper.texture=preload("res://assets/companion/journal-v1.png")
++	paper.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
++	paper.stretch_mode=TextureRect.STRETCH_SCALE
++	paper.mouse_filter=Control.MOUSE_FILTER_IGNORE
++	add_child(paper)
++	content=Control.new()
++	add_child(content)
++	title_label=_label(content,"Little paws. Big heart.",30,true)
++	portrait=TextureButton.new()
++	portrait.name="PetMole"
++	portrait.texture_normal=preload("res://assets/companion/mole.png")
++	portrait.ignore_texture_size=true
++	portrait.stretch_mode=TextureButton.STRETCH_KEEP_ASPECT_CENTERED
++	portrait.tooltip_text="Give your mole a little love"
++	portrait.pressed.connect(_pet)
++	content.add_child(portrait)
++	mood=_label(content,"Your little mining buddy",20,true)
++	mood.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
++	points=_label(content,"",18)
++	points.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
++	tally=_label(content,"",16)
++	tally.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
++	for id in ["together","skills","how"]:
++		var b=_button(content,{"together":"Together","skills":"Paw skills","how":"How we help"}[id],func(): select_tab(id))
++		tabs.append(b)
++	var close_button=_button(content,"Close",close_journal)
++	close_button.name="CloseJournal"
++	body=Control.new()
++	content.add_child(body)
++	notice=_label(content,"",16)
++	notice.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
++	notice.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
++	get_viewport().size_changed.connect(_layout)
++	visible=false
++	_layout()
++
++func _label(parent: Node,text_value: String,font_size: int,bold: bool=false) -> Label:
++	var l=Label.new()
++	l.text=text_value
++	l.add_theme_font_override("font",TITLE if bold else FONT)
++	l.add_theme_font_size_override("font_size",font_size)
++	l.add_theme_color_override("font_color",INK)
++	l.mouse_filter=Control.MOUSE_FILTER_IGNORE
++	parent.add_child(l)
++	return l
++
++func _style(color: Color) -> StyleBoxFlat:
++	var s=StyleBoxFlat.new()
++	s.bg_color=color
++	s.corner_radius_top_left=17;s.corner_radius_top_right=17;s.corner_radius_bottom_left=17;s.corner_radius_bottom_right=17
++	s.border_width_left=2;s.border_width_right=2;s.border_width_top=2;s.border_width_bottom=2
++	s.border_color=Color("aa9575")
++	s.content_margin_left=16;s.content_margin_right=16;s.content_margin_top=9;s.content_margin_bottom=9
++	return s
++
++func _button(parent: Node,text_value: String,callback: Callable) -> Button:
++	var b=Button.new()
++	b.text=text_value
++	b.custom_minimum_size=Vector2(0,54)
++	b.add_theme_font_override("font",FONT)
++	b.add_theme_font_size_override("font_size",18)
++	b.add_theme_color_override("font_color",INK)
++	b.add_theme_color_override("font_hover_color",INK)
++	b.add_theme_color_override("font_pressed_color",INK)
++	b.add_theme_color_override("font_disabled_color",MUTED)
++	b.add_theme_stylebox_override("normal",_style(Color("e6d7b7")))
++	b.add_theme_stylebox_override("hover",_style(Color("f3e5c7")))
++	b.add_theme_stylebox_override("pressed",_style(Color("c4c6a1")))
++	b.add_theme_stylebox_override("disabled",_style(Color("d8cbb1")))
++	b.pressed.connect(callback)
++	parent.add_child(b)
++	return b
++
++func _layout() -> void:
++	if paper==null: return
++	var screen: Vector2=get_viewport().get_visible_rect().size
++	# Keep the journal in its authored aspect; logical size gives stable mobile targets.
++	var factor: float=minf(screen.x/1420.0,screen.y/650.0)
++	var origin: Vector2=(screen-Vector2(1420,650)*factor)*0.5
++	paper.position=origin
++	paper.size=Vector2(1420,650)*factor
++	content.position=origin
++	content.scale=Vector2.ONE*factor
++	content.size=Vector2(1420,650)
++	title_label.position=Vector2(180,78);title_label.size=Vector2(900,44)
++	portrait.position=Vector2(158,168);portrait.size=Vector2(265,290)
++	mood.position=Vector2(165,466);mood.size=Vector2(265,31)
++	points.position=Vector2(130,509);points.size=Vector2(315,26)
++	tally.position=Vector2(175,545);tally.size=Vector2(250,32)
++	for i in tabs.size():
++		tabs[i].position=Vector2(494+i*244,133);tabs[i].size=Vector2(228,54)
++	var close_button: Button=content.get_node("CloseJournal")
++	close_button.position=Vector2(1190,70);close_button.size=Vector2(126,52)
++	body.position=Vector2(495,203);body.size=Vector2(808,356)
++	notice.position=Vector2(492,566);notice.size=Vector2(808,36)
++
++func is_open() -> bool: return visible
++
++func open_journal() -> void:
++	visible=true
++	response=""
++	select_tab("together")
++	_update_live()
++
++func close_journal() -> void:
++	if not visible: return
++	visible=false
++	closed.emit()
++
++func _input(event: InputEvent) -> void:
++	if visible and event.is_action_pressed("ui_cancel"):
++		close_journal()
++		get_viewport().set_input_as_handled()
++
++func _pet() -> void:
++	response="A happy nose wiggle, just for you."
++	var mole: MoleCompanion=owner_ui.active_mole()
++	if mole!=null: mole.pet()
++	AudioDirector.play_ui("open")
++	_update_live()
++
++func select_tab(id: String) -> void:
++	tab=id
++	for child in body.get_children(): body.remove_child(child);child.queue_free()
++	status=null;scroll=null
++	for i in tabs.size():
++		var active: bool=["together","skills","how"][i]==tab
++		tabs[i].add_theme_stylebox_override("normal",_style(Color("c6cba9") if active else Color("e6d7b7")))
++	if tab=="skills": _skills()
++	elif tab=="how": _how()
++	else: _together()
++	_update_live()
++
++func _together() -> void:
++	var heading=_label(body,"Your little helper, ready to go.",25,true)
++	heading.position=Vector2(0,0)
++	var description=_label(body,"I follow, light the way and scoop up loose ore.\nTap the ground to send me somewhere!",19)
++	description.position=Vector2(0,42);description.size=Vector2(800,62)
++	status=_label(body,"",20,true);status.position=Vector2(0,110);status.size=Vector2(790,36)
++	var definitions=[['fetch','Come here','Always ready'],['shake','Dig together','8-second recharge'],['ore_nose','Find ore','Sniff out a vein'],['homeward','Lead me home','I wait for you'],['echo','Find passage','Point the way deeper']]
++	for i in definitions.size():
++		var row: Array=definitions[i]
++		var skill_id: String=row[0]
++		var owned: bool=Skills.has_skill(skill_id)
++		var b=_button(body,String(row[1]) if owned else String(row[1])+" · learn first",func(): command_requested.emit(skill_id))
++		b.name="Command_"+skill_id
++		b.position=Vector2((i%2)*406,157+(i/2)*64)
++		b.size=Vector2(394,55)
++		b.disabled=not owned
++		if skill_id=="shake": b.tooltip_text="Tap an ordinary wall, or let me find one nearby."
++
++func _how() -> void:
++	var lines=[
++		["1. Your shadow with little paws", "I follow and light nearby tunnels automatically. Loose ore goes straight into your backpack."],
++		["2. A tap tells me where", "Tap open ground to send me. Drag to move yourself. Learn Earthshaker, then tap an ordinary wall to dig."],
++		["3. Learn it once. Feel it every trip.", "'Always helping' skills work on their own. Command buttons live in Together. Mining earns paw points."],
++		["4. Watch my little signals", "I tell you when I find, fetch or dig. My portrait shows what I am doing and when Earthshaker is ready."]]
++	for i in lines.size():
++		var h=_label(body,lines[i][0],21,true);h.position=Vector2(0,i*88)
++		var d=_label(body,lines[i][1],17);d.position=Vector2(0,i*88+31);d.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;d.set_deferred("size",Vector2(800,53))
++
++func _skills() -> void:
++	scroll=ScrollContainer.new()
++	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
++	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
++	body.add_child(scroll)
++	var rows=VBoxContainer.new();rows.size_flags_horizontal=Control.SIZE_EXPAND_FILL;rows.add_theme_constant_override("separation",12);scroll.add_child(rows)
++	for skill in Skills.SKILLS:
++		var card=PanelContainer.new();card.add_theme_stylebox_override("panel",_style(Color("f7edda")));rows.add_child(card)
++		var stack=VBoxContainer.new();stack.add_theme_constant_override("separation",6);card.add_child(stack)
++		var skill_id: String=skill.id
++		var owned: bool=Skills.has_skill(skill_id)
++		var passive: bool=skill_id in ["lantern","fetch","trailrunner","big_paws","ore_nose","long_beam","teamwork"]
++		_label(stack,String(skill.name)+("   ·   Always helping" if owned and passive else "   ·   Command ready" if owned else ""),21,true)
++		var detail=_label(stack,String(skill.detail),17);detail.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;detail.custom_minimum_size.x=725
++		if owned: continue
++		var prereq: String=String(skill.requires)
++		var locked: bool=not prereq.is_empty() and not Skills.has_skill(prereq)
++		var enough: bool=RunState.gold>=int(skill.gold) and Skills.bond()>=int(skill.bond)
++		var price: String="%d gold + %d paw points" % [int(skill.gold),int(skill.bond)]
++		var why: String="Learn "+_skill_name(prereq)+" first" if locked else "Need %d gold · %d paw points" % [maxi(0,int(skill.gold)-RunState.gold),maxi(0,int(skill.bond)-Skills.bond())] if not enough else "Ready to learn"
++		var row=HBoxContainer.new();stack.add_child(row)
++		var label=_label(row,price+"\n"+why,16);label.size_flags_horizontal=Control.SIZE_EXPAND_FILL
++		var learn=_button(row,"Learn",func(): _learn(skill_id));learn.name="Learn_"+skill_id;learn.custom_minimum_size.x=135;learn.disabled=locked or not enough
++
++func _skill_name(id: String) -> String:
++	for skill in Skills.SKILLS:
++		if String(skill.id)==id: return String(skill.name)
++	return id
++
++func _learn(id: String) -> void:
++	var offset: int=scroll.scroll_vertical if scroll!=null else 0
++	if Skills.learn(id):
++		response=_skill_name(id)+" learned! "+("Try it in Together." if id in ["shake","echo","homeward"] else "Already helping you.")
++		AudioDirector.play_economy("upgrade")
++		var mole: MoleCompanion=owner_ui.active_mole()
++		if mole!=null: mole.pet()
++		select_tab("skills")
++		if scroll!=null: scroll.set_deferred("scroll_vertical",offset)
++	else: AudioDirector.play_blocked()
++
++func _process(delta: float) -> void:
++	if not visible: return
++	clock+=delta
++	portrait.position.y=168.0+sin(clock*2.3)*2.3
++	portrait.rotation=sin(clock*1.1)*0.013
++	refresh_clock-=delta
++	if refresh_clock<=0.0: refresh_clock=0.20;_update_live()
++
++func _update_live() -> void:
++	if not visible or owner_ui==null: return
++	var mole: MoleCompanion=owner_ui.active_mole()
++	points.text="%d paw points" % Skills.bond()
++	mood.text="Your little mining buddy"
++	if mole!=null:
++		var ore_total: int=0
++		var dig_total: int=0
++		for world_name in ["surface_world","mine_world","depth_world","hub_world","deepheart_world","endless_world"]:
++			var world: Node=owner_ui.main.get(world_name)
++			var buddy: MoleCompanion=world.get_node_or_null("MoleCompanion") if world!=null else null
++			if buddy!=null: ore_total+=buddy.collected_total;dig_total+=buddy.dug_total
++		tally.text="%d fetched · %d dug" % [ore_total,dig_total]
++		tally.tooltip_text="Your mole's help this session"
++		if status!=null:
++			status.text=mole.status_text()
++			if Skills.has_skill("shake"): status.text+="  ·  "+("Dig ready" if mole.shake_cooldown<=0.0 else "Dig in %ds" % ceili(mole.shake_cooldown))
++		var shake_button=body.get_node_or_null("Command_shake")
++		if shake_button!=null and Skills.has_skill("shake"):
++			shake_button.disabled=mole.shake_cooldown>0.0
++			shake_button.text="Dig together" if mole.shake_cooldown<=0.0 else "Resting paws · %ds" % ceili(mole.shake_cooldown)
++	notice.text=response if not response.is_empty() else "10 paw skills · swipe up for more. Mine together to earn paw points." if tab=="skills" else "Tap your buddy for a little love. Mine together to earn paw points."
