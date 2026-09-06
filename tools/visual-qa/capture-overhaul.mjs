@@ -12,7 +12,7 @@ let EXPECTED_CAPTURE_COUNT = 0;
 const MOTION = false;
 const RANGE_START = Number(process.env.CAPTURE_START || 1);
 const RANGE_END = Number(process.env.CAPTURE_END || 19);
-if (!(RANGE_START >= 1 && RANGE_END >= RANGE_START && RANGE_END <= 175)) throw new Error("Invalid capture range");
+if (!(RANGE_START >= 1 && RANGE_END >= RANGE_START && RANGE_END <= 289)) throw new Error("Invalid capture range");
 const SUITE_ARG = "--visual-capture-suite";
 const MARKER_PREFIX = "EVER_DEEPER_VISUAL_CAPTURE_";
 const NEXT_MARKER_TIMEOUT_MS = 60 * 1000;
@@ -330,7 +330,7 @@ async function captureSuite(options) {
       }
       if (marker.startsWith(`${MARKER_PREFIX}READY`)) {
         if (!began) throw new Error("READY marker arrived before BEGIN");
-        const match = marker.match(/state=([a-z0-9_]+) index=(\d+) total=(\d+)/);
+        const match = marker.match(/state=([a-z0-9_-]+) index=(\d+) total=(\d+)/);
         if (!match) throw new Error(`Malformed READY marker: ${marker}`);
         const state = match[1];
         const index = Number(match[2]);
