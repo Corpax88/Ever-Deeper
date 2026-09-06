@@ -10,12 +10,13 @@ import path from "node:path";
 const VIEWPORT = { width: 932, height: 430 };
 let EXPECTED_CAPTURE_COUNT = 0;
 const MOTION = false;
+const GAMEPLAY = process.env.OVERHAUL_GAMEPLAY === "1";
 const RANGE_START = Number(process.env.CAPTURE_START || 1);
 const RANGE_END = Number(process.env.CAPTURE_END || 19);
-if (!(RANGE_START >= 1 && RANGE_END >= RANGE_START && RANGE_END <= 289)) throw new Error("Invalid capture range");
+if (!(RANGE_START >= 1 && RANGE_END >= RANGE_START && RANGE_END <= 303)) throw new Error("Invalid capture range");
 const SUITE_ARG = "--visual-capture-suite";
 const MARKER_PREFIX = "EVER_DEEPER_VISUAL_CAPTURE_";
-const NEXT_MARKER_TIMEOUT_MS = 60 * 1000;
+const NEXT_MARKER_TIMEOUT_MS = 120 * 1000;
 const DEFAULT_TIMEOUT_MS = NEXT_MARKER_TIMEOUT_MS;
 
 const MIME_TYPES = new Map([
@@ -100,7 +101,7 @@ function injectSuiteArgument(html) {
   const suiteArgs = existingArgs.filter((arg) => arg !== SUITE_ARG);
   // OS.get_cmdline_user_args() only exposes arguments after Godot's user separator.
   if (!suiteArgs.includes("--")) suiteArgs.push("--");
-  config.args = [...suiteArgs, SUITE_ARG, "--overhaul-capture", `--capture-start=${RANGE_START}`, `--capture-end=${RANGE_END}`];
+  config.args = [...suiteArgs, SUITE_ARG, GAMEPLAY ? "--overhaul-gameplay" : "--overhaul-capture", `--capture-start=${RANGE_START}`, `--capture-end=${RANGE_END}`];
   return html.replace(pattern, `const GODOT_CONFIG = ${JSON.stringify(config)};`);
 }
 
@@ -290,6 +291,7 @@ async function captureSuite(options) {
       if (text.startsWith("EVER_DEEPER_HERO_MOTION_DAMAGE")) motionHits.push(text);
       if (text.startsWith("EVER_DEEPER_HERO_STATE ")) heroStates.push(JSON.parse(text.slice("EVER_DEEPER_HERO_STATE ".length)));
       if (text.includes(MARKER_PREFIX)) markerQueue.push(text.slice(text.indexOf(MARKER_PREFIX)));
+      if (GAMEPLAY && text.startsWith("EVER_DEEPER_OVERHAUL_GAMEPLAY_")) markerQueue.push(text);
     });
     page.on("pageerror", (error) => pageErrors.push(String(error)));
     page.on("requestfailed", (request) => {
@@ -306,6 +308,14 @@ async function captureSuite(options) {
     });
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: NEXT_MARKER_TIMEOUT_MS });
 
+    if (GAMEPLAY) {
+      const result = await nextMarker(markerQueue, 10 * 60 * 1000);
+      if (!/^EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=\d+ failures=\[\]$/.test(result)) throw new Error(result);
+      if (pageErrors.length) throw new Error(pageErrors.join("\n"));
+      await fs.writeFile(path.join(options.outputDir,"gameplay.json"),JSON.stringify({result,pckSha256,htmlSha256,viewport:VIEWPORT,browser:browser.version(),webgl},null,2));
+      process.stdout.write(result+"\n");
+      return;
+    }
     const video = MOTION ? page.video() : null;
     const captures = [];
     const seenStates = new Set();
@@ -322,7 +332,7 @@ async function captureSuite(options) {
         if (!match) throw new Error(`Malformed BEGIN marker: ${marker}`);
         const [, count, width, height] = match.map(Number);
         EXPECTED_CAPTURE_COUNT = count;
-        if (count < 1 || count > 300 || width !== VIEWPORT.width || height !== VIEWPORT.height) {
+        if (count < 1 || count > 350 || width !== VIEWPORT.width || height !== VIEWPORT.height) {
           throw new Error(`Unexpected capture contract: ${marker}`);
         }
         began = true;
@@ -345,7 +355,7 @@ async function captureSuite(options) {
         try {
           await Promise.race([
             page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))),
-            new Promise((_, reject) => { frameDeadline = setTimeout(() => reject(new Error(`Render frame timeout at ${state}`)), 30000); }),
+            new Promise((_, reject) => { frameDeadline = setTimeout(() => reject(new Error(`Render frame timeout at ${state}`)), 60000); }),
           ]);
         } finally { clearTimeout(frameDeadline); }
         const file = `${String(index + RANGE_START - 1).padStart(3, "0")}_${state}.png`;
@@ -357,7 +367,7 @@ async function captureSuite(options) {
           throw new Error(`Wrong PNG dimensions for ${file}: ${dimensions.width}x${dimensions.height}`);
         }
         captures.push({ index: index + RANGE_START - 1, state, file, sha256: await sha256(filename) });
-        process.stdout.write(`CAPTURED ${index + RANGE_START - 1}/175 ${state}\n`);
+        process.stdout.write(`CAPTURED ${index + RANGE_START - 1}/303 ${state}\n`);
         await page.locator("#canvas").focus();
         await page.keyboard.press("Enter");
         continue;
@@ -403,7 +413,7 @@ async function captureSuite(options) {
       viewport: VIEWPORT,
       captureCount: captures.length,
       range: [RANGE_START, RANGE_END],
-      fullMatrixCount: 175,
+      fullMatrixCount: 303,
       motionHits,
       heroStates,
       pckSha256,

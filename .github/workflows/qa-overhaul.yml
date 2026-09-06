@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        batch: [{start: 1, end: 19}, {start: 145, end: 175}, {start: 176, end: 199}, {start: 200, end: 247}, {start: 248, end: 289}]
+        batch: [{start: 1, end: 30}, {start: 31, end: 60}, {start: 61, end: 90}, {start: 91, end: 120}, {start: 121, end: 150}, {start: 151, end: 180}, {start: 181, end: 210}, {start: 211, end: 240}, {start: 241, end: 270}, {start: 271, end: 300}, {start: 301, end: 303}]
     env:
       CAPTURE_START: ${{ matrix.batch.start }}
       CAPTURE_END: ${{ matrix.batch.end }}
@@ -26,6 +26,14 @@ jobs:
           npm ci
           npx playwright install --with-deps chromium
       - run: node tools/visual-qa/capture-overhaul.mjs --web-dir "$RUNNER_TEMP/surface-web" --output-dir "$RUNNER_TEMP/surface-evidence"
+      - if: matrix.batch.start == 1
+        run: OVERHAUL_GAMEPLAY=1 node tools/visual-qa/capture-overhaul.mjs --web-dir "$RUNNER_TEMP/surface-web" --output-dir "$RUNNER_TEMP/gameplay-evidence"
+      - uses: actions/upload-artifact@v4
+        if: matrix.batch.start == 1 && always()
+        with:
+          name: overhaul-gameplay-evidence
+          path: ${{ runner.temp }}/gameplay-evidence
+          retention-days: 14
       - uses: actions/upload-artifact@v4
         if: always()
         with:
