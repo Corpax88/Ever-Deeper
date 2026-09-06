@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "version": "0.44.0-dev.2",
+  "viewport": [
+    932,
+    430
+  ],
+  "capture_count": 25,
+  "pck_sha256": "e904c92117ac982779fc0ce9cf7b3bc6260dff231396759d0bac00050b98233b",
+  "html_sha256": "807386ab116ffe57e394397088e6f67f0962dab407e650e1031ff734b323ba55",
+  "qa_run_id": 34048685553,
+  "qa_commit": "e12939b8c99935f04b394e8ff7d9117334ff5035",
+  "candidate_artifact_id": 9993937718,
+  "evidence_artifact_id": 9993935737,
+  "comparison": "surface-work/approved-concept.png",
+  "reviewed": [
+    "001_surface_start.png",
+    "002_surface_camp_assay.png",
+    "003_surface_camp_forge.png",
+    "004_surface_copper_full.png",
+    "005_surface_copper_damage_1.png",
+    "006_surface_copper_damage_2.png",
+    "007_surface_copper_empty.png",
+    "008_surface_copper_regrowing.png",
+    "009_surface_wayfarer.png",
+    "010_surface_branch_join.png",
+    "011_surface_mine_ramp.png",
+    "012_surface_mine_entrance.png",
+    "013_surface_mine_return.png",
+    "014_surface_gate_locked.png",
+    "015_surface_gate_opening.png",
+    "016_surface_gate_open_left.png",
+    "017_surface_gate_cross_left.png",
+    "018_surface_gate_under_arch.png",
+    "019_surface_gate_cross_right.png",
+    "020_surface_gate_return.png",
+    "021_surface_moon_join.png",
+    "022_surface_moon_surface.png",
+    "023_surface_moon_mine_branch.png",
+    "024_surface_ember_surface.png",
+    "025_surface_star_surface.png"
+  ],
+  "findings": [
+    "Natural Mossvein earth road and authored cliff shelf replace colored route outlines.",
+    "Full diagonal gate is integrated with actual left-to-right route; no checkerboard or rectangular asset background visible.",
+    "Locked, opening, open, forward and return states reviewed; hero passes behind the near pillar and reappears on Moonglass road.",
+    "Raised copper mountain preserves resource silhouette, four damage states, solid shared coverage through regrowth, and separate lower mine entrance.",
+    "Forge silhouette and interaction position clear the mountain. Assay and Wayfarer remain reachable.",
+    "Moonglass foundation now connects the road and supports the existing resource mountain and lower branch.",
+    "Emberdeep and Starfall existing assets/progression preserved; stripe removal checked."
+  ],
+  "gameplay": "Source and exact PCK suite passed locked/open navigation both ways, pillar collisions, copper=24, HP regrowth=360, lower branch both directions and all shops.",
+  "hero_preservation": "103 source/asset files byte-identical to dev.1.",
+  "limitations": [
+    "Chromium/SwiftShader at 932x430; not a physical iPhone performance test.",
+    "Existing contextual action HUD is unchanged; context buttons can overlap the inventory widget.",
+    "Resource regeneration fades newly appearing silhouette portions; shared occupied pixels remain opaque."
+  ]
+}

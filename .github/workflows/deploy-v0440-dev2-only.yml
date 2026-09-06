@@ -1,0 +1,53 @@
+name: Deploy Ever Deeper v0.44.0-dev.2 DEV only
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/deploy-v0440-dev2-only.yml']
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages-ever-deeper
+  cancel-in-progress: false
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch the exact candidate that passed visual QA
+        uses: actions/download-artifact@v4
+        with:
+          name: surface-v2-exact-web-candidate
+          run-id: 34048685553
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - name: Verify reviewed DEV and preserve all LIVE bytes
+        run: python3 .github/surface-v2/prepare_release.py "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/site" "$RUNNER_TEMP/rollback"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-before-v0440-dev2-rollback
+          path: ${{ runner.temp }}/rollback
+          retention-days: 30
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/site
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish the verified atomic Pages package
+        id: deployment
+        uses: actions/deploy-pages@v4
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify all 18 public files after publication
+        run: python3 .github/surface-v2/prepare_release.py --verify-public
