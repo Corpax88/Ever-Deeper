@@ -16,6 +16,7 @@ subprocess.run([sys.executable,str(source/'apply_delta.py'),str(out/'index.pck')
 subprocess.run([sys.executable,str(source/'apply_delta.py'),str(out/'index.pck'),str(source/'final-delta'),str(out/'index.pck')],check=True)
 subprocess.run([sys.executable,str(source/'apply_delta.py'),str(out/'index.pck'),str(source/'touch-delta'),str(out/'index.pck')],check=True)
 subprocess.run([sys.executable,str(source/'apply_delta.py'),str(out/'index.pck'),str(source/'real-input-delta'),str(out/'index.pck')],check=True)
+subprocess.run([sys.executable,str(source/'apply_delta.py'),str(out/'index.pck'),str(source/'cancel-input-delta'),str(out/'index.pck')],check=True)
 (out/'index.html').write_bytes((source/'index.html').read_bytes())
 for name,expected in target['files'].items():
  data=(out/name).read_bytes();assert len(data)==expected['size'] and sha(data)==expected['sha256'],name

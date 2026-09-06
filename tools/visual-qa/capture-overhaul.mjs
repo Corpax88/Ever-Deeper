@@ -314,10 +314,16 @@ async function captureSuite(options) {
       await page.locator("#canvas").focus();
       let result;
       const cdp = await context.newCDPSession(page);
+      let gestureIndex=0;
       while (true) {
         result = await nextMarker(markerQueue, 10 * 60 * 1000);
         if (!result.startsWith("EVER_DEEPER_OVERHAUL_INPUT_READY ")) break;
         const input = JSON.parse(result.slice("EVER_DEEPER_OVERHAUL_INPUT_READY ".length));
+        gestureIndex++;
+        if (gestureIndex===1) {
+          await page.locator("#canvas").evaluate(canvas => { canvas.blur(); canvas.focus(); });
+          await page.screenshot({path:path.join(options.outputDir,"input-before-first-tap.png")});
+        }
         const box = await page.locator("#canvas").boundingBox();
         const x = box.x + input.x / input.width * box.width;
         const y = box.y + input.y / input.height * box.height;
