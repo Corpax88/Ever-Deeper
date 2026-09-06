@@ -6,11 +6,31 @@ on:
 permissions:
   contents: read
 jobs:
+  gameplay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python3 .github/overhaul/prepare_candidate.py "$RUNNER_TEMP/surface-web"
+      - run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - run: OVERHAUL_GAMEPLAY=1 node tools/visual-qa/capture-overhaul.mjs --web-dir "$RUNNER_TEMP/surface-web" --output-dir "$RUNNER_TEMP/gameplay-evidence"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: overhaul-gameplay-evidence
+          path: ${{ runner.temp }}/gameplay-evidence
+          retention-days: 14
   surface:
+    needs: gameplay
     strategy:
       fail-fast: false
       matrix:
-        batch: [{start: 31, end: 31}]
+        batch: [{start: 1, end: 15}, {start: 16, end: 30}, {start: 31, end: 45}, {start: 46, end: 60}, {start: 61, end: 75}, {start: 76, end: 90}, {start: 91, end: 105}, {start: 106, end: 120}, {start: 121, end: 135}, {start: 136, end: 150}, {start: 151, end: 165}, {start: 166, end: 180}, {start: 181, end: 195}, {start: 196, end: 210}, {start: 211, end: 225}, {start: 226, end: 240}, {start: 241, end: 255}, {start: 256, end: 270}, {start: 271, end: 285}, {start: 286, end: 300}, {start: 301, end: 303}]
     env:
       CAPTURE_START: ${{ matrix.batch.start }}
       CAPTURE_END: ${{ matrix.batch.end }}
@@ -26,14 +46,6 @@ jobs:
           npm ci
           npx playwright install --with-deps chromium
       - run: node tools/visual-qa/capture-overhaul.mjs --web-dir "$RUNNER_TEMP/surface-web" --output-dir "$RUNNER_TEMP/surface-evidence"
-      - if: always()
-        run: OVERHAUL_GAMEPLAY=1 node tools/visual-qa/capture-overhaul.mjs --web-dir "$RUNNER_TEMP/surface-web" --output-dir "$RUNNER_TEMP/gameplay-evidence"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: overhaul-gameplay-evidence
-          path: ${{ runner.temp }}/gameplay-evidence
-          retention-days: 14
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -41,6 +53,7 @@ jobs:
           path: ${{ runner.temp }}/surface-evidence
           retention-days: 14
       - uses: actions/upload-artifact@v4
+        if: matrix.batch.start == 1
         with:
           name: overhaul-exact-web-candidate-${{ matrix.batch.start }}
           path: ${{ runner.temp }}/surface-web
