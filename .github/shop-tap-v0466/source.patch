@@ -1,0 +1,329 @@
+--- a/project.godot
++++ b/project.godot
+@@ -11,7 +11,7 @@
+ [application]
+ 
+ config/name="Ever Deeper"
+-config/version="0.46.5"
++config/version="0.46.6"
+ run/main_scene="res://scenes/main/main.tscn"
+ config/use_custom_user_dir=true
+ config/custom_user_dir_name="Ever Deeper- Godot Production Port"
+--- a/scripts/dev/visual_capture_driver.gd
++++ b/scripts/dev/visual_capture_driver.gd
+@@ -135,7 +135,7 @@
+ 
+ func _verify_build_contract() -> Dictionary:
+ 	var dev_feature: = OS.has_feature("ever_deeper_dev")
+-	var expected_version: = "0.46.5-dev.1" if dev_feature else "0.46.5"
++	var expected_version: = "0.46.6-dev.1" if dev_feature else "0.46.6"
+ 	var expected_flavor: = "dev" if dev_feature else "production"
+ 	var actual_version: = String(PremiumMenuScript.release_version())
+ 	var developer_menu: Variant = _main.get("developer_menu")
+--- a/scripts/qa/menu_touch_qa.gd
++++ b/scripts/qa/menu_touch_qa.gd
+@@ -74,75 +74,68 @@
+ 	main.premium_menu.open_menu(true,"Mossvein",true,false);main.premium_menu.show_achievements();await settle()
+ 	await swipe(main.premium_menu.achievement_scroll,false,"achievements-swiped")
+ 	main.premium_menu.close_menu()
+-	driver._prepare_commerce_capture("starforge_owned_active");await settle()
++	# Preview is a deliberate selection, independent of browsing and buying.
++	driver._prepare_commerce_capture("starforge_ready_crusher");await settle()
+ 	var panel = main.commerce_panel
+ 	var carousel = panel.catalog_scroll
+-	check(panel.find_child("Previous",true,false)==null and panel.find_child("Next",true,false)==null,"Paging arrows removed")
+-	check(not carousel.get_h_scroll_bar().is_visible_in_tree(),"Carousel has no draggable scrollbar")
+-	panel.select_item(String(panel._items[0].id));await rest_carousel()
+-	var first = panel.catalog_strip.get_child(0)
+-	var first_id: int = first.get_instance_id()
+-	var stride: float = carousel.targets[1] - carousel.targets[0]
+-	var gold_before: int = RunState.gold
+-	var start: Vector2 = point(carousel)
+-	var displacement: Vector2 = Vector2(-stride * 0.68,0)
+-	var original_x: float = first.get_global_rect().position.x
+-	await gesture("record_start",Vector2.ZERO)
+-	await gesture("hold", start, displacement)
+-	check(carousel.held and not carousel.moving,"Finger owns carousel while dragging")
+-	check(absf(carousel.position_x + displacement.x)<3,"Cards follow finger distance before release")
+-	check(first.get_global_rect().position.x < original_x - 30,"Visible card geometry moves during the drag")
+-	check(panel._selected_item_id==String(panel._items[0].id),"Item does not abruptly switch during held drag")
+-	check(panel.primary_button.disabled,"Buying is disabled during carousel movement")
+-	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"starforge-held-between-cards")
+-	var before_release: float = carousel.position_x
+-	await gesture("release",start + displacement)
+-	check(carousel.moving,"Release starts a visible settling animation")
+-	check(carousel.position_x > before_release and carousel.position_x < carousel.targets[1],"Release continues smoothly toward next card")
+-	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"starforge-settling")
+-	await rest_carousel()
+-	check(panel._selected_item_id==String(panel._items[1].id),"Nearest centered card becomes selected after settling")
+-	check(first.get_instance_id()==first_id and panel.catalog_strip.get_child(0)==first,"Paging preserves card nodes rather than rebuilding and jumping")
+-	check(absf(carousel.position_x-carousel.targets[1])<1,"Settled card is centered exactly")
+-	check(carousel.motion_samples>4,"Release is rendered over multiple animation frames")
+-	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"starforge-centered-comet")
+-	await gesture("swipe",point(carousel),Vector2(-stride*0.8,0))
+-	# Browser dispatch is asynchronous: sample at contact, not before the
+-	# round trip during which the carousel is still supposed to glide.
+-	var caught_position: Array[float] = [-1.0]
+-	var on_contact = func(): caught_position[0] = carousel.position_x
+-	panel.swipe_pager.contact_started.connect(on_contact, CONNECT_ONE_SHOT)
+-	await gesture("hold",point(carousel),Vector2.ZERO)
+-	check(carousel.held and caught_position[0] >= 0 and absf(carousel.position_x-caught_position[0])<3,"Touch catches and holds the carousel at contact position")
+-	await gesture("cancel",point(carousel));await rest_carousel()
+-	await gesture("swipe",point(carousel),Vector2(-stride*0.8,0));await rest_carousel()
+-	check(panel._selected_item_id==String(panel._items[2].id),"Flick continues to the final card")
+-	await gesture("swipe",point(carousel),Vector2(-120,0));await rest_carousel()
+-	check(panel._selected_item_id==String(panel._items[2].id),"End of list remains bounded")
+-	await gesture("hold",point(carousel),Vector2(20,0))
+-	await gesture("release",point(carousel)+Vector2(20,0));await rest_carousel()
+-	check(panel._selected_item_id==String(panel._items[2].id),"Small drag settles back without page switch")
+-	await gesture("swipe",point(panel.overview_scroll),Vector2(0,-100));await rest_carousel()
+-	check(panel._selected_item_id==String(panel._items[2].id),"Vertical detail scrolling does not change cards")
+-	check(RunState.gold==gold_before,"Carousel does not purchase or equip during navigation")
+-	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"starforge-centered-crown")
+-	await gesture("record_stop",Vector2.ZERO)
+-	# The same component also handles the longer workshop lists.
++	var original_cargo: Dictionary = RunState.cargo.duplicate(true)
++	check(not panel.swipe_pager.horizontal_enabled,"Three Starforge options stay fixed")
++	var confirmations: Array[String] = []
++	var on_confirm = func(id: String): confirmations.append(id)
++	panel.action_confirmed.connect(on_confirm)
++	for index in [1,2,0,1]:
++		var card: Button = panel.catalog_strip.get_child(index)
++		await gesture("tap",point(card))
++		check(panel.selected_item_id()==String(panel._items[index].id),"Tap immediately previews core " + str(index))
++		check(panel.hero_icon.texture==panel._item_texture(panel._items[index]),"Preview art matches tapped core " + str(index))
++		check(carousel.scroll_horizontal==0,"All three cores remain visible after tap")
++		for other in panel.catalog_strip.get_children():
++			check(carousel.get_global_rect().encloses(other.get_global_rect()),"Core card remains fully visible")
++		await gesture("capture",Vector2.ZERO,Vector2.ZERO,"tap-core-"+str(index))
++	check(RunState.cargo==original_cargo and RunState.starforge_variant.is_empty() and confirmations.is_empty(),"Preview never spends materials, equips or confirms")
++	await gesture("swipe",point(carousel),Vector2(-110,0));await rest_carousel()
++	check(panel.selected_item_id()=="starforge:swift" and carousel.scroll_horizontal==0,"Swiping a short list does not change preview or hide options")
++	await gesture("cancel",point(panel.catalog_strip.get_child(2)));await rest_carousel()
++	check(panel.selected_item_id()=="starforge:swift","Canceled tap never selects another core")
++	await gesture("tap",point(panel.primary_button))
++	check(confirmations==["starforge:swift"],"Forge button confirms the previewed core exactly once")
++	check(RunState.starforge_variant=="swift" and RunState.cargo.astralite==33 and RunState.cargo.crownstone==33,"Only Forge Core purchases and equips the selected core")
++	panel.action_confirmed.disconnect(on_confirm)
+ 	panel.close_commerce()
+-	driver._prepare_commerce_capture("workshop_tool_forge_baseline");await settle()
+-	carousel=panel.catalog_scroll
+-	check(carousel.targets.size()>3,"Workshop exposes a longer carousel")
+-	await gesture("swipe",point(carousel),Vector2(-170,0));await rest_carousel()
+-	check(panel._selected_index()>0,"Workshop cards also glide and settle")
+-	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"workshop-carousel-centered")
+-	# The small mobile details pane overflows for mastery descriptions/costs.
+-	var detail: ScrollContainer=main.commerce_panel.overview_scroll
++	for fixture in ["workshop_tool_forge_baseline","workshop_light_lab_baseline","workshop_wardrobe_baseline"]:
++		driver._prepare_commerce_capture(fixture);await settle()
++		carousel=panel.catalog_scroll
++		var selected: String = panel.selected_item_id()
++		var cargo_before: Dictionary = RunState.cargo.duplicate(true)
++		var first: Button = panel.catalog_strip.get_child(0)
++		var original_x: float = first.get_global_rect().position.x
++		await gesture("hold",point(carousel),Vector2(-110,0))
++		check(carousel.held and first.get_global_rect().position.x < original_x-30,"Long shop list follows the finger: "+fixture)
++		check(panel.selected_item_id()==selected,"Held swipe leaves preview unchanged: "+fixture)
++		await gesture("release",point(carousel)+Vector2(-110,0));await rest_carousel()
++		check(carousel.scroll_horizontal>40 and panel.selected_item_id()==selected,"Swipe browses without selecting: "+fixture)
++		var target: Button = null
++		for card in panel.catalog_strip.get_children():
++			if carousel.get_global_rect().encloses(card.get_global_rect()) and String(card.get_meta("item_id"))!=selected:
++				target=card;break
++		check(target!=null,"A browsed card is available to tap: "+fixture)
++		if target!=null:
++			var target_id: String=String(target.get_meta("item_id"))
++			var offset: int=carousel.scroll_horizontal
++			await gesture("tap",point(target))
++			check(panel.selected_item_id()==target_id,"Tap selects after browsing: "+fixture)
++			check(carousel.scroll_horizontal==offset,"Tap keeps browsed list in place: "+fixture)
++			check(panel.hero_icon.texture==panel._item_texture(panel.selected_item()),"Workshop preview art matches selection: "+fixture)
++		check(RunState.cargo==cargo_before,"Workshop browsing and preview never spend materials: "+fixture)
++		await gesture("capture",Vector2.ZERO,Vector2.ZERO,fixture+"-tap-preview")
++		panel.close_commerce()
++	driver._prepare_commerce_capture("forge_mastery_rank_five_ready");await settle()
++	var detail: ScrollContainer=panel.overview_scroll
+ 	if detail.get_v_scroll_bar().max_value > detail.get_v_scroll_bar().page + 20:
+ 		await swipe(detail,false,"shop-details-swiped")
+ 	else:
+-		check(detail is TouchScrollContainer,"Non-overflowing shop details also support touch")
+-		await gesture("capture",Vector2.ZERO,Vector2.ZERO,"shop-details-fit")
+-	main.commerce_panel.close_commerce()
++		check(detail is TouchScrollContainer,"Shop details retain touch scrolling")
++	panel.close_commerce()
+ 	if main.developer_menu != null:
+ 		main.developer_menu.open_menu()
+ 		await settle()
+--- a/scripts/ui/commerce_panel.gd
++++ b/scripts/ui/commerce_panel.gd
+@@ -259,8 +259,10 @@
+ 	_build_interface()
+ 	swipe_pager = preload("res://scripts/ui/swipe_pager.gd").new()
+ 	swipe_pager.name = "SwipePager"
+-	swipe_pager.region = commerce_body
++	swipe_pager.region = catalog_pane
+ 	swipe_pager.contact_started.connect(catalog_scroll.press)
++	swipe_pager.contact_ended.connect(_carousel_contact_ended)
++	swipe_pager.tapped.connect(_catalog_tapped)
+ 	swipe_pager.drag_started.connect(_carousel_drag_started)
+ 	swipe_pager.dragged.connect(catalog_scroll.drag_by)
+ 	swipe_pager.released.connect(catalog_scroll.release)
+@@ -842,9 +844,9 @@
+ 	button.clip_contents = true
+ 	button.tooltip_text = String(item.get("title", item_id))
+ 	button.add_theme_stylebox_override("normal", _card_style(item, selected, false))
+-	button.add_theme_stylebox_override("hover", _card_style(item, true, false))
+-	button.add_theme_stylebox_override("pressed", _card_style(item, true, true))
+-	button.add_theme_stylebox_override("focus", _card_style(item, true, false))
++	button.add_theme_stylebox_override("hover", _card_style(item, selected, false))
++	button.add_theme_stylebox_override("pressed", _card_style(item, selected, true))
++	button.add_theme_stylebox_override("focus", _card_style(item, selected, false))
+ 	button.pressed.connect(_select_item.bind(item_id))
+ 
+ 	var margin: = MarginContainer.new()
+@@ -1094,19 +1096,20 @@
+ 	var count: = _items.size()
+ 	var has_pages: = count > 1
+ 	swipe_pager.enabled = has_pages
++	swipe_pager.horizontal_enabled = count > 3
+ 	page_navigation.visible = has_pages
+ 	catalog_scroll.visible = has_pages
+-	var dots: Array[String] = []
+-	for i in count: dots.append("●" if i == _selected_index() else "•")
+-	page_label.text = " ".join(dots) + "\nSwipe to explore"
++	page_label.text = "Swipe to browse · Tap to preview" if count > 3 else "Tap to preview"
+ 	page_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+ 	page_label.add_theme_font_override("font", SYMBOL_FONT)
+ 
+ 
+ func _select_item(item_id: String) -> void:
+ 	if not _has_item(item_id): return
++	# Preview is independent of browsing; never move a card out from under a tap.
++	catalog_scroll.moving = false
++	catalog_scroll.speed = 0.0
+ 	_commit_carousel_selection(item_id)
+-	catalog_scroll.scroll_to_index(_selected_index())
+ 
+ 
+ func _commit_carousel_selection(item_id: String) -> void:
+@@ -1117,7 +1120,8 @@
+ 		if not card is Button: continue
+ 		var id: String = String(card.get_meta("item_id", ""))
+ 		var selected: bool = id == item_id
+-		card.add_theme_stylebox_override("normal", _card_style(_item_by_id(id), selected, false))
++		for state in ["normal", "hover", "focus", "pressed"]:
++			card.add_theme_stylebox_override(state, _card_style(_item_by_id(id), selected, state == "pressed"))
+ 		if selected: _selected_card = card
+ 	_refresh_showcase(_item_by_id(item_id))
+ 	_refresh_overview()
+@@ -1135,21 +1139,37 @@
+ 	catalog_scroll.scroll_to_index(_selected_index() + offset)
+ 
+ 
++func _catalog_tapped(start: Vector2, end: Vector2) -> void:
++	if not visible or not catalog_scroll.get_global_rect().has_point(end): return
++	for card in catalog_strip.get_children():
++		if card is Button and card.get_global_rect().has_point(start) and card.get_global_rect().has_point(end):
++			_select_item(String(card.get_meta("item_id", "")))
++			return
++
++
++func _carousel_contact_ended() -> void:
++	catalog_scroll.held = false
++	catalog_scroll.speed = 0.0
++	primary_button.disabled = not _action_is_enabled(_item_by_id(_selected_item_id))
++
++
+ func _carousel_drag_started() -> void:
+ 	primary_button.disabled = true
+ 
+ 
+ func _carousel_settled(index: int) -> void:
+ 	if not visible or index < 0 or index >= _items.size(): return
+-	_commit_carousel_selection(String(Dictionary(_items[index]).get("id", "")))
++	# A swipe only changes which cards are visible. A tap chooses the preview.
+ 	primary_button.disabled = not _action_is_enabled(_item_by_id(_selected_item_id))
+ 
+ 
+ func _confirm_selected() -> void :
+ 	var item: = _item_by_id(_selected_item_id)
+-	if item.is_empty() or not _action_is_enabled(item):
++	if item.is_empty() or catalog_scroll.held or catalog_scroll.moving or not _action_is_enabled(item):
+ 		return
+-	action_confirmed.emit(_selected_item_id)
++	# A listener can close the panel while the signal is being delivered.
++	var confirmed_item_id: String = _selected_item_id
++	action_confirmed.emit(confirmed_item_id)
+ 	if bool(_config.get("close_on_confirm", false)):
+ 		close_commerce()
+ 
+@@ -1253,12 +1273,12 @@
+ 	await get_tree().process_frame
+ 	var pad: int = 0
+ 	carousel_margin.add_theme_constant_override("margin_left", pad)
+-	carousel_margin.add_theme_constant_override("margin_right", maxi(0, roundi(catalog_scroll.size.x - _selected_card.size.x)))
++	carousel_margin.add_theme_constant_override("margin_right", 0)
+ 	await get_tree().process_frame
+ 	if is_instance_valid(_selected_card):
+ 		var points: Array[float] = []
+ 		for card in catalog_strip.get_children():
+-			if card is Button: points.append(maxf(0.0, card.position.x))
++			if card is Button: points.append(clampf(card.position.x, 0.0, maxf(0.0, catalog_strip.size.x - catalog_scroll.size.x)))
+ 		catalog_scroll.configure(points, _selected_index())
+ 	_carousel_layout_pending = false
+ 
+--- a/scripts/ui/premium_menu.gd
++++ b/scripts/ui/premium_menu.gd
+@@ -12,7 +12,7 @@
+ const MUTED: = Color("789384")
+ const INK: = Color("07120d")
+ const IPHONE_LANDSCAPE_ASPECT: = 1.95
+-const DEV_RELEASE_VERSION: = "0.46.5-dev.1"
++const DEV_RELEASE_VERSION: = "0.46.6-dev.1"
+ 
+ 
+ static func release_version() -> String:
+--- a/scripts/ui/swipe_pager.gd
++++ b/scripts/ui/swipe_pager.gd
+@@ -1,12 +1,15 @@
+ extends Node
+ ## Own horizontal gestures before the child scroll containers see them.
+ ## Vertical gestures and stationary taps keep their normal GUI behavior.
++signal tapped(start: Vector2, end: Vector2)
++signal contact_ended
+ signal contact_started
+ signal drag_started
+ signal dragged(distance: float)
+ signal released(velocity_x: float, canceled: bool)
+ var region: Control
+ var enabled: bool = false
++var horizontal_enabled: bool = true
+ var finger: int = -1
+ var origin: Vector2
+ var latest: Vector2
+@@ -49,7 +52,7 @@
+ 	latest = _local(point)
+ 	var distance: Vector2 = latest - origin
+ 	if axis == 0 and distance.length() >= 6.0:
+-		axis = 1 if absf(distance.x) > absf(distance.y) * 1.25 else 2
++		axis = 1 if horizontal_enabled and absf(distance.x) > absf(distance.y) * 1.25 else 2
+ 		if axis == 1:
+ 			_clear_child_scrolls(region)
+ 			region.propagate_notification(Control.NOTIFICATION_SCROLL_BEGIN)
+@@ -72,9 +75,15 @@
+ 		region.propagate_notification(Control.NOTIFICATION_SCROLL_END)
+ 		if absf(latest.x - origin.x) >= 24.0 and Time.get_ticks_usec() - last_motion_usec < 90000:
+ 			velocity_x = release_speed
++	var completed_axis: int = axis
+ 	finger = -1
+ 	axis = 0
+-	released.emit(velocity_x, canceled)
++	if completed_axis == 1:
++		released.emit(velocity_x, canceled)
++	else:
++		contact_ended.emit()
++		if completed_axis == 0 and not canceled and origin.distance_to(latest) < 6.0:
++			tapped.emit(region.get_global_transform_with_canvas() * origin, region.get_global_transform_with_canvas() * latest)
+ 
+ func _cancel() -> void:
+ 	if finger != -1:
