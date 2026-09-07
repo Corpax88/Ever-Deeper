@@ -219,7 +219,7 @@ index fbf5093..804a605 100644
 +static func light_energy_for_level(level: int) -> float:
 +	return 1.0 + 0.06 * float(clampi(level, 0, 5))
 diff --git a/scripts/ui/commerce_catalog.gd b/scripts/ui/commerce_catalog.gd
-index 0d4790f..f9c36b4 100644
+index 0d4790f..823279f 100644
 --- a/scripts/ui/commerce_catalog.gd
 +++ b/scripts/ui/commerce_catalog.gd
 @@ -171,6 +171,8 @@ static func starforge_config() -> Dictionary:
@@ -231,6 +231,17 @@ index 0d4790f..f9c36b4 100644
  	var title: = String(status.get("display_name", workshop_id.capitalize()))
  	var level: = int(status.get("level", 1))
  	var max_level: = int(status.get("max_level", 1))
+@@ -287,8 +289,8 @@ static func _workshop_stats(workshop_id: String, current_level: int, next_level:
+ 			]
+ 		"light_lab":
+ 			return [
+-				{"label": "LIGHT RANGE", "current": "%d%%" % roundi((1.0 + 0.08 * current_level) * 100.0), "next": "%d%%" % roundi((1.0 + 0.08 * next_level) * 100.0)},
+-				{"label": "LIGHT ENERGY", "current": "%d%%" % roundi((1.0 + 0.06 * current_level) * 100.0), "next": "%d%%" % roundi((1.0 + 0.06 * next_level) * 100.0)},
++				{"label": "LIGHT RANGE", "current": "%d%%" % roundi(RunState.light_range_for_level(current_level) * 100.0), "next": "%d%%" % roundi(RunState.light_range_for_level(next_level) * 100.0)},
++				{"label": "BRIGHTNESS", "current": "%d%%" % roundi(RunState.light_energy_for_level(current_level) * 100.0), "next": "%d%%" % roundi(RunState.light_energy_for_level(next_level) * 100.0)},
+ 			]
+ 		"wardrobe":
+ 			return [{"label": "OUTFIT SLOTS", "current": current_level, "next": next_level}]
 @@ -468,3 +470,42 @@ static func _wardrobe_config(status: Dictionary, selection: Dictionary) -> Dicti
  		"selected_item_id": "workshop:equip:" + current,
  		"primary_action_visible": true,
