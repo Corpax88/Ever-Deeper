@@ -1,0 +1,473 @@
+diff --git a/project.godot b/project.godot
+index f410d94..1d9d89f 100644
+--- a/project.godot
++++ b/project.godot
+@@ -11,7 +11,7 @@ config_version=5
+ [application]
+ 
+ config/name="Ever Deeper"
+-config/version="0.46.7"
++config/version="0.46.8"
+ run/main_scene="res://scenes/main/main.tscn"
+ config/use_custom_user_dir=true
+ config/custom_user_dir_name="Ever Deeper- Godot Production Port"
+diff --git a/scripts/dev/visual_capture_driver.gd b/scripts/dev/visual_capture_driver.gd
+index 0e4711d..a67425a 100644
+--- a/scripts/dev/visual_capture_driver.gd
++++ b/scripts/dev/visual_capture_driver.gd
+@@ -135,7 +135,7 @@ func run(main_node: Node) -> void :
+ 
+ func _verify_build_contract() -> Dictionary:
+ 	var dev_feature: = OS.has_feature("ever_deeper_dev")
+-	var expected_version: = "0.46.7-dev.1" if dev_feature else "0.46.7"
++	var expected_version: = "0.46.8-dev.1" if dev_feature else "0.46.8"
+ 	var expected_flavor: = "dev" if dev_feature else "production"
+ 	var actual_version: = String(PremiumMenuScript.release_version())
+ 	var developer_menu: Variant = _main.get("developer_menu")
+@@ -1684,6 +1684,13 @@ func _check_surface_gameplay() -> bool:
+ 
+ 
+ func _build_overhaul_states() -> Array[Dictionary]:
++	if "--light-capture" in OS.get_cmdline_user_args():
++		var light_states: Array[Dictionary] = []
++		for style in RunState.ENDLESS_LIGHT_STYLE_IDS:
++			light_states.append({"id": "light_" + style, "kind": "overhaul_light", "style": style, "level": 5})
++		for variant in ["before", "after", "missing", "locked", "menu"]:
++			light_states.append({"id": "light_" + variant, "kind": "overhaul_light", "variant": variant, "level": 1})
++		return light_states
+ 	if "--wardrobe-capture" in OS.get_cmdline_user_args():
+ 		var wardrobe_states: Array[Dictionary] = []
+ 		for outfit in RunState.ENDLESS_OUTFIT_IDS:
+@@ -1740,6 +1747,7 @@ func _build_overhaul_states() -> Array[Dictionary]:
+ 
+ func _prepare_overhaul_extra(state: Dictionary) -> bool:
+ 	match String(state.kind):
++		"overhaul_light": return _prepare_light_state(state)
+ 		"overhaul_wardrobe":
+ 			_reset_run()
+ 			_workshop_capture_config("wardrobe")
+@@ -1864,3 +1872,26 @@ func _prepare_pet_state(state: Dictionary) -> bool:
+ 				ui.journal.pet_capture_frame=int(state.reaction_frame)
+ 			else: ui.journal.call("_pet")
+ 	return true
++
++
++func _prepare_light_state(state: Dictionary) -> bool:
++	_reset_run()
++	_workshop_capture_config("light_lab")
++	RunState.endless_workshops.light_lab.level = int(state.get("level", 5))
++	RunState.endless_light_style = "standard"
++	var status: Dictionary = RunState.workshop_status("light_lab")
++	var upgrade: Dictionary = Dictionary(status.get("next_upgrade", {}))
++	var variant: String = String(state.get("variant", ""))
++	if not upgrade.is_empty(): RunState.cargo[upgrade.resource] = 0 if variant == "missing" else int(upgrade.cost)
++	var config: Dictionary = CommerceCatalogScript.workshop_config("light_lab", RunState.workshop_status("light_lab"), {"current": "standard"})
++	config.selected_item_id = "workshop:equip:" + String(state.get("style", "standard"))
++	if variant in ["before", "after", "missing"]: config.selected_item_id = "workshop:upgrade"
++	if variant == "locked": config.selected_item_id = "workshop:equip:deepheart"
++	_main.call("_open_commerce", config, "workshop:light_lab")
++	var panel = _main.commerce_panel
++	if panel.selected_item_id() != String(config.selected_item_id): return false
++	if variant == "before": panel.hero_well.get_node("LightPreview").show_level(1)
++	if variant == "menu":
++		panel.close_commerce()
++		_main._open_start_menu()
++	return true
+diff --git a/scripts/lighting/headlamp_beam.gd b/scripts/lighting/headlamp_beam.gd
+index ef00a6b..45b139f 100644
+--- a/scripts/lighting/headlamp_beam.gd
++++ b/scripts/lighting/headlamp_beam.gd
+@@ -12,6 +12,8 @@ const BEAM_HALF_ANGLE: = 0.4
+ 
+ static var _shared_beam_texture: ImageTexture
+ 
++var preview_settings: Dictionary = {}
++
+ var beam_light: PointLight2D
+ var base_light_color: = Color.WHITE
+ var base_beam_length: = 500.0
+@@ -83,6 +85,7 @@ func _apply_endless_workshop_effects(force: bool = false) -> void :
+ 
+ 
+ func _endless_light_settings() -> Dictionary:
++	if not preview_settings.is_empty(): return preview_settings.duplicate()
+ 	var style_id: = "standard"
+ 	var range_multiplier: = 1.0
+ 	var energy_multiplier: = 1.0
+@@ -211,3 +214,8 @@ func _ensure_occlusion() -> void:
+ 		var occlusion: Node2D = load("res://scripts/lighting/cave_light_occluders.gd").new()
+ 		occlusion.name = "CaveLightOccluders"
+ 		world.add_child(occlusion)
++
++
++func configure_preview(style: String, level: int) -> void:
++	preview_settings = {"style": style, "range_multiplier": RunState.light_range_for_level(level), "energy_multiplier": RunState.light_energy_for_level(level)}
++	configure(Color("ffd58a"), Vector2.RIGHT, 0.0, 600.0)
+diff --git a/scripts/main.gd b/scripts/main.gd
+index a700202..64e32a7 100644
+--- a/scripts/main.gd
++++ b/scripts/main.gd
+@@ -2309,10 +2309,10 @@ func _confirm_workshop_commerce_action(item_id: String) -> void :
+ 		value = item_id.trim_prefix("workshop:style:")
+ 	if action.is_empty():
+ 		return
+-	if workshop_id != "wardrobe":
++	if workshop_id not in ["wardrobe", "light_lab"]:
+ 		_close_commerce_for_action()
+ 	var transaction: = Dictionary(hub_world.confirm_workshop_action(workshop_id, action, value))
+-	if workshop_id == "wardrobe":
++	if workshop_id in ["wardrobe", "light_lab"]:
+ 		commerce_panel.refresh_commerce(CommerceCatalogScript.workshop_config(workshop_id, RunState.workshop_status(workshop_id), hub_world.workshop_selection_preview(workshop_id)))
+ 	if bool(transaction.get("ok", false)):
+ 		_refresh_hud()
+@@ -6007,6 +6007,8 @@ func _has_any_arg(args: PackedStringArray, candidates: Array[String]) -> bool:
+ 
+ func _validate_release_version(args: PackedStringArray) -> bool:
+ 	var release_version: = String(PremiumMenuScript.release_version())
++	if OS.has_feature("web"):
++		JavaScriptBridge.eval("window.everDeeperVersion=" + JSON.stringify(release_version) + ";var badge=document.getElementById('ed-build-label');if(badge)badge.textContent='v'+window.everDeeperVersion;", true)
+ 	var displayed_label: = String(premium_menu.displayed_release_label())
+ 	var required_label: = String(PremiumMenuScript.release_label())
+ 	var expected_version: = ""
+diff --git a/scripts/qa/menu_touch_qa.gd b/scripts/qa/menu_touch_qa.gd
+index 7cf5bde..d37a5d1 100644
+--- a/scripts/qa/menu_touch_qa.gd
++++ b/scripts/qa/menu_touch_qa.gd
+@@ -50,6 +50,7 @@ func run(d: Node, m: Node) -> bool:
+ 	await settle()
+ 	await test_pause_modal()
+ 	await test_wardrobe()
++	await test_light_lab()
+ 	driver._prepare_pet_state({"location":"mine","variant":"ready","tab":"skills"})
+ 	await settle()
+ 	var journal = main.get_node("CompanionInterface").journal
+@@ -220,3 +221,46 @@ func test_wardrobe() -> void:
+ 		check(RunState.endless_outfit == outfit, "Correct outfit equipped: " + outfit)
+ 		await gesture("capture", Vector2.ZERO, Vector2.ZERO, "wardrobe-wearing-" + outfit)
+ 	panel.close_commerce()
++
++
++func test_light_lab() -> void:
++	driver._prepare_light_state({"level": 1, "variant": "missing"})
++	await settle()
++	var panel = main.commerce_panel
++	check(panel.primary_button.disabled, "Light upgrade requires materials")
++	check(not RunState.set_endless_light_style("deepheart"), "Locked light style cannot equip")
++	var preview = panel.hero_well.get_node("LightPreview")
++	var cargo: Dictionary = RunState.cargo.duplicate(true)
++	await gesture("tap", point(preview.before_button))
++	check(is_equal_approx(preview.lamp.effective_range_multiplier, RunState.light_range_for_level(1)), "Before preview uses current physical range")
++	await gesture("capture", Vector2.ZERO, Vector2.ZERO, "light-before-upgrade")
++	await gesture("tap", point(preview.after_button))
++	check(is_equal_approx(preview.lamp.effective_range_multiplier, RunState.light_range_for_level(2)), "After preview uses upgraded physical range")
++	check(is_equal_approx(preview.lamp.effective_energy_multiplier, RunState.light_energy_for_level(2)), "After preview uses upgraded brightness")
++	check(RunState.cargo == cargo and int(RunState.workshop_status("light_lab").level) == 1, "Preview never spends or upgrades")
++	await gesture("capture", Vector2.ZERO, Vector2.ZERO, "light-after-upgrade")
++	var recipe: Dictionary = RunState.workshop_status("light_lab").next_upgrade
++	RunState.cargo[recipe.resource] = int(recipe.cost) + 9
++	panel.refresh_commerce(driver.CommerceCatalogScript.workshop_config("light_lab",RunState.workshop_status("light_lab"),{"current":"standard"}))
++	panel._select_item("workshop:upgrade")
++	await settle()
++	await gesture("tap", point(panel.primary_button))
++	check(int(RunState.workshop_status("light_lab").level) == 2 and RunState.cargo[recipe.resource] == 9, "Upgrade consumes exact existing price once")
++	check(panel.selected_item_id() == "workshop:equip:standard", "Upgrade returns to current beam, avoiding accidental next purchase")
++	panel.close_commerce()
++	driver._prepare_light_state({"level":5,"style":"standard"})
++	await settle()
++	cargo = RunState.cargo.duplicate(true)
++	for style in RunState.ENDLESS_LIGHT_STYLE_IDS:
++		var current: String = RunState.endless_light_style
++		panel._select_item("workshop:equip:"+style)
++		await settle()
++		preview = panel.hero_well.get_node("LightPreview")
++		check(preview.lamp.applied_style_id == style, "Real beam preview: "+style)
++		check(RunState.endless_light_style == current and RunState.cargo == cargo, "Preview leaves loadout and cargo unchanged: "+style)
++		if not panel.primary_button.disabled: await gesture("tap",point(panel.primary_button))
++		check(RunState.endless_light_style == style and RunState.cargo == cargo, "Explicit Use beam equips for free: "+style)
++		await gesture("capture",Vector2.ZERO,Vector2.ZERO,"light-equipped-"+style)
++	panel.close_commerce()
++	var saved: Dictionary = RunState.serialize()
++	check(RunState.deserialize(saved) and RunState.endless_light_style == "deepheart", "Light choice persists after reload")
+diff --git a/scripts/state/run_state.gd b/scripts/state/run_state.gd
+index fbf5093..804a605 100644
+--- a/scripts/state/run_state.gd
++++ b/scripts/state/run_state.gd
+@@ -763,11 +763,11 @@ func endless_tool_range_multiplier() -> float:
+ 
+ 
+ func endless_light_range_multiplier() -> float:
+-	return 1.0 + 0.08 * float(_built_workshop_level("light_lab"))
++	return light_range_for_level(_built_workshop_level("light_lab"))
+ 
+ 
+ func endless_light_energy_multiplier() -> float:
+-	return 1.0 + 0.06 * float(_built_workshop_level("light_lab"))
++	return light_energy_for_level(_built_workshop_level("light_lab"))
+ 
+ 
+ func next_drill() -> Dictionary:
+@@ -5532,3 +5532,10 @@ func mark_endless_dug(depth: int, cell: int) -> void:
+ 	depths[str(depth)] = cells
+ 	overhaul_progress["dug"] = depths
+ 	_state_changed()
++
++
++static func light_range_for_level(level: int) -> float:
++	return 1.0 + 0.08 * float(clampi(level, 0, 5))
++
++static func light_energy_for_level(level: int) -> float:
++	return 1.0 + 0.06 * float(clampi(level, 0, 5))
+diff --git a/scripts/ui/commerce_catalog.gd b/scripts/ui/commerce_catalog.gd
+index 0d4790f..f9c36b4 100644
+--- a/scripts/ui/commerce_catalog.gd
++++ b/scripts/ui/commerce_catalog.gd
+@@ -171,6 +171,8 @@ static func starforge_config() -> Dictionary:
+ static func workshop_config(workshop_id: String, status: Dictionary, selection: Dictionary) -> Dictionary:
+ 	if workshop_id == "wardrobe":
+ 		return _wardrobe_config(status, selection)
++	if workshop_id == "light_lab":
++		return _light_lab_config(status, selection)
+ 	var title: = String(status.get("display_name", workshop_id.capitalize()))
+ 	var level: = int(status.get("level", 1))
+ 	var max_level: = int(status.get("max_level", 1))
+@@ -468,3 +470,42 @@ static func _wardrobe_config(status: Dictionary, selection: Dictionary) -> Dicti
+ 		"selected_item_id": "workshop:equip:" + current,
+ 		"primary_action_visible": true,
+ 	}
++
++
++static func _light_lab_config(status: Dictionary, selection: Dictionary) -> Dictionary:
++	var level: int = int(status.get("level", 1))
++	var current: String = String(selection.get("current", "standard"))
++	var items: Array = []
++	var upgrade: Dictionary = Dictionary(status.get("next_upgrade", {}))
++	if not upgrade.is_empty():
++		var resource: String = String(upgrade.resource)
++		items.append({
++			"id": "workshop:upgrade", "title": "Brighter, farther light",
++			"description": "Upgrade every beam. Compare Current and Upgraded in the cave preview.",
++			"light_preview": current, "light_level": level, "compare_level": level + 1,
++			"stats": _workshop_stats("light_lab", level, level + 1),
++			"costs": [_cost(resource, _resource_name(resource), int(RunState.cargo.get(resource, 0)), int(upgrade.cost), _resource_texture(resource))],
++			"affordable": bool(status.get("ready_to_upgrade", false)), "action_label": "Upgrade light",
++			"future_unlock_label": "Also unlocks",
++			"future_unlock": _workshop_level_unlock("light_lab", level + 1),
++		})
++	var notes: Dictionary = {
++		"standard": "Balanced beam for everyday mining.",
++		"focused": "24% narrower than Standard, with a warmer tint. Same reach and brightness.",
++		"wide": "28% wider than Standard, with a cooler tint. Same reach and brightness.",
++		"prismatic": "10% wider than Standard, with a violet tint. Same reach and brightness.",
++		"deepheart": "8% narrower than Standard, with a golden tint. Same reach and brightness.",
++	}
++	for i in RunState.ENDLESS_LIGHT_STYLE_IDS.size():
++		var style: String = String(RunState.ENDLESS_LIGHT_STYLE_IDS[i])
++		var locked: bool = i + 1 > level
++		items.append({
++			"id": "workshop:equip:" + style, "title": style.capitalize(),
++			"description": String(notes[style]), "light_preview": style, "light_level": level,
++			"equipped": style == current, "locked": locked,
++			"affordable": not locked, "action_enabled": style != current,
++			"action_label": "Equipped" if style == current else "Use beam",
++			"future_unlock_label": "Unlock requirement" if locked else "Your lamp · Level %d" % level,
++			"future_unlock": "Upgrade Light Lab to level %d to use this beam." % (i + 1) if locked else "Range +%d%% · Brightness +%d%%. Owned beams are free to switch." % [roundi((RunState.light_range_for_level(level)-1)*100), roundi((RunState.light_energy_for_level(level)-1)*100)],
++		})
++	return {"panel_id": "workshop:light_lab", "title": "Light Lab", "subtitle": "Level %d / 5 · Preview your headlamp in the cave" % level, "catalog_label": "Headlamp beams", "items": items, "selected_item_id": "workshop:equip:" + current}
+diff --git a/scripts/ui/commerce_panel.gd b/scripts/ui/commerce_panel.gd
+index a9137b7..931a144 100644
+--- a/scripts/ui/commerce_panel.gd
++++ b/scripts/ui/commerce_panel.gd
+@@ -292,6 +292,8 @@ func refresh_commerce(config: Dictionary) -> void :
+ 	var previous_item: Dictionary = selected_item()
+ 	if previous_selection == "workshop:upgrade" and previous_item.has("outfit_preview"):
+ 		previous_selection = "workshop:equip:" + String(previous_item.outfit_preview)
++	if previous_selection == "workshop:upgrade" and previous_item.has("light_preview"):
++		previous_selection = "workshop:equip:" + String(previous_item.light_preview)
+ 	_config = config.duplicate(true)
+ 	_items = _valid_items(Array(_config.get("items", [])))
+ 	_selected_item_id = previous_selection if _has_item(previous_selection) else _initial_selection(String(_config.get("selected_item_id", "")))
+@@ -827,6 +829,7 @@ func _refresh_showcase(item: Dictionary) -> void :
+ 		return
+ 	hero_icon.texture = _item_texture(item)
+ 	_update_outfit_preview(hero_icon, item, true)
++	_update_light_preview(item)
+ 	hero_icon.modulate = Color(1, 1, 1, 0.38) if bool(item.get("locked", false)) else Color.WHITE
+ 	var texture_path: = String(item.get("texture", item.get("icon_path", "")))
+ 	hero_icon.rotation = deg_to_rad(-40.0) if "/tools/" in texture_path or String(item.get("id", "")).begins_with("forge:") else 0.0
+@@ -879,6 +882,11 @@ func _item_card(item: Dictionary) -> Button:
+ 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+ 	icon.texture = _item_texture(item)
+ 	_update_outfit_preview(icon, item)
++	if item.has("light_preview"):
++		var preview = preload("res://scripts/ui/light_preview.gd").new()
++		icon.add_child(preview)
++		preview.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
++		preview.configure(item, true)
+ 	icon_slot.add_child(icon)
+ 	icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+ 	if icon.texture != null and ("/tools/" in icon.texture.resource_path or item_id.begins_with("forge:")):
+@@ -1864,3 +1872,21 @@ func _update_outfit_preview(target: TextureRect, item: Dictionary, animated: boo
+ 		target.add_child(existing)
+ 		existing.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+ 	existing.configure(String(item.outfit_preview), animated)
++
++
++func _update_light_preview(item: Dictionary) -> void:
++	var existing = hero_well.get_node_or_null("LightPreview")
++	hero_medallion.visible = not item.has("light_preview")
++	if not item.has("light_preview"):
++		if existing != null:
++			hero_well.remove_child(existing)
++			existing.queue_free()
++		return
++	if existing == null:
++		existing = preload("res://scripts/ui/light_preview.gd").new()
++		existing.name = "LightPreview"
++		hero_well.add_child(existing)
++		existing.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
++		existing.offset_left = 8
++		existing.offset_right = -8
++	existing.configure(item)
+diff --git a/scripts/ui/light_preview.gd b/scripts/ui/light_preview.gd
+new file mode 100644
+index 0000000..69c528b
+--- /dev/null
++++ b/scripts/ui/light_preview.gd
+@@ -0,0 +1,91 @@
++extends VBoxContainer
++## A separate cave viewport uses the real headlamp renderer and current hero.
++const Lamp = preload("res://scripts/lighting/headlamp_beam.gd")
++var viewport: SubViewport
++var lamp: HeadlampBeam
++var style: String
++var current_level: int
++var upgraded_level: int
++var showing_level: int
++var before_button: Button
++var after_button: Button
++var _thumbnail: bool = false
++
++func configure(item: Dictionary, thumbnail: bool = false) -> void:
++	style = String(item.get("light_preview", "standard"))
++	current_level = int(item.get("light_level", 1))
++	upgraded_level = int(item.get("compare_level", current_level))
++	_thumbnail = thumbnail
++	mouse_filter = Control.MOUSE_FILTER_IGNORE
++	add_theme_constant_override("separation", 3)
++	if viewport == null: _build()
++	if before_button != null:
++		before_button.get_parent().visible = upgraded_level > current_level
++		before_button.text = "CURRENT · LV %d" % current_level
++		after_button.text = "UPGRADED · LV %d" % upgraded_level
++	show_level(upgraded_level)
++
++func _build() -> void:
++	if not _thumbnail:
++		var row: HBoxContainer = HBoxContainer.new()
++		row.alignment = BoxContainer.ALIGNMENT_CENTER
++		add_child(row)
++		before_button = Button.new()
++		after_button = Button.new()
++		for button in [before_button, after_button]:
++			button.custom_minimum_size = Vector2(160, 42)
++			button.add_theme_font_size_override("font_size", 16)
++			row.add_child(button)
++		before_button.pressed.connect(func(): show_level(current_level))
++		after_button.pressed.connect(func(): show_level(upgraded_level))
++	viewport = SubViewport.new()
++	viewport.size = Vector2i(420, 208) if _thumbnail else Vector2i(1050, 520)
++	viewport.world_2d = World2D.new()
++	viewport.transparent_bg = false
++	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE if _thumbnail else SubViewport.UPDATE_WHEN_VISIBLE
++	add_child(viewport)
++	var world: Node2D = Node2D.new()
++	viewport.add_child(world)
++	if _thumbnail: world.scale = Vector2(0.4, 0.4)
++	var floor_sprite: Sprite2D = Sprite2D.new()
++	floor_sprite.texture = load("res://assets/mossvein/cave-floor.png")
++	floor_sprite.centered = false
++	floor_sprite.region_enabled = true
++	floor_sprite.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
++	floor_sprite.region_rect = Rect2(0, 0, 1050, 520)
++	world.add_child(floor_sprite)
++	var ambient: CanvasModulate = CanvasModulate.new()
++	ambient.color = Color(0.13, 0.15, 0.16)
++	world.add_child(ambient)
++	for position_value in [Vector2(380, 225), Vector2(650, 260), Vector2(750, 365)]:
++		var ore: Sprite2D = Sprite2D.new()
++		ore.texture = load("res://assets/minerals/copper-node.png")
++		ore.position = position_value
++		ore.scale = Vector2.ONE * 60.0 / ore.texture.get_width()
++		world.add_child(ore)
++	var holder: Node2D = Node2D.new()
++	world.add_child(holder)
++	var hero = preload("res://scripts/ui/outfit_preview.gd").new()
++	hero.position = Vector2(20, 190)
++	hero.size = Vector2(160, 160)
++	holder.add_child(hero)
++	hero.configure(String(RunState.endless_loadout_status().get("outfit", "miner")), false, "right")
++	lamp = Lamp.new()
++	lamp.position = Vector2(117, 226)
++	holder.add_child(lamp)
++	var picture: TextureRect = TextureRect.new()
++	picture.texture = viewport.get_texture()
++	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
++	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
++	picture.size_flags_vertical = Control.SIZE_EXPAND_FILL
++	picture.size_flags_horizontal = Control.SIZE_EXPAND_FILL
++	picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
++	add_child(picture)
++
++func show_level(level: int) -> void:
++	showing_level = level
++	lamp.configure_preview(style, level)
++	if before_button != null:
++		before_button.disabled = level == current_level
++		after_button.disabled = level == upgraded_level
++	if _thumbnail: viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+diff --git a/scripts/ui/light_preview.gd.uid b/scripts/ui/light_preview.gd.uid
+new file mode 100644
+index 0000000..021b420
+--- /dev/null
++++ b/scripts/ui/light_preview.gd.uid
+@@ -0,0 +1 @@
++uid://cgf3oo8i4tkha
+diff --git a/scripts/ui/outfit_preview.gd b/scripts/ui/outfit_preview.gd
+index 913777e..d8006f1 100644
+--- a/scripts/ui/outfit_preview.gd
++++ b/scripts/ui/outfit_preview.gd
+@@ -9,7 +9,7 @@ var _manifest: Dictionary = {}
+ var _clock: float = 0.0
+ var _cell: Vector2 = Vector2(160, 160)
+ 
+-func configure(value: String, animated: bool = false) -> void:
++func configure(value: String, animated: bool = false, direction: String = "down") -> void:
+ 	outfit = value
+ 	animate = animated
+ 	if _sprite == null:
+@@ -25,10 +25,10 @@ func configure(value: String, animated: bool = false) -> void:
+ 	var root: String = Hero.ROOT + gear + "/"
+ 	_manifest = JSON.parse_string(FileAccess.get_file_as_string(root + "manifest.json"))
+ 	_cell = Vector2(_manifest.cell[0], _manifest.cell[1])
+-	_sprite.texture = load(root + "down.png")
++	_sprite.texture = load(root + direction + ".png")
+ 	var cloth: ShaderMaterial = ShaderMaterial.new()
+ 	cloth.shader = Hero.ClothShader
+-	cloth.set_shader_parameter("cloth_mask", load(root + "down-cloth.png"))
++	cloth.set_shader_parameter("cloth_mask", load(root + direction + "-cloth.png"))
+ 	cloth.set_shader_parameter("cloth_color", Hero.OUTFIT_COLORS.get(outfit, Hero.OUTFIT_COLORS.miner))
+ 	cloth.set_shader_parameter("recolor", 0.0 if outfit == "miner" else 1.0)
+ 	_sprite.material = cloth
+diff --git a/scripts/ui/premium_menu.gd b/scripts/ui/premium_menu.gd
+index 6b54cb7..0d4ff40 100644
+--- a/scripts/ui/premium_menu.gd
++++ b/scripts/ui/premium_menu.gd
+@@ -12,7 +12,7 @@ const MINT: = Color("a8e3bc")
+ const MUTED: = Color("789384")
+ const INK: = Color("07120d")
+ const IPHONE_LANDSCAPE_ASPECT: = 1.95
+-const DEV_RELEASE_VERSION: = "0.46.7-dev.1"
++const DEV_RELEASE_VERSION: = "0.46.8-dev.1"
+ 
+ 
+ static func release_version() -> String:
