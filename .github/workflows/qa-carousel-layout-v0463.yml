@@ -17,7 +17,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: carousel-exact-candidates
-          run-id: 34101602163
+          run-id: 34102543647
           github-token: ${{ github.token }}
           path: ${{ runner.temp }}/candidate
       - run: |
@@ -34,5 +34,3 @@ jobs:
         with:
           name: carousel-shop-layouts
           path: ${{ runner.temp }}/evidence
-
-# DOM acknowledgment supported in the runner.
