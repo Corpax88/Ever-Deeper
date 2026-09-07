@@ -54,3 +54,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python3 .github/wardrobe-v0467/prepare.py --verify-public
+
+# Package exactly the nine canonical web files per flavor.
