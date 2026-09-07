@@ -339,9 +339,11 @@ async function captureSuite(options) {
           await page.evaluate(async ({x,y,dx,dy,kind}) => {
             const canvas=document.getElementById("canvas");
             const send=(type,px,py)=>{
-              const t=new Touch({identifier:12,target:canvas,clientX:px,clientY:py,pageX:px,pageY:py,screenX:px,screenY:py,radiusX:3,radiusY:3,force:1});
+              const t={identifier:12,target:canvas,clientX:px,clientY:py,pageX:px,pageY:py,screenX:px,screenY:py,radiusX:3,radiusY:3,force:1};
               const active=type==="touchend"||type==="touchcancel"?[]:[t];
-              canvas.dispatchEvent(new TouchEvent(type,{bubbles:true,cancelable:true,touches:active,targetTouches:active,changedTouches:[t]}));
+              const event=new Event(type,{bubbles:true,cancelable:true});
+              Object.defineProperties(event,{touches:{value:active},targetTouches:{value:active},changedTouches:{value:[t]}});
+              canvas.dispatchEvent(event);
             };
             send("touchstart",x,y);
             if(kind==="swipe") for(let i=1;i<=8;i++) {send("touchmove",x+dx*i/8,y+dy*i/8);await new Promise(r=>setTimeout(r,25));}
