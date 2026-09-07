@@ -1,0 +1,297 @@
+diff --git a/project.godot b/project.godot
+index 82e0d04..e81fe17 100644
+--- a/project.godot
++++ b/project.godot
+@@ -11,7 +11,7 @@ config_version=5
+ [application]
+ 
+ config/name="Ever Deeper"
+-config/version="0.46.1"
++config/version="0.46.2"
+ run/main_scene="res://scenes/main/main.tscn"
+ config/use_custom_user_dir=true
+ config/custom_user_dir_name="Ever Deeper- Godot Production Port"
+diff --git a/scripts/dev/visual_capture_driver.gd b/scripts/dev/visual_capture_driver.gd
+index 1257194..917ddb2 100644
+--- a/scripts/dev/visual_capture_driver.gd
++++ b/scripts/dev/visual_capture_driver.gd
+@@ -135,7 +135,7 @@ func run(main_node: Node) -> void :
+ 
+ func _verify_build_contract() -> Dictionary:
+ 	var dev_feature: = OS.has_feature("ever_deeper_dev")
+-	var expected_version: = "0.46.1-dev.1" if dev_feature else "0.46.1"
++	var expected_version: = "0.46.2-dev.1" if dev_feature else "0.46.2"
+ 	var expected_flavor: = "dev" if dev_feature else "production"
+ 	var actual_version: = String(PremiumMenuScript.release_version())
+ 	var developer_menu: Variant = _main.get("developer_menu")
+diff --git a/scripts/qa/menu_touch_qa.gd b/scripts/qa/menu_touch_qa.gd
+index 693d042..8816097 100644
+--- a/scripts/qa/menu_touch_qa.gd
++++ b/scripts/qa/menu_touch_qa.gd
+@@ -66,9 +66,33 @@ func run(d: Node, m: Node) -> bool:
+ 	await swipe(main.premium_menu.achievement_scroll,false,"achievements-swiped")
+ 	main.premium_menu.close_menu()
+ 	driver._prepare_commerce_capture("starforge_owned_active");await settle()
+-	var selected: String=main.commerce_panel._selected_item_id
+-	await swipe(main.commerce_panel.catalog_scroll,true,"shop-catalog-swiped")
+-	check(main.commerce_panel._selected_item_id==selected,"Swiping item cards does not select another item")
++	var panel = main.commerce_panel
++	check(panel.find_child("Previous",true,false)==null and panel.find_child("Next",true,false)==null,"Paging arrows removed")
++	panel.select_item(String(panel._items[0].id))
++	await settle()
++	var selected: String=panel._selected_item_id
++	var gold_before: int=RunState.gold
++	await gesture("swipe",point(panel.hero_well),Vector2(-125,0))
++	check(panel._selected_item_id==String(panel._items[1].id),"Hero showcase swipe advances exactly one item")
++	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"starforge-swipe-next")
++	await gesture("swipe",point(panel.overview_scroll),Vector2(125,0))
++	check(panel._selected_item_id==selected,"Swipe back over details returns to previous item")
++	await gesture("swipe",point(panel.hero_well),Vector2(125,0))
++	check(panel._selected_item_id==selected,"First item clamps at left edge")
++	await gesture("swipe",point(panel.catalog_scroll),Vector2(-120,0))
++	check(panel._selected_item_id==String(panel._items[1].id),"Card strip swipe changes selected item")
++	await gesture("swipe",point(panel.hero_well),Vector2(-180,0))
++	check(panel._selected_item_id==String(panel._items[2].id),"Next swipe reaches final item")
++	await gesture("swipe",point(panel.hero_well),Vector2(-125,0))
++	check(panel._selected_item_id==String(panel._items[2].id),"Final item clamps at right edge")
++	await gesture("swipe",point(panel.hero_well),Vector2(20,0))
++	check(panel._selected_item_id==String(panel._items[2].id),"Short drag does not page")
++	await gesture("cancel",point(panel.hero_well))
++	check(panel._selected_item_id==String(panel._items[2].id),"Canceled touch does not page")
++	await gesture("swipe",point(panel.hero_well),Vector2(0,-100))
++	check(panel._selected_item_id==String(panel._items[2].id),"Vertical motion does not page")
++	check(RunState.gold==gold_before,"Navigation gestures never buy or equip")
++	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"starforge-swipe-last")
+ 	# The small mobile details pane overflows for mastery descriptions/costs.
+ 	var detail: ScrollContainer=main.commerce_panel.overview_scroll
+ 	if detail.get_v_scroll_bar().max_value > detail.get_v_scroll_bar().page + 20:
+diff --git a/scripts/ui/commerce_panel.gd b/scripts/ui/commerce_panel.gd
+index dc54a5c..e6c117d 100644
+--- a/scripts/ui/commerce_panel.gd
++++ b/scripts/ui/commerce_panel.gd
+@@ -205,8 +205,8 @@ var commerce_body: HBoxContainer
+ var catalog_pane: VBoxContainer
+ var page_navigation: HBoxContainer
+ var page_label: Label
+-var previous_button: Button
+-var next_button: Button
++var swipe_pager: Node
++var _page_tween: Tween
+ var catalog_scroll: ScrollContainer
+ var catalog_strip: HBoxContainer
+ var hero_well: PanelContainer
+@@ -247,6 +247,11 @@ func _ready() -> void :
+ 	mouse_filter = Control.MOUSE_FILTER_STOP
+ 	z_index = 210
+ 	_build_interface()
++	swipe_pager = preload("res://scripts/ui/swipe_pager.gd").new()
++	swipe_pager.name = "SwipePager"
++	swipe_pager.region = commerce_body
++	swipe_pager.page_requested.connect(_swipe_selection)
++	add_child(swipe_pager)
+ 	get_viewport().size_changed.connect(_apply_responsive_layout)
+ 	visible = false
+ 	call_deferred("_apply_responsive_layout")
+@@ -375,7 +380,7 @@ func minimum_touch_targets_are_valid(minimum_height: float = -1.0) -> bool:
+ 	if required_height <= 0.0:
+ 		var viewport_size: = _layout_viewport_size if _layout_viewport_size != Vector2.ZERO else get_viewport_rect().size
+ 		required_height = _touch_target_for(layout_metrics(viewport_size))
+-	for button in [close_button, previous_button, next_button, cancel_button, primary_button]:
++	for button in [close_button, cancel_button, primary_button]:
+ 		if button != null and (button.custom_minimum_size.x < required_height or button.custom_minimum_size.y < required_height):
+ 			return false
+ 	if catalog_strip != null:
+@@ -387,7 +392,7 @@ func minimum_touch_targets_are_valid(minimum_height: float = -1.0) -> bool:
+ 
+ func _minimum_rendered_touch_target_dimension() -> float:
+ 	var minimum: = INF
+-	for button in [close_button, previous_button, next_button, cancel_button, primary_button]:
++	for button in [close_button, cancel_button, primary_button]:
+ 		if button != null and button.visible:
+ 			minimum = minf(minimum, minf(button.size.x, button.size.y))
+ 	if catalog_strip != null:
+@@ -543,16 +548,6 @@ func _build_commerce_body() -> void :
+ 	page_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+ 	page_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+ 	page_navigation.add_child(page_label)
+-	previous_button = _button("<", false)
+-	previous_button.name = "Previous"
+-	previous_button.custom_minimum_size = Vector2(68, MIN_TOUCH_TARGET)
+-	previous_button.pressed.connect(_change_selection.bind(-1))
+-	page_navigation.add_child(previous_button)
+-	next_button = _button(">", false)
+-	next_button.name = "Next"
+-	next_button.custom_minimum_size = Vector2(68, MIN_TOUCH_TARGET)
+-	next_button.pressed.connect(_change_selection.bind(1))
+-	page_navigation.add_child(next_button)
+ 
+ 	hero_well = PanelContainer.new()
+ 	hero_well.name = "HeroWell"
+@@ -737,8 +732,6 @@ func _apply_visual_theme() -> void :
+ 	footer_summary.add_theme_color_override("font_color", Color("aaa39a"))
+ 	_style_button(close_button, false)
+ 	_style_close_button(close_button)
+-	_style_button(previous_button, false)
+-	_style_button(next_button, false)
+ 	_style_button(cancel_button, false)
+ 	_style_button(primary_button, true)
+ 
+@@ -1075,17 +1068,14 @@ func _refresh_navigation() -> void :
+ 	var index: = _selected_index()
+ 	var count: = _items.size()
+ 	var has_pages: = count > 1
++	swipe_pager.enabled = has_pages
+ 	page_navigation.visible = has_pages
+ 	catalog_scroll.visible = has_pages
+ 	page_label.text = (
+-		"%s  -  %d / %d" % [_display_text(String(_config.get("catalog_label", "Catalog"))), maxi(0, index + 1), count]
++		"%s  ·  %d / %d  ·  Swipe to browse" % [_display_text(String(_config.get("catalog_label", "Catalog"))), maxi(0, index + 1), count]
+ 		if has_pages
+ 		else _display_text(String(_config.get("catalog_label", "Catalog")))
+ 	)
+-	previous_button.visible = has_pages
+-	next_button.visible = has_pages
+-	previous_button.disabled = index <= 0
+-	next_button.disabled = index < 0 or index >= count - 1
+ 
+ 
+ func _select_item(item_id: String) -> void :
+@@ -1107,6 +1097,16 @@ func _change_selection(offset: int) -> void :
+ 		_select_item(String(Dictionary(_items[next_index]).get("id", "")))
+ 
+ 
++func _swipe_selection(offset: int) -> void:
++	var old_selection: String = _selected_item_id
++	_change_selection(offset)
++	if old_selection == _selected_item_id: return
++	if _page_tween != null: _page_tween.kill()
++	hero_icon.modulate.a = 0.45
++	_page_tween = create_tween()
++	_page_tween.tween_property(hero_icon, "modulate:a", 1.0, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
++
++
+ func _confirm_selected() -> void :
+ 	var item: = _item_by_id(_selected_item_id)
+ 	if item.is_empty() or not _action_is_enabled(item):
+@@ -1169,8 +1169,6 @@ func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void :
+ 	close_button.custom_minimum_size = Vector2(touch, touch)
+ 	close_slot.custom_minimum_size.x = touch
+ 	header.get_node("CloseBalance").custom_minimum_size.x = touch
+-	previous_button.custom_minimum_size = Vector2(touch, touch)
+-	next_button.custom_minimum_size = Vector2(touch, touch)
+ 	page_navigation.custom_minimum_size.y = touch
+ 	cancel_button.custom_minimum_size = Vector2(148.0 * k, touch)
+ 	primary_button.custom_minimum_size = Vector2(292.0 * k, touch)
+diff --git a/scripts/ui/premium_menu.gd b/scripts/ui/premium_menu.gd
+index 613ba75..8ada3bd 100644
+--- a/scripts/ui/premium_menu.gd
++++ b/scripts/ui/premium_menu.gd
+@@ -12,7 +12,7 @@ const MINT: = Color("a8e3bc")
+ const MUTED: = Color("789384")
+ const INK: = Color("07120d")
+ const IPHONE_LANDSCAPE_ASPECT: = 1.95
+-const DEV_RELEASE_VERSION: = "0.46.1-dev.1"
++const DEV_RELEASE_VERSION: = "0.46.2-dev.1"
+ 
+ 
+ static func release_version() -> String:
+diff --git a/scripts/ui/swipe_pager.gd b/scripts/ui/swipe_pager.gd
+new file mode 100644
+index 0000000..b157e30
+--- /dev/null
++++ b/scripts/ui/swipe_pager.gd
+@@ -0,0 +1,94 @@
++extends Node
++## Own horizontal gestures before the child scroll containers see them.
++## Vertical gestures and stationary taps keep their normal GUI behavior.
++signal page_requested(direction: int)
++var region: Control
++var enabled: bool = false
++var finger: int = -1
++var origin: Vector2
++var latest: Vector2
++var axis: int = 0 # 0 undecided, 1 horizontal, 2 vertical
++var suppress_until: int = 0
++var web_cancel_callback: JavaScriptObject
++
++func _ready() -> void:
++	region.visibility_changed.connect(_cancel)
++	if OS.has_feature("web"):
++		web_cancel_callback = JavaScriptBridge.create_callback(func(_args: Array): _cancel())
++		JavaScriptBridge.get_interface("window").addEventListener("touchcancel", web_cancel_callback, true)
++
++func _exit_tree() -> void:
++	if web_cancel_callback != null:
++		JavaScriptBridge.get_interface("window").removeEventListener("touchcancel", web_cancel_callback, true)
++
++func _local(point: Vector2) -> Vector2:
++	return region.get_global_transform_with_canvas().affine_inverse() * point
++
++func _begin(point: Vector2, index: int) -> void:
++	if finger != -1 or not Rect2(Vector2.ZERO, region.size).has_point(_local(point)): return
++	finger = index
++	origin = _local(point)
++	latest = origin
++	axis = 0
++
++func _clear_child_scrolls(node: Node) -> void:
++	if node is TouchScrollContainer: node._cancel()
++	for child in node.get_children(): _clear_child_scrolls(child)
++
++func _motion(point: Vector2) -> void:
++	latest = _local(point)
++	var distance: Vector2 = latest - origin
++	if axis == 0 and distance.length() >= 6.0:
++		axis = 1 if absf(distance.x) > absf(distance.y) * 1.25 else 2
++		if axis == 1:
++			_clear_child_scrolls(region)
++			region.propagate_notification(Control.NOTIFICATION_SCROLL_BEGIN)
++	if axis == 1: get_viewport().set_input_as_handled()
++
++func _finish(canceled: bool) -> void:
++	var direction: int = 0
++	if axis == 1:
++		get_viewport().set_input_as_handled()
++		suppress_until = Time.get_ticks_msec() + 180
++		region.propagate_notification(Control.NOTIFICATION_SCROLL_END)
++		var distance: float = latest.x - origin.x
++		if not canceled and absf(distance) >= clampf(region.size.x * 0.045, 40.0, 65.0):
++			direction = 1 if distance < 0.0 else -1
++	finger = -1
++	axis = 0
++	if direction != 0: page_requested.emit(direction)
++
++func _cancel() -> void:
++	if finger != -1:
++		# Cancel any pressed child even if the finger has not started moving.
++		region.propagate_notification(Control.NOTIFICATION_SCROLL_BEGIN)
++		axis = 1
++		_finish(true)
++
++func _notification(what: int) -> void:
++	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_inside_tree(): _cancel()
++
++func _input(event: InputEvent) -> void:
++	if not enabled or not region.is_visible_in_tree(): return
++	if event is InputEventScreenTouch:
++		if event.pressed:
++			if finger != -1 and event.index != finger:
++				_cancel()
++				return
++			_begin(event.position, event.index)
++		elif event.index == finger:
++			latest = _local(event.position)
++			_finish(event.canceled)
++	elif event is InputEventScreenDrag and event.index == finger:
++		_motion(event.position)
++	elif event is InputEventMouseButton or event is InputEventMouseMotion:
++		if axis == 1 and finger >= 0 or Time.get_ticks_msec() < suppress_until:
++			get_viewport().set_input_as_handled()
++			return
++		# Godot synthesizes mouse events for touch. Never start a second gesture.
++		if event.device == InputEvent.DEVICE_ID_EMULATION or finger >= 0: return
++		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
++			if event.pressed: _begin(event.position, -2)
++			elif finger == -2: _finish(false)
++		elif event is InputEventMouseMotion and finger == -2:
++			_motion(event.position)
