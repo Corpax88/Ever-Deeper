@@ -11,6 +11,9 @@ func run() -> void:
 		if arg.begins_with("--perf-output="): output_dir = arg.get_slice("=", 1)
 		if arg == "--perf-capture": captures = true
 	DirAccess.make_dir_recursive_absolute(output_dir)
+	if "--perf-mossvein" in OS.get_cmdline_user_args():
+		await probe_mossvein()
+		return
 	if "--perf-review" in OS.get_cmdline_user_args():
 		await review()
 		return
@@ -65,6 +68,69 @@ func run() -> void:
 func fail(message: String) -> void:
 	push_error("MOBILE_PERFORMANCE_FAILED: " + message)
 	main.get_tree().quit(2)
+
+## Diagnostic ablations run only in isolated QA, never in ordinary play.
+func probe_mossvein() -> void:
+	seed(4608)
+	RunState.reset_run(false)
+	RunState.world_seed = 4608
+	main.game_started = true
+	if not main._dev_jump_mine("mossMine", 2):
+		fail("Cannot enter Mossvein Depth 2"); return
+	var world: Node2D = main.depth_world
+	var player: Node2D = world.player
+	player.camera.position_smoothing_enabled = false
+	var origin: Vector2 = world.entry_spawn()
+	var lights: Array[Node] = world.find_children("*", "PointLight2D", true, false)
+	var shadow_state: Dictionary = {}
+	for light in lights: shadow_state[light] = light.shadow_enabled
+	var probe_rows: Array[Dictionary] = []
+	for stage in ["cold_idle", "walk_1", "walk_2", "walk_3", "warm_idle", "no_shadows", "restored_shadows", "no_world_draw", "restored_draw"]:
+		var hide_draw: bool = stage == "no_world_draw"
+		RenderingServer.canvas_item_set_visible(world.get_canvas_item(), not hide_draw)
+		for light in lights:
+			if not is_instance_valid(light): continue
+			light.shadow_enabled = false if stage == "no_shadows" else shadow_state[light]
+		player.set_external_movement(Vector2.ZERO)
+		await main.get_tree().create_timer(0.3).timeout
+		var intervals: Array[float] = []
+		var draw_calls: Array[float] = []
+		var begin: int = Time.get_ticks_usec()
+		var previous: int = begin
+		var distance: float = 0.0
+		var last_position: Vector2 = player.global_position
+		while Time.get_ticks_usec() - begin < 4000000:
+			var elapsed: float = float(Time.get_ticks_usec() - begin) / 1000000.0
+			if not String(stage).ends_with("idle"):
+				# Follow a compact route around the actual entrance/stations.
+				var target: Vector2 = origin + Vector2(sin(elapsed * TAU / 4.0) * 120.0, -100.0 + cos(elapsed * TAU / 4.0) * 90.0)
+				player.set_external_movement(player.global_position.direction_to(target))
+			await main.get_tree().process_frame
+			var now: int = Time.get_ticks_usec()
+			intervals.append(float(now - previous) / 1000.0)
+			previous = now
+			distance += last_position.distance_to(player.global_position)
+			last_position = player.global_position
+			draw_calls.append(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
+		var stats: Dictionary = _journey_performance_frame_stats(intervals)
+		draw_calls.sort()
+		stats.merge({"stage": stage, "walked_pixels": distance,
+			"draw_calls_p95": _journey_percentile(draw_calls, 0.95),
+			"nodes": Performance.get_monitor(Performance.OBJECT_NODE_COUNT),
+			"objects": Performance.get_monitor(Performance.OBJECT_COUNT),
+			"static_mib": Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0,
+			"video_mib": Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0,
+			"light_nodes": world.find_children("*", "PointLight2D", true, false).size(),
+			"occluders": world.get_node("CaveLightOccluders").active_count})
+		probe_rows.append(stats)
+		print("MOSSVEIN_PROBE " + JSON.stringify(stats))
+		if DisplayServer.get_name() != "headless":
+			await RenderingServer.frame_post_draw
+			main.get_viewport().get_texture().get_image().save_png(output_dir.path_join(String(stage) + ".png"))
+	player.set_external_movement(Vector2.ZERO)
+	FileAccess.open(output_dir.path_join("mossvein.json"), FileAccess.WRITE).store_string(JSON.stringify({"rendered": DisplayServer.get_name() != "headless", "physical_iphone": false, "stages": probe_rows}, "\t"))
+	print("MOSSVEIN_PROBE_COMPLETE")
+	main.get_tree().quit(0)
 
 func measure(label: String, world: Node, moving: bool = false, mining: bool = false) -> void:
 	var player: Node2D = world.get("player")
