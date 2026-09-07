@@ -1,0 +1,36 @@
+name: Swipe menu visual review
+on:
+  push:
+    branches: [codex-swipe-menus-v0462]
+    paths: ['.github/workflows/qa-swipe-layout-v0462.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/download-artifact@v4
+        with:
+          name: swipe-exact-candidates
+          run-id: 34097781706
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tools/visual-qa/capture-menu-touch.mjs')
+          p.write_text(p.read_text().replace('"--pet-capture",',''))
+          PY
+      - run: CAPTURE_END=19 node tools/visual-qa/capture-menu-touch.mjs --web-dir "$RUNNER_TEMP/candidate/live" --output-dir "$RUNNER_TEMP/evidence"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: swipe-shop-layouts
+          path: ${{ runner.temp }}/evidence
