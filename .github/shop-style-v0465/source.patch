@@ -1,0 +1,704 @@
+--- a/scripts/ui/premium_menu.gd
++++ b/scripts/ui/premium_menu.gd
+@@ -12,7 +12,7 @@
+ const MUTED: = Color("789384")
+ const INK: = Color("07120d")
+ const IPHONE_LANDSCAPE_ASPECT: = 1.95
+-const DEV_RELEASE_VERSION: = "0.46.4-dev.1"
++const DEV_RELEASE_VERSION: = "0.46.5-dev.1"
+ 
+ 
+ static func release_version() -> String:
+--- a/scripts/dev/visual_capture_driver.gd
++++ b/scripts/dev/visual_capture_driver.gd
+@@ -135,7 +135,7 @@
+ 
+ func _verify_build_contract() -> Dictionary:
+ 	var dev_feature: = OS.has_feature("ever_deeper_dev")
+-	var expected_version: = "0.46.4-dev.1" if dev_feature else "0.46.4"
++	var expected_version: = "0.46.5-dev.1" if dev_feature else "0.46.5"
+ 	var expected_flavor: = "dev" if dev_feature else "production"
+ 	var actual_version: = String(PremiumMenuScript.release_version())
+ 	var developer_menu: Variant = _main.get("developer_menu")
+@@ -420,6 +420,15 @@
+ 			RunState.gold = int(RunState.movement_speed_upgrade_cost())
+ 			config = CommerceCatalogScript.wayfarer_config()
+ 			context_id = "wayfarer"
++		"starforge_ready_crusher", "starforge_ready_swift", "starforge_ready_prospector":
++			_main.call("_dev_seed_all_zones_state")
++			RunState.starforge_unlocked.clear()
++			RunState.starforge_variant = ""
++			RunState.cargo["astralite"] = 233
++			RunState.cargo["crownstone"] = 233
++			config = CommerceCatalogScript.starforge_config()
++			config["selected_item_id"] = "starforge:" + fixture_id.trim_prefix("starforge_ready_")
++			context_id = "starforge"
+ 		"starforge_owned_active":
+ 			config = _starforge_capture_config(false)
+ 			context_id = "starforge"
+@@ -1680,6 +1689,13 @@
+ 	# Read the reported shop regression first, then every affected existing fixture.
+ 	for state in _build_capture_states():
+ 		if String(state.kind)=="commerce": states.append(state)
++	if "--shop-style-capture" in OS.get_cmdline_user_args():
++		for variant in ["crusher", "swift", "prospector"]:
++			states.append({"id":"shop_starforge_ready_"+variant,"kind":"commerce","fixture_id":"starforge_ready_"+variant})
++		for profile in MINE_PROFILES:
++			for station in ["forge", "wayfarer"]:
++				states.append({"id":"shop_depth_"+String(profile.tag)+"_"+station,"kind":"overhaul_depth_shop","mine_id":profile.mine_id,"station":station})
++		return states
+ 	for state in _build_capture_states():
+ 		if String(state.kind)!="commerce": states.append(state)
+ 	states.append_array(_build_surface_states())
+--- a/project.godot
++++ b/project.godot
+@@ -11,7 +11,7 @@
+ [application]
+ 
+ config/name="Ever Deeper"
+-config/version="0.46.4"
++config/version="0.46.5"
+ run/main_scene="res://scenes/main/main.tscn"
+ config/use_custom_user_dir=true
+ config/custom_user_dir_name="Ever Deeper- Godot Production Port"
+--- a/scripts/ui/commerce_panel.gd
++++ b/scripts/ui/commerce_panel.gd
+@@ -122,6 +122,7 @@
+ 
+ 	func _draw() -> void :
+ 		var extent: = minf(size.x, size.y)
++		if premium_texture == null: return
+ 		if extent < 40.0:
+ 			return
+ 		if premium_texture != null:
+@@ -153,14 +154,17 @@
+ const IPHONE_CARD_MIN_WIDTH: = 330.0
+ const PANEL_MAX_SIZE: = Vector2(1120, 630)
+ const CARD_MIN_WIDTH: = 244.0
+-const DISPLAY_FONT: = preload("res://assets/ui/fonts/DejaVuSerif-Bold.ttf")
+-const BODY_FONT: = preload("res://assets/ui/fonts/DejaVuSans.ttf")
++const DISPLAY_FONT: = preload("res://assets/ui/fonts/RussoOne-Regular.ttf")
++const BODY_FONT: = preload("res://assets/ui/fonts/ChakraPetch-SemiBold.ttf")
++const SYMBOL_FONT: = preload("res://assets/ui/fonts/DejaVuSans.ttf")
+ const MOSSVEIN_FRAME: = preload("res://assets/ui/commerce/mossvein-frame-v1.png")
+ const MOSSVEIN_PLATE: = preload("res://assets/ui/commerce/mossvein-plate-v1.png")
+ const MOSSVEIN_ACTION: = preload("res://assets/ui/commerce/mossvein-action-v1.png")
+ const MOSSVEIN_MEDALLION: = preload("res://assets/ui/commerce/mossvein-medallion-v1.png")
+ 
+-const IVORY: = Color("eee2cf")
++const IVORY: = Color("edbf91")
++const AURA: = preload("res://assets/ui/commerce/starforge-aura-v1.png")
++const METAL_TEXT: = preload("res://scripts/ui/commerce_metal_text.gdshader")
+ const STEEL: = Color("b8b7b2")
+ const MUTED: = Color("858482")
+ const DANGER: = Color("d86c5f")
+@@ -174,8 +178,8 @@
+ const IRON_HIGH: = Color("9a9188")
+ const PANEL_THEMES: = {
+ 	"forge": {"accent": Color("e66a22"), "bright": Color("ffb25f"), "deep": Color("57230d")},
+-	"wayfarer": {"accent": Color("bd7240"), "bright": Color("efb47d"), "deep": Color("442719")},
+-	"starforge": {"accent": Color("735ba8"), "bright": Color("c2adeb"), "deep": Color("2a2046")},
++	"wayfarer": {"accent": Color("4c986d"), "bright": Color("9feab0"), "deep": Color("163c28")},
++	"starforge": {"accent": Color("735ba8"), "bright": Color("cc8bf2"), "deep": Color("2a2046")},
+ 	"tool_forge": {"accent": Color("b95932"), "bright": Color("e9a277"), "deep": Color("421e13")},
+ 	"light_lab": {"accent": Color("4f86a2"), "bright": Color("a9d3e3"), "deep": Color("18313d")},
+ 	"wardrobe": {"accent": Color("8f3d4c"), "bright": Color("d98b9b"), "deep": Color("37151e")},
+@@ -214,6 +218,8 @@
+ var hero_well: PanelContainer
+ var hero_medallion: ForgedMedallion
+ var hero_icon: TextureRect
++var hero_aura: TextureRect
++var primary_copy: Label
+ var hero_state_plate: PanelContainer
+ var hero_state_label: Label
+ 
+@@ -244,6 +250,8 @@
+ 
+ 
+ func _ready() -> void :
++	BODY_FONT.set("fallbacks", [SYMBOL_FONT])
++	DISPLAY_FONT.set("fallbacks", [SYMBOL_FONT])
+ 	process_mode = Node.PROCESS_MODE_ALWAYS
+ 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+ 	mouse_filter = Control.MOUSE_FILTER_STOP
+@@ -273,8 +281,8 @@
+ 	_apply_responsive_layout()
+ 	if primary_button != null and not primary_button.disabled:
+ 		primary_button.grab_focus()
+-	elif cancel_button != null:
+-		cancel_button.grab_focus()
++	elif close_button != null:
++		close_button.grab_focus()
+ 
+ 
+ func refresh_commerce(config: Dictionary) -> void :
+@@ -504,15 +512,15 @@
+ 	title_plaque = PanelContainer.new()
+ 	title_plaque.name = "TitlePlaque"
+ 	title_plaque.custom_minimum_size.y = 62
+-	title_plaque.size_flags_horizontal = Control.SIZE_EXPAND_FILL
++	title_plaque.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+ 	title_plaque.add_theme_stylebox_override("panel", _header_title_style())
+ 	title_stack.add_child(title_plaque)
+-	title_label = _label("Shop", 21, IVORY, HORIZONTAL_ALIGNMENT_CENTER, true)
++	title_label = _label("Shop", 28, IVORY, HORIZONTAL_ALIGNMENT_CENTER, true)
+ 	title_label.name = "Title"
+ 	title_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+ 	title_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+ 	title_plaque.add_child(title_label)
+-	subtitle_label = _label("Select an item to inspect", 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER, true)
++	subtitle_label = _label("Select an item to inspect", 12, STEEL, HORIZONTAL_ALIGNMENT_CENTER)
+ 	subtitle_label.name = "Subtitle"
+ 	subtitle_label.custom_minimum_size.y = 22
+ 	subtitle_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+@@ -581,6 +589,14 @@
+ 	hero_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+ 	hero_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+ 	hero_icon.resized.connect(_update_hero_icon_pivot)
++	hero_aura = TextureRect.new()
++	hero_aura.name = "StarforgeAura"
++	hero_aura.texture = AURA
++	hero_aura.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
++	hero_aura.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
++	hero_aura.mouse_filter = Control.MOUSE_FILTER_IGNORE
++	hero_medallion.add_child(hero_aura)
++	hero_aura.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+ 	hero_medallion.add_child(hero_icon)
+ 	hero_state_plate = PanelContainer.new()
+ 	hero_state_plate.name = "StatePlate"
+@@ -605,6 +621,7 @@
+ 	catalog_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+ 	catalog_scroll.follow_focus = false
+ 	catalog_pane.add_child(catalog_scroll)
++	page_navigation.move_to_front()
+ 	catalog_strip = HBoxContainer.new()
+ 	catalog_strip.name = "ItemCards"
+ 	catalog_strip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+@@ -633,7 +650,7 @@
+ 	overview_scroll.name = "DetailsScroll"
+ 	overview_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+ 	overview_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+-	overview_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
++	overview_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+ 	overview_scroll.follow_focus = true
+ 	overview_layout.add_child(overview_scroll)
+ 	var overview_margin: = MarginContainer.new()
+@@ -644,7 +661,7 @@
+ 	overview_content = VBoxContainer.new()
+ 	overview_content.name = "Details"
+ 	overview_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+-	overview_content.add_theme_constant_override("separation", 8)
++	overview_content.add_theme_constant_override("separation", 3)
+ 	overview_margin.add_child(overview_content)
+ 
+ 	total_panel = PanelContainer.new()
+@@ -689,8 +706,17 @@
+ 	primary_button = _button("Select", true)
+ 	primary_button.name = "PrimaryAction"
+ 	primary_button.custom_minimum_size = Vector2(248, 64)
++	primary_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+ 	primary_button.pressed.connect(_confirm_selected)
+ 	footer.add_child(primary_button)
++	primary_copy = _label("", 30, IVORY, HORIZONTAL_ALIGNMENT_CENTER, true)
++	primary_copy.name = "ActionText"
++	primary_copy.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
++	primary_copy.mouse_filter = Control.MOUSE_FILTER_IGNORE
++	primary_button.add_child(primary_copy)
++	primary_copy.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
++	_make_metallic(primary_copy)
++	_make_metallic(title_label)
+ 
+ 
+ func _resolve_visual_theme() -> void :
+@@ -709,7 +735,7 @@
+ 
+ 
+ func _apply_backdrop_style() -> void :
+-	var normal_alpha: = 0.74 if _uses_premium_skin() else 0.91
++	var normal_alpha: = 0.36 if _uses_premium_skin() else 0.91
+ 	var pressed_alpha: = 0.79 if _uses_premium_skin() else 0.94
+ 	var normal_style: = _flat_style(Color(0.004, 0.004, 0.005, normal_alpha), 0)
+ 	backdrop.add_theme_stylebox_override("normal", normal_style)
+@@ -727,12 +753,15 @@
+ 	overview_panel.add_theme_stylebox_override("panel", _overview_panel_style())
+ 	hero_well.add_theme_stylebox_override("panel", _hero_well_style())
+ 	hero_medallion.set_accent(_accent)
+-	hero_medallion.set_premium_texture(MOSSVEIN_MEDALLION if _uses_premium_skin() else null)
++	hero_medallion.visible = true
++	hero_medallion.set_premium_texture(null)
++	hero_aura.visible = _visual_theme_id == "starforge"
++	hero_aura.modulate.a = 0.6
+ 	hero_state_plate.add_theme_stylebox_override("panel", _title_plate_style())
+ 	chrome_overlay.set_accent(_accent)
+ 	chrome_overlay.set_premium_texture(MOSSVEIN_FRAME if _uses_premium_skin() else null)
+ 	metal_material.set_shader_parameter("accent_color", _accent)
+-	title_label.add_theme_color_override("font_color", IVORY)
++	title_label.add_theme_color_override("font_color", Color.WHITE)
+ 	title_label.add_theme_color_override("font_outline_color", Color(INK, 0.9))
+ 	title_label.add_theme_constant_override("outline_size", 2)
+ 	subtitle_label.add_theme_color_override("font_color", Color("aaa39a"))
+@@ -827,18 +856,15 @@
+ 	margin.add_theme_constant_override("margin_top", 7)
+ 	margin.add_theme_constant_override("margin_bottom", 7)
+ 	button.add_child(margin)
+-	var row: = HBoxContainer.new()
++	var row: = VBoxContainer.new()
+ 	row.name = "CardRow"
+ 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+-	row.add_theme_constant_override("separation", 9)
++	row.add_theme_constant_override("separation", 5)
+ 	margin.add_child(row)
+-
+-	var icon_slot: = PanelContainer.new()
++	var icon_slot: = Control.new()
+ 	icon_slot.name = "IconPlate"
+-	icon_slot.custom_minimum_size = Vector2(58, 58)
+ 	icon_slot.size_flags_vertical = Control.SIZE_EXPAND_FILL
+ 	icon_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+-	icon_slot.add_theme_stylebox_override("panel", _forged_plate_style(Color("0b0b0c"), Color(_accent, 0.55), 5))
+ 	row.add_child(icon_slot)
+ 	var icon: = TextureRect.new()
+ 	icon.name = "Icon"
+@@ -846,26 +872,18 @@
+ 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+ 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+ 	icon.texture = _item_texture(item)
+-	icon.modulate = Color(1, 1, 1, 0.4) if bool(item.get("locked", false)) else Color.WHITE
+ 	icon_slot.add_child(icon)
+-
+-	var copy: = VBoxContainer.new()
+-	copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+-	copy.mouse_filter = Control.MOUSE_FILTER_IGNORE
+-	copy.alignment = BoxContainer.ALIGNMENT_CENTER
+-	copy.add_theme_constant_override("separation", 2)
+-	row.add_child(copy)
+-	var state: = _label(_state_text(item), 10, _state_color(item), HORIZONTAL_ALIGNMENT_LEFT, true)
+-	state.mouse_filter = Control.MOUSE_FILTER_IGNORE
+-	state.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+-	copy.add_child(state)
+-	var item_title: = _label(_display_text(String(item.get("title", item_id))), 13, IVORY, HORIZONTAL_ALIGNMENT_LEFT, true)
++	icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
++	if icon.texture != null and ("/tools/" in icon.texture.resource_path or item_id.begins_with("forge:")):
++		icon.rotation = deg_to_rad(-40.0)
++		icon.resized.connect(func(): icon.pivot_offset = icon.size * 0.5)
++	var item_title: = _label(_display_text(String(item.get("title", item_id))), 12, STEEL, HORIZONTAL_ALIGNMENT_CENTER)
+ 	item_title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+ 	item_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+ 	item_title.max_lines_visible = 2
+-	item_title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+ 	item_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+-	copy.add_child(item_title)
++	row.add_child(item_title)
++
+ 	return button
+ 
+ 
+@@ -897,12 +915,12 @@
+ 	var stats: Array = Array(item.get("stats", []))
+ 	var costs: Array = Array(item.get("costs", []))
+ 	if not single_item:
+-		var status: = _label(_state_text(item), 10, _state_color(item), HORIZONTAL_ALIGNMENT_CENTER, true)
++		var status: = _label(("READY TO FORGE" if _visual_theme_id == "starforge" and _state_text(item) == "Ready" else _state_text(item).to_upper()), 12, IVORY, HORIZONTAL_ALIGNMENT_LEFT)
+ 		overview_content.add_child(status)
+ 	overview_content.add_child(_overview_title_plate(_display_text(String(item.get("title", _selected_item_id)))))
+ 	var description: = String(item.get("description", item.get("subtitle", "")))
+-	if not description.is_empty() and ( not single_item or (stats.is_empty() and costs.is_empty())):
+-		var description_label: = _label(description, 10, STEEL, HORIZONTAL_ALIGNMENT_CENTER)
++	if not description.is_empty() and (not single_item or stats.is_empty()):
++		var description_label: = _label(description, 15, STEEL, HORIZONTAL_ALIGNMENT_LEFT)
+ 		description_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+ 		description_label.max_lines_visible = 2
+ 		description_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+@@ -916,26 +934,16 @@
+ 		overview_content.add_child(error_label)
+ 
+ 	if not stats.is_empty():
+-		if single_item and stats[0] is Dictionary:
+-			overview_content.add_child(_hero_stat_panel(Dictionary(stats[0])))
+-			for stat_index in range(1, stats.size()):
+-				if stats[stat_index] is Dictionary:
+-					overview_content.add_child(_stat_row(Dictionary(stats[stat_index])))
+-		else:
+-			overview_content.add_child(_section_label(String(item.get("stats_label", "Current > Next"))))
+-			for stat_value in stats:
+-				if stat_value is Dictionary:
+-					overview_content.add_child(_stat_row(Dictionary(stat_value)))
+-
++		overview_content.add_child(_divider())
++		for stat_value in stats:
++			if stat_value is Dictionary: overview_content.add_child(_stat_row(Dictionary(stat_value)))
+ 	if not costs.is_empty():
+-		if not single_item:
+-			overview_content.add_child(_section_label(String(item.get("costs_label", "Cost"))))
++		overview_content.add_child(_divider())
+ 		for cost_value in costs:
+-			if cost_value is Dictionary:
+-				overview_content.add_child(_cost_row(Dictionary(cost_value)))
++			if cost_value is Dictionary: overview_content.add_child(_cost_row(Dictionary(cost_value)))
+ 
+ 	var future_unlock: = String(item.get("future_unlock", item.get("unlock_teaser", "")))
+-	if not future_unlock.is_empty() and ( not single_item or bool(item.get("locked", false))):
++	if not future_unlock.is_empty() and (stats.is_empty() or bool(item.get("locked", false))):
+ 		overview_content.add_child(_section_label(String(item.get("future_unlock_label", "Next unlock"))))
+ 		var teaser_plate: = PanelContainer.new()
+ 		teaser_plate.add_theme_stylebox_override("panel", _forged_plate_style(Color("111214"), IRON_EDGE, 7))
+@@ -947,7 +955,7 @@
+ 		overview_content.add_child(teaser_plate)
+ 
+ 	_refresh_total(item)
+-	total_panel.visible = not single_item or costs.is_empty()
++	total_panel.visible = false
+ 	_refresh_primary_action(item)
+ 	footer_summary.text = _footer_text(item)
+ 	call_deferred("_reset_overview_scroll")
+@@ -957,7 +965,8 @@
+ 	var plate: = PanelContainer.new()
+ 	plate.custom_minimum_size.y = 44
+ 	plate.add_theme_stylebox_override("panel", _flat_style(Color(0,0,0,0), 0))
+-	var label: = _label(title_text, 19, IVORY, HORIZONTAL_ALIGNMENT_CENTER, true)
++	var label: = _label(title_text, 26 if title_text.length() > 25 else 36, IVORY, HORIZONTAL_ALIGNMENT_LEFT, true)
++	_make_metallic(label)
+ 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+ 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+ 	label.max_lines_visible = 2
+@@ -991,29 +1000,36 @@
+ 
+ 
+ func _stat_row(stat: Dictionary) -> Control:
+-	var row_panel: = PanelContainer.new()
+-	row_panel.custom_minimum_size.y = 38
+-	row_panel.add_theme_stylebox_override("panel", _forged_plate_style(SURFACE_RAISED, IRON_EDGE, 7))
++	var plate: = PanelContainer.new()
++	plate.custom_minimum_size.y = 40
++	plate.add_theme_stylebox_override("panel", _forged_plate_style(Color("101113"), Color("343336"), 9, 1))
+ 	var row: = HBoxContainer.new()
+-	row.add_theme_constant_override("separation", 10)
+-	row_panel.add_child(row)
+-	var name_label: = _label(_display_text(String(stat.get("label", stat.get("id", "Stat")))), 11, MUTED, HORIZONTAL_ALIGNMENT_LEFT)
+-	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+-	row.add_child(name_label)
++	row.add_theme_constant_override("separation", 16)
++	plate.add_child(row)
++	var icon: = preload("res://scripts/ui/commerce_stat_icon.gd").new()
++	icon.kind = String(stat.get("id", stat.get("label", "power"))).to_lower()
++	icon.custom_minimum_size = Vector2(30, 30)
++	row.add_child(icon)
++	var label: = _label(_display_text(String(stat.get("label", stat.get("id", "Stat")))), 15, STEEL, HORIZONTAL_ALIGNMENT_LEFT)
++	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
++	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
++	row.add_child(label)
+ 	var decimals: = int(stat.get("decimals", -1))
+-	var current_text: = _value_text(stat.get("current", "-"), decimals)
+-	var next_text: = _value_text(stat.get("next", current_text), decimals)
++	var current: = _value_text(stat.get("current", "-"), decimals)
++	var next: = _value_text(stat.get("next", current), decimals)
+ 	var suffix: = String(stat.get("suffix", ""))
+-	var value: = _label("%s%s  >  %s%s" % [current_text, suffix, next_text, suffix], 13, _accent_bright, HORIZONTAL_ALIGNMENT_RIGHT, true)
+-	row.add_child(value)
+-	return row_panel
++	for entry in [[current + suffix, STEEL], ["→", Color("ef964e")], [next + suffix, _accent_bright]]:
++		var value: = _label(entry[0], 18, entry[1], HORIZONTAL_ALIGNMENT_RIGHT)
++		value.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
++		row.add_child(value)
++	return plate
+ 
+ 
+ func _cost_row(cost: Dictionary) -> Control:
+ 	var row_panel: = PanelContainer.new()
+-	row_panel.custom_minimum_size.y = 52
++	row_panel.custom_minimum_size.y = 40
+ 	var missing: = _cost_missing(cost)
+-	row_panel.add_theme_stylebox_override("panel", _forged_plate_style(SURFACE_RAISED, IRON_MID if missing <= 0 else Color(DANGER, 0.68), 9))
++	row_panel.add_theme_stylebox_override("panel", _flat_style(Color(0,0,0,0), 0))
+ 	var row: = HBoxContainer.new()
+ 	row.add_theme_constant_override("separation", 10)
+ 	row_panel.add_child(row)
+@@ -1028,12 +1044,13 @@
+ 		row.add_child(icon)
+ 	var owned: = maxi(0, int(cost.get("owned", 0)))
+ 	var required: = maxi(0, int(cost.get("required", cost.get("amount", 0))))
+-	var name_label: = _label(_display_text(String(cost.get("label", cost.get("id", "Material")))), 11, STEEL, HORIZONTAL_ALIGNMENT_LEFT, true)
++	var name_label: = _label(_display_text(String(cost.get("label", cost.get("id", "Material")))), 15, STEEL, HORIZONTAL_ALIGNMENT_LEFT)
+ 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+ 	row.add_child(name_label)
+-	var amount: = _label("%d / %d" % [owned, required], 15, _accent_bright if missing <= 0 else DANGER, HORIZONTAL_ALIGNMENT_RIGHT, true)
++	var amount: = _label("%d / %d" % [owned, required], 20, _accent_bright if missing <= 0 else DANGER, HORIZONTAL_ALIGNMENT_RIGHT)
+ 	row.add_child(amount)
+-	var missing_label: = _label("✓" if missing <= 0 else "%d missing" % missing, 18 if missing <= 0 else 10, _accent_bright if missing <= 0 else DANGER, HORIZONTAL_ALIGNMENT_RIGHT)
++	var missing_label: = _label("✓" if missing <= 0 else "%d missing" % missing, 22 if missing <= 0 else 12, Color("a6eea4") if missing <= 0 else DANGER, HORIZONTAL_ALIGNMENT_RIGHT)
++	missing_label.add_theme_font_override("font", SYMBOL_FONT)
+ 	missing_label.custom_minimum_size.x = 38 if missing <= 0 else 68
+ 	row.add_child(missing_label)
+ 	return row_panel
+@@ -1073,18 +1090,17 @@
+ 		primary_button.text = _display_text(String(item.get("disabled_action_label", _config.get("disabled_action_label", "Unavailable"))))
+ 
+ 
+-func _refresh_navigation() -> void :
+-	var index: = _selected_index()
++func _refresh_navigation() -> void:
+ 	var count: = _items.size()
+ 	var has_pages: = count > 1
+ 	swipe_pager.enabled = has_pages
+ 	page_navigation.visible = has_pages
+ 	catalog_scroll.visible = has_pages
+-	page_label.text = (
+-		"%s  ·  %d / %d  ·  Swipe to browse" % [_display_text(String(_config.get("catalog_label", "Catalog"))), maxi(0, index + 1), count]
+-		if has_pages
+-		else _display_text(String(_config.get("catalog_label", "Catalog")))
+-	)
++	var dots: Array[String] = []
++	for i in count: dots.append("●" if i == _selected_index() else "•")
++	page_label.text = " ".join(dots) + "\nSwipe to explore"
++	page_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
++	page_label.add_theme_font_override("font", SYMBOL_FONT)
+ 
+ 
+ func _select_item(item_id: String) -> void:
+@@ -1106,7 +1122,7 @@
+ 	_refresh_showcase(_item_by_id(item_id))
+ 	_refresh_overview()
+ 	_refresh_navigation()
+-	_apply_font_scale(overview_content, (1.68 if bool(layout_metrics(_layout_viewport_size).iphone_landscape) else 1.42) * clampf(frame.size.y / 620.0, 0.58, 1.12))
++	_apply_font_scale(overview_content, 1.50 * clampf(frame.size.y / 650.0, 0.48, 1.12))
+ 	selection_changed.emit(item_id)
+ 	if _page_tween != null: _page_tween.kill()
+ 	var alpha: float = hero_icon.modulate.a
+@@ -1149,71 +1165,60 @@
+ 		close_commerce()
+ 
+ 
+-func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void :
+-	if frame == null:
+-		return
++func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void:
++	if frame == null: return
+ 	var viewport_size: Vector2 = size_override if size_override != Vector2.ZERO else get_viewport_rect().size
+-	if viewport_size.x <= 1.0 or viewport_size.y <= 1.0:
+-		return
++	if viewport_size.x <= 1 or viewport_size.y <= 1: return
+ 	_layout_viewport_size = viewport_size
+ 	var metrics: Dictionary = layout_metrics(viewport_size)
+-	var panel_rect: Rect2 = metrics.panel_rect
+-	_place(frame, panel_rect)
+-	var mobile: bool = bool(metrics.iphone_landscape)
+-	var k: float = clampf(panel_rect.size.y / 620.0, 0.58, 1.12)
+-	var pad: float = 25.0 * k
+-	for side in ["left", "right", "top", "bottom"]:
+-		safe_margin.add_theme_constant_override("margin_" + side, roundi(pad))
+-	var inner: Vector2 = panel_rect.size - Vector2.ONE * pad * 2.0
+-	var touch: float = maxf(52.0, (90.0 if mobile else 76.0) * k)
+-	var head_h: float = 92.0 * k
+-	var foot_h: float = touch
+-	var gap: float = 12.0 * k
+-	_place(header_plate, Rect2(0, 0, inner.x, head_h))
+-	_place(accent_line, Rect2(0, head_h + gap * 0.4, inner.x, 2))
+-	_place(footer, Rect2(0, inner.y - foot_h, inner.x, foot_h))
+-	var content_top: float = head_h + gap + 2.0
+-	var content_h: float = inner.y - foot_h - content_top - gap
+-	_place(commerce_body, Rect2(0, content_top, inner.x, content_h))
+-	commerce_body.add_theme_constant_override("separation", roundi(20.0 * k))
+-	var single: bool = _items.size() <= 1
+-	overview_panel.custom_minimum_size.x = inner.x * (0.47 if single else 0.50)
++	var rect: Rect2 = metrics.panel_rect
++	_place(frame, rect)
++	var k: float = clampf(rect.size.y / 650.0, 0.48, 1.12)
++	var pad: float = 26.0 * k
++	for side in ["left", "right", "top", "bottom"]: safe_margin.add_theme_constant_override("margin_"+side, roundi(pad))
++	var inner: Vector2 = rect.size - Vector2.ONE * pad * 2
++	var head: float = 70 * k
++	var gap: float = 14 * k
++	var foot: float = 96 * k
++	var touch: float = maxf(52, 86*k)
++	var right: float = inner.x * 0.49
++	_place(header_plate, Rect2(0, -8*k, inner.x, head))
++	_place(accent_line, Rect2(0, head + 1*k, inner.x, 1))
++	_place(commerce_body, Rect2(0, head + gap, inner.x, inner.y - head - gap))
++	commerce_body.add_theme_constant_override("separation", roundi(28*k))
++	overview_panel.custom_minimum_size.x = right
++	var overview_style: StyleBox = _overview_panel_style()
++	overview_style.content_margin_bottom = foot + 8*k
++	overview_panel.add_theme_stylebox_override("panel", overview_style)
+ 	overview_panel.clip_contents = true
+-	overview_scroll.clip_contents = true
+ 	overview_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+-	catalog_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
+-	catalog_pane.clip_contents = true
+ 	header.custom_minimum_size.y = 0
+-	footer.custom_minimum_size.y = foot_h
+-	title_stack.custom_minimum_size.x = inner.x * 0.60
+-	title_plaque.custom_minimum_size.y = 56.0 * k
+-	subtitle_label.custom_minimum_size.y = 22.0 * k
++	title_stack.custom_minimum_size.x = inner.x * 0.62
++	title_plaque.custom_minimum_size = Vector2(inner.x*0.40, 46*k)
++	subtitle_label.custom_minimum_size.y = 20*k
+ 	close_button.custom_minimum_size = Vector2(touch, touch)
+ 	close_slot.custom_minimum_size.x = touch
+ 	header.get_node("CloseBalance").custom_minimum_size.x = touch
+-	page_navigation.custom_minimum_size.y = touch
+-	cancel_button.custom_minimum_size = Vector2(148.0 * k, touch)
+-	primary_button.custom_minimum_size = Vector2(292.0 * k, touch)
++	_place(footer, Rect2(inner.x-right+12, inner.y-foot, right-24, foot))
++	footer.custom_minimum_size.y = foot
++	cancel_button.visible = false
+ 	footer_summary.visible = false
+-	footer_spacer.visible = true
+-	total_panel.custom_minimum_size.y = 54.0 * k
++	footer_spacer.visible = false
++	primary_button.custom_minimum_size = Vector2(0, foot)
+ 	total_panel.visible = false
+-	var cards_h: float = 94.0 * k
++	var single: bool = _items.size() <= 1
++	var cards_h: float = 116*k
++	page_navigation.custom_minimum_size.y = 48*k
+ 	catalog_scroll.custom_minimum_size.y = cards_h
+-	var extent: float = maxf(76.0, minf(300.0 * k, content_h - (touch + cards_h + 20.0 * k if not single else 12.0 * k)))
++	catalog_pane.clip_contents = true
++	var extent: float = maxf(110, minf(inner.x-right-gap, inner.y-head-gap-(cards_h+56*k if not single else 10*k)))
+ 	hero_medallion.custom_minimum_size = Vector2(extent, extent)
+ 	hero_state_plate.visible = false
+-	for side in ["left", "top"]:
+-		hero_icon.set("offset_" + side, extent * 0.11)
+-	for side in ["right", "bottom"]:
+-		hero_icon.set("offset_" + side, -extent * 0.11)
++	for side in ["left", "top"]: hero_icon.set("offset_"+side, extent*0.08)
++	for side in ["right", "bottom"]: hero_icon.set("offset_"+side, -extent*0.08)
+ 	for child in catalog_strip.get_children():
+-		if child is Button:
+-			child.custom_minimum_size = Vector2(246.0 * k, cards_h - 12.0 * k)
+-			var icon: Control = child.get_node_or_null("Inset/CardRow/IconPlate")
+-			if icon != null:
+-				icon.custom_minimum_size = Vector2(52.0, 52.0) * k
+-	_apply_font_scale(self, (1.68 if mobile else 1.42) * k)
++		if child is Button: child.custom_minimum_size = Vector2((inner.x-right-56*k)/3.0, cards_h-10*k)
++	_apply_font_scale(self, 1.50*k)
+ 	call_deferred("_ensure_selected_visible")
+ 
+ 
+@@ -1246,14 +1251,14 @@
+ 	if _carousel_layout_pending or not is_instance_valid(_selected_card): return
+ 	_carousel_layout_pending = true
+ 	await get_tree().process_frame
+-	var pad: int = maxi(0, roundi((catalog_scroll.size.x - _selected_card.size.x) * 0.5))
++	var pad: int = 0
+ 	carousel_margin.add_theme_constant_override("margin_left", pad)
+-	carousel_margin.add_theme_constant_override("margin_right", pad)
++	carousel_margin.add_theme_constant_override("margin_right", maxi(0, roundi(catalog_scroll.size.x - _selected_card.size.x)))
+ 	await get_tree().process_frame
+ 	if is_instance_valid(_selected_card):
+ 		var points: Array[float] = []
+ 		for card in catalog_strip.get_children():
+-			if card is Button: points.append(maxf(0.0, pad + card.position.x + card.size.x * 0.5 - catalog_scroll.size.x * 0.5))
++			if card is Button: points.append(maxf(0.0, card.position.x))
+ 		catalog_scroll.configure(points, _selected_index())
+ 	_carousel_layout_pending = false
+ 
+@@ -1517,24 +1522,10 @@
+ 
+ 
+ func _card_style(item: Dictionary, selected: bool, pressed: bool) -> StyleBox:
+-	if _uses_premium_skin():
+-		var premium_tint: = Color("8f8b88")
+-		if bool(item.get("locked", false)):
+-			premium_tint = Color("69686b")
+-		elif pressed:
+-			premium_tint = Color("9a674c") if _visual_theme_id == "forge" else Color("8f817b").lerp(_accent, 0.22)
+-		elif selected:
+-			premium_tint = Color("ffe0b5") if _visual_theme_id == "forge" else Color("f3e6d8").lerp(_accent_bright, 0.18)
+-		return _mossvein_plate_style(7, premium_tint)
+-	var background: = SURFACE_RAISED if selected else CARD
+-	if bool(item.get("locked", false)):
+-		background = Color("151517")
+-	if pressed:
+-		background = _accent_deep
+-	var border: = _accent if selected else IRON_MID
+-	if bool(item.get("locked", false)) and not selected:
+-		border = Color("343438")
+-	return _forged_plate_style(background, border, 7, 3 if selected else 2)
++	var style: = _forged_plate_style(Color(_accent_deep, 0.3) if selected else Color("101113"), _accent_bright if selected else Color("454347"), 6, 2)
++	style.shadow_color = Color(_accent, 0.35) if selected else Color(0,0,0,0.6)
++	style.shadow_size = 8 if selected else 3
++	return style
+ 
+ 
+ func _section_label(text_value: String) -> Label:
+@@ -1639,10 +1630,7 @@
+ 
+ 
+ func _overview_panel_style() -> StyleBox:
+-	if _uses_premium_skin():
+-		var tint: = Color("d7d0c8") if _visual_theme_id == "forge" else Color("d1ccc6").lerp(_accent_bright, 0.08)
+-		return _mossvein_plate_style(16, tint)
+-	return _forged_plate_style(SURFACE, IRON_MID, 12)
++	return _panel_style(Color(0,0,0,0), Color(0,0,0,0), 0, 0, 12)
+ 
+ 
+ func _mossvein_texture_style(texture: Texture2D, region_ratio: Rect2, margin_ratio: Vector4, padding: int, tint: Color, draw_center: bool = true) -> StyleBoxTexture:
+@@ -1710,13 +1698,7 @@
+ 
+ 
+ func _hero_well_style() -> StyleBox:
+-	if _uses_premium_skin():
+-		var tint: = Color("d2cbc3") if _visual_theme_id == "forge" else Color("cdc8c2").lerp(_accent_bright, 0.08)
+-		return _mossvein_plate_style(11, tint)
+-	var style: StyleBoxFlat = _forged_plate_style(Color(0.018, 0.018, 0.02, 0.96), IRON_MID, 11, 3) as StyleBoxFlat
+-	style.shadow_color = Color(0, 0, 0, 0.88)
+-	style.shadow_size = 11
+-	return style
++	return _flat_style(Color(0,0,0,0), 0)
+ 
+ 
+ func _title_plate_style() -> StyleBox:
+@@ -1810,9 +1792,35 @@
+ func _process(delta: float) -> void:
+ 	if not visible or hero_icon == null:
+ 		return
++	primary_button.add_theme_constant_override("outline_size", 0)
++	primary_copy.text = primary_button.text.to_upper()
++	primary_copy.modulate = Color(1,1,1,0.48) if primary_button.disabled else Color.WHITE
++	primary_button.add_theme_color_override("font_color", Color(1,1,1,0))
++	primary_button.add_theme_color_override("font_hover_color", Color(1,1,1,0))
++	primary_button.add_theme_color_override("font_pressed_color", Color(1,1,1,0))
++	primary_button.add_theme_color_override("font_focus_color", Color(1,1,1,0))
++	primary_button.add_theme_color_override("font_disabled_color", Color(1,1,1,0))
+ 	_showcase_clock += delta
+ 	var amplitude: float = 3.5 if _visual_theme_id == "wayfarer" else 1.5
+ 	var bob: float = sin(_showcase_clock * 1.8) * amplitude
+ 	var extent: float = hero_medallion.custom_minimum_size.x
+-	hero_icon.offset_top = extent * 0.11 + bob
+-	hero_icon.offset_bottom = -extent * 0.11 + bob
++	hero_icon.offset_top = extent * 0.08 + bob
++	hero_icon.offset_bottom = -extent * 0.08 + bob
++
++func _make_metallic(label: Label) -> void:
++	var material: = ShaderMaterial.new()
++	material.shader = METAL_TEXT
++	label.material = material
++	label.resized.connect(func(): material.set_shader_parameter("text_height", maxf(1, label.size.y)))
++	label.add_theme_color_override("font_color", Color.WHITE)
++	label.add_theme_color_override("font_shadow_color", Color("402114"))
++	label.add_theme_constant_override("shadow_offset_y", 3)
++
++func _divider() -> Control:
++	var line: = HSeparator.new()
++	line.custom_minimum_size.y = 4
++	var style: = StyleBoxLine.new()
++	style.color = Color("765039")
++	style.thickness = 1
++	line.add_theme_stylebox_override("separator", style)
++	return line
+--- a/scripts/ui/commerce_catalog.gd
++++ b/scripts/ui/commerce_catalog.gd
+@@ -29,9 +29,9 @@
+ 	"prospector": "res://assets/tools/starforge-prospector.png",
+ }
+ const STARFORGE_TRAITS: = {
+-	"crusher": "Slow, colossal 5×5 impacts with the Crusher resource burst.",
+-	"swift": "The fastest strike profile for cutting a route at comet speed.",
+-	"prospector": "Every mined resource is doubled before it reaches your pouch.",
++	"crusher": "Slow strikes. Colossal impacts.",
++	"swift": "Comet speed. Relentless strikes.",
++	"prospector": "Every discovery. Twice the reward.",
+ }
+ 
+ 

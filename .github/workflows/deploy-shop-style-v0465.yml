@@ -1,0 +1,56 @@
+name: Publish approved shop style to DEV and live
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/deploy-shop-style-v0465.yml']
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages-ever-deeper
+  cancel-in-progress: false
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require successful browser and visual capture runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for run in 34112761870; do
+            test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/$run --jq .conclusion)" = success
+          done
+      - uses: actions/download-artifact@v4
+        with:
+          name: style-exact-candidates
+          run-id: 34112761870
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - run: python3 .github/shop-style-v0465/publish.py "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/site" "$RUNNER_TEMP/rollback"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-before-v0465-rollback
+          path: ${{ runner.temp }}/rollback
+          retention-days: 30
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/site
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 .github/shop-style-v0465/prepare.py --verify-public
