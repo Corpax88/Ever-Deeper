@@ -1,0 +1,148 @@
+{
+	"area": "mature_hub",
+	"audio_driver": "Dummy",
+	"covered_floor_pixel_parity": true,
+	"lights": [
+		{
+			"enabled": true,
+			"path": "WorldLights/SurfaceLiftLight",
+			"scale": "0.8203125",
+			"shadow": false
+		},
+		{
+			"enabled": true,
+			"path": "WorldLights/DeepElevatorLight",
+			"scale": "0.9609375",
+			"shadow": false
+		},
+		{
+			"enabled": true,
+			"path": "WorldLights/FoundationSconce_0",
+			"scale": "0.96875",
+			"shadow": false
+		},
+		{
+			"enabled": true,
+			"path": "WorldLights/FoundationSconce_1",
+			"scale": "0.96875",
+			"shadow": false
+		},
+		{
+			"enabled": true,
+			"path": "WorldLights/FoundationSconce_2",
+			"scale": "0.96875",
+			"shadow": false
+		},
+		{
+			"enabled": true,
+			"path": "WorldLights/FoundationSconce_3",
+			"scale": "0.96875",
+			"shadow": false
+		},
+		{
+			"enabled": true,
+			"path": "WorldLights/Workshop_tool_forge",
+			"scale": "0.7421875",
+			"shadow": false
+		},
+		{
+			"enabled": true,
+			"path": "WorldLights/Workshop_light_lab",
+			"scale": "0.7421875",
+			"shadow": false
+		},
+		{
+			"enabled": true,
+			"path": "WorldLights/Workshop_wardrobe",
+			"scale": "0.7421875",
+			"shadow": false
+		},
+		{
+			"enabled": true,
+			"path": "WorldLights/Workshop_treasure_chamber",
+			"scale": "0.7421875",
+			"shadow": false
+		},
+		{
+			"enabled": true,
+			"path": "WorldLights/Workshop_lift_workshop",
+			"scale": "0.7421875",
+			"shadow": false
+		},
+		{
+			"enabled": true,
+			"path": "Player/HubPlayerLight",
+			"scale": "0.8984375",
+			"shadow": false
+		},
+		{
+			"enabled": true,
+			"path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+			"scale": "2.26874995231628",
+			"shadow": true
+		},
+		{
+			"enabled": true,
+			"path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+			"scale": "1.70000004768372",
+			"shadow": true
+		}
+	],
+	"persistence_enabled": true,
+	"physical_iphone": false,
+	"renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"stages": [
+		{
+			"average_fps": 2.20689739874923,
+			"changed_lights": 0,
+			"draw_calls": 149.0,
+			"enabled_lights": 14,
+			"frames": 23,
+			"height": 1260,
+			"max_ms": 485.07,
+			"nodes": 651.0,
+			"p95_ms": 480.946,
+			"p99_ms": 485.07,
+			"shadowed_lights": 2,
+			"slow_frames": 22,
+			"stage": "baseline",
+			"width": 2328,
+			"world_light_mask": 1
+		},
+		{
+			"average_fps": 2.76813078706164,
+			"changed_lights": 0,
+			"draw_calls": 147.0,
+			"enabled_lights": 14,
+			"frames": 28,
+			"height": 1260,
+			"max_ms": 404.119,
+			"nodes": 651.0,
+			"p95_ms": 385.91,
+			"p99_ms": 404.119,
+			"shadowed_lights": 2,
+			"slow_frames": 27,
+			"stage": "skip_covered_floor",
+			"width": 2328,
+			"world_light_mask": 1
+		},
+		{
+			"average_fps": 2.22534243182325,
+			"changed_lights": 0,
+			"draw_calls": 147.0,
+			"enabled_lights": 14,
+			"frames": 23,
+			"height": 1260,
+			"max_ms": 479.455,
+			"nodes": 651.0,
+			"p95_ms": 475.659,
+			"p99_ms": 479.455,
+			"shadowed_lights": 2,
+			"slow_frames": 22,
+			"stage": "restored_skip_covered_floor",
+			"width": 2328,
+			"world_light_mask": 1
+		}
+	],
+	"test": "one lighting intervention at a time, restored after each"
+}

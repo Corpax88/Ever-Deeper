@@ -1,0 +1,173 @@
+{
+	"area": "mossvein_depth_2",
+	"audio_driver": "Dummy",
+	"lights": [
+		{
+			"enabled": true,
+			"path": "LandmarkLights/LandmarkLight_mossMine_depth_exit/@PointLight2D@253",
+			"scale": "0.9296875",
+			"shadow": false
+		},
+		{
+			"enabled": true,
+			"path": "LandmarkLights/LandmarkLight_mossMine_forge/@PointLight2D@254",
+			"scale": "0.8046875",
+			"shadow": false
+		},
+		{
+			"enabled": true,
+			"path": "LandmarkLights/LandmarkLight_mossMine_sell/@PointLight2D@255",
+			"scale": "0.734375",
+			"shadow": false
+		},
+		{
+			"enabled": true,
+			"path": "Player/PremiumHeadlamp/HelmetCone",
+			"scale": "6.1875",
+			"shadow": true
+		},
+		{
+			"enabled": true,
+			"path": "Player/PremiumHeadlamp/HelmetBounce",
+			"scale": "1.70000004768372",
+			"shadow": true
+		},
+		{
+			"enabled": true,
+			"path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+			"scale": "2.26874995231628",
+			"shadow": true
+		},
+		{
+			"enabled": true,
+			"path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+			"scale": "1.70000004768372",
+			"shadow": true
+		}
+	],
+	"persistence_enabled": true,
+	"physical_iphone": false,
+	"renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"stages": [
+		{
+			"average_fps": 2.74832651453894,
+			"changed_lights": 0,
+			"draw_calls": 219.0,
+			"enabled_lights": 7,
+			"frames": 28,
+			"height": 1260,
+			"max_ms": 382.654,
+			"nodes": 697.0,
+			"p95_ms": 380.06,
+			"p99_ms": 382.654,
+			"shadowed_lights": 4,
+			"slow_frames": 27,
+			"stage": "baseline",
+			"width": 2328,
+			"world_light_mask": 1
+		},
+		{
+			"average_fps": 3.95422275402125,
+			"changed_lights": 4,
+			"draw_calls": 217.0,
+			"enabled_lights": 7,
+			"frames": 40,
+			"height": 1260,
+			"max_ms": 274.202,
+			"nodes": 697.0,
+			"p95_ms": 262.251,
+			"p99_ms": 274.202,
+			"shadowed_lights": 0,
+			"slow_frames": 39,
+			"stage": "no_shadows",
+			"width": 2328,
+			"world_light_mask": 1
+		},
+		{
+			"average_fps": 2.74424140542795,
+			"changed_lights": 0,
+			"draw_calls": 214.0,
+			"enabled_lights": 7,
+			"frames": 28,
+			"height": 1260,
+			"max_ms": 400.236,
+			"nodes": 697.0,
+			"p95_ms": 386.347,
+			"p99_ms": 400.236,
+			"shadowed_lights": 4,
+			"slow_frames": 27,
+			"stage": "restored_no_shadows",
+			"width": 2328,
+			"world_light_mask": 1
+		},
+		{
+			"average_fps": 16.6238742924526,
+			"changed_lights": 7,
+			"draw_calls": 217.0,
+			"enabled_lights": 0,
+			"frames": 167,
+			"height": 1260,
+			"max_ms": 70.611,
+			"nodes": 697.0,
+			"p95_ms": 63.098,
+			"p99_ms": 69.572,
+			"shadowed_lights": 0,
+			"slow_frames": 166,
+			"stage": "no_lights",
+			"width": 2328,
+			"world_light_mask": 1
+		},
+		{
+			"average_fps": 2.7419593022732,
+			"changed_lights": 0,
+			"draw_calls": 217.0,
+			"enabled_lights": 7,
+			"frames": 28,
+			"height": 1260,
+			"max_ms": 384.229,
+			"nodes": 697.0,
+			"p95_ms": 381.574,
+			"p99_ms": 384.229,
+			"shadowed_lights": 4,
+			"slow_frames": 27,
+			"stage": "restored_no_lights",
+			"width": 2328,
+			"world_light_mask": 1
+		},
+		{
+			"average_fps": 15.1138660772259,
+			"changed_lights": 0,
+			"draw_calls": 217.0,
+			"enabled_lights": 7,
+			"frames": 152,
+			"height": 1260,
+			"max_ms": 70.905,
+			"nodes": 697.0,
+			"p95_ms": 69.581,
+			"p99_ms": 70.343,
+			"shadowed_lights": 4,
+			"slow_frames": 151,
+			"stage": "world_light_mask_zero",
+			"width": 2328,
+			"world_light_mask": 0
+		},
+		{
+			"average_fps": 2.80602944124794,
+			"changed_lights": 0,
+			"draw_calls": 217.0,
+			"enabled_lights": 7,
+			"frames": 29,
+			"height": 1260,
+			"max_ms": 378.691,
+			"nodes": 697.0,
+			"p95_ms": 377.789,
+			"p99_ms": 378.691,
+			"shadowed_lights": 4,
+			"slow_frames": 28,
+			"stage": "restored_world_light_mask_zero",
+			"width": 2328,
+			"world_light_mask": 1
+		}
+	],
+	"test": "one lighting intervention at a time, restored after each"
+}
