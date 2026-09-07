@@ -1,0 +1,31 @@
+name: Review final mobile journal layout
+on:
+  push:
+    branches: [codex-menu-touch-v0461]
+    paths: ['.github/workflows/qa-menu-layout-v0461.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/download-artifact@v4
+        with:
+          name: touch-exact-candidates
+          run-id: 34093149331
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - run: CAPTURE_END=9 node tools/visual-qa/capture-menu-touch.mjs --web-dir "$RUNNER_TEMP/candidate/live" --output-dir "$RUNNER_TEMP/evidence"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: touch-pet-layout
+          path: ${{ runner.temp }}/evidence
