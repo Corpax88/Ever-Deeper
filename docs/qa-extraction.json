@@ -58,6 +58,14 @@
   "ordered_cases": [
     {
       "flags": [
+        "--qa-mobile-performance"
+      ],
+      "method": "run",
+      "suite": "mobile_performance",
+      "surface": false
+    },
+    {
+      "flags": [
         "--qa-input-release"
       ],
       "method": "_run_input_release_qa",

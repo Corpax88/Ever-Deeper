@@ -1,7 +1,7 @@
 # Ever Deeper
 
 The current game is a **Godot 4.7.2** project. Open `project.godot` in this directory.
-The game version is defined in `project.godot` (currently 0.46.8).
+The game version is defined in `project.godot` (currently 0.46.9).
 This source cleanup preserves the published game's gameplay, artwork, balance and save format.
 
 ## Start here

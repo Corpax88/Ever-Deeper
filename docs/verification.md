@@ -73,3 +73,13 @@ baseline and candidate at the same viewport/seed, and inspect them before any de
 Compare production resources and game-data hashes as well as gameplay results. No art or
 layout changes are intended. Source review and a passing headless suite cannot replace
 this visual gate from `AGENTS.md`.
+
+## FPS and frame times
+
+See [mobile performance](performance.md). The rendered benchmark is separate from
+the headless source suite and does not certify physical iPhone performance.
+Use DEV TOOLS → SHOW FPS to measure the actual device while playing.
+
+The v0.46.9 protected-file manifest differs from the cleanup baseline only in
+`project.godot`: the release version changes from 0.46.8 to 0.46.9. Its rendering,
+viewport, FPS ceiling, save identity and other settings are unchanged.

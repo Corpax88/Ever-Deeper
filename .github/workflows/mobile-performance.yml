@@ -1,0 +1,70 @@
+name: Validate packaged mobile performance
+on:
+  push:
+    branches: [codex-iphone-performance]
+    paths: ['scripts/**', 'project.godot', 'tools/run_performance.py', '.github/workflows/mobile-performance.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot 4.7.2 and the test renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri
+          curl -L --fail --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+          curl -L --fail --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz -o "$RUNNER_TEMP/templates.tpz"
+          unzip -q "$RUNNER_TEMP/templates.tpz" -d "$RUNNER_TEMP/templates"
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          cp "$RUNNER_TEMP/templates/templates/"* "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+      - name: Verify source and build exact web packages
+        run: |
+          Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > "$RUNNER_TEMP/import.log" 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/import.log"; then exit 1; fi
+          python3 tools/check_invariants.py
+          mkdir -p "$RUNNER_TEMP/candidates/live" "$RUNNER_TEMP/candidates/dev"
+          Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-release 'Web Production' "$RUNNER_TEMP/candidates/live/index.html" > "$RUNNER_TEMP/export-live.log" 2>&1
+          Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-release 'Web DEV' "$RUNNER_TEMP/candidates/dev/index.html" > "$RUNNER_TEMP/export-dev.log" 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/export-"*.log; then exit 1; fi
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/candidates/live/index.pck" --cases input overhaul touch endgame endless onboarding layout portrait crusher --output "$RUNNER_TEMP/review/core"
+          for side in live dev; do
+            python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/candidates/$side/index.pck" --cases build-flavor --output "$RUNNER_TEMP/review/$side-core"
+          done
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/candidates/dev/index.pck" --cases touch dev-tools --output "$RUNNER_TEMP/review/dev-tools"
+      - name: Measure and inspect final packages with graphics rendered
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          xvfb-run -a -s '-screen 0 1280x720x24' python3 tools/run_performance.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/candidates/live/index.pck" --output "$RUNNER_TEMP/review/performance"
+          for side in live dev; do
+            xvfb-run -a -s '-screen 0 1280x720x24' python3 tools/run_performance.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/candidates/$side/index.pck" --output "$RUNNER_TEMP/review/$side-visual" --review
+          done
+          python3 - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'candidates'
+          names=['index.html','index.js','index.pck','index.wasm','index.audio.position.worklet.js','index.audio.worklet.js','index.png','index.icon.png','index.apple-touch-icon.png']
+          result={side:{name:{'size':(root/side/name).stat().st_size,'sha256':hashlib.sha256((root/side/name).read_bytes()).hexdigest()} for name in names} for side in ['live','dev']}
+          (root/'manifest.json').write_text(json.dumps(result,indent=2)+'\n')
+          print('EXACT_PACKAGE_MANIFEST',json.dumps(result))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: performance-web-candidates
+          path: ${{ runner.temp }}/candidates
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-final-review
+          path: |
+            ${{ runner.temp }}/import.log
+            ${{ runner.temp }}/export-*.log
+            ${{ runner.temp }}/review
+          retention-days: 30
