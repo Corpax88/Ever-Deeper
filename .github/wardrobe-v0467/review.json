@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "qa_run": 34127456395,
+  "candidate_artifact": 10020686377,
+  "layout_artifact": 10020735137,
+  "touch_artifacts": {
+    "live": 10020777137,
+    "dev": 10020805188
+  },
+  "live_pck_sha256": "a5c5d7ab3ba1f3561e1915b4a761e3619bfc239ce05d4248307a6a765757f8aa",
+  "dev_pck_sha256": "83f94776df18fba4ae4ad8515d7450e69e3daf3c1982d6fd8037f4efca15a958",
+  "viewport": {
+    "width": 844,
+    "height": 390
+  },
+  "visually_inspected": [
+    "wardrobe_miner",
+    "wardrobe_expedition",
+    "wardrobe_archivist",
+    "wardrobe_starweave",
+    "wardrobe_deepheart",
+    "wardrobe_owned",
+    "wardrobe_ready",
+    "wardrobe_missing",
+    "wardrobe_locked"
+  ],
+  "criteria": [
+    "All five clothing colors match production hero masks and equipment",
+    "Approved metal frame, fonts, rose accents and controls retained",
+    "Worn, ready, unlock, missing materials and locked requirement states readable",
+    "No duplicate finish entries or retired hero artwork",
+    "Native LIVE 97 and DEV 99 checks pass",
+    "WebKit LIVE 151 and DEV 155 checks pass; exact hashes match",
+    "Saved outfit and free Wear action verified"
+  ],
+  "physical_iphone_acceptance": "Not tested on Mats device"
+}

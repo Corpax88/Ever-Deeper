@@ -1,3 +1,32 @@
+# Current handoff — Wardrobe v0.46.7
+
+Release candidate approved for DEV and LIVE; publication is triggered by this merge.
+Check the deploy-wardrobe-v0467 workflow and publication receipt before claiming live.
+
+Wardrobe now has five clearly named clothing colors, using the approved current dad
+hero, actual equipped tool, production clothing masks/colors and real idle animation.
+Station finish options are removed from Wardrobe; existing saved decoration persists.
+The next color is the upgrade card, preserving original unlock levels and costs.
+Preview is separate from unlock/wear. Unlock keeps the new color selected; Wear is
+free, the panel stays open, and the chosen outfit survives reload. Future outfits
+show their required level. Approved shop style and all other shop controls remain.
+
+## Exact source and evidence
+Reconstruct v0.46.6 below, then apply .github/wardrobe-v0467/source.patch from the
+game-source root. The patch includes outfit_preview.gd and its UID. Do not copy it
+again. Old top-level distribution gameplay files are not authoritative.
+Godot 4.7.2; existing Web DEV and Web Production presets.
+QA run 34127456395; candidates 10020686377; layouts 10020735137; touch LIVE
+10020777137 / DEV 10020805188. Nine final WebKit layouts inspected at 844x390.
+Native LIVE 97 / DEV 99 checks; WebKit LIVE 151 / DEV 155 checks; all pass.
+review.json binds inspected evidence and tested packages to exact PCK hashes.
+LIVE excludes developer-menu resources. No gameplay economy or save schema changes.
+
+Next: verify publication, then Mats tests Wardrobe on his physical iPhone.
+Keep replies brief; do not generate a new hero or new assets for these color choices.
+
+---
+
 # Current handoff — v0.46.6
 
 Published and verified on LIVE and DEV on 2026-09-07. DEV version v0.46.6-dev.1.
