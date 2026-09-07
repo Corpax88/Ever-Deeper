@@ -1,0 +1,184 @@
+{
+  "review_scope": "Structural cleanup only; no new game release",
+  "baseline_version": "0.46.8",
+  "tested_source_commit": "b34d387d4e3710e01579079d20d6af80ff044c0f",
+  "clean_checkout_run": 34139995656,
+  "clean_checkout_job": 101799599157,
+  "source_delivery": {
+    "compared": 1280,
+    "missing": [],
+    "changed": [],
+    "source_commit": "b34d387d4e3710e01579079d20d6af80ff044c0f"
+  },
+  "protected_unchanged_files": 1139,
+  "qa_registry_cases": 50,
+  "native_checks": [
+    {
+      "case": "input",
+      "passed": true,
+      "completion": [
+        "EVER_DEEPER_INPUT_RELEASE_OK hide=true matching_touch=true canceled_touch=true unrelated_touch_ignored=true mouse=true worlds=5 focus_pause=true"
+      ]
+    },
+    {
+      "case": "overhaul",
+      "passed": true,
+      "completion": [
+        "EVER_DEEPER_SURFACE_GAMEPLAY_OK locked/open both-directions solid-pillars copper=24 regrowth=360 branch-both-directions shop-access",
+        "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=859 failures=[]"
+      ]
+    },
+    {
+      "case": "touch",
+      "passed": true,
+      "completion": [
+        "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=121 failures=[]"
+      ]
+    },
+    {
+      "case": "endgame",
+      "passed": true,
+      "completion": [
+        "EVER_DEEPER_ENDGAME_OK seals=4 endless=unlocked gateway=true persistence=true conclusion=true deepheart_reentry=blocked"
+      ]
+    },
+    {
+      "case": "endless",
+      "passed": true,
+      "completion": [
+        "EVER_DEEPER_ENDLESS_OK legacy=true depth=3 deterministic=true hazards=telegraphed sites=active cache=one_claim rope=true relic=physical assets=20 blueprint=tool_forge materials=200 workshop=two_press lift_checkpoint=true persistence=true"
+      ]
+    },
+    {
+      "case": "onboarding",
+      "passed": true,
+      "completion": [
+        "EVER_DEEPER_ONBOARDING_OK minimap=transparent_organic_overlap_fade tutorial=nonblocking shrine_respawn=75"
+      ]
+    },
+    {
+      "case": "layout",
+      "passed": true,
+      "completion": [
+        "EVER_DEEPER_IPHONE_LAYOUT_OK devices=844x390,852x393,874x402,912x420,932x430,956x440 touch=44css icons=optically-normalized safe=notch/home overlays=menu,bag,museum,starforge,conclusion"
+      ]
+    },
+    {
+      "case": "portrait",
+      "passed": true,
+      "completion": [
+        "EVER_DEEPER_PORTRAIT_GUARD_OK portrait=1280x2770 landscape=1558x720 card=1080x720"
+      ]
+    },
+    {
+      "case": "dev-tools",
+      "passed": true,
+      "completion": [
+        "EVER_DEEPER_DEV_TOOLS_QA_OK commands=23 isolated_save=true iphone=932x430 finger_scroll=true readable_text=true exact_depths=true relics=5 workshops=5"
+      ]
+    },
+    {
+      "case": "crusher",
+      "passed": true,
+      "completion": [
+        "EVER_DEEPER_CRUSHER_IMPACT_OK footprint=5x5 real_loot=true sectors=8 bundles_max=12 merge_window=0.15 arc=true drill_stress=600 accounting=exact depth2=true pickup=48/80/112/144 singularity=48 cleanup=0.30"
+      ]
+    }
+  ],
+  "exported_flavors": {
+    "live": true,
+    "dev": true
+  },
+  "pre_existing_legacy_results": {
+    "commerce": {
+      "baseline": false,
+      "candidate": false
+    },
+    "landscape": {
+      "baseline": false,
+      "candidate": false
+    },
+    "smoke": {
+      "baseline": false,
+      "candidate": false
+    },
+    "workshops": {
+      "baseline": false,
+      "candidate": false
+    }
+  },
+  "main_lines_before": 7441,
+  "main_lines_after": 4216,
+  "removed_private_helpers": 48,
+  "removed_helper_lines": 1068,
+  "relocated_qa_methods": 53,
+  "visual_status": "passed capture and representative visual review",
+  "reusable_pr_checks": {
+    "run_id": 34140624731,
+    "job_id": 101801569712,
+    "source_commit": "497f75dff3f1132a026d1a11ce03c59a34b001cb",
+    "passed": true
+  },
+  "visual": {
+    "run_id": 34139995656,
+    "viewport": {
+      "width": 844,
+      "height": 390
+    },
+    "states": 303,
+    "baseline_pck_sha256": "d95621dcda43a2245aa0d21be60c1a309383a19a0f1f4b92d2ee34e86cbcf3a2",
+    "candidate_pck_sha256": "66548bceee12296afe46f746ef133ae7ab3403f8b04d7dfd0bbfc13b80a855fa",
+    "byte_identical_frames": 2,
+    "note": "Numerical comparison locates differences; inspect animation/particle timing separately.",
+    "artifacts": {
+      "baseline": 10025818349,
+      "candidate": 10025824940
+    },
+    "primary_reviewer_frames": [
+      "031_d1_star_transition",
+      "137_endless_layer_02_permanent_walls",
+      "181_depth_moon_wayfarer",
+      "015_shop_workshop_light_lab_baseline",
+      "016_shop_workshop_wardrobe_baseline",
+      "118_d2_ember_edges_corners",
+      "133_d2_star_edges_corners",
+      "028_d1_ember_transition",
+      "091_d2_moss_gate_01_intact",
+      "145_surface_start",
+      "258_overhaul_world_hub"
+    ],
+    "findings": "Same assets, composition, text, geometry and HUD in inspected pairs. Differences are consistent with animation, particle and lighting phase; this is not a pixel-identical capture claim.",
+    "mean_rgb_difference_max": 5.54243,
+    "mean_rgb_difference_median": 0.0343,
+    "critic_reviewer_frames": [
+      "145_surface_start",
+      "020_d1_moss_barrier_clearance_compact_join",
+      "069_d1_ember_crucible_lock_damaged",
+      "088_d2_moss_edges_corners",
+      "134_d2_star_bedrock",
+      "139_endless_layer_04_permanent_walls",
+      "258_overhaul_world_hub",
+      "016_shop_workshop_wardrobe_baseline"
+    ]
+  },
+  "delivery_correction": "First clean-checkout CI found the omitted shader directory; all 18 original shader/UID files were included and guarded before the successful run.",
+  "independent_review": {
+    "rounds": 3,
+    "maximum_rounds": 3,
+    "target": 8,
+    "scores": [
+      6.1,
+      7.9,
+      8.3
+    ],
+    "final_score": 8.3,
+    "rubric": {
+      "boundaries": 1.6,
+      "clarity": 1.6,
+      "reuse": 1.2,
+      "state_save": 1.2,
+      "regression": 1.8,
+      "discoverability": 0.9
+    }
+  }
+}
