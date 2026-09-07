@@ -1,4 +1,26 @@
-# Current handoff — v0.46.4 / DEV v0.46.4-dev.1
+# Current handoff — v0.46.5 / DEV v0.46.5-dev.1
+
+Published and verified on 2026-09-07: approved Starforge design implemented as a shared shop system.
+Keep the same metallic geometric fonts, layout, swipe interaction and control placement.
+Shop identity comes from accents and authored item art: purple Starforge, ember Forge,
+green Wayfarer, blue Light Lab, rose Wardrobe. Mats asked whether separate identities
+would confuse players; keep interactions consistent. Reply briefly in Norwegian.
+
+- LIVE: https://corpax88.github.io/Ever-Deeper/
+- DEV: https://corpax88.github.io/Ever-Deeper/dev/
+- Publication: https://github.com/Corpax88/Ever-Deeper/actions/runs/34113285408 — SUCCESS, all 18 public files verified.
+- Release commit: 73e6f9e28de96059f223fa30ebc19fb85f11dbf3 (PR 4).
+- Editable source: extract the v0.46.3 game-source archive below, apply `.github/modal-v0464/source.patch`, then `.github/shop-style-v0465/source.patch`, then copy `.github/shop-style-v0465/source/` into the extracted project. Use Godot 4.7.2. The old top-level repo source is not current.
+- Source hashes, exact build manifests, licensed fonts, aura PNG, QA and inspected Starforge screenshot are in `.github/shop-style-v0465/`.
+- QA run 34112761870: SUCCESS. Inspected 30 final-build WebKit images at 844x390 and 30 exact-PCK native images. Browser touch: LIVE 70, DEV 74. Isolated native: LIVE 37 menu, DEV 39 menu, LIVE 859 gameplay.
+- LIVE excludes developer-menu resources. Settings/Browse isolation remains included. Save formats and economy are preserved; Starforge still needs both 200 Astralite and 200 Crownstone.
+- Long titles adapt; overflowing details retain touch scrolling with a visible scrollbar. No more image generation needed unless Mats requests changes.
+- Rollback artifact: 10015225012 (`ever-deeper-before-v0465-rollback`, expires 2026-10-07).
+- Next: Mats reloads v0.46.5 and checks shops on his physical iPhone; physical-device feel remains unverified.
+
+---
+
+# Previous handoff — v0.46.4 / DEV v0.46.4-dev.1
 
 Published and verified on 2026-09-07: Settings no longer activates hidden Starforge Browse.
 PremiumMenu moves to the front for GUI hit testing; context actions reject modal overlays.
