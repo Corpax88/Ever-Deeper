@@ -328,7 +328,7 @@ async function captureSuite(options) {
             recorder.ondataavailable = e => {if(e.data.size) window.carouselChunks.push(e.data);};
             recorder.start();
           });
-          await page.keyboard.press("Enter"); continue;
+          await page.keyboard.press("F13"); continue;
         }
         if (input.kind === "record_stop") {
           if (!WEBKIT) {
@@ -340,11 +340,11 @@ async function captureSuite(options) {
             });
             await fs.writeFile(path.join(options.outputDir,"carousel-motion.webm"),Buffer.from(bytes));
           }
-          await page.keyboard.press("Enter"); continue;
+          await page.keyboard.press("F13"); continue;
         }
         if (input.kind === "capture") {
           await page.screenshot({path:path.join(options.outputDir,input.label+".png")});
-          await page.keyboard.press("Enter");
+          await page.keyboard.press("F13");
           continue;
         }
         gestureIndex++;
@@ -384,7 +384,7 @@ async function captureSuite(options) {
           }
           if(input.kind!=="hold") await cdp.send("Input.dispatchTouchEvent",{type:input.kind === "cancel" ? "touchCancel" : "touchEnd",touchPoints:[]});
         }
-        await page.keyboard.press("Enter");
+        await page.keyboard.press("F13");
       }
       if (!/^EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=\d+ failures=\[\]$/.test(result)) throw new Error(result);
       if (pageErrors.length) throw new Error(pageErrors.join("\n"));
@@ -445,7 +445,7 @@ async function captureSuite(options) {
         captures.push({ index: index + RANGE_START - 1, state, file, sha256: await sha256(filename) });
         process.stdout.write(`CAPTURED ${index + RANGE_START - 1}/303 ${state}\n`);
         await page.locator("#canvas").focus();
-        await page.keyboard.press("Enter");
+        await page.keyboard.press("F13");
         continue;
       }
       if (marker.startsWith(`${MARKER_PREFIX}COMPLETE`)) {
