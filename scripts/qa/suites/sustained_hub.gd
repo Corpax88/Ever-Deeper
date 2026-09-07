@@ -169,8 +169,13 @@ func verify_covered_floor_pixels(world: Node2D) -> bool:
 	var tree: SceneTree = main.get_tree()
 	var was_paused: bool = tree.paused
 	tree.paused = true
+	var process_states: Dictionary = {}
+	for node in main.find_children("*", "Node", true, false):
+		process_states[node] = node.is_processing()
+		node.set_process(false)
+	world.set_meta("qa_fixed_draw_msec", 12345)
 	var reference: PackedByteArray
-	for stage in ["before", "candidate", "restored"]:
+	for stage in ["before", "unchanged_control", "candidate", "restored"]:
 		world.set_meta("qa_skip_covered_floor", stage == "candidate")
 		world.queue_redraw()
 		for frame in 2: await tree.process_frame
@@ -178,14 +183,21 @@ func verify_covered_floor_pixels(world: Node2D) -> bool:
 		var shot: Image = main.get_window().get_texture().get_image()
 		shot.save_png(output_dir.path_join("parity-" + stage + ".png"))
 		if shot.get_size() != FULL_SIZE:
-			tree.paused = was_paused
+			restore_visual_processes(process_states, world, was_paused)
 			fail("Pixel parity dimensions changed"); return false
 		if stage == "before": reference = shot.get_data()
 		elif shot.get_data() != reference:
 			world.set_meta("qa_skip_covered_floor", false)
 			world.queue_redraw()
-			tree.paused = was_paused
+			restore_visual_processes(process_states, world, was_paused)
 			fail("Covered floor changed pixels in " + stage); return false
-	tree.paused = was_paused
+	restore_visual_processes(process_states, world, was_paused)
 	print("COVERED_FLOOR_PARITY_OK pixels=" + str(FULL_SIZE.x * FULL_SIZE.y))
 	return true
+
+func restore_visual_processes(states: Dictionary, world: Node2D, paused: bool) -> void:
+	world.remove_meta("qa_fixed_draw_msec")
+	world.queue_redraw()
+	for node in states:
+		if is_instance_valid(node): node.set_process(states[node])
+	main.get_tree().paused = paused

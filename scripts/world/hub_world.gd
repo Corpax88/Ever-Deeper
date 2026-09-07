@@ -2869,7 +2869,7 @@ func _draw_deep_elevator(selected: bool) -> void :
 	)
 	_draw_elevator_resource_sockets()
 	if stage in ["powered", "complete"]:
-		var pulse: = 0.62 + sin(float(Time.get_ticks_msec()) * 0.004) * 0.1
+		var pulse: = 0.62 + sin(float(get_meta("qa_fixed_draw_msec", Time.get_ticks_msec())) * 0.004) * 0.1
 		draw_arc(
 			DEEP_ELEVATOR + Vector2(0, 4),
 			52,
