@@ -13,6 +13,48 @@ const PANEL_FILL: = Color("081710")
 const TOUCH_TARGET_MIN: = 52.0
 const RESET_CONFIRM_WINDOW_MSEC: = 4200
 
+class FrameMeter extends Label:
+	var samples: Array[float] = []
+	var previous_usec: int = 0
+	var elapsed_ms: float = 0.0
+	var latest: Dictionary = {}
+
+	func start() -> void:
+		samples.clear()
+		elapsed_ms = 0.0
+		previous_usec = 0
+		latest = {}
+		text = "Measuring FPS…"
+		show()
+		set_process(true)
+
+	func _process(_delta: float) -> void:
+		var now: int = Time.get_ticks_usec()
+		if previous_usec == 0:
+			previous_usec = now
+			return
+		var ms: float = float(now - previous_usec) / 1000.0
+		previous_usec = now
+		samples.append(ms)
+		elapsed_ms += ms
+		if elapsed_ms < 2000.0: return
+		var fps: float = float(samples.size()) * 1000.0 / elapsed_ms
+		samples.sort()
+		var p95: float = samples[clampi(ceili(samples.size() * 0.95) - 1, 0, samples.size() - 1)]
+		var slow: int = 0
+		for sample in samples:
+			if sample > 33.34: slow += 1
+		latest = {"fps": fps, "p95_ms": p95, "max_ms": samples[-1], "slow_frames": slow, "frames": samples.size()}
+		text = "%.1f FPS · p95 %.1f ms\nMax %.1f ms · >33 ms: %d" % [fps, p95, samples[-1], slow]
+		samples.clear()
+		elapsed_ms = 0.0
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_APPLICATION_FOCUS_IN:
+			previous_usec = 0
+			samples.clear()
+			elapsed_ms = 0.0
+
 const PRESET_ACTIONS: = [
 	{"label": "ALL ZONES\nUNLOCKED", "command": "preset_all_zones"},
 	{"label": "HUB\nREADY", "command": "preset_hub"},
@@ -79,6 +121,8 @@ var scroll: ScrollContainer
 var action_content: VBoxContainer
 var status_label: Label
 var reset_button: Button
+var frame_meter: FrameMeter
+var frame_meter_button: Button
 
 var _reset_armed_until_msec: int = 0
 var _last_viewport_size: = Vector2.ZERO
@@ -94,6 +138,20 @@ func _ready() -> void :
 	z_index = 190
 	_build_toggle()
 	_build_drawer()
+	frame_meter = FrameMeter.new()
+	frame_meter.name = "FrameMeter"
+	frame_meter.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame_meter.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	frame_meter.add_theme_font_size_override("font_size", 20)
+	frame_meter.add_theme_color_override("font_color", Color("fff0c5"))
+	frame_meter.add_theme_color_override("font_outline_color", Color("07120d"))
+	frame_meter.add_theme_constant_override("outline_size", 5)
+	add_child(frame_meter)
+	frame_meter.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
+	frame_meter.position += Vector2(-220, -142)
+	frame_meter.size = Vector2(440, 60)
+	frame_meter.hide()
+	frame_meter.set_process(false)
 	get_viewport().size_changed.connect(_apply_platform_safe_area)
 	set_process(false)
 	call_deferred("_apply_platform_safe_area")
@@ -124,6 +182,16 @@ func toggle_menu() -> void :
 
 func is_open() -> bool:
 	return drawer != null and drawer.visible
+
+func toggle_frame_meter() -> void:
+	if frame_meter.visible:
+		frame_meter.hide()
+		frame_meter.set_process(false)
+		frame_meter_button.text = "SHOW FPS"
+	else:
+		frame_meter.start()
+		frame_meter_button.text = "HIDE FPS"
+	close_menu()
 
 
 func set_status(message: String, is_error: bool = false) -> void :
@@ -242,6 +310,14 @@ func _build_drawer() -> void :
 	close_button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	close_button.pressed.connect(close_menu)
 	header.add_child(close_button)
+	frame_meter_button = _action_button("SHOW FPS", "toggle_fps", false)
+	frame_meter_button.name = "ToggleFPS"
+	frame_meter_button.remove_meta("dev_command")
+	frame_meter_button.custom_minimum_size = Vector2(108, 58)
+	frame_meter_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	frame_meter_button.tooltip_text = "Measure frame times while playing"
+	frame_meter_button.pressed.connect(toggle_frame_meter)
+	header.add_child(frame_meter_button)
 
 	status_label = _label("SWIPE UP OR DOWN · DEV SAVE ONLY", 12, MINT)
 	status_label.name = "DeveloperStatus"

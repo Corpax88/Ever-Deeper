@@ -11,6 +11,9 @@ func run() -> void:
 		if arg.begins_with("--perf-output="): output_dir = arg.get_slice("=", 1)
 		if arg == "--perf-capture": captures = true
 	DirAccess.make_dir_recursive_absolute(output_dir)
+	if "--perf-review" in OS.get_cmdline_user_args():
+		await review()
+		return
 	seed(4608)
 	RunState.reset_run(false)
 	RunState.world_seed = 4608
@@ -114,3 +117,56 @@ func measure(label: String, world: Node, moving: bool = false, mining: bool = fa
 		stats["lamp_refresh_mean_ms"] = float(Time.get_ticks_usec() - begin) / 100000.0
 	rows.append(stats)
 	print("EVER_DEEPER_MOBILE_STAGE " + JSON.stringify(stats))
+
+func review() -> void:
+	if DisplayServer.get_name() == "headless": fail("Review requires rendering"); return
+	main.game_started = true
+	main._dev_jump_surface()
+	driver = load("res://scripts/dev/visual_capture_driver.gd").new()
+	main.add_child(driver)
+	driver.set("_main", main)
+	driver.call("_prepare_light_state", {"level": 1, "variant": "missing"})
+	var preview: Node = main.commerce_panel.hero_well.get_node("LightPreview")
+	preview.show_level(1)
+	await capture_review("light-current")
+	var before: int = hash(preview.viewport.get_texture().get_image().get_data())
+	preview.show_level(2)
+	await capture_review("light-upgraded")
+	var after: int = hash(preview.viewport.get_texture().get_image().get_data())
+	if before == after: fail("Light level selection did not repaint preview"); return
+	preview.show_level(1)
+	await capture_review("light-current-restored")
+	if hash(preview.viewport.get_texture().get_image().get_data()) != before:
+		fail("Returning to the same light level changed its pixels"); return
+	for style in ["standard", "focused", "wide", "prismatic", "deepheart"]:
+		driver.call("_prepare_light_state", {"level": 5, "style": style})
+		await capture_review("light-style-" + style)
+		preview = main.commerce_panel.hero_well.get_node("LightPreview")
+		if preview.lamp.applied_style_id != style: fail("Wrong light style"); return
+	main.commerce_panel.close_commerce()
+	for fixture in ["forge_final_mixed_cost_ready", "wayfarer_baseline", "starforge_ready_crusher", "workshop_tool_forge_baseline", "workshop_wardrobe_baseline"]:
+		driver.call("_prepare_commerce_capture", fixture)
+		await capture_review(fixture)
+		main.commerce_panel.close_commerce()
+	main._dev_jump_surface()
+	var meter: Dictionary = {}
+	if main.developer_menu != null:
+		main.developer_menu.open_menu()
+		await capture_review("dev-fps-button")
+		main.developer_menu.frame_meter_button.pressed.emit()
+		await main.get_tree().create_timer(2.1).timeout
+		meter = main.developer_menu.frame_meter.latest
+		if meter.is_empty() or float(meter.fps) <= 0 or main.developer_menu.is_open():
+			fail("DEV FPS meter did not measure frames after closing the drawer"); return
+		await capture_review("dev-fps-meter")
+		main.developer_menu.toggle_frame_meter()
+		if main.developer_menu.frame_meter.visible or main.developer_menu.frame_meter.is_processing():
+			fail("Disabled FPS meter keeps processing"); return
+	FileAccess.open(output_dir.path_join("review.json"), FileAccess.WRITE).store_string(JSON.stringify({"passed": true, "preview_repaints": true, "preview_restores_exact_pixels": true, "meter": meter, "version": ProjectSettings.get_setting("application/config/version")}, "\t"))
+	print("EVER_DEEPER_MOBILE_REVIEW_COMPLETE")
+	main.get_tree().quit(0)
+
+func capture_review(label: String) -> void:
+	await main.get_tree().create_timer(0.4).timeout
+	await RenderingServer.frame_post_draw
+	main.get_viewport().get_texture().get_image().save_png(output_dir.path_join(label + ".png"))

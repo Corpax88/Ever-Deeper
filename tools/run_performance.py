@@ -10,6 +10,8 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--headless', action='store_true')
     parser.add_argument('--capture', action='store_true')
+    parser.add_argument('--review', action='store_true')
+    parser.add_argument('--pack', type=Path)
     args = parser.parse_args()
     args.output = args.output.resolve(); args.output.mkdir(parents=True, exist_ok=True)
     log_path = args.output/'run.log'
@@ -17,7 +19,12 @@ def main():
     if args.headless: command.append('--headless')
     command += ['--', '--qa-mobile-performance', '--perf-output='+str(args.output)]
     if args.capture: command.append('--perf-capture')
+    if args.review: command.append('--perf-review')
     with tempfile.TemporaryDirectory(prefix='ever-deeper-perf-') as save_dir, log_path.open('w') as log:
+        if args.pack:
+            command[command.index('--path')+1] = save_dir
+            separator = command.index('--')
+            command[separator:separator] = ['--main-pack', str(args.pack.resolve())]
         started = time.monotonic()
         proc = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT, env=dict(os.environ, XDG_DATA_HOME=save_dir))
         failure = ''
@@ -31,8 +38,11 @@ def main():
             try: proc.wait(timeout=5)
             except subprocess.TimeoutExpired: proc.kill(); proc.wait()
         text = log_path.read_text(errors='replace')
-        if failure or proc.returncode != 0 or 'EVER_DEEPER_MOBILE_PERFORMANCE_COMPLETE' not in text:
+        marker = 'EVER_DEEPER_MOBILE_REVIEW_COMPLETE' if args.review else 'EVER_DEEPER_MOBILE_PERFORMANCE_COMPLETE'
+        if failure or proc.returncode != 0 or marker not in text:
             print(text[-6000:]); raise SystemExit('Performance capture failed: '+failure)
+    if args.review:
+        print((args.output/'review.json').read_text()); return
     report = json.loads((args.output/'results.json').read_text())
     print('Rendered:', report['rendered'], '| Physical iPhone:', report['physical_iphone'])
     print('Stage | FPS | frame p95 | CPU p95 | draw calls | MiB')
