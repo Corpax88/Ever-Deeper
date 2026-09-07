@@ -143,7 +143,7 @@ index 1f30f2e..7cf5bde 100644
 +		await gesture("capture", Vector2.ZERO, Vector2.ZERO, "wardrobe-wearing-" + outfit)
 +	panel.close_commerce()
 diff --git a/scripts/ui/commerce_catalog.gd b/scripts/ui/commerce_catalog.gd
-index e1ac4e0..7cb4107 100644
+index e1ac4e0..0d4790f 100644
 --- a/scripts/ui/commerce_catalog.gd
 +++ b/scripts/ui/commerce_catalog.gd
 @@ -169,6 +169,8 @@ static func starforge_config() -> Dictionary:
@@ -201,8 +201,8 @@ index e1ac4e0..7cb4107 100644
 +			"action_enabled": not worn, "action_label": "Wearing" if worn else "Wear outfit",
 +			"locked_reason": "Unlock earlier colors first. Requires Wardrobe level %d." % (i + 1),
 +			"footer_text": "Currently wearing" if worn else "Free to switch" if not locked else "Not unlocked",
-+			"future_unlock_label": "Your outfit",
-+			"future_unlock": "Changes clothing color only. Your helmet, glasses, tool and mining stats stay the same.",
++			"future_unlock_label": "Unlock requirement" if locked and not next else "Your outfit",
++			"future_unlock": "Unlock earlier colors first. Requires Wardrobe level %d." % (i + 1) if locked and not next else "Changes clothing color only. Your helmet, glasses, tool and mining stats stay the same.",
 +			"total": {"label": "Outfit", "value": "Wearing" if worn else "Owned" if not locked else "Level %d" % (i + 1), "ready": not locked},
 +		}
 +		# The next color is also the upgrade: one card, one real unlock, no duplicate entry.
