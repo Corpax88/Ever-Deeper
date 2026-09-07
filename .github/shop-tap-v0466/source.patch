@@ -22,7 +22,7 @@
  	var developer_menu: Variant = _main.get("developer_menu")
 --- a/scripts/qa/menu_touch_qa.gd
 +++ b/scripts/qa/menu_touch_qa.gd
-@@ -74,75 +74,68 @@
+@@ -74,75 +74,73 @@
  	main.premium_menu.open_menu(true,"Mossvein",true,false);main.premium_menu.show_achievements();await settle()
  	await swipe(main.premium_menu.achievement_scroll,false,"achievements-swiped")
  	main.premium_menu.close_menu()
@@ -101,6 +101,11 @@
 +	check(panel.selected_item_id()=="starforge:swift" and carousel.scroll_horizontal==0,"Swiping a short list does not change preview or hide options")
 +	await gesture("cancel",point(panel.catalog_strip.get_child(2)));await rest_carousel()
 +	check(panel.selected_item_id()=="starforge:swift","Canceled tap never selects another core")
++	var comet_point: Vector2 = point(panel.catalog_strip.get_child(1))
++	await gesture("tap",point(panel.catalog_strip.get_child(0)))
++	await gesture("hold",comet_point,Vector2(8,0))
++	await gesture("release",comet_point+Vector2(8,0))
++	check(panel.selected_item_id()=="starforge:swift","Small finger movement still counts as a preview tap")
 +	await gesture("tap",point(panel.primary_button))
 +	check(confirmations==["starforge:swift"],"Forge button confirms the previewed core exactly once")
 +	check(RunState.starforge_variant=="swift" and RunState.cargo.astralite==33 and RunState.cargo.crownstone==33,"Only Forge Core purchases and equips the selected core")
@@ -285,7 +290,7 @@
  static func release_version() -> String:
 --- a/scripts/ui/swipe_pager.gd
 +++ b/scripts/ui/swipe_pager.gd
-@@ -1,12 +1,15 @@
+@@ -1,12 +1,16 @@
  extends Node
  ## Own horizontal gestures before the child scroll containers see them.
  ## Vertical gestures and stationary taps keep their normal GUI behavior.
@@ -298,19 +303,22 @@
  var region: Control
  var enabled: bool = false
 +var horizontal_enabled: bool = true
++const TAP_SLOP: float = 16.0
  var finger: int = -1
  var origin: Vector2
  var latest: Vector2
-@@ -49,7 +52,7 @@
+@@ -48,8 +52,8 @@
+ func _motion(point: Vector2) -> void:
  	latest = _local(point)
  	var distance: Vector2 = latest - origin
- 	if axis == 0 and distance.length() >= 6.0:
+-	if axis == 0 and distance.length() >= 6.0:
 -		axis = 1 if absf(distance.x) > absf(distance.y) * 1.25 else 2
++	if axis == 0 and distance.length() >= TAP_SLOP:
 +		axis = 1 if horizontal_enabled and absf(distance.x) > absf(distance.y) * 1.25 else 2
  		if axis == 1:
  			_clear_child_scrolls(region)
  			region.propagate_notification(Control.NOTIFICATION_SCROLL_BEGIN)
-@@ -72,9 +75,15 @@
+@@ -72,9 +76,15 @@
  		region.propagate_notification(Control.NOTIFICATION_SCROLL_END)
  		if absf(latest.x - origin.x) >= 24.0 and Time.get_ticks_usec() - last_motion_usec < 90000:
  			velocity_x = release_speed
@@ -322,7 +330,7 @@
 +		released.emit(velocity_x, canceled)
 +	else:
 +		contact_ended.emit()
-+		if completed_axis == 0 and not canceled and origin.distance_to(latest) < 6.0:
++		if completed_axis == 0 and not canceled and origin.distance_to(latest) < TAP_SLOP:
 +			tapped.emit(region.get_global_transform_with_canvas() * origin, region.get_global_transform_with_canvas() * latest)
  
  func _cancel() -> void:
