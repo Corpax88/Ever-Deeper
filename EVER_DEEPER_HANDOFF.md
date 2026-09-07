@@ -1,3 +1,22 @@
+# Current handoff — v0.46.2 / DEV v0.46.2-dev.1
+
+Published and verified on 2026-09-07: horizontal swipes replace menu paging arrows.
+Both public builds passed exact file verification in Actions run 34098949337.
+LIVE excludes the developer menu. Existing pet improvements and ten reactions remain.
+
+Use the complete editable source archive `Ever-Deeper-v0.46.2-source.zip`
+(Library `libfile_293ef9a87f608191835d7d076159680d`, file `file_0000000083448230955ff81e83cb4e26`).
+Its SHA-256 is `d7aca8835ee614e9a6ff32ea05a56706b1a5b6469fc35f164060ba4b44c13d6a`.
+Latest detailed handoff: `Ever-Deeper-v0.46.2-HANDOFF.md`
+(Library `libfile_3101ba3a10f481919a83a30b76e7fafe`).
+Release inputs, full source patch, QA, visual review and receipt: `.github/swipe-v0462/`.
+The older top-level source tree is not the latest complete editable project.
+Next step: Mats tests swipe browsing on his physical iPhone; browser tests do not prove physical-device performance.
+
+---
+
+## Historical handoff (superseded)
+
 # Ever Deeper v0.43.1 / DEV v0.43.1-dev.2 handoff
 
 ## Status
