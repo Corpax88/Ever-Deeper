@@ -18,12 +18,16 @@ class FrameMeter extends Label:
 	var previous_usec: int = 0
 	var elapsed_ms: float = 0.0
 	var latest: Dictionary = {}
+	var history: Array[Dictionary] = []
+	var started_msec: int = 0
 
 	func start() -> void:
 		samples.clear()
 		elapsed_ms = 0.0
 		previous_usec = 0
 		latest = {}
+		history.clear()
+		started_msec = Time.get_ticks_msec()
 		text = "Measuring FPS…"
 		show()
 		set_process(true)
@@ -45,7 +49,31 @@ class FrameMeter extends Label:
 		for sample in samples:
 			if sample > 33.34: slow += 1
 		latest = {"fps": fps, "p95_ms": p95, "max_ms": samples[-1], "slow_frames": slow, "frames": samples.size()}
-		text = "%.1f FPS · p95 %.1f ms\nMax %.1f ms · >33 ms: %d" % [fps, p95, samples[-1], slow]
+		var canvas_size: Vector2i = Vector2i(get_viewport().get_texture().get_size())
+		var dpr: float = 1.0
+		if OS.has_feature("web"):
+			# Read dimensions only: never create a GL context or read back pixels.
+			var raw: Variant = JavaScriptBridge.eval("JSON.stringify({w:document.getElementById('canvas').width,h:document.getElementById('canvas').height,dpr:window.devicePixelRatio||1})")
+			if raw is String:
+				var browser: Variant = JSON.parse_string(raw)
+				if browser is Dictionary:
+					canvas_size = Vector2i(int(browser.w), int(browser.h))
+					dpr = float(browser.dpr)
+		var cpu_ms: float = Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0
+		var physics_ms: float = Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0
+		var memory: float = Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0
+		var video_memory: float = Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0
+		var nodes: int = int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT))
+		var calls: int = int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
+		latest.merge({"meter_revision": 2, "elapsed_seconds": (Time.get_ticks_msec() - started_msec) / 1000.0,
+			"cpu_monitor_ms": cpu_ms, "physics_monitor_ms": physics_ms,
+			"static_mib": memory, "video_mib": video_memory, "nodes": nodes,
+			"draw_calls": calls, "canvas_width": canvas_size.x, "canvas_height": canvas_size.y, "dpr": dpr})
+		history.append(latest.duplicate())
+		if history.size() > 60: history.pop_front()
+		var video_label: String = "%.0f" % video_memory if video_memory > 0.0 else "n/a"
+		text = "D2 · %.0fs · %.1f FPS · p95 %.1f ms\nMax %.1f ms · >33 ms: %d · CPU %.1f / Phys %.1f ms\nCanvas %d×%d · DPR %.1f · Draw %d\nMem %.0f MiB · GPU %s MiB · Nodes %d" % [latest.elapsed_seconds, fps, p95, samples[-1], slow, cpu_ms, physics_ms, canvas_size.x, canvas_size.y, dpr, calls, memory, video_label, nodes]
+		# Bounded memory-only history; no autosave, network or per-frame logging.
 		samples.clear()
 		elapsed_ms = 0.0
 
@@ -148,8 +176,8 @@ func _ready() -> void :
 	frame_meter.add_theme_constant_override("outline_size", 5)
 	add_child(frame_meter)
 	frame_meter.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
-	frame_meter.position += Vector2(-220, -142)
-	frame_meter.size = Vector2(440, 60)
+	frame_meter.position += Vector2(-340, -182)
+	frame_meter.size = Vector2(680, 108)
 	frame_meter.hide()
 	frame_meter.set_process(false)
 	get_viewport().size_changed.connect(_apply_platform_safe_area)

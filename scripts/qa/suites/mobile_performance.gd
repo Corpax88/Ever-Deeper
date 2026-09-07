@@ -11,6 +11,9 @@ func run() -> void:
 		if arg.begins_with("--perf-output="): output_dir = arg.get_slice("=", 1)
 		if arg == "--perf-capture": captures = true
 	DirAccess.make_dir_recursive_absolute(output_dir)
+	if "--perf-meter-review" in OS.get_cmdline_user_args():
+		await review_meter()
+		return
 	if "--perf-mossvein" in OS.get_cmdline_user_args():
 		await probe_mossvein("--perf-hub" in OS.get_cmdline_user_args())
 		return
@@ -241,3 +244,33 @@ func capture_review(label: String) -> void:
 	await main.get_tree().create_timer(0.4).timeout
 	await RenderingServer.frame_post_draw
 	main.get_viewport().get_texture().get_image().save_png(output_dir.path_join(label + ".png"))
+
+func review_meter() -> void:
+	if main.developer_menu == null: fail("DEV meter missing"); return
+	main.game_started = true
+	main._dev_seed_hub_state()
+	main._dev_jump_hub()
+	main.developer_menu.toggle_frame_meter()
+	await main.get_tree().create_timer(4.5).timeout
+	var meter: Control = main.developer_menu.frame_meter
+	var reading: Dictionary = meter.latest
+	if int(reading.get("meter_revision", 0)) != 2 or int(reading.get("canvas_width", 0)) <= 0:
+		fail("Detailed meter did not collect valid dimensions"); return
+	if not main.get_viewport().get_visible_rect().encloses(meter.get_global_rect()):
+		fail("Meter extends beyond viewport"); return
+	if DisplayServer.get_name() != "headless":
+		await RenderingServer.frame_post_draw
+		main.get_viewport().get_texture().get_image().save_png(output_dir.path_join("meter-hub.png"))
+	print("METER_READING " + JSON.stringify(reading))
+	main.developer_menu.toggle_frame_meter()
+	if meter.is_processing() or meter.visible: fail("Hidden meter still active"); return
+	main._dev_jump_mine("mossMine", 2)
+	main.developer_menu.toggle_frame_meter()
+	await main.get_tree().create_timer(2.2).timeout
+	if meter.history.size() != 1: fail("Restart did not reset bounded history"); return
+	if DisplayServer.get_name() != "headless":
+		await RenderingServer.frame_post_draw
+		main.get_viewport().get_texture().get_image().save_png(output_dir.path_join("meter-mossvein.png"))
+	print("METER_READING " + JSON.stringify(meter.latest))
+	print("METER_REVIEW_OK")
+	main.get_tree().quit(0)
