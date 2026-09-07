@@ -102,7 +102,7 @@ function injectSuiteArgument(html) {
   const suiteArgs = existingArgs.filter((arg) => arg !== SUITE_ARG);
   // OS.get_cmdline_user_args() only exposes arguments after Godot's user separator.
   if (!suiteArgs.includes("--")) suiteArgs.push("--");
-  config.args = [...suiteArgs, SUITE_ARG, GAMEPLAY ? "--overhaul-gameplay" : "--overhaul-capture", ...(process.env.MENU_TOUCH === "1" ? ["--menu-touch-only"] : []),  ...(process.env.PET_REACTIONS === "1" ? ["--pet-reactions"] : []), `--capture-start=${RANGE_START}`, `--capture-end=${RANGE_END}`];
+  config.args = [...suiteArgs, SUITE_ARG, GAMEPLAY ? "--overhaul-gameplay" : "--overhaul-capture", "--shop-style-capture", ...(process.env.MENU_TOUCH === "1" ? ["--menu-touch-only"] : []),  ...(process.env.PET_REACTIONS === "1" ? ["--pet-reactions"] : []), `--capture-start=${RANGE_START}`, `--capture-end=${RANGE_END}`];
   return html.replace(pattern, `const GODOT_CONFIG = ${JSON.stringify(config)};`);
 }
 
