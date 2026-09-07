@@ -1,0 +1,85 @@
+{
+  "passed": true,
+  "reviewed_at": "2026-09-07T08:07:09.272171+00:00",
+  "reviewer": "Codex",
+  "reference": "User screenshot IMG_1700(1).jpeg, preserve authored premium shop and replace previous/next arrows with swipe navigation",
+  "dev_pck_sha256": "424350b4723c93d382405dcbf9a2cdd189cec3274d4ef5bfa2e02f02da051372",
+  "live_pck_sha256": "cca1e4e214962d20fb9a0d25275186b0ab0d8753f506b6d53ae7168e6b575249",
+  "qa_run": 34097781706,
+  "layout_run": 34097914049,
+  "candidate_artifact": 10009274616,
+  "native_gameplay_checks": 859,
+  "browser_checks": {
+    "webkit": {
+      "result": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=44 failures=[]",
+      "pckSha256": "cca1e4e214962d20fb9a0d25275186b0ab0d8753f506b6d53ae7168e6b575249",
+      "htmlSha256": "8c38c5004effb10e07ecf821a1d949992b408f777f07f0aa3e302459adceeb4f",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "browser": "26.5",
+      "webgl": {
+        "renderer": "Apple GPU",
+        "vendor": "Apple Inc.",
+        "version": "WebGL 2.0"
+      }
+    },
+    "chromium-live": {
+      "result": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=44 failures=[]",
+      "pckSha256": "cca1e4e214962d20fb9a0d25275186b0ab0d8753f506b6d53ae7168e6b575249",
+      "htmlSha256": "8c38c5004effb10e07ecf821a1d949992b408f777f07f0aa3e302459adceeb4f",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "browser": "151.0.7922.34",
+      "webgl": {
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "vendor": "Google Inc. (Google)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      }
+    },
+    "chromium-dev": {
+      "result": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=48 failures=[]",
+      "pckSha256": "424350b4723c93d382405dcbf9a2cdd189cec3274d4ef5bfa2e02f02da051372",
+      "htmlSha256": "3023e5c1e3ec75fb56e2d5dc06f3fa700cd88c51ace770551f5b5804c6af7392",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "browser": "151.0.7922.34",
+      "webgl": {
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "vendor": "Google Inc. (Google)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      }
+    }
+  },
+  "visual_review": {
+    "method": "Inspected all 19 shop screenshots and 25 input screenshots in contact sheets; inspected WebKit Starforge next/last at full resolution",
+    "shop_captures": 19,
+    "input_captures": 25,
+    "viewports": [
+      [
+        932,
+        430
+      ],
+      [
+        844,
+        390
+      ]
+    ],
+    "findings": [
+      "Paging arrows absent throughout the shared shop menus",
+      "Swipe hint and page counter fit within catalog area",
+      "Next/back swipes update item artwork, selected card, title and stats",
+      "Metal frames, card artwork, purchase controls and modal boundaries preserved",
+      "Existing pet, inventory, achievement and DEV drawer scrolling retained"
+    ],
+    "limitations": [
+      "Browser-engine tests do not establish physical iPhone performance",
+      "Artwork was preserved, not redesigned"
+    ]
+  }
+}
