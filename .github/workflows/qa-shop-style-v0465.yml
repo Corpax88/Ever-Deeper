@@ -41,8 +41,8 @@ jobs:
     steps:
       - run: |
           mkdir -p runtime/lib
-          cp /usr/bin/Xvfb runtime/
-          ldd /usr/bin/Xvfb | awk '/=> \/.* \(/ {print $3}' | while read f; do
+          cp /usr/bin/Xvfb /usr/bin/xkbcomp runtime/
+          ldd /usr/bin/Xvfb /usr/bin/xkbcomp | awk '/=> \/.* \(/ {print $3}' | while read f; do
             case "$f" in */libc.so.*|*/libm.so.*|*/libpthread.so.*|*/libdl.so.*|*/librt.so.*) continue;; esac
             cp -L "$f" runtime/lib/
           done

@@ -390,7 +390,7 @@ async function captureSuite(options) {
         if (!match) throw new Error(`Malformed BEGIN marker: ${marker}`);
         const [, count, width, height] = match.map(Number);
         EXPECTED_CAPTURE_COUNT = count;
-        if (count < 1 || count > 350 || width !== VIEWPORT.width || height !== VIEWPORT.height) {
+        if (count < 1 || count > 350 || width !== 932 || height !== 430) {
           throw new Error(`Unexpected capture contract: ${marker}`);
         }
         began = true;
