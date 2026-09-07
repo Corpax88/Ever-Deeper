@@ -1,0 +1,98 @@
+--- a/scripts/main.gd
++++ b/scripts/main.gd
+@@ -2742,7 +2742,7 @@
+ 
+ 
+ func _perform_context() -> void :
+-	if conclusion_overlay.visible or _shop_panel_is_open() or not commerce_transaction.is_empty():
++	if menu_open or inventory_open or orientation_guard_active or _companion_panel_is_open() or conclusion_overlay.visible or _shop_panel_is_open() or not commerce_transaction.is_empty():
+ 		return
+ 	if phase == "deepheart":
+ 		deepheart_world.interact()
+--- a/scripts/ui/premium_menu.gd
++++ b/scripts/ui/premium_menu.gd
+@@ -12,7 +12,7 @@
+ const MUTED: = Color("789384")
+ const INK: = Color("07120d")
+ const IPHONE_LANDSCAPE_ASPECT: = 1.95
+-const DEV_RELEASE_VERSION: = "0.46.3-dev.1"
++const DEV_RELEASE_VERSION: = "0.46.4-dev.1"
+ 
+ 
+ static func release_version() -> String:
+@@ -67,6 +67,8 @@
+ 
+ 
+ func open_menu(has_save: bool, location: String, is_pause: bool, storage_uncertain: bool) -> void :
++	# GUI picking follows sibling order, not z_index. Keep the modal above the HUD.
++	move_to_front()
+ 	_pause_mode = is_pause
+ 	visible = true
+ 	main_view.visible = true
+--- a/scripts/qa/menu_touch_qa.gd
++++ b/scripts/qa/menu_touch_qa.gd
+@@ -48,6 +48,7 @@
+ 	driver.get_tree().root.content_scale_size=Vector2i(1560,720)
+ 	driver.get_tree().root.content_scale_aspect=Window.CONTENT_SCALE_ASPECT_IGNORE
+ 	await settle()
++	await test_pause_modal()
+ 	driver._prepare_pet_state({"location":"mine","variant":"ready","tab":"skills"})
+ 	await settle()
+ 	var journal = main.get_node("CompanionInterface").journal
+@@ -149,3 +150,34 @@
+ 		main.developer_menu.close_menu()
+ 	print("EVER_DEEPER_OVERHAUL_GAMEPLAY_%s checks=%d failures=%s" % ["OK" if failures.is_empty() else "FAILED",checks,JSON.stringify(failures)])
+ 	return failures.is_empty()
++
++func test_pause_modal() -> void:
++	driver._prepare_commerce_capture("starforge_owned_active")
++	main.commerce_panel.close_commerce()
++	main.automated_mode = false
++	main.game_started = true
++	main.surface_context = "starforge"
++	main._refresh_context_button()
++	await settle()
++	var browse: Button = main.premium_hud.context_button
++	var settings: Button = main.premium_menu.main_card.get_node("Settings")
++	main._open_start_menu()
++	await settle()
++	# Force the exact overlap irrespective of desktop/mobile viewport scaling.
++	var saved_position: Vector2 = browse.global_position
++	browse.global_position = point(settings, Vector2(0.5, 0.5)) - browse.size * 0.5
++	await gesture("tap", point(settings, Vector2(0.5, 0.5)))
++	check(main.menu_open and main.premium_menu.detail_view.visible, "Settings receives tap over underlying Starforge Browse")
++	check(not main.commerce_panel.is_open(), "Pause menu tap cannot open Starforge")
++	main._perform_context()
++	check(not main.commerce_panel.is_open(), "Context callback is blocked while paused")
++	await gesture("tap", point(browse, Vector2(0.5, 0.5)))
++	check(not main.commerce_panel.is_open(), "Settings blocks underlying Browse hit area")
++	await gesture("capture", Vector2.ZERO, Vector2.ZERO, "settings-blocks-starforge")
++	browse.global_position = saved_position
++	main._hide_start_menu()
++	await settle()
++	await gesture("tap", point(browse, Vector2(0.5, 0.5)))
++	check(main.commerce_panel.is_open(), "Browse works again after closing pause menu")
++	main.commerce_panel.close_commerce()
++	main.automated_mode = true
+--- a/scripts/dev/visual_capture_driver.gd
++++ b/scripts/dev/visual_capture_driver.gd
+@@ -135,7 +135,7 @@
+ 
+ func _verify_build_contract() -> Dictionary:
+ 	var dev_feature: = OS.has_feature("ever_deeper_dev")
+-	var expected_version: = "0.46.3-dev.1" if dev_feature else "0.46.3"
++	var expected_version: = "0.46.4-dev.1" if dev_feature else "0.46.4"
+ 	var expected_flavor: = "dev" if dev_feature else "production"
+ 	var actual_version: = String(PremiumMenuScript.release_version())
+ 	var developer_menu: Variant = _main.get("developer_menu")
+--- a/project.godot
++++ b/project.godot
+@@ -11,7 +11,7 @@
+ [application]
+ 
+ config/name="Ever Deeper"
+-config/version="0.46.3"
++config/version="0.46.4"
+ run/main_scene="res://scenes/main/main.tscn"
+ config/use_custom_user_dir=true
+ config/custom_user_dir_name="Ever Deeper- Godot Production Port"
