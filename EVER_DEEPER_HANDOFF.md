@@ -1,4 +1,23 @@
-# Current handoff — v0.46.3 / DEV v0.46.3-dev.1
+# Current handoff — v0.46.4 / DEV v0.46.4-dev.1
+
+Published and verified on 2026-09-07: Settings no longer activates hidden Starforge Browse.
+PremiumMenu moves to the front for GUI hit testing; context actions reject modal overlays.
+All shops share this context guard. Existing carousel animation and authored visuals are preserved.
+
+- LIVE: https://corpax88.github.io/Ever-Deeper/
+- DEV: https://corpax88.github.io/Ever-Deeper/dev/
+- Publication: https://github.com/Corpax88/Ever-Deeper/actions/runs/34109006807 (SUCCESS; all 18 public files verified).
+- Release commit: b2fd4cde949bb22f4b1506fe2f020bebb69e094e (PR 3).
+- Editable source: extract game-source from the v0.46.3 archive listed below, then apply `.github/modal-v0464/source.patch` with `git apply`. Use Godot 4.7.2. The top-level repo source is older.
+- Review, packed resource audit, exact build manifests and receipt: `.github/modal-v0464/`.
+- Exact native checks: LIVE 37 menu, DEV 39 menu, LIVE 859 gameplay. Browser: Chromium DEV 74, LIVE 70; WebKit LIVE 70. Final Settings screenshots inspected at 932x430 and 844x390.
+- LIVE excludes the developer menu. Save identity and assets are unchanged.
+- Ask Mats to reload 0.46.4 and tap Settings/Audio while standing near Starforge. Physical iPhone acceptance remains unverified.
+- Original browser QA succeeded. Chromium was slow; a supplemental run without optional animation recording was started against identical packs (34108706596), and is not the publication gate.
+
+---
+
+# Previous handoff — v0.46.3 / DEV v0.46.3-dev.1
 
 Published and verified on 2026-09-07: continuous finger-following shop carousels.
 All multi-item shops/workshops using CommercePanel share inertial centering and
