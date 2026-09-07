@@ -2,6 +2,11 @@
 
 ## Current source gate
 
+GitHub Actions runs `Godot source checks` for source pull requests and changes on main.
+It imports the event's tested commit, checks protected files and runs the ten current cases;
+logs are attached even when a check fails. The larger `Verify complete source cleanup`
+workflow is a one-time baseline comparison, separate from this reusable source gate.
+
 `python3 tools/qa.py --godot /path/to/Godot` runs input release, the 859-check gameplay
 suite, shop touch/state tests, endgame, endless, onboarding, iPhone layout, orientation,
 developer tools and Crusher integration. Native/headless checks do not validate rendered art.
