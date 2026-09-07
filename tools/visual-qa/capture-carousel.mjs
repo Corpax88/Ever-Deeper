@@ -267,7 +267,7 @@ async function captureSuite(options) {
     });
     const context = await browser.newContext({
       viewport: VIEWPORT,
-      ...(MOTION ? { recordVideo: { dir: options.outputDir, size: VIEWPORT } } : {}),
+      ...((MOTION || (GAMEPLAY && WEBKIT)) ? { recordVideo: { dir: options.outputDir, size: VIEWPORT } } : {}),
       screen: VIEWPORT,
       deviceScaleFactor: 1,
       hasTouch: true,
