@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "version": "0.46.6",
+  "live_pck_sha256": "2e42dffa1e9dba2f2fcc8c4a305c4d3e71633171dccc3c23d159daba23bb383b",
+  "dev_pck_sha256": "ac4451cfe60c578a142ee9847717bf52fd8d0fd16518658f0afdb961b8fdf6f6",
+  "qa_run": 34118498409,
+  "qa_commit": "2c26cc88abcfe3c8fc04ac25e716baab5b47273e",
+  "native_checks": {
+    "live_menu": 72,
+    "dev_menu": 74,
+    "live_gameplay": 859
+  },
+  "browser_checks": {
+    "live": 114,
+    "dev": 118
+  },
+  "viewport": [
+    844,
+    390
+  ],
+  "browser": "WebKit 26.5",
+  "visually_inspected_shop_states": 30,
+  "tap_preview_evidence": [
+    "tap-core-1.png",
+    "tap-core-2.png",
+    "workshop_tool_forge_baseline-tap-preview.png",
+    "workshop_light_lab_baseline-tap-preview.png",
+    "workshop_wardrobe_baseline-tap-preview.png"
+  ],
+  "notes": [
+    "Compared against approved shop design and user IMG_1712.jpeg regression. Authored art/fonts preserved; short lists keep all options visible.",
+    "Tap screenshots show matching selected-card highlight, hero art, title, stats and price. Longer lists browse independently of preview selection.",
+    "Real mobile tap, small movement, cancel, swipe, and explicit purchase tests pass in both builds. Physical iPhone feel remains for Mats."
+  ],
+  "artifacts": {
+    "candidates": 10017238446,
+    "layouts": 10017301806,
+    "touch_live": 10017313867,
+    "touch_dev": 10017314392
+  },
+  "visual_manifest_sha256": "15a7d31ffcedd5c23d2e915f0d52dc66a0134b524475d15c67218aaa1e5de1f3"
+}
