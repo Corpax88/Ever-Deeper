@@ -177,8 +177,8 @@ async function probeWebGL2(context) {
         version: gl.getParameter(gl.VERSION),
       };
     });
-    if (!details) throw new Error("Chromium did not provide WebGL2");
-    if (!/swiftshader/i.test(`${details.vendor} ${details.renderer}`)) {
+    if (!details) throw new Error("Browser did not provide WebGL2");
+    if (!WEBKIT && !/swiftshader/i.test(`${details.vendor} ${details.renderer}`)) {
       throw new Error(`Capture renderer is not SwiftShader: ${details.vendor} / ${details.renderer}`);
     }
     return details;
