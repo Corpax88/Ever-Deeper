@@ -1,4 +1,31 @@
-# Current handoff — v0.46.5 / DEV v0.46.5-dev.1
+# Current handoff — v0.46.6
+
+Published and verified on LIVE and DEV on 2026-09-07. DEV version v0.46.6-dev.1.
+User reports ChatGPT chat repeatedly closes; work is saved here for continuation.
+
+## Shop interaction
+Tap selects and immediately previews art, title, stats, costs and action. Swipe only browses longer lists; it never changes the selected item. Purchase/equip requires the explicit main button.
+Starforge's three cards stay fully visible, with “Tap to preview” and no pagination dots. Shared behavior also covers Tool Forge, Light Lab and Wardrobe.
+Only the selected card is accented. Touch tap tolerance is 16 logical pixels; cancelled taps do not select.
+Approved v0.46.5 shop styling/fonts and v0.46.4 Settings input-blocking fix are preserved. LIVE excludes DEV menu.
+
+## Release and evidence
+- PR #5; release merge a1eb3578885ec1a5306b5e943943a3df1b24a7d5.
+- Final QA run 34118498409 succeeded; exact candidate artifact 10017238446.
+- Publication run 34119089398 succeeded. Verify job 101733094267: “All 18 public files verified” at 2026-09-07T11:57:01Z.
+- Native exact-pack checks: LIVE 72 menu, DEV 74 menu, LIVE 859 gameplay; all pass.
+- WebKit mobile checks: LIVE 114, DEV 118; all pass.
+- Manually reviewed 30 final mobile shop screenshots plus actual tap-preview screenshots for Starforge and other shops. Physical iPhone feel still requires Mats's feedback.
+- Rollback artifact 10017462590, ever-deeper-before-v0466-rollback, publication run above; expires 2026-10-07.
+- Evidence, review, source hashes and publication receipt: .github/shop-tap-v0466/.
+
+## Authoritative source
+Reconstruct v0.46.5 using the previous handoff below, then apply .github/shop-tap-v0466/source.patch. Old top-level repository source is not current.
+Patch changes commerce_panel.gd, swipe_pager.gd, menu_touch_qa.gd, and version strings in project.godot, premium_menu.gd, visual_capture_driver.gd.
+LIVE: https://corpax88.github.io/Ever-Deeper/
+DEV: https://corpax88.github.io/Ever-Deeper/dev/
+
+# Previous handoff — v0.46.5 / DEV v0.46.5-dev.1
 
 Published and verified on 2026-09-07: approved Starforge design implemented as a shared shop system.
 Keep the same metallic geometric fonts, layout, swipe interaction and control placement.
