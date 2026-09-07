@@ -1,0 +1,36 @@
+name: Rendered mobile performance
+on:
+  push:
+    branches: [codex-iphone-performance]
+    paths: ['scripts/**', 'tools/run_performance.py', '.github/workflows/mobile-performance.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install matching renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri
+          curl -L --fail --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Import source
+        run: |
+          Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > "$RUNNER_TEMP/import.log" 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/import.log"; then exit 1; fi
+      - name: Measure rendered mobile journey
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: xvfb-run -a -s '-screen 0 1280x720x24' python3 tools/run_performance.py --godot Godot_v4.7.2-stable_linux.x86_64 --output "$RUNNER_TEMP/performance" --capture
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rendered-mobile-performance
+          path: |
+            ${{ runner.temp }}/import.log
+            ${{ runner.temp }}/performance

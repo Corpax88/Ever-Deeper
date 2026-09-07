@@ -1,6 +1,7 @@
 extends Node
 ## One ordered source of truth for automated startup. First matching entry wins.
 const CASES: Array[Dictionary] = [
+	{"flags": ["--qa-mobile-performance"], "method": "run", "suite": "mobile_performance", "surface": false},
 	{"flags": ["--qa-input-release"], "method": "_run_input_release_qa", "suite": "input_release", "surface": true},
 	{"flags": ["--smoke-test"], "method": "_run_smoke_test", "suite": "smoke", "surface": true},
 	{"flags": ["--qa-landscape"], "method": "_run_landscape_qa", "suite": "layout", "surface": false},
