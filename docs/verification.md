@@ -36,6 +36,8 @@ exercise the corresponding active paths. These failures are recorded as remainin
 
 `python3 tools/check_invariants.py` verifies hashes of every protected art/audio/import
 setting, scene, game-data file, player/light implementation and the project configuration.
+Shaders and their resource identities are also protected. These hashes establish parity for
+this structural cleanup; update them only alongside an intentional, reviewed game change.
 It also checks that every QA entry resolves to a real method, and validates the fixed
 mine ordering/mapping owner. Save serialization and migration functions are unchanged.
 

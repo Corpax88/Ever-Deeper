@@ -4,7 +4,7 @@ on:
     branches: [codex-code-cleanup]
     paths: ['.github/workflows/source-cleanup.yml']
 permissions:
-  contents: write
+  contents: read
 jobs:
   source:
     runs-on: ubuntu-latest
@@ -12,17 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: {ref: codex-code-cleanup}
-      - name: Restore exact current authored assets
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: python3 .github/code-cleanup/restore_assets.py
-      - name: Commit complete source asset tree
-        run: |
-          git config user.name 'Ever Deeper source maintenance'
-          git config user.email 'actions@users.noreply.github.com'
-          git add assets
-          git diff --cached --quiet || git commit -m 'Restore the exact v0.46.8 authored assets to the current source root'
-          git push origin HEAD:codex-code-cleanup
       - name: Install exact Godot runtime and templates
         run: |
           curl -L --fail --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
@@ -35,6 +24,7 @@ jobs:
       - name: Import clean checkout and run source gates
         run: |
           Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > "$RUNNER_TEMP/import.log" 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/import.log"; then exit 1; fi
           python3 tools/check_invariants.py
           python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --output "$RUNNER_TEMP/native"
       - name: Export unchanged game and check both flavors

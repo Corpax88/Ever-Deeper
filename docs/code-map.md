@@ -18,6 +18,7 @@ Read this map, then the named owner. You should not need to read the whole game 
 | Outfit and light previews | `scripts/ui/outfit_preview.gd`, `light_preview.gd` | Actual hero and headlamp renderers |
 | Hero movement, animation and equipment | `scripts/player/` | Production art under `assets/hero/dad/` |
 | Light effects | `scripts/lighting/` | RunState supplies the selected style and level |
+| Terrain cutouts, blending and parallax clipping | `shaders/` | World components bind each shader |
 | Companion and its skills | `scripts/companion/` | `mole_skills.gd` owns skill definitions |
 | Menu, HUD, inventory and tutorial | `scripts/ui/` | Named components own their presentation |
 | Achievements, guide and progression | `scripts/progression/` | RunState persistence |
