@@ -1,4 +1,29 @@
-# Current handoff — v0.46.2 / DEV v0.46.2-dev.1
+# Current handoff — v0.46.3 / DEV v0.46.3-dev.1
+
+Published and verified on 2026-09-07: continuous finger-following shop carousels.
+All multi-item shops/workshops using CommercePanel share inertial centering and
+interruptible dragging. Existing authored artwork, game data and saves are preserved.
+LIVE excludes the developer menu. Single-item shops retain their normal presentation.
+
+- LIVE: https://corpax88.github.io/Ever-Deeper/
+- DEV: https://corpax88.github.io/Ever-Deeper/dev/
+- Publication: https://github.com/Corpax88/Ever-Deeper/actions/runs/34104039025 (SUCCESS; all 18 public files verified).
+- Complete editable source: Ever-Deeper-v0.46.3-source.zip
+  - Library: libfile_e93359032c8c81918236ce40ff4925ab
+  - File: file_0000000007d481fda7f25e378f11fc69
+  - SHA-256: 4a1d0c6ae4955df9281d64aa8fbbd934ca34ad3cec50a569a115ec6ed279d6ec
+- Matching handoff: Ever-Deeper-v0.46.3-HANDOFF.md
+  - Library: libfile_e01617cab48481918a99aad39e8b6184
+  - File: file_00000000ce808230a16a657736bdc378
+- Evidence and receipt: .github/carousel-v0463/review.json and publication-receipt.json.
+
+Use this archive, not the older top-level repository source, for future development.
+Native gameplay, Chromium/WebKit gestures, 19 shop states and actual WebKit motion
+were reviewed. Physical iPhone feel still needs Mats's feedback. Keep replies short.
+
+---
+
+# Previous handoff (historical) — v0.46.2 / DEV v0.46.2-dev.1
 
 Published and verified on 2026-09-07: horizontal swipes replace menu paging arrows.
 Both public builds passed exact file verification in Actions run 34098949337.
