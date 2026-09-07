@@ -1,0 +1,108 @@
+{
+  "version": "0.46.9",
+  "source_commit": "a3293f7527e57fb5c8fe80556c44ebc454fd8118",
+  "qa_run_id": 34155202247,
+  "visual_reviewed": true,
+  "exact_pack_checks_passed": true,
+  "comparison_run_id": 34154067921,
+  "comparison_artifact_id": 10030456366,
+  "final_review_artifact_id": 10030815550,
+  "final_review_zip_sha256": "65ca2483b1923c09471db339bd875d0bd17523a2b0069205a283d0bb1e0fcf45",
+  "candidate_artifact_id": 10030815010,
+  "physical_iphone_verified": false,
+  "inspected": [
+    "Light Lab current/upgraded/restore",
+    "All five Light Lab styles",
+    "Mossvein Forge",
+    "Wayfarer",
+    "Starforge",
+    "Tool Forge",
+    "Wardrobe",
+    "DEV FPS toggle and meter"
+  ],
+  "notes": [
+    "One optimization round; no subagents.",
+    "22 rendered scenarios; software-renderer FPS is not physical iPhone FPS.",
+    "Source assets, shaders, gameplay and save code preserved. Only project version changed among protected files.",
+    "Preview switching repaints; returning to the same level restores exact preview pixels.",
+    "Production pack excludes developer_menu and its nested FrameMeter."
+  ],
+  "files": {
+    "dev": {
+      "index.apple-touch-icon.png": {
+        "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5",
+        "size": 66421
+      },
+      "index.audio.position.worklet.js": {
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+        "size": 2973
+      },
+      "index.audio.worklet.js": {
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+        "size": 7298
+      },
+      "index.html": {
+        "sha256": "2ee1c2a572db503dc380aa23a6946ed6896c06f4b856b928f36bd4e4b636a7df",
+        "size": 5444
+      },
+      "index.icon.png": {
+        "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+        "size": 470687
+      },
+      "index.js": {
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+        "size": 279815
+      },
+      "index.pck": {
+        "sha256": "1bc9da66948c530c6d41943c06b06c72cf0d5b6abb156fb28c5d70b2aa32b270",
+        "size": 219339060
+      },
+      "index.png": {
+        "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+        "size": 1981427
+      },
+      "index.wasm": {
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+        "size": 39514754
+      }
+    },
+    "live": {
+      "index.apple-touch-icon.png": {
+        "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5",
+        "size": 66421
+      },
+      "index.audio.position.worklet.js": {
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+        "size": 2973
+      },
+      "index.audio.worklet.js": {
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+        "size": 7298
+      },
+      "index.html": {
+        "sha256": "64ac4bd1f31ccc8eec456b4d995f0a7a3f098c297c4de377c0526b4d2cf16e3b",
+        "size": 5444
+      },
+      "index.icon.png": {
+        "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+        "size": 470687
+      },
+      "index.js": {
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+        "size": 279815
+      },
+      "index.pck": {
+        "sha256": "64403da94cc12aa0b23eb2a148449f7ce21c57b7df8ee859615fef8760d4de27",
+        "size": 219322336
+      },
+      "index.png": {
+        "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+        "size": 1981427
+      },
+      "index.wasm": {
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+        "size": 39514754
+      }
+    }
+  }
+}

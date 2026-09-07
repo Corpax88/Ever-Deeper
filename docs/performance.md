@@ -75,3 +75,17 @@ The DEV-only SHOW FPS button adds a read-only, optional two-second frame meter.
 It shows FPS, p95, worst frame and count over 33.34 ms. It stops processing
 when hidden, clears its interval on app focus return, and is excluded from LIVE.
 Final exact-PCK visual and gameplay verification is recorded separately.
+
+## Final package gate
+
+Run 34155202247 succeeded for source a3293f7527e57fb5c8fe80556c44ebc454fd8118.
+Production passed nine current gameplay cases; both PCK flavors passed exclusion
+checks; DEV passed touch and developer-tool tests. The final LIVE PCK completed
+all 22 rendered stages. Both flavors passed rendered current/upgrade light
+selection, exact preview pixel restoration, and all five light styles.
+
+Final screenshots were inspected for Forge, Wayfarer, Starforge, Tool Forge,
+Wardrobe, every light style, and the DEV FPS toggle/meter. The meter records
+real frame intervals and stops processing when switched off.
+Exact file identities are in `.github/performance-v0469/review.json`.
+Physical iPhone acceptance remains pending. Only one optimization round was used.

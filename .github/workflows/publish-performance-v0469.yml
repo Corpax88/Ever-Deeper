@@ -1,0 +1,56 @@
+name: Publish verified performance update v0.46.9
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-performance-v0469.yml']
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages-ever-deeper
+  cancel-in-progress: false
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require the successful inspected package run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34155202247 --jq .conclusion)" = success
+          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34155202247 --jq .head_sha)" = a3293f7527e57fb5c8fe80556c44ebc454fd8118
+      - uses: actions/download-artifact@v4
+        with:
+          name: performance-web-candidates
+          run-id: 34155202247
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - name: Preserve the previous release and stage reviewed files
+        run: python3 .github/performance-v0469/publish.py prepare "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/site" "$RUNNER_TEMP/rollback"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-before-v0469-rollback
+          path: ${{ runner.temp }}/rollback
+          retention-days: 30
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/site
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 .github/performance-v0469/publish.py verify
