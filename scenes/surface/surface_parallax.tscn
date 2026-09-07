@@ -1,0 +1,116 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://cyj4ogk2gua8x" path="res://scripts/world/surface_parallax.gd" id="1"]
+[ext_resource type="Script" uid="uid://dh5m66ieuw87e" path="res://scripts/world/surface_parallax_layer.gd" id="2"]
+[ext_resource type="Shader" uid="uid://bym0yvgu0supe" path="res://shaders/surface_parallax_world_clip.gdshader" id="3"]
+[ext_resource type="Texture2D" uid="uid://mt4nppcp8k3t" path="res://assets/surface/moss-moon-parallax-background.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://c4t3uddjeingy" path="res://assets/surface/mossvein-parallax-midground-v1.png" id="5"]
+[ext_resource type="Texture2D" uid="uid://d1xrbch6lpa3o" path="res://assets/surface/moss-moon-parallax-foreground.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://b5bqgnoe7hfm5" path="res://assets/surface/mossvein-parallax-foreground-v1.png" id="7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_world_clip"]
+shader = ExtResource("3")
+shader_parameter/world_right = 2240.0
+
+[node name="SurfaceParallax" type="Node2D" unique_id=1860888070]
+script = ExtResource("1")
+reference_x = 640.0
+
+[node name="FarSky" type="Node2D" parent="." unique_id=1033436966]
+z_index = -30
+script = ExtResource("2")
+scroll_factor = 0.02
+extra_cull_margin = 480.0
+
+[node name="MossMoonPanorama" type="Sprite2D" parent="FarSky" unique_id=1455044467]
+texture_filter = 2
+material = SubResource("ShaderMaterial_world_clip")
+position = Vector2(1120, 373.333)
+scale = Vector2(1.03131, 1.03131)
+texture = ExtResource("4")
+
+[node name="FarCanopy" type="Node2D" parent="." unique_id=887771296]
+z_index = -24
+script = ExtResource("2")
+scroll_factor = 0.05
+extra_cull_margin = 384.0
+
+[node name="MossCanopyCullAnchor" type="Node2D" parent="FarCanopy" unique_id=42316514]
+visible = false
+position = Vector2(256, 640)
+
+[node name="TransitionCanopyCullAnchor" type="Node2D" parent="FarCanopy" unique_id=1301522197]
+visible = false
+position = Vector2(1110, 640)
+
+[node name="MoonCanopyCullAnchor" type="Node2D" parent="FarCanopy" unique_id=999265350]
+visible = false
+position = Vector2(1960, 640)
+
+[node name="MidForest" type="Node2D" parent="." unique_id=414757158]
+script = ExtResource("2")
+scroll_factor = 0.08
+extra_cull_margin = 320.0
+
+[node name="MossveinMidground" type="Sprite2D" parent="MidForest" unique_id=1565495520]
+self_modulate = Color(0.76, 0.86, 0.82, 0.72)
+texture_filter = 2
+material = SubResource("ShaderMaterial_world_clip")
+position = Vector2(991.5, 883.5)
+texture = ExtResource("5")
+
+[node name="MossForestCullAnchor" type="Node2D" parent="MidForest" unique_id=1503198037]
+visible = false
+position = Vector2(180, 640)
+
+[node name="MossRoadCullAnchor" type="Node2D" parent="MidForest" unique_id=1964260954]
+visible = false
+position = Vector2(700, 640)
+
+[node name="PortalForestCullAnchor" type="Node2D" parent="MidForest" unique_id=1098555700]
+visible = false
+position = Vector2(1110, 640)
+
+[node name="MoonForestCullAnchor" type="Node2D" parent="MidForest" unique_id=1788491809]
+visible = false
+position = Vector2(1870, 640)
+
+[node name="NearSilhouette" type="Node2D" parent="." unique_id=488777058]
+z_index = 20
+script = ExtResource("2")
+scroll_factor = 0.12
+extra_cull_margin = 256.0
+fade_out_start_x = 2040.0
+fade_out_end_x = 2240.0
+hide_when_faded = true
+
+[node name="ContinuousForestFloor" type="Sprite2D" parent="NearSilhouette" unique_id=616005256]
+self_modulate = Color(0.76, 0.84, 0.82, 0.58)
+texture_filter = 2
+position = Vector2(875.8, 906.667)
+scale = Vector2(1.03131, 1.03131)
+texture = ExtResource("6")
+
+[node name="MossveinCameraFrame" type="Sprite2D" parent="NearSilhouette" unique_id=1893504950]
+self_modulate = Color(0.74, 0.86, 0.82, 0.88)
+texture_filter = 2
+position = Vector2(640, 215)
+texture = ExtResource("7")
+region_enabled = true
+region_rect = Rect2(0, 0, 1672, 430)
+
+[node name="MossveinFloorFrame" type="Sprite2D" parent="NearSilhouette" unique_id=2059728313]
+self_modulate = Color(0.74, 0.86, 0.82, 0.88)
+texture_filter = 2
+position = Vector2(640, 965)
+texture = ExtResource("7")
+region_enabled = true
+region_rect = Rect2(0, 430, 1672, 511)
+
+[node name="MossFloorCullAnchor" type="Node2D" parent="NearSilhouette" unique_id=1105472341]
+visible = false
+position = Vector2(250, 930)
+
+[node name="MoonFloorCullAnchor" type="Node2D" parent="NearSilhouette" unique_id=1875197960]
+visible = false
+position = Vector2(1980, 930)

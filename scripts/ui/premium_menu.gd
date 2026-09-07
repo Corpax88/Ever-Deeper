@@ -12,7 +12,7 @@ const MINT: = Color("a8e3bc")
 const MUTED: = Color("789384")
 const INK: = Color("07120d")
 const IPHONE_LANDSCAPE_ASPECT: = 1.95
-const DEV_RELEASE_VERSION: = "0.43.1-dev.3"
+const DEV_RELEASE_VERSION: = "0.46.8-dev.1"
 
 
 static func release_version() -> String:
@@ -67,6 +67,8 @@ func _ready() -> void :
 
 
 func open_menu(has_save: bool, location: String, is_pause: bool, storage_uncertain: bool) -> void :
+	# GUI picking follows sibling order, not z_index. Keep the modal above the HUD.
+	move_to_front()
 	_pause_mode = is_pause
 	visible = true
 	main_view.visible = true
@@ -594,7 +596,7 @@ func show_achievements(highlight_id: String = "") -> void :
 	achievement_count_label.position = Vector2(0, -6)
 	achievement_count_label.size = Vector2(880, 28)
 	detail_body.add_child(achievement_count_label)
-	achievement_scroll = ScrollContainer.new()
+	achievement_scroll = preload("res://scripts/ui/touch_scroll_container.gd").new()
 	achievement_scroll.position = Vector2(0, 30)
 	achievement_scroll.size = Vector2(880, 370)
 	achievement_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED

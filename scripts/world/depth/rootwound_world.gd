@@ -23,7 +23,7 @@ const CrusherLootBurstScript = preload("res://scripts/world/crusher_loot_burst.g
 const CaveEdgeAssetDrawer = preload("res://scripts/world/cave_edge_asset_drawer.gd")
 
 const MINE_ID: = "mossMine"
-const SUPPORTED_MINE_IDS: = ["mossMine", "moonMine", "emberMine", "starMine"]
+const SUPPORTED_MINE_IDS: = WorldCatalog.MINE_ORDER
 const DEPTH: = 2
 const TILE_SIZE: = 48.0
 const PLAYER_RADIUS: = 23.0
@@ -52,27 +52,27 @@ const LANDMARK_LIGHT_HYSTERESIS_BONUS: = 105.0
 
 const UNIQUE_CAVERN_NAMES: = {
 	"mossMine": [
-		"Deep Forgotten Pocket", "Deep Rootbound Hollow", "Deep Old Prospector Room", 
-		"Deep Echo Chamber", "Deep Buried Camp", "Deep Gilded Hollow", 
-		"Taproot Reliquary", "Amberwake Vault", 
-	], 
+		"Deep Forgotten Pocket", "Deep Rootbound Hollow", "Deep Old Prospector Room",
+		"Deep Echo Chamber", "Deep Buried Camp", "Deep Gilded Hollow",
+		"Taproot Reliquary", "Amberwake Vault",
+	],
 	"moonMine": [
-		"Deep Prism Pocket", "Deep Silent Grotto", "Deep Glasswater Hollow", 
-		"Deep Moonlit Fault", "Deep Crystal Nest", "Deep Lost Survey", 
-		"Deep Starshard Grotto", "Refraction Archive", "Lunar Prism Vault", 
-	], 
+		"Deep Prism Pocket", "Deep Silent Grotto", "Deep Glasswater Hollow",
+		"Deep Moonlit Fault", "Deep Crystal Nest", "Deep Lost Survey",
+		"Deep Starshard Grotto", "Refraction Archive", "Lunar Prism Vault",
+	],
 	"emberMine": [
-		"Deep Cinder Pocket", "Deep Ashen Vault", "Deep Collapsed Furnace", 
-		"Deep Heatwell Hollow", "Deep Old Smelter", "Deep Burning Grotto", 
-		"Deep Magma Scar", "Deep Crucible Pocket", "Furnaceheart Reliquary", 
-		"Cinder Crown Vault", 
-	], 
+		"Deep Cinder Pocket", "Deep Ashen Vault", "Deep Collapsed Furnace",
+		"Deep Heatwell Hollow", "Deep Old Smelter", "Deep Burning Grotto",
+		"Deep Magma Scar", "Deep Crucible Pocket", "Furnaceheart Reliquary",
+		"Cinder Crown Vault",
+	],
 	"starMine": [
-		"Deep Fallen Pocket", "Deep Silent Orbit", "Deep Astral Hollow", 
-		"Deep Void Grotto", "Deep Lost Observatory", "Deep Starlight Vault", 
-		"Deep Crown Scar", "Deep Celestial Nest", "Deep Last Light Chamber", 
-		"Eventide Reliquary", "Singularity Antechamber", 
-	], 
+		"Deep Fallen Pocket", "Deep Silent Orbit", "Deep Astral Hollow",
+		"Deep Void Grotto", "Deep Lost Observatory", "Deep Starlight Vault",
+		"Deep Crown Scar", "Deep Celestial Nest", "Deep Last Light Chamber",
+		"Eventide Reliquary", "Singularity Antechamber",
+	],
 }
 
 const LAMP_TEXTURE: = preload("res://assets/entrances/depth-work-lamp.png")
@@ -136,6 +136,9 @@ var station_positions: Dictionary = {}
 var exit_context: = false
 var station_context: = ""
 var active_context: = ""
+var wayfarer_position: Vector2=Vector2.ZERO
+var station_animation_clock: float=0.0
+var station_redraw_clock: float=0.0
 var active: = false
 var external_mine_held: = false
 var swing_active: = false
@@ -164,6 +167,7 @@ var manual_depth_entrance_enabled: = false
 var deep_tool_override_enabled: = false
 var deep_tool_override_value: = false
 var tool_stats_override: Dictionary = {}
+const ROCK_MASS: Texture2D = preload("res://assets/surface/v3/cave-rock-mass.png")
 var floor_texture: Texture2D
 var cave_edge_texture: Texture2D
 var cave_corner_texture: Texture2D
@@ -408,11 +412,11 @@ func get_drill_gates() -> Array[Dictionary]:
 		var gate_id: = String(rock.deposit_id)
 		if not gates_by_id.has(gate_id):
 			gates_by_id[gate_id] = {
-				"id": gate_id, 
-				"type": String(rock.type), 
-				"required_drill_level": int(rock.requires_drill_level), 
-				"positions": [], 
-				"remaining": 0, 
+				"id": gate_id,
+				"type": String(rock.type),
+				"required_drill_level": int(rock.requires_drill_level),
+				"positions": [],
+				"remaining": 0,
 			}
 		var gate: Dictionary = Dictionary(gates_by_id[gate_id])
 		gate.positions.append(Vector2(rock.position))
@@ -461,7 +465,7 @@ func collision_at(position: Vector2) -> bool:
 
 func export_runtime_state() -> Dictionary:
 	return {
-		"mining_rush_remaining": mining_rush_remaining, 
+		"mining_rush_remaining": mining_rush_remaining,
 		"shrine_cooldowns": shrine_cooldowns.duplicate(true),
 	}
 
@@ -490,6 +494,11 @@ func _process(delta: float) -> void :
 		_apply_target(_find_mine_target())
 		target_dirty = false
 	_update_mining(delta)
+	station_animation_clock+=delta
+	station_redraw_clock+=delta
+	if station_redraw_clock>=0.05 and player.global_position.distance_to(wayfarer_position)<760.0:
+		station_redraw_clock=0.0
+		_request_redraw()
 	rock_respawn_check_elapsed += maxf(0.0, delta)
 	if rock_respawn_check_elapsed >= ROCK_RESPAWN_CHECK_INTERVAL:
 		rock_respawn_check_elapsed = fposmod(rock_respawn_check_elapsed, ROCK_RESPAWN_CHECK_INTERVAL)
@@ -504,7 +513,7 @@ func _process(delta: float) -> void :
 		perform_context()
 
 
-func _update_shrine_cooldowns(delta: float) -> void:
+func _update_shrine_cooldowns(delta: float) -> void :
 	var changed: = false
 	for reward_id_value in shrine_cooldowns.keys():
 		var reward_id: = String(reward_id_value)
@@ -585,14 +594,14 @@ func _persistent_state_fingerprint() -> int:
 		var reward_id: = String(Dictionary(cavern.reward).id)
 		cavern_state[cavern_id] = RunState.is_cavern_discovered(cavern_id)
 		reward_state[reward_id] = {
-			"claimed": RunState.is_pocket_reward_claimed(reward_id), 
-			"pending": RunState.pending_pocket_reward_loot(reward_id), 
+			"claimed": RunState.is_pocket_reward_claimed(reward_id),
+			"pending": RunState.pending_pocket_reward_loot(reward_id),
 		}
 	return hash([
-		RunState.dug_cells(mine_id, DEPTH), 
-		Dictionary(RunState.mine_resource_runtime.get("%s:%d" % [mine_id, DEPTH], {})), 
-		cavern_state, 
-		reward_state, 
+		RunState.dug_cells(mine_id, DEPTH),
+		Dictionary(RunState.mine_resource_runtime.get("%s:%d" % [mine_id, DEPTH], {})),
+		cavern_state,
+		reward_state,
 	])
 
 
@@ -615,6 +624,10 @@ func _build_terrain() -> void :
 	_clear_circle(sell_position, 126.0)
 	_clear_circle(forge_position, 126.0)
 	_clear_circle((sell_position + forge_position) * 0.5, 112.0)
+	wayfarer_position=(sell_position+forge_position)*0.5+Vector2(0,-168)
+	wayfarer_position.y=maxf(100.0,wayfarer_position.y)
+	_clear_circle(wayfarer_position,128.0)
+	_clear_circle((wayfarer_position+(sell_position+forge_position)*0.5)*0.5,90.0)
 
 	for definition_index in Array(discoveries.caverns).size():
 		var cavern_value: Variant = Array(discoveries.caverns)[definition_index]
@@ -671,9 +684,9 @@ func _build_terrain() -> void :
 			var index: = int(index_value)
 			if index >= 0 and index < terrain_hp.size():
 				var cell: = Vector2i(index % cols, floori(float(index) / float(cols)))
-				# The outer ring is the permanent world shell.  Older saves may
-				# contain dug perimeter cells from before bedrock was explicit;
-				# ignore those entries so the boundary can never reopen.
+
+
+
 				if _terrain_is_bedrock(cell):
 					continue
 				dug_indices[index] = true
@@ -714,26 +727,26 @@ func _build_rocks() -> void :
 		var type_data: Dictionary = Dictionary(GameData.data.ROCK_TYPES[kind])
 		var cell: = _world_to_cell(Vector2(float(source.x), float(source.y)))
 		var rock: = {
-			"id": 1000 + rocks.size(), 
-			"state_id": "rock:%d" % definition_index, 
-			"type": kind, 
-			"position": Vector2(float(source.x), float(source.y)), 
-			"cell": cell, 
-			"deposit_id": String(source.get("depositId", "")), 
-			"cavern_id": String(source.get("cavernId", "")), 
-			"pocket_reward_id": String(source.get("pocketRewardId", "")), 
-			"rare_find": bool(source.get("rareFind", false)), 
-			"drill_gated": bool(source.get("drillGated", false)), 
-			"required_pickaxe": int(source.get("requiredPickaxe", 2)), 
-			"requires_deep_tool": bool(source.get("requiresDeepTool", true)), 
-			"requires_drill_level": int(source.get("requiresDrillLevel", 0)), 
-			"hp": int(type_data.hp), 
-			"max_hp": int(type_data.hp), 
-			"shell": int(type_data.get("shell", 0)), 
-			"max_shell": int(type_data.get("shell", 0)), 
-			"broken": false, 
-			"respawn_remaining": 0.0, 
-			"respawn_until_unix": 0.0, 
+			"id": 1000 + rocks.size(),
+			"state_id": "rock:%d" % definition_index,
+			"type": kind,
+			"position": Vector2(float(source.x), float(source.y)),
+			"cell": cell,
+			"deposit_id": String(source.get("depositId", "")),
+			"cavern_id": String(source.get("cavernId", "")),
+			"pocket_reward_id": String(source.get("pocketRewardId", "")),
+			"rare_find": bool(source.get("rareFind", false)),
+			"drill_gated": bool(source.get("drillGated", false)),
+			"required_pickaxe": int(source.get("requiredPickaxe", 2)),
+			"requires_deep_tool": bool(source.get("requiresDeepTool", true)),
+			"requires_drill_level": int(source.get("requiresDrillLevel", 0)),
+			"hp": int(type_data.hp),
+			"max_hp": int(type_data.hp),
+			"shell": int(type_data.get("shell", 0)),
+			"max_shell": int(type_data.get("shell", 0)),
+			"broken": false,
+			"respawn_remaining": 0.0,
+			"respawn_until_unix": 0.0,
 		}
 		var rock_index: = rocks.size()
 		rocks.append(rock)
@@ -744,6 +757,19 @@ func _build_rocks() -> void :
 		rocks_by_cell[cell] = indices
 	_restore_persistent_resource_depletion()
 	_apply_claimed_pocket_rocks()
+	# Gate strikes are permanent passage progress, independent of ore respawn.
+	for index in rocks.size():
+		var rock: Dictionary = rocks[index]
+		if not bool(rock.drill_gated): continue
+		var hits: int = RunState.barrier_hits(mine_id + ":d2:" + String(rock.deposit_id))
+		if hits <= 0: continue
+		rock.shell = 0
+		rock.hp = maxi(0,ceili(float(rock.max_hp)*(1.0-float(hits)/10.0)))
+		if hits >= 10:
+			rock.broken = true
+			rock.respawn_remaining = INF
+			rock.respawn_until_unix = 0.0
+		rocks[index] = rock
 
 
 func _apply_claimed_pocket_rocks() -> void :
@@ -839,7 +865,7 @@ func _player_collides(position: Vector2) -> bool:
 				continue
 			var rect: = Rect2(Vector2(cell) * TILE_SIZE, Vector2.ONE * TILE_SIZE)
 			var nearest: = Vector2(
-				clampf(position.x, rect.position.x, rect.end.x), 
+				clampf(position.x, rect.position.x, rect.end.x),
 				clampf(position.y, rect.position.y, rect.end.y)
 			)
 			if position.distance_squared_to(nearest) < PLAYER_RADIUS * PLAYER_RADIUS:
@@ -873,7 +899,9 @@ func _update_context(world_position: Vector2) -> void :
 	else:
 		var sell: Dictionary = Dictionary(station_positions.sell)
 		var forge: Dictionary = Dictionary(station_positions.forge)
-		if world_position.distance_to(Vector2(float(sell.x), float(sell.y))) <= float(sell.radius):
+		if world_position.distance_to(wayfarer_position)<=86.0:
+			next_context="depthWayfarer"
+		elif world_position.distance_to(Vector2(float(sell.x), float(sell.y))) <= float(sell.radius):
 			next_context = "depthSell"
 		elif world_position.distance_to(Vector2(float(forge.x), float(forge.y))) <= float(forge.radius):
 			next_context = "drillForge"
@@ -947,12 +975,11 @@ func _start_swing(mining_held: bool = false) -> void :
 	if mining_rush_remaining > 0.0:
 		swing_duration *= MINING_RUSH_COOLDOWN_MULTIPLIER
 	swing_duration /= _heat_streak_speed()
+	if current_target_kind == "rock" and current_target_rock >= 0 and bool(rocks[current_target_rock].drill_gated):
+		swing_duration = 0.60
 
 
 func _mining_visual_progress() -> float:
-	if player.direction_name == "up":
-		var visual_cycle: = maxf(UPWARD_MINING_VISUAL_CYCLE, swing_duration)
-		return fposmod(mining_visual_elapsed, visual_cycle) / visual_cycle
 	return clampf(swing_elapsed / maxf(0.001, swing_duration), 0.0, 1.0)
 
 
@@ -1007,10 +1034,10 @@ func _hit_terrain(cell: Vector2i) -> bool:
 	terrain_hp[index] = maxi(0, terrain_hp[index] - int(tool.get("power", 1)))
 	AudioDirector.play_mining("deepstone", terrain_hp[index] <= 0, false)
 	var impact: = {
-		"position": _target_contact_point(), 
-		"age": 0.0, 
-		"life": 0.34, 
-		"broken": terrain_hp[index] <= 0, 
+		"position": _target_contact_point(),
+		"age": 0.0,
+		"life": 0.34,
+		"broken": terrain_hp[index] <= 0,
 		"style": _tool_impact_style(tool),
 	}
 	_attach_crusher_debris(impact, cell)
@@ -1057,6 +1084,8 @@ func _hit_rock(rock_index: int) -> bool:
 		message_changed.emit("%s REQUIRED" % String(required_pickaxe.name).to_upper())
 		return false
 
+	if bool(rock.drill_gated):
+		return _strike_drill_gate(rock_index)
 	var tool: = _current_tool()
 	var power: = int(tool.get("power", 1))
 	var was_armored: = int(rock.shell) > 0
@@ -1073,10 +1102,10 @@ func _hit_rock(rock_index: int) -> bool:
 	rocks[rock_index] = rock
 	AudioDirector.play_mining(String(rock.type), int(rock.shell) <= 0 and int(rock.hp) <= 0, was_armored)
 	var impact: = {
-		"position": Vector2(rock.position), 
-		"age": 0.0, 
-		"life": 0.34, 
-		"broken": int(rock.shell) <= 0 and int(rock.hp) <= 0, 
+		"position": Vector2(rock.position),
+		"age": 0.0,
+		"life": 0.34,
+		"broken": int(rock.shell) <= 0 and int(rock.hp) <= 0,
 		"style": _tool_impact_style(tool),
 	}
 	_attach_crusher_debris(impact, _world_to_cell(Vector2(rock.position)))
@@ -1191,6 +1220,8 @@ func _update_rocks() -> void :
 			rock.respawn_until_unix = now + 0.5
 			rocks[index] = rock
 			continue
+		if bool(rock.drill_gated) and RunState.barrier_hits(mine_id + ":d2:" + String(rock.deposit_id)) >= 10:
+			continue
 		rock.broken = false
 		rock.hp = int(rock.max_hp)
 		rock.shell = int(rock.max_shell)
@@ -1213,17 +1244,17 @@ func _restore_persistent_loose_loot() -> void :
 	for stored_value in RunState.mine_loose_loot(mine_id, DEPTH):
 		var stored: Dictionary = Dictionary(stored_value)
 		drops.append({
-			"kind": String(stored.get("kind", "deepstone")), 
-			"amount": maxi(1, int(stored.get("amount", 1))), 
+			"kind": String(stored.get("kind", "deepstone")),
+			"amount": maxi(1, int(stored.get("amount", 1))),
 			"position": Vector2(
-				float(stored.get("x", 0.0)), 
+				float(stored.get("x", 0.0)),
 				float(stored.get("y", 0.0))
-			), 
-			"velocity": Vector2.ZERO, 
-			"age": 1.0, 
-			"pocket_reward_id": "", 
-			"persistent_id": String(stored.get("id", "")), 
-			"settled_persisted": true, 
+			),
+			"velocity": Vector2.ZERO,
+			"age": 1.0,
+			"pocket_reward_id": "",
+			"persistent_id": String(stored.get("id", "")),
+			"settled_persisted": true,
 		})
 
 
@@ -1283,19 +1314,19 @@ func _spawn_drop(
 						_refresh_crusher_bundle(index, position, crusher_sector)
 					return
 		var drop: Dictionary = {
-			"kind": kind, 
-			"amount": int(stored.get("amount", maxi(1, amount))), 
-			"position": position, 
+			"kind": kind,
+			"amount": int(stored.get("amount", maxi(1, amount))),
+			"position": position,
 			"velocity": (
 				CrusherLootBurstScript.direction_for_sector(crusher_sector)
 				* CrusherLootBurstScript.LAUNCH_SPEED
 				if is_crusher_bundle
 				else Vector2.from_angle(angle) * 76.0
-			), 
-			"age": 0.0, 
-			"pocket_reward_id": "", 
-			"persistent_id": persistent_id, 
-			"settled_persisted": false, 
+			),
+			"age": 0.0,
+			"pocket_reward_id": "",
+			"persistent_id": persistent_id,
+			"settled_persisted": false,
 		}
 		if is_crusher_bundle:
 			drop["crusher_bundle"] = true
@@ -1310,16 +1341,16 @@ func _spawn_drop(
 		drops.append(drop)
 		return
 	drops.append({
-		"kind": kind, 
-		"amount": amount, 
-		"position": position, 
-		"velocity": Vector2.from_angle(angle) * 76.0, 
-		"age": 0.0, 
-		"pocket_reward_id": pocket_reward_id, 
+		"kind": kind,
+		"amount": amount,
+		"position": position,
+		"velocity": Vector2.from_angle(angle) * 76.0,
+		"age": 0.0,
+		"pocket_reward_id": pocket_reward_id,
 	})
 
 
-func _refresh_crusher_bundle(index: int, position: Vector2, sector: int) -> void:
+func _refresh_crusher_bundle(index: int, position: Vector2, sector: int) -> void :
 	if index < 0 or index >= drops.size():
 		return
 	var drop: Dictionary = drops[index]
@@ -1369,9 +1400,9 @@ func _update_drops(delta: float) -> void :
 				RunState.collect_pocket_loot(expired_reward_id, String(drop.kind), maxi(1, int(drop.amount)))
 			elif not String(drop.get("persistent_id", "")).is_empty():
 				RunState.collect_mine_loose_loot(
-					mine_id, 
-					DEPTH, 
-					String(drop.persistent_id), 
+					mine_id,
+					DEPTH,
+					String(drop.persistent_id),
 					maxi(1, int(drop.amount))
 				)
 			else:
@@ -1385,9 +1416,9 @@ func _update_drops(delta: float) -> void :
 			and not bool(drop.get("settled_persisted", false))
 		):
 			RunState.update_mine_loose_loot_position(
-				mine_id, 
-				DEPTH, 
-				String(drop.get("persistent_id", "")), 
+				mine_id,
+				DEPTH,
+				String(drop.get("persistent_id", "")),
 				Vector2(drop.position)
 			)
 			drop.settled_persisted = true
@@ -1425,9 +1456,9 @@ func _update_drops(delta: float) -> void :
 					continue
 			elif not String(drop.get("persistent_id", "")).is_empty():
 				var collected: Dictionary = RunState.collect_mine_loose_loot(
-					mine_id, 
-					DEPTH, 
-					String(drop.persistent_id), 
+					mine_id,
+					DEPTH,
+					String(drop.persistent_id),
 					int(drop.amount)
 				)
 				collected_amount = int(collected.get("amount", 0))
@@ -1604,7 +1635,7 @@ func _target_contact_point() -> Vector2:
 	if entry >= 0.0:
 		return player.global_position + aim * entry
 	return Vector2(
-		clampf(player.global_position.x, rect.position.x, rect.end.x), 
+		clampf(player.global_position.x, rect.position.x, rect.end.x),
 		clampf(player.global_position.y, rect.position.y, rect.end.y)
 	)
 
@@ -1712,8 +1743,8 @@ func _claim_pocket_reward(cavern_index: int) -> Dictionary:
 		claimed_rewards[reward_id] = true
 	if kind == "cache":
 		_spawn_reward_plan_loot(
-			reward_id, 
-			Dictionary(plan.get("pending_loot", {})), 
+			reward_id,
+			Dictionary(plan.get("pending_loot", {})),
 			Vector2(float(cavern.x), float(cavern.y) + 12.0)
 		)
 		message_changed.emit("%s · CACHE OPENED" % String(cavern.name).to_upper())
@@ -1788,16 +1819,16 @@ func _apply_depth_crusher_wave(center: Vector2i, tool: Dictionary) -> void :
 			_emit_revealed_resources(cell)
 
 
-func _attach_crusher_debris(impact: Dictionary, _cell: Vector2i) -> void:
+func _attach_crusher_debris(impact: Dictionary, _cell: Vector2i) -> void :
 	if String(RunState.starforge_variant) != "crusher" or not bool(impact.get("broken", false)):
 		return
-	# Actual yielded resources now provide the flying pieces. Retain only the
-	# short, data-only ground force pass from CrusherDebris (no fake chunks).
+
+
 	impact["crusher_force"] = true
 	impact["life"] = minf(CrusherDebrisScript.LIFE_SECONDS, 0.34)
 
 
-func _append_impact(impact: Dictionary) -> void:
+func _append_impact(impact: Dictionary) -> void :
 	impacts.append(impact)
 	while impacts.size() > MAX_ACTIVE_IMPACTS:
 		impacts.pop_front()
@@ -1948,110 +1979,110 @@ func _load_depth_texture_map(paths: Dictionary) -> Dictionary:
 func _asset_contract_paths() -> Dictionary:
 	if mine_id == "moonMine":
 		return {
-			"floor": "res://assets/prismatic/floor.png", 
-			"shaft": "res://assets/prismatic/depth-portal.png", 
-			"sell": "res://assets/stations/ore-exchange-v1.png", 
-			"forge": "res://assets/stations/drill-forge-workshop-v1.png", 
-			"pocket": "res://assets/prismatic/crystal-pocket.png", 
-			"cache": "res://assets/prismatic/buried-cache.png", 
-			"shrine": "res://assets/prismatic/mining-rush-shrine.png", 
-			"impact": "res://assets/world-life/moonglass-impact.png", 
+			"floor": "res://assets/prismatic/floor.png",
+			"shaft": "res://assets/prismatic/depth-portal.png",
+			"sell": "res://assets/stations/ore-exchange-v1.png",
+			"forge": "res://assets/stations/drill-forge-workshop-v1.png",
+			"pocket": "res://assets/prismatic/crystal-pocket.png",
+			"cache": "res://assets/prismatic/buried-cache.png",
+			"shrine": "res://assets/prismatic/mining-rush-shrine.png",
+			"impact": "res://assets/world-life/moonglass-impact.png",
 			"nodes": {
-				"deepstone": "res://assets/prismatic/deepstone-wall.png", 
-				"prismite": "res://assets/prismatic/prismite-node.png", 
-				"lunacore": "res://assets/prismatic/lunacore-node.png", 
-				"phasecrystal": "res://assets/prismatic/phasecrystal-node.png", 
-			}, 
+				"deepstone": "res://assets/prismatic/deepstone-wall.png",
+				"prismite": "res://assets/prismatic/prismite-node.png",
+				"lunacore": "res://assets/prismatic/lunacore-node.png",
+				"phasecrystal": "res://assets/prismatic/phasecrystal-node.png",
+			},
 			"wall_hints": {
-				"deepstone": "res://assets/prismatic/deepstone-wall.png", 
-				"prismite": "res://assets/prismatic/prismite-wall.png", 
-				"lunacore": "res://assets/prismatic/lunacore-wall.png", 
-				"phasecrystal": "res://assets/prismatic/phasecrystal-wall.png", 
-			}, 
+				"deepstone": "res://assets/prismatic/deepstone-wall.png",
+				"prismite": "res://assets/prismatic/prismite-wall.png",
+				"lunacore": "res://assets/prismatic/lunacore-wall.png",
+				"phasecrystal": "res://assets/prismatic/phasecrystal-wall.png",
+			},
 			"drops": {
-				"deepstone": "res://assets/drops/deepstone-drop.png", 
-				"prismite": "res://assets/drops/prismite-drop.png", 
-				"lunacore": "res://assets/drops/lunacore-drop.png", 
-				"phasecrystal": "res://assets/drops/phasecrystal-drop.png", 
-			}, 
+				"deepstone": "res://assets/drops/deepstone-drop.png",
+				"prismite": "res://assets/drops/prismite-drop.png",
+				"lunacore": "res://assets/drops/lunacore-drop.png",
+				"phasecrystal": "res://assets/drops/phasecrystal-drop.png",
+			},
 		}
 	if mine_id == "emberMine":
 		return {
-			"floor": "res://assets/molten/floor.png", 
-			"shaft": "res://assets/molten/depth-portal.png", 
-			"sell": "res://assets/stations/ore-exchange-v1.png", 
-			"forge": "res://assets/stations/drill-forge-workshop-v1.png", 
-			"pocket": "res://assets/molten/crystal-pocket.png", 
-			"cache": "res://assets/molten/buried-cache.png", 
-			"shrine": "res://assets/molten/mining-rush-shrine.png", 
-			"impact": "res://assets/world-life/emberdeep-impact.png", 
+			"floor": "res://assets/molten/floor.png",
+			"shaft": "res://assets/molten/depth-portal.png",
+			"sell": "res://assets/stations/ore-exchange-v1.png",
+			"forge": "res://assets/stations/drill-forge-workshop-v1.png",
+			"pocket": "res://assets/molten/crystal-pocket.png",
+			"cache": "res://assets/molten/buried-cache.png",
+			"shrine": "res://assets/molten/mining-rush-shrine.png",
+			"impact": "res://assets/world-life/emberdeep-impact.png",
 			"nodes": {
-				"deepstone": "res://assets/molten/deepstone-node.png", 
-				"magmaite": "res://assets/molten/magmaite-node.png", 
-				"furnaceheart": "res://assets/molten/furnaceheart-node.png", 
-				"infernium": "res://assets/molten/infernium-node.png", 
-			}, 
+				"deepstone": "res://assets/molten/deepstone-node.png",
+				"magmaite": "res://assets/molten/magmaite-node.png",
+				"furnaceheart": "res://assets/molten/furnaceheart-node.png",
+				"infernium": "res://assets/molten/infernium-node.png",
+			},
 			"wall_hints": {
-				"deepstone": "res://assets/molten/deepstone-wall.png", 
-				"magmaite": "res://assets/molten/magmaite-wall.png", 
-				"furnaceheart": "res://assets/molten/furnaceheart-wall.png", 
-				"infernium": "res://assets/molten/infernium-wall.png", 
-			}, 
+				"deepstone": "res://assets/molten/deepstone-wall.png",
+				"magmaite": "res://assets/molten/magmaite-wall.png",
+				"furnaceheart": "res://assets/molten/furnaceheart-wall.png",
+				"infernium": "res://assets/molten/infernium-wall.png",
+			},
 			"drops": {
-				"deepstone": "res://assets/drops/deepstone-drop.png", 
-				"magmaite": "res://assets/drops/magmaite-drop.png", 
-				"furnaceheart": "res://assets/drops/furnaceheart-drop.png", 
-				"infernium": "res://assets/drops/infernium-drop.png", 
-			}, 
+				"deepstone": "res://assets/drops/deepstone-drop.png",
+				"magmaite": "res://assets/drops/magmaite-drop.png",
+				"furnaceheart": "res://assets/drops/furnaceheart-drop.png",
+				"infernium": "res://assets/drops/infernium-drop.png",
+			},
 		}
 	if mine_id == "starMine":
 		return {
-			"floor": "res://assets/voidstar/floor.png", 
-			"shaft": "res://assets/voidstar/depth-portal.png", 
-			"sell": "res://assets/stations/ore-exchange-v1.png", 
-			"forge": "res://assets/stations/drill-forge-workshop-v1.png", 
-			"pocket": "res://assets/voidstar/crystal-pocket.png", 
-			"cache": "res://assets/voidstar/buried-cache.png", 
-			"shrine": "res://assets/voidstar/mining-rush-shrine.png", 
-			"impact": "res://assets/world-life/starfall-impact.png", 
+			"floor": "res://assets/voidstar/floor.png",
+			"shaft": "res://assets/voidstar/depth-portal.png",
+			"sell": "res://assets/stations/ore-exchange-v1.png",
+			"forge": "res://assets/stations/drill-forge-workshop-v1.png",
+			"pocket": "res://assets/voidstar/crystal-pocket.png",
+			"cache": "res://assets/voidstar/buried-cache.png",
+			"shrine": "res://assets/voidstar/mining-rush-shrine.png",
+			"impact": "res://assets/world-life/starfall-impact.png",
 			"nodes": {
-				"deepstone": "res://assets/voidstar/deepstone-node.png", 
-				"voidglass": "res://assets/voidstar/voidglass-node.png", 
-				"singularity": "res://assets/voidstar/singularity-node.png", 
-			}, 
+				"deepstone": "res://assets/voidstar/deepstone-node.png",
+				"voidglass": "res://assets/voidstar/voidglass-node.png",
+				"singularity": "res://assets/voidstar/singularity-node.png",
+			},
 			"wall_hints": {
-				"deepstone": "res://assets/voidstar/deepstone-wall.png", 
-				"voidglass": "res://assets/voidstar/voidglass-wall.png", 
-				"singularity": "res://assets/voidstar/singularity-wall.png", 
-			}, 
+				"deepstone": "res://assets/voidstar/deepstone-wall.png",
+				"voidglass": "res://assets/voidstar/voidglass-wall.png",
+				"singularity": "res://assets/voidstar/singularity-wall.png",
+			},
 			"drops": {
-				"deepstone": "res://assets/drops/deepstone-drop.png", 
-				"voidglass": "res://assets/drops/voidglass-drop.png", 
-				"singularity": "res://assets/drops/singularity-drop.png", 
-			}, 
+				"deepstone": "res://assets/drops/deepstone-drop.png",
+				"voidglass": "res://assets/drops/voidglass-drop.png",
+				"singularity": "res://assets/drops/singularity-drop.png",
+			},
 		}
 	return {
-		"floor": "res://assets/rootwound/floor.png", 
-		"shaft": "res://assets/rootwound/depth-shaft.png", 
-		"sell": "res://assets/stations/ore-exchange-v1.png", 
-		"forge": "res://assets/stations/drill-forge-workshop-v1.png", 
-		"pocket": "res://assets/mossvein/magic-crystal-pocket.png", 
-		"cache": "res://assets/mossvein/buried-cache.png", 
-		"shrine": "res://assets/mossvein/mining-rush-shrine.png", 
-		"impact": "res://assets/world-life/mossvein-impact.png", 
+		"floor": "res://assets/rootwound/floor.png",
+		"shaft": "res://assets/rootwound/depth-shaft.png",
+		"sell": "res://assets/stations/ore-exchange-v1.png",
+		"forge": "res://assets/stations/drill-forge-workshop-v1.png",
+		"pocket": "res://assets/mossvein/magic-crystal-pocket.png",
+		"cache": "res://assets/mossvein/buried-cache.png",
+		"shrine": "res://assets/mossvein/mining-rush-shrine.png",
+		"impact": "res://assets/world-life/mossvein-impact.png",
 		"nodes": {
-			"deepstone": "res://assets/rootwound/deepstone-node.png", 
-			"rootiron": "res://assets/rootwound/rootiron-node.png", 
-			"ambercore": "res://assets/rootwound/ambercore-node.png", 
-			"burrowsteel": "res://assets/rootwound/burrowsteel-node.png", 
-		}, 
-		"wall_hints": {"rootiron": "res://assets/rootwound/rootiron-wall.png"}, 
+			"deepstone": "res://assets/rootwound/deepstone-node.png",
+			"rootiron": "res://assets/rootwound/rootiron-node.png",
+			"ambercore": "res://assets/rootwound/ambercore-node.png",
+			"burrowsteel": "res://assets/rootwound/burrowsteel-node.png",
+		},
+		"wall_hints": {"rootiron": "res://assets/rootwound/rootiron-wall.png"},
 		"drops": {
-			"deepstone": "res://assets/drops/deepstone-drop.png", 
-			"rootiron": "res://assets/drops/rootiron-drop.png", 
-			"ambercore": "res://assets/drops/ambercore-drop.png", 
-			"burrowsteel": "res://assets/drops/burrowsteel-drop.png", 
-		}, 
+			"deepstone": "res://assets/drops/deepstone-drop.png",
+			"rootiron": "res://assets/drops/rootiron-drop.png",
+			"ambercore": "res://assets/drops/ambercore-drop.png",
+			"burrowsteel": "res://assets/drops/burrowsteel-drop.png",
+		},
 	}
 
 
@@ -2076,13 +2107,13 @@ func _draw() -> void :
 		return
 	_remember_draw_camera_bounds()
 	draw_rect(Rect2(Vector2.ZERO, world_size), _profile_color("floor", "100e0c"), true)
-	draw_texture_rect(floor_texture, Rect2(Vector2.ZERO, world_size), true, Color(0.68, 0.66, 0.64, 0.9))
-	draw_rect(Rect2(Vector2.ZERO, world_size), Color(_profile_color("floor", "100e0c"), 0.3), true)
-	var visible_rect := _resource_visible_rect(Vector2.ONE * TILE_SIZE * 3.0)
+	draw_texture_rect(floor_texture, Rect2(Vector2.ZERO, world_size), true, Color(0.92,0.90,0.88,1.0))
+	draw_rect(Rect2(Vector2.ZERO, world_size), Color(_profile_color("floor", "100e0c"), 0.12), true)
+	var visible_rect: = _resource_visible_rect(Vector2.ONE * TILE_SIZE * 3.0)
 	var start: = _world_to_cell(visible_rect.position)
 	var finish: = _world_to_cell(visible_rect.end)
-	# Authored edge faces extend beyond their owning tile, so they need a second
-	# pass after every visible terrain top has been painted.
+
+
 	for row in range(maxi(0, start.y), mini(rows - 1, finish.y) + 1):
 		for col in range(maxi(0, start.x), mini(cols - 1, finish.x) + 1):
 			var cell: = Vector2i(col, row)
@@ -2109,19 +2140,9 @@ func _draw_terrain_top(cell: Vector2i) -> void :
 	if _terrain_is_bedrock(cell):
 		_draw_bedrock_top(cell, rect)
 		return
-	draw_rect(rect, _profile_color("dirt", "211710"), true)
-	draw_texture_rect_region(
-		floor_texture,
-		rect,
-		_terrain_texture_region(cell),
-		Color(0.82, 0.78, 0.72, 0.72)
-	)
-	var noise: = fposmod(sin(float(cell.x * 31 + cell.y * 17)) * 43758.5453, 1.0)
-	var fleck: = rect.position + Vector2(8.0 + noise * 26.0, 9.0 + (1.0 - noise) * 25.0)
-	draw_colored_polygon(PackedVector2Array([
-		fleck + Vector2(-1.8, 0.7), fleck + Vector2(-0.4, -1.5),
-		fleck + Vector2(1.7, -0.6), fleck + Vector2(1.1, 1.4),
-	]), Color(0.93, 0.67, 0.39, 0.13))
+	var region: Rect2 = Rect2(Vector2(posmod(cell.x,8),posmod(cell.y,8))*96.0,Vector2(96,96))
+	var tint: Color = {"mossMine": Color(0.74,0.80,0.67), "moonMine": Color(0.67,0.83,0.98), "emberMine": Color(0.92,0.65,0.46), "starMine": Color(0.74,0.65,0.95)}.get(mine_id,Color.WHITE)
+	draw_texture_rect_region(ROCK_MASS,rect,region,tint)
 
 
 func _terrain_texture_region(cell: Vector2i) -> Rect2:
@@ -2154,10 +2175,10 @@ func _draw_terrain_edge_details(cell: Vector2i) -> void :
 		return
 	var rect: = Rect2(Vector2(cell) * TILE_SIZE, Vector2.ONE * TILE_SIZE)
 	var open_sides: = [
-		not _visual_is_solid(cell + Vector2i.UP), 
-		not _visual_is_solid(cell + Vector2i.RIGHT), 
-		not _visual_is_solid(cell + Vector2i.DOWN), 
-		not _visual_is_solid(cell + Vector2i.LEFT), 
+		not _visual_is_solid(cell + Vector2i.UP),
+		not _visual_is_solid(cell + Vector2i.RIGHT),
+		not _visual_is_solid(cell + Vector2i.DOWN),
+		not _visual_is_solid(cell + Vector2i.LEFT),
 	]
 	for side in 4:
 		if not bool(open_sides[side]):
@@ -2190,51 +2211,6 @@ func _draw_terrain_edge_details(cell: Vector2i) -> void :
 			draw_line(center, rect.end - Vector2(7, 9), Color(0.07, 0.035, 0.02, 0.84), 1.5 + damage * 2.3)
 	if not bedrock and open_sides.has(true):
 		_draw_mineral_hint(cell, open_sides)
-
-
-func _draw_wall_ribbon(cell: Vector2i, rect: Rect2, side: int, noise: float) -> void :
-	var starts: = [rect.position, rect.position + Vector2(rect.size.x, 0), rect.end, rect.position + Vector2(0, rect.size.y)]
-	var ends: = [rect.position + Vector2(rect.size.x, 0), rect.end, rect.position + Vector2(0, rect.size.y), rect.position]
-	var outward_directions: = [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]
-	var start: Vector2 = starts[side]
-	var finish: Vector2 = ends[side]
-	var outward: Vector2 = outward_directions[side]
-	if _terrain_is_bedrock(cell):
-		_draw_permanent_bedrock_face(cell, start, finish, outward, side)
-		return
-	var inward: = -outward
-	var outer: = _terrain_edge_profile(start, finish, outward, side, 2.2, 5.8, 0)
-	var inner: = _terrain_edge_profile(start, finish, inward, side, 7.8, 5.2, 17)
-	var shadow_outer: = _offset_edge_profile(outer, outward * 8.5)
-	var dirt: = _profile_color("dirt", "211710")
-	var edge: = _profile_color("wallEdge", "a2764d")
-	var face: = dirt.lerp(edge, 0.24).lightened((noise - 0.5) * 0.07)
-	draw_colored_polygon(_edge_strip_polygon(shadow_outer, outer), Color(0.008, 0.007, 0.006, 0.86))
-	draw_colored_polygon(_edge_strip_polygon(outer, inner), Color(face, 0.97))
-	draw_polyline(inner, Color(dirt.darkened(0.34), 0.66), 3.8, true)
-	_draw_wall_ribbon_detail(cell, start, finish, outward, side, false)
-
-
-func _draw_permanent_bedrock_face(
-	cell: Vector2i,
-	start: Vector2,
-	finish: Vector2,
-	outward: Vector2,
-	side: int
-) -> void :
-	var inward: = -outward
-	var outer: = _terrain_edge_profile(start, finish, outward, side, 2.0, 3.8, 83)
-	var inner: = _terrain_edge_profile(start, finish, inward, side, 24.0, 7.5, 127)
-	var shadow_outer: = _offset_edge_profile(outer, outward * 13.0)
-	var base: = Color("111310").lerp(_profile_color("dirt", "211710"), 0.12)
-	var plate: = base.lerp(Color("555b55"), 0.34)
-	draw_colored_polygon(_edge_strip_polygon(shadow_outer, outer), Color(0.004, 0.005, 0.004, 0.94))
-	draw_colored_polygon(_edge_strip_polygon(outer, inner), Color(plate, 0.99))
-	draw_polyline(inner, Color(0.025, 0.03, 0.027, 0.74), 5.0, true)
-	# Broad, calm strata communicate ancient fused rock.  There are no damage
-	# cracks on permanent bedrock because it must never invite mining.
-	var stratum: = _terrain_edge_profile(start, finish, inward, side, 13.0, 2.4, 211)
-	draw_polyline(stratum, Color(0.32, 0.35, 0.33, 0.15), 5.4, true)
 
 
 func _terrain_edge_profile(
@@ -2281,34 +2257,6 @@ func _edge_strip_polygon(first: PackedVector2Array, second: PackedVector2Array) 
 	return result
 
 
-func _draw_wall_ribbon_detail(
-	cell: Vector2i,
-	start: Vector2,
-	finish: Vector2,
-	outward: Vector2,
-	side: int,
-	bedrock: bool
-) -> void :
-	if bedrock:
-		return
-	var key: = absi(cell.x * 92821 + cell.y * 68917 + side * 31337)
-	if key % 3 != 0:
-		return
-	var stone_count: = 2 if key % 11 == 0 else 1
-	for stone_index in stone_count:
-		var stone_key: = key + stone_index * 48611
-		var along: = 0.22 + float(stone_key % 55) / 100.0
-		var position: = start.lerp(finish, clampf(along, 0.22, 0.77)) - outward * (3.2 + float(stone_key % 4))
-		var radius: = 5.2 + float(stone_key % 5) * 0.6
-		var points: = _angular_stone_points(position, radius, stone_key)
-		var closed: = points.duplicate()
-		closed.append(points[0])
-		var edge: = _profile_color("wallEdge", "a2764d")
-		var detail: = _profile_color("detail", "f0c47d")
-		draw_colored_polygon(points, Color(edge.lerp(detail, 0.22), 0.6))
-		draw_polyline(closed, Color(0.012, 0.01, 0.009, 0.68), 1.45, true)
-
-
 func _angular_stone_points(center: Vector2, radius: float, key: int) -> PackedVector2Array:
 	var points: = PackedVector2Array()
 	for vertex in 6:
@@ -2323,8 +2271,8 @@ func _angular_stone_points(center: Vector2, radius: float, key: int) -> PackedVe
 
 
 func _draw_wall_corner_joins(cell: Vector2i, _rect: Rect2, open_sides: Array, _noise: float) -> void :
-	var adjacent_pairs := [[0, 1], [1, 2], [2, 3], [3, 0]]
-	var bedrock := _terrain_is_bedrock(cell)
+	var adjacent_pairs: = [[0, 1], [1, 2], [2, 3], [3, 0]]
+	var bedrock: = _terrain_is_bedrock(cell)
 	for corner in 4:
 		var pair: Array = adjacent_pairs[corner]
 		if not bool(open_sides[int(pair[0])]) or not bool(open_sides[int(pair[1])]):
@@ -2337,36 +2285,6 @@ func _draw_wall_corner_joins(cell: Vector2i, _rect: Rect2, open_sides: Array, _n
 			CaveEdgeAssetDrawer.draw_mineable_corner(
 				self, cave_corner_texture, cell, corner, TILE_SIZE
 			)
-
-
-func _draw_excavation_edge(cell: Vector2i, rect: Rect2, side: int, noise: float) -> void :
-	var starts: = [rect.position, rect.position + Vector2(rect.size.x, 0), rect.end, rect.position + Vector2(0, rect.size.y)]
-	var ends: = [rect.position + Vector2(rect.size.x, 0), rect.end, rect.position + Vector2(0, rect.size.y), rect.position]
-	var outward_directions: = [Vector2.UP, Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT]
-	var start: Vector2 = starts[side]
-	var finish: Vector2 = ends[side]
-	var bedrock: = _terrain_is_bedrock(cell)
-	var outer: = _terrain_edge_profile(
-		start,
-		finish,
-		outward_directions[side],
-		side,
-		2.0 if bedrock else 2.2,
-		3.8 if bedrock else 5.8,
-		83 if bedrock else 0
-	)
-	var edge: = Color("70766f") if bedrock else _profile_color("wallEdge", "a2764d")
-	var detail: = Color("a8ada7") if bedrock else _profile_color("detail", "f0c47d")
-	var ridge: = edge.lerp(detail, 0.12 + noise * 0.08)
-	draw_polyline(outer, Color(0.008, 0.009, 0.008, 0.96), 7.2 if bedrock else 5.6, true)
-	# A broken highlight keeps the edge readable without turning it back into a
-	# smooth pipe.  The massive world shell gets a broader, quieter ridge.
-	draw_polyline(
-		PackedVector2Array([outer[1], outer[2], outer[3]]),
-		Color(ridge, 0.58 if bedrock else 0.78),
-		2.8 if bedrock else 2.0,
-		true
-	)
 
 
 func _draw_mineral_hint(cell: Vector2i, open_sides: Array) -> void :
@@ -2448,7 +2366,7 @@ func _draw_drill_gate(gate_id: String, indices: Array) -> void :
 		return
 	var entries: Array[Dictionary] = []
 	var min_position: = Vector2(INF, INF)
-	var max_position: = Vector2(-INF, -INF)
+	var max_position: = Vector2( - INF, - INF)
 	for index_value in indices:
 		var rock_index: = int(index_value)
 		var position: = Vector2(rocks[rock_index].position)
@@ -2458,7 +2376,7 @@ func _draw_drill_gate(gate_id: String, indices: Array) -> void :
 	var vertical: = (max_position.y - min_position.y) > (max_position.x - min_position.x)
 	var along: = Vector2.DOWN if vertical else Vector2.RIGHT
 	var across: = Vector2.RIGHT if vertical else Vector2.DOWN
-	entries.sort_custom(func(left: Dictionary, right: Dictionary) -> bool:
+	entries.sort_custom( func(left: Dictionary, right: Dictionary) -> bool:
 		var left_position: = Vector2(left.position)
 		var right_position: = Vector2(right.position)
 		var left_along: = left_position.dot(along)
@@ -2482,7 +2400,7 @@ func _draw_drill_gate(gate_id: String, indices: Array) -> void :
 	var texture: Texture2D = drill_gate_textures[texture_index]
 	var source_size: = Vector2(texture.get_size())
 	var target_width: = target_length * source_size.x / maxf(1.0, source_size.y)
-	var rotation: = 0.0 if vertical else -PI * 0.5
+	var rotation: = 0.0 if vertical else - PI * 0.5
 	var transform_scale: = Vector2.ONE if vertical else Vector2(-1.0, 1.0)
 	draw_set_transform(gate_center, rotation, transform_scale)
 	for entry_index in entries.size():
@@ -2506,183 +2424,18 @@ func _draw_drill_gate(gate_id: String, indices: Array) -> void :
 			Vector2(source_size.x, normalized_height * source_size.y)
 		)
 		var destination_rect: = Rect2(
-			Vector2(-target_width * 0.5, segment_start - center_projection),
+			Vector2( - target_width * 0.5, segment_start - center_projection),
 			Vector2(target_width, segment_end - segment_start)
 		)
 		draw_texture_rect_region(texture, destination_rect, source_rect)
+		var hits: int = RunState.barrier_hits(mine_id + ":d2:" + gate_id)
+		if hits>0:
+			var c: Vector2 = destination_rect.get_center()
+			for crack in range(1+hits/3):
+				var offset: Vector2 = Vector2(float(crack-1)*12.0,0.0)
+				draw_polyline(PackedVector2Array([c+offset+Vector2(-15,-18),c+offset+Vector2(3,-5),c+offset+Vector2(-5,8),c+offset+Vector2(12,20)]),Color(0.04,0.025,0.015,0.86),1.2+float(hits)*0.23,true)
+
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-
-
-func _draw_drill_gate_stone_body(
-	positions: Array[Vector2], palette: Dictionary, gate_id: String, kind: String
-) -> void :
-	var shadow: Color = palette.shadow
-	var stone_dark: Color = palette.stone_dark
-	var stone: Color = palette.stone
-	var stone_light: Color = palette.stone_light
-	for position_index in range(1, positions.size()):
-		var start: = positions[position_index - 1]
-		var finish: = positions[position_index]
-		# Intact gate stones sit diagonally one tile apart.  A larger gap means a
-		# segment has been broken, so never paint a solid body across the opening.
-		if start.distance_to(finish) > TILE_SIZE * 1.55:
-			continue
-		draw_line(start + Vector2(5, 7), finish + Vector2(5, 7), Color(shadow, 0.88), 62.0, true)
-		draw_line(start, finish, Color(stone_dark, 0.98), 55.0, true)
-		draw_line(start, finish, Color(stone, 0.98), 45.0, true)
-
-	var texture: Texture2D = resource_textures.get(kind)
-	for position_index in positions.size():
-		var center: = positions[position_index]
-		var seed: = absi(hash([gate_id, position_index, roundi(center.x), roundi(center.y)]))
-		var rotation: = deg_to_rad(float(seed % 9) - 4.0)
-		var radius_x: = 27.0 + float(seed % 5)
-		var radius_y: = 25.0 + float((seed / 7) % 6)
-		var local_points: = PackedVector2Array([
-			Vector2(-radius_x * 0.84, -radius_y),
-			Vector2(radius_x * 0.18, -radius_y - 2.0),
-			Vector2(radius_x, -radius_y * 0.56),
-			Vector2(radius_x + 2.0, radius_y * 0.18),
-			Vector2(radius_x * 0.62, radius_y),
-			Vector2(-radius_x * 0.28, radius_y + 2.0),
-			Vector2(-radius_x, radius_y * 0.52),
-			Vector2(-radius_x - 2.0, -radius_y * 0.22),
-		])
-		var points: = PackedVector2Array()
-		var shadow_points: = PackedVector2Array()
-		for local_point in local_points:
-			var world_point: = center + Vector2(local_point).rotated(rotation)
-			points.append(world_point)
-			shadow_points.append(world_point + Vector2(5, 7))
-		draw_colored_polygon(shadow_points, Color(shadow, 0.94))
-		draw_colored_polygon(points, Color(stone_dark, 1.0))
-		var inset: = PackedVector2Array()
-		for point in points:
-			inset.append(center + (Vector2(point) - center) * 0.82)
-		draw_colored_polygon(inset, Color(stone, 0.98))
-		draw_polyline(PackedVector2Array([points[0], points[1], points[2], points[3]]), Color(stone_light, 0.56), 2.2, true)
-
-		if texture != null:
-			var pulse: = _resource_hit_pulse(center)
-			var source_size: = Vector2(texture.get_size())
-			var scale_factor: = minf(57.0 / source_size.x, 54.0 / source_size.y) * (1.0 + pulse * 0.07)
-			var size: = source_size * scale_factor
-			draw_set_transform(center, rotation, Vector2.ONE)
-			draw_texture_rect(texture, Rect2(-size * Vector2(0.5, 0.54), size), false, Color(0.93, 0.94, 0.91, 0.72))
-			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-
-
-func _draw_drill_gate_reinforcement(
-	positions: Array[Vector2],
-	palette: Dictionary,
-	along: Vector2,
-	across: Vector2,
-	gate_center: Vector2
-) -> void :
-	if positions.is_empty():
-		return
-	var center_projection: = gate_center.dot(along)
-	var run_start: = positions[0].dot(along)
-	var previous_projection: = run_start
-	for index in range(1, positions.size() + 1):
-		var at_end: = index == positions.size()
-		var projection: = previous_projection if at_end else positions[index].dot(along)
-		if at_end or projection - previous_projection > TILE_SIZE * 1.5:
-			_draw_drill_gate_rail_run(
-				run_start,
-				previous_projection,
-				center_projection,
-				gate_center,
-				along,
-				across,
-				palette
-			)
-			if not at_end:
-				run_start = projection
-		previous_projection = projection
-
-	for position in positions:
-		var brace_center: = gate_center + along * (position.dot(along) - center_projection)
-		var start: = brace_center - across * 23.0
-		var finish: = brace_center + across * 23.0
-		draw_line(start, finish, Color(palette.metal_dark, 1.0), 9.0, true)
-		draw_line(start, finish, Color(palette.metal, 1.0), 5.4, true)
-		draw_line(start, finish, Color(palette.metal_light, 0.48), 1.25, true)
-		for bolt_position in [start + across * 4.0, finish - across * 4.0]:
-			draw_circle(bolt_position, 4.2, Color(palette.metal_dark, 1.0))
-			draw_circle(bolt_position - Vector2(0.8, 0.8), 2.1, Color(palette.metal_light, 0.78))
-
-
-func _draw_drill_gate_rail_run(
-	start_projection: float,
-	finish_projection: float,
-	center_projection: float,
-	gate_center: Vector2,
-	along: Vector2,
-	across: Vector2,
-	palette: Dictionary
-) -> void :
-	if finish_projection - start_projection < 1.0:
-		return
-	var extension: = 11.0
-	var start_center: = gate_center + along * (start_projection - center_projection - extension)
-	var finish_center: = gate_center + along * (finish_projection - center_projection + extension)
-	for rail_sign_value in [-1.0, 1.0]:
-		var rail_sign: float = float(rail_sign_value)
-		var offset: = across * rail_sign * 16.0
-		var start: = start_center + offset
-		var finish: = finish_center + offset
-		draw_line(start, finish, Color(palette.metal_dark, 0.98), 8.5, true)
-		draw_line(start, finish, Color(palette.metal, 0.98), 5.2, true)
-		draw_line(start - across * 1.0, finish - across * 1.0, Color(palette.metal_light, 0.5), 1.2, true)
-
-
-func _draw_drill_gate_lock(center: Vector2, required_drill: int, palette: Dictionary) -> void :
-	draw_circle(center + Vector2(3, 5), 25.0, Color(palette.shadow, 0.92))
-	draw_circle(center, 28.0, Color(palette.rune, 0.11))
-	var plate: = PackedVector2Array()
-	for index in 8:
-		var angle: = -PI * 0.5 + float(index) * TAU / 8.0
-		plate.append(center + Vector2(cos(angle), sin(angle)) * (22.0 if index % 2 == 0 else 20.0))
-	draw_colored_polygon(plate, Color(palette.metal_dark, 1.0))
-	draw_polyline(PackedVector2Array(Array(plate) + [plate[0]]), Color(palette.metal_light, 0.76), 2.2, true)
-	draw_circle(center, 13.5, Color(palette.shadow, 0.84))
-	draw_arc(center, 11.5, 0.0, TAU, 24, Color(palette.rune, 0.94), 2.5, true)
-	if required_drill <= 1:
-		draw_line(center + Vector2(0, -8), center + Vector2(0, 8), Color(palette.rune, 0.98), 3.0, true)
-		draw_line(center + Vector2(-6, -2), center + Vector2(0, -8), Color(palette.rune, 0.98), 2.4, true)
-		draw_line(center + Vector2(6, -2), center + Vector2(0, -8), Color(palette.rune, 0.98), 2.4, true)
-	else:
-		var rune: = PackedVector2Array([
-			center + Vector2(0, -9), center + Vector2(7, 0), center + Vector2(0, 9),
-			center + Vector2(-7, 0), center + Vector2(0, -9),
-		])
-		draw_polyline(rune, Color(palette.rune, 0.98), 2.7, true)
-		draw_line(center + Vector2(-5, 0), center + Vector2(5, 0), Color(palette.rune, 0.98), 2.0, true)
-
-
-func _drill_gate_palette(kind: String) -> Dictionary:
-	var type_data: Dictionary = Dictionary(GameData.data.ROCK_TYPES[kind])
-	var mineral: = Color(String(type_data.edge))
-	var cavern_stone: = _profile_color("dirt", "211710").lerp(_profile_color("wallEdge", "a2764d"), 0.22)
-	var metal: = Color("48564f")
-	var metal_light: = Color("a7b7ae")
-	if kind == "phasecrystal":
-		metal = Color("485266")
-		metal_light = Color("b8c9dd")
-	elif kind == "infernium":
-		metal = Color("5b4033")
-		metal_light = Color("c29a77")
-	return {
-		"shadow": Color("090a09"),
-		"stone_dark": cavern_stone.darkened(0.38),
-		"stone": cavern_stone.lerp(Color(String(type_data.color)), 0.18).lightened(0.03),
-		"stone_light": cavern_stone.lerp(mineral, 0.34).lightened(0.08),
-		"metal_dark": metal.darkened(0.48),
-		"metal": metal,
-		"metal_light": metal_light,
-		"rune": mineral,
-	}
 
 
 func _draw_resources() -> void :
@@ -2722,19 +2475,19 @@ func _resource_visible_rect(margin: Vector2) -> Rect2:
 		if player.camera.enabled and player.camera.is_inside_tree():
 			view_center = player.camera.get_screen_center_position()
 	var world_view_size: = Vector2(
-		viewport_size.x / maxf(0.01, camera_zoom.x), 
+		viewport_size.x / maxf(0.01, camera_zoom.x),
 		viewport_size.y / maxf(0.01, camera_zoom.y)
 	)
 	return Rect2(
-		view_center - world_view_size * 0.5 - margin, 
+		view_center - world_view_size * 0.5 - margin,
 		world_view_size + margin * 2.0
 	)
 
 
 func _camera_draw_bounds_changed() -> bool:
-	var viewport_size := get_viewport_rect().size
-	var view_center := player.global_position
-	var camera_zoom := Vector2.ONE
+	var viewport_size: = get_viewport_rect().size
+	var view_center: = player.global_position
+	var camera_zoom: = Vector2.ONE
 	if is_instance_valid(player.camera):
 		camera_zoom = Vector2(absf(player.camera.zoom.x), absf(player.camera.zoom.y))
 		if player.camera.enabled and player.camera.is_inside_tree():
@@ -2746,7 +2499,7 @@ func _camera_draw_bounds_changed() -> bool:
 	)
 
 
-func _remember_draw_camera_bounds() -> void:
+func _remember_draw_camera_bounds() -> void :
 	last_draw_viewport_size = get_viewport_rect().size
 	last_draw_camera_center = player.global_position
 	last_draw_camera_zoom = Vector2.ONE
@@ -2780,9 +2533,9 @@ func _draw_pocket_landmarks() -> void :
 		if kind in ["crystal", "motherlode"]:
 			var pocket_size: = Vector2(146, 106)
 			draw_texture_rect(
-				pocket_texture, 
-				Rect2(position - pocket_size * Vector2(0.5, 0.62), pocket_size), 
-				false, 
+				pocket_texture,
+				Rect2(position - pocket_size * Vector2(0.5, 0.62), pocket_size),
+				false,
 				Color(1, 1, 1, 0.18 if claimed else 0.5)
 			)
 		else:
@@ -2791,23 +2544,23 @@ func _draw_pocket_landmarks() -> void :
 			var scale_factor: = minf(112.0 / source_size.x, 96.0 / source_size.y)
 			var size: = source_size * scale_factor
 			draw_circle(
-				position + Vector2(0, 14), 
-				49.0, 
+				position + Vector2(0, 14),
+				49.0,
 				Color(0.93, 0.64, 0.29, 0.025 if claimed else 0.08)
 			)
 			draw_texture_rect(
-				texture, 
-				Rect2(position - size * Vector2(0.5, 0.6), size), 
-				false, 
+				texture,
+				Rect2(position - size * Vector2(0.5, 0.6), size),
+				false,
 				Color(0.48, 0.47, 0.45, 0.3) if claimed else Color.WHITE
 			)
 		_draw_pocket_landmark_label(cavern, reward, position, claimed)
 
 
 func _draw_pocket_landmark_label(
-	cavern: Dictionary, 
-	reward: Dictionary, 
-	position: Vector2, 
+	cavern: Dictionary,
+	reward: Dictionary,
+	position: Vector2,
 	claimed: bool
 ) -> void :
 	var name: = String(cavern.name).to_upper()
@@ -2836,6 +2589,8 @@ func _draw_depth_landmarks() -> void :
 	var forge: = Vector2(float(station_positions.forge.x), float(station_positions.forge.y))
 	_draw_station(sell_texture, sell, "ORE EXCHANGE", active_context == "depthSell")
 	_draw_station(forge_texture, forge, "DRILL FORGE", active_context == "drillForge")
+	_draw_station(preload("res://assets/surface/wayfarer-shop.png"),wayfarer_position,"WAYFARER",active_context=="depthWayfarer")
+	_draw_landmark_texture(preload("res://assets/surface/v3/wayfarer-boots.png"),wayfarer_position+Vector2(0,-85+sin(station_animation_clock*1.8)*5.0),Vector2(69,69),0.0)
 
 
 func _draw_station(texture: Texture2D, position: Vector2, label: String, selected: bool) -> void :
@@ -2843,7 +2598,7 @@ func _draw_station(texture: Texture2D, position: Vector2, label: String, selecte
 	_draw_landmark_texture(texture, position, Vector2(220, 154), 57.0)
 	if selected:
 		draw_arc(position + Vector2(0, 8), 88.0, 0, TAU, 48, Color(_profile_color("detail", "f0c47d"), 0.72), 2.0)
-	draw_string(ThemeDB.fallback_font, position + Vector2(-82, 78), label, HORIZONTAL_ALIGNMENT_CENTER, 164, 10, _profile_color("detail", "f0c47d"))
+	draw_string(preload("res://assets/ui/fonts/DejaVuSerif-Bold.ttf"), position + Vector2(-110, 78), label, HORIZONTAL_ALIGNMENT_CENTER, 220, 18, _profile_color("detail", "f0c47d"))
 
 
 func _draw_landmark_texture(texture: Texture2D, position: Vector2, bounds: Vector2, bottom: float) -> void :
@@ -2997,44 +2752,44 @@ func _rebuild_landmark_light_specs() -> void :
 	var accent_color: = _profile_color("accent", "f6b663")
 	var edge_color: = _profile_color("wallEdge", "80e0b1")
 	landmark_light_specs.append({
-		"id": "%s:depth_exit" % mine_id, 
-		"kind": "depth_exit", 
-		"position": depth_entrance + Vector2(-44, -25), 
-		"radius": 238.0, 
-		"energy": 1.08, 
-		"color": headlamp_color, 
-		"with_lamp": true, 
+		"id": "%s:depth_exit" % mine_id,
+		"kind": "depth_exit",
+		"position": depth_entrance + Vector2(-44, -25),
+		"radius": 238.0,
+		"energy": 1.08,
+		"color": headlamp_color,
+		"with_lamp": true,
 	})
 	var sell: = Vector2(float(station_positions.sell.x), float(station_positions.sell.y))
 	var forge: = Vector2(float(station_positions.forge.x), float(station_positions.forge.y))
 	landmark_light_specs.append({
-		"id": "%s:sell" % mine_id, 
-		"kind": "sell", 
-		"position": sell + Vector2(0, -18), 
-		"radius": 188.0, 
-		"energy": 0.86, 
-		"color": accent_color, 
-		"with_lamp": false, 
+		"id": "%s:sell" % mine_id,
+		"kind": "sell",
+		"position": sell + Vector2(0, -18),
+		"radius": 188.0,
+		"energy": 0.86,
+		"color": accent_color,
+		"with_lamp": false,
 	})
 	landmark_light_specs.append({
-		"id": "%s:forge" % mine_id, 
-		"kind": "forge", 
-		"position": forge + Vector2(0, -18), 
-		"radius": 206.0, 
-		"energy": 0.98, 
-		"color": edge_color, 
-		"with_lamp": false, 
+		"id": "%s:forge" % mine_id,
+		"kind": "forge",
+		"position": forge + Vector2(0, -18),
+		"radius": 206.0,
+		"energy": 0.98,
+		"color": edge_color,
+		"with_lamp": false,
 	})
 	for cavern in caverns:
 		if bool(cavern.discovered):
 			landmark_light_specs.append({
-				"id": "%s:cavern:%s" % [mine_id, String(cavern.id)], 
-				"kind": "cavern", 
-				"position": Vector2(float(cavern.x), float(cavern.y)), 
-				"radius": 164.0, 
-				"energy": 0.52, 
-				"color": accent_color, 
-				"with_lamp": false, 
+				"id": "%s:cavern:%s" % [mine_id, String(cavern.id)],
+				"kind": "cavern",
+				"position": Vector2(float(cavern.x), float(cavern.y)),
+				"radius": 164.0,
+				"energy": 0.52,
+				"color": accent_color,
+				"with_lamp": false,
 			})
 
 
@@ -3168,41 +2923,41 @@ func contract_snapshot() -> Dictionary:
 		if int(hp) > 0:
 			solid_cells += 1
 	return {
-		"mine_id": mine_id, 
-		"initialized": interior_initialized, 
-		"build_count": interior_build_count, 
-		"configured_world_seed": configured_world_seed, 
-		"depth": DEPTH, 
-		"name": String(depth_profile.name), 
-		"world_size": world_size, 
-		"tile_size": TILE_SIZE, 
-		"terrain_hp": terrain_max_hp, 
-		"solid_cells": solid_cells, 
-		"depth_entrance": depth_entrance, 
-		"entry_spawn": entry_spawn(), 
-		"stations": station_positions.duplicate(true), 
-		"resource_count": rocks.size(), 
-		"resource_counts": resource_counts, 
-		"drill_gated_count": drill_gated, 
-		"drill_gate_counts": drill_gate_counts, 
-		"required_drill_counts": required_drill_counts, 
-		"cavern_count": caverns.size(), 
+		"mine_id": mine_id,
+		"initialized": interior_initialized,
+		"build_count": interior_build_count,
+		"configured_world_seed": configured_world_seed,
+		"depth": DEPTH,
+		"name": String(depth_profile.name),
+		"world_size": world_size,
+		"tile_size": TILE_SIZE,
+		"terrain_hp": terrain_max_hp,
+		"solid_cells": solid_cells,
+		"depth_entrance": depth_entrance,
+		"entry_spawn": entry_spawn(),
+		"stations": station_positions.duplicate(true),
+		"resource_count": rocks.size(),
+		"resource_counts": resource_counts,
+		"drill_gated_count": drill_gated,
+		"drill_gate_counts": drill_gate_counts,
+		"required_drill_counts": required_drill_counts,
+		"cavern_count": caverns.size(),
 		"shrine_respawn_seconds": SHRINE_RESPAWN_SECONDS,
 		"shrine_cooldowns": shrine_cooldowns.duplicate(true),
-		"asset_contract": _asset_contract_paths(), 
+		"asset_contract": _asset_contract_paths(),
 		"palette": {
-			"dirt": String(depth_profile.get("dirt", "#211710")), 
-			"floor": String(depth_profile.get("floor", "#100e0c")), 
-			"wall_edge": String(depth_profile.get("wallEdge", "#80e0b1")), 
-			"accent": String(depth_profile.get("accent", "#f6b663")), 
-			"detail": String(depth_profile.get("detail", "#ffd58a")), 
-		}, 
+			"dirt": String(depth_profile.get("dirt", "#211710")),
+			"floor": String(depth_profile.get("floor", "#100e0c")),
+			"wall_edge": String(depth_profile.get("wallEdge", "#80e0b1")),
+			"accent": String(depth_profile.get("accent", "#f6b663")),
+			"detail": String(depth_profile.get("detail", "#ffd58a")),
+		},
 		"lighting_contract": {
-			"ambient": _ambient_modulate_color(), 
-			"headlamp": _profile_color("detail", "ffd58a"), 
-			"sell_station": _profile_color("accent", "f6b663"), 
-			"forge_station": _profile_color("wallEdge", "80e0b1"), 
-		}, 
+			"ambient": _ambient_modulate_color(),
+			"headlamp": _profile_color("detail", "ffd58a"),
+			"sell_station": _profile_color("accent", "f6b663"),
+			"forge_station": _profile_color("wallEdge", "80e0b1"),
+		},
 	}
 
 
@@ -3223,29 +2978,29 @@ func depth_content_snapshot() -> Dictionary:
 		var kind: = String(reward.kind)
 		reward_kind_counts[kind] = int(reward_kind_counts.get(kind, 0)) + 1
 		cavern_rows.append({
-			"id": String(cavern.id), 
-			"name": String(cavern.name), 
-			"source_name": String(cavern.get("source_name", cavern.name)), 
-			"position": Vector2(float(cavern.x), float(cavern.y)), 
-			"radii": Vector2(float(cavern.rx), float(cavern.ry)), 
-			"boundary_count": Array(cavern.boundary).size(), 
-			"reward_id": reward_id, 
-			"reward_kind": kind, 
-			"reward_label": String(reward.label), 
-			"linked_rocks": linked_rocks, 
-			"live_linked_rocks": live_linked_rocks, 
-			"discovered": bool(cavern.discovered), 
-			"claimed": _pocket_reward_is_claimed(reward_id), 
+			"id": String(cavern.id),
+			"name": String(cavern.name),
+			"source_name": String(cavern.get("source_name", cavern.name)),
+			"position": Vector2(float(cavern.x), float(cavern.y)),
+			"radii": Vector2(float(cavern.rx), float(cavern.ry)),
+			"boundary_count": Array(cavern.boundary).size(),
+			"reward_id": reward_id,
+			"reward_kind": kind,
+			"reward_label": String(reward.label),
+			"linked_rocks": linked_rocks,
+			"live_linked_rocks": live_linked_rocks,
+			"discovered": bool(cavern.discovered),
+			"claimed": _pocket_reward_is_claimed(reward_id),
 		})
 	return {
-		"mine_id": mine_id, 
-		"depth_name": String(depth_profile.name), 
-		"return_name": _depth_one_return_name(), 
-		"route_signature": _route_signature(), 
-		"caverns": cavern_rows, 
-		"cavern_count": cavern_rows.size(), 
-		"reward_kind_counts": reward_kind_counts, 
-		"asset_contract": _asset_contract_paths(), 
+		"mine_id": mine_id,
+		"depth_name": String(depth_profile.name),
+		"return_name": _depth_one_return_name(),
+		"route_signature": _route_signature(),
+		"caverns": cavern_rows,
+		"cavern_count": cavern_rows.size(),
+		"reward_kind_counts": reward_kind_counts,
+		"asset_contract": _asset_contract_paths(),
 	}
 
 
@@ -3253,15 +3008,15 @@ func _route_signature() -> String:
 
 
 	var parts: = PackedStringArray([
-		"entry:%.4f,%.4f" % [depth_entrance.x / world_size.x, depth_entrance.y / world_size.y], 
+		"entry:%.4f,%.4f" % [depth_entrance.x / world_size.x, depth_entrance.y / world_size.y],
 	])
 	for cavern in caverns:
 		parts.append(
 			"%.4f,%.4f/%.4f,%.4f" % [
-				float(cavern.x) / world_size.x, 
-				float(cavern.y) / world_size.y, 
-				float(cavern.rx) / world_size.x, 
-				float(cavern.ry) / world_size.y, 
+				float(cavern.x) / world_size.x,
+				float(cavern.y) / world_size.y,
+				float(cavern.rx) / world_size.x,
+				float(cavern.ry) / world_size.y,
 			]
 		)
 	return "|".join(parts)
@@ -3278,23 +3033,23 @@ func lighting_snapshot() -> Dictionary:
 	if headlamp != null:
 		headlamp_light_count = headlamp.find_children("*", "PointLight2D", true, false).size()
 	return {
-		"spec_count": landmark_light_specs.size(), 
-		"active_count": active_ids.size(), 
-		"active_ids": active_ids, 
-		"active_positions": active_positions, 
-		"max_active": MAX_ACTIVE_LANDMARK_LIGHTS, 
-		"enter_radius": LANDMARK_LIGHT_ENTER_RADIUS, 
-		"exit_radius": LANDMARK_LIGHT_EXIT_RADIUS, 
-		"refresh_distance": LANDMARK_LIGHT_REFRESH_DISTANCE, 
-		"hysteresis_bonus": LANDMARK_LIGHT_HYSTERESIS_BONUS, 
-		"last_refresh_position": last_landmark_light_refresh_position, 
-		"refresh_count": landmark_light_refresh_count, 
-		"rebuild_count": landmark_light_rebuild_count, 
-		"headlamp_present": headlamp != null, 
-		"headlamp_light_count": headlamp_light_count, 
-		"headlamp": headlamp.debug_snapshot() if headlamp != null and headlamp.has_method("debug_snapshot") else {}, 
-		"camera": player.camera.headlamp_framing_snapshot() if player.camera.has_method("headlamp_framing_snapshot") else {}, 
-		"player_position": player.global_position, 
+		"spec_count": landmark_light_specs.size(),
+		"active_count": active_ids.size(),
+		"active_ids": active_ids,
+		"active_positions": active_positions,
+		"max_active": MAX_ACTIVE_LANDMARK_LIGHTS,
+		"enter_radius": LANDMARK_LIGHT_ENTER_RADIUS,
+		"exit_radius": LANDMARK_LIGHT_EXIT_RADIUS,
+		"refresh_distance": LANDMARK_LIGHT_REFRESH_DISTANCE,
+		"hysteresis_bonus": LANDMARK_LIGHT_HYSTERESIS_BONUS,
+		"last_refresh_position": last_landmark_light_refresh_position,
+		"refresh_count": landmark_light_refresh_count,
+		"rebuild_count": landmark_light_rebuild_count,
+		"headlamp_present": headlamp != null,
+		"headlamp_light_count": headlamp_light_count,
+		"headlamp": headlamp.debug_snapshot() if headlamp != null and headlamp.has_method("debug_snapshot") else {},
+		"camera": player.camera.headlamp_framing_snapshot() if player.camera.has_method("headlamp_framing_snapshot") else {},
+		"player_position": player.global_position,
 	}
 
 
@@ -3303,37 +3058,133 @@ func spawn_safety_snapshot() -> Dictionary:
 	var forge: = Vector2(float(station_positions.forge.x), float(station_positions.forge.y))
 	var spawn: = entry_spawn()
 	return {
-		"mine_id": mine_id, 
-		"entry_spawn": spawn, 
-		"entry_collision": collision_at(spawn), 
-		"depth_exit": depth_entrance, 
-		"depth_exit_collision": collision_at(depth_entrance), 
-		"sell": sell, 
-		"sell_collision": collision_at(sell), 
-		"forge": forge, 
-		"forge_collision": collision_at(forge), 
-		"entry_exit_distance": spawn.distance_to(depth_entrance), 
-		"exit_context_radius": SHAFT_CONTEXT_RADIUS, 
-		"return_name": _depth_one_return_name(), 
+		"mine_id": mine_id,
+		"entry_spawn": spawn,
+		"entry_collision": collision_at(spawn),
+		"depth_exit": depth_entrance,
+		"depth_exit_collision": collision_at(depth_entrance),
+		"sell": sell,
+		"sell_collision": collision_at(sell),
+		"forge": forge,
+		"forge_collision": collision_at(forge),
+		"entry_exit_distance": spawn.distance_to(depth_entrance),
+		"exit_context_radius": SHAFT_CONTEXT_RADIUS,
+		"return_name": _depth_one_return_name(),
 	}
 
 
 func target_snapshot() -> Dictionary:
 	return {
-		"kind": current_target_kind, 
-		"cell": current_target_cell, 
-		"rock_index": current_target_rock, 
-		"contact": _target_contact_point(), 
+		"kind": current_target_kind,
+		"cell": current_target_cell,
+		"rock_index": current_target_rock,
+		"contact": _target_contact_point(),
 	}
 
 
 func heat_streak_snapshot() -> Dictionary:
 	return {
-		"unlocked": _heat_streak_unlocked(), 
-		"active": heat_streak_active, 
-		"elapsed": heat_streak_elapsed, 
-		"progress": _heat_streak_progress(), 
-		"speed_multiplier": _heat_streak_speed(), 
-		"max_speed": HEAT_STREAK_MAX_SPEED, 
-		"build_seconds": HEAT_STREAK_BUILD_SECONDS, 
+		"unlocked": _heat_streak_unlocked(),
+		"active": heat_streak_active,
+		"elapsed": heat_streak_elapsed,
+		"progress": _heat_streak_progress(),
+		"speed_multiplier": _heat_streak_speed(),
+		"max_speed": HEAT_STREAK_MAX_SPEED,
+		"build_seconds": HEAT_STREAK_BUILD_SECONDS,
 	}
+
+
+func _strike_drill_gate(rock_index: int) -> bool:
+	var rock: Dictionary = rocks[rock_index]
+	var gate_id: String = String(rock.deposit_id)
+	var hits: int = RunState.strike_barrier(mine_id + ":d2:" + gate_id)
+	for i in rocks.size():
+		if String(rocks[i].deposit_id) != gate_id or bool(rocks[i].broken): continue
+		var part: Dictionary = rocks[i]
+		part.shell = 0
+		part.hp = maxi(1,ceili(float(part.max_hp)*(1.0-float(hits)/10.0)))
+		rocks[i] = part
+		if hits == 10: _break_rock(i)
+	_append_impact({"position":Vector2(rock.position),"age":0.0,"life":0.42,"broken":hits==10,"style":""})
+	AudioDirector.play_mining(String(rock.type),hits==10,false)
+	message_changed.emit("PASSAGE OPEN" if hits == 10 else "WALL · %d / 10 strikes" % hits)
+	target_dirty = true
+	_request_redraw()
+	return true
+
+
+func companion_loot_candidates() -> Array[Dictionary]:
+	var result: Array[Dictionary]=[]
+	for i in drops.size():
+		var drop: Dictionary=drops[i]
+		if not drop.has("companion_id"):
+			drop["companion_id"]=str(Time.get_ticks_usec())+":"+str(i)
+			drops[i]=drop
+		result.append({"id":drop.companion_id,"position":drop.position,"age":drop.age})
+	return result
+
+func companion_collect_loot(origin: Vector2, radius: float) -> int:
+	var collected_total: int=0
+	for i in range(drops.size()-1,-1,-1):
+		var drop: Dictionary=drops[i]
+		if origin.distance_to(Vector2(drop.position))>radius or float(drop.age)<0.5: continue
+		var amount: int=int(drop.get("amount",1))
+		var taken: int=0
+		var reward_id: String=String(drop.get("pocket_reward_id",""))
+		if not reward_id.is_empty(): taken=RunState.collect_pocket_loot(reward_id,String(drop.kind),amount)
+		elif not String(drop.get("persistent_id","")).is_empty():
+			var receipt: Dictionary=RunState.collect_mine_loose_loot(mine_id,2,String(drop.persistent_id),amount)
+			taken=int(receipt.get("amount",0))
+		else:
+			RunState.add_resource(String(drop.kind),amount,false)
+			taken=amount
+		if taken<=0: continue
+		collected_total+=taken
+		if taken>=amount: drops.remove_at(i)
+		else:
+			drop.amount=amount-taken
+			drops[i]=drop
+		AudioDirector.play_pickup(String(drop.kind),taken)
+	if collected_total>0: _request_redraw()
+	return collected_total
+
+
+func companion_can_dig(point: Vector2) -> bool:
+	var cell: Vector2i=_world_to_cell(point)
+	if not _has_deep_tool() or not _terrain_is_solid(cell) or _terrain_is_bedrock(cell): return false
+	for index in Array(rocks_by_cell.get(cell,[])):
+		if not bool(rocks[int(index)].broken): return false
+	for offset in [Vector2i.LEFT,Vector2i.RIGHT,Vector2i.UP,Vector2i.DOWN]:
+		if not _terrain_is_solid(cell+offset): return true
+	return false
+
+func companion_dig(point: Vector2, square: bool) -> int:
+	if not companion_can_dig(point): return 0
+	var start: Vector2i=_world_to_cell(point)
+	var count: int=0
+	for offset in ([Vector2i.ZERO,Vector2i.RIGHT,Vector2i.DOWN,Vector2i.ONE] if square else [Vector2i.ZERO]):
+		var cell: Vector2i=start+Vector2i(offset)
+		if not companion_can_dig(_cell_center(cell)): continue
+		var index: int=_cell_index(cell)
+		terrain_hp[index]=0
+		dug_indices[index]=true
+		RunState.mark_terrain_dug(mine_id,index,2)
+		_discover_cavern_from_cell(index)
+		_emit_revealed_resources(cell)
+		_record_mined("deepstone",1)
+		_spawn_drop(_cell_center(cell),"deepstone",1)
+		count+=1
+	target_dirty=true
+	_request_redraw()
+	return count
+
+func companion_ore_target(origin: Vector2) -> Vector2:
+	var result: Vector2=Vector2(INF,INF)
+	var distance: float=650.0
+	for i in rocks.size():
+		if not _rock_is_exposed(i) or bool(rocks[i].broken) or bool(rocks[i].drill_gated): continue
+		var point: Vector2=Vector2(rocks[i].position)
+		if point.distance_to(origin)<distance:
+			distance=point.distance_to(origin)
+			result=point
+	return result

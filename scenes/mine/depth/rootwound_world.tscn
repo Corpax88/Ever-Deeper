@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://pba1b225g675" path="res://scripts/world/depth/rootwound_world.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2"]
+
+[node name="RootwoundWorld" type="Node2D" unique_id=1801569198]
+process_mode = 4
+visible = false
+script = ExtResource("1")
+
+[node name="Darkness" type="CanvasModulate" parent="." unique_id=1972324940]
+color = Color(0.38, 0.34, 0.28, 1)
+
+[node name="LandmarkLights" type="Node2D" parent="." unique_id=1331972303]
+
+[node name="Player" parent="." unique_id=719924713 instance=ExtResource("2")]

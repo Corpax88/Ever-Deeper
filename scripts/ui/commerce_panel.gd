@@ -20,7 +20,7 @@ class ForgedChrome:
 		accent = value
 		queue_redraw()
 
-	func set_forge_texture(value: Texture2D) -> void :
+	func set_premium_texture(value: Texture2D) -> void :
 		if value == null:
 			premium_style = null
 			queue_redraw()
@@ -112,7 +112,7 @@ class ForgedMedallion:
 		accent = value
 		queue_redraw()
 
-	func set_forge_texture(value: Texture2D) -> void :
+	func set_premium_texture(value: Texture2D) -> void :
 		premium_texture = value
 		queue_redraw()
 
@@ -122,6 +122,7 @@ class ForgedMedallion:
 
 	func _draw() -> void :
 		var extent: = minf(size.x, size.y)
+		if premium_texture == null: return
 		if extent < 40.0:
 			return
 		if premium_texture != null:
@@ -153,14 +154,17 @@ const IPHONE_PANEL_MAX_SIZE: = Vector2(1340, 650)
 const IPHONE_CARD_MIN_WIDTH: = 330.0
 const PANEL_MAX_SIZE: = Vector2(1120, 630)
 const CARD_MIN_WIDTH: = 244.0
-const DISPLAY_FONT: = preload("res://assets/ui/fonts/DejaVuSerif-Bold.ttf")
-const BODY_FONT: = preload("res://assets/ui/fonts/DejaVuSans.ttf")
+const DISPLAY_FONT: = preload("res://assets/ui/fonts/RussoOne-Regular.ttf")
+const BODY_FONT: = preload("res://assets/ui/fonts/ChakraPetch-SemiBold.ttf")
+const SYMBOL_FONT: = preload("res://assets/ui/fonts/DejaVuSans.ttf")
 const MOSSVEIN_FRAME: = preload("res://assets/ui/commerce/mossvein-frame-v1.png")
 const MOSSVEIN_PLATE: = preload("res://assets/ui/commerce/mossvein-plate-v1.png")
 const MOSSVEIN_ACTION: = preload("res://assets/ui/commerce/mossvein-action-v1.png")
 const MOSSVEIN_MEDALLION: = preload("res://assets/ui/commerce/mossvein-medallion-v1.png")
 
-const IVORY: = Color("eee2cf")
+const IVORY: = Color("edbf91")
+const AURA: = preload("res://assets/ui/commerce/starforge-aura-v1.png")
+const METAL_TEXT: = preload("res://scripts/ui/commerce_metal_text.gdshader")
 const STEEL: = Color("b8b7b2")
 const MUTED: = Color("858482")
 const DANGER: = Color("d86c5f")
@@ -174,8 +178,8 @@ const IRON_MID: = Color("625d5a")
 const IRON_HIGH: = Color("9a9188")
 const PANEL_THEMES: = {
 	"forge": {"accent": Color("e66a22"), "bright": Color("ffb25f"), "deep": Color("57230d")},
-	"wayfarer": {"accent": Color("bd7240"), "bright": Color("efb47d"), "deep": Color("442719")},
-	"starforge": {"accent": Color("735ba8"), "bright": Color("c2adeb"), "deep": Color("2a2046")},
+	"wayfarer": {"accent": Color("4c986d"), "bright": Color("9feab0"), "deep": Color("163c28")},
+	"starforge": {"accent": Color("735ba8"), "bright": Color("cc8bf2"), "deep": Color("2a2046")},
 	"tool_forge": {"accent": Color("b95932"), "bright": Color("e9a277"), "deep": Color("421e13")},
 	"light_lab": {"accent": Color("4f86a2"), "bright": Color("a9d3e3"), "deep": Color("18313d")},
 	"wardrobe": {"accent": Color("8f3d4c"), "bright": Color("d98b9b"), "deep": Color("37151e")},
@@ -184,15 +188,16 @@ const PANEL_THEMES: = {
 }
 
 var backdrop: Button
-var frame: PanelContainer
-var inner_frame: PanelContainer
+var frame: Panel
+var inner_frame: Panel
 var safe_margin: MarginContainer
 var metal_fill: ColorRect
 var metal_material: ShaderMaterial
 var chrome_overlay: ForgedChrome
-var body: VBoxContainer
+var body: Control
 var header_plate: PanelContainer
 var header: HBoxContainer
+var title_stack: VBoxContainer
 var title_plaque: PanelContainer
 var close_slot: HBoxContainer
 var accent_line: ColorRect
@@ -204,13 +209,17 @@ var commerce_body: HBoxContainer
 var catalog_pane: VBoxContainer
 var page_navigation: HBoxContainer
 var page_label: Label
-var previous_button: Button
-var next_button: Button
+var swipe_pager: Node
+var _page_tween: Tween
 var catalog_scroll: ScrollContainer
+var carousel_margin: MarginContainer
+var _carousel_layout_pending: bool = false
 var catalog_strip: HBoxContainer
 var hero_well: PanelContainer
 var hero_medallion: ForgedMedallion
 var hero_icon: TextureRect
+var hero_aura: TextureRect
+var primary_copy: Label
 var hero_state_plate: PanelContainer
 var hero_state_label: Label
 
@@ -237,14 +246,28 @@ var _visual_theme_id: = "forge"
 var _accent: = Color("e66a22")
 var _accent_bright: = Color("ffb25f")
 var _accent_deep: = Color("57230d")
+var _showcase_clock: float = 0.0
 
 
 func _ready() -> void :
+	BODY_FONT.set("fallbacks", [SYMBOL_FONT])
+	DISPLAY_FONT.set("fallbacks", [SYMBOL_FONT])
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	z_index = 210
 	_build_interface()
+	swipe_pager = preload("res://scripts/ui/swipe_pager.gd").new()
+	swipe_pager.name = "SwipePager"
+	swipe_pager.region = catalog_pane
+	swipe_pager.contact_started.connect(catalog_scroll.press)
+	swipe_pager.contact_ended.connect(_carousel_contact_ended)
+	swipe_pager.tapped.connect(_catalog_tapped)
+	swipe_pager.drag_started.connect(_carousel_drag_started)
+	swipe_pager.dragged.connect(catalog_scroll.drag_by)
+	swipe_pager.released.connect(catalog_scroll.release)
+	catalog_scroll.settled.connect(_carousel_settled)
+	add_child(swipe_pager)
 	get_viewport().size_changed.connect(_apply_responsive_layout)
 	visible = false
 	call_deferred("_apply_responsive_layout")
@@ -260,12 +283,17 @@ func open_commerce(config: Dictionary) -> void :
 	_apply_responsive_layout()
 	if primary_button != null and not primary_button.disabled:
 		primary_button.grab_focus()
-	elif cancel_button != null:
-		cancel_button.grab_focus()
+	elif close_button != null:
+		close_button.grab_focus()
 
 
 func refresh_commerce(config: Dictionary) -> void :
 	var previous_selection: = _selected_item_id
+	var previous_item: Dictionary = selected_item()
+	if previous_selection == "workshop:upgrade" and previous_item.has("outfit_preview"):
+		previous_selection = "workshop:equip:" + String(previous_item.outfit_preview)
+	if previous_selection == "workshop:upgrade" and previous_item.has("light_preview"):
+		previous_selection = "workshop:equip:" + String(previous_item.light_preview)
 	_config = config.duplicate(true)
 	_items = _valid_items(Array(_config.get("items", [])))
 	_selected_item_id = previous_selection if _has_item(previous_selection) else _initial_selection(String(_config.get("selected_item_id", "")))
@@ -345,9 +373,9 @@ func interaction_snapshot() -> Dictionary:
 func layout_metrics(viewport_size: Vector2) -> Dictionary:
 	var aspect: = viewport_size.x / maxf(1.0, viewport_size.y)
 	var iphone_landscape: = aspect >= IPHONE_LANDSCAPE_ASPECT
-	var side_margin: = 110.0 if iphone_landscape else 28.0
+	var side_margin: = maxf(28.0, viewport_size.x * 0.045)
 	var vertical_margin: = 18.0 if viewport_size.y <= 500.0 else 30.0
-	var panel_max_size: = IPHONE_PANEL_MAX_SIZE if iphone_landscape else PANEL_MAX_SIZE
+	var panel_max_size: = Vector2(1520, 700) if iphone_landscape else PANEL_MAX_SIZE
 	var available: = Vector2(
 		maxf(520.0, viewport_size.x - side_margin * 2.0),
 		maxf(330.0, viewport_size.y - vertical_margin * 2.0)
@@ -373,7 +401,7 @@ func minimum_touch_targets_are_valid(minimum_height: float = -1.0) -> bool:
 	if required_height <= 0.0:
 		var viewport_size: = _layout_viewport_size if _layout_viewport_size != Vector2.ZERO else get_viewport_rect().size
 		required_height = _touch_target_for(layout_metrics(viewport_size))
-	for button in [close_button, previous_button, next_button, cancel_button, primary_button]:
+	for button in [close_button, cancel_button, primary_button]:
 		if button != null and (button.custom_minimum_size.x < required_height or button.custom_minimum_size.y < required_height):
 			return false
 	if catalog_strip != null:
@@ -385,7 +413,7 @@ func minimum_touch_targets_are_valid(minimum_height: float = -1.0) -> bool:
 
 func _minimum_rendered_touch_target_dimension() -> float:
 	var minimum: = INF
-	for button in [close_button, previous_button, next_button, cancel_button, primary_button]:
+	for button in [close_button, cancel_button, primary_button]:
 		if button != null and button.visible:
 			minimum = minf(minimum, minf(button.size.x, button.size.y))
 	if catalog_strip != null:
@@ -407,7 +435,7 @@ func _build_interface() -> void :
 	backdrop.pressed.connect(_on_backdrop_pressed)
 	add_child(backdrop)
 
-	frame = PanelContainer.new()
+	frame = Panel.new()
 	frame.name = "CommerceFrame"
 	frame.mouse_filter = Control.MOUSE_FILTER_STOP
 	frame.add_theme_stylebox_override("panel", _frame_style())
@@ -420,12 +448,14 @@ func _build_interface() -> void :
 	metal_material = _metal_shader_material()
 	metal_fill.material = metal_material
 	frame.add_child(metal_fill)
+	metal_fill.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
-	inner_frame = PanelContainer.new()
+	inner_frame = Panel.new()
 	inner_frame.name = "InnerFrame"
 	inner_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	inner_frame.add_theme_stylebox_override("panel", _inner_frame_style())
 	frame.add_child(inner_frame)
+	inner_frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 	safe_margin = MarginContainer.new()
 	safe_margin.name = "SafeMargin"
@@ -434,10 +464,11 @@ func _build_interface() -> void :
 	safe_margin.add_theme_constant_override("margin_top", 23)
 	safe_margin.add_theme_constant_override("margin_bottom", 22)
 	inner_frame.add_child(safe_margin)
+	safe_margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
-	body = VBoxContainer.new()
+	body = Control.new()
 	body.name = "Body"
-	body.add_theme_constant_override("separation", 8)
+	body.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	safe_margin.add_child(body)
 
 	_build_header()
@@ -455,6 +486,7 @@ func _build_interface() -> void :
 	chrome_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	chrome_overlay.z_index = 4
 	frame.add_child(chrome_overlay)
+	chrome_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 
 func _build_header() -> void :
@@ -477,25 +509,30 @@ func _build_header() -> void :
 	balance_spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	header.add_child(balance_spacer)
 
+	title_stack = VBoxContainer.new()
+	title_stack.name = "TitleStack"
+	title_stack.custom_minimum_size.x = 430
+	title_stack.alignment = BoxContainer.ALIGNMENT_CENTER
+	title_stack.add_theme_constant_override("separation", -2)
+	header.add_child(title_stack)
+
 	title_plaque = PanelContainer.new()
 	title_plaque.name = "TitlePlaque"
-	title_plaque.custom_minimum_size.x = 430
+	title_plaque.custom_minimum_size.y = 62
+	title_plaque.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	title_plaque.add_theme_stylebox_override("panel", _header_title_style())
-	header.add_child(title_plaque)
-	var titles: = VBoxContainer.new()
-	titles.name = "Titles"
-	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	titles.alignment = BoxContainer.ALIGNMENT_CENTER
-	titles.add_theme_constant_override("separation", 4)
-	title_plaque.add_child(titles)
-	title_label = _label("Shop", 21, IVORY, HORIZONTAL_ALIGNMENT_CENTER, true)
+	title_stack.add_child(title_plaque)
+	title_label = _label("Shop", 28, IVORY, HORIZONTAL_ALIGNMENT_CENTER, true)
 	title_label.name = "Title"
+	title_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	title_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	titles.add_child(title_label)
-	subtitle_label = _label("Select an item to inspect", 10, MUTED, HORIZONTAL_ALIGNMENT_CENTER)
+	title_plaque.add_child(title_label)
+	subtitle_label = _label("Select an item to inspect", 12, STEEL, HORIZONTAL_ALIGNMENT_CENTER)
 	subtitle_label.name = "Subtitle"
+	subtitle_label.custom_minimum_size.y = 22
+	subtitle_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	subtitle_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	titles.add_child(subtitle_label)
+	title_stack.add_child(subtitle_label)
 
 	close_slot = HBoxContainer.new()
 	close_slot.name = "CloseSlot"
@@ -532,16 +569,6 @@ func _build_commerce_body() -> void :
 	page_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	page_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	page_navigation.add_child(page_label)
-	previous_button = _button("<", false)
-	previous_button.name = "Previous"
-	previous_button.custom_minimum_size = Vector2(68, MIN_TOUCH_TARGET)
-	previous_button.pressed.connect(_change_selection.bind(-1))
-	page_navigation.add_child(previous_button)
-	next_button = _button(">", false)
-	next_button.name = "Next"
-	next_button.custom_minimum_size = Vector2(68, MIN_TOUCH_TARGET)
-	next_button.pressed.connect(_change_selection.bind(1))
-	page_navigation.add_child(next_button)
 
 	hero_well = PanelContainer.new()
 	hero_well.name = "HeroWell"
@@ -569,6 +596,14 @@ func _build_commerce_body() -> void :
 	hero_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	hero_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hero_icon.resized.connect(_update_hero_icon_pivot)
+	hero_aura = TextureRect.new()
+	hero_aura.name = "StarforgeAura"
+	hero_aura.texture = AURA
+	hero_aura.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	hero_aura.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	hero_aura.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hero_medallion.add_child(hero_aura)
+	hero_aura.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	hero_medallion.add_child(hero_icon)
 	hero_state_plate = PanelContainer.new()
 	hero_state_plate.name = "StatePlate"
@@ -584,21 +619,25 @@ func _build_commerce_body() -> void :
 	hero_state_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hero_state_plate.add_child(hero_state_label)
 
-	catalog_scroll = ScrollContainer.new()
+	catalog_scroll = preload("res://scripts/ui/inertial_carousel.gd").new()
 	catalog_scroll.name = "CatalogScroll"
 	catalog_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	catalog_scroll.custom_minimum_size.y = 96
 	catalog_scroll.size_flags_vertical = Control.SIZE_SHRINK_END
 	catalog_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	catalog_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	catalog_scroll.follow_focus = true
+	catalog_scroll.follow_focus = false
 	catalog_pane.add_child(catalog_scroll)
+	page_navigation.move_to_front()
 	catalog_strip = HBoxContainer.new()
 	catalog_strip.name = "ItemCards"
 	catalog_strip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	catalog_strip.size_flags_vertical = Control.SIZE_FILL
 	catalog_strip.add_theme_constant_override("separation", 8)
-	catalog_scroll.add_child(catalog_strip)
+	carousel_margin = MarginContainer.new()
+	carousel_margin.name = "CarouselPadding"
+	catalog_scroll.add_child(carousel_margin)
+	carousel_margin.add_child(catalog_strip)
 
 	overview_panel = PanelContainer.new()
 	overview_panel.name = "Overview"
@@ -614,11 +653,11 @@ func _build_commerce_body() -> void :
 	overview_heading.name = "Heading"
 	overview_heading.visible = false
 	overview_layout.add_child(overview_heading)
-	overview_scroll = ScrollContainer.new()
+	overview_scroll = preload("res://scripts/ui/touch_scroll_container.gd").new()
 	overview_scroll.name = "DetailsScroll"
 	overview_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	overview_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	overview_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
+	overview_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	overview_scroll.follow_focus = true
 	overview_layout.add_child(overview_scroll)
 	var overview_margin: = MarginContainer.new()
@@ -629,7 +668,7 @@ func _build_commerce_body() -> void :
 	overview_content = VBoxContainer.new()
 	overview_content.name = "Details"
 	overview_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	overview_content.add_theme_constant_override("separation", 8)
+	overview_content.add_theme_constant_override("separation", 3)
 	overview_margin.add_child(overview_content)
 
 	total_panel = PanelContainer.new()
@@ -656,7 +695,7 @@ func _build_footer() -> void :
 	footer.custom_minimum_size.y = 64
 	footer.add_theme_constant_override("separation", 8)
 	body.add_child(footer)
-	footer_summary = _label("Select an item", 12, MUTED, HORIZONTAL_ALIGNMENT_LEFT)
+	footer_summary = _label("Select an item", 12, MUTED, HORIZONTAL_ALIGNMENT_LEFT, true)
 	footer_summary.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	footer_summary.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	footer_summary.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -674,8 +713,17 @@ func _build_footer() -> void :
 	primary_button = _button("Select", true)
 	primary_button.name = "PrimaryAction"
 	primary_button.custom_minimum_size = Vector2(248, 64)
+	primary_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	primary_button.pressed.connect(_confirm_selected)
 	footer.add_child(primary_button)
+	primary_copy = _label("", 30, IVORY, HORIZONTAL_ALIGNMENT_CENTER, true)
+	primary_copy.name = "ActionText"
+	primary_copy.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	primary_copy.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	primary_button.add_child(primary_copy)
+	primary_copy.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_make_metallic(primary_copy)
+	_make_metallic(title_label)
 
 
 func _resolve_visual_theme() -> void :
@@ -689,9 +737,13 @@ func _resolve_visual_theme() -> void :
 	_accent_deep = Color(colors.get("deep", Color("57230d")))
 
 
+func _uses_premium_skin() -> bool:
+	return PANEL_THEMES.has(_visual_theme_id)
+
+
 func _apply_backdrop_style() -> void :
-	var normal_alpha: = 0.74 if _visual_theme_id == "forge" else 0.91
-	var pressed_alpha: = 0.79 if _visual_theme_id == "forge" else 0.94
+	var normal_alpha: = 0.36 if _uses_premium_skin() else 0.91
+	var pressed_alpha: = 0.79 if _uses_premium_skin() else 0.94
 	var normal_style: = _flat_style(Color(0.004, 0.004, 0.005, normal_alpha), 0)
 	backdrop.add_theme_stylebox_override("normal", normal_style)
 	backdrop.add_theme_stylebox_override("hover", normal_style)
@@ -708,22 +760,23 @@ func _apply_visual_theme() -> void :
 	overview_panel.add_theme_stylebox_override("panel", _overview_panel_style())
 	hero_well.add_theme_stylebox_override("panel", _hero_well_style())
 	hero_medallion.set_accent(_accent)
-	hero_medallion.set_forge_texture(MOSSVEIN_MEDALLION if _visual_theme_id == "forge" else null)
+	hero_medallion.visible = true
+	hero_medallion.set_premium_texture(null)
+	hero_aura.visible = _visual_theme_id == "starforge"
+	hero_aura.modulate.a = 0.6
 	hero_state_plate.add_theme_stylebox_override("panel", _title_plate_style())
 	chrome_overlay.set_accent(_accent)
-	chrome_overlay.set_forge_texture(MOSSVEIN_FRAME if _visual_theme_id == "forge" else null)
+	chrome_overlay.set_premium_texture(MOSSVEIN_FRAME if _uses_premium_skin() else null)
 	metal_material.set_shader_parameter("accent_color", _accent)
-	title_label.add_theme_color_override("font_color", IVORY)
+	title_label.add_theme_color_override("font_color", Color.WHITE)
 	title_label.add_theme_color_override("font_outline_color", Color(INK, 0.9))
 	title_label.add_theme_constant_override("outline_size", 2)
-	subtitle_label.add_theme_color_override("font_color", MUTED)
+	subtitle_label.add_theme_color_override("font_color", Color("aaa39a"))
 	page_label.add_theme_color_override("font_color", _accent_bright)
 	overview_heading.add_theme_color_override("font_color", _accent_bright)
-	footer_summary.add_theme_color_override("font_color", MUTED)
+	footer_summary.add_theme_color_override("font_color", Color("aaa39a"))
 	_style_button(close_button, false)
 	_style_close_button(close_button)
-	_style_button(previous_button, false)
-	_style_button(next_button, false)
 	_style_button(cancel_button, false)
 	_style_button(primary_button, true)
 
@@ -775,6 +828,8 @@ func _refresh_showcase(item: Dictionary) -> void :
 		hero_state_label.add_theme_color_override("font_color", MUTED)
 		return
 	hero_icon.texture = _item_texture(item)
+	_update_outfit_preview(hero_icon, item, true)
+	_update_light_preview(item)
 	hero_icon.modulate = Color(1, 1, 1, 0.38) if bool(item.get("locked", false)) else Color.WHITE
 	var texture_path: = String(item.get("texture", item.get("icon_path", "")))
 	hero_icon.rotation = deg_to_rad(-40.0) if "/tools/" in texture_path or String(item.get("id", "")).begins_with("forge:") else 0.0
@@ -789,16 +844,16 @@ func _item_card(item: Dictionary) -> Button:
 	var button: = Button.new()
 	button.name = "Item_%s" % item_id.validate_node_name()
 	button.set_meta("item_id", item_id)
-	button.custom_minimum_size = Vector2(150, 76)
+	button.custom_minimum_size = Vector2(CARD_MIN_WIDTH, 84)
 	button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	button.size_flags_vertical = Control.SIZE_FILL
 	button.focus_mode = Control.FOCUS_ALL
 	button.clip_contents = true
 	button.tooltip_text = String(item.get("title", item_id))
 	button.add_theme_stylebox_override("normal", _card_style(item, selected, false))
-	button.add_theme_stylebox_override("hover", _card_style(item, true, false))
-	button.add_theme_stylebox_override("pressed", _card_style(item, true, true))
-	button.add_theme_stylebox_override("focus", _card_style(item, true, false))
+	button.add_theme_stylebox_override("hover", _card_style(item, selected, false))
+	button.add_theme_stylebox_override("pressed", _card_style(item, selected, true))
+	button.add_theme_stylebox_override("focus", _card_style(item, selected, false))
 	button.pressed.connect(_select_item.bind(item_id))
 
 	var margin: = MarginContainer.new()
@@ -810,18 +865,15 @@ func _item_card(item: Dictionary) -> Button:
 	margin.add_theme_constant_override("margin_top", 7)
 	margin.add_theme_constant_override("margin_bottom", 7)
 	button.add_child(margin)
-	var row: = HBoxContainer.new()
+	var row: = VBoxContainer.new()
 	row.name = "CardRow"
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	row.add_theme_constant_override("separation", 9)
+	row.add_theme_constant_override("separation", 5)
 	margin.add_child(row)
-
-	var icon_slot: = PanelContainer.new()
+	var icon_slot: = Control.new()
 	icon_slot.name = "IconPlate"
-	icon_slot.custom_minimum_size = Vector2(58, 58)
 	icon_slot.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	icon_slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	icon_slot.add_theme_stylebox_override("panel", _forged_plate_style(Color("0b0b0c"), Color(_accent, 0.55), 5))
 	row.add_child(icon_slot)
 	var icon: = TextureRect.new()
 	icon.name = "Icon"
@@ -829,23 +881,24 @@ func _item_card(item: Dictionary) -> Button:
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	icon.texture = _item_texture(item)
-	icon.modulate = Color(1, 1, 1, 0.4) if bool(item.get("locked", false)) else Color.WHITE
+	_update_outfit_preview(icon, item)
+	if item.has("light_preview"):
+		var preview = preload("res://scripts/ui/light_preview.gd").new()
+		icon.add_child(preview)
+		preview.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		preview.configure(item, true)
 	icon_slot.add_child(icon)
-
-	var copy: = VBoxContainer.new()
-	copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	copy.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	copy.alignment = BoxContainer.ALIGNMENT_CENTER
-	copy.add_theme_constant_override("separation", 2)
-	row.add_child(copy)
-	var state: = _label(_state_text(item), 10, _state_color(item), HORIZONTAL_ALIGNMENT_LEFT, true)
-	state.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	state.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	copy.add_child(state)
-	var item_title: = _label(_display_text(String(item.get("title", item_id))), 13, IVORY, HORIZONTAL_ALIGNMENT_LEFT, true)
+	icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	if icon.texture != null and ("/tools/" in icon.texture.resource_path or item_id.begins_with("forge:")):
+		icon.rotation = deg_to_rad(-40.0)
+		icon.resized.connect(func(): icon.pivot_offset = icon.size * 0.5)
+	var item_title: = _label(_display_text(String(item.get("title", item_id))), 12, STEEL, HORIZONTAL_ALIGNMENT_CENTER)
 	item_title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	item_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	item_title.max_lines_visible = 2
 	item_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	copy.add_child(item_title)
+	row.add_child(item_title)
+
 	return button
 
 
@@ -877,12 +930,12 @@ func _refresh_overview() -> void :
 	var stats: Array = Array(item.get("stats", []))
 	var costs: Array = Array(item.get("costs", []))
 	if not single_item:
-		var status: = _label(_state_text(item), 10, _state_color(item), HORIZONTAL_ALIGNMENT_CENTER, true)
+		var status: = _label(("READY TO FORGE" if _visual_theme_id == "starforge" and _state_text(item) == "Ready" else _state_text(item).to_upper()), 12, IVORY, HORIZONTAL_ALIGNMENT_LEFT)
 		overview_content.add_child(status)
 	overview_content.add_child(_overview_title_plate(_display_text(String(item.get("title", _selected_item_id)))))
 	var description: = String(item.get("description", item.get("subtitle", "")))
-	if not description.is_empty() and ( not single_item or (stats.is_empty() and costs.is_empty())):
-		var description_label: = _label(description, 10, STEEL, HORIZONTAL_ALIGNMENT_CENTER)
+	if not description.is_empty() and (not single_item or stats.is_empty()):
+		var description_label: = _label(description, 15, STEEL, HORIZONTAL_ALIGNMENT_LEFT)
 		description_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		description_label.max_lines_visible = 2
 		description_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -896,26 +949,16 @@ func _refresh_overview() -> void :
 		overview_content.add_child(error_label)
 
 	if not stats.is_empty():
-		if single_item and stats[0] is Dictionary:
-			overview_content.add_child(_hero_stat_panel(Dictionary(stats[0])))
-			for stat_index in range(1, stats.size()):
-				if stats[stat_index] is Dictionary:
-					overview_content.add_child(_stat_row(Dictionary(stats[stat_index])))
-		else:
-			overview_content.add_child(_section_label(String(item.get("stats_label", "Current > Next"))))
-			for stat_value in stats:
-				if stat_value is Dictionary:
-					overview_content.add_child(_stat_row(Dictionary(stat_value)))
-
+		overview_content.add_child(_divider())
+		for stat_value in stats:
+			if stat_value is Dictionary: overview_content.add_child(_stat_row(Dictionary(stat_value)))
 	if not costs.is_empty():
-		if not single_item:
-			overview_content.add_child(_section_label(String(item.get("costs_label", "Cost"))))
+		overview_content.add_child(_divider())
 		for cost_value in costs:
-			if cost_value is Dictionary:
-				overview_content.add_child(_cost_row(Dictionary(cost_value)))
+			if cost_value is Dictionary: overview_content.add_child(_cost_row(Dictionary(cost_value)))
 
 	var future_unlock: = String(item.get("future_unlock", item.get("unlock_teaser", "")))
-	if not future_unlock.is_empty() and ( not single_item or bool(item.get("locked", false))):
+	if not future_unlock.is_empty() and (stats.is_empty() or bool(item.get("locked", false))):
 		overview_content.add_child(_section_label(String(item.get("future_unlock_label", "Next unlock"))))
 		var teaser_plate: = PanelContainer.new()
 		teaser_plate.add_theme_stylebox_override("panel", _forged_plate_style(Color("111214"), IRON_EDGE, 7))
@@ -927,7 +970,7 @@ func _refresh_overview() -> void :
 		overview_content.add_child(teaser_plate)
 
 	_refresh_total(item)
-	total_panel.visible = not single_item or costs.is_empty()
+	total_panel.visible = false
 	_refresh_primary_action(item)
 	footer_summary.text = _footer_text(item)
 	call_deferred("_reset_overview_scroll")
@@ -935,9 +978,10 @@ func _refresh_overview() -> void :
 
 func _overview_title_plate(title_text: String) -> PanelContainer:
 	var plate: = PanelContainer.new()
-	plate.custom_minimum_size.y = 58
-	plate.add_theme_stylebox_override("panel", _title_plate_style())
-	var label: = _label(title_text, 19, IVORY, HORIZONTAL_ALIGNMENT_CENTER, true)
+	plate.custom_minimum_size.y = 44
+	plate.add_theme_stylebox_override("panel", _flat_style(Color(0,0,0,0), 0))
+	var label: = _label(title_text, 26 if title_text.length() > 25 else 36, IVORY, HORIZONTAL_ALIGNMENT_LEFT, true)
+	_make_metallic(label)
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.max_lines_visible = 2
@@ -946,54 +990,37 @@ func _overview_title_plate(title_text: String) -> PanelContainer:
 	return plate
 
 
-func _hero_stat_panel(stat: Dictionary) -> PanelContainer:
-	var plate: = PanelContainer.new()
-	plate.custom_minimum_size.y = 108
-	plate.add_theme_stylebox_override("panel", _forged_plate_style(Color("111214"), IRON_MID, 10))
-	var stack: = VBoxContainer.new()
-	stack.alignment = BoxContainer.ALIGNMENT_CENTER
-	stack.add_theme_constant_override("separation", 1)
-	plate.add_child(stack)
-	var stat_name: = _label(_display_text(String(stat.get("label", stat.get("id", "Power")))), 10, STEEL, HORIZONTAL_ALIGNMENT_CENTER, true)
-	stack.add_child(stat_name)
-	var values: = HBoxContainer.new()
-	values.alignment = BoxContainer.ALIGNMENT_CENTER
-	values.add_theme_constant_override("separation", 18)
-	stack.add_child(values)
-	var decimals: = int(stat.get("decimals", -1))
-	var current_text: = _value_text(stat.get("current", "-"), decimals)
-	var next_text: = _value_text(stat.get("next", current_text), decimals)
-	var suffix: = String(stat.get("suffix", ""))
-	values.add_child(_label("%s%s" % [current_text, suffix], 28, IVORY, HORIZONTAL_ALIGNMENT_CENTER, true))
-	values.add_child(_label(">", 21, _accent_bright, HORIZONTAL_ALIGNMENT_CENTER, true))
-	values.add_child(_label("%s%s" % [next_text, suffix], 28, _accent_bright, HORIZONTAL_ALIGNMENT_CENTER, true))
-	return plate
-
-
 func _stat_row(stat: Dictionary) -> Control:
-	var row_panel: = PanelContainer.new()
-	row_panel.custom_minimum_size.y = 38
-	row_panel.add_theme_stylebox_override("panel", _forged_plate_style(SURFACE_RAISED, IRON_EDGE, 7))
+	var plate: = PanelContainer.new()
+	plate.custom_minimum_size.y = 40
+	plate.add_theme_stylebox_override("panel", _forged_plate_style(Color("101113"), Color("343336"), 9, 1))
 	var row: = HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10)
-	row_panel.add_child(row)
-	var name_label: = _label(_display_text(String(stat.get("label", stat.get("id", "Stat")))), 11, MUTED, HORIZONTAL_ALIGNMENT_LEFT)
-	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(name_label)
+	row.add_theme_constant_override("separation", 16)
+	plate.add_child(row)
+	var icon: = preload("res://scripts/ui/commerce_stat_icon.gd").new()
+	icon.kind = String(stat.get("id", stat.get("label", "power"))).to_lower()
+	icon.custom_minimum_size = Vector2(30, 30)
+	row.add_child(icon)
+	var label: = _label(_display_text(String(stat.get("label", stat.get("id", "Stat")))), 15, STEEL, HORIZONTAL_ALIGNMENT_LEFT)
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(label)
 	var decimals: = int(stat.get("decimals", -1))
-	var current_text: = _value_text(stat.get("current", "-"), decimals)
-	var next_text: = _value_text(stat.get("next", current_text), decimals)
+	var current: = _value_text(stat.get("current", "-"), decimals)
+	var next: = _value_text(stat.get("next", current), decimals)
 	var suffix: = String(stat.get("suffix", ""))
-	var value: = _label("%s%s  >  %s%s" % [current_text, suffix, next_text, suffix], 13, _accent_bright, HORIZONTAL_ALIGNMENT_RIGHT, true)
-	row.add_child(value)
-	return row_panel
+	for entry in [[current + suffix, STEEL], ["→", Color("ef964e")], [next + suffix, _accent_bright]]:
+		var value: = _label(entry[0], 18, entry[1], HORIZONTAL_ALIGNMENT_RIGHT)
+		value.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		row.add_child(value)
+	return plate
 
 
 func _cost_row(cost: Dictionary) -> Control:
 	var row_panel: = PanelContainer.new()
-	row_panel.custom_minimum_size.y = 52
+	row_panel.custom_minimum_size.y = 40
 	var missing: = _cost_missing(cost)
-	row_panel.add_theme_stylebox_override("panel", _forged_plate_style(SURFACE_RAISED, IRON_MID if missing <= 0 else Color(DANGER, 0.68), 9))
+	row_panel.add_theme_stylebox_override("panel", _flat_style(Color(0,0,0,0), 0))
 	var row: = HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
 	row_panel.add_child(row)
@@ -1008,12 +1035,13 @@ func _cost_row(cost: Dictionary) -> Control:
 		row.add_child(icon)
 	var owned: = maxi(0, int(cost.get("owned", 0)))
 	var required: = maxi(0, int(cost.get("required", cost.get("amount", 0))))
-	var name_label: = _label(_display_text(String(cost.get("label", cost.get("id", "Material")))), 11, STEEL, HORIZONTAL_ALIGNMENT_LEFT, true)
+	var name_label: = _label(_display_text(String(cost.get("label", cost.get("id", "Material")))), 15, STEEL, HORIZONTAL_ALIGNMENT_LEFT)
 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(name_label)
-	var amount: = _label("%d / %d" % [owned, required], 15, _accent_bright if missing <= 0 else DANGER, HORIZONTAL_ALIGNMENT_RIGHT, true)
+	var amount: = _label("%d / %d" % [owned, required], 20, _accent_bright if missing <= 0 else DANGER, HORIZONTAL_ALIGNMENT_RIGHT)
 	row.add_child(amount)
-	var missing_label: = _label("✓" if missing <= 0 else "%d missing" % missing, 18 if missing <= 0 else 10, _accent_bright if missing <= 0 else DANGER, HORIZONTAL_ALIGNMENT_RIGHT)
+	var missing_label: = _label("✓" if missing <= 0 else "%d missing" % missing, 22 if missing <= 0 else 12, Color("a6eea4") if missing <= 0 else DANGER, HORIZONTAL_ALIGNMENT_RIGHT)
+	missing_label.add_theme_font_override("font", SYMBOL_FONT)
 	missing_label.custom_minimum_size.x = 38 if missing <= 0 else 68
 	row.add_child(missing_label)
 	return row_panel
@@ -1053,47 +1081,84 @@ func _refresh_primary_action(item: Dictionary) -> void :
 		primary_button.text = _display_text(String(item.get("disabled_action_label", _config.get("disabled_action_label", "Unavailable"))))
 
 
-func _refresh_navigation() -> void :
-	var index: = _selected_index()
+func _refresh_navigation() -> void:
 	var count: = _items.size()
 	var has_pages: = count > 1
+	swipe_pager.enabled = has_pages
+	swipe_pager.horizontal_enabled = count > 3
 	page_navigation.visible = has_pages
 	catalog_scroll.visible = has_pages
-	page_label.text = (
-		"%s  -  %d / %d" % [_display_text(String(_config.get("catalog_label", "Catalog"))), maxi(0, index + 1), count]
-		if has_pages
-		else _display_text(String(_config.get("catalog_label", "Catalog")))
-	)
-	previous_button.visible = has_pages
-	next_button.visible = has_pages
-	previous_button.disabled = index <= 0
-	next_button.disabled = index < 0 or index >= count - 1
+	page_label.text = "Swipe to browse · Tap to preview" if count > 3 else "Tap to preview"
+	page_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	page_label.add_theme_font_override("font", SYMBOL_FONT)
 
 
-func _select_item(item_id: String) -> void :
-	if not _has_item(item_id) or item_id == _selected_item_id:
-		return
+func _select_item(item_id: String) -> void:
+	if not _has_item(item_id): return
+	# Preview is independent of browsing; never move a card out from under a tap.
+	catalog_scroll.moving = false
+	catalog_scroll.speed = 0.0
+	_commit_carousel_selection(item_id)
+
+
+func _commit_carousel_selection(item_id: String) -> void:
+	if item_id == _selected_item_id: return
 	_selected_item_id = item_id
-	_rebuild_cards()
-	_refresh_showcase(_item_by_id(_selected_item_id))
+	# Keep the existing card nodes and scroll position throughout the gesture.
+	for card in catalog_strip.get_children():
+		if not card is Button: continue
+		var id: String = String(card.get_meta("item_id", ""))
+		var selected: bool = id == item_id
+		for state in ["normal", "hover", "focus", "pressed"]:
+			card.add_theme_stylebox_override(state, _card_style(_item_by_id(id), selected, state == "pressed"))
+		if selected: _selected_card = card
+	_refresh_showcase(_item_by_id(item_id))
 	_refresh_overview()
 	_refresh_navigation()
-	_apply_responsive_layout()
+	_apply_font_scale(overview_content, 1.50 * clampf(frame.size.y / 650.0, 0.48, 1.12))
 	selection_changed.emit(item_id)
+	if _page_tween != null: _page_tween.kill()
+	var alpha: float = hero_icon.modulate.a
+	hero_icon.modulate.a = alpha * 0.6
+	_page_tween = create_tween()
+	_page_tween.tween_property(hero_icon, "modulate:a", alpha, 0.16)
 
 
-func _change_selection(offset: int) -> void :
-	var index: = _selected_index()
-	var next_index: = clampi(index + offset, 0, _items.size() - 1)
-	if next_index >= 0 and next_index < _items.size():
-		_select_item(String(Dictionary(_items[next_index]).get("id", "")))
+func _change_selection(offset: int) -> void:
+	catalog_scroll.scroll_to_index(_selected_index() + offset)
+
+
+func _catalog_tapped(start: Vector2, end: Vector2) -> void:
+	if not visible or not catalog_scroll.get_global_rect().has_point(end): return
+	for card in catalog_strip.get_children():
+		if card is Button and card.get_global_rect().has_point(start) and card.get_global_rect().has_point(end):
+			_select_item(String(card.get_meta("item_id", "")))
+			return
+
+
+func _carousel_contact_ended() -> void:
+	catalog_scroll.held = false
+	catalog_scroll.speed = 0.0
+	primary_button.disabled = not _action_is_enabled(_item_by_id(_selected_item_id))
+
+
+func _carousel_drag_started() -> void:
+	primary_button.disabled = true
+
+
+func _carousel_settled(index: int) -> void:
+	if not visible or index < 0 or index >= _items.size(): return
+	# A swipe only changes which cards are visible. A tap chooses the preview.
+	primary_button.disabled = not _action_is_enabled(_item_by_id(_selected_item_id))
 
 
 func _confirm_selected() -> void :
 	var item: = _item_by_id(_selected_item_id)
-	if item.is_empty() or not _action_is_enabled(item):
+	if item.is_empty() or catalog_scroll.held or catalog_scroll.moving or not _action_is_enabled(item):
 		return
-	action_confirmed.emit(_selected_item_id)
+	# A listener can close the panel while the signal is being delivered.
+	var confirmed_item_id: String = _selected_item_id
+	action_confirmed.emit(confirmed_item_id)
 	if bool(_config.get("close_on_confirm", false)):
 		close_commerce()
 
@@ -1109,72 +1174,65 @@ func _unhandled_input(event: InputEvent) -> void :
 		close_commerce()
 
 
-func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void :
-	if frame == null:
-		return
-	var viewport_size: = size_override if size_override != Vector2.ZERO else get_viewport_rect().size
-	if viewport_size.x <= 1.0 or viewport_size.y <= 1.0:
-		return
+func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void:
+	if frame == null: return
+	var viewport_size: Vector2 = size_override if size_override != Vector2.ZERO else get_viewport_rect().size
+	if viewport_size.x <= 1 or viewport_size.y <= 1: return
 	_layout_viewport_size = viewport_size
-	var metrics: = layout_metrics(viewport_size)
-	_place(frame, Rect2(metrics.get("panel_rect", Rect2())))
-	var compact: = viewport_size.y <= 500.0
-	var iphone_landscape: = bool(metrics.get("iphone_landscape", false))
-	var touch_target: = _touch_target_for(metrics)
-	var panel_width: = Rect2(metrics.get("panel_rect", Rect2())).size.x
-	var single_item: = _items.size() == 1
-	safe_margin.add_theme_constant_override(
-		"margin_bottom", 32 if _visual_theme_id == "forge" and iphone_landscape else 22
-	)
-	overview_panel.custom_minimum_size.x = (
-		clampf(panel_width * (0.46 if single_item else 0.42), 470.0, 590.0)
-		if iphone_landscape
-		else clampf(panel_width * (0.44 if single_item else 0.4), 330.0, 470.0)
-	)
-	header.custom_minimum_size.y = touch_target if iphone_landscape else (58.0 if compact else 68.0)
-	footer.custom_minimum_size.y = touch_target if iphone_landscape else (58.0 if compact else 66.0)
-	page_navigation.custom_minimum_size.y = touch_target
-	close_button.custom_minimum_size = Vector2(touch_target, touch_target) if iphone_landscape else Vector2(60, MIN_TOUCH_TARGET if compact else 60)
-	title_plaque.custom_minimum_size.x = 590.0 if iphone_landscape else 430.0
-	var balance_spacer: Control = header.get_node_or_null("CloseBalance") as Control
-	if balance_spacer != null:
-		balance_spacer.custom_minimum_size.x = close_button.custom_minimum_size.x
-	close_slot.custom_minimum_size.x = close_button.custom_minimum_size.x
-	previous_button.custom_minimum_size = Vector2(touch_target, touch_target) if iphone_landscape else Vector2(60, MIN_TOUCH_TARGET)
-	next_button.custom_minimum_size = Vector2(touch_target, touch_target) if iphone_landscape else Vector2(60, MIN_TOUCH_TARGET)
-	cancel_button.custom_minimum_size = Vector2(168, touch_target) if iphone_landscape else Vector2(132, 58 if compact else 64)
-	primary_button.custom_minimum_size = Vector2(318, touch_target) if iphone_landscape else Vector2(248, 58 if compact else 64)
-	total_panel.custom_minimum_size.y = touch_target if iphone_landscape else MIN_TOUCH_TARGET
-	var hero_extent: = 372.0 if iphone_landscape and single_item and _visual_theme_id == "forge" else 390.0 if iphone_landscape and single_item else 168.0 if iphone_landscape else 320.0 if single_item else 190.0
-	hero_medallion.custom_minimum_size = Vector2(hero_extent, hero_extent)
-	var hero_icon_inset: = hero_extent * 0.11 if _visual_theme_id == "forge" else 12.0
-	hero_icon.offset_left = hero_icon_inset
-	hero_icon.offset_top = hero_icon_inset
-	hero_icon.offset_right = -hero_icon_inset
-	hero_icon.offset_bottom = -hero_icon_inset
-	catalog_scroll.custom_minimum_size.y = 104.0 if iphone_landscape else 82.0
-	_apply_card_touch_targets(touch_target, iphone_landscape)
-	_apply_font_scale(self, IPHONE_FONT_SCALE if iphone_landscape else (1.2 if compact else 1.0))
+	var metrics: Dictionary = layout_metrics(viewport_size)
+	var rect: Rect2 = metrics.panel_rect
+	_place(frame, rect)
+	var k: float = clampf(rect.size.y / 650.0, 0.48, 1.12)
+	var pad: float = 26.0 * k
+	for side in ["left", "right", "top", "bottom"]: safe_margin.add_theme_constant_override("margin_"+side, roundi(pad))
+	var inner: Vector2 = rect.size - Vector2.ONE * pad * 2
+	var head: float = 70 * k
+	var gap: float = 14 * k
+	var foot: float = 96 * k
+	var touch: float = maxf(52, 86*k)
+	var right: float = inner.x * 0.49
+	_place(header_plate, Rect2(0, -8*k, inner.x, head))
+	_place(accent_line, Rect2(0, head + 1*k, inner.x, 1))
+	_place(commerce_body, Rect2(0, head + gap, inner.x, inner.y - head - gap))
+	commerce_body.add_theme_constant_override("separation", roundi(28*k))
+	overview_panel.custom_minimum_size.x = right
+	var overview_style: StyleBox = _overview_panel_style()
+	overview_style.content_margin_bottom = foot + 8*k
+	overview_panel.add_theme_stylebox_override("panel", overview_style)
+	overview_panel.clip_contents = true
+	overview_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	header.custom_minimum_size.y = 0
+	title_stack.custom_minimum_size.x = inner.x * 0.62
+	title_plaque.custom_minimum_size = Vector2(inner.x*0.40, 46*k)
+	subtitle_label.custom_minimum_size.y = 20*k
+	close_button.custom_minimum_size = Vector2(touch, touch)
+	close_slot.custom_minimum_size.x = touch
+	header.get_node("CloseBalance").custom_minimum_size.x = touch
+	_place(footer, Rect2(inner.x-right+12, inner.y-foot, right-24, foot))
+	footer.custom_minimum_size.y = foot
+	cancel_button.visible = false
+	footer_summary.visible = false
+	footer_spacer.visible = false
+	primary_button.custom_minimum_size = Vector2(0, foot)
+	total_panel.visible = false
+	var single: bool = _items.size() <= 1
+	var cards_h: float = 116*k
+	page_navigation.custom_minimum_size.y = 48*k
+	catalog_scroll.custom_minimum_size.y = cards_h
+	catalog_pane.clip_contents = true
+	var extent: float = maxf(110, minf(inner.x-right-gap, inner.y-head-gap-(cards_h+56*k if not single else 10*k)))
+	hero_medallion.custom_minimum_size = Vector2(extent, extent)
+	hero_state_plate.visible = false
+	for side in ["left", "top"]: hero_icon.set("offset_"+side, extent*0.08)
+	for side in ["right", "bottom"]: hero_icon.set("offset_"+side, -extent*0.08)
+	for child in catalog_strip.get_children():
+		if child is Button: child.custom_minimum_size = Vector2((inner.x-right-56*k)/3.0, cards_h-10*k)
+	_apply_font_scale(self, 1.50*k)
+	call_deferred("_ensure_selected_visible")
 
 
 func _touch_target_for(metrics: Dictionary) -> float:
-	return IPHONE_TOUCH_TARGET if bool(metrics.get("iphone_landscape", false)) else MIN_TOUCH_TARGET
-
-
-func _apply_card_touch_targets(touch_target: float, iphone_landscape: bool) -> void :
-	if catalog_strip == null:
-		return
-	for child in catalog_strip.get_children():
-		if child is Button:
-			var card: Button = child as Button
-			card.custom_minimum_size = Vector2(
-				190.0 if iphone_landscape else 150.0,
-				maxf(touch_target, 94.0) if iphone_landscape else 76.0
-			)
-			var icon_plate: Control = card.get_node_or_null("Inset/CardRow/IconPlate") as Control
-			if icon_plate != null:
-				var icon_extent: = 76.0 if iphone_landscape else 58.0
-				icon_plate.custom_minimum_size = Vector2(icon_extent, icon_extent)
+	return maxf(44.0, 70.0 * clampf(Rect2(metrics.panel_rect).size.y / 620.0, 0.58, 1.12))
 
 
 func apply_landscape_layout_for_test(viewport_size: Vector2) -> Dictionary:
@@ -1182,9 +1240,20 @@ func apply_landscape_layout_for_test(viewport_size: Vector2) -> Dictionary:
 	return layout_metrics(viewport_size)
 
 
-func _ensure_selected_visible() -> void :
-	if is_instance_valid(_selected_card) and catalog_scroll != null:
-		catalog_scroll.ensure_control_visible(_selected_card)
+func _ensure_selected_visible() -> void:
+	if _carousel_layout_pending or not is_instance_valid(_selected_card): return
+	_carousel_layout_pending = true
+	await get_tree().process_frame
+	var pad: int = 0
+	carousel_margin.add_theme_constant_override("margin_left", pad)
+	carousel_margin.add_theme_constant_override("margin_right", 0)
+	await get_tree().process_frame
+	if is_instance_valid(_selected_card):
+		var points: Array[float] = []
+		for card in catalog_strip.get_children():
+			if card is Button: points.append(clampf(card.position.x, 0.0, maxf(0.0, catalog_strip.size.x - catalog_scroll.size.x)))
+		catalog_scroll.configure(points, _selected_index())
+	_carousel_layout_pending = false
 
 
 func _update_hero_icon_pivot() -> void :
@@ -1323,18 +1392,6 @@ func _cost_color(item: Dictionary) -> Color:
 	return MUTED if bool(item.get("locked", false)) else _accent_bright if _is_affordable(item) else DANGER
 
 
-func _card_stat_text(item: Dictionary) -> String:
-	var stats: Array = Array(item.get("stats", []))
-	if stats.is_empty() or not stats[0] is Dictionary:
-		return _display_text(String(item.get("stat_summary", "")))
-	var stat: Dictionary = stats[0]
-	var decimals: = int(stat.get("decimals", -1))
-	var current_text: = _value_text(stat.get("current", "-"), decimals)
-	var next_text: = _value_text(stat.get("next", current_text), decimals)
-	var suffix: = String(stat.get("suffix", ""))
-	return "%s  %s%s > %s%s" % [_display_text(String(stat.get("label", stat.get("id", "Stat")))), current_text, suffix, next_text, suffix]
-
-
 func _card_cost_text(item: Dictionary) -> String:
 	var costs: Array = Array(item.get("costs", []))
 	if costs.is_empty():
@@ -1446,24 +1503,10 @@ func _value_text(value: Variant, decimals: int = -1) -> String:
 
 
 func _card_style(item: Dictionary, selected: bool, pressed: bool) -> StyleBox:
-	if _visual_theme_id == "forge":
-		var premium_tint: = Color("8f8b88")
-		if bool(item.get("locked", false)):
-			premium_tint = Color("69686b")
-		elif pressed:
-			premium_tint = Color("9a674c")
-		elif selected:
-			premium_tint = Color("ffe0b5")
-		return _mossvein_plate_style(7, premium_tint)
-	var background: = SURFACE_RAISED if selected else CARD
-	if bool(item.get("locked", false)):
-		background = Color("151517")
-	if pressed:
-		background = _accent_deep
-	var border: = _accent if selected else IRON_MID
-	if bool(item.get("locked", false)) and not selected:
-		border = Color("343438")
-	return _forged_plate_style(background, border, 7, 3 if selected else 2)
+	var style: = _forged_plate_style(Color(_accent_deep, 0.3) if selected else Color("101113"), _accent_bright if selected else Color("454347"), 6, 2)
+	style.shadow_color = Color(_accent, 0.35) if selected else Color(0,0,0,0.6)
+	style.shadow_size = 8 if selected else 3
+	return style
 
 
 func _section_label(text_value: String) -> Label:
@@ -1475,8 +1518,8 @@ func _section_label(text_value: String) -> Label:
 func _button(text_value: String, primary: bool) -> Button:
 	var button: = Button.new()
 	button.text = text_value
-	button.add_theme_font_override("font", DISPLAY_FONT if primary else BODY_FONT)
-	button.add_theme_font_size_override("font_size", 15 if primary else 12)
+	button.add_theme_font_override("font", DISPLAY_FONT)
+	button.add_theme_font_size_override("font_size", 15 if primary else 13)
 	_style_button(button, primary)
 	return button
 
@@ -1485,14 +1528,22 @@ func _style_button(button: Button, primary: bool) -> void :
 	button.add_theme_color_override("font_color", IVORY if primary else STEEL)
 	button.add_theme_color_override("font_hover_color", Color.WHITE)
 	button.add_theme_color_override("font_pressed_color", Color.WHITE)
-	button.add_theme_color_override("font_disabled_color", Color("aaa6a1") if _visual_theme_id == "forge" else Color("626166"))
-	if _visual_theme_id == "forge":
+	button.add_theme_color_override("font_disabled_color", Color("aaa6a1") if _uses_premium_skin() else Color("626166"))
+	if _uses_premium_skin():
 		button.add_theme_color_override("font_outline_color", Color(INK, 0.94))
 		button.add_theme_constant_override("outline_size", 2)
-		button.add_theme_stylebox_override("normal", _mossvein_action_style(10, Color("fff0e2")) if primary else _mossvein_plate_style(10, Color("d2cec8")))
-		button.add_theme_stylebox_override("hover", _mossvein_action_style(10, Color.WHITE) if primary else _mossvein_plate_style(10, Color("f2e4d1")))
-		button.add_theme_stylebox_override("pressed", _mossvein_action_style(10, Color("9c7055")) if primary else _mossvein_plate_style(10, Color("82726a")))
-		button.add_theme_stylebox_override("focus", _mossvein_action_style(10, Color("fff1dc")) if primary else _mossvein_plate_style(10, Color("ffd3a3")))
+		var primary_normal: = Color("fff0e2") if _visual_theme_id == "forge" else Color("f2e7dc").lerp(_accent_bright, 0.14)
+		var primary_hover: = Color.WHITE if _visual_theme_id == "forge" else Color("fffaf5").lerp(_accent_bright, 0.10)
+		var primary_pressed: = Color("9c7055") if _visual_theme_id == "forge" else Color("8b7870").lerp(_accent, 0.22)
+		var primary_focus: = Color("fff1dc") if _visual_theme_id == "forge" else Color("f8e9da").lerp(_accent_bright, 0.18)
+		var secondary_normal: = Color("d2cec8") if _visual_theme_id == "forge" else Color("ccc8c3").lerp(_accent_bright, 0.08)
+		var secondary_hover: = Color("f2e4d1") if _visual_theme_id == "forge" else Color("eee7df").lerp(_accent_bright, 0.12)
+		var secondary_pressed: = Color("82726a") if _visual_theme_id == "forge" else Color("787174").lerp(_accent, 0.14)
+		var secondary_focus: = Color("ffd3a3") if _visual_theme_id == "forge" else Color("ead8c8").lerp(_accent_bright, 0.16)
+		button.add_theme_stylebox_override("normal", _mossvein_action_style(10, primary_normal) if primary else _mossvein_plate_style(10, secondary_normal))
+		button.add_theme_stylebox_override("hover", _mossvein_action_style(10, primary_hover) if primary else _mossvein_plate_style(10, secondary_hover))
+		button.add_theme_stylebox_override("pressed", _mossvein_action_style(10, primary_pressed) if primary else _mossvein_plate_style(10, secondary_pressed))
+		button.add_theme_stylebox_override("focus", _mossvein_action_style(10, primary_focus) if primary else _mossvein_plate_style(10, secondary_focus))
 		button.add_theme_stylebox_override("disabled", _mossvein_plate_style(10, Color("858286") if primary else Color("68686c")))
 		return
 	button.remove_theme_color_override("font_outline_color")
@@ -1522,6 +1573,8 @@ func _label(text_value: String, font_size: int, color: Color, alignment: Horizon
 	label.add_theme_font_size_override("font_size", font_size)
 	label.add_theme_color_override("font_color", color)
 	if display_font:
+		label.add_theme_color_override("font_outline_color", Color(INK, 0.94))
+		label.add_theme_constant_override("outline_size", 2)
 		label.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.92))
 		label.add_theme_constant_override("shadow_offset_y", 2)
 		label.add_theme_constant_override("shadow_outline_size", 2)
@@ -1558,9 +1611,7 @@ func _forged_plate_style(background: Color, border: Color, padding: int, border_
 
 
 func _overview_panel_style() -> StyleBox:
-	if _visual_theme_id == "forge":
-		return _mossvein_plate_style(16, Color("d7d0c8"))
-	return _forged_plate_style(SURFACE, IRON_MID, 12)
+	return _panel_style(Color(0,0,0,0), Color(0,0,0,0), 0, 0, 12)
 
 
 func _mossvein_texture_style(texture: Texture2D, region_ratio: Rect2, margin_ratio: Vector4, padding: int, tint: Color, draw_center: bool = true) -> StyleBoxTexture:
@@ -1628,17 +1679,13 @@ func _inner_frame_style() -> StyleBoxFlat:
 
 
 func _hero_well_style() -> StyleBox:
-	if _visual_theme_id == "forge":
-		return _mossvein_plate_style(11, Color("d2cbc3"))
-	var style: StyleBoxFlat = _forged_plate_style(Color(0.018, 0.018, 0.02, 0.96), IRON_MID, 11, 3) as StyleBoxFlat
-	style.shadow_color = Color(0, 0, 0, 0.88)
-	style.shadow_size = 11
-	return style
+	return _flat_style(Color(0,0,0,0), 0)
 
 
 func _title_plate_style() -> StyleBox:
-	if _visual_theme_id == "forge":
-		return _mossvein_plate_style(9, Color("e4d6c6"))
+	if _uses_premium_skin():
+		var tint: = Color("e4d6c6") if _visual_theme_id == "forge" else Color("ded5cc").lerp(_accent_bright, 0.10)
+		return _mossvein_plate_style(9, tint)
 	var style: StyleBoxFlat = _forged_plate_style(Color("171719"), IRON_MID, 9, 3) as StyleBoxFlat
 	style.border_width_top = 3
 	style.shadow_color = Color(0, 0, 0, 0.84)
@@ -1689,8 +1736,9 @@ func _header_style() -> StyleBoxFlat:
 
 
 func _header_title_style() -> StyleBox:
-	if _visual_theme_id == "forge":
-		return _mossvein_plate_style(4, Color("eee1d1"))
+	if _uses_premium_skin():
+		var tint: = Color("eee1d1") if _visual_theme_id == "forge" else Color("e7ded5").lerp(_accent_bright, 0.10)
+		return _mossvein_plate_style(4, tint)
 	var style: StyleBoxFlat = _forged_plate_style(Color("18181a"), IRON_MID, 6, 3) as StyleBoxFlat
 	style.border_width_top = 4
 	style.border_width_bottom = 4
@@ -1720,3 +1768,73 @@ func _place(control: Control, rect: Rect2) -> void :
 	control.offset_top = rect.position.y
 	control.offset_right = rect.end.x
 	control.offset_bottom = rect.end.y
+
+
+func _process(delta: float) -> void:
+	if not visible or hero_icon == null:
+		return
+	primary_button.add_theme_constant_override("outline_size", 0)
+	primary_copy.text = primary_button.text.to_upper()
+	primary_copy.modulate = Color(1,1,1,0.48) if primary_button.disabled else Color.WHITE
+	primary_button.add_theme_color_override("font_color", Color(1,1,1,0))
+	primary_button.add_theme_color_override("font_hover_color", Color(1,1,1,0))
+	primary_button.add_theme_color_override("font_pressed_color", Color(1,1,1,0))
+	primary_button.add_theme_color_override("font_focus_color", Color(1,1,1,0))
+	primary_button.add_theme_color_override("font_disabled_color", Color(1,1,1,0))
+	_showcase_clock += delta
+	var amplitude: float = 3.5 if _visual_theme_id == "wayfarer" else 1.5
+	var bob: float = sin(_showcase_clock * 1.8) * amplitude
+	var extent: float = hero_medallion.custom_minimum_size.x
+	hero_icon.offset_top = extent * 0.08 + bob
+	hero_icon.offset_bottom = -extent * 0.08 + bob
+
+func _make_metallic(label: Label) -> void:
+	var material: = ShaderMaterial.new()
+	material.shader = METAL_TEXT
+	label.material = material
+	label.resized.connect(func(): material.set_shader_parameter("text_height", maxf(1, label.size.y)))
+	label.add_theme_color_override("font_color", Color.WHITE)
+	label.add_theme_color_override("font_shadow_color", Color("402114"))
+	label.add_theme_constant_override("shadow_offset_y", 3)
+
+func _divider() -> Control:
+	var line: = HSeparator.new()
+	line.custom_minimum_size.y = 4
+	var style: = StyleBoxLine.new()
+	style.color = Color("765039")
+	style.thickness = 1
+	line.add_theme_stylebox_override("separator", style)
+	return line
+
+
+func _update_outfit_preview(target: TextureRect, item: Dictionary, animated: bool = false) -> void:
+	var existing: Node = target.get_node_or_null("OutfitPreview")
+	if not item.has("outfit_preview"):
+		if existing != null:
+			target.remove_child(existing)
+			existing.queue_free()
+		return
+	if existing == null:
+		existing = preload("res://scripts/ui/outfit_preview.gd").new()
+		existing.name = "OutfitPreview"
+		target.add_child(existing)
+		existing.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	existing.configure(String(item.outfit_preview), animated)
+
+
+func _update_light_preview(item: Dictionary) -> void:
+	var existing = hero_well.get_node_or_null("LightPreview")
+	hero_medallion.visible = not item.has("light_preview")
+	if not item.has("light_preview"):
+		if existing != null:
+			hero_well.remove_child(existing)
+			existing.queue_free()
+		return
+	if existing == null:
+		existing = preload("res://scripts/ui/light_preview.gd").new()
+		existing.name = "LightPreview"
+		hero_well.add_child(existing)
+		existing.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		existing.offset_left = 8
+		existing.offset_right = -8
+	existing.configure(item)
