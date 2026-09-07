@@ -12,7 +12,7 @@ index e81fe17..ab15a5b 100644
  config/use_custom_user_dir=true
  config/custom_user_dir_name="Ever Deeper- Godot Production Port"
 diff --git a/scripts/dev/visual_capture_driver.gd b/scripts/dev/visual_capture_driver.gd
-index 917ddb2..e6047c0 100644
+index 917ddb2..069f6af 100644
 --- a/scripts/dev/visual_capture_driver.gd
 +++ b/scripts/dev/visual_capture_driver.gd
 @@ -135,7 +135,7 @@ func run(main_node: Node) -> void :
@@ -29,7 +29,7 @@ index 917ddb2..e6047c0 100644
  	if not key.pressed or key.echo:
  		return
 -	if key.keycode not in [KEY_ENTER, KEY_KP_ENTER] and key.physical_keycode not in [KEY_ENTER, KEY_KP_ENTER]:
-+	if key.keycode not in [KEY_ENTER, KEY_KP_ENTER, KEY_F13] and key.physical_keycode not in [KEY_ENTER, KEY_KP_ENTER, KEY_F13]:
++	if key.keycode not in [KEY_ENTER, KEY_KP_ENTER, KEY_F8] and key.physical_keycode not in [KEY_ENTER, KEY_KP_ENTER, KEY_F8]:
  		return
  	_acknowledged = true
  	_waiting_for_ack = false
