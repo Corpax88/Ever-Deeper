@@ -1,0 +1,88 @@
+name: Verify complete source cleanup
+on:
+  push:
+    branches: [codex-code-cleanup]
+    paths: ['.github/workflows/source-cleanup.yml']
+permissions:
+  contents: write
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: codex-code-cleanup}
+      - name: Restore exact current authored assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/code-cleanup/restore_assets.py
+      - name: Commit complete source asset tree
+        run: |
+          git config user.name 'Ever Deeper source maintenance'
+          git config user.email 'actions@users.noreply.github.com'
+          git add assets
+          git diff --cached --quiet || git commit -m 'Restore the exact v0.46.8 authored assets to the current source root'
+          git push origin HEAD:codex-code-cleanup
+      - name: Install exact Godot runtime and templates
+        run: |
+          curl -L --fail --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          curl -L --fail --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz -o "$RUNNER_TEMP/templates.tpz"
+          unzip -q "$RUNNER_TEMP/templates.tpz" "templates/web*.zip" "templates/version.txt" -d "$RUNNER_TEMP/templates"
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          cp "$RUNNER_TEMP/templates/templates/"* "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Import clean checkout and run source gates
+        run: |
+          Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > "$RUNNER_TEMP/import.log" 2>&1
+          python3 tools/check_invariants.py
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --output "$RUNNER_TEMP/native"
+      - name: Export unchanged game and check both flavors
+        run: |
+          mkdir -p "$RUNNER_TEMP/candidates/live" "$RUNNER_TEMP/candidates/dev"
+          Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-release 'Web Production' "$RUNNER_TEMP/candidates/live/index.html" > "$RUNNER_TEMP/export-live.log" 2>&1
+          Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-release 'Web DEV' "$RUNNER_TEMP/candidates/dev/index.html" > "$RUNNER_TEMP/export-dev.log" 2>&1
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/candidates/live/index.pck" --cases build-flavor --output "$RUNNER_TEMP/flavor-live"
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/candidates/dev/index.pck" --cases build-flavor --output "$RUNNER_TEMP/flavor-dev"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cleanup-native-evidence
+          path: |
+            ${{ runner.temp }}/native
+            ${{ runner.temp }}/flavor-*
+            ${{ runner.temp }}/*.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cleanup-exact-candidates
+          path: ${{ runner.temp }}/candidates
+  visual:
+    needs: source
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        side: [baseline, candidate]
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: codex-code-cleanup}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/download-artifact@v4
+        if: matrix.side == 'candidate'
+        with:
+          name: cleanup-exact-candidates
+          path: ${{ runner.temp }}/candidates
+      - name: Fetch published baseline
+        if: matrix.side == 'baseline'
+        run: python3 .github/code-cleanup/fetch_baseline.py "$RUNNER_TEMP/candidates/live"
+      - run: |
+          npm ci
+          npx playwright install --with-deps webkit
+      - name: Capture identical complete mobile matrix
+        run: TOUCH_BROWSER=webkit SMALL_IPHONE=1 CAPTURE_END=303 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidates/live" --output-dir "$RUNNER_TEMP/visual"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cleanup-visual-${{ matrix.side }}
+          path: ${{ runner.temp }}/visual
