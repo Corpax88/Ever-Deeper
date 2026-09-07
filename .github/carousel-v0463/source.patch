@@ -1,0 +1,503 @@
+diff --git a/project.godot b/project.godot
+index e81fe17..ab15a5b 100644
+--- a/project.godot
++++ b/project.godot
+@@ -11,7 +11,7 @@ config_version=5
+ [application]
+ 
+ config/name="Ever Deeper"
+-config/version="0.46.2"
++config/version="0.46.3"
+ run/main_scene="res://scenes/main/main.tscn"
+ config/use_custom_user_dir=true
+ config/custom_user_dir_name="Ever Deeper- Godot Production Port"
+diff --git a/scripts/dev/visual_capture_driver.gd b/scripts/dev/visual_capture_driver.gd
+index 917ddb2..069f6af 100644
+--- a/scripts/dev/visual_capture_driver.gd
++++ b/scripts/dev/visual_capture_driver.gd
+@@ -135,7 +135,7 @@ func run(main_node: Node) -> void :
+ 
+ func _verify_build_contract() -> Dictionary:
+ 	var dev_feature: = OS.has_feature("ever_deeper_dev")
+-	var expected_version: = "0.46.2-dev.1" if dev_feature else "0.46.2"
++	var expected_version: = "0.46.3-dev.1" if dev_feature else "0.46.3"
+ 	var expected_flavor: = "dev" if dev_feature else "production"
+ 	var actual_version: = String(PremiumMenuScript.release_version())
+ 	var developer_menu: Variant = _main.get("developer_menu")
+@@ -172,7 +172,7 @@ func _input(event: InputEvent) -> void :
+ 	var key: = event as InputEventKey
+ 	if not key.pressed or key.echo:
+ 		return
+-	if key.keycode not in [KEY_ENTER, KEY_KP_ENTER] and key.physical_keycode not in [KEY_ENTER, KEY_KP_ENTER]:
++	if key.keycode not in [KEY_ENTER, KEY_KP_ENTER, KEY_F8] and key.physical_keycode not in [KEY_ENTER, KEY_KP_ENTER, KEY_F8]:
+ 		return
+ 	_acknowledged = true
+ 	_waiting_for_ack = false
+diff --git a/scripts/qa/menu_touch_qa.gd b/scripts/qa/menu_touch_qa.gd
+index 8816097..4a298bd 100644
+--- a/scripts/qa/menu_touch_qa.gd
++++ b/scripts/qa/menu_touch_qa.gd
+@@ -17,14 +17,22 @@ func gesture(kind: String, start: Vector2, delta: Vector2 = Vector2.ZERO, label:
+ 		print("EVER_DEEPER_OVERHAUL_INPUT_READY ",JSON.stringify({"kind":kind,"x":start.x,"y":start.y,"dx":delta.x,"dy":delta.y,"label":label,"width":size.x,"height":size.y}))
+ 		check(await driver._wait_for_ack(), "Browser acknowledges " + kind)
+ 	else:
+-		if kind == "capture": return
+-		var event = InputEventScreenTouch.new();event.index=5;event.pressed=true;event.position=start;driver.get_viewport().push_input(event,true)
+-		if kind == "swipe":
++		if kind in ["capture","record_start","record_stop"]: return
++		var event = InputEventScreenTouch.new();event.index=5;event.pressed=true;event.position=start
++		if kind != "release": driver.get_viewport().push_input(event,true)
++		if kind in ["swipe","hold"]:
+ 			for i in range(1,7):
+ 				var drag = InputEventScreenDrag.new();drag.index=5;drag.position=start+delta*float(i)/6.0;drag.relative=delta/6.0
+ 				driver.get_viewport().push_input(drag,true);await driver.get_tree().process_frame
+-		event=InputEventScreenTouch.new();event.index=5;event.position=start+delta;event.canceled=kind=="cancel";driver.get_viewport().push_input(event,true)
++		event=InputEventScreenTouch.new();event.index=5;event.position=start+delta;event.canceled=kind=="cancel"
++		if kind != "hold": driver.get_viewport().push_input(event,true)
+ 	await settle()
++func rest_carousel() -> void:
++	for i in range(180):
++		if not main.commerce_panel.catalog_scroll.moving: break
++		await driver.get_tree().process_frame
++	await settle()
++
+ func swipe(scroll: ScrollContainer, horizontal: bool, label: String) -> void:
+ 	check(scroll is TouchScrollContainer, label + " uses shared finger scrolling")
+ 	scroll.scroll_horizontal=0;scroll.scroll_vertical=0
+@@ -67,32 +75,65 @@ func run(d: Node, m: Node) -> bool:
+ 	main.premium_menu.close_menu()
+ 	driver._prepare_commerce_capture("starforge_owned_active");await settle()
+ 	var panel = main.commerce_panel
++	var carousel = panel.catalog_scroll
+ 	check(panel.find_child("Previous",true,false)==null and panel.find_child("Next",true,false)==null,"Paging arrows removed")
+-	panel.select_item(String(panel._items[0].id))
+-	await settle()
+-	var selected: String=panel._selected_item_id
+-	var gold_before: int=RunState.gold
+-	await gesture("swipe",point(panel.hero_well),Vector2(-125,0))
+-	check(panel._selected_item_id==String(panel._items[1].id),"Hero showcase swipe advances exactly one item")
+-	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"starforge-swipe-next")
+-	await gesture("swipe",point(panel.overview_scroll),Vector2(125,0))
+-	check(panel._selected_item_id==selected,"Swipe back over details returns to previous item")
+-	await gesture("swipe",point(panel.hero_well),Vector2(125,0))
+-	check(panel._selected_item_id==selected,"First item clamps at left edge")
+-	await gesture("swipe",point(panel.catalog_scroll),Vector2(-120,0))
+-	check(panel._selected_item_id==String(panel._items[1].id),"Card strip swipe changes selected item")
+-	await gesture("swipe",point(panel.hero_well),Vector2(-180,0))
+-	check(panel._selected_item_id==String(panel._items[2].id),"Next swipe reaches final item")
+-	await gesture("swipe",point(panel.hero_well),Vector2(-125,0))
+-	check(panel._selected_item_id==String(panel._items[2].id),"Final item clamps at right edge")
+-	await gesture("swipe",point(panel.hero_well),Vector2(20,0))
+-	check(panel._selected_item_id==String(panel._items[2].id),"Short drag does not page")
+-	await gesture("cancel",point(panel.hero_well))
+-	check(panel._selected_item_id==String(panel._items[2].id),"Canceled touch does not page")
+-	await gesture("swipe",point(panel.hero_well),Vector2(0,-100))
+-	check(panel._selected_item_id==String(panel._items[2].id),"Vertical motion does not page")
+-	check(RunState.gold==gold_before,"Navigation gestures never buy or equip")
+-	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"starforge-swipe-last")
++	check(not carousel.get_h_scroll_bar().is_visible_in_tree(),"Carousel has no draggable scrollbar")
++	panel.select_item(String(panel._items[0].id));await rest_carousel()
++	var first = panel.catalog_strip.get_child(0)
++	var first_id: int = first.get_instance_id()
++	var stride: float = carousel.targets[1] - carousel.targets[0]
++	var gold_before: int = RunState.gold
++	var start: Vector2 = point(carousel)
++	var displacement: Vector2 = Vector2(-stride * 0.68,0)
++	var original_x: float = first.get_global_rect().position.x
++	await gesture("record_start",Vector2.ZERO)
++	await gesture("hold", start, displacement)
++	check(carousel.held and not carousel.moving,"Finger owns carousel while dragging")
++	check(absf(carousel.position_x + displacement.x)<3,"Cards follow finger distance before release")
++	check(first.get_global_rect().position.x < original_x - 30,"Visible card geometry moves during the drag")
++	check(panel._selected_item_id==String(panel._items[0].id),"Item does not abruptly switch during held drag")
++	check(panel.primary_button.disabled,"Buying is disabled during carousel movement")
++	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"starforge-held-between-cards")
++	var before_release: float = carousel.position_x
++	await gesture("release",start + displacement)
++	check(carousel.moving,"Release starts a visible settling animation")
++	check(carousel.position_x > before_release and carousel.position_x < carousel.targets[1],"Release continues smoothly toward next card")
++	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"starforge-settling")
++	await rest_carousel()
++	check(panel._selected_item_id==String(panel._items[1].id),"Nearest centered card becomes selected after settling")
++	check(first.get_instance_id()==first_id and panel.catalog_strip.get_child(0)==first,"Paging preserves card nodes rather than rebuilding and jumping")
++	check(absf(carousel.position_x-carousel.targets[1])<1,"Settled card is centered exactly")
++	check(carousel.motion_samples>4,"Release is rendered over multiple animation frames")
++	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"starforge-centered-comet")
++	await gesture("swipe",point(carousel),Vector2(-stride*0.8,0))
++	# Browser dispatch is asynchronous: sample at contact, not before the
++	# round trip during which the carousel is still supposed to glide.
++	var caught_position: Array[float] = [-1.0]
++	var on_contact = func(): caught_position[0] = carousel.position_x
++	panel.swipe_pager.contact_started.connect(on_contact, CONNECT_ONE_SHOT)
++	await gesture("hold",point(carousel),Vector2.ZERO)
++	check(carousel.held and caught_position[0] >= 0 and absf(carousel.position_x-caught_position[0])<3,"Touch catches and holds the carousel at contact position")
++	await gesture("cancel",point(carousel));await rest_carousel()
++	await gesture("swipe",point(carousel),Vector2(-stride*0.8,0));await rest_carousel()
++	check(panel._selected_item_id==String(panel._items[2].id),"Flick continues to the final card")
++	await gesture("swipe",point(carousel),Vector2(-120,0));await rest_carousel()
++	check(panel._selected_item_id==String(panel._items[2].id),"End of list remains bounded")
++	await gesture("hold",point(carousel),Vector2(20,0))
++	await gesture("release",point(carousel)+Vector2(20,0));await rest_carousel()
++	check(panel._selected_item_id==String(panel._items[2].id),"Small drag settles back without page switch")
++	await gesture("swipe",point(panel.overview_scroll),Vector2(0,-100));await rest_carousel()
++	check(panel._selected_item_id==String(panel._items[2].id),"Vertical detail scrolling does not change cards")
++	check(RunState.gold==gold_before,"Carousel does not purchase or equip during navigation")
++	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"starforge-centered-crown")
++	await gesture("record_stop",Vector2.ZERO)
++	# The same component also handles the longer workshop lists.
++	panel.close_commerce()
++	driver._prepare_commerce_capture("workshop_tool_forge_baseline");await settle()
++	carousel=panel.catalog_scroll
++	check(carousel.targets.size()>3,"Workshop exposes a longer carousel")
++	await gesture("swipe",point(carousel),Vector2(-170,0));await rest_carousel()
++	check(panel._selected_index()>0,"Workshop cards also glide and settle")
++	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"workshop-carousel-centered")
+ 	# The small mobile details pane overflows for mastery descriptions/costs.
+ 	var detail: ScrollContainer=main.commerce_panel.overview_scroll
+ 	if detail.get_v_scroll_bar().max_value > detail.get_v_scroll_bar().page + 20:
+diff --git a/scripts/ui/commerce_panel.gd b/scripts/ui/commerce_panel.gd
+index e6c117d..dddebfa 100644
+--- a/scripts/ui/commerce_panel.gd
++++ b/scripts/ui/commerce_panel.gd
+@@ -208,6 +208,8 @@ var page_label: Label
+ var swipe_pager: Node
+ var _page_tween: Tween
+ var catalog_scroll: ScrollContainer
++var carousel_margin: MarginContainer
++var _carousel_layout_pending: bool = false
+ var catalog_strip: HBoxContainer
+ var hero_well: PanelContainer
+ var hero_medallion: ForgedMedallion
+@@ -250,7 +252,11 @@ func _ready() -> void :
+ 	swipe_pager = preload("res://scripts/ui/swipe_pager.gd").new()
+ 	swipe_pager.name = "SwipePager"
+ 	swipe_pager.region = commerce_body
+-	swipe_pager.page_requested.connect(_swipe_selection)
++	swipe_pager.contact_started.connect(catalog_scroll.press)
++	swipe_pager.drag_started.connect(_carousel_drag_started)
++	swipe_pager.dragged.connect(catalog_scroll.drag_by)
++	swipe_pager.released.connect(catalog_scroll.release)
++	catalog_scroll.settled.connect(_carousel_settled)
+ 	add_child(swipe_pager)
+ 	get_viewport().size_changed.connect(_apply_responsive_layout)
+ 	visible = false
+@@ -590,21 +596,24 @@ func _build_commerce_body() -> void :
+ 	hero_state_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+ 	hero_state_plate.add_child(hero_state_label)
+ 
+-	catalog_scroll = preload("res://scripts/ui/touch_scroll_container.gd").new()
++	catalog_scroll = preload("res://scripts/ui/inertial_carousel.gd").new()
+ 	catalog_scroll.name = "CatalogScroll"
+ 	catalog_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+ 	catalog_scroll.custom_minimum_size.y = 96
+ 	catalog_scroll.size_flags_vertical = Control.SIZE_SHRINK_END
+ 	catalog_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
+ 	catalog_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+-	catalog_scroll.follow_focus = true
++	catalog_scroll.follow_focus = false
+ 	catalog_pane.add_child(catalog_scroll)
+ 	catalog_strip = HBoxContainer.new()
+ 	catalog_strip.name = "ItemCards"
+ 	catalog_strip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+ 	catalog_strip.size_flags_vertical = Control.SIZE_FILL
+ 	catalog_strip.add_theme_constant_override("separation", 8)
+-	catalog_scroll.add_child(catalog_strip)
++	carousel_margin = MarginContainer.new()
++	carousel_margin.name = "CarouselPadding"
++	catalog_scroll.add_child(carousel_margin)
++	carousel_margin.add_child(catalog_strip)
+ 
+ 	overview_panel = PanelContainer.new()
+ 	overview_panel.name = "Overview"
+@@ -1078,33 +1087,46 @@ func _refresh_navigation() -> void :
+ 	)
+ 
+ 
+-func _select_item(item_id: String) -> void :
+-	if not _has_item(item_id) or item_id == _selected_item_id:
+-		return
++func _select_item(item_id: String) -> void:
++	if not _has_item(item_id): return
++	_commit_carousel_selection(item_id)
++	catalog_scroll.scroll_to_index(_selected_index())
++
++
++func _commit_carousel_selection(item_id: String) -> void:
++	if item_id == _selected_item_id: return
+ 	_selected_item_id = item_id
+-	_rebuild_cards()
+-	_refresh_showcase(_item_by_id(_selected_item_id))
++	# Keep the existing card nodes and scroll position throughout the gesture.
++	for card in catalog_strip.get_children():
++		if not card is Button: continue
++		var id: String = String(card.get_meta("item_id", ""))
++		var selected: bool = id == item_id
++		card.add_theme_stylebox_override("normal", _card_style(_item_by_id(id), selected, false))
++		if selected: _selected_card = card
++	_refresh_showcase(_item_by_id(item_id))
+ 	_refresh_overview()
+ 	_refresh_navigation()
+-	_apply_responsive_layout()
++	_apply_font_scale(overview_content, (1.68 if bool(layout_metrics(_layout_viewport_size).iphone_landscape) else 1.42) * clampf(frame.size.y / 620.0, 0.58, 1.12))
+ 	selection_changed.emit(item_id)
++	if _page_tween != null: _page_tween.kill()
++	var alpha: float = hero_icon.modulate.a
++	hero_icon.modulate.a = alpha * 0.6
++	_page_tween = create_tween()
++	_page_tween.tween_property(hero_icon, "modulate:a", alpha, 0.16)
+ 
+ 
+-func _change_selection(offset: int) -> void :
+-	var index: = _selected_index()
+-	var next_index: = clampi(index + offset, 0, _items.size() - 1)
+-	if next_index >= 0 and next_index < _items.size():
+-		_select_item(String(Dictionary(_items[next_index]).get("id", "")))
++func _change_selection(offset: int) -> void:
++	catalog_scroll.scroll_to_index(_selected_index() + offset)
+ 
+ 
+-func _swipe_selection(offset: int) -> void:
+-	var old_selection: String = _selected_item_id
+-	_change_selection(offset)
+-	if old_selection == _selected_item_id: return
+-	if _page_tween != null: _page_tween.kill()
+-	hero_icon.modulate.a = 0.45
+-	_page_tween = create_tween()
+-	_page_tween.tween_property(hero_icon, "modulate:a", 1.0, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
++func _carousel_drag_started() -> void:
++	primary_button.disabled = true
++
++
++func _carousel_settled(index: int) -> void:
++	if not visible or index < 0 or index >= _items.size(): return
++	_commit_carousel_selection(String(Dictionary(_items[index]).get("id", "")))
++	primary_button.disabled = not _action_is_enabled(_item_by_id(_selected_item_id))
+ 
+ 
+ func _confirm_selected() -> void :
+@@ -1159,7 +1181,7 @@ func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void :
+ 	overview_panel.clip_contents = true
+ 	overview_scroll.clip_contents = true
+ 	overview_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+-	catalog_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
++	catalog_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
+ 	catalog_pane.clip_contents = true
+ 	header.custom_minimum_size.y = 0
+ 	footer.custom_minimum_size.y = foot_h
+@@ -1220,9 +1242,20 @@ func apply_landscape_layout_for_test(viewport_size: Vector2) -> Dictionary:
+ 	return layout_metrics(viewport_size)
+ 
+ 
+-func _ensure_selected_visible() -> void :
+-	if is_instance_valid(_selected_card) and catalog_scroll != null:
+-		catalog_scroll.ensure_control_visible(_selected_card)
++func _ensure_selected_visible() -> void:
++	if _carousel_layout_pending or not is_instance_valid(_selected_card): return
++	_carousel_layout_pending = true
++	await get_tree().process_frame
++	var pad: int = maxi(0, roundi((catalog_scroll.size.x - _selected_card.size.x) * 0.5))
++	carousel_margin.add_theme_constant_override("margin_left", pad)
++	carousel_margin.add_theme_constant_override("margin_right", pad)
++	await get_tree().process_frame
++	if is_instance_valid(_selected_card):
++		var points: Array[float] = []
++		for card in catalog_strip.get_children():
++			if card is Button: points.append(maxf(0.0, pad + card.position.x + card.size.x * 0.5 - catalog_scroll.size.x * 0.5))
++		catalog_scroll.configure(points, _selected_index())
++	_carousel_layout_pending = false
+ 
+ 
+ func _update_hero_icon_pivot() -> void :
+diff --git a/scripts/ui/inertial_carousel.gd b/scripts/ui/inertial_carousel.gd
+new file mode 100644
+index 0000000..22d3c29
+--- /dev/null
++++ b/scripts/ui/inertial_carousel.gd
+@@ -0,0 +1,102 @@
++extends ScrollContainer
++## Continuous, interruptible dragging with a critically damped snap at release.
++signal settled(index: int)
++var targets: Array[float] = []
++var position_x: float = 0.0
++var speed: float = 0.0
++var target_x: float = 0.0
++var target_index: int = 0
++var held: bool = false
++var moving: bool = false
++var start_index: int = 0
++var motion_samples: int = 0
++
++func configure(points: Array[float], index: int) -> void:
++	targets = points
++	if not held and not moving: jump_to(index)
++
++func jump_to(index: int) -> void:
++	if targets.is_empty(): return
++	target_index = clampi(index, 0, targets.size() - 1)
++	target_x = targets[target_index]
++	position_x = target_x
++	speed = 0.0
++	held = false
++	moving = false
++	_apply_position()
++
++func press() -> void:
++	held = true
++	moving = false
++	speed = 0.0
++	start_index = nearest_index(position_x) if not targets.is_empty() else 0
++
++func drag_by(distance: float) -> void:
++	if targets.is_empty(): return
++	position_x = clampf(position_x - distance, targets[0], targets[-1])
++	_apply_position()
++
++func release(velocity_x: float, canceled: bool) -> void:
++	held = false
++	if targets.is_empty(): return
++	if canceled:
++		scroll_to_index(start_index)
++		return
++	speed = clampf(-velocity_x, -2600.0, 2600.0)
++	var projected: float = clampf(position_x + speed * 0.16, targets[0], targets[-1])
++	target_index = nearest_index(projected)
++	target_x = targets[target_index]
++	moving = true
++
++func nearest_index(value: float) -> int:
++	var best: int = 0
++	for index in range(targets.size()):
++		if absf(targets[index] - value) < absf(targets[best] - value): best = index
++	return best
++
++func scroll_to_index(index: int) -> void:
++	if targets.is_empty(): return
++	target_index = clampi(index, 0, targets.size() - 1)
++	target_x = targets[target_index]
++	held = false
++	moving = true
++	speed = 0.0
++
++func _apply_position() -> void:
++	get_h_scroll_bar().value = position_x
++
++func _process(delta: float) -> void:
++	if not is_visible_in_tree():
++		moving = false
++		held = false
++		speed = 0.0
++		return
++	if held or not moving: return
++	# Exact spring solution avoids frame-rate dependent lerping or an end jump.
++	var dt: float = minf(delta, 0.05)
++	var omega: float = 18.0
++	var displacement: float = position_x - target_x
++	var coefficient: float = speed + omega * displacement
++	var decay: float = exp(-omega * dt)
++	position_x = target_x + (displacement + coefficient * dt) * decay
++	speed = (speed - omega * coefficient * dt) * decay
++	position_x = clampf(position_x, targets[0], targets[-1])
++	_apply_position()
++	motion_samples += 1
++	if absf(position_x - target_x) < 0.3 and absf(speed) < 3.0:
++		position_x = target_x
++		speed = 0.0
++		moving = false
++		_apply_position()
++		settled.emit(target_index)
++
++func _gui_input(event: InputEvent) -> void:
++	# Wheel navigation uses the same animated path; touch/mouse drag is coordinated
++	# by SwipePager, before child buttons receive a drag release.
++	if event is InputEventMouseButton and event.pressed:
++		if event.button_index in [MOUSE_BUTTON_WHEEL_DOWN, MOUSE_BUTTON_WHEEL_RIGHT]:
++			scroll_to_index(target_index + 1)
++			accept_event()
++		elif event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_LEFT]:
++			scroll_to_index(target_index - 1)
++			accept_event()
+diff --git a/scripts/ui/premium_menu.gd b/scripts/ui/premium_menu.gd
+index 8ada3bd..4c7a884 100644
+--- a/scripts/ui/premium_menu.gd
++++ b/scripts/ui/premium_menu.gd
+@@ -12,7 +12,7 @@ const MINT: = Color("a8e3bc")
+ const MUTED: = Color("789384")
+ const INK: = Color("07120d")
+ const IPHONE_LANDSCAPE_ASPECT: = 1.95
+-const DEV_RELEASE_VERSION: = "0.46.2-dev.1"
++const DEV_RELEASE_VERSION: = "0.46.3-dev.1"
+ 
+ 
+ static func release_version() -> String:
+diff --git a/scripts/ui/swipe_pager.gd b/scripts/ui/swipe_pager.gd
+index b157e30..6eaed96 100644
+--- a/scripts/ui/swipe_pager.gd
++++ b/scripts/ui/swipe_pager.gd
+@@ -1,7 +1,10 @@
+ extends Node
+ ## Own horizontal gestures before the child scroll containers see them.
+ ## Vertical gestures and stationary taps keep their normal GUI behavior.
+-signal page_requested(direction: int)
++signal contact_started
++signal drag_started
++signal dragged(distance: float)
++signal released(velocity_x: float, canceled: bool)
+ var region: Control
+ var enabled: bool = false
+ var finger: int = -1
+@@ -9,6 +12,9 @@ var origin: Vector2
+ var latest: Vector2
+ var axis: int = 0 # 0 undecided, 1 horizontal, 2 vertical
+ var suppress_until: int = 0
++var release_speed: float = 0.0
++var last_motion_usec: int = 0
++var drag_previous: Vector2
+ var web_cancel_callback: JavaScriptObject
+ 
+ func _ready() -> void:
+@@ -30,6 +36,10 @@ func _begin(point: Vector2, index: int) -> void:
+ 	origin = _local(point)
+ 	latest = origin
+ 	axis = 0
++	release_speed = 0.0
++	last_motion_usec = Time.get_ticks_usec()
++	drag_previous = origin
++	contact_started.emit()
+ 
+ func _clear_child_scrolls(node: Node) -> void:
+ 	if node is TouchScrollContainer: node._cancel()
+@@ -43,20 +53,28 @@ func _motion(point: Vector2) -> void:
+ 		if axis == 1:
+ 			_clear_child_scrolls(region)
+ 			region.propagate_notification(Control.NOTIFICATION_SCROLL_BEGIN)
+-	if axis == 1: get_viewport().set_input_as_handled()
++			drag_started.emit()
++	if axis == 1:
++		var now: int = Time.get_ticks_usec()
++		var elapsed: float = maxf(float(now - last_motion_usec) / 1000000.0, 0.008)
++		var dx: float = latest.x - drag_previous.x
++		release_speed = lerpf(release_speed, dx / elapsed, 0.55)
++		drag_previous = latest
++		last_motion_usec = now
++		dragged.emit(dx)
++		get_viewport().set_input_as_handled()
+ 
+ func _finish(canceled: bool) -> void:
+-	var direction: int = 0
++	var velocity_x: float = 0.0
+ 	if axis == 1:
+ 		get_viewport().set_input_as_handled()
+ 		suppress_until = Time.get_ticks_msec() + 180
+ 		region.propagate_notification(Control.NOTIFICATION_SCROLL_END)
+-		var distance: float = latest.x - origin.x
+-		if not canceled and absf(distance) >= clampf(region.size.x * 0.045, 40.0, 65.0):
+-			direction = 1 if distance < 0.0 else -1
++		if absf(latest.x - origin.x) >= 24.0 and Time.get_ticks_usec() - last_motion_usec < 90000:
++			velocity_x = release_speed
+ 	finger = -1
+ 	axis = 0
+-	if direction != 0: page_requested.emit(direction)
++	released.emit(velocity_x, canceled)
+ 
+ func _cancel() -> void:
+ 	if finger != -1:
