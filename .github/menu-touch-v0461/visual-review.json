@@ -1,0 +1,79 @@
+{
+  "passed": true,
+  "touch_browsers": [
+    "chromium",
+    "webkit"
+  ],
+  "pet_layout_states": 9,
+  "production_dev_menu": false,
+  "touch_results": [
+    {
+      "name": "chromium-live",
+      "run_id": 34093149331,
+      "passed": true,
+      "result": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=27 failures=[]",
+      "pckSha256": "3aec9e39e5126a157101b0d554ca4136142111597f59fd82e9ec3dd05edf1aa3",
+      "htmlSha256": "33bdbc914c9ff619c569cc52b71801abd9f8623f7717fbeca11aa52a890c5488",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "browser": "151.0.7922.34",
+      "webgl": {
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "vendor": "Google Inc. (Google)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      }
+    },
+    {
+      "name": "chromium-dev",
+      "run_id": 34093149331,
+      "passed": true,
+      "result": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=31 failures=[]",
+      "pckSha256": "301b6407a37a2e82001591628d4d5aef3cc76b0e127a5fca656edfad66f3ef06",
+      "htmlSha256": "72d38bc6d33c3ea85a6e610a593fe29f8975549a6a129b90e7c7284751e77a8f",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "browser": "151.0.7922.34",
+      "webgl": {
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "vendor": "Google Inc. (Google)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)"
+      }
+    },
+    {
+      "name": "webkit-live",
+      "run_id": 34093695440,
+      "passed": true,
+      "result": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=27 failures=[]",
+      "pckSha256": "3aec9e39e5126a157101b0d554ca4136142111597f59fd82e9ec3dd05edf1aa3",
+      "htmlSha256": "33bdbc914c9ff619c569cc52b71801abd9f8623f7717fbeca11aa52a890c5488",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "browser": "26.5",
+      "webgl": {
+        "renderer": "Apple GPU",
+        "vendor": "Apple Inc.",
+        "version": "WebGL 2.0"
+      }
+    }
+  ],
+  "identities": {
+    "dev": {
+      "index.pck": "301b6407a37a2e82001591628d4d5aef3cc76b0e127a5fca656edfad66f3ef06",
+      "index.html": "72d38bc6d33c3ea85a6e610a593fe29f8975549a6a129b90e7c7284751e77a8f"
+    },
+    "live": {
+      "index.pck": "3aec9e39e5126a157101b0d554ca4136142111597f59fd82e9ec3dd05edf1aa3",
+      "index.html": "33bdbc914c9ff619c569cc52b71801abd9f8623f7717fbeca11aa52a890c5488"
+    }
+  },
+  "limitations": "Playwright Chromium CDP gestures and WebKit DOM swipes/native taps, not a physical iPhone.",
+  "layout_run_id": 34093895151,
+  "layout_artifact_id": 10007987404,
+  "visual_notes": "Personally reviewed all nine journal states, scrolling screenshots in Chromium and WebKit, and DEV drawer. Original journal art retained; enlarged controls fit; no overlapping buttons or text; scroll clipping stays within pane."
+}
