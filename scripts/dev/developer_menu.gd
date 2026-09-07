@@ -71,8 +71,9 @@ class FrameMeter extends Label:
 			"draw_calls": calls, "canvas_width": canvas_size.x, "canvas_height": canvas_size.y, "dpr": dpr})
 		history.append(latest.duplicate())
 		if history.size() > 60: history.pop_front()
+		var memory_label: String = "%.0f" % memory if memory > 0.0 else "n/a"
 		var video_label: String = "%.0f" % video_memory if video_memory > 0.0 else "n/a"
-		text = "D2 · %.0fs · %.1f FPS · p95 %.1f ms\nMax %.1f ms · >33 ms: %d · CPU %.1f / Phys %.1f ms\nCanvas %d×%d · DPR %.1f · Draw %d\nMem %.0f MiB · GPU %s MiB · Nodes %d" % [latest.elapsed_seconds, fps, p95, samples[-1], slow, cpu_ms, physics_ms, canvas_size.x, canvas_size.y, dpr, calls, memory, video_label, nodes]
+		text = "D2 · %.0fs · %.1f FPS · p95 %.1f ms\nMax %.1f ms · >33 ms: %d · CPU %.1f / Phys %.1f ms\nCanvas %d×%d · DPR %.1f · Draw %d\nMem %s MiB · GPU %s MiB · Nodes %d" % [latest.elapsed_seconds, fps, p95, samples[-1], slow, cpu_ms, physics_ms, canvas_size.x, canvas_size.y, dpr, calls, memory_label, video_label, nodes]
 		# Bounded memory-only history; no autosave, network or per-frame logging.
 		samples.clear()
 		elapsed_ms = 0.0

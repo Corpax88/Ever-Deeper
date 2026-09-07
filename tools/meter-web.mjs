@@ -12,7 +12,7 @@ const server = http.createServer(async (req,res) => {
     if (!file.startsWith(root+path.sep)) {res.writeHead(403).end();return;}
     let data = await readFile(file);
     if (file.endsWith('.html')) data = Buffer.from(data.toString().replace(/const GODOT_CONFIG = (\{[^\r\n]+\});/, (_,raw) => {
-      const config=JSON.parse(raw); config.args=['--','--qa-mobile-performance','--perf-meter-review'];
+      const config=JSON.parse(raw); config.args=['--audio-driver','Dummy','--','--qa-mobile-performance','--perf-meter-review'];
       return 'const GODOT_CONFIG = '+JSON.stringify(config)+';';
     }));
     res.writeHead(200,{'Content-Type':file.endsWith('.wasm')?'application/wasm':file.endsWith('.js')?'text/javascript':file.endsWith('.html')?'text/html':'application/octet-stream','Cross-Origin-Opener-Policy':'same-origin','Cross-Origin-Embedder-Policy':'require-corp'}).end(data);
