@@ -266,8 +266,9 @@ func review_meter() -> void:
 	if meter.is_processing() or meter.visible: fail("Hidden meter still active"); return
 	main._dev_jump_mine("mossMine", 2)
 	main.developer_menu.toggle_frame_meter()
+	if not meter.history.is_empty(): fail("Restart did not reset history"); return
 	await main.get_tree().create_timer(2.2).timeout
-	if meter.history.size() != 1: fail("Restart did not reset bounded history"); return
+	if meter.history.is_empty() or meter.history.size() > 60: fail("Invalid bounded history"); return
 	if DisplayServer.get_name() != "headless":
 		await RenderingServer.frame_post_draw
 		main.get_viewport().get_texture().get_image().save_png(output_dir.path_join("meter-mossvein.png"))
