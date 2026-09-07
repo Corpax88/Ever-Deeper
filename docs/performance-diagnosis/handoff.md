@@ -40,14 +40,25 @@ before using it to choose an optimization. No production resolution change made.
 The first run 34157419216 completed measurements but failed its final shell gate
 because ripgrep was absent; the second workflow installs it and passed.
 
-## Next discriminating device check
+## New physical-device evidence — idle test confirmed
 
-After a fresh reload, leave the game completely untouched for about 30 seconds.
-Does FPS fall while standing still, or only after movement? This separates an
-elapsed-time/warm-up trigger from movement activation. Do not claim a memory leak,
-thermal throttling, or a fixed iPhone regression without evidence.
+User answered yes and supplied ScreenRecording_09-07-2026 22-09-56_1.mp4,
+40.97 seconds. Fresh loading screen, Continue Base Hub, enables FPS meter, then
+stands still beside Wardrobe. Sampled visible readings: about 50 FPS at recording
+16–28 seconds, 43 FPS around 32 seconds, 14.4 FPS with p95 76 ms around 36 seconds.
+This is the developed hub (Treasure Chamber 5/5, active workshops), unlike the
+fresh automated hub fixture. User movement is NOT required. Companion animations,
+lighting, audio and normal background processing are still active.
 
-If movement is necessary, next compare camera movement, companion movement, and
-headlamp turning separately. If time alone triggers it, instrument actual WebGL
-render dimensions and long-session frame/CPU/resource counters in DEV. Preserve
-approved visual appearance; no speculative shadow removal or resolution downgrade.
+Earlier native route tests do not reproduce this high-to-low time-dependent
+transition and do not match the user's mature save. No root cause confirmed.
+Source review found an eight-second location checkpoint and six-second batched
+autosave; these timings alone do not explain sustained low FPS. No evidence was
+found for a timed FPS cap. Do not claim thermal throttling or a leak as fact.
+
+Next implementation should instrument actual WebGL render dimensions, CPU frame
+cost and resource counts over at least 60 seconds in a mature-hub DEV fixture.
+Keep persistence/audio active in the diagnostic: prior isolated QA differs from
+normal play here. Also repair the resolution probe before interpreting it.
+Preserve approved visual appearance; no speculative shadow removal or resolution
+downgrade. No more movement/no-recording/idle confirmations needed from Mats.
