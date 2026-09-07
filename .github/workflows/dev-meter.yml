@@ -1,0 +1,62 @@
+name: Validate detailed DEV frame meter
+on:
+  push:
+    branches: [codex-dev-meter]
+    paths: ['scripts/**', 'tools/meter-web.mjs', '.github/workflows/dev-meter.yml']
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot 4.7.2 and the test renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri ripgrep
+          curl -L --fail --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+          curl -L --fail --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz -o "$RUNNER_TEMP/templates.tpz"
+          unzip -q "$RUNNER_TEMP/templates.tpz" -d "$RUNNER_TEMP/templates"
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          cp "$RUNNER_TEMP/templates/templates/"* "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+      - name: Build and test exact DEV pack
+        run: |
+          mkdir -p "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review"
+          Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > "$RUNNER_TEMP/review/import.log" 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/review/import.log"; then exit 1; fi
+          python3 tools/check_invariants.py
+          Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-release 'Web DEV' "$RUNNER_TEMP/candidate/index.html" > "$RUNNER_TEMP/review/export.log" 2>&1
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/candidate/index.pck" --cases build-flavor dev-tools touch --output "$RUNNER_TEMP/review/core"
+          mkdir -p "$RUNNER_TEMP/pack-run"
+          cd "$RUNNER_TEMP/pack-run"
+          xvfb-run -a timeout 90 Godot_v4.7.2-stable_linux.x86_64 --path . --main-pack "$RUNNER_TEMP/candidate/index.pck" --resolution 844x390 --audio-driver Dummy -- --qa-mobile-performance --perf-meter-review --perf-output="$RUNNER_TEMP/review" > "$RUNNER_TEMP/review/native.log" 2>&1
+          cat "$RUNNER_TEMP/review/native.log"
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/review/native.log"; then exit 1; fi
+          rg METER_REVIEW_OK "$RUNNER_TEMP/review/native.log"
+      - name: Verify browser diagnostics
+        run: |
+          npm ci
+          npx playwright install --with-deps webkit
+          node tools/meter-web.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review"
+      - name: Bind package hashes to review
+        run: |
+          python3 - <<'PYCODE'
+          import os,json,hashlib
+          from pathlib import Path
+          p=Path(os.environ['RUNNER_TEMP'])/'candidate'
+          manifest={f.name:{'size':f.stat().st_size,'sha256':hashlib.sha256(f.read_bytes()).hexdigest()} for f in p.iterdir() if f.is_file()}
+          (p/'manifest.json').write_text(json.dumps(manifest,indent=2))
+          print('MANIFEST '+json.dumps(manifest))
+          PYCODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dev-meter-candidate
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dev-meter-review
+          path: ${{ runner.temp }}/review

@@ -1,0 +1,69 @@
+{
+  "version": "0.46.9-dev.2",
+  "source_commit": "2625955f4246ca98dc4acce099fda4d83ba558e6",
+  "qa_run_id": 34159892066,
+  "visual_reviewed": true,
+  "package_checks_passed": true,
+  "physical_iphone_verified": false,
+  "files": {
+    "index.apple-touch-icon.png": {
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5",
+      "size": 66421
+    },
+    "index.audio.position.worklet.js": {
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+      "size": 2973
+    },
+    "index.audio.worklet.js": {
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+      "size": 7298
+    },
+    "index.html": {
+      "sha256": "ee8fbcdd53f9b5bf007d8f98784f72c59ddc92e33948a44804ae91820ab68df3",
+      "size": 5444
+    },
+    "index.icon.png": {
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+      "size": 470687
+    },
+    "index.js": {
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+      "size": 279815
+    },
+    "index.pck": {
+      "sha256": "b1ea1a84acc5791ceb1937c4b95fb1c5eea85c4d1ec59a146ec66182689feb74",
+      "size": 219344612
+    },
+    "index.png": {
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+      "size": 1981427
+    },
+    "index.wasm": {
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+      "size": 39514754
+    }
+  },
+  "artifacts": [
+    {
+      "id": 10032307492,
+      "name": "dev-meter-review",
+      "digest": "sha256:0d170a246e000da9116622005e0d336afa316415e52f93d10a868c0e7ad9b249"
+    },
+    {
+      "id": 10032306808,
+      "name": "dev-meter-candidate",
+      "digest": "sha256:2ea28a628d904053bee653e402ff3b48e8e2bd195141d3722fe2a7c72606916f"
+    }
+  ],
+  "inspected": [
+    "Native exact DEV pack hub and Mossvein overlay",
+    "WebKit 844x390 CSS, DPR 3, actual canvas 2532x1170"
+  ],
+  "notes": [
+    "Instrumentation only; not a performance fix.",
+    "Exact DEV pack flavor, developer tools, touch and meter reset/hide checks passed.",
+    "Browser test uses dummy audio; normal game audio is unchanged.",
+    "Unsupported memory counters displayed as n/a.",
+    "All previous LIVE files must remain byte-identical."
+  ]
+}

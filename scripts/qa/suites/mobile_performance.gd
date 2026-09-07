@@ -11,6 +11,12 @@ func run() -> void:
 		if arg.begins_with("--perf-output="): output_dir = arg.get_slice("=", 1)
 		if arg == "--perf-capture": captures = true
 	DirAccess.make_dir_recursive_absolute(output_dir)
+	if "--perf-meter-review" in OS.get_cmdline_user_args():
+		await review_meter()
+		return
+	if "--perf-mossvein" in OS.get_cmdline_user_args():
+		await probe_mossvein("--perf-hub" in OS.get_cmdline_user_args())
+		return
 	if "--perf-review" in OS.get_cmdline_user_args():
 		await review()
 		return
@@ -65,6 +71,74 @@ func run() -> void:
 func fail(message: String) -> void:
 	push_error("MOBILE_PERFORMANCE_FAILED: " + message)
 	main.get_tree().quit(2)
+
+## Diagnostic ablations run only in isolated QA, never in ordinary play.
+func probe_mossvein(is_hub: bool = false) -> void:
+	seed(4608)
+	RunState.reset_run(false)
+	RunState.world_seed = 4608
+	main.game_started = true
+	var entered: bool = main._dev_jump_hub() if is_hub else main._dev_jump_mine("mossMine", 2)
+	if not entered:
+		fail("Cannot enter diagnostic area"); return
+	var world: Node2D = main.hub_world if is_hub else main.depth_world
+	var player: Node2D = world.player
+	player.camera.position_smoothing_enabled = false
+	var origin: Vector2 = player.global_position
+	var lights: Array[Node] = world.find_children("*", "PointLight2D", true, false)
+	var shadow_state: Dictionary = {}
+	for light in lights: shadow_state[light] = light.shadow_enabled
+	var probe_rows: Array[Dictionary] = []
+	for stage in ["cold_idle", "walk_1", "walk_2", "walk_3", "warm_idle", "no_shadows", "restored_shadows", "cached_world_draw", "half_resolution", "restored_resolution", "no_world_draw", "restored_draw"]:
+		world.set_process(stage != "cached_world_draw")
+		if stage != "cached_world_draw": world.queue_redraw()
+		if DisplayServer.get_name() != "headless":
+			DisplayServer.window_set_size(Vector2i(422, 195) if stage == "half_resolution" else Vector2i(844, 390))
+		var hide_draw: bool = stage == "no_world_draw"
+		RenderingServer.canvas_item_set_visible(world.get_canvas_item(), not hide_draw)
+		for light in lights:
+			if not is_instance_valid(light): continue
+			light.shadow_enabled = false if stage == "no_shadows" else shadow_state[light]
+		player.set_external_movement(Vector2.ZERO)
+		await main.get_tree().create_timer(0.3).timeout
+		var intervals: Array[float] = []
+		var draw_calls: Array[float] = []
+		var begin: int = Time.get_ticks_usec()
+		var previous: int = begin
+		var distance: float = 0.0
+		var last_position: Vector2 = player.global_position
+		while Time.get_ticks_usec() - begin < 4000000:
+			var elapsed: float = float(Time.get_ticks_usec() - begin) / 1000000.0
+			if not String(stage).ends_with("idle"):
+				# Follow a compact route around the actual entrance/stations.
+				var target: Vector2 = origin + Vector2(sin(elapsed * TAU / 4.0) * 120.0, -100.0 + cos(elapsed * TAU / 4.0) * 90.0)
+				player.set_external_movement(player.global_position.direction_to(target))
+			await main.get_tree().process_frame
+			var now: int = Time.get_ticks_usec()
+			intervals.append(float(now - previous) / 1000.0)
+			previous = now
+			distance += last_position.distance_to(player.global_position)
+			last_position = player.global_position
+			draw_calls.append(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
+		var stats: Dictionary = _journey_performance_frame_stats(intervals)
+		draw_calls.sort()
+		stats.merge({"stage": stage, "walked_pixels": distance,
+			"draw_calls_p95": _journey_percentile(draw_calls, 0.95),
+			"nodes": Performance.get_monitor(Performance.OBJECT_NODE_COUNT),
+			"objects": Performance.get_monitor(Performance.OBJECT_COUNT),
+			"static_mib": Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0,
+			"video_mib": Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0,
+			"light_nodes": world.find_children("*", "PointLight2D", true, false).size(),
+			"occluders": world.get_node("CaveLightOccluders").active_count if world.has_node("CaveLightOccluders") else 0})
+		probe_rows.append(stats)
+		print("MOSSVEIN_PROBE " + JSON.stringify(stats))
+		if DisplayServer.get_name() != "headless":
+			await RenderingServer.frame_post_draw
+			main.get_viewport().get_texture().get_image().save_png(output_dir.path_join(String(stage) + ".png"))
+	player.set_external_movement(Vector2.ZERO)
+	FileAccess.open(output_dir.path_join("mossvein.json"), FileAccess.WRITE).store_string(JSON.stringify({"rendered": DisplayServer.get_name() != "headless", "physical_iphone": false, "area": "hub" if is_hub else "mossvein_depth_2", "stages": probe_rows}, "\t"))
+	print("MOSSVEIN_PROBE_COMPLETE")
+	main.get_tree().quit(0)
 
 func measure(label: String, world: Node, moving: bool = false, mining: bool = false) -> void:
 	var player: Node2D = world.get("player")
@@ -170,3 +244,34 @@ func capture_review(label: String) -> void:
 	await main.get_tree().create_timer(0.4).timeout
 	await RenderingServer.frame_post_draw
 	main.get_viewport().get_texture().get_image().save_png(output_dir.path_join(label + ".png"))
+
+func review_meter() -> void:
+	if main.developer_menu == null: fail("DEV meter missing"); return
+	main.game_started = true
+	main._dev_seed_hub_state()
+	main._dev_jump_hub()
+	main.developer_menu.toggle_frame_meter()
+	await main.get_tree().create_timer(4.5).timeout
+	var meter: Control = main.developer_menu.frame_meter
+	var reading: Dictionary = meter.latest
+	if int(reading.get("meter_revision", 0)) != 2 or int(reading.get("canvas_width", 0)) <= 0:
+		fail("Detailed meter did not collect valid dimensions"); return
+	if not main.get_viewport().get_visible_rect().encloses(meter.get_global_rect()):
+		fail("Meter extends beyond viewport"); return
+	if DisplayServer.get_name() != "headless":
+		await RenderingServer.frame_post_draw
+		main.get_viewport().get_texture().get_image().save_png(output_dir.path_join("meter-hub.png"))
+	print("METER_READING " + JSON.stringify(reading))
+	main.developer_menu.toggle_frame_meter()
+	if meter.is_processing() or meter.visible: fail("Hidden meter still active"); return
+	main._dev_jump_mine("mossMine", 2)
+	main.developer_menu.toggle_frame_meter()
+	if not meter.history.is_empty(): fail("Restart did not reset history"); return
+	await main.get_tree().create_timer(2.2).timeout
+	if meter.history.is_empty() or meter.history.size() > 60: fail("Invalid bounded history"); return
+	if DisplayServer.get_name() != "headless":
+		await RenderingServer.frame_post_draw
+		main.get_viewport().get_texture().get_image().save_png(output_dir.path_join("meter-mossvein.png"))
+	print("METER_READING " + JSON.stringify(meter.latest))
+	print("METER_REVIEW_OK")
+	main.get_tree().quit(0)
