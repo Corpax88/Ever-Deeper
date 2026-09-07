@@ -2,8 +2,9 @@
 
 Status: FPS diagnosis remains unresolved. Detailed meter published on DEV
 v0.46.9-dev.2; LIVE v0.46.9 is byte-identical. See dev-meter.md and
-.github/dev-meter/publication-receipt.json. Next: record the new four-line D2
-meter through the stationary high-to-low transition on the existing iPhone save.
+.github/dev-meter/publication-receipt.json. The requested D2 recording has now been analyzed; do not request another idle
+recording. User identifies the test device as iPhone Air (called iPhone 17 Air).
+Sustained mature-hub control completed; results and next step are below.
 No critic or other agents used.
 
 User evidence: Mossvein Depth 2 recording starts near 56 FPS, declines to about
@@ -65,3 +66,57 @@ Keep persistence/audio active in the diagnostic: prior isolated QA differs from
 normal play here. Also repair the resolution probe before interpreting it.
 Preserve approved visual appearance; no speculative shadow removal or resolution
 downgrade. No more movement/no-recording/idle confirmations needed from Mats.
+
+## D2 recording and sustained control — latest evidence
+
+ScreenRecording_09-07-2026 22-44-03_1.mp4 (64.30 seconds) shows:
+- Meter elapsed 10s: 49.9 FPS, p95 22ms, max 23ms, CPU monitor 6ms, physics 1ms.
+- Elapsed 22s: 30.3 FPS, p95 53ms, CPU 7ms.
+- Elapsed 26s: 15.0 FPS, p95 73ms, CPU 8ms, physics 1ms.
+- Elapsed 28s: 14.5 FPS, p95 74ms; elapsed 32s: 13.7 FPS, p95 92ms.
+- Canvas 2328x1260, DPR 3, draw calls 140, GPU memory 488 MiB and nodes 703
+  remain constant across these readings. Static memory is unavailable, not zero.
+
+Stable counters and a modest CPU-monitor increase narrow investigation toward
+rendering/frame scheduling but do not identify GPU timing, thermal throttling,
+or rule out allocations invisible to the meter. Last sample also has an iOS
+Sleep focus banner; the drop precedes the banner.
+
+New isolated suite: --qa-sustained-hub, scripts/qa/suites/sustained_hub.gd.
+All relics/workshops are built; Light Lab and Wardrobe level 4; hero stationary
+beside Wardrobe. This approximates visible progression, not the user's exact save.
+Persistence/checkpoints run against a disposable save. Audio uses Dummy in CI;
+this is native llvmpipe, not Safari/iOS hardware emulation.
+Window.size replaces the ineffective DisplayServer-only resize. Actual rendered
+image dimensions must equal 2328x1260, then 1164x630, then 2328x1260 or the test
+fails. Six 10-second baseline buckets, two at half linear resolution, two restored.
+No runtime graphics change, release deployment or claimed FPS fix accompanies it.
+
+### Sustained rendered control result
+
+GitHub Actions 34161550415 succeeded on 87d9254ef64e3eef4b9ad4432cd53008130e6675.
+Artifact 10032814382, SHA256 067bb6e928542658bf4e39295dca2df31a4dceac32994069399035b7b49166d9.
+Machine-readable results: sustained-hub-native.json.
+
+Actual rendered dimensions passed all three assertions. At full resolution,
+steady buckets stayed near 1.70 FPS throughout 60 wall-clock seconds; half linear
+resolution gave 6.28–6.37 FPS; restored full resolution returned to about 1.70 FPS.
+This ~3.7x sensitivity to a 4x pixel-count change shows this software-rendered
+scene is strongly pixel-cost-bound. It does NOT demonstrate the physical iPhone
+cause or promise a 3.7x gain on Apple hardware. No high-to-low transition reproduced.
+Node counts settle at 651 and draws near 147. Graphics memory is ~483 MiB full,
+~465 MiB half, returning to ~483 MiB; no continuing growth observed in these buckets.
+The synthetic scene has fewer nodes than the user's 703 and lacks exact outfit,
+equipment, companion progress and save history. Physics/simulation advances more
+slowly under the overloaded native renderer, so 60 wall-clock seconds are not
+necessarily 60 seconds of every game timer. CPU monitor includes native render
+waiting and cannot be compared directly with the phone's 6–8ms monitor.
+
+Next: isolate pixel-heavy effects under equal, verified render dimensions before
+choosing a DEV-only reversible scaling experiment. Keep native and physical-device
+claims separate. No additional user recording requested; LIVE/DEV unchanged.
+
+All three screenshots inspected. World framing is retained at both pixel sizes;
+fixture achievement banners and the near-shop interaction overlay differ from
+the phone recording. This was diagnostic visual review, not a release approval.
+Source and evidence are on codex-sustained-hub-probe; main was not overwritten.
