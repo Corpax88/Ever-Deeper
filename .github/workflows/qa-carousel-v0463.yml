@@ -1,0 +1,45 @@
+name: Continuous carousel motion validation
+on:
+  push:
+    branches: [codex-carousel-v0463]
+    paths: ['.github/workflows/qa-carousel-v0463.yml']
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 .github/carousel-v0463/prepare.py "$RUNNER_TEMP/candidate"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: carousel-exact-candidates
+          path: ${{ runner.temp }}/candidate
+  test:
+    needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {browser: chromium, side: dev, small: '0'}
+          - {browser: chromium, side: live, small: '0'}
+          - {browser: webkit, side: live, small: '1'}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/download-artifact@v4
+        with:
+          name: carousel-exact-candidates
+          path: ${{ runner.temp }}/candidate
+      - run: |
+          npm ci
+          npx playwright install --with-deps ${{ matrix.browser }}
+      - run: MENU_TOUCH=1 OVERHAUL_GAMEPLAY=1 TOUCH_BROWSER=${{ matrix.browser }} SMALL_IPHONE=${{ matrix.small }} LIBGL_ALWAYS_SOFTWARE=1 node tools/visual-qa/capture-carousel.mjs --web-dir "$RUNNER_TEMP/candidate/${{ matrix.side }}" --output-dir "$RUNNER_TEMP/evidence"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: carousel-${{ matrix.browser }}-${{ matrix.side }}
+          path: ${{ runner.temp }}/evidence
