@@ -103,7 +103,7 @@ function injectSuiteArgument(html) {
   // OS.get_cmdline_user_args() only exposes arguments after Godot's user separator.
   if (!suiteArgs.includes("--")) suiteArgs.push("--");
   config.args = [...suiteArgs, SUITE_ARG, GAMEPLAY ? "--overhaul-gameplay" : "--overhaul-capture", "--light-capture", ...(process.env.MENU_TOUCH === "1" ? ["--menu-touch-only"] : []),  ...(process.env.PET_REACTIONS === "1" ? ["--pet-reactions"] : []), `--capture-start=${RANGE_START}`, `--capture-end=${RANGE_END}`];
-  return html.replace(pattern, `const GODOT_CONFIG = ${JSON.stringify(config)};`);
+  return html.replace(pattern, `const GODOT_CONFIG = ${JSON.stringify(config)};`).replace("<body>", '<body><div id="ed-build-label" hidden>v0.46.6-dev.1</div>');
 }
 
 async function createStaticServer(webDir) {
@@ -444,6 +444,8 @@ async function captureSuite(options) {
       throw new Error(`Captured ${captures.length}, expected ${EXPECTED_CAPTURE_COUNT}`);
     }
     if (MOTION && motionHits.length !== 12) throw new Error(`Expected 12 real damage checks, got ${motionHits.length}`);
+    const versionBadge = await page.evaluate(() => ({version: window.everDeeperVersion, badge: document.getElementById("ed-build-label")?.textContent}));
+    if (!["0.46.8", "0.46.8-dev.1"].includes(versionBadge.version) || versionBadge.badge !== "v" + versionBadge.version) throw new Error("Cached loading version badge did not synchronize: " + JSON.stringify(versionBadge));
     if (pageErrors.length > 0) throw new Error(`Page errors:\n${pageErrors.join("\n")}`);
     const serverOrigin = new URL(url).origin;
     const blockingRequestFailures = requestFailures.filter((failure) => {
