@@ -8,6 +8,10 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        area: [hub, mossvein]
     steps:
       - uses: actions/checkout@v4
       - name: Install renderer
@@ -18,17 +22,22 @@ jobs:
           unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
           echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
       - name: Import, check and render
+        env:
+          PROBE_AREA: ${{ matrix.area }}
         run: |
           mkdir -p "$RUNNER_TEMP/probe" "$RUNNER_TEMP/saves"
           Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > "$RUNNER_TEMP/probe/import.log" 2>&1
           if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/probe/import.log"; then exit 1; fi
           python3 tools/check_invariants.py
-          XDG_DATA_HOME="$RUNNER_TEMP/saves" xvfb-run -a -s '-screen 0 2560x1440x24' Godot_v4.7.2-stable_linux.x86_64 --path . --resolution 2328x1260 --audio-driver Dummy -- --qa-sustained-hub --perf-effects --perf-effects-mossvein --perf-output="$RUNNER_TEMP/probe" > "$RUNNER_TEMP/probe/run.log" 2>&1
+          probe_args=()
+          if [ "$PROBE_AREA" = mossvein ]; then probe_args+=(--perf-effects-mossvein); fi
+          XDG_DATA_HOME="$RUNNER_TEMP/saves" xvfb-run -a -s '-screen 0 2560x1440x24' Godot_v4.7.2-stable_linux.x86_64 --path . --resolution 2328x1260 --audio-driver Dummy -- --qa-sustained-hub --perf-effects --perf-covered-floor "${probe_args[@]}" --perf-output="$RUNNER_TEMP/probe" > "$RUNNER_TEMP/probe/run.log" 2>&1
           if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/probe/run.log"; then exit 1; fi
           rg 'SUSTAINED_HUB_ROW|SUSTAINED_HUB_COMPLETE' "$RUNNER_TEMP/probe/run.log"
+          rg 'COVERED_FLOOR_PARITY_OK' "$RUNNER_TEMP/probe/run.log"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: sustained-hub-probe
+          name: covered-floor-${{ matrix.area }}
           path: ${{ runner.temp }}/probe
           retention-days: 30

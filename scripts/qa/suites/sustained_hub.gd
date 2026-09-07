@@ -83,10 +83,13 @@ func run() -> void:
 
 func probe_effects() -> void:
 	var mossvein: bool = "--perf-effects-mossvein" in OS.get_cmdline_user_args()
+	var covered_floor: bool = "--perf-covered-floor" in OS.get_cmdline_user_args()
 	var world: Node2D = main.depth_world if mossvein else main.hub_world
 	var window: Window = main.get_window()
 	window.size = FULL_SIZE
 	for frame in 4: await main.get_tree().process_frame
+	if covered_floor:
+		if not await verify_covered_floor_pixels(world): return
 	var lights: Array[Node] = world.find_children("*", "PointLight2D", true, false)
 	var original: Dictionary = {}
 	var inventory: Array[Dictionary] = []
@@ -97,11 +100,14 @@ func probe_effects() -> void:
 	var original_mask: int = world.light_mask
 	var interventions: Array[String] = ["no_shadows", "no_station_lights", "no_hero_lights", "no_companion_lights", "no_lights", "world_light_mask_zero"]
 	if mossvein: interventions = ["no_shadows", "no_lights", "world_light_mask_zero"]
+	if covered_floor: interventions = ["skip_covered_floor"]
 	var stages: Array[String] = ["baseline"]
 	for intervention in interventions:
 		stages.append(intervention)
 		stages.append("restored_" + intervention)
 	for stage in stages:
+		world.set_meta("qa_skip_covered_floor", stage == "skip_covered_floor")
+		world.queue_redraw()
 		world.light_mask = 0 if stage == "world_light_mask_zero" else original_mask
 		var changed: int = 0
 		for light in lights:
@@ -118,7 +124,7 @@ func probe_effects() -> void:
 			if stage == "no_shadows" and light.shadow_enabled:
 				light.shadow_enabled = false
 				changed += 1
-		if stage in interventions and stage != "world_light_mask_zero" and changed == 0:
+		if stage in interventions and stage not in ["world_light_mask_zero", "skip_covered_floor"] and changed == 0:
 			fail("No matching effect for " + stage); return
 		for frame in 2: await main.get_tree().process_frame
 		await RenderingServer.frame_post_draw
@@ -151,8 +157,35 @@ func probe_effects() -> void:
 		print("SUSTAINED_HUB_ROW " + JSON.stringify(stats))
 	var report: Dictionary = {"physical_iphone": false, "renderer": RenderingServer.get_video_adapter_name(),
 		"area": "mossvein_depth_2" if mossvein else "mature_hub",
+		"covered_floor_pixel_parity": covered_floor,
 		"lights": inventory, "stages": rows, "persistence_enabled": RunState.persistence_enabled(),
 		"audio_driver": AudioServer.get_driver_name(), "test": "one lighting intervention at a time, restored after each"}
-	FileAccess.open(output_dir.path_join("effects-mossvein.json" if mossvein else "effects.json"), FileAccess.WRITE).store_string(JSON.stringify(report, "\t"))
+	var report_name: String = ("covered-floor-mossvein.json" if mossvein else "covered-floor-hub.json") if covered_floor else ("effects-mossvein.json" if mossvein else "effects.json")
+	FileAccess.open(output_dir.path_join(report_name), FileAccess.WRITE).store_string(JSON.stringify(report, "\t"))
 	print("SUSTAINED_HUB_COMPLETE")
 	main.get_tree().quit(0)
+
+func verify_covered_floor_pixels(world: Node2D) -> bool:
+	var tree: SceneTree = main.get_tree()
+	var was_paused: bool = tree.paused
+	tree.paused = true
+	var reference: PackedByteArray
+	for stage in ["before", "candidate", "restored"]:
+		world.set_meta("qa_skip_covered_floor", stage == "candidate")
+		world.queue_redraw()
+		for frame in 2: await tree.process_frame
+		await RenderingServer.frame_post_draw
+		var shot: Image = main.get_window().get_texture().get_image()
+		shot.save_png(output_dir.path_join("parity-" + stage + ".png"))
+		if shot.get_size() != FULL_SIZE:
+			tree.paused = was_paused
+			fail("Pixel parity dimensions changed"); return false
+		if stage == "before": reference = shot.get_data()
+		elif shot.get_data() != reference:
+			world.set_meta("qa_skip_covered_floor", false)
+			world.queue_redraw()
+			tree.paused = was_paused
+			fail("Covered floor changed pixels in " + stage); return false
+	tree.paused = was_paused
+	print("COVERED_FLOOR_PARITY_OK pixels=" + str(FULL_SIZE.x * FULL_SIZE.y))
+	return true
