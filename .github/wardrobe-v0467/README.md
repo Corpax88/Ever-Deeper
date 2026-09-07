@@ -38,3 +38,5 @@ root gameplay files are not authoritative. Exact candidate hashes are in bundle.
   touch regressions are retained.
 - Final browser mobile captures and touch results must pass and be manually
   reviewed before publication. Physical iPhone acceptance remains for Mats.
+
+Final release QA: run 34127456395, nine inspected WebKit layouts at 844x390, LIVE 151 and DEV 155 checks pass. Exact files are bound by review.json.

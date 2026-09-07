@@ -1,0 +1,56 @@
+name: Publish Wardrobe overhaul to DEV and live
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/deploy-wardrobe-v0467.yml']
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages-ever-deeper
+  cancel-in-progress: false
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require successful browser and visual capture runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for run in 34127456395; do
+            test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/$run --jq .conclusion)" = success
+          done
+      - uses: actions/download-artifact@v4
+        with:
+          name: wardrobe-exact-candidates
+          run-id: 34127456395
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - run: python3 .github/wardrobe-v0467/publish.py "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/site" "$RUNNER_TEMP/rollback"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-before-v0467-rollback
+          path: ${{ runner.temp }}/rollback
+          retention-days: 30
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/site
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 .github/wardrobe-v0467/prepare.py --verify-public
