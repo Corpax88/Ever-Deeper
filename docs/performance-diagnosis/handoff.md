@@ -120,3 +120,30 @@ All three screenshots inspected. World framing is retained at both pixel sizes;
 fixture achievement banners and the near-shop interaction overlay differ from
 the phone recording. This was diagnostic visual review, not a release approval.
 Source and evidence are on codex-sustained-hub-probe; main was not overwritten.
+
+## Fixed-resolution lighting ablations — mature hub
+
+Run 34162707325 succeeded on 02620189b9db3101098f00b75e5aa9701e730648.
+All 13 full-resolution screenshots inspected; each intervention restores normal
+lighting afterward. No light nodes removed, no gameplay changes, and every image
+asserted 2328x1260. See hub-lighting-effects.json for individual measurements.
+
+| Controlled state | Native software FPS | Enabled lights |
+| --- | ---: | ---: |
+| Baseline / every restored state | 1.85–1.86 | 14 |
+| Shadows disabled | 2.02 | 14 |
+| Eleven fixed hub lights disabled | 3.85 | 3 |
+| Hero hub light disabled | 1.96 | 13 |
+| Two companion lights disabled | 2.29 | 12 |
+| All lights disabled | 12.31 | 0 |
+| Root world light_mask=0; lights still enabled for children | 11.43 | 14 |
+
+The dominant measured cost lies in lighting the root hub CanvasItem's custom
+world drawing (floor, stations, museum, feedback etc.). The mask experiment keeps
+hero/companion/other child items lit; it is a diagnostic visual change, NOT a fix.
+Removing only shadows improves FPS about 9%, insufficient to explain total cost.
+All returned baselines agree, supporting the effect comparison despite transient
+fixture achievement banners. This locates native rendering work; it does not prove
+why iPhone frame scheduling changes after 20 seconds. Do not blame the companion
+alone, claim a 6x phone speedup, or publish the unlit diagnostic appearance.
+Next corroboration: same shadow/all-light/root-mask comparisons in Mossvein D2.

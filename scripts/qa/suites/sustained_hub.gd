@@ -31,6 +31,11 @@ func run() -> void:
 	player.set_external_movement(Vector2.ZERO)
 	player.camera.position_smoothing_enabled = false
 	player.camera.reset_smoothing()
+	if "--perf-effects-mossvein" in OS.get_cmdline_user_args():
+		if not main._dev_jump_mine("mossMine", 2):
+			fail("Cannot enter Mossvein effect control"); return
+		main.depth_world.player.set_external_movement(Vector2.ZERO)
+		main.depth_world.player.camera.position_smoothing_enabled = false
 	var window: Window = main.get_window()
 	window.min_size = Vector2i.ZERO
 	if "--perf-effects" in OS.get_cmdline_user_args():
@@ -77,7 +82,8 @@ func run() -> void:
 	main.get_tree().quit(0)
 
 func probe_effects() -> void:
-	var world: Node2D = main.hub_world
+	var mossvein: bool = "--perf-effects-mossvein" in OS.get_cmdline_user_args()
+	var world: Node2D = main.depth_world if mossvein else main.hub_world
 	var window: Window = main.get_window()
 	window.size = FULL_SIZE
 	for frame in 4: await main.get_tree().process_frame
@@ -90,6 +96,7 @@ func probe_effects() -> void:
 			"shadow": light.shadow_enabled, "scale": str(light.texture_scale)})
 	var original_mask: int = world.light_mask
 	var interventions: Array[String] = ["no_shadows", "no_station_lights", "no_hero_lights", "no_companion_lights", "no_lights", "world_light_mask_zero"]
+	if mossvein: interventions = ["no_shadows", "no_lights", "world_light_mask_zero"]
 	var stages: Array[String] = ["baseline"]
 	for intervention in interventions:
 		stages.append(intervention)
@@ -102,7 +109,7 @@ func probe_effects() -> void:
 				fail("Light graph changed during controlled probe"); return
 			light.enabled = original[light].enabled
 			light.shadow_enabled = original[light].shadow
-			var is_station: bool = world.world_lights.is_ancestor_of(light)
+			var is_station: bool = str(world.get_path_to(light)).begins_with("WorldLights/")
 			var is_hero: bool = world.player.is_ancestor_of(light)
 			var disable: bool = stage == "no_lights" or (stage == "no_station_lights" and is_station) or (stage == "no_hero_lights" and is_hero) or (stage == "no_companion_lights" and not is_station and not is_hero)
 			if disable and light.enabled:
@@ -143,8 +150,9 @@ func probe_effects() -> void:
 		rows.append(stats)
 		print("SUSTAINED_HUB_ROW " + JSON.stringify(stats))
 	var report: Dictionary = {"physical_iphone": false, "renderer": RenderingServer.get_video_adapter_name(),
+		"area": "mossvein_depth_2" if mossvein else "mature_hub",
 		"lights": inventory, "stages": rows, "persistence_enabled": RunState.persistence_enabled(),
 		"audio_driver": AudioServer.get_driver_name(), "test": "one lighting intervention at a time, restored after each"}
-	FileAccess.open(output_dir.path_join("effects.json"), FileAccess.WRITE).store_string(JSON.stringify(report, "\t"))
+	FileAccess.open(output_dir.path_join("effects-mossvein.json" if mossvein else "effects.json"), FileAccess.WRITE).store_string(JSON.stringify(report, "\t"))
 	print("SUSTAINED_HUB_COMPLETE")
 	main.get_tree().quit(0)
