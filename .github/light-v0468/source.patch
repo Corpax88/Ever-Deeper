@@ -342,7 +342,7 @@ index a9137b7..931a144 100644
 +	existing.configure(item)
 diff --git a/scripts/ui/light_preview.gd b/scripts/ui/light_preview.gd
 new file mode 100644
-index 0000000..2e26a0e
+index 0000000..1792b8f
 --- /dev/null
 +++ b/scripts/ui/light_preview.gd
 @@ -0,0 +1,91 @@
@@ -387,7 +387,7 @@ index 0000000..2e26a0e
 +		before_button.pressed.connect(func(): show_level(current_level))
 +		after_button.pressed.connect(func(): show_level(upgraded_level))
 +	viewport = SubViewport.new()
-+	viewport.size = Vector2i(400, 304) if _thumbnail else Vector2i(1000, 760)
++	viewport.size = Vector2i(440, 480) if _thumbnail else Vector2i(1100, 1200)
 +	viewport.world_2d = World2D.new()
 +	viewport.transparent_bg = false
 +	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE if _thumbnail else SubViewport.UPDATE_WHEN_VISIBLE
@@ -400,12 +400,12 @@ index 0000000..2e26a0e
 +	floor_sprite.centered = false
 +	floor_sprite.region_enabled = true
 +	floor_sprite.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
-+	floor_sprite.region_rect = Rect2(0, 0, 1000, 760)
++	floor_sprite.region_rect = Rect2(0, 0, 1100, 1200)
 +	world.add_child(floor_sprite)
 +	var ambient: CanvasModulate = CanvasModulate.new()
 +	ambient.color = Color(0.13, 0.15, 0.16)
 +	world.add_child(ambient)
-+	for position_value in [Vector2(380, 380), Vector2(650, 415), Vector2(750, 520)]:
++	for position_value in [Vector2(380, 600), Vector2(650, 635), Vector2(750, 740)]:
 +		var ore: Sprite2D = Sprite2D.new()
 +		ore.texture = load("res://assets/minerals/copper-node.png")
 +		ore.position = position_value
@@ -414,12 +414,12 @@ index 0000000..2e26a0e
 +	var holder: Node2D = Node2D.new()
 +	world.add_child(holder)
 +	var hero = preload("res://scripts/ui/outfit_preview.gd").new()
-+	hero.position = Vector2(20, 344)
++	hero.position = Vector2(20, 564)
 +	hero.size = Vector2(160, 160)
 +	holder.add_child(hero)
 +	hero.configure(String(RunState.endless_loadout_status().get("outfit", "miner")), false, "right")
 +	lamp = Lamp.new()
-+	lamp.position = Vector2(117, 380)
++	lamp.position = Vector2(117, 600)
 +	holder.add_child(lamp)
 +	var picture: TextureRect = TextureRect.new()
 +	picture.texture = viewport.get_texture()
