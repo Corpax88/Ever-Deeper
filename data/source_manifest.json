@@ -1,0 +1,1505 @@
+{
+  "source": "Ever-Deeper",
+  "source_version": "0.38.1",
+  "source_commit": "d175489fd0bbd3d934481493eb9b4b7a668f461e",
+  "game_data_sha256": "fa93b98d3ff51dbce95b5a290ac5d3e84736a35e9e2103bcd833c9707f85d3cf",
+  "exported_top_level_keys": [
+    "ACHIEVEMENTS_KEY",
+    "ACHIEVEMENT_BY_ID",
+    "ACHIEVEMENT_DEFINITIONS",
+    "ACHIEVEMENT_REASONS",
+    "AUTO_SORT_RADIUS",
+    "BASE_MODULE_INTERACT_RADIUS",
+    "BIOMES",
+    "CHEST_DEFINITIONS",
+    "CHEST_INTERACT_RADIUS",
+    "COIN_DROP",
+    "DEPTH2_RESOURCE_PROFILES",
+    "DEPTH_ROUTE_LABELS",
+    "DRILLS",
+    "DRILL_RECIPES",
+    "EMBER_GATE_COST",
+    "EMBER_MASTERY",
+    "EMBER_MASTERY_SUNSLAG_COSTS",
+    "EMBER_PICKAXE_ORE_REQUIRED",
+    "GATE_COST",
+    "GROUND_DROP_EDGE_BOTTOM",
+    "GROUND_DROP_EDGE_TOP",
+    "GROUND_DROP_EDGE_X",
+    "GROUND_DROP_LIFETIME",
+    "GROUND_DROP_PICKUP_RADIUS",
+    "HUB_BUILD_COSTS",
+    "HUB_GRID",
+    "HUB_STATIONS",
+    "HUB_WORLD",
+    "LOOT_SWEEP_WARNING_SECONDS",
+    "MATERIAL_FEEDBACK",
+    "MAX_GROUND_DROPS",
+    "MAX_MINING_PARTICLES",
+    "MINERAL_NODE_RENDER_SCALE",
+    "MINE_CHUNK_CELLS",
+    "MINE_DEFINITIONS",
+    "MINE_DEPTH_DISCOVERIES",
+    "MINE_DEPTH_PROFILES",
+    "MINE_DIRT_COLORS",
+    "MINE_DISCOVERIES",
+    "MINE_DISCOVERY_PROFILES",
+    "MINE_SCENES",
+    "MINE_TERRAIN_HP",
+    "MINE_TILE_SIZE",
+    "MINING_RANGE",
+    "MINING_RUSH_COOLDOWN_MULTIPLIER",
+    "MINING_RUSH_DURATION",
+    "MOVEMENT_SPEED_GAIN",
+    "PICKAXES",
+    "PLAYER_MOVE_STEP",
+    "PLAYER_SPEED",
+    "ROCK_LAYOUT",
+    "ROCK_TYPES",
+    "SAVE_KEY",
+    "STARFORGE_MATERIAL_REQUIRED",
+    "STARFORGE_VARIANTS",
+    "STATIONS",
+    "STORAGE_CHEST_CAPACITY",
+    "SURFACE_BOUNDARIES",
+    "VEIN_DEFINITIONS",
+    "VEIN_ROCK_LAYOUT",
+    "WORLD"
+  ],
+  "omitted_function_routes": [
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.burrower.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.cache_hunter.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.chestmaster.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.crowned.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.deep_hoard.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.deepcore.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.depth_master.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.drillborn_ore.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.earth_eater.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.ember_unsealed.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.emberforged.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.ever_deeper.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.every_depth.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.fallen_star.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.fire_below.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.first_chip.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.first_payday.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.four_frontiers.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.fourfold_veins.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.glass_below.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.goldspark.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.hidden_descent.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.into_the_deep.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.iron_rhythm.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.ironbound.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.keen_eye.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.mineral_crown.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.minewalker.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.mobile_base.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.moon_unsealed.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.moonforged.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.more_storage.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.moss_below.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.ore_mountain.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.pulse_driver.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.quick_step.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.roadrunner.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.rune_ready.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.seasoned_arms.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.starforged.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.stars_below.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.stars_unsealed.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.sunstruck.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.three_hearts.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.threefold_star.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.treasure_found.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.true_aim.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.tunnel_hand.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.vein_runner.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_BY_ID.vein_veteran.predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[0].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[10].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[11].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[12].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[13].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[14].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[15].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[16].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[17].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[18].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[19].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[1].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[20].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[21].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[22].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[23].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[24].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[25].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[26].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[27].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[28].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[29].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[2].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[30].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[31].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[32].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[33].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[34].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[35].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[36].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[37].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[38].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[39].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[3].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[40].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[41].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[42].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[43].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[44].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[45].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[46].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[47].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[48].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[49].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[4].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[5].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[6].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[7].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[8].predicate",
+    "EverDeeperGameData.ACHIEVEMENT_DEFINITIONS[9].predicate",
+    "EverDeeperGameData.MINE_DEFINITIONS.emberMine.unlock",
+    "EverDeeperGameData.MINE_DEFINITIONS.moonMine.unlock",
+    "EverDeeperGameData.MINE_DEFINITIONS.mossMine.unlock",
+    "EverDeeperGameData.MINE_DEFINITIONS.starMine.unlock",
+    "EverDeeperGameData.discoveriesFor",
+    "EverDeeperGameData.newWorldSeed",
+    "EverDeeperGameData.seededRandom"
+  ],
+  "parity_counts": {
+    "assets": 263,
+    "biomes": 4,
+    "mines": 4,
+    "rock_types": 26,
+    "pickaxes": 6,
+    "drills": 4,
+    "achievements": 50,
+    "chests": 8
+  },
+  "assets": [
+    {
+      "path": "achievements/burrower.png",
+      "bytes": 229834,
+      "sha256": "843dbf59f0ef93ae9fe27bb4bfbcdbeadcfa1664746bf01d866ebe6626d825c5"
+    },
+    {
+      "path": "achievements/cache_hunter.png",
+      "bytes": 229761,
+      "sha256": "708a37805491222f0d2c3e8b7ec098f5971afc34e8e7dabb24a2c7b9fb5399d3"
+    },
+    {
+      "path": "achievements/chestmaster.png",
+      "bytes": 255675,
+      "sha256": "fbbf6a4b426f4fd51c630d26181a4dedaa99a8fcae4bb9f82acb14676e6439d9"
+    },
+    {
+      "path": "achievements/crowned.png",
+      "bytes": 341602,
+      "sha256": "39c14fa8a17233ca5123d9512dfbe9dee68c151b499758fb3683da9290f48c1f"
+    },
+    {
+      "path": "achievements/deep_hoard.png",
+      "bytes": 410250,
+      "sha256": "8886073c4d17f6f8b0953b302363b8b0e6d86969f3e18d3ab59daa03e600ebba"
+    },
+    {
+      "path": "achievements/deepcore.png",
+      "bytes": 230653,
+      "sha256": "535fa7cf3f0894746e7aad81d24d1833c521fa0db5cbbc0faf045293d7d00b10"
+    },
+    {
+      "path": "achievements/depth_master.png",
+      "bytes": 231967,
+      "sha256": "65f689e81715b58030d52dac81f582be8341d176d6147063a54c6eacf33d821f"
+    },
+    {
+      "path": "achievements/drillborn_ore.png",
+      "bytes": 426574,
+      "sha256": "44523c0f568f8b3081b588832ccd124ff7307549d6dc93d5880ff8339a1b7b40"
+    },
+    {
+      "path": "achievements/earth_eater.png",
+      "bytes": 411387,
+      "sha256": "e8ee41d61ea3289ac1a8e3d59e2bfeaa4c9e31417a609911e24cccc44cb2579b"
+    },
+    {
+      "path": "achievements/ember_unsealed.png",
+      "bytes": 414415,
+      "sha256": "5cd9c734686470fd60f2b05aef0924ee55a6e88e7be45170ed442331a5f556cb"
+    },
+    {
+      "path": "achievements/emberforged.png",
+      "bytes": 314690,
+      "sha256": "136361f9d214dbc6742a3845282f3286310039b525327a6a9ee404a95af9f7a5"
+    },
+    {
+      "path": "achievements/ever_deeper.png",
+      "bytes": 242516,
+      "sha256": "a3f19e45751db7aaf07f627130e6750f25c1ca90209bd318789019e7abedf0df"
+    },
+    {
+      "path": "achievements/every_depth.png",
+      "bytes": 252847,
+      "sha256": "1e532d415e9b4a13ba96c49e470538c6c5261473ca88effdf1fdb0899a86d914"
+    },
+    {
+      "path": "achievements/fallen_star.png",
+      "bytes": 348458,
+      "sha256": "c6d3cdfb7a42fa82d952b9cb52c152abceb582ac9e98355e12d3e3124c26e0d8"
+    },
+    {
+      "path": "achievements/fire_below.png",
+      "bytes": 211343,
+      "sha256": "f558ecc493517a1307c4d2f4faa67a38c00922ec9e64137c051ca8788d1e208f"
+    },
+    {
+      "path": "achievements/first_chip.png",
+      "bytes": 316542,
+      "sha256": "b0807c0df7323880ca1c93d2fdccbd8d485e32326de9b84f22adb0a95a178a2a"
+    },
+    {
+      "path": "achievements/first_payday.png",
+      "bytes": 310853,
+      "sha256": "d0914bbb658a4eb68d80ff3e1df0369daba796c752333aa9b7eab150b5af577e"
+    },
+    {
+      "path": "achievements/four_frontiers.png",
+      "bytes": 338277,
+      "sha256": "d0f5681f3b51ea865de3c134154be7b472da81e869d3a21a6df3de59908b1de9"
+    },
+    {
+      "path": "achievements/fourfold_veins.png",
+      "bytes": 235383,
+      "sha256": "906b9622ce35fa2ca3dba70fa7caf3af42ded4c1f604057c8c582ff15f4ef301"
+    },
+    {
+      "path": "achievements/glass_below.png",
+      "bytes": 234185,
+      "sha256": "6ff5a87cb09ef54a3bd6f2f78519f49446a6a4b491a920a64722b5d6928c5d25"
+    },
+    {
+      "path": "achievements/goldspark.png",
+      "bytes": 379128,
+      "sha256": "0d6a7366b1705ddaf757a7a4dd87abc00d8fe15d06daaefe64caa4b38347c6f6"
+    },
+    {
+      "path": "achievements/hidden_descent.png",
+      "bytes": 215039,
+      "sha256": "96528d4db04bcb578969320b04065b611ee0d0fd8d10e88589a604b37c29ccef"
+    },
+    {
+      "path": "achievements/into_the_deep.png",
+      "bytes": 366685,
+      "sha256": "a18d339730ca4bd9ed6a864bd3f76d9a2347f41eb7d9067c1aa5c4c0cb28ea51"
+    },
+    {
+      "path": "achievements/iron_rhythm.png",
+      "bytes": 413510,
+      "sha256": "b346602bcae07cbecad7b0cb275a7964fb0e6416369f8389bb74b4b654bfea93"
+    },
+    {
+      "path": "achievements/ironbound.png",
+      "bytes": 369708,
+      "sha256": "9edd7855b423ab2a380c5a60676f570f7177cf0e7d211ceda6c5e79c3d062281"
+    },
+    {
+      "path": "achievements/keen_eye.png",
+      "bytes": 363943,
+      "sha256": "85a85f0c25a54a0c847ca3deaaebdd49905dcefd7ba53b2fa8e4b6bdc9c81ba8"
+    },
+    {
+      "path": "achievements/mineral_crown.png",
+      "bytes": 237233,
+      "sha256": "495ee66db74cf9b1a32d2f75f346c9bba0cfabf453fedeefd5e9c6a36ebbb755"
+    },
+    {
+      "path": "achievements/minewalker.png",
+      "bytes": 416486,
+      "sha256": "27c5de371e4159217e7939f8fb6339ef9ac9b85dcc4a5c3dfd849bdd343785cd"
+    },
+    {
+      "path": "achievements/mobile_base.png",
+      "bytes": 252745,
+      "sha256": "119fdf097c116e5c617dcf8b691811e6a39e9cb008134f3281c29d7028a62483"
+    },
+    {
+      "path": "achievements/moon_unsealed.png",
+      "bytes": 322540,
+      "sha256": "608bbe01c9c9560146d92ba9e6782b62e7d7a34659d75fc67af3e2a4085d6901"
+    },
+    {
+      "path": "achievements/moonforged.png",
+      "bytes": 400582,
+      "sha256": "88d9a37e2d733097f8698d029f5c9bc5b3e87fa7ceb074d243082477d774f6f9"
+    },
+    {
+      "path": "achievements/more_storage.png",
+      "bytes": 226369,
+      "sha256": "2bf17a844b5ce36696663803c65ce92604969c76ab88570d6d1761b53d5d4d2e"
+    },
+    {
+      "path": "achievements/moss_below.png",
+      "bytes": 240535,
+      "sha256": "1c72f1dcea0c1e1b91a434e52e4e4bdd5dd47a4f388041ec0d9683b273caceeb"
+    },
+    {
+      "path": "achievements/ore_mountain.png",
+      "bytes": 374147,
+      "sha256": "51c16cd119d787c6b5df883bebccac95dc503016b31e4538ae99a29a1ed471cc"
+    },
+    {
+      "path": "achievements/pulse_driver.png",
+      "bytes": 232310,
+      "sha256": "dc590fb4c404036b6c9138a451fd98a4af717a38fbb26ea0599489dd9eac73de"
+    },
+    {
+      "path": "achievements/quick_step.png",
+      "bytes": 233110,
+      "sha256": "1ad08dfb6d2f7dce5dcc48aeb201718866de28f895b03d2006cc7d477e082145"
+    },
+    {
+      "path": "achievements/roadrunner.png",
+      "bytes": 233359,
+      "sha256": "5260a6be0a34cf270eaba65feaaed7bf9e1a087e99e32dda60590c39c85f44a5"
+    },
+    {
+      "path": "achievements/rune_ready.png",
+      "bytes": 431056,
+      "sha256": "592cb4cc5e6f7af43188e95c01d79d32c6d81b8440f33207e8ee1ed417647134"
+    },
+    {
+      "path": "achievements/seasoned_arms.png",
+      "bytes": 389318,
+      "sha256": "eeb439b1d11e9483c1ea8f4d16abcbe9c595c298671d472c50214bac35a4b5f2"
+    },
+    {
+      "path": "achievements/starforged.png",
+      "bytes": 215853,
+      "sha256": "8386c0cd4e2dd042ed4e527420e764e8527bf112f876f291ac83e0eae283c802"
+    },
+    {
+      "path": "achievements/stars_below.png",
+      "bytes": 232344,
+      "sha256": "3b078bc6c6f86fa34d735c4101a37c5dc4b837dcd60b35b423223acfb1ae4857"
+    },
+    {
+      "path": "achievements/stars_unsealed.png",
+      "bytes": 318773,
+      "sha256": "29ce7b7276356a081e36f1869404d341439c7e495661c5734884a210a64c04b1"
+    },
+    {
+      "path": "achievements/sunstruck.png",
+      "bytes": 329323,
+      "sha256": "b80a8d627239c9e063bcefd13c99771cba5389e4960b816476a3a7971b199611"
+    },
+    {
+      "path": "achievements/three_hearts.png",
+      "bytes": 300856,
+      "sha256": "d04dfcea73179a738c8148e7d130a1866e1a1660b58e5ba6a98db9009387eb5f"
+    },
+    {
+      "path": "achievements/threefold_star.png",
+      "bytes": 232000,
+      "sha256": "86a32c8bc3c459e0aab4a1abad0c997c32b9ef0223dd1a50b907ddf171871f6e"
+    },
+    {
+      "path": "achievements/treasure_found.png",
+      "bytes": 219337,
+      "sha256": "bef8105d685ca4e68ed854aa931dd52e3d05a113660c189a866ceebd224aeea4"
+    },
+    {
+      "path": "achievements/true_aim.png",
+      "bytes": 367981,
+      "sha256": "cad4c65ce3438c40fae3c8238ad14e2bad13ca7ba8edbed5eb807abf8b08192d"
+    },
+    {
+      "path": "achievements/tunnel_hand.png",
+      "bytes": 334213,
+      "sha256": "c2366dbd5abcabb8a8dc42c8547c768e594f202eaa9cb3ea48a8492ee4007a3e"
+    },
+    {
+      "path": "achievements/vein_runner.png",
+      "bytes": 210978,
+      "sha256": "aa6264a8a141ae39bee37d6164bdd3cd32b1cf6f54c98e03699af61c4a935375"
+    },
+    {
+      "path": "achievements/vein_veteran.png",
+      "bytes": 241167,
+      "sha256": "5b2dccd10f9d2c19aed59babb607527fcedebd5d05e15193fe0a441468b47bdd"
+    },
+    {
+      "path": "ambient/emberdeep-cinder-skink.png",
+      "bytes": 210667,
+      "sha256": "dfa093f47cc676eba33919a185b83f3f4f1f7bc1a5bf41685ebc803ca9dc05e2"
+    },
+    {
+      "path": "ambient/moonglass-prism-moth.png",
+      "bytes": 219612,
+      "sha256": "16760d96719b016f2f5f07093ce0c0ea66cde0aa76e3452d0770c63fb5765beb"
+    },
+    {
+      "path": "ambient/mossvein-glowmoth.png",
+      "bytes": 249193,
+      "sha256": "1c7b49e5fc83df31466bcf17e3b845127f84fbcf48b57f32c2bc601235e88caf"
+    },
+    {
+      "path": "ambient/starfall-astral-ray.png",
+      "bytes": 214390,
+      "sha256": "dc9b5ef0b6dbfdb49eb5a5d8a2619622dbe67420a0204433bf6b5b7de71b33f6"
+    },
+    {
+      "path": "audio/ever-deeper-drift-loop.mp3",
+      "bytes": 659632,
+      "sha256": "3d12460a7baddc5a49a79998d0307df4b1a524fcebe4c0cf4e347d837cfdd72d"
+    },
+    {
+      "path": "branding/ever-deeper-logo.png",
+      "bytes": 259252,
+      "sha256": "f7979c4aad59fd1de301eac2cb93181801136fc10c4f554b6887193f1e0f43d6"
+    },
+    {
+      "path": "characters/miner-b-drill-burrower-walk.png",
+      "bytes": 1159087,
+      "sha256": "f2ab02a94be837fb435c68a28ed3bab1bf0a5e2c075d3345bc7106ad3f46a8ff"
+    },
+    {
+      "path": "characters/miner-b-drill-burrower.png",
+      "bytes": 211797,
+      "sha256": "3f2fd32320970fc178c0bc372464f6b8d92c66d3f7ece7738be2fdcd6364a97d"
+    },
+    {
+      "path": "characters/miner-b-drill-deepcore-walk.png",
+      "bytes": 1132584,
+      "sha256": "102da24da0b1acb1abd25a800ea62bb8d835b070c94f223962963feeb5145440"
+    },
+    {
+      "path": "characters/miner-b-drill-deepcore.png",
+      "bytes": 211744,
+      "sha256": "1ab5ba04e396a25a546e587b349b5dd945ced9e75560a092da5359abf6a9035c"
+    },
+    {
+      "path": "characters/miner-b-drill-pulse-walk.png",
+      "bytes": 1357568,
+      "sha256": "6ba38c1a770e077bb60dd17fbfd471e0f59de082798a726fdc5fb2a269e3aaa5"
+    },
+    {
+      "path": "characters/miner-b-drill-pulse.png",
+      "bytes": 214572,
+      "sha256": "0832fcf9be0b48e36b8d0abe6fe06920424134b2fff070b31817bd922d9c66de"
+    },
+    {
+      "path": "characters/miner-b-walk.png",
+      "bytes": 1259510,
+      "sha256": "2506fc236f0dbf1ab28cdf85e0c420c8268b17bcb9095ffa6cd7b1f5bd7b0745"
+    },
+    {
+      "path": "characters/miner-b.png",
+      "bytes": 217101,
+      "sha256": "028bf5145ae629452fee44f60b2933033a18479fb23f1d427db3efe0cbb4aec3"
+    },
+    {
+      "path": "drops/ambercore-drop.png",
+      "bytes": 47287,
+      "sha256": "a56cf82429d0921026e0a6d75e47ddcea566a896621ebe5bcc1d1f90af6d5d8c"
+    },
+    {
+      "path": "drops/astralite-drop.png",
+      "bytes": 56926,
+      "sha256": "19371433431c7f95fe17f2024bd41e252aa3ebd508a73993fca01bc731bf72e3"
+    },
+    {
+      "path": "drops/burrowsteel-drop.png",
+      "bytes": 54899,
+      "sha256": "1c710b14b366cf279986992997c3bb841e739f9bdcb8e2c42685d86e3f9fbe38"
+    },
+    {
+      "path": "drops/copper-drop.png",
+      "bytes": 36259,
+      "sha256": "6cfac222daaf753f59f98de49f203bb5158c8ed6838faa5e799ab51ee5d6d2cb"
+    },
+    {
+      "path": "drops/crownstone-drop.png",
+      "bytes": 61252,
+      "sha256": "cdeac70e49c50dd6e66bd8e7c949f1adf13d6bf4cfca71530927a14fc2a16f72"
+    },
+    {
+      "path": "drops/deepstone-drop.png",
+      "bytes": 23757,
+      "sha256": "4ea7108a75c84eec80fcc92d9ccee408f80e5e2db0719733994957f29a827b51"
+    },
+    {
+      "path": "drops/emberstone-drop.png",
+      "bytes": 14205,
+      "sha256": "92c3d1c023fa04171aabce3d3a5a2d2994ff42ed8d8dc27c83c28fde70970468"
+    },
+    {
+      "path": "drops/furnaceheart-drop.png",
+      "bytes": 15419,
+      "sha256": "068118804e8aced0929db33cb3e84784e5f40cac92a7b17da41e46ecdb51fbf2"
+    },
+    {
+      "path": "drops/gold-drop.png",
+      "bytes": 30297,
+      "sha256": "f01f38e732070044b45db582f084b8255204298abaef34c404cea0079ba516e6"
+    },
+    {
+      "path": "drops/infernium-drop.png",
+      "bytes": 11935,
+      "sha256": "004e5010de04da0ac7a88e46188592e2114e75e89bef0060fb58c81a0f76f7a6"
+    },
+    {
+      "path": "drops/lunacore-drop.png",
+      "bytes": 31145,
+      "sha256": "b933eeb42651abf28c3a01fac4e348b16de063aeebc9ea3db27b19f2ea425233"
+    },
+    {
+      "path": "drops/magmaite-drop.png",
+      "bytes": 16353,
+      "sha256": "4dbf14ca4daa29a3667139567d7058e63354e5bc8008ddd4d611c4d0256f6c4b"
+    },
+    {
+      "path": "drops/moonglass-drop.png",
+      "bytes": 26196,
+      "sha256": "540491e36456fbaead8b459802ce140d08ba0d13eda65ffaeb23e45835f98d17"
+    },
+    {
+      "path": "drops/phasecrystal-drop.png",
+      "bytes": 19272,
+      "sha256": "dfe6a0922d166f7176eae5e465a6025f17ca8b93538b45433ad54e41c83339f0"
+    },
+    {
+      "path": "drops/prismite-drop.png",
+      "bytes": 34124,
+      "sha256": "08da4201384d71988c6aa6993238becbc266651a51a0f7b4877f4d689b61f8f4"
+    },
+    {
+      "path": "drops/rootiron-drop.png",
+      "bytes": 44640,
+      "sha256": "99f18b252e1fc45752c35c88bf7dee9a0d314289c5f6daf01373b9865bdc0cfc"
+    },
+    {
+      "path": "drops/singularity-drop.png",
+      "bytes": 61096,
+      "sha256": "7797b97f4d820ae4d074c2ec0d105e7940728a1539bc2e0c8262c4bad3a15e2d"
+    },
+    {
+      "path": "drops/starshard-drop.png",
+      "bytes": 21666,
+      "sha256": "5e37661bfd7d5faeffebcb7ab05f411b3ba6f8be75af0c2011f67028ab6e3591"
+    },
+    {
+      "path": "drops/stone-drop.png",
+      "bytes": 26744,
+      "sha256": "702de01a8cd9b1362d4c367b17cf5d3ec37f0e4d18022db8d6479cb8af288ae6"
+    },
+    {
+      "path": "drops/sunslag-drop.png",
+      "bytes": 14731,
+      "sha256": "10b19901853b89412f73107ca575d94966b6e76570f2713d8a077d89b0fb2e7b"
+    },
+    {
+      "path": "drops/voidglass-drop.png",
+      "bytes": 59003,
+      "sha256": "d721429adf6ea538c7ac2a6f34a02af0ad17bf74c1fd6e10bf5667f9999c7100"
+    },
+    {
+      "path": "emberdeep/buried-cache.png",
+      "bytes": 54864,
+      "sha256": "cb1dd9aee5f8962af580b2f97c220cc3723b2f3d87b170faf731e90f56e267c6"
+    },
+    {
+      "path": "emberdeep/cinder-bulkhead.png",
+      "bytes": 53024,
+      "sha256": "3e4e2139b514cb3e8b4924bee06f4d2c33b0ae9953e748329a404e331472ef4e"
+    },
+    {
+      "path": "emberdeep/crucible-seal.png",
+      "bytes": 49607,
+      "sha256": "4df572b832485821874e50d9d64a1f88638d5bbc1b48c99ceabbc1dcbc0cc0a1"
+    },
+    {
+      "path": "emberdeep/crystal-pocket.png",
+      "bytes": 120129,
+      "sha256": "0b99b977f20497a77d770cc7eb07d042bc7a28939a6d68e5a6c08d7aa8dbdfbc"
+    },
+    {
+      "path": "emberdeep/emberstone-node.png",
+      "bytes": 117164,
+      "sha256": "f2930acb0dc21ad7faeee736b9a58d99baccce200ee54dc5f9bea3d184c56420"
+    },
+    {
+      "path": "emberdeep/emberstone-wall.png",
+      "bytes": 36385,
+      "sha256": "b420042b08c7a3963ab1a292c8b94808f55cb1c2644582d23249647966213404"
+    },
+    {
+      "path": "emberdeep/floor.png",
+      "bytes": 182389,
+      "sha256": "a1614f167308a3f1810d60550abe910a14ddb919e1a11ba49a5ed141f622608e"
+    },
+    {
+      "path": "emberdeep/mining-rush-shrine.png",
+      "bytes": 82401,
+      "sha256": "a06075c4e5194dc55e4747ffb2d707944aff46ca12cc5c3164951fb8bbe3257f"
+    },
+    {
+      "path": "emberdeep/route-marker.png",
+      "bytes": 32775,
+      "sha256": "b3d926f0e55b214f738c1efd4618a36b576a66edd68c37a3b3c956e8e44ce119"
+    },
+    {
+      "path": "emberdeep/sunslag-node.png",
+      "bytes": 128462,
+      "sha256": "52573df31ef77cb4fa20c3d1c07152935e4473c6719bb0122328aa313843d406"
+    },
+    {
+      "path": "emberdeep/sunslag-wall.png",
+      "bytes": 44768,
+      "sha256": "9c7226f81c6049ffdf32c050bb9f77f9baa4cd5d9e0f9e76c7f79faf7a4f3ad5"
+    },
+    {
+      "path": "emberdeep/unbreakable-wall.png",
+      "bytes": 386411,
+      "sha256": "29076e0500b70aa4a2e0e7b515873874a5532aa21cee87bbad4ea71ace39bed3"
+    },
+    {
+      "path": "emberdeep/wall.png",
+      "bytes": 87163,
+      "sha256": "3a5ff0758c38776ae9b96bc85f208d13f87e7a4d296822eae7749f78672372f1"
+    },
+    {
+      "path": "entrances/depth-work-lamp.png",
+      "bytes": 62101,
+      "sha256": "ad48d93d69c396eee55b8e748202030986993ad1bdca3e2ca1532d744b33f77b"
+    },
+    {
+      "path": "entrances/emberdeep-entrance.png",
+      "bytes": 129820,
+      "sha256": "356698a1b2d8656129cafd8529cb4f534f8a9622ea8e8c5e51f6cdd191a2c922"
+    },
+    {
+      "path": "entrances/moonglass-entrance.png",
+      "bytes": 119346,
+      "sha256": "b1a33c035073685d27b5ecd5fea91e848de9c730b0161f6607d5499929ef6cd3"
+    },
+    {
+      "path": "entrances/mossvein-entrance.png",
+      "bytes": 220264,
+      "sha256": "216b99d6d8d9d726dd56296793e4d478453d1ece4a5bf43eef35223e5a7b082c"
+    },
+    {
+      "path": "entrances/starfall-entrance.png",
+      "bytes": 92296,
+      "sha256": "60956ec9edf697eb12f15b5af99c7c9a09340c24dcbea102d16abd44c65aba19"
+    },
+    {
+      "path": "minerals/copper-node.png",
+      "bytes": 223170,
+      "sha256": "39f717716e7d848ddbc989b9b673efcc14c8f44fd936e7b05b6127e131c1c2e0"
+    },
+    {
+      "path": "minerals/copper-wall.png",
+      "bytes": 112630,
+      "sha256": "59c95a20bae598f5e81e0a9a45a9cf01a904ddb5bdcc700d801529498a7e7975"
+    },
+    {
+      "path": "minerals/gold-node.png",
+      "bytes": 139061,
+      "sha256": "6771a70962bbd342b9ccd345b13b163aab3d6b0632d2a0254a20caf2a8c42282"
+    },
+    {
+      "path": "minerals/gold-wall.png",
+      "bytes": 94522,
+      "sha256": "ea5ac0d6fffa8249e6094aabbafd44eba1d2a36b33dfa1d2c37a792dc609c961"
+    },
+    {
+      "path": "minerals/stone-node.png",
+      "bytes": 160011,
+      "sha256": "e1b77126c7cdad6fddbfb95ed236f40645ab1b4f3a512298ed390e436becb951"
+    },
+    {
+      "path": "molten/buried-cache.png",
+      "bytes": 39921,
+      "sha256": "b3f3aaa3fc32fb9574468112fd189cfd00899bebf6f695f5361e71c0c09cb2b8"
+    },
+    {
+      "path": "molten/crystal-pocket.png",
+      "bytes": 111434,
+      "sha256": "10812bffbbc94f3a383a936c31440e6d5ecf04a6cf66f4d4bb3ecf41704f4c85"
+    },
+    {
+      "path": "molten/deepstone-node.png",
+      "bytes": 100645,
+      "sha256": "8e62c79a70b81b08e655da3522034bc6cfbdcdd375469a89a424337ae05876de"
+    },
+    {
+      "path": "molten/deepstone-wall.png",
+      "bytes": 39289,
+      "sha256": "31bc6c0e41922d771d7b6d9be2f08a0f9e4ddd014502f3c437a7045fa4ac88cb"
+    },
+    {
+      "path": "molten/depth-portal.png",
+      "bytes": 114089,
+      "sha256": "7e5db676400a8abbedae9a4e5b97d474d6c2d430e1ea65fe85c4a27384a3ff26"
+    },
+    {
+      "path": "molten/drill-forge.png",
+      "bytes": 117817,
+      "sha256": "ed39ae3a53bb23c4715dbad6404817fe6bdfacc9363251af11e21bfea1ad7d53"
+    },
+    {
+      "path": "molten/floor.png",
+      "bytes": 196576,
+      "sha256": "34ca91988f2900bbacaec56b6cce75cf3860440c3e83428f4861b99c2ed5f77b"
+    },
+    {
+      "path": "molten/furnaceheart-node.png",
+      "bytes": 139478,
+      "sha256": "4badb5c5ca9c80cfe05bf61cbd564c0628a22c2551b71f3653fb2d95b48a55dd"
+    },
+    {
+      "path": "molten/furnaceheart-wall.png",
+      "bytes": 37632,
+      "sha256": "7afc6d2fe78e25ba7b362fbfd6f369baeb3170faa6754c21b6ddbc656214f3c8"
+    },
+    {
+      "path": "molten/infernium-node.png",
+      "bytes": 63783,
+      "sha256": "2ae463f2ba40e2c9beccb2adbccaeb687209c1fc6bf75c6d4543454b31e42341"
+    },
+    {
+      "path": "molten/infernium-wall.png",
+      "bytes": 34878,
+      "sha256": "0b59b7aff234322cc1ee066c386bcad8aaf49d8215e19507934d06a9f3c137b2"
+    },
+    {
+      "path": "molten/magmaite-node.png",
+      "bytes": 82109,
+      "sha256": "780783f143cf1655047b2694449d00935f9af826d21ff83d5e0e9f6db2b1256b"
+    },
+    {
+      "path": "molten/magmaite-wall.png",
+      "bytes": 44616,
+      "sha256": "6b5db8a0277d793635838aca5558e7f6d617cff6c3a910ade748fc9ad042de08"
+    },
+    {
+      "path": "molten/mining-rush-shrine.png",
+      "bytes": 62915,
+      "sha256": "9c08b38201fcfdcf10252cedb02c63c6acd4669c7460947bb8d90cf652aae6f2"
+    },
+    {
+      "path": "molten/sell-station.png",
+      "bytes": 77012,
+      "sha256": "58f8e8805c3a809b87dfac92541298622f5a08e8fa5dbc703d0d23d40b81470a"
+    },
+    {
+      "path": "molten/wall.png",
+      "bytes": 35599,
+      "sha256": "15b76157db6a44716ba5af518c10472acf9cfd423892bec0ee969a63b3758668"
+    },
+    {
+      "path": "moonglass/buried-cache.png",
+      "bytes": 55939,
+      "sha256": "7b87f350485aad085a16f3a20de2babf85a681a184360c0fb72fc39abaccb4b4"
+    },
+    {
+      "path": "moonglass/crystal-pocket.png",
+      "bytes": 105514,
+      "sha256": "7de562f05b782a0f665daf8da5bf5460fbf65672b1d56b14baff968fb553ca9b"
+    },
+    {
+      "path": "moonglass/floor.png",
+      "bytes": 161843,
+      "sha256": "f8f2e063ac182b605a6ab5d882a3a4c343747089ba4275bd8ac312d31de4b01b"
+    },
+    {
+      "path": "moonglass/mining-rush-shrine.png",
+      "bytes": 80267,
+      "sha256": "13fe9db349d55f8d834c6bb4d4d9adebaec735a9850eed117e948faf1b116194"
+    },
+    {
+      "path": "moonglass/moonglass-node.png",
+      "bytes": 102351,
+      "sha256": "a3a7fd8719c138b0be270d00d90d9df167a1defc24cee734401c15368c02e446"
+    },
+    {
+      "path": "moonglass/moonglass-wall.png",
+      "bytes": 28851,
+      "sha256": "1eb557905a1009022591f78540e74aa1c6d5beab62761ebc5832f2bff7920c4b"
+    },
+    {
+      "path": "moonglass/prismatic-fault.png",
+      "bytes": 60036,
+      "sha256": "448d6ea2cd73f54b85d373d3ce54b258ca772e592f50d1226da3a6cde89ef626"
+    },
+    {
+      "path": "moonglass/route-marker.png",
+      "bytes": 53250,
+      "sha256": "8d195fc62b77f5d49e589b169aa17bc4319f5e56f9d53c1bbb50809dce198e2c"
+    },
+    {
+      "path": "moonglass/starbound-geode.png",
+      "bytes": 51385,
+      "sha256": "509885a26d0501fda08fb54209b4df1a5bb96b4b9bdf1a7078961a105ed2a902"
+    },
+    {
+      "path": "moonglass/starshard-node.png",
+      "bytes": 133535,
+      "sha256": "a4eb344529de538fcffac8bb6ef5957867379c5beff11ee8799e1411b733adfc"
+    },
+    {
+      "path": "moonglass/starshard-wall.png",
+      "bytes": 50714,
+      "sha256": "cb8b8c1c5fc17263e99744aef64eccaedf19433ead257d992c307c13864d19c1"
+    },
+    {
+      "path": "moonglass/unbreakable-wall.png",
+      "bytes": 321007,
+      "sha256": "3b7cef70a08acf209ffb53e9b89070d4ae5f6707fe62c2c1e25b3473e6992d34"
+    },
+    {
+      "path": "moonglass/wall.png",
+      "bytes": 84456,
+      "sha256": "61552eafe97fa4e15d85c5270304a7328bcf0ed5a76d78aadc8f48ed59da6551"
+    },
+    {
+      "path": "mossvein/buried-cache.png",
+      "bytes": 68048,
+      "sha256": "ebbd3e9e2dcc209a500dd1f3211c1a3eefb1600c9321d78ffc6f91004494b15e"
+    },
+    {
+      "path": "mossvein/cave-floor.png",
+      "bytes": 149955,
+      "sha256": "38f73dd2226e785712561d989ab9a7ddc4cd5af234d02dd1738b43659f069988"
+    },
+    {
+      "path": "mossvein/cave-wall.png",
+      "bytes": 127524,
+      "sha256": "1a0ae688d10235c6146cb73ca1006dce79258a3cb2f82606a3feac3edea768c2"
+    },
+    {
+      "path": "mossvein/magic-crystal-pocket.png",
+      "bytes": 125731,
+      "sha256": "0049ffda26cbfa23e00d5f71e27770b95171e038cd179eec8994b42bd96233d9"
+    },
+    {
+      "path": "mossvein/mining-rush-shrine.png",
+      "bytes": 100883,
+      "sha256": "bc0173030a955824ab5c6f64e85df494ac335db4c8199fd6fdc84149b4ecadd1"
+    },
+    {
+      "path": "mossvein/unbreakable-wall.png",
+      "bytes": 254411,
+      "sha256": "0494745de8d4adcd5d5c893be0f2592716ac3b66ff65bc9ec1fdb4602dac4f8a"
+    },
+    {
+      "path": "prismatic/buried-cache.png",
+      "bytes": 45513,
+      "sha256": "266275e2699b86b78a44082e80e24b2f845cc550cb9437d5edd2bee29be2a06a"
+    },
+    {
+      "path": "prismatic/crystal-pocket.png",
+      "bytes": 108626,
+      "sha256": "74e6508df92027876fe38f5b68018a465d16a3c94a0061a5b7979e99b9f1de68"
+    },
+    {
+      "path": "prismatic/deepstone-wall.png",
+      "bytes": 49561,
+      "sha256": "5227221fe428466d40737a75b09548bb0eff9a12dd9a6f67bbada4acf1ea41d1"
+    },
+    {
+      "path": "prismatic/depth-portal.png",
+      "bytes": 115053,
+      "sha256": "18d5e3001d51e3ab08124c9eeedd163a39fbbf32f8e70bc8f293280b85057fc0"
+    },
+    {
+      "path": "prismatic/drill-forge.png",
+      "bytes": 123135,
+      "sha256": "6aa2d11bb81aee4dd6c1ed4761be72aff8207bba3617dbad15988e208b8f0e5d"
+    },
+    {
+      "path": "prismatic/floor.png",
+      "bytes": 156824,
+      "sha256": "e61cfab67f4f37475cbde7013830f4950abb9776d36e56b927893ce8159a02df"
+    },
+    {
+      "path": "prismatic/lunacore-node.png",
+      "bytes": 143049,
+      "sha256": "72b1435355f83b8abd89a0efdffd99f5fe8e42198f5f3583b1ea1624e96ac664"
+    },
+    {
+      "path": "prismatic/lunacore-wall.png",
+      "bytes": 41489,
+      "sha256": "8f81233125d23987db57f6ce775d2a665f756423dd951a55d746097ba8b9a514"
+    },
+    {
+      "path": "prismatic/mining-rush-shrine.png",
+      "bytes": 110068,
+      "sha256": "de5e060364a6b9979e57d24f04da834fdd80fc97a38fc66d8430ef5d825d9309"
+    },
+    {
+      "path": "prismatic/phasecrystal-node.png",
+      "bytes": 117180,
+      "sha256": "dceb14d35992a387670bec3108ee0760fc907edf91dec7d1b74cd39df7bfd6ec"
+    },
+    {
+      "path": "prismatic/phasecrystal-wall.png",
+      "bytes": 43437,
+      "sha256": "f40d6845516a231aa996c4dd59023320ad4904bef2f650e5ccff5991d54bb97b"
+    },
+    {
+      "path": "prismatic/prismite-node.png",
+      "bytes": 122176,
+      "sha256": "0d01515e2e8e2fa481860e9397b14ee2e5b475ad9e0c2810ee0c01b68beac4bd"
+    },
+    {
+      "path": "prismatic/prismite-wall.png",
+      "bytes": 41617,
+      "sha256": "01781bf0292a5cbb4859ef13794b1abc165e977f5bb49b545213d354af39a7c7"
+    },
+    {
+      "path": "prismatic/sell-station.png",
+      "bytes": 111392,
+      "sha256": "0549ba3b3942a91a5ef2de2c99414bd72233326a906f4dbe8c025854fe2912fa"
+    },
+    {
+      "path": "prismatic/wall.png",
+      "bytes": 51594,
+      "sha256": "4ef06f2c44b3f5c7d6a15954c57e854f36109d50c474d98ab876af3405ee3e74"
+    },
+    {
+      "path": "rootwound/ambercore-node.png",
+      "bytes": 138418,
+      "sha256": "7f7da8d62aeec7dcdded45b632028058cce82573264293906aa8cc2a9cde2457"
+    },
+    {
+      "path": "rootwound/burrowsteel-node.png",
+      "bytes": 128292,
+      "sha256": "c51c726c31a7093f4194ac39f3e2647fa11ae8d69c4c17ed94e181760ea6a0a2"
+    },
+    {
+      "path": "rootwound/deepstone-node.png",
+      "bytes": 115568,
+      "sha256": "0d7c71f19f39959d6bf80b1b1968d991e2f4c6685fea0923e55dbee1941c57f0"
+    },
+    {
+      "path": "rootwound/depth-shaft.png",
+      "bytes": 119900,
+      "sha256": "16f86e27f6f8ef4b8d7f24e3f744eec0c6517f0c969938f7c54d26ea56f4d62a"
+    },
+    {
+      "path": "rootwound/drill-forge.png",
+      "bytes": 151374,
+      "sha256": "022741caccf99b5fdcf09d7a55bd8aac6fcc4b4c7fc56d8dcba083a48618132a"
+    },
+    {
+      "path": "rootwound/floor.png",
+      "bytes": 121867,
+      "sha256": "ce451a77bf3fef4ebfbe450e8930c0bcc3f6408bf8d18888420b5d9eb42c273c"
+    },
+    {
+      "path": "rootwound/rootiron-node.png",
+      "bytes": 128672,
+      "sha256": "1cf9350c7e3bf386bf6065db2881ac8c992e22e09db8bd150847d13b6d02de39"
+    },
+    {
+      "path": "rootwound/rootiron-wall.png",
+      "bytes": 66943,
+      "sha256": "f25f4b346eaba4bcdbd69d8ef307aa53c494a88a8ef42587ab49b958c6141e9b"
+    },
+    {
+      "path": "rootwound/sell-station.png",
+      "bytes": 122421,
+      "sha256": "46d789fb378beada74141a5d38537e69424728cc4e7271b8d340bdc0e8e232a0"
+    },
+    {
+      "path": "rootwound/wall.png",
+      "bytes": 73237,
+      "sha256": "c6ad103f45703b7a3481e1b9e587d2ff7124ce273c297ac0efa3bef1e5db84b3"
+    },
+    {
+      "path": "starfall/astral-bridge-lock.png",
+      "bytes": 52382,
+      "sha256": "d38788b3c38a83ff2d2b507639ca5151c14f97329b1c2de431baf00bad5095cd"
+    },
+    {
+      "path": "starfall/astralite-node.png",
+      "bytes": 137557,
+      "sha256": "9e7ddd2f1acf4e5765e3dd7bec5331f1f34d7fc683c378afc6c1456943604163"
+    },
+    {
+      "path": "starfall/astralite-wall.png",
+      "bytes": 41650,
+      "sha256": "48aab0fd283ccfaec142f7087703c09dee2ee86792a3928a4ddb7e889f5d5c2b"
+    },
+    {
+      "path": "starfall/buried-cache.png",
+      "bytes": 66641,
+      "sha256": "7177302f6251c489d2ed9d5d7b9d9dff9bf5a16bf13a13722db509c5111b0546"
+    },
+    {
+      "path": "starfall/crownstone-node.png",
+      "bytes": 161248,
+      "sha256": "6a8e14cec4ae785b036d4a0cccc2bdf3d7b0089cf83aa986f41f160cfdbf14a6"
+    },
+    {
+      "path": "starfall/crownstone-wall.png",
+      "bytes": 49762,
+      "sha256": "199c305986a105f5f014094489c9a5b54f98b8b73f6a3600210a42fed3f0f29e"
+    },
+    {
+      "path": "starfall/crownstone-ward.png",
+      "bytes": 49316,
+      "sha256": "e67ed88f2afbb2e0b7850144df9a94fcb81db5e9c0a31adabacc80d0e8e6b55c"
+    },
+    {
+      "path": "starfall/crystal-pocket.png",
+      "bytes": 128467,
+      "sha256": "9456cd8c27452d85c9a8211fcb92133f35ac65e5e130c0f04ee4b74e9eedcfd5"
+    },
+    {
+      "path": "starfall/floor.png",
+      "bytes": 184609,
+      "sha256": "fa975e55481305042385bb139784a285ecb5a2bff10a53e86e04c766f2d703c9"
+    },
+    {
+      "path": "starfall/mining-rush-shrine.png",
+      "bytes": 97114,
+      "sha256": "334ec3f441075eb7ed385ec64bcafcf65c649872203ed3104599ebce26bf9fde"
+    },
+    {
+      "path": "starfall/route-marker.png",
+      "bytes": 35161,
+      "sha256": "b8c155e55a57d53d12d804adc648dc3c328a2fee455b8312ae8f7c700e95924b"
+    },
+    {
+      "path": "starfall/unbreakable-wall.png",
+      "bytes": 352567,
+      "sha256": "059e7cead6f9c08db7f7f3c64bd2db589130c1cd0a5963318fc5a21eff6586fc"
+    },
+    {
+      "path": "starfall/wall.png",
+      "bytes": 94922,
+      "sha256": "afda234b5c1cb82670621e4c8ca1afb8aeb6fcd5930f60a9d0314e72efd5e90a"
+    },
+    {
+      "path": "surface/assay-station.png",
+      "bytes": 146253,
+      "sha256": "741f3fd0aee5cf0b7ee5ce1fd49e6ed76c2a692487f5c6b61ab87f6ee6e444f0"
+    },
+    {
+      "path": "surface/astral-cache-closed.png",
+      "bytes": 43367,
+      "sha256": "d096e67873c1a40c3db545b20d7fbc0a361271f72c598ebd44d532c75e420cd3"
+    },
+    {
+      "path": "surface/astral-cache-open.png",
+      "bytes": 40245,
+      "sha256": "110579061bb165cfe84da3a5020e4dc56b133c3daf3365078419ec653cc92078"
+    },
+    {
+      "path": "surface/boundary-emberdeep-starfall.png",
+      "bytes": 346603,
+      "sha256": "e6298a4451a49b51c01106961fd08131bfa0fe16c412a8c4d38af391250996b2"
+    },
+    {
+      "path": "surface/boundary-moonglass-emberdeep.png",
+      "bytes": 386670,
+      "sha256": "33f27778d1c3338047f2aae59da8c1194c65049694d24936e3b3ba9eaba764ff"
+    },
+    {
+      "path": "surface/boundary-mossvein-moonglass.png",
+      "bytes": 393288,
+      "sha256": "cadc48de7e328dbcb7fbaf5c2966c6e211fe2cc7e79e6ec86800dd562fc5e9fb"
+    },
+    {
+      "path": "surface/celestial-coffer-closed.png",
+      "bytes": 63221,
+      "sha256": "9f66e0a04d564476bfc4121f258630afc35013a01a359c8ed0221d43948e8dc5"
+    },
+    {
+      "path": "surface/celestial-coffer-open.png",
+      "bytes": 53719,
+      "sha256": "ad6c267d60f1726d68c5f6eb6d02066ce41a304504995a1a17d0de425a069297"
+    },
+    {
+      "path": "surface/crystal-cache-closed.png",
+      "bytes": 62638,
+      "sha256": "42cabcc7c22f0bb67cee33f8843a40725639add0d99052818aab958545b28d39"
+    },
+    {
+      "path": "surface/crystal-cache-open.png",
+      "bytes": 59614,
+      "sha256": "7bda7a6b01de5b2ef916be886eca8130dde813f1c1b21e8500412fa26268ef84"
+    },
+    {
+      "path": "surface/ember-vault-closed.png",
+      "bytes": 137577,
+      "sha256": "46400f19ba35c10defd89a8a767e392fbe89e4d0e2eaba4b4aab3d2dc5a0fe0f"
+    },
+    {
+      "path": "surface/ember-vault-open.png",
+      "bytes": 130130,
+      "sha256": "8a72b847f8513f656597e91875479a95e129c0ada53ecbd65175a60079652d57"
+    },
+    {
+      "path": "surface/emberdeep-fault-bed.png",
+      "bytes": 63818,
+      "sha256": "1b67361cc5c3ab7a8870e49258382dbe8c7aba006cfa74cd61025ab82120f427"
+    },
+    {
+      "path": "surface/emberdeep-ground.png",
+      "bytes": 179262,
+      "sha256": "3e48c13fb98aad45d840f078ed2c483d56e7507ad201db4b9c51b6330b5f7133"
+    },
+    {
+      "path": "surface/emberdeep-mine-path.png",
+      "bytes": 155388,
+      "sha256": "af43ec8f8e4aa665f5d96d8c307a568743536203db635de824fae5300f524c27"
+    },
+    {
+      "path": "surface/emberdeep-seal-mark.png",
+      "bytes": 99903,
+      "sha256": "af56d60a6239556870233e149030fd97ee31a67a8ab17fbc4d4b7b4fb85cc74b"
+    },
+    {
+      "path": "surface/emberdeep-seal.png",
+      "bytes": 78507,
+      "sha256": "22f83cbf744fbfcce29623f2a5cde2e05b3a8a8454561fe4387b1af6422141c3"
+    },
+    {
+      "path": "surface/emberdeep-slag-clusters.png",
+      "bytes": 57162,
+      "sha256": "c47e53b2b546a0eb2b422523c7eeb2038a376352623716a4a933cad9eecf39c1"
+    },
+    {
+      "path": "surface/forge-station.png",
+      "bytes": 147194,
+      "sha256": "25e23c68a679a87f6ef531a665e59bc76605a7007b48b07f7d44a416bc447adb"
+    },
+    {
+      "path": "surface/foundry-lockbox-closed.png",
+      "bytes": 139231,
+      "sha256": "bd9694ce704e4977be07914bd2d13e5550263e805dda9e2dfd64a18b9de29478"
+    },
+    {
+      "path": "surface/foundry-lockbox-open.png",
+      "bytes": 74479,
+      "sha256": "cd90f2813ac269e4a7e134333ce62a73806cf4b6bb1523ee32f8fa04e4635328"
+    },
+    {
+      "path": "surface/moonglass-bloom-bed.png",
+      "bytes": 67429,
+      "sha256": "15119ab33ce48a60bd00115f0d75ad234cb4fdfb61c5e3a6940b9cdf16d680b6"
+    },
+    {
+      "path": "surface/moonglass-crystals.png",
+      "bytes": 24087,
+      "sha256": "3d08352d0bb08e504739c7f04af77734fbfcaee32ca968645ab145cff01532d5"
+    },
+    {
+      "path": "surface/moonglass-gate-mark.png",
+      "bytes": 62362,
+      "sha256": "aad878771f83ad5da4aba5e533077a8ab13b8b9ef170e6846e2911e36195a188"
+    },
+    {
+      "path": "surface/moonglass-gate.png",
+      "bytes": 68713,
+      "sha256": "7d750ae3f1f6758c07b3a1a9bb8b866434f6450c54b6ca45e65ba0d9fdc6f9d8"
+    },
+    {
+      "path": "surface/moonglass-ground.png",
+      "bytes": 166037,
+      "sha256": "91fcf2c686b7b25d76e144bb5cfd6f318864ed79d99217bab30b020c16bf9425"
+    },
+    {
+      "path": "surface/moonglass-reliquary-closed.png",
+      "bytes": 70519,
+      "sha256": "ee8609589ec737ee90a047c55516911ed35fbaf2af1739056e13ed30a8b2bda5"
+    },
+    {
+      "path": "surface/moonglass-reliquary-open.png",
+      "bytes": 64007,
+      "sha256": "bac9b787f662e6997e842a05d1d40ff206f8777e675f4caf2c54d3547bcbc656"
+    },
+    {
+      "path": "surface/mossvein-ground.png",
+      "bytes": 381567,
+      "sha256": "d2999d3649d31082a1d5140a444cb4e9b3282b719350ae8d2574d5bc6aa78aac"
+    },
+    {
+      "path": "surface/mossvein-mine-path.png",
+      "bytes": 45693,
+      "sha256": "fabdbfc41a2e01fcf955b7f90d494a50287adc0005958ed1f0b6b6589a2dbdf0"
+    },
+    {
+      "path": "surface/road-emberdeep.png",
+      "bytes": 61862,
+      "sha256": "cf8f76fa349cf3c8cc5929f28221016a23646773a5d8e5dc8ec49c8e3d1e9270"
+    },
+    {
+      "path": "surface/road-moonglass.png",
+      "bytes": 57765,
+      "sha256": "6fe5cc37d7e8f59ba551c5b6137fdedcabda2a1fc6c9f7e217780e8b05b0fe00"
+    },
+    {
+      "path": "surface/road-mossvein.png",
+      "bytes": 74275,
+      "sha256": "378b2b903aae51677e6c1dd3aea9b817e7bede00dbd3f89ffa8f97c71f98b9c8"
+    },
+    {
+      "path": "surface/road-starfall.png",
+      "bytes": 66263,
+      "sha256": "6f1bf7b0f329723c32da6b9c5c2727dab544eb553cf896736d8dac64053d259a"
+    },
+    {
+      "path": "surface/starfall-ground.png",
+      "bytes": 156853,
+      "sha256": "fa76502e7f635c5fbd9f64831f88cd144801e1aa5fee232fd9921682a7d096b7"
+    },
+    {
+      "path": "surface/starfall-lattice-bed.png",
+      "bytes": 50623,
+      "sha256": "f4bf83e601331298109b8852b47de988cd0e991b0b9e215348eb12f33b01c10d"
+    },
+    {
+      "path": "surface/starfall-mine-path.png",
+      "bytes": 43201,
+      "sha256": "b1136132b71c413be91aa687d04b29e613ccf74e19ceaec53d33ffb1b801ec37"
+    },
+    {
+      "path": "surface/starfall-seal-mark.png",
+      "bytes": 72293,
+      "sha256": "801ca2e03f7076d21778733a7030003ab81a1f3394c2ac55b85044d346215395"
+    },
+    {
+      "path": "surface/starfall-seal.png",
+      "bytes": 77474,
+      "sha256": "c2befdef3dd38b02d1d176e99eade67bc567d0b34c4a81b86f876d47fcf8cc4e"
+    },
+    {
+      "path": "surface/starfall-shard-clusters.png",
+      "bytes": 16812,
+      "sha256": "bd1c9dce7050c595a40974376f5824875abf5d74c0043711b5867d994f83d5bf"
+    },
+    {
+      "path": "surface/starforge-station.png",
+      "bytes": 84636,
+      "sha256": "7a420173ef9297cc220b42bf2436e77c0a20c53e3ac5dc4217676278e9a05848"
+    },
+    {
+      "path": "surface/storage-chest.png",
+      "bytes": 70433,
+      "sha256": "9adba8bf01a34acd9e1c9ce137964477cb3679b943c5dab22048405fa4cf5257"
+    },
+    {
+      "path": "surface/treasure-cache-closed.png",
+      "bytes": 85277,
+      "sha256": "e4f206067d5224bc9f968ab9bb5e2ca5c887ba21bf9043459e2893f0c4d9aae4"
+    },
+    {
+      "path": "surface/treasure-cache-open.png",
+      "bytes": 83112,
+      "sha256": "0c266b1a05be6572f2426d30d7e4e72f382fc7c31af269d1f185833f24efbeb8"
+    },
+    {
+      "path": "surface/wayfarer-shop.png",
+      "bytes": 153814,
+      "sha256": "ba1085c9641182e2be93438b5373600dc2497d4aa3a76b81cd159bcb0b20cd6c"
+    },
+    {
+      "path": "tools/drill-burrower.png",
+      "bytes": 143432,
+      "sha256": "f6707ffa355017977747c1a41f8b6cb5318f1cc9c4c044e646d58a9e0d2b89d4"
+    },
+    {
+      "path": "tools/drill-deepcore.png",
+      "bytes": 141114,
+      "sha256": "f8ca11ec3bb981fa1fe720d2136071a3400ecb49fd3f353bf00cd7b6734f9255"
+    },
+    {
+      "path": "tools/drill-pulse.png",
+      "bytes": 135978,
+      "sha256": "708ef6db13aa972224c89146b5216ff9eb40d0db7ba788dc136b136e50abf6e2"
+    },
+    {
+      "path": "tools/pickaxe-ember.png",
+      "bytes": 94944,
+      "sha256": "2dd7f4b173fc0d9c7c53887962a0032c632bb47cc6182f1788b847969840f723"
+    },
+    {
+      "path": "tools/pickaxe-iron.png",
+      "bytes": 94416,
+      "sha256": "0f016fd4b042b9bbbd87cd6a3400c36f2ad50fec2137cc332545da306004779b"
+    },
+    {
+      "path": "tools/pickaxe-moonglass.png",
+      "bytes": 110812,
+      "sha256": "116eb061f8d3491eadee0c83eb22bd0442bff831365640dafea0e061f92e4269"
+    },
+    {
+      "path": "tools/pickaxe-runed.png",
+      "bytes": 105839,
+      "sha256": "b116658bc473e67a96c041735bcca752e223288db9fef56f3bc735106bf53799"
+    },
+    {
+      "path": "tools/pickaxe-worn.png",
+      "bytes": 89429,
+      "sha256": "528b1e75f1a29dc756fb87250829ee38ce5d99187036b7ba61f3ecc22905f5a4"
+    },
+    {
+      "path": "tools/starforge-crusher.png",
+      "bytes": 136497,
+      "sha256": "9b925c93181db5275e7fb6e9cf5226e90014fb7e3a42228da193e178b9c1b21d"
+    },
+    {
+      "path": "tools/starforge-prospector.png",
+      "bytes": 82265,
+      "sha256": "7c30f0282c08ca7fe641cb8d9e9759081efc484a98b1b5b6a8f5aef08b9aeb84"
+    },
+    {
+      "path": "tools/starforge-swift.png",
+      "bytes": 82676,
+      "sha256": "837f11eaa502837934f651be6806acb5ce17172ed3fa39443e4ebb7cef04605f"
+    },
+    {
+      "path": "voidstar/buried-cache.png",
+      "bytes": 42190,
+      "sha256": "dec97f43508b80b82b777e66613c1839d5ce14470e9ef747320860327619850d"
+    },
+    {
+      "path": "voidstar/crystal-pocket.png",
+      "bytes": 132925,
+      "sha256": "4cd93523769f0c475aba11b9b2280c1bbb51e10c4d65845840af34707021d894"
+    },
+    {
+      "path": "voidstar/deepstone-node.png",
+      "bytes": 83854,
+      "sha256": "9b86b7a0191976df224a74c48a88ac6cce0609123ef514fcc6ad45670462dfb0"
+    },
+    {
+      "path": "voidstar/deepstone-wall.png",
+      "bytes": 35732,
+      "sha256": "5b1c2cb477644babc569f978339a84b47d06ca92f2eea6e7937e01a2fbc115ae"
+    },
+    {
+      "path": "voidstar/depth-portal.png",
+      "bytes": 122858,
+      "sha256": "f7f74918f059b637cec24bbdf183376fc7a301c687ced4bb22e0e5e31ce221df"
+    },
+    {
+      "path": "voidstar/drill-forge.png",
+      "bytes": 135954,
+      "sha256": "f9222af8614f6d5c4886abbd2c1abcae985f13e906bc62aa846a7f9ee1c7bbc4"
+    },
+    {
+      "path": "voidstar/floor.png",
+      "bytes": 178392,
+      "sha256": "39e760f3e3a6f84a3f2ec8c43f19f686e15b8d7f92108f933e6158e7843bc49a"
+    },
+    {
+      "path": "voidstar/mining-rush-shrine.png",
+      "bytes": 89074,
+      "sha256": "99bb028fbe90e403790156d908464a6c33d73949c7559cf4b08c0f250a1ae1b7"
+    },
+    {
+      "path": "voidstar/sell-station.png",
+      "bytes": 111655,
+      "sha256": "cb353fa65a352b6408b02037d734bde60a0e53203819bbbf7ebbe40361b17c52"
+    },
+    {
+      "path": "voidstar/singularity-node.png",
+      "bytes": 142816,
+      "sha256": "8d88c40503b8f4b2f5f65195ac1370a25bb9bfee39e388bbfe9c1d14320aeccb"
+    },
+    {
+      "path": "voidstar/singularity-wall.png",
+      "bytes": 92428,
+      "sha256": "0d77921230d491f1efe41818b1bb2b982b04b95e2371db8ed0fef496b6b8dd41"
+    },
+    {
+      "path": "voidstar/voidglass-node.png",
+      "bytes": 95871,
+      "sha256": "927713315c734ade3100bbde40e327c90e47f87bad3f295fc59b92282f0834e8"
+    },
+    {
+      "path": "voidstar/voidglass-wall.png",
+      "bytes": 39175,
+      "sha256": "07a1464a74984a620845f86d5038a99abbb884451b0cee5ec9edccb8a07798a0"
+    },
+    {
+      "path": "voidstar/wall.png",
+      "bytes": 53681,
+      "sha256": "a0736c7dda1b6f2ed1d2a011f6c0b650c4952d51decf9ed6d75335a411429da7"
+    },
+    {
+      "path": "world-life/emberdeep-drift.png",
+      "bytes": 208621,
+      "sha256": "dd7ef79ce364363e750d0d1c6a779ece16691d9a8f2342aaa44d3e5af117bdbb"
+    },
+    {
+      "path": "world-life/emberdeep-impact.png",
+      "bytes": 56598,
+      "sha256": "f04d1af54e80890da7cc9c28d67bfbcdcdf17eb38918359f0835cc2a69203e4d"
+    },
+    {
+      "path": "world-life/emberdeep-response.png",
+      "bytes": 249045,
+      "sha256": "f374bce49490777d4e62721fd4e4674998909a216c75fd62e1e3396c90fc057f"
+    },
+    {
+      "path": "world-life/moonglass-drift.png",
+      "bytes": 248712,
+      "sha256": "05c37d0016730c4b458ff4f818d6efa672c9b76943d62a0c273d76dd18d68e3e"
+    },
+    {
+      "path": "world-life/moonglass-impact.png",
+      "bytes": 57071,
+      "sha256": "52753c25f32d26577fc92c93a999bdac54fd06faa0e50fd12e261f2e8632e35b"
+    },
+    {
+      "path": "world-life/moonglass-response.png",
+      "bytes": 298555,
+      "sha256": "3ba35b639c3cf42ddad92df349d5356c50f8399e6f800636fe171eacfb5c485c"
+    },
+    {
+      "path": "world-life/mossvein-drift.png",
+      "bytes": 321195,
+      "sha256": "b4f368c208ee810de5e11d570b39cf118b1a20799a6cfe9b85abec7b99bd260b"
+    },
+    {
+      "path": "world-life/mossvein-impact.png",
+      "bytes": 54201,
+      "sha256": "f656eb02c686d42b4d898e5ec4213d6b42a6d7c2affeb1c7332395ebfc298d45"
+    },
+    {
+      "path": "world-life/mossvein-response.png",
+      "bytes": 177015,
+      "sha256": "18a2cfafdfd67015222ef1d25117f6d53b6431242e8ab70761bcf808bd404917"
+    },
+    {
+      "path": "world-life/starfall-drift.png",
+      "bytes": 208101,
+      "sha256": "523263d3320e0d3890aab9929151068e3c6e15f93928672443528d0e3ff46e49"
+    },
+    {
+      "path": "world-life/starfall-impact.png",
+      "bytes": 68084,
+      "sha256": "ee46665c8c3d339e4ff47ea8c01e4431990cf56ba669737901c2a8e53e4b3451"
+    },
+    {
+      "path": "world-life/starfall-response.png",
+      "bytes": 272531,
+      "sha256": "3f0f6f905574400257f173e99b035c58d5dacf9e86930fa0ae6a34f5e6f48fef"
+    }
+  ]
+}

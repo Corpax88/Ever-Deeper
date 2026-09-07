@@ -18,3 +18,12 @@ These rules are mandatory for every visual change, in every chat and for every a
 - Asset: one production PNG with transparency, no text, no background, and no mockup composition.
 - Mockup: a concept sheet used as a visual target.
 - Sprite sheet: real animation frames, not a collage of concepts.
+
+## Finding and verifying code
+
+Start with README.md and docs/code-map.md, then read the named owner of the change.
+The root Godot project is authoritative. Historical JS code and release patches are not
+current runtime source. QA startup belongs in scripts/qa/qa_launcher.gd and named suites.
+Keep gameplay/save changes separate from structural cleanup. Run tools/qa.py and
+check_invariants.py as described in docs/verification.md; report known legacy failures
+honestly. Do not remove debug/save compatibility APIs based only on textual reference counts.

@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://dvchd0m6jjvhn" path="res://scripts/world/deepheart_world.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2"]
+
+[node name="DeepheartWorld" type="Node2D" unique_id=894283633]
+process_mode = 4
+visible = false
+script = ExtResource("1")
+
+[node name="Darkness" type="CanvasModulate" parent="." unique_id=40612873]
+color = Color(0.48, 0.44, 0.58, 1)
+
+[node name="WorldLights" type="Node2D" parent="." unique_id=576488503]
+
+[node name="Player" parent="." unique_id=1000214340 instance=ExtResource("2")]

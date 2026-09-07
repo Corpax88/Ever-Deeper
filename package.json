@@ -1,14 +1,13 @@
 {
   "name": "ever-deeper",
-  "version": "0.38.1",
+  "version": "0.46.8",
   "private": true,
-  "description": "A mobile-first fantasy mining game prototype.",
+  "description": "Ever Deeper \u2014 Godot source and mobile verification tools",
   "scripts": {
-    "test": "playwright test",
-    "test:release": "playwright test tests/browser/release-branding.spec.js && playwright test tests/browser/mining-loop.spec.js --grep \"Underground Hub|Starfall|Starforge|Voidstar|v0.38.1|Heat Streak|start menu|settings|achievement|floating joystick|biome walls|deep descent|permanent walls|ambient life|world life\"",
-    "test:smoke": "node tests/runtime-smoke.js",
-    "test:desktop": "playwright test --project=desktop",
-    "test:mobile": "playwright test --project=iphone"
+    "test": "python3 tools/qa.py",
+    "test:invariants": "python3 tools/check_invariants.py",
+    "test:legacy": "python3 tools/qa.py --cases commerce landscape smoke workshops",
+    "capture:web": "node tools/capture-web.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.62.0"

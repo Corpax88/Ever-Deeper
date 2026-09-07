@@ -1,0 +1,534 @@
+{
+  "baseline_commit": "c71ff97",
+  "methods": {
+    "_qa_input_mouse_button": "input_release",
+    "_start_qa_moss_overview": "world_fixtures",
+    "_start_qa_surface_performance": "world_fixtures",
+    "_run_portrait_qa": "layout",
+    "_start_qa_surface_context": "world_fixtures",
+    "_journey_percentile": "journey_performance",
+    "_start_qa_endgame_depth": "world_fixtures",
+    "_start_qa_surface_mountains": "world_fixtures",
+    "_prepare_endless_qa_victory": "endless",
+    "_prepare_journey_mine_performance": "journey_performance",
+    "_start_qa_mine": "world_fixtures",
+    "_run_crusher_impact_qa": "crusher",
+    "_endless_premium_asset_contract": "endless",
+    "_run_build_flavor_qa": "build_flavor",
+    "_start_qa_surface_camp": "world_fixtures",
+    "_start_qa_hub": "world_fixtures",
+    "_start_qa_starforge": "world_fixtures",
+    "_start_qa_surface_mountain": "world_fixtures",
+    "_endless_qa_require": "endless",
+    "_qa_input_is_fully_released": "input_release",
+    "_run_landscape_qa": "layout",
+    "_crusher_impact_qa_require": "crusher",
+    "_run_iphone_layout_qa": "layout",
+    "_start_qa_surface_decor": "world_fixtures",
+    "_measure_journey_performance_stage": "journey_performance",
+    "_start_qa_version_menu": "layout",
+    "_start_qa_prismatic": "world_fixtures",
+    "_run_surface_mountain_independence_smoke": "smoke",
+    "_measure_journey_mature_save": "journey_performance",
+    "_start_qa_barrier": "world_fixtures",
+    "_run_workshop_panel_qa": "commerce",
+    "_run_endgame_qa": "endgame",
+    "_workshop_panel_qa_require": "commerce",
+    "_qa_input_phase_is_held": "input_release",
+    "_run_dev_tools_qa": "build_flavor",
+    "_qa_input_release_check": "input_release",
+    "_run_commerce_integration_qa": "commerce",
+    "_run_input_release_qa": "input_release",
+    "_start_qa_surface": "world_fixtures",
+    "_start_qa_surface_resource": "world_fixtures",
+    "_dev_qa_require": "build_flavor",
+    "_start_qa_moon_resource": "world_fixtures",
+    "_run_endless_qa": "endless",
+    "_run_journey_performance_qa": "journey_performance",
+    "_run_workshop_overlap_qa": "commerce",
+    "_start_qa_deepheart": "world_fixtures",
+    "_workshop_overlap_qa_require": "commerce",
+    "_journey_performance_frame_stats": "journey_performance",
+    "_endgame_qa_require": "endgame",
+    "_qa_input_touch": "input_release",
+    "_run_smoke_test": "smoke",
+    "_start_qa_rootwound": "world_fixtures",
+    "_run_onboarding_qa": "layout"
+  },
+  "ordered_cases": [
+    {
+      "flags": [
+        "--qa-input-release"
+      ],
+      "method": "_run_input_release_qa",
+      "suite": "input_release",
+      "surface": true
+    },
+    {
+      "flags": [
+        "--smoke-test"
+      ],
+      "method": "_run_smoke_test",
+      "suite": "smoke",
+      "surface": true
+    },
+    {
+      "flags": [
+        "--qa-landscape"
+      ],
+      "method": "_run_landscape_qa",
+      "suite": "layout",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-iphone-layout"
+      ],
+      "method": "_run_iphone_layout_qa",
+      "suite": "layout",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-portrait"
+      ],
+      "method": "_run_portrait_qa",
+      "suite": "layout",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-version-menu"
+      ],
+      "method": "_start_qa_version_menu",
+      "suite": "layout",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-onboarding"
+      ],
+      "method": "_run_onboarding_qa",
+      "suite": "layout",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-mine",
+        "--qa-swing",
+        "--qa-up",
+        "--qa-camera",
+        "--qa-performance"
+      ],
+      "method": "_start_qa_mine",
+      "suite": "world_fixtures",
+      "surface": true
+    },
+    {
+      "flags": [
+        "--qa-barrier"
+      ],
+      "method": "_start_qa_barrier",
+      "suite": "world_fixtures",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-moss-overview"
+      ],
+      "method": "_start_qa_moss_overview",
+      "suite": "world_fixtures",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-surface-camp"
+      ],
+      "method": "_start_qa_surface_camp",
+      "suite": "world_fixtures",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-assay"
+      ],
+      "method": "_start_qa_surface_context",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "sell"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-forge"
+      ],
+      "method": "_start_qa_surface_context",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "forge"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-mine-entrance"
+      ],
+      "method": "_start_qa_surface_context",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "mine"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-surface-decor"
+      ],
+      "method": "_start_qa_surface_decor",
+      "suite": "world_fixtures",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-gate"
+      ],
+      "method": "_start_qa_surface",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "gate"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-gate-ready"
+      ],
+      "method": "_start_qa_surface",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "gate_ready"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-open-gate"
+      ],
+      "method": "_start_qa_surface",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "open_gate"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-moon-surface"
+      ],
+      "method": "_start_qa_surface",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "moon_surface"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-moon-mine"
+      ],
+      "method": "_start_qa_surface",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "moon_mine"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-surface-performance"
+      ],
+      "method": "_start_qa_surface_performance",
+      "suite": "world_fixtures",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-journey-performance"
+      ],
+      "method": "_run_journey_performance_qa",
+      "suite": "journey_performance",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-moon-resource"
+      ],
+      "method": "_start_qa_moon_resource",
+      "suite": "world_fixtures",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-ember-resource"
+      ],
+      "method": "_start_qa_surface_resource",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "ember_fault"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-starfall-resource"
+      ],
+      "method": "_start_qa_surface_resource",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "starfall_lattice"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-surface-mountain",
+        "--qa-surface-mountain-damage"
+      ],
+      "method": "_start_qa_surface_mountain",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args_flag": "--qa-surface-mountain-damage"
+    },
+    {
+      "flags": [
+        "--qa-surface-mountains",
+        "--qa-moon-mountain"
+      ],
+      "method": "_start_qa_surface_mountains",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "moonglass_mountain"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-ember-mountain"
+      ],
+      "method": "_start_qa_surface_mountains",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "emberdeep_mountain"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-starfall-mountain"
+      ],
+      "method": "_start_qa_surface_mountains",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "starfall_mountain"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-starforge"
+      ],
+      "method": "_start_qa_starforge",
+      "suite": "world_fixtures",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-crusher-impact"
+      ],
+      "method": "_run_crusher_impact_qa",
+      "suite": "crusher",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-rootwound-locked"
+      ],
+      "method": "_start_qa_rootwound",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "locked"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-drill"
+      ],
+      "method": "_start_qa_rootwound",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "drill"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-depth-loop"
+      ],
+      "method": "_start_qa_rootwound",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "loop"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-rootwound-performance"
+      ],
+      "method": "_start_qa_rootwound",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "performance"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-rootwound"
+      ],
+      "method": "_start_qa_rootwound",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "starforge"
+      ]
+    },
+    {
+      "flags": [
+        "--qa-prismatic"
+      ],
+      "method": "_start_qa_prismatic",
+      "suite": "world_fixtures",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-molten-performance"
+      ],
+      "method": "_start_qa_endgame_depth",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "emberMine",
+        2,
+        true
+      ]
+    },
+    {
+      "flags": [
+        "--qa-molten"
+      ],
+      "method": "_start_qa_endgame_depth",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "emberMine",
+        2
+      ]
+    },
+    {
+      "flags": [
+        "--qa-voidstar"
+      ],
+      "method": "_start_qa_endgame_depth",
+      "suite": "world_fixtures",
+      "surface": false,
+      "args": [
+        "starMine",
+        3
+      ]
+    },
+    {
+      "flags": [
+        "--qa-hub"
+      ],
+      "method": "_start_qa_hub",
+      "suite": "world_fixtures",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-deepheart"
+      ],
+      "method": "_start_qa_deepheart",
+      "suite": "world_fixtures",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-endgame"
+      ],
+      "method": "_run_endgame_qa",
+      "suite": "endgame",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-endless"
+      ],
+      "method": "_run_endless_qa",
+      "suite": "endless",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-workshop-overlap"
+      ],
+      "method": "_run_workshop_overlap_qa",
+      "suite": "commerce",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-workshop-panel"
+      ],
+      "method": "_run_workshop_panel_qa",
+      "suite": "commerce",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-commerce"
+      ],
+      "method": "_run_commerce_integration_qa",
+      "suite": "commerce",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--visual-capture-suite"
+      ],
+      "method": "_start_visual_capture_suite",
+      "suite": "main",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-dev-tools"
+      ],
+      "method": "_run_dev_tools_qa",
+      "suite": "build_flavor",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-build-flavor"
+      ],
+      "method": "_run_build_flavor_qa",
+      "suite": "build_flavor",
+      "surface": false
+    }
+  ]
+}

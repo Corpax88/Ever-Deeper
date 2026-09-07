@@ -8,8 +8,8 @@ const PremiumMenuScript = preload("res://scripts/ui/premium_menu.gd")
 const CommerceCatalogScript = preload("res://scripts/ui/commerce_catalog.gd")
 
 const FIXED_WORLD_SEED: = 424242
-const EXPECTED_CAPTURE_COUNT: = 133
-const ACK_TIMEOUT_MSEC: = 45000
+const EXPECTED_CAPTURE_COUNT: = 144
+const ACK_TIMEOUT_MSEC: = 120000
 const SETTLE_PROCESS_FRAMES: = 5
 const AUTO_ACK_ARG: = "--visual-capture-auto-ack"
 
@@ -39,17 +39,51 @@ var _main: Node
 var _waiting_for_ack: = false
 var _acknowledged: = false
 var _auto_ack: = false
+var _hero_mode: = false
+var _surface_mode: = false
+var _overhaul_mode: = false
+var _capture_player: Node
+var _capture_world: Node
 
 
 func run(main_node: Node) -> void :
 	_main = main_node
+	_overhaul_mode = "--overhaul-capture" in OS.get_cmdline_user_args()
+	_surface_mode = "--surface-capture" in OS.get_cmdline_user_args()
+	_hero_mode = _overhaul_mode or _surface_mode or "--hero-capture" in OS.get_cmdline_user_args()
 	_auto_ack = AUTO_ACK_ARG in OS.get_cmdline_user_args()
 	set_process_input(true)
 	var build_contract: = _verify_build_contract()
 	if build_contract.is_empty():
 		return
-	var states: = _build_capture_states()
-	if states.size() != EXPECTED_CAPTURE_COUNT:
+	if "--menu-touch-only" in OS.get_cmdline_user_args():
+		var qa: RefCounted = load("res://scripts/qa/menu_touch_qa.gd").new()
+		var ok: bool = await qa.run(self,_main)
+		get_tree().quit(0 if ok else 4)
+		return
+	if "--overhaul-gameplay" in OS.get_cmdline_user_args():
+		var qa: RefCounted = load("res://scripts/qa/overhaul_qa.gd").new()
+		var ok: bool = await qa.run(self,_main)
+		get_tree().quit(0 if ok else 4)
+		return
+	if "--hero-motion" in OS.get_cmdline_user_args():
+		await _run_hero_motion()
+		return
+	if _surface_mode and not _check_surface_gameplay():
+		_fail("surface_gameplay")
+		return
+	var states: Array[Dictionary] = _build_overhaul_states() if _overhaul_mode else (_build_surface_states() if _surface_mode else (_build_hero_states() if _hero_mode else _build_capture_states()))
+	if _hero_mode:
+		var first: int = 1
+		var last: int = states.size()
+		for argument in OS.get_cmdline_user_args():
+			if argument.begins_with("--capture-start="): first = int(argument.get_slice("=", 1))
+			if argument.begins_with("--capture-end="): last = int(argument.get_slice("=", 1))
+		if first < 1 or last < first or last > states.size():
+			_fail("invalid_capture_range")
+			return
+		states = states.slice(first - 1, last)
+	if not _hero_mode and states.size() != EXPECTED_CAPTURE_COUNT:
 		_fail("matrix_count_%d_expected_%d" % [states.size(), EXPECTED_CAPTURE_COUNT])
 		return
 	var viewport_size: = get_viewport().get_visible_rect().size
@@ -69,13 +103,19 @@ func run(main_node: Node) -> void :
 	)
 	for state_index in states.size():
 		var state: Dictionary = states[state_index]
+		_resume_capture_nodes()
 		if not _prepare_state(state):
 			_fail("state_setup_%s" % String(state.id))
+			return
+		if _hero_mode and not await _settle_hero_state(state):
+			_fail("hero_assets_%s" % String(state.id))
 			return
 		for _frame in SETTLE_PROCESS_FRAMES:
 			await get_tree().process_frame
 		await get_tree().physics_frame
 		await get_tree().create_timer(0.12, true, false, true).timeout
+		var toast: Node = _main.get("achievement_toast")
+		if is_instance_valid(toast) and toast.has_method("clear"): toast.call("clear")
 		_waiting_for_ack = true
 		_acknowledged = false
 		print(
@@ -95,7 +135,7 @@ func run(main_node: Node) -> void :
 
 func _verify_build_contract() -> Dictionary:
 	var dev_feature: = OS.has_feature("ever_deeper_dev")
-	var expected_version: = "0.43.1-dev.3" if dev_feature else "0.43.1"
+	var expected_version: = "0.46.8-dev.1" if dev_feature else "0.46.8"
 	var expected_flavor: = "dev" if dev_feature else "production"
 	var actual_version: = String(PremiumMenuScript.release_version())
 	var developer_menu: Variant = _main.get("developer_menu")
@@ -132,7 +172,7 @@ func _input(event: InputEvent) -> void :
 	var key: = event as InputEventKey
 	if not key.pressed or key.echo:
 		return
-	if key.keycode not in [KEY_ENTER, KEY_KP_ENTER] and key.physical_keycode not in [KEY_ENTER, KEY_KP_ENTER]:
+	if key.keycode not in [KEY_ENTER, KEY_KP_ENTER, KEY_F8] and key.physical_keycode not in [KEY_ENTER, KEY_KP_ENTER, KEY_F8]:
 		return
 	_acknowledged = true
 	_waiting_for_ack = false
@@ -229,11 +269,68 @@ func _build_capture_states() -> Array[Dictionary]:
 				"fixture_id": fixture_id,
 			}
 		)
+	# Keep the existing 133 capture indices stable and append visual regressions.
+	states.append(
+		{
+			"id": "d1_moss_copper_readability",
+			"kind": "d1_resource_readability",
+			"mine_id": "mossMine",
+			"resource_id": "copper",
+		}
+	)
+	states.append(
+		{
+			"id": "d1_moon_moonglass_readability",
+			"kind": "d1_resource_readability",
+			"mine_id": "moonMine",
+			"resource_id": "moonglass",
+		}
+	)
+	states.append(
+		{
+			"id": "d1_ember_emberstone_readability",
+			"kind": "d1_resource_readability",
+			"mine_id": "emberMine",
+			"resource_id": "emberstone",
+		}
+	)
+	states.append(
+		{
+			"id": "d1_star_astralite_readability",
+			"kind": "d1_resource_readability",
+			"mine_id": "starMine",
+			"resource_id": "astralite",
+		}
+	)
+	# Keep the existing 137 capture indices stable. These appended fixtures make
+	# every commerce theme part of the final-build visual release gate.
+	for fixture_id in [
+		"starforge_owned_active",
+		"starforge_world_locked",
+		"workshop_light_lab_baseline",
+		"workshop_wardrobe_baseline",
+		"workshop_treasure_chamber_baseline",
+		"workshop_lift_workshop_baseline",
+		"workshop_tool_forge_locked_loadout",
+	]:
+		states.append(
+			{
+				"id": "shop_%s" % fixture_id,
+				"kind": "commerce",
+				"fixture_id": fixture_id,
+			}
+		)
 	return states
 
 
 func _prepare_state(state: Dictionary) -> bool:
+	if String(state.kind).begins_with("overhaul_"):
+		return _prepare_overhaul_extra(state)
 	match String(state.kind):
+		"surface_v2":
+			return _prepare_surface_state(state)
+		"hero":
+			return _prepare_hero_state(state)
 		"d1_edges":
 			return _prepare_d1_edges(String(state.mine_id), false)
 		"d1_bedrock":
@@ -243,6 +340,10 @@ func _prepare_state(state: Dictionary) -> bool:
 		"d1_barrier":
 			return _prepare_d1_barrier(
 				String(state.mine_id), String(state.barrier_id), String(state.variant)
+			)
+		"d1_resource_readability":
+			return _prepare_d1_resource_readability(
+				String(state.mine_id), String(state.resource_id)
 			)
 		"d2_edges":
 			return _prepare_d2_edges(String(state.mine_id))
@@ -275,6 +376,8 @@ func _prepare_commerce_capture(fixture_id: String) -> bool:
 	_main.call("_dev_jump_surface")
 	var config: Dictionary = {}
 	var context_id: = ""
+	var expect_selected_locked: = false
+	var expect_action_disabled: = false
 	match fixture_id:
 		"forge_ordinary_ready":
 			config = _forge_capture_config(1, 0, true, true, true)
@@ -317,9 +420,46 @@ func _prepare_commerce_capture(fixture_id: String) -> bool:
 			RunState.gold = int(RunState.movement_speed_upgrade_cost())
 			config = CommerceCatalogScript.wayfarer_config()
 			context_id = "wayfarer"
+		"starforge_ready_crusher", "starforge_ready_swift", "starforge_ready_prospector":
+			_main.call("_dev_seed_all_zones_state")
+			RunState.starforge_unlocked.clear()
+			RunState.starforge_variant = ""
+			RunState.cargo["astralite"] = 233
+			RunState.cargo["crownstone"] = 233
+			config = CommerceCatalogScript.starforge_config()
+			config["selected_item_id"] = "starforge:" + fixture_id.trim_prefix("starforge_ready_")
+			context_id = "starforge"
+		"starforge_owned_active":
+			config = _starforge_capture_config(false)
+			context_id = "starforge"
+			expect_action_disabled = true
+		"starforge_world_locked":
+			config = _starforge_capture_config(true)
+			context_id = "starforge"
+			expect_selected_locked = true
+			expect_action_disabled = true
 		"workshop_tool_forge_baseline":
-			config = _tool_forge_capture_config()
+			config = _workshop_capture_config("tool_forge")
 			context_id = "workshop:tool_forge"
+		"workshop_light_lab_baseline":
+			config = _workshop_capture_config("light_lab")
+			context_id = "workshop:light_lab"
+		"workshop_wardrobe_baseline":
+			config = _workshop_capture_config("wardrobe")
+			context_id = "workshop:wardrobe"
+		"workshop_treasure_chamber_baseline":
+			config = _workshop_capture_config("treasure_chamber")
+			context_id = "workshop:treasure_chamber"
+		"workshop_lift_workshop_baseline":
+			config = _workshop_capture_config("lift_workshop")
+			context_id = "workshop:lift_workshop"
+		"workshop_tool_forge_locked_loadout":
+			config = _workshop_capture_config(
+				"tool_forge", "workshop:equip:deepheart"
+			)
+			context_id = "workshop:tool_forge"
+			expect_selected_locked = true
+			expect_action_disabled = true
 		_:
 			return false
 	if config.is_empty():
@@ -333,6 +473,8 @@ func _prepare_commerce_capture(fixture_id: String) -> bool:
 		bool(snapshot.get("open", false))
 		and String(snapshot.get("panel_id", "")) == String(config.get("panel_id", ""))
 		and int(snapshot.get("item_count", 0)) > 0
+		and (not expect_selected_locked or bool(snapshot.get("selected_locked", false)))
+		and (not expect_action_disabled or not bool(snapshot.get("action_enabled", true)))
 	)
 
 
@@ -386,27 +528,42 @@ func _with_missing_commerce_icons(source: Dictionary) -> Dictionary:
 	return config
 
 
-func _tool_forge_capture_config() -> Dictionary:
+func _starforge_capture_config(world_locked: bool) -> Dictionary:
+	if not world_locked:
+		_main.call("_dev_seed_all_zones_state")
+	return CommerceCatalogScript.starforge_config()
+
+
+func _workshop_capture_config(
+	workshop_id: String, selected_item_id: String = ""
+) -> Dictionary:
+	if workshop_id not in RunState.ENDLESS_WORKSHOP_IDS:
+		return {}
 	_main.call("_dev_seed_victory_state")
 	if not bool(_main.call("_dev_build_all_workshops_state")):
 		return {}
 	if not bool(_main.call("_dev_jump_hub")):
 		return {}
-	var status: Dictionary = Dictionary(RunState.workshop_status("tool_forge"))
+	var status: Dictionary = Dictionary(RunState.workshop_status(workshop_id))
 	var upgrade: Dictionary = Dictionary(status.get("next_upgrade", {}))
 	if not upgrade.is_empty():
 		var resource_id: = String(upgrade.get("resource", ""))
 		var required: = int(upgrade.get("cost", 0))
 		if not resource_id.is_empty() and required > 0:
 			RunState.cargo[resource_id] = required
-			status = Dictionary(RunState.workshop_status("tool_forge"))
+			status = Dictionary(RunState.workshop_status(workshop_id))
 	var hub_world: Variant = _main.get("hub_world")
 	if hub_world == null or not is_instance_valid(hub_world):
 		return {}
 	var selection: Dictionary = Dictionary(
-		hub_world.call("workshop_selection_preview", "tool_forge")
+		hub_world.call("workshop_selection_preview", workshop_id)
 	)
-	return CommerceCatalogScript.workshop_config("tool_forge", status, selection)
+	var config: Dictionary = CommerceCatalogScript.workshop_config(
+		workshop_id, status, selection
+	)
+	if not selected_item_id.is_empty():
+		config["selected_item_id"] = selected_item_id
+	return config
 
 
 func _load_d1(mine_id: String, reveal_transition: bool = false) -> Node:
@@ -577,6 +734,103 @@ func _prepare_d1_edge_regression_stage(world: Node) -> bool:
 		Vector2(world.call("_cell_center", Vector2i(stage_left + 10, stage_top + 4))),
 		Vector2(world.call("_cell_center", compact_join)),
 		Vector2(0.0, -24.0)
+	)
+	return true
+
+
+func _prepare_d1_resource_readability(mine_id: String, resource_id: String) -> bool:
+	var world: = _load_d1(mine_id)
+	if world == null:
+		return false
+	var cols: = int(world.get("cols"))
+	var rows: = int(world.get("rows"))
+	if cols < 24 or rows < 18:
+		return false
+	var center_col: = floori(float(cols) * 0.5)
+	var center_row: = floori(float(rows) * 0.5)
+	var stage_left: = center_col - 9
+	var stage_right: = center_col + 9
+	var stage_top: = center_row - 4
+	var stage_bottom: = center_row + 4
+	var resource_cell: = Vector2i(center_col + 2, center_row)
+	var unselected_resource_cell: = Vector2i(center_col - 4, center_row)
+	var damaged_resource_cell: = Vector2i(center_col + 6, center_row)
+	var player_cell: = resource_cell + Vector2i(-3, 0)
+	if stage_left < 1 or stage_right >= cols - 1 or stage_top < 1 or stage_bottom >= rows - 1:
+		return false
+
+	var blocks: = Dictionary(world.get("blocks"))
+	var mineable_edge_voids: = Dictionary(world.get("mineable_edge_void_cells"))
+	var terrain_hp: = int(GameData.data.MINE_TERRAIN_HP)
+	for row in range(stage_top, stage_bottom + 1):
+		for col in range(stage_left, stage_right + 1):
+			var cell: = Vector2i(col, row)
+			blocks.erase(cell)
+			mineable_edge_voids[cell] = true
+
+	# Normal terrain above and below proves the cave rim still renders while the
+	# authored resource node remains unobscured in the fully excavated corridor.
+	for col in range(stage_left, stage_right + 1):
+		for row in [stage_top, stage_bottom]:
+			var terrain_cell: = Vector2i(col, row)
+			blocks[terrain_cell] = world.call(
+				"_make_block", "stone", terrain_hp, 0, "terrain"
+			)
+			mineable_edge_voids.erase(terrain_cell)
+
+	if not GameData.data.ROCK_TYPES.has(resource_id):
+		return false
+	var resource_data: Dictionary = Dictionary(GameData.data.ROCK_TYPES[resource_id])
+	var resource_block: = Dictionary(
+		world.call(
+			"_make_block",
+			resource_id,
+			int(resource_data.hp),
+			0,
+			"resource"
+		)
+	)
+	var damaged_resource_block: = resource_block.duplicate(true)
+	damaged_resource_block["hp"] = maxi(1, floori(float(resource_data.hp) * 0.5))
+	blocks[resource_cell] = resource_block
+	blocks[unselected_resource_cell] = resource_block.duplicate(true)
+	blocks[damaged_resource_cell] = damaged_resource_block
+	for capture_resource_cell in [
+		resource_cell, unselected_resource_cell, damaged_resource_cell
+	]:
+		mineable_edge_voids.erase(capture_resource_cell)
+	world.set("blocks", blocks)
+	world.set("mineable_edge_void_cells", mineable_edge_voids)
+	_clear_d1_capture_overlays(world, stage_left, stage_right, stage_top, stage_bottom)
+	world.call("_rebuild_role_counts")
+
+	for capture_resource_cell in [
+		resource_cell, unselected_resource_cell, damaged_resource_cell
+	]:
+		var capture_block: Dictionary = Dictionary(blocks[capture_resource_cell])
+		var exposed_sides: Array[bool] = world.call(
+			"_mineable_edge_open_sides", capture_resource_cell
+		)
+		if exposed_sides != [true, true, true, true]:
+			return false
+		if (
+			bool(world.call("_block_emits_mineable_edge", capture_block))
+			or bool(world.call("_block_emits_mineable_corner", capture_block, exposed_sides))
+			or not bool(
+				world.call(
+					"_resource_node_uses_transparent_surround", capture_block, exposed_sides
+				)
+			)
+			or bool(world.call("_target_uses_filled_highlight", capture_block))
+		):
+			return false
+	world.set("current_target", resource_cell)
+	world.call("_request_redraw")
+	_frame_world(
+		world,
+		Vector2(world.call("_cell_center", player_cell)),
+		Vector2(world.call("_cell_center", resource_cell)),
+		Vector2(48.0, -12.0)
 	)
 	return true
 
@@ -1134,3 +1388,511 @@ func _fail(reason: String) -> void :
 	print("EVER_DEEPER_VISUAL_CAPTURE_FAILED reason=%s" % reason.replace(" ", "_"))
 	push_error("Visual capture suite failed: %s" % reason)
 	get_tree().quit(72)
+
+
+func _build_hero_states() -> Array[Dictionary]:
+	var states: Array[Dictionary] = []
+	for state in _build_capture_states():
+		if String(state.kind) != "commerce": states.append(state)
+	var gears: = ["worn", "iron", "runed", "moonglass", "ember", "crusher", "comet", "crown", "burrower", "pulse", "deepcore"]
+	for gear in gears:
+		var directions: = ["left", "down", "up", "right"] if gear in ["worn", "crusher", "deepcore"] else ["left"]
+		for direction in directions:
+			for pose in ["idle", "walk", "impact"]:
+				states.append({"id": "hero_%s_%s_%s" % [gear, direction, pose], "kind": "hero", "gear": gear, "direction": direction, "pose": pose})
+	for outfit in ["miner", "expedition", "archivist", "starweave", "deepheart"]:
+		states.append({"id": "hero_outfit_%s" % outfit, "kind": "hero", "gear": "crusher", "direction": "down", "pose": "idle", "outfit": outfit})
+	for location in ["surface", "hub", "deepheart"]:
+		states.append({"id": "hero_world_%s" % location, "kind": "hero", "gear": "deepcore", "direction": "right", "pose": "idle", "location": location})
+	return states
+
+func _resume_capture_nodes() -> void:
+	if is_instance_valid(_capture_player):
+		_capture_player.set_physics_process(true)
+		_capture_player.visual.set_process(true)
+	if is_instance_valid(_capture_world):
+		var old_mole: Node = _capture_world.get_node_or_null("MoleCompanion")
+		if old_mole != null: old_mole.set_physics_process(true)
+		_capture_world.set_process(true)
+		_capture_world.set_physics_process(true)
+	_capture_player = null
+	_capture_world = null
+
+func _active_capture_world() -> Node:
+	var property: = String(_main.get("phase")) + "_world"
+	if property == "mine_world": return _main.get("mine_world")
+	if property in ["surface_world", "depth_world", "hub_world", "deepheart_world", "endless_world"]:
+		return _main.get(property)
+	return null
+
+func _prepare_hero_state(state: Dictionary) -> bool:
+	var location: = String(state.get("location", "mine"))
+	if location == "mine":
+		var world: = _load_d1("mossMine")
+		if world == null: return false
+		# Real generated entry terrain; the same player/camera used during play.
+		var origin: Vector2 = world.player.global_position
+		_frame_world(world, origin, origin + Vector2.LEFT * 48.0)
+	else:
+		_reset_run()
+		_main.call("_dev_jump_" + location)
+	var world: = _active_capture_world()
+	if world == null: return false
+	var gear: = String(state.gear)
+	RunState.pickaxe_level = 1
+	RunState.drill_level = 0
+	RunState.starforge_variant = ""
+	RunState.endless_tool_style = "original"
+	RunState.endless_outfit = String(state.get("outfit", "miner"))
+	match gear:
+		"iron": RunState.pickaxe_level = 2
+		"runed": RunState.pickaxe_level = 3
+		"moonglass": RunState.pickaxe_level = 4
+		"ember": RunState.pickaxe_level = 5
+		"crusher": RunState.starforge_variant = "crusher"
+		"comet": RunState.starforge_variant = "swift"
+		"crown": RunState.starforge_variant = "prospector"
+		"burrower": RunState.drill_level = 1
+		"pulse": RunState.drill_level = 2
+		"deepcore": RunState.drill_level = 3
+	world.player.prepare_visual_cache()
+	world.player.control_enabled = false
+	var dirs: = {"down": Vector2.DOWN, "left": Vector2.LEFT, "up": Vector2.UP, "right": Vector2.RIGHT}
+	world.player.set_facing(dirs[String(state.direction)])
+	_main.call("_refresh_hud")
+	return true
+
+func _settle_hero_state(state: Dictionary) -> bool:
+	var toast: Node = _main.get("achievement_toast")
+	if is_instance_valid(toast) and toast.has_method("clear"): toast.call("clear")
+	_capture_world = _active_capture_world()
+	if _capture_world == null: return false
+	_capture_player = _capture_world.get("player")
+	var visual: Node = _capture_player.get("visual")
+	visual.call("_refresh_equipment")
+	var deadline: = Time.get_ticks_msec() + 30000
+	while String(visual.get("active_gear")).is_empty() or String(visual.get("active_gear")) != String(visual.get("_wanted_gear")):
+		if Time.get_ticks_msec() > deadline: return false
+		await get_tree().process_frame
+	var mole: Node = _capture_world.get_node_or_null("MoleCompanion")
+	if mole != null:
+		mole.call("_spawn_beside_hero")
+		mole.set("was_active",true)
+		mole.set("visible",true)
+		mole.set_physics_process(false)
+		if String(state.kind)=="overhaul_mole":
+			var dirs: Dictionary={"down":Vector2.DOWN,"right":Vector2.RIGHT,"up":Vector2.UP,"left":Vector2.LEFT}
+			mole.set("facing",dirs[String(state.direction)])
+			mole.set("action",String(state.action))
+			mole.set("animation_clock",float(state.frame)/8.0)
+			mole.set("action_clock",float(state.frame)*(0.18 if String(state.action)=="pickup" else 0.21)+0.01)
+		if String(state.kind)=="overhaul_pet":
+			if String(state.get("variant",""))=="cooldown": mole.shake_cooldown=5.0
+			if String(state.get("variant",""))=="pet": mole.call("pet")
+			if String(state.get("tab",""))=="hud":
+				mole.call("_react","Got 3! +3 paws",3.0)
+				mole.bubble.text=mole.feedback;mole.bubble.visible=true
+				mole.guide_kind="ore_nose";mole.guide_point=mole.global_position+Vector2(400,0);mole.guide_time=20.0
+				mole.call("_ping",mole.global_position+Vector2(110,0))
+		mole.call("_draw_pose")
+	_capture_player.set_physics_process(false)
+	_capture_world.set_process(false)
+	_capture_world.set_physics_process(false)
+	visual.set_process(false)
+	if String(state.kind) == "hero":
+		var pose: = String(state.pose)
+		visual.set("_idle_clock", 0.0)
+		visual.set("_walk_phase", 0.25)
+		visual.set("_recover_phase", -1.0)
+		var hit: float = visual.call("_mechanical_hit_phase")
+		visual.call("set_state", String(state.direction), 0, pose == "walk", pose == "impact", hit, 0.0, hit)
+		visual.call("_draw_frame", 0.0)
+	visual.call("_draw_frame", 0.0)
+	var snapshot: Dictionary = visual.call("tool_visual_snapshot")
+	if int(snapshot.textures_loaded) != 8 or int(snapshot.frame) < 0: return false
+	print("EVER_DEEPER_HERO_STATE ", JSON.stringify(snapshot))
+	return true
+
+
+func _run_hero_motion() -> void:
+	print("EVER_DEEPER_VISUAL_CAPTURE_BEGIN count=1 viewport=932x430")
+	print("EVER_DEEPER_VISUAL_CAPTURE_READY state=hero_motion index=1 total=1")
+	for gear in ["worn", "crusher", "deepcore"]:
+		var state: = {"kind": "hero", "gear": gear, "direction": "left", "pose": "idle"}
+		if not _prepare_hero_state(state) or not await _settle_hero_state(state):
+			_fail("motion_gear_%s" % gear)
+			return
+		_resume_capture_nodes()
+		var world: Node = _main.get("mine_world")
+		var player: Node = world.get("player")
+		var origin_cell: = Vector2i(12, 13)
+		for x in range(7, 18):
+			for y in range(8, 19): world.blocks.erase(Vector2i(x, y))
+		var origin: Vector2 = world.call("_cell_center", origin_cell)
+		world.call("restore_position", origin)
+		player.control_enabled = true
+		player.camera.position_smoothing_enabled = false
+		player.camera.reset_smoothing()
+		world.call("_request_redraw")
+		await get_tree().create_timer(0.8).timeout
+		player.set_external_movement(Vector2.RIGHT * 0.15)
+		await get_tree().create_timer(0.5).timeout
+		player.set_external_movement(Vector2.LEFT * 0.15)
+		await get_tree().create_timer(0.5).timeout
+		player.set_external_movement(Vector2.ZERO)
+		world.call("restore_position", origin)
+		for direction in [Vector2i.LEFT, Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN]:
+			var target: Vector2i = origin_cell + direction * 2
+			world.call("_place_resource_block", target, "copper", 0, "resource", false)
+			var rock: Dictionary = world.blocks[target]
+			rock.hp = 1000000
+			rock.max_hp = 1000000
+			world.blocks[target] = rock
+			player.set_facing(Vector2(direction))
+			world.target_dirty = true
+			world.call("_request_redraw")
+			world.call("set_mine_held", true)
+			await get_tree().create_timer(2.2).timeout
+			world.call("set_mine_held", false)
+			if int(world.blocks[target].hp) >= 1000000:
+				_fail("motion_no_real_damage_%s_%s" % [gear, str(direction)])
+				return
+			print("EVER_DEEPER_HERO_MOTION_DAMAGE gear=%s direction=%s damage=%d" % [gear, str(direction), 1000000 - int(world.blocks[target].hp)])
+			await get_tree().create_timer(0.25).timeout
+			world.blocks.erase(target)
+			world.call("_request_redraw")
+	print("EVER_DEEPER_VISUAL_CAPTURE_COMPLETE count=1")
+	get_tree().quit(0)
+
+
+func _build_surface_states() -> Array[Dictionary]:
+	var states: Array[Dictionary] = []
+	for spec in [
+		["start", Vector2(240, 680), 1.0, "locked"],
+		["camp_assay", Vector2(105, 520), 1.0, "locked"],
+		["camp_forge", Vector2(302, 565), 1.0, "locked"],
+		["copper_full", Vector2(555, 665), 1.0, "locked"],
+		["copper_damage_1", Vector2(555, 665), 0.666667, "locked"],
+		["copper_damage_2", Vector2(555, 665), 0.333333, "locked"],
+		["copper_empty", Vector2(555, 665), 0.0, "locked"],
+		["copper_regrowing", Vector2(555, 665), 0.5, "locked"],
+		["wayfarer", Vector2(800, 535), 1.0, "locked"],
+		["branch_join", Vector2(650, 680), 1.0, "locked"],
+		["mine_ramp", Vector2(760, 790), 1.0, "locked"],
+		["mine_entrance", Vector2(905, 889), 1.0, "locked"],
+		["mine_return", Vector2(760, 790), 1.0, "open"],
+		["gate_locked", Vector2(990, 680), 1.0, "locked"],
+		["gate_opening", Vector2(990, 680), 1.0, "opening"],
+		["gate_open_left", Vector2(990, 680), 1.0, "open"],
+		["gate_cross_left", Vector2(1060, 662), 1.0, "open"],
+		["gate_under_arch", Vector2(1110, 650), 1.0, "open"],
+		["gate_cross_right", Vector2(1170, 635), 1.0, "open"],
+		["gate_return", Vector2(1110, 650), 1.0, "return"],
+		["moon_join", Vector2(1270, 610), 1.0, "open"],
+		["moon_surface", Vector2(1500, 650), 1.0, "open"],
+		["moon_mine_branch", Vector2(1492, 759), 1.0, "open"],
+		["ember_surface", Vector2(2600, 650), 1.0, "open"],
+		["star_surface", Vector2(3690, 650), 1.0, "open"],
+	]:
+		states.append({"id": "surface_" + String(spec[0]), "kind": "surface_v2", "position": spec[1], "hp": spec[2], "gate": spec[3]})
+	return states
+
+
+func _prepare_surface_state(state: Dictionary) -> bool:
+	_reset_run()
+	_main.call("_dev_jump_surface")
+	var world: Node = _main.get("surface_world")
+	world.reset_for_new_run()
+	var gate_state: = String(state.gate)
+	if gate_state in ["open", "return"]:
+		RunState.unlock_world("moonglass")
+		RunState.unlock_world("emberdeep")
+		RunState.unlock_world("starfall")
+		world.call("_refresh_unlock_visibility")
+		for gate in ["moonglass", "emberdeep", "starfall"]:
+			world.call("_sync_portal_transition", gate, true, false)
+			world.portal_transitions[gate].call("_process", 2.0)
+	elif gate_state == "opening":
+		var portal: WorldTransitionVisual = world.portal_transitions.moonglass
+		portal.set_gate_open(true, true)
+		portal.call("_process", 0.7)
+	var toast: Node = _main.get("achievement_toast")
+	if is_instance_valid(toast) and toast.has_method("clear"):
+		toast.call("clear")
+	world.ore_mountain_hp = roundi(float(state.hp) * 360.0)
+	world.ore_mountain_growth_buffer = 0.0
+	world.call("_update_ore_mountain_visual", float(state.hp))
+	world.restore_position(Vector2(state.position))
+	world.player.control_enabled = false
+	world.player.set_external_movement(Vector2.ZERO)
+	world.player.set_facing(Vector2.LEFT if gate_state == "return" else Vector2.RIGHT)
+	world.player.camera.position_smoothing_enabled = false
+	world.player.camera.reset_smoothing()
+	world.player.prepare_visual_cache()
+	_main.call("_refresh_hud")
+	return true
+
+
+func _check_surface_gameplay() -> bool:
+	_reset_run()
+	_main.call("_dev_jump_surface")
+	var world: Node = _main.get("surface_world")
+	world.reset_for_new_run()
+	var blocked: Vector2 = world.call("_resolve_motion", Vector2(990, 680), Vector2(280, -70))
+	if blocked.x >= 1050.0: return false
+	RunState.unlock_world("moonglass")
+	world.call("_sync_portal_transition", "moonglass", true, false)
+	world.portal_transitions.moonglass.call("_process", 2.0)
+	var route: = [Vector2(840, 650), Vector2(990, 680), Vector2(1110, 650), Vector2(1270, 610), Vector2(1360, 650)]
+	for backwards in [false, true]:
+		var points: Array = route.duplicate()
+		if backwards: points.reverse()
+		var position: Vector2 = points[0]
+		for target in points.slice(1):
+			position = world.call("_resolve_motion", position, Vector2(target) - position)
+			if position.distance_to(Vector2(target)) > 1.0:
+				print("SURFACE_ROUTE_FAILURE ", position, " expected ", target)
+				return false
+	for foot in [Vector2(1028, 608), Vector2(1225, 687)]:
+		if not world.call("_surface_collides", foot): return false
+	world.restore_position(Vector2(555, 665))
+	world.call("_evaluate_context", Vector2(555, 665))
+	if String(world.active_context) != "ore_mountain": return false
+	while int(world.ore_mountain_hp) > 0:
+		world.call("_mine_ore_mountain_once")
+	var copper: int = 0
+	for drop in world.ore_drops:
+		if String(drop.kind) == "copper": copper += int(drop.amount)
+	if copper != 24: return false
+	world.call("_apply_ore_mountain_regrowth", 150.0)
+	if int(world.ore_mountain_hp) != 360: return false
+	var branch: = [Vector2(650, 680), Vector2(700, 730), Vector2(760, 790), Vector2(820, 850), Vector2(875, 890), Vector2(930, 900)]
+	for backwards in [false, true]:
+		var points: Array = branch.duplicate()
+		if backwards: points.reverse()
+		var position: Vector2 = points[0]
+		for target in points.slice(1):
+			position = world.call("_resolve_motion", position, Vector2(target) - position)
+			if position.distance_to(Vector2(target)) > 1.0: return false
+	for station in ["sell", "forge", "speedShop"]:
+		var position: Vector2 = world.station_interaction_position(station)
+		if world.call("_surface_collides", position):
+			print("SURFACE_STATION_FAILURE ", station, " ", position)
+			return false
+	print("EVER_DEEPER_SURFACE_GAMEPLAY_OK locked/open both-directions solid-pillars copper=24 regrowth=360 branch-both-directions shop-access")
+	return true
+
+
+func _build_overhaul_states() -> Array[Dictionary]:
+	if "--light-capture" in OS.get_cmdline_user_args():
+		var light_states: Array[Dictionary] = []
+		for style in RunState.ENDLESS_LIGHT_STYLE_IDS:
+			light_states.append({"id": "light_" + style, "kind": "overhaul_light", "style": style, "level": 5})
+		for variant in ["before", "after", "missing", "locked", "menu"]:
+			light_states.append({"id": "light_" + variant, "kind": "overhaul_light", "variant": variant, "level": 1})
+		return light_states
+	if "--wardrobe-capture" in OS.get_cmdline_user_args():
+		var wardrobe_states: Array[Dictionary] = []
+		for outfit in RunState.ENDLESS_OUTFIT_IDS:
+			wardrobe_states.append({"id": "wardrobe_" + outfit, "kind": "overhaul_wardrobe", "outfit": outfit, "level": 5})
+		for variant in ["owned", "ready", "missing", "locked"]:
+			wardrobe_states.append({"id": "wardrobe_" + variant, "kind": "overhaul_wardrobe", "variant": variant, "level": 1})
+		return wardrobe_states
+	if "--pet-capture" in OS.get_cmdline_user_args(): return _build_pet_states()
+	var states: Array[Dictionary] = []
+	# Read the reported shop regression first, then every affected existing fixture.
+	for state in _build_capture_states():
+		if String(state.kind)=="commerce": states.append(state)
+	if "--shop-style-capture" in OS.get_cmdline_user_args():
+		for variant in ["crusher", "swift", "prospector"]:
+			states.append({"id":"shop_starforge_ready_"+variant,"kind":"commerce","fixture_id":"starforge_ready_"+variant})
+		for profile in MINE_PROFILES:
+			for station in ["forge", "wayfarer"]:
+				states.append({"id":"shop_depth_"+String(profile.tag)+"_"+station,"kind":"overhaul_depth_shop","mine_id":profile.mine_id,"station":station})
+		return states
+	for state in _build_capture_states():
+		if String(state.kind)!="commerce": states.append(state)
+	states.append_array(_build_surface_states())
+	for gate in ["emberdeep","starfall"]:
+		var x: float = 2240.0 if gate=="emberdeep" else 3360.0
+		for offset in [-120,0,120]:
+			states.append({"id":"surface_"+gate+"_arch_"+str(offset),"kind":"surface_v2","position":Vector2(x+offset,650),"hp":1.0,"gate":"open"})
+	for profile in MINE_PROFILES:
+		for station in ["stations","forge","wayfarer"]:
+			states.append({"id":"depth_"+String(profile.tag)+"_"+station,"kind":"overhaul_depth_shop","mine_id":profile.mine_id,"station":station})
+	for mountain in ["moonglass","emberdeep","starfall"]:
+		for hp in [1.0,0.66,0.33,0.0]:
+			states.append({"id":"mountain_"+mountain+"_"+str(roundi(hp*100)),"kind":"overhaul_mountain","mountain":mountain,"hp":hp})
+	for action in ["walk","pickup","shake"]:
+		for direction in ["down","right","up","left"]:
+			for frame in range(4):
+				states.append({"id":"mole_"+action+"_"+direction+"_"+str(frame),"kind":"overhaul_mole","action":action,"direction":direction,"frame":frame})
+	for skill in ["fetch","lantern","trailrunner","big_paws","ore_nose","long_beam","shake","teamwork","echo","homeward"]:
+		states.append({"id":"companion_skill_"+skill,"kind":"overhaul_skill","skill":skill})
+	for location in ["hub","deepheart"]:
+		states.append({"id":"overhaul_world_"+location,"kind":"hero","gear":"deepcore","direction":"right","pose":"idle","location":location})
+	for depth in [1,2]:
+		for hits in [0,3,6,9,10]:
+			states.append({"id":"strikes_depth_"+str(depth)+"_"+str(hits),"kind":"overhaul_strikes","depth":depth,"hits":hits})
+	for layer in [1,2,3,4,5]:
+		for hits in [0,1,2,3]:
+			states.append({"id":"dig_layer_"+str(layer)+"_"+str(hits),"kind":"overhaul_dig","layer":layer,"hits":hits})
+	for profile in MINE_PROFILES:
+		for level in range(3):
+			states.append({"id":"depth_drill_"+String(profile.tag)+"_level_"+str(level+1),"kind":"overhaul_depth_shop","mine_id":profile.mine_id,"station":"forge","drill_level":level})
+	states.append({"id":"depth_drill_locked","kind":"overhaul_depth_shop","mine_id":"mossMine","station":"forge","drill_level":0,"locked":true})
+	states.append({"id":"depth_drill_missing_ore","kind":"overhaul_depth_shop","mine_id":"moonMine","station":"forge","drill_level":1,"missing":true})
+	return states
+
+
+func _prepare_overhaul_extra(state: Dictionary) -> bool:
+	match String(state.kind):
+		"overhaul_light": return _prepare_light_state(state)
+		"overhaul_wardrobe":
+			_reset_run()
+			_workshop_capture_config("wardrobe")
+			RunState.endless_workshops.wardrobe.level = int(state.level)
+			RunState.endless_outfit = "miner"
+			var status: Dictionary = RunState.workshop_status("wardrobe")
+			var upgrade: Dictionary = Dictionary(status.get("next_upgrade", {}))
+			if not upgrade.is_empty(): RunState.cargo[upgrade.resource] = 0 if String(state.get("variant", "")) == "missing" else int(upgrade.cost)
+			status = RunState.workshop_status("wardrobe")
+			var config: Dictionary = CommerceCatalogScript.workshop_config("wardrobe", status, {"current": "miner"})
+			config.selected_item_id = "workshop:equip:" + String(state.get("outfit", "miner"))
+			if String(state.get("variant", "")) in ["ready", "missing"]: config.selected_item_id = "workshop:upgrade"
+			if String(state.get("variant", "")) == "locked": config.selected_item_id = "workshop:equip:deepheart"
+			_main.call("_open_commerce", config, "workshop:wardrobe")
+			return _main.commerce_panel.selected_item_id() == String(config.selected_item_id)
+		"overhaul_pet": return _prepare_pet_state(state)
+		"overhaul_depth_shop":
+			var world: Node = _load_d2(String(state.mine_id))
+			if world==null: return false
+			var stations: Dictionary=world.get("station_positions")
+			var sell: Vector2=Vector2(float(stations.sell.x),float(stations.sell.y))
+			var forge: Vector2=Vector2(float(stations.forge.x),float(stations.forge.y))
+			_frame_world(world,(sell+forge)*0.5+Vector2(0,90),(sell+forge)*0.5)
+			if String(state.station)=="forge":
+				RunState.drill_level=int(state.get("drill_level",3))
+				if bool(state.get("locked",false)): RunState.starforge_variant=""
+				RunState.gold=100000
+				for kind in RunState.cargo.keys(): RunState.cargo[kind]=0 if bool(state.get("missing",false)) else 10000
+				_main.call("_open_commerce",CommerceCatalogScript.depth_forge_config(String(state.mine_id)),"depth_forge")
+			elif String(state.station)=="wayfarer":
+				RunState.gold=1000
+				_main.call("_open_commerce",CommerceCatalogScript.wayfarer_config(),"depth_wayfarer")
+			return true
+		"overhaul_mountain":
+			var biome: String=String(state.mountain)
+			var x: float={"moonglass":1665.0,"emberdeep":2820.0,"starfall":3900.0}[biome]
+			if not _prepare_surface_state({"gate":"open","hp":1.0,"position":Vector2(x,675)}): return false
+			var world: Node=_main.get("surface_world")
+			var id: String=biome+"_mountain"
+			world.surface_resource_mountains[id].hp=roundi(float(state.hp)*360.0)
+			world.surface_resource_mountains[id].growth_buffer=0.0
+			world.call("_update_surface_resource_mountain_visual",id)
+			return true
+		"overhaul_mole":
+			var world: Node=_load_d1("mossMine")
+			if world==null: return false
+			_frame_world(world,world.player.global_position,world.player.global_position+Vector2.LEFT*48.0)
+			return true
+		"overhaul_skill":
+			if _load_d1("mossMine")==null: return false
+			RunState.gold=250
+			RunState.overhaul_progress={"companion_xp":40,"skills":{"big_paws":1,"long_beam":1}}
+			_main.call("_open_commerce",MoleSkills.config("mole:"+String(state.skill)),"companion")
+			return true
+		"overhaul_strikes":
+			var count: int=int(state.hits)
+			if int(state.depth)==1:
+				if not _prepare_d1_barrier("mossMine","outer_rubble","ready"): return false
+				var world: Node=_main.get("mine_world")
+				var cells: Array[Vector2i]=_d1_barrier_cells(world,"outer_rubble",true)
+				for i in count: world.call("_strike_barrier_group",cells[0],world.blocks[cells[0]])
+			else:
+				if not _prepare_d2_gate("mossMine",0,"intact"): return false
+				var world: Node=_main.get("depth_world")
+				var gate: Dictionary=world.call("get_drill_gates")[0]
+				var target: int=-1
+				for i in world.rocks.size():
+					if String(world.rocks[i].deposit_id)==String(gate.id): target=i; break
+				if target<0: return false
+				for i in count: world.call("_strike_drill_gate",target)
+			return true
+		"overhaul_dig":
+			if not _prepare_endless_walls(int(state.layer)): return false
+			var world: Node=_main.get("endless_world")
+			var cell: Vector2i=world.call("_nearest_diggable_wall")
+			if cell.x<0: return false
+			world.dig_damage[cell]=int(state.hits)
+			if int(state.hits)>=3: world.call("_set_floor",cell,true)
+			world.queue_redraw()
+			return true
+	return false
+
+func _build_pet_states() -> Array[Dictionary]:
+	var states: Array[Dictionary]=[]
+	if "--pet-reactions" in OS.get_cmdline_user_args():
+		for reaction in 10:
+			for frame in 8:
+				states.append({"id":"pet_reaction_%02d_frame_%d" % [reaction,frame],"kind":"overhaul_pet","variant":"pet","tab":"together","location":"mine","reaction":reaction,"reaction_frame":frame})
+		return states
+
+	for item in [["fresh","together"],["fresh","how"],["fresh","skills"],["ready","skills"],["learned","skills"],["bottom","skills"],["learned","together"],["cooldown","together"],["pet","together"]]:
+		states.append({"id":"pet_"+item[0]+"_"+item[1],"kind":"overhaul_pet","variant":item[0],"tab":item[1],"location":"mine"})
+	for location in ["mine","depth","surface"]:
+		states.append({"id":"pet_hud_"+location,"kind":"overhaul_pet","variant":"learned","tab":"hud","location":location})
+	return states
+
+func _prepare_pet_state(state: Dictionary) -> bool:
+	var world: Node
+	match String(state.location):
+		"mine": world=_load_d1("mossMine")
+		"depth": world=_load_d2("mossMine")
+		"surface":
+			_reset_run();_main.call("_dev_jump_surface");world=_main.get("surface_world")
+	if world==null: return false
+	var variant: String=state.variant
+	RunState.overhaul_progress={"companion_xp":0,"skills":{}}
+	RunState.gold=0
+	if variant!="fresh":
+		RunState.gold=500;RunState.overhaul_progress.companion_xp=90
+	if variant in ["learned","bottom","cooldown","pet"]:
+		for skill in MoleSkills.SKILLS: RunState.overhaul_progress.skills[skill.id]=1
+	_frame_world(world,world.player.global_position,world.player.global_position+Vector2.LEFT*48.0)
+	var ui: Node=_main.get_node("CompanionInterface")
+	ui.last_world_identity=String(_main.phase)+":"+String(_main.current_mine_id)+":"+str(RunState.endless_current_depth)
+	if String(state.tab)!="hud":
+		ui.open_skills()
+		ui.journal.select_tab(String(state.tab))
+		if variant=="bottom": ui.journal.scroll.set_deferred("scroll_vertical",2000)
+		if variant=="pet":
+			if state.has("reaction"):
+				ui.journal.play_pet_reaction(int(state.reaction))
+				ui.journal.pet_capture_frame=int(state.reaction_frame)
+			else: ui.journal.call("_pet")
+	return true
+
+
+func _prepare_light_state(state: Dictionary) -> bool:
+	_reset_run()
+	_workshop_capture_config("light_lab")
+	RunState.endless_workshops.light_lab.level = int(state.get("level", 5))
+	RunState.endless_light_style = "standard"
+	var status: Dictionary = RunState.workshop_status("light_lab")
+	var upgrade: Dictionary = Dictionary(status.get("next_upgrade", {}))
+	var variant: String = String(state.get("variant", ""))
+	if not upgrade.is_empty(): RunState.cargo[upgrade.resource] = 0 if variant == "missing" else int(upgrade.cost)
+	var config: Dictionary = CommerceCatalogScript.workshop_config("light_lab", RunState.workshop_status("light_lab"), {"current": "standard"})
+	config.selected_item_id = "workshop:equip:" + String(state.get("style", "standard"))
+	if variant in ["before", "after", "missing"]: config.selected_item_id = "workshop:upgrade"
+	if variant == "locked": config.selected_item_id = "workshop:equip:deepheart"
+	_main.call("_open_commerce", config, "workshop:light_lab")
+	var panel = _main.commerce_panel
+	if panel.selected_item_id() != String(config.selected_item_id): return false
+	if variant == "before": panel.hero_well.get_node("LightPreview").show_level(1)
+	if variant == "menu":
+		panel.close_commerce()
+		_main.premium_menu.modulate.a = 1.0
+		_main.premium_menu.open_menu(true, "Base Hub", true, false)
+	return true

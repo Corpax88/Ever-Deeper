@@ -1,0 +1,68 @@
+# Verification
+
+## Current source gate
+
+`python3 tools/qa.py --godot /path/to/Godot` runs input release, the 859-check gameplay
+suite, shop touch/state tests, endgame, endless, onboarding, iPhone layout, orientation,
+developer tools and Crusher integration. Native/headless checks do not validate rendered art.
+
+Run a subset with `--cases input overhaul touch`. Logs and machine-readable results are
+written to `qa-results/`. Each case has a timeout and a separate save directory. A success
+message alone does not pass: the process must also exit successfully without script errors.
+
+The export-only flavor check must run against an exported PCK, where production resource
+exclusions exist: `--pack builds/live/index.pck --cases build-flavor`. Running that check
+against editable source correctly finds the developer-menu resource and is not a valid
+production-flavor test.
+
+## Pre-existing failing checks
+
+The cleanup was compared with the immutable v0.46.8 source baseline. The following old
+checks fail in both versions and retain their original assertions. They are not counted
+as passing gates or silently skipped inside a test. Run them explicitly with `--cases`.
+
+| Case | Existing failure |
+|---|---|
+| `commerce` | Old interaction snapshot asserts `touch_targets_valid` for the revised shop layout |
+| `landscape` | Old portal seam expects a 24×184 sprite before the approved surface replacement |
+| `smoke` | Old Emberdeep mountain context assertion; further old mining expectations also differ |
+| `workshops` | Old WorkshopPanel preview flow predates the shared CommercePanel workshop flow |
+
+`--all --pack ...` includes all registered cases and remains red until those older
+expectations are reconciled in a dedicated test update. The current gameplay/touch suites
+exercise the corresponding active paths. These failures are recorded as remaining test debt.
+
+## Refactor invariants
+
+`python3 tools/check_invariants.py` verifies hashes of every protected art/audio/import
+setting, scene, game-data file, player/light implementation and the project configuration.
+It also checks that every QA entry resolves to a real method, and validates the fixed
+mine ordering/mapping owner. Save serialization and migration functions are unchanged.
+
+Removed helpers were private, disconnected render/presentation implementations. Full-token
+references, scene bindings, string calls and engine callback names were checked before
+removal. Public/debug APIs and active fallbacks were retained. See the removal inventory.
+
+## Browser capture command
+
+After exporting with the commands in README.md, install the browser dependency with
+`npm ci` and `npx playwright install webkit`, then run:
+
+```sh
+TOUCH_BROWSER=webkit SMALL_IPHONE=1 CAPTURE_SCOPE=light CAPTURE_END=10 node tools/capture-web.mjs --web-dir builds/live --output-dir qa-results/mobile
+```
+
+Omit `CAPTURE_SCOPE=light` to use the full capture matrix, and select a numeric range with
+`CAPTURE_START` / `CAPTURE_END` (1–303). Unknown command-line flags fail explicitly.
+The runner works with the ordinary Godot export shell. It injects a hidden stale-version
+badge as a test fixture; `main._validate_release_version()` supplies the running version
+and synchronizes it. No release-stamping step is required. `EXPECTED_VERSION` optionally
+asserts an exact expected version; otherwise the badge must agree with the running game.
+
+## Visual gate
+
+Export both flavors with matching Godot templates. Capture the same states from the
+baseline and candidate at the same viewport/seed, and inspect them before any deployment.
+Compare production resources and game-data hashes as well as gameplay results. No art or
+layout changes are intended. Source review and a passing headless suite cannot replace
+this visual gate from `AGENTS.md`.

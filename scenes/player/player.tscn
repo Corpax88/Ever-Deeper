@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://ceqoyids7j44v" path="res://scripts/player/player_controller.gd" id="1"]
+[ext_resource type="Script" uid="uid://im06g1huw4qk" path="res://scripts/player/player_visual.gd" id="2"]
+[ext_resource type="Script" uid="uid://6rkc1mspblfi" path="res://scripts/ui/resource_pickup_burst.gd" id="3"]
+[ext_resource type="Script" uid="uid://dl6whg1iq8cw1" path="res://scripts/camera/cinematic_camera_2d.gd" id="4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape_player"]
+radius = 23.0
+
+[node name="Player" type="CharacterBody2D" unique_id=1843526226]
+z_index = 10
+script = ExtResource("1")
+
+[node name="Shadow" type="Polygon2D" parent="." unique_id=1046021073]
+position = Vector2(0, 2)
+color = Color(0.025, 0.02, 0.012, 0.32)
+polygon = PackedVector2Array(-23, -6, 23, -6, 29, 1, 21, 8, -21, 8, -29, 1)
+
+[node name="Visual" type="Node2D" parent="." unique_id=1052030051]
+texture_filter = 1
+script = ExtResource("2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=702551829]
+shape = SubResource("CircleShape_player")
+
+[node name="ResourcePickupBurst" type="Node2D" parent="." unique_id=1870536946]
+script = ExtResource("3")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1769177400]
+limit_smoothed = true
+position_smoothing_enabled = true
+position_smoothing_speed = 6.7
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_left_margin = 0.08
+drag_top_margin = 0.1
+drag_right_margin = 0.08
+drag_bottom_margin = 0.1
+script = ExtResource("4")
