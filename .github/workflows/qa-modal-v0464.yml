@@ -43,3 +43,5 @@ jobs:
         with:
           name: modal-${{ matrix.browser }}-${{ matrix.side }}
           path: ${{ runner.temp }}/evidence
+
+# Input checks retain every assertion; optional animation recording is disabled.

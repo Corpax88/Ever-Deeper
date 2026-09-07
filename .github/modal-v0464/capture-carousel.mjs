@@ -320,26 +320,8 @@ async function captureSuite(options) {
         result = await nextMarker(markerQueue, 10 * 60 * 1000);
         if (!result.startsWith("EVER_DEEPER_OVERHAUL_INPUT_READY ")) break;
         const input = JSON.parse(result.slice("EVER_DEEPER_OVERHAUL_INPUT_READY ".length));
-        if (input.kind === "record_start") {
-          if (!WEBKIT) await page.evaluate(() => {
-            const stream = document.getElementById("canvas").captureStream(30);
-            const recorder = new MediaRecorder(stream, {mimeType:"video/webm", videoBitsPerSecond:2500000});
-            window.carouselRecorder = recorder; window.carouselChunks = []; window.carouselStream = stream;
-            recorder.ondataavailable = e => {if(e.data.size) window.carouselChunks.push(e.data);};
-            recorder.start();
-          });
-          await page.keyboard.press("F8"); continue;
-        }
-        if (input.kind === "record_stop") {
-          if (!WEBKIT) {
-            const bytes = await page.evaluate(async () => {
-              const recorder = window.carouselRecorder;
-              await new Promise(resolve => {recorder.onstop=resolve; recorder.stop();});
-              window.carouselStream.getTracks().forEach(track=>track.stop());
-              return Array.from(new Uint8Array(await new Blob(window.carouselChunks,{type:"video/webm"}).arrayBuffer()));
-            });
-            await fs.writeFile(path.join(options.outputDir,"carousel-motion.webm"),Buffer.from(bytes));
-          }
+        // Input regression evidence uses screenshots; MediaRecorder is unrelated.
+        if (input.kind === "record_start" || input.kind === "record_stop") {
           await page.keyboard.press("F8"); continue;
         }
         if (input.kind === "capture") {
