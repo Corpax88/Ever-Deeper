@@ -1,0 +1,53 @@
+name: Shop mockup visual validation
+on:
+  push:
+    branches: [codex-shop-style-v0465]
+    paths: ['.github/workflows/qa-shop-style-v0465.yml']
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 .github/shop-style-v0465/prepare.py "$RUNNER_TEMP/candidate"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: style-exact-candidates
+          path: ${{ runner.temp }}/candidate
+  layout:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/download-artifact@v4
+        with:
+          name: style-exact-candidates
+          path: ${{ runner.temp }}/candidate
+      - run: |
+          npm ci
+          npx playwright install --with-deps webkit
+      - run: TOUCH_BROWSER=webkit SMALL_IPHONE=1 CAPTURE_END=19 node .github/shop-style-v0465/capture-style.mjs --web-dir "$RUNNER_TEMP/candidate/live" --output-dir "$RUNNER_TEMP/evidence"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: style-webkit-layouts
+          path: ${{ runner.temp }}/evidence
+  native-runtime:
+    runs-on: ubuntu-22.04
+    steps:
+      - run: |
+          mkdir -p runtime/lib
+          cp /usr/bin/Xvfb runtime/
+          ldd /usr/bin/Xvfb | awk '/=> \/.* \(/ {print $3}' | while read f; do
+            case "$f" in */libc.so.*|*/libm.so.*|*/libpthread.so.*|*/libdl.so.*|*/librt.so.*) continue;; esac
+            cp -L "$f" runtime/lib/
+          done
+          tar -czf runtime.tgz runtime
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-display-runtime
+          path: runtime.tgz
