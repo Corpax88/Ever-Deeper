@@ -1773,14 +1773,15 @@ func _place(control: Control, rect: Rect2) -> void :
 func _process(delta: float) -> void:
 	if not visible or hero_icon == null:
 		return
-	primary_button.add_theme_constant_override("outline_size", 0)
+	# Reapply only after a shop/theme change, without invalidating the button's
+	# text layout six times on every animation frame.
+	if primary_button.get_theme_constant("outline_size") != 0:
+		primary_button.add_theme_constant_override("outline_size", 0)
 	primary_copy.text = primary_button.text.to_upper()
 	primary_copy.modulate = Color(1,1,1,0.48) if primary_button.disabled else Color.WHITE
-	primary_button.add_theme_color_override("font_color", Color(1,1,1,0))
-	primary_button.add_theme_color_override("font_hover_color", Color(1,1,1,0))
-	primary_button.add_theme_color_override("font_pressed_color", Color(1,1,1,0))
-	primary_button.add_theme_color_override("font_focus_color", Color(1,1,1,0))
-	primary_button.add_theme_color_override("font_disabled_color", Color(1,1,1,0))
+	for color_name in [&"font_color", &"font_hover_color", &"font_pressed_color", &"font_focus_color", &"font_disabled_color"]:
+		if primary_button.get_theme_color(color_name) != Color(1,1,1,0):
+			primary_button.add_theme_color_override(color_name, Color(1,1,1,0))
 	_showcase_clock += delta
 	var amplitude: float = 3.5 if _visual_theme_id == "wayfarer" else 1.5
 	var bob: float = sin(_showcase_clock * 1.8) * amplitude

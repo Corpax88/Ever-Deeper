@@ -42,7 +42,8 @@ func _build() -> void:
 	viewport.size = Vector2i(440, 480) if _thumbnail else Vector2i(1100, 1200)
 	viewport.world_2d = World2D.new()
 	viewport.transparent_bg = false
-	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE if _thumbnail else SubViewport.UPDATE_WHEN_VISIBLE
+	# The cave, hero and beam are static between level/style selections.
+	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	add_child(viewport)
 	var world: Node2D = Node2D.new()
 	viewport.add_child(world)
@@ -88,4 +89,4 @@ func show_level(level: int) -> void:
 	if before_button != null:
 		before_button.disabled = level == current_level
 		after_button.disabled = level == upgraded_level
-	if _thumbnail: viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE

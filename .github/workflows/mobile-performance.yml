@@ -12,6 +12,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Install matching renderer
         run: |
           sudo apt-get update -qq
@@ -23,10 +25,22 @@ jobs:
         run: |
           Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > "$RUNNER_TEMP/import.log" 2>&1
           if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/import.log"; then exit 1; fi
-      - name: Measure rendered mobile journey
+      - name: Compare baseline and candidate on the same renderer
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
-        run: xvfb-run -a -s '-screen 0 1280x720x24' python3 tools/run_performance.py --godot Godot_v4.7.2-stable_linux.x86_64 --output "$RUNNER_TEMP/performance" --capture
+        run: |
+          mkdir -p "$RUNNER_TEMP/candidate-source"
+          for file in scripts/ui/light_preview.gd scripts/ui/commerce_panel.gd scripts/companion/companion_interface.gd; do
+            cp --parents "$file" "$RUNNER_TEMP/candidate-source"
+            git show "988d9aeed77a1be27d7daebdb7d03cd4d67e51e2:$file" > "$file"
+          done
+          xvfb-run -a -s '-screen 0 1280x720x24' python3 tools/run_performance.py --godot Godot_v4.7.2-stable_linux.x86_64 --output "$RUNNER_TEMP/performance/baseline" --capture
+          cp -r "$RUNNER_TEMP/candidate-source/scripts/"* scripts/
+          xvfb-run -a -s '-screen 0 1280x720x24' python3 tools/run_performance.py --godot Godot_v4.7.2-stable_linux.x86_64 --output "$RUNNER_TEMP/performance/candidate" --capture
+      - name: Check gameplay and protected resources
+        run: |
+          python3 tools/check_invariants.py
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --output "$RUNNER_TEMP/performance/core"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

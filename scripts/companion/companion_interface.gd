@@ -70,9 +70,10 @@ func _process(_delta: float) -> void:
 	activity.visible=button.visible
 	var active: MoleCompanion=active_mole()
 	if active!=null and activity.visible:
-		activity.text=active.direction_hint()
-		if activity.text.is_empty(): activity.text=active.status_text()
-		if Skills.has_skill("shake"): activity.text+="\n"+("Dig ready" if active.shake_cooldown<=0.0 else "Dig in %ds" % ceili(active.shake_cooldown))
+		var next_text: String=active.direction_hint()
+		if next_text.is_empty(): next_text=active.status_text()
+		if Skills.has_skill("shake"): next_text+="\n"+("Dig ready" if active.shake_cooldown<=0.0 else "Dig in %ds" % ceili(active.shake_cooldown))
+		if activity.text!=next_text: activity.text=next_text
 
 func active_mole() -> MoleCompanion:
 	var world: Node=main.get(String(main.phase)+"_world")

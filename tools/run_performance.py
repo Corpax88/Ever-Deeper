@@ -13,7 +13,7 @@ def main():
     args = parser.parse_args()
     args.output = args.output.resolve(); args.output.mkdir(parents=True, exist_ok=True)
     log_path = args.output/'run.log'
-    command = [args.godot, '--path', str(args.project.resolve()), '--resolution', '844x390']
+    command = [args.godot, '--path', str(args.project.resolve()), '--resolution', '844x390', '--audio-driver', 'Dummy']
     if args.headless: command.append('--headless')
     command += ['--', '--qa-mobile-performance', '--perf-output='+str(args.output)]
     if args.capture: command.append('--perf-capture')
