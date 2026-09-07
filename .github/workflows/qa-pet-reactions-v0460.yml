@@ -1,0 +1,80 @@
+name: Inspect ten mole reactions and production release
+on:
+  push:
+    branches: [codex-pet-reactions-v0460]
+    paths: ['.github/pet-reactions-v0460/**', '.github/workflows/qa-pet-reactions-v0460.yml', 'tools/visual-qa/capture-pet-reactions.mjs']
+permissions:
+  contents: read
+jobs:
+  gameplay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python3 .github/pet-reactions-v0460/prepare_candidate.py "$RUNNER_TEMP/candidate"
+      - run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - run: |
+          OVERHAUL_GAMEPLAY=1 node tools/visual-qa/capture-pet-reactions.mjs --web-dir "$RUNNER_TEMP/candidate/dev" --output-dir "$RUNNER_TEMP/evidence/dev"
+          OVERHAUL_GAMEPLAY=1 node tools/visual-qa/capture-pet-reactions.mjs --web-dir "$RUNNER_TEMP/candidate/live" --output-dir "$RUNNER_TEMP/evidence/live"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reactions-gameplay
+          path: ${{ runner.temp }}/evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reactions-exact-candidates
+          path: ${{ runner.temp }}/candidate
+  visuals:
+    needs: gameplay
+    strategy:
+      fail-fast: false
+      matrix:
+        start: [1, 9, 17, 25, 33, 41, 49, 57, 65, 73]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: reactions-exact-candidates
+          path: ${{ runner.temp }}/candidate
+      - run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - run: PET_REACTIONS=1 CAPTURE_START=${{ matrix.start }} CAPTURE_END=$((${{ matrix.start }} + 7)) node tools/visual-qa/capture-pet-reactions.mjs --web-dir "$RUNNER_TEMP/candidate/live" --output-dir "$RUNNER_TEMP/evidence"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reactions-visual-${{ matrix.start }}
+          path: ${{ runner.temp }}/evidence
+  dev-journal:
+    needs: gameplay
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: reactions-exact-candidates
+          path: ${{ runner.temp }}/candidate
+      - run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - run: CAPTURE_END=12 node tools/visual-qa/capture-pet-reactions.mjs --web-dir "$RUNNER_TEMP/candidate/dev" --output-dir "$RUNNER_TEMP/evidence"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reactions-dev-journal
+          path: ${{ runner.temp }}/evidence

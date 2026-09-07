@@ -1,0 +1,220 @@
+--- a/scripts/companion/companion_journal.gd
++++ b/scripts/companion/companion_journal.gd
+@@ -26,6 +26,74 @@
+ var response: String=""
+ var scroll: ScrollContainer
+ var notice: Label
++const PET_REACTIONS = ["wave", "shy", "clap", "hop", "nuzzle", "tip", "kiss", "dance", "giggle", "hug"]
++const PET_MESSAGES = ["A little wave, just for you.", "Aw, you made your buddy blush.", "Tiny paws, big applause!", "Too happy to keep both feet down!", "That is the perfect scratching spot.", "A tip of the helmet. Thank you, friend.", "One little paw-kiss, coming your way.", "You started a happy little dance!", "Hehe! Those paws are ticklish.", "A snug little hug, just for you."]
++const PET_DURATIONS = [0.12, 0.16, 0.18, 0.26, 0.28, 0.22, 0.16, 0.16]
++var pet_bag: Array[int] = []
++var pet_last: int = -1
++var pet_reaction: int = -1
++var pet_elapsed: float = 0.0
++var pet_frames: Array[AtlasTexture] = []
++var pet_capture_frame: int = -1
++
++func _next_pet_reaction() -> int:
++	if pet_bag.is_empty():
++		for i in PET_REACTIONS.size(): pet_bag.append(i)
++		pet_bag.shuffle()
++		if pet_bag.back() == pet_last:
++			var swap: int = pet_bag[0]
++			pet_bag[0] = pet_bag.back()
++			pet_bag[pet_bag.size()-1] = swap
++	return pet_bag.pop_back()
++
++func play_pet_reaction(index: int) -> void:
++	if index < 0 or index >= PET_REACTIONS.size(): return
++	pet_reaction = index
++	pet_last = index
++	pet_elapsed = 0.0
++	pet_frames.clear()
++	var sheet: Texture2D = load("res://assets/companion/reactions/" + PET_REACTIONS[index] + ".png")
++	# Sample the original PNG without rescaling or baking altered copies.
++	# Wave uses only the near-paw poses so its gesture never swaps arms.
++	var order: Array = [0, 1, 2, 4, 2, 4, 6, 7] if index == 0 else [0, 1, 2, 3, 4, 5, 6, 7]
++	for frame in order:
++		var atlas = AtlasTexture.new()
++		atlas.atlas = sheet
++		var x: int = roundi(float(int(frame) % 4) * sheet.get_width() / 4.0)
++		var y: int = roundi(float(int(frame) / 4) * sheet.get_height() / 2.0)
++		var right: int = roundi(float(int(frame) % 4 + 1) * sheet.get_width() / 4.0)
++		var bottom: int = roundi(float(int(frame) / 4 + 1) * sheet.get_height() / 2.0)
++		atlas.region = Rect2(x, y, right-x, bottom-y)
++		atlas.filter_clip = true
++		pet_frames.append(atlas)
++	portrait.rotation = 0.0
++	portrait.position = Vector2(158, 168)
++	portrait.texture_normal = pet_frames[0]
++	response = PET_MESSAGES[index]
++	_update_live()
++
++func _reset_pet_reaction() -> void:
++	pet_reaction = -1
++	pet_capture_frame = -1
++	pet_elapsed = 0.0
++	pet_frames.clear()
++	portrait.texture_normal = preload("res://assets/companion/mole.png")
++	portrait.rotation = 0.0
++	portrait.position = Vector2(158, 168)
++
++func _advance_pet_reaction(delta: float) -> void:
++	if pet_capture_frame >= 0:
++		portrait.texture_normal = pet_frames[clampi(pet_capture_frame, 0, 7)]
++		return
++	pet_elapsed += maxf(delta, 0.0)
++	var end: float = 0.0
++	for i in PET_DURATIONS.size():
++		end += PET_DURATIONS[i]
++		if pet_elapsed < end:
++			portrait.texture_normal = pet_frames[i]
++			return
++	_reset_pet_reaction()
++
+ 
+ func _ready() -> void:
+ 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+@@ -135,6 +203,7 @@
+ 
+ func open_journal() -> void:
+ 	visible=true
++	_reset_pet_reaction()
+ 	response=""
+ 	select_tab("together")
+ 	_update_live()
+@@ -142,6 +211,7 @@
+ func close_journal() -> void:
+ 	if not visible: return
+ 	visible=false
++	_reset_pet_reaction()
+ 	closed.emit()
+ 
+ func _input(event: InputEvent) -> void:
+@@ -150,8 +220,9 @@
+ 		get_viewport().set_input_as_handled()
+ 
+ func _pet() -> void:
+-	response="A happy nose wiggle, just for you."
+-	var mole: MoleCompanion=owner_ui.active_mole()
++	if not visible or pet_reaction >= 0: return
++	play_pet_reaction(_next_pet_reaction())
++	var mole: MoleCompanion=owner_ui.active_mole() if owner_ui != null else null
+ 	if mole!=null: mole.pet()
+ 	AudioDirector.play_ui("open")
+ 	_update_live()
+@@ -239,8 +310,11 @@
+ func _process(delta: float) -> void:
+ 	if not visible: return
+ 	clock+=delta
+-	portrait.position.y=168.0+sin(clock*2.3)*2.3
+-	portrait.rotation=sin(clock*1.1)*0.013
++	if pet_reaction >= 0:
++		_advance_pet_reaction(delta)
++	else:
++		portrait.position.y=168.0+sin(clock*2.3)*2.3
++		portrait.rotation=sin(clock*1.1)*0.013
+ 	refresh_clock-=delta
+ 	if refresh_clock<=0.0: refresh_clock=0.20;_update_live()
+ 
+@@ -248,7 +322,7 @@
+ 	if not visible or owner_ui==null: return
+ 	var mole: MoleCompanion=owner_ui.active_mole()
+ 	points.text="%d paw points" % Skills.bond()
+-	mood.text="Your little mining buddy"
++	mood.text="Loves being with you" if pet_reaction >= 0 else "Your little mining buddy"
+ 	if mole!=null:
+ 		var ore_total: int=0
+ 		var dig_total: int=0
+--- a/scripts/qa/overhaul_qa.gd
++++ b/scripts/qa/overhaul_qa.gd
+@@ -425,6 +425,32 @@
+ 	for tab in ["together","skills","how"]:
+ 		ui.journal.select_tab(tab)
+ 		check(ui.journal.tab==tab and ui.journal.body.get_child_count()>0,"Journal tab renders "+tab)
++	var journal = ui.journal
++	var pet_progress: Dictionary = RunState.overhaul_progress.duplicate(true)
++	for reaction in journal.PET_REACTIONS.size():
++		journal.play_pet_reaction(reaction)
++		check(journal.pet_frames.size() == 8 and journal.portrait.texture_normal is AtlasTexture, "Pet reaction has eight real frames: " + journal.PET_REACTIONS[reaction])
++		journal.call("_advance_pet_reaction", 0.40)
++		check(journal.portrait.texture_normal == journal.pet_frames[2], "Pet animation advances its actual portrait: " + journal.PET_REACTIONS[reaction])
++		journal.call("_pet")
++		check(journal.pet_reaction == reaction and is_equal_approx(journal.pet_elapsed, 0.40), "Rapid pet taps cannot restart or queue animations")
++		journal.call("_advance_pet_reaction", 2.0)
++		check(journal.pet_reaction == -1 and not journal.portrait.texture_normal is AtlasTexture, "Pet animation returns to the original portrait")
++	journal.pet_bag.clear()
++	for cycle in 2:
++		var seen: Array[int] = []
++		for tap in 10:
++			var previous: int = journal.pet_last
++			journal.call("_pet")
++			check(journal.pet_reaction != previous and not seen.has(journal.pet_reaction), "All ten pet reactions play without repeats")
++			seen.append(journal.pet_reaction)
++			journal.call("_advance_pet_reaction", 3.0)
++	check(RunState.overhaul_progress == pet_progress, "Petting does not change skills or award paw points")
++	journal.call("_pet")
++	journal.close_journal()
++	check(journal.pet_reaction == -1 and journal.pet_frames.is_empty(), "Closing the journal cancels its reaction and releases frames")
++	ui.open_skills()
++	check(journal.pet_reaction == -1, "Reopening the journal starts with the original calm portrait")
+ 	ui.journal.close_journal()
+ 	check(world.player.control_enabled and not main.call("_shop_panel_is_open"),"Closing journal restores world controls")
+ 	RunState.overhaul_progress={"skills":{"teamwork":1}}
+--- a/scripts/dev/visual_capture_driver.gd
++++ b/scripts/dev/visual_capture_driver.gd
+@@ -130,7 +130,7 @@
+ 
+ func _verify_build_contract() -> Dictionary:
+ 	var dev_feature: = OS.has_feature("ever_deeper_dev")
+-	var expected_version: = "0.46.0-dev.1" if dev_feature else "0.45.0"
++	var expected_version: = "0.46.0-dev.2" if dev_feature else "0.46.0"
+ 	var expected_flavor: = "dev" if dev_feature else "production"
+ 	var actual_version: = String(PremiumMenuScript.release_version())
+ 	var developer_menu: Variant = _main.get("developer_menu")
+@@ -1781,6 +1781,12 @@
+ 
+ func _build_pet_states() -> Array[Dictionary]:
+ 	var states: Array[Dictionary]=[]
++	if "--pet-reactions" in OS.get_cmdline_user_args():
++		for reaction in 10:
++			for frame in 8:
++				states.append({"id":"pet_reaction_%02d_frame_%d" % [reaction,frame],"kind":"overhaul_pet","variant":"pet","tab":"together","location":"mine","reaction":reaction,"reaction_frame":frame})
++		return states
++
+ 	for item in [["fresh","together"],["fresh","how"],["fresh","skills"],["ready","skills"],["learned","skills"],["bottom","skills"],["learned","together"],["cooldown","together"],["pet","together"]]:
+ 		states.append({"id":"pet_"+item[0]+"_"+item[1],"kind":"overhaul_pet","variant":item[0],"tab":item[1],"location":"mine"})
+ 	for location in ["mine","depth","surface"]:
+@@ -1809,5 +1815,9 @@
+ 		ui.open_skills()
+ 		ui.journal.select_tab(String(state.tab))
+ 		if variant=="bottom": ui.journal.scroll.set_deferred("scroll_vertical",2000)
+-		if variant=="pet": ui.journal.call("_pet")
++		if variant=="pet":
++			if state.has("reaction"):
++				ui.journal.play_pet_reaction(int(state.reaction))
++				ui.journal.pet_capture_frame=int(state.reaction_frame)
++			else: ui.journal.call("_pet")
+ 	return true
+--- a/scripts/ui/premium_menu.gd
++++ b/scripts/ui/premium_menu.gd
+@@ -12,7 +12,7 @@
+ const MUTED: = Color("789384")
+ const INK: = Color("07120d")
+ const IPHONE_LANDSCAPE_ASPECT: = 1.95
+-const DEV_RELEASE_VERSION: = "0.46.0-dev.1"
++const DEV_RELEASE_VERSION: = "0.46.0-dev.2"
+ 
+ 
+ static func release_version() -> String:
+--- a/project.godot
++++ b/project.godot
+@@ -11,7 +11,7 @@
+ [application]
+ 
+ config/name="Ever Deeper"
+-config/version="0.45.0"
++config/version="0.46.0"
+ run/main_scene="res://scenes/main/main.tscn"
+ config/use_custom_user_dir=true
+ config/custom_user_dir_name="Ever Deeper- Godot Production Port"
