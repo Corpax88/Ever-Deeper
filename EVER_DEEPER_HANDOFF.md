@@ -1,3 +1,31 @@
+# Current handoff — Light Lab v0.46.8
+
+Light Lab now previews the current production dad hero in a cave using the real
+HeadlampBeam renderer. All five beam styles show their actual width and tint.
+The level upgrade has Current / Upgraded buttons using shared runtime range and
+energy formulas. Preview is read-only; Use beam equips owned styles for free;
+Upgrade light spends the existing recipe exactly once and returns to the equipped
+beam. Station finish items are removed only from Light Lab. Wardrobe remains intact.
+Any cached HTML ed-build-label is synchronized with the running release version.
+LIVE excludes the developer menu; DEV retains it.
+
+## Source continuation
+Reconstruct v0.46.7 from the handoff below, then apply .github/light-v0468/source.patch
+from the source root. This includes light_preview.gd and its UID. Verify changed
+files against .github/light-v0468/source-files-sha256.json. The distribution
+repository's top-level gameplay source is NOT authoritative. Use Godot 4.7.2 and
+the existing Web DEV / Web Production presets.
+
+QA run 34131562175; WebKit LIVE 189 / DEV 193 checks pass. Ten final layouts
+visually inspected at 844x390. Candidate artifact 10022287510.
+
+Native exact candidate checks: LIVE 121, DEV 123, no runtime errors.
+QA and final visual evidence are bound to candidate hashes in .github/light-v0468/review.json.
+The bundle reconstructs from the previously published v0.46.7 LIVE package; after
+publication use the retained exact candidate or page artifact, not prepare.py's old baseline.
+
+---
+
 # Current handoff — Wardrobe v0.46.7
 
 Published and verified on DEV and LIVE on 2026-09-07.
