@@ -1,0 +1,68 @@
+{
+  "release": "0.46.9",
+  "dev_release": "0.46.9-dev.1",
+  "status": "published_and_verified",
+  "publication_verified_at": "2026-09-07T19:32:51Z",
+  "repository": "Corpax88/Ever-Deeper",
+  "pull_request": 9,
+  "merge_commit": "7ada9135f722682cde4a98a64b81e54a844deee1",
+  "publication_run": {
+    "id": 34155871163,
+    "url": "https://github.com/Corpax88/Ever-Deeper/actions/runs/34155871163",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 101847459505,
+        "name": "package",
+        "conclusion": "success"
+      },
+      {
+        "id": 101847659780,
+        "name": "deploy",
+        "conclusion": "success"
+      },
+      {
+        "id": 101847753370,
+        "name": "verify",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "public_file_verification": {
+    "file_count": 18,
+    "result": "All 18 public files verified against the inspected packages",
+    "manifest": ".github/performance-v0469/review.json",
+    "live_url": "https://corpax88.github.io/Ever-Deeper/",
+    "dev_url": "https://corpax88.github.io/Ever-Deeper/dev/"
+  },
+  "final_package_qa": {
+    "run_id": 34155202247,
+    "source_commit": "a3293f7527e57fb5c8fe80556c44ebc454fd8118",
+    "conclusion": "success",
+    "rendered_scenarios": 22,
+    "visual_review_complete": true,
+    "physical_iphone_tested": false
+  },
+  "main_source_gate": {
+    "run_id": 34155871121,
+    "commit": "7ada9135f722682cde4a98a64b81e54a844deee1",
+    "conclusion": "success"
+  },
+  "artifacts": [
+    {
+      "id": 10030951631,
+      "name": "github-pages",
+      "size_in_bytes": 461887060,
+      "digest": "sha256:6159b0761f19429f62f3c3950378fc1994276c51f657abea7f307bc4705551a6",
+      "expires_at": "2026-09-08T19:31:44Z"
+    },
+    {
+      "id": 10030946553,
+      "name": "ever-deeper-before-v0469-rollback",
+      "size_in_bytes": 461886569,
+      "digest": "sha256:a5d69f578d69626356a95816291aa99c270915a546bfe5782d2d581443c3f776",
+      "expires_at": "2026-10-07T19:31:30Z"
+    }
+  ],
+  "remaining": "Physical iPhone Safari acceptance with the optional DEV FPS meter; no verified 60 FPS claim."
+}

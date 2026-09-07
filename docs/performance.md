@@ -89,3 +89,11 @@ Wardrobe, every light style, and the DEV FPS toggle/meter. The meter records
 real frame intervals and stops processing when switched off.
 Exact file identities are in `.github/performance-v0469/review.json`.
 Physical iPhone acceptance remains pending. Only one optimization round was used.
+
+## Publication
+
+v0.46.9 LIVE and v0.46.9-dev.1 DEV were published by run 34155871163.
+All 18 public files were downloaded and verified against the inspected packages
+at 2026-09-07T19:32:51Z. Main source gate 34155871121 passed.
+The complete result and rollback artifact identity are recorded in
+`.github/performance-v0469/publication-receipt.json`.
