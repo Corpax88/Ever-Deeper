@@ -12,7 +12,7 @@ index 7ca28bb..f410d94 100644
  config/use_custom_user_dir=true
  config/custom_user_dir_name="Ever Deeper- Godot Production Port"
 diff --git a/scripts/dev/visual_capture_driver.gd b/scripts/dev/visual_capture_driver.gd
-index 0cc24c8..fef77b1 100644
+index 0cc24c8..0e4711d 100644
 --- a/scripts/dev/visual_capture_driver.gd
 +++ b/scripts/dev/visual_capture_driver.gd
 @@ -135,7 +135,7 @@ func run(main_node: Node) -> void :
@@ -38,11 +38,12 @@ index 0cc24c8..fef77b1 100644
  	if "--pet-capture" in OS.get_cmdline_user_args(): return _build_pet_states()
  	var states: Array[Dictionary] = []
  	# Read the reported shop regression first, then every affected existing fixture.
-@@ -1733,6 +1740,20 @@ func _build_overhaul_states() -> Array[Dictionary]:
+@@ -1733,6 +1740,21 @@ func _build_overhaul_states() -> Array[Dictionary]:
  
  func _prepare_overhaul_extra(state: Dictionary) -> bool:
  	match String(state.kind):
 +		"overhaul_wardrobe":
++			_reset_run()
 +			_workshop_capture_config("wardrobe")
 +			RunState.endless_workshops.wardrobe.level = int(state.level)
 +			RunState.endless_outfit = "miner"
@@ -55,7 +56,7 @@ index 0cc24c8..fef77b1 100644
 +			if String(state.get("variant", "")) in ["ready", "missing"]: config.selected_item_id = "workshop:upgrade"
 +			if String(state.get("variant", "")) == "locked": config.selected_item_id = "workshop:equip:deepheart"
 +			_main.call("_open_commerce", config, "workshop:wardrobe")
-+			return true
++			return _main.commerce_panel.selected_item_id() == String(config.selected_item_id)
  		"overhaul_pet": return _prepare_pet_state(state)
  		"overhaul_depth_shop":
  			var world: Node = _load_d2(String(state.mine_id))
@@ -277,7 +278,7 @@ index d827dbe..a9137b7 100644
 +	existing.configure(String(item.outfit_preview), animated)
 diff --git a/scripts/ui/outfit_preview.gd b/scripts/ui/outfit_preview.gd
 new file mode 100644
-index 0000000..566568d
+index 0000000..913777e
 --- /dev/null
 +++ b/scripts/ui/outfit_preview.gd
 @@ -0,0 +1,54 @@
@@ -322,7 +323,7 @@ index 0000000..566568d
 +func _fit() -> void:
 +	if _sprite == null: return
 +	_sprite.position = size * 0.5
-+	_sprite.scale = Vector2.ONE * minf(size.x / _cell.x, size.y / _cell.y)
++	_sprite.scale = Vector2.ONE * 1.2 * minf(size.x / _cell.x, size.y / _cell.y)
 +
 +func _process(delta: float) -> void:
 +	if not is_visible_in_tree() or _manifest.is_empty(): return

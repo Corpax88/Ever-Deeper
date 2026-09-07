@@ -39,7 +39,7 @@ func configure(value: String, animated: bool = false) -> void:
 func _fit() -> void:
 	if _sprite == null: return
 	_sprite.position = size * 0.5
-	_sprite.scale = Vector2.ONE * minf(size.x / _cell.x, size.y / _cell.y)
+	_sprite.scale = Vector2.ONE * 1.2 * minf(size.x / _cell.x, size.y / _cell.y)
 
 func _process(delta: float) -> void:
 	if not is_visible_in_tree() or _manifest.is_empty(): return
