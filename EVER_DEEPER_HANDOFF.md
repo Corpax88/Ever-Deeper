@@ -1,7 +1,9 @@
 # Current handoff — Wardrobe v0.46.7
 
-Release candidate approved for DEV and LIVE; publication is triggered by this merge.
-Check the deploy-wardrobe-v0467 workflow and publication receipt before claiming live.
+Published and verified on DEV and LIVE on 2026-09-07.
+LIVE v0.46.7; DEV v0.46.7-dev.1. All 18 public files match exact size and SHA-256.
+Publication run 34128153928; release commit e25511403723e5dfc209e2cf14a657bdc8295b96.
+PR 6; rollback artifact 10020956719. LIVE has no developer menu.
 
 Wardrobe now has five clearly named clothing colors, using the approved current dad
 hero, actual equipped tool, production clothing masks/colors and real idle animation.
@@ -22,7 +24,7 @@ Native LIVE 97 / DEV 99 checks; WebKit LIVE 151 / DEV 155 checks; all pass.
 review.json binds inspected evidence and tested packages to exact PCK hashes.
 LIVE excludes developer-menu resources. No gameplay economy or save schema changes.
 
-Next: verify publication, then Mats tests Wardrobe on his physical iPhone.
+Next: Mats reloads v0.46.7 and tests outfit preview, unlock and Wear on his iPhone.
 Keep replies brief; do not generate a new hero or new assets for these color choices.
 
 ---
