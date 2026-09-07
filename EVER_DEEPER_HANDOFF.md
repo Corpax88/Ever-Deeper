@@ -1,5 +1,9 @@
 # Current handoff — Light Lab v0.46.8
 
+Published and verified on DEV and LIVE on 2026-09-07.
+LIVE v0.46.8; DEV v0.46.8-dev.1. All 18 public files match their exact hashes.
+Publication run 34132010576; PR 7; rollback artifact 10022472677.
+
 Light Lab now previews the current production dad hero in a cave using the real
 HeadlampBeam renderer. All five beam styles show their actual width and tint.
 The level upgrade has Current / Upgraded buttons using shared runtime range and
