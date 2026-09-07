@@ -1,0 +1,290 @@
+diff --git a/project.godot b/project.godot
+index 7ca28bb..f410d94 100644
+--- a/project.godot
++++ b/project.godot
+@@ -11,7 +11,7 @@ config_version=5
+ [application]
+ 
+ config/name="Ever Deeper"
+-config/version="0.46.6"
++config/version="0.46.7"
+ run/main_scene="res://scenes/main/main.tscn"
+ config/use_custom_user_dir=true
+ config/custom_user_dir_name="Ever Deeper- Godot Production Port"
+diff --git a/scripts/dev/visual_capture_driver.gd b/scripts/dev/visual_capture_driver.gd
+index 0cc24c8..fef77b1 100644
+--- a/scripts/dev/visual_capture_driver.gd
++++ b/scripts/dev/visual_capture_driver.gd
+@@ -135,7 +135,7 @@ func run(main_node: Node) -> void :
+ 
+ func _verify_build_contract() -> Dictionary:
+ 	var dev_feature: = OS.has_feature("ever_deeper_dev")
+-	var expected_version: = "0.46.6-dev.1" if dev_feature else "0.46.6"
++	var expected_version: = "0.46.7-dev.1" if dev_feature else "0.46.7"
+ 	var expected_flavor: = "dev" if dev_feature else "production"
+ 	var actual_version: = String(PremiumMenuScript.release_version())
+ 	var developer_menu: Variant = _main.get("developer_menu")
+@@ -1684,6 +1684,13 @@ func _check_surface_gameplay() -> bool:
+ 
+ 
+ func _build_overhaul_states() -> Array[Dictionary]:
++	if "--wardrobe-capture" in OS.get_cmdline_user_args():
++		var wardrobe_states: Array[Dictionary] = []
++		for outfit in RunState.ENDLESS_OUTFIT_IDS:
++			wardrobe_states.append({"id": "wardrobe_" + outfit, "kind": "overhaul_wardrobe", "outfit": outfit, "level": 5})
++		for variant in ["owned", "ready", "missing", "locked"]:
++			wardrobe_states.append({"id": "wardrobe_" + variant, "kind": "overhaul_wardrobe", "variant": variant, "level": 1})
++		return wardrobe_states
+ 	if "--pet-capture" in OS.get_cmdline_user_args(): return _build_pet_states()
+ 	var states: Array[Dictionary] = []
+ 	# Read the reported shop regression first, then every affected existing fixture.
+@@ -1733,6 +1740,20 @@ func _build_overhaul_states() -> Array[Dictionary]:
+ 
+ func _prepare_overhaul_extra(state: Dictionary) -> bool:
+ 	match String(state.kind):
++		"overhaul_wardrobe":
++			_workshop_capture_config("wardrobe")
++			RunState.endless_workshops.wardrobe.level = int(state.level)
++			RunState.endless_outfit = "miner"
++			var status: Dictionary = RunState.workshop_status("wardrobe")
++			var upgrade: Dictionary = Dictionary(status.get("next_upgrade", {}))
++			if not upgrade.is_empty(): RunState.cargo[upgrade.resource] = 0 if String(state.get("variant", "")) == "missing" else int(upgrade.cost)
++			status = RunState.workshop_status("wardrobe")
++			var config: Dictionary = CommerceCatalogScript.workshop_config("wardrobe", status, {"current": "miner"})
++			config.selected_item_id = "workshop:equip:" + String(state.get("outfit", "miner"))
++			if String(state.get("variant", "")) in ["ready", "missing"]: config.selected_item_id = "workshop:upgrade"
++			if String(state.get("variant", "")) == "locked": config.selected_item_id = "workshop:equip:deepheart"
++			_main.call("_open_commerce", config, "workshop:wardrobe")
++			return true
+ 		"overhaul_pet": return _prepare_pet_state(state)
+ 		"overhaul_depth_shop":
+ 			var world: Node = _load_d2(String(state.mine_id))
+diff --git a/scripts/main.gd b/scripts/main.gd
+index 4b04997..a700202 100644
+--- a/scripts/main.gd
++++ b/scripts/main.gd
+@@ -2152,7 +2152,7 @@ func _workshop_panel_config(workshop_id: String) -> Dictionary:
+ 	var details: Dictionary = {
+ 		"tool_forge": "Tool impact and mining profile",
+ 		"light_lab": "Beam shape and lens response",
+-		"wardrobe": "Expedition outfit and station finish",
++		"wardrobe": "Preview and unlock clothing colors",
+ 		"treasure_chamber": "Relic archive and recovered discoveries",
+ 		"lift_workshop": "Deepest route and return checkpoint",
+ 	}
+@@ -2309,8 +2309,11 @@ func _confirm_workshop_commerce_action(item_id: String) -> void :
+ 		value = item_id.trim_prefix("workshop:style:")
+ 	if action.is_empty():
+ 		return
+-	_close_commerce_for_action()
++	if workshop_id != "wardrobe":
++		_close_commerce_for_action()
+ 	var transaction: = Dictionary(hub_world.confirm_workshop_action(workshop_id, action, value))
++	if workshop_id == "wardrobe":
++		commerce_panel.refresh_commerce(CommerceCatalogScript.workshop_config(workshop_id, RunState.workshop_status(workshop_id), hub_world.workshop_selection_preview(workshop_id)))
+ 	if bool(transaction.get("ok", false)):
+ 		_refresh_hud()
+ 	else:
+diff --git a/scripts/qa/menu_touch_qa.gd b/scripts/qa/menu_touch_qa.gd
+index 1f30f2e..7cf5bde 100644
+--- a/scripts/qa/menu_touch_qa.gd
++++ b/scripts/qa/menu_touch_qa.gd
+@@ -49,6 +49,7 @@ func run(d: Node, m: Node) -> bool:
+ 	driver.get_tree().root.content_scale_aspect=Window.CONTENT_SCALE_ASPECT_IGNORE
+ 	await settle()
+ 	await test_pause_modal()
++	await test_wardrobe()
+ 	driver._prepare_pet_state({"location":"mine","variant":"ready","tab":"skills"})
+ 	await settle()
+ 	var journal = main.get_node("CompanionInterface").journal
+@@ -179,3 +180,43 @@ func test_pause_modal() -> void:
+ 	check(main.commerce_panel.is_open(), "Browse works again after closing pause menu")
+ 	main.commerce_panel.close_commerce()
+ 	main.automated_mode = true
++
++
++func test_wardrobe() -> void:
++	driver._prepare_overhaul_extra({"kind":"overhaul_wardrobe", "level":1, "variant":"missing"})
++	await settle()
++	var panel = main.commerce_panel
++	check(panel._items.size() == 5, "Wardrobe has exactly five distinct colors")
++	check(panel.primary_button.disabled, "Unaffordable outfit unlock disabled")
++	check(not RunState.set_endless_outfit("deepheart"), "Locked outfit cannot be equipped")
++	var outfit_before: String = RunState.endless_outfit
++	var resource: String = String(RunState.workshop_status("wardrobe").next_upgrade.resource)
++	var cost: int = int(RunState.workshop_status("wardrobe").next_upgrade.cost)
++	RunState.cargo[resource] = cost + 11
++	panel.refresh_commerce(driver.CommerceCatalogScript.workshop_config("wardrobe", RunState.workshop_status("wardrobe"), main.hub_world.workshop_selection_preview("wardrobe")))
++	await settle()
++	panel._select_item("workshop:upgrade")
++	check(RunState.endless_outfit == outfit_before, "Preview does not equip outfit")
++	await gesture("tap", point(panel.primary_button))
++	check(int(RunState.workshop_status("wardrobe").level) == 2 and int(RunState.cargo[resource]) == 11, "Unlock charges exact existing price once")
++	check(RunState.endless_outfit == outfit_before, "Unlock leaves current clothes on")
++	check(panel.selected_item_id() == "workshop:equip:expedition", "Unlock keeps newly owned outfit in preview")
++	await gesture("tap", point(panel.primary_button))
++	check(RunState.endless_outfit == "expedition" and int(RunState.cargo[resource]) == 11, "Wear equips for free after unlock")
++	check(panel.primary_button.disabled, "Wearing button cannot double equip")
++	await gesture("capture", Vector2.ZERO, Vector2.ZERO, "wardrobe-new-outfit-worn")
++	panel.close_commerce()
++	var saved: Dictionary = RunState.serialize()
++	check(RunState.deserialize(saved) and RunState.endless_outfit == "expedition", "Outfit persists through save reload")
++	driver._prepare_overhaul_extra({"kind":"overhaul_wardrobe", "level":5, "outfit":"miner"})
++	await settle()
++	for outfit in RunState.ENDLESS_OUTFIT_IDS:
++		panel._select_item("workshop:equip:" + outfit)
++		await settle()
++		var preview = panel.hero_icon.get_node("OutfitPreview")
++		check(preview.outfit == outfit and preview._sprite.texture.resource_path.begins_with("res://assets/hero/dad/"), "Current hero preview: " + outfit)
++		check(preview._sprite.material.get_shader_parameter("cloth_color") == preview.Hero.OUTFIT_COLORS[outfit], "Production outfit color: " + outfit)
++		if not panel.primary_button.disabled: await gesture("tap", point(panel.primary_button))
++		check(RunState.endless_outfit == outfit, "Correct outfit equipped: " + outfit)
++		await gesture("capture", Vector2.ZERO, Vector2.ZERO, "wardrobe-wearing-" + outfit)
++	panel.close_commerce()
+diff --git a/scripts/ui/commerce_catalog.gd b/scripts/ui/commerce_catalog.gd
+index e1ac4e0..7cb4107 100644
+--- a/scripts/ui/commerce_catalog.gd
++++ b/scripts/ui/commerce_catalog.gd
+@@ -169,6 +169,8 @@ static func starforge_config() -> Dictionary:
+ 
+ 
+ static func workshop_config(workshop_id: String, status: Dictionary, selection: Dictionary) -> Dictionary:
++	if workshop_id == "wardrobe":
++		return _wardrobe_config(status, selection)
+ 	var title: = String(status.get("display_name", workshop_id.capitalize()))
+ 	var level: = int(status.get("level", 1))
+ 	var max_level: = int(status.get("max_level", 1))
+@@ -317,12 +319,7 @@ static func _all_workshop_options(workshop_id: String) -> Array:
+ static func _workshop_option_texture(workshop_id: String, option: String) -> String:
+ 	if workshop_id == "tool_forge":
+ 		return String(TOOL_TEXTURES.get(option, WORKSHOP_TEXTURES.get(workshop_id, "")))
+-	if workshop_id == "wardrobe":
+-		var path: = (
+-			"res://assets/characters/miner-b-drill-deepcore.png" if option == "miner" else
+-			"res://assets/characters/outfits/%s/miner-b-drill-deepcore.png" % option
+-		)
+-		return path if ResourceLoader.exists(path) else String(WORKSHOP_TEXTURES.get(workshop_id, ""))
++
+ 	return String(WORKSHOP_TEXTURES.get(workshop_id, ""))
+ 
+ 
+@@ -417,3 +414,57 @@ static func depth_forge_config(mine_id: String) -> Dictionary:
+ 		"locked":not RunState.has_deep_tool(),"locked_reason":"Forge a Starforge core first",
+ 		"future_unlock":"A stronger drill opens the next sealed passage" if not next.is_empty() else "Explore Voidstar for the Singularity Core",
+ 	}]}
++
++
++static func _wardrobe_config(status: Dictionary, selection: Dictionary) -> Dictionary:
++	var level: int = int(status.get("level", 1))
++	var current: String = String(selection.get("current", "miner"))
++	var names: Array[String] = ["Miner Green", "Expedition Blue", "Archivist Sand", "Starweave Violet", "Deepheart Red"]
++	var descriptions: Array[String] = [
++		"The original forest-green mining clothes.",
++		"Ocean-blue clothes for your next expedition.",
++		"Muted sand-colored clothes for the relic collector.",
++		"Violet clothes inspired by Starfall crystals.",
++		"Deep red clothes inspired by the heart of the mine.",
++	]
++	var items: Array = []
++	for i in RunState.ENDLESS_OUTFIT_IDS.size():
++		var outfit: String = String(RunState.ENDLESS_OUTFIT_IDS[i])
++		var locked: bool = i + 1 > level
++		var next: bool = i == level
++		var worn: bool = outfit == current
++		var item: Dictionary = {
++			"id": "workshop:equip:" + outfit,
++			"title": names[i], "subtitle": "Clothing color · cosmetic only",
++			"outfit_preview": outfit,
++			"description": descriptions[i],
++			"equipped": worn, "locked": locked, "affordable": not locked,
++			"action_enabled": not worn, "action_label": "Wearing" if worn else "Wear outfit",
++			"locked_reason": "Unlock earlier colors first. Requires Wardrobe level %d." % (i + 1),
++			"footer_text": "Currently wearing" if worn else "Free to switch" if not locked else "Not unlocked",
++			"future_unlock_label": "Your outfit",
++			"future_unlock": "Changes clothing color only. Your helmet, glasses, tool and mining stats stay the same.",
++			"total": {"label": "Outfit", "value": "Wearing" if worn else "Owned" if not locked else "Level %d" % (i + 1), "ready": not locked},
++		}
++		# The next color is also the upgrade: one card, one real unlock, no duplicate entry.
++		if next:
++			var upgrade: Dictionary = Dictionary(status.get("next_upgrade", {}))
++			if not upgrade.is_empty():
++				var resource: String = String(upgrade.resource)
++				item.merge({
++					"id": "workshop:upgrade", "locked": false,
++					"subtitle": "Unlock this clothing color · Wardrobe level %d" % (i + 1),
++					"equipped": false, "action_enabled": true,
++					"affordable": bool(status.get("ready_to_upgrade", false)),
++					"action_label": "Unlock outfit", "footer_text": "Unlocks permanently · then tap Wear outfit",
++					"costs": [_cost(resource, _resource_name(resource), int(RunState.cargo.get(resource, 0)), int(upgrade.cost), _resource_texture(resource))],
++					"total": {"label": "Wardrobe", "value": "%d > %d" % [level, i + 1], "ready": bool(status.get("ready_to_upgrade", false))},
++				}, true)
++		items.append(item)
++	return {
++		"panel_id": "workshop:wardrobe", "title": "Wardrobe",
++		"subtitle": "%d / 5 colors unlocked · Preview, then wear" % level,
++		"catalog_label": "Clothing colors", "items": items,
++		"selected_item_id": "workshop:equip:" + current,
++		"primary_action_visible": true,
++	}
+diff --git a/scripts/ui/commerce_panel.gd b/scripts/ui/commerce_panel.gd
+index d827dbe..a9137b7 100644
+--- a/scripts/ui/commerce_panel.gd
++++ b/scripts/ui/commerce_panel.gd
+@@ -289,6 +289,9 @@ func open_commerce(config: Dictionary) -> void :
+ 
+ func refresh_commerce(config: Dictionary) -> void :
+ 	var previous_selection: = _selected_item_id
++	var previous_item: Dictionary = selected_item()
++	if previous_selection == "workshop:upgrade" and previous_item.has("outfit_preview"):
++		previous_selection = "workshop:equip:" + String(previous_item.outfit_preview)
+ 	_config = config.duplicate(true)
+ 	_items = _valid_items(Array(_config.get("items", [])))
+ 	_selected_item_id = previous_selection if _has_item(previous_selection) else _initial_selection(String(_config.get("selected_item_id", "")))
+@@ -823,6 +826,7 @@ func _refresh_showcase(item: Dictionary) -> void :
+ 		hero_state_label.add_theme_color_override("font_color", MUTED)
+ 		return
+ 	hero_icon.texture = _item_texture(item)
++	_update_outfit_preview(hero_icon, item, true)
+ 	hero_icon.modulate = Color(1, 1, 1, 0.38) if bool(item.get("locked", false)) else Color.WHITE
+ 	var texture_path: = String(item.get("texture", item.get("icon_path", "")))
+ 	hero_icon.rotation = deg_to_rad(-40.0) if "/tools/" in texture_path or String(item.get("id", "")).begins_with("forge:") else 0.0
+@@ -874,6 +878,7 @@ func _item_card(item: Dictionary) -> Button:
+ 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+ 	icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+ 	icon.texture = _item_texture(item)
++	_update_outfit_preview(icon, item)
+ 	icon_slot.add_child(icon)
+ 	icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+ 	if icon.texture != null and ("/tools/" in icon.texture.resource_path or item_id.begins_with("forge:")):
+@@ -1844,3 +1849,18 @@ func _divider() -> Control:
+ 	style.thickness = 1
+ 	line.add_theme_stylebox_override("separator", style)
+ 	return line
++
++
++func _update_outfit_preview(target: TextureRect, item: Dictionary, animated: bool = false) -> void:
++	var existing: Node = target.get_node_or_null("OutfitPreview")
++	if not item.has("outfit_preview"):
++		if existing != null:
++			target.remove_child(existing)
++			existing.queue_free()
++		return
++	if existing == null:
++		existing = preload("res://scripts/ui/outfit_preview.gd").new()
++		existing.name = "OutfitPreview"
++		target.add_child(existing)
++		existing.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
++	existing.configure(String(item.outfit_preview), animated)
+diff --git a/scripts/ui/premium_menu.gd b/scripts/ui/premium_menu.gd
+index 87c8bc9..6b54cb7 100644
+--- a/scripts/ui/premium_menu.gd
++++ b/scripts/ui/premium_menu.gd
+@@ -12,7 +12,7 @@ const MINT: = Color("a8e3bc")
+ const MUTED: = Color("789384")
+ const INK: = Color("07120d")
+ const IPHONE_LANDSCAPE_ASPECT: = 1.95
+-const DEV_RELEASE_VERSION: = "0.46.6-dev.1"
++const DEV_RELEASE_VERSION: = "0.46.7-dev.1"
+ 
+ 
+ static func release_version() -> String:
