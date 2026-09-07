@@ -1,6 +1,9 @@
 # Sustained FPS drop investigation — 2026-09-07
 
-Status: diagnosis only. No runtime fix or deployment. DEV/LIVE remain v0.46.9.
+Status: FPS diagnosis remains unresolved. Detailed meter published on DEV
+v0.46.9-dev.2; LIVE v0.46.9 is byte-identical. See dev-meter.md and
+.github/dev-meter/publication-receipt.json. Next: record the new four-line D2
+meter through the stationary high-to-low transition on the existing iPhone save.
 No critic or other agents used.
 
 User evidence: Mossvein Depth 2 recording starts near 56 FPS, declines to about

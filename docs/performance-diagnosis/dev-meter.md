@@ -29,3 +29,7 @@ checks, rendered hub/Mossvein overlay bounds and restart/stop behavior, and WebK
 at 844x390 CSS pixels with device scale 3. The browser checks reported canvas
 width, height and DPR against the DOM values, rather than assuming resolution.
 Publication identity and exact-package evidence are in .github/dev-meter/review.json.
+
+Published and verified: run 34160254145; all 18 public files match, LIVE unchanged.
+Source checks 34160254158 passed. Final QA run 34159892066 passed; review artifact
+10032307492 and candidate 10032306808 bind inspected screenshots to the pack.
