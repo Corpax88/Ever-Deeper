@@ -25,7 +25,7 @@ index 917ddb2..a68d84a 100644
  	var actual_version: = String(PremiumMenuScript.release_version())
  	var developer_menu: Variant = _main.get("developer_menu")
 diff --git a/scripts/qa/menu_touch_qa.gd b/scripts/qa/menu_touch_qa.gd
-index 8816097..778cab0 100644
+index 8816097..4a298bd 100644
 --- a/scripts/qa/menu_touch_qa.gd
 +++ b/scripts/qa/menu_touch_qa.gd
 @@ -17,14 +17,22 @@ func gesture(kind: String, start: Vector2, delta: Vector2 = Vector2.ZERO, label:
@@ -55,7 +55,7 @@ index 8816097..778cab0 100644
  func swipe(scroll: ScrollContainer, horizontal: bool, label: String) -> void:
  	check(scroll is TouchScrollContainer, label + " uses shared finger scrolling")
  	scroll.scroll_horizontal=0;scroll.scroll_vertical=0
-@@ -67,32 +75,61 @@ func run(d: Node, m: Node) -> bool:
+@@ -67,32 +75,65 @@ func run(d: Node, m: Node) -> bool:
  	main.premium_menu.close_menu()
  	driver._prepare_commerce_capture("starforge_owned_active");await settle()
  	var panel = main.commerce_panel
@@ -115,9 +115,13 @@ index 8816097..778cab0 100644
 +	check(carousel.motion_samples>4,"Release is rendered over multiple animation frames")
 +	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"starforge-centered-comet")
 +	await gesture("swipe",point(carousel),Vector2(-stride*0.8,0))
-+	var caught_position: float = carousel.position_x
++	# Browser dispatch is asynchronous: sample at contact, not before the
++	# round trip during which the carousel is still supposed to glide.
++	var caught_position: Array[float] = [-1.0]
++	var on_contact = func(): caught_position[0] = carousel.position_x
++	panel.swipe_pager.contact_started.connect(on_contact, CONNECT_ONE_SHOT)
 +	await gesture("hold",point(carousel),Vector2.ZERO)
-+	check(carousel.held and absf(carousel.position_x-caught_position)<3,"Touch catches a gliding carousel without jumping")
++	check(carousel.held and caught_position[0] >= 0 and absf(carousel.position_x-caught_position[0])<3,"Touch catches and holds the carousel at contact position")
 +	await gesture("cancel",point(carousel));await rest_carousel()
 +	await gesture("swipe",point(carousel),Vector2(-stride*0.8,0));await rest_carousel()
 +	check(panel._selected_item_id==String(panel._items[2].id),"Flick continues to the final card")
