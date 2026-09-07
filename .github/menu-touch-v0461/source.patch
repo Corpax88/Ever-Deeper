@@ -1,0 +1,399 @@
+--- a/scripts/companion/companion_journal.gd
++++ b/scripts/companion/companion_journal.gd
+@@ -161,7 +161,7 @@
+ func _button(parent: Node,text_value: String,callback: Callable) -> Button:
+ 	var b=Button.new()
+ 	b.text=text_value
+-	b.custom_minimum_size=Vector2(0,54)
++	b.custom_minimum_size=Vector2(0,75)
+ 	b.add_theme_font_override("font",FONT)
+ 	b.add_theme_font_size_override("font_size",18)
+ 	b.add_theme_color_override("font_color",INK)
+@@ -193,10 +193,10 @@
+ 	points.position=Vector2(130,509);points.size=Vector2(315,26)
+ 	tally.position=Vector2(175,545);tally.size=Vector2(250,32)
+ 	for i in tabs.size():
+-		tabs[i].position=Vector2(494+i*244,133);tabs[i].size=Vector2(228,54)
++		tabs[i].position=Vector2(494+i*244,130);tabs[i].size=Vector2(228,75)
+ 	var close_button: Button=content.get_node("CloseJournal")
+-	close_button.position=Vector2(1190,70);close_button.size=Vector2(126,52)
+-	body.position=Vector2(495,203);body.size=Vector2(808,356)
++	close_button.position=Vector2(1190,52);close_button.size=Vector2(126,75)
++	body.position=Vector2(495,210);body.size=Vector2(808,350)
+ 	notice.position=Vector2(492,566);notice.size=Vector2(808,36)
+ 
+ func is_open() -> bool: return visible
+@@ -243,8 +243,8 @@
+ 	var heading=_label(body,"Your little helper, ready to go.",25,true)
+ 	heading.position=Vector2(0,0)
+ 	var description=_label(body,"I follow, light the way and scoop up loose ore.\nTap the ground to send me somewhere!",19)
+-	description.position=Vector2(0,42);description.size=Vector2(800,62)
+-	status=_label(body,"",20,true);status.position=Vector2(0,110);status.size=Vector2(790,36)
++	description.position=Vector2(0,42);description.size=Vector2(800,44)
++	status=_label(body,"",20,true);status.position=Vector2(0,88);status.size=Vector2(790,28)
+ 	var definitions=[['fetch','Come here','Always ready'],['shake','Dig together','8-second recharge'],['ore_nose','Find ore','Sniff out a vein'],['homeward','Lead me home','I wait for you'],['echo','Find passage','Point the way deeper']]
+ 	for i in definitions.size():
+ 		var row: Array=definitions[i]
+@@ -252,8 +252,8 @@
+ 		var owned: bool=Skills.has_skill(skill_id)
+ 		var b=_button(body,String(row[1]) if owned else String(row[1])+" · learn first",func(): command_requested.emit(skill_id))
+ 		b.name="Command_"+skill_id
+-		b.position=Vector2((i%2)*406,157+(i/2)*64)
+-		b.size=Vector2(394,55)
++		b.position=Vector2((i%2)*406,120+(i/2)*77)
++		b.size=Vector2(394,75)
+ 		b.disabled=not owned
+ 		if skill_id=="shake": b.tooltip_text="Tap an ordinary wall, or let me find one nearby."
+ 
+@@ -268,7 +268,7 @@
+ 		var d=_label(body,lines[i][1],17);d.position=Vector2(0,i*88+31);d.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;d.set_deferred("size",Vector2(800,53))
+ 
+ func _skills() -> void:
+-	scroll=ScrollContainer.new()
++	scroll=preload("res://scripts/ui/touch_scroll_container.gd").new()
+ 	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+ 	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+ 	body.add_child(scroll)
+--- a/scripts/dev/developer_menu.gd
++++ b/scripts/dev/developer_menu.gd
+@@ -165,29 +165,6 @@
+ 	}
+ 
+ 
+-func _input(event: InputEvent) -> void :
+-	if not is_open() or scroll == null:
+-		return
+-	if event is InputEventScreenTouch:
+-		var touch: InputEventScreenTouch = event
+-		if touch.pressed and scroll.get_global_rect().has_point(touch.position):
+-			_active_scroll_touch = touch.index
+-			_scroll_drag_distance = 0.0
+-		elif not touch.pressed and touch.index == _active_scroll_touch:
+-			if _scroll_drag_distance > 4.0:
+-				get_viewport().set_input_as_handled()
+-			_active_scroll_touch = -1
+-			_scroll_drag_distance = 0.0
+-	elif event is InputEventScreenDrag:
+-		var drag: InputEventScreenDrag = event
+-		if drag.index != _active_scroll_touch:
+-			return
+-		_scroll_drag_distance += absf(drag.relative.y)
+-		scroll.scroll_vertical -= int(roundf(drag.relative.y))
+-		if _scroll_drag_distance > 4.0:
+-			get_viewport().set_input_as_handled()
+-
+-
+ func _process(_delta: float) -> void :
+ 	if _reset_armed_until_msec <= 0:
+ 		set_process(false)
+@@ -276,7 +253,7 @@
+ 	rule.add_theme_stylebox_override("separator", _line_style(Color(GOLD, 0.34)))
+ 	shell.add_child(rule)
+ 
+-	scroll = ScrollContainer.new()
++	scroll = preload("res://scripts/ui/touch_scroll_container.gd").new()
+ 	scroll.name = "DeveloperActionsScroll"
+ 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+ 	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+--- a/scripts/dev/visual_capture_driver.gd
++++ b/scripts/dev/visual_capture_driver.gd
+@@ -55,6 +55,11 @@
+ 	set_process_input(true)
+ 	var build_contract: = _verify_build_contract()
+ 	if build_contract.is_empty():
++		return
++	if "--menu-touch-only" in OS.get_cmdline_user_args():
++		var qa: RefCounted = load("res://scripts/qa/menu_touch_qa.gd").new()
++		var ok: bool = await qa.run(self,_main)
++		get_tree().quit(0 if ok else 4)
+ 		return
+ 	if "--overhaul-gameplay" in OS.get_cmdline_user_args():
+ 		var qa: RefCounted = load("res://scripts/qa/overhaul_qa.gd").new()
+@@ -130,7 +135,7 @@
+ 
+ func _verify_build_contract() -> Dictionary:
+ 	var dev_feature: = OS.has_feature("ever_deeper_dev")
+-	var expected_version: = "0.46.0-dev.2" if dev_feature else "0.46.0"
++	var expected_version: = "0.46.1-dev.1" if dev_feature else "0.46.1"
+ 	var expected_flavor: = "dev" if dev_feature else "production"
+ 	var actual_version: = String(PremiumMenuScript.release_version())
+ 	var developer_menu: Variant = _main.get("developer_menu")
+--- a/scripts/main.gd
++++ b/scripts/main.gd
+@@ -836,12 +836,12 @@
+ 	touch.index = 3
+ 	touch.pressed = true
+ 	touch.position = dev_scroll.get_global_rect().get_center()
+-	developer_menu._input(touch)
++	get_viewport().push_input(touch, true)
+ 	var drag: = InputEventScreenDrag.new()
+ 	drag.index = 3
+ 	drag.position = touch.position - Vector2(0, 80)
+ 	drag.relative = Vector2(0, -80)
+-	developer_menu._input(drag)
++	get_viewport().push_input(drag, true)
+ 	if not _dev_qa_require(dev_scroll.scroll_vertical > 0, "iphone_finger_drag_moves_content"):
+ 		return
+ 	developer_menu.close_menu()
+--- a/scripts/qa/menu_touch_qa.gd
++++ b/scripts/qa/menu_touch_qa.gd
+@@ -0,0 +1,86 @@
++extends RefCounted
++var driver: Node
++var main: Node
++var checks: int = 0
++var failures: Array[String] = []
++func check(ok: bool, label: String) -> void:
++	checks += 1
++	if not ok: failures.append(label);print("OVERHAUL_CHECK_FAILED ", label)
++func settle() -> void:
++	for i in 6: await driver.get_tree().process_frame
++func point(c: Control, fraction: Vector2 = Vector2(0.5,0.65)) -> Vector2:
++	return c.get_global_transform_with_canvas() * (c.size * fraction)
++func gesture(kind: String, start: Vector2, delta: Vector2 = Vector2.ZERO, label: String = "") -> void:
++	if OS.has_feature("web"):
++		driver._acknowledged = false;driver._waiting_for_ack = true
++		var size: Vector2 = driver.get_viewport().get_visible_rect().size
++		print("EVER_DEEPER_OVERHAUL_INPUT_READY ",JSON.stringify({"kind":kind,"x":start.x,"y":start.y,"dx":delta.x,"dy":delta.y,"label":label,"width":size.x,"height":size.y}))
++		check(await driver._wait_for_ack(), "Browser acknowledges " + kind)
++	else:
++		if kind == "capture": return
++		var event = InputEventScreenTouch.new();event.index=5;event.pressed=true;event.position=start;driver.get_viewport().push_input(event,true)
++		if kind == "swipe":
++			for i in range(1,7):
++				var drag = InputEventScreenDrag.new();drag.index=5;drag.position=start+delta*float(i)/6.0;drag.relative=delta/6.0
++				driver.get_viewport().push_input(drag,true);await driver.get_tree().process_frame
++		event=InputEventScreenTouch.new();event.index=5;event.position=start+delta;event.canceled=kind=="cancel";driver.get_viewport().push_input(event,true)
++	await settle()
++func swipe(scroll: ScrollContainer, horizontal: bool, label: String) -> void:
++	check(scroll is TouchScrollContainer, label + " uses shared finger scrolling")
++	scroll.scroll_horizontal=0;scroll.scroll_vertical=0
++	await settle()
++	print("TOUCH_RANGE ",label," ",scroll.get_v_scroll_bar().max_value,"/",scroll.get_v_scroll_bar().page," h=",scroll.get_h_scroll_bar().max_value,"/",scroll.get_h_scroll_bar().page," rect=",scroll.get_global_rect())
++	var before: int = scroll.scroll_horizontal if horizontal else scroll.scroll_vertical
++	await gesture("swipe",point(scroll),Vector2(-110,0) if horizontal else Vector2(0,-100))
++	scroll.velocity=Vector2.ZERO
++	check((scroll.scroll_horizontal if horizontal else scroll.scroll_vertical)>before+20,label + " scrolls by dragging content")
++	await gesture("capture",Vector2.ZERO,Vector2.ZERO,label)
++func run(d: Node, m: Node) -> bool:
++	driver=d;main=m
++	driver.get_tree().root.content_scale_size=Vector2i(1560,720)
++	driver.get_tree().root.content_scale_aspect=Window.CONTENT_SCALE_ASPECT_IGNORE
++	await settle()
++	driver._prepare_pet_state({"location":"mine","variant":"ready","tab":"skills"})
++	await settle()
++	var journal = main.get_node("CompanionInterface").journal
++	var learn: Button=journal.find_child("Learn_trailrunner",true,false)
++	var gold: int=RunState.gold
++	await gesture("swipe",point(learn,Vector2(0.5,0.5)),Vector2(0,-100))
++	journal.scroll.velocity=Vector2.ZERO
++	check(journal.scroll.scroll_vertical>30,"Pet skill cards swipe from Learn button")
++	check(RunState.gold==gold and not MoleSkills.has_skill("trailrunner"),"Swipe over Learn never buys a skill")
++	await gesture("capture",Vector2.ZERO,Vector2.ZERO,"pet-skills-swiped")
++	journal.scroll.scroll_vertical=0;await settle()
++	await gesture("cancel",point(learn,Vector2(0.5,0.5)))
++	check(RunState.gold==gold,"Canceled finger never buys a skill")
++	await gesture("tap",point(learn,Vector2(0.5,0.5)))
++	check(MoleSkills.has_skill("trailrunner") and RunState.gold==gold-35,"A deliberate tap still learns exactly once")
++	await swipe(journal.scroll,false,"pet-text-swiped")
++	journal.close_journal()
++	var cargo: Dictionary={}
++	for id in RunState.RESOURCE_IDS:cargo[id]=20
++	main.resource_inventory.open_inventory(cargo,{},false);await settle()
++	await swipe(main.resource_inventory.find_child("Scroll",true,false),false,"inventory-swiped")
++	main.resource_inventory.close_inventory()
++	main.premium_menu.open_menu(true,"Mossvein",true,false);main.premium_menu.show_achievements();await settle()
++	await swipe(main.premium_menu.achievement_scroll,false,"achievements-swiped")
++	main.premium_menu.close_menu()
++	driver._prepare_commerce_capture("starforge_owned_active");await settle()
++	var selected: String=main.commerce_panel._selected_item_id
++	await swipe(main.commerce_panel.catalog_scroll,true,"shop-catalog-swiped")
++	check(main.commerce_panel._selected_item_id==selected,"Swiping item cards does not select another item")
++	# The small mobile details pane overflows for mastery descriptions/costs.
++	var detail: ScrollContainer=main.commerce_panel.overview_scroll
++	if detail.get_v_scroll_bar().max_value > detail.get_v_scroll_bar().page + 20:
++		await swipe(detail,false,"shop-details-swiped")
++	else:
++		check(detail is TouchScrollContainer,"Non-overflowing shop details also support touch")
++		await gesture("capture",Vector2.ZERO,Vector2.ZERO,"shop-details-fit")
++	main.commerce_panel.close_commerce()
++	if main.developer_menu != null:
++		main.developer_menu.open_menu()
++		await settle()
++		await swipe(main.developer_menu.scroll,false,"dev-tools-swiped")
++		main.developer_menu.close_menu()
++	print("EVER_DEEPER_OVERHAUL_GAMEPLAY_%s checks=%d failures=%s" % ["OK" if failures.is_empty() else "FAILED",checks,JSON.stringify(failures)])
++	return failures.is_empty()
+--- a/scripts/ui/commerce_panel.gd
++++ b/scripts/ui/commerce_panel.gd
+@@ -595,7 +595,7 @@
+ 	hero_state_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+ 	hero_state_plate.add_child(hero_state_label)
+ 
+-	catalog_scroll = ScrollContainer.new()
++	catalog_scroll = preload("res://scripts/ui/touch_scroll_container.gd").new()
+ 	catalog_scroll.name = "CatalogScroll"
+ 	catalog_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+ 	catalog_scroll.custom_minimum_size.y = 96
+@@ -625,7 +625,7 @@
+ 	overview_heading.name = "Heading"
+ 	overview_heading.visible = false
+ 	overview_layout.add_child(overview_heading)
+-	overview_scroll = ScrollContainer.new()
++	overview_scroll = preload("res://scripts/ui/touch_scroll_container.gd").new()
+ 	overview_scroll.name = "DetailsScroll"
+ 	overview_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+ 	overview_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+--- a/scripts/ui/premium_menu.gd
++++ b/scripts/ui/premium_menu.gd
+@@ -12,7 +12,7 @@
+ const MUTED: = Color("789384")
+ const INK: = Color("07120d")
+ const IPHONE_LANDSCAPE_ASPECT: = 1.95
+-const DEV_RELEASE_VERSION: = "0.46.0-dev.2"
++const DEV_RELEASE_VERSION: = "0.46.1-dev.1"
+ 
+ 
+ static func release_version() -> String:
+@@ -594,7 +594,7 @@
+ 	achievement_count_label.position = Vector2(0, -6)
+ 	achievement_count_label.size = Vector2(880, 28)
+ 	detail_body.add_child(achievement_count_label)
+-	achievement_scroll = ScrollContainer.new()
++	achievement_scroll = preload("res://scripts/ui/touch_scroll_container.gd").new()
+ 	achievement_scroll.position = Vector2(0, 30)
+ 	achievement_scroll.size = Vector2(880, 370)
+ 	achievement_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+--- a/scripts/ui/resource_inventory.gd
++++ b/scripts/ui/resource_inventory.gd
+@@ -167,7 +167,7 @@
+ 	protected_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+ 	layout.add_child(protected_note)
+ 
+-	var scroll: = ScrollContainer.new()
++	var scroll: = preload("res://scripts/ui/touch_scroll_container.gd").new()
+ 	scroll.name = "Scroll"
+ 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+ 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+--- a/scripts/ui/touch_scroll_container.gd
++++ b/scripts/ui/touch_scroll_container.gd
+@@ -0,0 +1,108 @@
++class_name TouchScrollContainer
++extends ScrollContainer
++## One-finger scrolling over labels, cards and buttons, including mobile Web.
++## A drag cancels the pending button press; a stationary tap retains normal GUI input.
++var web_cancel_callback: JavaScriptObject
++var finger: int = -1
++var origin: Vector2
++var previous: Vector2
++var dragging: bool = false
++var velocity: Vector2 = Vector2.ZERO
++var last_motion: int = 0
++var suppress_mouse_until: int = 0
++
++func _ready() -> void:
++	scroll_deadzone = 6
++	visibility_changed.connect(_cancel)
++	if OS.has_feature("web"):
++		web_cancel_callback = JavaScriptBridge.create_callback(func(_args: Array): _cancel())
++		JavaScriptBridge.get_interface("window").addEventListener("touchcancel", web_cancel_callback, true)
++
++func _exit_tree() -> void:
++	if web_cancel_callback != null:
++		JavaScriptBridge.get_interface("window").removeEventListener("touchcancel", web_cancel_callback, true)
++
++func _local(point: Vector2) -> Vector2:
++	return get_global_transform_with_canvas().affine_inverse() * point
++
++func _on_bar(point: Vector2) -> bool:
++	for bar in [get_h_scroll_bar(), get_v_scroll_bar()]:
++		if bar.is_visible_in_tree() and Rect2(Vector2.ZERO, bar.size).has_point(bar.get_global_transform_with_canvas().affine_inverse() * point): return true
++	return false
++
++func _notify_content(what: int) -> void:
++	for child in get_children():
++		if child != get_h_scroll_bar() and child != get_v_scroll_bar(): child.propagate_notification(what)
++
++func _begin_drag() -> void:
++	dragging = true
++	_notify_content(Control.NOTIFICATION_SCROLL_BEGIN)
++	var focused: Control = get_viewport().gui_get_focus_owner()
++	if focused != null and is_ancestor_of(focused): focused.release_focus()
++	scroll_started.emit()
++
++func _cancel() -> void:
++	if finger >= 0:
++		if not dragging: _begin_drag()
++		suppress_mouse_until = Time.get_ticks_msec() + 150
++	_finish(false)
++
++func _finish(coast: bool) -> void:
++	if dragging:
++		_notify_content(Control.NOTIFICATION_SCROLL_END)
++		scroll_ended.emit()
++	finger = -1
++	dragging = false
++	if not coast: velocity = Vector2.ZERO
++
++func _input(event: InputEvent) -> void:
++	if not is_visible_in_tree(): return
++	if event is InputEventMouseButton or event is InputEventMouseMotion:
++		if dragging or Time.get_ticks_msec() < suppress_mouse_until:
++			get_viewport().set_input_as_handled()
++		return
++	if event is InputEventScreenTouch:
++		if event.pressed:
++			if finger >= 0 or not Rect2(Vector2.ZERO, size).has_point(_local(event.position)) or _on_bar(event.position): return
++			finger = event.index
++			origin = _local(event.position)
++			previous = origin
++			velocity = Vector2.ZERO
++			last_motion = Time.get_ticks_msec()
++			suppress_mouse_until = 0
++		elif event.index == finger:
++			if event.canceled and not dragging: _begin_drag()
++			if dragging:
++				get_viewport().set_input_as_handled()
++				suppress_mouse_until = Time.get_ticks_msec() + 150
++			_finish(not event.canceled and Time.get_ticks_msec() - last_motion < 120)
++	elif event is InputEventScreenDrag and event.index == finger:
++		var point: Vector2 = _local(event.position)
++		var distance: Vector2 = point - origin
++		if not dragging and distance.length() < 6.0: return
++		if not dragging: _begin_drag()
++		var movement: Vector2 = previous - point
++		var now: int = Time.get_ticks_msec()
++		velocity = movement / maxf(float(now - last_motion) / 1000.0, 0.016)
++		velocity = velocity.limit_length(2200.0)
++		_move(movement)
++		previous = point
++		last_motion = now
++		get_viewport().set_input_as_handled()
++
++func _move(amount: Vector2) -> void:
++	if horizontal_scroll_mode != SCROLL_MODE_DISABLED:
++		get_h_scroll_bar().value += amount.x
++	if vertical_scroll_mode != SCROLL_MODE_DISABLED:
++		get_v_scroll_bar().value += amount.y
++
++func _process(delta: float) -> void:
++	if not is_visible_in_tree():
++		velocity = Vector2.ZERO
++		return
++	if finger >= 0 or velocity.length() < 5.0: return
++	_move(velocity * minf(delta, 0.05))
++	velocity = velocity.move_toward(Vector2.ZERO, 2600.0 * delta)
++
++func _notification(what: int) -> void:
++	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and is_inside_tree(): _cancel()
+--- a/project.godot
++++ b/project.godot
+@@ -11,7 +11,7 @@
+ [application]
+ 
+ config/name="Ever Deeper"
+-config/version="0.46.0"
++config/version="0.46.1"
+ run/main_scene="res://scenes/main/main.tscn"
+ config/use_custom_user_dir=true
+ config/custom_user_dir_name="Ever Deeper- Godot Production Port"
