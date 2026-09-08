@@ -34,6 +34,17 @@ func run() -> void:
 		for field in root.find_children("StaticLightField", "", true, false):
 			field.enabled = false
 			field.queue_free()
+	if mode == "dev9-settled":
+		# The cache uploads a new light texture after drawing. Wait for this fixture work
+		# and its atlas upload before recording a reference from the static preview.
+		for frame in 120:
+			var pending := false
+			for field in root.find_children("StaticLightField", "", true, false):
+				pending = pending or field.baking or field._scheduled
+			if not pending:
+				await RenderingServer.frame_post_draw
+				break
+			await process_frame
 	# Match the production gate, then test repeated redraws and settled restoration.
 	for level in [1,2,1,1,2,1]:
 		await sample(level)

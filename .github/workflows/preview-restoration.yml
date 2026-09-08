@@ -14,15 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - mode: dev8
-            run_id: 34267571804
-            artifact: hero-v28-candidate
-            pck: d342642443ca76d46f465f1883f68ff9ea226e9e79cea5330e00c74e37e01378
-          - mode: dev9
-            run_id: 34278070936
-            artifact: dev-lighting-candidate
-            pck: 3d0d4c5b79ee3db408dcfcafa20f5d793129a41317068e26bd19760d1d2c215f
-          - mode: dev9-originals
+          - mode: dev9-settled
             run_id: 34278070936
             artifact: dev-lighting-candidate
             pck: 3d0d4c5b79ee3db408dcfcafa20f5d793129a41317068e26bd19760d1d2c215f
