@@ -139,3 +139,38 @@ The final DEV6 workflow exports both flavors, runs the ten current gameplay case
 both flavor gates, compares paired native renders of the affected worlds and lighting
 states, then runs the actual 120-second probe and real touch cancellation in Chromium
 at DPR3. Publication is pending those exact-package gates and visual inspection.
+
+
+## Exact DEV6 package review completed
+
+Package source: cdfd85360fe8707225ded2e0a52ef3870a5f4ec4.
+[Final package run 34256408421](https://github.com/Corpax88/Ever-Deeper/actions/runs/34256408421)
+passed all ten jobs: build/current gameplay and both flavor checks, seven native groups,
+and Chromium hub/Mossvein at DPR3. Candidate artifact: 10068112526.
+The two earlier package attempts corrected QA-only assumptions about post-victory
+Deepheart entry and Starfall's absence of authored drill gates; no runtime fix was needed.
+
+35 paired native comparisons and all preview/browser images were inspected. Coverage
+includes all four Depth 2 profiles, mined/corner/permanent terrain, the hub, all five
+headlamp styles, surface, four Depth 1 profiles, Deepheart and Endless layers 1 and 12.
+Static differences are normally at most 2/255 per channel; a few isolated pixels reach
+3-5/255 at maximum range/styles. Larger hub differences are its elevator animation,
+which also changes in baseline controls. No visible quality change was found.
+
+Image inspection showed the initial three gate-location fixtures had fallen back to the
+entrance. Therefore [supplemental run 34257483120](https://github.com/Corpax88/Ever-Deeper/actions/runs/34257483120)
+uses the identical PCK with an external harness and asserts the gate is actually inside
+the viewport, its segments are visible, and mining records one persistent gate strike.
+All six intact/struck gate pairs were inspected and passed. The harness and its workflow
+are required alongside the package suite; Starfall has no such gates in authored data.
+
+The two browser runs each completed seven original-duration stages (120.80626s hub,
+120.824965s Mossvein), restored all graphics and skills, and passed real touch cancellation.
+Both retained a 2532×1170 drawing buffer at DPR3. These are software-renderer results,
+not a physical iPhone FPS guarantee.
+
+The exact nine-file size/SHA256 manifest and artifact identities are in
+[DEV6 review](../../../.github/dev-lighting/review.json). Engine JS/WASM, audio worklets,
+art/icons, production settings and save APIs remain unchanged. The protected headlamp
+hash is the sole intentional protected-source change. No publication is considered
+complete until the publisher verifies all 18 public files and preserves LIVE 0.46.9.

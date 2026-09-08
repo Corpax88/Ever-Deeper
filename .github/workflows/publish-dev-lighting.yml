@@ -1,0 +1,58 @@
+name: Publish reviewed DEV6 lighting optimization
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-dev-lighting.yml']
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages-ever-deeper
+  cancel-in-progress: false
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require the successful inspected package run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34256408421 --jq .conclusion)" = success
+          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34256408421 --jq .head_sha)" = cdfd85360fe8707225ded2e0a52ef3870a5f4ec4
+          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34257483120 --jq .conclusion)" = success
+          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34257483120 --jq .head_sha)" = 350f47680aa5ead20567aca4e56c858f5c5ca8a7
+      - uses: actions/download-artifact@v4
+        with:
+          name: dev-lighting-candidate
+          run-id: 34256408421
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - name: Preserve the previous release and stage reviewed files
+        run: python3 .github/dev-lighting/publish.py prepare "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/site" "$RUNNER_TEMP/rollback"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-before-dev6-lighting-rollback
+          path: ${{ runner.temp }}/rollback
+          retention-days: 30
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/site
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 .github/dev-lighting/publish.py verify

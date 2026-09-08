@@ -58,3 +58,10 @@ for the hub and Depth 2 while the world owners retain drawing and gameplay state
 the original draw paths and reconstructed original cone, including mining and corners.
 `.github/workflows/dev-lighting.yml` builds both flavors, runs current gameplay gates,
 then native visual cases and the 120-second Chromium DPR3 probe.
+
+
+The DEV6 package receipt lives in `.github/dev-lighting/review.json`; DEV-only publication
+uses `.github/workflows/publish-dev-lighting.yml` and its sibling publisher.
+`tools/review-lit-gates.gd` and `.github/workflows/dev-lighting-gates.yml` verify actual
+visible, intact/struck gates from the unchanged exported PCK. Run this alongside the
+package suite because its initial gate positions can fall back to the entrance.
