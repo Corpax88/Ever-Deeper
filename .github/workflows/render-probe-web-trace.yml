@@ -1,8 +1,8 @@
-name: Trace WebGL probe warning on identical candidate
+name: Compare WebGL engine startup with a standalone framebuffer
 on:
   push:
     branches: [codex-render-probe]
-    paths: ['.github/workflows/render-probe-web-trace.yml', '.github/dev-render-probe/web-trace.mjs']
+    paths: ['.github/workflows/render-probe-web-trace.yml', '.github/dev-render-probe/web-baseline.mjs']
 permissions:
   contents: read
   actions: read
@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        skip_context: ['0', '1']
+        mode: ['menu', 'probe', 'minimal']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -25,17 +25,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Compare existing context observer with an omitted observer
-        env:
-          PROBE_GL_TRACE: '0'
-          PROBE_SKIP_CONTEXT: ${{ matrix.skip_context }}
+      - name: Observe unchanged engine and standalone framebuffer
         run: |
           npm ci
           npx playwright install --with-deps webkit
-          node .github/dev-render-probe/web-trace.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review" hub
+          node .github/dev-render-probe/web-baseline.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review" '${{ matrix.mode }}'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: render-probe-context-control-${{ matrix.skip_context }}
+          name: render-probe-webgl-baseline-${{ matrix.mode }}
           path: ${{ runner.temp }}/review
           retention-days: 30

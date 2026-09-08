@@ -4,7 +4,6 @@
   const canvas = document.getElementById('canvas');
   let scale = 1, active = false, raf = 0, previous = 0, began = 0, abortReason = '';
   let count = 0, cursor = 0, watchdog = 0;
-  let gl = null;
   const times = new Float64Array(4096), durations = new Float64Array(4096);
   function resize() {
     const dpr = window.devicePixelRatio || 1;
@@ -31,7 +30,6 @@
   const api = {
     begin() {
       if (active || document.hidden) return false;
-      gl = canvas.getContext('webgl2');
       active = true; abortReason = ''; scale = 1; resize();
       previous = 0; count = 0; cursor = 0; began = performance.now();
       watchdog = setTimeout(() => stop('Diagnostic timed out'), 150000);
@@ -47,7 +45,6 @@
       for (let i = 0; i < count; i++) if (times[i] >= limit) values.push(durations[i]);
       const elapsed = values.reduce((a, b) => a + b, 0); values.sort((a, b) => a - b);
       return {active, abort_reason: abortReason, scale, width: canvas.width, height: canvas.height,
-        drawing_buffer_width: gl?.drawingBufferWidth || 0, drawing_buffer_height: gl?.drawingBufferHeight || 0,
         css_width: window.innerWidth, css_height: window.innerHeight, dpr: devicePixelRatio || 1,
         raf_fps: elapsed ? values.length * 1000 / elapsed : 0, raf_frames: values.length,
         raf_p95_ms: values.length ? values[Math.ceil(values.length * 0.95) - 1] : 0};

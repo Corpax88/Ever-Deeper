@@ -54,8 +54,8 @@ func start(main: Node) -> bool:
 	game = main
 	phase = String(game.get("phase"))
 	mine_id = String(game.get("current_mine_id"))
-	if phase not in ["hub", "depth"]:
-		start_error = "Enter the hub or a mine first"; return false
+	if phase not in ["hub", "depth"] or (phase == "depth" and int(RunState.current_depth) != 2):
+		start_error = "Start in the hub or Depth 2"; return false
 	world = game.get("hub_world" if phase == "hub" else "depth_world")
 	if world == null:
 		start_error = "Wait for the area to load"; return false
@@ -102,7 +102,7 @@ func _exit_tree() -> void:
 
 func _process(_delta: float) -> void:
 	if not running: return
-	if not is_instance_valid(world) or String(game.get("phase")) != phase or String(game.get("current_mine_id")) != mine_id or bool(game.get("menu_open")):
+	if not is_instance_valid(world) or String(game.get("phase")) != phase or String(game.get("current_mine_id")) != mine_id or (phase == "depth" and int(RunState.current_depth) != 2) or bool(game.get("menu_open")):
 		cancel("Area or menu changed"); return
 	var now := Time.get_ticks_usec()
 	var elapsed := float(now - stage_started) / 1000000.0
@@ -167,7 +167,7 @@ func settings_restored() -> bool:
 	if OS.has_feature("web"):
 		var info := _browser_snapshot()
 		var expected := Vector2(roundf(float(info.get("css_width", 0)) * float(info.get("dpr", 1))), roundf(float(info.get("css_height", 0)) * float(info.get("dpr", 1))))
-		return is_equal_approx(float(info.get("scale", 0.0)), 1.0) and Vector2(float(info.get("width", 0)), float(info.get("height", 0))) == expected and Vector2(float(info.get("drawing_buffer_width", 0)), float(info.get("drawing_buffer_height", 0))) == expected
+		return is_equal_approx(float(info.get("scale", 0.0)), 1.0) and Vector2(float(info.get("width", 0)), float(info.get("height", 0))) == expected
 	return DisplayServer.window_get_size() == original_window
 
 func _finish(reason: String) -> void:
@@ -210,7 +210,6 @@ func _snapshot() -> Dictionary:
 			if entry.node.shadow_enabled: shadows += 1
 			if entry.pet: pet += 1
 	return {"canvas_width":int(info.get("width", size.x)), "canvas_height":int(info.get("height", size.y)),
-		"render_width":int(info.get("drawing_buffer_width", size.x)), "render_height":int(info.get("drawing_buffer_height", size.y)),
 		"dpr":float(info.get("dpr", 1)), "raf_fps":float(info.get("raf_fps", 0)), "raf_frames":int(info.get("raf_frames", 0)),
 		"raf_p95_ms":float(info.get("raf_p95_ms", 0)), "lights":enabled, "shadows":shadows, "pet_lights":pet,
 		"cpu_ms":Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,

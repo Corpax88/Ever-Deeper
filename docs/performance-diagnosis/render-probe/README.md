@@ -45,7 +45,7 @@ half-resolution stage. The exact exported WASM/engine JavaScript are not modifie
 
 Reference: [Godot HTML shell configuration](https://docs.godotengine.org/en/stable/tutorials/platform/web/html5_shell_classref.html#canvasresizepolicy).
 The docs flag their 4.7 text as potentially outdated, so actual exported-package dimensions
-and touch mapping are gates. Plain exports retain Godot's normal adaptive policy; the
+and touch mapping are gates. Browser QA retains the context returned during the engine's own initial context creation and reads its drawing-buffer dimensions; the shipped probe never requests or reads a GL context. Native screenshots verify the actual framebuffer size. Plain exports retain Godot's normal adaptive policy; the
 diagnostic refuses to start in a web shell that lacks its controller.
 
 ## Verification
@@ -67,3 +67,14 @@ separately compared during the DEV4 investigation. The ordinary game keeps its u
 
 Implementation prepared; package, rendered review and deployment pending. LIVE must remain
 byte-identical to 0.46.9. Only an exact reviewed DEV candidate may be published as dev.5.
+
+## Issues caught during candidate review
+
+- The first native runner lacked ripgrep; installing it makes every error gate executable.
+- Direct JavaScript boolean acknowledgements did not reach successful GDScript startup in the exported WebKit run despite the controller reporting active. The bridge now serializes acknowledgements, matching the existing JSON snapshot path. This observation is not a diagnosis of the phone slowdown.
+- Calling the low-level native display resize changed reported dimensions without resizing the captured framebuffer. The probe now uses the Window size property; native captures must match every reported size. ViewportTexture size is not used as the physical framebuffer oracle.
+- The report has its own canvas layer above the companion interface, keeping the version and values readable.
+
+Failed candidates are not published. The final review records the successful immutable candidate, including its browser touch/resize checks.
+
+WebGL investigation: the direct boolean startup issue is fixed. Native hub and Depth 2 now pass the complete run with real framebuffer resizing. WebKit still reports the same-image blit warning during rendering. It occurs with screenshots disabled and with the extra context observer omitted. Full tests now retain this warning and continue collecting functional evidence, but still fail the final gate if it occurs. Baseline engine and standalone WebGL controls are in progress.

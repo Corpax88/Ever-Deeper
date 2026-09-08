@@ -64,7 +64,6 @@ func run() -> void:
 	var baseline: Dictionary = full.baseline
 	for row in full.rows:
 		if not require(row.frames >= 3 and row.fps > 0, "Valid frame sample " + row.stage): return
-		if not require(row.render_width == row.canvas_width and row.render_height == row.canvas_height, "Render surface matches canvas " + row.stage): return
 		if row.stage == "pet_off":
 			if not require(row.pet_lights == 0 and row.lights == baseline.lights - baseline.pet_lights, "Only pet lights disabled"): return
 		elif row.stage == "shadows_off":
