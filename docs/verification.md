@@ -91,3 +91,15 @@ transparent texture bounds. The gameplay check now tests the unchanged light-nod
 position (`shadow_origin_preserved`), while `origin_centered` keeps its old diagnostic
 meaning (zero texture offset). Light energy, color, range, occlusion and five styles
 are retained. No other protected-file baseline changes. See the lighting-cost report.
+
+## DEV7 floor composition
+
+The existing protected-file baselines remain unchanged. The new floor shader shares
+lighting across the original textured floor and translucent color wash. The old
+two-pass path remains a QA reference. This is not a bit-identical change: separate
+framebuffer clipping and rounding can differ in isolated bright highlights. Inspect
+paired output, including maximum-range light styles, before accepting a package.
+
+The final package workflow includes the visible/struck gate harness using the same
+artifact; a separate supplemental run is no longer needed. Source and production
+flavor checks, native image review and two full DPR3 browser tests remain required.

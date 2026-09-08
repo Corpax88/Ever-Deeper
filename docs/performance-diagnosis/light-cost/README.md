@@ -174,3 +174,54 @@ The exact nine-file size/SHA256 manifest and artifact identities are in
 art/icons, production settings and save APIs remain unchanged. The protected headlamp
 hash is the sole intentional protected-source change. No publication is considered
 complete until the publisher verifies all 18 public files and preserves LIVE 0.46.9.
+
+
+## Physical DEV6 retest and DEV7 floor follow-up
+
+The user supplied IMG_1744.jpeg from the same affected iPhone. Its complete
+two-minute hub report starts at 60 FPS, then measures 30.1 original, 32.2 pet lights
+off, 29.7 restored, 30.1 shadows off, 30.0 restored, 60.0 all lights off and 30.0
+restored. This is about 52% above DEV5's 19.8 original FPS, but the drop remains.
+Full transcription: `iphone-dev6.json`. Temperature is still unmeasured.
+
+Run 34261639588 loads the published DEV6 PCK without rebuilding it. Both hub and
+Mossvein jobs pass. Floor lighting represents approximately 53–55% of the extra
+lighting time in these software-renderer fixtures. Reducing floor chunks to 64 or
+128 pixels provides little benefit and increases draw calls; 256 is retained.
+
+Run 34261843315 compares two versus one floor pass in the same running scenes,
+then restores DEV6. All four jobs pass. `dev7-floor-study.json` records all rows
+and maps the inherited harness's stage names to the actual variants.
+
+| Area | Render buffer | DEV6 FPS | Single floor pass FPS | Restored FPS |
+|---|---|---:|---:|---:|
+| Hub | 844×390 | 23.84 | 30.00 | 23.88 |
+| Hub | 2328×1260 | 2.999 | 3.974 | 3.003 |
+| Mossvein Depth 2 | 844×390 | 32.86 | 40.19 | 32.36 |
+| Mossvein Depth 2 | 2328×1260 | 3.243 | 4.266 | 3.258 |
+
+These are controlled Mesa software-renderer comparisons, not iPhone predictions.
+The selected change combines the existing textured floor and translucent color wash
+before their shared lighting. Artwork, UVs, 256px chunk geometry, light definitions,
+shadows, canvas resolution, DPR, gameplay and saves retain the DEV6 behavior. The
+reference two-pass path remains available to QA through `composite_pass=false`.
+
+This is visually equivalent, not bit-identical rendering. The original framebuffer
+clips each lit pass separately; the combined pass clips after composition. In the
+initial hub pair, 124 isolated bright floor pixels outside the animated elevator
+ring differ by more than 3/255, with maximum channel difference 23/255. These tiny
+highlights were inspected at 2× zoom. Most differences are at most 1/255; Mossvein's
+whole initial pair differs by at most 1/255. Final package visual review is required
+across every affected biome, maximum light styles, corners, mining and reached gates.
+
+Exact-package DEV7 baseline comparisons retain all DEV6 chunking and cone geometry,
+and toggle only the floor pass. The visible/struck gate job now runs in the same
+package workflow and consumes that workflow's exact candidate.
+
+Final DEV7 package gate: run 34262864741, source
+`85b808bd2390a2fc81b66a503ab57f0a28eed50c`, all 11 jobs successful. All 35 paired
+cases, previews and both browser reports were inspected. Static case maxima remain
+29/255 or below in isolated bright floor highlights, with no visible regression.
+The eight unaffected-world pairs are pixel-identical. Full metrics are in
+`dev7-pixel-comparison.json`; immutable package identities are in
+`.github/dev-lighting/review.json`. Physical DEV7 performance is not yet verified.
