@@ -54,7 +54,9 @@ func run() -> void:
 			print("PROBE_STAGE_READY " + JSON.stringify({"area":area,"stage":id,"state":probe._snapshot()}))
 			if not OS.has_feature("web"):
 				await RenderingServer.frame_post_draw
-				main.get_viewport().get_texture().get_image().save_png(output_dir.path_join(area + "-" + id + ".png"))
+				var capture: Image = main.get_viewport().get_texture().get_image()
+				if not require(capture.get_size() == DisplayServer.window_get_size(), "Native framebuffer matches window " + id): return
+				capture.save_png(output_dir.path_join(area + "-" + id + ".png"))
 	while not probe.result.has("graphics_restored"): await main.get_tree().process_frame
 	var full: Dictionary = probe.result.duplicate(true)
 	if not require(not full.cancelled and full.graphics_restored and full.rows.size() == 9 and float(full.duration_seconds) >= 120.0, "Complete original-duration run"): return
@@ -105,7 +107,7 @@ func run() -> void:
 		await probe.completed
 		if not require(probe.result.cancelled and probe.settings_restored(), "Resize abort restores full current DPR"): return
 		JavaScriptBridge.eval("window.__renderProbeResizeDone=true")
-		while JavaScriptBridge.eval("window.__renderProbeResizeRestored === true") != true: await main.get_tree().process_frame
+		while JavaScriptBridge.eval("JSON.stringify(window.__renderProbeResizeRestored === true)") != "true": await main.get_tree().process_frame
 	probe.result = full
 	probe.rows.assign(full.rows)
 	probe.early = full.early

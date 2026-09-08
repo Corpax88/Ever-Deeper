@@ -228,9 +228,13 @@ func toggle_frame_meter() -> void:
 
 func start_render_probe() -> bool:
 	if render_probe == null:
+		var probe_layer := CanvasLayer.new()
+		probe_layer.name = "RenderProbeLayer"
+		probe_layer.layer = 200
+		add_child(probe_layer)
 		render_probe = load("res://scripts/dev/render_probe.gd").new()
 		render_probe.name = "RenderProbe"
-		add_child(render_probe)
+		probe_layer.add_child(render_probe)
 		render_probe.completed.connect(_on_render_probe_completed)
 	if not render_probe.start(get_tree().current_scene):
 		set_status(render_probe.start_error, true)

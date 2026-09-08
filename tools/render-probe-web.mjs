@@ -44,6 +44,7 @@ try {
   page.on('pageerror', error => errors.push(String(error)));
   page.on('console', message => {
     const value = message.text(); logs.push(value);
+    if (/^PROBE_(START_STATE|BROWSER_BEGIN)/.test(value)) console.log(value);
     if (/SCRIPT ERROR|Parse Error|^ERROR:|INVALID_OPERATION|INVALID_FRAMEBUFFER_OPERATION|WebGL.*error/i.test(value)) errors.push(value);
     if (value.startsWith('RENDER_PROBE_REVIEW_OK ')) complete = true;
     if (value.startsWith('PROBE_STAGE_READY ')) {
