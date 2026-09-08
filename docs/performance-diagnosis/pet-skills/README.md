@@ -24,7 +24,7 @@ The clean fix is [draft PR 10](https://github.com/Corpax88/Ever-Deeper/pull/10).
 
 ## Findings
 
-No large delayed collapse appeared in the 60-second idle traces. Corrected idle late/early FPS ratios ranged about 0.986–1.044 across all states. This is inconsistent with reproducing the user's roughly 50-to-14 FPS fall on these runners, but cannot exclude a physical-device or browser-specific issue.
+No large delayed collapse appeared in the 60-second idle traces. Corrected idle late/early FPS ratios ranged about 0.978–1.044 across all states. This is inconsistent with reproducing the user's roughly 50-to-14 FPS fall on these runners, but cannot exclude a physical-device or browser-specific issue.
 
 Pet lighting has a sustained rendering cost. In the corrected hub Lantern test, off/on/restored FPS was 20.45 / 15.51 / 20.24, roughly a 24% loss while lit. The hub Long Beam test was 18.51 / 17.33 / 18.69, roughly a 7% loss with the longer beam. Mossvein Lantern was 16.56 / 11.91 / 16.44. These are steady costs, not observed delayed cliffs. Mossvein Long Beam has enough between-trial variation that this run does not isolate a reliable effect size there.
 
