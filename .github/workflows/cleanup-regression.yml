@@ -1,0 +1,32 @@
+name: Compare cleanup with original normal startup
+on:
+  push:
+    branches: [codex-cleanup-regression]
+    paths: ['.github/cleanup-regression/**', '.github/workflows/cleanup-regression.yml']
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        area: [hub, mossvein]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the matching engine and software renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri
+          curl -L --fail --retry 3 --retry-all-errors https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Run original and cleaned source for 90 seconds each
+        run: python3 .github/cleanup-regression/run_pair.py '${{ matrix.area }}'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cleanup-normal-startup-${{ matrix.area }}
+          path: ${{ runner.temp }}/cleanup-regression/results
+          retention-days: 30
