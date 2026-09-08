@@ -4,7 +4,7 @@ import {readFile, writeFile} from 'node:fs/promises';
 import path from 'node:path';
 const [root, output] = process.argv.slice(2).map(p => path.resolve(p));
 const audioEnabled = process.argv[4] === 'audio';
-const rows = [], errors = [], logs = [];
+const rows = [], errors = [], logs = [], shutdownErrors = [], webglWarnings = [];
 let complete = false;
 const server = http.createServer(async (req,res) => {
   try {
@@ -40,8 +40,8 @@ try {
     const frame=()=>{window.audioProbe.frames++;requestAnimationFrame(frame);};requestAnimationFrame(frame);
     setInterval(()=>{const p=window.audioProbe;const now=performance.now();p.elapsed+=(now-p.last)/1000;p.samples.push({seconds:p.elapsed,raf_fps:p.frames*1000/(now-p.last),contexts:p.contexts.map(c=>({state:c.state,time:c.currentTime})),starts:p.starts});p.frames=0;p.last=now;},5000);
   });
-  page.on('pageerror',e=>errors.push(String(e)));
-  page.on('console',msg=>{const s=msg.text();logs.push(s);if(s.startsWith('METER_READING ')) rows.push(JSON.parse(s.slice(14)));if(s.includes('METER_REVIEW_OK')) complete=true;if(/SCRIPT ERROR|Parse Error/.test(s)) errors.push(s);});
+  page.on('pageerror',e=>(complete?shutdownErrors:errors).push(String(e)));
+  page.on('console',msg=>{const s=msg.text();logs.push(s);if(s.includes('WebGL:')) webglWarnings.push({afterComplete:complete,message:s});if(s.startsWith('METER_READING ')) rows.push(JSON.parse(s.slice(14)));if(s.includes('METER_REVIEW_OK')) complete=true;if(/SCRIPT ERROR|Parse Error/.test(s)) errors.push(s);});
   await page.goto(`http://127.0.0.1:${server.address().port}/`);
   if(audioEnabled) {
     await page.waitForFunction(()=>window.audioProbe.contexts.length>0,{},{timeout:45000});
@@ -52,11 +52,11 @@ try {
   const deadline=Date.now()+200000;
   while(!complete && !errors.length && Date.now()<deadline) await page.waitForTimeout(250);
   await page.screenshot({path:path.join(output,'browser-final.png')});
-  await writeFile(path.join(output,'browser-console.json'),JSON.stringify({complete,errors,logs},null,2));
+  await writeFile(path.join(output,'browser-console.json'),JSON.stringify({complete,errors,shutdownErrors,webglWarnings,logs},null,2));
   if(!complete||errors.length||rows.length!==2) throw new Error(JSON.stringify({complete,errors,rows}));
   const audioState=await page.evaluate(()=>{const p=window.audioProbe;return {starts:p.starts,contexts:p.contexts.map(c=>({state:c.state,time:c.currentTime})),samples:p.samples};});
-  await writeFile(path.join(output,'audio-probe.json'),JSON.stringify({audioEnabled,...audioState,rows},null,2));
-  if(audioEnabled && !(audioState.starts>0 && audioState.contexts.some(c=>c.state==='running' && c.time>30))) throw new Error('Real audio was not exercised for >30 seconds');
+  await writeFile(path.join(output,'audio-probe.json'),JSON.stringify({audioEnabled,...audioState,rows,shutdownErrors,webglWarnings},null,2));
+  if(audioEnabled && !(audioState.starts>0 && audioState.samples.some(s=>s.contexts.some(c=>c.state==='running' && c.time>30)))) throw new Error('Real audio was not exercised for >30 seconds');
   const canvas=await page.locator('canvas').evaluate(c=>({w:c.width,h:c.height,dpr:devicePixelRatio}));
   const last=rows.at(-1);
   if(last.canvas_width!==canvas.w||last.canvas_height!==canvas.h||last.dpr!==canvas.dpr) throw new Error('Incorrect physical canvas diagnostics');

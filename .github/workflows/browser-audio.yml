@@ -25,6 +25,10 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/audio" "$RUNNER_TEMP/dummy"
           node tools/audio-web-probe.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/audio" audio
+      - name: Dummy audio control
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/dummy"
           node tools/audio-web-probe.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/dummy" dummy
       - uses: actions/upload-artifact@v4
         if: always()
