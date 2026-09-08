@@ -99,3 +99,12 @@ standard lighting function. This addresses unnecessary lighting of transparent m
 in the authored station and cave-edge textures. Runtime adoption is pending measurements
 and paired image review. Shader COLOR already includes the sampled texture by this point:
 [CanvasItem fragment COLOR](https://docs.godotengine.org/en/stable/tutorials/shaders/shader_reference/canvas_item_shader.html).
+
+## Transparent discard rejected
+
+[Run 34252458972](https://github.com/Corpax88/Ever-Deeper/actions/runs/34252458972),
+source `bcb1a3a4c7381cd4652dc049e53ab7d0951ded6d`, passed all four jobs. Discard alone
+was slower than baseline; adding it to floor+cone improvements gave no consistent gain.
+It is not adopted. The next test partitions station drawing and cave terrain rows into
+bounded CanvasItems, reusing the existing native drawing functions and exact ordering.
+Terrain top and edge passes retain their original row/column order to preserve overlaps.

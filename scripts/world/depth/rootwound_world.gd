@@ -3,6 +3,9 @@ extends Node2D
 
 const LitFloorChunksScript = preload("res://scripts/lighting/lit_floor_chunks.gd")
 var lit_floor_chunks: Node2D
+const LitDrawSectionsScript = preload("res://scripts/lighting/lit_draw_sections.gd")
+var lit_draw_sections: Node2D
+var _draw_canvas: CanvasItem
 
 signal exit_context_changed(active: bool)
 signal context_changed(context: String)
@@ -203,6 +206,9 @@ var inactive_state_fingerprint_valid: = false
 func _ready() -> void :
 	lit_floor_chunks = LitFloorChunksScript.new()
 	add_child(lit_floor_chunks)
+	lit_draw_sections = LitDrawSectionsScript.new()
+	add_child(lit_draw_sections)
+	_draw_canvas = self
 	player.moved.connect(_on_player_moved)
 	player.facing_changed.connect(_on_player_facing_changed)
 
@@ -2108,6 +2114,7 @@ func _request_redraw() -> void :
 
 
 func _draw() -> void :
+	_draw_canvas = self
 	if mine.is_empty():
 		return
 	_remember_draw_camera_bounds()
@@ -2116,6 +2123,10 @@ func _draw() -> void :
 	var visible_rect: = _resource_visible_rect(Vector2.ONE * TILE_SIZE * 3.0)
 	var start: = _world_to_cell(visible_rect.position)
 	var finish: = _world_to_cell(visible_rect.end)
+	if lit_draw_sections.enabled:
+		_draw_partitioned_depth(start, finish)
+		return
+	lit_draw_sections.hide()
 
 
 	for row in range(maxi(0, start.y), mini(rows - 1, finish.y) + 1):
@@ -2139,6 +2150,31 @@ func _draw() -> void :
 	_draw_target()
 
 
+func _draw_partitioned_depth(start: Vector2i, finish: Vector2i) -> void:
+	lit_draw_sections.begin(self)
+	# Preserve both original passes and exact row/column order, including overlaps.
+	for pass_index in 2:
+		for row in range(maxi(0, start.y), mini(rows - 1, finish.y) + 1):
+			for first_col in range(maxi(0, start.x), mini(cols - 1, finish.x) + 1, 6):
+				lit_draw_sections.add(_draw_terrain_section.bind(row, first_col, mini(first_col + 5, mini(cols - 1, finish.x)), pass_index))
+	lit_draw_sections.add(_draw_pocket_landmarks)
+	lit_draw_sections.add(_draw_drill_gates)
+	lit_draw_sections.add(_draw_resources)
+	lit_draw_sections.add(_draw_depth_landmarks)
+	for impact in impacts: lit_draw_sections.add(_draw_impact.bind(impact))
+	for drop in drops: lit_draw_sections.add(_draw_drop.bind(drop))
+	lit_draw_sections.add(_draw_target)
+	lit_draw_sections.finish()
+
+
+func _draw_terrain_section(row: int, first_col: int, last_col: int, pass_index: int) -> void:
+	for col in range(first_col, last_col + 1):
+		var cell: Vector2i = Vector2i(col, row)
+		if not _visual_is_solid(cell): continue
+		if pass_index == 0: _draw_terrain_top(cell)
+		else: _draw_terrain_edge_details(cell)
+
+
 func _draw_terrain_top(cell: Vector2i) -> void :
 	var rect: = Rect2(Vector2(cell) * TILE_SIZE, Vector2.ONE * TILE_SIZE).grow(0.7)
 	if _terrain_is_bedrock(cell):
@@ -2146,7 +2182,7 @@ func _draw_terrain_top(cell: Vector2i) -> void :
 		return
 	var region: Rect2 = Rect2(Vector2(posmod(cell.x,8),posmod(cell.y,8))*96.0,Vector2(96,96))
 	var tint: Color = {"mossMine": Color(0.74,0.80,0.67), "moonMine": Color(0.67,0.83,0.98), "emberMine": Color(0.92,0.65,0.46), "starMine": Color(0.74,0.65,0.95)}.get(mine_id,Color.WHITE)
-	draw_texture_rect_region(ROCK_MASS,rect,region,tint)
+	_draw_canvas.draw_texture_rect_region(ROCK_MASS,rect,region,tint)
 
 
 func _terrain_texture_region(cell: Vector2i) -> Rect2:
@@ -2163,8 +2199,8 @@ func _terrain_texture_region(cell: Vector2i) -> Rect2:
 
 func _draw_bedrock_top(cell: Vector2i, rect: Rect2) -> void :
 	var base: = Color("101210").lerp(_profile_color("dirt", "211710"), 0.16)
-	draw_rect(rect, base, true)
-	draw_texture_rect_region(
+	_draw_canvas.draw_rect(rect, base, true)
+	_draw_canvas.draw_texture_rect_region(
 		floor_texture,
 		rect,
 		_terrain_texture_region(cell),
@@ -2189,7 +2225,7 @@ func _draw_terrain_edge_details(cell: Vector2i) -> void :
 			continue
 		if bedrock:
 			CaveEdgeAssetDrawer.draw_bedrock_edge(
-				self,
+				_draw_canvas,
 				bedrock_edge_texture,
 				cell,
 				side,
@@ -2198,7 +2234,7 @@ func _draw_terrain_edge_details(cell: Vector2i) -> void :
 			)
 		else:
 			CaveEdgeAssetDrawer.draw_mineable_edge(
-				self,
+				_draw_canvas,
 				cave_edge_texture,
 				cell,
 				side,
@@ -2210,9 +2246,9 @@ func _draw_terrain_edge_details(cell: Vector2i) -> void :
 	if not bedrock and hp_ratio < 0.999:
 		var damage: = 1.0 - hp_ratio
 		var center: = rect.get_center()
-		draw_line(rect.position + Vector2(9, 8), center, Color(0.07, 0.035, 0.02, 0.84), 1.5 + damage * 2.3)
+		_draw_canvas.draw_line(rect.position + Vector2(9, 8), center, Color(0.07, 0.035, 0.02, 0.84), 1.5 + damage * 2.3)
 		if damage > 0.45:
-			draw_line(center, rect.end - Vector2(7, 9), Color(0.07, 0.035, 0.02, 0.84), 1.5 + damage * 2.3)
+			_draw_canvas.draw_line(center, rect.end - Vector2(7, 9), Color(0.07, 0.035, 0.02, 0.84), 1.5 + damage * 2.3)
 	if not bedrock and open_sides.has(true):
 		_draw_mineral_hint(cell, open_sides)
 
@@ -2283,11 +2319,11 @@ func _draw_wall_corner_joins(cell: Vector2i, _rect: Rect2, open_sides: Array, _n
 			continue
 		if bedrock:
 			CaveEdgeAssetDrawer.draw_bedrock_corner(
-				self, bedrock_corner_texture, cell, corner, TILE_SIZE
+				_draw_canvas, bedrock_corner_texture, cell, corner, TILE_SIZE
 			)
 		else:
 			CaveEdgeAssetDrawer.draw_mineable_corner(
-				self, cave_corner_texture, cell, corner, TILE_SIZE
+				_draw_canvas, cave_corner_texture, cell, corner, TILE_SIZE
 			)
 
 
@@ -2318,9 +2354,9 @@ func _draw_mineral_hint(cell: Vector2i, open_sides: Array) -> void :
 	var source_size: = Vector2(texture.get_size())
 	var scale_factor: = max_height / maxf(1.0, source_size.y)
 	var size: = source_size * scale_factor
-	draw_set_transform(_cell_center(cell) + offsets[side], rotations[side], Vector2.ONE)
-	draw_texture_rect(texture, Rect2( - size * Vector2(0.5, 0.62), size), false, Color(1, 1, 1, 0.88))
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	_draw_canvas.draw_set_transform(_cell_center(cell) + offsets[side], rotations[side], Vector2.ONE)
+	_draw_canvas.draw_texture_rect(texture, Rect2( - size * Vector2(0.5, 0.62), size), false, Color(1, 1, 1, 0.88))
+	_draw_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 func _draw_drill_gates() -> void :
@@ -2406,7 +2442,7 @@ func _draw_drill_gate(gate_id: String, indices: Array) -> void :
 	var target_width: = target_length * source_size.x / maxf(1.0, source_size.y)
 	var rotation: = 0.0 if vertical else - PI * 0.5
 	var transform_scale: = Vector2.ONE if vertical else Vector2(-1.0, 1.0)
-	draw_set_transform(gate_center, rotation, transform_scale)
+	_draw_canvas.draw_set_transform(gate_center, rotation, transform_scale)
 	for entry_index in entries.size():
 		var entry: Dictionary = entries[entry_index]
 		var rock: Dictionary = Dictionary(rocks[int(entry.index)])
@@ -2431,15 +2467,15 @@ func _draw_drill_gate(gate_id: String, indices: Array) -> void :
 			Vector2( - target_width * 0.5, segment_start - center_projection),
 			Vector2(target_width, segment_end - segment_start)
 		)
-		draw_texture_rect_region(texture, destination_rect, source_rect)
+		_draw_canvas.draw_texture_rect_region(texture, destination_rect, source_rect)
 		var hits: int = RunState.barrier_hits(mine_id + ":d2:" + gate_id)
 		if hits>0:
 			var c: Vector2 = destination_rect.get_center()
 			for crack in range(1+hits/3):
 				var offset: Vector2 = Vector2(float(crack-1)*12.0,0.0)
-				draw_polyline(PackedVector2Array([c+offset+Vector2(-15,-18),c+offset+Vector2(3,-5),c+offset+Vector2(-5,8),c+offset+Vector2(12,20)]),Color(0.04,0.025,0.015,0.86),1.2+float(hits)*0.23,true)
+				_draw_canvas.draw_polyline(PackedVector2Array([c+offset+Vector2(-15,-18),c+offset+Vector2(3,-5),c+offset+Vector2(-5,8),c+offset+Vector2(12,20)]),Color(0.04,0.025,0.015,0.86),1.2+float(hits)*0.23,true)
 
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	_draw_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 func _draw_resources() -> void :
@@ -2466,8 +2502,8 @@ func _draw_resources() -> void :
 		var size: = source_size * scale_factor
 		var type_data: Dictionary = Dictionary(GameData.data.ROCK_TYPES[kind])
 		if bool(type_data.get("rare", false)) or bool(rock.drill_gated):
-			draw_circle(position, 52.0 + hit_pulse * 5.0, Color(Color(String(type_data.edge)), 0.09 + hit_pulse * 0.09))
-		draw_texture_rect(texture, Rect2(position - size * Vector2(0.5, 0.56), size), false, Color.WHITE)
+			_draw_canvas.draw_circle(position, 52.0 + hit_pulse * 5.0, Color(Color(String(type_data.edge)), 0.09 + hit_pulse * 0.09))
+		_draw_canvas.draw_texture_rect(texture, Rect2(position - size * Vector2(0.5, 0.56), size), false, Color.WHITE)
 
 
 func _resource_visible_rect(margin: Vector2) -> Rect2:
@@ -2536,7 +2572,7 @@ func _draw_pocket_landmarks() -> void :
 		var claimed: = _pocket_reward_is_claimed(reward_id)
 		if kind in ["crystal", "motherlode"]:
 			var pocket_size: = Vector2(146, 106)
-			draw_texture_rect(
+			_draw_canvas.draw_texture_rect(
 				pocket_texture,
 				Rect2(position - pocket_size * Vector2(0.5, 0.62), pocket_size),
 				false,
@@ -2547,12 +2583,12 @@ func _draw_pocket_landmarks() -> void :
 			var source_size: = Vector2(texture.get_size())
 			var scale_factor: = minf(112.0 / source_size.x, 96.0 / source_size.y)
 			var size: = source_size * scale_factor
-			draw_circle(
+			_draw_canvas.draw_circle(
 				position + Vector2(0, 14),
 				49.0,
 				Color(0.93, 0.64, 0.29, 0.025 if claimed else 0.08)
 			)
-			draw_texture_rect(
+			_draw_canvas.draw_texture_rect(
 				texture,
 				Rect2(position - size * Vector2(0.5, 0.6), size),
 				false,
@@ -2577,17 +2613,17 @@ func _draw_pocket_landmark_label(
 	var width: = clampf(90.0 + float(maxi(name.length(), reward_label.length())) * 3.8, 158.0, 226.0)
 	var rect: = Rect2(position + Vector2( - width * 0.5, 67.0), Vector2(width, 42.0))
 	var accent: = _profile_color("detail", "ffd58a")
-	draw_rect(rect, Color(0.008, 0.011, 0.015, 0.84), true)
-	draw_rect(rect, Color(accent, 0.26 if claimed else 0.58), false, 1.0)
-	draw_string(ThemeDB.fallback_font, rect.position + Vector2(0, 16), name, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, 9, Color(accent, 0.72 if claimed else 0.98))
-	draw_string(ThemeDB.fallback_font, rect.position + Vector2(0, 33), reward_label, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, 8, Color(0.76, 0.78, 0.82, 0.76 if claimed else 0.94))
+	_draw_canvas.draw_rect(rect, Color(0.008, 0.011, 0.015, 0.84), true)
+	_draw_canvas.draw_rect(rect, Color(accent, 0.26 if claimed else 0.58), false, 1.0)
+	_draw_canvas.draw_string(ThemeDB.fallback_font, rect.position + Vector2(0, 16), name, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, 9, Color(accent, 0.72 if claimed else 0.98))
+	_draw_canvas.draw_string(ThemeDB.fallback_font, rect.position + Vector2(0, 33), reward_label, HORIZONTAL_ALIGNMENT_CENTER, rect.size.x, 8, Color(0.76, 0.78, 0.82, 0.76 if claimed else 0.94))
 
 
 func _draw_depth_landmarks() -> void :
 	_draw_landmark_texture(shaft_texture, depth_entrance, Vector2(158, 138), 40.0)
-	draw_string(ThemeDB.fallback_font, depth_entrance + Vector2(-92, 68), "ASCEND TO %s" % _depth_one_return_name(), HORIZONTAL_ALIGNMENT_CENTER, 184, 9, _profile_color("detail", "f0c47d"))
+	_draw_canvas.draw_string(ThemeDB.fallback_font, depth_entrance + Vector2(-92, 68), "ASCEND TO %s" % _depth_one_return_name(), HORIZONTAL_ALIGNMENT_CENTER, 184, 9, _profile_color("detail", "f0c47d"))
 	if active_context == "depthExit":
-		draw_arc(depth_entrance + Vector2(0, 5), 76.0, 0, TAU, 48, Color(_profile_color("detail", "f0c47d"), 0.74), 2.0)
+		_draw_canvas.draw_arc(depth_entrance + Vector2(0, 5), 76.0, 0, TAU, 48, Color(_profile_color("detail", "f0c47d"), 0.74), 2.0)
 
 	var sell: = Vector2(float(station_positions.sell.x), float(station_positions.sell.y))
 	var forge: = Vector2(float(station_positions.forge.x), float(station_positions.forge.y))
@@ -2598,18 +2634,18 @@ func _draw_depth_landmarks() -> void :
 
 
 func _draw_station(texture: Texture2D, position: Vector2, label: String, selected: bool) -> void :
-	draw_circle(position + Vector2(0, 48), 76.0, Color(0.01, 0.008, 0.005, 0.32))
+	_draw_canvas.draw_circle(position + Vector2(0, 48), 76.0, Color(0.01, 0.008, 0.005, 0.32))
 	_draw_landmark_texture(texture, position, Vector2(220, 154), 57.0)
 	if selected:
-		draw_arc(position + Vector2(0, 8), 88.0, 0, TAU, 48, Color(_profile_color("detail", "f0c47d"), 0.72), 2.0)
-	draw_string(preload("res://assets/ui/fonts/DejaVuSerif-Bold.ttf"), position + Vector2(-110, 78), label, HORIZONTAL_ALIGNMENT_CENTER, 220, 18, _profile_color("detail", "f0c47d"))
+		_draw_canvas.draw_arc(position + Vector2(0, 8), 88.0, 0, TAU, 48, Color(_profile_color("detail", "f0c47d"), 0.72), 2.0)
+	_draw_canvas.draw_string(preload("res://assets/ui/fonts/DejaVuSerif-Bold.ttf"), position + Vector2(-110, 78), label, HORIZONTAL_ALIGNMENT_CENTER, 220, 18, _profile_color("detail", "f0c47d"))
 
 
 func _draw_landmark_texture(texture: Texture2D, position: Vector2, bounds: Vector2, bottom: float) -> void :
 	var source_size: = Vector2(texture.get_size())
 	var scale_factor: = minf(bounds.x / source_size.x, bounds.y / source_size.y)
 	var size: = source_size * scale_factor
-	draw_texture_rect(texture, Rect2(position + Vector2( - size.x * 0.5, bottom - size.y), size), false)
+	_draw_canvas.draw_texture_rect(texture, Rect2(position + Vector2( - size.x * 0.5, bottom - size.y), size), false)
 
 
 func _draw_drop(drop: Dictionary) -> void :
@@ -2622,15 +2658,15 @@ func _draw_drop(drop: Dictionary) -> void :
 	var pulse: = 1.0 + sin(float(drop.age) * 6.0) * 0.06
 	var position: = CrusherLootBurstScript.draw_position(drop)
 	var alpha: = clampf((LOOSE_RESOURCE_LIFETIME - float(drop.age)) / LOOSE_RESOURCE_FADE_SECONDS, 0.0, 1.0)
-	draw_texture_rect(texture, DropVisuals.draw_rect(kind, texture, position, pulse), false, Color(1, 1, 1, alpha))
+	_draw_canvas.draw_texture_rect(texture, DropVisuals.draw_rect(kind, texture, position, pulse), false, Color(1, 1, 1, alpha))
 	var amount: = int(drop.get("amount", 1))
 	if amount > 1:
 		var label: = "x%d" % amount
 		var badge_width: = maxf(24.0, float(label.length() * 6 + 8))
 		var badge_rect: = Rect2(position + Vector2(8.0, -25.0), Vector2(badge_width, 16.0))
-		draw_rect(badge_rect, Color(0.035, 0.027, 0.02, alpha * 0.9), true)
-		draw_rect(badge_rect, Color(0.94, 0.71, 0.31, alpha * 0.82), false, 1.0)
-		draw_string(
+		_draw_canvas.draw_rect(badge_rect, Color(0.035, 0.027, 0.02, alpha * 0.9), true)
+		_draw_canvas.draw_rect(badge_rect, Color(0.94, 0.71, 0.31, alpha * 0.82), false, 1.0)
+		_draw_canvas.draw_string(
 			ThemeDB.fallback_font,
 			badge_rect.position + Vector2(0.0, 12.0),
 			label,
@@ -2646,7 +2682,7 @@ func _draw_impact(impact: Dictionary) -> void :
 	var frame: = mini(3, floori(progress * 4.0))
 	var source: = Rect2(Vector2(frame * 256, 0), Vector2(256, 256))
 	var size: = Vector2.ONE * (76.0 if bool(impact.broken) else 62.0)
-	draw_texture_rect_region(impact_texture, Rect2(Vector2(impact.position) - size * 0.5, size), source, Color(1, 1, 1, 1.0 - progress))
+	_draw_canvas.draw_texture_rect_region(impact_texture, Rect2(Vector2(impact.position) - size * 0.5, size), source, Color(1, 1, 1, 1.0 - progress))
 	var style: = String(impact.get("style", ""))
 	var center: = Vector2(impact.position)
 	var alpha: = 1.0 - progress
@@ -2656,17 +2692,17 @@ func _draw_impact(impact: Dictionary) -> void :
 		"swift":
 			for streak in range(3):
 				var y: = float(streak - 1) * 8.0
-				draw_line(center + Vector2(-42, y), center + Vector2(42, y - 10), Color(0.38, 0.94, 1.0, alpha * (0.82 - streak * 0.12)), 2.8 - streak * 0.5)
+				_draw_canvas.draw_line(center + Vector2(-42, y), center + Vector2(42, y - 10), Color(0.38, 0.94, 1.0, alpha * (0.82 - streak * 0.12)), 2.8 - streak * 0.5)
 		"prospector":
 			for orbit in range(2):
 				var phase: = progress * TAU + float(orbit) * PI
 				var point: = center + Vector2(cos(phase) * 42.0, sin(phase) * 18.0)
-				draw_circle(point, 5.5, Color(1.0, 0.76, 0.22, alpha * 0.86))
+				_draw_canvas.draw_circle(point, 5.5, Color(1.0, 0.76, 0.22, alpha * 0.86))
 		"drill":
 			for ring in range(3):
-				draw_arc(center, 12.0 + ring * 9.0 + progress * 12.0, progress * TAU * 4.0 + ring, progress * TAU * 4.0 + ring + 4.4, 18, Color(1.0, 0.58, 0.16, alpha * (0.78 - ring * 0.16)), 2.4)
+				_draw_canvas.draw_arc(center, 12.0 + ring * 9.0 + progress * 12.0, progress * TAU * 4.0 + ring, progress * TAU * 4.0 + ring + 4.4, 18, Color(1.0, 0.58, 0.16, alpha * (0.78 - ring * 0.16)), 2.4)
 	if bool(impact.get("crusher_force", false)):
-		CrusherDebrisScript.draw_burst(self, impact, _crusher_debris_palette())
+		CrusherDebrisScript.draw_burst(_draw_canvas, impact, _crusher_debris_palette())
 
 
 func _draw_target() -> void :
@@ -2695,9 +2731,9 @@ func _draw_target() -> void :
 		radius = 39.0
 	else:
 		return
-	draw_arc(center, radius, - PI * 0.82, PI * 0.82, 28, Color(color, 0.78), 2.2)
-	draw_circle(_target_contact_point(), 3.5, Color(color, 0.96))
-	draw_string(ThemeDB.fallback_font, center + Vector2(-72, - radius - 10), label, HORIZONTAL_ALIGNMENT_CENTER, 144, 10, color)
+	_draw_canvas.draw_arc(center, radius, - PI * 0.82, PI * 0.82, 28, Color(color, 0.78), 2.2)
+	_draw_canvas.draw_circle(_target_contact_point(), 3.5, Color(color, 0.96))
+	_draw_canvas.draw_string(ThemeDB.fallback_font, center + Vector2(-72, - radius - 10), label, HORIZONTAL_ALIGNMENT_CENTER, 144, 10, color)
 
 
 func _rock_target_label(rock: Dictionary) -> String:

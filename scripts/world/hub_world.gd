@@ -3,6 +3,9 @@ extends Node2D
 
 const LitFloorChunksScript = preload("res://scripts/lighting/lit_floor_chunks.gd")
 var lit_floor_chunks: Node2D
+const LitDrawSectionsScript = preload("res://scripts/lighting/lit_draw_sections.gd")
+var lit_draw_sections: Node2D
+var _draw_canvas: CanvasItem
 
 signal context_changed(context: String)
 signal hub_exit_context_changed(active: bool)
@@ -204,6 +207,9 @@ var _workshop_panel_preview: Dictionary = {}
 func _ready() -> void :
 	lit_floor_chunks = LitFloorChunksScript.new()
 	add_child(lit_floor_chunks)
+	lit_draw_sections = LitDrawSectionsScript.new()
+	add_child(lit_draw_sections)
+	_draw_canvas = self
 	base_state = _sanitize_base_state(base_state)
 	hub_state = _sanitize_hub_state(hub_state)
 	economy_state = _sanitize_economy_state(economy_state)
@@ -2268,6 +2274,11 @@ func _shared_hub_light_texture() -> Texture2D:
 
 
 func _draw() -> void :
+	_draw_canvas = self
+	if lit_draw_sections.enabled:
+		_draw_partitioned_hub()
+		return
+	lit_draw_sections.hide()
 	_draw_ground()
 	_draw_stations()
 	_draw_workshop_presentation()
@@ -2317,13 +2328,13 @@ func _draw_workshop_delivery(origin: Vector2, target: Vector2, progress: float, 
 				Color(1, 1, 1, 0.68 + alpha * 0.32)
 			)
 		else:
-			draw_circle(point, 5.0 + float(index % 3), Color(color, 0.88))
+			_draw_canvas.draw_circle(point, 5.0 + float(index % 3), Color(color, 0.88))
 	if progress > 0.64:
 		var seat: = clampf((progress - 0.64) / 0.36, 0.0, 1.0)
 		for index in range(6):
 			var angle: = TAU * float(index) / 6.0 + seat * 0.5
 			var start: = target + Vector2.from_angle(angle) * lerpf(38.0, 15.0, seat)
-			draw_line(start, start + Vector2.from_angle(angle) * 10.0, Color(color, (1.0 - seat) * 0.72), 2.2)
+			_draw_canvas.draw_line(start, start + Vector2.from_angle(angle) * 10.0, Color(color, (1.0 - seat) * 0.72), 2.2)
 
 
 func _draw_workshop_construction(
@@ -2335,9 +2346,9 @@ func _draw_workshop_construction(
 ) -> void :
 	var foundation: = clampf(progress / 0.3, 0.0, 1.0)
 	var half_width: = lerpf(18.0, 74.0, foundation)
-	draw_line(target + Vector2( - half_width, 42), target + Vector2(half_width, 42), Color(color, 0.78), 5.0)
-	draw_line(target + Vector2( - half_width, 36), target + Vector2( - half_width, -50), Color(color, 0.42 * (1.0 - progress)), 3.0)
-	draw_line(target + Vector2(half_width, 36), target + Vector2(half_width, -50), Color(color, 0.42 * (1.0 - progress)), 3.0)
+	_draw_canvas.draw_line(target + Vector2( - half_width, 42), target + Vector2(half_width, 42), Color(color, 0.78), 5.0)
+	_draw_canvas.draw_line(target + Vector2( - half_width, 36), target + Vector2( - half_width, -50), Color(color, 0.42 * (1.0 - progress)), 3.0)
+	_draw_canvas.draw_line(target + Vector2(half_width, 36), target + Vector2(half_width, -50), Color(color, 0.42 * (1.0 - progress)), 3.0)
 	var assembly: = clampf((progress - 0.18) / 0.58, 0.0, 1.0)
 	var material_texture: = _workshop_material_texture(String(_workshop_presentation.get("resource_id", "")))
 	for index in range(10):
@@ -2353,15 +2364,15 @@ func _draw_workshop_construction(
 			_draw_texture_rotated_bounded(material_texture, point, Vector2(27, 27), angle + travel * 2.0, Color(1, 1, 1, 0.9))
 		else:
 			var part_size: = Vector2(18 + index % 3 * 4, 7 + index % 2 * 4)
-			draw_set_transform(point, angle + travel * 1.7, Vector2.ONE)
-			draw_rect(Rect2( - part_size * 0.5, part_size), Color(color, 0.86), true)
-			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+			_draw_canvas.draw_set_transform(point, angle + travel * 1.7, Vector2.ONE)
+			_draw_canvas.draw_rect(Rect2( - part_size * 0.5, part_size), Color(color, 0.86), true)
+			_draw_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	if progress > 0.62:
 		var commission: = clampf((progress - 0.62) / 0.38, 0.0, 1.0)
 		var ghost_alpha: = sin(PI * commission) * 0.46
-		draw_set_transform(target + Vector2(0, -14), 0.0, Vector2.ONE * lerpf(0.82, 1.04, commission))
+		_draw_canvas.draw_set_transform(target + Vector2(0, -14), 0.0, Vector2.ONE * lerpf(0.82, 1.04, commission))
 		_draw_texture_bounded(_workshop_texture(workshop_id), Vector2.ZERO, Vector2(184, 124), Color(color, ghost_alpha))
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		_draw_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		_draw_workshop_signature(workshop_id, target + Vector2(0, -14), commission, 1.0 - commission * 0.35, 1.15)
 
 
@@ -2385,12 +2396,12 @@ func _draw_workshop_upgrade(
 		if material_texture != null:
 			_draw_texture_rotated_bounded(material_texture, point, Vector2(25, 25), - travel * 2.6 + angle, Color.WHITE)
 		else:
-			draw_circle(point, 6.0, Color(color, 0.92))
+			_draw_canvas.draw_circle(point, 6.0, Color(color, 0.92))
 	var calibration: = clampf((progress - 0.58) / 0.42, 0.0, 1.0)
 	if calibration > 0.0:
 		_draw_workshop_signature(workshop_id, target + Vector2(0, -12), calibration, sin(PI * calibration), 1.2)
 		var radius: = lerpf(34.0, 76.0, calibration)
-		draw_arc(target + Vector2(0, -12), radius, - PI * 0.5, - PI * 0.5 + TAU * calibration, 40, Color(color, 0.78 * (1.0 - calibration)), 3.0)
+		_draw_canvas.draw_arc(target + Vector2(0, -12), radius, - PI * 0.5, - PI * 0.5 + TAU * calibration, 40, Color(color, 0.78 * (1.0 - calibration)), 3.0)
 
 
 func _draw_workshop_signature(
@@ -2404,40 +2415,40 @@ func _draw_workshop_signature(
 	match workshop_id:
 		"tool_forge":
 			var swing: = lerpf(-0.8, 0.28, clampf(progress * 1.45, 0.0, 1.0))
-			draw_set_transform(center, swing, Vector2.ONE * scale)
-			draw_rect(Rect2(-4, -42, 8, 60), color, true)
-			draw_rect(Rect2(-23, -48, 46, 15), Color(1.0, 0.84, 0.58, color.a), true)
-			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+			_draw_canvas.draw_set_transform(center, swing, Vector2.ONE * scale)
+			_draw_canvas.draw_rect(Rect2(-4, -42, 8, 60), color, true)
+			_draw_canvas.draw_rect(Rect2(-23, -48, 46, 15), Color(1.0, 0.84, 0.58, color.a), true)
+			_draw_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 			for index in range(7):
 				var angle: = -2.8 + float(index) * 0.34
 				var spark_origin: = center + Vector2(0, 16)
-				draw_line(spark_origin, spark_origin + Vector2.from_angle(angle) * (18.0 + index * 3.0) * scale, Color(1.0, 0.72, 0.28, color.a), 2.0)
+				_draw_canvas.draw_line(spark_origin, spark_origin + Vector2.from_angle(angle) * (18.0 + index * 3.0) * scale, Color(1.0, 0.72, 0.28, color.a), 2.0)
 		"light_lab":
-			draw_circle(center, 19.0 * scale, Color(0.82, 1.0, 0.96, 0.12 * color.a))
-			draw_arc(center, 22.0 * scale, 0, TAU, 32, color, 3.0)
+			_draw_canvas.draw_circle(center, 19.0 * scale, Color(0.82, 1.0, 0.96, 0.12 * color.a))
+			_draw_canvas.draw_arc(center, 22.0 * scale, 0, TAU, 32, color, 3.0)
 			for index in range(8):
 				var angle: = TAU * float(index) / 8.0 + progress * 0.45
-				draw_line(center + Vector2.from_angle(angle) * 27.0 * scale, center + Vector2.from_angle(angle) * 62.0 * scale, color, 2.2)
+				_draw_canvas.draw_line(center + Vector2.from_angle(angle) * 27.0 * scale, center + Vector2.from_angle(angle) * 62.0 * scale, color, 2.2)
 		"wardrobe":
 			for ribbon_index in range(2):
 				var ribbon: = PackedVector2Array()
 				for point_index in range(15):
 					var ratio: = float(point_index) / 14.0
 					ribbon.append(center + Vector2((ratio - 0.5) * 112.0 * scale, sin(ratio * TAU * 1.5 + progress * 4.0 + ribbon_index * PI) * 15.0 * scale + (ribbon_index * 18.0 - 9.0)))
-				draw_polyline(ribbon, color, 4.0, true)
+				_draw_canvas.draw_polyline(ribbon, color, 4.0, true)
 		"treasure_chamber":
 			for index in range(6):
 				var angle: = TAU * float(index) / 6.0 + progress * 0.7
 				var point: = center + Vector2.from_angle(angle) * 50.0 * scale
 				var diamond: = PackedVector2Array([point + Vector2(0, -7), point + Vector2(6, 0), point + Vector2(0, 7), point + Vector2(-6, 0)])
-				draw_colored_polygon(diamond, color)
+				_draw_canvas.draw_colored_polygon(diamond, color)
 		"lift_workshop":
-			draw_arc(center, 45.0 * scale, - PI * 0.5, - PI * 0.5 + TAU * clampf(progress * 1.2, 0.0, 1.0), 36, color, 3.0)
+			_draw_canvas.draw_arc(center, 45.0 * scale, - PI * 0.5, - PI * 0.5 + TAU * clampf(progress * 1.2, 0.0, 1.0), 36, color, 3.0)
 			for index in range(4):
 				var angle: = PI * 0.5 * index
-				draw_line(center + Vector2.from_angle(angle) * 16.0 * scale, center + Vector2.from_angle(angle) * 38.0 * scale, color, 3.0)
+				_draw_canvas.draw_line(center + Vector2.from_angle(angle) * 16.0 * scale, center + Vector2.from_angle(angle) * 38.0 * scale, color, 3.0)
 			var arrow: = PackedVector2Array([center + Vector2(0, -34) * scale, center + Vector2(10, -10) * scale, center, center + Vector2(-10, -10) * scale])
-			draw_colored_polygon(arrow, color)
+			_draw_canvas.draw_colored_polygon(arrow, color)
 
 
 func _workshop_travel_point(origin: Vector2, target: Vector2, progress: float, lane: float) -> Vector2:
@@ -2466,37 +2477,68 @@ func _draw_feedback() -> void :
 	var eased: = 1.0 - pow(1.0 - progress, 3.0)
 	var alpha: = pow(1.0 - progress, 1.7)
 	var radius: = lerpf(28.0, 112.0, eased)
-	draw_circle(_feedback_position, radius * 0.72, Color(_feedback_color, 0.035 * alpha))
-	draw_arc(_feedback_position, radius, 0, TAU, 64, Color(_feedback_color, 0.82 * alpha), 3.2)
-	draw_arc(_feedback_position, radius * 0.72, 0, TAU, 48, Color(1, 0.94, 0.78, 0.34 * alpha), 1.5)
+	_draw_canvas.draw_circle(_feedback_position, radius * 0.72, Color(_feedback_color, 0.035 * alpha))
+	_draw_canvas.draw_arc(_feedback_position, radius, 0, TAU, 64, Color(_feedback_color, 0.82 * alpha), 3.2)
+	_draw_canvas.draw_arc(_feedback_position, radius * 0.72, 0, TAU, 48, Color(1, 0.94, 0.78, 0.34 * alpha), 1.5)
 
 
 func _draw_ground() -> void :
-	# The opaque floor covers the interior; only draw the background borders.
-	draw_rect(Rect2(0, 0, WORLD_SIZE.x, 48), Color("08090e"), true)
-	draw_rect(Rect2(0, WORLD_SIZE.y - 48, WORLD_SIZE.x, 48), Color("08090e"), true)
-	draw_rect(Rect2(0, 48, 54, WORLD_SIZE.y - 96), Color("08090e"), true)
-	draw_rect(Rect2(WORLD_SIZE.x - 54, 48, 54, WORLD_SIZE.y - 96), Color("08090e"), true)
-	var interior: = Rect2(54, 48, WORLD_SIZE.x - 108, WORLD_SIZE.y - 96)
-	lit_floor_chunks.draw_floor(self, HUB_FLOOR_TEXTURE, interior, Color(0.96, 0.84, 0.72, 1.0), Color(0.18, 0.075, 0.018, 0.12))
+	_draw_ground_border()
+	_draw_floor_surface()
 	_draw_hub_wall_frame()
 	_draw_foundation_route()
 	_draw_foundation_sconces()
 
 
+func _draw_ground_border() -> void:
+	# Opaque floor covers the interior; these borders do not overlap it.
+	_draw_canvas.draw_rect(Rect2(0, 0, WORLD_SIZE.x, 48), Color("08090e"), true)
+	_draw_canvas.draw_rect(Rect2(0, WORLD_SIZE.y - 48, WORLD_SIZE.x, 48), Color("08090e"), true)
+	_draw_canvas.draw_rect(Rect2(0, 48, 54, WORLD_SIZE.y - 96), Color("08090e"), true)
+	_draw_canvas.draw_rect(Rect2(WORLD_SIZE.x - 54, 48, 54, WORLD_SIZE.y - 96), Color("08090e"), true)
+
+
+func _draw_floor_surface() -> void:
+	var interior: Rect2 = Rect2(54, 48, WORLD_SIZE.x - 108, WORLD_SIZE.y - 96)
+	lit_floor_chunks.draw_floor(self, HUB_FLOOR_TEXTURE, interior, Color(0.96, 0.84, 0.72, 1.0), Color(0.18, 0.075, 0.018, 0.12))
+
+
+func _draw_partitioned_hub() -> void:
+	_draw_floor_surface()
+	lit_draw_sections.begin(self)
+	lit_draw_sections.add(_draw_ground_border)
+	lit_draw_sections.add(_draw_hub_wall_frame)
+	lit_draw_sections.add(_draw_foundation_route)
+	for position_value in FOUNDATION_LIGHT_POSITIONS:
+		lit_draw_sections.add(_draw_foundation_sconce.bind(Vector2(position_value)))
+	lit_draw_sections.add(_draw_deep_elevator.bind(active_context == "deepElevator"))
+	lit_draw_sections.add(_draw_lift.bind(SURFACE_LIFT, false, active_context == "hubExit"))
+	if RunState.victory:
+		for workshop_id in _workshop_ids():
+			if workshop_id == "treasure_chamber": continue
+			var status: Dictionary = _workshop_status(workshop_id)
+			if not _workshop_unlocked(status) and not bool(status.get("built", false)): continue
+			lit_draw_sections.add(_draw_workshop_site.bind(workshop_id, status, active_context == "workshop:%s" % workshop_id))
+		lit_draw_sections.add(_draw_relic_museum.bind(active_context in ["deepHoard", "relicPedestal", "workshop:treasure_chamber"]))
+	lit_draw_sections.add(_draw_workshop_presentation)
+	lit_draw_sections.add(_draw_feedback)
+	lit_draw_sections.add(_draw_carried_relic)
+	lit_draw_sections.finish()
+
+
 func _draw_hub_wall_frame() -> void :
-	draw_rect(Rect2(0, 0, WORLD_SIZE.x, 58), Color("111015"), true)
-	draw_rect(Rect2(0, WORLD_SIZE.y - 54, WORLD_SIZE.x, 54), Color("111015"), true)
-	draw_rect(Rect2(0, 0, 58, WORLD_SIZE.y), Color("111015"), true)
-	draw_rect(Rect2(WORLD_SIZE.x - 58, 0, 58, WORLD_SIZE.y), Color("111015"), true)
+	_draw_canvas.draw_rect(Rect2(0, 0, WORLD_SIZE.x, 58), Color("111015"), true)
+	_draw_canvas.draw_rect(Rect2(0, WORLD_SIZE.y - 54, WORLD_SIZE.x, 54), Color("111015"), true)
+	_draw_canvas.draw_rect(Rect2(0, 0, 58, WORLD_SIZE.y), Color("111015"), true)
+	_draw_canvas.draw_rect(Rect2(WORLD_SIZE.x - 58, 0, 58, WORLD_SIZE.y), Color("111015"), true)
 	for center_x in [236.0, 720.0, 1204.0]:
 		_draw_texture_bounded(HUB_WALL_TEXTURE, Vector2(center_x, 72), Vector2(500, 178), Color(0.9, 0.88, 0.94, 1.0))
 		_draw_texture_rotated_bounded(HUB_WALL_TEXTURE, Vector2(center_x, 938), Vector2(500, 154), PI, Color(0.74, 0.7, 0.78, 0.95))
 	for center_y in [250.0, 566.0, 842.0]:
 		_draw_texture_rotated_bounded(HUB_WALL_TEXTURE, Vector2(42, center_y), Vector2(360, 132), PI * 0.5, Color(0.76, 0.74, 0.8, 0.96))
 		_draw_texture_rotated_bounded(HUB_WALL_TEXTURE, Vector2(1398, center_y), Vector2(360, 132), - PI * 0.5, Color(0.76, 0.74, 0.8, 0.96))
-	draw_rect(Rect2(70, 64, WORLD_SIZE.x - 140, WORLD_SIZE.y - 124), Color(0.95, 0.73, 0.34, 0.25), false, 3.0)
-	draw_rect(Rect2(80, 74, WORLD_SIZE.x - 160, WORLD_SIZE.y - 144), Color(0.35, 0.84, 0.73, 0.16), false, 1.5)
+	_draw_canvas.draw_rect(Rect2(70, 64, WORLD_SIZE.x - 140, WORLD_SIZE.y - 124), Color(0.95, 0.73, 0.34, 0.25), false, 3.0)
+	_draw_canvas.draw_rect(Rect2(80, 74, WORLD_SIZE.x - 160, WORLD_SIZE.y - 144), Color(0.35, 0.84, 0.73, 0.16), false, 1.5)
 
 
 func _draw_foundation_route() -> void :
@@ -2512,15 +2554,18 @@ func _draw_foundation_route() -> void :
 			continue
 		var destination: = _workshop_position(workshop_id)
 		var color: = _workshop_color(workshop_id)
-		draw_line(route_origin, destination, Color(color, 0.16), 18.0, true)
-		draw_line(route_origin, destination, Color(color, 0.42), 2.0, true)
+		_draw_canvas.draw_line(route_origin, destination, Color(color, 0.16), 18.0, true)
+		_draw_canvas.draw_line(route_origin, destination, Color(color, 0.42), 2.0, true)
 
 
 func _draw_foundation_sconces() -> void :
 	for position_value in FOUNDATION_LIGHT_POSITIONS:
-		var position: = Vector2(position_value)
-		_draw_ellipse_shape(position + Vector2(0, 11), Vector2(38, 12), Color(0, 0, 0, 0.34))
-		_draw_texture_bounded(HUB_LAMP_TEXTURE, position, Vector2(76, 50), Color(1.0, 0.88, 0.68, 1.0))
+		_draw_foundation_sconce(Vector2(position_value))
+
+
+func _draw_foundation_sconce(at: Vector2) -> void:
+	_draw_ellipse_shape(at + Vector2(0, 11), Vector2(38, 12), Color(0, 0, 0, 0.34))
+	_draw_texture_bounded(HUB_LAMP_TEXTURE, at, Vector2(76, 50), Color(1.0, 0.88, 0.68, 1.0))
 
 
 func _draw_stations() -> void :
@@ -2535,12 +2580,12 @@ func _draw_lift(position: Vector2, locked: bool, selected: bool) -> void :
 	_draw_ellipse_shape(position + Vector2(0, 43), Vector2(78, 23), Color(0, 0, 0, 0.45))
 	_draw_texture_bounded(PORTAL_TEXTURE, position + Vector2(0, -27), Vector2(178, 154))
 	if locked:
-		draw_rect(Rect2(position + Vector2(-50, -39), Vector2(100, 74)), Color(0.024, 0.035, 0.051, 0.64), true)
+		_draw_canvas.draw_rect(Rect2(position + Vector2(-50, -39), Vector2(100, 74)), Color(0.024, 0.035, 0.051, 0.64), true)
 		for x in range(-36, 37, 24):
-			draw_line(position + Vector2(x, -38), position + Vector2(x, 35), Color("8b7540"), 5.0)
-		draw_circle(position + Vector2(0, -1), 8, Color("d0ae55"))
+			_draw_canvas.draw_line(position + Vector2(x, -38), position + Vector2(x, 35), Color("8b7540"), 5.0)
+		_draw_canvas.draw_circle(position + Vector2(0, -1), 8, Color("d0ae55"))
 	if selected:
-		draw_arc(position + Vector2(0, -2), 82, 0, TAU, 48, Color("d5b760") if locked else Color("78e1c5"), 2.0)
+		_draw_canvas.draw_arc(position + Vector2(0, -2), 82, 0, TAU, 48, Color("d5b760") if locked else Color("78e1c5"), 2.0)
 
 
 func _workshop_color(workshop_id: String) -> Color:
@@ -2584,13 +2629,13 @@ func _draw_workshop_site(workshop_id: String, status: Dictionary, selected: bool
 	var position: = DEEP_HOARD_POSITION if is_chamber else interaction_position
 	if built:
 		var floor_size: = Vector2(300, 218) if is_chamber else Vector2(190, 154)
-		draw_rect(Rect2(position - floor_size * 0.5, floor_size), Color(color, 0.08), true)
-		draw_rect(Rect2(position - floor_size * 0.5, floor_size), Color(color, 0.42), false, 2.0)
-		draw_arc(position + Vector2(0, 22), 64.0 if not is_chamber else 114.0, PI, TAU, 36, Color(color, 0.34), 4.0)
+		_draw_canvas.draw_rect(Rect2(position - floor_size * 0.5, floor_size), Color(color, 0.08), true)
+		_draw_canvas.draw_rect(Rect2(position - floor_size * 0.5, floor_size), Color(color, 0.42), false, 2.0)
+		_draw_canvas.draw_arc(position + Vector2(0, 22), 64.0 if not is_chamber else 114.0, PI, TAU, 36, Color(color, 0.34), 4.0)
 	else:
 		_draw_ellipse_shape(position + Vector2(0, 26), Vector2(76, 25), Color(0, 0, 0, 0.37))
 		_draw_ellipse_shape(position + Vector2(0, 17), Vector2(67, 18), Color("302a28"))
-		draw_arc(position + Vector2(0, 4), 57.0, - PI * 0.5, - PI * 0.5 + TAU * progress, 28, Color(color, 0.86), 5.0)
+		_draw_canvas.draw_arc(position + Vector2(0, 4), 57.0, - PI * 0.5, - PI * 0.5 + TAU * progress, 28, Color(color, 0.86), 5.0)
 		var material_texture: = _workshop_material_texture(_workshop_resource(status))
 		var staged_parts: = ceili(progress * 5.0)
 		var stage_offsets: Array[Vector2] = [
@@ -2601,16 +2646,16 @@ func _draw_workshop_site(workshop_id: String, status: Dictionary, selected: bool
 			if material_texture != null:
 				_draw_texture_rotated_bounded(material_texture, part_position, Vector2(28, 24), float(stage_index) * 0.42, Color(1, 1, 1, 0.76))
 			else:
-				draw_circle(part_position, 7.0, Color(color, 0.72))
+				_draw_canvas.draw_circle(part_position, 7.0, Color(color, 0.72))
 	if not is_chamber:
 		var build_progress: = _workshop_presentation_progress(workshop_id, "build")
 		var workshop_alpha: = 1.0 if build_progress < 0.0 else lerpf(0.16, 1.0, clampf((build_progress - 0.3) / 0.48, 0.0, 1.0))
 		_draw_workshop_icon(workshop_id, position + Vector2(0, -14), built, color, workshop_alpha, status)
 	else:
 		_draw_ellipse_shape(interaction_position + Vector2(0, 22), Vector2(34, 11), Color(0, 0, 0, 0.35))
-		draw_rect(Rect2(interaction_position - Vector2(22, 28), Vector2(44, 54)), Color("302b32"), true)
-		draw_rect(Rect2(interaction_position - Vector2(22, 28), Vector2(44, 54)), Color(color, 0.62), false, 2.0)
-		draw_circle(interaction_position + Vector2(0, -7), 7.0, Color(color, 0.82 if built else 0.36))
+		_draw_canvas.draw_rect(Rect2(interaction_position - Vector2(22, 28), Vector2(44, 54)), Color("302b32"), true)
+		_draw_canvas.draw_rect(Rect2(interaction_position - Vector2(22, 28), Vector2(44, 54)), Color(color, 0.62), false, 2.0)
+		_draw_canvas.draw_circle(interaction_position + Vector2(0, -7), 7.0, Color(color, 0.82 if built else 0.36))
 	if not is_chamber:
 		var title_y: = position.y + (84.0 if built else 67.0)
 		var title: = _workshop_name(workshop_id, status)
@@ -2620,7 +2665,7 @@ func _draw_workshop_site(workshop_id: String, status: Dictionary, selected: bool
 		if built and max_level > 1:
 			var dot_start: = position.x - float(max_level - 1) * 7.0
 			for dot_index in range(max_level):
-				draw_circle(
+				_draw_canvas.draw_circle(
 					Vector2(dot_start + float(dot_index) * 14.0, title_y + 18.0),
 					3.5,
 					Color(color, 0.9 if dot_index < level else 0.18)
@@ -2631,7 +2676,7 @@ func _draw_workshop_site(workshop_id: String, status: Dictionary, selected: bool
 		elif selected:
 			_draw_workshop_selection_preview(workshop_id, position, color)
 	if selected:
-		draw_arc(interaction_position + Vector2(0, 4), 88.0 if not is_chamber else 48.0, 0, TAU, 48, Color(color, 0.88), 2.4)
+		_draw_canvas.draw_arc(interaction_position + Vector2(0, 4), 88.0 if not is_chamber else 48.0, 0, TAU, 48, Color(color, 0.88), 2.4)
 
 
 func _draw_workshop_icon(
@@ -2657,7 +2702,7 @@ func _draw_workshop_icon(
 	}.get(finish_id, Color.WHITE))
 	var tint: = Color(finish_tint, alpha) if built else Color(0.48, 0.46, 0.43, 0.68)
 	if built:
-		draw_circle(position + Vector2(0, -4), 68.0, Color(color, 0.045 * alpha))
+		_draw_canvas.draw_circle(position + Vector2(0, -4), 68.0, Color(color, 0.045 * alpha))
 	_draw_texture_bounded(_workshop_texture(workshop_id), position, Vector2(184, 124), tint)
 	if not built or finish_id == "original":
 		return
@@ -2667,21 +2712,21 @@ func _draw_workshop_icon(
 		"starforged": Color("c39aff"),
 		"deepheart": Color("72f29b"),
 	}.get(finish_id, color)
-	draw_arc(position + Vector2(0, 1), 72.0, PI, TAU, 28, Color(finish_color, 0.42 * alpha), 2.0)
+	_draw_canvas.draw_arc(position + Vector2(0, 1), 72.0, PI, TAU, 28, Color(finish_color, 0.42 * alpha), 2.0)
 	if finish_id == "riveted":
 		for offset in [Vector2(-58, -34), Vector2(58, -34), Vector2(-58, 30), Vector2(58, 30)]:
-			draw_circle(position + offset, 3.1, Color(finish_color, 0.82 * alpha))
+			_draw_canvas.draw_circle(position + offset, 3.1, Color(finish_color, 0.82 * alpha))
 	elif finish_id == "crystal":
 		for offset in [Vector2(-63, -9), Vector2(63, -9)]:
 			var center: Vector2 = position + Vector2(offset)
 			var diamond: PackedVector2Array = PackedVector2Array([center + Vector2(0, -8), center + Vector2(5, 0), center + Vector2(0, 8), center + Vector2(-5, 0)])
-			draw_colored_polygon(diamond, Color(finish_color, 0.74 * alpha))
+			_draw_canvas.draw_colored_polygon(diamond, Color(finish_color, 0.74 * alpha))
 	elif finish_id == "starforged":
 		for index in range(5):
 			var angle: = TAU * float(index) / 5.0 - PI * 0.5
-			draw_circle(position + Vector2.from_angle(angle) * 72.0, 2.8, Color(finish_color, 0.86 * alpha))
+			_draw_canvas.draw_circle(position + Vector2.from_angle(angle) * 72.0, 2.8, Color(finish_color, 0.86 * alpha))
 	elif finish_id == "deepheart":
-		draw_circle(position + Vector2(0, -5), 75.0, Color(finish_color, 0.045 * alpha))
+		_draw_canvas.draw_circle(position + Vector2(0, -5), 75.0, Color(finish_color, 0.045 * alpha))
 
 
 func _draw_workshop_selection_preview(workshop_id: String, position: Vector2, color: Color) -> void :
@@ -2694,14 +2739,14 @@ func _draw_workshop_selection_preview(workshop_id: String, position: Vector2, co
 	if String(_workshop_panel_preview.get("workshop_id", "")) == workshop_id:
 		preview = String(_workshop_panel_preview.get("value", current))
 	var rail_center: = position + Vector2(0, -101)
-	draw_rect(Rect2(rail_center - Vector2(82, 18), Vector2(164, 36)), Color(0.025, 0.035, 0.045, 0.84), true)
-	draw_rect(Rect2(rail_center - Vector2(82, 18), Vector2(164, 36)), Color(color, 0.48), false, 1.5)
+	_draw_canvas.draw_rect(Rect2(rail_center - Vector2(82, 18), Vector2(164, 36)), Color(0.025, 0.035, 0.045, 0.84), true)
+	_draw_canvas.draw_rect(Rect2(rail_center - Vector2(82, 18), Vector2(164, 36)), Color(color, 0.48), false, 1.5)
 	var preview_label: = "EQUIPPED" if preview == current else "PREVIEW"
 	_draw_centered_text("%s · %s" % [preview_label, preview.replace("_", " ").to_upper()], rail_center + Vector2(0, 4), 11, Color(color, 0.96))
 	var dot_start: = rail_center.x - float(options.size() - 1) * 8.0
 	for option_index in range(options.size()):
 		var is_current: = String(options[option_index]) == preview
-		draw_circle(Vector2(dot_start + option_index * 16.0, rail_center.y + 24.0), 4.0, Color(color, 0.94 if is_current else 0.24))
+		_draw_canvas.draw_circle(Vector2(dot_start + option_index * 16.0, rail_center.y + 24.0), 4.0, Color(color, 0.94 if is_current else 0.24))
 
 
 func _workshop_texture(workshop_id: String) -> Texture2D:
@@ -2730,7 +2775,7 @@ func _draw_centered_text(text: String, center: Vector2, font_size: int, color: C
 	if text.is_empty():
 		return
 	var font: Font = ThemeDB.fallback_font
-	draw_string(font, center - Vector2(130, 0), text, HORIZONTAL_ALIGNMENT_CENTER, 260.0, font_size, color)
+	_draw_canvas.draw_string(font, center - Vector2(130, 0), text, HORIZONTAL_ALIGNMENT_CENTER, 260.0, font_size, color)
 
 
 func _draw_relic_museum(selected: bool) -> void :
@@ -2739,7 +2784,7 @@ func _draw_relic_museum(selected: bool) -> void :
 	var museum_color: = _workshop_color("treasure_chamber")
 	_draw_ellipse_shape(DEEP_HOARD_POSITION + Vector2(0, 111), Vector2(202, 38), Color(0, 0, 0, 0.44))
 	if chamber_built:
-		draw_circle(DEEP_HOARD_POSITION + Vector2(0, -4), 180.0, Color(museum_color, 0.035))
+		_draw_canvas.draw_circle(DEEP_HOARD_POSITION + Vector2(0, -4), 180.0, Color(museum_color, 0.035))
 		_draw_texture_bounded(_premium_texture(TREASURE_CHAMBER_TEXTURE_PATH), DEEP_HOARD_POSITION, Vector2(460, 307))
 	else:
 		_draw_texture_bounded(
@@ -2748,7 +2793,7 @@ func _draw_relic_museum(selected: bool) -> void :
 			Vector2(460, 307),
 			Color(0.42, 0.4, 0.38, 0.3)
 		)
-		draw_arc(DEEP_HOARD_POSITION + Vector2(0, 35), 126.0, - PI * 0.5, PI * 1.5, 56, Color(museum_color, 0.18), 3.0)
+		_draw_canvas.draw_arc(DEEP_HOARD_POSITION + Vector2(0, 35), 126.0, - PI * 0.5, PI * 1.5, 56, Color(museum_color, 0.18), 3.0)
 	_draw_ellipse_shape(RELIC_PEDESTAL_POSITION + Vector2(0, 40), Vector2(67, 20), Color(0, 0, 0, 0.44))
 	_draw_texture_bounded(
 		_premium_texture(RELIC_PEDESTAL_TEXTURE_PATH),
@@ -2761,7 +2806,7 @@ func _draw_relic_museum(selected: bool) -> void :
 	for index in range(slots.size()):
 		var slot: = slots[index]
 		if index >= relics.size():
-			draw_circle(slot + Vector2(0, -21), 15.0, Color(museum_color, 0.025 if chamber_built else 0.012))
+			_draw_canvas.draw_circle(slot + Vector2(0, -21), 15.0, Color(museum_color, 0.025 if chamber_built else 0.012))
 			continue
 		var relic: Dictionary = relics[index]
 		_draw_relic_shape(relic, slot + Vector2(0, -25), 0.56)
@@ -2775,7 +2820,7 @@ func _draw_relic_museum(selected: bool) -> void :
 		var resource_id: = _workshop_resource(chamber_status).replace("_", " ").to_upper()
 		_draw_centered_text("BUILD · %d / %d %s" % [delivered, required, resource_id], DEEP_HOARD_POSITION + Vector2(0, -146), 11, Color(museum_color, 0.9))
 	if selected:
-		draw_arc(RELIC_PEDESTAL_POSITION + Vector2(0, 4), 80.0, 0, TAU, 52, Color(museum_color, 0.9), 2.5)
+		_draw_canvas.draw_arc(RELIC_PEDESTAL_POSITION + Vector2(0, 4), 80.0, 0, TAU, 52, Color(museum_color, 0.9), 2.5)
 
 
 func _museum_slot_positions(slot_count: int) -> Array[Vector2]:
@@ -2809,13 +2854,13 @@ func _draw_relic_shape(relic: Dictionary, position: Vector2, scale_factor: float
 	var color: = _relic_color(relic_id)
 	var shadow_size: = Vector2(30, 9) * scale_factor
 	_draw_ellipse_shape(position + Vector2(0, 31) * scale_factor, shadow_size, Color(0, 0, 0, 0.42))
-	draw_circle(position, 35.0 * scale_factor, Color(color, 0.045))
+	_draw_canvas.draw_circle(position, 35.0 * scale_factor, Color(color, 0.045))
 	var texture: = _relic_texture(relic_id)
 	if texture != null:
 		_draw_texture_bounded(texture, position, Vector2.ONE * 96.0 * scale_factor)
 	else:
-		draw_circle(position, 24.0 * scale_factor, Color(color, 0.75))
-		draw_arc(position, 23.0 * scale_factor, 0, TAU, 28, Color(color, 0.98), 3.0 * scale_factor)
+		_draw_canvas.draw_circle(position, 24.0 * scale_factor, Color(color, 0.75))
+		_draw_canvas.draw_arc(position, 23.0 * scale_factor, 0, TAU, 28, Color(color, 0.98), 3.0 * scale_factor)
 
 
 func _relic_texture(relic_id: String) -> Texture2D:
@@ -2840,10 +2885,10 @@ func _draw_carried_relic() -> void :
 	if carried.is_empty():
 		return
 	var rope: = PackedVector2Array(_relic_rope_points)
-	draw_polyline(rope, Color(0.13, 0.08, 0.045, 0.72), 7.0, true)
-	draw_polyline(rope, Color("c39757"), 3.2, true)
+	_draw_canvas.draw_polyline(rope, Color(0.13, 0.08, 0.045, 0.72), 7.0, true)
+	_draw_canvas.draw_polyline(rope, Color("c39757"), 3.2, true)
 	for index in range(1, _relic_rope_points.size() - 1, 2):
-		draw_circle(_relic_rope_points[index], 2.4, Color("efd29a"))
+		_draw_canvas.draw_circle(_relic_rope_points[index], 2.4, Color("efd29a"))
 	var relic_position: = _relic_rope_points[_relic_rope_points.size() - 1]
 	_draw_relic_shape(carried, relic_position, 0.9)
 	_draw_centered_text(_relic_name(carried), relic_position + Vector2(0, -57), 11, Color(0.95, 0.84, 0.64, 0.94))
@@ -2861,7 +2906,7 @@ func _draw_deep_elevator(selected: bool) -> void :
 	_draw_ellipse_shape(DEEP_ELEVATOR + Vector2(0, 104), Vector2(135, 31), Color(0, 0, 0, 0.46))
 	if stage in ["powered", "complete"]:
 		var aura_color: = Color(0.3, 0.92, 1.0, 0.12) if stage == "powered" else Color(0.62, 1.0, 0.76, 0.14)
-		draw_circle(DEEP_ELEVATOR + Vector2(0, 6), 148, aura_color)
+		_draw_canvas.draw_circle(DEEP_ELEVATOR + Vector2(0, 6), 148, aura_color)
 	_draw_texture_bounded(
 		DEEP_ELEVATOR_TERMINAL_TEXTURE,
 		DEEP_ELEVATOR + Vector2(0, 3),
@@ -2871,7 +2916,7 @@ func _draw_deep_elevator(selected: bool) -> void :
 	_draw_elevator_resource_sockets()
 	if stage in ["powered", "complete"]:
 		var pulse: = 0.62 + sin(float(Time.get_ticks_msec()) * 0.004) * 0.1
-		draw_arc(
+		_draw_canvas.draw_arc(
 			DEEP_ELEVATOR + Vector2(0, 4),
 			52,
 			0,
@@ -2882,7 +2927,7 @@ func _draw_deep_elevator(selected: bool) -> void :
 		)
 	if selected:
 		var selected_color: = Color("7cf1dd") if stage in ["powered", "complete"] else Color("efc267")
-		draw_arc(DEEP_ELEVATOR + Vector2(0, 7), 151, 0, TAU, 64, selected_color, 2.7)
+		_draw_canvas.draw_arc(DEEP_ELEVATOR + Vector2(0, 7), 151, 0, TAU, 64, selected_color, 2.7)
 
 
 func _draw_elevator_resource_sockets() -> void :
@@ -2894,8 +2939,8 @@ func _draw_elevator_resource_sockets() -> void :
 		var progress: = clampf(float(delivered.get(resource_id, 0)) / float(required), 0.0, 1.0)
 		var socket_position: = DEEP_ELEVATOR + Vector2(ELEVATOR_SOCKET_OFFSETS[resource_id])
 		var resource_color: = Color(ELEVATOR_RESOURCE_COLORS[resource_id])
-		draw_circle(socket_position, 14.0, Color(resource_color, 0.035 + progress * 0.13))
-		draw_arc(
+		_draw_canvas.draw_circle(socket_position, 14.0, Color(resource_color, 0.035 + progress * 0.13))
+		_draw_canvas.draw_arc(
 			socket_position,
 			10.0,
 			- PI * 0.5,
@@ -2905,23 +2950,23 @@ func _draw_elevator_resource_sockets() -> void :
 			2.4
 		)
 		if progress >= 1.0:
-			draw_circle(socket_position, 4.2, Color(resource_color, 0.88))
+			_draw_canvas.draw_circle(socket_position, 4.2, Color(resource_color, 0.88))
 
 
 func _draw_texture_bounded(texture: Texture2D, center: Vector2, bounds: Vector2, modulate: Color = Color.WHITE) -> void :
 	var source: = Vector2(texture.get_size())
 	var scale_factor: = minf(bounds.x / maxf(1.0, source.x), bounds.y / maxf(1.0, source.y))
 	var size: = source * scale_factor
-	draw_texture_rect(texture, Rect2(center - size * 0.5, size), false, modulate)
+	_draw_canvas.draw_texture_rect(texture, Rect2(center - size * 0.5, size), false, modulate)
 
 
 func _draw_texture_rotated_bounded(texture: Texture2D, center: Vector2, bounds: Vector2, rotation: float, modulate: Color = Color.WHITE) -> void :
 	var source: = Vector2(texture.get_size())
 	var scale_factor: = minf(bounds.x / maxf(1.0, source.x), bounds.y / maxf(1.0, source.y))
 	var size: = source * scale_factor
-	draw_set_transform(center, rotation, Vector2.ONE)
-	draw_texture_rect(texture, Rect2( - size * 0.5, size), false, modulate)
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	_draw_canvas.draw_set_transform(center, rotation, Vector2.ONE)
+	_draw_canvas.draw_texture_rect(texture, Rect2( - size * 0.5, size), false, modulate)
+	_draw_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 func _draw_ellipse_shape(center: Vector2, radii: Vector2, color: Color) -> void :
@@ -2929,4 +2974,4 @@ func _draw_ellipse_shape(center: Vector2, radii: Vector2, color: Color) -> void 
 	for index in 32:
 		var angle: = TAU * float(index) / 32.0
 		points.append(center + Vector2(cos(angle) * radii.x, sin(angle) * radii.y))
-	draw_colored_polygon(points, color)
+	_draw_canvas.draw_colored_polygon(points, color)

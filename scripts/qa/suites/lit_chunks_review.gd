@@ -42,14 +42,14 @@ func run() -> void:
 		var trimmed: ImageTexture = ImageTexture.create_from_image(image.get_region(used))
 		var offset: Vector2 = (Vector2(used.position) + Vector2(used.size) * 0.5 - Vector2(image.get_size()) * 0.5) * float(node.texture_scale)
 		cone_state.append({"node":node,"texture":node.texture,"offset":node.offset,"cropped":trimmed,"crop_offset":offset,"before":str(image.get_size()),"after":str(used)})
-	for id in ["baseline", "combined", "cutout", "combined_cutout", "restored"]:
+	for id in ["baseline", "combined", "sections", "optimized", "restored"]:
 		set_variant(id)
 		await measure(id, 45.0 if id == "baseline" else 20.0)
 	# Freeze simulation and time for paired pixels; time spent capturing is not measured.
 	var prior_scale: float = Engine.time_scale
 	Engine.time_scale = 0.0
 	main.get_tree().paused = true
-	for id in ["baseline", "combined", "cutout", "combined_cutout", "restored"]:
+	for id in ["baseline", "combined", "sections", "optimized", "restored"]:
 		set_variant(id)
 		world.queue_redraw()
 		for frame in 4: await main.get_tree().process_frame
@@ -65,9 +65,10 @@ func run() -> void:
 	main.get_tree().quit(0)
 
 func set_variant(id: String) -> void:
-	world.lit_floor_chunks.enabled = id in ["floor", "combined", "combined_cutout"]
+	world.lit_floor_chunks.enabled = id in ["floor", "combined", "sections", "optimized"]
+	world.lit_draw_sections.enabled = id in ["sections", "optimized"]
 	world.material = cutout_material if id in ["cutout", "combined_cutout"] else original_material
 	for entry in cone_state:
-		entry.node.texture = entry.cropped if id in ["cones", "combined", "combined_cutout"] else entry.texture
-		entry.node.offset = entry.crop_offset if id in ["cones", "combined", "combined_cutout"] else entry.offset
+		entry.node.texture = entry.cropped if id in ["cones", "combined", "optimized"] else entry.texture
+		entry.node.offset = entry.crop_offset if id in ["cones", "combined", "optimized"] else entry.offset
 	world.queue_redraw()
