@@ -7,3 +7,7 @@ QA: all ten current gameplay cases, build flavor, protected files, native captur
 Confirmed: Teamwork previously threw repeated bool(null) errors in hub. The 22 pet-skill native tests and two actual-dig controls are documented on codex-pet-skill-performance. Physical iPhone's delayed ~30-second FPS collapse remains unconfirmed as fixed. Next: compare the user's same hub/Mossvein situation on dev.4; preserve graphics and investigate remaining device-specific slowdown if it persists.
 
 Test URL: https://corpax88.github.io/Ever-Deeper/dev/?v=0.46.9-dev.4
+
+## Device follow-up
+
+User reports dev.4 still falls to 19.4 FPS at 32 seconds; direct Safari and home-screen launch behave the same. Actual Web Audio vs Dummy test completed without reproducing a delayed collapse. See docs/performance-diagnosis/browser-audio/README.md for full measurements, previously missed WebGL warnings, shutdown-only audio error, and next diagnostic design. No newer release published.
