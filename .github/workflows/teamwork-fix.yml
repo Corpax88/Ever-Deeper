@@ -1,0 +1,29 @@
+name: Validate Teamwork hub fix
+on:
+  push:
+    branches: [codex-teamwork-hub-fix]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot
+        run: |
+          curl -L --fail --retry 3 --retry-all-errors https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Import and gameplay regression
+        run: |
+          mkdir -p qa-results
+          Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > qa-results/import.log 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' qa-results/import.log; then exit 1; fi
+          python3 tools/check_invariants.py
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: teamwork-core-regression
+          path: qa-results
