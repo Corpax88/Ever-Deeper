@@ -289,7 +289,12 @@ async function captureSuite(options) {
       const text = message.text();
       if (GAMEPLAY && /OVERHAUL_|SCRIPT ERROR|Parse Error/.test(text)) process.stdout.write(text+"\n");
       if (/SCRIPT ERROR|Parse Error|Failed to load/.test(text)) pageErrors.push(text);
-      if (text.startsWith("EVER_DEEPER_HERO_MOTION_DAMAGE ")) motionDamage.push(text);
+      if (text.startsWith("EVER_DEEPER_HERO_MOTION_DAMAGE ")) {
+        motionDamage.push(text);
+        // Damage is live progress. Long SwiftShader recordings must not look
+        // stalled merely because they contain only one still-image capture.
+        markerQueue.push(MARKER_PREFIX + "PROGRESS " + text);
+      }
       if (text.startsWith("EVER_DEEPER_HERO_STATE ")) heroStates.push(JSON.parse(text.slice("EVER_DEEPER_HERO_STATE ".length)));
       if (text.includes(MARKER_PREFIX)) markerQueue.push(text.slice(text.indexOf(MARKER_PREFIX)));
       if (GAMEPLAY && /^EVER_DEEPER_OVERHAUL_(GAMEPLAY_|INPUT_READY )/.test(text)) markerQueue.push(text);
