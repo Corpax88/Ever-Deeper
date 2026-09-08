@@ -1,0 +1,144 @@
+name: Validate approved Gruvepappa v28
+on:
+  push:
+    branches: [codex-hero-v28]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install matching Godot and export templates
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ripgrep
+          curl -L --fail --retry 3 --retry-all-errors https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+          curl -L --fail --retry 3 --retry-all-errors https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz -o "$RUNNER_TEMP/templates.tpz"
+          unzip -q "$RUNNER_TEMP/templates.tpz" 'templates/web*.zip' 'templates/version.txt' -d "$RUNNER_TEMP/templates"
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          cp "$RUNNER_TEMP/templates/templates/"* "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+      - name: Import, verify and export both flavors
+        run: |
+          mkdir -p "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/production" "$RUNNER_TEMP/review"
+          Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > "$RUNNER_TEMP/review/import.log" 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/review/import.log"; then exit 1; fi
+          python3 tools/check_invariants.py
+          Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-release 'Web DEV' "$RUNNER_TEMP/candidate/index.html" > "$RUNNER_TEMP/review/export-dev.log" 2>&1
+          Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-release 'Web Production' "$RUNNER_TEMP/production/index.html" > "$RUNNER_TEMP/review/export-production.log" 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/review/export-"*.log; then exit 1; fi
+          python3 tools/install-render-probe-shell.py "$RUNNER_TEMP/candidate/index.html"
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/candidate/index.pck" --output "$RUNNER_TEMP/review/core"
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/candidate/index.pck" --cases build-flavor --output "$RUNNER_TEMP/review/dev-flavor"
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/production/index.pck" --cases build-flavor --output "$RUNNER_TEMP/review/production-flavor"
+      - name: Bind exact candidate files
+        run: |
+          python3 - <<'PY'
+          import os,json,hashlib
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'candidate'
+          names=['index.html','index.js','index.pck','index.wasm','index.audio.position.worklet.js','index.audio.worklet.js','index.png','index.icon.png','index.apple-touch-icon.png']
+          files={name:{'size':(root/name).stat().st_size,'sha256':hashlib.sha256((root/name).read_bytes()).hexdigest()} for name in names}
+          for file in root.iterdir():
+            if file.name not in names: file.unlink()
+          (root/'manifest.json').write_text(json.dumps(files,indent=2)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hero-v28-candidate
+          path: ${{ runner.temp }}/candidate
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hero-v28-build-review
+          path: ${{ runner.temp }}/review
+          retention-days: 30
+  visual:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        range: ['1-48', '49-96', '97-144', '145-192', '193-216']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: hero-v28-candidate
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Capture actual mobile game states
+        env:
+          HERO_V28_CAPTURE: '1'
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          RANGE='${{ matrix.range }}'
+          export CAPTURE_START="${RANGE%-*}" CAPTURE_END="${RANGE#*-}"
+          node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hero-v28-visual-${{ matrix.range }}
+          path: ${{ runner.temp }}/review
+          retention-days: 30
+  gameplay:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: hero-v28-candidate
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify rendered mining and mobile touch
+        env:
+          OVERHAUL_GAMEPLAY: '1'
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hero-v28-gameplay
+          path: ${{ runner.temp }}/review
+          retention-days: 30
+  motion:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: hero-v28-candidate
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Record native hero motion and actual mining damage
+        env:
+          HERO_MOTION: '1'
+          CAPTURE_END: '1'
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hero-v28-motion
+          path: ${{ runner.temp }}/review
+          retention-days: 30

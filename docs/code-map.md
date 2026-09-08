@@ -74,3 +74,11 @@ through `composite_pass`. The exact-package review toggles only this choice.
 `dev-lighting.yml` includes visible and struck gate coverage in the same package run.
 The physical DEV6 report and isolated studies are recorded under
 `docs/performance-diagnosis/light-cost/`.
+
+## Approved Gruvepappa v28
+
+Native Blender export and atomic atlas packaging live in `tools/hero_v28/`.
+`assets/hero/dad/<gear>/` holds the real 160px animation cells and garment masks.
+`visual_capture_driver.gd` owns the opt-in v28 mobile matrix; ordinary play retains
+the existing player, equipment, outfit and save behavior. Release evidence and the
+DEV-only publisher live in `.github/hero-v28/`.

@@ -103,3 +103,14 @@ paired output, including maximum-range light styles, before accepting a package.
 The final package workflow includes the visible/struck gate harness using the same
 artifact; a separate supplemental run is no longer needed. Source and production
 flavor checks, native image review and two full DPR3 browser tests remain required.
+
+## Intentional Gruvepappa v28 replacement
+
+The 99 protected hero files (88 atlases and eleven manifests) are intentionally
+updated to the approved native v28 model. Cell size, equipment IDs, frame timing,
+shader and outfit behavior are preserved. Four projected floor anchors correct an
+old preceding-camera sample; native grip and bone targets are validated at export.
+The hero workflow checks all eleven tools, four directions, idle/blink/walk/impact,
+all outfits, worlds and relevant environmental states in the exact exported package.
+Real motion must also produce damage with worn, Crusher and Deepcore tools in all
+four directions. Inspect the captured package before setting the release review flags.
