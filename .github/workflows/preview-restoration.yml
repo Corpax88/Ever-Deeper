@@ -1,0 +1,59 @@
+name: Diagnose exact-package light-preview restoration
+on:
+  push:
+    branches: [codex-preview-restoration-dev9]
+    paths: ['tools/diagnose-preview-restoration.gd', '.github/workflows/preview-restoration.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - mode: dev8
+            run_id: 34267571804
+            artifact: hero-v28-candidate
+            pck: d342642443ca76d46f465f1883f68ff9ea226e9e79cea5330e00c74e37e01378
+          - mode: dev9
+            run_id: 34278070936
+            artifact: dev-lighting-candidate
+            pck: 3d0d4c5b79ee3db408dcfcafa20f5d793129a41317068e26bd19760d1d2c215f
+          - mode: dev9-originals
+            run_id: 34278070936
+            artifact: dev-lighting-candidate
+            pck: 3d0d4c5b79ee3db408dcfcafa20f5d793129a41317068e26bd19760d1d2c215f
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          run-id: ${{ matrix.run_id }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - name: Install renderer and verify package
+        run: |
+          echo "${{ matrix.pck }}  $RUNNER_TEMP/candidate/index.pck" | sha256sum -c -
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri ripgrep
+          curl -L --fail --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Capture raw preview pixels and renderer state
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          mkdir -p "$RUNNER_TEMP/review" "$RUNNER_TEMP/pack-run"
+          cd "$RUNNER_TEMP/pack-run"
+          xvfb-run -a -s '-screen 0 2560x1440x24' timeout 300 Godot_v4.7.2-stable_linux.x86_64 --path . --main-pack "$RUNNER_TEMP/candidate/index.pck" --script "$GITHUB_WORKSPACE/tools/diagnose-preview-restoration.gd" --resolution 2328x1260 --audio-driver Dummy -- --output="$RUNNER_TEMP/review" --mode="${{ matrix.mode }}" > "$RUNNER_TEMP/review/native.log" 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/review/native.log"; then exit 1; fi
+          rg 'PREVIEW_DIAG_COMPLETE' "$RUNNER_TEMP/review/native.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: preview-restoration-${{ matrix.mode }}
+          path: ${{ runner.temp }}/review
+          retention-days: 30
