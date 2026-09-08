@@ -1,0 +1,44 @@
+name: Compare DEV6 floor passes and smaller light bounds
+on:
+  push:
+    branches: [codex-floor-pass]
+    paths: ['scripts/**', 'shaders/**', '.github/workflows/floor-pass.yml']
+permissions:
+  contents: read
+jobs:
+  rendered:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        area: [hub, mossvein]
+        resolution: [844x390, 2328x1260]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install matching native renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri ripgrep
+          curl -L --fail --retry 3 --retry-all-errors https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Import exact study source
+        run: |
+          mkdir -p "$RUNNER_TEMP/review"
+          Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > "$RUNNER_TEMP/review/import.log" 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/review/import.log"; then exit 1; fi
+          python3 tools/check_invariants.py
+      - name: Paired baseline, floor, cone, combined and restored rendering
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          xvfb-run -a -s '-screen 0 2560x1440x24' timeout 420 Godot_v4.7.2-stable_linux.x86_64 --path . --resolution '${{ matrix.resolution }}' --audio-driver Dummy -- --qa-mobile-performance --perf-floor-pass --probe-area='${{ matrix.area }}' --perf-output="$RUNNER_TEMP/review" > "$RUNNER_TEMP/review/native.log" 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/review/native.log"; then exit 1; fi
+          rg LIT_CHUNKS_COMPLETE "$RUNNER_TEMP/review/native.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: floor-pass-${{ matrix.area }}-${{ matrix.resolution }}
+          path: ${{ runner.temp }}/review
+          retention-days: 30
