@@ -68,9 +68,17 @@ func run() -> void:
 		if not require(mined and RunState.dug_cells(String(mines[area]), 2).has(world._cell_index(edge.cell)), "Mining opens and persists the cell"): return
 		await paired(area + "-mined-corner", "wide", Vector2(edge.direction))
 		var gates: Array = world.get_drill_gates()
-		if not require(not gates.is_empty() and not gates[0].positions.is_empty(), "Drill gate fixture"): return
-		world.restore_position(Vector2(gates[0].positions[0]) + Vector2(0, 100))
-		await paired(area + "-gate", "focused", Vector2.UP)
+		if area == "starfall":
+			# Starfall's authored Depth 2 has no drillGated deposits. Review its
+			# actual forge courtyard; the other three profiles cover drill gates.
+			if not require(gates.is_empty(), "Starfall has no authored drill gate"): return
+			var forge: Dictionary = world.station_positions.forge
+			world.restore_position(Vector2(float(forge.x), float(forge.y)) + Vector2(0, 100))
+			await paired(area + "-forge", "focused", Vector2.UP)
+		else:
+			if not require(not gates.is_empty() and not gates[0].positions.is_empty(), "Drill gate fixture"): return
+			world.restore_position(Vector2(gates[0].positions[0]) + Vector2(0, 100))
+			await paired(area + "-gate", "focused", Vector2.UP)
 		# Isolated reached-corner fixture: retain the permanent outer wall unchanged.
 		for row in range(1, 5):
 			for col in range(1, 5):
