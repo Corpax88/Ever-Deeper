@@ -1,7 +1,7 @@
 name: Pet skill sustained performance
 on:
   push:
-    branches: [codex-pet-skill-performance]
+    branches: [codex-pet-dig-coverage]
 permissions:
   contents: read
 jobs:
@@ -12,8 +12,8 @@ jobs:
       fail-fast: false
       max-parallel: 22
       matrix:
-        area: [hub, mossvein]
-        skill: [lantern, fetch, trailrunner, big_paws, ore_nose, long_beam, shake, teamwork, echo, homeward, all]
+        area: [mossvein]
+        skill: [shake, teamwork]
     steps:
       - uses: actions/checkout@v4
       - name: Install renderer

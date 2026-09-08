@@ -34,6 +34,8 @@ func run() -> void:
 		if world.has_method("set_mine_held"): world.set_mine_held(false)
 		trials.append({"state":state,"initial":initial,"final":snapshot(),"idle":idle,"active":active,
 			"exercise_supported":exercise_supported,"commands":commands.duplicate(true)})
+		if state=="on" and area=="mossvein" and skill in ["shake","teamwork"] and mole.dug_total<=int(initial.dug):
+			fail("Pet digging was not exercised"); return
 		print("PET_TRIAL_DONE " + JSON.stringify({"area":area,"skill":skill,"state":state,"final":snapshot()}))
 	var report: Dictionary = {"area":area,"skill":skill,"trials":trials,
 		"rendered":DisplayServer.get_name()!="headless","renderer":RenderingServer.get_video_adapter_name(),
@@ -165,7 +167,7 @@ func prepare_exercise() -> void:
 		exercise_wall=dig_target()
 		if is_finite(exercise_wall.x):
 			var floor_point: Vector2 = mole._nearby_floor(exercise_wall)
-			for direction in [Vector2.LEFT,Vector2.RIGHT,Vector2.UP,Vector2.DOWN]:
+			for direction in ([Vector2.LEFT,Vector2.RIGHT,Vector2.UP,Vector2.DOWN] if skill=="teamwork" else []):
 				var candidate: Vector2 = exercise_wall+direction*52.0
 				if not mole._blocked(candidate):
 					floor_point=candidate
@@ -209,6 +211,13 @@ func exercise_tick(elapsed: float) -> void:
 		"teamwork":
 			if exercise_supported:
 				world.set_mine_held(true)
+				# Keep the player swing pending so the pet can land its own assist.
+				world.swing_active=true
+				world.swing_elapsed=0.0
+				world.swing_duration=1000.0
+				world.swing_hit=false
+				mole.global_position=world.player.global_position
+				mole.assist_cooldown=0.0
 				mole._think()
 				ok=world.companion_can_dig(world.player.global_position+world.player.facing_vector*52.0)
 	commands.append({"at_seconds":elapsed,"command":action_id,"accepted":ok})
