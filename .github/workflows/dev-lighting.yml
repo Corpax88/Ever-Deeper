@@ -1,7 +1,7 @@
 name: Validate DEV7 shared floor lighting
 on:
   push:
-    branches: [codex-floor-release]
+    branches: [codex-floor-lighting-dev7]
     paths: ['scripts/**', 'shaders/**', 'export_presets.cfg', 'tools/render-probe*', 'tools/install-render-probe-shell.py', 'docs/unchanged-files.json', '.github/workflows/dev-lighting.yml']
 permissions:
   contents: read
