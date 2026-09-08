@@ -77,6 +77,7 @@ func _run_build_flavor_qa() -> void :
 	var feature_enabled= OS.has_feature(main.DEV_BUILD_FEATURE)
 	var menu_present= main.developer_menu != null
 	var dev_resource_present= ResourceLoader.exists("res://scripts/dev/developer_menu.gd")
+	var render_probe_present= ResourceLoader.exists("res://scripts/dev/render_probe.gd")
 	var user_dir_name= String(ProjectSettings.get_setting_with_override("application/config/custom_user_dir_name"))
 	var expected_user_dir= (
 		"Ever Deeper- Godot Development Port"
@@ -92,6 +93,7 @@ func _run_build_flavor_qa() -> void :
 	if (
 		feature_enabled != menu_present
 		or feature_enabled != dev_resource_present
+		or feature_enabled != render_probe_present
 		or not save_contract_valid
 	):
 		push_error(
@@ -113,4 +115,3 @@ func _run_build_flavor_qa() -> void :
 		]
 	)
 	main.get_tree().quit(0)
-

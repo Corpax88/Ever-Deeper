@@ -11,6 +11,10 @@ func run() -> void:
 		if arg.begins_with("--perf-output="): output_dir = arg.get_slice("=", 1)
 		if arg == "--perf-capture": captures = true
 	DirAccess.make_dir_recursive_absolute(output_dir)
+	if "--perf-render-probe-review" in OS.get_cmdline_user_args():
+		var reviewer = load("res://scripts/qa/suites/render_probe_review.gd").new(main, output_dir)
+		await reviewer.run()
+		return
 	if "--perf-floor-review" in OS.get_cmdline_user_args():
 		await review_floor_release()
 		return
@@ -304,5 +308,5 @@ func review_floor_release() -> void:
 		await main.get_tree().create_timer(1.0).timeout
 		main.depth_world.set_mine_held(false)
 		await capture_review("floor-" + String(mine_id) + "-terrain")
-	print("FLOOR_RELEASE_REVIEW_OK captures=11 version=0.46.9-dev.4")
+	print("FLOOR_RELEASE_REVIEW_OK captures=11 version=0.46.9-dev.5")
 	main.get_tree().quit(0)

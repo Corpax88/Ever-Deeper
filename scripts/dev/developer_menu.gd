@@ -152,6 +152,9 @@ var status_label: Label
 var reset_button: Button
 var frame_meter: FrameMeter
 var frame_meter_button: Button
+var render_probe_button: Button
+var render_probe: Control
+var _probe_meter_visible := false
 
 var _reset_armed_until_msec: int = 0
 var _last_viewport_size: = Vector2.ZERO
@@ -221,6 +224,30 @@ func toggle_frame_meter() -> void:
 		frame_meter.start()
 		frame_meter_button.text = "HIDE FPS"
 	close_menu()
+
+
+func start_render_probe() -> bool:
+	if render_probe == null:
+		render_probe = load("res://scripts/dev/render_probe.gd").new()
+		render_probe.name = "RenderProbe"
+		add_child(render_probe)
+		render_probe.completed.connect(_on_render_probe_completed)
+	if not render_probe.start(get_tree().current_scene):
+		set_status("Start in the hub or Depth 2 using the latest DEV page", true)
+		return false
+	_probe_meter_visible = frame_meter.visible
+	frame_meter.hide()
+	frame_meter.set_process(false)
+	toggle_button.disabled = true
+	close_menu()
+	return true
+
+
+func _on_render_probe_completed(_report: Dictionary) -> void:
+	toggle_button.disabled = false
+	if _probe_meter_visible:
+		frame_meter.show()
+		frame_meter.set_process(true)
 
 
 func set_status(message: String, is_error: bool = false) -> void :
@@ -375,6 +402,12 @@ func _build_drawer() -> void :
 	action_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	action_content.add_theme_constant_override("separation", 8)
 	scroll.add_child(action_content)
+	render_probe_button = _action_button("AUTO FPS TEST · 2 MIN", "render_probe", true)
+	render_probe_button.name = "AutoFPSTest"
+	render_probe_button.remove_meta("dev_command")
+	render_probe_button.tooltip_text = "Stand still in the hub or Depth 2; graphics are restored automatically"
+	render_probe_button.pressed.connect(start_render_probe)
+	action_content.add_child(render_probe_button)
 
 	_add_action_category("PROGRESSION PRESETS", PRESET_ACTIONS, true)
 	_add_action_category("EXACT LOCATION JUMPS", LOCATION_ACTIONS, true)
