@@ -1,4 +1,4 @@
-name: Preview native hero integration
+name: Validate approved Gruvepappa v28
 on:
   push:
     branches: [codex-hero-v28]
@@ -64,7 +64,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        range: ['1-16', '185-192']
+        range: ['1-48', '49-96', '97-144', '145-192', '193-217']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -87,5 +87,58 @@ jobs:
         if: always()
         with:
           name: hero-v28-visual-${{ matrix.range }}
+          path: ${{ runner.temp }}/review
+          retention-days: 30
+  gameplay:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: hero-v28-candidate
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify rendered mining and mobile touch
+        env:
+          OVERHAUL_GAMEPLAY: '1'
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hero-v28-gameplay
+          path: ${{ runner.temp }}/review
+          retention-days: 30
+  motion:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: hero-v28-candidate
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Record native hero motion and actual mining damage
+        env:
+          HERO_MOTION: '1'
+          CAPTURE_END: '1'
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hero-v28-motion
           path: ${{ runner.temp }}/review
           retention-days: 30

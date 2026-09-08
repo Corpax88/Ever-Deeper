@@ -153,32 +153,32 @@
   "directions": {
     "down": {
       "ground_anchor": [
-        84.35466766357422,
-        133.81949663162231
-      ]
-    },
-    "left": {
-      "ground_anchor": [
         81.44407272338867,
         124.19918298721313
       ]
     },
-    "up": {
+    "left": {
       "ground_anchor": [
         85.4561996459961,
         126.35711669921875
       ]
     },
-    "right": {
+    "up": {
       "ground_anchor": [
         83.86887550354004,
         126.48400068283081
       ]
+    },
+    "right": {
+      "ground_anchor": [
+        74.54380512237549,
+        126.35711669921875
+      ]
     }
   },
-  "source": "native dad v9",
+  "source": "approved native Gruvepappa v28",
   "poses_are_real": true,
-  "max_grip_error": 2.0758258872859228e-07,
+  "max_grip_error": 3.6684180292379e-07,
   "qa": {
     "down": {
       "frames": 120,
@@ -187,6 +187,20 @@
       "atlas_size": [
         1280,
         2400
+      ],
+      "silhouette_bounds": [
+        52,
+        31,
+        137,
+        171
+      ],
+      "previous_ground_anchor": [
+        84.35466766357422,
+        133.81949663162231
+      ],
+      "ground_anchor": [
+        81.44407272338867,
+        124.19918298721313
       ]
     },
     "left": {
@@ -196,6 +210,20 @@
       "atlas_size": [
         1280,
         2400
+      ],
+      "silhouette_bounds": [
+        32,
+        34,
+        140,
+        171
+      ],
+      "previous_ground_anchor": [
+        81.44407272338867,
+        124.19918298721313
+      ],
+      "ground_anchor": [
+        85.4561996459961,
+        126.35711669921875
       ]
     },
     "up": {
@@ -205,6 +233,20 @@
       "atlas_size": [
         1280,
         2400
+      ],
+      "silhouette_bounds": [
+        53,
+        39,
+        142,
+        172
+      ],
+      "previous_ground_anchor": [
+        85.4561996459961,
+        126.35711669921875
+      ],
+      "ground_anchor": [
+        83.86887550354004,
+        126.48400068283081
       ]
     },
     "right": {
@@ -214,7 +256,23 @@
       "atlas_size": [
         1280,
         2400
+      ],
+      "silhouette_bounds": [
+        60,
+        36,
+        168,
+        171
+      ],
+      "previous_ground_anchor": [
+        83.86887550354004,
+        126.48400068283081
+      ],
+      "ground_anchor": [
+        74.54380512237549,
+        126.35711669921875
       ]
     }
-  }
+  },
+  "visual_model": "Gruvepappa v28, approved by Mats",
+  "runtime_3d": false
 }

@@ -65,3 +65,12 @@ uses `.github/workflows/publish-dev-lighting.yml` and its sibling publisher.
 `tools/review-lit-gates.gd` and `.github/workflows/dev-lighting-gates.yml` verify actual
 visible, intact/struck gates from the unchanged exported PCK. Run this alongside the
 package suite because its initial gate positions can fall back to the entrance.
+
+### DEV7 floor lighting
+
+`shaders/lit_floor_composite.gdshader` combines the existing floor tint and wash
+before shared lighting. `lit_floor_chunks.gd` retains the DEV6 two-pass reference
+through `composite_pass`. The exact-package review toggles only this choice.
+`dev-lighting.yml` includes visible and struck gate coverage in the same package run.
+The physical DEV6 report and isolated studies are recorded under
+`docs/performance-diagnosis/light-cost/`.

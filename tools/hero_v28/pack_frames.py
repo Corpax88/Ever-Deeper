@@ -22,13 +22,18 @@ for direction in ['down','left','up','right']:
   cloth.paste(mask.resize((cell,cell),Image.Resampling.LANCZOS),pos)
  assert len(hashes)>count*.5
  assert cloth.getextrema()[1]>200
- beauty.save(out/(direction+'.png'),optimize=True);cloth.save(out/(direction+'-cloth.png'),optimize=True)
+
+ for im,name in [(beauty,direction+'.png'),(cloth,direction+'-cloth.png')]:
+  target=out/name;temporary=out/(name+'.partial')
+  im.save(temporary,format='PNG',optimize=True)
+  with Image.open(temporary) as check:check.verify()
+  temporary.replace(target)
  stats[direction]={'frames':count,'unique':len(hashes),'edge_clipping':[],'atlas_size':list(beauty.size),'silhouette_bounds':[min(b[0] for b in boxes),min(b[1] for b in boxes),max(b[2] for b in boxes),max(b[3] for b in boxes)]}
  m['directions'][direction]['ground_anchor']=[v*.8 for v in m['directions'][direction]['ground_anchor']]
  # Old manifests sampled the previous camera transform. Use the actual
  # projected floor origin so the new feet align with the gameplay shadow.
  assert all(0<v<cell for v in m['directions'][direction]['ground_anchor'])
- stats[direction]['previous_ground_anchor']=old['directions'][direction]['ground_anchor']
+ stats[direction]['previous_ground_anchor']=old.get('qa',{}).get(direction,{}).get('previous_ground_anchor',old['directions'][direction]['ground_anchor'])
  stats[direction]['ground_anchor']=m['directions'][direction]['ground_anchor']
 m.pop('frames');m['cell']=[cell,cell];m['qa']=stats;m['visual_model']='Gruvepappa v28, approved by Mats';m['runtime_3d']=False
 (out/'manifest.json').write_text(json.dumps(m,indent=2)+'\n')

@@ -1,6 +1,6 @@
 extends RefCounted
-## Exact exported-package comparison. Baseline restores the original draw paths and
-## reconstructs the original 256px cone without altering any nontransparent texel.
+## Exact exported-package comparison: DEV6 two-pass floor versus shared floor lighting.
+## Retain the DEV6 light geometry, all light settings, draw sections and 256px chunks.
 var main: Node
 var output_dir: String
 var area := "hub"
@@ -88,7 +88,7 @@ func run() -> void:
 		if not require(not world._hit_terrain(Vector2i(0, 1)) and world._terrain_is_solid(Vector2i(0, 1)), "Permanent wall survives mining"): return
 		await paired(area + "-permanent-corner", "prismatic", Vector2(-1,-1))
 	if failed: return
-	var report := {"version":"0.46.9-dev.6", "area":area, "rendered":true, "physical_iphone":false, "window":str(DisplayServer.window_get_size()), "cases":cases, "candidate_restored":true}
+	var report := {"version":"0.46.9-dev.7", "area":area, "rendered":true, "physical_iphone":false, "window":str(DisplayServer.window_get_size()), "cases":cases, "candidate_restored":true}
 	FileAccess.open(output_dir.path_join("lighting-release.json"), FileAccess.WRITE).store_string(JSON.stringify(report, "\t"))
 	print("LIGHTING_RELEASE_REVIEW_OK " + JSON.stringify(report))
 	main.get_tree().quit(0)
@@ -176,9 +176,11 @@ func paired(label: String, style: String, direction: Vector2) -> void:
 	print("LIGHTING_RELEASE_CASE " + JSON.stringify(cases.back()))
 
 func set_variant(optimized: bool) -> void:
-	if world.get("lit_floor_chunks") != null: world.lit_floor_chunks.enabled = optimized
-	if world.get("lit_draw_sections") != null: world.lit_draw_sections.enabled = optimized
+	if world.get("lit_floor_chunks") != null:
+		world.lit_floor_chunks.enabled = true
+		world.lit_floor_chunks.composite_pass = optimized
+	if world.get("lit_draw_sections") != null: world.lit_draw_sections.enabled = true
 	for entry in cone_state:
-		entry.node.texture = entry.cropped if optimized else entry.full
-		entry.node.offset = entry.offset if optimized else Vector2.ZERO
+		entry.node.texture = entry.cropped
+		entry.node.offset = entry.offset
 	world.queue_redraw()

@@ -1,8 +1,12 @@
 extends Node2D
 ## Keep each floor draw's light list local instead of lighting one world-sized item.
-## Texture coordinates, two-pass tint, material and world draw order stay unchanged.
+## Share lighting across the floor and color wash; retain two passes for comparison.
 var enabled: bool = true
 var chunk_size: int = 256
+var composite_pass: bool = true
+var _composite_material: ShaderMaterial
+var _composite_tint := Color.TRANSPARENT
+var _composite_wash := Color.TRANSPARENT
 var _pool: Array[FloorChunk] = []
 
 class FloorChunk extends Node2D:
@@ -12,11 +16,12 @@ class FloorChunk extends Node2D:
 	var tint: Color
 	var wash: Color
 
-	func configure(texture: Texture2D, rect: Rect2, uv: Rect2, color: Color, overlay: Color, mask: int) -> void:
+	func configure(texture: Texture2D, rect: Rect2, uv: Rect2, color: Color, overlay: Color, mask: int, draw_material: ShaderMaterial) -> void:
 		light_mask = mask
 		texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
-		if floor_texture == texture and area == rect and source == uv and tint == color and wash == overlay:
+		if floor_texture == texture and area == rect and source == uv and tint == color and wash == overlay and material == draw_material:
 			return
+		material = draw_material
 		floor_texture = texture
 		area = rect
 		source = uv
@@ -25,8 +30,8 @@ class FloorChunk extends Node2D:
 		queue_redraw()
 
 	func _draw() -> void:
-		draw_texture_rect_region(floor_texture, area, source, tint, false, false)
-		draw_rect(area, wash, true)
+		draw_texture_rect_region(floor_texture, area, source, Color.WHITE if material != null else tint, false, false)
+		if material == null: draw_rect(area, wash, true)
 
 func _init() -> void:
 	name = "LitFloorChunks"
@@ -39,6 +44,16 @@ func draw_floor(owner_canvas: CanvasItem, texture: Texture2D, bounds: Rect2, tin
 		owner_canvas.draw_rect(bounds, wash, true)
 		return
 	show()
+	if composite_pass:
+		if _composite_material == null:
+			_composite_material = ShaderMaterial.new()
+			_composite_material.shader = load("res://shaders/lit_floor_composite.gdshader")
+		if _composite_tint != tint:
+			_composite_tint = tint
+			_composite_material.set_shader_parameter("floor_tint", tint)
+		if _composite_wash != wash:
+			_composite_wash = wash
+			_composite_material.set_shader_parameter("floor_wash", wash)
 	var view_bounds: Rect2 = owner_canvas.get_global_transform_with_canvas().affine_inverse() * owner_canvas.get_viewport_rect()
 	view_bounds = view_bounds.grow(float(chunk_size)).intersection(bounds)
 	if not view_bounds.has_area():
@@ -56,7 +71,7 @@ func draw_floor(owner_canvas: CanvasItem, texture: Texture2D, bounds: Rect2, tin
 				_pool.append(created)
 				add_child(created)
 			var chunk: FloorChunk = _pool[used]
-			chunk.configure(texture, rect, Rect2(rect.position - bounds.position, rect.size), tint, wash, owner_canvas.light_mask)
+			chunk.configure(texture, rect, Rect2(rect.position - bounds.position, rect.size), tint, wash, owner_canvas.light_mask, _composite_material if composite_pass else null)
 			chunk.show()
 			used += 1
 	for index in range(used, _pool.size()): _pool[index].hide()

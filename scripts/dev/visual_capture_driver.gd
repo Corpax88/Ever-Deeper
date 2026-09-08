@@ -1421,6 +1421,19 @@ func _build_hero_v28_states() -> Array[Dictionary]:
 	for mine in ["mossMine", "moonMine", "emberMine", "starMine"]:
 		for depth in [1,2]:
 			states.append({"id":"hero_v28_%s_depth_%d" % [mine.to_lower(),depth],"kind":"hero","gear":"iron","direction":"down","pose":"idle","mine_id":mine,"depth":depth})
+	var seen_barriers: Dictionary = {}
+	for environment in _build_capture_states():
+		var kind := String(environment.kind)
+		var selected := kind in ["d1_bedrock", "d2_edges", "d2_bedrock", "d2_transition"]
+		if kind == "d2_gate": selected = int(environment.gate_index) == 0 and String(environment.variant) == "intact"
+		if kind == "d1_barrier" and String(environment.variant) == "ready" and not seen_barriers.has(environment.mine_id):
+			selected = true
+			seen_barriers[environment.mine_id] = true
+		if kind == "endless_walls": selected = int(environment.layer) == 3
+		if selected:
+			var fixture: Dictionary = environment.duplicate(true)
+			fixture.id = "hero_v28_environment_" + String(fixture.id)
+			states.append(fixture)
 	return states
 
 func _resume_capture_nodes() -> void:

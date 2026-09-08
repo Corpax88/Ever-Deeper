@@ -1,4 +1,4 @@
-name: Publish reviewed DEV6 lighting optimization
+name: Publish reviewed DEV7 shared floor lighting
 on:
   push:
     branches: [main]
@@ -21,21 +21,19 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34256408421 --jq .conclusion)" = success
-          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34256408421 --jq .head_sha)" = cdfd85360fe8707225ded2e0a52ef3870a5f4ec4
-          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34257483120 --jq .conclusion)" = success
-          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34257483120 --jq .head_sha)" = 350f47680aa5ead20567aca4e56c858f5c5ca8a7
+          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34262864741 --jq .conclusion)" = success
+          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34262864741 --jq .head_sha)" = 85b808bd2390a2fc81b66a503ab57f0a28eed50c
       - uses: actions/download-artifact@v4
         with:
           name: dev-lighting-candidate
-          run-id: 34256408421
+          run-id: 34262864741
           github-token: ${{ github.token }}
           path: ${{ runner.temp }}/candidate
       - name: Preserve the previous release and stage reviewed files
         run: python3 .github/dev-lighting/publish.py prepare "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/site" "$RUNNER_TEMP/rollback"
       - uses: actions/upload-artifact@v4
         with:
-          name: ever-deeper-before-dev6-lighting-rollback
+          name: ever-deeper-before-dev7-floor-rollback
           path: ${{ runner.temp }}/rollback
           retention-days: 30
       - uses: actions/upload-pages-artifact@v3

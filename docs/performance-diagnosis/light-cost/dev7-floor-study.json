@@ -1,0 +1,288 @@
+{
+  "source_commit": "7d1664f4817445618c2ca1186dbb136134403db4",
+  "run_id": 34261843315,
+  "physical_iphone": false,
+  "stage_mapping": {
+    "baseline": "DEV6, two floor passes, 256px chunks",
+    "combined": "one floor pass, 256px chunks",
+    "sections": "two floor passes, 128px chunks",
+    "optimized": "one floor pass, 128px chunks",
+    "restored": "DEV6 restored"
+  },
+  "results": {
+    "hub": {
+      "844x390": {
+        "area": "hub",
+        "cones": [
+          {
+            "after": "[P: (128, 77), S: (127, 103)]",
+            "before": "(256, 256)",
+            "offset": "(288.1313, 2.26875)"
+          }
+        ],
+        "physical_iphone": false,
+        "rendered": true,
+        "stages": [
+          {
+            "cpu_median_ms": 42.341,
+            "draw_calls": 175.0,
+            "fps": 23.8372121929617,
+            "frames": 1026,
+            "p95_ms": 42.715,
+            "seconds": 45.031582,
+            "stage": "baseline",
+            "video_mib": 463.032964706421
+          },
+          {
+            "cpu_median_ms": 34.716,
+            "draw_calls": 140.0,
+            "fps": 30.0040436133454,
+            "frames": 541,
+            "p95_ms": 34.648,
+            "seconds": 20.012751,
+            "stage": "combined",
+            "video_mib": 463.032964706421
+          },
+          {
+            "cpu_median_ms": 43.378,
+            "draw_calls": 271.0,
+            "fps": 23.3584606008795,
+            "frames": 421,
+            "p95_ms": 43.675,
+            "seconds": 20.00801,
+            "stage": "sections",
+            "video_mib": 463.032964706421
+          },
+          {
+            "cpu_median_ms": 33.665,
+            "draw_calls": 140.0,
+            "fps": 30.174976661455,
+            "frames": 545,
+            "p95_ms": 33.829,
+            "seconds": 20.028904,
+            "stage": "optimized",
+            "video_mib": 463.032964706421
+          },
+          {
+            "cpu_median_ms": 42.161,
+            "draw_calls": 175.0,
+            "fps": 23.8765792473637,
+            "frames": 431,
+            "p95_ms": 42.556,
+            "seconds": 20.017245,
+            "stage": "restored",
+            "video_mib": 463.032964706421
+          }
+        ],
+        "window": "(844, 390)"
+      },
+      "2328x1260": {
+        "area": "hub",
+        "cones": [
+          {
+            "after": "[P: (128, 77), S: (127, 103)]",
+            "before": "(256, 256)",
+            "offset": "(288.1313, 2.26875)"
+          }
+        ],
+        "physical_iphone": false,
+        "rendered": true,
+        "stages": [
+          {
+            "cpu_median_ms": 332.932,
+            "draw_calls": 179.0,
+            "fps": 2.99911281628874,
+            "frames": 130,
+            "p95_ms": 336.601,
+            "seconds": 45.013193,
+            "stage": "baseline",
+            "video_mib": 483.069330215454
+          },
+          {
+            "cpu_median_ms": 251.409,
+            "draw_calls": 144.0,
+            "fps": 3.97372507657858,
+            "frames": 73,
+            "p95_ms": 253.515,
+            "seconds": 20.182937,
+            "stage": "combined",
+            "video_mib": 483.069330215454
+          },
+          {
+            "cpu_median_ms": 327.462,
+            "draw_calls": 263.0,
+            "fps": 3.05272436570112,
+            "frames": 56,
+            "p95_ms": 330.565,
+            "seconds": 20.315275,
+            "stage": "sections",
+            "video_mib": 483.069330215454
+          },
+          {
+            "cpu_median_ms": 247.714,
+            "draw_calls": 144.0,
+            "fps": 4.0374683701686,
+            "frames": 73,
+            "p95_ms": 249.507,
+            "seconds": 20.063145,
+            "stage": "optimized",
+            "video_mib": 483.069330215454
+          },
+          {
+            "cpu_median_ms": 332.759,
+            "draw_calls": 179.0,
+            "fps": 3.0031332869385,
+            "frames": 56,
+            "p95_ms": 334.924,
+            "seconds": 20.312285,
+            "stage": "restored",
+            "video_mib": 483.069330215454
+          }
+        ],
+        "window": "(2328, 1260)"
+      }
+    },
+    "mossvein": {
+      "844x390": {
+        "area": "mossvein",
+        "cones": [
+          {
+            "after": "[P: (128, 77), S: (127, 103)]",
+            "before": "(256, 256)",
+            "offset": "(392.9062, 3.09375)"
+          },
+          {
+            "after": "[P: (128, 77), S: (127, 103)]",
+            "before": "(256, 256)",
+            "offset": "(288.1313, 2.26875)"
+          }
+        ],
+        "physical_iphone": false,
+        "rendered": true,
+        "stages": [
+          {
+            "cpu_median_ms": 33.449,
+            "draw_calls": 268.0,
+            "fps": 32.8627873347003,
+            "frames": 1414,
+            "p95_ms": 36.082,
+            "seconds": 45.008883,
+            "stage": "baseline",
+            "video_mib": 486.173196792603
+          },
+          {
+            "cpu_median_ms": 28.879,
+            "draw_calls": 232.0,
+            "fps": 40.188388064848,
+            "frames": 724,
+            "p95_ms": 28.851,
+            "seconds": 20.014721,
+            "stage": "combined",
+            "video_mib": 486.173196792603
+          },
+          {
+            "cpu_median_ms": 33.928,
+            "draw_calls": 370.0,
+            "fps": 32.4424938772419,
+            "frames": 585,
+            "p95_ms": 35.474,
+            "seconds": 20.0162,
+            "stage": "sections",
+            "video_mib": 486.173196792603
+          },
+          {
+            "cpu_median_ms": 31.104,
+            "draw_calls": 238.0,
+            "fps": 40.1543571254101,
+            "frames": 723,
+            "p95_ms": 30.95,
+            "seconds": 20.004786,
+            "stage": "optimized",
+            "video_mib": 486.173196792603
+          },
+          {
+            "cpu_median_ms": 33.408,
+            "draw_calls": 268.0,
+            "fps": 32.3580359048978,
+            "frames": 584,
+            "p95_ms": 36.449,
+            "seconds": 20.028175,
+            "stage": "restored",
+            "video_mib": 486.173196792603
+          }
+        ],
+        "window": "(844, 390)"
+      },
+      "2328x1260": {
+        "area": "mossvein",
+        "cones": [
+          {
+            "after": "[P: (128, 77), S: (127, 103)]",
+            "before": "(256, 256)",
+            "offset": "(392.9062, 3.09375)"
+          },
+          {
+            "after": "[P: (128, 77), S: (127, 103)]",
+            "before": "(256, 256)",
+            "offset": "(288.1313, 2.26875)"
+          }
+        ],
+        "physical_iphone": false,
+        "rendered": true,
+        "stages": [
+          {
+            "cpu_median_ms": 308.392,
+            "draw_calls": 254.0,
+            "fps": 3.24251136210722,
+            "frames": 140,
+            "p95_ms": 310.803,
+            "seconds": 45.030351,
+            "stage": "baseline",
+            "video_mib": 507.707723617554
+          },
+          {
+            "cpu_median_ms": 234.674,
+            "draw_calls": 224.0,
+            "fps": 4.26565539279467,
+            "frames": 78,
+            "p95_ms": 236.478,
+            "seconds": 20.100311,
+            "stage": "combined",
+            "video_mib": 507.707723617554
+          },
+          {
+            "cpu_median_ms": 299.302,
+            "draw_calls": 338.0,
+            "fps": 3.33775503799925,
+            "frames": 61,
+            "p95_ms": 301.945,
+            "seconds": 20.079759,
+            "stage": "sections",
+            "video_mib": 507.707723617554
+          },
+          {
+            "cpu_median_ms": 229.734,
+            "draw_calls": 230.0,
+            "fps": 4.35689363504677,
+            "frames": 80,
+            "p95_ms": 232.163,
+            "seconds": 20.210427,
+            "stage": "optimized",
+            "video_mib": 507.707723617554
+          },
+          {
+            "cpu_median_ms": 306.892,
+            "draw_calls": 254.0,
+            "fps": 3.25789319648734,
+            "frames": 60,
+            "p95_ms": 309.035,
+            "seconds": 20.274835,
+            "stage": "restored",
+            "video_mib": 507.707723617554
+          }
+        ],
+        "window": "(2328, 1260)"
+      }
+    }
+  }
+}
