@@ -1,4 +1,4 @@
-# DEV7 floor lighting handoff
+# DEV lighting handoff — DEV8 physical result
 
 > Subsequent release: the approved Gruvepappa v28 was published to DEV8 in run 34270405341. All DEV7 floor/FPS changes are retained. The current DEV file hashes and verified publication receipt are in `.github/hero-v28/`; use that DEV8 package as the previous-release baseline for the next deployment. LIVE remains unchanged.
 
@@ -50,9 +50,21 @@ from DEV6; JS, WASM, audio worklets and icons are byte-identical. Main QA also p
 
 ## Next step
 
-Await the user's same two-minute AUTO FPS TEST from DEV7 in the hub. Confirm the
-report says 0.46.9-dev.7. Do not claim the physical drop is fixed before that result.
-No further work or retesting is pending on the published package.
+The physical DEV8 result is now received: see `docs/performance-diagnosis/light-cost/iphone-dev8.json`.
+The hub starts at 60 FPS and reaches 34.6 in Original, 37.4 with pet lights off,
+35.1 with shadows off, 60.0 with all lights off, and **59.8 after final restoration**.
+The last recovery is new relative to DEV5/DEV6, but the final stage lasts only 10 seconds
+and reports its last eight seconds. It does not cross the previously observed ~30-second
+failure delay. Source review confirms restoration is called and both samplers clear at
+stage boundaries; the screenshot cannot establish light counts or sustained recovery.
+
+Next: close the result, enable DEV TOOLS > SHOW FPS if needed, and stay stationary in
+the same hub for at least 60 seconds. Capture the meter to see whether the fall returns.
+Use the already-published DEV8 for this check; do not publish a speculative lighting
+workaround or claim a thermal/driver cause. No runtime change was made for this record.
+Preserve the newly published hero and use DEV8 as the rollback baseline for any future
+DEV release. The normal menu still reports dev.5 in the DEV8 source; synchronize version
+labels in the next prepared release.
 
 Keep updates brief and Norwegian. No critic/subagents. Preserve the audited cleanup.
 All ten pet skills were already tested; do not repeat that investigation without

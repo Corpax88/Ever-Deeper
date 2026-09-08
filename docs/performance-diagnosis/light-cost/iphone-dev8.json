@@ -1,0 +1,79 @@
+{
+  "version": "0.46.9-dev.8",
+  "source_image": "IMG_1745.jpeg",
+  "source": "User-supplied physical iPhone screenshot; values transcribed from the visible result panel.",
+  "physical_iphone": true,
+  "device_user_reported": "iPhone 17 Air",
+  "area": "hub",
+  "duration_seconds_displayed": 120,
+  "start_fps": 60,
+  "candidate_source_commit": "2e8e165b7f236c854357d0440c007d74b03e7f12",
+  "publication_commit": "13aa2ebb5c2acb5b2906ea9701827402a5c644d0",
+  "rows": [
+    {
+      "stage": "original",
+      "fps": 34.6,
+      "raf_fps": 34.6,
+      "p95_ms": 31
+    },
+    {
+      "stage": "pet_off",
+      "fps": 37.4,
+      "raf_fps": 37.5,
+      "p95_ms": 29
+    },
+    {
+      "stage": "restore_pet",
+      "fps": 34.5,
+      "raf_fps": 34.5,
+      "p95_ms": 31
+    },
+    {
+      "stage": "shadows_off",
+      "fps": 35.1,
+      "raf_fps": 35.1,
+      "p95_ms": 30
+    },
+    {
+      "stage": "restore_shadows",
+      "fps": 34.7,
+      "raf_fps": 34.7,
+      "p95_ms": 30
+    },
+    {
+      "stage": "lights_off",
+      "fps": 60,
+      "raf_fps": 60,
+      "p95_ms": 17
+    },
+    {
+      "stage": "restore_lights",
+      "fps": 59.8,
+      "raf_fps": 59.8,
+      "p95_ms": 17
+    }
+  ],
+  "panel_footer": "Original graphics restored · Send a screenshot",
+  "code_review": {
+    "source_matches_current_main": true,
+    "last_restore_stage_seconds": 10,
+    "warmup_seconds": 2,
+    "rolling_measurement_window_seconds": 8,
+    "restores_saved_enabled_and_shadow_flags_before_each_stage": true,
+    "browser_samples_cleared_at_each_stage": true,
+    "restored_state_check": "Compares enabled/shadow flags on surviving captured Light2D instances. It does not prove rendered appearance or detect removed/replaced instances.",
+    "row_light_counts_available_in_screenshot": false,
+    "physical_report_json_available": false
+  },
+  "findings": [
+    "The original stage still falls from a 60 FPS start to 34.6 FPS.",
+    "Disabling pet lights or shadows alone shows limited improvement in this run; disabling all lights reaches 60 FPS.",
+    "The final restored row remains near 60 FPS for its short observation window, unlike the previous DEV5/DEV6 screenshots.",
+    "This is not evidence of sustained recovery beyond the previously observed approximately 30-second delay.",
+    "DEV8 retains DEV7 floor lighting and changes hero art. Camera framing also differs from the DEV6 image; these screenshots are not a controlled quantitative comparison of optimization gains.",
+    "No temperature, GPU clock, power, or driver telemetry was measured; a thermal or driver-reset cause is not established."
+  ],
+  "next_step": "After closing the result, enable DEV TOOLS > SHOW FPS if needed, remain stationary in the same hub for at least 60 seconds, and capture the meter to determine whether the drop returns. Existing DEV8 can answer this without another deployment.",
+  "publication_status": "DEV8 remains published; no runtime or published-file change was made for this evidence record.",
+  "open_version_issue": "The DEV8 candidate's normal menu constant still says 0.46.9-dev.5; the diagnostic says 0.46.9-dev.8. Correct consistently in the next prepared DEV release."
+}
