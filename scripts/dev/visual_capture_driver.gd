@@ -1391,6 +1391,8 @@ func _fail(reason: String) -> void :
 
 
 func _build_hero_states() -> Array[Dictionary]:
+	if "--hero-v28-capture" in OS.get_cmdline_user_args():
+		return _build_hero_v28_states()
 	var states: Array[Dictionary] = []
 	for state in _build_capture_states():
 		if String(state.kind) != "commerce": states.append(state)
@@ -1404,6 +1406,21 @@ func _build_hero_states() -> Array[Dictionary]:
 		states.append({"id": "hero_outfit_%s" % outfit, "kind": "hero", "gear": "crusher", "direction": "down", "pose": "idle", "outfit": outfit})
 	for location in ["surface", "hub", "deepheart"]:
 		states.append({"id": "hero_world_%s" % location, "kind": "hero", "gear": "deepcore", "direction": "right", "pose": "idle", "location": location})
+	return states
+
+func _build_hero_v28_states() -> Array[Dictionary]:
+	var states: Array[Dictionary] = []
+	for gear in ["worn", "iron", "runed", "moonglass", "ember", "crusher", "comet", "crown", "burrower", "pulse", "deepcore"]:
+		for direction in ["down", "left", "up", "right"]:
+			for pose in ["idle", "blink", "walk", "impact"]:
+				states.append({"id":"hero_v28_%s_%s_%s" % [gear,direction,pose], "kind":"hero", "gear":gear, "direction":direction, "pose":pose})
+	for outfit in ["miner", "expedition", "archivist", "starweave", "deepheart"]:
+		states.append({"id":"hero_v28_outfit_"+outfit,"kind":"hero","gear":"crusher","direction":"down","pose":"idle","outfit":outfit})
+	for location in ["surface", "hub", "deepheart"]:
+		states.append({"id":"hero_v28_world_"+location,"kind":"hero","gear":"deepcore","direction":"right","pose":"idle","location":location})
+	for mine in ["mossMine", "moonMine", "emberMine", "starMine"]:
+		for depth in [1,2]:
+			states.append({"id":"hero_v28_%s_depth_%d" % [mine,depth],"kind":"hero","gear":"iron","direction":"down","pose":"idle","mine_id":mine,"depth":depth})
 	return states
 
 func _resume_capture_nodes() -> void:
@@ -1428,7 +1445,8 @@ func _active_capture_world() -> Node:
 func _prepare_hero_state(state: Dictionary) -> bool:
 	var location: = String(state.get("location", "mine"))
 	if location == "mine":
-		var world: = _load_d1("mossMine")
+		var mine_id: = String(state.get("mine_id", "mossMine"))
+		var world: Node = _load_d2(mine_id) if int(state.get("depth", 1)) == 2 else _load_d1(mine_id)
 		if world == null: return false
 		# Real generated entry terrain; the same player/camera used during play.
 		var origin: Vector2 = world.player.global_position
@@ -1501,7 +1519,7 @@ func _settle_hero_state(state: Dictionary) -> bool:
 	visual.set_process(false)
 	if String(state.kind) == "hero":
 		var pose: = String(state.pose)
-		visual.set("_idle_clock", 0.0)
+		visual.set("_idle_clock", 0.47 if pose == "blink" else 0.0)
 		visual.set("_walk_phase", 0.25)
 		visual.set("_recover_phase", -1.0)
 		var hit: float = visual.call("_mechanical_hit_phase")
