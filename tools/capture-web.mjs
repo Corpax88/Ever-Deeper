@@ -10,6 +10,7 @@ import path from "node:path";
 const WEBKIT = process.env.TOUCH_BROWSER === "webkit";
 const VIEWPORT = process.env.SMALL_IPHONE === "1" ? {width:844,height:390} : { width: 932, height: 430 };
 let EXPECTED_CAPTURE_COUNT = 0;
+const HERO_MOTION = process.env.HERO_MOTION === "1";
 const GAMEPLAY = process.env.OVERHAUL_GAMEPLAY === "1";
 const RANGE_START = Number(process.env.CAPTURE_START || 1);
 const RANGE_END = Number(process.env.CAPTURE_END || 19);
@@ -100,7 +101,7 @@ function injectSuiteArgument(html) {
   const suiteArgs = existingArgs.filter((arg) => arg !== SUITE_ARG);
   // OS.get_cmdline_user_args() only exposes arguments after Godot's user separator.
   if (!suiteArgs.includes("--")) suiteArgs.push("--");
-  config.args = [...suiteArgs, SUITE_ARG, GAMEPLAY ? "--overhaul-gameplay" : (process.env.HERO_V28_CAPTURE === "1" ? "--hero-capture" : "--overhaul-capture"), ...(process.env.HERO_V28_CAPTURE === "1" ? ["--hero-v28-capture"] : []), ...(process.env.CAPTURE_SCOPE === "light" ? ["--light-capture"] : []), ...(process.env.MENU_TOUCH === "1" ? ["--menu-touch-only"] : []),  ...(process.env.PET_REACTIONS === "1" ? ["--pet-reactions"] : []), `--capture-start=${RANGE_START}`, `--capture-end=${RANGE_END}`];
+  config.args = [...suiteArgs, SUITE_ARG, ...(HERO_MOTION ? ["--hero-motion"] : []), GAMEPLAY ? "--overhaul-gameplay" : (process.env.HERO_V28_CAPTURE === "1" ? "--hero-capture" : "--overhaul-capture"), ...(process.env.HERO_V28_CAPTURE === "1" ? ["--hero-v28-capture"] : []), ...(process.env.CAPTURE_SCOPE === "light" ? ["--light-capture"] : []), ...(process.env.MENU_TOUCH === "1" ? ["--menu-touch-only"] : []),  ...(process.env.PET_REACTIONS === "1" ? ["--pet-reactions"] : []), `--capture-start=${RANGE_START}`, `--capture-end=${RANGE_END}`];
   return html.replace(pattern, `const GODOT_CONFIG = ${JSON.stringify(config)};`).replace("<body>", '<body><div id="ed-build-label" hidden>v0.46.6-dev.1</div>');
 }
 
@@ -265,7 +266,7 @@ async function captureSuite(options) {
     });
     const context = await browser.newContext({
       viewport: VIEWPORT,
-      ...((GAMEPLAY && WEBKIT) ? { recordVideo: { dir: options.outputDir, size: VIEWPORT } } : {}),
+      ...(((GAMEPLAY && WEBKIT) || HERO_MOTION) ? { recordVideo: { dir: options.outputDir, size: VIEWPORT } } : {}),
       screen: VIEWPORT,
       deviceScaleFactor: 1,
       hasTouch: true,
@@ -282,11 +283,13 @@ async function captureSuite(options) {
     const markerQueue = [];
     const pageErrors = [];
     const heroStates = [];
+    const motionDamage = [];
     const requestFailures = [];
     page.on("console", (message) => {
       const text = message.text();
       if (GAMEPLAY && /OVERHAUL_|SCRIPT ERROR|Parse Error/.test(text)) process.stdout.write(text+"\n");
       if (/SCRIPT ERROR|Parse Error|Failed to load/.test(text)) pageErrors.push(text);
+      if (text.startsWith("EVER_DEEPER_HERO_MOTION_DAMAGE ")) motionDamage.push(text);
       if (text.startsWith("EVER_DEEPER_HERO_STATE ")) heroStates.push(JSON.parse(text.slice("EVER_DEEPER_HERO_STATE ".length)));
       if (text.includes(MARKER_PREFIX)) markerQueue.push(text.slice(text.indexOf(MARKER_PREFIX)));
       if (GAMEPLAY && /^EVER_DEEPER_OVERHAUL_(GAMEPLAY_|INPUT_READY )/.test(text)) markerQueue.push(text);
@@ -433,6 +436,7 @@ async function captureSuite(options) {
         completed = true;
       }
     }
+    if (HERO_MOTION && motionDamage.length !== 12) throw new Error("Missing real mining damage evidence");
     if (EXPECTED_CAPTURE_COUNT !== RANGE_END - RANGE_START + 1) throw new Error("Wrong range size");
     if (captures.length !== EXPECTED_CAPTURE_COUNT) {
       throw new Error(`Captured ${captures.length}, expected ${EXPECTED_CAPTURE_COUNT}`);
@@ -474,6 +478,7 @@ async function captureSuite(options) {
       webgl,
       suiteArgument: SUITE_ARG,
       captures,
+      motionDamage,
     };
     await fs.writeFile(
       path.join(options.outputDir, "manifest.json"),
@@ -483,6 +488,7 @@ async function captureSuite(options) {
       path.join(options.outputDir, "contact-sheet.html"),
       contactSheet(captures, metadata),
     );
+    await context.close();
     process.stdout.write(
       `Captured ${captures.length} final-build states at ${VIEWPORT.width}x${VIEWPORT.height}.\n` +
         `PCK sha256: ${pckSha256}\nOutput: ${options.outputDir}\n`,

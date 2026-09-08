@@ -115,3 +115,30 @@ jobs:
           name: hero-v28-gameplay
           path: ${{ runner.temp }}/review
           retention-days: 30
+  motion:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: hero-v28-candidate
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Record native hero motion and actual mining damage
+        env:
+          HERO_MOTION: '1'
+          CAPTURE_END: '1'
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hero-v28-motion
+          path: ${{ runner.temp }}/review
+          retention-days: 30
