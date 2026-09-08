@@ -1,6 +1,8 @@
-# FPS handoff — DEV9 reviewed; iPhone confirmation pending
+# FPS handoff — DEV9 published; iPhone confirmation pending
 
-DEV9 publication is prepared. Read publication-receipt.json for the verified deployment state.
+DEV9 is published and all 18 public files were verified at 2026-09-08T21:53:51.5171964Z.
+Publication commit 7e3344605a0e5854c51e617b668b1002f9eaa856; run 34282895724.
+Read publication-receipt.json for the verified deployment state.
 DEV-only is authorized; LIVE 0.46.9 must remain byte-identical.
 
 ## Current candidate
