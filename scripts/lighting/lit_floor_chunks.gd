@@ -1,10 +1,12 @@
 extends Node2D
 ## Keep each floor draw's light list local instead of lighting one world-sized item.
-## Texture coordinates, two-pass tint, material and world draw order stay unchanged.
+## Share lighting across the floor and color wash; retain two passes for comparison.
 var enabled: bool = true
 var chunk_size: int = 256
-var composite_pass: bool = false
+var composite_pass: bool = true
 var _composite_material: ShaderMaterial
+var _composite_tint := Color.TRANSPARENT
+var _composite_wash := Color.TRANSPARENT
 var _pool: Array[FloorChunk] = []
 
 class FloorChunk extends Node2D:
@@ -46,8 +48,12 @@ func draw_floor(owner_canvas: CanvasItem, texture: Texture2D, bounds: Rect2, tin
 		if _composite_material == null:
 			_composite_material = ShaderMaterial.new()
 			_composite_material.shader = load("res://shaders/lit_floor_composite.gdshader")
-		_composite_material.set_shader_parameter("floor_tint", tint)
-		_composite_material.set_shader_parameter("floor_wash", wash)
+		if _composite_tint != tint:
+			_composite_tint = tint
+			_composite_material.set_shader_parameter("floor_tint", tint)
+		if _composite_wash != wash:
+			_composite_wash = wash
+			_composite_material.set_shader_parameter("floor_wash", wash)
 	var view_bounds: Rect2 = owner_canvas.get_global_transform_with_canvas().affine_inverse() * owner_canvas.get_viewport_rect()
 	view_bounds = view_bounds.grow(float(chunk_size)).intersection(bounds)
 	if not view_bounds.has_area():

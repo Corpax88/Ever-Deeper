@@ -162,7 +162,7 @@ func _finish(reason: String) -> void:
 	running = false
 	set_process(false)
 	_restore()
-	result = {"revision":1, "version":"0.46.9-dev.6", "area":phase, "mine":game.get("current_mine_id"),
+	result = {"revision":1, "version":"0.46.9-dev.7", "area":phase, "mine":game.get("current_mine_id"),
 		"cancelled":not reason.is_empty(), "reason":reason, "duration_seconds":float(Time.get_ticks_usec() - started) / 1000000.0,
 		"baseline":baseline, "early":early, "rows":rows.duplicate(true), "web":OS.has_feature("web"), "settings_saved":false}
 	_finalize.call_deferred()

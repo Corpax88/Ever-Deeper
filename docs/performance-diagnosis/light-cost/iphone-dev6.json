@@ -1,0 +1,21 @@
+{
+  "source": "User-provided IMG_1744.jpeg, read from the inline image",
+  "version": "0.46.9-dev.6",
+  "area": "hub",
+  "device_reported_by_user": "iPhone 17 Air",
+  "duration_seconds": 120,
+  "start_fps": 60.0,
+  "stages": [
+    {"stage": "Original", "fps": 30.1, "raf": 30.1, "p95_ms": 35},
+    {"stage": "Pet lights off", "fps": 32.2, "raf": 32.2, "p95_ms": 32},
+    {"stage": "Restored", "fps": 29.7, "raf": 29.7, "p95_ms": 35},
+    {"stage": "Shadows off", "fps": 30.1, "raf": 30.1, "p95_ms": 34},
+    {"stage": "Restored", "fps": 30.0, "raf": 30.0, "p95_ms": 35},
+    {"stage": "All lights off", "fps": 60.0, "raf": 60.0, "p95_ms": 17},
+    {"stage": "Restored", "fps": 30.0, "raf": 30.0, "p95_ms": 35}
+  ],
+  "dev5_original_fps": 19.8,
+  "observed_original_fps_improvement_percent": 52.020202,
+  "slowdown_fixed": false,
+  "interpretation": "Improvement reproduced on the physical device, but lighting-dependent slowdown remains. The test does not measure temperature or prove a thermal explanation."
+}
