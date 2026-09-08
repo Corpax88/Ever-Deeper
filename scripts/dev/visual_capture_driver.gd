@@ -1420,7 +1420,7 @@ func _build_hero_v28_states() -> Array[Dictionary]:
 		states.append({"id":"hero_v28_world_"+location,"kind":"hero","gear":"deepcore","direction":"right","pose":"idle","location":location})
 	for mine in ["mossMine", "moonMine", "emberMine", "starMine"]:
 		for depth in [1,2]:
-			states.append({"id":"hero_v28_%s_depth_%d" % [mine,depth],"kind":"hero","gear":"iron","direction":"down","pose":"idle","mine_id":mine,"depth":depth})
+			states.append({"id":"hero_v28_%s_depth_%d" % [mine.to_lower(),depth],"kind":"hero","gear":"iron","direction":"down","pose":"idle","mine_id":mine,"depth":depth})
 	return states
 
 func _resume_capture_nodes() -> void:
