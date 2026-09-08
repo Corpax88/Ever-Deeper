@@ -78,6 +78,6 @@ func run() -> void:
 		await reviewer.paired(mine_id + "-struck-gate", "focused", -across)
 		if reviewer.failed: return
 		report.append({"mine":mine_id,"gate":gate.id,"screen_center":str(screen),"player_distance":world.player.global_position.distance_to(center),"visible":true,"hits":state.barrier_hits(key)})
-	FileAccess.open(output_dir.path_join("gate-review.json"), FileAccess.WRITE).store_string(JSON.stringify({"passed":true,"package_version":"0.46.9-dev.7","cases":report,"paired":reviewer.cases}, "\t"))
+	FileAccess.open(output_dir.path_join("gate-review.json"), FileAccess.WRITE).store_string(JSON.stringify({"passed":true,"package_version":"0.46.9-dev.9","cases":report,"paired":reviewer.cases}, "\t"))
 	print("LIT_GATE_REVIEW_OK " + JSON.stringify(report))
 	quit(0)

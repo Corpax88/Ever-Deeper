@@ -22,7 +22,7 @@
       if (active || document.hidden) return false;
       active = true; abortReason = '';
       previous = 0; count = 0; cursor = 0; began = performance.now();
-      watchdog = setTimeout(() => stop('Diagnostic timed out'), 150000);
+      watchdog = setTimeout(() => stop('Diagnostic timed out'), 210000);
       raf = requestAnimationFrame(tick); return true;
     },
     stage() {

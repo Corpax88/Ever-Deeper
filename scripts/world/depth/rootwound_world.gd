@@ -5,6 +5,8 @@ const LitFloorChunksScript = preload("res://scripts/lighting/lit_floor_chunks.gd
 var lit_floor_chunks: Node2D
 const LitDrawSectionsScript = preload("res://scripts/lighting/lit_draw_sections.gd")
 var lit_draw_sections: Node2D
+const StaticLightFieldScript = preload("res://scripts/lighting/static_light_field.gd")
+var static_light_field: Node2D
 var _draw_canvas: CanvasItem
 
 signal exit_context_changed(active: bool)
@@ -208,6 +210,8 @@ func _ready() -> void :
 	add_child(lit_floor_chunks)
 	lit_draw_sections = LitDrawSectionsScript.new()
 	add_child(lit_draw_sections)
+	static_light_field = StaticLightFieldScript.new()
+	add_child(static_light_field)
 	_draw_canvas = self
 	player.moved.connect(_on_player_moved)
 	player.facing_changed.connect(_on_player_facing_changed)
@@ -341,6 +345,7 @@ func set_active(enabled: bool, entering: bool = false) -> void :
 		player.camera.reset_smoothing()
 		_update_context(player.global_position)
 		_refresh_landmark_lights(true)
+	static_light_field.configure(self, landmark_lights)
 	_request_redraw()
 
 
@@ -2874,6 +2879,7 @@ func _refresh_landmark_lights(force: bool = false) -> void :
 	for spec in selected_specs:
 		_add_landmark_light(Dictionary(spec))
 	landmark_light_rebuild_count += 1
+	static_light_field.configure(self, landmark_lights)
 
 
 func _same_light_id_set(left: Array[String], right: Array[String]) -> bool:

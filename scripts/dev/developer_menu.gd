@@ -406,7 +406,7 @@ func _build_drawer() -> void :
 	action_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	action_content.add_theme_constant_override("separation", 8)
 	scroll.add_child(action_content)
-	render_probe_button = _action_button("AUTO FPS TEST · 2 MIN", "render_probe", true)
+	render_probe_button = _action_button("AUTO FPS TEST · 3 MIN", "render_probe", true)
 	render_probe_button.name = "AutoFPSTest"
 	render_probe_button.remove_meta("dev_command")
 	render_probe_button.tooltip_text = "Stand still in the hub or Depth 2; graphics are restored automatically"

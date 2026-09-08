@@ -1,7 +1,7 @@
-name: Validate DEV7 shared floor lighting
+name: Validate DEV9 cached fixed lighting
 on:
   push:
-    branches: [codex-floor-lighting-dev7]
+    branches: [codex-fixed-lighting-dev9]
     paths: ['scripts/**', 'shaders/**', 'export_presets.cfg', 'tools/render-probe*', 'tools/install-render-probe-shell.py', 'docs/unchanged-files.json', '.github/workflows/dev-lighting.yml']
 permissions:
   contents: read
@@ -118,7 +118,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Chromium DPR3 120-second diagnostic and real touch restoration
+      - name: Chromium DPR3 180-second diagnostic and real touch restoration
         run: |
           npm ci
           npx playwright install --with-deps chromium

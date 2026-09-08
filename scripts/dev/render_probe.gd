@@ -8,7 +8,7 @@ const STAGES = [
 	{"id":"shadows_off", "title":"Shadows off", "seconds":10.0},
 	{"id":"restore_shadows", "title":"Restored", "seconds":10.0},
 	{"id":"lights_off", "title":"All lights off", "seconds":10.0},
-	{"id":"restore_lights", "title":"Restored", "seconds":10.0},
+	{"id":"restore_lights", "title":"Restored · 70s", "seconds":70.0},
 ]
 var game: Node
 var world: Node2D
@@ -61,6 +61,7 @@ func start(main: Node) -> bool:
 		if begin_status != "true":
 			start_error = "Open the latest DEV page and keep it visible"
 			return false
+	world.set_meta(&"fixed_light_probe_lock", true)
 	lights.clear()
 	for node in world.find_children("*", "Light2D", true, false):
 		var pet_light := false
@@ -94,6 +95,7 @@ func _notification(what: int) -> void:
 func _exit_tree() -> void:
 	if running:
 		_restore()
+		if is_instance_valid(world): world.remove_meta(&"fixed_light_probe_lock")
 		if OS.has_feature("web"): JavaScriptBridge.eval("window.everDeeperRenderProbe?.cancel('Diagnostic closed')")
 
 func _process(_delta: float) -> void:
@@ -162,7 +164,7 @@ func _finish(reason: String) -> void:
 	running = false
 	set_process(false)
 	_restore()
-	result = {"revision":1, "version":"0.46.9-dev.8", "area":phase, "mine":game.get("current_mine_id"),
+	result = {"revision":1, "version":preload("res://scripts/ui/premium_menu.gd").release_version(), "area":phase, "mine":game.get("current_mine_id"),
 		"cancelled":not reason.is_empty(), "reason":reason, "duration_seconds":float(Time.get_ticks_usec() - started) / 1000000.0,
 		"baseline":baseline, "early":early, "rows":rows.duplicate(true), "web":OS.has_feature("web"), "settings_saved":false}
 	_finalize.call_deferred()
@@ -176,6 +178,7 @@ func _finalize() -> void:
 		JavaScriptBridge.eval("window.everDeeperRenderProbe.finish(" + JSON.stringify(result) + ")")
 	status_panel.hide()
 	_show_result()
+	if is_instance_valid(world): world.remove_meta(&"fixed_light_probe_lock")
 	completed.emit(result)
 
 func _browser_snapshot() -> Dictionary:

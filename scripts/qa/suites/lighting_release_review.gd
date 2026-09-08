@@ -1,6 +1,6 @@
 extends RefCounted
-## Exact exported-package comparison: DEV6 two-pass floor versus shared floor lighting.
-## Retain the DEV6 light geometry, all light settings, draw sections and 256px chunks.
+## Exact package comparison: DEV8 separate fixed lamps versus cached fixed lighting.
+## Keep the one-pass floor, moving lights, shadows, geometry, artwork and framebuffer.
 var main: Node
 var output_dir: String
 var area := "hub"
@@ -140,6 +140,21 @@ func paired(label: String, style: String, direction: Vector2) -> void:
 		lamp.refresh_workshop_effects()
 		lamp.set_direction(direction)
 	for frame in 5: await main.get_tree().process_frame
+	if world.get("static_light_field") != null:
+		for frame in 20:
+			if not world.static_light_field.baking: break
+			await main.get_tree().process_frame
+		if world.static_light_field._sources.size() >= 2 and world.static_light_field.field_bounds.size.x <= 2048 and world.static_light_field.field_bounds.size.y <= 2048:
+			if not require(world.static_light_field.ready_for_use, "Fixed field prepared " + label): return
+	if cases.is_empty() and area in ["hub", "mossvein"]:
+		var meter: RefCounted = load("res://scripts/qa/suites/light_cost.gd").new(main, output_dir)
+		set_variant(false)
+		await meter.measure("dev8_reference", 45.0)
+		set_variant(true)
+		await meter.measure("fixed_field", 45.0)
+		set_variant(false)
+		await meter.measure("restored_reference", 20.0)
+		FileAccess.open(output_dir.path_join("fixed-field-performance.json"), FileAccess.WRITE).store_string(JSON.stringify({"physical_iphone":false,"area":area,"stages":meter.rows}, "\t"))
 	var prior_scale: float = Engine.time_scale
 	main.get_tree().paused = true
 	Engine.time_scale = 0.0
@@ -159,6 +174,10 @@ func paired(label: String, style: String, direction: Vector2) -> void:
 	for variant in ["baseline", "candidate", "baseline-control"]:
 		set_variant(variant == "candidate")
 		for frame in 4: await main.get_tree().process_frame
+		if world.get("static_light_field") != null and world.static_light_field.ready_for_use:
+			if not require(world.static_light_field.debug_snapshot().applied == (variant == "candidate"), "Requested fixed-field state " + variant): return
+			for source in world.static_light_field._sources:
+				if not require(is_instance_valid(source.node) and source.node.enabled == (bool(source.enabled) and variant != "candidate"), "Original lamp state " + variant): return
 		await RenderingServer.frame_post_draw
 		var capture: Image = main.get_viewport().get_texture().get_image()
 		if not require(capture.get_size() == DisplayServer.window_get_size(), "Physical render buffer"): return
@@ -172,13 +191,14 @@ func paired(label: String, style: String, direction: Vector2) -> void:
 		var lamp: HeadlampBeam = node.get_parent()
 		lamp.preview_settings = {}
 		lamp.refresh_workshop_effects()
-	cases.append({"id":label, "style":style, "direction":str(direction), "cones":cone_state.size(), "position":str(world.player.global_position)})
+	cases.append({"id":label, "style":style, "direction":str(direction), "cones":cone_state.size(), "position":str(world.player.global_position), "fixed_field":world.static_light_field.debug_snapshot() if world.get("static_light_field") != null else {}})
 	print("LIGHTING_RELEASE_CASE " + JSON.stringify(cases.back()))
 
 func set_variant(optimized: bool) -> void:
+	if world.get("static_light_field") != null: world.static_light_field.enabled = optimized
 	if world.get("lit_floor_chunks") != null:
 		world.lit_floor_chunks.enabled = true
-		world.lit_floor_chunks.composite_pass = optimized
+		world.lit_floor_chunks.composite_pass = true
 	if world.get("lit_draw_sections") != null: world.lit_draw_sections.enabled = true
 	for entry in cone_state:
 		entry.node.texture = entry.cropped

@@ -5,6 +5,8 @@ const LitFloorChunksScript = preload("res://scripts/lighting/lit_floor_chunks.gd
 var lit_floor_chunks: Node2D
 const LitDrawSectionsScript = preload("res://scripts/lighting/lit_draw_sections.gd")
 var lit_draw_sections: Node2D
+const StaticLightFieldScript = preload("res://scripts/lighting/static_light_field.gd")
+var static_light_field: Node2D
 var _draw_canvas: CanvasItem
 
 signal context_changed(context: String)
@@ -209,6 +211,8 @@ func _ready() -> void :
 	add_child(lit_floor_chunks)
 	lit_draw_sections = LitDrawSectionsScript.new()
 	add_child(lit_draw_sections)
+	static_light_field = StaticLightFieldScript.new()
+	add_child(static_light_field)
 	_draw_canvas = self
 	base_state = _sanitize_base_state(base_state)
 	hub_state = _sanitize_hub_state(hub_state)
@@ -2185,6 +2189,7 @@ func _build_lighting() -> void :
 				0.58
 			)
 	active_hub_lamp_light_ids.clear()
+	static_light_field.configure(self, world_lights)
 
 
 func _refresh_hub_lamp_lights(force: bool = false) -> void :
@@ -2221,6 +2226,7 @@ func _refresh_hub_lamp_lights(force: bool = false) -> void :
 		light.position = Vector2(candidate.position)
 		light.set_meta("hub_lamp_id", String(candidate.id))
 		world_lights.add_child(light)
+	static_light_field.configure(self, world_lights)
 
 
 func _deep_elevator_light_profile() -> Dictionary:

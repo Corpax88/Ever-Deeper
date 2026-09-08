@@ -34,6 +34,11 @@ func run() -> void:
 	if not require(main._dev_jump_hub() if area == "hub" else main._dev_jump_mine("mossMine", 2), "Area"): return
 	if area == "hub": main.hub_world.restore_position(Vector2(1200, 480))
 	for frame in 3: await main.get_tree().process_frame
+	var active_world: Node2D = main.hub_world if area == "hub" else main.depth_world
+	for frame in 20:
+		if active_world.static_light_field.ready_for_use: break
+		await main.get_tree().process_frame
+	if not require(active_world.static_light_field.ready_for_use and active_world.static_light_field.debug_snapshot().applied, "Cached field active before probe"): return
 	main.developer_menu.toggle_frame_meter()
 	main.developer_menu.open_menu()
 	main.developer_menu.render_probe_button.pressed.emit()
@@ -45,7 +50,7 @@ func run() -> void:
 	while probe.running:
 		await main.get_tree().process_frame
 		if not probe.running: break
-		if Time.get_ticks_usec() - started > 140000000:
+		if Time.get_ticks_usec() - started > 200000000:
 			require(false, "Timeout"); return
 		if probe.stage_index != previous_stage:
 			previous_stage = probe.stage_index
@@ -59,8 +64,9 @@ func run() -> void:
 				capture.save_png(output_dir.path_join(area + "-" + id + ".png"))
 	while not probe.result.has("graphics_restored"): await main.get_tree().process_frame
 	var full: Dictionary = probe.result.duplicate(true)
-	if not require(not full.cancelled and full.graphics_restored and full.rows.size() == 7 and float(full.duration_seconds) >= 120.0, "Complete original-duration run"): return
+	if not require(not full.cancelled and full.graphics_restored and full.rows.size() == 7 and float(full.duration_seconds) >= 180.0, "Complete original-duration run"): return
 	if not require(float(full.rows[0].elapsed_seconds) >= 60.0, "Baseline crosses delayed-failure threshold"): return
+	if not require(float(full.rows[-1].elapsed_seconds) - float(full.rows[-2].elapsed_seconds) >= 70.0, "Restored lights cross delayed-failure threshold"): return
 	var baseline: Dictionary = full.baseline
 	for row in full.rows:
 		if not require(row.frames >= 3 and row.fps > 0, "Valid frame sample " + row.stage): return

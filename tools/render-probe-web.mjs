@@ -90,9 +90,12 @@ try {
   await Promise.all(captures);
   if (!complete || errors.length || !touchDone) throw new Error(JSON.stringify({complete, errors, glWarnings, touchDone}));
   const state = await page.evaluate(() => ({report: window.everDeeperRenderProbeResult,
+    runningVersion:window.everDeeperVersion,
     canvas: {w: document.querySelector('canvas').width, h: document.querySelector('canvas').height, dpr: devicePixelRatio, bufferWidth:window.__renderProbeGL?.drawingBufferWidth, bufferHeight:window.__renderProbeGL?.drawingBufferHeight}}));
   if (state.canvas.w !== 2532 || state.canvas.h !== 1170 || state.canvas.dpr !== 3) throw new Error('DPR/canvas not restored: ' + JSON.stringify(state.canvas));
   if (surfaces.length !== 7 || state.canvas.bufferWidth !== 2532 || state.canvas.bufferHeight !== 1170) throw new Error('Missing physical drawing-buffer checks');
+  if (state.runningVersion !== state.report.version || state.report.version !== '0.46.9-dev.9') throw new Error('Menu/diagnostic version mismatch: '+JSON.stringify({menu:state.runningVersion,probe:state.report.version}));
+  if (state.report.duration_seconds < 180 || state.report.rows[6].elapsed_seconds-state.report.rows[5].elapsed_seconds < 70) throw new Error('Sustained restoration window missing');
   if (!state.report.graphics_restored || state.report.rows.length !== 7 || state.report.rows.some(row => row.raf_frames < 3 || row.raf_fps <= 0)) throw new Error('Missing restored settings or RAF samples');
   if (takeCaptures) await captureCanvas(page,path.join(output, `${area}-result.png`));
   await writeFile(path.join(output, 'chromium.json'), JSON.stringify({passed: glWarnings.length === 0, functional_checks_passed:true, area, ...state, stageCanvases:surfaces, bufferChecks, touchDone, glWarnings}, null, 2));

@@ -8,6 +8,18 @@ var _composite_material: ShaderMaterial
 var _composite_tint := Color.TRANSPARENT
 var _composite_wash := Color.TRANSPARENT
 var _pool: Array[FloorChunk] = []
+var _fixed_field_material: ShaderMaterial
+var _fixed_field_mask: int = 0
+var _owner_light_mask: int = 1
+
+func set_fixed_field(draw_material: ShaderMaterial, mask: int) -> void:
+	_fixed_field_material = draw_material
+	_fixed_field_mask = mask
+	if draw_material != null:
+		draw_material.set_shader_parameter("floor_tint", _composite_tint)
+		draw_material.set_shader_parameter("floor_wash", _composite_wash)
+	for node in _pool: node.light_mask = mask if draw_material != null else _owner_light_mask
+	if get_parent() is CanvasItem: get_parent().queue_redraw()
 
 class FloorChunk extends Node2D:
 	var floor_texture: Texture2D
@@ -38,6 +50,7 @@ func _init() -> void:
 	show_behind_parent = true
 
 func draw_floor(owner_canvas: CanvasItem, texture: Texture2D, bounds: Rect2, tint: Color, wash: Color) -> void:
+	_owner_light_mask = owner_canvas.light_mask
 	if not enabled:
 		hide()
 		owner_canvas.draw_texture_rect(texture, bounds, true, tint)
@@ -51,9 +64,11 @@ func draw_floor(owner_canvas: CanvasItem, texture: Texture2D, bounds: Rect2, tin
 		if _composite_tint != tint:
 			_composite_tint = tint
 			_composite_material.set_shader_parameter("floor_tint", tint)
+			if _fixed_field_material != null: _fixed_field_material.set_shader_parameter("floor_tint", tint)
 		if _composite_wash != wash:
 			_composite_wash = wash
 			_composite_material.set_shader_parameter("floor_wash", wash)
+			if _fixed_field_material != null: _fixed_field_material.set_shader_parameter("floor_wash", wash)
 	var view_bounds: Rect2 = owner_canvas.get_global_transform_with_canvas().affine_inverse() * owner_canvas.get_viewport_rect()
 	view_bounds = view_bounds.grow(float(chunk_size)).intersection(bounds)
 	if not view_bounds.has_area():
@@ -71,7 +86,9 @@ func draw_floor(owner_canvas: CanvasItem, texture: Texture2D, bounds: Rect2, tin
 				_pool.append(created)
 				add_child(created)
 			var chunk: FloorChunk = _pool[used]
-			chunk.configure(texture, rect, Rect2(rect.position - bounds.position, rect.size), tint, wash, owner_canvas.light_mask, _composite_material if composite_pass else null)
+			var draw_material: ShaderMaterial = _fixed_field_material if _fixed_field_material != null else _composite_material
+			var mask: int = _fixed_field_mask if composite_pass and _fixed_field_material != null else owner_canvas.light_mask
+			chunk.configure(texture, rect, Rect2(rect.position - bounds.position, rect.size), tint, wash, mask, draw_material if composite_pass else null)
 			chunk.show()
 			used += 1
 	for index in range(used, _pool.size()): _pool[index].hide()
