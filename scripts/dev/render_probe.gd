@@ -15,6 +15,7 @@ const STAGES = [
 var game: Node
 var world: Node2D
 var running := false
+var start_error := ""
 var stage_index := -1
 var result: Dictionary = {}
 var rows: Array[Dictionary] = []
@@ -47,14 +48,19 @@ func _ready() -> void:
 	hide()
 
 func start(main: Node) -> bool:
-	if running or not OS.has_feature("ever_deeper_dev"): return false
+	start_error = ""
+	if running or not OS.has_feature("ever_deeper_dev"):
+		start_error = "Diagnostic unavailable or already running"; return false
 	game = main
 	phase = String(game.get("phase"))
 	mine_id = String(game.get("current_mine_id"))
-	if phase not in ["hub", "depth"]: return false
+	if phase not in ["hub", "depth"]:
+		start_error = "Enter the hub or a mine first"; return false
 	world = game.get("hub_world" if phase == "hub" else "depth_world")
-	if world == null: return false
+	if world == null:
+		start_error = "Wait for the area to load"; return false
 	if OS.has_feature("web") and JavaScriptBridge.eval("!!(window.everDeeperRenderProbe && window.everDeeperRenderProbe.begin())") != true:
+		start_error = "Open the latest DEV page and keep it visible"
 		return false
 	lights.clear()
 	for node in world.find_children("*", "Light2D", true, false):
@@ -133,7 +139,7 @@ func _next_stage() -> void:
 		if JavaScriptBridge.eval("window.everDeeperRenderProbe.stage(%s)" % ("0.5" if id == "half_resolution" else "1")) != true:
 			cancel("Browser diagnostic stopped"); return
 	else:
-		DisplayServer.window_set_size(original_window / 2 if id == "half_resolution" else original_window)
+		get_window().size = original_window / 2 if id == "half_resolution" else original_window
 	samples.clear()
 	stage_started = Time.get_ticks_usec()
 	previous = 0
@@ -150,7 +156,7 @@ func _restore() -> void:
 	if OS.has_feature("web"):
 		JavaScriptBridge.eval("window.everDeeperRenderProbe?.cancel('')")
 	elif original_window != Vector2i.ZERO:
-		DisplayServer.window_set_size(original_window)
+		get_window().size = original_window
 
 func settings_restored() -> bool:
 	for entry in lights:
@@ -191,6 +197,7 @@ func _browser_snapshot() -> Dictionary:
 func _snapshot() -> Dictionary:
 	var info := _browser_snapshot()
 	var size := DisplayServer.window_get_size()
+	var render_size := get_viewport().get_texture().get_size()
 	var enabled := 0
 	var shadows := 0
 	var pet := 0
@@ -200,6 +207,7 @@ func _snapshot() -> Dictionary:
 			if entry.node.shadow_enabled: shadows += 1
 			if entry.pet: pet += 1
 	return {"canvas_width":int(info.get("width", size.x)), "canvas_height":int(info.get("height", size.y)),
+		"render_width":int(render_size.x), "render_height":int(render_size.y),
 		"dpr":float(info.get("dpr", 1)), "raf_fps":float(info.get("raf_fps", 0)), "raf_frames":int(info.get("raf_frames", 0)),
 		"raf_p95_ms":float(info.get("raf_p95_ms", 0)), "lights":enabled, "shadows":shadows, "pet_lights":pet,
 		"cpu_ms":Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0,

@@ -27,10 +27,24 @@ const browser = await webkit.launch({headless: true});
 let page;
 try {
   page = await browser.newPage({viewport: {width: 844, height: 390}, deviceScaleFactor: 3, isMobile: true, hasTouch: true});
+  await page.bringToFront();
+  await page.addInitScript(() => {
+    let api;
+    Object.defineProperty(window, 'everDeeperRenderProbe', {configurable: true,
+      get: () => api, set(value) {
+        api = value;
+        const begin = api.begin.bind(api);
+        api.begin = () => {
+          const result = begin();
+          console.log('PROBE_BROWSER_BEGIN ' + JSON.stringify({result, hidden: document.hidden, visibility: document.visibilityState, state: api.snapshot()}));
+          return result;
+        };
+      }});
+  });
   page.on('pageerror', error => errors.push(String(error)));
   page.on('console', message => {
     const value = message.text(); logs.push(value);
-    if (/SCRIPT ERROR|Parse Error|INVALID_OPERATION|INVALID_FRAMEBUFFER_OPERATION|WebGL.*error/i.test(value)) errors.push(value);
+    if (/SCRIPT ERROR|Parse Error|^ERROR:|INVALID_OPERATION|INVALID_FRAMEBUFFER_OPERATION|WebGL.*error/i.test(value)) errors.push(value);
     if (value.startsWith('RENDER_PROBE_REVIEW_OK ')) complete = true;
     if (value.startsWith('PROBE_STAGE_READY ')) {
       const event = JSON.parse(value.slice('PROBE_STAGE_READY '.length));

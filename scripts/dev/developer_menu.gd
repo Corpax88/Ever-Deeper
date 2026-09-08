@@ -233,7 +233,7 @@ func start_render_probe() -> bool:
 		add_child(render_probe)
 		render_probe.completed.connect(_on_render_probe_completed)
 	if not render_probe.start(get_tree().current_scene):
-		set_status("Start in the hub or Depth 2 using the latest DEV page", true)
+		set_status(render_probe.start_error, true)
 		return false
 	_probe_meter_visible = frame_meter.visible
 	frame_meter.hide()

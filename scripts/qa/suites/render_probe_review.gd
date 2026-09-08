@@ -38,6 +38,7 @@ func run() -> void:
 	main.developer_menu.open_menu()
 	main.developer_menu.render_probe_button.pressed.emit()
 	var probe: Control = main.developer_menu.render_probe
+	print("PROBE_START_STATE " + JSON.stringify({"running":probe.running,"drawer":main.developer_menu.is_open(),"meter_processing":main.developer_menu.frame_meter.is_processing(),"error":probe.start_error,"browser":probe._browser_snapshot()}))
 	if not require(probe.running and not main.developer_menu.is_open() and not main.developer_menu.frame_meter.is_processing(), "Button starts and closes drawer"): return
 	var previous_stage := -1
 	var started := Time.get_ticks_usec()
@@ -61,6 +62,7 @@ func run() -> void:
 	var baseline: Dictionary = full.baseline
 	for row in full.rows:
 		if not require(row.frames >= 3 and row.fps > 0, "Valid frame sample " + row.stage): return
+		if not require(row.render_width == row.canvas_width and row.render_height == row.canvas_height, "Render surface matches canvas " + row.stage): return
 		if row.stage == "pet_off":
 			if not require(row.pet_lights == 0 and row.lights == baseline.lights - baseline.pet_lights, "Only pet lights disabled"): return
 		elif row.stage == "shadows_off":
