@@ -1,0 +1,81 @@
+name: Complete review of the immutable DEV rendering probe
+on:
+  push:
+    branches: [codex-render-probe]
+    paths: ['.github/workflows/dev-render-probe-review.yml', '.github/dev-render-probe/chromium-review.mjs']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bind the successful source and native gates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34227311649 --jq .head_sha)" = 0708589f450e8efb1590fbc42df02b8a6f5f4a43
+          gh api repos/Corpax88/Ever-Deeper/actions/runs/34227311649/jobs > "$RUNNER_TEMP/source-jobs.json"
+          git fetch --depth=1 origin 0708589f450e8efb1590fbc42df02b8a6f5f4a43
+          git diff --name-only 0708589f450e8efb1590fbc42df02b8a6f5f4a43 HEAD > "$RUNNER_TEMP/source-diff.txt"
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])
+          jobs={j['name']:j for j in json.loads((root/'source-jobs.json').read_text())['jobs']}
+          for name in ['build','rendered (hub, native)','rendered (mossvein, native)']:
+            assert jobs[name]['conclusion']=='success',name
+          assert all(p.startswith(('.github/','docs/')) for p in (root/'source-diff.txt').read_text().splitlines()),'Runtime source changed'
+          print('Original import, exports, ten gameplay cases, both flavors and two full native runs verified; runtime source unchanged')
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          name: dev-render-probe-candidate
+          run-id: 34227311649
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - name: Verify every candidate byte
+        run: |
+          python3 - <<'PY'
+          import json,hashlib,os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'candidate'
+          for name,info in json.loads((root/'manifest.json').read_text()).items():
+            data=(root/name).read_bytes()
+            assert len(data)==info['size'] and hashlib.sha256(data).hexdigest()==info['sha256'],name
+          print('Immutable candidate manifest verified')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dev-render-probe-reviewed-candidate
+          path: ${{ runner.temp }}/candidate
+          retention-days: 30
+  browser:
+    needs: package
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        area: [hub, mossvein]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: dev-render-probe-reviewed-candidate
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run complete diagnostic, mobile touch, resize and captures
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          node .github/dev-render-probe/chromium-review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review" '${{ matrix.area }}'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dev-render-probe-chromium-${{ matrix.area }}
+          path: ${{ runner.temp }}/review
+          retention-days: 30
