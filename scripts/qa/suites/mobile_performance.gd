@@ -252,9 +252,10 @@ func review_meter() -> void:
 	if main.developer_menu == null: fail("DEV meter missing"); return
 	main.game_started = true
 	main._dev_seed_hub_state()
+	RunState.overhaul_progress["skills"] = {"lantern":1,"fetch":1,"trailrunner":1,"big_paws":1,"ore_nose":1,"long_beam":1,"shake":1,"teamwork":1,"echo":1,"homeward":1}
 	main._dev_jump_hub()
 	main.developer_menu.toggle_frame_meter()
-	await main.get_tree().create_timer(4.5).timeout
+	await main.get_tree().create_timer(35.0).timeout
 	var meter: Control = main.developer_menu.frame_meter
 	var reading: Dictionary = meter.latest
 	if int(reading.get("meter_revision", 0)) != 2 or int(reading.get("canvas_width", 0)) <= 0:
@@ -291,6 +292,7 @@ func review_floor_release() -> void:
 			RunState.add_resource(String(upgrade.resource), int(upgrade.cost), false)
 			if not bool(RunState.upgrade_workshop(workshop_id).get("ok", false)):
 				fail("Mature hub upgrade failed"); return
+	RunState.overhaul_progress["skills"] = {"lantern":1,"fetch":1,"trailrunner":1,"big_paws":1,"ore_nose":1,"long_beam":1,"shake":1,"teamwork":1,"echo":1,"homeward":1}
 	main._dev_jump_hub()
 	for point in [Vector2(430,820), Vector2(1200,480), Vector2(720,200)]:
 		main.hub_world.restore_position(point)
@@ -302,5 +304,5 @@ func review_floor_release() -> void:
 		await main.get_tree().create_timer(1.0).timeout
 		main.depth_world.set_mine_held(false)
 		await capture_review("floor-" + String(mine_id) + "-terrain")
-	print("FLOOR_RELEASE_REVIEW_OK captures=11 version=0.46.9-dev.3")
+	print("FLOOR_RELEASE_REVIEW_OK captures=11 version=0.46.9-dev.4")
 	main.get_tree().quit(0)
