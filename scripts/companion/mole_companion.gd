@@ -207,7 +207,7 @@ func _think() -> void:
 func _qa_think_step() -> void:
 	var range_value: float = 440.0 if Skills.has_skill("long_beam") else 220.0
 	if lamp.base_beam_length != range_value: lamp.configure(Color("ffe0a0"),facing,0.0,range_value)
-	if mode in ["follow","fetch","hold"] and Skills.has_skill("teamwork") and assist_cooldown<=0.0 and (bool(world.get("external_mine_held")) or Input.is_action_pressed("mine")):
+	if mode in ["follow","fetch","hold"] and Skills.has_skill("teamwork") and assist_cooldown<=0.0 and world.has_method("companion_can_dig") and (world.get("external_mine_held") == true or Input.is_action_pressed("mine")):
 		var point: Vector2 = hero.global_position+Vector2(hero.get("facing_vector"))*52.0
 		if global_position.distance_to(point)<170.0 and world.has_method("companion_can_dig") and bool(world.call("companion_can_dig",point)):
 			assist_action=true

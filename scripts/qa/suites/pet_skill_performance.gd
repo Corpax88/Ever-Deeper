@@ -165,6 +165,11 @@ func prepare_exercise() -> void:
 		exercise_wall=dig_target()
 		if is_finite(exercise_wall.x):
 			var floor_point: Vector2 = mole._nearby_floor(exercise_wall)
+			for direction in [Vector2.LEFT,Vector2.RIGHT,Vector2.UP,Vector2.DOWN]:
+				var candidate: Vector2 = exercise_wall+direction*52.0
+				if not mole._blocked(candidate):
+					floor_point=candidate
+					break
 			world.restore_position(floor_point)
 			world.player.facing_vector=(exercise_wall-floor_point).normalized()
 			mole._spawn_beside_hero()
@@ -196,10 +201,32 @@ func exercise_tick(elapsed: float) -> void:
 					var point: Vector2 = exercise_point+Vector2((i%5-2)*12,(i/5-2)*12)
 					if not mole._blocked(point): world._spawn_drop(point,"deepstone",1)
 				ok=true
-		"ore_nose","echo","homeward": ok=mole.scout(action_id)
+		"ore_nose":
+			if area=="mossvein": prepare_ore_fixture()
+			ok=mole.scout(action_id)
+		"echo","homeward": ok=mole.scout(action_id)
 		"shake": ok=mole.shake_nearby()
 		"teamwork":
 			if exercise_supported:
 				world.set_mine_held(true)
-				ok=true
+				mole._think()
+				ok=world.companion_can_dig(world.player.global_position+world.player.facing_vector*52.0)
 	commands.append({"at_seconds":elapsed,"command":action_id,"accepted":ok})
+
+func prepare_ore_fixture() -> void:
+	# Expose one real, ungated deposit in a disposable 7x7 chamber.
+	for rock in world.rocks:
+		if bool(rock.broken) or bool(rock.drill_gated) or not String(rock.cavern_id).is_empty(): continue
+		var center: Vector2i = rock.cell
+		for y in range(-3,4):
+			for x in range(-3,4):
+				var cell: Vector2i = center+Vector2i(x,y)
+				var index: int = world._cell_index(cell)
+				if index<0 or index>=world.terrain_hp.size(): continue
+				world.terrain_hp[index]=0
+				world.dug_indices[index]=true
+		world.restore_position(Vector2(rock.position)+Vector2(0,100))
+		mole._spawn_beside_hero()
+		world.target_dirty=true
+		world._request_redraw()
+		return
