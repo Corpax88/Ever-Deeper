@@ -2106,7 +2106,7 @@ func _draw() -> void :
 	if mine.is_empty():
 		return
 	_remember_draw_camera_bounds()
-	draw_rect(Rect2(Vector2.ZERO, world_size), _profile_color("floor", "100e0c"), true)
+	# Opaque floor texture supplies the background without a hidden lit layer.
 	draw_texture_rect(floor_texture, Rect2(Vector2.ZERO, world_size), true, Color(0.92,0.90,0.88,1.0))
 	draw_rect(Rect2(Vector2.ZERO, world_size), Color(_profile_color("floor", "100e0c"), 0.12), true)
 	var visible_rect: = _resource_visible_rect(Vector2.ONE * TILE_SIZE * 3.0)

@@ -2467,7 +2467,11 @@ func _draw_feedback() -> void :
 
 
 func _draw_ground() -> void :
-	draw_rect(Rect2(Vector2.ZERO, WORLD_SIZE), Color("08090e"), true)
+	# The opaque floor covers the interior; only draw the background borders.
+	draw_rect(Rect2(0, 0, WORLD_SIZE.x, 48), Color("08090e"), true)
+	draw_rect(Rect2(0, WORLD_SIZE.y - 48, WORLD_SIZE.x, 48), Color("08090e"), true)
+	draw_rect(Rect2(0, 48, 54, WORLD_SIZE.y - 96), Color("08090e"), true)
+	draw_rect(Rect2(WORLD_SIZE.x - 54, 48, 54, WORLD_SIZE.y - 96), Color("08090e"), true)
 	var interior: = Rect2(54, 48, WORLD_SIZE.x - 108, WORLD_SIZE.y - 96)
 	draw_texture_rect(HUB_FLOOR_TEXTURE, interior, true, Color(0.96, 0.84, 0.72, 1.0))
 	draw_rect(interior, Color(0.18, 0.075, 0.018, 0.12), true)
