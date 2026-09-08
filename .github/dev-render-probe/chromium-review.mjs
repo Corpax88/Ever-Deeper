@@ -29,7 +29,7 @@ const server = http.createServer(async (req, res) => {
   } catch { res.writeHead(404).end(); }
 });
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
-const browser = await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const browser = await chromium.launch({headless:false,args:['--use-gl=angle','--use-angle=gl','--ignore-gpu-blocklist','--ozone-platform=x11']});
 let page;
 try {
   page = await browser.newPage({viewport: {width: 844, height: 390}, deviceScaleFactor: 3, isMobile: true, hasTouch: true});
