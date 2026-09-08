@@ -88,7 +88,7 @@ func run() -> void:
 		if not require(not world._hit_terrain(Vector2i(0, 1)) and world._terrain_is_solid(Vector2i(0, 1)), "Permanent wall survives mining"): return
 		await paired(area + "-permanent-corner", "prismatic", Vector2(-1,-1))
 	if failed: return
-	var report := {"version":"0.46.9-dev.7", "area":area, "rendered":true, "physical_iphone":false, "window":str(DisplayServer.window_get_size()), "cases":cases, "candidate_restored":true}
+	var report := {"version":preload("res://scripts/ui/premium_menu.gd").release_version(), "area":area, "rendered":true, "physical_iphone":false, "window":str(DisplayServer.window_get_size()), "cases":cases, "candidate_restored":true}
 	FileAccess.open(output_dir.path_join("lighting-release.json"), FileAccess.WRITE).store_string(JSON.stringify(report, "\t"))
 	print("LIGHTING_RELEASE_REVIEW_OK " + JSON.stringify(report))
 	main.get_tree().quit(0)

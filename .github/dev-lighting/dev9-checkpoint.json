@@ -1,0 +1,257 @@
+{
+  "updated_at": "2026-09-08T21:16:59.076Z",
+  "purpose": "User requested handoff. Development paused; DEV9 not published.",
+  "repository": "Corpax88/Ever-Deeper",
+  "main_before_docs_checkpoint": "28d1820eb32702f74c62a206cd179eb24c3c8516",
+  "published": {
+    "dev_version": "0.46.9-dev.8",
+    "live_version": "0.46.9",
+    "dev_receipt": ".github/hero-v28/publication-receipt.json",
+    "dev_review": ".github/hero-v28/review.json",
+    "publication_run_id": 34270405341,
+    "publication_commit": "13aa2ebb5c2acb5b2906ea9701827402a5c644d0",
+    "candidate_source_commit": "2e8e165b7f236c854357d0440c007d74b03e7f12",
+    "note": "DEV8 receipt recorded 18 public files verified and LIVE unchanged; no new deployment at handoff."
+  },
+  "candidate": {
+    "version": "0.46.9-dev.9",
+    "branch": "codex-fixed-lighting-dev9",
+    "source_commit": "efd3dc6f37ff7a1c5eeb3c9bbf0c6eb9e0385ed5",
+    "tree": "6ca0d18acebb148367e3d50eebe154b997cb69f4",
+    "qa_run_id": 34278070936,
+    "status": "completed",
+    "conclusion": "failure",
+    "published": false,
+    "visual_reviewed": false,
+    "physical_iphone_verified": false,
+    "package_file_manifest_verified": false,
+    "jobs": [
+      {
+        "id": 102235907978,
+        "name": "build",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 102236642186,
+        "name": "native (other)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 102236642216,
+        "name": "native (moonglass)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 102236642217,
+        "name": "gates",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 102236642220,
+        "name": "native (hub)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 102236642227,
+        "name": "native (emberdeep)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 102236642250,
+        "name": "native (starfall)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 102236642270,
+        "name": "chromium (hub)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 102236642319,
+        "name": "chromium (mossvein)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 102236642344,
+        "name": "native (preview)",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 102236642400,
+        "name": "native (mossvein)",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 10076735474,
+        "name": "dev-lighting-chromium-hub",
+        "sha256": "623c0b73af0ef0051e4286b8376025d13693c525cf4ce5f0189d631d7326486f",
+        "size_bytes": 4234382,
+        "expires_at": "2026-10-08T21:07:02Z",
+        "zip_download_digest_verified": false
+      },
+      {
+        "id": 10076724506,
+        "name": "dev-lighting-chromium-mossvein",
+        "sha256": "aa1ae47c38f5903e61c8358e9e04f01db90066ee5eeb485d34f6b0298c46194d",
+        "size_bytes": 4279585,
+        "expires_at": "2026-10-08T21:06:44Z",
+        "zip_download_digest_verified": false
+      },
+      {
+        "id": 10076696911,
+        "name": "dev-lighting-native-mossvein",
+        "sha256": "4aa6ecb058523c3397374d44656d81ef0099b700be165a3ae440cf3ca7980c0e",
+        "size_bytes": 52911961,
+        "expires_at": "2026-10-08T21:05:58Z",
+        "zip_download_digest_verified": false
+      },
+      {
+        "id": 10076696861,
+        "name": "dev-lighting-native-hub",
+        "sha256": "d11a687d6b34ec6f43df88977a291926c878addeedfefb2ab2433de1bec8c132",
+        "size_bytes": 70963294,
+        "expires_at": "2026-10-08T21:05:58Z",
+        "zip_download_digest_verified": false
+      },
+      {
+        "id": 10076656321,
+        "name": "dev-lighting-native-other",
+        "sha256": "d815a0602263698dfdcb4200c360ce614db88dbc4bbb5570ceddf254f8f91209",
+        "size_bytes": 97470854,
+        "expires_at": "2026-10-08T21:04:47Z",
+        "zip_download_digest_verified": false
+      },
+      {
+        "id": 10076653505,
+        "name": "dev-lighting-native-starfall",
+        "sha256": "3460d4109c0092fe24cc36b073d81345cd23b277e99559bdf0cd740921098bbf",
+        "size_bytes": 54585944,
+        "expires_at": "2026-10-08T21:04:44Z",
+        "zip_download_digest_verified": false
+      },
+      {
+        "id": 10076633667,
+        "name": "dev-lighting-native-gates",
+        "sha256": "fe063a0f5005e37557ef77b83bd6288d1dce68712cc8cdaea50de997691265b5",
+        "size_bytes": 72681345,
+        "expires_at": "2026-10-08T21:04:11Z",
+        "zip_download_digest_verified": false
+      },
+      {
+        "id": 10076628058,
+        "name": "dev-lighting-native-emberdeep",
+        "sha256": "cfca41120bea6487924db15654f4c9814eafd5bb43820ad7ff16f84b1acf3fd5",
+        "size_bytes": 52254368,
+        "expires_at": "2026-10-08T21:04:02Z",
+        "zip_download_digest_verified": false
+      },
+      {
+        "id": 10076621316,
+        "name": "dev-lighting-native-moonglass",
+        "sha256": "a417f0cb3245557fa4e0cf6d3950d1c5ecb54a6b866968277b5e71de6c393085",
+        "size_bytes": 54886112,
+        "expires_at": "2026-10-08T21:03:50Z",
+        "zip_download_digest_verified": false
+      },
+      {
+        "id": 10076608721,
+        "name": "dev-lighting-native-preview",
+        "sha256": "09b6c9ff1d4a47a63b58b0cd0a01c6634061764747bf1e8b8892bf06d9d8857d",
+        "size_bytes": 6534642,
+        "expires_at": "2026-10-08T21:03:30Z",
+        "zip_download_digest_verified": true
+      },
+      {
+        "id": 10076578392,
+        "name": "dev-lighting-build-review",
+        "sha256": "2a73fb3a3307c985a11248de62bd52bcae2646538b605e08c787880d5bfdf84f",
+        "size_bytes": 58578,
+        "expires_at": "2026-10-08T21:02:38Z",
+        "zip_download_digest_verified": true
+      },
+      {
+        "id": 10076577835,
+        "name": "dev-lighting-candidate",
+        "sha256": "2050a321c536161e9404e006fd05090c4955aedf78f7fb716017b344da2b2563",
+        "size_bytes": 230754988,
+        "expires_at": "2026-10-08T21:02:31Z",
+        "zip_download_digest_verified": true
+      }
+    ],
+    "current_failure": {
+      "job_id": 102236642344,
+      "job": "native (preview)",
+      "artifact_id": 10076608721,
+      "log": "native.log",
+      "message": "MOBILE_PERFORMANCE_FAILED: Returning to the same light level changed its pixels",
+      "source": "scripts/qa/suites/mobile_performance.gd:237",
+      "captures": [
+        "light-current.png",
+        "light-upgraded.png",
+        "light-current-restored.png"
+      ],
+      "root_cause": "Unresolved. Images not yet inspected; do not weaken assertion merely to pass."
+    },
+    "candidate_manifest_claim": {
+      "index_pck_size": 219176328,
+      "index_pck_sha256": "3d0d4c5b79ee3db408dcfcafa20f5d793129a41317068e26bd19760d1d2c215f",
+      "note": "Read from manifest.json. Archive digest verified, per-file bytes not yet checked."
+    },
+    "prior_attempt": {
+      "source_commit": "cc72789328898b5fda40962ca894977b2667489c",
+      "qa_run_id": 34277656794,
+      "conclusion": "failure",
+      "cause": "visual_capture_driver.gd expected dev.5",
+      "correction": "Expected DEV literal updated to dev.9 only. Current ten core cases and both flavors pass."
+    }
+  },
+  "study": {
+    "branch": "codex-static-field-dev8",
+    "source_commit": "5b1ea312111c5603cf599f12b00f07c747dfe37e",
+    "qa_run_id": 34276033718,
+    "conclusion": "success",
+    "package": "unchanged published DEV8",
+    "fps": {
+      "hub": {
+        "original": 4.068,
+        "field_0": 5.567,
+        "field_1": 5.56,
+        "field_2": 5.983,
+        "restored": 4.076
+      },
+      "mossvein": {
+        "original": 4.157,
+        "field_0": 4.43,
+        "field_1": 4.426,
+        "field_2": 4.598,
+        "restored": 4.303
+      }
+    },
+    "artifacts": [
+      {
+        "id": 10075846099,
+        "name": "static-field-hub",
+        "sha256": "e16b4d65516f86cb4d45b363cd2ccbe9770fe0aee777c711dea618dfafcc9da5"
+      },
+      {
+        "id": 10075850168,
+        "name": "static-field-mossvein",
+        "sha256": "b67b24e1d397415ddbf0ac279ebb68ce39677c0bece2e70945dc7757a43a69d1"
+      }
+    ],
+    "limitation": "Mesa software comparison; not iPhone prediction. Study differs from final candidate. Final performance/memory/visual review pending."
+  }
+}

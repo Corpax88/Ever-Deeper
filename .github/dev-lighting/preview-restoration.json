@@ -1,0 +1,102 @@
+{
+  "source_candidate": "efd3dc6f37ff7a1c5eeb3c9bbf0c6eb9e0385ed5",
+  "diagnosis_run": 34280931704,
+  "settled_run": 34281360754,
+  "diagnosis_source": "7e2213842f2acce928695069c4692c25d8c0aa45",
+  "settled_source": "6535a47001237452fa8f4642c4becfcfd3b64d8f",
+  "published_baseline_pck": "d342642443ca76d46f465f1883f68ff9ea226e9e79cea5330e00c74e37e01378",
+  "candidate_pck": "3d0d4c5b79ee3db408dcfcafa20f5d793129a41317068e26bd19760d1d2c215f",
+  "difference": {
+    "raw_preview_changed_pixels": 4,
+    "raw_max_channel_delta": 1,
+    "raw_bbox": [
+      739,
+      731,
+      739,
+      756
+    ],
+    "screen_changed_pixels": 1,
+    "screen_max_channel_delta": 1
+  },
+  "results": {
+    "dev8": {
+      "level_1_hashes": [
+        4200759286
+      ],
+      "level_2_hashes": [
+        2244004965
+      ]
+    },
+    "dev9_originals": {
+      "level_1_hashes": [
+        4200759286
+      ],
+      "level_2_hashes": [
+        2244004965
+      ]
+    },
+    "dev9_immediate": {
+      "level_1_hashes": [
+        4200759286,
+        2394295552
+      ],
+      "level_2_hashes": [
+        2244004965
+      ]
+    },
+    "dev9_settled": [
+      {
+        "sample": "00-level-1",
+        "hash": 2394295552
+      },
+      {
+        "sample": "01-level-2",
+        "hash": 2244004965
+      },
+      {
+        "sample": "02-level-1",
+        "hash": 2394295552
+      },
+      {
+        "sample": "03-level-1",
+        "hash": 2394295552
+      },
+      {
+        "sample": "04-level-2",
+        "hash": 2244004965
+      },
+      {
+        "sample": "05-level-1",
+        "hash": 2394295552
+      },
+      {
+        "sample": "06-level-1",
+        "hash": 2394295552
+      },
+      {
+        "sample": "07-level-2",
+        "hash": 2244004965
+      },
+      {
+        "sample": "08-level-1",
+        "hash": 2394295552
+      },
+      {
+        "sample": "09-level-1",
+        "hash": 2394295552
+      }
+    ]
+  },
+  "findings": [
+    "DEV9's separate preview retains identical lamp positions, scale, energy, color, shadow and masks during the failed 1 -> 2 -> 1 cycle. Only initial level-1 readback differs; later level-1 readbacks are identical.",
+    "DEV8 and DEV9 with fixed-field nodes removed restore exactly. Waiting for DEV9's deferred bake and following rendered frame before recording the initial preview makes all seven level-1 readbacks exact.",
+    "Engine source shows adding a light texture marks the global GLES3 texture atlas dirty and rebuilds its packing. The field texture is added after frame_post_draw. The evidence supports a fixture/atlas synchronization issue, not a change in preview settings.",
+    "Correction waits for scheduled/baking fixture work (bounded 120 frames) and the following draw before the initial baseline. Exact-pixel assertion and level-change assertion remain unchanged.",
+    "Raw preview PNGs are now retained by final QA. No production preview, hero, lighting, save or gameplay code changes are needed for this correction."
+  ],
+  "engine_sources": [
+    "https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/gles3/storage/texture_storage.cpp",
+    "https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/gles3/rasterizer_canvas_gles3.cpp"
+  ],
+  "physical_iphone_verified": false
+}

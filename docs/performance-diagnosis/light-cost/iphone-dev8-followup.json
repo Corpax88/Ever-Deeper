@@ -1,0 +1,35 @@
+{
+  "recorded_at": "2026-09-08T21:16:59.076Z",
+  "screenshot": "IMG_1746.jpeg",
+  "version_context": "Published DEV8; latest standalone follow-up after DEV8 120-second test.",
+  "version_visible_in_screenshot": false,
+  "source": "User screenshot in chat; manually transcribed.",
+  "user_report": "Jepp, dropper fortsatt.",
+  "location": "Hub",
+  "device_user_description": "iPhone 17 Air",
+  "displayed_meter": {
+    "location_label": "D2",
+    "elapsed_seconds": 52,
+    "fps": 34.7,
+    "p95_frame_ms": 30,
+    "max_frame_ms": 32,
+    "frames_over_33ms": 0,
+    "cpu_ms": 6,
+    "physics_ms": 1,
+    "canvas_width": 2328,
+    "canvas_height": 1260,
+    "device_pixel_ratio": 3,
+    "draw_calls": 140,
+    "memory_mib": null,
+    "gpu_mib": 487,
+    "nodes": 796
+  },
+  "interpretation": [
+    "Earlier final-restored 59.8 FPS was not sustained. User reports another fall and follow-up shows 34.7 FPS.",
+    "52 seconds is the visible meter elapsed time, not a measured exact onset time.",
+    "D2 is the existing meter label; visible scene is hub.",
+    "Screenshot does not establish thermal/driver cause or active light counts.",
+    "Requested follow-up supplied; do not ask user to repeat same DEV8 check."
+  ],
+  "related_report": "docs/performance-diagnosis/light-cost/iphone-dev8.json"
+}

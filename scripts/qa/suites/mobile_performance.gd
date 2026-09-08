@@ -223,6 +223,7 @@ func review() -> void:
 	main.add_child(driver)
 	driver.set("_main", main)
 	driver.call("_prepare_light_state", {"level": 1, "variant": "missing"})
+	if not await settle_fixed_light_fixture(): return
 	var preview: Node = main.commerce_panel.hero_well.get_node("LightPreview")
 	preview.show_level(1)
 	await capture_review("light-current")
@@ -263,10 +264,29 @@ func review() -> void:
 	print("EVER_DEEPER_MOBILE_REVIEW_COMPLETE")
 	main.get_tree().quit(0)
 
+func settle_fixed_light_fixture() -> bool:
+	# Fixed-light baking adds a texture after frame_post_draw. The GLES3 light
+	# atlas then repacks on the next draw, including this separate preview's
+	# existing light textures. Capture both levels against the same settled
+	# renderer state, without relaxing the exact-pixel restoration assertion.
+	for frame in 120:
+		var pending := false
+		for field in main.get_tree().root.find_children("StaticLightField", "", true, false):
+			pending = pending or field.baking or field._scheduled
+		if not pending:
+			await RenderingServer.frame_post_draw
+			return true
+		await main.get_tree().process_frame
+	fail("Fixed-light fixture did not settle before preview review")
+	return false
+
 func capture_review(label: String) -> void:
 	await main.get_tree().create_timer(0.4).timeout
 	await RenderingServer.frame_post_draw
 	main.get_viewport().get_texture().get_image().save_png(output_dir.path_join(label + ".png"))
+	if label.begins_with("light-"):
+		var preview: Node = main.commerce_panel.hero_well.get_node("LightPreview")
+		preview.viewport.get_texture().get_image().save_png(output_dir.path_join(label + "-viewport.png"))
 
 func review_meter() -> void:
 	if main.developer_menu == null: fail("DEV meter missing"); return
