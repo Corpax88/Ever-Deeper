@@ -1,0 +1,56 @@
+name: Publish reviewed DEV lighting probe
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-dev-render-probe.yml']
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages-ever-deeper
+  cancel-in-progress: false
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require the successful inspected package run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34231779653 --jq .conclusion)" = success
+          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34231779653 --jq .head_sha)" = 25216ecf9809914b3b6271fe9b5804620dafa403
+      - uses: actions/download-artifact@v4
+        with:
+          name: dev-render-probe-candidate
+          run-id: 34231779653
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - name: Preserve the previous release and stage reviewed files
+        run: python3 .github/dev-render-probe/publish.py prepare "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/site" "$RUNNER_TEMP/rollback"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-before-dev-render-probe-rollback
+          path: ${{ runner.temp }}/rollback
+          retention-days: 30
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/site
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 .github/dev-render-probe/publish.py verify

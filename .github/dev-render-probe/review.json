@@ -1,0 +1,97 @@
+{
+  "version": "0.46.9-dev.5",
+  "source_commit": "25216ecf9809914b3b6271fe9b5804620dafa403",
+  "qa_run_id": 34231779653,
+  "visual_reviewed": true,
+  "package_checks_passed": true,
+  "physical_iphone_verified": false,
+  "artifacts": [
+    {
+      "id": 10058316249,
+      "name": "dev-render-probe-chromium-hub",
+      "digest": "sha256:fb5174cab0f5410798bdac6e25517876d874d5810fc5df8a67d721fb1308ee5f"
+    },
+    {
+      "id": 10058314938,
+      "name": "dev-render-probe-chromium-mossvein",
+      "digest": "sha256:4c78e11889e131523f2696545d839d925c44f5ff2cf2c933601f417d3cf74174"
+    },
+    {
+      "id": 10058307158,
+      "name": "dev-render-probe-native-mossvein",
+      "digest": "sha256:ed273568656b58e74b01c805db95b881b6915f123e6c0940958280d8907944ad"
+    },
+    {
+      "id": 10058294820,
+      "name": "dev-render-probe-native-hub",
+      "digest": "sha256:51d2fabe1860d928f6c6def68f5caea80890ece11e2edbfefadb2d02cf732a39"
+    },
+    {
+      "id": 10058174669,
+      "name": "dev-render-probe-build-review",
+      "digest": "sha256:147c6e213858f414f82ca76aeaa742aba30802088be785cd2590d4bd3f9cddf7"
+    },
+    {
+      "id": 10058173775,
+      "name": "dev-render-probe-candidate",
+      "digest": "sha256:32ea5a00292a94af33dd32d9e6d155fb1d95209ae1681d1c2c42eaa673287d05"
+    }
+  ],
+  "inspected": [
+    "Native hub and Mossvein Depth 2 final reports",
+    "Chromium/Mesa hub and Mossvein Depth 2 full-DPR3 final reports",
+    "Seven result rows readable above pet UI; original graphics restored",
+    "Actual mobile Cancel touch and original 2532x1170 drawing buffer"
+  ],
+  "notes": [
+    "All five final QA jobs passed: build plus both areas on native and Chromium.",
+    "Ten core gameplay cases, 1139 protected-file hashes and DEV/Production flavor checks passed.",
+    "Seven stages: original 60 seconds, then pet lights off/restored, shadows off/restored and all world lights off/restored, each 10 seconds; final eight seconds sampled.",
+    "Native durations: hub 120.161926s, Mossvein Depth 2 120.084402s. Browser durations: hub 121.463095s, Mossvein Depth 2 122.149355s.",
+    "Every full report had seven rows and graphics_restored=true. Cancellation in each intervention, focus handling, skill/save immutability and previous FPS meter state restoration passed.",
+    "Chromium/Mesa under Xvfb, mobile CSS 844x390, DPR3, original drawing buffer 2532x1170. Actual Cancel touch passed. No script or WebGL errors.",
+    "All nine package files were verified locally against this size/SHA256 manifest. Engine JS and WASM are byte-identical to DEV4; only HTML and PCK changed.",
+    "No canvas resize or DPR override; original Godot canvasResizePolicy=2. No engine presentation patch.",
+    "CI WebKit warning also occurs with probe inactive in ordinary original-policy menu; rejected engine and resolution experiments are documented but not shipped.",
+    "Software-renderer results do not reproduce or certify the physical iPhone Air slowdown. This is an opt-in diagnostic, not a verified phone fix.",
+    "Publisher preserves all nine LIVE 0.46.9 files, retains both previous releases as rollback, and verifies all 18 public files after DEV deployment."
+  ],
+  "files": {
+    "index.apple-touch-icon.png": {
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5",
+      "size": 66421
+    },
+    "index.audio.position.worklet.js": {
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+      "size": 2973
+    },
+    "index.audio.worklet.js": {
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+      "size": 7298
+    },
+    "index.html": {
+      "sha256": "957639299c708bf57140f611ec958a4f08a36862d9708584909243e5275c5479",
+      "size": 7855
+    },
+    "index.icon.png": {
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+      "size": 470687
+    },
+    "index.js": {
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+      "size": 279815
+    },
+    "index.pck": {
+      "sha256": "08345b9e2dcc994a1a333ada9dea1aecb5842e8e0b83712251e1fd553853bfa4",
+      "size": 219365504
+    },
+    "index.png": {
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+      "size": 1981427
+    },
+    "index.wasm": {
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+      "size": 39514754
+    }
+  }
+}

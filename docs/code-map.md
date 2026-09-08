@@ -24,6 +24,7 @@ Read this map, then the named owner. You should not need to read the whole game 
 | Achievements, guide and progression | `scripts/progression/` | RunState persistence |
 | Sound and music | `scripts/audio/audio_director.gd` | Authored audio assets |
 | FPS, frame-time captures and physical DEV meter | `tools/run_performance.py`, `scripts/qa/suites/mobile_performance.gd` | `docs/performance.md`; meter in `scripts/dev/developer_menu.gd` |
+| Automatic DEV lighting comparison | `scripts/dev/render_probe.gd`, `tools/render-probe-web.mjs` | Seven-stage, two-minute test; `docs/performance-diagnosis/render-probe/README.md` |
 | Automated startup flags | `scripts/qa/qa_launcher.gd` | Ordered first-match registry |
 | Older scene fixtures and regression checks | `scripts/qa/suites/` | Named suites with explicit `main` access |
 | Current gameplay and touch checks | `scripts/qa/overhaul_qa.gd`, `menu_touch_qa.gd` | Visual capture driver provides fixtures |

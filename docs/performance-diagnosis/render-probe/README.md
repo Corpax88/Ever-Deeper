@@ -50,4 +50,22 @@ reproduced or certified by these software-renderer checks.
 - Alternative presentation control: 34225846204; not adopted.
 - Resize trace: 34226736488; not adopted.
 
-Final lighting-only package, visual review and DEV publication pending. LIVE stays 0.46.9.
+## Reviewed lighting-only candidate
+
+Source: `25216ecf9809914b3b6271fe9b5804620dafa403`, version `0.46.9-dev.5`.
+Final QA: [run 34231779653](https://github.com/Corpax88/Ever-Deeper/actions/runs/34231779653).
+All five jobs passed, including ten core gameplay cases, 1139 protected-file hashes,
+both build flavors and both areas on native and Chromium/Mesa.
+
+Native hub/Depth 2 sequences completed in 120.161926/120.084402 seconds; browser sequences
+in 121.463095/122.149355 seconds. Every report has seven rows and restored graphics.
+Actual mobile Cancel input passed at CSS 844×390 / DPR3, with the unchanged physical
+2532×1170 drawing buffer. Both browser runs recorded zero script or WebGL errors.
+The four final result screenshots were inspected and are readable above the companion UI.
+
+All nine candidate files were checked against the manifest in
+`.github/dev-render-probe/review.json`. Engine JS/WASM remain byte-identical to DEV4;
+only HTML and PCK changed. Candidate artifact: `10058173775`.
+The physical phone issue is unresolved; these checks validate the diagnostic sequence.
+
+Publication prepared; DEV deployment and public-file verification pending. LIVE stays 0.46.9.
