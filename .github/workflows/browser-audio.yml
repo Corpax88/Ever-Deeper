@@ -1,0 +1,35 @@
+name: Compare actual WebKit audio with Dummy driver
+on:
+  push:
+    branches: [codex-browser-audio-probe]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: dev-teamwork-candidate
+          run-id: 34198922230
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - name: Install WebKit
+        run: |
+          npm ci
+          npx playwright install --with-deps webkit
+      - name: Compare the exact published DEV package
+        run: |
+          mkdir -p "$RUNNER_TEMP/audio" "$RUNNER_TEMP/dummy"
+          node tools/audio-web-probe.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/audio" audio
+          node tools/audio-web-probe.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/dummy" dummy
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-audio-comparison
+          path: |
+            ${{ runner.temp }}/audio
+            ${{ runner.temp }}/dummy
