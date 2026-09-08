@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        screenshots: ['0', '1']
+        skip_context: ['0', '1']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -25,10 +25,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Trace with and without screenshots
+      - name: Compare existing context observer with an omitted observer
         env:
-          PROBE_GL_TRACE: '1'
-          PROBE_SCREENSHOTS: ${{ matrix.screenshots }}
+          PROBE_GL_TRACE: '0'
+          PROBE_SKIP_CONTEXT: ${{ matrix.skip_context }}
         run: |
           npm ci
           npx playwright install --with-deps webkit
@@ -36,6 +36,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: render-probe-gl-trace-${{ matrix.screenshots }}
+          name: render-probe-context-control-${{ matrix.skip_context }}
           path: ${{ runner.temp }}/review
           retention-days: 30

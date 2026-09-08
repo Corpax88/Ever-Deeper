@@ -6,7 +6,8 @@ const [rootArg, outputArg, area = 'hub'] = process.argv.slice(2);
 const root = path.resolve(rootArg), output = path.resolve(outputArg);
 await mkdir(output, {recursive: true});
 const logs = [], errors = [], captures = [];
-const takeCaptures = process.env.PROBE_SCREENSHOTS !== '0';
+const takeCaptures = false;
+const control = process.env.PROBE_SKIP_CONTEXT === '1';
 let complete = false, touchDone = false, resizeStarted = false, resizeRestored = false;
 const server = http.createServer(async (req, res) => {
   try {
@@ -14,6 +15,7 @@ const server = http.createServer(async (req, res) => {
     const file = path.resolve(root, '.' + (name === '/' ? '/index.html' : name));
     if (!file.startsWith(root + path.sep)) { res.writeHead(403).end(); return; }
     let data = await readFile(file);
+    if (file.endsWith('.html') && control) data = Buffer.from(data.toString().replace("gl = canvas.getContext('webgl2');", '/* Control: omit context observer; reported buffer dimensions remain zero. */'));
     if (file.endsWith('.html')) data = Buffer.from(data.toString().replace(/const GODOT_CONFIG = (\{[^\r\n]+\});/, (_, raw) => {
       const config = JSON.parse(raw);
       config.args = ['--audio-driver', 'Dummy', '--', '--qa-mobile-performance', '--perf-render-probe-review', `--probe-area=${area}`];
@@ -66,7 +68,8 @@ try {
     }
   });
   await page.goto(`http://127.0.0.1:${server.address().port}/`);
-  const deadline = Date.now() + 300000;
+  const began = Date.now();
+  const deadline = began + 20000;
   while (!complete && !errors.length && Date.now() < deadline) {
     const state = await page.evaluate(() => ({target: window.__renderProbeTouchTarget,
       resize: window.__renderProbeResizeReady, resizeDone: window.__renderProbeResizeDone}));
@@ -84,14 +87,12 @@ try {
     await page.waitForTimeout(200);
   }
   await Promise.all(captures);
-  if (!complete || errors.length || !touchDone || !resizeRestored) throw new Error(JSON.stringify({complete, errors, touchDone, resizeRestored}));
-  const state = await page.evaluate(() => ({report: window.everDeeperRenderProbeResult,
-    canvas: {w: document.querySelector('canvas').width, h: document.querySelector('canvas').height, dpr: devicePixelRatio}}));
-  if (state.canvas.w !== 2532 || state.canvas.h !== 1170 || state.canvas.dpr !== 3) throw new Error('DPR/canvas not restored: ' + JSON.stringify(state.canvas));
-  if (!state.report.graphics_restored || state.report.rows.length !== 9 || state.report.rows.some(row => row.raf_frames < 3 || row.raf_fps <= 0)) throw new Error('Missing restored settings or RAF samples');
-  if (takeCaptures) await page.screenshot({path: path.join(output, `${area}-result.png`)});
-  await writeFile(path.join(output, 'webkit.json'), JSON.stringify({passed: true, area, ...state, touchDone, resizeRestored}, null, 2));
-  console.log('RENDER_PROBE_WEBKIT_OK ' + JSON.stringify(state.canvas));
+  const observation = {control_without_context_observer: control, seconds: (Date.now()-began)/1000, errors, complete,
+    phase: await page.evaluate(() => window.everDeeperRenderProbe?.snapshot())};
+  await writeFile(path.join(output, 'control.json'), JSON.stringify(observation,null,2));
+  console.log('GL_CONTEXT_CONTROL ' + JSON.stringify(observation));
+  if (errors.length) process.exitCode = 1;
+
 } finally {
   await writeFile(path.join(output, 'browser-console.json'), JSON.stringify({complete, errors, logs}, null, 2));
   if (page && takeCaptures) await page.screenshot({path: path.join(output, 'browser-last.png')}).catch(() => {});
