@@ -7,6 +7,10 @@ var output_dir: String = "user://mobile-performance"
 var captures: bool = false
 
 func run() -> void:
+	if "--perf-pet-skills" in OS.get_cmdline_user_args():
+		var suite: RefCounted = load("res://scripts/qa/suites/pet_skill_performance.gd").new(main, session)
+		await suite.run()
+		return
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--perf-output="): output_dir = arg.get_slice("=", 1)
 		if arg == "--perf-capture": captures = true

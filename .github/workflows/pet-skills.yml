@@ -1,0 +1,41 @@
+name: Pet skill sustained performance
+on:
+  push:
+    branches: [codex-pet-skill-performance]
+permissions:
+  contents: read
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      max-parallel: 22
+      matrix:
+        area: [hub, mossvein]
+        skill: [lantern, fetch, trailrunner, big_paws, ore_nose, long_beam, shake, teamwork, echo, homeward, all]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri ripgrep
+          curl -L --fail --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Import and validate
+        run: |
+          mkdir -p "$RUNNER_TEMP/results"
+          Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > "$RUNNER_TEMP/results/import.log" 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/results/import.log"; then exit 1; fi
+          python3 tools/check_invariants.py
+      - name: Measure three sustained trials
+        run: |
+          XDG_DATA_HOME="$RUNNER_TEMP/saves" xvfb-run -a -s '-screen 0 1280x720x24' timeout 600 Godot_v4.7.2-stable_linux.x86_64 --path . --resolution 844x390 --audio-driver Dummy -- --qa-mobile-performance --perf-pet-skills --pet-area=${{ matrix.area }} --pet-skill=${{ matrix.skill }} --perf-output="$RUNNER_TEMP/results" > "$RUNNER_TEMP/results/run.log" 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/results/run.log"; then exit 1; fi
+          rg PET_SKILL_PERFORMANCE_COMPLETE "$RUNNER_TEMP/results/run.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pet-${{ matrix.area }}-${{ matrix.skill }}
+          path: ${{ runner.temp }}/results

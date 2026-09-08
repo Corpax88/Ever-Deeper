@@ -41,6 +41,9 @@ var guide_time: float = 0.0
 var idle_clock: float = 0.0
 var assist_action: bool = false
 var failed_loot: Dictionary = {}
+# Profiling exists only on the isolated QA branch.
+var qa_stats: Dictionary = {"physics_usec":0,"physics_max_usec":0,"physics_calls":0,"think_usec":0,"think_calls":0,"path_usec":0,"path_calls":0,"path_max_usec":0,"loot_usec":0,"loot_calls":0,"ore_usec":0,"ore_calls":0}
+var qa_sim_seconds: float = 0.0
 
 
 func _ready() -> void:
@@ -82,6 +85,15 @@ func _ready() -> void:
 	visible = false
 
 func _physics_process(delta: float) -> void:
+	qa_sim_seconds += delta
+	var begin: int = Time.get_ticks_usec()
+	_qa_physics_step(delta)
+	var cost: int = Time.get_ticks_usec() - begin
+	qa_stats.physics_usec += cost
+	qa_stats.physics_calls += 1
+	qa_stats.physics_max_usec = maxi(int(qa_stats.physics_max_usec), cost)
+
+func _qa_physics_step(delta: float) -> void:
 	var live: bool = is_instance_valid(hero) and world.is_visible_in_tree() and (world.has_method("_surface_collides") or bool(world.get("active")))
 	visible = live
 	if not live:
@@ -187,6 +199,12 @@ func command(point: Vector2) -> bool:
 	return true
 
 func _think() -> void:
+	var begin: int = Time.get_ticks_usec()
+	_qa_think_step()
+	qa_stats.think_usec += Time.get_ticks_usec() - begin
+	qa_stats.think_calls += 1
+
+func _qa_think_step() -> void:
 	var range_value: float = 440.0 if Skills.has_skill("long_beam") else 220.0
 	if lamp.base_beam_length != range_value: lamp.configure(Color("ffe0a0"),facing,0.0,range_value)
 	if mode in ["follow","fetch","hold"] and Skills.has_skill("teamwork") and assist_cooldown<=0.0 and (bool(world.get("external_mine_held")) or Input.is_action_pressed("mine")):
@@ -204,7 +222,10 @@ func _think() -> void:
 	if Skills.has_skill("ore_nose") and sniff_clock<=0.0 and mode in ["follow","hold"]:
 		sniff_clock=10.0
 		if world.has_method("companion_ore_target"):
+			var qa_ore_start: int = Time.get_ticks_usec()
 			var ore: Vector2=world.call("companion_ore_target",global_position)
+			qa_stats.ore_usec += Time.get_ticks_usec() - qa_ore_start
+			qa_stats.ore_calls += 1
 			if is_finite(ore.x) and (not is_finite(last_sniff.x) or ore.distance_to(last_sniff)>16.0):
 				last_sniff=ore
 				guide_kind="ore_nose"
@@ -212,6 +233,10 @@ func _think() -> void:
 				guide_time=12.0
 				_ping(ore)
 				_react("Sniff sniff... ore!",2.4)
+	# Fetch is a built-in skill without an in-game off switch. QA isolates only fetching.
+	if get_meta("qa_fetch_disabled", false):
+		if mode=="follow": destination=hero.global_position
+		return
 	if mode=="fetch":
 		var found: bool = false
 		for drop in _loot():
@@ -232,7 +257,11 @@ func _think() -> void:
 				mode="fetch"
 
 func _loot() -> Array:
-	return world.call("companion_loot_candidates") if world.has_method("companion_loot_candidates") else []
+	var begin: int = Time.get_ticks_usec()
+	var result: Array = world.call("companion_loot_candidates") if world.has_method("companion_loot_candidates") else []
+	qa_stats.loot_usec += Time.get_ticks_usec() - begin
+	qa_stats.loot_calls += 1
+	return result
 
 func _begin_shake() -> void:
 	if shake_cooldown>0.0:
@@ -358,6 +387,15 @@ func _move(delta: float) -> void:
 		moving=true
 
 func _path_to(point: Vector2) -> Array[Vector2]:
+	var begin: int = Time.get_ticks_usec()
+	var result: Array[Vector2] = _qa_path_to(point)
+	var cost: int = Time.get_ticks_usec() - begin
+	qa_stats.path_usec += cost
+	qa_stats.path_calls += 1
+	qa_stats.path_max_usec = maxi(int(qa_stats.path_max_usec), cost)
+	return result
+
+func _qa_path_to(point: Vector2) -> Array[Vector2]:
 	var tile: float = 64.0 if world.has_method("_is_floor") else 48.0
 	var start: Vector2i = Vector2i((global_position/tile).floor())
 	var goal: Vector2i = Vector2i((point/tile).floor())
