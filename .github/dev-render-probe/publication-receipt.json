@@ -1,0 +1,89 @@
+{
+  "version": "0.46.9-dev.5",
+  "published_url": "https://corpax88.github.io/Ever-Deeper/dev/?v=0.46.9-dev.5",
+  "reviewed_source_commit": "25216ecf9809914b3b6271fe9b5804620dafa403",
+  "reviewed_qa_run_id": 34231779653,
+  "candidate_artifact_id": 10058173775,
+  "publication_commit": "50be556ca567c774835cb6a21d40e0b6adfb747a",
+  "publication_run_id": 34233714193,
+  "publication_run_url": "https://github.com/Corpax88/Ever-Deeper/actions/runs/34233714193",
+  "conclusion": "success",
+  "verified_at": "2026-09-08T13:45:14.5844115Z",
+  "verification": "All 18 public files verified; LIVE unchanged",
+  "jobs": [
+    {
+      "id": 102085961929,
+      "name": "package",
+      "conclusion": "success"
+    },
+    {
+      "id": 102086413791,
+      "name": "deploy",
+      "conclusion": "success"
+    },
+    {
+      "id": 102086547643,
+      "name": "verify",
+      "conclusion": "success"
+    }
+  ],
+  "source_checks": {
+    "run_id": 34233714245,
+    "conclusion": "success"
+  },
+  "artifacts": [
+    {
+      "id": 10058947974,
+      "name": "github-pages",
+      "digest": "sha256:dde07a515d5f07793e80126760d23d805d89488e70ac04b9fd9522b182ba54ff"
+    },
+    {
+      "id": 10058936610,
+      "name": "ever-deeper-before-dev-render-probe-rollback",
+      "digest": "sha256:5f9854da0df95d23599b5464f096f4a31ace0c9a414405a97aa9984d9bc56527"
+    }
+  ],
+  "live_version": "0.46.9",
+  "live_unchanged": true,
+  "dev_files": {
+    "index.apple-touch-icon.png": {
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5",
+      "size": 66421
+    },
+    "index.audio.position.worklet.js": {
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+      "size": 2973
+    },
+    "index.audio.worklet.js": {
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+      "size": 7298
+    },
+    "index.html": {
+      "sha256": "957639299c708bf57140f611ec958a4f08a36862d9708584909243e5275c5479",
+      "size": 7855
+    },
+    "index.icon.png": {
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+      "size": 470687
+    },
+    "index.js": {
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+      "size": 279815
+    },
+    "index.pck": {
+      "sha256": "08345b9e2dcc994a1a333ada9dea1aecb5842e8e0b83712251e1fd553853bfa4",
+      "size": 219365504
+    },
+    "index.png": {
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+      "size": 1981427
+    },
+    "index.wasm": {
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+      "size": 39514754
+    }
+  },
+  "physical_iphone_verified": false,
+  "next_step": "On the affected iPhone, open DEV5 in the hub, choose DEV TOOLS → AUTO FPS TEST · 2 MIN, remain still and keep the app visible, then share the final result table.",
+  "limitation": "The diagnostic is verified and published. The physical iPhone FPS drop is not yet resolved or reproduced in CI."
+}

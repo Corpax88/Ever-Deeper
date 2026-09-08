@@ -9,4 +9,8 @@
 - Original configuration runs for 60 seconds; pet lights, shadows and world lights are then tested separately with restored intervals. The final table includes engine FPS, browser RAF and p95.
 - Save and skill values are preserved. Cancel/focus/area changes restore the original light state.
 - Engine JS/WASM and normal canvas behavior are unchanged from DEV4.
-- Publication prepared; deployment and all-18-file public verification pending. LIVE stays 0.46.9.
+- Published: https://corpax88.github.io/Ever-Deeper/dev/?v=0.46.9-dev.5
+- Publication run: https://github.com/Corpax88/Ever-Deeper/actions/runs/34233714193 — package, deploy and verify passed; source checks also passed.
+- All 18 public file sizes and SHA256 hashes verified at 2026-09-08T13:45:14Z. LIVE remains byte-identical at 0.46.9.
+- Previous LIVE+DEV rollback artifact: 10058936610. Details in publication-receipt.json.
+- Next: one final result screenshot from the affected physical iPhone; do not call the original FPS issue fixed.

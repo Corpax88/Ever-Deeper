@@ -68,4 +68,13 @@ All nine candidate files were checked against the manifest in
 only HTML and PCK changed. Candidate artifact: `10058173775`.
 The physical phone issue is unresolved; these checks validate the diagnostic sequence.
 
-Publication prepared; DEV deployment and public-file verification pending. LIVE stays 0.46.9.
+Published to [DEV 0.46.9-dev.5](https://corpax88.github.io/Ever-Deeper/dev/?v=0.46.9-dev.5)
+by [run 34233714193](https://github.com/Corpax88/Ever-Deeper/actions/runs/34233714193),
+commit `50be556ca567c774835cb6a21d40e0b6adfb747a`. Package, deployment and verification
+passed. All 18 public file sizes and SHA256 hashes matched at 2026-09-08T13:45:14Z;
+all nine LIVE files remain byte-identical at 0.46.9. Source checks on the publication
+commit also passed. The previous LIVE+DEV rollback artifact is `10058936610`.
+See `.github/dev-render-probe/publication-receipt.json` for identities and evidence.
+
+Next evidence: a final automatic-test screenshot from the affected physical iPhone.
+No physical-device FPS recovery is claimed.
