@@ -1,0 +1,503 @@
+{
+  "before_version": "0.46.8",
+  "after_version": "0.46.9",
+  "scope": "Actual releases: after includes the separate v0.46.9 performance changes, not only cleanup.",
+  "artifacts": {
+    "before": 10030946553,
+    "after": 10030951631
+  },
+  "flavors": {
+    "live": {
+      "before_engine": [
+        4,
+        7,
+        2
+      ],
+      "after_engine": [
+        4,
+        7,
+        2
+      ],
+      "before_count": 1253,
+      "after_count": 1278,
+      "identical_entries": 1238,
+      "changed": {
+        ".godot/uid_cache.bin": {
+          "before": {
+            "size": 33678,
+            "sha256": "95e56d2ce7d9f0538723e56a398377cf5bba699d42cb674e5ecb71715a025656",
+            "flags": 0
+          },
+          "after": {
+            "size": 34308,
+            "sha256": "5de87a38db17784a1432497a1a7c7366ec8e0aca8fbb601f4adfc949ad1f7cc5",
+            "flags": 0
+          }
+        },
+        "project.binary": {
+          "before": {
+            "size": 1850,
+            "sha256": "d8ae577766dd2dc180b14641fb5d3735f36188dcd6b28ca381e33be892911077",
+            "flags": 0
+          },
+          "after": {
+            "size": 1850,
+            "sha256": "58ddc57b043b70c3a1feadd9813f1d444bf01502641ea4611c8cd6d7243bd87e",
+            "flags": 0
+          }
+        },
+        "scripts/companion/companion_interface.gdc": {
+          "before": {
+            "size": 5891,
+            "sha256": "f2119cdfb2e3f221701940062944aa6a49ce14796dc2057dfe58f338752b6b18",
+            "flags": 0
+          },
+          "after": {
+            "size": 5937,
+            "sha256": "325c6b682af979bfcf8f6745fb32f1f4ac60b00b091129772fbe228acc87545f",
+            "flags": 0
+          }
+        },
+        "scripts/dev/visual_capture_driver.gdc": {
+          "before": {
+            "size": 49896,
+            "sha256": "ef36fe50e6d07fa10f5b1ce08dbad55e3d3409f4ee40517e340e4689ab841d55",
+            "flags": 0
+          },
+          "after": {
+            "size": 49896,
+            "sha256": "9ee27fc40fc99a6604950202aa641ab1371df032a267647f6b0a01d6e8b39224",
+            "flags": 0
+          }
+        },
+        "scripts/main.gdc": {
+          "before": {
+            "size": 223475,
+            "sha256": "f162c9c0cf30ef8a8cbe8438c72d18e825562807211756df97b8e3510edccbd3",
+            "flags": 0
+          },
+          "after": {
+            "size": 120365,
+            "sha256": "0eeecc43994dabcad112ee4fc91395e9df0972fd2c4dea70fecf139bfb8500b4",
+            "flags": 0
+          }
+        },
+        "scripts/state/run_state.gdc": {
+          "before": {
+            "size": 138208,
+            "sha256": "ffa71f337e02de2c00ff6e62158704f6838373a51843e05d39f4f99c93d8d187",
+            "flags": 0
+          },
+          "after": {
+            "size": 138293,
+            "sha256": "fa6532d33dad036b9f952b1a97f196d6c6d8fc4ffb70df3f522498d1c1078164",
+            "flags": 0
+          }
+        },
+        "scripts/ui/commerce_panel.gdc": {
+          "before": {
+            "size": 51670,
+            "sha256": "508776a350c31c487ed1407d410589f8469d28ea9c47163159f4ea0f1a4a09b1",
+            "flags": 0
+          },
+          "after": {
+            "size": 50335,
+            "sha256": "88b89b9607ee4d3963ded987d4057bde56cbc8a8c55288aa7bc3b3e26ef7b5f7",
+            "flags": 0
+          }
+        },
+        "scripts/ui/light_preview.gdc": {
+          "before": {
+            "size": 3560,
+            "sha256": "8d294fae9b5b44b0bbcd024617a3714956c201d747bab4e1237ddd2248b6c8d3",
+            "flags": 0
+          },
+          "after": {
+            "size": 3527,
+            "sha256": "97605cde78f2cc61911da63f9484933cfc54bca8cdc8a98498bf09533b2a03bc",
+            "flags": 0
+          }
+        },
+        "scripts/ui/premium_menu.gdc": {
+          "before": {
+            "size": 23100,
+            "sha256": "8f3ba5b5a12b4bd347a77a5905fbb87d08e4782923db2ac882595efc072076aa",
+            "flags": 0
+          },
+          "after": {
+            "size": 23100,
+            "sha256": "8a9623cfe11470b85885e59210de954577473f82eef104a87b346cc00d570db3",
+            "flags": 0
+          }
+        },
+        "scripts/world/depth/rootwound_world.gdc": {
+          "before": {
+            "size": 105162,
+            "sha256": "5627cbd4d3c2e81e87cb84347c8d1aae46d9acf4b14d655d7aeebbbc1b344eef",
+            "flags": 0
+          },
+          "after": {
+            "size": 96035,
+            "sha256": "3d40796275dc164090159be76c9495ab54b66ff38b627801fe7858587fdb9c1a",
+            "flags": 0
+          }
+        },
+        "scripts/world/endless_descent_world.gdc": {
+          "before": {
+            "size": 89334,
+            "sha256": "96a82a30b8482c757ea01d661679d276b598cada88e4134a5349b108b9a3b947",
+            "flags": 0
+          },
+          "after": {
+            "size": 87249,
+            "sha256": "de874a6ed082224bc3e7af2129261924e8ff3cc79484ff00563a5af2e43dcad1",
+            "flags": 0
+          }
+        },
+        "scripts/world/hub_world.gdc": {
+          "before": {
+            "size": 95675,
+            "sha256": "58402e927b5dfaf9571b7b1924f8a73d91cbcde3aa7f51802fd9fe6651010fb8",
+            "flags": 0
+          },
+          "after": {
+            "size": 89071,
+            "sha256": "3f01d1c0510e01ebfee0b333de0488fede713bc693ddf9b87264a039de991747",
+            "flags": 0
+          }
+        },
+        "scripts/world/mossvein_mine.gdc": {
+          "before": {
+            "size": 99276,
+            "sha256": "ed7daa9c01fc0b10c6577b0704469b63ef56aff779426c1bfd4eadf564a8cf3a",
+            "flags": 0
+          },
+          "after": {
+            "size": 89964,
+            "sha256": "c2bd746bd9b346a2f40f597d3f7912e0de5cf28e2a7ce76c5e3634464f930ef2",
+            "flags": 0
+          }
+        },
+        "scripts/world/surface_world.gdc": {
+          "before": {
+            "size": 179291,
+            "sha256": "5899929d47fb1b83870c35e5e51f868901a0fa904a5f5cf755e9ee53d4638d91",
+            "flags": 0
+          },
+          "after": {
+            "size": 179193,
+            "sha256": "78ebedab4bfdabce1737c9481b9bfc186e43b08964e3afafaf079fc993cfe728",
+            "flags": 0
+          }
+        }
+      },
+      "added": [
+        "scripts/qa/qa_context.gd.remap",
+        "scripts/qa/qa_context.gdc",
+        "scripts/qa/qa_launcher.gd.remap",
+        "scripts/qa/qa_launcher.gdc",
+        "scripts/qa/suites/build_flavor.gd.remap",
+        "scripts/qa/suites/build_flavor.gdc",
+        "scripts/qa/suites/commerce.gd.remap",
+        "scripts/qa/suites/commerce.gdc",
+        "scripts/qa/suites/crusher.gd.remap",
+        "scripts/qa/suites/crusher.gdc",
+        "scripts/qa/suites/endgame.gd.remap",
+        "scripts/qa/suites/endgame.gdc",
+        "scripts/qa/suites/endless.gd.remap",
+        "scripts/qa/suites/endless.gdc",
+        "scripts/qa/suites/input_release.gd.remap",
+        "scripts/qa/suites/input_release.gdc",
+        "scripts/qa/suites/journey_performance.gd.remap",
+        "scripts/qa/suites/journey_performance.gdc",
+        "scripts/qa/suites/layout.gd.remap",
+        "scripts/qa/suites/layout.gdc",
+        "scripts/qa/suites/mobile_performance.gd.remap",
+        "scripts/qa/suites/mobile_performance.gdc",
+        "scripts/qa/suites/smoke.gd.remap",
+        "scripts/qa/suites/smoke.gdc",
+        "scripts/qa/suites/world_fixtures.gd.remap",
+        "scripts/qa/suites/world_fixtures.gdc"
+      ],
+      "removed": [
+        "version.json"
+      ],
+      "texture_count": 538,
+      "texture_changes": [],
+      "before_files": {
+        "index.html": "b84749ca6c1e23514a23ff5dcfb7a145f768fd3ba2b5992e0018e565f27348eb",
+        "index.js": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+        "index.wasm": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+        "index.pck": "d95621dcda43a2245aa0d21be60c1a309383a19a0f1f4b92d2ee34e86cbcf3a2",
+        "index.audio.position.worklet.js": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+        "index.audio.worklet.js": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+        "index.icon.png": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+        "index.png": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+        "index.apple-touch-icon.png": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+      },
+      "after_files": {
+        "index.html": "64ac4bd1f31ccc8eec456b4d995f0a7a3f098c297c4de377c0526b4d2cf16e3b",
+        "index.js": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+        "index.wasm": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+        "index.pck": "64403da94cc12aa0b23eb2a148449f7ce21c57b7df8ee859615fef8760d4de27",
+        "index.audio.position.worklet.js": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+        "index.audio.worklet.js": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+        "index.icon.png": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+        "index.png": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+        "index.apple-touch-icon.png": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+      }
+    },
+    "dev": {
+      "before_engine": [
+        4,
+        7,
+        2
+      ],
+      "after_engine": [
+        4,
+        7,
+        2
+      ],
+      "before_count": 1255,
+      "after_count": 1280,
+      "identical_entries": 1239,
+      "changed": {
+        ".godot/uid_cache.bin": {
+          "before": {
+            "size": 33725,
+            "sha256": "84f896d7490462aa28b05acefb025d5ffe2e4ad22c64309ec60a226b8bfcef57",
+            "flags": 0
+          },
+          "after": {
+            "size": 34355,
+            "sha256": "a7810fb1c600990b2f0f74373c0bcff53e5ae3beb6d8f992cab8d6d05087f628",
+            "flags": 0
+          }
+        },
+        "project.binary": {
+          "before": {
+            "size": 1898,
+            "sha256": "14806687a7c51b53bb3bf7edfcdf734e4ecf0db62b777be5a9a9f78a0da53bf1",
+            "flags": 0
+          },
+          "after": {
+            "size": 1898,
+            "sha256": "c4409b3c8459234b6691dff7dff331ed95db38d2db42623697b020bf985c0c74",
+            "flags": 0
+          }
+        },
+        "scripts/companion/companion_interface.gdc": {
+          "before": {
+            "size": 5891,
+            "sha256": "f2119cdfb2e3f221701940062944aa6a49ce14796dc2057dfe58f338752b6b18",
+            "flags": 0
+          },
+          "after": {
+            "size": 5937,
+            "sha256": "325c6b682af979bfcf8f6745fb32f1f4ac60b00b091129772fbe228acc87545f",
+            "flags": 0
+          }
+        },
+        "scripts/dev/developer_menu.gdc": {
+          "before": {
+            "size": 13945,
+            "sha256": "66d28127d6420a36089c54ab6fd4e486438acecff7ba7e68289a54351c51eb2a",
+            "flags": 0
+          },
+          "after": {
+            "size": 16230,
+            "sha256": "60ed98749bab596aa3abb91f8c50e2f9e1933ac0c2a1dfdc9415f150c776f154",
+            "flags": 0
+          }
+        },
+        "scripts/dev/visual_capture_driver.gdc": {
+          "before": {
+            "size": 49896,
+            "sha256": "ef36fe50e6d07fa10f5b1ce08dbad55e3d3409f4ee40517e340e4689ab841d55",
+            "flags": 0
+          },
+          "after": {
+            "size": 49896,
+            "sha256": "9ee27fc40fc99a6604950202aa641ab1371df032a267647f6b0a01d6e8b39224",
+            "flags": 0
+          }
+        },
+        "scripts/main.gdc": {
+          "before": {
+            "size": 223475,
+            "sha256": "f162c9c0cf30ef8a8cbe8438c72d18e825562807211756df97b8e3510edccbd3",
+            "flags": 0
+          },
+          "after": {
+            "size": 120365,
+            "sha256": "0eeecc43994dabcad112ee4fc91395e9df0972fd2c4dea70fecf139bfb8500b4",
+            "flags": 0
+          }
+        },
+        "scripts/state/run_state.gdc": {
+          "before": {
+            "size": 138208,
+            "sha256": "ffa71f337e02de2c00ff6e62158704f6838373a51843e05d39f4f99c93d8d187",
+            "flags": 0
+          },
+          "after": {
+            "size": 138293,
+            "sha256": "fa6532d33dad036b9f952b1a97f196d6c6d8fc4ffb70df3f522498d1c1078164",
+            "flags": 0
+          }
+        },
+        "scripts/ui/commerce_panel.gdc": {
+          "before": {
+            "size": 51670,
+            "sha256": "508776a350c31c487ed1407d410589f8469d28ea9c47163159f4ea0f1a4a09b1",
+            "flags": 0
+          },
+          "after": {
+            "size": 50335,
+            "sha256": "88b89b9607ee4d3963ded987d4057bde56cbc8a8c55288aa7bc3b3e26ef7b5f7",
+            "flags": 0
+          }
+        },
+        "scripts/ui/light_preview.gdc": {
+          "before": {
+            "size": 3560,
+            "sha256": "8d294fae9b5b44b0bbcd024617a3714956c201d747bab4e1237ddd2248b6c8d3",
+            "flags": 0
+          },
+          "after": {
+            "size": 3527,
+            "sha256": "97605cde78f2cc61911da63f9484933cfc54bca8cdc8a98498bf09533b2a03bc",
+            "flags": 0
+          }
+        },
+        "scripts/ui/premium_menu.gdc": {
+          "before": {
+            "size": 23100,
+            "sha256": "8f3ba5b5a12b4bd347a77a5905fbb87d08e4782923db2ac882595efc072076aa",
+            "flags": 0
+          },
+          "after": {
+            "size": 23100,
+            "sha256": "8a9623cfe11470b85885e59210de954577473f82eef104a87b346cc00d570db3",
+            "flags": 0
+          }
+        },
+        "scripts/world/depth/rootwound_world.gdc": {
+          "before": {
+            "size": 105162,
+            "sha256": "5627cbd4d3c2e81e87cb84347c8d1aae46d9acf4b14d655d7aeebbbc1b344eef",
+            "flags": 0
+          },
+          "after": {
+            "size": 96035,
+            "sha256": "3d40796275dc164090159be76c9495ab54b66ff38b627801fe7858587fdb9c1a",
+            "flags": 0
+          }
+        },
+        "scripts/world/endless_descent_world.gdc": {
+          "before": {
+            "size": 89334,
+            "sha256": "96a82a30b8482c757ea01d661679d276b598cada88e4134a5349b108b9a3b947",
+            "flags": 0
+          },
+          "after": {
+            "size": 87249,
+            "sha256": "de874a6ed082224bc3e7af2129261924e8ff3cc79484ff00563a5af2e43dcad1",
+            "flags": 0
+          }
+        },
+        "scripts/world/hub_world.gdc": {
+          "before": {
+            "size": 95675,
+            "sha256": "58402e927b5dfaf9571b7b1924f8a73d91cbcde3aa7f51802fd9fe6651010fb8",
+            "flags": 0
+          },
+          "after": {
+            "size": 89071,
+            "sha256": "3f01d1c0510e01ebfee0b333de0488fede713bc693ddf9b87264a039de991747",
+            "flags": 0
+          }
+        },
+        "scripts/world/mossvein_mine.gdc": {
+          "before": {
+            "size": 99276,
+            "sha256": "ed7daa9c01fc0b10c6577b0704469b63ef56aff779426c1bfd4eadf564a8cf3a",
+            "flags": 0
+          },
+          "after": {
+            "size": 89964,
+            "sha256": "c2bd746bd9b346a2f40f597d3f7912e0de5cf28e2a7ce76c5e3634464f930ef2",
+            "flags": 0
+          }
+        },
+        "scripts/world/surface_world.gdc": {
+          "before": {
+            "size": 179291,
+            "sha256": "5899929d47fb1b83870c35e5e51f868901a0fa904a5f5cf755e9ee53d4638d91",
+            "flags": 0
+          },
+          "after": {
+            "size": 179193,
+            "sha256": "78ebedab4bfdabce1737c9481b9bfc186e43b08964e3afafaf079fc993cfe728",
+            "flags": 0
+          }
+        }
+      },
+      "added": [
+        "scripts/qa/qa_context.gd.remap",
+        "scripts/qa/qa_context.gdc",
+        "scripts/qa/qa_launcher.gd.remap",
+        "scripts/qa/qa_launcher.gdc",
+        "scripts/qa/suites/build_flavor.gd.remap",
+        "scripts/qa/suites/build_flavor.gdc",
+        "scripts/qa/suites/commerce.gd.remap",
+        "scripts/qa/suites/commerce.gdc",
+        "scripts/qa/suites/crusher.gd.remap",
+        "scripts/qa/suites/crusher.gdc",
+        "scripts/qa/suites/endgame.gd.remap",
+        "scripts/qa/suites/endgame.gdc",
+        "scripts/qa/suites/endless.gd.remap",
+        "scripts/qa/suites/endless.gdc",
+        "scripts/qa/suites/input_release.gd.remap",
+        "scripts/qa/suites/input_release.gdc",
+        "scripts/qa/suites/journey_performance.gd.remap",
+        "scripts/qa/suites/journey_performance.gdc",
+        "scripts/qa/suites/layout.gd.remap",
+        "scripts/qa/suites/layout.gdc",
+        "scripts/qa/suites/mobile_performance.gd.remap",
+        "scripts/qa/suites/mobile_performance.gdc",
+        "scripts/qa/suites/smoke.gd.remap",
+        "scripts/qa/suites/smoke.gdc",
+        "scripts/qa/suites/world_fixtures.gd.remap",
+        "scripts/qa/suites/world_fixtures.gdc"
+      ],
+      "removed": [
+        "version.json"
+      ],
+      "texture_count": 538,
+      "texture_changes": [],
+      "before_files": {
+        "index.html": "22c51e8198858b428ec20d60ca1527f3912ee50b76e6fb932be49af24befc1b8",
+        "index.js": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+        "index.wasm": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+        "index.pck": "e3bfa2bd5ed7516d09d2e516de91206fe55e98e01248417f3cb4b1d3bb59bc90",
+        "index.audio.position.worklet.js": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+        "index.audio.worklet.js": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+        "index.icon.png": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+        "index.png": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+        "index.apple-touch-icon.png": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+      },
+      "after_files": {
+        "index.html": "2ee1c2a572db503dc380aa23a6946ed6896c06f4b856b928f36bd4e4b636a7df",
+        "index.js": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+        "index.wasm": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+        "index.pck": "1bc9da66948c530c6d41943c06b06c72cf0d5b6abb156fb28c5d70b2aa32b270",
+        "index.audio.position.worklet.js": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+        "index.audio.worklet.js": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+        "index.icon.png": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+        "index.png": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+        "index.apple-touch-icon.png": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+      }
+    }
+  }
+}

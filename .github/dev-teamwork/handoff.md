@@ -11,3 +11,8 @@ Test URL: https://corpax88.github.io/Ever-Deeper/dev/?v=0.46.9-dev.4
 ## Device follow-up
 
 User reports dev.4 still falls to 19.4 FPS at 32 seconds; direct Safari and home-screen launch behave the same. Actual Web Audio vs Dummy test completed without reproducing a delayed collapse. See docs/performance-diagnosis/browser-audio/README.md for full measurements, previously missed WebGL warnings, shutdown-only audio error, and next diagnostic design. No newer release published.
+
+
+## Cleanup follow-up — 2026-09-08
+
+Mats suspects the cleanup removed important code. Reconstructed and verified the original v0.46.8 source; all 48 removed helpers audited. No active performance control was found missing. Original/cleaned ordinary-startup runs stayed stable for 90 seconds per side in mature hub and Mossvein D2 (run 34206534221). The actual published v0.46.8/v0.46.9 packages also retain identical textures, shaders, scenes, audio and browser engine bytes. See docs/performance-diagnosis/cleanup-audit/README.md for evidence and limits. No runtime change or new deployment. The physical iPhone slowdown remains unresolved; do not treat Linux results as device acceptance. The proposed timed mobile rendering diagnostic is still unimplemented.
