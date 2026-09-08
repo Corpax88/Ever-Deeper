@@ -1,6 +1,9 @@
 class_name HubWorld
 extends Node2D
 
+const LitFloorChunksScript = preload("res://scripts/lighting/lit_floor_chunks.gd")
+var lit_floor_chunks: Node2D
+
 signal context_changed(context: String)
 signal hub_exit_context_changed(active: bool)
 signal hub_exit_requested
@@ -199,6 +202,8 @@ var _workshop_panel_preview: Dictionary = {}
 
 
 func _ready() -> void :
+	lit_floor_chunks = LitFloorChunksScript.new()
+	add_child(lit_floor_chunks)
 	base_state = _sanitize_base_state(base_state)
 	hub_state = _sanitize_hub_state(hub_state)
 	economy_state = _sanitize_economy_state(economy_state)
@@ -2473,8 +2478,7 @@ func _draw_ground() -> void :
 	draw_rect(Rect2(0, 48, 54, WORLD_SIZE.y - 96), Color("08090e"), true)
 	draw_rect(Rect2(WORLD_SIZE.x - 54, 48, 54, WORLD_SIZE.y - 96), Color("08090e"), true)
 	var interior: = Rect2(54, 48, WORLD_SIZE.x - 108, WORLD_SIZE.y - 96)
-	draw_texture_rect(HUB_FLOOR_TEXTURE, interior, true, Color(0.96, 0.84, 0.72, 1.0))
-	draw_rect(interior, Color(0.18, 0.075, 0.018, 0.12), true)
+	lit_floor_chunks.draw_floor(self, HUB_FLOOR_TEXTURE, interior, Color(0.96, 0.84, 0.72, 1.0), Color(0.18, 0.075, 0.018, 0.12))
 	_draw_hub_wall_frame()
 	_draw_foundation_route()
 	_draw_foundation_sconces()

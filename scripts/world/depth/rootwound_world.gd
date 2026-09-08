@@ -1,6 +1,9 @@
 class_name RootwoundWorld
 extends Node2D
 
+const LitFloorChunksScript = preload("res://scripts/lighting/lit_floor_chunks.gd")
+var lit_floor_chunks: Node2D
+
 signal exit_context_changed(active: bool)
 signal context_changed(context: String)
 signal station_context_changed(kind: String)
@@ -198,6 +201,8 @@ var inactive_state_fingerprint_valid: = false
 
 
 func _ready() -> void :
+	lit_floor_chunks = LitFloorChunksScript.new()
+	add_child(lit_floor_chunks)
 	player.moved.connect(_on_player_moved)
 	player.facing_changed.connect(_on_player_facing_changed)
 
@@ -2107,8 +2112,7 @@ func _draw() -> void :
 		return
 	_remember_draw_camera_bounds()
 	# Opaque floor texture supplies the background without a hidden lit layer.
-	draw_texture_rect(floor_texture, Rect2(Vector2.ZERO, world_size), true, Color(0.92,0.90,0.88,1.0))
-	draw_rect(Rect2(Vector2.ZERO, world_size), Color(_profile_color("floor", "100e0c"), 0.12), true)
+	lit_floor_chunks.draw_floor(self, floor_texture, Rect2(Vector2.ZERO, world_size), Color(0.92,0.90,0.88,1.0), Color(_profile_color("floor", "100e0c"), 0.12))
 	var visible_rect: = _resource_visible_rect(Vector2.ONE * TILE_SIZE * 3.0)
 	var start: = _world_to_cell(visible_rect.position)
 	var finish: = _world_to_cell(visible_rect.end)

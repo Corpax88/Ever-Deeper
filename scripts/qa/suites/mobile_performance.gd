@@ -11,6 +11,10 @@ func run() -> void:
 		if arg.begins_with("--perf-output="): output_dir = arg.get_slice("=", 1)
 		if arg == "--perf-capture": captures = true
 	DirAccess.make_dir_recursive_absolute(output_dir)
+	if "--perf-lit-chunks" in OS.get_cmdline_user_args():
+		var reviewer = load("res://scripts/qa/suites/lit_chunks_review.gd").new(main, output_dir)
+		await reviewer.run()
+		return
 	if "--perf-light-cost" in OS.get_cmdline_user_args():
 		var reviewer = load("res://scripts/qa/suites/light_cost.gd").new(main, output_dir)
 		await reviewer.run()
