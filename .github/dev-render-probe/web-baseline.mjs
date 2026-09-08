@@ -27,7 +27,7 @@ const server=http.createServer(async(req,res)=>{
   if(file.endsWith('.html')){
    if(mode==='minimal')data=Buffer.from(minimal);
    else data=Buffer.from(data.toString().replace(/const GODOT_CONFIG = (\{[^\r\n]+\});/,(_,raw)=>{
-    const c=JSON.parse(raw);c.args=mode==='probe'?['--audio-driver','Dummy','--','--qa-mobile-performance','--perf-render-probe-review','--probe-area=hub']:['--audio-driver','Dummy'];
+    const c=JSON.parse(raw);if(mode==='menu_adaptive')c.canvasResizePolicy=2;c.args=mode==='probe'?['--audio-driver','Dummy','--','--qa-mobile-performance','--perf-render-probe-review','--probe-area=hub']:['--audio-driver','Dummy'];
     return 'const GODOT_CONFIG = '+JSON.stringify(c)+';';
    }));
   }
