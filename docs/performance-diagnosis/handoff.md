@@ -1,6 +1,6 @@
 # FPS release handoff — 2026-09-08
 
-DEV 0.46.9-dev.3: clean covered-floor optimization, publishing after successful
+DEV 0.46.9-dev.3: clean covered-floor optimization, published and public bytes verified after successful
 exact-package QA run 34190767917. See .github/dev-floor/review.json.
 The native test improvement (~25%) is not a physical iPhone result.
 
@@ -21,3 +21,6 @@ Do not claim the delayed drop fixed before physical confirmation.
 Next: user opens DEV with ?v=0.46.9-dev.3, checks version, tests sustained FPS
 in the same hub. No new recording is required unless it adds useful evidence.
 No critic/other agents. Keep responses to five lines.
+
+Publication 34191148253 passed: all 18 public files verified, LIVE byte-identical.
+See .github/dev-floor/publication-receipt.json. Ready for physical iPhone testing.
