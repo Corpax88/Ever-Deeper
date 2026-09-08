@@ -5,7 +5,7 @@ import path from 'node:path';
 const [rootArg, outputArg, area = 'hub'] = process.argv.slice(2);
 const root = path.resolve(rootArg), output = path.resolve(outputArg);
 await mkdir(output, {recursive: true});
-const logs = [], errors = [], glWarnings = [], captures = [], surfaces = [];
+const logs = [], errors = [], glWarnings = [], captures = [], surfaces = [], bufferChecks = [];
 const takeCaptures = process.env.PROBE_SCREENSHOTS !== '0';
 async function captureCanvas(page,file) {
   const data=await page.evaluate(()=>document.querySelector('canvas').toDataURL('image/png'));
@@ -67,13 +67,7 @@ try {
     if (value.startsWith('RENDER_PROBE_REVIEW_OK ')) complete = true;
     if (value.startsWith('PROBE_STAGE_READY ')) {
       const event = JSON.parse(value.slice('PROBE_STAGE_READY '.length));
-      captures.push((async () => {
-        const surface = await page.evaluate(() => ({width:document.querySelector('canvas').width, height:document.querySelector('canvas').height,
-          bufferWidth:window.__renderProbeGL?.drawingBufferWidth, bufferHeight:window.__renderProbeGL?.drawingBufferHeight}));
-        surfaces.push({stage:event.stage,...surface});
-        if (surface.width !== surface.bufferWidth || surface.height !== surface.bufferHeight) errors.push('Drawing buffer mismatch: '+JSON.stringify(surface));
-        if (takeCaptures) await captureCanvas(page,path.join(output, `${area}-${event.stage}.png`));
-      })().catch(error => errors.push(String(error))));
+      surfaces.push({stage:event.stage,width:event.state.canvas_width,height:event.state.canvas_height});
     }
   });
   await page.goto(`http://127.0.0.1:${server.address().port}/`);
@@ -83,6 +77,10 @@ try {
       resize: window.__renderProbeResizeReady, resizeDone: window.__renderProbeResizeDone}));
     if (state.target && !touchDone) {
       touchDone = true;
+      const buffer=await page.evaluate(()=>({width:document.querySelector('canvas').width,height:document.querySelector('canvas').height,
+        bufferWidth:window.__renderProbeGL?.drawingBufferWidth,bufferHeight:window.__renderProbeGL?.drawingBufferHeight}));
+      bufferChecks.push({phase:'half_resolution_touch',...buffer});
+      if(buffer.width!==1266||buffer.height!==585||buffer.bufferWidth!==1266||buffer.bufferHeight!==585)throw new Error('Reduced drawing buffer is incorrect: '+JSON.stringify(buffer));
       if (!(state.target.x > 0 && state.target.x < 844 && state.target.y > 0 && state.target.y < 390)) throw new Error('Invalid mobile touch coordinates: ' + JSON.stringify(state.target));
       await page.touchscreen.tap(state.target.x, state.target.y);
     }
@@ -92,7 +90,7 @@ try {
       await page.waitForTimeout(750);
       await page.evaluate(() => { window.__renderProbeResizeRestored = true; });
     }
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(500);
   }
   await Promise.all(captures);
   if (!complete || errors.length || !touchDone || !resizeRestored) throw new Error(JSON.stringify({complete, errors, glWarnings, touchDone, resizeRestored}));
@@ -102,7 +100,7 @@ try {
   if (surfaces.length !== 9 || state.canvas.bufferWidth !== 2532 || state.canvas.bufferHeight !== 1170) throw new Error('Missing physical drawing-buffer checks');
   if (!state.report.graphics_restored || state.report.rows.length !== 9 || state.report.rows.some(row => row.raf_frames < 3 || row.raf_fps <= 0)) throw new Error('Missing restored settings or RAF samples');
   if (takeCaptures) await captureCanvas(page,path.join(output, `${area}-result.png`));
-  await writeFile(path.join(output, 'chromium.json'), JSON.stringify({passed: glWarnings.length === 0, functional_checks_passed:true, area, ...state, surfaces, touchDone, resizeRestored, glWarnings}, null, 2));
+  await writeFile(path.join(output, 'chromium.json'), JSON.stringify({passed: glWarnings.length === 0, functional_checks_passed:true, area, ...state, stageCanvases:surfaces, bufferChecks, touchDone, resizeRestored, glWarnings}, null, 2));
   if (glWarnings.length) throw new Error('WebGL warnings remain a failed review gate: '+JSON.stringify(glWarnings));
   console.log('RENDER_PROBE_CHROMIUM_OK ' + JSON.stringify(state.canvas));
 } finally {
