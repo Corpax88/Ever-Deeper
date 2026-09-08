@@ -2,15 +2,13 @@ extends Control
 ## Opt-in, bounded and reversible. Never writes gameplay state or diagnostic settings to saves.
 signal completed(report: Dictionary)
 const STAGES = [
-	{"id":"original", "title":"Original", "seconds":40.0},
+	{"id":"original", "title":"Original", "seconds":60.0},
 	{"id":"pet_off", "title":"Pet lights off", "seconds":10.0},
 	{"id":"restore_pet", "title":"Restored", "seconds":10.0},
 	{"id":"shadows_off", "title":"Shadows off", "seconds":10.0},
 	{"id":"restore_shadows", "title":"Restored", "seconds":10.0},
 	{"id":"lights_off", "title":"All lights off", "seconds":10.0},
 	{"id":"restore_lights", "title":"Restored", "seconds":10.0},
-	{"id":"half_resolution", "title":"Half resolution", "seconds":10.0},
-	{"id":"restore_resolution", "title":"Restored", "seconds":10.0},
 ]
 var game: Node
 var world: Node2D
@@ -27,7 +25,6 @@ var stage_started := 0
 var started := 0
 var previous := 0
 var last_ui := 0
-var original_window := Vector2i.ZERO
 var phase := ""
 var mine_id := ""
 var browser: Dictionary = {}
@@ -72,7 +69,6 @@ func start(main: Node) -> bool:
 			if ancestor.name == "MoleCompanion": pet_light = true
 			ancestor = ancestor.get_parent()
 		lights.append({"node":node, "enabled":node.enabled, "shadow":node.shadow_enabled, "pet":pet_light})
-	original_window = DisplayServer.window_get_size()
 	rows.clear()
 	early = {}
 	result = {}
@@ -138,11 +134,9 @@ func _next_stage() -> void:
 		if id == "lights_off": light.enabled = false
 		if id == "shadows_off": light.shadow_enabled = false
 	if OS.has_feature("web"):
-		var stage_status: Variant = JavaScriptBridge.eval("JSON.stringify(window.everDeeperRenderProbe.stage(%s))" % ("0.5" if id == "half_resolution" else "1"))
+		var stage_status: Variant = JavaScriptBridge.eval("JSON.stringify(window.everDeeperRenderProbe.stage())")
 		if stage_status != "true":
 			cancel("Browser diagnostic stopped"); return
-	else:
-		get_window().size = original_window / 2 if id == "half_resolution" else original_window
 	samples.clear()
 	stage_started = Time.get_ticks_usec()
 	previous = 0
@@ -158,17 +152,11 @@ func _restore() -> void:
 	_restore_lights()
 	if OS.has_feature("web"):
 		JavaScriptBridge.eval("window.everDeeperRenderProbe?.cancel('')")
-	elif original_window != Vector2i.ZERO:
-		get_window().size = original_window
 
 func settings_restored() -> bool:
 	for entry in lights:
 		if is_instance_valid(entry.node) and (entry.node.enabled != entry.enabled or entry.node.shadow_enabled != entry.shadow): return false
-	if OS.has_feature("web"):
-		var info := _browser_snapshot()
-		var expected := Vector2(roundf(float(info.get("css_width", 0)) * float(info.get("dpr", 1))), roundf(float(info.get("css_height", 0)) * float(info.get("dpr", 1))))
-		return is_equal_approx(float(info.get("scale", 0.0)), 1.0) and Vector2(float(info.get("width", 0)), float(info.get("height", 0))) == expected
-	return DisplayServer.window_get_size() == original_window
+	return true
 
 func _finish(reason: String) -> void:
 	running = false

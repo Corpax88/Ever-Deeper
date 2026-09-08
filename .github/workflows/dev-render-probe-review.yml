@@ -1,8 +1,6 @@
 name: Complete review of the immutable DEV rendering probe
 on:
-  push:
-    branches: [codex-render-probe]
-    paths: ['.github/workflows/dev-render-probe-review.yml', '.github/dev-render-probe/chromium-review.mjs']
+  workflow_dispatch:
 permissions:
   contents: read
   actions: read

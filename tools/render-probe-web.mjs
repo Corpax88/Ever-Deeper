@@ -1,13 +1,20 @@
 import {chromium} from '@playwright/test';
 import http from 'node:http';
-import {readFile, writeFile, mkdir} from 'node:fs/promises';
+import {readFile, writeFile, mkdir, stat} from 'node:fs/promises';
 import path from 'node:path';
 const [rootArg, outputArg, area = 'hub'] = process.argv.slice(2);
 const root = path.resolve(rootArg), output = path.resolve(outputArg);
 await mkdir(output, {recursive: true});
-const logs = [], errors = [], glWarnings = [], captures = [], surfaces = [];
+const manifest=JSON.parse(await readFile(path.join(root,'manifest.json'),'utf8'));
+for(const [name,info]of Object.entries(manifest))if((await stat(path.join(root,name))).size!==info.size)throw new Error('Incomplete candidate file: '+name);
+const logs = [], errors = [], glWarnings = [], captures = [], surfaces = [], bufferChecks = [];
 const takeCaptures = process.env.PROBE_SCREENSHOTS !== '0';
-let complete = false, touchDone = false, resizeStarted = false, resizeRestored = false;
+async function captureCanvas(page,file) {
+  const data=await page.evaluate(()=>document.querySelector('canvas').toDataURL('image/png'));
+  if(!data.startsWith('data:image/png;base64,'))throw new Error('Canvas PNG unavailable');
+  await writeFile(file,Buffer.from(data.slice('data:image/png;base64,'.length),'base64'));
+}
+let complete = false, touchDone = false;
 const server = http.createServer(async (req, res) => {
   try {
     const name = new URL(req.url, 'http://localhost').pathname;
@@ -21,10 +28,10 @@ const server = http.createServer(async (req, res) => {
     }));
     res.writeHead(200, {'Content-Type': file.endsWith('.wasm') ? 'application/wasm' : file.endsWith('.js') ? 'text/javascript' : file.endsWith('.html') ? 'text/html' : 'application/octet-stream',
       'Cross-Origin-Opener-Policy': 'same-origin', 'Cross-Origin-Embedder-Policy': 'require-corp'}).end(data);
-  } catch { res.writeHead(404).end(); }
+  } catch (error) { console.error('HOST_READ_FAIL '+JSON.stringify({url:req.url,error:String(error)})); res.writeHead(404).end(); }
 });
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
-const browser = await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const browser = await chromium.launch({headless:false,args:['--use-gl=angle','--use-angle=gl','--ignore-gpu-blocklist','--ozone-platform=x11']});
 let page;
 try {
   page = await browser.newPage({viewport: {width: 844, height: 390}, deviceScaleFactor: 3, isMobile: true, hasTouch: true});
@@ -62,46 +69,37 @@ try {
     if (value.startsWith('RENDER_PROBE_REVIEW_OK ')) complete = true;
     if (value.startsWith('PROBE_STAGE_READY ')) {
       const event = JSON.parse(value.slice('PROBE_STAGE_READY '.length));
-      captures.push((async () => {
-        const surface = await page.evaluate(() => ({width:document.querySelector('canvas').width, height:document.querySelector('canvas').height,
-          bufferWidth:window.__renderProbeGL?.drawingBufferWidth, bufferHeight:window.__renderProbeGL?.drawingBufferHeight}));
-        surfaces.push({stage:event.stage,...surface});
-        if (surface.width !== surface.bufferWidth || surface.height !== surface.bufferHeight) errors.push('Drawing buffer mismatch: '+JSON.stringify(surface));
-        if (takeCaptures) await page.screenshot({path: path.join(output, `${area}-${event.stage}.png`)});
-      })().catch(error => errors.push(String(error))));
+      surfaces.push({stage:event.stage,width:event.state.canvas_width,height:event.state.canvas_height});
     }
   });
   await page.goto(`http://127.0.0.1:${server.address().port}/`);
   const deadline = Date.now() + 300000;
   while (!complete && !errors.length && Date.now() < deadline) {
-    const state = await page.evaluate(() => ({target: window.__renderProbeTouchTarget,
-      resize: window.__renderProbeResizeReady, resizeDone: window.__renderProbeResizeDone}));
+    const state = await page.evaluate(() => ({target: window.__renderProbeTouchTarget}));
     if (state.target && !touchDone) {
       touchDone = true;
+      const buffer=await page.evaluate(()=>({width:document.querySelector('canvas').width,height:document.querySelector('canvas').height,
+        bufferWidth:window.__renderProbeGL?.drawingBufferWidth,bufferHeight:window.__renderProbeGL?.drawingBufferHeight}));
+      bufferChecks.push({phase:'lights_off_touch',...buffer});
+      if(buffer.width!==2532||buffer.height!==1170||buffer.bufferWidth!==2532||buffer.bufferHeight!==1170)throw new Error('Drawing buffer is incorrect: '+JSON.stringify(buffer));
       if (!(state.target.x > 0 && state.target.x < 844 && state.target.y > 0 && state.target.y < 390)) throw new Error('Invalid mobile touch coordinates: ' + JSON.stringify(state.target));
       await page.touchscreen.tap(state.target.x, state.target.y);
     }
-    if (state.resize && !resizeStarted) { resizeStarted = true; await page.setViewportSize({width: 852, height: 393}); }
-    if (state.resizeDone && !resizeRestored) {
-      resizeRestored = true; await page.setViewportSize({width: 844, height: 390});
-      await page.waitForTimeout(750);
-      await page.evaluate(() => { window.__renderProbeResizeRestored = true; });
-    }
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(500);
   }
   await Promise.all(captures);
-  if (!complete || errors.length || !touchDone || !resizeRestored) throw new Error(JSON.stringify({complete, errors, glWarnings, touchDone, resizeRestored}));
+  if (!complete || errors.length || !touchDone) throw new Error(JSON.stringify({complete, errors, glWarnings, touchDone}));
   const state = await page.evaluate(() => ({report: window.everDeeperRenderProbeResult,
     canvas: {w: document.querySelector('canvas').width, h: document.querySelector('canvas').height, dpr: devicePixelRatio, bufferWidth:window.__renderProbeGL?.drawingBufferWidth, bufferHeight:window.__renderProbeGL?.drawingBufferHeight}}));
   if (state.canvas.w !== 2532 || state.canvas.h !== 1170 || state.canvas.dpr !== 3) throw new Error('DPR/canvas not restored: ' + JSON.stringify(state.canvas));
-  if (surfaces.length !== 9 || state.canvas.bufferWidth !== 2532 || state.canvas.bufferHeight !== 1170) throw new Error('Missing physical drawing-buffer checks');
-  if (!state.report.graphics_restored || state.report.rows.length !== 9 || state.report.rows.some(row => row.raf_frames < 3 || row.raf_fps <= 0)) throw new Error('Missing restored settings or RAF samples');
-  if (takeCaptures) await page.screenshot({path: path.join(output, `${area}-result.png`)});
-  await writeFile(path.join(output, 'chromium.json'), JSON.stringify({passed: glWarnings.length === 0, functional_checks_passed:true, area, ...state, surfaces, touchDone, resizeRestored, glWarnings}, null, 2));
+  if (surfaces.length !== 7 || state.canvas.bufferWidth !== 2532 || state.canvas.bufferHeight !== 1170) throw new Error('Missing physical drawing-buffer checks');
+  if (!state.report.graphics_restored || state.report.rows.length !== 7 || state.report.rows.some(row => row.raf_frames < 3 || row.raf_fps <= 0)) throw new Error('Missing restored settings or RAF samples');
+  if (takeCaptures) await captureCanvas(page,path.join(output, `${area}-result.png`));
+  await writeFile(path.join(output, 'chromium.json'), JSON.stringify({passed: glWarnings.length === 0, functional_checks_passed:true, area, ...state, stageCanvases:surfaces, bufferChecks, touchDone, glWarnings}, null, 2));
   if (glWarnings.length) throw new Error('WebGL warnings remain a failed review gate: '+JSON.stringify(glWarnings));
   console.log('RENDER_PROBE_CHROMIUM_OK ' + JSON.stringify(state.canvas));
 } finally {
   await writeFile(path.join(output, 'browser-console.json'), JSON.stringify({complete, errors, glWarnings, logs}, null, 2));
-  if (page && takeCaptures) await page.screenshot({path: path.join(output, 'browser-last.png')}).catch(() => {});
+  if (page && takeCaptures && !complete) await captureCanvas(page,path.join(output, 'browser-last.png')).catch(() => {});
   await browser.close(); server.close();
 }

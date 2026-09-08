@@ -1,80 +1,53 @@
-# Automatic DEV rendering probe
+# Automatic DEV lighting probe
 
-The physical iPhone Air slowdown remains unresolved after DEV4. It starts about 30 seconds
-into both hub and Mossvein Depth 2, including stationary play, Safari and home-screen mode.
-Cleanup audit found no lost active performance behavior. Software-renderer tests cannot
-reproduce the phone's delayed collapse. This tool collects a controlled comparison on the
-affected device with one start and one result screenshot; it is not a performance fix.
+The physical iPhone Air slowdown remains unresolved. It begins around 30 seconds in the
+hub and Mossvein Depth 2. Cleanup audit found no removed active runtime behavior.
 
-## User flow
+## Device flow
 
-DEV TOOLS → AUTO FPS TEST · 2 MIN, while in the hub or Depth 2. Stand still and leave the app
-visible. The original configuration runs for 40 seconds, including an early reading after
-10 seconds. Then each intervention runs for 10 seconds and is followed by 10 seconds of
-the restored configuration: pet lights off, shadows off, all lights off, half resolution.
-Results show engine FPS, independent browser RAF frequency and p95 frame time per stage.
-Send one screenshot of the result. The version appears on the result screen.
+DEV TOOLS → AUTO FPS TEST · 2 MIN. Stand still in the hub or Depth 2. The original
+configuration runs for 60 seconds, with an early reading after 10 seconds. Then pet lights,
+shadows and all world lights are disabled separately for 10 seconds each, with a 10-second
+restored interval after each intervention. Seven rows report FPS, browser RAF frequency
+and p95. Only each stage's final eight seconds are measured; its first two seconds settle.
 
-The first two seconds of each stage settle; only its final eight seconds are measured.
-The half-resolution stage halves each canvas dimension, producing one quarter of the
-pixels. It is temporary and explicitly labelled. No diagnostic choices are written into
-the game save, no art is replaced, and ordinary full-DPR rendering is restored.
+The probe preserves every captured light/shadow state and all skill/save values. Completion,
+Cancel, focus loss, area/menu changes and scene exit restore the captured properties.
+Browser hiding, window changes, context loss and a bounded watchdog also end the test.
+No canvas sizing, devicePixelRatio, engine JavaScript, WASM or presentation behavior is
+changed. The standard Godot adaptive canvas policy remains 2. The probe is DEV-only.
 
-## Boundaries and restoration
+## Verification and limits
 
-`scripts/dev/render_probe.gd` owns the opt-in state machine and bounded measurements.
-It captures each light's enabled/shadow state and the original native window size.
-Between trials it restores light properties; completion, Cancel, focus loss, area/menu
-changes and tree exit restore the original configuration. The browser additionally restores
-full DPR on window resize, page hiding, context loss and a 150-second watchdog. Resize aborts
-the test and restores the current window dimensions, rather than stale old dimensions.
-The normal developer toggle and previous FPS meter state return after the test.
+The exact candidate is checked by the existing ten gameplay cases, protected hashes and
+both build flavors, then full native and mobile-browser hub/Depth 2 runs. Assertions check
+all seven stages, original durations, every restoration, cancellation during all three
+interventions, focus handling, actual mobile Cancel input and report bounds. Browser GPU
+readback is performed after timing, with buffer dimensions checked during the separate
+Cancel trial. Native stage captures and final browser images require visual review.
 
-Production exports exclude the diagnostic resource as well as the developer menu.
-No per-frame JavaScript sampling runs outside the opt-in test; normal resizing is event-driven.
-Only the latest report is retained in `window.everDeeperRenderProbeResult`; no telemetry is sent.
+WebKit in this CI environment emits same-image glBlitFramebuffer warnings even in the
+ordinary menu with the original adaptive policy and the diagnostic inactive. A standalone
+WebGL framebuffer control runs clean. Omitting screenshots or a context observer did not
+remove the warnings. A bundled alternative presentation path removed that warning but
+exposed other resize errors; it was not adopted. The engine files remain unchanged.
 
-## Browser canvas ownership
+The proposed resolution intervention was removed after WebGL resize errors. This release
+concentrates on the user's pet-light suspicion and on separating lighting from shadow cost.
+It is a diagnostic release, not a verified fix for the physical phone.
 
-The DEV candidate's HTML receives `tools/render-probe-browser.js` through
-`python3 tools/install-render-probe-shell.py <candidate/index.html>` before its hashes and
-review. It uses Godot's documented canvas resize policy 0 to own the canvas dimensions.
-At scale 1, canvas width/height equal window CSS dimensions multiplied by the real DPR;
-the DPR property itself is never changed. Canvas CSS dimensions stay fixed during the
-half-resolution stage. The exact exported WASM/engine JavaScript are not modified.
+SwiftShader was too slow at full DPR3 (6–8 seconds per frame) to honor measurement timing.
+Browser review uses Chromium with Mesa under Xvfb. The phone's GPU/thermal behavior is not
+reproduced or certified by these software-renderer checks.
 
-Reference: [Godot HTML shell configuration](https://docs.godotengine.org/en/stable/tutorials/platform/web/html5_shell_classref.html#canvasresizepolicy).
-The docs flag their 4.7 text as potentially outdated, so actual exported-package dimensions
-and touch mapping are gates. Browser QA retains the context returned during the engine's own initial context creation and reads its drawing-buffer dimensions; the shipped probe never requests or reads a GL context. Native screenshots verify the actual framebuffer size. Plain exports retain Godot's normal adaptive policy; the
-diagnostic refuses to start in a web shell that lacks its controller.
+## Evidence
 
-## Verification
+- Cleanup audit: `docs/performance-diagnosis/cleanup-audit/`.
+- Native prototype: run 34223377725, both areas passed all original controls/restorations.
+- Screenshot control: 34224072357; context-observer control: 34224795796.
+- Ordinary menu/probe/standalone controls: 34225327227.
+- Original adaptive-policy menu control: 34227575304; same WebKit warnings persisted.
+- Alternative presentation control: 34225846204; not adopted.
+- Resize trace: 34226736488; not adopted.
 
-`.github/workflows/dev-render-probe.yml` builds one candidate and tests its exact PCK.
-The ten current gameplay cases, protected hashes and both flavor checks run before rendered
-tests. Both hub and Depth 2 run the full 120-second diagnostic natively and in mobile WebKit
-at CSS 844×390, DPR3. Assertions verify each independent intervention, every restoration,
-early/late timings, resource counts, and cancellation during all four altered configurations.
-Additional checks exercise focus cancellation, a real mobile Cancel tap at half resolution,
-resize cancellation, and result-panel bounds. Native and browser captures require inspection.
-
-The WebKit test performs no Godot GPU readback. It retains and fails on WebGL errors as
-well as script/page errors; previously missed glBlitFramebuffer warnings must not be ignored.
-Browser screenshots come from Playwright. Test audio uses Dummy; actual Web Audio was
-separately compared during the DEV4 investigation. The ordinary game keeps its usual audio.
-
-## Status
-
-Implementation prepared; package, rendered review and deployment pending. LIVE must remain
-byte-identical to 0.46.9. Only an exact reviewed DEV candidate may be published as dev.5.
-
-## Issues caught during candidate review
-
-- The first native runner lacked ripgrep; installing it makes every error gate executable.
-- Direct JavaScript boolean acknowledgements did not reach successful GDScript startup in the exported WebKit run despite the controller reporting active. The bridge now serializes acknowledgements, matching the existing JSON snapshot path. This observation is not a diagnosis of the phone slowdown.
-- Calling the low-level native display resize changed reported dimensions without resizing the captured framebuffer. The probe now uses the Window size property; native captures must match every reported size. ViewportTexture size is not used as the physical framebuffer oracle.
-- The report has its own canvas layer above the companion interface, keeping the version and values readable.
-
-Failed candidates are not published. The final review records the successful immutable candidate, including its browser touch/resize checks.
-
-WebGL investigation: the direct boolean startup issue is fixed. Native hub and Depth 2 now pass the complete run with real framebuffer resizing. WebKit still reports the same-image blit warning during rendering. It occurs with screenshots disabled and with the extra context observer omitted. Full tests now retain this warning and continue collecting functional evidence, but still fail the final gate if it occurs. Baseline engine and standalone WebGL controls are in progress.
+Final lighting-only package, visual review and DEV publication pending. LIVE stays 0.46.9.

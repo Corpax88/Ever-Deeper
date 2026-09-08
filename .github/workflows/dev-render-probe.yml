@@ -96,12 +96,13 @@ jobs:
         if: matrix.renderer == 'chromium'
         with:
           node-version: '22'
-      - name: Chromium DPR3 diagnostic, real touch and resize restoration
+      - name: Chromium DPR3 lighting diagnostic and real touch restoration
         if: matrix.renderer == 'chromium'
         run: |
           npm ci
           npx playwright install --with-deps chromium
-          node tools/render-probe-web.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review" '${{ matrix.area }}'
+          sudo apt-get install -y xvfb libgl1-mesa-dri
+          LIBGL_ALWAYS_SOFTWARE=1 xvfb-run -a node tools/render-probe-web.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review" '${{ matrix.area }}'
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -59,8 +59,8 @@ func run() -> void:
 				capture.save_png(output_dir.path_join(area + "-" + id + ".png"))
 	while not probe.result.has("graphics_restored"): await main.get_tree().process_frame
 	var full: Dictionary = probe.result.duplicate(true)
-	if not require(not full.cancelled and full.graphics_restored and full.rows.size() == 9 and float(full.duration_seconds) >= 120.0, "Complete original-duration run"): return
-	if not require(float(full.rows[0].elapsed_seconds) >= 40.0, "Baseline crosses delayed-failure threshold"): return
+	if not require(not full.cancelled and full.graphics_restored and full.rows.size() == 7 and float(full.duration_seconds) >= 120.0, "Complete original-duration run"): return
+	if not require(float(full.rows[0].elapsed_seconds) >= 60.0, "Baseline crosses delayed-failure threshold"): return
 	var baseline: Dictionary = full.baseline
 	for row in full.rows:
 		if not require(row.frames >= 3 and row.fps > 0, "Valid frame sample " + row.stage): return
@@ -70,13 +70,12 @@ func run() -> void:
 			if not require(row.shadows == 0 and row.lights == baseline.lights, "Only shadows disabled"): return
 		elif row.stage == "lights_off":
 			if not require(row.lights == 0, "All lights disabled"): return
-		elif row.stage == "half_resolution":
-			if not require(row.canvas_width == roundi(baseline.canvas_width / 2.0) and row.canvas_height == roundi(baseline.canvas_height / 2.0), "Actual render dimensions halve"): return
+
 		else:
 			if not require(row.lights == baseline.lights and row.shadows == baseline.shadows and row.canvas_width == baseline.canvas_width and row.canvas_height == baseline.canvas_height, "Original settings restored " + row.stage): return
 	if not require(RunState.overhaul_progress.skills == skills and main.developer_menu.frame_meter.is_processing() and not main.developer_menu.toggle_button.disabled, "Skills and prior meter state restored"): return
 	FileAccess.open(output_dir.path_join(area + "-probe.json"), FileAccess.WRITE).store_string(JSON.stringify(full, "\t"))
-	for stage in [1, 3, 5, 7]:
+	for stage in [1, 3, 5]:
 		if not require(main.developer_menu.start_render_probe(), "Cancel run starts"): return
 		while probe.stage_index < stage: probe._next_stage()
 		for frame in 3: await main.get_tree().process_frame
@@ -90,7 +89,7 @@ func run() -> void:
 	if not require(probe.result.cancelled and probe.settings_restored(), "Focus loss restores"): return
 	if OS.has_feature("web"):
 		if not require(main.developer_menu.start_render_probe(), "Touch run starts"): return
-		while probe.stage_index < 7: probe._next_stage()
+		while probe.stage_index < 5: probe._next_stage()
 		for frame in 4: await main.get_tree().process_frame
 		var canvas: Dictionary = probe._browser_snapshot()
 		var point: Vector2 = main.get_viewport().get_screen_transform() * probe.cancel_button.get_global_rect().get_center()
@@ -98,22 +97,15 @@ func run() -> void:
 		JavaScriptBridge.eval("window.__renderProbeTouchTarget=" + JSON.stringify({"x":point.x,"y":point.y}))
 		print("PROBE_TOUCH_READY")
 		await probe.completed
-		if not require(probe.result.cancelled and probe.settings_restored(), "Real mobile tap at reduced resolution"): return
-		if not require(main.developer_menu.start_render_probe(), "Resize run starts"): return
-		while probe.stage_index < 7: probe._next_stage()
-		JavaScriptBridge.eval("window.__renderProbeResizeReady=true")
-		print("PROBE_RESIZE_READY")
-		await probe.completed
-		if not require(probe.result.cancelled and probe.settings_restored(), "Resize abort restores full current DPR"): return
-		JavaScriptBridge.eval("window.__renderProbeResizeDone=true")
-		while JavaScriptBridge.eval("JSON.stringify(window.__renderProbeResizeRestored === true)") != "true": await main.get_tree().process_frame
+		if not require(probe.result.cancelled and probe.settings_restored(), "Real mobile tap while lights are disabled"): return
+
 	probe.result = full
 	probe.rows.assign(full.rows)
 	probe.early = full.early
 	probe._show_result()
 	for frame in 4: await main.get_tree().process_frame
 	if not require(main.get_viewport().get_visible_rect().encloses(probe.result_panel.get_global_rect()), "Result panel fits viewport"): return
-	print("RENDER_PROBE_REVIEW_OK " + JSON.stringify({"area":area,"report":full,"cancel_stages":4,"focus":true,"mobile_tap_and_resize":OS.has_feature("web")}))
+	print("RENDER_PROBE_REVIEW_OK " + JSON.stringify({"area":area,"report":full,"cancel_stages":3,"focus":true,"mobile_tap":OS.has_feature("web")}))
 	if OS.has_feature("web"):
 		JavaScriptBridge.eval("window.everDeeperRenderProbeResult=" + JSON.stringify(full))
 	else:
