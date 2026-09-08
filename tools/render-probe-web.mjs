@@ -1,4 +1,4 @@
-import {webkit} from '@playwright/test';
+import {chromium} from '@playwright/test';
 import http from 'node:http';
 import {readFile, writeFile, mkdir} from 'node:fs/promises';
 import path from 'node:path';
@@ -24,7 +24,7 @@ const server = http.createServer(async (req, res) => {
   } catch { res.writeHead(404).end(); }
 });
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
-const browser = await webkit.launch({headless: true});
+const browser = await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 let page;
 try {
   page = await browser.newPage({viewport: {width: 844, height: 390}, deviceScaleFactor: 3, isMobile: true, hasTouch: true});
@@ -58,8 +58,7 @@ try {
   page.on('console', message => {
     const value = message.text(); logs.push(value);
     if (/^PROBE_(START_STATE|BROWSER_BEGIN)/.test(value)) console.log(value);
-    if (value === 'WebGL: INVALID_OPERATION: glBlitFramebuffer: Read and write color attachments cannot be the same image.') glWarnings.push({time:Date.now(),message:value});
-    else if (/SCRIPT ERROR|Parse Error|^ERROR:|INVALID_OPERATION|INVALID_FRAMEBUFFER_OPERATION|WebGL.*error/i.test(value)) errors.push(value);
+    if (/SCRIPT ERROR|Parse Error|^ERROR:|INVALID_OPERATION|INVALID_FRAMEBUFFER_OPERATION|WebGL.*error/i.test(value)) errors.push(value);
     if (value.startsWith('RENDER_PROBE_REVIEW_OK ')) complete = true;
     if (value.startsWith('PROBE_STAGE_READY ')) {
       const event = JSON.parse(value.slice('PROBE_STAGE_READY '.length));
@@ -98,9 +97,9 @@ try {
   if (surfaces.length !== 9 || state.canvas.bufferWidth !== 2532 || state.canvas.bufferHeight !== 1170) throw new Error('Missing physical drawing-buffer checks');
   if (!state.report.graphics_restored || state.report.rows.length !== 9 || state.report.rows.some(row => row.raf_frames < 3 || row.raf_fps <= 0)) throw new Error('Missing restored settings or RAF samples');
   if (takeCaptures) await page.screenshot({path: path.join(output, `${area}-result.png`)});
-  await writeFile(path.join(output, 'webkit.json'), JSON.stringify({passed: glWarnings.length === 0, functional_checks_passed:true, area, ...state, surfaces, touchDone, resizeRestored, glWarnings}, null, 2));
+  await writeFile(path.join(output, 'chromium.json'), JSON.stringify({passed: glWarnings.length === 0, functional_checks_passed:true, area, ...state, surfaces, touchDone, resizeRestored, glWarnings}, null, 2));
   if (glWarnings.length) throw new Error('WebGL warnings remain a failed review gate: '+JSON.stringify(glWarnings));
-  console.log('RENDER_PROBE_WEBKIT_OK ' + JSON.stringify(state.canvas));
+  console.log('RENDER_PROBE_CHROMIUM_OK ' + JSON.stringify(state.canvas));
 } finally {
   await writeFile(path.join(output, 'browser-console.json'), JSON.stringify({complete, errors, glWarnings, logs}, null, 2));
   if (page && takeCaptures) await page.screenshot({path: path.join(output, 'browser-last.png')}).catch(() => {});

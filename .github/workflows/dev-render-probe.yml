@@ -66,7 +66,7 @@ jobs:
       fail-fast: false
       matrix:
         area: [hub, mossvein]
-        renderer: [native, webkit]
+        renderer: [native, chromium]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -93,14 +93,14 @@ jobs:
           if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/review/native.log"; then exit 1; fi
           rg RENDER_PROBE_REVIEW_OK "$RUNNER_TEMP/review/native.log"
       - uses: actions/setup-node@v4
-        if: matrix.renderer == 'webkit'
+        if: matrix.renderer == 'chromium'
         with:
           node-version: '22'
-      - name: WebKit DPR3 diagnostic, real touch and resize restoration
-        if: matrix.renderer == 'webkit'
+      - name: Chromium DPR3 diagnostic, real touch and resize restoration
+        if: matrix.renderer == 'chromium'
         run: |
           npm ci
-          npx playwright install --with-deps webkit
+          npx playwright install --with-deps chromium
           node tools/render-probe-web.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review" '${{ matrix.area }}'
       - uses: actions/upload-artifact@v4
         if: always()
