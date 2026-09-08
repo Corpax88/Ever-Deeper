@@ -1,0 +1,38 @@
+name: Review built-in WebGL presentation alternative
+on:
+  push:
+    branches: [codex-render-probe]
+    paths: ['.github/workflows/render-probe-present-control.yml', '.github/dev-render-probe/web-present-control.mjs']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  control:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        area: [hub, mossvein]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: dev-render-probe-candidate
+          run-id: 34223377725
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test built-in textured-quad presentation
+        run: |
+          npm ci
+          npx playwright install --with-deps webkit
+          node .github/dev-render-probe/web-present-control.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review" '${{ matrix.area }}'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: render-probe-present-control-${{ matrix.area }}
+          path: ${{ runner.temp }}/review
+          retention-days: 30
