@@ -1,0 +1,69 @@
+{
+  "version": "0.46.9-dev.3",
+  "source_commit": "6d0d23cf0a7092236e4118444412f5b4877b42f7",
+  "qa_run_id": 34190767917,
+  "visual_reviewed": true,
+  "package_checks_passed": true,
+  "physical_iphone_verified": false,
+  "files": {
+    "index.apple-touch-icon.png": {
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5",
+      "size": 66421
+    },
+    "index.audio.position.worklet.js": {
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+      "size": 2973
+    },
+    "index.audio.worklet.js": {
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+      "size": 7298
+    },
+    "index.html": {
+      "sha256": "bf7e82bc833b9746a43e454bc18bca49104cbcf399fb4efcdc52ce2c471d45a5",
+      "size": 5444
+    },
+    "index.icon.png": {
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+      "size": 470687
+    },
+    "index.js": {
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+      "size": 279815
+    },
+    "index.pck": {
+      "sha256": "f848cad5afad9e060547fba43811922be137f84cc742be7bfd4b1d8e37387926",
+      "size": 219345828
+    },
+    "index.png": {
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+      "size": 1981427
+    },
+    "index.wasm": {
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+      "size": 39514754
+    }
+  },
+  "artifacts": [
+    {
+      "id": 10042199472,
+      "name": "dev-floor-review",
+      "digest": "sha256:2aecbde1ac62befdae76d6f3689c473de0dd8acef8c38c76dfb3fb63d1575054"
+    },
+    {
+      "id": 10042198804,
+      "name": "dev-floor-candidate",
+      "digest": "sha256:63f3be606ca1ccecb547757e02eecb37eda658ecce9460d1c87b39e51f4b7cf5"
+    }
+  ],
+  "inspected": [
+    "11 exact-package native captures: three hub positions, all four depth-2 entrances and terrain",
+    "WebKit mobile 844x390 CSS DPR3; D2 meter retains correct dimensions"
+  ],
+  "notes": [
+    "Clean covered-floor optimization enabled in ordinary DEV gameplay.",
+    "All current gameplay cases, build flavor, native meter checks and WebKit passed.",
+    "No experimental metadata or frozen-clock hooks in world code.",
+    "Previous isolated pixel-parity tests showed identical images and approximately 25% native software FPS improvement.",
+    "Physical iPhone FPS recovery remains unverified; LIVE bytes must be preserved."
+  ]
+}

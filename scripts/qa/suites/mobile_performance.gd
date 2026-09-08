@@ -11,6 +11,9 @@ func run() -> void:
 		if arg.begins_with("--perf-output="): output_dir = arg.get_slice("=", 1)
 		if arg == "--perf-capture": captures = true
 	DirAccess.make_dir_recursive_absolute(output_dir)
+	if "--perf-floor-review" in OS.get_cmdline_user_args():
+		await review_floor_release()
+		return
 	if "--perf-meter-review" in OS.get_cmdline_user_args():
 		await review_meter()
 		return
@@ -274,4 +277,30 @@ func review_meter() -> void:
 		main.get_viewport().get_texture().get_image().save_png(output_dir.path_join("meter-mossvein.png"))
 	print("METER_READING " + JSON.stringify(meter.latest))
 	print("METER_REVIEW_OK")
+	main.get_tree().quit(0)
+
+## Final exported-package review of every affected floor profile.
+func review_floor_release() -> void:
+	if DisplayServer.get_name() == "headless": fail("Floor review requires rendering"); return
+	main.game_started = true
+	main._dev_seed_victory_state()
+	if not main._dev_build_all_workshops_state(): fail("Mature hub fixture failed"); return
+	for workshop_id in ["light_lab", "wardrobe"]:
+		for level in 3:
+			var upgrade: Dictionary = RunState.workshop_status(workshop_id).next_upgrade
+			RunState.add_resource(String(upgrade.resource), int(upgrade.cost), false)
+			if not bool(RunState.upgrade_workshop(workshop_id).get("ok", false)):
+				fail("Mature hub upgrade failed"); return
+	main._dev_jump_hub()
+	for point in [Vector2(430,820), Vector2(1200,480), Vector2(720,200)]:
+		main.hub_world.restore_position(point)
+		await capture_review("floor-hub-%d-%d" % [point.x,point.y])
+	for mine_id in main.MINE_IDS:
+		if not main._dev_jump_mine(mine_id, 2): fail("Depth fixture failed"); return
+		await capture_review("floor-" + String(mine_id) + "-entrance")
+		main.depth_world.set_mine_held(true)
+		await main.get_tree().create_timer(1.0).timeout
+		main.depth_world.set_mine_held(false)
+		await capture_review("floor-" + String(mine_id) + "-terrain")
+	print("FLOOR_RELEASE_REVIEW_OK captures=11 version=0.46.9-dev.3")
 	main.get_tree().quit(0)
