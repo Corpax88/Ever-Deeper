@@ -1,0 +1,43 @@
+name: Inspect final hero environment states
+on:
+  push:
+    branches: [codex-hero-v28-environment]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  environment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require the exact built source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34267571804 --jq .head_sha)" = 2e8e165b7f236c854357d0440c007d74b03e7f12
+          test "$(gh api repos/Corpax88/Ever-Deeper/actions/runs/34267571804/jobs --jq '.jobs[] | select(.name == "build") | .conclusion')" = success
+      - uses: actions/download-artifact@v4
+        with:
+          name: hero-v28-candidate
+          run-id: 34267571804
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Inspect actual existing wall, gate and transition states
+        env:
+          HERO_V28_CAPTURE: '1'
+          CAPTURE_START: '193'
+          CAPTURE_END: '216'
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hero-v28-environment-final
+          path: ${{ runner.temp }}/review
+          retention-days: 30
