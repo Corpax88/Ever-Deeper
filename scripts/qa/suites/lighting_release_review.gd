@@ -7,6 +7,7 @@ var area := "hub"
 var world: Node2D
 var cases: Array[Dictionary] = []
 var cone_state: Array[Dictionary] = []
+var failed := false
 
 func _init(game: Node, output: String) -> void:
 	main = game
@@ -14,6 +15,7 @@ func _init(game: Node, output: String) -> void:
 
 func require(ok: bool, message: String) -> bool:
 	if not ok:
+		failed = true
 		push_error("LIGHTING_RELEASE_FAIL " + message)
 		main.get_tree().quit(2)
 	return ok
@@ -77,6 +79,7 @@ func run() -> void:
 		world._request_redraw()
 		if not require(not world._hit_terrain(Vector2i(0, 1)) and world._terrain_is_solid(Vector2i(0, 1)), "Permanent wall survives mining"): return
 		await paired(area + "-permanent-corner", "prismatic", Vector2(-1,-1))
+	if failed: return
 	var report := {"version":"0.46.9-dev.6", "area":area, "rendered":true, "physical_iphone":false, "window":str(DisplayServer.window_get_size()), "cases":cases, "candidate_restored":true}
 	FileAccess.open(output_dir.path_join("lighting-release.json"), FileAccess.WRITE).store_string(JSON.stringify(report, "\t"))
 	print("LIGHTING_RELEASE_REVIEW_OK " + JSON.stringify(report))
@@ -90,7 +93,10 @@ func other_worlds() -> void:
 		if not require(main._dev_jump_mine(mine_id, 1), "Depth 1"): return
 		world = main.mine_world
 		await paired(String(mine_id) + "-depth1", "wide", Vector2.LEFT)
-	if not require(main._dev_jump_deepheart(), "Deepheart"): return
+	# This mature fixture has already won. Use the existing saved-location restore
+	# path; ordinary post-victory entry correctly routes to Endless instead.
+	main._enter_deepheart(false, false, true)
+	if not require(main.phase == "deepheart", "Restored Deepheart fixture"): return
 	world = main.deepheart_world
 	await paired("deepheart", "deepheart", Vector2.RIGHT)
 	for depth in [1, 12]:
