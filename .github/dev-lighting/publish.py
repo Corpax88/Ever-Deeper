@@ -2,7 +2,7 @@
 import concurrent.futures,hashlib,json,shutil,sys,time,urllib.request
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent
-BASE={'live':json.loads((ROOT.parent/'performance-v0469/review.json').read_text())['files']['live'], 'dev':json.loads((ROOT/'review-dev6.json').read_text())['files']}
+BASE={'live':json.loads((ROOT.parent/'performance-v0469/review.json').read_text())['files']['live'], 'dev':json.loads((ROOT/'review-dev8.json').read_text())['files']}
 REVIEW=json.loads((ROOT/'review.json').read_text())
 URL='https://corpax88.github.io/Ever-Deeper/'
 def check(data,info):

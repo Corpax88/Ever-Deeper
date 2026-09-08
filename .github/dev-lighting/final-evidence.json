@@ -1,0 +1,1295 @@
+{
+  "artifacts": [
+    {
+      "digest_verified": true,
+      "id": 10078027366,
+      "name": "dev-lighting-chromium-mossvein",
+      "sha256": "0adaf1d32218f485028150e0f8a9d128c316d0c193793937b9bee574a7a4246a"
+    },
+    {
+      "digest_verified": true,
+      "id": 10078020506,
+      "name": "dev-lighting-chromium-hub",
+      "sha256": "c96e28e0a72958098e3f54c0f537a80e8f9e12842b6afbbe0601372bad1107a3"
+    },
+    {
+      "digest_verified": true,
+      "id": 10077994846,
+      "name": "dev-lighting-native-mossvein",
+      "sha256": "d9e512b59c11f0a5587159bd6522a28eeaa2dff3481c6a00feaadd971634953e"
+    },
+    {
+      "digest_verified": true,
+      "id": 10077987198,
+      "name": "dev-lighting-native-hub",
+      "sha256": "eed9b61868be28991abc5c5a82800bb6f54896e8d96e19cf69aae2609276fe54"
+    },
+    {
+      "digest_verified": true,
+      "id": 10077948909,
+      "name": "dev-lighting-native-other",
+      "sha256": "e7598b77d2bb4ea7665ec0e212fe8f6ba89e8b6fd9b349becac05fbff749f82e"
+    },
+    {
+      "digest_verified": true,
+      "id": 10077935833,
+      "name": "dev-lighting-native-preview",
+      "sha256": "c93e964f91beb73c28d3b865ce35d18c72d745c2789d10458ee36c18a0bf1dc9"
+    },
+    {
+      "digest_verified": true,
+      "id": 10077934574,
+      "name": "dev-lighting-native-gates",
+      "sha256": "e2c756f9c0fd68deffa457211bd276a309037560d41009568ddfea94ac964449"
+    },
+    {
+      "digest_verified": true,
+      "id": 10077934222,
+      "name": "dev-lighting-native-emberdeep",
+      "sha256": "87d291e63e950c5061b4f93034a04412ce6500121f5d8632b60c91eed82cc1ea"
+    },
+    {
+      "digest_verified": true,
+      "id": 10077930804,
+      "name": "dev-lighting-native-moonglass",
+      "sha256": "a3f875572d781b1d44c7a34f74b0f78d1ae5a2586e23562275dca6d53094340c"
+    },
+    {
+      "digest_verified": true,
+      "id": 10077923145,
+      "name": "dev-lighting-native-starfall",
+      "sha256": "2d24891ef7828084640fc28d214b8a1575abf307b160932c1544294d92b87b4f"
+    },
+    {
+      "digest_verified": true,
+      "id": 10077874777,
+      "name": "dev-lighting-build-review",
+      "sha256": "750689aa846a10c4f3369c5b8430877da6057ea6c4375a16f0fd41ac67d27821"
+    },
+    {
+      "digest_verified": true,
+      "id": 10077874087,
+      "name": "dev-lighting-candidate",
+      "sha256": "a0bc315c32bb9a1a76a974bdb5625e7dd9bcb4a23cac574c4c725a6914a021ca"
+    },
+    {
+      "digest_verified": true,
+      "id": 10077969023,
+      "name": "dev9-cache-lifecycle",
+      "sha256": "317ed00f81eb08fdad69f70bf71caccbc45f004583c42bb8aaf6914d677a7148"
+    }
+  ],
+  "browser": {
+    "hub": {
+      "buffer_checks": [
+        {
+          "bufferHeight": 1170,
+          "bufferWidth": 2532,
+          "height": 1170,
+          "phase": "lights_off_touch",
+          "width": 2532
+        }
+      ],
+      "duration": 180.302855,
+      "gl_warnings": [],
+      "graphics_restored": true,
+      "passed": true,
+      "restoration_seconds": 70.01083500000001,
+      "rows": [
+        {
+          "canvas_height": 1170,
+          "canvas_width": 2532,
+          "cpu_ms": 204.72,
+          "dpr": 3,
+          "draw_calls": 151,
+          "elapsed_seconds": 60.109575,
+          "fps": 5.30628034580948,
+          "frames": 43,
+          "lights": 4,
+          "nodes": 761,
+          "p95_ms": 194.429992675781,
+          "pet_lights": 2,
+          "physics_ms": 0.53,
+          "raf_fps": 5.30885498492223,
+          "raf_frames": 43,
+          "raf_p95_ms": 199.994999999995,
+          "shadows": 2,
+          "stage": "original",
+          "title": "Original",
+          "video_mib": 518.392683029175
+        },
+        {
+          "canvas_height": 1170,
+          "canvas_width": 2532,
+          "cpu_ms": 135.21,
+          "dpr": 3,
+          "draw_calls": 151,
+          "elapsed_seconds": 70.167865,
+          "fps": 7.36219438931269,
+          "frames": 59,
+          "lights": 2,
+          "nodes": 761,
+          "p95_ms": 140.970001220703,
+          "pet_lights": 0,
+          "physics_ms": 3.545,
+          "raf_fps": 7.35995808566244,
+          "raf_frames": 59,
+          "raf_p95_ms": 149.99500000001,
+          "shadows": 0,
+          "stage": "pet_off",
+          "title": "Pet lights off",
+          "video_mib": 518.392683029175
+        },
+        {
+          "canvas_height": 1170,
+          "canvas_width": 2532,
+          "cpu_ms": 186.92,
+          "dpr": 3,
+          "draw_calls": 151,
+          "elapsed_seconds": 80.23251,
+          "fps": 5.26159938055488,
+          "frames": 43,
+          "lights": 4,
+          "nodes": 761,
+          "p95_ms": 194.985000610352,
+          "pet_lights": 2,
+          "physics_ms": 1.64,
+          "raf_fps": 5.26551674311871,
+          "raf_frames": 43,
+          "raf_p95_ms": 199.994999999995,
+          "shadows": 2,
+          "stage": "restore_pet",
+          "title": "Restored",
+          "video_mib": 518.392683029175
+        },
+        {
+          "canvas_height": 1170,
+          "canvas_width": 2532,
+          "cpu_ms": 162.36,
+          "dpr": 3,
+          "draw_calls": 151,
+          "elapsed_seconds": 90.240985,
+          "fps": 6.10028618951151,
+          "frames": 49,
+          "lights": 4,
+          "nodes": 761,
+          "p95_ms": 169.020004272461,
+          "pet_lights": 2,
+          "physics_ms": 3.04,
+          "raf_fps": 6.08719849733158,
+          "raf_frames": 49,
+          "raf_p95_ms": 166.665000000008,
+          "shadows": 0,
+          "stage": "shadows_off",
+          "title": "Shadows off",
+          "video_mib": 518.392683029175
+        },
+        {
+          "canvas_height": 1170,
+          "canvas_width": 2532,
+          "cpu_ms": 186.53,
+          "dpr": 3,
+          "draw_calls": 151,
+          "elapsed_seconds": 100.28725,
+          "fps": 5.27996395206297,
+          "frames": 43,
+          "lights": 4,
+          "nodes": 761,
+          "p95_ms": 196.554992675781,
+          "pet_lights": 2,
+          "physics_ms": 0.445,
+          "raf_fps": 5.27628402359603,
+          "raf_frames": 43,
+          "raf_p95_ms": 199.994999999995,
+          "shadows": 2,
+          "stage": "restore_shadows",
+          "title": "Restored",
+          "video_mib": 518.392683029175
+        },
+        {
+          "canvas_height": 1170,
+          "canvas_width": 2532,
+          "cpu_ms": 74.66,
+          "dpr": 3,
+          "draw_calls": 146,
+          "elapsed_seconds": 110.291585,
+          "fps": 13.6737263365608,
+          "frames": 110,
+          "lights": 0,
+          "nodes": 761,
+          "p95_ms": 78.3249969482422,
+          "pet_lights": 0,
+          "physics_ms": 2.85,
+          "raf_fps": 13.6651394838056,
+          "raf_frames": 110,
+          "raf_p95_ms": 83.3349999999919,
+          "shadows": 0,
+          "stage": "lights_off",
+          "title": "All lights off",
+          "video_mib": 518.392683029175
+        },
+        {
+          "canvas_height": 1170,
+          "canvas_width": 2532,
+          "cpu_ms": 206.465,
+          "dpr": 3,
+          "draw_calls": 148,
+          "elapsed_seconds": 180.30242,
+          "fps": 5.29603935714868,
+          "frames": 43,
+          "lights": 4,
+          "nodes": 761,
+          "p95_ms": 193.809997558594,
+          "pet_lights": 2,
+          "physics_ms": 0.415,
+          "raf_fps": 5.28709542961338,
+          "raf_frames": 43,
+          "raf_p95_ms": 199.995000000024,
+          "shadows": 2,
+          "stage": "restore_lights",
+          "title": "Restored · 70s",
+          "video_mib": 518.392683029175
+        }
+      ],
+      "touch_done": true,
+      "version": "0.46.9-dev.9"
+    },
+    "mossvein": {
+      "buffer_checks": [
+        {
+          "bufferHeight": 1170,
+          "bufferWidth": 2532,
+          "height": 1170,
+          "phase": "lights_off_touch",
+          "width": 2532
+        }
+      ],
+      "duration": 180.66922,
+      "gl_warnings": [],
+      "graphics_restored": true,
+      "passed": true,
+      "restoration_seconds": 70.046005,
+      "rows": [
+        {
+          "canvas_height": 1170,
+          "canvas_width": 2532,
+          "cpu_ms": 212.105,
+          "dpr": 3,
+          "draw_calls": 234,
+          "elapsed_seconds": 60.15397,
+          "fps": 4.71774828286314,
+          "frames": 38,
+          "lights": 5,
+          "nodes": 996,
+          "p95_ms": 220.345001220703,
+          "pet_lights": 2,
+          "physics_ms": 3.07,
+          "raf_fps": 4.7206874811716,
+          "raf_frames": 38,
+          "raf_p95_ms": 216.660000000003,
+          "shadows": 4,
+          "stage": "original",
+          "title": "Original",
+          "video_mib": 522.828178405762
+        },
+        {
+          "canvas_height": 1170,
+          "canvas_width": 2532,
+          "cpu_ms": 172.08,
+          "dpr": 3,
+          "draw_calls": 234,
+          "elapsed_seconds": 70.234775,
+          "fps": 5.85557055330972,
+          "frames": 47,
+          "lights": 3,
+          "nodes": 996,
+          "p95_ms": 177.660003662109,
+          "pet_lights": 0,
+          "physics_ms": 0.405,
+          "raf_fps": 5.86301745807006,
+          "raf_frames": 47,
+          "raf_p95_ms": 183.330000000002,
+          "shadows": 2,
+          "stage": "pet_off",
+          "title": "Pet lights off",
+          "video_mib": 522.828178405762
+        },
+        {
+          "canvas_height": 1170,
+          "canvas_width": 2532,
+          "cpu_ms": 208.075,
+          "dpr": 3,
+          "draw_calls": 234,
+          "elapsed_seconds": 80.342275,
+          "fps": 4.74803550176013,
+          "frames": 38,
+          "lights": 5,
+          "nodes": 996,
+          "p95_ms": 216.955001831055,
+          "pet_lights": 2,
+          "physics_ms": 3.03,
+          "raf_fps": 4.75018703861465,
+          "raf_frames": 38,
+          "raf_p95_ms": 216.660000000003,
+          "shadows": 4,
+          "stage": "restore_pet",
+          "title": "Restored",
+          "video_mib": 522.828178405762
+        },
+        {
+          "canvas_height": 1170,
+          "canvas_width": 2532,
+          "cpu_ms": 164.955,
+          "dpr": 3,
+          "draw_calls": 234,
+          "elapsed_seconds": 90.452185,
+          "fps": 6.03958521266899,
+          "frames": 49,
+          "lights": 5,
+          "nodes": 996,
+          "p95_ms": 171.425003051758,
+          "pet_lights": 2,
+          "physics_ms": 0.395,
+          "raf_fps": 6.04962544793464,
+          "raf_frames": 49,
+          "raf_p95_ms": 166.665000000008,
+          "shadows": 0,
+          "stage": "shadows_off",
+          "title": "Shadows off",
+          "video_mib": 522.828178405762
+        },
+        {
+          "canvas_height": 1170,
+          "canvas_width": 2532,
+          "cpu_ms": 211.31,
+          "dpr": 3,
+          "draw_calls": 234,
+          "elapsed_seconds": 100.57762,
+          "fps": 4.74376195050165,
+          "frames": 38,
+          "lights": 5,
+          "nodes": 996,
+          "p95_ms": 218.824996948242,
+          "pet_lights": 2,
+          "physics_ms": 0.42,
+          "raf_fps": 4.7403119873758,
+          "raf_frames": 38,
+          "raf_p95_ms": 216.660000000003,
+          "shadows": 4,
+          "stage": "restore_shadows",
+          "title": "Restored",
+          "video_mib": 522.828178405762
+        },
+        {
+          "canvas_height": 1170,
+          "canvas_width": 2532,
+          "cpu_ms": 82.45,
+          "dpr": 3,
+          "draw_calls": 214,
+          "elapsed_seconds": 110.622755,
+          "fps": 12.1301314984946,
+          "frames": 98,
+          "lights": 0,
+          "nodes": 996,
+          "p95_ms": 87.4550018310547,
+          "pet_lights": 0,
+          "physics_ms": 2.675,
+          "raf_fps": 12.1254850194008,
+          "raf_frames": 97,
+          "raf_p95_ms": 83.3350000000064,
+          "shadows": 0,
+          "stage": "lights_off",
+          "title": "All lights off",
+          "video_mib": 522.828178405762
+        },
+        {
+          "canvas_height": 1170,
+          "canvas_width": 2532,
+          "cpu_ms": 214,
+          "dpr": 3,
+          "draw_calls": 234,
+          "elapsed_seconds": 180.66876,
+          "fps": 4.73644196558926,
+          "frames": 38,
+          "lights": 5,
+          "nodes": 996,
+          "p95_ms": 217.304992675781,
+          "pet_lights": 2,
+          "physics_ms": 0.515,
+          "raf_fps": 4.74031494402998,
+          "raf_frames": 38,
+          "raf_p95_ms": 216.660000000003,
+          "shadows": 4,
+          "stage": "restore_lights",
+          "title": "Restored · 70s",
+          "video_mib": 522.828178405762
+        }
+      ],
+      "touch_done": true,
+      "version": "0.46.9-dev.9"
+    }
+  },
+  "core": {
+    "core": true,
+    "dev-flavor": true,
+    "production-flavor": true
+  },
+  "files": {
+    "index.apple-touch-icon.png": {
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5",
+      "size": 66421
+    },
+    "index.audio.position.worklet.js": {
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+      "size": 2973
+    },
+    "index.audio.worklet.js": {
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+      "size": 7298
+    },
+    "index.html": {
+      "sha256": "d38ff14da301911aa9a471f98a9a26b57ed202487979b36b61bd6c442c8f71cd",
+      "size": 7855
+    },
+    "index.icon.png": {
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+      "size": 470687
+    },
+    "index.js": {
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+      "size": 279815
+    },
+    "index.pck": {
+      "sha256": "78fde726ddc232060827c2500460a81224c90476b63922ee73c6f4d6cbb927f2",
+      "size": 219176904
+    },
+    "index.png": {
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+      "size": 1981427
+    },
+    "index.wasm": {
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+      "size": 39514754
+    }
+  },
+  "fps": {
+    "hub": {
+      "area": "hub",
+      "physical_iphone": false,
+      "stages": [
+        {
+          "cpu_median_ms": 251.686,
+          "draw_calls": 146,
+          "fps": 3.87522155656578,
+          "frames": 168,
+          "p95_ms": 318.46,
+          "seconds": 45.150756,
+          "stage": "dev8_reference",
+          "video_mib": 502.393663406372
+        },
+        {
+          "cpu_median_ms": 172.408,
+          "draw_calls": 151,
+          "fps": 5.80944380871024,
+          "frames": 251,
+          "p95_ms": 174.249,
+          "seconds": 45.089593,
+          "stage": "fixed_field",
+          "video_mib": 502.393663406372
+        },
+        {
+          "cpu_median_ms": 251.146,
+          "draw_calls": 146,
+          "fps": 3.98325244238853,
+          "frames": 73,
+          "p95_ms": 252.917,
+          "seconds": 20.07936,
+          "stage": "restored_reference",
+          "video_mib": 502.393663406372
+        }
+      ]
+    },
+    "mossvein": {
+      "area": "mossvein",
+      "physical_iphone": false,
+      "stages": [
+        {
+          "cpu_median_ms": 213.955,
+          "draw_calls": 226,
+          "fps": 4.57151585901565,
+          "frames": 198,
+          "p95_ms": 265.073,
+          "seconds": 45.069161,
+          "stage": "dev8_reference",
+          "video_mib": 509.077884674072
+        },
+        {
+          "cpu_median_ms": 198.787,
+          "draw_calls": 226,
+          "fps": 5.04395401015283,
+          "frames": 218,
+          "p95_ms": 200.248,
+          "seconds": 45.18067,
+          "stage": "fixed_field",
+          "video_mib": 509.077884674072
+        },
+        {
+          "cpu_median_ms": 214.8,
+          "draw_calls": 226,
+          "fps": 4.66845331121036,
+          "frames": 85,
+          "p95_ms": 215.996,
+          "seconds": 20.146236,
+          "stage": "restored_reference",
+          "video_mib": 509.077884674072
+        }
+      ]
+    }
+  },
+  "lifecycle": {
+    "cases": [
+      {
+        "active": {
+          "texture_mib": 496.263689041138,
+          "video_mib": 502.523027420044
+        },
+        "after_reconfigure": {
+          "texture_mib": 496.263689041138,
+          "video_mib": 502.523027420044
+        },
+        "area": "hub",
+        "cache": {
+          "applied": true,
+          "bake_count": 1,
+          "baking": false,
+          "bounds": "[P: (28.0, -106.0), S: (1284.0, 1181.0)]",
+          "enabled": true,
+          "normalization": 3,
+          "ready": true,
+          "sources": 11,
+          "texture_size": "(1284.0, 1181.0)"
+        },
+        "disable_restores_originals_and_actor_masks": true,
+        "lock_deferred": true,
+        "observed_peak_video_mib": 502.523027420044,
+        "pre_bake": {
+          "texture_mib": 476.553598403931,
+          "video_mib": 482.812936782837
+        },
+        "reconfigure_recovers": true,
+        "restored_cache": {
+          "applied": true,
+          "bake_count": 2,
+          "baking": false,
+          "bounds": "[P: (28.0, -106.0), S: (1284.0, 1181.0)]",
+          "enabled": true,
+          "normalization": 3,
+          "ready": true,
+          "sources": 11,
+          "texture_size": "(1284.0, 1181.0)"
+        },
+        "settled_bake_and_upload_ms": 1298.662,
+        "temporary_viewport_freed": true,
+        "unsupported_source_fallback": true
+      },
+      {
+        "active": {
+          "texture_mib": 540.912021636963,
+          "video_mib": 547.189678192139
+        },
+        "after_reconfigure": {
+          "texture_mib": 540.912021636963,
+          "video_mib": 547.189678192139
+        },
+        "area": "mossvein",
+        "cache": {
+          "applied": true,
+          "bake_count": 1,
+          "baking": false,
+          "bounds": "[P: (1010.0, 4306.0), S: (734.0, 589.0)]",
+          "enabled": true,
+          "normalization": 3,
+          "ready": true,
+          "sources": 3,
+          "texture_size": "(734.0, 589.0)"
+        },
+        "disable_restores_originals_and_actor_masks": true,
+        "lock_deferred": true,
+        "observed_peak_video_mib": 547.189678192139,
+        "pre_bake": {
+          "texture_mib": 538.715106964111,
+          "video_mib": 544.992763519287
+        },
+        "reconfigure_recovers": true,
+        "restored_cache": {
+          "applied": true,
+          "bake_count": 2,
+          "baking": false,
+          "bounds": "[P: (1010.0, 4306.0), S: (734.0, 589.0)]",
+          "enabled": true,
+          "normalization": 3,
+          "ready": true,
+          "sources": 3,
+          "texture_size": "(734.0, 589.0)"
+        },
+        "settled_bake_and_upload_ms": 1183.254,
+        "temporary_viewport_freed": true,
+        "unsupported_source_fallback": true
+      }
+    ],
+    "physical_iphone": false,
+    "renderer": "Mesa software"
+  },
+  "pixels": [
+    {
+      "area": "emberdeep",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          86,
+          1,
+          1271,
+          779
+        ],
+        "max": 4,
+        "mean": 0.025571970626738667,
+        "pct_gt2": 0.003306878306878307
+      },
+      "case": "emberdeep-entrance"
+    },
+    {
+      "area": "emberdeep",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          86,
+          2,
+          1271,
+          931
+        ],
+        "max": 5,
+        "mean": 0.03187617615774832,
+        "pct_gt2": 0.007329678721431299
+      },
+      "case": "emberdeep-gate"
+    },
+    {
+      "area": "emberdeep",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          86,
+          25,
+          1271,
+          776
+        ],
+        "max": 4,
+        "mean": 0.02529156780123275,
+        "pct_gt2": 0.0030341460753831886
+      },
+      "case": "emberdeep-mined-corner"
+    },
+    {
+      "area": "emberdeep",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "emberdeep-permanent-corner"
+    },
+    {
+      "area": "gates",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "emberMine-struck-gate"
+    },
+    {
+      "area": "gates",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "emberMine-visible-gate"
+    },
+    {
+      "area": "gates",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "moonMine-struck-gate"
+    },
+    {
+      "area": "gates",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "moonMine-visible-gate"
+    },
+    {
+      "area": "gates",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 2,
+        "mean": 0.009060931789668903,
+        "pct_gt2": 0
+      },
+      "case": "mossMine-struck-gate"
+    },
+    {
+      "area": "gates",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 2,
+        "mean": 0.009032039218894889,
+        "pct_gt2": 0
+      },
+      "case": "mossMine-visible-gate"
+    },
+    {
+      "area": "hub",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          269,
+          22,
+          2276,
+          1198
+        ],
+        "max": 3,
+        "mean": 0.07180059523809523,
+        "pct_gt2": 0.004806905580101457
+      },
+      "case": "hub-deepheart"
+    },
+    {
+      "area": "hub",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 1,
+        "mean": 0.000060768150330006,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          236,
+          5,
+          2081,
+          1258
+        ],
+        "max": 24,
+        "mean": 0.07895742990781651,
+        "pct_gt2": 0.0645693558064692
+      },
+      "case": "hub-focused"
+    },
+    {
+      "area": "hub",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 2,
+        "mean": 0.00048767932144220806,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          17,
+          6,
+          1804,
+          1259
+        ],
+        "max": 14,
+        "mean": 0.07676346956308297,
+        "pct_gt2": 0.09416080292368953
+      },
+      "case": "hub-prismatic"
+    },
+    {
+      "area": "hub",
+      "baseline-control": {
+        "gt2_bbox": [
+          840,
+          49,
+          1043,
+          252
+        ],
+        "max": 6,
+        "mean": 0.002203591201658212,
+        "pct_gt2": 0.08935389734358806
+      },
+      "candidate": {
+        "gt2_bbox": [
+          17,
+          21,
+          1902,
+          1232
+        ],
+        "max": 38,
+        "mean": 0.0876112236131566,
+        "pct_gt2": 0.09542218949435444
+      },
+      "case": "hub-standard"
+    },
+    {
+      "area": "hub",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          269,
+          22,
+          2276,
+          1198
+        ],
+        "max": 3,
+        "mean": 0.0715423519063983,
+        "pct_gt2": 0.003272786777941417
+      },
+      "case": "hub-wide"
+    },
+    {
+      "area": "moonglass",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          1218,
+          25,
+          2247,
+          826
+        ],
+        "max": 4,
+        "mean": 0.028970725604101893,
+        "pct_gt2": 0.015818469426716848
+      },
+      "case": "moonglass-entrance"
+    },
+    {
+      "area": "moonglass",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          1218,
+          25,
+          2272,
+          971
+        ],
+        "max": 6,
+        "mean": 0.033715669830360555,
+        "pct_gt2": 0.025193639884361532
+      },
+      "case": "moonglass-gate"
+    },
+    {
+      "area": "moonglass",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          1218,
+          44,
+          2228,
+          608
+        ],
+        "max": 4,
+        "mean": 0.018956679894179894,
+        "pct_gt2": 0.00992063492063492
+      },
+      "case": "moonglass-mined-corner"
+    },
+    {
+      "area": "moonglass",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "moonglass-permanent-corner"
+    },
+    {
+      "area": "mossvein",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          737,
+          20,
+          1623,
+          647
+        ],
+        "max": 4,
+        "mean": 0.02466556210112911,
+        "pct_gt2": 0.0031023291332569684
+      },
+      "case": "mossvein-entrance"
+    },
+    {
+      "area": "mossvein",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          762,
+          29,
+          1702,
+          829
+        ],
+        "max": 5,
+        "mean": 0.030402399361806578,
+        "pct_gt2": 0.008147875415916654
+      },
+      "case": "mossvein-gate"
+    },
+    {
+      "area": "mossvein",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          750,
+          22,
+          1702,
+          674
+        ],
+        "max": 3,
+        "mean": 0.024501667075765014,
+        "pct_gt2": 0.004397807232858779
+      },
+      "case": "mossvein-mined-corner"
+    },
+    {
+      "area": "mossvein",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "mossvein-permanent-corner"
+    },
+    {
+      "area": "other",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "deepheart"
+    },
+    {
+      "area": "other",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "emberMine-depth1"
+    },
+    {
+      "area": "other",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "endless-1"
+    },
+    {
+      "area": "other",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "endless-12"
+    },
+    {
+      "area": "other",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "moonMine-depth1"
+    },
+    {
+      "area": "other",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "mossMine-depth1"
+    },
+    {
+      "area": "other",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "starMine-depth1"
+    },
+    {
+      "area": "other",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "surface"
+    },
+    {
+      "area": "starfall",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          327,
+          0,
+          1528,
+          771
+        ],
+        "max": 4,
+        "mean": 0.02755524532264223,
+        "pct_gt2": 0.010704740086183384
+      },
+      "case": "starfall-entrance"
+    },
+    {
+      "area": "starfall",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          280,
+          200,
+          1474,
+          1233
+        ],
+        "max": 5,
+        "mean": 0.037751595483554244,
+        "pct_gt2": 0.020454917362133857
+      },
+      "case": "starfall-forge"
+    },
+    {
+      "area": "starfall",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": [
+          319,
+          5,
+          1498,
+          778
+        ],
+        "max": 4,
+        "mean": 0.0271341297114493,
+        "pct_gt2": 0.009375170457644685
+      },
+      "case": "starfall-mined-corner"
+    },
+    {
+      "area": "starfall",
+      "baseline-control": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "candidate": {
+        "gt2_bbox": null,
+        "max": 0,
+        "mean": 0,
+        "pct_gt2": 0
+      },
+      "case": "starfall-permanent-corner"
+    }
+  ]
+}
