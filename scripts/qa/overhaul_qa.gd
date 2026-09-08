@@ -224,7 +224,7 @@ func _test_companion() -> void:
 	check(int(world.call("companion_collect_loot",position,64.0))==0,"Shared loot claim cannot duplicate")
 	check(MoleSkills.bond()==3,"Bond earned only from collected ore")
 	var light: Dictionary=mole.lamp.debug_snapshot()
-	check(bool(light.occluded) and bool(light.origin_centered),"Mole helmet light uses wall occlusion")
+	check(bool(light.occluded) and bool(light.shadow_origin_preserved),"Mole helmet shadow emitter stays at the helmet; texture margins may be cropped")
 	check(is_equal_approx(mole.lamp.beam_light.energy,0.72),"Companion lamp energy stable")
 	for action in ["walk","pickup","shake"]:
 		for direction in [Vector2.DOWN,Vector2.RIGHT,Vector2.UP,Vector2.LEFT]:

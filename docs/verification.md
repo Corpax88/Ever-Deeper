@@ -83,3 +83,11 @@ Use DEV TOOLS → SHOW FPS to measure the actual device while playing.
 The v0.46.9 protected-file manifest differs from the cleanup baseline only in
 `project.godot`: the release version changes from 0.46.8 to 0.46.9. Its rendering,
 viewport, FPS ceiling, save identity and other settings are unchanged.
+
+## Intentional DEV6 lighting optimization
+
+The headlamp protected hash is updated alongside the reviewed, lossless crop of its
+transparent texture bounds. The gameplay check now tests the unchanged light-node
+position (`shadow_origin_preserved`), while `origin_centered` keeps its old diagnostic
+meaning (zero texture offset). Light energy, color, range, occlusion and five styles
+are retained. No other protected-file baseline changes. See the lighting-cost report.

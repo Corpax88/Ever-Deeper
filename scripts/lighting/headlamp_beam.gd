@@ -11,6 +11,7 @@ const BEAM_TEXTURE_SIZE: = Vector2i(256, 256)
 const BEAM_HALF_ANGLE: = 0.4
 
 static var _shared_beam_texture: ImageTexture
+static var _shared_beam_source_rect: Rect2i
 
 var preview_settings: Dictionary = {}
 
@@ -81,6 +82,11 @@ func _apply_endless_workshop_effects(force: bool = false) -> void :
 	beam_light.texture_scale = (
 		base_beam_length * effective_range_multiplier / (float(BEAM_TEXTURE_SIZE.x) * 0.5)
 	)
+	# Trim only transparent texels. Keep the original beam and shadow emitter in place.
+	beam_light.offset = (
+		Vector2(_shared_beam_source_rect.position) + Vector2(_shared_beam_source_rect.size) * 0.5
+		- Vector2(BEAM_TEXTURE_SIZE) * 0.5
+	) * beam_light.texture_scale
 	beam_light.scale = Vector2(1.0, effective_width_multiplier)
 
 
@@ -151,25 +157,30 @@ static func _beam_texture() -> ImageTexture:
 			var value: float = cone * distance_fade if forward > 0.0 else 0.0
 			image.set_pixel(x, y, Color(value, value, value, 1.0) if value > 0.01 else Color.TRANSPARENT)
 
-	_shared_beam_texture = ImageTexture.create_from_image(image)
+	_shared_beam_source_rect = image.get_used_rect().grow(1).intersection(Rect2i(Vector2i.ZERO, BEAM_TEXTURE_SIZE))
+	_shared_beam_texture = ImageTexture.create_from_image(image.get_region(_shared_beam_source_rect))
 	return _shared_beam_texture
 
 
 func debug_snapshot() -> Dictionary:
 	var image: = _beam_texture().get_image()
 	var border_alpha_max: = 0.0
-	for x in BEAM_TEXTURE_SIZE.x:
+	for x in image.get_width():
 		border_alpha_max = maxf(border_alpha_max, image.get_pixel(x, 0).a)
-		border_alpha_max = maxf(border_alpha_max, image.get_pixel(x, BEAM_TEXTURE_SIZE.y - 1).a)
-	for y in BEAM_TEXTURE_SIZE.y:
+		border_alpha_max = maxf(border_alpha_max, image.get_pixel(x, image.get_height() - 1).a)
+	for y in image.get_height():
 		border_alpha_max = maxf(border_alpha_max, image.get_pixel(0, y).a)
-		border_alpha_max = maxf(border_alpha_max, image.get_pixel(BEAM_TEXTURE_SIZE.x - 1, y).a)
+		border_alpha_max = maxf(border_alpha_max, image.get_pixel(image.get_width() - 1, y).a)
 	return {
 		"light_count": find_children("*", "PointLight2D", true, false).size(),
 		"cone_only": false,
 		"occluded": beam_light != null and beam_light.shadow_enabled,
 		"origin_centered": beam_light != null and beam_light.offset == Vector2.ZERO,
-		"texture_size": BEAM_TEXTURE_SIZE,
+		"shadow_origin_preserved": beam_light != null and beam_light.position == Vector2.ZERO,
+		"texture_size": image.get_size(),
+		"source_texture_size": BEAM_TEXTURE_SIZE,
+		"source_texture_region": _shared_beam_source_rect,
+		"texture_offset": beam_light.offset if beam_light != null else Vector2.ZERO,
 		"half_angle": BEAM_HALF_ANGLE,
 		"border_alpha_max": border_alpha_max,
 		"beam_length": float(beam_light.texture_scale) * float(BEAM_TEXTURE_SIZE.x) * 0.5 if beam_light != null else 0.0,

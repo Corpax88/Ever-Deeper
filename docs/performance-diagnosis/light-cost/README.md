@@ -108,3 +108,34 @@ was slower than baseline; adding it to floor+cone improvements gave no consisten
 It is not adopted. The next test partitions station drawing and cave terrain rows into
 bounded CanvasItems, reusing the existing native drawing functions and exact ordering.
 Terrain top and edge passes retain their original row/column order to preserve overlaps.
+
+## Selected implementation
+
+[Run 34253613410](https://github.com/Corpax88/Ever-Deeper/actions/runs/34253613410),
+source `9b05d90414345f853ceed92e0bb72ab0b44eef66`, passed all four native jobs.
+
+| Area / framebuffer | Baseline | Floor + cone | Floor + sections | All three | Restored |
+|---|---:|---:|---:|---:|---:|
+| Hub / 844×390 | 16.98 | 21.99 | 21.78 | 24.27 | 16.96 |
+| Hub / 2328×1260 | 2.01 | 2.75 | 2.60 | 3.03 | 2.01 |
+| Mossvein / 844×390 | 12.46 | 18.79 | 13.44 | 22.73 | 12.56 |
+| Mossvein / 2328×1260 | 1.72 | 2.88 | 1.88 | 3.27 | 1.72 |
+
+These are Mesa software-renderer measurements, not estimates of iPhone FPS. At the
+reported phone framebuffer size they show approximately 50% and 90% higher FPS.
+All baseline/candidate pairs at both sizes were inspected. Mossvein differences are
+at most 2/255 per channel; both restored controls are exact. Hub differences above
+2/255 remain confined to the small elevator animation, which also changes in controls.
+
+The selected DEV6 code uses all three improvements and no transparent-discard shader.
+Headlamp generation now retains only Rect2i(128,77,127,103), with the original scaling
+and a compensated texture offset on every style/range refresh. The node stays at the
+original helmet shadow-emitter position. Exact Godot 4.7.2 light/viewport source was
+checked for offset handling and shadow bounds; the cropped shadow radius still covers
+all nontransparent cone texels. Protected headlamp hash and the current gameplay
+assertion are intentionally updated for this change; historical assertions are retained.
+
+The final DEV6 workflow exports both flavors, runs the ten current gameplay cases and
+both flavor gates, compares paired native renders of the affected worlds and lighting
+states, then runs the actual 120-second probe and real touch cancellation in Chromium
+at DPR3. Publication is pending those exact-package gates and visual inspection.

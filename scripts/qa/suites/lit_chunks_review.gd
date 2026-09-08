@@ -1,8 +1,6 @@
 extends "res://scripts/qa/suites/light_cost.gd"
 ## Factorial performance and same-state visual comparison of floor chunks and tight cones.
 var cone_state: Array[Dictionary] = []
-var original_material: Material
-var cutout_material: ShaderMaterial
 
 func run() -> void:
 	for arg in OS.get_cmdline_user_args():
@@ -31,17 +29,18 @@ func run() -> void:
 	world.player.camera.position_smoothing_enabled = false
 	world.player.camera.reset_smoothing()
 	for frame in 5: await main.get_tree().process_frame
-	original_material = world.material
-	var shader: Shader = Shader.new()
-	shader.code = "shader_type canvas_item; void fragment() { if (COLOR.a <= 0.0) { discard; } }"
-	cutout_material = ShaderMaterial.new()
-	cutout_material.shader = shader
 	for node in world.find_children("HelmetCone", "PointLight2D", true, false):
 		var image: Image = node.texture.get_image()
+		if image.get_size() != Vector2i(256,256):
+			var region: Rect2i = node.get_parent().debug_snapshot().source_texture_region
+			var full: Image = Image.create(256,256,false,Image.FORMAT_RGBA8)
+			full.fill(Color.TRANSPARENT)
+			full.blit_rect(image,Rect2i(Vector2i.ZERO,image.get_size()),region.position)
+			image = full
 		var used: Rect2i = image.get_used_rect().grow(1).intersection(Rect2i(Vector2i.ZERO, image.get_size()))
 		var trimmed: ImageTexture = ImageTexture.create_from_image(image.get_region(used))
 		var offset: Vector2 = (Vector2(used.position) + Vector2(used.size) * 0.5 - Vector2(image.get_size()) * 0.5) * float(node.texture_scale)
-		cone_state.append({"node":node,"texture":node.texture,"offset":node.offset,"cropped":trimmed,"crop_offset":offset,"before":str(image.get_size()),"after":str(used)})
+		cone_state.append({"node":node,"texture":ImageTexture.create_from_image(image),"offset":Vector2.ZERO,"cropped":trimmed,"crop_offset":offset,"before":str(image.get_size()),"after":str(used)})
 	for id in ["baseline", "combined", "sections", "optimized", "restored"]:
 		set_variant(id)
 		await measure(id, 45.0 if id == "baseline" else 20.0)
@@ -67,7 +66,6 @@ func run() -> void:
 func set_variant(id: String) -> void:
 	world.lit_floor_chunks.enabled = id in ["floor", "combined", "sections", "optimized"]
 	world.lit_draw_sections.enabled = id in ["sections", "optimized"]
-	world.material = cutout_material if id in ["cutout", "combined_cutout"] else original_material
 	for entry in cone_state:
 		entry.node.texture = entry.cropped if id in ["cones", "combined", "optimized"] else entry.texture
 		entry.node.offset = entry.crop_offset if id in ["cones", "combined", "optimized"] else entry.offset

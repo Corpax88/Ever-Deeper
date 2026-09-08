@@ -48,3 +48,13 @@ A future change may justify extracting one coherent catalog or render component 
 parity evidence. This cleanup deliberately does not redesign progression, saves or simulation.
 `docs/dead-code-removals.json` records the closed private implementations removed here;
 public/debug APIs, active fallbacks and legacy save support remain.
+
+### DEV6 lighting cost
+
+`scripts/lighting/lit_floor_chunks.gd` and `lit_draw_sections.gd` bound lighting work
+for the hub and Depth 2 while the world owners retain drawing and gameplay state.
+`headlamp_beam.gd` removes only transparent texture margins with a compensated offset.
+`scripts/qa/suites/lighting_release_review.gd` compares the exported package with
+the original draw paths and reconstructed original cone, including mining and corners.
+`.github/workflows/dev-lighting.yml` builds both flavors, runs current gameplay gates,
+then native visual cases and the 120-second Chromium DPR3 probe.
