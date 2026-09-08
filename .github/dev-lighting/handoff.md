@@ -1,5 +1,8 @@
 # DEV7 floor lighting handoff
 
+> Subsequent release: the approved Gruvepappa v28 was published to DEV8 in run 34270405341. All DEV7 floor/FPS changes are retained. The current DEV file hashes and verified publication receipt are in `.github/hero-v28/`; use that DEV8 package as the previous-release baseline for the next deployment. LIVE remains unchanged.
+
+
 DEV7 is published and all 18 public files were verified at 2026-09-08T18:41:49Z.
 LIVE remains byte-identical 0.46.9. See publication-receipt.json and review.json.
 The prior DEV6 review and receipt are archived beside them.
