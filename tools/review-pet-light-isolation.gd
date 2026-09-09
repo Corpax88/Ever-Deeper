@@ -21,6 +21,9 @@ func run() -> void:
 	main._dev_seed_victory_state()
 	if not main._dev_build_all_workshops_state():
 		quit(2); return
+	state.overhaul_progress["skills"] = {"lantern":1,"fetch":1,"trailrunner":1,"big_paws":1,"ore_nose":1,"long_beam":1,"shake":1,"teamwork":1,"echo":1,"homeward":1}
+	root.get_node("AchievementService").achievement_unlocked.disconnect(main._on_achievement_unlocked)
+	main.achievement_toast.clear()
 	var cases: Array[Dictionary] = []
 	for area in ["hub","mossvein"]:
 		if not (main._dev_jump_hub() if area == "hub" else main._dev_jump_mine("mossMine",2)):
@@ -38,13 +41,18 @@ func run() -> void:
 			push_error("Missing pet"); quit(2); return
 		var lamps: Array[Dictionary] = []
 		for light in pet.find_children("*","PointLight2D",true,false):
-			lamps.append({"node":light,"enabled":light.enabled,"shadow":light.shadow_enabled})
+			lamps.append({"node":light,"enabled":light.enabled,"shadow":light.shadow_enabled,"mask":light.range_item_cull_mask})
 		if lamps.size() != 2:
 			push_error("Expected pet cone and bounce"); quit(2); return
 		world.set_meta(&"fixed_light_probe_lock",true)
-		for stage in ["original","cone_off","restore_cone","bounce_off","restore_bounce","pet_off","restored"]:
+		var warmup: int = Time.get_ticks_usec()
+		while Time.get_ticks_usec() - warmup < 10000000: await process_frame
+		for stage in ["original","cone_off","restore_cone","bounce_off","restore_bounce","pet_off","restore_pet","floor_off","restore_floor","sprites_off","restored"]:
 			for entry in lamps:
 				entry.node.enabled = entry.enabled
+				entry.node.range_item_cull_mask = entry.mask
+				if stage == "floor_off": entry.node.range_item_cull_mask = int(entry.mask) & ~(1 << 19)
+				if stage == "sprites_off": entry.node.range_item_cull_mask = int(entry.mask) & (1 << 19)
 				if stage == "pet_off" or (stage == "cone_off" and entry.node.name == "HelmetCone") or (stage == "bounce_off" and entry.node.name == "HelmetBounce"):
 					entry.node.enabled = false
 			for frame in 8: await process_frame
@@ -69,7 +77,7 @@ func run() -> void:
 			cases.append(row)
 			print("PET_LIGHT_ROW "+JSON.stringify(row))
 		for entry in lamps:
-			if entry.node.enabled != entry.enabled or entry.node.shadow_enabled != entry.shadow:
+			if entry.node.enabled != entry.enabled or entry.node.shadow_enabled != entry.shadow or entry.node.range_item_cull_mask != entry.mask:
 				push_error("Restoration failed"); quit(2); return
 		world.remove_meta(&"fixed_light_probe_lock")
 	FileAccess.open(output_dir.path_join("pet-light-isolation.json"),FileAccess.WRITE).store_string(JSON.stringify({"physical_iphone":false,"renderer":"Mesa software","package_sha256":"78fde726ddc232060827c2500460a81224c90476b63922ee73c6f4d6cbb927f2","cases":cases},"\t"))
