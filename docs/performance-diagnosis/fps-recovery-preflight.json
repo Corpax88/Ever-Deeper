@@ -579,7 +579,8 @@
         "restored-lights.png": "c4949dae9e63c64d7b4775dbeaabc87c3b22088ad0f02eb1dde6f569634650a6",
         "lights-off.png": "5880d2f14ccf2f89667a70884dc74e7f56fdaa19d491bc40879b9a267955058d",
         "normal-updates.png": "c4949dae9e63c64d7b4775dbeaabc87c3b22088ad0f02eb1dde6f569634650a6"
-      }
+      },
+      "performance_reference_valid": true
     },
     {
       "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
@@ -829,7 +830,9 @@
         "max_channel_difference": 4,
         "mean_channel_difference": 6.409207440135275e-05,
         "restored_pixel_identical": true
-      }
+      },
+      "performance_reference_valid": false,
+      "reference_correction": "WITHDRAWN D1 gain estimate: the disabled floor helper emitted an extra world-sized zero-alpha wash, absent in the original. Pixel comparison remains valid; remeasure performance after guarding wash alpha or compare exact packages."
     },
     {
       "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
@@ -1161,7 +1164,9 @@
         "max_channel_difference": 4,
         "mean_channel_difference": 6.977399589083438e-05,
         "restored_pixel_identical": true
-      }
+      },
+      "performance_reference_valid": false,
+      "reference_correction": "WITHDRAWN D1 gain estimate: the disabled floor helper emitted an extra world-sized zero-alpha wash, absent in the original. Pixel comparison remains valid; remeasure performance after guarding wash alpha or compare exact packages."
     },
     {
       "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
@@ -1429,7 +1434,8 @@
         "max_channel_difference": 0,
         "mean_channel_difference": 0.0,
         "restored_pixel_identical": true
-      }
+      },
+      "performance_reference_valid": true
     }
   ]
 }

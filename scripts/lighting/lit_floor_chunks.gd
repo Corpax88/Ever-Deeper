@@ -61,7 +61,7 @@ func draw_floor(owner_canvas: CanvasItem, texture: Texture2D, bounds: Rect2, tin
 		hide()
 		if underlay.a > 0.0: owner_canvas.draw_rect(bounds, underlay, true)
 		owner_canvas.draw_texture_rect(texture, bounds, true, tint)
-		owner_canvas.draw_rect(bounds, wash, true)
+		if wash.a > 0.0: owner_canvas.draw_rect(bounds, wash, true)
 		return
 	show()
 	if composite_pass:

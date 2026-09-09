@@ -27,6 +27,8 @@ var recording: bool = false
 var route: Array[Vector2] = []
 var route_index: int = 0
 var route_loops: int = 0
+var route_locked_barriers: Array[Dictionary] = []
+var route_rejected_edges: int = 0
 var input_vector: Vector2 = Vector2(INF, INF)
 var deep_column: float = 0.0
 var distance: float = 0.0
@@ -80,7 +82,9 @@ func _run() -> void:
 	physics_frame.connect(_drive)
 	state.resource_collected.connect(_on_pickup)
 	state.changed.connect(_on_state_changed)
-	var selected: Array[String] = FIXTURES.duplicate() if fixture == "all" else [fixture]
+	var selected: Array[String] = []
+	if fixture == "all": selected.assign(FIXTURES)
+	else: selected.append(fixture)
 	for selected_fixture in selected:
 		fixture = selected_fixture
 		if not _prepare(): return
@@ -150,6 +154,8 @@ func _prepare() -> bool:
 	route.clear()
 	route_index = 0
 	route_loops = 0
+	route_locked_barriers.clear()
+	route_rejected_edges = 0
 	input_vector = Vector2(INF, INF)
 	if fixture == "deep_post5":
 		deep_column = (floorf(player.global_position.x / 64.0) + 0.5) * 64.0
@@ -162,6 +168,14 @@ func _prepare_route() -> bool:
 	# the real collision resolver; a solid D1 cell must actually be mined first.
 	var grid_step: float = 48.0
 	var dimensions: Vector2i = Vector2i(world.cols, world.rows) if fixture == "ember_d1" else Vector2i(30,20)
+	if fixture == "ember_d1":
+		# A gate's collision rectangle extends beyond its sparse trigger cells.
+		# Exclude the whole closed gate when this actual loadout cannot mine it.
+		for value in world.mine.barriers:
+			var barrier: Dictionary = value
+			if int(barrier.requiresPickaxe) <= int(state.pickaxe_level) or not world._role_has_blocks(String(barrier.id)): continue
+			route_locked_barriers.append({"id":String(barrier.id),"requires_tool":int(barrier.requiresPickaxe),
+				"rect":Rect2(float(barrier.x),float(barrier.y),float(barrier.w),float(barrier.h))})
 	var start: Vector2i = Vector2i(Vector2(player.global_position) / grid_step)
 	var center: Vector2 = (Vector2(start) + Vector2.ONE * 0.5) * grid_step
 	if fixture == "hub" and world.collision_at(center): return _fail("Hub route starts inside a station")
@@ -178,11 +192,14 @@ func _prepare_route() -> bool:
 			if visited.has(next) or next.x < 2 or next.y < 2 or next.x >= dimensions.x - 2 or next.y >= dimensions.y - 2:
 				continue
 			var position: Vector2 = (Vector2(next) + Vector2.ONE * 0.5) * grid_step
+			var origin: Vector2 = (Vector2(cell) + Vector2.ONE * 0.5) * grid_step
 			if fixture == "ember_d1":
 				var block: Dictionary = world.blocks.get(next, {})
 				if String(block.get("kind", "")) == "bedrock" or int(block.get("requires_tool", 0)) > int(state.pickaxe_level): continue
+				if _edge_hits_locked_barrier(origin, position):
+					route_rejected_edges += 1
+					continue
 			else:
-				var origin: Vector2 = (Vector2(cell) + Vector2.ONE * 0.5) * grid_step
 				var blocked: bool = false
 				for fraction in [0.25,0.5,0.75,1.0]:
 					blocked = blocked or bool(world.collision_at(origin.lerp(position, fraction)))
@@ -196,6 +213,14 @@ func _prepare_route() -> bool:
 			stack.pop_back()
 			if not stack.is_empty(): route.append((Vector2(stack.back()) + Vector2.ONE * 0.5) * grid_step)
 	return true if route.size() > 4 else _fail("Insufficient reachable route")
+
+func _edge_hits_locked_barrier(origin: Vector2, destination: Vector2) -> bool:
+	# Cardinal segments give a narrow rectangle. Conservatively include the
+	# player's radius and 0.5px clearance, including at gate corners.
+	var segment: Rect2 = Rect2(origin,destination-origin).abs().grow(0.01)
+	for barrier in route_locked_barriers:
+		if segment.intersects(Rect2(barrier.rect).grow(float(world.PLAYER_RADIUS) + 0.5)): return true
+	return false
 
 func _drive() -> void:
 	if not recording: return
@@ -304,15 +329,21 @@ func _measure() -> bool:
 	var progress: bool = float(final.distance) > 48.0 and actual_mining
 	var every_window_active: bool = true
 	for row in windows:
-		if bool(row.complete_10s_window): every_window_active = every_window_active and (fixture == "hub" or bool(row.active_mining_observed))
+		if bool(row.complete_10s_window):
+			every_window_active = every_window_active and (float(row.moved_pixels) > 1.0 if fixture == "hub" else bool(row.active_mining_observed))
+	var sustained_duration: bool = duration >= 180.0 and float(windows[-1].to_seconds) >= 180.0
+	var valid_workload: bool = progress and (duration < 180.0 or every_window_active)
 	var result: Dictionary = {"fixture":fixture,"initial":initial,"final":final,"windows":windows.duplicate(true),
-		"actual_play_progress":progress,"every_full_window_active":every_window_active,"sustained_180s":duration >= 180.0,
-		"route_points":route.size(),"route_hash":hash(route),"route_loops":route_loops,"source_seed":WORLD_SEED}
+		"actual_play_progress":progress,"every_full_window_active":every_window_active,"elapsed_180s":sustained_duration,
+		"sustained_180s":sustained_duration and valid_workload,"valid_workload":valid_workload,
+		"route_points":route.size(),"route_hash":hash(route),"route_loops":route_loops,"source_seed":WORLD_SEED,
+		"route_rejected_locked_edges":route_rejected_edges,"route_locked_barriers":_route_barrier_report()}
 	reports.append(result)
 	_write_json(output.path_join(fixture + "-final-state.json"), state.serialize())
 	_write_json(output.path_join(fixture + "-summary.json"), result)
 	await _capture(fixture + "-final")
-	return true if progress else _fail("Workload made insufficient real mining/movement progress: " + fixture)
+	if not progress: return _fail("Workload made insufficient real mining/movement progress: " + fixture)
+	return true if valid_workload else _fail("180s workload includes a full window without actual mining/movement: " + fixture)
 
 func _snapshot() -> Dictionary:
 	var broken_count: int = broken
@@ -326,9 +357,26 @@ func _snapshot() -> Dictionary:
 		"pickaxe_level":state.pickaxe_level,"drill_level":state.drill_level,"starforge_variant":state.starforge_variant,
 		"loadout":state.endless_loadout_status(),"skills":Dictionary(state.overhaul_progress.get("skills", {})).duplicate(true),
 		"progression_goal":main.premium_hud.progression_goal_snapshot(),
+		"route_index":route_index,"route_waypoint":_xy(route[route_index]) if not route.is_empty() else [],
+		"mining_target":_target_snapshot(),
 		"depth":int(world.current_depth) if fixture == "deep_post5" else 1,"descent":state.endless_descent_status(),
 		"memory":{"static_mib":Performance.get_monitor(Performance.MEMORY_STATIC)/1048576.0,
 			"gpu_mib":Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED)/1048576.0,"nodes":Performance.get_monitor(Performance.OBJECT_NODE_COUNT)}}
+
+func _target_snapshot() -> Dictionary:
+	if fixture != "ember_d1": return {}
+	var cell: Vector2i = world.current_target
+	var block: Dictionary = world.blocks.get(cell, {})
+	return {"cell":[cell.x,cell.y],"kind":String(block.get("kind","")),"role":String(block.get("role","")),
+		"requires_tool":int(block.get("requires_tool",0)),"hp":float(block.get("hp",0.0))}
+
+func _route_barrier_report() -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for barrier in route_locked_barriers:
+		var rect: Rect2 = barrier.rect
+		result.append({"id":barrier.id,"requires_tool":barrier.requires_tool,"rect":[rect.position.x,rect.position.y,rect.size.x,rect.size.y],
+			"player_clearance":float(world.PLAYER_RADIUS) + 0.5})
+	return result
 
 func _bits(value: int) -> int:
 	var count: int = 0

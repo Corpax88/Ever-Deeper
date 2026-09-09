@@ -1,10 +1,11 @@
 # FPS recovery — independent provisional review
 
-Date: 2026-09-09. **The rendering changes show a substantial improvement in the
-measured software-renderer fixtures. Physical iPhone performance, final 1.0 and
-LIVE approval remain open.** This reviews current source changes, two measured
+Date: 2026-09-09. **The initial D1 gain estimate is withdrawn pending correction
+of its reference draw path. Physical iPhone performance, final 1.0 and LIVE
+approval remain open.** This reviews current source changes, two measured
 triplets and a broader source visual preflight. It does not approve an immutable
-exported release or the whole game.
+exported release or the whole game. The inspected visual comparisons remain
+useful; pixel agreement alone does not establish an equivalent performance baseline.
 
 The latest supplied phone screenshot records 19.9 FPS and P95 56 ms in active
 play. The exact build is not visible. `D2` is frame-meter revision 2; 554 seconds
@@ -65,16 +66,45 @@ benchmark or physical-device measurements. The reported engine process monitor
 is not exclusive script CPU time. Original/restored paths retain allocated but
 hidden section nodes in these same-process comparisons.
 
-| Fixture | Original FPS | Candidate FPS | Restored FPS | Gain vs mean controls | Control drift |
-|---|---:|---:|---:|---:|---:|
-| Emberdeep D1 | 4.543 | 12.196 | 4.280 | 176.47% | 5.97% |
-| The Deep | 5.612 | 7.190 | 5.216 | 32.79% | 7.32% |
+### Correction: the initial D1 reference emitted extra work
 
-Both observed gains exceed the drift between their controls. Emberdeep P95 is
-247.183 → 97.748 → 281.701 ms; The Deep P95 is 211.950 → 169.558 → 234.029 ms.
-Emberdeep draw calls rise from 171 to 206 despite the improved throughput;
-The Deep draw calls fall from 693 to 512. Draw-call count alone is not the
-performance acceptance criterion.
+A subsequent audit, prompted by the root implementer, found that the disabled
+`LitFloorChunks` fallback unconditionally draws its wash rectangle even when
+the wash is `Color.TRANSPARENT`. The critic verified against source `246ee70`
+that original D1 emitted exactly an opaque background rectangle followed by
+the floor texture. The new fallback used in the source `broad` and `restored`
+stages added a third, world-sized transparent rectangle. The active chunk path
+already skipped this rectangle when its alpha was zero.
+
+That additional command may incur lit fragment work while preserving every
+output pixel. It invalidates the initial D1 timing reference and the previously
+reported **176.47% / approximately 2.7× gain**. The critic's earlier interpretation
+of that estimate as a valid improvement is superseded here. Matching restored
+pixels and small timing drift did not detect this difference in submitted work.
+
+The proposed `wash.a > 0.0` fallback guard restores the original D1 floor command
+sequence. Existing Hub/D2 washes have alpha 0.12 and retain their original draws.
+The Deep does not use this fallback, so this specific defect does not invalidate
+its reference. The size of the D1 overstatement cannot be inferred by comparing
+unmatched baseline and source runs. Corrected paired measurement and the planned
+unchanged-PCK baseline versus final-PCK sustained comparison are required before
+reporting a D1 improvement. The immutable baseline package is not changed by
+this source-reference correction.
+
+The old observations below are retained transparently, **not as accepted D1
+performance evidence**:
+
+| Fixture | Source broad FPS | Candidate FPS | Restored FPS | Gain interpretation | Control drift |
+|---|---:|---:|---:|---:|---:|
+| Emberdeep D1 | 4.543 | 12.196 | 4.280 | Invalid reference; withdrawn | 5.97% |
+| The Deep | 5.612 | 7.190 | 5.216 | 32.79%; short source fixture only | 7.32% |
+
+The Deep's observed gain exceeds the drift between its controls; it remains
+a short software-renderer result. Its P95 is 211.950 → 169.558 → 234.029 ms and
+draw calls fall from 693 to 512. The invalid D1 triplet recorded P95
+247.183 → 97.748 → 281.701 ms and 171 → 206 → 171 draw calls; those numbers
+do not establish its improvement. Draw-call count alone is not the performance
+acceptance criterion.
 
 | Image comparison | Changed pixels | Maximum channel difference | Original/restored |
 |---|---:|---:|---|

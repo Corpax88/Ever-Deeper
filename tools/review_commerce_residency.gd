@@ -50,6 +50,9 @@ func _run() -> void:
 		_finish()
 		return
 	original_time_scale = Engine.time_scale
+	# Start every authored animation at the same time in both packages. Deferred
+	# setup and UPDATE_ONCE previews still receive rendered frames at zero delta.
+	Engine.time_scale = 0.0
 	root.position = Vector2i.ZERO
 	root.size = FRAME_SIZE
 	DisplayServer.window_set_size(FRAME_SIZE)
@@ -100,9 +103,7 @@ func _run() -> void:
 	main.quick_tutorial.dismiss()
 	main.premium_hud.set_status("")
 	panel = main.commerce_panel
-	# Freeze animation only for this image/resource review. This is explicitly
-	# not a frame-time test. Preview viewports still render their UPDATE_ONCE.
-	Engine.time_scale = 0.0
+	# This frozen image/resource review is explicitly not a frame-time test.
 	await _settle()
 	stages.append(_snapshot("cold"))
 	for workshop in ["wardrobe", "light_lab"]:
