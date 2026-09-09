@@ -2,7 +2,7 @@
 
 Source candidate: `246ee70cca3cff2eae0fe417800cf2d1724c6417`.
 Validation run: [34349012950](https://github.com/Corpax88/Ever-Deeper/actions/runs/34349012950).
-DEV version: **1.0.0-dev.2**. Exact-package review passed; approved for DEV publication.
+DEV version: **1.0.0-dev.2**. Exact-package review passed; published and verified on DEV.
 
 ## Scope
 
@@ -45,6 +45,15 @@ final 1.0 or LIVE approval is implied. The immutable candidate is artifact
 `eb5d344c9368192c345637640dfc3fc3697ec84e373339daaefa7a0322e6a38f`.
 PCK SHA-256: `c331cde35f64edf26a9d10c921e46ad1ef9bd3001aea225b521a38c86ea0ca36`.
 See `dev-button-evidence.json` and `dev-button-ci-jobs.json`.
+
+## Publication
+
+[Run 34350088172](https://github.com/Corpax88/Ever-Deeper/actions/runs/34350088172)
+passed package, deploy and verify. All 18 public files were checked: nine match
+DEV artifact 10102987319 and nine retain the existing LIVE bytes. The durable
+receipt is `.github/one-point-zero/dev-button-publication-receipt.json`; rollback
+artifact **10103344125** retains the previous DEV/LIVE packages.
+[PR 12](https://github.com/Corpax88/Ever-Deeper/pull/12) is merged.
 
 ## Physical test after DEV publication
 

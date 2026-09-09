@@ -7,9 +7,11 @@ open. Independent critic acceptance is 9/10 for this bounded fix; the game's
 provisional 8.4/10 and physical-iPhone/final-1.0 limitations remain unchanged.
 See [the correction and phone test steps](dev-button-review.md).
 
-Approved artifact **10102987319** is awaiting DEV publication. The previously
-verified DEV publication and baseline acceptance are recorded below. LIVE stays
-at its existing 0.46.9 bytes.
+Published and verified by [34350088172](https://github.com/Corpax88/Ever-Deeper/actions/runs/34350088172).
+All nine DEV files match approved artifact **10102987319**; all nine LIVE files
+retain their existing 0.46.9 bytes. Receipt:
+`.github/one-point-zero/dev-button-publication-receipt.json`. Rollback artifact:
+**10103344125**. The prior 1.0-dev.1 baseline acceptance is recorded below.
 
 # Ever-Deeper 1.0 — DEV acceptance candidate
 
