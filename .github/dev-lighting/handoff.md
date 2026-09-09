@@ -57,9 +57,19 @@ all lights off 60.0; final restored (70-second stage) 52.1. P95 20–21 ms with 
 lighting, 17 ms with pet/all lights off. See docs/performance-diagnosis/light-cost/iphone-dev9.json.
 Rows use the final eight seconds of each stage; do not describe them as whole-stage averages.
 This confirms a large improvement from DEV8, but does not establish sustained 60 FPS.
-Next targeted study isolates HelmetCone and HelmetBounce, with restored controls, from
-the unchanged published PCK on branch codex-dev9-pet-light-isolation (e2de065abd8097cca4887d022b92a3a917ad0d72).
-No new runtime optimization or publication has been made. Inspect study results before choosing one.
+Controlled exact-package study completed: run 34297806957, source 4e81a836ec17d4cea8408d892c163adc24231c0f.
+Artifact 10083907379 (SHA-256 380300a71fdbca3e691b33e6d53ebc8850cb411d4dcbf8db07c2f0944936cd0e).
+All 22 captures inspected; lights, shadows and receiver masks restored.
+Full results: docs/performance-diagnosis/light-cost/dev9-pet-light-isolation.json.
+Hub restored controls 6.244–6.279 FPS; cone off 8.340; bounce off 6.781;
+pet floor contribution off 7.198; pet non-floor contribution off 7.777.
+Long beam was enabled in the isolated fixture. These software-renderer numbers rank
+test costs, not expected iPhone FPS. No notification overlays; ten-second warmup.
+Earlier run 34297424013 had notifications/default short beam/cold baseline and is superseded.
+Next: attribute cone non-floor cost to individual draw groups before changing runtime.
+Broad hub groups still include _draw_hub_wall_frame, _draw_foundation_route and
+_draw_relic_museum; narrower CanvasItem bounds are a hypothesis, not a proven fix.
+No new runtime optimization or publication has been made.
 
 DEV8 phone evidence remains: 34.7 FPS at meter 52 s in the hub, 2328×1260 / DPR3.
 The earlier temporary 59.8 FPS after restoration was not sustained.
