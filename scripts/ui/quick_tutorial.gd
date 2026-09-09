@@ -17,6 +17,7 @@ const MENU_ICON: = preload("res://assets/ui/hud-menu-v1.png")
 var _touch_mode: = false
 var _strip: HBoxContainer
 var _open_serial: = 0
+var _premium_hud: Control
 
 
 func _ready() -> void :
@@ -25,6 +26,9 @@ func _ready() -> void :
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	z_index = 80
 	visible = false
+	_premium_hud = get_parent().get_node_or_null("PremiumHud") as Control
+	if _premium_hud != null and _premium_hud.has_signal("onboarding_layout_changed"):
+		_premium_hud.onboarding_layout_changed.connect(_on_hud_layout_changed)
 	get_viewport().size_changed.connect(_apply_layout)
 
 
@@ -152,10 +156,19 @@ func _apply_layout() -> void :
 		if item is Control:
 			item.custom_minimum_size.x = item_width
 	_strip.reset_size()
+	if _premium_hud != null and _premium_hud.has_method("onboarding_layout_rect"):
+		var available: Rect2 = _premium_hud.onboarding_layout_rect()
+		if available.has_area():
+			_strip.position = available.position + (available.size - _strip.size) * 0.5
+			return
 	_strip.position = Vector2(
 		(viewport_size.x - _strip.size.x) * 0.5,
 		maxf(22.0, viewport_size.y * 0.16 - _strip.size.y * 0.5)
 	)
+
+
+func _on_hud_layout_changed(_available_rect: Rect2) -> void:
+	_apply_layout()
 
 
 func _begin_fade(serial: int) -> void :

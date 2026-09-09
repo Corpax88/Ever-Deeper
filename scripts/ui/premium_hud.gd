@@ -6,6 +6,7 @@ signal context_requested
 signal hub_build_requested
 signal menu_requested
 signal minimap_layout_changed(map_rect: Rect2)
+signal onboarding_layout_changed(available_rect: Rect2)
 
 const ProgressionGoalPanelScript: = preload("res://scripts/ui/progression_goal_panel.gd")
 const ProgressionGuideScript: = preload("res://scripts/progression/guide_director.gd")
@@ -43,6 +44,7 @@ var progression_goal_panel: Control
 var _progression_guide: RefCounted = ProgressionGuideScript.new()
 var _progression_row_count: = 0
 var _minimap_layout_rect: = Rect2()
+var _onboarding_layout_rect: = Rect2()
 
 var objective_chip: PanelContainer
 var objective_title: Label
@@ -263,6 +265,10 @@ func minimap_layout_rect() -> Rect2:
 	return _minimap_layout_rect
 
 
+func onboarding_layout_rect() -> Rect2:
+	return _onboarding_layout_rect
+
+
 func icon_size_snapshot() -> Dictionary:
 	return {
 		"menu": button_icon_visual_size(menu_button),
@@ -315,6 +321,8 @@ func _apply_responsive_layout(viewport_size: Vector2, native_insets: Vector4) ->
 	status_label.add_theme_font_size_override("font_size", 20 if bool(metrics.iphone) else 8)
 	_minimap_layout_rect = Rect2(metrics.minimap)
 	minimap_layout_changed.emit(_minimap_layout_rect)
+	_onboarding_layout_rect = Rect2(metrics.onboarding)
+	onboarding_layout_changed.emit(_onboarding_layout_rect)
 	queue_redraw()
 
 
@@ -372,6 +380,9 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 	var progression_rect: = Rect2(viewport_size.x - right - goal_width, gold_rect.end.y + 10.0, goal_width, goal_height)
 	var minimap_size: = Vector2(246, 136) if iphone else Vector2(184, 106)
 	var minimap_rect: = Rect2(progression_rect.position.x - gap - minimap_size.x, progression_rect.position.y, minimap_size.x, minimap_size.y)
+	var onboarding_top: = maxf(progression_rect.end.y, minimap_rect.end.y) + 12.0
+	var onboarding_bottom: = minf(mine_rect.position.y, bag_rect.position.y) - 12.0
+	var onboarding_rect: = Rect2(left, onboarding_top, context_rect.position.x - left - 12.0, maxf(0.0, onboarding_bottom - onboarding_top))
 	var status_size: = Vector2(680, 50) if iphone else Vector2(580, 28)
 	var status_rect: = Rect2((viewport_size.x - status_size.x) * 0.5, viewport_size.y - bottom - status_size.y, status_size.x, status_size.y)
 	return {
@@ -388,6 +399,7 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 		"objective": objective_rect,
 		"progression_goal": progression_rect,
 		"minimap": minimap_rect,
+		"onboarding": onboarding_rect,
 		"context": context_rect,
 		"status": status_rect,
 	}
@@ -626,6 +638,8 @@ func _compact_context_caption(label: String) -> String:
 		"SEALED": "LOCKED",
 		"ATTACH ROPE": "ATTACH",
 		"TUNNEL HOME": "HOME",
+		"OVERLOAD": "BOOST",
+		"STABILIZE": "STEADY",
 		"CUSTOMIZE": "CUSTOM",
 	}.get(caption, caption)
 

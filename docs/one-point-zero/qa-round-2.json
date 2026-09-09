@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "round": 2,
+  "maximum_rounds": 4,
+  "date": "2026-09-09",
+  "status": "provisional_pending_corrected_exact_package",
+  "source_commit": "787f6d5fc3795557f3a6c44a2e9ea3c061f48d92",
+  "source_tree": "4a6c4ef955a72919c8257d95e0f5d5634ee14f53",
+  "build_run_id": 34330585865,
+  "pck_sha256": "0ec875a41ae1c941821257f6332a9dc93e3baf718afdf2fe05874831c691f8b7",
+  "native_capture_count_inspected": 28,
+  "native_assertion_count": 326,
+  "native_failures": [],
+  "source_cases_passed": 13,
+  "exact_dev_package_cases_passed": 13,
+  "scores": {
+    "gameplay_loop": 8,
+    "progression_feel": 8,
+    "ux": 8,
+    "visual_premium": 8,
+    "performance": null,
+    "code_quality": 8,
+    "overall": null
+  },
+  "observed_critical_bug_count": 0,
+  "open_findings": [
+    {"id": "tutorial_goal_overlap", "severity": "visual_gate", "status": "correction_pending_exact_package_review"},
+    {"id": "overload_caption_clipping", "severity": "minor", "status": "observed_in_memory_loom_and_echo_coffer_captures"}
+  ],
+  "fixture_limits": [
+    "Accelerated achievement and resource backlog does not establish ordinary density",
+    "Native mouse hover tooltip is not physical touch evidence",
+    "Accelerated gathering and positioning do not establish human pacing",
+    "Native software renderer does not establish iPhone performance",
+    "Audio reports measure output but explicitly do not verify subjective listening"
+  ],
+  "dev_test_ready": false,
+  "final_one_point_zero_approved": false,
+  "live_publication_authorized": false,
+  "physical_iphone_verified": false,
+  "physical_baseline": {"build": "0.46.9-dev.9", "normal_pet_lighting_fps": 52.1, "pet_lights_disabled_fps": 60.0, "restored_fps": 52.1}
+}

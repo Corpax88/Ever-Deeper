@@ -36,7 +36,11 @@ func _run() -> void:
 	if not _check(not output_dir.is_empty(), "Explicit isolated output directory required"): quit(3); return
 	DirAccess.make_dir_recursive_absolute(output_dir)
 	if not _check(DisplayServer.get_name() != "headless", "Rendered display required"): _finish(); return
-	if not _check("--main-pack" in OS.get_cmdline_args() and FileAccess.file_exists(pack_source), "Exact --main-pack artifact required"): _finish(); return
+	# Godot consumes --main-pack before exposing its arguments to scripts. The
+	# launcher verifies that exact invocation; the loaded resource root must be
+	# an exported project, and its supplied immutable package is hashed below.
+	if not _check(FileAccess.file_exists("res://project.binary") and not FileAccess.file_exists("res://project.godot"), "Exported resource root required; editable source refused"): _finish(); return
+	if not _check(FileAccess.file_exists(pack_source) and FileAccess.get_sha256(pack_source).length() == 64, "Explicit hashable package artifact required"): _finish(); return
 	if not _check(OS.has_feature("ever_deeper_dev"), "DEV export required; source execution is not release evidence"): _finish(); return
 	await _resize(LARGE_VIEW)
 	state = root.get_node("RunState")
@@ -53,6 +57,11 @@ func _run() -> void:
 	main._enter_mine("mossMine", false, false)
 	await _settle(8)
 	_check(String(main.mine_button.icon.resource_path) == "res://assets/tools/pickaxe-iron.png", "Mine action uses approved pickaxe asset")
+	main.quick_tutorial.open(false)
+	await _capture("01-new-player-keyboard-tutorial", {"fixture": "Existing keyboard tutorial explicitly opened; ordinary native input detection unchanged"}, true)
+	main.quick_tutorial.open(true)
+	await _capture("01-new-player-touch-tutorial", {"fixture": "Existing touch tutorial explicitly opened for mobile acceptance; ordinary input detection unchanged"}, true)
+	main.quick_tutorial.dismiss()
 	await _capture("01-new-player-hud", {"fixture": "Fresh player inside first mine"}, true)
 	if not await _recipe_capture(): _finish(); return
 
@@ -145,6 +154,7 @@ func _mine_corner(label: String) -> bool:
 	world.restore_position(Vector2(edge.stand))
 	world.player.set_facing(Vector2(edge.facing))
 	await _settle(4)
+	var backlog: Dictionary = _clear_fixture_feedback()
 	var cell: Vector2i = edge.cell
 	var before: int = int(state.total_mined_resources())
 	var before_floor: bool = bool(world._is_floor(cell))
@@ -164,6 +174,15 @@ func _mine_corner(label: String) -> bool:
 	_check(not bool(main.mine_held), "Releasing pointer releases mine action")
 	if not _check(not before_floor and bool(world._is_floor(cell)), "Real held mining opens selected rock"): return false
 	_check(int(state.total_mined_resources()) > before, "Excavated rock grants materials")
+	if label == "04-deep-mined-corner":
+		# Keep one newly earned pickup visible separately from clean terrain views.
+		# Slow software rendering must not age this real transient offscreen.
+		Engine.time_scale = 0.0
+		var feedback: Node = main._active_player_node().get_node_or_null("ResourcePickupBurst")
+		if feedback != null: feedback._process(0.20)
+		_check(feedback != null and not Array(feedback.debug_snapshot().entries).is_empty(), "Fresh held-mining pickup feedback remains visible")
+		await _capture(label + "-fresh-pickup", {"fixture": "New reward from the immediately preceding real mine-button action", "preserve_fresh_feedback": true, "fixture_backlog_before_action": backlog, "frozen_time_for_transient_capture": true}, true)
+		Engine.time_scale = 1.0
 	await _capture(label, {"fixture": "Actual mine-button input; simulation wait accelerated", "cell": str(cell), "stratum_index": int(world.current_depth) % 5})
 	return true
 
@@ -329,11 +348,31 @@ func _capture(label: String, details: Dictionary = {}, also_small: bool = false)
 	main._update_visual_guide()
 	main.premium_hud.set_status("")
 	await _settle(6)
-	await _save_frame(label, details)
+	var capture_details: Dictionary = details.duplicate(true)
+	if not bool(details.get("preserve_fresh_feedback", false)):
+		capture_details["fixture_backlog_cleared"] = _clear_fixture_feedback()
+	var hover: = InputEventMouseMotion.new()
+	hover.position = Vector2(-100, -100)
+	hover.global_position = hover.position
+	root.push_input(hover, true)
+	await _save_frame(label, capture_details)
 	if also_small:
 		await _resize(SMALL_VIEW)
-		await _save_frame(label + "-small", details)
+		await _save_frame(label + "-small", capture_details)
 		await _resize(LARGE_VIEW)
+
+func _clear_fixture_feedback() -> Dictionary:
+	# Only this external accelerated-journey fixture discards its old feedback.
+	# Normal runtime signals, processing and future notifications stay enabled.
+	var discarded: Dictionary = {"reason": "Accelerated fixture transactions and mining backlog", "achievement": main.achievement_toast.debug_snapshot()}
+	main.achievement_toast.clear()
+	var player: Node = main._active_player_node()
+	var feedback: Node = player.get_node_or_null("ResourcePickupBurst") if player != null else null
+	if feedback != null:
+		var snapshot: Dictionary = feedback.debug_snapshot()
+		discarded["pickup"] = snapshot
+		feedback._process(float(snapshot.hold_seconds) + float(snapshot.fade_seconds) + 0.1)
+	return discarded
 
 func _save_frame(label: String, details: Dictionary) -> void:
 	await RenderingServer.frame_post_draw
@@ -346,6 +385,12 @@ func _save_frame(label: String, details: Dictionary) -> void:
 	var goal_rect: Rect2 = goal.get("panel_rect", Rect2())
 	var minimap: Dictionary = main.minimap_overlay.debug_snapshot()
 	var minimap_rect: Rect2 = minimap.get("map_rect", Rect2())
+	var tutorial: Dictionary = main.quick_tutorial.debug_snapshot()
+	var player: Node = main._active_player_node()
+	var feedback: Node = player.get_node_or_null("ResourcePickupBurst") if player != null else null
+	if label.contains("-tutorial"):
+		_check(bool(tutorial.get("visible", false)) and int(tutorial.get("item_count", 0)) == 5, "All five tutorial hints remain visible: " + label)
+		_check(bool(tutorial.get("touch_mode", false)) == label.contains("-touch-"), "Captured tutorial uses requested input hints: " + label)
 	if bool(goal.get("visible", false)) and not bool(main.commerce_panel.visible):
 		_check(Rect2(metrics.safe_rect).encloses(goal_rect), "Goal stays inside mobile safe area: " + label)
 		_check(not goal_rect.intersects(Rect2(metrics.mine)) and not goal_rect.intersects(Rect2(metrics.context)), "Goal clears touch actions: " + label)
@@ -354,15 +399,24 @@ func _save_frame(label: String, details: Dictionary) -> void:
 			_check(not goal_rect.intersects(minimap_rect), "Minimap and progression goal stay separate: " + label)
 			_check(Rect2(metrics.safe_rect).encloses(minimap_rect), "Minimap stays inside mobile safe area: " + label)
 			_check(not minimap_rect.intersects(Rect2(metrics.mine)) and not minimap_rect.intersects(Rect2(metrics.context)), "Minimap clears touch actions: " + label)
+	if bool(tutorial.get("visible", false)):
+		var tutorial_rect: Rect2 = tutorial.get("strip_rect", Rect2())
+		_check(not bool(tutorial.get("input_blocking", true)), "Tutorial remains touch transparent: " + label)
+		_check(Rect2(metrics.safe_rect).encloses(tutorial_rect), "Tutorial stays inside safe area: " + label)
+		for name in ["progression_goal", "minimap", "menu", "guide", "build", "gold", "mine", "bag", "context"]:
+			_check(not tutorial_rect.intersects(Rect2(metrics[name])), "Tutorial clears " + name + ": " + label)
+		var companion: Node = main.get_node("CompanionInterface")
+		_check(not tutorial_rect.intersects(companion.button.get_global_rect()) and not tutorial_rect.intersects(companion.activity.get_global_rect()), "Tutorial clears companion: " + label)
 	var record: Dictionary = details.duplicate(true)
 	record.merge({
 		"file": filename, "sha256": FileAccess.get_sha256(output_dir.path_join(filename)),
 		"framebuffer": {"width": image.get_width(), "height": image.get_height()},
 		"logical_viewport": str(root.get_visible_rect().size), "phase": String(main.phase),
-		"goal": goal, "minimap": minimap, "mine_icon": String(main.mine_button.icon.resource_path),
+		"goal": goal, "minimap": minimap, "tutorial": tutorial, "mine_icon": String(main.mine_button.icon.resource_path),
 		"context_caption": String(main.premium_hud.context_button.text),
 		"stream": world.stream_snapshot() if world != null and main.phase == "endless" else {},
-		"physical_iphone": false,
+		"achievement_feedback": main.achievement_toast.debug_snapshot(), "pickup_feedback": feedback.debug_snapshot() if feedback != null else {},
+		"physical_iphone": false, "native_mouse_hover_cleared": true,
 	}, true)
 	captures.append(record)
 	print("ONE_POINT_ZERO_CAPTURE " + filename)
@@ -372,7 +426,7 @@ func _finish() -> void:
 	var report: Dictionary = {
 		"automated_assertions_passed": failures.is_empty() and not captures.is_empty(),
 		"visual_review_pending": true, "physical_iphone": false, "rendered": DisplayServer.get_name() != "headless",
-		"artifact": {"path": pack_source, "sha256": FileAccess.get_sha256(pack_source) if FileAccess.file_exists(pack_source) else "", "version": str(ProjectSettings.get_setting("application/config/version", ""))},
+		"artifact": {"path": pack_source, "sha256": FileAccess.get_sha256(pack_source) if FileAccess.file_exists(pack_source) else "", "version": str(ProjectSettings.get_setting("application/config/version", "")), "project_binary_sha256": FileAccess.get_sha256("res://project.binary") if FileAccess.file_exists("res://project.binary") else "", "source_project_config_present": FileAccess.file_exists("res://project.godot"), "external_harness_sha256": FileAccess.get_sha256(get_script().resource_path), "invocation_verified_by": "Exact --main-pack launcher/workflow; Godot consumes this switch before script arguments"},
 		"engine": Engine.get_version_info(), "renderer": RenderingServer.get_current_rendering_method(), "adapter": RenderingServer.get_video_adapter_name(),
 		"fixture_seed": FIXTURE_SEED, "captures": captures, "assertions": checks, "failures": failures,
 		"elapsed_seconds": float(Time.get_ticks_usec() - started_usec) / 1000000.0,

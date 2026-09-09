@@ -3832,11 +3832,11 @@ func _refresh_context_card() -> void :
 			if choice == "stabilize":
 				title = "CALM SEAL"
 				detail = "Cross three lit floor seals to recover the cache and silence a nearby surge"
-				hint = "PRESS E OR TAP STABILIZE"
+				hint = "PRESS E OR TAP STEADY"
 			else:
 				title = "POWER SEAL"
 				detail = "Cross four lit floor seals for a double cache; the nearby surge grows stronger"
-				hint = "PRESS E OR TAP OVERLOAD"
+				hint = "PRESS E OR TAP BOOST"
 		elif endless_context.begins_with("endless_relic:"):
 			var relic: = Dictionary(RunState.relic_status(endless_context.trim_prefix("endless_relic:")))
 			title = String(relic.get("display_name", "RELIC")).to_upper()

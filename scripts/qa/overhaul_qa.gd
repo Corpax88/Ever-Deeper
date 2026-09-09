@@ -299,8 +299,10 @@ func _test_path_and_touch() -> void:
 	main.achievement_toast.clear()
 	mole.call("recall")
 	var click_target: Vector2=start+Vector2(48,-144)
-	var screen_point: Vector2=world.get_canvas_transform()*click_target
-	await _send_gesture(screen_point,"tap")
+	var command_canvas: Transform2D=world.get_canvas_transform()
+	var screen_point: Vector2=command_canvas*click_target
+	var dispatched_point: Vector2=await _send_gesture(screen_point,"tap")
+	click_target=command_canvas.affine_inverse()*dispatched_point
 	check(mole.mode=="command" and mole.destination.distance_to(click_target)<1.0,"Real screen tap routes through UI to companion")
 	mole.call("recall")
 	await _send_gesture(screen_point,"drag_return")
@@ -308,7 +310,9 @@ func _test_path_and_touch() -> void:
 	await _send_gesture(screen_point,"cancel")
 	check(mole.mode=="follow","Canceled touch does not command companion")
 	var left_target: Vector2=start+Vector2(-144,144)
-	await _send_gesture(world.get_canvas_transform()*left_target,"tap")
+	command_canvas=world.get_canvas_transform()
+	dispatched_point=await _send_gesture(command_canvas*left_target,"tap")
+	left_target=command_canvas.affine_inverse()*dispatched_point
 	check(mole.mode=="command" and mole.destination.distance_to(left_target)<1.0,"Tap inside movement zone commands companion")
 	check(main.movement_pad.active_pointer==-2 and main.button_move==Vector2.ZERO,"Companion command also releases the movement joystick")
 	mole.call("recall")
@@ -326,18 +330,29 @@ func _test_path_and_touch() -> void:
 	check(mole.dug_total>=1 and mole.dug_total<=4,"Earthshaker opens at most 2x2 ordinary cells")
 	check(mole.shake_cooldown>0.0 and mole.shake_cooldown<=8.0,"Earthshaker has a real recharge")
 
-func _send_gesture(point: Vector2,kind: String) -> void:
+func _send_gesture(point: Vector2,kind: String) -> Vector2:
 	if OS.has_feature("web"):
 		# Actual browser touch events exercise the same route as an iPhone.
 		driver.set("_acknowledged",false)
 		driver.set("_waiting_for_ack",true)
 		var size: Vector2=driver.get_viewport().get_visible_rect().size
+		# Browser touch dispatch quantizes client coordinates to CSS pixels. Choose
+		# that actual pixel before dispatch, then assert its exact world identity.
+		# This preserves the strict command tolerance instead of relaxing the gate.
+		var raw: Variant=JSON.parse_string(String(JavaScriptBridge.eval("JSON.stringify((()=>{const r=document.getElementById('canvas').getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};})())",true)))
+		check(raw is Dictionary,"Browser gesture has actual canvas CSS bounds")
+		if raw is Dictionary:
+			var canvas: Rect2=Rect2(float(raw.get("x",0)),float(raw.get("y",0)),float(raw.get("width",0)),float(raw.get("height",0)))
+			check(canvas.has_area(),"Browser canvas CSS bounds have area")
+			if canvas.has_area():
+				var client: Vector2=(canvas.position+point/size*canvas.size).round()
+				point=(client-canvas.position)/canvas.size*size
 		print("EVER_DEEPER_OVERHAUL_INPUT_READY ",JSON.stringify({"kind":kind,"x":point.x,"y":point.y,"width":size.x,"height":size.y}))
 		if not await driver.call("_wait_for_ack"): failures.append("Browser gesture acknowledgement timed out")
 		var ui: Node=main.get_node("CompanionInterface")
 		var mole: MoleCompanion=ui.call("active_mole")
 		print("OVERHAUL_INPUT_RESULT ",JSON.stringify({"kind":kind,"touch_start":str(ui.touch_start),"mode":mole.mode,"destination":str(mole.destination),"visible":ui.button.visible}))
-		return
+		return point
 	var press: InputEventScreenTouch=InputEventScreenTouch.new()
 	press.index=12
 	press.pressed=true
@@ -355,6 +370,7 @@ func _send_gesture(point: Vector2,kind: String) -> void:
 	release.position=point
 	release.canceled=kind=="cancel"
 	driver.get_viewport().push_input(release,true)
+	return point
 
 func _test_surface_and_guide() -> void:
 	for gate in ["moonglass","emberdeep","starfall"]:
