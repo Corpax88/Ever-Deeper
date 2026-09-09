@@ -1,3 +1,16 @@
+# Current DEV correction — 1.0.0-dev.2
+
+Reviewed source: `246ee70cca3cff2eae0fe417800cf2d1724c6417`.
+All six jobs in [34349012950](https://github.com/Corpax88/Ever-Deeper/actions/runs/34349012950)
+passed. DEV now sits below the gameplay menu row, and its drawer fits on first
+open. Independent critic acceptance is 9/10 for this bounded fix; the game's
+provisional 8.4/10 and physical-iPhone/final-1.0 limitations remain unchanged.
+See [the correction and phone test steps](dev-button-review.md).
+
+Approved artifact **10102987319** is awaiting DEV publication. The previously
+verified DEV publication and baseline acceptance are recorded below. LIVE stays
+at its existing 0.46.9 bytes.
+
 # Ever-Deeper 1.0 — DEV acceptance candidate
 
 DEV version: **1.0.0-dev.1**. Reviewed source:

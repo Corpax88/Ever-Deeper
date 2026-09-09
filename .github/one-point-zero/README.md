@@ -14,7 +14,7 @@ DEV9 rollback files, are pinned from wardrobe publication run **34325408480** in
 checks the committed version labels, and uses Godot 4.7.2 with matching templates.
 
 It imports and checks invariants, runs thirteen source cases, exports
-**1.0.0-dev.1** and **1.0.0-rc.1**, repeats all thirteen cases against the exact DEV PCK,
+**1.0.0-dev.2** and **1.0.0-rc.1**, repeats all thirteen cases against the exact DEV PCK,
 and verifies both exported flavor/save/resource contracts and displayed versions.
 The production candidate is discarded after its flavor checks; only its hashes are
 retained as evidence. No production candidate goes into the publishable artifact.
