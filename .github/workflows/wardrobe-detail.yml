@@ -36,7 +36,11 @@ jobs:
           from pathlib import Path
           source = Path('tools/capture-web.mjs').read_text()
           assert source.count('deviceScaleFactor: 1,') == 1
-          Path('tools/capture-wardrobe-detail.mjs').write_text(source.replace('deviceScaleFactor: 1,', 'deviceScaleFactor: 3,'))
+          source = source.replace('deviceScaleFactor: 1,', 'deviceScaleFactor: 3,')
+          expected = 'dimensions.width !== VIEWPORT.width || dimensions.height !== VIEWPORT.height'
+          assert source.count(expected) == 1
+          source = source.replace(expected, 'dimensions.width !== VIEWPORT.width * 3 || dimensions.height !== VIEWPORT.height * 3')
+          Path('tools/capture-wardrobe-detail.mjs').write_text(source)
           PY
           node tools/capture-wardrobe-detail.mjs --web-dir "$RUNNER_TEMP/candidate/${{ matrix.side }}" --output-dir "$RUNNER_TEMP/review"
       - uses: actions/upload-artifact@v4
