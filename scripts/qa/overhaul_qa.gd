@@ -307,6 +307,8 @@ func _test_path_and_touch() -> void:
 	mole.call("recall")
 	await _send_gesture(screen_point,"drag_return")
 	check(mole.mode=="follow","Dragging back to the start does not command companion")
+	# Keep cancellation independent even when the preceding drag assertion fails.
+	mole.call("recall")
 	await _send_gesture(screen_point,"cancel")
 	check(mole.mode=="follow","Canceled touch does not command companion")
 	var left_target: Vector2=start+Vector2(-144,144)

@@ -324,10 +324,14 @@ async function captureSuite(options) {
       const gestureInputs=[];
       await page.evaluate(() => {
         window.__edCaptureTouches=[];
+        window.__edCaptureAnimationFrame=0;
+        const countFrame=()=>{window.__edCaptureAnimationFrame++;requestAnimationFrame(countFrame);};
+        requestAnimationFrame(countFrame);
         for (const type of ["touchstart","touchmove","touchend","touchcancel"]) {
           window.addEventListener(type,event => {
             window.__edCaptureTouches.push({
               type:event.type,trusted:event.isTrusted,target:event.target.id,
+              timeMs:performance.now(),animationFrame:window.__edCaptureAnimationFrame,
               changedTouchesItem:typeof event.changedTouches.item==="function",
               active:Array.from(event.touches,touch=>touch.identifier),
               changed:Array.from(event.changedTouches,touch=>({id:touch.identifier,x:touch.clientX,y:touch.clientY})),
@@ -364,6 +368,10 @@ async function captureSuite(options) {
         else if (WEBKIT) {
           await page.evaluate(async ({x,y,dx,dy,returnDistance,kind}) => {
             const canvas=document.getElementById("canvas");
+            // A physical finger moves across frames. Synchronous out-and-back
+            // events collapse to the last position in Godot's input accumulator.
+            // Two rAF boundaries let the game observe each phase before the next.
+            const inputFrame=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
             const send=(type,px,py)=>{
               const ended=type==="touchend"||type==="touchcancel";
               const data={identifier:12,target:canvas,clientX:px,clientY:py,pageX:px+window.scrollX,pageY:py+window.scrollY,screenX:px,screenY:py,radiusX:3,radiusY:3,rotationAngle:0,force:ended?0:1};
@@ -383,13 +391,21 @@ async function captureSuite(options) {
               }
               canvas.dispatchEvent(event);
             };
-            if(kind!=="release") send("touchstart",x,y);
+            if(kind!=="release") {
+              send("touchstart",x,y);
+              await inputFrame();
+            }
             if(kind==="swipe"||kind==="hold") for(let i=1;i<=8;i++) {send("touchmove",x+dx*i/8,y+dy*i/8);await new Promise(r=>setTimeout(r,25));}
             else if(kind==="drag_return") {
               send("touchmove",x+returnDistance,y);
+              await inputFrame();
               send("touchmove",x,y);
+              await inputFrame();
             }
-            if(kind!=="hold") send(kind==="cancel"?"touchcancel":"touchend",x+dx,y+dy);
+            if(kind!=="hold") {
+              send(kind==="cancel"?"touchcancel":"touchend",x+dx,y+dy);
+              await inputFrame();
+            }
           },{x,y,dx:(input.dx||0)/input.width*box.width,dy:(input.dy||0)/input.height*box.height,returnDistance:48/input.width*box.width,kind:input.kind});
         } else {
           if(input.kind!=="release") await cdp.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{x,y}]});
@@ -400,7 +416,9 @@ async function captureSuite(options) {
             }
           } else if (input.kind === "drag_return") {
             await cdp.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:x+48/input.width*box.width,y}]});
+            await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
             await cdp.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x,y}]});
+            await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
           }
           if(input.kind!=="hold") await cdp.send("Input.dispatchTouchEvent",{type:input.kind === "cancel" ? "touchCancel" : "touchEnd",touchPoints:[]});
         }
