@@ -330,6 +330,7 @@ func _build_drawer() -> void :
 	drawer.mouse_filter = Control.MOUSE_FILTER_STOP
 	drawer.add_theme_stylebox_override("panel", _panel_style(PANEL_FILL, GOLD, 16, 2, 10))
 	add_child(drawer)
+	drawer.minimum_size_changed.connect(_apply_platform_safe_area)
 
 	var margin: = MarginContainer.new()
 	margin.add_theme_constant_override("margin_left", 12)
