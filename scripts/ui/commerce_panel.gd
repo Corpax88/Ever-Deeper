@@ -1816,7 +1816,7 @@ func _update_outfit_preview(target: TextureRect, item: Dictionary, animated: boo
 			existing.queue_free()
 		return
 	if existing == null:
-		existing = preload("res://scripts/ui/outfit_preview.gd").new()
+		existing = preload("res://scripts/ui/wardrobe_portrait.gd").new()
 		existing.name = "OutfitPreview"
 		target.add_child(existing)
 		existing.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

@@ -1,0 +1,83 @@
+name: Validate wardrobe portrait on current DEV and LIVE
+on:
+  push:
+    branches: [codex-wardrobe-portrait]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install matching Godot and templates
+        run: |
+          curl -L --fail --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+          curl -L --fail --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz -o "$RUNNER_TEMP/templates.tpz"
+          unzip -q "$RUNNER_TEMP/templates.tpz" 'templates/web*.zip' 'templates/version.txt' -d "$RUNNER_TEMP/templates"
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          cp "$RUNNER_TEMP/templates/templates/"* "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+      - name: Compile wardrobe and preserve each public baseline
+        run: |
+          mkdir -p "$RUNNER_TEMP/export" "$RUNNER_TEMP/review"
+          Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > "$RUNNER_TEMP/review/import.log" 2>&1
+          if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/review/import.log"; then exit 1; fi
+          python3 tools/check_invariants.py
+          Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-release 'Web DEV' "$RUNNER_TEMP/export/index.html" > "$RUNNER_TEMP/review/export.log" 2>&1
+          if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/review/export.log"; then exit 1; fi
+          python3 .github/wardrobe-portrait/prepare.py build "$RUNNER_TEMP/export/index.pck" "$RUNNER_TEMP/candidate"
+          for side in live dev; do
+            cases="input overhaul touch endgame endless onboarding layout portrait crusher"
+            if [ "$side" = dev ]; then cases="$cases dev-tools"; fi
+            python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/candidate/$side/index.pck" --cases $cases --output "$RUNNER_TEMP/review/$side"
+            python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/candidate/$side/index.pck" --cases build-flavor --output "$RUNNER_TEMP/review/$side-flavor"
+          done
+          cp "$RUNNER_TEMP/candidate/manifest.json" "$RUNNER_TEMP/candidate/resource-audit.json" "$RUNNER_TEMP/review/"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wardrobe-portrait-candidate
+          path: ${{ runner.temp }}/candidate
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wardrobe-portrait-build-review
+          path: ${{ runner.temp }}/review
+          retention-days: 30
+  mobile:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        side: [live, dev]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: wardrobe-portrait-candidate
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Install mobile browser
+        run: |
+          npm ci
+          npx playwright install --with-deps webkit
+      - name: Capture final wardrobe and verify touch, unlock, equip and save
+        env:
+          TOUCH_BROWSER: webkit
+          SMALL_IPHONE: '1'
+        run: |
+          CAPTURE_SCOPE=wardrobe CAPTURE_END=9 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate/${{ matrix.side }}" --output-dir "$RUNNER_TEMP/review/wardrobe"
+          OVERHAUL_GAMEPLAY=1 MENU_TOUCH=1 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate/${{ matrix.side }}" --output-dir "$RUNNER_TEMP/review/touch"
+          python3 .github/wardrobe-portrait/prepare.py baseline '${{ matrix.side }}' "$RUNNER_TEMP/baseline"
+          CAPTURE_SCOPE=wardrobe CAPTURE_END=1 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/baseline/${{ matrix.side }}" --output-dir "$RUNNER_TEMP/review/baseline"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wardrobe-portrait-mobile-${{ matrix.side }}
+          path: ${{ runner.temp }}/review
+          retention-days: 30

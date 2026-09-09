@@ -15,6 +15,7 @@ Read this map, then the named owner. You should not need to read the whole game 
 | Endless layers, relics and rope | `scripts/world/endless_descent_world.gd` | RunState endless state |
 | Shop entries, costs and descriptions | `scripts/ui/commerce_catalog.gd` | RunState is the transaction authority |
 | Shop layout, browsing and touch | `scripts/ui/commerce_panel.gd` | `inertial_carousel.gd`, `swipe_pager.gd` |
+| Wardrobe portrait | `scripts/ui/wardrobe_portrait.gd` | Approved PNG under `assets/hero/dad/wardrobe/`; release in `.github/wardrobe-portrait/` |
 | Outfit and light previews | `scripts/ui/outfit_preview.gd`, `light_preview.gd` | Actual hero and headlamp renderers |
 | Hero movement, animation and equipment | `scripts/player/` | Production art under `assets/hero/dad/` |
 | Light effects | `scripts/lighting/` | RunState supplies the selected style and level |
