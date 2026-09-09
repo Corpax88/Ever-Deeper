@@ -185,6 +185,9 @@ func _ready() -> void :
 	frame_meter.hide()
 	frame_meter.set_process(false)
 	get_viewport().size_changed.connect(_apply_platform_safe_area)
+	var main_menu: Control = get_parent().get_node_or_null("PremiumMenu")
+	if main_menu != null:
+		main_menu.visibility_changed.connect(_apply_platform_safe_area)
 	set_process(false)
 	call_deferred("_apply_platform_safe_area")
 
@@ -545,6 +548,13 @@ func _apply_layout(viewport_size: Vector2, safe_insets: Vector4) -> void :
 	var compact: = viewport_size.y < 520.0
 	var toggle_size: = Vector2(116.0 if compact else 132.0, TOUCH_TARGET_MIN if compact else 58.0)
 	var origin: = Vector2(safe_insets.x + outer_gap, safe_insets.y + outer_gap)
+	var hud: Control = get_parent().get_node_or_null("PremiumHud")
+	var main_menu: Control = get_parent().get_node_or_null("PremiumMenu")
+	if hud != null and (main_menu == null or not main_menu.visible):
+		# Follow the HUD's mobile spacing and leave its entire top button row free.
+		var menu_rect: Rect2 = hud.layout_snapshot(viewport_size).menu
+		origin.x = maxf(origin.x, menu_rect.position.x)
+		origin.y = maxf(safe_insets.y, menu_rect.position.y) + menu_rect.size.y + outer_gap
 	toggle_button.position = origin
 	toggle_button.size = toggle_size
 

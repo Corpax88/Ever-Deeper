@@ -60,7 +60,7 @@ jobs:
         env:
           TOUCH_BROWSER: webkit
           SMALL_IPHONE: '1'
-          EXPECTED_VERSION: 1.0.0-dev.1
+          EXPECTED_VERSION: 1.0.0-dev.2
         run: |
           python3 .github/one-point-zero/prepare.py verify-candidate "$RUNNER_TEMP/candidate"
           OVERHAUL_GAMEPLAY=1 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate/dev" --output-dir "$RUNNER_TEMP/review/gameplay"
@@ -88,7 +88,7 @@ jobs:
         env:
           HERO_MOTION: '1'
           CAPTURE_END: '1'
-          EXPECTED_VERSION: 1.0.0-dev.1
+          EXPECTED_VERSION: 1.0.0-dev.2
         run: |
           npm ci
           npx playwright install --with-deps chromium
@@ -120,7 +120,7 @@ jobs:
         with: {node-version: '22'}
       - name: Measure real Web Audio unlock, overlap and mute
         env:
-          EXPECTED_VERSION: 1.0.0-dev.1
+          EXPECTED_VERSION: 1.0.0-dev.2
         run: |
           npm ci
           npx playwright install --with-deps '${{ matrix.browser }}'
