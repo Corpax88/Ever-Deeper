@@ -1,4 +1,4 @@
-# FPS handoff — DEV9 published; iPhone confirmation pending
+# FPS handoff — DEV9 iPhone result: 52.1 FPS, remaining pet-light cost
 
 DEV9 is published and all 18 public files were verified at 2026-09-08T21:53:51.5171964Z.
 Publication commit 7e3344605a0e5854c51e617b668b1002f9eaa856; run 34282895724.
@@ -51,9 +51,15 @@ Original light/shadow counts and DPR3 framebuffer were restored; touch/cancel/fo
 
 ## Next step
 
-Ask Mats to open DEV9, stand still in the hub, and run DEV TOOLS > AUTO FPS TEST · 3 MIN.
-He should send the result screenshot. This is the new DEV9 test, not the already completed
-DEV8 follow-up. Physical DEV9 performance is still unverified; do not call FPS fixed.
+Mats supplied IMG_1748.jpeg for DEV9's 180-second hub test. Do not ask him to repeat it.
+Original 52.1 FPS; pet lights off 60.0; restored 51.7; shadows off 53.2; restored 52.2;
+all lights off 60.0; final restored (70-second stage) 52.1. P95 20–21 ms with normal
+lighting, 17 ms with pet/all lights off. See docs/performance-diagnosis/light-cost/iphone-dev9.json.
+Rows use the final eight seconds of each stage; do not describe them as whole-stage averages.
+This confirms a large improvement from DEV8, but does not establish sustained 60 FPS.
+Next targeted study isolates HelmetCone and HelmetBounce, with restored controls, from
+the unchanged published PCK on branch codex-dev9-pet-light-isolation (e2de065abd8097cca4887d022b92a3a917ad0d72).
+No new runtime optimization or publication has been made. Inspect study results before choosing one.
 
 DEV8 phone evidence remains: 34.7 FPS at meter 52 s in the hub, 2328×1260 / DPR3.
 The earlier temporary 59.8 FPS after restoration was not sustained.

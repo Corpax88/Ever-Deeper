@@ -1,0 +1,60 @@
+{
+  "version": "0.46.9-dev.9",
+  "source": "User-supplied IMG_1748.jpeg; manually transcribed visible result panel",
+  "area": "hub",
+  "duration_seconds": 180,
+  "early_fps": 60,
+  "rows": [
+    {
+      "stage": "original",
+      "fps": 52.1,
+      "raf_fps": 52.1,
+      "p95_ms": 21
+    },
+    {
+      "stage": "pet_off",
+      "fps": 60,
+      "raf_fps": 60,
+      "p95_ms": 17
+    },
+    {
+      "stage": "restore_pet",
+      "fps": 51.7,
+      "raf_fps": 51.8,
+      "p95_ms": 20
+    },
+    {
+      "stage": "shadows_off",
+      "fps": 53.2,
+      "raf_fps": 53.2,
+      "p95_ms": 20
+    },
+    {
+      "stage": "restore_shadows",
+      "fps": 52.2,
+      "raf_fps": 52.2,
+      "p95_ms": 21
+    },
+    {
+      "stage": "lights_off",
+      "fps": 60,
+      "raf_fps": 60,
+      "p95_ms": 17
+    },
+    {
+      "stage": "restore_lights",
+      "fps": 52.1,
+      "raf_fps": 52.1,
+      "p95_ms": 20
+    }
+  ],
+  "graphics_restored": true,
+  "measurement_note": "Each row summarizes the final eight seconds of its stage, not its full duration; final restored stage lasts 70 seconds.",
+  "finding": "Original and end-of-long-restoration both 52.1 FPS. Pet lights disabled reaches 60; shadows disabled 53.2. Remaining bottleneck not fixed. Does not identify cone vs bounce or establish thermal/driver throttling.",
+  "next_study": {
+    "branch": "codex-dev9-pet-light-isolation",
+    "source": "e2de065abd8097cca4887d022b92a3a917ad0d72",
+    "package_sha256": "78fde726ddc232060827c2500460a81224c90476b63922ee73c6f4d6cbb927f2",
+    "purpose": "Isolate pet cone vs bounce with interleaved restored baselines using unchanged package."
+  }
+}
