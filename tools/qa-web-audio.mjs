@@ -111,7 +111,7 @@ try {
   const initial = await page.evaluate(() => ({ state: window.everDeeperAudioReviewState, supported: window.__webAudioQA.supported, contexts: window.__webAudioQA.contexts.length }));
   assert(initial.supported && initial.contexts > 0, 'Browser created no supported real AudioContext');
   assert(initial.state.sample_backend && !initial.state.headless && initial.state.voices === 10, 'Actual ten-voice SAMPLE backend required');
-  assert.equal(initial.state.version, process.env.EXPECTED_VERSION || '1.0.0-dev.2');
+  assert.equal(initial.state.version, process.env.EXPECTED_VERSION || '1.0.0-dev.3');
   report.initial = initial;
   await page.evaluate(() => {
     const button = document.createElement('button'); button.id = 'audio-review-unlock'; button.textContent = 'Start audio review';

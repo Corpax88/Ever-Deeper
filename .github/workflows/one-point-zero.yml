@@ -60,7 +60,7 @@ jobs:
         env:
           TOUCH_BROWSER: webkit
           SMALL_IPHONE: '1'
-          EXPECTED_VERSION: 1.0.0-dev.2
+          EXPECTED_VERSION: 1.0.0-dev.3
         run: |
           python3 .github/one-point-zero/prepare.py verify-candidate "$RUNNER_TEMP/candidate"
           OVERHAUL_GAMEPLAY=1 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate/dev" --output-dir "$RUNNER_TEMP/review/gameplay"
@@ -88,7 +88,7 @@ jobs:
         env:
           HERO_MOTION: '1'
           CAPTURE_END: '1'
-          EXPECTED_VERSION: 1.0.0-dev.2
+          EXPECTED_VERSION: 1.0.0-dev.3
         run: |
           npm ci
           npx playwright install --with-deps chromium
@@ -120,7 +120,7 @@ jobs:
         with: {node-version: '22'}
       - name: Measure real Web Audio unlock, overlap and mute
         env:
-          EXPECTED_VERSION: 1.0.0-dev.2
+          EXPECTED_VERSION: 1.0.0-dev.3
         run: |
           npm ci
           npx playwright install --with-deps '${{ matrix.browser }}'
@@ -136,7 +136,7 @@ jobs:
   native-visual:
     needs: build
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -171,6 +171,27 @@ jobs:
           assert review['rendered'] is True and len(review['captures']) > 0
           assert review['artifact']['sha256'] == candidate['dev_files']['index.pck']['sha256']
           PY
+          python3 .github/one-point-zero/prepare.py verify-candidate "$RUNNER_TEMP/candidate"
+      - name: Compare all mine receivers and light styles in the same package
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          LP_NUM_THREADS: '4'
+          OMP_NUM_THREADS: '4'
+          XDG_DATA_HOME: ${{ runner.temp }}/receiver-userdata
+        run: |
+          mkdir -p "$RUNNER_TEMP/review/receivers"
+          xvfb-run -a -s '-screen 0 2560x1440x24' timeout 600 Godot_v4.7.2-stable_linux.x86_64 --path "$RUNNER_TEMP/pack-run" --main-pack "$RUNNER_TEMP/candidate/dev/index.pck" --script "$GITHUB_WORKSPACE/tools/review_mining_receivers.gd" --resolution 2328x1260 --audio-driver Dummy -- --pack-source="$RUNNER_TEMP/candidate/dev/index.pck" --output="$RUNNER_TEMP/review/receivers" --seconds=0.5 > "$RUNNER_TEMP/review/receivers/native.log" 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/review/receivers/native.log"; then exit 1; fi
+          rg 'MINING_RECEIVER_REVIEW_COMPLETE' "$RUNNER_TEMP/review/receivers/native.log"
+          python3 - <<'PYCODE'
+          import json, os
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP'])
+          report = json.loads((root/'review/receivers/mining-receivers.json').read_text())
+          candidate = json.loads((root/'candidate/manifest.json').read_text())
+          assert report['failures'] == [] and len(report['stages']) == 75
+          assert report['pack_sha256'] == candidate['dev_files']['index.pck']['sha256']
+          PYCODE
           python3 .github/one-point-zero/prepare.py verify-candidate "$RUNNER_TEMP/candidate"
       - uses: actions/upload-artifact@v4
         if: always()

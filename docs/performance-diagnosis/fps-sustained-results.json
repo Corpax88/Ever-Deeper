@@ -1,0 +1,1516 @@
+{
+  "runs": [
+    {
+      "folder": "runs/baseline-ember",
+      "raw_summary_sha256": "d25a42ca0f0c197276c44f9bf5b552a1f6340ed7722293208676eb15768c5315",
+      "fixture": "ember_d1",
+      "fixture_stage": "progressed Ember; pickaxe5; original intact barriers",
+      "pickaxe_level": 5,
+      "runtime": {
+        "dev_build": true,
+        "project_version": "1.0.0-rc.1",
+        "version": "1.0.0-dev.2"
+      },
+      "package": {
+        "exported": true,
+        "path": "/workspace/scratch/6604552ab244/dev-button-candidate/dev/index.pck",
+        "sha256_after": "c331cde35f64edf26a9d10c921e46ad1ef9bd3001aea225b521a38c86ea0ca36",
+        "sha256_before": "c331cde35f64edf26a9d10c921e46ad1ef9bd3001aea225b521a38c86ea0ca36"
+      },
+      "harness": {
+        "path": "/workspace/scratch/6604552ab244/fps-investigation/review_sustained_mining_progressed.gd",
+        "sha256_after": "fc43bb4f3c32fda561c37bb4766f4dc5332dbc666a51470b89e7d43551097588",
+        "sha256_before": "fc43bb4f3c32fda561c37bb4766f4dc5332dbc666a51470b89e7d43551097588"
+      },
+      "renderer": "gl_compatibility",
+      "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "window_pixels": [
+        2328.0,
+        1260.0
+      ],
+      "rendered": true,
+      "physical_iphone": false,
+      "frames": 1762,
+      "elapsed_seconds": 180.02331099999998,
+      "average_fps": 9.787621337550004,
+      "p95_ms": 136.368,
+      "p99_ms": 157.803,
+      "max_ms": 188.786,
+      "over_33_ms": 1761,
+      "complete_windows": 17,
+      "every_full_window_active": true,
+      "actual_play_progress": true,
+      "sustained_180s": true,
+      "inactive_complete_windows": [],
+      "mined_resources": 673,
+      "picked_resources": {
+        "emberstone": 10,
+        "moonglass": 2,
+        "stone": 660
+      },
+      "broken": 674,
+      "distance": 33264.0,
+      "depth_before": 1,
+      "depth_after": 1,
+      "memory_before": {
+        "gpu_mib": 497.845011711121,
+        "nodes": 760.0,
+        "static_mib": 82.9820194244385
+      },
+      "memory_after": {
+        "gpu_mib": 500.488940238953,
+        "nodes": 789.0,
+        "static_mib": 85.6428833007812
+      },
+      "route_policy": "nearest currently existing mineable block by legal cardinal shortest path",
+      "route_plans": 659,
+      "route_planner_total_ms": 13.909,
+      "route_planner_max_ms": 0.57,
+      "error_lines": [],
+      "windows": [
+        {
+          "window": 0,
+          "from_seconds": 0.0,
+          "to_seconds": 10.034705,
+          "average_fps": 8.07198617199011,
+          "p95_ms": 154.088,
+          "mined_resources": 37,
+          "moved_pixels": 1815.66680908203,
+          "active_mining_observed": true
+        },
+        {
+          "window": 1,
+          "from_seconds": 10.034705,
+          "to_seconds": 20.126899,
+          "average_fps": 9.31412931618238,
+          "p95_ms": 131.138,
+          "mined_resources": 38,
+          "moved_pixels": 1784.33319091797,
+          "active_mining_observed": true
+        },
+        {
+          "window": 2,
+          "from_seconds": 20.126899,
+          "to_seconds": 30.219952,
+          "average_fps": 9.90780490303578,
+          "p95_ms": 123.075,
+          "mined_resources": 41,
+          "moved_pixels": 1954.00003051758,
+          "active_mining_observed": true
+        },
+        {
+          "window": 3,
+          "from_seconds": 30.219952,
+          "to_seconds": 40.270553,
+          "average_fps": 8.35770915590023,
+          "p95_ms": 148.296,
+          "mined_resources": 11,
+          "moved_pixels": 1117.99996948242,
+          "active_mining_observed": true
+        },
+        {
+          "window": 4,
+          "from_seconds": 40.270553,
+          "to_seconds": 50.330225,
+          "average_fps": 8.05195238970018,
+          "p95_ms": 142.979,
+          "mined_resources": 35,
+          "moved_pixels": 1680.0,
+          "active_mining_observed": true
+        },
+        {
+          "window": 5,
+          "from_seconds": 50.330225,
+          "to_seconds": 60.42687,
+          "average_fps": 7.92342406809391,
+          "p95_ms": 155.036,
+          "mined_resources": 35,
+          "moved_pixels": 1671.66680908203,
+          "active_mining_observed": true
+        },
+        {
+          "window": 6,
+          "from_seconds": 60.42687,
+          "to_seconds": 70.510339,
+          "average_fps": 8.33046642975746,
+          "p95_ms": 152.243,
+          "mined_resources": 34,
+          "moved_pixels": 1736.33319091797,
+          "active_mining_observed": true
+        },
+        {
+          "window": 7,
+          "from_seconds": 70.510339,
+          "to_seconds": 80.519676,
+          "average_fps": 9.39123140723506,
+          "p95_ms": 130.331,
+          "mined_resources": 23,
+          "moved_pixels": 1558.66650390625,
+          "active_mining_observed": true
+        },
+        {
+          "window": 8,
+          "from_seconds": 80.519676,
+          "to_seconds": 90.585212,
+          "average_fps": 10.1335885143126,
+          "p95_ms": 120.203,
+          "mined_resources": 30,
+          "moved_pixels": 1417.33349609375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 9,
+          "from_seconds": 90.585212,
+          "to_seconds": 100.597683,
+          "average_fps": 10.9862989865339,
+          "p95_ms": 105.666,
+          "mined_resources": 43,
+          "moved_pixels": 2016.0,
+          "active_mining_observed": true
+        },
+        {
+          "window": 10,
+          "from_seconds": 100.597683,
+          "to_seconds": 110.611816,
+          "average_fps": 11.2840522489566,
+          "p95_ms": 103.122,
+          "mined_resources": 44,
+          "moved_pixels": 2112.0,
+          "active_mining_observed": true
+        },
+        {
+          "window": 11,
+          "from_seconds": 110.611816,
+          "to_seconds": 120.704007,
+          "average_fps": 10.4040837118521,
+          "p95_ms": 110.884,
+          "mined_resources": 43,
+          "moved_pixels": 2064.0,
+          "active_mining_observed": true
+        },
+        {
+          "window": 12,
+          "from_seconds": 120.704007,
+          "to_seconds": 130.783073,
+          "average_fps": 9.92155423925194,
+          "p95_ms": 111.397,
+          "mined_resources": 45,
+          "moved_pixels": 2097.99975585938,
+          "active_mining_observed": true
+        },
+        {
+          "window": 13,
+          "from_seconds": 130.783073,
+          "to_seconds": 140.814739,
+          "average_fps": 10.5665399944536,
+          "p95_ms": 106.323,
+          "mined_resources": 44,
+          "moved_pixels": 2078.00024414062,
+          "active_mining_observed": true
+        },
+        {
+          "window": 14,
+          "from_seconds": 140.814739,
+          "to_seconds": 150.835019,
+          "average_fps": 10.5785467072776,
+          "p95_ms": 108.545,
+          "mined_resources": 43,
+          "moved_pixels": 2064.0,
+          "active_mining_observed": true
+        },
+        {
+          "window": 15,
+          "from_seconds": 150.835019,
+          "to_seconds": 160.835764,
+          "average_fps": 10.5992103588283,
+          "p95_ms": 106.598,
+          "mined_resources": 45,
+          "moved_pixels": 2146.00012207031,
+          "active_mining_observed": true
+        },
+        {
+          "window": 16,
+          "from_seconds": 160.835764,
+          "to_seconds": 170.877225,
+          "average_fps": 11.253342516592,
+          "p95_ms": 103.278,
+          "mined_resources": 43,
+          "moved_pixels": 2064.0,
+          "active_mining_observed": true
+        },
+        {
+          "window": 17,
+          "from_seconds": 170.877225,
+          "to_seconds": 180.023311,
+          "average_fps": 11.2616478786664,
+          "p95_ms": 102.106,
+          "mined_resources": 39,
+          "moved_pixels": 1885.99987792969,
+          "active_mining_observed": true
+        }
+      ],
+      "raw_summary": "runs/baseline-ember/sustained-mining.json"
+    },
+    {
+      "folder": "runs/candidate-ember",
+      "raw_summary_sha256": "5dee562c9a90bcb45b20a9b13e15fbcc59af455b74558927eca4acfa0eb5fe07",
+      "fixture": "ember_d1",
+      "fixture_stage": "progressed Ember; pickaxe5; original intact barriers",
+      "pickaxe_level": 5,
+      "runtime": {
+        "dev_build": true,
+        "project_version": "1.0.0-rc.1",
+        "version": "1.0.0-dev.3"
+      },
+      "package": {
+        "exported": true,
+        "path": "/workspace/scratch/6604552ab244/fps-final-10108229398/dev/index.pck",
+        "sha256_after": "6ec691604a060bcad3a21ac2666385e3d1a0c0ac07822c6b74c2a31e33dc5d6d",
+        "sha256_before": "6ec691604a060bcad3a21ac2666385e3d1a0c0ac07822c6b74c2a31e33dc5d6d"
+      },
+      "harness": {
+        "path": "/workspace/scratch/6604552ab244/fps-investigation/review_sustained_mining_progressed.gd",
+        "sha256_after": "fc43bb4f3c32fda561c37bb4766f4dc5332dbc666a51470b89e7d43551097588",
+        "sha256_before": "fc43bb4f3c32fda561c37bb4766f4dc5332dbc666a51470b89e7d43551097588"
+      },
+      "renderer": "gl_compatibility",
+      "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "window_pixels": [
+        2328.0,
+        1260.0
+      ],
+      "rendered": true,
+      "physical_iphone": false,
+      "frames": 3122,
+      "elapsed_seconds": 180.007378,
+      "average_fps": 17.34373354407729,
+      "p95_ms": 76.201,
+      "p99_ms": 93.013,
+      "max_ms": 233.086,
+      "over_33_ms": 3121,
+      "complete_windows": 17,
+      "every_full_window_active": true,
+      "actual_play_progress": true,
+      "sustained_180s": true,
+      "inactive_complete_windows": [],
+      "mined_resources": 696,
+      "picked_resources": {
+        "emberstone": 10,
+        "moonglass": 2,
+        "stone": 684
+      },
+      "broken": 697,
+      "distance": 34608.0,
+      "depth_before": 1,
+      "depth_after": 1,
+      "memory_before": {
+        "gpu_mib": 481.569197654724,
+        "nodes": 974.0,
+        "static_mib": 84.3413896560669
+      },
+      "memory_after": {
+        "gpu_mib": 484.314383506775,
+        "nodes": 1103.0,
+        "static_mib": 87.9934301376343
+      },
+      "route_policy": "nearest currently existing mineable block by legal cardinal shortest path",
+      "route_plans": 688,
+      "route_planner_total_ms": 18.953,
+      "route_planner_max_ms": 0.255,
+      "error_lines": [],
+      "windows": [
+        {
+          "window": 0,
+          "from_seconds": 0.0,
+          "to_seconds": 10.034577,
+          "average_fps": 16.3434891176778,
+          "p95_ms": 71.938,
+          "mined_resources": 41,
+          "moved_pixels": 2055.66670227051,
+          "active_mining_observed": true
+        },
+        {
+          "window": 1,
+          "from_seconds": 10.034577,
+          "to_seconds": 20.038311,
+          "average_fps": 17.7933559608842,
+          "p95_ms": 65.752,
+          "mined_resources": 42,
+          "moved_pixels": 1928.33329772949,
+          "active_mining_observed": true
+        },
+        {
+          "window": 2,
+          "from_seconds": 20.038311,
+          "to_seconds": 30.097764,
+          "average_fps": 18.2912530134591,
+          "p95_ms": 63.393,
+          "mined_resources": 37,
+          "moved_pixels": 2064.0,
+          "active_mining_observed": true
+        },
+        {
+          "window": 3,
+          "from_seconds": 30.097764,
+          "to_seconds": 40.137548,
+          "average_fps": 13.5461081632832,
+          "p95_ms": 92.512,
+          "mined_resources": 17,
+          "moved_pixels": 1078.66674804688,
+          "active_mining_observed": true
+        },
+        {
+          "window": 4,
+          "from_seconds": 40.137548,
+          "to_seconds": 50.179284,
+          "average_fps": 14.7384874487838,
+          "p95_ms": 80.99,
+          "mined_resources": 39,
+          "moved_pixels": 1871.99975585938,
+          "active_mining_observed": true
+        },
+        {
+          "window": 5,
+          "from_seconds": 50.179284,
+          "to_seconds": 60.27404,
+          "average_fps": 14.3638934908382,
+          "p95_ms": 82.62,
+          "mined_resources": 35,
+          "moved_pixels": 1753.33349609375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 6,
+          "from_seconds": 60.27404,
+          "to_seconds": 70.334393,
+          "average_fps": 15.1088137762164,
+          "p95_ms": 79.889,
+          "mined_resources": 41,
+          "moved_pixels": 2013.33349609375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 7,
+          "from_seconds": 70.334393,
+          "to_seconds": 80.337396,
+          "average_fps": 16.0951666214636,
+          "p95_ms": 74.193,
+          "mined_resources": 12,
+          "moved_pixels": 1154.66650390625,
+          "active_mining_observed": true
+        },
+        {
+          "window": 8,
+          "from_seconds": 80.337396,
+          "to_seconds": 90.360776,
+          "average_fps": 20.9510165233684,
+          "p95_ms": 57.217,
+          "mined_resources": 43,
+          "moved_pixels": 2064.0,
+          "active_mining_observed": true
+        },
+        {
+          "window": 9,
+          "from_seconds": 90.360776,
+          "to_seconds": 100.403007,
+          "average_fps": 21.9074825106095,
+          "p95_ms": 56.177,
+          "mined_resources": 44,
+          "moved_pixels": 2064.0,
+          "active_mining_observed": true
+        },
+        {
+          "window": 10,
+          "from_seconds": 100.403007,
+          "to_seconds": 110.444466,
+          "average_fps": 21.3116440549127,
+          "p95_ms": 56.439,
+          "mined_resources": 44,
+          "moved_pixels": 2075.33325195312,
+          "active_mining_observed": true
+        },
+        {
+          "window": 11,
+          "from_seconds": 110.444466,
+          "to_seconds": 120.489164,
+          "average_fps": 18.616786686867,
+          "p95_ms": 63.181,
+          "mined_resources": 43,
+          "moved_pixels": 2100.66674804688,
+          "active_mining_observed": true
+        },
+        {
+          "window": 12,
+          "from_seconds": 120.489164,
+          "to_seconds": 130.527135,
+          "average_fps": 17.4338021100081,
+          "p95_ms": 72.448,
+          "mined_resources": 44,
+          "moved_pixels": 2103.66680908203,
+          "active_mining_observed": true
+        },
+        {
+          "window": 13,
+          "from_seconds": 130.527135,
+          "to_seconds": 140.552006,
+          "average_fps": 18.1548470798278,
+          "p95_ms": 67.642,
+          "mined_resources": 43,
+          "moved_pixels": 2072.33319091797,
+          "active_mining_observed": true
+        },
+        {
+          "window": 14,
+          "from_seconds": 140.552006,
+          "to_seconds": 150.603116,
+          "average_fps": 16.4160973265639,
+          "p95_ms": 88.06,
+          "mined_resources": 44,
+          "moved_pixels": 2097.99993896484,
+          "active_mining_observed": true
+        },
+        {
+          "window": 15,
+          "from_seconds": 150.603116,
+          "to_seconds": 160.616053,
+          "average_fps": 17.1777771097531,
+          "p95_ms": 67.291,
+          "mined_resources": 43,
+          "moved_pixels": 2078.00006103516,
+          "active_mining_observed": true
+        },
+        {
+          "window": 16,
+          "from_seconds": 160.616053,
+          "to_seconds": 170.652752,
+          "average_fps": 16.6389367659626,
+          "p95_ms": 71.002,
+          "mined_resources": 44,
+          "moved_pixels": 2086.66650390625,
+          "active_mining_observed": true
+        },
+        {
+          "window": 17,
+          "from_seconds": 170.652752,
+          "to_seconds": 180.007378,
+          "average_fps": 17.317635146504,
+          "p95_ms": 70.185,
+          "mined_resources": 40,
+          "moved_pixels": 1945.33349609375,
+          "active_mining_observed": true
+        }
+      ],
+      "raw_summary": "runs/candidate-ember/sustained-mining.json"
+    },
+    {
+      "folder": "runs/baseline-hub",
+      "raw_summary_sha256": "18e586e04c50f1c3c658f623a264ef3b540ef760a8e1077056fcf075b2806e2c",
+      "fixture": "hub",
+      "fixture_stage": "completed Hub / post-fifth-relic",
+      "pickaxe_level": 5,
+      "runtime": {
+        "dev_build": true,
+        "project_version": "1.0.0-rc.1",
+        "version": "1.0.0-dev.2"
+      },
+      "package": {
+        "exported": true,
+        "path": "/workspace/scratch/6604552ab244/dev-button-candidate/dev/index.pck",
+        "sha256_after": "c331cde35f64edf26a9d10c921e46ad1ef9bd3001aea225b521a38c86ea0ca36",
+        "sha256_before": "c331cde35f64edf26a9d10c921e46ad1ef9bd3001aea225b521a38c86ea0ca36"
+      },
+      "harness": {
+        "path": "/workspace/scratch/6604552ab244/fps-investigation/review_sustained_mining_progressed.gd",
+        "sha256_after": "fc43bb4f3c32fda561c37bb4766f4dc5332dbc666a51470b89e7d43551097588",
+        "sha256_before": "fc43bb4f3c32fda561c37bb4766f4dc5332dbc666a51470b89e7d43551097588"
+      },
+      "renderer": "gl_compatibility",
+      "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "window_pixels": [
+        2328.0,
+        1260.0
+      ],
+      "rendered": true,
+      "physical_iphone": false,
+      "frames": 2640,
+      "elapsed_seconds": 180.007391,
+      "average_fps": 14.66606446176424,
+      "p95_ms": 78.709,
+      "p99_ms": 404.491,
+      "max_ms": 3115.465,
+      "over_33_ms": 2639,
+      "complete_windows": 17,
+      "every_full_window_active": true,
+      "actual_play_progress": true,
+      "sustained_180s": true,
+      "inactive_complete_windows": [],
+      "mined_resources": 0,
+      "picked_resources": {},
+      "broken": 0,
+      "distance": 50315.3333282471,
+      "depth_before": 1,
+      "depth_after": 1,
+      "memory_before": {
+        "gpu_mib": 523.943807601929,
+        "nodes": 767.0,
+        "static_mib": 76.169997215271
+      },
+      "memory_after": {
+        "gpu_mib": 524.070646286011,
+        "nodes": 761.0,
+        "static_mib": 77.2884225845337
+      },
+      "route_policy": "unchanged",
+      "route_plans": 0,
+      "route_planner_total_ms": 0.0,
+      "route_planner_max_ms": 0.0,
+      "error_lines": [],
+      "windows": [
+        {
+          "window": 0,
+          "from_seconds": 0.0,
+          "to_seconds": 10.030215,
+          "average_fps": 15.8521028711747,
+          "p95_ms": 87.775,
+          "mined_resources": 0,
+          "moved_pixels": 2987.33334350586,
+          "active_mining_observed": false
+        },
+        {
+          "window": 1,
+          "from_seconds": 10.030215,
+          "to_seconds": 20.071189,
+          "average_fps": 16.7314445789821,
+          "p95_ms": 76.83,
+          "mined_resources": 0,
+          "moved_pixels": 3210.33334350586,
+          "active_mining_observed": false
+        },
+        {
+          "window": 2,
+          "from_seconds": 20.071189,
+          "to_seconds": 30.114235,
+          "average_fps": 15.1348505224411,
+          "p95_ms": 92.554,
+          "mined_resources": 0,
+          "moved_pixels": 3185.00006103516,
+          "active_mining_observed": false
+        },
+        {
+          "window": 3,
+          "from_seconds": 30.114235,
+          "to_seconds": 40.140416,
+          "average_fps": 16.357175279401,
+          "p95_ms": 71.142,
+          "mined_resources": 0,
+          "moved_pixels": 3204.66650390625,
+          "active_mining_observed": false
+        },
+        {
+          "window": 4,
+          "from_seconds": 40.140416,
+          "to_seconds": 51.213648,
+          "average_fps": 7.94709259229825,
+          "p95_ms": 596.577,
+          "mined_resources": 0,
+          "moved_pixels": 1996.33355712891,
+          "active_mining_observed": false
+        },
+        {
+          "window": 5,
+          "from_seconds": 51.213648,
+          "to_seconds": 61.337139,
+          "average_fps": 2.56828400400613,
+          "p95_ms": 886.049,
+          "mined_resources": 0,
+          "moved_pixels": 1081.33325195312,
+          "active_mining_observed": false
+        },
+        {
+          "window": 6,
+          "from_seconds": 61.337139,
+          "to_seconds": 73.342154,
+          "average_fps": 1.24947782239339,
+          "p95_ms": 3115.465,
+          "mined_resources": 0,
+          "moved_pixels": 640.999877929688,
+          "active_mining_observed": false
+        },
+        {
+          "window": 7,
+          "from_seconds": 73.342154,
+          "to_seconds": 83.362991,
+          "average_fps": 17.4636110736059,
+          "p95_ms": 72.958,
+          "mined_resources": 0,
+          "moved_pixels": 3204.66674804688,
+          "active_mining_observed": false
+        },
+        {
+          "window": 8,
+          "from_seconds": 83.362991,
+          "to_seconds": 93.505907,
+          "average_fps": 16.3661022136041,
+          "p95_ms": 76.741,
+          "mined_resources": 0,
+          "moved_pixels": 3185.00012207031,
+          "active_mining_observed": false
+        },
+        {
+          "window": 9,
+          "from_seconds": 93.505907,
+          "to_seconds": 103.507559,
+          "average_fps": 16.0973407193132,
+          "p95_ms": 71.924,
+          "mined_resources": 0,
+          "moved_pixels": 3198.99981689453,
+          "active_mining_observed": false
+        },
+        {
+          "window": 10,
+          "from_seconds": 103.507559,
+          "to_seconds": 113.530041,
+          "average_fps": 18.2589502280972,
+          "p95_ms": 65.885,
+          "mined_resources": 0,
+          "moved_pixels": 3210.33343505859,
+          "active_mining_observed": false
+        },
+        {
+          "window": 11,
+          "from_seconds": 113.530041,
+          "to_seconds": 123.541718,
+          "average_fps": 18.5783061119531,
+          "p95_ms": 63.455,
+          "mined_resources": 0,
+          "moved_pixels": 3198.99993896484,
+          "active_mining_observed": false
+        },
+        {
+          "window": 12,
+          "from_seconds": 123.541718,
+          "to_seconds": 133.551531,
+          "average_fps": 18.5817657133055,
+          "p95_ms": 64.062,
+          "mined_resources": 0,
+          "moved_pixels": 3201.99993896484,
+          "active_mining_observed": false
+        },
+        {
+          "window": 13,
+          "from_seconds": 133.551531,
+          "to_seconds": 143.586621,
+          "average_fps": 17.3391568984434,
+          "p95_ms": 77.374,
+          "mined_resources": 0,
+          "moved_pixels": 3210.33349609375,
+          "active_mining_observed": false
+        },
+        {
+          "window": 14,
+          "from_seconds": 143.586621,
+          "to_seconds": 153.607965,
+          "average_fps": 17.4627275543081,
+          "p95_ms": 70.796,
+          "mined_resources": 0,
+          "moved_pixels": 3204.66644287109,
+          "active_mining_observed": false
+        },
+        {
+          "window": 15,
+          "from_seconds": 153.607965,
+          "to_seconds": 163.631994,
+          "average_fps": 16.2609266194262,
+          "p95_ms": 69.744,
+          "mined_resources": 0,
+          "moved_pixels": 3151.00012207031,
+          "active_mining_observed": false
+        },
+        {
+          "window": 16,
+          "from_seconds": 163.631994,
+          "to_seconds": 173.635396,
+          "average_fps": 18.2937764572493,
+          "p95_ms": 63.25,
+          "mined_resources": 0,
+          "moved_pixels": 3202.00012207031,
+          "active_mining_observed": false
+        },
+        {
+          "window": 17,
+          "from_seconds": 173.635396,
+          "to_seconds": 180.007391,
+          "average_fps": 18.2046596081761,
+          "p95_ms": 63.8,
+          "mined_resources": 0,
+          "moved_pixels": 2041.33320617676,
+          "active_mining_observed": false
+        }
+      ],
+      "raw_summary": "runs/baseline-hub/sustained-mining.json"
+    },
+    {
+      "folder": "runs/candidate-hub",
+      "raw_summary_sha256": "6ed612d8bd1d9c55ada1fd526157ab4219478b1bd49b05be943e18e1d736ed44",
+      "fixture": "hub",
+      "fixture_stage": "completed Hub / post-fifth-relic",
+      "pickaxe_level": 5,
+      "runtime": {
+        "dev_build": true,
+        "project_version": "1.0.0-rc.1",
+        "version": "1.0.0-dev.3"
+      },
+      "package": {
+        "exported": true,
+        "path": "/workspace/scratch/6604552ab244/fps-final-10108229398/dev/index.pck",
+        "sha256_after": "6ec691604a060bcad3a21ac2666385e3d1a0c0ac07822c6b74c2a31e33dc5d6d",
+        "sha256_before": "6ec691604a060bcad3a21ac2666385e3d1a0c0ac07822c6b74c2a31e33dc5d6d"
+      },
+      "harness": {
+        "path": "/workspace/scratch/6604552ab244/fps-investigation/review_sustained_mining_progressed.gd",
+        "sha256_after": "fc43bb4f3c32fda561c37bb4766f4dc5332dbc666a51470b89e7d43551097588",
+        "sha256_before": "fc43bb4f3c32fda561c37bb4766f4dc5332dbc666a51470b89e7d43551097588"
+      },
+      "renderer": "gl_compatibility",
+      "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "window_pixels": [
+        2328.0,
+        1260.0
+      ],
+      "rendered": true,
+      "physical_iphone": false,
+      "frames": 3203,
+      "elapsed_seconds": 180.026193,
+      "average_fps": 17.791855432948026,
+      "p95_ms": 68.087,
+      "p99_ms": 83.596,
+      "max_ms": 148.383,
+      "over_33_ms": 3202,
+      "complete_windows": 17,
+      "every_full_window_active": true,
+      "actual_play_progress": true,
+      "sustained_180s": true,
+      "inactive_complete_windows": [],
+      "mined_resources": 0,
+      "picked_resources": {},
+      "broken": 0,
+      "distance": 57659.3333740234,
+      "depth_before": 1,
+      "depth_after": 1,
+      "memory_before": {
+        "gpu_mib": 507.667993545532,
+        "nodes": 770.0,
+        "static_mib": 76.2294521331787
+      },
+      "memory_after": {
+        "gpu_mib": 507.794832229614,
+        "nodes": 764.0,
+        "static_mib": 77.4377937316895
+      },
+      "route_policy": "unchanged",
+      "route_plans": 0,
+      "route_planner_total_ms": 0.0,
+      "route_planner_max_ms": 0.0,
+      "error_lines": [],
+      "windows": [
+        {
+          "window": 0,
+          "from_seconds": 0.0,
+          "to_seconds": 10.003874,
+          "average_fps": 18.4928358753819,
+          "p95_ms": 69.309,
+          "mined_resources": 0,
+          "moved_pixels": 3250.00012207031,
+          "active_mining_observed": false
+        },
+        {
+          "window": 1,
+          "from_seconds": 10.003874,
+          "to_seconds": 20.010071,
+          "average_fps": 18.0887903766036,
+          "p95_ms": 65.737,
+          "mined_resources": 0,
+          "moved_pixels": 3204.66662597656,
+          "active_mining_observed": false
+        },
+        {
+          "window": 2,
+          "from_seconds": 20.010071,
+          "to_seconds": 30.038331,
+          "average_fps": 17.6501207587358,
+          "p95_ms": 71.273,
+          "mined_resources": 0,
+          "moved_pixels": 3204.66662597656,
+          "active_mining_observed": false
+        },
+        {
+          "window": 3,
+          "from_seconds": 30.038331,
+          "to_seconds": 40.045387,
+          "average_fps": 16.9880132578453,
+          "p95_ms": 69.531,
+          "mined_resources": 0,
+          "moved_pixels": 3204.66662597656,
+          "active_mining_observed": false
+        },
+        {
+          "window": 4,
+          "from_seconds": 40.045387,
+          "to_seconds": 50.062665,
+          "average_fps": 18.368263314645,
+          "p95_ms": 63.418,
+          "mined_resources": 0,
+          "moved_pixels": 3207.66670227051,
+          "active_mining_observed": false
+        },
+        {
+          "window": 5,
+          "from_seconds": 50.062665,
+          "to_seconds": 60.104326,
+          "average_fps": 17.6265659635393,
+          "p95_ms": 66.772,
+          "mined_resources": 0,
+          "moved_pixels": 3204.66664123535,
+          "active_mining_observed": false
+        },
+        {
+          "window": 6,
+          "from_seconds": 60.104326,
+          "to_seconds": 70.111704,
+          "average_fps": 17.686950567871,
+          "p95_ms": 69.274,
+          "mined_resources": 0,
+          "moved_pixels": 3204.66667175293,
+          "active_mining_observed": false
+        },
+        {
+          "window": 7,
+          "from_seconds": 70.111704,
+          "to_seconds": 80.1156,
+          "average_fps": 16.9933793793938,
+          "p95_ms": 69.489,
+          "mined_resources": 0,
+          "moved_pixels": 3198.99998474121,
+          "active_mining_observed": false
+        },
+        {
+          "window": 8,
+          "from_seconds": 80.1156,
+          "to_seconds": 90.118378,
+          "average_fps": 17.5951120778648,
+          "p95_ms": 66.562,
+          "mined_resources": 0,
+          "moved_pixels": 3207.66638183594,
+          "active_mining_observed": false
+        },
+        {
+          "window": 9,
+          "from_seconds": 90.118378,
+          "to_seconds": 100.170484,
+          "average_fps": 18.3046219369354,
+          "p95_ms": 70.357,
+          "mined_resources": 0,
+          "moved_pixels": 3216.00042724609,
+          "active_mining_observed": false
+        },
+        {
+          "window": 10,
+          "from_seconds": 100.170484,
+          "to_seconds": 110.173645,
+          "average_fps": 19.0939643978538,
+          "p95_ms": 63.712,
+          "mined_resources": 0,
+          "moved_pixels": 3204.66662597656,
+          "active_mining_observed": false
+        },
+        {
+          "window": 11,
+          "from_seconds": 110.173645,
+          "to_seconds": 120.216812,
+          "average_fps": 18.5200544808226,
+          "p95_ms": 63.951,
+          "mined_resources": 0,
+          "moved_pixels": 3204.66644287109,
+          "active_mining_observed": false
+        },
+        {
+          "window": 12,
+          "from_seconds": 120.216812,
+          "to_seconds": 130.217697,
+          "average_fps": 18.3983717441006,
+          "p95_ms": 61.968,
+          "mined_resources": 0,
+          "moved_pixels": 3199.00012207031,
+          "active_mining_observed": false
+        },
+        {
+          "window": 13,
+          "from_seconds": 130.217697,
+          "to_seconds": 140.262273,
+          "average_fps": 17.2232257489017,
+          "p95_ms": 68.264,
+          "mined_resources": 0,
+          "moved_pixels": 3216.0,
+          "active_mining_observed": false
+        },
+        {
+          "window": 14,
+          "from_seconds": 140.262273,
+          "to_seconds": 150.306394,
+          "average_fps": 16.5270808665089,
+          "p95_ms": 74.65,
+          "mined_resources": 0,
+          "moved_pixels": 3221.66668701172,
+          "active_mining_observed": false
+        },
+        {
+          "window": 15,
+          "from_seconds": 150.306394,
+          "to_seconds": 160.30679,
+          "average_fps": 17.3993109872849,
+          "p95_ms": 67.798,
+          "mined_resources": 0,
+          "moved_pixels": 3190.66667175293,
+          "active_mining_observed": false
+        },
+        {
+          "window": 16,
+          "from_seconds": 160.30679,
+          "to_seconds": 170.321986,
+          "average_fps": 17.87284043168,
+          "p95_ms": 65.155,
+          "mined_resources": 0,
+          "moved_pixels": 3204.66670227051,
+          "active_mining_observed": false
+        },
+        {
+          "window": 17,
+          "from_seconds": 170.321986,
+          "to_seconds": 180.026193,
+          "average_fps": 17.4151272741812,
+          "p95_ms": 68.719,
+          "mined_resources": 0,
+          "moved_pixels": 3114.33331298828,
+          "active_mining_observed": false
+        }
+      ],
+      "raw_summary": "runs/candidate-hub/sustained-mining.json"
+    },
+    {
+      "folder": "runs/baseline-deep",
+      "raw_summary_sha256": "70ac5f6536d371c69cf18632bb906c6bf3bb320863925d1f080eca84f60e90b2",
+      "fixture": "deep_post5",
+      "fixture_stage": "completed Hub / post-fifth-relic",
+      "pickaxe_level": 5,
+      "runtime": {
+        "dev_build": true,
+        "project_version": "1.0.0-rc.1",
+        "version": "1.0.0-dev.2"
+      },
+      "package": {
+        "exported": true,
+        "path": "/workspace/scratch/6604552ab244/dev-button-candidate/dev/index.pck",
+        "sha256_after": "c331cde35f64edf26a9d10c921e46ad1ef9bd3001aea225b521a38c86ea0ca36",
+        "sha256_before": "c331cde35f64edf26a9d10c921e46ad1ef9bd3001aea225b521a38c86ea0ca36"
+      },
+      "harness": {
+        "path": "/workspace/scratch/6604552ab244/fps-investigation/review_sustained_mining_progressed.gd",
+        "sha256_after": "fc43bb4f3c32fda561c37bb4766f4dc5332dbc666a51470b89e7d43551097588",
+        "sha256_before": "fc43bb4f3c32fda561c37bb4766f4dc5332dbc666a51470b89e7d43551097588"
+      },
+      "renderer": "gl_compatibility",
+      "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "window_pixels": [
+        2328.0,
+        1260.0
+      ],
+      "rendered": true,
+      "physical_iphone": false,
+      "frames": 1387,
+      "elapsed_seconds": 180.0194,
+      "average_fps": 7.704725157399703,
+      "p95_ms": 154.611,
+      "p99_ms": 180.277,
+      "max_ms": 259.477,
+      "over_33_ms": 1386,
+      "complete_windows": 17,
+      "every_full_window_active": true,
+      "actual_play_progress": true,
+      "sustained_180s": true,
+      "inactive_complete_windows": [],
+      "mined_resources": 16804,
+      "picked_resources": {
+        "deep_alloy": 3649,
+        "echo_crystal": 3382,
+        "lumenstone": 3382,
+        "memory_silk": 3090,
+        "waystone": 3301
+      },
+      "broken": 1944,
+      "distance": 55000.921875,
+      "depth_before": 13,
+      "depth_after": 52,
+      "memory_before": {
+        "gpu_mib": 525.323896408081,
+        "nodes": 1071.0,
+        "static_mib": 78.4984073638916
+      },
+      "memory_after": {
+        "gpu_mib": 527.949071884155,
+        "nodes": 1096.0,
+        "static_mib": 81.1272773742676
+      },
+      "route_policy": "unchanged",
+      "route_plans": 0,
+      "route_planner_total_ms": 0.0,
+      "route_planner_max_ms": 0.0,
+      "error_lines": [],
+      "windows": [
+        {
+          "window": 0,
+          "from_seconds": 0.0,
+          "to_seconds": 10.072721,
+          "average_fps": 6.85018477132445,
+          "p95_ms": 202.907,
+          "mined_resources": 815,
+          "moved_pixels": 2873.01171875,
+          "active_mining_observed": true
+        },
+        {
+          "window": 1,
+          "from_seconds": 10.072721,
+          "to_seconds": 20.07751,
+          "average_fps": 7.49640996926572,
+          "p95_ms": 163.992,
+          "mined_resources": 760,
+          "moved_pixels": 3156.345703125,
+          "active_mining_observed": true
+        },
+        {
+          "window": 2,
+          "from_seconds": 20.07751,
+          "to_seconds": 30.169591,
+          "average_fps": 7.72883214076462,
+          "p95_ms": 145.637,
+          "mined_resources": 1052,
+          "moved_pixels": 3122.349609375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 3,
+          "from_seconds": 30.169591,
+          "to_seconds": 40.256802,
+          "average_fps": 7.4351572501061,
+          "p95_ms": 153.958,
+          "mined_resources": 804,
+          "moved_pixels": 3111.017578125,
+          "active_mining_observed": true
+        },
+        {
+          "window": 4,
+          "from_seconds": 40.256802,
+          "to_seconds": 50.387142,
+          "average_fps": 7.79835622496382,
+          "p95_ms": 155.179,
+          "mined_resources": 1133,
+          "moved_pixels": 3020.349609375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 5,
+          "from_seconds": 50.387142,
+          "to_seconds": 60.408213,
+          "average_fps": 7.68380944511819,
+          "p95_ms": 144.114,
+          "mined_resources": 895,
+          "moved_pixels": 3201.67578125,
+          "active_mining_observed": true
+        },
+        {
+          "window": 6,
+          "from_seconds": 60.408213,
+          "to_seconds": 70.511056,
+          "average_fps": 8.01754516030784,
+          "p95_ms": 142.418,
+          "mined_resources": 1086,
+          "moved_pixels": 3122.34765625,
+          "active_mining_observed": true
+        },
+        {
+          "window": 7,
+          "from_seconds": 70.511056,
+          "to_seconds": 80.604359,
+          "average_fps": 7.92604759809549,
+          "p95_ms": 149.054,
+          "mined_resources": 963,
+          "moved_pixels": 3105.34765625,
+          "active_mining_observed": true
+        },
+        {
+          "window": 8,
+          "from_seconds": 80.604359,
+          "to_seconds": 90.707908,
+          "average_fps": 8.01698492282266,
+          "p95_ms": 156.17,
+          "mined_resources": 849,
+          "moved_pixels": 2975.015625,
+          "active_mining_observed": true
+        },
+        {
+          "window": 9,
+          "from_seconds": 90.707908,
+          "to_seconds": 100.789547,
+          "average_fps": 7.73683723450125,
+          "p95_ms": 151.274,
+          "mined_resources": 828,
+          "moved_pixels": 3088.3515625,
+          "active_mining_observed": true
+        },
+        {
+          "window": 10,
+          "from_seconds": 100.789547,
+          "to_seconds": 110.79781,
+          "average_fps": 8.09331249588465,
+          "p95_ms": 146.551,
+          "mined_resources": 897,
+          "moved_pixels": 3105.34375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 11,
+          "from_seconds": 110.79781,
+          "to_seconds": 120.805789,
+          "average_fps": 7.49402052102628,
+          "p95_ms": 153.904,
+          "mined_resources": 773,
+          "moved_pixels": 3071.34375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 12,
+          "from_seconds": 120.805789,
+          "to_seconds": 130.907691,
+          "average_fps": 7.82030948231333,
+          "p95_ms": 148.942,
+          "mined_resources": 1465,
+          "moved_pixels": 3190.3515625,
+          "active_mining_observed": true
+        },
+        {
+          "window": 13,
+          "from_seconds": 130.907691,
+          "to_seconds": 140.990504,
+          "average_fps": 7.93429373330637,
+          "p95_ms": 146.795,
+          "mined_resources": 840,
+          "moved_pixels": 3150.68359375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 14,
+          "from_seconds": 140.990504,
+          "to_seconds": 151.007766,
+          "average_fps": 7.78655884212672,
+          "p95_ms": 159.274,
+          "mined_resources": 1162,
+          "moved_pixels": 2963.68359375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 15,
+          "from_seconds": 151.007766,
+          "to_seconds": 161.02299,
+          "average_fps": 7.88799132201137,
+          "p95_ms": 148.051,
+          "mined_resources": 688,
+          "moved_pixels": 3156.34375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 16,
+          "from_seconds": 161.02299,
+          "to_seconds": 171.088745,
+          "average_fps": 7.25231241968437,
+          "p95_ms": 180.277,
+          "mined_resources": 971,
+          "moved_pixels": 2907.0078125,
+          "active_mining_observed": true
+        },
+        {
+          "window": 17,
+          "from_seconds": 171.088745,
+          "to_seconds": 180.0194,
+          "average_fps": 7.72619701466466,
+          "p95_ms": 157.945,
+          "mined_resources": 823,
+          "moved_pixels": 2680.3515625,
+          "active_mining_observed": true
+        }
+      ],
+      "raw_summary": "runs/baseline-deep/sustained-mining.json"
+    },
+    {
+      "folder": "runs/candidate-deep",
+      "raw_summary_sha256": "473aa54049f34dc66922925826a95db6eae633d52c9047be0df3572d3b7656e1",
+      "fixture": "deep_post5",
+      "fixture_stage": "completed Hub / post-fifth-relic",
+      "pickaxe_level": 5,
+      "runtime": {
+        "dev_build": true,
+        "project_version": "1.0.0-rc.1",
+        "version": "1.0.0-dev.3"
+      },
+      "package": {
+        "exported": true,
+        "path": "/workspace/scratch/6604552ab244/fps-final-10108229398/dev/index.pck",
+        "sha256_after": "6ec691604a060bcad3a21ac2666385e3d1a0c0ac07822c6b74c2a31e33dc5d6d",
+        "sha256_before": "6ec691604a060bcad3a21ac2666385e3d1a0c0ac07822c6b74c2a31e33dc5d6d"
+      },
+      "harness": {
+        "path": "/workspace/scratch/6604552ab244/fps-investigation/review_sustained_mining_progressed.gd",
+        "sha256_after": "fc43bb4f3c32fda561c37bb4766f4dc5332dbc666a51470b89e7d43551097588",
+        "sha256_before": "fc43bb4f3c32fda561c37bb4766f4dc5332dbc666a51470b89e7d43551097588"
+      },
+      "renderer": "gl_compatibility",
+      "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "window_pixels": [
+        2328.0,
+        1260.0
+      ],
+      "rendered": true,
+      "physical_iphone": false,
+      "frames": 2077,
+      "elapsed_seconds": 180.089509,
+      "average_fps": 11.533153771883514,
+      "p95_ms": 105.704,
+      "p99_ms": 120.341,
+      "max_ms": 166.35,
+      "over_33_ms": 2076,
+      "complete_windows": 17,
+      "every_full_window_active": true,
+      "actual_play_progress": true,
+      "sustained_180s": true,
+      "inactive_complete_windows": [],
+      "mined_resources": 17456,
+      "picked_resources": {
+        "deep_alloy": 3751,
+        "echo_crystal": 3526,
+        "lumenstone": 3481,
+        "memory_silk": 3212,
+        "waystone": 3486
+      },
+      "broken": 1972,
+      "distance": 56210.34375,
+      "depth_before": 13,
+      "depth_after": 53,
+      "memory_before": {
+        "gpu_mib": 509.048082351685,
+        "nodes": 1250.0,
+        "static_mib": 79.626072883606
+      },
+      "memory_after": {
+        "gpu_mib": 511.681222915649,
+        "nodes": 1293.0,
+        "static_mib": 82.4931898117065
+      },
+      "route_policy": "unchanged",
+      "route_plans": 0,
+      "route_planner_total_ms": 0.0,
+      "route_planner_max_ms": 0.0,
+      "error_lines": [],
+      "windows": [
+        {
+          "window": 0,
+          "from_seconds": 0.0,
+          "to_seconds": 10.043388,
+          "average_fps": 11.2511833656133,
+          "p95_ms": 105.371,
+          "mined_resources": 920,
+          "moved_pixels": 3247.009765625,
+          "active_mining_observed": true
+        },
+        {
+          "window": 1,
+          "from_seconds": 10.043388,
+          "to_seconds": 20.119423,
+          "average_fps": 11.7109557479703,
+          "p95_ms": 101.69,
+          "mined_resources": 754,
+          "moved_pixels": 3180.771484375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 2,
+          "from_seconds": 20.119423,
+          "to_seconds": 30.160716,
+          "average_fps": 11.0543532590873,
+          "p95_ms": 107.239,
+          "mined_resources": 1020,
+          "moved_pixels": 3167.685546875,
+          "active_mining_observed": true
+        },
+        {
+          "window": 3,
+          "from_seconds": 30.160716,
+          "to_seconds": 40.18891,
+          "average_fps": 11.0687926460138,
+          "p95_ms": 104.541,
+          "mined_resources": 744,
+          "moved_pixels": 3173.345703125,
+          "active_mining_observed": true
+        },
+        {
+          "window": 4,
+          "from_seconds": 40.18891,
+          "to_seconds": 50.277181,
+          "average_fps": 11.6967516039171,
+          "p95_ms": 102.201,
+          "mined_resources": 1218,
+          "moved_pixels": 3173.34375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 5,
+          "from_seconds": 50.277181,
+          "to_seconds": 60.296989,
+          "average_fps": 11.9762773897464,
+          "p95_ms": 99.101,
+          "mined_resources": 858,
+          "moved_pixels": 3122.3515625,
+          "active_mining_observed": true
+        },
+        {
+          "window": 6,
+          "from_seconds": 60.296989,
+          "to_seconds": 70.329474,
+          "average_fps": 11.7617918192751,
+          "p95_ms": 112.408,
+          "mined_resources": 1150,
+          "moved_pixels": 3116.68359375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 7,
+          "from_seconds": 70.329474,
+          "to_seconds": 80.33236,
+          "average_fps": 10.6969128709454,
+          "p95_ms": 117.916,
+          "mined_resources": 784,
+          "moved_pixels": 3099.6796875,
+          "active_mining_observed": true
+        },
+        {
+          "window": 8,
+          "from_seconds": 80.33236,
+          "to_seconds": 90.354116,
+          "average_fps": 11.8741665632251,
+          "p95_ms": 105.704,
+          "mined_resources": 904,
+          "moved_pixels": 3071.34375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 9,
+          "from_seconds": 90.354116,
+          "to_seconds": 100.358122,
+          "average_fps": 11.5953549008267,
+          "p95_ms": 104.393,
+          "mined_resources": 752,
+          "moved_pixels": 3026.01171875,
+          "active_mining_observed": true
+        },
+        {
+          "window": 10,
+          "from_seconds": 100.358122,
+          "to_seconds": 110.424365,
+          "average_fps": 11.7223476524459,
+          "p95_ms": 104.409,
+          "mined_resources": 1176,
+          "moved_pixels": 3082.68359375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 11,
+          "from_seconds": 110.424365,
+          "to_seconds": 120.471864,
+          "average_fps": 11.147052614785,
+          "p95_ms": 111.748,
+          "mined_resources": 872,
+          "moved_pixels": 3202.34375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 12,
+          "from_seconds": 120.471864,
+          "to_seconds": 130.514428,
+          "average_fps": 11.5508350257962,
+          "p95_ms": 103.856,
+          "mined_resources": 1136,
+          "moved_pixels": 3173.34765625,
+          "active_mining_observed": true
+        },
+        {
+          "window": 13,
+          "from_seconds": 130.514428,
+          "to_seconds": 140.516278,
+          "average_fps": 12.2977249208896,
+          "p95_ms": 98.335,
+          "mined_resources": 1091,
+          "moved_pixels": 3071.34375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 14,
+          "from_seconds": 140.516278,
+          "to_seconds": 150.586935,
+          "average_fps": 11.7172097113426,
+          "p95_ms": 98.937,
+          "mined_resources": 955,
+          "moved_pixels": 3139.34765625,
+          "active_mining_observed": true
+        },
+        {
+          "window": 15,
+          "from_seconds": 150.586935,
+          "to_seconds": 160.593299,
+          "average_fps": 10.7931312512717,
+          "p95_ms": 116.879,
+          "mined_resources": 976,
+          "moved_pixels": 3133.68359375,
+          "active_mining_observed": true
+        },
+        {
+          "window": 16,
+          "from_seconds": 160.593299,
+          "to_seconds": 170.664393,
+          "average_fps": 12.0145835199235,
+          "p95_ms": 99.77,
+          "mined_resources": 1023,
+          "moved_pixels": 3122.3515625,
+          "active_mining_observed": true
+        },
+        {
+          "window": 17,
+          "from_seconds": 170.664393,
+          "to_seconds": 180.089509,
+          "average_fps": 11.6709438907702,
+          "p95_ms": 101.476,
+          "mined_resources": 1123,
+          "moved_pixels": 2907.015625,
+          "active_mining_observed": true
+        }
+      ],
+      "raw_summary": "runs/candidate-deep/sustained-mining.json"
+    }
+  ],
+  "limits": [
+    "This is native software rendering, not browser or physical iPhone certification.",
+    "Frame FPS uses total sampled frames / total wall-clock time, not mean window FPS.",
+    "Identical seed, loadout and target policy do not guarantee equal progress/state at equal wall-clock times.",
+    "The harness retains raw window samples and JSON snapshots; static-memory growth includes this observer data.",
+    "TIME_PROCESS is not exclusive script CPU. Dummy audio does not verify sound playback quality.",
+    "Active excavation coverage does not establish full progression or all camera states."
+  ],
+  "raw_evidence_archive": "fps-sustained-evidence.zip",
+  "separate_failed_history_archive": "fps-sustained-failed-fixtures.zip"
+}

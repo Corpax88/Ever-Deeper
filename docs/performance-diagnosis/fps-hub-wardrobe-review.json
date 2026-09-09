@@ -1,0 +1,199 @@
+{
+  "schema": 1,
+  "reviewed_date": "2026-09-09",
+  "reviewer": "fps_resources implementer, independent visual comparison task; not the separate critic score",
+  "physical_iphone": false,
+  "performance_test": false,
+  "candidate": {
+    "source_commit": "42fffc163c940db2ab9df2e1924608e2d1659793",
+    "pck_sha256": "6ec691604a060bcad3a21ac2666385e3d1a0c0ac07822c6b74c2a31e33dc5d6d",
+    "journey_artifact": 10108704344,
+    "mobile_artifact": 10108439751
+  },
+  "baseline": {
+    "pck_sha256": "c331cde35f64edf26a9d10c921e46ad1ef9bd3001aea225b521a38c86ea0ca36",
+    "journey_artifact": 10103127254,
+    "mobile_artifact": 10103091862,
+    "provenance": "docs/one-point-zero/dev-button-evidence.json"
+  },
+  "reviewed_frames": 14,
+  "byte_identical_frames": 4,
+  "visible_regressions": [],
+  "images": [
+    {
+      "file": "hub-five-workshops-complete-small.png",
+      "size": [
+        844,
+        390
+      ],
+      "candidate_sha256": "c6d56cd1db69eea82db3503b4a82e395fed8301c76c88bb5075f3e3baefad69f",
+      "baseline_sha256": "e2038941796df5ad1b8588d3efeeed7a759a098a9ec0a5c8b9ff40c104e9b15e",
+      "comparison": "candidate and baseline visually inspected",
+      "visible_regression_found": false,
+      "observation": "844x390 layout matches prior composition; goal and resource count remain readable. Existing world labels behind HUD elements are unchanged."
+    },
+    {
+      "file": "hub-five-workshops-complete.png",
+      "size": [
+        2532,
+        1170
+      ],
+      "candidate_sha256": "80fc59dacda901c8ce53d7f0a2a3fe94026c74a8c39493a767aa388b359689fb",
+      "baseline_sha256": "58e842f2cafe8d07244440ac6e28e72d072a10390a5f957007c0f38e5cb728c1",
+      "comparison": "candidate and baseline visually inspected",
+      "visible_regression_found": false,
+      "observation": "All five workshops and completed museum remain visible with the next forge goal; no new missing texture or layout change."
+    },
+    {
+      "file": "hub-museum-complete-selected.png",
+      "size": [
+        2532,
+        1170
+      ],
+      "candidate_sha256": "9cae0c174a6081bbc86ead170f11173fd0350e99308e7f3b1bef1ba2f9ca1037",
+      "baseline_sha256": "d709fd973ca6d9fb010aa247ac1ce458ab577084cbc0400d9dc934c39fb315c6",
+      "comparison": "candidate and baseline visually inspected",
+      "visible_regression_found": false,
+      "observation": "Completed museum and five relics remain visible; next upgrade and material counter fit. Minor companion/hero pose differences are visible between captures."
+    },
+    {
+      "file": "hub-museum-three-relics.png",
+      "size": [
+        2532,
+        1170
+      ],
+      "candidate_sha256": "90dc9ca657d7f0cbc95a4a8e69bdd3d9fadc99a76ec485242d21ba849cddba6a",
+      "baseline_sha256": "4e81d558554e3cf0d633c8926c481042e51c98f10f71aaa12181d24f65e8a07d",
+      "comparison": "candidate and baseline visually inspected",
+      "visible_regression_found": false,
+      "observation": "Three displayed relics, colored links and three built workshops remain visible; next goal correctly reads Find relic 4 of 5."
+    },
+    {
+      "file": "hub-pedestal-ready-unbuilt-museum.png",
+      "size": [
+        2532,
+        1170
+      ],
+      "candidate_sha256": "57d521738aac5edb748164e1b9247965c580d16cd80b764a05efe0fe86736e4a",
+      "baseline_sha256": "496950b4d2ad8edcc6ebdcdb99d33dcd4c9d071cbab9eb9d79188af1f5b54ba1",
+      "comparison": "candidate and baseline visually inspected",
+      "visible_regression_found": false,
+      "observation": "Ghost museum, carried Forge Heart, Place action and 0/5 count remain coherent; no missing art or new overlap."
+    },
+    {
+      "file": "hub-tool-forge-upgrade.png",
+      "size": [
+        2532,
+        1170
+      ],
+      "candidate_sha256": "6f2c58409a083e35da8c0c02f2fd58b5e284d5386eb906a1bd99761fde9f5c4d",
+      "baseline_sha256": "53d1563a2e41c3f7ce25ab3b11b6f6dac5eda5febf11ff3acfec9a0fe7f36d82",
+      "comparison": "candidate and baseline visually inspected",
+      "visible_regression_found": false,
+      "observation": "Forge art, upgrade title, three stat rows, material cost and upgrade button fit as before."
+    },
+    {
+      "file": "hub-tunnel-workshop-bonus.png",
+      "size": [
+        2532,
+        1170
+      ],
+      "candidate_sha256": "81adaa2ad7f0625542cef5153c7404042a661c8a9e363a919432f7f184b7d4e9",
+      "baseline_sha256": "c4d6870567d43c60b249669117b850a92a32458526faefa60a7319dd398eb209",
+      "comparison": "candidate and baseline visually inspected",
+      "visible_regression_found": false,
+      "observation": "Workshop art and Tunnel Home preparation 1.25s -> 0.45s remain intact; no new clipping."
+    },
+    {
+      "file": "tunnel-home-hub-arrival.png",
+      "size": [
+        2532,
+        1170
+      ],
+      "candidate_sha256": "9d993bbc9f6d17010b3ce183fef4eebb60427f6f4735fd95e93233fba13f8870",
+      "baseline_sha256": "82c5507b26f6b05bdfffe768c3f4a59852b370b9cd8ab106d8c82a73ed0d957d",
+      "comparison": "candidate and baseline visually inspected",
+      "visible_regression_found": false,
+      "observation": "Hero, companion, physical Forge Heart and tether remain visible after arrival; Place your relic goal remains correct."
+    },
+    {
+      "file": "wardrobe-new-outfit-worn.png",
+      "size": [
+        844,
+        390
+      ],
+      "candidate_sha256": "a77d200fd65199b695b5c9bebb39bdeee1c4d1f3a992c1e403902aec690cd2e2",
+      "baseline_sha256": "a77d200fd65199b695b5c9bebb39bdeee1c4d1f3a992c1e403902aec690cd2e2",
+      "comparison": "byte-identical PNG",
+      "visible_regression_found": false,
+      "observation": "Expedition Blue portrait and matching thumbnail, 2/5 unlock label and Wearing state are byte-identical to DEV2."
+    },
+    {
+      "file": "wardrobe-wearing-archivist.png",
+      "size": [
+        844,
+        390
+      ],
+      "candidate_sha256": "4b7b12a2ba232f2191837246587ef6a9868e075a7aeab143f72f4c05b8ad72d1",
+      "baseline_sha256": "4b7b12a2ba232f2191837246587ef6a9868e075a7aeab143f72f4c05b8ad72d1",
+      "comparison": "byte-identical PNG",
+      "visible_regression_found": false,
+      "observation": "Archivist Sand portrait, matching thumbnail and Wearing state are byte-identical to DEV2."
+    },
+    {
+      "file": "wardrobe-wearing-deepheart.png",
+      "size": [
+        844,
+        390
+      ],
+      "candidate_sha256": "c10d19f09f1fc591a65466bf77ee1b4f64b4139061a488e258f9fde1f4978efa",
+      "baseline_sha256": "c10d19f09f1fc591a65466bf77ee1b4f64b4139061a488e258f9fde1f4978efa",
+      "comparison": "byte-identical PNG",
+      "visible_regression_found": false,
+      "observation": "Deepheart Red portrait, matching thumbnail and Wearing state are byte-identical to DEV2."
+    },
+    {
+      "file": "wardrobe-wearing-expedition.png",
+      "size": [
+        844,
+        390
+      ],
+      "candidate_sha256": "78bfbb1b975871d8870c6c9bdc870688e9d3dbff44c025099aa349194916cfba",
+      "baseline_sha256": "dd9e9ff56d732e0cd80b6c66352ad83a429ba7db379c599d6d316d62e87a5dc5",
+      "comparison": "candidate and baseline visually inspected",
+      "visible_regression_found": false,
+      "observation": "Expedition Blue portrait, thumbnail, text and Wearing state have no visible regression against DEV2; PNG bytes differ."
+    },
+    {
+      "file": "wardrobe-wearing-miner.png",
+      "size": [
+        844,
+        390
+      ],
+      "candidate_sha256": "de55c99c134f40c2ea8fbef9dfd5ca083f9296b70d260ca7271be4b545bc381e",
+      "baseline_sha256": "2ab223f3b034613167f7dae213cb9dfa0b731a259e0e49885a5fdaa102d69f29",
+      "comparison": "candidate and baseline visually inspected",
+      "visible_regression_found": false,
+      "observation": "Original Miner Green portrait, thumbnail, text and Wearing state have no visible regression against DEV2; PNG bytes differ."
+    },
+    {
+      "file": "wardrobe-wearing-starweave.png",
+      "size": [
+        844,
+        390
+      ],
+      "candidate_sha256": "bc4d7e3dc8951029bff21dcbfb9c23ec1a07a01a91cab3340efe1185fe9d32a2",
+      "baseline_sha256": "bc4d7e3dc8951029bff21dcbfb9c23ec1a07a01a91cab3340efe1185fe9d32a2",
+      "comparison": "byte-identical PNG",
+      "visible_regression_found": false,
+      "observation": "Starweave Violet portrait, matching thumbnail and Wearing state are byte-identical to DEV2."
+    }
+  ],
+  "limits": [
+    "All 14 candidate frames were visually inspected. Four prior wardrobe PNGs are byte-identical; the other ten prior counterparts were also visually inspected.",
+    "No pixel-error threshold or frame-time claim is inferred from manual inspection.",
+    "Hub captures contain different companion/hero animation phases; no new missing art, recoloring loss or clipping was observed.",
+    "The separate rendered close/reopen allocation review is recorded in fps-commerce-residency.json; physical-phone opening and sustained-FPS checks remain separate."
+  ],
+  "files_modified": "Documentation only; no assets or runtime code edited by this review."
+}

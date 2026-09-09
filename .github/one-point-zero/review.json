@@ -2,12 +2,12 @@
   "schema": 1,
   "dev_only": true,
   "live_publication_authorized": false,
-  "dev_version": "1.0.0-dev.2",
-  "source_commit": "246ee70cca3cff2eae0fe417800cf2d1724c6417",
-  "qa_run_id": 34349012950,
-  "candidate_artifact_id": 10102987319,
-  "candidate_zip_sha256": "eb5d344c9368192c345637640dfc3fc3697ec84e373339daaefa7a0322e6a38f",
-  "candidate_manifest_sha256": "9ad20f8e94964274680fab5ec43576fdc2b30daf3844b2d1b52b05b4c48b34a2",
+  "dev_version": "1.0.0-dev.3",
+  "source_commit": "42fffc163c940db2ab9df2e1924608e2d1659793",
+  "qa_run_id": 34361743735,
+  "candidate_artifact_id": 10108229398,
+  "candidate_zip_sha256": "dd727bb1cc109d7536201694e668c7db5994cef9ed26192420c7878cd54bc77c",
+  "candidate_manifest_sha256": "a2787c8974aadafe358455807f31ee4385c533cf3538eed6086da12d746db21c",
   "package_checks_passed": true,
   "visual_reviewed": true,
   "mobile_touch_reviewed": true,
@@ -33,7 +33,7 @@
       "size": 7298
     },
     "index.html": {
-      "sha256": "bd2e00a51f612a4a5d41dda10f418ae233d433dfe828f980682fb972b01b42b0",
+      "sha256": "4f52aa5115a0c4a18b27091f0a90c33b13a830865f740ac4431eba775c50259c",
       "size": 7855
     },
     "index.icon.png": {
@@ -45,8 +45,8 @@
       "size": 279815
     },
     "index.pck": {
-      "sha256": "c331cde35f64edf26a9d10c921e46ad1ef9bd3001aea225b521a38c86ea0ca36",
-      "size": 220937608
+      "sha256": "6ec691604a060bcad3a21ac2666385e3d1a0c0ac07822c6b74c2a31e33dc5d6d",
+      "size": 220944136
     },
     "index.png": {
       "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
@@ -57,12 +57,16 @@
       "size": 39514754
     }
   },
-  "reviewed_at": "2026-09-09T12:14:51.673608+00:00",
   "notes": [
-    "DEV-only menu placement correction; final 1.0, physical iPhone and LIVE approval remain false.",
-    "All six matching CI jobs passed. All 13 source and 13 exact-PCK cases passed; mobile WebKit passed 869 gameplay and 193 menu/touch assertions.",
-    "Independent critic inspected all 12 exact-package mobile/desktop layout images and approved this bounded fix at 9/10. Whole-game provisional assessment remains 8.4/10; the new score is not an overall 1.0 rating.",
-    "DEV sits below the top HUD controls. First-open drawer now fits its settled content and all lower commands remain reachable. Existing art, gameplay, saves, lighting and sound are preserved.",
-    "Publish only artifact 10102987319 without rebuilding and preserve the nine existing LIVE files. Baseline receipt pins current DEV 1.0.0-dev.1."
-  ]
+    "Independent review approves this exact DEV artifact for physical-device testing. Provisional critic_score 8.4 averages gameplay 8, progression 8, UX 9, visuals 9 and code 8 only; performance and overall 1.0 approval remain unverified. No critical bug reproduced in the tested paths.",
+    "All six required jobs passed in run 34361743735 for source 42fffc163c940db2ab9df2e1924608e2d1659793. Thirteen source and exact-PCK suites, 869 WebKit gameplay assertions, 195 touch assertions, real WebAudio in both browsers, 44 hero transitions and twelve actual mining damage combinations passed.",
+    "Exact-PCK progression journey covers a new player, all five generated relics, paid completion of all five workshops and continued Deep mining. Funding, position and wait acceleration limit this to functional coverage, not human pacing or subjective audio approval.",
+    "Native review covers 34 journey captures / 431 assertions, 75 receiver captures across all four D1 mines and five light styles plus five Deep strata, and fifteen additional captures proving mined corners, actual cleared gates and an accelerated damaged-gate fixture. Numeric comparisons cover all triplets; representative actual image inspections and precise limits are recorded in docs/performance-diagnosis/.",
+    "Six serial 180-second native llvmpipe runs compare unchanged DEV2 and DEV3 packages at 2328x1260 using actual joystick, held mine and collision timing. Progressed Ember mean FPS improves 77.20%, P95 136.368 to 76.201 ms; its worst frame worsens 188.786 to 233.086 ms. Post-fifth Deep FPS improves 49.69%, P95 154.611 to 105.704 ms. An unexplained old-Hub transient prevents clean Hub FPS attribution. These are not iPhone FPS estimates.",
+    "Rendered commerce tests pass 44 baseline and 58 candidate checks with zero engine errors. Closed wardrobe and Light Lab release 16.30 / 20.34 MiB respectively; final closed-shop GPU allocation is 30.52 MiB lower. Reopen and beam image comparisons pass. Phone cold-reopen hitch behavior remains unverified.",
+    "Corrected source attribution supports approximately 2.2x in a short frozen software-renderer fixture; the earlier 2.7x reference estimate is explicitly withdrawn. Failed sustained fixtures and raw accepted interval evidence are retained in repository archives.",
+    "The latest supplied physical screenshot shows 19.9 FPS, P95 56 ms and no visible build version. DEV3 adds a visible build identifier to SHOW FPS. Physical iPhone acceptance, final 1.0 approval and LIVE publication remain false; only DEV may be published.",
+    "Later review metadata, documentation and external diagnostic harness edits do not alter the reviewed immutable runtime package. Publication must download artifact 10108229398 without rebuilding and preserve all nine existing LIVE files."
+  ],
+  "reviewed_at": "2026-09-09T15:02:53.082482+00:00"
 }

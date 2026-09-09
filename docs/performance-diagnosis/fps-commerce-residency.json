@@ -1,0 +1,568 @@
+{
+  "schema": 1,
+  "recorded_date": "2026-09-09",
+  "kind": "Exact immutable DEV2/DEV3 rendered commerce resource lifetime comparison",
+  "physical_iphone": false,
+  "frame_time_benchmark": false,
+  "engine": {
+    "build": "official",
+    "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "hex": 263938,
+    "major": 4,
+    "minor": 7,
+    "patch": 2,
+    "status": "stable",
+    "string": "4.7.2-stable (official)",
+    "timestamp": 0
+  },
+  "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "harness_sha256": "756055c344db1c09eb320cce023075d5f1393a0978ebb46156f1c0eb4c413c49",
+  "runner_sha256": "60a3e9f4e568168601a427106f9349c8f4b3c7f86be308c54e6daadd23b57632",
+  "candidate_source_commit": "42fffc163c940db2ab9df2e1924608e2d1659793",
+  "candidate_build_run_id": 34361743735,
+  "fixture": {
+    "animation_frozen_for_images": true,
+    "five_workshops": true,
+    "framebuffer": [
+      2532,
+      1170
+    ],
+    "light_and_wardrobe_level": 5,
+    "seed": 4608,
+    "selection": "deepheart",
+    "tool": "worn"
+  },
+  "protocol": "Serial processes; fresh exported resource root and save namespace for each; same external harness; twelve rendered settle frames around shop transitions; frame delta frozen for reproducible images. Baseline retention is observed, not treated as a failing candidate requirement.",
+  "measurement": "Godot Performance RENDER_VIDEO_MEM_USED / RENDER_TEXTURE_MEM_USED / RENDER_BUFFER_MEM_USED in bytes; these are rendered allocation counters, not physical-iPhone driver telemetry.",
+  "summary": {
+    "wardrobe_close_gpu_released_bytes": 17091812,
+    "light_lab_close_gpu_released_bytes": 21324411,
+    "same_drops_on_second_close": true,
+    "baseline_releases_bytes_on_both_closes": 0,
+    "candidate_closed_shop_nodes": 58,
+    "candidate_closed_shop_viewports": 0,
+    "baseline_final_gpu_bytes": 591971759,
+    "candidate_final_gpu_bytes": 559971496,
+    "final_whole_package_difference_bytes": 32000263
+  },
+  "packages": [
+    {
+      "id": "baseline",
+      "pck_sha256": "c331cde35f64edf26a9d10c921e46ad1ef9bd3001aea225b521a38c86ea0ca36",
+      "require_release": false,
+      "passed": true,
+      "checks": 44,
+      "failed_checks": 0,
+      "exit_code": 0,
+      "engine_errors": [],
+      "report_sha256": "def8d7593ee0e0de8d5814b83a3d51ed7dac5b9459c4a5d8e637b5de752bafb6",
+      "log_sha256": "7dd6d4eea2ee8400dcefb865606e61ff9bff4dcd63ac326f7e4561b8926eec6b",
+      "stages": [
+        {
+          "id": "cold",
+          "gpu_bytes": 553707136,
+          "texture_bytes": 547166984,
+          "buffer_bytes": 6540152,
+          "scene_descendants": 766,
+          "shop_descendants": 58,
+          "shop_viewports": 0,
+          "portrait_cached": true
+        },
+        {
+          "id": "wardrobe-before",
+          "gpu_bytes": 553707136,
+          "texture_bytes": 547166984,
+          "buffer_bytes": 6540152,
+          "scene_descendants": 766,
+          "shop_descendants": 58,
+          "shop_viewports": 0,
+          "portrait_cached": true
+        },
+        {
+          "id": "wardrobe-opened",
+          "gpu_bytes": 568542868,
+          "texture_bytes": 561934428,
+          "buffer_bytes": 6608440,
+          "scene_descendants": 815,
+          "shop_descendants": 107,
+          "shop_viewports": 0,
+          "portrait_cached": true
+        },
+        {
+          "id": "wardrobe-opened-closed",
+          "gpu_bytes": 568542868,
+          "texture_bytes": 561934428,
+          "buffer_bytes": 6608440,
+          "scene_descendants": 815,
+          "shop_descendants": 107,
+          "shop_viewports": 0,
+          "portrait_cached": true,
+          "previous_preview_nodes_freed": false,
+          "gpu_released_bytes": 0,
+          "texture_released_bytes": 0
+        },
+        {
+          "id": "wardrobe-reopened",
+          "gpu_bytes": 568542868,
+          "texture_bytes": 561934428,
+          "buffer_bytes": 6608440,
+          "scene_descendants": 815,
+          "shop_descendants": 107,
+          "shop_viewports": 0,
+          "portrait_cached": true
+        },
+        {
+          "id": "wardrobe-reopened-closed",
+          "gpu_bytes": 568542868,
+          "texture_bytes": 561934428,
+          "buffer_bytes": 6608440,
+          "scene_descendants": 815,
+          "shop_descendants": 107,
+          "shop_viewports": 0,
+          "portrait_cached": true,
+          "previous_preview_nodes_freed": false,
+          "gpu_released_bytes": 0,
+          "texture_released_bytes": 0
+        },
+        {
+          "id": "light_lab-before",
+          "gpu_bytes": 568542868,
+          "texture_bytes": 561934428,
+          "buffer_bytes": 6608440,
+          "scene_descendants": 815,
+          "shop_descendants": 107,
+          "shop_viewports": 0,
+          "portrait_cached": true
+        },
+        {
+          "id": "light_lab-opened",
+          "gpu_bytes": 591971759,
+          "texture_bytes": 583233127,
+          "buffer_bytes": 8738632,
+          "scene_descendants": 896,
+          "shop_descendants": 188,
+          "shop_viewports": 6,
+          "portrait_cached": true
+        },
+        {
+          "id": "light_lab-opened-closed",
+          "gpu_bytes": 591971759,
+          "texture_bytes": 583233127,
+          "buffer_bytes": 8738632,
+          "scene_descendants": 896,
+          "shop_descendants": 188,
+          "shop_viewports": 6,
+          "portrait_cached": true,
+          "previous_preview_nodes_freed": false,
+          "gpu_released_bytes": 0,
+          "texture_released_bytes": 0
+        },
+        {
+          "id": "light_lab-reopened",
+          "gpu_bytes": 591971759,
+          "texture_bytes": 583233127,
+          "buffer_bytes": 8738632,
+          "scene_descendants": 896,
+          "shop_descendants": 188,
+          "shop_viewports": 6,
+          "portrait_cached": true
+        },
+        {
+          "id": "light_lab-reopened-closed",
+          "gpu_bytes": 591971759,
+          "texture_bytes": 583233127,
+          "buffer_bytes": 8738632,
+          "scene_descendants": 896,
+          "shop_descendants": 188,
+          "shop_viewports": 6,
+          "portrait_cached": true,
+          "previous_preview_nodes_freed": false,
+          "gpu_released_bytes": 0,
+          "texture_released_bytes": 0
+        }
+      ],
+      "captures": [
+        {
+          "file": "wardrobe-opened.png",
+          "height": 1170,
+          "sha256": "7f2d32f9d74ee2c96020c45925275339ed9b499663cfca41cb2bc36f7d05071a",
+          "width": 2532
+        },
+        {
+          "file": "wardrobe-reopened.png",
+          "height": 1170,
+          "sha256": "7f2d32f9d74ee2c96020c45925275339ed9b499663cfca41cb2bc36f7d05071a",
+          "width": 2532
+        },
+        {
+          "file": "light_lab-opened.png",
+          "height": 1170,
+          "sha256": "9d992a40fdf22b2ba5b4c7fa1c49b4013d509f69f5c597b2c6888acb781d07b1",
+          "width": 2532
+        },
+        {
+          "file": "light_lab-opened-beam.png",
+          "height": 1200,
+          "sha256": "af2cf16aa6d031433d4bc350c99fa0d676f586aee4b3e50fb68a34d00c115033",
+          "width": 1100
+        },
+        {
+          "file": "light_lab-reopened.png",
+          "height": 1170,
+          "sha256": "9d992a40fdf22b2ba5b4c7fa1c49b4013d509f69f5c597b2c6888acb781d07b1",
+          "width": 2532
+        },
+        {
+          "file": "light_lab-reopened-beam.png",
+          "height": 1200,
+          "sha256": "af2cf16aa6d031433d4bc350c99fa0d676f586aee4b3e50fb68a34d00c115033",
+          "width": 1100
+        }
+      ]
+    },
+    {
+      "id": "candidate",
+      "pck_sha256": "6ec691604a060bcad3a21ac2666385e3d1a0c0ac07822c6b74c2a31e33dc5d6d",
+      "require_release": true,
+      "passed": true,
+      "checks": 58,
+      "failed_checks": 0,
+      "exit_code": 0,
+      "engine_errors": [],
+      "report_sha256": "140574ade65bde3b37a98aebb4365a567afe831bf5d1a72304954bbd5f1f7bbf",
+      "log_sha256": "a462acaa799b2ca9aecef9fce4db1f0ac48d0206c3468bc8264d00758824d19c",
+      "stages": [
+        {
+          "id": "cold",
+          "gpu_bytes": 536640708,
+          "texture_bytes": 530100556,
+          "buffer_bytes": 6540152,
+          "scene_descendants": 769,
+          "shop_descendants": 58,
+          "shop_viewports": 0,
+          "portrait_cached": false
+        },
+        {
+          "id": "wardrobe-before",
+          "gpu_bytes": 536640708,
+          "texture_bytes": 530100556,
+          "buffer_bytes": 6540152,
+          "scene_descendants": 769,
+          "shop_descendants": 58,
+          "shop_viewports": 0,
+          "portrait_cached": false
+        },
+        {
+          "id": "wardrobe-opened",
+          "gpu_bytes": 568542868,
+          "texture_bytes": 561934428,
+          "buffer_bytes": 6608440,
+          "scene_descendants": 818,
+          "shop_descendants": 107,
+          "shop_viewports": 0,
+          "portrait_cached": true
+        },
+        {
+          "id": "wardrobe-opened-closed",
+          "gpu_bytes": 551451056,
+          "texture_bytes": 544868000,
+          "buffer_bytes": 6583056,
+          "scene_descendants": 769,
+          "shop_descendants": 58,
+          "shop_viewports": 0,
+          "portrait_cached": false,
+          "previous_preview_nodes_freed": true,
+          "gpu_released_bytes": 17091812,
+          "texture_released_bytes": 17066428
+        },
+        {
+          "id": "wardrobe-reopened",
+          "gpu_bytes": 568542868,
+          "texture_bytes": 561934428,
+          "buffer_bytes": 6608440,
+          "scene_descendants": 818,
+          "shop_descendants": 107,
+          "shop_viewports": 0,
+          "portrait_cached": true
+        },
+        {
+          "id": "wardrobe-reopened-closed",
+          "gpu_bytes": 551451056,
+          "texture_bytes": 544868000,
+          "buffer_bytes": 6583056,
+          "scene_descendants": 769,
+          "shop_descendants": 58,
+          "shop_viewports": 0,
+          "portrait_cached": false,
+          "previous_preview_nodes_freed": true,
+          "gpu_released_bytes": 17091812,
+          "texture_released_bytes": 17066428
+        },
+        {
+          "id": "light_lab-before",
+          "gpu_bytes": 551451056,
+          "texture_bytes": 544868000,
+          "buffer_bytes": 6583056,
+          "scene_descendants": 769,
+          "shop_descendants": 58,
+          "shop_viewports": 0,
+          "portrait_cached": false
+        },
+        {
+          "id": "light_lab-opened",
+          "gpu_bytes": 581295907,
+          "texture_bytes": 566166699,
+          "buffer_bytes": 15129208,
+          "scene_descendants": 899,
+          "shop_descendants": 188,
+          "shop_viewports": 6,
+          "portrait_cached": false
+        },
+        {
+          "id": "light_lab-opened-closed",
+          "gpu_bytes": 559971496,
+          "texture_bytes": 544868000,
+          "buffer_bytes": 15103496,
+          "scene_descendants": 769,
+          "shop_descendants": 58,
+          "shop_viewports": 0,
+          "portrait_cached": false,
+          "previous_preview_nodes_freed": true,
+          "gpu_released_bytes": 21324411,
+          "texture_released_bytes": 21298699
+        },
+        {
+          "id": "light_lab-reopened",
+          "gpu_bytes": 581295907,
+          "texture_bytes": 566166699,
+          "buffer_bytes": 15129208,
+          "scene_descendants": 899,
+          "shop_descendants": 188,
+          "shop_viewports": 6,
+          "portrait_cached": false
+        },
+        {
+          "id": "light_lab-reopened-closed",
+          "gpu_bytes": 559971496,
+          "texture_bytes": 544868000,
+          "buffer_bytes": 15103496,
+          "scene_descendants": 769,
+          "shop_descendants": 58,
+          "shop_viewports": 0,
+          "portrait_cached": false,
+          "previous_preview_nodes_freed": true,
+          "gpu_released_bytes": 21324411,
+          "texture_released_bytes": 21298699
+        }
+      ],
+      "captures": [
+        {
+          "file": "wardrobe-opened.png",
+          "height": 1170,
+          "sha256": "dc312bbc5832b3f76ee6c1a9b1e77309fbbbcea859807ba5907b66fe5fca866b",
+          "width": 2532
+        },
+        {
+          "file": "wardrobe-reopened.png",
+          "height": 1170,
+          "sha256": "dc312bbc5832b3f76ee6c1a9b1e77309fbbbcea859807ba5907b66fe5fca866b",
+          "width": 2532
+        },
+        {
+          "file": "light_lab-opened.png",
+          "height": 1170,
+          "sha256": "83b6058c1dfb4bdb7382351a1241a28a2d221f85c9a38d7735a0c8c19d22d869",
+          "width": 2532
+        },
+        {
+          "file": "light_lab-opened-beam.png",
+          "height": 1200,
+          "sha256": "af2cf16aa6d031433d4bc350c99fa0d676f586aee4b3e50fb68a34d00c115033",
+          "width": 1100
+        },
+        {
+          "file": "light_lab-reopened.png",
+          "height": 1170,
+          "sha256": "83b6058c1dfb4bdb7382351a1241a28a2d221f85c9a38d7735a0c8c19d22d869",
+          "width": 2532
+        },
+        {
+          "file": "light_lab-reopened-beam.png",
+          "height": 1200,
+          "sha256": "af2cf16aa6d031433d4bc350c99fa0d676f586aee4b3e50fb68a34d00c115033",
+          "width": 1100
+        }
+      ]
+    }
+  ],
+  "image_comparison": [
+    {
+      "pair": "DEV2 vs DEV3: wardrobe-opened.png",
+      "size": [
+        2532,
+        1170
+      ],
+      "max_channel_error": 6,
+      "mean_channel_error": 0.000446675713263391,
+      "changed_pixels": 635,
+      "changed_bounds": [
+        1214,
+        18,
+        1361,
+        54
+      ]
+    },
+    {
+      "pair": "DEV2 vs DEV3: wardrobe-reopened.png",
+      "size": [
+        2532,
+        1170
+      ],
+      "max_channel_error": 6,
+      "mean_channel_error": 0.000446675713263391,
+      "changed_pixels": 635,
+      "changed_bounds": [
+        1214,
+        18,
+        1361,
+        54
+      ]
+    },
+    {
+      "pair": "DEV2 vs DEV3: light_lab-opened.png",
+      "size": [
+        2532,
+        1170
+      ],
+      "max_channel_error": 6,
+      "mean_channel_error": 0.000446675713263391,
+      "changed_pixels": 635,
+      "changed_bounds": [
+        1214,
+        18,
+        1361,
+        54
+      ]
+    },
+    {
+      "pair": "DEV2 vs DEV3: light_lab-opened-beam.png",
+      "size": [
+        1100,
+        1200
+      ],
+      "max_channel_error": 0,
+      "mean_channel_error": 0.0,
+      "changed_pixels": 0,
+      "changed_bounds": null
+    },
+    {
+      "pair": "DEV2 vs DEV3: light_lab-reopened.png",
+      "size": [
+        2532,
+        1170
+      ],
+      "max_channel_error": 6,
+      "mean_channel_error": 0.000446675713263391,
+      "changed_pixels": 635,
+      "changed_bounds": [
+        1214,
+        18,
+        1361,
+        54
+      ]
+    },
+    {
+      "pair": "DEV2 vs DEV3: light_lab-reopened-beam.png",
+      "size": [
+        1100,
+        1200
+      ],
+      "max_channel_error": 0,
+      "mean_channel_error": 0.0,
+      "changed_pixels": 0,
+      "changed_bounds": null
+    },
+    {
+      "pair": "baseline: wardrobe-opened.png vs wardrobe-reopened.png",
+      "size": [
+        2532,
+        1170
+      ],
+      "max_channel_error": 0,
+      "mean_channel_error": 0.0,
+      "changed_pixels": 0,
+      "changed_bounds": null
+    },
+    {
+      "pair": "baseline: light_lab-opened.png vs light_lab-reopened.png",
+      "size": [
+        2532,
+        1170
+      ],
+      "max_channel_error": 0,
+      "mean_channel_error": 0.0,
+      "changed_pixels": 0,
+      "changed_bounds": null
+    },
+    {
+      "pair": "baseline: light_lab-opened-beam.png vs light_lab-reopened-beam.png",
+      "size": [
+        1100,
+        1200
+      ],
+      "max_channel_error": 0,
+      "mean_channel_error": 0.0,
+      "changed_pixels": 0,
+      "changed_bounds": null
+    },
+    {
+      "pair": "candidate: wardrobe-opened.png vs wardrobe-reopened.png",
+      "size": [
+        2532,
+        1170
+      ],
+      "max_channel_error": 0,
+      "mean_channel_error": 0.0,
+      "changed_pixels": 0,
+      "changed_bounds": null
+    },
+    {
+      "pair": "candidate: light_lab-opened.png vs light_lab-reopened.png",
+      "size": [
+        2532,
+        1170
+      ],
+      "max_channel_error": 0,
+      "mean_channel_error": 0.0,
+      "changed_pixels": 0,
+      "changed_bounds": null
+    },
+    {
+      "pair": "candidate: light_lab-opened-beam.png vs light_lab-reopened-beam.png",
+      "size": [
+        1100,
+        1200
+      ],
+      "max_channel_error": 0,
+      "mean_channel_error": 0.0,
+      "changed_pixels": 0,
+      "changed_bounds": null
+    }
+  ],
+  "image_comparison_sha256": "a06d0423b40df7abda8f4820cac7768c569f1f3dd9af7f4d5d487062a84b3677",
+  "visual_review": {
+    "regression_found": false,
+    "observations": [
+      "Wardrobe portrait, clothing recoloring, thumbnails, text and controls remain intact.",
+      "Light preview shows the existing worn hero and Deepheart beam; both 1100x1200 beam images are pixel-identical across packages.",
+      "Opening and reopening screenshots are pixel-identical within each package.",
+      "The only cross-package full-window difference is 635 pixels in the exposed top hub strip, bounding rectangle [1214,18,1361,54], maximum channel difference 6/255; shop content below this strip is identical."
+    ]
+  },
+  "limits": [
+    "No phone FPS or opening-latency claim.",
+    "Post-close total memory remains above cold startup because the counters cover the complete scene and backend; this report does not claim all allocations return to cold values.",
+    "The final total is a whole-package comparison; the within-package open/close deltas are the direct preview-release measurements.",
+    "No art, resolution, import, runtime or protected baseline edits were made for this review."
+  ]
+}

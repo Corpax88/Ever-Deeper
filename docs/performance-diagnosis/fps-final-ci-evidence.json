@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "source_commit": "42fffc163c940db2ab9df2e1924608e2d1659793",
+  "source_tree": "0513a2907e1c7a2e7fec29acc30addf22f0a7c08",
+  "qa_run_id": 34361743735,
+  "source_checks_run_id": 34361748660,
+  "all_six_jobs_passed": true,
+  "jobs": [
+    {
+      "id": 102500182106,
+      "name": "build",
+      "conclusion": "success"
+    },
+    {
+      "id": 102501329888,
+      "name": "hero-motion",
+      "conclusion": "success"
+    },
+    {
+      "id": 102501329892,
+      "name": "mobile",
+      "conclusion": "success"
+    },
+    {
+      "id": 102501329942,
+      "name": "native-visual",
+      "conclusion": "success"
+    },
+    {
+      "id": 102501329947,
+      "name": "web-audio (webkit)",
+      "conclusion": "success"
+    },
+    {
+      "id": 102501330053,
+      "name": "web-audio (chromium)",
+      "conclusion": "success"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 10108704344,
+      "name": "ever-deeper-one-point-zero-native-visual",
+      "size": 425954762,
+      "digest": "sha256:fe9b56c4e85a1021d437425e5d491933c1614078e21202199352f966ab4e2fa2",
+      "source_commit": "42fffc163c940db2ab9df2e1924608e2d1659793"
+    },
+    {
+      "id": 10108439751,
+      "name": "ever-deeper-one-point-zero-mobile-review",
+      "size": 16900405,
+      "digest": "sha256:ab1fd7cba577202d171d0cdde432a41dd861a5eb80a37cb09d6fb8b5330fe70b",
+      "source_commit": "42fffc163c940db2ab9df2e1924608e2d1659793"
+    },
+    {
+      "id": 10108329576,
+      "name": "ever-deeper-one-point-zero-hero-motion-review",
+      "size": 9386758,
+      "digest": "sha256:7872199b693e27d7a88858d0e49656a50bb966f1a70f0747a3d8d1e1364c2383",
+      "source_commit": "42fffc163c940db2ab9df2e1924608e2d1659793"
+    },
+    {
+      "id": 10108295157,
+      "name": "ever-deeper-one-point-zero-web-audio-webkit",
+      "size": 5785,
+      "digest": "sha256:b2e2f9575a0f35b03041f9bf545ed31520eeb39be9b98678bf3d535e101e8e2d",
+      "source_commit": "42fffc163c940db2ab9df2e1924608e2d1659793"
+    },
+    {
+      "id": 10108274400,
+      "name": "ever-deeper-one-point-zero-web-audio-chromium",
+      "size": 5545,
+      "digest": "sha256:8a20453febaf0f24ba03f1289c4438390706d3a79f70e434213b7ab9da6767ce",
+      "source_commit": "42fffc163c940db2ab9df2e1924608e2d1659793"
+    },
+    {
+      "id": 10108229970,
+      "name": "ever-deeper-one-point-zero-build-review",
+      "size": 87213,
+      "digest": "sha256:327158040d4a16b04fe36293c6beccde3f0cb394acb925eabe4181f0abb87826",
+      "source_commit": "42fffc163c940db2ab9df2e1924608e2d1659793"
+    },
+    {
+      "id": 10108229398,
+      "name": "ever-deeper-one-point-zero-dev-candidate",
+      "size": 232515759,
+      "digest": "sha256:dd727bb1cc109d7536201694e668c7db5994cef9ed26192420c7878cd54bc77c",
+      "source_commit": "42fffc163c940db2ab9df2e1924608e2d1659793"
+    }
+  ],
+  "candidate_manifest_sha256": "a2787c8974aadafe358455807f31ee4385c533cf3538eed6086da12d746db21c",
+  "candidate_pck_sha256": "6ec691604a060bcad3a21ac2666385e3d1a0c0ac07822c6b74c2a31e33dc5d6d",
+  "native_journey": {
+    "captures": 34,
+    "assertions": 431,
+    "passed": true,
+    "limitations": "Accelerated campaign funding, fixture placement and simulation waits; not human progression pacing."
+  },
+  "mobile": {
+    "browser": "WebKit 26.5",
+    "viewport": [
+      844,
+      390
+    ],
+    "gameplay_assertions": 869,
+    "touch_assertions": 195,
+    "passed": true,
+    "limitations": "Browser device emulation; Apple GPU WebGL renderer string is not proof of physical iPhone hardware."
+  },
+  "hero": {
+    "damage_combinations": 12,
+    "passed": true
+  },
+  "audio": {
+    "webkit": true,
+    "chromium": true,
+    "subjective_listening_verified": false
+  },
+  "physical_iphone_verified": false,
+  "final_one_point_zero_approved": false,
+  "live_publication_authorized": false,
+  "notes": [
+    "All downloaded ZIPs independently verified against GitHub artifact digest; exact candidate verified using prepare.py verify-candidate.",
+    "Later external diagnostic scripts and review metadata do not rebuild or replace this immutable runtime candidate."
+  ]
+}

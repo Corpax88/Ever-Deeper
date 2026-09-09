@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "recorded_date": "2026-09-09",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "status": "Intermittent headless engine error remains unreproduced; root cause not proven.",
+  "original_failure": {
+    "suite": "local source 13-case gate",
+    "error": "ERROR: Parameter \"t\" is null. at texture_2d_initialize (./servers/rendering/dummy/storage/texture_storage.h:85)",
+    "gate_kept_failed": true,
+    "log_sha256": "aa653dc7e176cb526c785a2c59e35349dba10b8b7b70f6d4a593f79d08da5f0e"
+  },
+  "isolated_touch": {
+    "passed": true,
+    "exit_code": 0,
+    "assertions": 123,
+    "result_sha256": "a474f76f1d3e51d2d366188ea4da8278a8f090d8b763ef66a595ebe2dd286225",
+    "log_sha256": "1746fa897fc9ec1c3783e235df430d16aad588eda5527a74f042de647f54daf9"
+  },
+  "independent_touch": {
+    "passed": true,
+    "exit_code": 0,
+    "assertions": 123,
+    "result_sha256": "e6216c2860653abe2c9771ef2cc085175ab29825441c747e67fb1f8d550c36a0",
+    "log_sha256": "1746fa897fc9ec1c3783e235df430d16aad588eda5527a74f042de647f54daf9"
+  },
+  "initial_candidate_ci": {
+    "run_id": 34360064270,
+    "url": "https://github.com/Corpax88/Ever-Deeper/actions/runs/34360064270",
+    "source_commit": "bafaec4dccef813602245c6140ec457a286784fd",
+    "validation_sha256": "948c9c14e1f1ded52bc9fb58006f596602d80f20c4faec2e5fac51a2794cd2aa",
+    "passed": true,
+    "source": {
+      "passed": true,
+      "cases": 13,
+      "touch_completion": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=123 failures=[]"
+    },
+    "dev": {
+      "passed": true,
+      "cases": 13,
+      "touch_completion": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=125 failures=[]"
+    },
+    "scope": "Initial candidate only; no result claimed for the later corrected CI run."
+  },
+  "allocation_stress": {
+    "harness_sha256": "49088769acb65a335913d3070b16d01b8d3bf7ada7c3a2a690566045e5c57fdf",
+    "workflow": "Sequential worn -> Crusher -> Deepcore equipment changes alongside ordinary short-lived main-thread texture loads; ordinary ResourceLoader reuse, no cache-ignore.",
+    "results": [
+      {
+        "package": "baseline",
+        "package_sha256": "c331cde35f64edf26a9d10c921e46ad1ef9bd3001aea225b521a38c86ea0ca36",
+        "cycles": 12,
+        "cold_temporary_texture_loads": 2208,
+        "all_cycles_eight_atlases": true,
+        "exit_code": 0,
+        "engine_error_count": 0,
+        "result_sha256": "dfaf898efac1a278b5938e456aadd80d104b3782a44b17c89c9047a2e3a790af",
+        "log_sha256": "a83183ca118b8597328a131af307c4f99f38b1bb7d768ef18960d5a7f5a96059"
+      },
+      {
+        "package": "candidate",
+        "package_sha256": "b737de4db1aeee6d5f275182c2650dfe7d09b73a87bf7962afae4d8b0b94c33d",
+        "cycles": 12,
+        "cold_temporary_texture_loads": 2904,
+        "all_cycles_eight_atlases": true,
+        "exit_code": 0,
+        "engine_error_count": 0,
+        "result_sha256": "ea0755e3a0722269c02067582ff627347283b7804fa60395b5ba15eefc34c637",
+        "log_sha256": "c28c55ba02c0145ebdb0b6d0e36f3b5943a7ee2bebccbf53b0c95a0935e502e7"
+      }
+    ],
+    "compiled_loader_source_available": false,
+    "source_identity_basis": "HeroGear unchanged in inspected baseline and initial candidate git sources."
+  },
+  "hypothesis": {
+    "proven": false,
+    "description": "Concurrent RID allocation in the dummy backend is a source-supported possibility. The dummy owner defaults to non-thread-safe allocation; GLES3 explicitly uses a thread-safe owner. This does not establish the cause of the observed error. Rendering-thread free_rid flushes pending commands before freeing, so resource release alone does not establish initialize-after-free.",
+    "sources": [
+      {
+        "claim": "Dummy uses default non-thread-safe RID_PtrOwner; texture_2d_initialize fails if that owner no longer contains the supplied RID. This is not the PNG-image-null check.",
+        "url": "https://github.com/godotengine/godot/blob/ed1daf0bf/servers/rendering/dummy/storage/texture_storage.h",
+        "github_blob_sha": "7824ab84f99ad243fb17109edd1eff84e86bccac"
+      },
+      {
+        "claim": "RID_Alloc and RID_PtrOwner THREAD_SAFE template defaults are false; allocation growth and counters lock only when true.",
+        "url": "https://github.com/godotengine/godot/blob/ed1daf0bf/core/templates/rid_owner.h",
+        "github_blob_sha": "f97a905b14b9772d366e9f3ad2b5a6b7f95221c0"
+      },
+      {
+        "claim": "GLES3 texture storage explicitly uses RID_Owner<Texture,true>.",
+        "url": "https://github.com/godotengine/godot/blob/ed1daf0bf/drivers/gles3/storage/texture_storage.h",
+        "github_blob_sha": "2f98843aaabcd578e64202161e30e1f52306b675"
+      },
+      {
+        "claim": "Texture creation allocates RID on caller thread before queuing initialize. Rendering-thread free_rid flushes pending commands before _free. Thus a main-thread resource clear does not alone establish initialize-after-free.",
+        "url": "https://github.com/godotengine/godot/blob/ed1daf0bf/servers/rendering/rendering_server_default.h",
+        "github_blob_sha": "30d52d8e891a17c488111a72dd9b48418c1ab762"
+      },
+      {
+        "claim": "Threaded ResourceLoader calls _load before taking its load-status mutex; texture creation can run on workers.",
+        "url": "https://github.com/godotengine/godot/blob/ed1daf0bf/core/io/resource_loader.cpp",
+        "github_blob_sha": "e7cf8b8a3fc5e57196b70618ba6d28b7f46195e6"
+      }
+    ]
+  },
+  "changes_for_error": {
+    "application_workaround": false,
+    "artificial_retention_delay": false,
+    "headless_bypass": false,
+    "error_filtering": false
+  },
+  "limits": [
+    "Bounded passing reruns do not rule out the intermittent error.",
+    "The failed local gate remains recorded; no claim that the error is harmless.",
+    "No browser or physical iPhone performance claim follows from these checks."
+  ]
+}
