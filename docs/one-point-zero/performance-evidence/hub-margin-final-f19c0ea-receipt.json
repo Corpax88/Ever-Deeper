@@ -1,0 +1,177 @@
+{
+  "status": "rendered_and_visually_inspected_by_ui_agent",
+  "started_utc": "2026-09-09T09:32:19.397302+00:00",
+  "source_commit": "f19c0ea61402c860fab60eae3560579aeed6ff21",
+  "build_run_id": 34334701244,
+  "pack_path": "/workspace/scratch/6604552ab244/candidate-f19c0ea/dev/index.pck",
+  "pck_sha256_before": "7757ec55406704ce613ced7c34e51581e2f1e06eb1cae893ab7486c03d5e5260",
+  "expected_pck_sha256": "7757ec55406704ce613ced7c34e51581e2f1e06eb1cae893ab7486c03d5e5260",
+  "manifest_sha256": "8cb889f0e18247ac9ab95b81539f43aaf6b4738d00fa18c09072ea7fc4d0c017",
+  "candidate_version": "1.0.0-dev.1",
+  "harness_path": "/workspace/scratch/6604552ab244/Ever-Deeper/tools/review_hub_light_receivers.gd",
+  "harness_sha256": "886f7da0775b73c7678242b42a00fdc23577f614d5a23ebc9389d773e5074761",
+  "launcher_sha256": "60a3e9f4e568168601a427106f9349c8f4b3c7f86be308c54e6daadd23b57632",
+  "godot_path": "/workspace/scratch/6604552ab244/runtime/Godot_v4.7.2-stable_linux.x86_64",
+  "godot_sha256": "8d106cbe6144c2dc7e881d61d2429c1a8a76e6b22ef48bd5e48dcf934953f71e",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "working_directory": "/workspace/scratch/6604552ab244/Ever-Deeper",
+  "launcher_argv": [
+    "python3",
+    "/workspace/scratch/6604552ab244/Ever-Deeper/tools/run_rendered_isolated.py",
+    "--godot",
+    "/workspace/scratch/6604552ab244/runtime/Godot_v4.7.2-stable_linux.x86_64",
+    "--xvfb",
+    "/workspace/scratch/6604552ab244/runtime/xvfb/usr/bin/Xvfb",
+    "--project",
+    "/workspace/scratch/6604552ab244/margin-final-f19c0ea/pack-run",
+    "--resolution",
+    "2532x1170",
+    "--timeout",
+    "300",
+    "--output",
+    "/workspace/scratch/6604552ab244/margin-final-f19c0ea",
+    "--",
+    "--main-pack",
+    "/workspace/scratch/6604552ab244/candidate-f19c0ea/dev/index.pck",
+    "--script",
+    "/workspace/scratch/6604552ab244/Ever-Deeper/tools/review_hub_light_receivers.gd",
+    "--",
+    "--output=/workspace/scratch/6604552ab244/margin-final-f19c0ea"
+  ],
+  "godot_argv": [
+    "/workspace/scratch/6604552ab244/runtime/Godot_v4.7.2-stable_linux.x86_64",
+    "--path",
+    "/workspace/scratch/6604552ab244/margin-final-f19c0ea/pack-run",
+    "--display-driver",
+    "x11",
+    "--resolution",
+    "2532x1170",
+    "--audio-driver",
+    "Dummy",
+    "--main-pack",
+    "/workspace/scratch/6604552ab244/candidate-f19c0ea/dev/index.pck",
+    "--script",
+    "/workspace/scratch/6604552ab244/Ever-Deeper/tools/review_hub_light_receivers.gd",
+    "--",
+    "--output=/workspace/scratch/6604552ab244/margin-final-f19c0ea"
+  ],
+  "environment": {
+    "LP_NUM_THREADS": "4",
+    "OMP_NUM_THREADS": "4",
+    "LIBGL_ALWAYS_SOFTWARE": "1"
+  },
+  "fixtures": {
+    "world": "Hub",
+    "headlamp_styles": [
+      "standard",
+      "wide",
+      "focused",
+      "prismatic",
+      "deepheart"
+    ],
+    "range_multiplier": 1.4,
+    "energy_multiplier": 1.3,
+    "terminal_visual": "repaired",
+    "simulation_time_frozen": true
+  },
+  "framebuffer": [
+    2532,
+    1170
+  ],
+  "physical_iphone": false,
+  "visual_review_pending": false,
+  "limitations": "Native llvmpipe eight-second samples with interleaved controls; no physical-phone FPS inference. Whole-candidate acceptance remains separate.",
+  "launcher_exit_code": 0,
+  "elapsed_seconds": 175.17978179900092,
+  "pck_sha256_after": "7757ec55406704ce613ced7c34e51581e2f1e06eb1cae893ab7486c03d5e5260",
+  "package_unchanged": true,
+  "runtime_errors": [],
+  "completion_marker": true,
+  "comparison_exit_code": 0,
+  "comparison_tool_sha256": "b8b57bd0b24c1392471f5ad6043564be605b672df925d14d877093207533c9d5",
+  "pngs": {
+    "00-standard-broad.png": {
+      "sha256": "cace13fca2019858f0b772e3680037b4155d8e8fcd3e36ccf9b20d5d838b0853",
+      "size": 4695150
+    },
+    "00-standard-narrow.png": {
+      "sha256": "2a46394fb6e8b7a848094e5e32b5a00d1679d8e6d3b3b6823ba40b40c8ec5d87",
+      "size": 4695242
+    },
+    "00-standard-restored.png": {
+      "sha256": "cace13fca2019858f0b772e3680037b4155d8e8fcd3e36ccf9b20d5d838b0853",
+      "size": 4695150
+    },
+    "01-wide-broad.png": {
+      "sha256": "fb5e6cca18c1feea75a88f252dedf7fcf7b983088ff6ff74b64b6447016790aa",
+      "size": 4971551
+    },
+    "01-wide-narrow.png": {
+      "sha256": "63a0d186047a3de3b7d802077278c0293f6e30e6190cc7652cf68cbcfd90e4a6",
+      "size": 4971527
+    },
+    "01-wide-restored.png": {
+      "sha256": "fb5e6cca18c1feea75a88f252dedf7fcf7b983088ff6ff74b64b6447016790aa",
+      "size": 4971551
+    },
+    "02-focused-broad.png": {
+      "sha256": "c348a995da6c1af885acfe70b98ae515cfa4b002c54a21417e918969a7072a70",
+      "size": 4607888
+    },
+    "02-focused-narrow.png": {
+      "sha256": "626607da394116490eef7c844e5a82e89de50aa0d98d6005cafabc683b1e9320",
+      "size": 4607940
+    },
+    "02-focused-restored.png": {
+      "sha256": "c348a995da6c1af885acfe70b98ae515cfa4b002c54a21417e918969a7072a70",
+      "size": 4607888
+    },
+    "03-prismatic-broad.png": {
+      "sha256": "e2f429f97a271a1eca79807c7c6d009ba396ce5ee95696305f6785c31234fc62",
+      "size": 4626898
+    },
+    "03-prismatic-narrow.png": {
+      "sha256": "8755913a2ea90c31a13c92c689464e539d4a893c4f5fd539b970f6ad9ad82506",
+      "size": 4626947
+    },
+    "03-prismatic-restored.png": {
+      "sha256": "e2f429f97a271a1eca79807c7c6d009ba396ce5ee95696305f6785c31234fc62",
+      "size": 4626898
+    },
+    "04-deepheart-broad.png": {
+      "sha256": "10be9689531db84c196140ca5d9fcff47149fa3b68a27da9ca98b64d7d892c7e",
+      "size": 4684016
+    },
+    "04-deepheart-narrow.png": {
+      "sha256": "a6d9391e68ab257025aa59a259b7d8ab2b85c668bf1fc086ce987bbff9854710",
+      "size": 4683993
+    },
+    "04-deepheart-restored.png": {
+      "sha256": "10be9689531db84c196140ca5d9fcff47149fa3b68a27da9ca98b64d7d892c7e",
+      "size": 4684016
+    }
+  },
+  "expected_capture_count": 15,
+  "complete_matrix": true,
+  "independent_critic_review_pending": true,
+  "comparison_summary": "hub-margin-final-f19c0ea-comparison.json",
+  "raw_output_directory": "/workspace/scratch/6604552ab244/margin-final-f19c0ea",
+  "recorded_files": {
+    "hub-light-receivers.json": {
+      "sha256": "c1b0e8bf70a54bf7b4735630ae0b1d3339a1b9ade29c29b3926b60e89fd0262b",
+      "size": 2702
+    },
+    "hub-receiver-image-differences.json": {
+      "sha256": "82b7744b2c7a47b1a7ece7294366bf72d3afe52ae1301348e02b3f298bbb9e1d",
+      "size": 4312
+    },
+    "godot.log": {
+      "sha256": "21d96cdf27fa395e69444407afc9fae97ea660e2c57ffd2c5b1da4f5df4bd992",
+      "size": 3973
+    },
+    "xvfb.log": {
+      "sha256": "55988dfebc0944c1b688b5b0941f0513e3b204bb0abaf1ba5f3ff64eed9aab97",
+      "size": 1278
+    }
+  }
+}

@@ -1,0 +1,497 @@
+{
+  "schema": 1,
+  "source_commit": "f19c0ea61402c860fab60eae3560579aeed6ff21",
+  "build_run_id": 34334701244,
+  "candidate_version": "1.0.0-dev.1",
+  "pck_sha256": "7757ec55406704ce613ced7c34e51581e2f1e06eb1cae893ab7486c03d5e5260",
+  "raw_output_directory": "/workspace/scratch/6604552ab244/margin-final-f19c0ea",
+  "framebuffer": [
+    2532,
+    1170
+  ],
+  "mobile_target_css": [
+    844,
+    390
+  ],
+  "target_dpr": 3,
+  "physical_iphone": false,
+  "renderer": "gl_compatibility",
+  "device": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "software_threads": 4,
+  "sample_seconds_per_stage": 8,
+  "settle_seconds_per_stage": 1,
+  "stage_count": 15,
+  "lights_preserved": true,
+  "reference_controls_exact": true,
+  "original_restored_png_bytes_identical": true,
+  "candidate_exact": false,
+  "stages": [
+    {
+      "draw_calls": 125.0,
+      "fps": 9.99804663163934,
+      "frames": 80,
+      "p95_ms": 118.015,
+      "stage": "00-standard-broad",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 125.0,
+      "fps": 10.3483555714923,
+      "frames": 83,
+      "p95_ms": 116.861,
+      "stage": "00-standard-narrow",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 125.0,
+      "fps": 10.0366847021347,
+      "frames": 81,
+      "p95_ms": 119.875,
+      "stage": "00-standard-restored",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 152.0,
+      "fps": 8.55110879997085,
+      "frames": 69,
+      "p95_ms": 140.331,
+      "stage": "01-wide-broad",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 152.0,
+      "fps": 8.72409380345065,
+      "frames": 70,
+      "p95_ms": 134.289,
+      "stage": "01-wide-narrow",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 152.0,
+      "fps": 8.20171241813821,
+      "frames": 66,
+      "p95_ms": 140.855,
+      "stage": "01-wide-restored",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 142.0,
+      "fps": 11.1827136121954,
+      "frames": 90,
+      "p95_ms": 109.711,
+      "stage": "02-focused-broad",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 142.0,
+      "fps": 11.9086620506542,
+      "frames": 96,
+      "p95_ms": 99.655,
+      "stage": "02-focused-narrow",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 142.0,
+      "fps": 11.6120732454991,
+      "frames": 94,
+      "p95_ms": 98.925,
+      "stage": "02-focused-restored",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 136.0,
+      "fps": 12.8704486875829,
+      "frames": 103,
+      "p95_ms": 93.548,
+      "stage": "03-prismatic-broad",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 136.0,
+      "fps": 13.8282329162772,
+      "frames": 111,
+      "p95_ms": 91.077,
+      "stage": "03-prismatic-narrow",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 136.0,
+      "fps": 12.9731552983988,
+      "frames": 104,
+      "p95_ms": 90.155,
+      "stage": "03-prismatic-restored",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 124.0,
+      "fps": 11.6111377529152,
+      "frames": 93,
+      "p95_ms": 104.365,
+      "stage": "04-deepheart-broad",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 124.0,
+      "fps": 12.2024470637924,
+      "frames": 98,
+      "p95_ms": 97.94,
+      "stage": "04-deepheart-narrow",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 124.0,
+      "fps": 12.0535600562417,
+      "frames": 97,
+      "p95_ms": 98.304,
+      "stage": "04-deepheart-restored",
+      "visible_sections": 17
+    }
+  ],
+  "summaries": [
+    {
+      "fixture": "00-standard",
+      "headlamp_style": "standard",
+      "player_position": [
+        430,
+        820
+      ],
+      "beam_direction": [
+        1,
+        0
+      ],
+      "original_fps": 9.99804663163934,
+      "trimmed_fps": 10.3483555714923,
+      "restored_fps": 10.0366847021347,
+      "mean_control_fps": 10.01736566688702,
+      "gain_against_mean_controls_percent": 3.3041611498658474,
+      "signed_control_drift_percent": 0.38571089226661526,
+      "absolute_control_drift_percent": 0.38571089226661526,
+      "original_p95_ms": 118.015,
+      "trimmed_p95_ms": 116.861,
+      "restored_p95_ms": 119.875,
+      "candidate_p95_reduction_against_mean_controls_percent": 1.7520702845853053,
+      "draw_calls": 125.0,
+      "visible_sections": 17,
+      "raster": {
+        "fixture": "00-standard",
+        "candidate": {
+          "reference": "00-standard-broad.png",
+          "candidate": "00-standard-narrow.png",
+          "size": [
+            2532,
+            1170
+          ],
+          "max_channel_delta": 2,
+          "mean_channel_delta": 0.00022380200105318588,
+          "changed_pixels": 2077,
+          "changed_percent": 0.07011112461349428,
+          "changed_bounds": [
+            26,
+            16,
+            2532,
+            1170
+          ]
+        },
+        "control": {
+          "reference": "00-standard-broad.png",
+          "candidate": "00-standard-restored.png",
+          "size": [
+            2532,
+            1170
+          ],
+          "max_channel_delta": 0,
+          "mean_channel_delta": 0.0,
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "changed_bounds": null
+        }
+      },
+      "candidate_pixels_by_max_channel_delta": {
+        "1": 1837,
+        "2": 240
+      },
+      "original_restored_png_bytes_identical": true,
+      "visual_inspection": "Portal rim, lower wall edge, full museum facade, relic pedestal and route materials retain their appearance."
+    },
+    {
+      "fixture": "01-wide",
+      "headlamp_style": "wide",
+      "player_position": [
+        1200,
+        480
+      ],
+      "beam_direction": [
+        -1,
+        0
+      ],
+      "original_fps": 8.55110879997085,
+      "trimmed_fps": 8.72409380345065,
+      "restored_fps": 8.20171241813821,
+      "mean_control_fps": 8.376410609054531,
+      "gain_against_mean_controls_percent": 4.150742013772435,
+      "signed_control_drift_percent": -4.17119453832596,
+      "absolute_control_drift_percent": 4.17119453832596,
+      "original_p95_ms": 140.331,
+      "trimmed_p95_ms": 134.289,
+      "restored_p95_ms": 140.855,
+      "candidate_p95_reduction_against_mean_controls_percent": 4.483864772783852,
+      "draw_calls": 152.0,
+      "visible_sections": 17,
+      "raster": {
+        "fixture": "01-wide",
+        "candidate": {
+          "reference": "01-wide-broad.png",
+          "candidate": "01-wide-narrow.png",
+          "size": [
+            2532,
+            1170
+          ],
+          "max_channel_delta": 2,
+          "mean_channel_delta": 9.164742577064851e-05,
+          "changed_pixels": 882,
+          "changed_percent": 0.0297727548912383,
+          "changed_bounds": [
+            0,
+            0,
+            2509,
+            1170
+          ]
+        },
+        "control": {
+          "reference": "01-wide-broad.png",
+          "candidate": "01-wide-restored.png",
+          "size": [
+            2532,
+            1170
+          ],
+          "max_channel_delta": 0,
+          "mean_channel_delta": 0.0,
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "changed_bounds": null
+        }
+      },
+      "candidate_pixels_by_max_channel_delta": {
+        "1": 803,
+        "2": 79
+      },
+      "original_restored_png_bytes_identical": true,
+      "visual_inspection": "Wide beam fixture retains the visible museum top, wall and route edges and workshop artwork; context UI is identical across variants."
+    },
+    {
+      "fixture": "02-focused",
+      "headlamp_style": "focused",
+      "player_position": [
+        720,
+        200
+      ],
+      "beam_direction": [
+        0,
+        -1
+      ],
+      "original_fps": 11.1827136121954,
+      "trimmed_fps": 11.9086620506542,
+      "restored_fps": 11.6120732454991,
+      "mean_control_fps": 11.39739342884725,
+      "gain_against_mean_controls_percent": 4.4858381435961325,
+      "signed_control_drift_percent": 3.7671739243200535,
+      "absolute_control_drift_percent": 3.7671739243200535,
+      "original_p95_ms": 109.711,
+      "trimmed_p95_ms": 99.655,
+      "restored_p95_ms": 98.925,
+      "candidate_p95_reduction_against_mean_controls_percent": 4.469986004332904,
+      "draw_calls": 142.0,
+      "visible_sections": 17,
+      "raster": {
+        "fixture": "02-focused",
+        "candidate": {
+          "reference": "02-focused-broad.png",
+          "candidate": "02-focused-narrow.png",
+          "size": [
+            2532,
+            1170
+          ],
+          "max_channel_delta": 2,
+          "mean_channel_delta": 0.00011688000432076261,
+          "changed_pixels": 1078,
+          "changed_percent": 0.03638892264484682,
+          "changed_bounds": [
+            1,
+            53,
+            2510,
+            1170
+          ]
+        },
+        "control": {
+          "reference": "02-focused-broad.png",
+          "candidate": "02-focused-restored.png",
+          "size": [
+            2532,
+            1170
+          ],
+          "max_channel_delta": 0,
+          "mean_channel_delta": 0.0,
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "changed_bounds": null
+        }
+      },
+      "candidate_pixels_by_max_channel_delta": {
+        "1": 985,
+        "2": 93
+      },
+      "original_restored_png_bytes_identical": true,
+      "visual_inspection": "Focused beam and terminal approach retain the bright metalwork, relic museum edge and surrounding wall texture; original/restored lighting matches."
+    },
+    {
+      "fixture": "03-prismatic",
+      "headlamp_style": "prismatic",
+      "player_position": [
+        90,
+        90
+      ],
+      "beam_direction": [
+        -1,
+        -1
+      ],
+      "original_fps": 12.8704486875829,
+      "trimmed_fps": 13.8282329162772,
+      "restored_fps": 12.9731552983988,
+      "mean_control_fps": 12.92180199299085,
+      "gain_against_mean_controls_percent": 7.014740852537615,
+      "signed_control_drift_percent": 0.7948319504633307,
+      "absolute_control_drift_percent": 0.7948319504633307,
+      "original_p95_ms": 93.548,
+      "trimmed_p95_ms": 91.077,
+      "restored_p95_ms": 90.155,
+      "candidate_p95_reduction_against_mean_controls_percent": 0.8432088751952893,
+      "draw_calls": 136.0,
+      "visible_sections": 17,
+      "raster": {
+        "fixture": "03-prismatic",
+        "candidate": {
+          "reference": "03-prismatic-broad.png",
+          "candidate": "03-prismatic-narrow.png",
+          "size": [
+            2532,
+            1170
+          ],
+          "max_channel_delta": 2,
+          "mean_channel_delta": 0.0001101288127354478,
+          "changed_pixels": 1106,
+          "changed_percent": 0.037334089466790885,
+          "changed_bounds": [
+            25,
+            43,
+            2528,
+            1170
+          ]
+        },
+        "control": {
+          "reference": "03-prismatic-broad.png",
+          "candidate": "03-prismatic-restored.png",
+          "size": [
+            2532,
+            1170
+          ],
+          "max_channel_delta": 0,
+          "mean_channel_delta": 0.0,
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "changed_bounds": null
+        }
+      },
+      "candidate_pixels_by_max_channel_delta": {
+        "1": 1069,
+        "2": 37
+      },
+      "original_restored_png_bytes_identical": true,
+      "visual_inspection": "Diagonal upper-corner fixture retains rotated wall edges and corner texture boundaries; no introduced gap or cut edge is visible."
+    },
+    {
+      "fixture": "04-deepheart",
+      "headlamp_style": "deepheart",
+      "player_position": [
+        1200,
+        800
+      ],
+      "beam_direction": [
+        0,
+        1
+      ],
+      "original_fps": 11.6111377529152,
+      "trimmed_fps": 12.2024470637924,
+      "restored_fps": 12.0535600562417,
+      "mean_control_fps": 11.83234890457845,
+      "gain_against_mean_controls_percent": 3.1278502873655523,
+      "signed_control_drift_percent": 3.739091087445098,
+      "absolute_control_drift_percent": 3.739091087445098,
+      "original_p95_ms": 104.365,
+      "trimmed_p95_ms": 97.94,
+      "restored_p95_ms": 98.304,
+      "candidate_p95_reduction_against_mean_controls_percent": 3.349796959574469,
+      "draw_calls": 124.0,
+      "visible_sections": 17,
+      "raster": {
+        "fixture": "04-deepheart",
+        "candidate": {
+          "reference": "04-deepheart-broad.png",
+          "candidate": "04-deepheart-narrow.png",
+          "size": [
+            2532,
+            1170
+          ],
+          "max_channel_delta": 2,
+          "mean_channel_delta": 0.0003360405611590446,
+          "changed_pixels": 3272,
+          "changed_percent": 0.11044949433575024,
+          "changed_bounds": [
+            0,
+            1,
+            2494,
+            1170
+          ]
+        },
+        "control": {
+          "reference": "04-deepheart-broad.png",
+          "candidate": "04-deepheart-restored.png",
+          "size": [
+            2532,
+            1170
+          ],
+          "max_channel_delta": 0,
+          "mean_channel_delta": 0.0,
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "changed_bounds": null
+        }
+      },
+      "candidate_pixels_by_max_channel_delta": {
+        "1": 3014,
+        "2": 258
+      },
+      "original_restored_png_bytes_identical": true,
+      "visual_inspection": "Deepheart-style lower-hub view retains the full museum and relic display, portal rim, lower wall and local headlamp lighting."
+    }
+  ],
+  "formulas": {
+    "gain_percent": "100 * (trimmed_fps / mean(original_fps, restored_fps) - 1)",
+    "control_drift_percent": "100 * abs(restored_fps - original_fps) / mean(original_fps, restored_fps)"
+  },
+  "visual_review": {
+    "reviewer": "ui_round2",
+    "status": "no_visible_margin_trim_regression_in_five_style_comparison",
+    "method": "Inspected full-frame original and trimmed PNGs for every style (ten unique images); all five restored PNGs are byte-identical to their inspected originals.",
+    "finding": "No visible clipping, seams, lost material detail, or lighting appearance change introduced by the transparent-margin trim. Sparse raster rounding remains measurable.",
+    "scope": "Paired Hub artwork with five headlamp styles; no claim of whole-game or physical-device acceptance.",
+    "independent_critic_review_pending": true
+  },
+  "limitations": [
+    "Software renderer eight-second timing samples cannot establish physical iPhone FPS, browser pacing, or sustained device performance.",
+    "Control drift is material for some fixtures, and P95 is not better than both controls in every fixture; the result is provisional for device testing.",
+    "This run uses 2532x1170. Earlier four-style source comparisons and b061c4d Deepheart-only comparisons used 2328x1260 and are historical evidence, not directly comparable FPS measurements.",
+    "The deterministic fixture freezes simulation time and uses the existing repaired terminal visual to avoid unrelated wall-clock pulse changes. Production pulse behavior and light settings are unchanged.",
+    "Deepheart here names the headlamp style in the Hub, not the separate Deepheart world.",
+    "Full native journey, browser touch, audio and physical iPhone acceptance remain separate release gates."
+  ]
+}

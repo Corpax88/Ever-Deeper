@@ -4,8 +4,9 @@
 
 A small hub texture-margin optimization is included **provisionally for DEV device
 measurement**. It is not a demonstrated fix for the physical iPhone bottleneck and
-is not approval for LIVE or a 9/10 performance score. Runtime source is frozen after
-Godot 4.7.2 editor parsing completed without script errors.
+is not approval for LIVE or a 9/10 performance score. The final exported candidate
+has completed all five paired lighting-style captures at the target mobile viewport;
+physical iPhone acceptance remains open.
 
 ## Established physical-device evidence
 
@@ -42,36 +43,66 @@ original draw path for paired diagnosis. This switch is not exposed in the game 
 
 ## Measured result and visual limit
 
-The paired run used Godot 4.7.2, Mesa llvmpipe, a **2328×1260** framebuffer and
-`LP_NUM_THREADS=4`. Each reported measurement sampled eight seconds after settling.
-These numbers cannot be compared directly with the earlier default-thread studies,
-or used to predict physical iPhone performance.
+The final paired run used the exact DEV PCK from source
+`f19c0ea61402c860fab60eae3560579aeed6ff21`, build run `34334701244`, with SHA-256
+`7757ec55406704ce613ced7c34e51581e2f1e06eb1cae893ab7486c03d5e5260`.
+The PCK hash was verified before and after rendering. Godot 4.7.2, Mesa llvmpipe,
+`LP_NUM_THREADS=4` and `OMP_NUM_THREADS=4` produced all fifteen PNGs at
+**2532×1170**, the 844×390 mobile target at DPR 3. Each measurement sampled eight
+seconds after one second of settling; simulation time stayed frozen for each pair.
+These are native software-renderer measurements, not browser or phone FPS.
 
 | Fixture | Original FPS | Margin trim FPS | Restored FPS | Gain vs mean controls | Control drift |
 |---|---:|---:|---:|---:|---:|
-| Standard | 9.767 | 10.299 | 9.219 | 8.5% | 5.8% |
-| Wide | 8.516 | 9.036 | 8.754 | 4.6% | 2.8% |
-| Focused | 10.705 | 11.265 | 11.003 | 3.8% | 2.7% |
-| Prismatic | 13.297 | 13.498 | 12.835 | 3.3% | 3.5% |
+| Standard | 9.998 | 10.348 | 10.037 | 3.30% | 0.39% |
+| Wide | 8.551 | 8.724 | 8.202 | 4.15% | 4.17% |
+| Focused | 11.183 | 11.909 | 11.612 | 4.49% | 3.77% |
+| Prismatic | 12.870 | 13.828 | 12.973 | 7.01% | 0.79% |
+| Deepheart | 11.611 | 12.202 | 12.054 | 3.13% | 3.74% |
 
-The benefit is modest and controls drift. P95 is not uniformly improved. Draw-call
-counts are unchanged. The captured light-node count, light textures, masks, enablement,
-energy, color, positions, scales and shadow-filter settings remain unchanged.
+Gain compares the trimmed FPS with the mean of the original and restored controls.
+Drift is the absolute difference between those controls divided by their mean.
+The apparent gain is modest; Wide and Deepheart gains are no larger than their
+control drift. P95 is not better than both controls in every fixture:
 
-All four restored controls are pixel-identical. Candidates differ by at most **2/255**
-on **812–2,138 pixels**, less than **0.073%** of each frame. Sparse raster rounding
-appears on the existing artwork, without visible clipping, seams, loss of detail or
-changes to lighting. The lighting agent inspected all four final candidate views;
-the root reviewer inspected the full-size standard pair and accepted the negligible
-rounding for provisional DEV testing, consistently with the earlier DEV7 visual gate.
-This is not a claim of mathematical pixel identity.
+| Fixture | Original P95 ms | Margin trim P95 ms | Restored P95 ms |
+|---|---:|---:|---:|
+| Standard | 118.015 | 116.861 | 119.875 |
+| Wide | 140.331 | 134.289 | 140.855 |
+| Focused | 109.711 | 99.655 | 98.925 |
+| Prismatic | 93.548 | 91.077 | 90.155 |
+| Deepheart | 104.365 | 97.940 | 98.304 |
 
-The initial conservative exact-pixel check stopped the run after four styles. After
-visual review, the small change was reapplied. Complete the missing Deepheart pair
-and empty/partial/selected museum states on the **exact exported DEV package** before
-DEV publication. The unrelated terminal pulse uses wall-clock time; deterministic
-receiver comparisons use its existing repaired visual state. Raw completed-hub
-captures were retained; no production clock or pulse behavior was altered.
+Draw-call counts are unchanged within every triplet (125, 152, 142, 136 and 124
+respectively), with 17 visible sections. The harness confirmed that light-node count,
+textures, masks, enablement, energy, color, positions, scales and shadow-filter
+settings remained unchanged.
+
+All five restored PNGs are **byte-identical** to their originals. Trimmed candidates
+are not pixel-identical; their maximum per-channel difference is **2/255**:
+
+| Fixture | Maximum channel difference | Changed pixels | Frame changed |
+|---|---:|---:|---:|
+| Standard | 2/255 | 2,077 | 0.07011% |
+| Wide | 2/255 | 882 | 0.02977% |
+| Focused | 2/255 | 1,078 | 0.03639% |
+| Prismatic | 2/255 | 1,106 | 0.03733% |
+| Deepheart | 2/255 | 3,272 | 0.11045% |
+
+The UI reviewer inspected the original and trimmed full-frame images for all five
+styles; the restored controls contain the same bytes as the inspected originals.
+No introduced clipping, seams, lost material detail or changed lighting appearance
+was visible in these comparisons. The sparse differences are consistent with raster
+rounding. Independent final review and whole-game acceptance remain separate.
+
+These exact-package results supersede the earlier four-style source trial for this
+artifact gate. That trial and the intermediate `b061c4d` Deepheart pair used
+2328×1260; their FPS numbers must not be compared directly with this mobile-target
+run. All five styles here light the Hub; “Deepheart” names the headlamp style, not
+the separate Deepheart world. Empty, partial and selected museum states belong to
+the final native journey matrix. The unrelated terminal pulse uses wall-clock time;
+the paired fixture uses its existing repaired visual state without changing any
+production clock or pulse behavior.
 
 ## Rejected hypothesis
 
@@ -88,14 +119,21 @@ private IPv4/local-hostname Xauthority records; authentication stays enabled.
 
 `tools/review_hub_light_receivers.gd` is an opt-in external `--script` harness, separate
 from QA startup. `--attribute` performs group attribution; the default compares the
-original and trimmed draw paths. Pass `--fixture=deepheart` to complete only the
-missing pair. For an exported package, use an absolute external script path together
-with `--main-pack` so the game's resources come from that exact PCK. The output
-folder must be explicitly provided through `--output=...`.
+original and trimmed draw paths across all five styles. Omit `--fixture` for the full
+matrix; `--fixture=deepheart` selects only that diagnostic style. For an exported
+package, use an empty isolated project directory, an absolute external script path
+and `--main-pack` so the game's resources come from that exact PCK. The output
+folder must be explicitly provided through `--output=...`. The final receipt below
+records the full invocation, package/engine/harness hashes and all fifteen PNG hashes.
 
 `tools/compare_hub_receiver_images.py OUTPUT_DIRECTORY` records raw image differences
 and fails if restored controls differ; actual visual acceptance remains a separate
-review. Evidence and full numerical limits are in:
+review. Final exact-package evidence and full numerical limits are in:
+
+- `performance-evidence/hub-margin-final-f19c0ea-receipt.json`
+- `performance-evidence/hub-margin-final-f19c0ea-comparison.json`
+
+Earlier experiments remain available for history:
 
 - `performance-evidence/hub-margin-trial.json`
 - `performance-evidence/hub-receiver-attribution.json`
