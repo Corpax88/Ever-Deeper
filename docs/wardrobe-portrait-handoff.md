@@ -45,9 +45,11 @@ portrait resources are added. The other 1277 LIVE and 1300 DEV resources are
 byte-for-byte identical, with no deletions. LIVE remains 0.46.9 and DEV remains
 0.46.9-dev.9; this task updates Wardrobe only. Physical iPhone FPS is unverified.
 
-Publication is the remaining step. The publisher requires both inspected runs,
-checks the exact candidate hashes, preserves both preceding public builds, and
-verifies all 18 public files after deployment. A concurrent release aborts staging.
+Published successfully: commit `b2e812615df3abe0bc0d463ff39e8958ed2eb7aa`,
+run `34325408480`. All 18 public files matched the inspected candidates at
+2026-09-09 07:47:29 UTC. Source checks `34325408424` also passed.
+The publication receipt is `.github/wardrobe-portrait/publication-receipt.json`.
+Rollback artifact `10093590972` preserves both preceding public builds.
 
 Next user check: reopen the game, enter Wardrobe and tap/swipe through all five
 colors. The full-resolution crossed-arms character should replace the old blurry

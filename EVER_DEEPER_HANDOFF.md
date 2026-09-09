@@ -1,3 +1,11 @@
+# Latest publication — Wardrobe portrait, 9 September 2026
+
+Published and verified on both DEV and LIVE. Read `docs/wardrobe-portrait-handoff.md`
+for the change and `.github/wardrobe-portrait/publication-receipt.json` for current
+public hashes. Continue FPS work from `.github/dev-lighting/handoff.md`.
+
+The older cleanup checkpoint below is historical.
+
 # Current source — Ever Deeper 0.46.8
 
 Open the Godot project at the repository root. Start with README.md and docs/code-map.md.

@@ -1,5 +1,19 @@
 # FPS handoff — DEV9 iPhone result: 52.1 FPS, remaining pet-light cost
 
+## Wardrobe publication — 9 September 2026
+
+The separate wardrobe task is now published to DEV and LIVE, explicitly authorized
+by Mats. This replaces only CommercePanel and adds the approved portrait resources.
+The FPS runtime, hero animation, lighting, save and diagnostic resources are identical
+to the prior public packages. Versions remain LIVE 0.46.9 / DEV 0.46.9-dev.9.
+For the CURRENT public file hashes, use `.github/wardrobe-portrait/publication-receipt.json`
+and its `review.json`, not the older package hashes below. Publication `34325408480`
+verified all 18 files. Next FPS publication must preserve this new LIVE baseline and
+retain the wardrobe resources in DEV. The FPS findings and next investigation below
+still apply; no new physical-iPhone FPS claim is made.
+
+## Earlier DEV9 lighting release and diagnosis
+
 DEV9 is published and all 18 public files were verified at 2026-09-08T21:53:51.5171964Z.
 Publication commit 7e3344605a0e5854c51e617b668b1002f9eaa856; run 34282895724.
 Read publication-receipt.json for the verified deployment state.
