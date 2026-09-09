@@ -1,8 +1,10 @@
 # Ever Deeper
 
 The current game is a **Godot 4.7.2** project. Open `project.godot` in this directory.
-The game version is defined in `project.godot` (currently 0.46.9).
-This source cleanup preserves the published game's gameplay, artwork, balance and save format.
+The current candidate is `1.0.0-rc.1`; its DEV label is `1.0.0-dev.1`.
+This branch builds the continuous mineable The Deep, live resource goals and mole Tunnel Home.
+Read [the active 1.0 handoff](docs/one-point-zero/HANDOFF.md) for verified work and remaining acceptance gates.
+LIVE remains the separate published 0.46.9 package until explicitly accepted.
 
 ## Start here
 

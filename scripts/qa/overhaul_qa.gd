@@ -178,19 +178,39 @@ func _test_endless_dig() -> void:
 		var cell: Vector2i=world.call("_nearest_diggable_wall")
 		check(cell.x>=0,"Ordinary wall can be targeted "+str(layer))
 		if cell.x<0: continue
-		var resources: String=JSON.stringify(world.resources)
-		for hit in range(1,4):
-			world.call("_update_wall_mining",float(world.call("_mining_cycle_duration"))+0.01)
-			check(bool(world.call("_is_floor",cell))==(hit==3),"Free dig takes three strikes "+str(layer)+":"+str(hit))
-		var depth: int=int(world.current_depth)
-		var index: int=int(world.call("_cell_index",cell))
+		var resources: Dictionary=_endless_resource_identities(world)
+		# 1.0 ordinary rock responds to actual upgraded tool damage. The prior
+		# fixed three-hit rule intentionally no longer applies (see QA review).
+		var duration: float = float(world.call("_mining_cycle_duration"))
+		world.call("_cancel_mining")
+		world.call("_update_wall_mining", duration * 0.2)
+		check(not bool(world.call("_is_floor",cell)) and int(world.dig_damage.get(cell,0)) == 0,"Free dig waits for physical contact "+str(layer))
+		world.call("_update_wall_mining", duration * 0.65)
+		check(bool(world.call("_is_floor",cell)) or int(world.dig_damage.get(cell,0)) > 0,"Physical impact applies real tool damage "+str(layer))
+		for _hit in range(16):
+			if bool(world.call("_is_floor",cell)): break
+			world.call("_update_wall_mining",duration+0.01)
+		check(bool(world.call("_is_floor",cell)),"Equipped tool opens ordinary rock "+str(layer))
+		var depth: int=int(world.call("depth_at_position",world.call("_cell_center",cell)))
+		var index: int=int(world.call("_chunk_cell_index",cell))
+		var absolute: Vector2i=Vector2i(world.call("absolute_cell",cell))
 		check(RunState.endless_dug_cells(depth).has(index),"Free dig saved "+str(layer))
 		var saved: Dictionary=RunState.serialize()
 		check(RunState.deserialize(saved),"The Deep save reload")
 		world.call("_generate_depth",depth,"up")
-		check(bool(world.call("_is_floor",cell)),"Free dig survives reentry "+str(layer))
-		check(JSON.stringify(world.resources)==resources,"Free dig preserves resource identities "+str(layer))
+		var restored_cell: Vector2i=absolute-Vector2i(0,(int(world.window_start_depth)-1)*22)
+		check(bool(world.call("_is_floor",restored_cell)),"Free dig survives reentry "+str(layer))
+		check(_endless_resource_identities(world)==resources,"Free dig preserves resource identities "+str(layer))
 		check(not world.call("companion_can_dig",Vector2(32,32)),"Permanent outer wall protected")
+
+func _endless_resource_identities(world: Node) -> Dictionary:
+	# HP/depletion legitimately change when the restored Crusher shockwave hits
+	# nearby deposits; their generated identity and absolute position must not.
+	var result: Dictionary = {}
+	for value in world.resources:
+		result[String(value.id)] = {"kind":String(value.kind),"amount":int(value.amount),
+			"cell":Vector2i(world.call("absolute_cell",Vector2i(value.cell)))}
+	return result
 
 func _test_companion() -> void:
 	var world: Node=driver.call("_load_d1","mossMine")
@@ -279,16 +299,22 @@ func _test_path_and_touch() -> void:
 	main.achievement_toast.clear()
 	mole.call("recall")
 	var click_target: Vector2=start+Vector2(48,-144)
-	var screen_point: Vector2=world.get_canvas_transform()*click_target
-	await _send_gesture(screen_point,"tap")
+	var command_canvas: Transform2D=world.get_canvas_transform()
+	var screen_point: Vector2=command_canvas*click_target
+	var dispatched_point: Vector2=await _send_gesture(screen_point,"tap")
+	click_target=command_canvas.affine_inverse()*dispatched_point
 	check(mole.mode=="command" and mole.destination.distance_to(click_target)<1.0,"Real screen tap routes through UI to companion")
 	mole.call("recall")
 	await _send_gesture(screen_point,"drag_return")
 	check(mole.mode=="follow","Dragging back to the start does not command companion")
+	# Keep cancellation independent even when the preceding drag assertion fails.
+	mole.call("recall")
 	await _send_gesture(screen_point,"cancel")
 	check(mole.mode=="follow","Canceled touch does not command companion")
 	var left_target: Vector2=start+Vector2(-144,144)
-	await _send_gesture(world.get_canvas_transform()*left_target,"tap")
+	command_canvas=world.get_canvas_transform()
+	dispatched_point=await _send_gesture(command_canvas*left_target,"tap")
+	left_target=command_canvas.affine_inverse()*dispatched_point
 	check(mole.mode=="command" and mole.destination.distance_to(left_target)<1.0,"Tap inside movement zone commands companion")
 	check(main.movement_pad.active_pointer==-2 and main.button_move==Vector2.ZERO,"Companion command also releases the movement joystick")
 	mole.call("recall")
@@ -306,18 +332,29 @@ func _test_path_and_touch() -> void:
 	check(mole.dug_total>=1 and mole.dug_total<=4,"Earthshaker opens at most 2x2 ordinary cells")
 	check(mole.shake_cooldown>0.0 and mole.shake_cooldown<=8.0,"Earthshaker has a real recharge")
 
-func _send_gesture(point: Vector2,kind: String) -> void:
+func _send_gesture(point: Vector2,kind: String) -> Vector2:
 	if OS.has_feature("web"):
 		# Actual browser touch events exercise the same route as an iPhone.
 		driver.set("_acknowledged",false)
 		driver.set("_waiting_for_ack",true)
 		var size: Vector2=driver.get_viewport().get_visible_rect().size
+		# Browser touch dispatch quantizes client coordinates to CSS pixels. Choose
+		# that actual pixel before dispatch, then assert its exact world identity.
+		# This preserves the strict command tolerance instead of relaxing the gate.
+		var raw: Variant=JSON.parse_string(String(JavaScriptBridge.eval("JSON.stringify((()=>{const r=document.getElementById('canvas').getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};})())",true)))
+		check(raw is Dictionary,"Browser gesture has actual canvas CSS bounds")
+		if raw is Dictionary:
+			var canvas: Rect2=Rect2(float(raw.get("x",0)),float(raw.get("y",0)),float(raw.get("width",0)),float(raw.get("height",0)))
+			check(canvas.has_area(),"Browser canvas CSS bounds have area")
+			if canvas.has_area():
+				var client: Vector2=(canvas.position+point/size*canvas.size).round()
+				point=(client-canvas.position)/canvas.size*size
 		print("EVER_DEEPER_OVERHAUL_INPUT_READY ",JSON.stringify({"kind":kind,"x":point.x,"y":point.y,"width":size.x,"height":size.y}))
 		if not await driver.call("_wait_for_ack"): failures.append("Browser gesture acknowledgement timed out")
 		var ui: Node=main.get_node("CompanionInterface")
 		var mole: MoleCompanion=ui.call("active_mole")
 		print("OVERHAUL_INPUT_RESULT ",JSON.stringify({"kind":kind,"touch_start":str(ui.touch_start),"mode":mole.mode,"destination":str(mole.destination),"visible":ui.button.visible}))
-		return
+		return point
 	var press: InputEventScreenTouch=InputEventScreenTouch.new()
 	press.index=12
 	press.pressed=true
@@ -335,6 +372,7 @@ func _send_gesture(point: Vector2,kind: String) -> void:
 	release.position=point
 	release.canceled=kind=="cancel"
 	driver.get_viewport().push_input(release,true)
+	return point
 
 func _test_surface_and_guide() -> void:
 	for gate in ["moonglass","emberdeep","starfall"]:

@@ -1,0 +1,86 @@
+# Ever-Deeper 1.0 — DEV acceptance candidate
+
+DEV version: **1.0.0-dev.1**. Reviewed source:
+`f19c0ea61402c860fab60eae3560579aeed6ff21`, validation run
+[34334701244](https://github.com/Corpax88/Ever-Deeper/actions/runs/34334701244).
+The six required jobs passed. This is a candidate for device testing, not final
+1.0 approval. LIVE remains the existing `0.46.9` package.
+
+## Implemented scope
+
+- The Deep is a continuous procedural mountain. Three resident geology bands
+  stream around the player, with camera/companion rebasing and persistent excavation.
+  Mining continues after the fifth relic without floor selection or lift travel.
+- Five existing relics appear at increasing depths. Physical rope attachment,
+  return, Museum placement and paid workshop construction remain intact.
+- The right-hand goal shows the actual next recipe and updates on collection,
+  sale, delivery and purchase. Four- and five-resource recipes clear the minimap
+  and mobile controls; keyboard/touch onboarding has its own clear space.
+- Existing upgrades change real mining cadence, power, reach, pickup and lighting.
+  The completed Tunnel Workshop shortens the mole's Tunnel Home preparation.
+  No new miner skill tree or unrelated system was added.
+- Tunnel Home returns the player and attached relic to the Hub and preserves
+  the exact dig site. Save migration covers old layers and detached/relocated relics.
+- The mine action uses the approved pickaxe. Approved Gruvepappa v28 artwork is
+  preserved. Discovery audio survives rapid common mining sounds.
+
+## Verified candidate
+
+Artifact **10097319961**, immutable ZIP SHA-256:
+`633a8a54d12efb6bd1831cd60c69f56c6cb94c298af96d8c832bf47d83690a48`.
+DEV PCK SHA-256:
+`7757ec55406704ce613ced7c34e51581e2f1e06eb1cae893ab7486c03d5e5260`.
+
+All thirteen active source and exact-DEV-package suites pass, including the
+new-player progression, all five generated relics, paid Hub completion, continued
+mining, streaming, save recovery, migration and live-goal checks. The journeys
+accelerate gathering and positioning; they do not substitute for human pacing.
+Both export flavors preserve their version, save and developer-resource boundaries.
+The production candidate was checked but is not included in the DEV publisher.
+
+Actual WebKit checks pass **869 gameplay** and **193 menu/touch** assertions.
+Native finger taps are trusted browser events; simulated drag/cancel events are
+recorded explicitly and span separate animation frames. The initial harness failures
+and their causes are retained in the round-2 report, not relabeled as passing runs.
+
+The exact PCK produced **34 native mobile captures / 431 assertions**, independently
+inspected for onboarding, recipes, terrain, all five strata/relics, Home, Museum,
+shops and post-fifth mining. Fifteen further images cover all five lighting styles
+at 2532×1170. All restored controls are byte-identical; the compensated margin trim
+has sparse differences up to 2/255 on at most 0.11045% of pixels with no visible
+detail loss. Measured software gains of 3.13–7.01% include 0.39–4.17% control drift;
+they do not establish an iPhone performance fix.
+
+Hero validation includes 44 transition cases and real damage in twelve
+worn/Crusher/Deepcore direction combinations. WebKit and Chromium audio checks
+confirm trusted-gesture unlock, real output, protected discovery overlap and mute/
+unmute. Subjective listening and physical-device smoothness remain unverified.
+
+## Review and remaining acceptance
+
+Two design improvement rounds corrected legacy save defects, a paid-speed cap,
+goal/map/tutorial collisions and clipped action captions. Independent review finds
+no critical bug or remaining concrete design blocker in the exercised paths.
+The provisional DEV assessment is **8.4/10**, the mean of gameplay 8, progression 8,
+UX 9, visual presentation 9 and code 8. Performance and the overall 1.0 score are
+explicitly unverified and excluded from that mean. See `qa-round-2.md/json`.
+
+The last physical measurement is still **DEV9: 52.1 FPS with normal pet lighting,
+60 with pet lighting disabled**. It is not a measurement of this new candidate.
+The new DEV needs sustained iPhone testing with normal lighting, mining, travel and
+shop use; a brief cold 60 FPS peak is insufficient. Do not repeat the old DEV9 test.
+Final 1.0 approval still requires at least 9/10 overall, no critical bugs and stable,
+smooth physical iPhone behavior. LIVE publication is not authorized by this review.
+
+## Publication contract
+
+The reviewed identity and DEV-only flags are in `.github/one-point-zero/review.json`.
+The publisher downloads those exact artifact bytes, verifies all six matching jobs,
+preserves all nine LIVE files, archives the previous DEV/LIVE package and verifies
+all eighteen public files. It performs no rebuild and cannot include the new
+production package. The publication workflow's receipt records the actual outcome.
+
+DEV: [corpax88.github.io/Ever-Deeper/dev/](https://corpax88.github.io/Ever-Deeper/dev/).
+Source/review: [pull request 11](https://github.com/Corpax88/Ever-Deeper/pull/11).
+Older failing historical suites remain documented in `docs/verification.md`; they
+were neither weakened nor silently counted as passing current gates.

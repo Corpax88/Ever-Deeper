@@ -1,0 +1,256 @@
+{
+  "schema": 1,
+  "round": 2,
+  "maximum_rounds": 4,
+  "date": "2026-09-09",
+  "status": "dev_test_ready_final_one_point_zero_and_physical_iphone_unverified",
+  "source_commit": "f19c0ea61402c860fab60eae3560579aeed6ff21",
+  "source_tree": "871f7574a23d89403117a3456ba0b7d556a712b4",
+  "build_run_id": 34334701244,
+  "pck_sha256": "7757ec55406704ce613ced7c34e51581e2f1e06eb1cae893ab7486c03d5e5260",
+  "native_capture_count_inspected": 34,
+  "native_assertion_count": 431,
+  "native_failures": [],
+  "source_cases_passed": 13,
+  "exact_dev_package_cases_passed": 13,
+  "scores": {
+    "gameplay_loop": 8,
+    "progression_feel": 8,
+    "ux": 9,
+    "visual_premium": 9,
+    "performance": null,
+    "code_quality": 8,
+    "overall": null
+  },
+  "observed_critical_bug_count": 0,
+  "open_findings": [],
+  "resolved_findings": [
+    {
+      "id": "tutorial_goal_overlap",
+      "severity": "visual_gate",
+      "resolved_in": "b061c4df1dab575d02e436bbc798e638c4dd2c72",
+      "evidence": "Both keyboard and touch tutorials independently viewed at large and small mobile framebuffers",
+      "confirmed_in_final_source": "f19c0ea61402c860fab60eae3560579aeed6ff21"
+    },
+    {
+      "id": "overload_caption_clipping",
+      "severity": "minor",
+      "resolved_in": "b061c4df1dab575d02e436bbc798e638c4dd2c72",
+      "evidence": "BOOST caption fully visible in Memory Loom and Echo Coffer captures",
+      "confirmed_in_final_source": "f19c0ea61402c860fab60eae3560579aeed6ff21"
+    }
+  ],
+  "initial_review": {
+    "source_commit": "787f6d5fc3795557f3a6c44a2e9ea3c061f48d92",
+    "source_tree": "4a6c4ef955a72919c8257d95e0f5d5634ee14f53",
+    "build_run_id": 34330585865,
+    "pck_sha256": "0ec875a41ae1c941821257f6332a9dc93e3baf718afdf2fe05874831c691f8b7",
+    "native_capture_count_inspected": 28,
+    "native_assertion_count": 326,
+    "scores": {
+      "gameplay_loop": 8,
+      "progression_feel": 8,
+      "ux": 8,
+      "visual_premium": 8,
+      "performance": null,
+      "code_quality": 8,
+      "overall": null
+    }
+  },
+  "pending_gates": [
+    "Sustained stable physical iPhone acceptance of this candidate",
+    "Extended player assessment of pacing, hauling, progression feel and subjective audio",
+    "Final overall score of at least 9/10 and zero critical bugs before final 1.0 or LIVE"
+  ],
+  "fixture_limits": [
+    "Accelerated achievement and resource backlog does not establish ordinary density",
+    "Native mouse hover tooltip is not physical touch evidence",
+    "Accelerated gathering and positioning do not establish human pacing",
+    "Native software renderer does not establish iPhone performance",
+    "Audio reports measure output but explicitly do not verify subjective listening",
+    "Automated WebKit complex gestures are synthetic, while simple browser taps are trusted; neither is physical iPhone evidence",
+    "No remaining confirmed design bug is inferred from missing extended human pacing evidence"
+  ],
+  "dev_test_ready": true,
+  "final_one_point_zero_approved": false,
+  "live_publication_authorized": false,
+  "physical_iphone_verified": false,
+  "physical_baseline": {
+    "build": "0.46.9-dev.9",
+    "normal_pet_lighting_fps": 52.1,
+    "pet_lights_disabled_fps": 60.0,
+    "restored_fps": 52.1
+  },
+  "intermediate_review": {
+    "source_commit": "b061c4df1dab575d02e436bbc798e638c4dd2c72",
+    "source_tree": "a544c6231935d29496d194adee185b2ba8724c54",
+    "build_run_id": 34333668790,
+    "pck_sha256": "06c7a50758e4a87a2b5bd0e27bbc92c500e5560540c35fe98aeac5732807de84",
+    "native_capture_count_inspected": 34,
+    "native_assertion_count": 431,
+    "native_failures": [],
+    "scores": {
+      "gameplay_loop": 8,
+      "progression_feel": 8,
+      "ux": 8,
+      "visual_premium": 9,
+      "performance": null,
+      "code_quality": 8,
+      "overall": null
+    },
+    "native_artifact_id": 10097051620,
+    "status": "visual_findings_resolved_browser_fixture_gate_still_pending_at_that_stage",
+    "deepheart_margin_pair": {
+      "source_commit": "b061c4df1dab575d02e436bbc798e638c4dd2c72",
+      "independently_inspected": true,
+      "visual_fidelity_acceptable_for_dev_testing": true,
+      "reference_controls_byte_identical": true,
+      "changed_pixels": 3205,
+      "changed_percent": 0.10926335024273169,
+      "max_channel_delta": 3,
+      "pixels_with_delta_3": 1,
+      "physical_iphone_verified": false
+    }
+  },
+  "candidate_version": "1.0.0-dev.1",
+  "native_artifact_id": 10097465893,
+  "native_job_id": 102412213654,
+  "native_png_hashes_independently_checked": true,
+  "native_evidence_directory": "/workspace/scratch/6604552ab244/qa-10097465893",
+  "dev_assessment_score": 8.4,
+  "dev_assessment_score_basis": "Arithmetic mean of five assessable categories: gameplay 8, progression 8, UX 9, visual premium 9, code quality 8. Excludes unverified performance and is not the final overall 1.0 score.",
+  "observed_critical_bug_scope": "Zero critical bugs identified in exercised paths; unexercised paths are not proven bug-free.",
+  "remaining_concrete_design_or_art_blockers": [],
+  "final_qa_only_change": "b061c4d to f19c0ea separates gesture phases across browser animation frames and independently initializes cancel. Original assertions retained; no gameplay or art changes.",
+  "browser_mobile": {
+    "artifact_id": 10097467957,
+    "job_id": 102412213518,
+    "pck_sha256": "7757ec55406704ce613ced7c34e51581e2f1e06eb1cae893ab7486c03d5e5260",
+    "browser": "WebKit 26.5",
+    "viewport_css": [
+      844,
+      390
+    ],
+    "physical_iphone": false,
+    "gameplay_checks": 869,
+    "menu_touch_checks": 193,
+    "failures": [],
+    "gameplay_gesture_records": 5,
+    "menu_touch_gesture_records": 43,
+    "drag_return_phase_frames": [
+      70,
+      72,
+      74,
+      76
+    ],
+    "cancel_phase_frames": [
+      86,
+      88
+    ],
+    "simple_taps": "Trusted browser touch events",
+    "complex_gestures": "Synthetic touch events; explicitly not physical-device evidence",
+    "evidence_directory": "/workspace/scratch/6604552ab244/qa-10097467957"
+  },
+  "audio": {
+    "webkit_artifact_id": 10097377877,
+    "chromium_artifact_id": 10097362558,
+    "pck_sha256": "7757ec55406704ce613ced7c34e51581e2f1e06eb1cae893ab7486c03d5e5260",
+    "both_reports_passed": true,
+    "checks": [
+      "trusted_gesture_unlock",
+      "same_cluster_common_and_rare_output",
+      "discovery_survives_actual_effect_overlap",
+      "mute_stops_output_and_blocks_new_effects",
+      "unmute_restores_actual_output"
+    ],
+    "errors": [],
+    "subjective_listening_verified": false,
+    "physical_iphone_verified": false
+  },
+  "hero_motion": {
+    "artifact_id": 10097508925,
+    "pck_sha256": "7757ec55406704ce613ced7c34e51581e2f1e06eb1cae893ab7486c03d5e5260",
+    "actual_damage_cases": 12,
+    "gear": [
+      "worn",
+      "crusher",
+      "deepcore"
+    ],
+    "directions_per_gear": 4,
+    "extracted_video_frames_independently_viewed": 6,
+    "viewed_frames": [
+      "motion-worn-01.png",
+      "motion-worn-03.png",
+      "motion-worn-05.png",
+      "motion-active-01.png",
+      "motion-active-03.png",
+      "motion-active-05.png"
+    ],
+    "limitation": "Sampled motion and damage receipts do not establish sustained physical player feel."
+  },
+  "lighting_matrix": {
+    "source_commit": "f19c0ea61402c860fab60eae3560579aeed6ff21",
+    "pck_sha256": "7757ec55406704ce613ced7c34e51581e2f1e06eb1cae893ab7486c03d5e5260",
+    "png_count_independently_viewed": 15,
+    "png_hashes_independently_checked": true,
+    "framebuffer": [
+      2532,
+      1170
+    ],
+    "all_original_restored_byte_identical": true,
+    "visual_fidelity_acceptable_for_dev_testing": true,
+    "physical_iphone_verified": false,
+    "independent_observation": "No trim-induced clipping, seams, material detail loss or lighting appearance change visible across all five Hub headlamp fixtures.",
+    "timing_limit": "Eight-second llvmpipe samples; Wide and Deepheart gains do not exceed control drift. No iPhone FPS gain established.",
+    "evidence_directory": "/workspace/scratch/6604552ab244/margin-final-f19c0ea",
+    "receipt": "performance-evidence/hub-margin-final-f19c0ea-receipt.json",
+    "comparison": "performance-evidence/hub-margin-final-f19c0ea-comparison.json",
+    "fixtures": [
+      {
+        "headlamp_style": "standard",
+        "changed_pixels": 2077,
+        "changed_percent": 0.07011112461349428,
+        "max_channel_delta": 2,
+        "original_restored_byte_identical": true,
+        "software_fps_gain_against_mean_controls_percent": 3.3041611498658474,
+        "absolute_control_drift_percent": 0.38571089226661526
+      },
+      {
+        "headlamp_style": "wide",
+        "changed_pixels": 882,
+        "changed_percent": 0.0297727548912383,
+        "max_channel_delta": 2,
+        "original_restored_byte_identical": true,
+        "software_fps_gain_against_mean_controls_percent": 4.150742013772435,
+        "absolute_control_drift_percent": 4.17119453832596
+      },
+      {
+        "headlamp_style": "focused",
+        "changed_pixels": 1078,
+        "changed_percent": 0.03638892264484682,
+        "max_channel_delta": 2,
+        "original_restored_byte_identical": true,
+        "software_fps_gain_against_mean_controls_percent": 4.4858381435961325,
+        "absolute_control_drift_percent": 3.7671739243200535
+      },
+      {
+        "headlamp_style": "prismatic",
+        "changed_pixels": 1106,
+        "changed_percent": 0.037334089466790885,
+        "max_channel_delta": 2,
+        "original_restored_byte_identical": true,
+        "software_fps_gain_against_mean_controls_percent": 7.014740852537615,
+        "absolute_control_drift_percent": 0.7948319504633307
+      },
+      {
+        "headlamp_style": "deepheart",
+        "changed_pixels": 3272,
+        "changed_percent": 0.11044949433575024,
+        "max_channel_delta": 2,
+        "original_restored_byte_identical": true,
+        "software_fps_gain_against_mean_controls_percent": 3.1278502873655523,
+        "absolute_control_drift_percent": 3.739091087445098
+      }
+    ]
+  }
+}

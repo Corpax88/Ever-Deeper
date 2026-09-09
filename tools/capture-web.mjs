@@ -321,6 +321,24 @@ async function captureSuite(options) {
       let result;
       const cdp = WEBKIT ? null : await context.newCDPSession(page);
       let gestureIndex=0;
+      const gestureInputs=[];
+      await page.evaluate(() => {
+        window.__edCaptureTouches=[];
+        window.__edCaptureAnimationFrame=0;
+        const countFrame=()=>{window.__edCaptureAnimationFrame++;requestAnimationFrame(countFrame);};
+        requestAnimationFrame(countFrame);
+        for (const type of ["touchstart","touchmove","touchend","touchcancel"]) {
+          window.addEventListener(type,event => {
+            window.__edCaptureTouches.push({
+              type:event.type,trusted:event.isTrusted,target:event.target.id,
+              timeMs:performance.now(),animationFrame:window.__edCaptureAnimationFrame,
+              changedTouchesItem:typeof event.changedTouches.item==="function",
+              active:Array.from(event.touches,touch=>touch.identifier),
+              changed:Array.from(event.changedTouches,touch=>({id:touch.identifier,x:touch.clientX,y:touch.clientY})),
+            });
+          },true);
+        }
+      });
       while (true) {
         result = await nextMarker(markerQueue, 10 * 60 * 1000);
         if (!result.startsWith("EVER_DEEPER_OVERHAUL_INPUT_READY ")) break;
@@ -340,24 +358,55 @@ async function captureSuite(options) {
           await page.screenshot({path:path.join(options.outputDir,"input-before-first-tap.png")});
         }
         const box = await page.locator("#canvas").boundingBox();
-        const x = box.x + input.x / input.width * box.width;
-        const y = box.y + input.y / input.height * box.height;
+        // The game fixture chooses a CSS pixel; preserve that choice across
+        // floating-point viewport conversion and browser touch quantization.
+        const x = Math.round(box.x + input.x / input.width * box.width);
+        const y = Math.round(box.y + input.y / input.height * box.height);
         if (x < box.x || y < box.y || x >= box.x + box.width || y >= box.y + box.height) throw new Error("Gesture outside canvas");
+        await page.evaluate(() => {window.__edCaptureTouches.length=0;});
         if (input.kind === "tap") await page.touchscreen.tap(x,y);
         else if (WEBKIT) {
-          await page.evaluate(async ({x,y,dx,dy,kind}) => {
+          await page.evaluate(async ({x,y,dx,dy,returnDistance,kind}) => {
             const canvas=document.getElementById("canvas");
+            // A physical finger moves across frames. Synchronous out-and-back
+            // events collapse to the last position in Godot's input accumulator.
+            // Two rAF boundaries let the game observe each phase before the next.
+            const inputFrame=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
             const send=(type,px,py)=>{
-              const t={identifier:12,target:canvas,clientX:px,clientY:py,pageX:px,pageY:py,screenX:px,screenY:py,radiusX:3,radiusY:3,force:1};
-              const active=type==="touchend"||type==="touchcancel"?[]:[t];
-              const event=new Event(type,{bubbles:true,cancelable:true});
-              Object.defineProperties(event,{touches:{value:active},targetTouches:{value:active},changedTouches:{value:[t]}});
+              const ended=type==="touchend"||type==="touchcancel";
+              const data={identifier:12,target:canvas,clientX:px,clientY:py,pageX:px+window.scrollX,pageY:py+window.scrollY,screenX:px,screenY:py,radiusX:3,radiusY:3,rotationAngle:0,force:ended?0:1};
+              let touch=data;
+              if(typeof Touch==="function") {
+                try {touch=new Touch(data);} catch { /* Older WebKit has no constructible Touch. */ }
+              }
+              const active=ended?[]:[touch];
+              let event;
+              if(typeof TouchEvent==="function") {
+                try {event=new TouchEvent(type,{bubbles:true,cancelable:true,touches:active,targetTouches:active,changedTouches:[touch]});} catch { /* Fall back to the same TouchList contract. */ }
+              }
+              if(!event) {
+                const list=items=>Object.defineProperty(items,"item",{value:index=>items[index]??null});
+                event=new Event(type,{bubbles:true,cancelable:true});
+                Object.defineProperties(event,{touches:{value:list([...active])},targetTouches:{value:list([...active])},changedTouches:{value:list([touch])}});
+              }
               canvas.dispatchEvent(event);
             };
-            if(kind!=="release") send("touchstart",x,y);
+            if(kind!=="release") {
+              send("touchstart",x,y);
+              await inputFrame();
+            }
             if(kind==="swipe"||kind==="hold") for(let i=1;i<=8;i++) {send("touchmove",x+dx*i/8,y+dy*i/8);await new Promise(r=>setTimeout(r,25));}
-            if(kind!=="hold") send(kind==="cancel"?"touchcancel":"touchend",x+dx,y+dy);
-          },{x,y,dx:(input.dx||0)/input.width*box.width,dy:(input.dy||0)/input.height*box.height,kind:input.kind});
+            else if(kind==="drag_return") {
+              send("touchmove",x+returnDistance,y);
+              await inputFrame();
+              send("touchmove",x,y);
+              await inputFrame();
+            }
+            if(kind!=="hold") {
+              send(kind==="cancel"?"touchcancel":"touchend",x+dx,y+dy);
+              await inputFrame();
+            }
+          },{x,y,dx:(input.dx||0)/input.width*box.width,dy:(input.dy||0)/input.height*box.height,returnDistance:48/input.width*box.width,kind:input.kind});
         } else {
           if(input.kind!=="release") await cdp.send("Input.dispatchTouchEvent",{type:"touchStart",touchPoints:[{x,y}]});
           if (input.kind === "swipe" || input.kind === "hold") {
@@ -367,10 +416,16 @@ async function captureSuite(options) {
             }
           } else if (input.kind === "drag_return") {
             await cdp.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x:x+48/input.width*box.width,y}]});
+            await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
             await cdp.send("Input.dispatchTouchEvent",{type:"touchMove",touchPoints:[{x,y}]});
+            await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
           }
           if(input.kind!=="hold") await cdp.send("Input.dispatchTouchEvent",{type:input.kind === "cancel" ? "touchCancel" : "touchEnd",touchPoints:[]});
         }
+        const receipt={index:gestureIndex,input,canvas:box,css:{x,y},events:await page.evaluate(()=>window.__edCaptureTouches)};
+        gestureInputs.push(receipt);
+        await fs.writeFile(path.join(options.outputDir,"gesture-inputs.json"),JSON.stringify(gestureInputs,null,2));
+        process.stdout.write("OVERHAUL_BROWSER_INPUT "+JSON.stringify(receipt)+"\n");
         await page.keyboard.press("F8");
       }
       if (!/^EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=\d+ failures=\[\]$/.test(result)) throw new Error(result);

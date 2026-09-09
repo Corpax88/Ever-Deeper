@@ -96,6 +96,7 @@ var depth_context: = ""
 var hub_context: = ""
 var deepheart_context: = ""
 var endless_context: = ""
+var tunnel_home_in_progress: = false
 var deepheart_hub_return_position: = Vector2(720, 300)
 var endless_hub_return_position: = Vector2(720, 300)
 var button_move: = Vector2.ZERO
@@ -210,6 +211,7 @@ func _ready() -> void :
 	_connect_optional_signal(endless_world, "relic_attached", "_on_endless_relic_attached")
 	_connect_optional_signal(endless_world, "relic_hauled_to_hub", "_on_endless_relic_hauled_to_hub")
 	_connect_optional_signal(endless_world, "rope_state_changed", "_on_endless_rope_state_changed")
+	_connect_optional_signal(endless_world, "world_rebased", "_on_endless_world_rebased")
 	RunState.changed.connect(_queue_hud_refresh)
 	RunState.resource_collected.connect(_on_resource_collected)
 
@@ -353,7 +355,7 @@ func _on_developer_command_requested(command: String) -> void :
 			_dev_start_clean_run()
 			_dev_seed_victory_state()
 			ok = _dev_jump_endless(1)
-			message = "ENDLESS READY · LAYER 1"
+			message = "THE DEEP READY · DEPTH 1"
 		"jump_surface":
 			_dev_jump_surface()
 			message = "JUMPED TO SURFACE"
@@ -365,10 +367,10 @@ func _on_developer_command_requested(command: String) -> void :
 			message = "JUMPED TO THE DEEPHEART"
 		"jump_endless_1":
 			ok = _dev_jump_endless(1)
-			message = "JUMPED TO ENDLESS · LAYER 1"
+			message = "JUMPED TO THE DEEP · DEPTH 1"
 		"jump_endless_12":
 			ok = _dev_jump_endless(12)
-			message = "JUMPED TO ENDLESS · LAYER 12"
+			message = "JUMPED TO THE DEEP · DEPTH 12"
 		"grant_resources_200":
 			_dev_grant_all_resources(200)
 			message = "+200 OF EVERY RESOURCE"
@@ -583,7 +585,7 @@ func _dev_jump_endless(target_depth: int) -> bool:
 	endless_context = String(endless_world.current_context())
 	objective_label.text = _endless_objective()
 	RunState.set_location("endless", endless_world.player.global_position)
-	_set_status("DEV · Endless Descent · Layer %d" % target_depth)
+	_set_status("DEV · The Deep · Depth %d" % target_depth)
 	return true
 
 
@@ -809,7 +811,7 @@ func _asset_button_style(color: Color) -> StyleBoxFlat:
 
 
 func _open_inventory() -> void :
-	if automated_mode or menu_open or inventory_open or conclusion_overlay.visible or _shop_panel_is_open() or not commerce_transaction.is_empty() or not game_started:
+	if tunnel_home_in_progress or automated_mode or menu_open or inventory_open or conclusion_overlay.visible or _shop_panel_is_open() or not commerce_transaction.is_empty() or not game_started:
 		return
 	AudioDirector.play_ui("open")
 	_cancel_held_input()
@@ -867,10 +869,10 @@ func _update_visual_guide() -> void :
 		guide_director.reset()
 		guide_overlay.clear_target()
 		if premium_hud != null:
-			premium_hud.set_objective("", "")
+			premium_hud.set_progression_goal({})
 		return
 	if premium_hud != null:
-		premium_hud.set_objective(String(goal.get("title", "")), String(goal.get("detail", "")))
+		premium_hud.set_progression_goal(goal)
 	var proposal: = _guide_route_proposal(goal)
 	var resolved: Dictionary = guide_director.resolve(proposal)
 	if resolved.is_empty() or String(resolved.get("target_key", "")).is_empty():
@@ -954,7 +956,8 @@ func _guide_route_proposal(goal: Dictionary) -> Dictionary:
 		"endless":
 			var target_kind: = ""
 			if kind == "endless_return":
-				target_kind = "up"
+				# The mole's home command is always available; no uphill waypoint.
+				return {}
 			elif kind == "endless_resource":
 				target_kind = String(goal.get("resource_id", ""))
 			elif kind == "endless_explore":
@@ -1130,7 +1133,7 @@ func _unhandled_input(event: InputEvent) -> void :
 
 
 func _open_start_menu() -> void :
-	if automated_mode or menu_open or conclusion_overlay.visible or _shop_panel_is_open() or not commerce_transaction.is_empty():
+	if tunnel_home_in_progress or automated_mode or menu_open or conclusion_overlay.visible or _shop_panel_is_open() or not commerce_transaction.is_empty():
 		return
 	if game_started:
 		AudioDirector.play_ui("open")
@@ -1180,7 +1183,7 @@ func _refresh_start_menu() -> void :
 
 func _menu_location_label() -> String:
 	if String(RunState.current_scene) == "endless":
-		return "ENDLESS DESCENT · LAYER %d" % int(Dictionary(RunState.endless_descent_status()).get("current_depth", 1))
+		return "THE DEEP · DEPTH %d" % int(Dictionary(RunState.endless_descent_status()).get("current_depth", 1))
 	if String(RunState.current_scene) == "deepheart":
 		return "THE DEEPHEART"
 	if String(RunState.current_scene) == "hub":
@@ -1262,6 +1265,7 @@ func _cancel_new_game() -> void :
 
 
 func _start_new_game() -> void :
+	tunnel_home_in_progress = false
 	_settle_commerce_before_world_change()
 	AudioDirector.play_ui("confirm")
 	AudioDirector.set_environment("surface")
@@ -1348,7 +1352,7 @@ func _update_minimap() -> void :
 			location_name = "THE DEEPHEART"
 		"endless":
 			world_size = Vector2(endless_world.WORLD_SIZE)
-			location_name = "ENDLESS · LAYER %d" % int(Dictionary(RunState.endless_descent_status()).get("current_depth", 1))
+			location_name = "THE DEEP · %d m" % endless_world.depth_metres()
 	var camera: Camera2D = active_player.camera
 	if not is_instance_valid(camera):
 		minimap_overlay.hide_map()
@@ -1695,6 +1699,9 @@ func _cancel_mine_hold() -> void :
 
 
 func _on_mine_button_gui_input(event: InputEvent) -> void :
+	if tunnel_home_in_progress:
+		_cancel_mine_hold()
+		return
 	if event is InputEventScreenTouch:
 		var touch: = event as InputEventScreenTouch
 		if touch.index == mine_touch_index and ( not touch.pressed or touch.canceled):
@@ -1723,7 +1730,7 @@ func _on_mine_button_visibility_changed() -> void :
 
 
 func _on_joystick_movement(direction: Vector2) -> void :
-	if _shop_panel_is_open():
+	if tunnel_home_in_progress or _shop_panel_is_open():
 		button_move = Vector2.ZERO
 		_apply_button_movement()
 		return
@@ -1883,7 +1890,8 @@ func _close_commerce_for_action() -> void :
 
 func _open_commerce(config: Dictionary, context_id: String) -> void :
 	if (
-		commerce_panel == null
+		tunnel_home_in_progress
+		or commerce_panel == null
 		or _shop_panel_is_open()
 		or (station_transaction_fx != null and station_transaction_fx.busy)
 		or config.is_empty()
@@ -2350,7 +2358,7 @@ func _maybe_start_assay_transaction() -> void :
 
 
 func _enforce_shop_player_control() -> void :
-	if not _shop_panel_is_open():
+	if not _shop_panel_is_open() and not tunnel_home_in_progress:
 		return
 	var active_player: Node2D = _active_player_node()
 	if is_instance_valid(active_player):
@@ -2406,9 +2414,9 @@ func _on_endless_context_changed(context: String) -> void :
 	endless_context = context
 	_refresh_context_button()
 	if context == "endless_up":
-		_set_status("Upper passage · haul discoveries toward the Hub" if int(Dictionary(RunState.endless_descent_status()).get("current_depth", 0)) > 0 else "Hub lift · return with everything you found")
+		_set_status("Upper passage · haul discoveries toward the Hub" if int(Dictionary(RunState.endless_descent_status()).get("current_depth", 0)) > 0 else "Tunnel Home · return with everything you found")
 	elif context == "endless_down":
-		_set_status("Lower passage · explore one layer deeper")
+		_set_status("Keep digging · The Deep continues")
 	elif context.begins_with("endless_site:"):
 		var choice: = String(context.get_slice(":", 2))
 		_set_status(
@@ -2423,13 +2431,16 @@ func _on_endless_context_changed(context: String) -> void :
 
 
 func _perform_context() -> void :
-	if menu_open or inventory_open or orientation_guard_active or _companion_panel_is_open() or conclusion_overlay.visible or _shop_panel_is_open() or not commerce_transaction.is_empty():
+	if tunnel_home_in_progress or menu_open or inventory_open or orientation_guard_active or _companion_panel_is_open() or conclusion_overlay.visible or _shop_panel_is_open() or not commerce_transaction.is_empty():
 		return
 	if phase == "deepheart":
 		deepheart_world.interact()
 		return
 	if phase == "endless":
-		endless_world.perform_context()
+		if endless_context.is_empty():
+			request_tunnel_home()
+		else:
+			endless_world.perform_context()
 		return
 	if phase == "hub":
 		hub_world.perform_context()
@@ -2567,7 +2578,7 @@ func _try_unlock_gate(world_id: String) -> void :
 		AudioDirector.play_ui("confirm")
 		_set_status("The passage is opening · stand clear")
 		return
-	var requirement: Dictionary = Dictionary(GATE_REQUIREMENTS[world_id])
+	var requirement: Dictionary = _gate_requirements(world_id)
 	var pickaxe_required: = int(requirement.pickaxe)
 	var mastery_required: = int(requirement.mastery)
 	var gold_required: = int(requirement.gold)
@@ -2814,7 +2825,7 @@ func _on_deep_elevator_enter_requested() -> void :
 func _enter_deepheart(entering: bool = true, persist_location: bool = true, allow_victory_restore: bool = false) -> void :
 	if bool(RunState.victory) and not allow_victory_restore:
 		AudioDirector.play_blocked()
-		_set_status("The Deepheart is restored · use the Hub elevator to enter the Endless Descent")
+		_set_status("The Deepheart is restored · enter The Deep from your Hub")
 		return
 	var elevator_status: = Dictionary(RunState.deep_elevator_status())
 	if not bool(elevator_status.get("powered", false)):
@@ -2879,7 +2890,7 @@ func _exit_deepheart() -> void :
 	AudioDirector.set_environment("hub")
 	AudioDirector.play_transition("ascend")
 	objective_label.text = _hub_objective()
-	_set_status(_deep_hoard_status_text() if bool(RunState.victory) else "Back in the Hub · the Deepheart lift remains ready")
+	_set_status(_deep_hoard_status_text() if bool(RunState.victory) else "Back in the Hub · the Deepheart passage remains ready")
 	_refresh_context_button()
 	_refresh_hud()
 	if persistence_active:
@@ -2889,7 +2900,7 @@ func _exit_deepheart() -> void :
 func _enter_endless(entering: bool = true, persist_location: bool = true, restoring_active_run: bool = false) -> void :
 	if not bool(RunState.victory):
 		AudioDirector.play_blocked()
-		_set_status("The Endless Descent opens only after the Deepheart is restored")
+		_set_status("The Deep opens when the Deepheart is restored")
 		return
 	if phase == "endless" and bool(endless_world.active):
 		return
@@ -2911,7 +2922,7 @@ func _enter_endless(entering: bool = true, persist_location: bool = true, restor
 		var started: = Dictionary(RunState.start_endless_descent())
 		if not bool(started.get("ok", false)):
 			AudioDirector.play_blocked()
-			_set_status("Place the carried relic in the Museum before descending again" if String(started.get("reason", "")) == "carried_relic_must_be_placed" else "The Deep Elevator cannot begin this descent yet")
+			_set_status("Place the carried relic in the Museum before descending again" if String(started.get("reason", "")) == "carried_relic_must_be_placed" else "The tunnel is not ready yet")
 			return
 		target_depth = int(started.get("depth", 1))
 	phase = "endless"
@@ -2978,7 +2989,7 @@ func _on_endless_hub_exit_requested() -> void :
 		var result: = Dictionary(RunState.leave_endless_descent_to_hub())
 		if not bool(result.get("ok", false)):
 			AudioDirector.play_blocked()
-			_set_status("Reach layer 0 with the relic still attached before returning to the Hub")
+			_set_status("Use Tunnel Home with your relic attached")
 			return
 	_return_from_endless_to_hub(String(carried.get("id", "")))
 
@@ -3003,7 +3014,7 @@ func _return_from_endless_to_hub(carried_relic_id: String = "") -> void :
 	AudioDirector.play_transition("ascend")
 	objective_label.text = _hub_objective()
 	if carried_relic_id.is_empty():
-		_set_status("Back in the Hub · the Endless Descent remains open")
+		_set_status("Home again · your tunnel waits where you left it")
 	else:
 		var relic: = Dictionary(RunState.relic_status(carried_relic_id))
 		_set_status("%s hauled home · drag it to the Museum pedestal" % String(relic.get("display_name", "Relic")))
@@ -3019,13 +3030,66 @@ func _on_endless_depth_changed(_depth: int) -> void :
 		return
 	objective_label.text = _endless_objective()
 	_refresh_hud()
+	guide_update_elapsed = GUIDE_UPDATE_INTERVAL
+
+
+func _on_endless_world_rebased(offset: Vector2) -> void:
+	var mole: Node = endless_world.get_node_or_null("MoleCompanion")
+	if mole != null:
+		mole.rebase_world(offset)
+	guide_director.reset()
+	guide_update_elapsed = GUIDE_UPDATE_INTERVAL
+	minimap_update_elapsed = MINIMAP_UPDATE_INTERVAL
+
+
+func request_tunnel_home() -> bool:
+	if phase != "endless" or tunnel_home_in_progress or menu_open or inventory_open or orientation_guard_active or _shop_panel_is_open():
+		return false
+	if not bool(RunState.victory) or not bool(endless_world.active):
+		return false
+	var mole: Node = endless_world.get_node_or_null("MoleCompanion")
+	if mole == null:
+		return false
+	tunnel_home_in_progress = true
+	_cancel_held_input()
+	endless_world.player.control_enabled = false
+	endless_world.set_process(false)
+	endless_world.set_physics_process(false)
+	mole.begin_tunnel_home()
+	AudioDirector.play_mining("stone", true, false)
+	_refresh_context_button()
+	_complete_tunnel_home()
+	return true
+
+
+func _complete_tunnel_home() -> void:
+	# Use the existing authored digging frames before returning player and rope.
+	await get_tree().create_timer(RunState.tunnel_home_duration()).timeout
+	endless_world.set_process(true)
+	endless_world.set_physics_process(true)
+	if not tunnel_home_in_progress:
+		return
+	tunnel_home_in_progress = false
+	if phase != "endless":
+		return
+	var result: Dictionary = endless_world.prepare_tunnel_home()
+	if not bool(result.get("ok", false)):
+		var mole: Node = endless_world.get_node_or_null("MoleCompanion")
+		if mole != null:
+			mole.recall()
+		endless_world.player.control_enabled = not orientation_guard_active and not menu_open and not inventory_open
+		AudioDirector.play_blocked()
+		_set_status("Attach your relic's rope before tunneling home" if String(result.get("reason", "")) == "relic_rope_required" else "Tunnel paused · ready when you are")
+		return
+	_return_from_endless_to_hub(String(result.get("carried_relic_id", "")))
+	if menu_open or inventory_open or orientation_guard_active:
+		_pause_all_worlds_for_orientation()
 
 
 func _on_endless_resource_collected(kind: String, amount: int, depth: int) -> void :
 	if phase != "endless" or amount <= 0:
 		return
 	AudioDirector.play_pickup(kind, amount)
-	_set_status("Layer %d · +%d %s · workshop materials secured" % [depth, amount, String(ENDLESS_RESOURCE_NAMES.get(kind, kind.capitalize()))])
 	_refresh_hud()
 
 
@@ -3033,7 +3097,7 @@ func _on_endless_discovery_found(_site_id: String, title: String, depth: int) ->
 	if phase != "endless":
 		return
 	AudioDirector.play_discovery()
-	_set_status("Layer %d discovery · %s" % [depth, title.capitalize()])
+	_set_status("%s discovered" % title.capitalize())
 
 
 func _on_endless_relic_discovered(relic_id: String, depth: int) -> void :
@@ -3041,7 +3105,7 @@ func _on_endless_relic_discovered(relic_id: String, depth: int) -> void :
 		return
 	var relic: = Dictionary(RunState.relic_status(relic_id))
 	AudioDirector.play_discovery(true)
-	_set_status("Layer %d · %s discovered · attach your rope" % [depth, String(relic.get("display_name", "Relic"))])
+	_set_status("%s · attach your rope" % String(relic.get("display_name", "Relic")))
 	_refresh_hud()
 
 
@@ -3050,20 +3114,20 @@ func _on_endless_relic_attached(relic_id: String, _depth: int) -> void :
 		return
 	var relic: = Dictionary(RunState.relic_status(relic_id))
 	AudioDirector.play_ui("confirm")
-	_set_status("%s attached · haul it upward to the Museum" % String(relic.get("display_name", "Relic")))
+	_set_status("%s attached · ask your mole for Tunnel Home" % String(relic.get("display_name", "Relic")))
 	_refresh_hud()
 
 
 func _on_endless_relic_hauled_to_hub(relic_id: String, _discovery_depth: int) -> void :
 	var relic: = Dictionary(RunState.relic_status(relic_id))
-	_set_status("%s reached the Hub lift · return and place it in the Museum" % String(relic.get("display_name", "Relic")))
+	_set_status("%s hauled home · drag it to the Museum pedestal" % String(relic.get("display_name", "Relic")))
 
 
 func _on_endless_rope_state_changed(attached: bool, relic_id: String) -> void :
 	if phase != "endless" or relic_id.is_empty():
 		return
 	if not attached:
-		_set_status("Rope released · reattach it before changing layers")
+		_set_status("Rope released · reattach it before Tunnel Home")
 	_refresh_hud()
 
 
@@ -3099,7 +3163,7 @@ func _safe_hub_return_position(preferred: Vector2) -> Vector2:
 
 func _on_deepheart_finale_completed() -> void :
 	objective_label.text = _deepheart_objective()
-	_set_status("The Deepheart beats again · the gateway to the Endless Descent is open")
+	_set_status("The Deepheart beats again · The Deep is open")
 	_open_deepheart_conclusion()
 	_refresh_context_button()
 	_refresh_hud()
@@ -3136,7 +3200,7 @@ func _stay_in_deepheart_from_conclusion() -> void :
 	AudioDirector.play_ui("confirm")
 	RunState.mark_conclusion_seen()
 	_dismiss_deepheart_conclusion(true)
-	_set_status("The Endless Descent awaits below your Hub · return whenever you are ready")
+	_set_status("The Deep awaits below your Hub · your mole can tunnel home")
 	_refresh_context_button()
 	_refresh_hud()
 
@@ -3176,7 +3240,7 @@ func _deepheart_objective() -> String:
 
 func _deepheart_progress_text() -> String:
 	if bool(RunState.victory):
-		return "The Deepheart is restored · the Endless Descent is open below the Hub"
+		return "The Deepheart is restored · The Deep is open below the Hub"
 	var seals: = Dictionary(RunState.deepheart_seal_status())
 	var missing: = Array(seals.get("missing", []))
 	if missing.is_empty():
@@ -3187,31 +3251,31 @@ func _deepheart_progress_text() -> String:
 func _hub_objective() -> String:
 	if bool(RunState.victory):
 		var goal: = Dictionary(guide_director.goal_for_state())
-		return String(goal.get("title", "Enter the Endless Descent")).to_upper()
+		return String(goal.get("title", "Explore The Deep")).to_upper()
 	var status: = Dictionary(RunState.deep_elevator_status())
 	if bool(status.get("powered", false)):
-		return "BEGIN THE FINAL DESCENT · ENTER THE DEEP ELEVATOR"
+		return "ENTER THE DEEPHEART PASSAGE"
 	if bool(status.get("repaired", false)):
-		return "POWER THE DEEP ELEVATOR · INSTALL THE SINGULARITY CORE"
-	return "REPAIR THE DEEP ELEVATOR · DELIVER CORE MATERIALS"
+		return "AWAKEN THE PASSAGE · INSTALL THE SINGULARITY CORE"
+	return "RESTORE THE PASSAGE · DELIVER CORE MATERIALS"
 
 
 func _deep_hoard_status_text() -> String:
 	var status: = Dictionary(RunState.deep_hoard_status())
 	if not bool(status.get("unlocked", false)):
-		return "Museum · restore the Deepheart to open the Endless Descent"
-	return "Museum · %d / %d relics placed · deepest layer %d" % [
+		return "Museum · restore the Deepheart to open The Deep"
+	return "Museum · %d / %d relics placed · deepest %d m" % [
 		int(status.get("placed_relic_count", 0)), int(status.get("total_relics", 5)),
-		int(status.get("deepest_depth", 0)),
+		int(status.get("deepest_metres", 0)),
 	]
 
 
 func _endless_objective() -> String:
 	var status: = Dictionary(RunState.endless_descent_status())
 	var goal: = Dictionary(guide_director.goal_for_state())
-	return "LAYER %d · %s" % [
-		int(status.get("current_depth", 1)),
-		String(goal.get("title", "Explore one layer deeper")).to_upper(),
+	return "%d m · %s" % [
+		endless_world.depth_metres(),
+		String(goal.get("title", "Keep digging deeper")).to_upper(),
 	]
 
 
@@ -3221,8 +3285,8 @@ func _endless_progress_text() -> String:
 	var relic_id: = String(carried.get("id", ""))
 	if not relic_id.is_empty():
 		var relic: = Dictionary(RunState.relic_status(relic_id))
-		return "%s secured by rope · haul it upward one layer at a time" % String(relic.get("display_name", "Relic"))
-	return "Layer %d · explore every branch or continue deeper when ready" % int(status.get("current_depth", 1))
+		return "%s secured · Tunnel Home brings it back with you" % String(relic.get("display_name", "Relic"))
+	return "Dig your own way deeper · your mole can tunnel home"
 
 
 func _workshop_status_text(workshop_id: String) -> String:
@@ -3266,11 +3330,11 @@ func _deep_elevator_status_text() -> String:
 	var status: = Dictionary(RunState.deep_elevator_status())
 	if bool(status.get("victory", false)):
 		var endless: = Dictionary(RunState.endless_descent_status())
-		return "Deep Elevator · Endless Descent ready · deepest layer %d" % int(endless.get("deepest_depth", 0))
+		return "The Deep · tunnel ready · deepest %d" % int(endless.get("deepest_depth", 0))
 	if bool(status.get("powered", false)):
-		return "Deep Elevator · final descent ready"
+		return "Deepheart passage · ready"
 	if bool(status.get("repaired", false)):
-		return "Deep Elevator · the Singularity Core can awaken it"
+		return "Deepheart passage · install the Singularity Core"
 	var missing: = Dictionary(status.get("missing", {}))
 	var names: = {
 		"ambercore": "Ambercore", "lunacore": "Lunacore",
@@ -3282,7 +3346,7 @@ func _deep_elevator_status_text() -> String:
 		var amount: = int(missing.get(resource_id, 0))
 		if amount > 0:
 			rows.append("%d %s" % [amount, String(names[resource_id])])
-	return "Deep Elevator · bring %s" % ", ".join(rows) if not rows.is_empty() else "Deep Elevator · awaiting repair"
+	return "Deepheart passage · bring %s" % ", ".join(rows) if not rows.is_empty() else "Deepheart passage · awaiting repair"
 
 
 func _sync_hub_runtime() -> void :
@@ -3346,6 +3410,7 @@ func _checkpoint_location() -> void :
 	if phase == "deepheart":
 		RunState.set_location("deepheart", deepheart_world.player.global_position, 1)
 	elif phase == "endless":
+		endless_world.save_stream_position()
 		RunState.set_location("endless", endless_world.player.global_position)
 	elif phase == "depth":
 		RunState.set_location(current_mine_id, depth_world.player.global_position, 2)
@@ -3361,7 +3426,7 @@ func _checkpoint_location() -> void :
 
 
 func _gate_status(world_id: String) -> String:
-	var requirement: Dictionary = Dictionary(GATE_REQUIREMENTS[world_id])
+	var requirement: Dictionary = _gate_requirements(world_id)
 	if int(requirement.pickaxe) > RunState.pickaxe_level:
 		return "%s · %s required" % [String(requirement.title), String(GameData.data.PICKAXES[int(requirement.pickaxe)].name)]
 	if int(requirement.mastery) > int(RunState.get("ember_mastery")):
@@ -3369,6 +3434,15 @@ func _gate_status(world_id: String) -> String:
 	if RunState.gold < int(requirement.gold):
 		return "%s · %d gold" % [String(requirement.title), int(requirement.gold)]
 	return "%s · ready to open" % String(requirement.title)
+
+
+func _gate_requirements(world_id: String) -> Dictionary:
+	var requirement: Dictionary = Dictionary(GATE_REQUIREMENTS.get(world_id, {})).duplicate()
+	if world_id == "moonglass":
+		requirement["gold"] = int(GameData.data.GATE_COST)
+	elif world_id == "emberdeep":
+		requirement["gold"] = int(GameData.data.EMBER_GATE_COST)
+	return requirement
 
 
 func _surface_chest_definition(chest_id: String) -> Dictionary:
@@ -3498,7 +3572,7 @@ func _try_upgrade_drill() -> void :
 func _depth_objective() -> String:
 	var depth_title: = _depth_name(current_mine_id)
 	if RunState.victory:
-		return "ASCEND TO THE BASE HUB · ENTER THE ENDLESS DESCENT"
+		return "ASCEND TO THE BASE HUB · EXPLORE THE DEEP"
 	if RunState.singularity_secured:
 		return "SINGULARITY CORE SECURED · ASCEND TO THE STARFALL HUB"
 	if not RunState.has_deep_tool():
@@ -3561,9 +3635,9 @@ func _refresh_starforge_panel() -> void :
 
 func _surface_objective() -> String:
 	if RunState.victory:
-		return "RETURN TO THE BASE HUB · ENTER THE ENDLESS DESCENT"
+		return "RETURN TO THE BASE HUB · EXPLORE THE DEEP"
 	if RunState.singularity_secured:
-		return "ENTER THE BASE HUB · REPAIR THE DEEP ELEVATOR"
+		return "ENTER THE BASE HUB · RESTORE THE DEEPHEART PASSAGE"
 	if not RunState.area_unlocked:
 		return "FORGE THE RUNED PICKAXE · OPEN THE MOONGLASS GATE"
 	if not RunState.emberdeep_unlocked:
@@ -3613,6 +3687,9 @@ func _refresh_context_button() -> void :
 			label = "STABILIZE" if String(endless_context.get_slice(":", 2)) == "stabilize" else "OVERLOAD"
 		elif endless_context.begins_with("endless_relic:"):
 			label = "ATTACH ROPE"
+		else:
+			label = "TUNNEL HOME"
+		enabled = enabled and not tunnel_home_in_progress
 	elif phase == "hub":
 		if hub_context.begins_with("module:"):
 			label = "USE"
@@ -3755,11 +3832,11 @@ func _refresh_context_card() -> void :
 			if choice == "stabilize":
 				title = "CALM SEAL"
 				detail = "Cross three lit floor seals to recover the cache and silence a nearby surge"
-				hint = "PRESS E OR TAP STABILIZE"
+				hint = "PRESS E OR TAP STEADY"
 			else:
 				title = "POWER SEAL"
 				detail = "Cross four lit floor seals for a double cache; the nearby surge grows stronger"
-				hint = "PRESS E OR TAP OVERLOAD"
+				hint = "PRESS E OR TAP BOOST"
 		elif endless_context.begins_with("endless_relic:"):
 			var relic: = Dictionary(RunState.relic_status(endless_context.trim_prefix("endless_relic:")))
 			title = String(relic.get("display_name", "RELIC")).to_upper()
@@ -3835,9 +3912,9 @@ func _cargo_summary() -> String:
 		var carried: = Dictionary(status.get("carried_relic", {}))
 		var relic_id: = String(carried.get("id", ""))
 		if not relic_id.is_empty():
-			return "LAYER %d  ·  RELIC ON ROPE  ·  POUCH %d" % [int(status.get("current_depth", 1)), RunState.cargo_count()]
-		return "LAYER %d  ·  DEEPEST %d  ·  POUCH %d" % [
-			int(status.get("current_depth", 1)), int(status.get("deepest_depth", 1)), RunState.cargo_count(),
+			return "%d m  ·  RELIC ON ROPE  ·  POUCH %d" % [endless_world.depth_metres(), RunState.cargo_count()]
+		return "%d m  ·  BEST %d m  ·  POUCH %d" % [
+			endless_world.depth_metres(), endless_world.deepest_metres(), RunState.cargo_count(),
 		]
 	if phase == "hub":
 		var stored: = 0
@@ -3903,7 +3980,7 @@ func _on_resource_collected(resource_id: String, amount: int) -> void :
 	if resource_id == "singularity" and RunState.secure_singularity(resource_id):
 		AudioDirector.play_discovery(true)
 		objective_label.text = "ASCEND TO STARFALL · ENTER THE BASE HUB"
-		_set_status("Singularity Core secured · repair the Deep Elevator in your Starfall Hub")
+		_set_status("Singularity Core secured · restore the passage in your Starfall Hub")
 		_refresh_hud()
 		if persistence_active:
 			_checkpoint_location()

@@ -1,0 +1,176 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "input",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 3.42,
+      "marker": "EVER_DEEPER_INPUT_RELEASE_OK",
+      "completion": [
+        "EVER_DEEPER_INPUT_RELEASE_OK hide=true matching_touch=true canceled_touch=true unrelated_touch_ignored=true mouse=true worlds=5 focus_pause=true"
+      ],
+      "log": "qa-results/one-point-zero-source-final/input.log",
+      "log_sha256": "26d296a2b3a1a9aa5afc623770fb4af0de5614eb406e9ad581cb308a46c2f0fc"
+    },
+    {
+      "case": "overhaul",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 6.94,
+      "marker": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK",
+      "completion": [
+        "EVER_DEEPER_SURFACE_GAMEPLAY_OK locked/open both-directions solid-pillars copper=24 regrowth=360 branch-both-directions shop-access",
+        "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=859 failures=[]"
+      ],
+      "log": "qa-results/one-point-zero-source-final/overhaul.log",
+      "log_sha256": "57d3790e3c03fa2f7887e9cf55ded69736ba20fd7c5d82e475064d88b2d98abf"
+    },
+    {
+      "case": "touch",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 14.06,
+      "marker": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK",
+      "completion": [
+        "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=121 failures=[]"
+      ],
+      "log": "qa-results/one-point-zero-source-final/touch.log",
+      "log_sha256": "8a0a60dff4e7d9027ba5e9b1d86e3caa4cc38a043c563e4cddfbfb3a6c010f31"
+    },
+    {
+      "case": "endgame",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 3.52,
+      "marker": "EVER_DEEPER_ENDGAME_OK",
+      "completion": [
+        "EVER_DEEPER_ENDGAME_OK seals=4 endless=unlocked gateway=true persistence=true conclusion=true deepheart_reentry=blocked"
+      ],
+      "log": "qa-results/one-point-zero-source-final/endgame.log",
+      "log_sha256": "036a8c20e9848888a981e8da195cb1a00d7f9fc3136953621bdc6ba6f87c531e"
+    },
+    {
+      "case": "onboarding",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 3.32,
+      "marker": "EVER_DEEPER_ONBOARDING_OK",
+      "completion": [
+        "EVER_DEEPER_ONBOARDING_OK minimap=transparent_organic_overlap_fade tutorial=nonblocking shrine_respawn=75"
+      ],
+      "log": "qa-results/one-point-zero-source-final/onboarding.log",
+      "log_sha256": "3f43f063cae37ac7b76209f10162988d6468fe9c4c9710b01b85a47c303ceffd"
+    },
+    {
+      "case": "layout",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 3.62,
+      "marker": "EVER_DEEPER_IPHONE_LAYOUT_OK",
+      "completion": [
+        "EVER_DEEPER_IPHONE_LAYOUT_OK devices=844x390,852x393,874x402,912x420,932x430,956x440 touch=44css icons=optically-normalized safe=notch/home overlays=menu,bag,museum,starforge,conclusion"
+      ],
+      "log": "qa-results/one-point-zero-source-final/layout.log",
+      "log_sha256": "48ac1072353d70959f9c6aa1e1f11cf60a5c439cbd3d5766185720cce5fb1f74"
+    },
+    {
+      "case": "portrait",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 3.53,
+      "marker": "EVER_DEEPER_PORTRAIT_GUARD_OK",
+      "completion": [
+        "EVER_DEEPER_PORTRAIT_GUARD_OK portrait=1280x2770 landscape=1558x720 card=1080x720"
+      ],
+      "log": "qa-results/one-point-zero-source-final/portrait.log",
+      "log_sha256": "bea8f9f920a20fcc985a14dece536371b4b95fd9714368ca8bc6c183338fa2b3"
+    },
+    {
+      "case": "dev-tools",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.15,
+      "marker": "EVER_DEEPER_DEV_TOOLS_QA_OK",
+      "completion": [
+        "EVER_DEEPER_DEV_TOOLS_QA_OK commands=23 isolated_save=true iphone=932x430 finger_scroll=true readable_text=true exact_depths=true relics=5 workshops=5"
+      ],
+      "log": "qa-results/one-point-zero-source-final/dev-tools.log",
+      "log_sha256": "c29c7b1137e4b85356ee5353935810421128436c10a75cbd063b7e8b12410bdf"
+    },
+    {
+      "case": "crusher",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 3.61,
+      "marker": "EVER_DEEPER_CRUSHER_IMPACT_OK",
+      "completion": [
+        "EVER_DEEPER_CRUSHER_IMPACT_OK footprint=5x5 real_loot=true sectors=8 bundles_max=12 merge_window=0.15 arc=true drill_stress=600 accounting=exact depth2=true pickup=48/80/112/144 singularity=48 cleanup=0.30"
+      ],
+      "log": "qa-results/one-point-zero-source-final/crusher.log",
+      "log_sha256": "0b569f5a97c05df07b9569bb4ae80fb9ed4aaae563ee98a8f954f9720fdf6d04"
+    },
+    {
+      "case": "one-point-zero-state",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 3.61,
+      "marker": "EVER_DEEPER_ONE_POINT_ZERO_STATE_OK",
+      "completion": [
+        "EVER_DEEPER_ONE_POINT_ZERO_STATE_OK checks=240"
+      ],
+      "log": "qa-results/one-point-zero-source-final/one-point-zero-state.log",
+      "log_sha256": "eb85eb12a4597bfef7965e2564191ae409ede573adcbee36213d1f25baefe940"
+    },
+    {
+      "case": "one-point-zero-world",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 11.46,
+      "marker": "EVER_DEEPER_ONE_POINT_ZERO_WORLD_OK",
+      "completion": [
+        "EVER_DEEPER_ONE_POINT_ZERO_WORLD_OK checks=515"
+      ],
+      "log": "qa-results/one-point-zero-source-final/one-point-zero-world.log",
+      "log_sha256": "a7be6fd06a06d791409f952264dbc1d62faa87007e91f728fdb3011882646df5"
+    },
+    {
+      "case": "one-point-zero-migration",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.02,
+      "marker": "EVER_DEEPER_ONE_POINT_ZERO_MIGRATION_OK",
+      "completion": [
+        "EVER_DEEPER_ONE_POINT_ZERO_MIGRATION_OK checks=260"
+      ],
+      "log": "qa-results/one-point-zero-source-final/one-point-zero-migration.log",
+      "log_sha256": "47ed0e0c21a5893a8824f676e07d5b2789aeb798c7cc1bb8002510be76085960"
+    },
+    {
+      "case": "one-point-zero-ui",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 3.82,
+      "marker": "EVER_DEEPER_ONE_POINT_ZERO_UI_OK",
+      "completion": [
+        "EVER_DEEPER_ONE_POINT_ZERO_UI_OK checks=261"
+      ],
+      "log": "qa-results/one-point-zero-source-final/one-point-zero-ui.log",
+      "log_sha256": "9d619fa569e66a3223a03df04d9a513f12a27b3d85204a825f1b4bfa9e4e8cad"
+    }
+  ],
+  "evidence_scope": "Integrated working tree before final export; exact PCK validation remains required."
+}

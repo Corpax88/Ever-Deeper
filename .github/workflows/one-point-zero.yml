@@ -1,0 +1,180 @@
+name: Validate Ever-Deeper 1.0 DEV candidate
+on:
+  push:
+    branches: [codex-ever-deeper-1-0]
+permissions:
+  contents: read
+concurrency:
+  group: ever-deeper-one-point-zero-validation-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check DEV-only staging protections offline
+        run: python3 .github/one-point-zero/check_release.py
+      - name: Install Godot 4.7.2 and matching web templates
+        run: |
+          curl -L --fail --retry 3 --retry-all-errors https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+          curl -L --fail --retry 3 --retry-all-errors https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz -o "$RUNNER_TEMP/templates.tpz"
+          unzip -q "$RUNNER_TEMP/templates.tpz" 'templates/web*.zip' 'templates/version.txt' -d "$RUNNER_TEMP/templates"
+          test "$(cat "$RUNNER_TEMP/templates/templates/version.txt")" = 4.7.2.stable
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          cp "$RUNNER_TEMP/templates/templates/"* "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+      - name: Build exact source, verify gameplay and both flavors
+        run: |
+          python3 .github/one-point-zero/prepare.py build --godot Godot_v4.7.2-stable_linux.x86_64 --candidate "$RUNNER_TEMP/candidate" --review-output "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-one-point-zero-dev-candidate
+          path: ${{ runner.temp }}/candidate
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ever-deeper-one-point-zero-build-review
+          path: ${{ runner.temp }}/review
+          retention-days: 30
+  mobile:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-one-point-zero-dev-candidate
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Install mobile WebKit
+        run: |
+          npm ci
+          npx playwright install --with-deps webkit
+      - name: Check exact-package gameplay and small-iPhone touch
+        env:
+          TOUCH_BROWSER: webkit
+          SMALL_IPHONE: '1'
+          EXPECTED_VERSION: 1.0.0-dev.1
+        run: |
+          python3 .github/one-point-zero/prepare.py verify-candidate "$RUNNER_TEMP/candidate"
+          OVERHAUL_GAMEPLAY=1 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate/dev" --output-dir "$RUNNER_TEMP/review/gameplay"
+          OVERHAUL_GAMEPLAY=1 MENU_TOUCH=1 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate/dev" --output-dir "$RUNNER_TEMP/review/touch"
+          python3 .github/one-point-zero/prepare.py verify-candidate "$RUNNER_TEMP/candidate"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ever-deeper-one-point-zero-mobile-review
+          path: ${{ runner.temp }}/review
+          retention-days: 30
+  hero-motion:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-one-point-zero-dev-candidate
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Inspect real hero movement and twelve mining combinations
+        env:
+          HERO_MOTION: '1'
+          CAPTURE_END: '1'
+          EXPECTED_VERSION: 1.0.0-dev.1
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          python3 .github/one-point-zero/prepare.py verify-candidate "$RUNNER_TEMP/candidate"
+          node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate/dev" --output-dir "$RUNNER_TEMP/review"
+          python3 .github/one-point-zero/prepare.py verify-candidate "$RUNNER_TEMP/candidate"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ever-deeper-one-point-zero-hero-motion-review
+          path: ${{ runner.temp }}/review
+          retention-days: 30
+  web-audio:
+    name: web-audio (${{ matrix.browser }})
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [webkit, chromium]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-one-point-zero-dev-candidate
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Measure real Web Audio unlock, overlap and mute
+        env:
+          EXPECTED_VERSION: 1.0.0-dev.1
+        run: |
+          npm ci
+          npx playwright install --with-deps '${{ matrix.browser }}'
+          python3 .github/one-point-zero/prepare.py verify-candidate "$RUNNER_TEMP/candidate"
+          node tools/qa-web-audio.mjs "$RUNNER_TEMP/candidate/dev" "$RUNNER_TEMP/review" '${{ matrix.browser }}'
+          python3 .github/one-point-zero/prepare.py verify-candidate "$RUNNER_TEMP/candidate"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ever-deeper-one-point-zero-web-audio-${{ matrix.browser }}
+          path: ${{ runner.temp }}/review
+          retention-days: 30
+  native-visual:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ever-deeper-one-point-zero-dev-candidate
+          path: ${{ runner.temp }}/candidate
+      - name: Install matching Godot native renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri ripgrep
+          curl -L --fail --retry 3 --retry-all-errors https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Capture and verify the exact DEV package
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          LP_NUM_THREADS: '4'
+          OMP_NUM_THREADS: '4'
+        run: |
+          python3 .github/one-point-zero/prepare.py verify-candidate "$RUNNER_TEMP/candidate"
+          mkdir -p "$RUNNER_TEMP/review" "$RUNNER_TEMP/pack-run"
+          xvfb-run -a -s '-screen 0 2560x1440x24' timeout 720 Godot_v4.7.2-stable_linux.x86_64 --path "$RUNNER_TEMP/pack-run" --main-pack "$RUNNER_TEMP/candidate/dev/index.pck" --script "$GITHUB_WORKSPACE/tools/review_one_point_zero.gd" --resolution 2532x1170 --audio-driver Dummy -- --pack-source="$RUNNER_TEMP/candidate/dev/index.pck" --output="$RUNNER_TEMP/review" > "$RUNNER_TEMP/review/native.log" 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/review/native.log"; then exit 1; fi
+          rg 'ONE_POINT_ZERO_RENDER_COMPLETE' "$RUNNER_TEMP/review/native.log"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          root = Path(os.environ['RUNNER_TEMP'])
+          review = json.loads((root/'review/review.json').read_text())
+          candidate = json.loads((root/'candidate/manifest.json').read_text())
+          assert review['automated_assertions_passed'] is True and review['failures'] == []
+          assert review['rendered'] is True and len(review['captures']) > 0
+          assert review['artifact']['sha256'] == candidate['dev_files']['index.pck']['sha256']
+          PY
+          python3 .github/one-point-zero/prepare.py verify-candidate "$RUNNER_TEMP/candidate"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ever-deeper-one-point-zero-native-visual
+          path: ${{ runner.temp }}/review
+          retention-days: 30

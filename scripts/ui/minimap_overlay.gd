@@ -18,6 +18,7 @@ var _elapsed: = 0.0
 var _redraw_elapsed: = REDRAW_INTERVAL
 var _map_rect: = Rect2()
 var _panel_style: = StyleBoxFlat.new()
+var _premium_hud: Control
 
 
 func _ready() -> void :
@@ -29,6 +30,9 @@ func _ready() -> void :
 	_panel_style.border_color = Color(GOLD, 0.26)
 	_panel_style.set_border_width_all(1)
 	_panel_style.set_corner_radius_all(24)
+	_premium_hud = get_parent().get_node_or_null("PremiumHud") as Control
+	if _premium_hud != null and _premium_hud.has_signal("minimap_layout_changed"):
+		_premium_hud.minimap_layout_changed.connect(_place_map)
 	get_viewport().size_changed.connect(_apply_layout)
 	_apply_layout()
 
@@ -85,6 +89,11 @@ func _process(delta: float) -> void :
 
 
 func _apply_layout() -> void :
+	if _premium_hud != null and _premium_hud.has_method("minimap_layout_rect"):
+		var shared_rect: Rect2 = _premium_hud.minimap_layout_rect()
+		if shared_rect.has_area():
+			_place_map(shared_rect)
+			return
 	var viewport_size: = get_viewport_rect().size
 	if viewport_size.x <= 1.0 or viewport_size.y <= 1.0:
 		return
@@ -93,6 +102,11 @@ func _apply_layout() -> void :
 	var right: = 116.0 if iphone else 8.0
 	var top: = 126.0 if iphone else 68.0
 	_map_rect = Rect2(viewport_size.x - right - size.x, top, size.x, size.y)
+	queue_redraw()
+
+
+func _place_map(map_rect: Rect2) -> void:
+	_map_rect = map_rect
 	queue_redraw()
 
 

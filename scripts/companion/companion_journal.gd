@@ -245,7 +245,8 @@ func _together() -> void:
 	var description=_label(body,"I follow, light the way and scoop up loose ore.\nTap the ground to send me somewhere!",19)
 	description.position=Vector2(0,42);description.size=Vector2(800,44)
 	status=_label(body,"",20,true);status.position=Vector2(0,88);status.size=Vector2(790,28)
-	var definitions=[['fetch','Come here','Always ready'],['shake','Dig together','8-second recharge'],['ore_nose','Find ore','Sniff out a vein'],['homeward','Lead me home','I wait for you'],['echo','Find passage','Point the way deeper']]
+	var home_label: String = "Tunnel Home" if RunState.current_scene == "endless" else "Lead me home"
+	var definitions=[['fetch','Come here','Always ready'],['shake','Dig together','8-second recharge'],['ore_nose','Find ore','Sniff out a vein'],['homeward',home_label,'Bring your attached relic'],['echo','Find passage','Point the way deeper']]
 	for i in definitions.size():
 		var row: Array=definitions[i]
 		var skill_id: String=row[0]

@@ -58,7 +58,8 @@ func _layout() -> void:
 	activity.add_theme_font_size_override("font_size",16 if mobile else 12)
 
 func _process(_delta: float) -> void:
-	var identity: String=String(main.phase)+":"+String(main.current_mine_id)+":"+str(RunState.endless_current_depth)
+	# Crossing a seam in The Deep keeps the same companion and current command.
+	var identity: String=String(main.phase)+":"+String(main.current_mine_id)
 	if identity!=last_world_identity:
 		last_world_identity=identity
 		touch_index=-1
@@ -93,7 +94,11 @@ func _command_skill(skill: String) -> void:
 			mole.call("_react","Right beside you!",2.0)
 		"shake":
 			if not mole.shake_nearby(): mole.call("_react","Tap an ordinary wall",2.4)
-		"ore_nose","echo","homeward":
+		"homeward":
+			if String(main.phase) == "endless":
+				if not main.request_tunnel_home(): mole.call("_react","Stay close, little miner",2.4)
+			elif not mole.scout(skill): mole.call("_react","Already home, little miner",2.4)
+		"ore_nose","echo":
 			if not mole.scout(skill): mole.call("_react","Nothing reachable yet",2.4)
 
 func _on_web_touch_cancel(arguments: Array) -> void:
@@ -102,7 +107,7 @@ func _on_web_touch_cancel(arguments: Array) -> void:
 		web_canceled_touches[int(changed.item(index).identifier)]=true
 
 func _ground_input_enabled() -> bool:
-	return button.visible and not main.call("_shop_panel_is_open") and not bool(main.menu_open) and not bool(main.inventory_open) and main.movement_pad.is_visible_in_tree() and not bool(main.movement_pad.build_mode) and (main.developer_menu==null or not main.developer_menu.is_open())
+	return button.visible and not bool(main.tunnel_home_in_progress) and not main.call("_shop_panel_is_open") and not bool(main.menu_open) and not bool(main.inventory_open) and main.movement_pad.is_visible_in_tree() and not bool(main.movement_pad.build_mode) and (main.developer_menu==null or not main.developer_menu.is_open())
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch or event is InputEventScreenDrag:

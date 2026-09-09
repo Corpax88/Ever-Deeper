@@ -1,0 +1,73 @@
+{
+  "round": 1,
+  "maximum_rounds": 4,
+  "date": "2026-09-09",
+  "based_on_commit": "3a6ddd7d8cf0678d92756cb2c3d53c14c4d1826a",
+  "candidate_status": "development working tree; final PCK not inspected",
+  "approved_1_0": false,
+  "overall_score": null,
+  "scores": {
+    "gameplay_loop": 8,
+    "progression_feel": 8,
+    "ux": 8,
+    "visual_premium": null,
+    "performance": null,
+    "code_quality": 8
+  },
+  "passed_checks": {
+    "state": 240,
+    "world": 515,
+    "migration": 260,
+    "ui": 357,
+    "overhaul": 859
+  },
+  "corrected_blockers": [
+    "legacy active local coordinate changed depth",
+    "carried deeper depth clamped on reload",
+    "detached relic relocated to original depth",
+    "paid Forge speed clamped away on fast equipment",
+    "rendered progression panel covered minimap",
+    "actual five-row Deepcore recipe covered iPhone context action"
+  ],
+  "open_findings": [],
+  "required_evidence": [
+    "frozen source and exact PCK regression gates",
+    "final mobile render and motion inspection",
+    "sustained physical iPhone performance"
+  ],
+  "last_physical_iphone": {
+    "version": "0.46.9-dev.9",
+    "normal_fps": 52.1,
+    "pet_lights_disabled_fps": 60.0,
+    "candidate_60_fps_certified": false
+  },
+  "speed_probe_seconds": {
+    "crusher": [
+      0.68,
+      0.425
+    ],
+    "swift": [
+      0.24,
+      0.15
+    ],
+    "prospector": [
+      0.28336,
+      0.1771
+    ]
+  },
+  "integrated_source_gate": {
+    "passed": true,
+    "active_cases": 13,
+    "results": "qa-results/one-point-zero-source-final/results.json",
+    "exact_package_review": false
+  },
+  "post_source_ui_geometry_gate": {
+    "passed": true,
+    "checks": 357,
+    "results": "qa-results/one-point-zero-ui-geometry/results.json",
+    "actual_recipe_row_counts": [4, 5],
+    "css_viewports": ["844x390", "956x440"],
+    "project_content_scale": 1.1,
+    "final_png_legibility_pending": true
+  }
+}

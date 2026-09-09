@@ -6,6 +6,7 @@ signal resource_collected(resource_id: String, amount: int)
 const MossveinProgressionScript: = preload("res://scripts/progression/mossvein_progression.gd")
 const BeltNetworkScript: = preload("res://scripts/progression/belt_network.gd")
 const SaveEpochScript: = preload("res://scripts/state/save_epoch.gd")
+const EndlessTerrainStateScript = preload("res://scripts/state/endless_terrain_state.gd")
 
 const SAVE_SCHEMA_ID: = "ever_deeper_run_state"
 const SAVE_SCHEMA_VERSION: = 2
@@ -118,7 +119,7 @@ const ENDLESS_WORKSHOP_NAMES: = {
 	"light_lab": "Light Lab",
 	"wardrobe": "Wardrobe",
 	"treasure_chamber": "Treasure Chamber",
-	"lift_workshop": "Lift Workshop",
+	"lift_workshop": "Tunnel Workshop",
 }
 const ENDLESS_WORKSHOP_STYLE_IDS: = [
 	"original", "riveted", "crystal", "starforged", "deepheart",
@@ -188,11 +189,14 @@ var deepheart_awakened_at_mined: = 0
 var endless_descent_active: = false
 var endless_current_depth: = 0
 var endless_deepest_depth: = 0
+var endless_deepest_metres: int = 0
 var endless_start_depth_checkpoint: = 1
 var endless_resource_exhausted_through: = 0
 var endless_active_floor_depth: = 0
 var endless_active_floor_mined_mask: = 0
 var endless_active_floor_site_mask: = 0
+var endless_chunks: Dictionary = {}
+var endless_stream_anchor: Dictionary = {}
 var endless_relics: Dictionary = _default_endless_relics()
 var carried_relic: Dictionary = _default_carried_relic()
 var endless_workshops: Dictionary = _default_endless_workshops()
@@ -689,7 +693,7 @@ func resource_pickup_radius(base_radius: float = 48.0, resource_id: String = "")
 	if resource_id == "singularity":
 		return maxf(0.0, base_radius)
 	var safe_level: = clampi(drill_level, 0, Array(_game_data().DRILLS).size() - 1)
-	return maxf(0.0, base_radius) + float(safe_level) * DRILL_PICKUP_RADIUS_STEP
+	return maxf(0.0, base_radius) + float(safe_level) * DRILL_PICKUP_RADIUS_STEP + float(_built_workshop_level("treasure_chamber")) * 72.0
 
 
 func attune_tool_with_starforge(tool: Dictionary) -> Dictionary:
@@ -746,15 +750,15 @@ func apply_tool_forge_effects(tool: Dictionary, minimum_cooldown: float = 0.02) 
 
 
 func endless_tool_power_multiplier() -> float:
-	return 1.0 + 0.04 * float(_built_workshop_level("tool_forge"))
+	return 1.0 + 0.35 * float(_built_workshop_level("tool_forge"))
 
 
 func endless_tool_speed_multiplier() -> float:
-	return 1.0 + 0.025 * float(_built_workshop_level("tool_forge"))
+	return 1.0 + 0.12 * float(_built_workshop_level("tool_forge"))
 
 
 func endless_tool_range_multiplier() -> float:
-	return 1.0 + 0.03 * float(_built_workshop_level("tool_forge"))
+	return 1.0 + 0.10 * float(_built_workshop_level("tool_forge"))
 
 
 func endless_light_range_multiplier() -> float:
@@ -763,6 +767,20 @@ func endless_light_range_multiplier() -> float:
 
 func endless_light_energy_multiplier() -> float:
 	return light_energy_for_level(_built_workshop_level("light_lab"))
+
+
+func workshop_effects_at_level(workshop_id: String, level: int) -> Dictionary:
+	var safe: int = clampi(level, 0, 5)
+	var forge: int = safe if workshop_id == "tool_forge" else 0
+	var light: int = safe if workshop_id == "light_lab" else 0
+	var treasure: bool = workshop_id == "treasure_chamber" and safe > 0
+	return {
+		"power": 1.0 + 0.35 * float(forge), "speed": 1.0 + 0.12 * float(forge),
+		"reach": 1.0 + 0.10 * float(forge), "pickup_bonus": 72.0 if treasure else 0.0,
+		"light_range": light_range_for_level(light), "light_energy": light_energy_for_level(light),
+		"cache_yield": 1.25 if treasure else 1.0,
+		"tunnel_duration": 0.45 if workshop_id == "lift_workshop" and safe > 0 else 1.25,
+	}
 
 
 func next_drill() -> Dictionary:
@@ -1102,69 +1120,66 @@ func collect_endless_resource(resource_id: String, amount: int = 1) -> bool:
 
 
 func endless_floor_resource_state(depth: int) -> Dictionary:
-	var bounded_depth: = clampi(depth, 0, ENDLESS_MAX_SAVED_DEPTH)
-	var exhausted: = bounded_depth > 0 and bounded_depth <= endless_resource_exhausted_through
-	var mined_mask: = (
-		endless_active_floor_mined_mask
-		if bounded_depth == endless_active_floor_depth and not exhausted
-		else 0
-	)
+	var bounded_depth: int = clampi(depth, 0, ENDLESS_MAX_SAVED_DEPTH)
+	var exhausted: bool = bounded_depth > 0 and bounded_depth <= endless_resource_exhausted_through
+	var chunk: Dictionary = Dictionary(endless_chunks.get(str(bounded_depth), {}))
+	var legacy: int = endless_active_floor_mined_mask if bounded_depth == endless_active_floor_depth else 0
 	return {
-		"depth": bounded_depth,
-		"exhausted": exhausted,
-		"mined_mask": mined_mask,
+		"depth": bounded_depth, "exhausted": exhausted,
+		"mined_mask": int(chunk.get("nodes", 0)) | legacy,
 		"exhausted_through": endless_resource_exhausted_through,
 	}
 
 
 func mark_endless_resource_node_mined(depth: int, node_index: int) -> bool:
-	if (
-		not victory
-		or not endless_descent_active
-		or depth <= 0
-		or depth != endless_current_depth
-		or depth <= endless_resource_exhausted_through
-		or node_index < 0
-		or node_index >= 31
-	):
+	if not _endless_band_in_reach(depth) or depth <= endless_resource_exhausted_through or node_index < 0 or node_index >= 31:
 		return false
-	if endless_active_floor_depth != depth:
-		endless_active_floor_depth = depth
-		endless_active_floor_mined_mask = 0
-	var bit: = 1 << node_index
-	if (endless_active_floor_mined_mask & bit) != 0:
-		return true
-	endless_active_floor_mined_mask |= bit
+	var chunk: Dictionary = Dictionary(endless_chunks.get(str(depth), {}))
+	var mask: int = int(Dictionary(endless_floor_resource_state(depth)).get("mined_mask", 0))
+	var bit: int = 1 << node_index
+	if (mask & bit) != 0:
+		return false
+	chunk["nodes"] = mask | bit
+	endless_chunks[str(depth)] = chunk
+	if endless_active_floor_depth == depth:
+		endless_active_floor_mined_mask = mask | bit
 	_state_changed()
 	return true
 
 
+func claim_endless_resource_node(depth: int, node_index: int, resource_id: String, amount: int) -> Dictionary:
+	if not _endless_band_in_reach(depth) or resource_id not in ENDLESS_RESOURCE_IDS or amount <= 0 or amount > MAX_MINE_LOOSE_DROP_AMOUNT:
+		return {"ok": false, "reason": "invalid_node_claim"}
+	begin_state_batch()
+	var claimed: bool = mark_endless_resource_node_mined(depth, node_index)
+	if claimed:
+		add_resource(resource_id, amount, true)
+	end_state_batch()
+	return {"ok": claimed, "reason": "claimed" if claimed else "already_claimed", "amount": amount if claimed else 0}
+
+
 func endless_floor_site_state(depth: int, site_index: int = -1) -> Dictionary:
-	var bounded_depth: = clampi(depth, 0, ENDLESS_MAX_SAVED_DEPTH)
-	var exhausted: = bounded_depth > 0 and bounded_depth <= endless_resource_exhausted_through
-	var mask: = (
-		endless_active_floor_site_mask
-		if bounded_depth == endless_active_floor_depth and not exhausted
-		else 0
-	)
-	var resolved: = false
-	var choice: = ""
-	if site_index >= 0 and site_index < ENDLESS_SITE_LIMIT:
-		resolved = exhausted or (mask & (1 << site_index)) != 0
-		if resolved:
-			choice = (
-				"overload"
-				if (mask & (1 << (site_index + ENDLESS_SITE_OVERLOAD_SHIFT))) != 0
-				else "stabilize"
-			)
-	return {
-		"depth": bounded_depth,
-		"site_index": site_index,
-		"exhausted": exhausted,
-		"mask": mask,
-		"resolved": resolved,
-		"choice": choice,
-	}
+	var bounded_depth: int = clampi(depth, 0, ENDLESS_MAX_SAVED_DEPTH)
+	var exhausted: bool = bounded_depth > 0 and bounded_depth <= endless_resource_exhausted_through
+	var chunk: Dictionary = Dictionary(endless_chunks.get(str(bounded_depth), {}))
+	var legacy: int = endless_active_floor_site_mask if bounded_depth == endless_active_floor_depth else 0
+	var mask: int = int(chunk.get("sites", 0)) | legacy
+	var resolved: bool = site_index >= 0 and site_index < ENDLESS_SITE_LIMIT and (exhausted or (mask & (1 << site_index)) != 0)
+	var choice: String = "overload" if resolved and (mask & (1 << (site_index + ENDLESS_SITE_OVERLOAD_SHIFT))) != 0 else "stabilize" if resolved else ""
+	return {"depth": bounded_depth, "site_index": site_index, "exhausted": exhausted, "mask": mask, "resolved": resolved, "choice": choice, "discovered": resolved or (site_index >= 0 and site_index < ENDLESS_SITE_LIMIT and (int(chunk.get("seen", 0)) & (1 << site_index)) != 0)}
+
+
+func mark_endless_site_discovered(depth: int, site_index: int) -> void:
+	if not _endless_band_in_reach(depth) or site_index < 0 or site_index >= ENDLESS_SITE_LIMIT:
+		return
+	var chunk: Dictionary = Dictionary(endless_chunks.get(str(depth), {}))
+	var before: int = int(chunk.get("seen", 0))
+	var after: int = before | (1 << site_index)
+	if before == after:
+		return
+	chunk["seen"] = after
+	endless_chunks[str(depth)] = chunk
+	_state_changed()
 
 
 func claim_endless_site_cache(
@@ -1178,7 +1193,7 @@ func claim_endless_site_cache(
 		not victory
 		or not endless_descent_active
 		or depth <= 0
-		or depth != endless_current_depth
+		or not _endless_band_in_reach(depth)
 		or depth <= endless_resource_exhausted_through
 		or site_index < 0
 		or site_index >= ENDLESS_SITE_LIMIT
@@ -1188,16 +1203,18 @@ func claim_endless_site_cache(
 		or base_amount > 120
 	):
 		return {"ok": false, "reason": "invalid_site_cache"}
-	if endless_active_floor_depth != depth:
-		endless_active_floor_depth = depth
-		endless_active_floor_mined_mask = 0
-		endless_active_floor_site_mask = 0
-	var resolved_bit: = 1 << site_index
-	if (endless_active_floor_site_mask & resolved_bit) != 0:
+	var chunk: Dictionary = Dictionary(endless_chunks.get(str(depth), {}))
+	var mask: int = int(Dictionary(endless_floor_site_state(depth)).get("mask", 0))
+	var resolved_bit: int = 1 << site_index
+	if (mask & resolved_bit) != 0:
 		return {"ok": false, "reason": "already_claimed"}
-	endless_active_floor_site_mask |= resolved_bit
+	mask |= resolved_bit
 	if choice == "overload":
-		endless_active_floor_site_mask |= 1 << (site_index + ENDLESS_SITE_OVERLOAD_SHIFT)
+		mask |= 1 << (site_index + ENDLESS_SITE_OVERLOAD_SHIFT)
+	chunk["sites"] = mask
+	endless_chunks[str(depth)] = chunk
+	if endless_active_floor_depth == depth:
+		endless_active_floor_site_mask = mask
 	var reward_multiplier: = 2.0 if choice == "overload" else 1.0
 	var chamber_built: = _built_workshop_level("treasure_chamber") > 0
 	if chamber_built:
@@ -1239,6 +1256,7 @@ func endless_descent_status() -> Dictionary:
 		"active": victory and endless_descent_active,
 		"current_depth": endless_current_depth if victory else 0,
 		"deepest_depth": endless_deepest_depth if victory else 0,
+		"deepest_metres": maxi(endless_deepest_metres, (endless_deepest_depth - 1) * 44) if victory else 0,
 		"start_depth": endless_start_depth_checkpoint if victory else 1,
 		"start_depth_checkpoint": endless_start_depth_checkpoint if victory else 1,
 		"next_unknown_depth": mini(ENDLESS_MAX_SAVED_DEPTH, endless_deepest_depth + 1) if victory else 1,
@@ -1253,6 +1271,10 @@ func endless_descent_status() -> Dictionary:
 		"built_workshop_count": built_count if victory else 0,
 		"total_workshops": ENDLESS_WORKSHOP_IDS.size(),
 		"resources": _endless_resource_snapshot() if victory else _empty_endless_resource_snapshot(),
+		"continuous": true,
+		"depth_metres": endless_depth_metres(),
+		"next_relic_id": next_endless_relic_id(),
+		"next_relic_depth": next_endless_relic_depth(),
 		"museum": true,
 		"exploration_complete": false,
 	}
@@ -1303,23 +1325,16 @@ func reach_endless_depth(depth: int) -> bool:
 		return true
 	if absi(depth - endless_current_depth) != 1 or depth > endless_deepest_depth + 1:
 		return false
-	var previous_depth: = endless_current_depth
 	var carried_id: = String(carried_relic.get("id", ""))
 	if not carried_id.is_empty():
 		if not bool(carried_relic.get("attached", false)):
 			return false
-		if depth > int(carried_relic.get("current_depth", endless_current_depth)):
-			return false
 		carried_relic["current_depth"] = depth
-	if previous_depth > 0:
-		endless_resource_exhausted_through = maxi(
-			endless_resource_exhausted_through, previous_depth
-		)
 	endless_current_depth = depth
 	endless_deepest_depth = maxi(endless_deepest_depth, depth)
 	endless_active_floor_depth = depth
-	endless_active_floor_mined_mask = 0
-	endless_active_floor_site_mask = 0
+	endless_active_floor_mined_mask = int(Dictionary(endless_chunks.get(str(depth), {})).get("nodes", 0))
+	endless_active_floor_site_mask = int(Dictionary(endless_chunks.get(str(depth), {})).get("sites", 0))
 	_state_changed()
 	return true
 
@@ -1341,7 +1356,7 @@ func checkpoint_endless_depth(depth: int = 0) -> bool:
 
 func leave_endless_descent_to_hub() -> Dictionary:
 	if not victory or not endless_descent_active or endless_current_depth != 0:
-		return {"ok": false, "reason": "surface_lift_required"}
+		return {"ok": false, "reason": "tunnel_home_required"}
 	var carried_id: = String(carried_relic.get("id", ""))
 	if not carried_id.is_empty():
 		if not bool(carried_relic.get("attached", false)):
@@ -1392,7 +1407,7 @@ func discover_endless_relic(relic_id: String, depth: int) -> bool:
 		or relic_id not in ENDLESS_RELIC_IDS
 		or depth < 1
 		or depth > ENDLESS_MAX_SAVED_DEPTH
-		or depth != endless_current_depth
+		or not _endless_band_in_reach(depth)
 	):
 		return false
 	var state: Dictionary = Dictionary(endless_relics.get(
@@ -1422,7 +1437,7 @@ func collect_endless_relic(relic_id: String, depth: int = 0) -> Dictionary:
 	var target_depth: = endless_current_depth if depth <= 0 else depth
 	if (
 		target_depth < 1
-		or target_depth != endless_current_depth
+		or not _endless_band_in_reach(target_depth)
 		or target_depth != int(state.get("found_depth", 0))
 	):
 		return {"ok": false, "reason": "wrong_depth", "relic_id": relic_id}
@@ -1431,7 +1446,7 @@ func collect_endless_relic(relic_id: String, depth: int = 0) -> Dictionary:
 	carried_relic = {
 		"id": relic_id,
 		"origin_depth": target_depth,
-		"current_depth": target_depth,
+		"current_depth": endless_current_depth,
 		"attached": false,
 	}
 	_state_changed()
@@ -1468,7 +1483,7 @@ func update_carried_relic_transport(depth: int) -> bool:
 	):
 		return false
 	var previous: = int(carried_relic.get("current_depth", 0))
-	if depth > previous or previous - depth > 1:
+	if absi(previous - depth) > 1:
 		return false
 	if depth > 0 and ( not endless_descent_active or depth != endless_current_depth):
 		return false
@@ -3191,11 +3206,15 @@ func serialize() -> Dictionary:
 				"active": endless_descent_active and saved_victory,
 				"current_depth": endless_current_depth if saved_victory else 0,
 				"deepest_depth": endless_deepest_depth if saved_victory else 0,
+				"deepest_metres": endless_deepest_metres if saved_victory else 0,
 				"start_depth_checkpoint": endless_start_depth_checkpoint if saved_victory else 1,
 				"resource_exhausted_through": endless_resource_exhausted_through if saved_victory else 0,
 				"active_floor_depth": endless_active_floor_depth if saved_victory else 0,
 				"active_floor_mined_mask": endless_active_floor_mined_mask if saved_victory else 0,
 				"active_floor_site_mask": endless_active_floor_site_mask if saved_victory else 0,
+				"stream_version": 1,
+				"chunks": endless_chunks.duplicate(true) if saved_victory else {},
+				"stream_anchor": endless_stream_anchor.duplicate(true) if saved_victory else {},
 				"relics": endless_relics.duplicate(true) if saved_victory else _default_endless_relics(),
 				"carried_relic": carried_relic.duplicate(true) if saved_victory else _default_carried_relic(),
 				"workshops": endless_workshops.duplicate(true) if saved_victory else _default_endless_workshops(),
@@ -3380,6 +3399,7 @@ func deserialize(raw: Variant) -> bool:
 		endless_deepest_depth = clampi(_nonnegative_int(
 			endless_source.get("deepest_depth", endless_source.get("deepestDepth", 0)), 0
 		), 0, ENDLESS_MAX_SAVED_DEPTH)
+		endless_deepest_metres = maxi(0, _nonnegative_int(endless_source.get("deepest_metres", maxi(0, endless_deepest_depth - 1) * 44), 0))
 		endless_start_depth_checkpoint = clampi(_nonnegative_int(
 			endless_source.get(
 				"start_depth_checkpoint", endless_source.get("startDepthCheckpoint", 1)
@@ -3407,6 +3427,14 @@ func deserialize(raw: Variant) -> bool:
 			),
 			0
 		), 0, 255)
+		endless_chunks = EndlessTerrainStateScript.sanitize(endless_source.get("chunks", {}), ENDLESS_MAX_SAVED_DEPTH)
+		endless_stream_anchor = _sanitize_endless_stream_anchor(endless_source.get("stream_anchor", {}))
+		# Keep the previous active masks as a migration journal before any travel.
+		if endless_active_floor_depth > 0:
+			var migrated: Dictionary = Dictionary(endless_chunks.get(str(endless_active_floor_depth), {}))
+			migrated["nodes"] = int(migrated.get("nodes", 0)) | endless_active_floor_mined_mask
+			migrated["sites"] = int(migrated.get("sites", 0)) | endless_active_floor_site_mask
+			endless_chunks[str(endless_active_floor_depth)] = migrated
 		endless_relics = _sanitize_endless_relics(endless_source.get("relics", {}))
 		carried_relic = _sanitize_carried_relic(
 			endless_source.get("carried_relic", endless_source.get("carriedRelic", {})),
@@ -3705,11 +3733,14 @@ func _apply_defaults(emit_change: bool = true) -> void :
 	endless_descent_active = false
 	endless_current_depth = 0
 	endless_deepest_depth = 0
+	endless_deepest_metres = 0
 	endless_start_depth_checkpoint = 1
 	endless_resource_exhausted_through = 0
 	endless_active_floor_depth = 0
 	endless_active_floor_mined_mask = 0
 	endless_active_floor_site_mask = 0
+	endless_chunks = {}
+	endless_stream_anchor = {}
 	endless_relics = _default_endless_relics()
 	carried_relic = _default_carried_relic()
 	endless_workshops = _default_endless_workshops()
@@ -3919,7 +3950,7 @@ func _sanitize_carried_relic(raw: Variant, relics: Dictionary) -> Dictionary:
 			source.get("current_depth", source.get("currentDepth", origin_depth)), origin_depth
 		),
 		0,
-		origin_depth
+		ENDLESS_MAX_SAVED_DEPTH
 	)
 	relic["collected"] = true
 	relics[relic_id] = relic
@@ -3976,11 +4007,14 @@ func _normalize_endless_state() -> void :
 		endless_descent_active = false
 		endless_current_depth = 0
 		endless_deepest_depth = 0
+		endless_deepest_metres = 0
 		endless_start_depth_checkpoint = 1
 		endless_resource_exhausted_through = 0
 		endless_active_floor_depth = 0
 		endless_active_floor_mined_mask = 0
 		endless_active_floor_site_mask = 0
+		endless_chunks = {}
+		endless_stream_anchor = {}
 		endless_relics = _default_endless_relics()
 		carried_relic = _default_carried_relic()
 		endless_workshops = _default_endless_workshops()
@@ -4025,9 +4059,8 @@ func _normalize_endless_state() -> void :
 	var carried_id: = String(carried_relic.get("id", ""))
 	if not carried_id.is_empty():
 		var transport_depth: = int(carried_relic.get("current_depth", 0))
-		if not bool(carried_relic.get("attached", false)):
-			transport_depth = int(carried_relic.get("origin_depth", transport_depth))
-			carried_relic["current_depth"] = transport_depth
+		# Detachment preserves the transport location; the original discovery
+		# band is historical data, not a safe place to teleport a hauled relic.
 		if transport_depth > 0:
 			endless_descent_active = true
 			endless_current_depth = transport_depth
@@ -4037,7 +4070,7 @@ func _normalize_endless_state() -> void :
 	endless_workshops = _sanitize_endless_workshops(
 		endless_workshops, endless_relics
 	)
-	if _built_workshop_level("lift_workshop") <= 0:
+	if _built_workshop_level("lift_workshop") <= 0 and endless_stream_anchor.is_empty():
 		endless_start_depth_checkpoint = 1
 	if endless_light_style not in _available_selection_options(
 		"light_lab", ENDLESS_LIGHT_STYLE_IDS
@@ -5046,6 +5079,14 @@ func _load_location(raw: Variant) -> void :
 		)
 	elif current_scene == "endless":
 		current_position = requested_position
+		if endless_stream_anchor.is_empty() and endless_current_depth > 0:
+			# Pre-1.0 coordinates described a single 22-row floor. Embed those
+			# coordinates in the equivalent band of the new three-band window.
+			var stream_start: int = maxi(1, endless_current_depth - 1)
+			var stream_slot: int = endless_current_depth - stream_start
+			current_position = Vector2(clampf(requested_position.x, 160.0, 2400.0), clampf(requested_position.y, 96.0, 1312.0) + float(stream_slot) * 1408.0)
+			endless_stream_anchor = {"start_depth": stream_start, "depth": endless_current_depth, "x": current_position.x, "y": current_position.y}
+			endless_deepest_metres = maxi(endless_deepest_metres, endless_depth_metres())
 	elif requested_scene == "surface" or not VALID_SCENES.has(requested_scene):
 		current_position = requested_position
 	else:
@@ -5517,16 +5558,109 @@ func strike_barrier(key: String) -> int:
 
 
 func endless_dug_cells(depth: int) -> Array:
-	return Array(Dictionary(overhaul_progress.get("dug",{})).get(str(depth),[])).duplicate()
+	var chunk: Dictionary = Dictionary(endless_chunks.get(str(depth), {}))
+	var result: Array = EndlessTerrainStateScript.cells(String(chunk.get("dug", "")))
+	for legacy_cell in Array(Dictionary(overhaul_progress.get("dug", {})).get(str(depth), [])):
+		if not result.has(legacy_cell):
+			result.append(legacy_cell)
+	return result
 
 
 func mark_endless_dug(depth: int, cell: int) -> void:
-	var depths: Dictionary = overhaul_progress.get("dug",{})
-	var cells: Array = depths.get(str(depth),[])
-	if not cells.has(cell): cells.append(cell)
-	depths[str(depth)] = cells
-	overhaul_progress["dug"] = depths
+	if not _endless_band_in_reach(depth) or cell < 0 or cell >= EndlessTerrainStateScript.CELL_COUNT:
+		return
+	var chunk: Dictionary = Dictionary(endless_chunks.get(str(depth), {}))
+	var before: String = String(chunk.get("dug", ""))
+	var after: String = EndlessTerrainStateScript.mark(before, cell)
+	if before == after:
+		return
+	chunk["dug"] = after
+	endless_chunks[str(depth)] = chunk
 	_state_changed()
+
+
+func claim_endless_rock_cell(depth: int, cell: int, resource_id: String, amount: int) -> Dictionary:
+	if not _endless_band_in_reach(depth) or cell < 0 or cell >= EndlessTerrainStateScript.CELL_COUNT or resource_id not in ENDLESS_RESOURCE_IDS or amount <= 0 or amount > MAX_MINE_LOOSE_DROP_AMOUNT:
+		return {"ok": false, "reason": "invalid_rock_claim"}
+	var chunk: Dictionary = Dictionary(endless_chunks.get(str(depth), {}))
+	var legacy: Array = Array(Dictionary(overhaul_progress.get("dug", {})).get(str(depth), []))
+	if EndlessTerrainStateScript.contains(String(chunk.get("dug", "")), cell) or legacy.has(cell):
+		return {"ok": false, "reason": "already_claimed"}
+	begin_state_batch()
+	mark_endless_dug(depth, cell)
+	add_resource(resource_id, amount, true)
+	end_state_batch()
+	return {"ok": true, "reason": "claimed", "amount": amount}
+
+
+func _endless_band_in_reach(depth: int) -> bool:
+	return victory and endless_descent_active and depth > 0 and depth <= ENDLESS_MAX_SAVED_DEPTH and absi(depth - endless_current_depth) <= 1
+
+
+func save_endless_stream_anchor(start_depth: int, position: Vector2, relic_position: Vector2 = Vector2(INF, INF)) -> void:
+	if not victory or not endless_descent_active or start_depth < 1 or not _valid_vector(position):
+		return
+	endless_stream_anchor = {"start_depth": start_depth, "depth": endless_current_depth, "x": position.x, "y": position.y}
+	if _valid_vector(relic_position):
+		endless_stream_anchor["relic_x"] = relic_position.x
+		endless_stream_anchor["relic_y"] = relic_position.y
+	endless_deepest_metres = maxi(endless_deepest_metres, endless_depth_metres())
+	# Mining and movement share ordinary autosaving; UI signals only occur for
+	# real progression, rather than redrawing every panel for every footstep.
+	_queue_autosave()
+
+
+func endless_stream_anchor_status() -> Dictionary:
+	return endless_stream_anchor.duplicate(true)
+
+
+func _sanitize_endless_stream_anchor(raw: Variant) -> Dictionary:
+	if not raw is Dictionary or raw.is_empty():
+		return {}
+	var start: int = clampi(_nonnegative_int(raw.get("start_depth", 1), 1), 1, ENDLESS_MAX_SAVED_DEPTH - 2)
+	var depth: int = clampi(_nonnegative_int(raw.get("depth", start), start), start, start + 2)
+	var result: Dictionary = {"start_depth": start, "depth": depth, "x": _bounded_float(raw.get("x", 1280.0), 1280.0, 128.0, 2432.0), "y": _bounded_float(raw.get("y", 256.0), 256.0, 32.0, 4192.0)}
+	if raw.has("relic_x") and raw.has("relic_y"):
+		result["relic_x"] = _bounded_float(raw.relic_x, float(result.x), 128.0, 2432.0)
+		result["relic_y"] = _bounded_float(raw.relic_y, float(result.y), 27.0, 4197.0)
+	return result
+
+
+func tunnel_home_duration() -> float:
+	return 0.45 if _built_workshop_level("lift_workshop") > 0 else 1.25
+
+
+func tunnel_home_endless_descent() -> Dictionary:
+	if not victory or not endless_descent_active:
+		return {"ok": false, "reason": "not_in_the_deep"}
+	var carried_id: String = String(carried_relic.get("id", ""))
+	if not carried_id.is_empty() and not bool(carried_relic.get("attached", false)):
+		return {"ok": false, "reason": "relic_rope_required"}
+	endless_start_depth_checkpoint = maxi(1, endless_current_depth)
+	endless_current_depth = 0
+	if not carried_id.is_empty():
+		carried_relic["current_depth"] = 0
+	return leave_endless_descent_to_hub()
+
+
+func endless_depth_metres() -> int:
+	if not victory:
+		return 0
+	if not endless_stream_anchor.is_empty():
+		return maxi(0, floori((float(int(endless_stream_anchor.get("start_depth", 1)) - 1) * 22.0 + float(endless_stream_anchor.get("y", 0.0)) / 64.0) * 2.0))
+	return maxi(0, endless_current_depth - 1) * 44
+
+
+func next_endless_relic_id() -> String:
+	for id_value in ENDLESS_RELIC_IDS:
+		if not bool(Dictionary(endless_relics.get(String(id_value), {})).get("placed", false)):
+			return String(id_value)
+	return ""
+
+
+func next_endless_relic_depth() -> int:
+	var index: int = ENDLESS_RELIC_IDS.find(next_endless_relic_id())
+	return int([1, 3, 5, 8, 12][index]) if index >= 0 else -1
 
 
 static func light_range_for_level(level: int) -> float:

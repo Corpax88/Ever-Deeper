@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "dev_only": true,
+  "live_publication_authorized": false,
+  "dev_version": "1.0.0-dev.1",
+  "source_commit": "f19c0ea61402c860fab60eae3560579aeed6ff21",
+  "qa_run_id": 34334701244,
+  "candidate_artifact_id": 10097319961,
+  "candidate_zip_sha256": "633a8a54d12efb6bd1831cd60c69f56c6cb94c298af96d8c832bf47d83690a48",
+  "candidate_manifest_sha256": "8cb889f0e18247ac9ab95b81539f43aaf6b4738d00fa18c09072ea7fc4d0c017",
+  "package_checks_passed": true,
+  "visual_reviewed": true,
+  "mobile_touch_reviewed": true,
+  "web_audio_reviewed": true,
+  "full_progression_reviewed": true,
+  "critic_reviewed": true,
+  "dev_test_ready": true,
+  "final_one_point_zero_approved": false,
+  "critic_score": 8.4,
+  "critical_bug_count": 0,
+  "physical_iphone_verified": false,
+  "files": {
+    "index.apple-touch-icon.png": {
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5",
+      "size": 66421
+    },
+    "index.audio.position.worklet.js": {
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+      "size": 2973
+    },
+    "index.audio.worklet.js": {
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+      "size": 7298
+    },
+    "index.html": {
+      "sha256": "8e39f58fa95d2b685bf8d77c204dbca5525bf2cc9ab2a1378bbd110ff782cd5a",
+      "size": 7855
+    },
+    "index.icon.png": {
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+      "size": 470687
+    },
+    "index.js": {
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+      "size": 279815
+    },
+    "index.pck": {
+      "sha256": "7757ec55406704ce613ced7c34e51581e2f1e06eb1cae893ab7486c03d5e5260",
+      "size": 220937064
+    },
+    "index.png": {
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+      "size": 1981427
+    },
+    "index.wasm": {
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+      "size": 39514754
+    }
+  },
+  "reviewed_at": "2026-09-09T09:50:13.115386+00:00",
+  "notes": [
+    "DEV test readiness only. Final overall 1.0 approval, physical iPhone performance and LIVE publication remain false.",
+    "Provisional score 8.4 is the mean of five observed categories (8,8,9,9,8); performance and final overall quality remain unverified.",
+    "All six matching CI jobs passed, including thirteen source and thirteen exact-PCK suites, WebKit 869 gameplay and 193 touch/menu assertions, twelve real hero damage combinations, and real Web Audio on WebKit/Chromium.",
+    "Independent critic inspected all 34 exact-PCK native journey images and all 15 mobile-resolution lighting pair images. No critical bug or remaining concrete design blocker was observed in exercised paths.",
+    "Accelerated test gathering and travel do not establish human pacing or subjective sound. Stable physical iPhone testing and an overall score of at least 9/10 are still required for final 1.0.",
+    "Last phone baseline belongs to DEV9: 52.1 FPS normal pet lighting and 60 with pet lights disabled. It does not certify this candidate.",
+    "Publish only artifact 10097319961 without rebuilding; preserve all nine existing LIVE files byte-for-byte. Final source/reports are documented in docs/one-point-zero/."
+  ]
+}

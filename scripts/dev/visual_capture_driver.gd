@@ -56,6 +56,11 @@ func run(main_node: Node) -> void :
 	var build_contract: = _verify_build_contract()
 	if build_contract.is_empty():
 		return
+	if "--web-audio-review" in OS.get_cmdline_user_args():
+		var qa: Node = load("res://scripts/qa/web_audio_qa.gd").new()
+		add_child(qa)
+		qa.run(_main)
+		return
 	if "--menu-touch-only" in OS.get_cmdline_user_args():
 		var qa: RefCounted = load("res://scripts/qa/menu_touch_qa.gd").new()
 		var ok: bool = await qa.run(self,_main)
@@ -135,7 +140,7 @@ func run(main_node: Node) -> void :
 
 func _verify_build_contract() -> Dictionary:
 	var dev_feature: = OS.has_feature("ever_deeper_dev")
-	var expected_version: = "0.46.9-dev.9" if dev_feature else "0.46.9"
+	var expected_version: = "1.0.0-dev.1" if dev_feature else "1.0.0-rc.1"
 	var expected_flavor: = "dev" if dev_feature else "production"
 	var actual_version: = String(PremiumMenuScript.release_version())
 	var developer_menu: Variant = _main.get("developer_menu")

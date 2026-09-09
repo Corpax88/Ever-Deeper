@@ -12,7 +12,7 @@ Read this map, then the named owner. You should not need to read the whole game 
 | Depth 1 blocks, barriers, drops | `scripts/world/mossvein_mine.gd` | `cave_edge_asset_drawer.gd` |
 | Depth 2 geology and gates | `scripts/world/depth/rootwound_world.gd` | `rootwound_layout.gd` |
 | Base hub and workshop placement | `scripts/world/hub_world.gd` | `station_transaction_fx.gd`, `belt_network.gd` |
-| Endless layers, relics and rope | `scripts/world/endless_descent_world.gd` | RunState endless state |
+| Continuous The Deep, relics and rope | `scripts/world/endless_descent_world.gd` | `endless_deep_layout.gd`, `scripts/state/endless_terrain_state.gd`, RunState |
 | Shop entries, costs and descriptions | `scripts/ui/commerce_catalog.gd` | RunState is the transaction authority |
 | Shop layout, browsing and touch | `scripts/ui/commerce_panel.gd` | `inertial_carousel.gd`, `swipe_pager.gd` |
 | Wardrobe portrait | `scripts/ui/wardrobe_portrait.gd` | Approved PNG under `assets/hero/dad/wardrobe/`; release in `.github/wardrobe-portrait/` |
@@ -23,6 +23,7 @@ Read this map, then the named owner. You should not need to read the whole game 
 | Companion and its skills | `scripts/companion/` | `mole_skills.gd` owns skill definitions |
 | Menu, HUD, inventory and tutorial | `scripts/ui/` | Named components own their presentation |
 | Achievements, guide and progression | `scripts/progression/` | RunState persistence |
+| Live next-goal resource requirements | `scripts/progression/progression_goal.gd` | `guide_director.gd`, `scripts/ui/progression_goal_panel.gd`; costs remain in RunState/GameData |
 | Sound and music | `scripts/audio/audio_director.gd` | Authored audio assets |
 | FPS, frame-time captures and physical DEV meter | `tools/run_performance.py`, `scripts/qa/suites/mobile_performance.gd` | `docs/performance.md`; meter in `scripts/dev/developer_menu.gd` |
 | Automatic DEV lighting comparison | `scripts/dev/render_probe.gd`, `tools/render-probe-web.mjs` | Seven-stage, two-minute test; `docs/performance-diagnosis/render-probe/README.md` |
@@ -30,6 +31,8 @@ Read this map, then the named owner. You should not need to read the whole game 
 | Older scene fixtures and regression checks | `scripts/qa/suites/` | Named suites with explicit `main` access |
 | Current gameplay and touch checks | `scripts/qa/overhaul_qa.gd`, `menu_touch_qa.gd` | Visual capture driver provides fixtures |
 | Deterministic mobile captures | `scripts/dev/visual_capture_driver.gd` | `tools/capture-web.mjs` |
+| 1.0 continuous-world acceptance | `scripts/qa/suites/one_point_zero.gd` | Named world, terrain, migration and UI suites; `docs/one-point-zero/` |
+| Exact 1.0 DEV build and publication | `.github/one-point-zero/` | Immutable candidate review; preserves all current LIVE files |
 
 ## Boundaries
 

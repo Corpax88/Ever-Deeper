@@ -1,0 +1,65 @@
+name: Publish exact reviewed Ever-Deeper 1.0 DEV candidate
+on:
+  push:
+    branches: [main]
+    paths: ['.github/one-point-zero/review.json', '.github/workflows/publish-one-point-zero-dev.yml']
+permissions:
+  contents: read
+concurrency:
+  group: pages-ever-deeper
+  cancel-in-progress: false
+jobs:
+  package:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download reviewed artifact and preserve all existing LIVE bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/one-point-zero/publish.py prepare "$RUNNER_TEMP/publish"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-before-one-point-zero-dev-rollback
+          path: ${{ runner.temp }}/publish/rollback
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ever-deeper-one-point-zero-publication-evidence
+          path: ${{ runner.temp }}/publish/*.json
+          retention-days: 30
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/publish/site
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify nine DEV files and all nine unchanged LIVE files
+        run: python3 .github/one-point-zero/publish.py verify "$RUNNER_TEMP/verified"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ever-deeper-one-point-zero-publication-receipt
+          path: ${{ runner.temp }}/verified/publication-receipt.json
+          retention-days: 30

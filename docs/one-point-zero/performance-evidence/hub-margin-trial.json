@@ -1,0 +1,485 @@
+{
+  "physical_iphone": false,
+  "rendered": true,
+  "software_threads": 4,
+  "status": "provisionally_retained_for_DEV_device_test_after_visual_review",
+  "stages": [
+    {
+      "draw_calls": 123.0,
+      "fps": 9.76697240175044,
+      "frames": 79,
+      "p95_ms": 122.009,
+      "stage": "00-standard-broad",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 123.0,
+      "fps": 10.2985397787303,
+      "frames": 83,
+      "p95_ms": 111.205,
+      "stage": "00-standard-narrow",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 123.0,
+      "fps": 9.21887821949078,
+      "frames": 74,
+      "p95_ms": 129.624,
+      "stage": "00-standard-restored",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 150.0,
+      "fps": 8.51558011772481,
+      "frames": 69,
+      "p95_ms": 142.653,
+      "stage": "01-wide-broad",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 150.0,
+      "fps": 9.03644062278654,
+      "frames": 73,
+      "p95_ms": 126.524,
+      "stage": "01-wide-narrow",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 150.0,
+      "fps": 8.75391691546491,
+      "frames": 71,
+      "p95_ms": 131.252,
+      "stage": "01-wide-restored",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 140.0,
+      "fps": 10.7048802677813,
+      "frames": 86,
+      "p95_ms": 108.576,
+      "stage": "02-focused-broad",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 140.0,
+      "fps": 11.2653543065345,
+      "frames": 91,
+      "p95_ms": 109.296,
+      "stage": "02-focused-narrow",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 140.0,
+      "fps": 11.0026151609114,
+      "frames": 89,
+      "p95_ms": 112.034,
+      "stage": "02-focused-restored",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 134.0,
+      "fps": 13.2968510819784,
+      "frames": 107,
+      "p95_ms": 85.896,
+      "stage": "03-prismatic-broad",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 134.0,
+      "fps": 13.498381881472,
+      "frames": 108,
+      "p95_ms": 89.581,
+      "stage": "03-prismatic-narrow",
+      "visible_sections": 17
+    },
+    {
+      "draw_calls": 134.0,
+      "fps": 12.8347742132688,
+      "frames": 103,
+      "p95_ms": 91.174,
+      "stage": "03-prismatic-restored",
+      "visible_sections": 17
+    }
+  ],
+  "images": [
+    {
+      "fixture": "00-standard",
+      "candidate": {
+        "reference": "00-standard-broad.png",
+        "candidate": "00-standard-narrow.png",
+        "size": [
+          2328,
+          1260
+        ],
+        "max_channel_delta": 2,
+        "mean_channel_delta": 0.0002577319587628866,
+        "changed_pixels": 2138,
+        "changed_percent": 0.07288768886707031,
+        "changed_bounds": [
+          29,
+          20,
+          2328,
+          1260
+        ]
+      },
+      "control": {
+        "reference": "00-standard-broad.png",
+        "candidate": "00-standard-restored.png",
+        "size": [
+          2328,
+          1260
+        ],
+        "max_channel_delta": 0,
+        "mean_channel_delta": 0.0,
+        "changed_pixels": 0,
+        "changed_percent": 0.0,
+        "changed_bounds": null
+      }
+    },
+    {
+      "fixture": "01-wide",
+      "candidate": {
+        "reference": "01-wide-broad.png",
+        "candidate": "01-wide-narrow.png",
+        "size": [
+          2328,
+          1260
+        ],
+        "max_channel_delta": 2,
+        "mean_channel_delta": 0.00019551491845306278,
+        "changed_pixels": 1752,
+        "changed_percent": 0.059728358697430865,
+        "changed_bounds": [
+          87,
+          0,
+          2301,
+          1260
+        ]
+      },
+      "control": {
+        "reference": "01-wide-broad.png",
+        "candidate": "01-wide-restored.png",
+        "size": [
+          2328,
+          1260
+        ],
+        "max_channel_delta": 0,
+        "mean_channel_delta": 0.0,
+        "changed_pixels": 0,
+        "changed_percent": 0.0,
+        "changed_bounds": null
+      }
+    },
+    {
+      "fixture": "02-focused",
+      "candidate": {
+        "reference": "02-focused-broad.png",
+        "candidate": "02-focused-narrow.png",
+        "size": [
+          2328,
+          1260
+        ],
+        "max_channel_delta": 2,
+        "mean_channel_delta": 9.119483990618011e-05,
+        "changed_pixels": 884,
+        "changed_percent": 0.03013691158021055,
+        "changed_bounds": [
+          13,
+          50,
+          2328,
+          1258
+        ]
+      },
+      "control": {
+        "reference": "02-focused-broad.png",
+        "candidate": "02-focused-restored.png",
+        "size": [
+          2328,
+          1260
+        ],
+        "max_channel_delta": 0,
+        "mean_channel_delta": 0.0,
+        "changed_pixels": 0,
+        "changed_percent": 0.0,
+        "changed_bounds": null
+      }
+    },
+    {
+      "fixture": "03-prismatic",
+      "candidate": {
+        "reference": "03-prismatic-broad.png",
+        "candidate": "03-prismatic-narrow.png",
+        "size": [
+          2328,
+          1260
+        ],
+        "max_channel_delta": 2,
+        "mean_channel_delta": 8.369470354006437e-05,
+        "changed_pixels": 812,
+        "changed_percent": 0.027682321496754484,
+        "changed_bounds": [
+          31,
+          44,
+          2324,
+          1254
+        ]
+      },
+      "control": {
+        "reference": "03-prismatic-broad.png",
+        "candidate": "03-prismatic-restored.png",
+        "size": [
+          2328,
+          1260
+        ],
+        "max_channel_delta": 0,
+        "mean_channel_delta": 0.0,
+        "changed_pixels": 0,
+        "changed_percent": 0.0,
+        "changed_bounds": null
+      }
+    }
+  ],
+  "approval_scope": "Root reviewed full-size standard render and tiny roundoff; no LIVE/1.0 performance approval",
+  "summaries": [
+    {
+      "fixture": "00-standard",
+      "reference_fps": 9.76697240175044,
+      "candidate_fps": 10.2985397787303,
+      "restored_fps": 9.21887821949078,
+      "gain_against_mean_controls_percent": 8.486472206922091,
+      "control_drift_percent": 5.77371215221147,
+      "reference_p95_ms": 122.009,
+      "candidate_p95_ms": 111.205,
+      "restored_p95_ms": 129.624,
+      "images": {
+        "fixture": "00-standard",
+        "candidate": {
+          "reference": "00-standard-broad.png",
+          "candidate": "00-standard-narrow.png",
+          "size": [
+            2328,
+            1260
+          ],
+          "max_channel_delta": 2,
+          "mean_channel_delta": 0.0002577319587628866,
+          "changed_pixels": 2138,
+          "changed_percent": 0.07288768886707031,
+          "changed_bounds": [
+            29,
+            20,
+            2328,
+            1260
+          ]
+        },
+        "control": {
+          "reference": "00-standard-broad.png",
+          "candidate": "00-standard-restored.png",
+          "size": [
+            2328,
+            1260
+          ],
+          "max_channel_delta": 0,
+          "mean_channel_delta": 0.0,
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "changed_bounds": null
+        }
+      }
+    },
+    {
+      "fixture": "01-wide",
+      "reference_fps": 8.51558011772481,
+      "candidate_fps": 9.03644062278654,
+      "restored_fps": 8.75391691546491,
+      "gain_against_mean_controls_percent": 4.652041752225666,
+      "control_drift_percent": 2.7602054336851602,
+      "reference_p95_ms": 142.653,
+      "candidate_p95_ms": 126.524,
+      "restored_p95_ms": 131.252,
+      "images": {
+        "fixture": "01-wide",
+        "candidate": {
+          "reference": "01-wide-broad.png",
+          "candidate": "01-wide-narrow.png",
+          "size": [
+            2328,
+            1260
+          ],
+          "max_channel_delta": 2,
+          "mean_channel_delta": 0.00019551491845306278,
+          "changed_pixels": 1752,
+          "changed_percent": 0.059728358697430865,
+          "changed_bounds": [
+            87,
+            0,
+            2301,
+            1260
+          ]
+        },
+        "control": {
+          "reference": "01-wide-broad.png",
+          "candidate": "01-wide-restored.png",
+          "size": [
+            2328,
+            1260
+          ],
+          "max_channel_delta": 0,
+          "mean_channel_delta": 0.0,
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "changed_bounds": null
+        }
+      }
+    },
+    {
+      "fixture": "02-focused",
+      "reference_fps": 10.7048802677813,
+      "candidate_fps": 11.2653543065345,
+      "restored_fps": 11.0026151609114,
+      "gain_against_mean_controls_percent": 3.792299240971775,
+      "control_drift_percent": 2.7431528810694346,
+      "reference_p95_ms": 108.576,
+      "candidate_p95_ms": 109.296,
+      "restored_p95_ms": 112.034,
+      "images": {
+        "fixture": "02-focused",
+        "candidate": {
+          "reference": "02-focused-broad.png",
+          "candidate": "02-focused-narrow.png",
+          "size": [
+            2328,
+            1260
+          ],
+          "max_channel_delta": 2,
+          "mean_channel_delta": 9.119483990618011e-05,
+          "changed_pixels": 884,
+          "changed_percent": 0.03013691158021055,
+          "changed_bounds": [
+            13,
+            50,
+            2328,
+            1258
+          ]
+        },
+        "control": {
+          "reference": "02-focused-broad.png",
+          "candidate": "02-focused-restored.png",
+          "size": [
+            2328,
+            1260
+          ],
+          "max_channel_delta": 0,
+          "mean_channel_delta": 0.0,
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "changed_bounds": null
+        }
+      }
+    },
+    {
+      "fixture": "03-prismatic",
+      "reference_fps": 13.2968510819784,
+      "candidate_fps": 13.498381881472,
+      "restored_fps": 12.8347742132688,
+      "gain_against_mean_controls_percent": 3.310695212877368,
+      "control_drift_percent": 3.536533709548041,
+      "reference_p95_ms": 85.896,
+      "candidate_p95_ms": 89.581,
+      "restored_p95_ms": 91.174,
+      "images": {
+        "fixture": "03-prismatic",
+        "candidate": {
+          "reference": "03-prismatic-broad.png",
+          "candidate": "03-prismatic-narrow.png",
+          "size": [
+            2328,
+            1260
+          ],
+          "max_channel_delta": 2,
+          "mean_channel_delta": 8.369470354006437e-05,
+          "changed_pixels": 812,
+          "changed_percent": 0.027682321496754484,
+          "changed_bounds": [
+            31,
+            44,
+            2324,
+            1254
+          ]
+        },
+        "control": {
+          "reference": "03-prismatic-broad.png",
+          "candidate": "03-prismatic-restored.png",
+          "size": [
+            2328,
+            1260
+          ],
+          "max_channel_delta": 0,
+          "mean_channel_delta": 0.0,
+          "changed_pixels": 0,
+          "changed_percent": 0.0,
+          "changed_bounds": null
+        }
+      }
+    }
+  ],
+  "roundoff": "All four controls exactly restore; candidate changes at most 2/255 on <=0.073% pixels. Four final candidate views inspected without visible clipping, seams, material loss or lighting loss.",
+  "missing": "Deepheart and empty/partial/selected museum states to be completed on exact exported DEV package; physical iPhone remains unverified.",
+  "capture_directory": "/workspace/scratch/6604552ab244/receiver-pairs-trim",
+  "runtime_sources": {
+    "scripts/world/hub_world.gd": "d82332b73c3936ba351a39d04ea5ce7de5196b742bb6030fbbe955a95e7df03d"
+  },
+  "captures": {
+    "00-standard-broad.png": {
+      "bytes": 4647706,
+      "sha256": "b69a14ed44d6b245752ccce060c2e738277d69d42bbe16b8980951997c398aa1"
+    },
+    "00-standard-difference-x64.png": {
+      "bytes": 13124,
+      "sha256": "1c0ed0aa06610a65ee044c82296411462d4aa9587dbc04eaf78a4ce2a7482c9c"
+    },
+    "00-standard-narrow.png": {
+      "bytes": 4647707,
+      "sha256": "bb6606c6daa5a671dbe584d4c4bbb8cedc11afb93bdb826faf4168bb77d9f056"
+    },
+    "00-standard-restored.png": {
+      "bytes": 4647706,
+      "sha256": "b69a14ed44d6b245752ccce060c2e738277d69d42bbe16b8980951997c398aa1"
+    },
+    "01-wide-broad.png": {
+      "bytes": 4993763,
+      "sha256": "100f1380df38bd74c31576cd0bfc07cbae8fe51536252794291418c8e8d595e1"
+    },
+    "01-wide-narrow.png": {
+      "bytes": 4993738,
+      "sha256": "61e7f0caf4479da4fcc07a1fe96ec4d4682c2372db393f632dd0a67ea7671b93"
+    },
+    "01-wide-restored.png": {
+      "bytes": 4993763,
+      "sha256": "100f1380df38bd74c31576cd0bfc07cbae8fe51536252794291418c8e8d595e1"
+    },
+    "02-focused-broad.png": {
+      "bytes": 4660913,
+      "sha256": "f4bf73f6b1964de822c408ac92593a6285b9eb80891f6fe6d5233e4f75991e2f"
+    },
+    "02-focused-narrow.png": {
+      "bytes": 4660899,
+      "sha256": "bfc379068e2a659071c5cfdfd003c6624e8fcb5ac03da3b389a1883086dfc9d6"
+    },
+    "02-focused-restored.png": {
+      "bytes": 4660913,
+      "sha256": "f4bf73f6b1964de822c408ac92593a6285b9eb80891f6fe6d5233e4f75991e2f"
+    },
+    "03-prismatic-broad.png": {
+      "bytes": 4623628,
+      "sha256": "74faa2dab2cdb837863c69fe10ae3d15e2608a320e2936a30743e8b6ed6f4d7f"
+    },
+    "03-prismatic-narrow.png": {
+      "bytes": 4623615,
+      "sha256": "32a88266240cd5c030f5add4226956826f00bba97436d0640a40a903405493a9"
+    },
+    "03-prismatic-restored.png": {
+      "bytes": 4623628,
+      "sha256": "74faa2dab2cdb837863c69fe10ae3d15e2608a320e2936a30743e8b6ed6f4d7f"
+    }
+  }
+}
