@@ -6,14 +6,52 @@
 still low across areas; the supplied active-play screenshot records **19.9 FPS**.
 Its exact build version is not visible. This is a severe observed performance
 failure, not evidence that the problem has been fixed or grounds for 1.0/LIVE
-approval. Current optimization work requires new rendered comparisons, gameplay
-and visual verification, followed by sustained measurement on the actual phone.
+approval. DEV3 has now passed rendered comparisons, gameplay and independent
+visual review. Sustained measurement on the actual phone remains required.
 
 The historical hub texture-margin optimization documented below was included
 provisionally for DEV device measurement. Its five paired lighting-style captures
 passed the visual gate, but did not demonstrate a fix for physical iPhone performance.
 Those earlier results do not certify the current work or justify a 9/10 performance
 score.
+
+## Current DEV3 recovery candidate
+
+Source `42fffc163c940db2ab9df2e1924608e2d1659793` reduces broad D1/Deep
+light-receiver work while retaining the same approved images, light settings and
+resolution. Closed commerce previews and wardrobe portrait textures now release
+their references. The guide also avoids unnecessary repeated sorting. Six exact
+candidate CI jobs passed in run **34361743735**; package, sustained and independent
+review records are collected under `../performance-diagnosis/`.
+
+All six exact-package 180-second native runs completed with real movement and
+held mining at 2328×1260 on llvmpipe. Progressed Ember FPS improves **77.20%**
+(9.79 → 17.34), with P95 **136.37 → 76.20 ms**; the single worst frame worsens
+from 188.79 to 233.09 ms. Post-fifth Deep improves **49.69%** (7.70 → 11.53 FPS),
+with P95 **154.61 → 105.70 ms**. An unexplained transient in the old Hub run
+prevents a clean Hub FPS gain claim. These are software-renderer results, not
+expected phone FPS. The progressed Ember equipment differs from the unidentified
+equipment in the player's screenshot.
+
+The rendered commerce pair also passes: wardrobe and Light Lab release 16.30
+and 20.34 MiB respectively when closed, and the final closed-shop fixture reports
+30.52 MiB less GPU allocation. Open/reopen image checks pass; cold-reopen hitching
+on a real phone remains unverified. See the sustained and commerce evidence under
+`../performance-diagnosis/` for the raw identities and comparison limits.
+
+The corrected frozen native Ember comparison measures 5.221 → 11.851 → 5.321 FPS
+(original → candidate → restored), about **2.2×** at 1.89% control drift. This is
+software-renderer attribution, **not an iPhone FPS estimate**. The earlier 2.7×
+estimate used an extra transparent reference draw and is withdrawn. Neither figure
+replaces the unchanged-PCK sustained comparison or physical-device acceptance.
+
+After DEV publication, confirm **1.0.0-dev.3** in the menu and **DEV3** in SHOW FPS.
+Play normally for 10–15 minutes with normal lighting, including Ember mining,
+The Deep after five relics, Tunnel Home and opening/closing shops. Capture the FPS
+readout while mining and after returning to the Hub, and report the iPhone model.
+Measure without screen recording; a separate recording can illustrate motion.
+The built-in **AUTO FPS TEST · 3 MIN** is a supplementary stationary lighting
+comparison, not a substitute for active mining or the sustained play session.
 
 ## Established physical-device evidence
 
@@ -59,7 +97,7 @@ Its strongest signal was the relic museum: 17.74 FPS with that cone contribution
 excluded versus neighboring restored controls of 14.98 and 15.76 FPS. This is a
 render-cost diagnosis, not a suggested gameplay setting or expected phone FPS.
 
-## Included runtime change
+## Historical DEV1/DEV2 hub change
 
 `HubWorld._draw_hub_texture_rect()` omits only verified all-transparent margins from
 four existing resources: the wall, route marker, treasure chamber and relic pedestal.

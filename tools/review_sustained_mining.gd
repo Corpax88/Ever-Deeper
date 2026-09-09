@@ -29,6 +29,10 @@ var route_index: int = 0
 var route_loops: int = 0
 var route_locked_barriers: Array[Dictionary] = []
 var route_rejected_edges: int = 0
+var route_graph: Dictionary = {}
+var route_targets: Array[Dictionary] = []
+var route_planning_usec: int = 0
+var route_planning_max_usec: int = 0
 var input_vector: Vector2 = Vector2(INF, INF)
 var deep_column: float = 0.0
 var distance: float = 0.0
@@ -124,7 +128,8 @@ func _prepare() -> bool:
 	seed(WORLD_SEED)
 	state.overhaul_progress["skills"] = {"lantern":1,"fetch":1,"trailrunner":1,"big_paws":1,"ore_nose":1,"long_beam":1,"shake":1,"teamwork":1,"echo":1,"homeward":1}
 	if fixture == "ember_d1":
-		state.pickaxe_level = 4
+		# Progressed Ember fixture: gates remain intact and must be mined normally.
+		state.pickaxe_level = 5
 		state.gold = 254
 		state.area_unlocked = true
 		state.emberdeep_unlocked = true
@@ -156,6 +161,10 @@ func _prepare() -> bool:
 	route_loops = 0
 	route_locked_barriers.clear()
 	route_rejected_edges = 0
+	route_graph.clear()
+	route_targets.clear()
+	route_planning_usec = 0
+	route_planning_max_usec = 0
 	input_vector = Vector2(INF, INF)
 	if fixture == "deep_post5":
 		deep_column = (floorf(player.global_position.x / 64.0) + 0.5) * 64.0
@@ -181,6 +190,9 @@ func _prepare_route() -> bool:
 	if fixture == "hub" and world.collision_at(center): return _fail("Hub route starts inside a station")
 	world.restore_position(center)
 	start = Vector2i(Vector2(player.global_position) / grid_step)
+	if fixture == "ember_d1":
+		_build_mining_graph(dimensions,grid_step)
+		return _plan_next_dig(start)
 	var visited: Dictionary = {start:true}
 	var stack: Array[Vector2i] = [start]
 	route.append((Vector2(start) + Vector2.ONE * 0.5) * grid_step)
@@ -214,6 +226,67 @@ func _prepare_route() -> bool:
 			if not stack.is_empty(): route.append((Vector2(stack.back()) + Vector2.ONE * 0.5) * grid_step)
 	return true if route.size() > 4 else _fail("Insufficient reachable route")
 
+func _build_mining_graph(dimensions: Vector2i, grid_step: float) -> void:
+	# Build legal cardinal edges before timing. Mineable cells stay traversable
+	# in this graph; only actual gameplay can remove their real blocking terrain.
+	for row in range(2,dimensions.y-2):
+		for col in range(2,dimensions.x-2):
+			var cell: Vector2i = Vector2i(col,row)
+			var source_block: Dictionary = world.blocks.get(cell,{})
+			if String(source_block.get("kind","")) == "bedrock" or int(source_block.get("requires_tool",0)) > int(state.pickaxe_level): continue
+			var neighbors: Array[Vector2i] = []
+			for direction in DIRECTIONS:
+				var next: Vector2i = cell + direction
+				if next.x < 2 or next.y < 2 or next.x >= dimensions.x-2 or next.y >= dimensions.y-2: continue
+				var block: Dictionary = world.blocks.get(next,{})
+				if String(block.get("kind","")) == "bedrock" or int(block.get("requires_tool",0)) > int(state.pickaxe_level): continue
+				var origin: Vector2 = (Vector2(cell)+Vector2.ONE*0.5)*grid_step
+				var destination: Vector2 = (Vector2(next)+Vector2.ONE*0.5)*grid_step
+				if _edge_hits_locked_barrier(origin,destination):
+					route_rejected_edges += 1
+					continue
+				neighbors.append(next)
+			route_graph[cell] = neighbors
+
+func _plan_next_dig(start: Vector2i) -> bool:
+	# A miner heads toward remaining rock, rather than unwinding a DFS tree
+	# through empty corridors. Breadth-first search gives the nearest real target.
+	# Replan only when a target's cell is physically reached; natural respawns
+	# remain eligible, and no terrain/save state is changed by this planner.
+	var began: int = Time.get_ticks_usec()
+	var queue: Array[Vector2i] = [start]
+	var parents: Dictionary = {start:start}
+	var target: Vector2i = Vector2i(-1,-1)
+	var index: int = 0
+	while index < queue.size():
+		var cell: Vector2i = queue[index]
+		index += 1
+		if cell != start and world.blocks.has(cell):
+			var block: Dictionary = world.blocks[cell]
+			if String(block.get("kind","")) != "bedrock" and int(block.get("requires_tool",0)) <= int(state.pickaxe_level):
+				target = cell
+				break
+		for next in route_graph.get(cell,[]):
+			if parents.has(next): continue
+			parents[next] = cell
+			queue.append(next)
+	if target.x < 0: return _fail("No reachable naturally existing mining target remains")
+	var reversed: Array[Vector2i] = [target]
+	var cell: Vector2i = target
+	while cell != start:
+		cell = Vector2i(parents[cell])
+		reversed.append(cell)
+	reversed.reverse()
+	route.clear()
+	for step in reversed: route.append((Vector2(step)+Vector2.ONE*0.5)*48.0)
+	route_index = 0
+	var elapsed: int = Time.get_ticks_usec()-began
+	route_planning_usec += elapsed
+	route_planning_max_usec = maxi(route_planning_max_usec,elapsed)
+	route_targets.append({"cell":[target.x,target.y],"kind":String(world.blocks[target].get("kind","")),
+		"path_steps":route.size()-1,"planner_usec":elapsed,"total_mined":state.total_mined_resources()})
+	return true
+
 func _edge_hits_locked_barrier(origin: Vector2, destination: Vector2) -> bool:
 	# Cardinal segments give a narrow rectangle. Conservatively include the
 	# player's radius and 0.5px clearance, including at gate corners.
@@ -231,8 +304,14 @@ func _drive() -> void:
 		while player.global_position.distance_to(route[route_index]) < 0.25:
 			route_index += 1
 			if route_index == route.size():
-				route_index = 0
-				route_loops += 1
+				if fixture == "ember_d1":
+					if not _plan_next_dig(Vector2i(Vector2(player.global_position)/48.0)):
+						recording = false
+						main._cancel_held_input()
+						return
+				else:
+					route_index = 0
+					route_loops += 1
 		remaining = route[route_index] - player.global_position
 	var motion: Vector2 = Vector2(remaining.x,0) if absf(remaining.x) > 0.1 else Vector2(0,remaining.y)
 	var step_distance: float = maxf(0.01, float(player.movement_speed) / float(Engine.physics_ticks_per_second))
@@ -333,11 +412,14 @@ func _measure() -> bool:
 			every_window_active = every_window_active and (float(row.moved_pixels) > 1.0 if fixture == "hub" else bool(row.active_mining_observed))
 	var sustained_duration: bool = duration >= 180.0 and float(windows[-1].to_seconds) >= 180.0
 	var valid_workload: bool = progress and (duration < 180.0 or every_window_active)
-	var result: Dictionary = {"fixture":fixture,"initial":initial,"final":final,"windows":windows.duplicate(true),
+	var result: Dictionary = {"fixture":fixture,"fixture_stage":"progressed Ember; pickaxe5; original intact barriers" if fixture == "ember_d1" else "completed Hub / post-fifth-relic",
+		"initial":initial,"final":final,"windows":windows.duplicate(true),
 		"actual_play_progress":progress,"every_full_window_active":every_window_active,"elapsed_180s":sustained_duration,
 		"sustained_180s":sustained_duration and valid_workload,"valid_workload":valid_workload,
 		"route_points":route.size(),"route_hash":hash(route),"route_loops":route_loops,"source_seed":WORLD_SEED,
-		"route_rejected_locked_edges":route_rejected_edges,"route_locked_barriers":_route_barrier_report()}
+		"route_rejected_locked_edges":route_rejected_edges,"route_locked_barriers":_route_barrier_report(),
+		"route_policy":"nearest currently existing mineable block by legal cardinal shortest path" if fixture == "ember_d1" else "unchanged",
+		"route_targets":route_targets.duplicate(true),"route_planning_usec":route_planning_usec,"route_planning_max_usec":route_planning_max_usec}
 	reports.append(result)
 	_write_json(output.path_join(fixture + "-final-state.json"), state.serialize())
 	_write_json(output.path_join(fixture + "-summary.json"), result)
@@ -357,7 +439,7 @@ func _snapshot() -> Dictionary:
 		"pickaxe_level":state.pickaxe_level,"drill_level":state.drill_level,"starforge_variant":state.starforge_variant,
 		"loadout":state.endless_loadout_status(),"skills":Dictionary(state.overhaul_progress.get("skills", {})).duplicate(true),
 		"progression_goal":main.premium_hud.progression_goal_snapshot(),
-		"route_index":route_index,"route_waypoint":_xy(route[route_index]) if not route.is_empty() else [],
+		"route_plans":route_targets.size(),"route_index":route_index,"route_waypoint":_xy(route[route_index]) if not route.is_empty() else [],
 		"mining_target":_target_snapshot(),
 		"depth":int(world.current_depth) if fixture == "deep_post5" else 1,"descent":state.endless_descent_status(),
 		"memory":{"static_mib":Performance.get_monitor(Performance.MEMORY_STATIC)/1048576.0,

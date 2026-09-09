@@ -1,0 +1,100 @@
+{
+  "source_commit": "42fffc163c940db2ab9df2e1924608e2d1659793",
+  "pck_sha256": "6ec691604a060bcad3a21ac2666385e3d1a0c0ac07822c6b74c2a31e33dc5d6d",
+  "qa_run_id": 34361743735,
+  "native_assertions": 431,
+  "native_visual_artifact": 10108704344,
+  "reviewer": "root",
+  "reviewed": [
+    {
+      "file": "01-new-player-touch-tutorial-small.png",
+      "sha256": "cf3a17a09d6534de6b42c0ca9ee48bed6cd0c640f24c78c6c95ffa34974c0cc2"
+    },
+    {
+      "file": "01-new-player-keyboard-tutorial-small.png",
+      "sha256": "8e1010f32490f2cdcf538ab94c63dd4bc9c5f0e686a35fdc069ce12cb45ec16f"
+    },
+    {
+      "file": "01-new-player-hud.png",
+      "sha256": "fe92e04b4c30d1821590fbd0827b9643d4ace66918edd8a06053e27d103d90b7"
+    },
+    {
+      "file": "02-4-row-recipe-small.png",
+      "sha256": "1314dfd114aee56bb0e73a07345e173745910a28a33d7a3dee70d62cc8b7e978"
+    },
+    {
+      "file": "02-5-row-recipe-small.png",
+      "sha256": "b1f9a11889979c67e268e9e07937f240b30b4bc8e6aa33134b3b85a2678e1aa4"
+    },
+    {
+      "file": "03-deep-entrance.png",
+      "sha256": "22d036a28cf190c6af2cd14dfa91a13be90096a366bdeeecd7fa53e7e80370dd"
+    },
+    {
+      "file": "04-deep-mined-corner-fresh-pickup-small.png",
+      "sha256": "5cff30c606a0f495a68b4a4daee95a72819e027cac5368a04a4f6e08b0ba373f"
+    },
+    {
+      "file": "05-diggable-and-bedrock.png",
+      "sha256": "277b5a4349cd2820e226b19d043a13bb2fb1c1cd5a238b7c64b8eb0ffffe5d8a"
+    },
+    {
+      "file": "stratum-2-mined-edge.png",
+      "sha256": "5dac87540d566abbe751e1dc934e1bfd634f0a064053b7598241ff1bd877713e"
+    },
+    {
+      "file": "stratum-3-mined-edge.png",
+      "sha256": "be505b2ac2f301bf25480121ee35f439a0cc5f995db4a0803e22d71669a49451"
+    },
+    {
+      "file": "stratum-4-mined-edge.png",
+      "sha256": "3dabbe356e4ce26f89f0f24f8b57f70e9282f1fc15685780de18329cd4986f0a"
+    },
+    {
+      "file": "stratum-5-mined-edge.png",
+      "sha256": "e02f033ab86543763c118ebf7579106cbf28f1d1ad5585b8e97266a446f6c84e"
+    },
+    {
+      "file": "post-fifth-deeper-mining.png",
+      "sha256": "78a252ae1d68e36caca3cfd2cbe6ad6207a44e0cd7923a27faa355341048bdcf"
+    },
+    {
+      "file": "relic-forge_heart-on-rope.png",
+      "sha256": "8e4b46ea65cea40fa30cb47fe9b75fff54dada820045e92246caea1c78c1ef83"
+    },
+    {
+      "file": "tunnel-home-digging.png",
+      "sha256": "10d194a91991bfc5a2393f07ca2bf5f8e2b12123c6fcbda790fa006d99714117"
+    },
+    {
+      "file": "relic-ancient_lens-on-rope.png",
+      "sha256": "dbd87df76d10c077a83b3e2b07a5ec2e17b684b14c7092f26c41096e4ce92f5d"
+    },
+    {
+      "file": "relic-memory_loom-on-rope.png",
+      "sha256": "245a41d08543445c2b30537d001f9940f47d40cfe0ea68b8f6a3403d0264d1a9"
+    },
+    {
+      "file": "relic-echo_coffer-on-rope.png",
+      "sha256": "35ca098f5837ac199b29d45d86bf8f436412781f4c065e7bbc9b96aa549f731a"
+    },
+    {
+      "file": "relic-wayfinder_core-on-rope.png",
+      "sha256": "dffae1daea74a035b594283e2da8a1b1cb59c65c6f153a3881a30e35cb2b25e2"
+    }
+  ],
+  "finding": "No introduced art, light, terrain/corner, reward feedback or HUD clipping regression found in these rendered fixtures. Generated relic attachment and normal Tunnel Home presentation retained.",
+  "physical_iphone_verified": false,
+  "limitations": "Accelerated fixture setup and simulation waits; no human pacing or hardware FPS inference. Remaining Hub/shop views independently reviewed by fps_resources; receiver triplets by fps_critic.",
+  "sustained_ember_images": [
+    {
+      "file": "sustained-progressed-candidate-ember/ember_d1-initial.png",
+      "sha256": "89ce0b0e34b48c49b7a98b5887c6b4cee41a105216e2fb4aad4bd51de6a88ded"
+    },
+    {
+      "file": "sustained-progressed-candidate-ember/ember_d1-final.png",
+      "sha256": "7dac0f3313db9a49d43de584b6656ae3aba05d016c1688cff64de01913487c84"
+    }
+  ],
+  "sustained_ember_finding": "Actual candidate after180s retains excavated floor, mineable edges, existing hidden-chamber art, hero/mole and live resource feedback; no visible introduced regression. Precise corner and broken-gate fixtures remain separately checked."
+}

@@ -1,0 +1,388 @@
+{
+  "base_harness_sha256": "f089ee3b1fd3f4de3933e0e7df98d1985be6a9df93cf9abe47eca29a94c04f46",
+  "evidence": [
+    {
+      "cell": [
+        31,
+        7
+      ],
+      "coverage": {
+        "player_position": "(1464.0, 360.0)",
+        "visible_exposed_resource_cells": 3,
+        "visible_mineable_corners": 2
+      },
+      "fixture": "saved-actual-mined-corner",
+      "save_sha256": "b8084c8313319ac5829e57776e8b1d8e8d3a5ab39ab03ec12661a1b04db96339"
+    },
+    {
+      "coverage": {
+        "player_position": "(552.0, 648.0)",
+        "visible_exposed_resource_cells": 5,
+        "visible_mineable_corners": 2
+      },
+      "fixture": "saved-broken-gate",
+      "gate": "ember_bulkhead"
+    },
+    {
+      "coverage": {
+        "player_position": "(1272.0, 456.0)",
+        "visible_exposed_resource_cells": 3,
+        "visible_mineable_corners": 2
+      },
+      "fixture": "saved-broken-gate",
+      "gate": "ember_crucible_lock"
+    },
+    {
+      "fixture": "actual-struck-gate",
+      "gate": "ember_bulkhead",
+      "hits_after": 1,
+      "hits_before": 0
+    }
+  ],
+  "failures": [],
+  "frame_time_benchmark": false,
+  "harness_sha256": "e78555c14fc29e5000556cc81d7e19736c45ce8228516d5f802801966b04f87d",
+  "limits": "Saved corner/broken gates arise from real sustained controls; struck gate uses real mining damage with accelerated fixture timing. Same-package broad/narrow/restored visual comparison only.",
+  "pack_sha256": "6ec691604a060bcad3a21ac2666385e3d1a0c0ac07822c6b74c2a31e33dc5d6d",
+  "physical_iphone": false,
+  "stages": [
+    {
+      "coverage": {
+        "player_position": "(1464.0, 360.0)",
+        "visible_exposed_resource_cells": 3,
+        "visible_mineable_corners": 2
+      },
+      "draws": 109.0,
+      "fps": 5.9820955879054,
+      "frames": 4,
+      "gpu_bytes": 500933443.0,
+      "label": "ember-actual-mined-corner-broad",
+      "nodes": 1013.0,
+      "p95_ms": 242.02,
+      "raw_frame_ms": [
+        0.771,
+        198.259,
+        242.02,
+        227.612
+      ],
+      "sections": 190
+    },
+    {
+      "coverage": {
+        "player_position": "(1464.0, 360.0)",
+        "visible_exposed_resource_cells": 3,
+        "visible_mineable_corners": 2
+      },
+      "draws": 187.0,
+      "fps": 9.9329032386231,
+      "frames": 6,
+      "gpu_bytes": 500929555.0,
+      "label": "ember-actual-mined-corner-narrow",
+      "nodes": 1013.0,
+      "p95_ms": 128.229,
+      "raw_frame_ms": [
+        0.667,
+        111.364,
+        121.809,
+        128.229,
+        122.09,
+        119.894
+      ],
+      "sections": 190
+    },
+    {
+      "coverage": {
+        "player_position": "(1464.0, 360.0)",
+        "visible_exposed_resource_cells": 3,
+        "visible_mineable_corners": 2
+      },
+      "draws": 109.0,
+      "fps": 5.95522563605532,
+      "frames": 4,
+      "gpu_bytes": 500933443.0,
+      "label": "ember-actual-mined-corner-restored",
+      "nodes": 1013.0,
+      "p95_ms": 249.938,
+      "raw_frame_ms": [
+        0.762,
+        249.938,
+        216.512,
+        204.467
+      ],
+      "sections": 190
+    },
+    {
+      "coverage": {
+        "player_position": "(552.0, 648.0)",
+        "visible_exposed_resource_cells": 5,
+        "visible_mineable_corners": 2
+      },
+      "draws": 129.0,
+      "fps": 7.5640104383344,
+      "frames": 5,
+      "gpu_bytes": 500947507.0,
+      "label": "ember_bulkhead-actual-broken-broad",
+      "nodes": 1077.0,
+      "p95_ms": 168.323,
+      "raw_frame_ms": [
+        0.761,
+        167.302,
+        162.713,
+        161.926,
+        168.323
+      ],
+      "sections": 190
+    },
+    {
+      "coverage": {
+        "player_position": "(552.0, 648.0)",
+        "visible_exposed_resource_cells": 5,
+        "visible_mineable_corners": 2
+      },
+      "draws": 242.0,
+      "fps": 10.3803893684052,
+      "frames": 6,
+      "gpu_bytes": 500941027.0,
+      "label": "ember_bulkhead-actual-broken-narrow",
+      "nodes": 1077.0,
+      "p95_ms": 140.565,
+      "raw_frame_ms": [
+        0.706,
+        109.453,
+        112.573,
+        108.803,
+        105.913,
+        140.565
+      ],
+      "sections": 190
+    },
+    {
+      "coverage": {
+        "player_position": "(552.0, 648.0)",
+        "visible_exposed_resource_cells": 5,
+        "visible_mineable_corners": 2
+      },
+      "draws": 129.0,
+      "fps": 7.95733278162493,
+      "frames": 4,
+      "gpu_bytes": 500947507.0,
+      "label": "ember_bulkhead-actual-broken-restored",
+      "nodes": 1077.0,
+      "p95_ms": 170.775,
+      "raw_frame_ms": [
+        0.71,
+        170.269,
+        170.775,
+        160.927
+      ],
+      "sections": 190
+    },
+    {
+      "coverage": {
+        "player_position": "(1272.0, 456.0)",
+        "visible_exposed_resource_cells": 3,
+        "visible_mineable_corners": 2
+      },
+      "draws": 124.0,
+      "fps": 7.03930395362507,
+      "frames": 4,
+      "gpu_bytes": 502603863.0,
+      "label": "ember_crucible_lock-actual-broken-broad",
+      "nodes": 1102.0,
+      "p95_ms": 208.146,
+      "raw_frame_ms": [
+        0.719,
+        182.253,
+        208.146,
+        177.12
+      ],
+      "sections": 215
+    },
+    {
+      "coverage": {
+        "player_position": "(1272.0, 456.0)",
+        "visible_exposed_resource_cells": 3,
+        "visible_mineable_corners": 2
+      },
+      "draws": 245.0,
+      "fps": 12.5118862919774,
+      "frames": 7,
+      "gpu_bytes": 502597383.0,
+      "label": "ember_crucible_lock-actual-broken-narrow",
+      "nodes": 1102.0,
+      "p95_ms": 95.446,
+      "raw_frame_ms": [
+        1.16,
+        92.58,
+        90.599,
+        92.845,
+        92.438,
+        94.4,
+        95.446
+      ],
+      "sections": 215
+    },
+    {
+      "coverage": {
+        "player_position": "(1272.0, 456.0)",
+        "visible_exposed_resource_cells": 3,
+        "visible_mineable_corners": 2
+      },
+      "draws": 124.0,
+      "fps": 6.89388925656298,
+      "frames": 4,
+      "gpu_bytes": 502603863.0,
+      "label": "ember_crucible_lock-actual-broken-restored",
+      "nodes": 1102.0,
+      "p95_ms": 223.395,
+      "raw_frame_ms": [
+        0.757,
+        180.484,
+        175.588,
+        223.395
+      ],
+      "sections": 215
+    },
+    {
+      "coverage": {
+        "player_position": "(648.0, 648.0)",
+        "visible_exposed_resource_cells": 2,
+        "visible_mineable_corners": 0
+      },
+      "draws": 187.0,
+      "fps": 7.16587752440429,
+      "frames": 4,
+      "gpu_bytes": 505065143.0,
+      "label": "ember_bulkhead-intact-broad",
+      "nodes": 1102.0,
+      "p95_ms": 188.662,
+      "raw_frame_ms": [
+        1.153,
+        184.628,
+        188.662,
+        183.758
+      ],
+      "sections": 215
+    },
+    {
+      "coverage": {
+        "player_position": "(648.0, 648.0)",
+        "visible_exposed_resource_cells": 2,
+        "visible_mineable_corners": 0
+      },
+      "draws": 222.0,
+      "fps": 11.9532627426761,
+      "frames": 6,
+      "gpu_bytes": 505056071.0,
+      "label": "ember_bulkhead-intact-narrow",
+      "nodes": 1102.0,
+      "p95_ms": 121.948,
+      "raw_frame_ms": [
+        0.718,
+        89.686,
+        121.948,
+        115.22,
+        88.094,
+        86.289
+      ],
+      "sections": 215
+    },
+    {
+      "coverage": {
+        "player_position": "(648.0, 648.0)",
+        "visible_exposed_resource_cells": 2,
+        "visible_mineable_corners": 0
+      },
+      "draws": 187.0,
+      "fps": 5.8534129787726,
+      "frames": 4,
+      "gpu_bytes": 505065143.0,
+      "label": "ember_bulkhead-intact-restored",
+      "nodes": 1102.0,
+      "p95_ms": 244.457,
+      "raw_frame_ms": [
+        0.832,
+        212.757,
+        244.457,
+        225.316
+      ],
+      "sections": 215
+    },
+    {
+      "coverage": {
+        "player_position": "(648.0, 648.0)",
+        "visible_exposed_resource_cells": 2,
+        "visible_mineable_corners": 0
+      },
+      "draws": 194.0,
+      "fps": 6.42239102406631,
+      "frames": 4,
+      "gpu_bytes": 505068215.0,
+      "label": "ember_bulkhead-struck-broad",
+      "nodes": 1102.0,
+      "p95_ms": 231.765,
+      "raw_frame_ms": [
+        0.861,
+        231.765,
+        212.892,
+        177.303
+      ],
+      "sections": 215
+    },
+    {
+      "coverage": {
+        "player_position": "(648.0, 648.0)",
+        "visible_exposed_resource_cells": 2,
+        "visible_mineable_corners": 0
+      },
+      "draws": 229.0,
+      "fps": 11.9292120556617,
+      "frames": 6,
+      "gpu_bytes": 505057607.0,
+      "label": "ember_bulkhead-struck-narrow",
+      "nodes": 1102.0,
+      "p95_ms": 116.245,
+      "raw_frame_ms": [
+        0.716,
+        100.614,
+        108.615,
+        89.854,
+        116.245,
+        86.923
+      ],
+      "sections": 215
+    },
+    {
+      "coverage": {
+        "player_position": "(648.0, 648.0)",
+        "visible_exposed_resource_cells": 2,
+        "visible_mineable_corners": 0
+      },
+      "draws": 194.0,
+      "fps": 7.05454930248144,
+      "frames": 4,
+      "gpu_bytes": 505068215.0,
+      "label": "ember_bulkhead-struck-restored",
+      "nodes": 1102.0,
+      "p95_ms": 197.792,
+      "raw_frame_ms": [
+        0.715,
+        197.792,
+        183.741,
+        184.762
+      ],
+      "sections": 215
+    }
+  ],
+  "root_visual_review": {
+    "viewed": [
+      "ember-actual-mined-corner-narrow.png",
+      "ember_bulkhead-actual-broken-narrow.png",
+      "ember_bulkhead-intact-narrow.png",
+      "ember_bulkhead-struck-narrow.png",
+      "ember_crucible_lock-actual-broken-narrow.png"
+    ],
+    "finding": "Actual mined joins, retained resource silhouettes, both open passages, intact gate artwork and real one-strike fracture remain coherent; no introduced visible seam or loss of detail.",
+    "frame_time_benchmark": false
+  }
+}

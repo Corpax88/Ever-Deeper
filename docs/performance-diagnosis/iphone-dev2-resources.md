@@ -72,3 +72,100 @@ equipment requests to exactly eight final atlases.
 These checks establish resource lifetime and reopening behavior. They do not
 measure physical iPhone frame times or certify rendered visual parity. Native
 or browser measurements and final image review remain separate release gates.
+
+## Headless engine error follow-up
+
+One local 13-case source run stopped during touch QA with
+`Parameter "t" is null` in the dummy renderer's `texture_2d_initialize`.
+That run remains recorded as failed. An isolated rerun passed all 123 touch
+assertions without engine errors; the CPU review agent independently obtained
+the same result. Initial candidate CI
+[34360064270](https://github.com/Corpax88/Ever-Deeper/actions/runs/34360064270),
+at source `bafaec4dccef813602245c6140ec457a286784fd`, passed all 13 source and
+13 exported DEV PCK cases, including touch (123 and 125 assertions respectively).
+These results do not describe the later corrected candidate CI run.
+
+The same bounded external allocation stress then ran sequentially against the
+immutable DEV2 baseline and initial candidate. It changed worn → Crusher →
+Deepcore equipment while loading ordinary short-lived textures on the main
+thread, using normal ResourceLoader cache behavior.
+
+| Package | Equipment cycles | Actual cold temporary loads | Engine errors |
+|---|---:|---:|---:|
+| DEV2 baseline | 12 | 2,208 | 0 |
+| Initial candidate | 12 | 2,904 | 0 |
+
+Every cycle completed with exactly eight current hero atlases. Exact Godot
+`ed1daf0bf` source shows that the dummy texture RID owner defaults to a
+non-thread-safe allocator, while GLES3 explicitly uses a thread-safe owner.
+This supports an allocation-race hypothesis; it does **not** prove the cause
+of the observed failure. Rendering-thread `free_rid` also flushes pending
+commands before freeing, so releasing a resource alone does not establish
+initialization after free.
+
+No application workaround, retention delay, headless bypass or error filtering
+was added. The intermittent error remains unreproduced, and these bounded
+passes do not rule it out or establish iPhone performance. Package, harness,
+result and log hashes, CI results and exact engine source references are in
+[`fps-texture-investigation.json`](fps-texture-investigation.json).
+
+## Rendered comparison and phone follow-up
+
+The rendered comparison used the unchanged DEV2 PCK (`c331cde35f64...`) and final
+runtime candidate `42fffc163c940db2ab9df2e1924608e2d1659793`
+(`6ec691604a06...`), serially with the same external commerce harness
+(`756055c344db...`). Fresh save directories and exported resource roots were
+used; only the candidate required resources to be released. DEV2 passed 44
+checks and DEV3 passed 58, both with exit 0 and no engine errors. This used native
+GLES3/llvmpipe, and `physical_iphone` remains false.
+
+| Shop closed | DEV2 GPU released | DEV3 GPU released | DEV3 shop nodes | DEV3 preview viewports |
+|---|---:|---:|---:|---:|
+| Wardrobe | 0 MiB | 16.30 MiB | 107 → 58 | 0 → 0 |
+| Light Lab | 0 MiB | 20.34 MiB | 188 → 58 | 6 → 0 |
+
+Both second closes produced the same releases. DEV3's portrait cache entry and
+preview weak references disappeared after closing; DEV2 retained them. After
+both shops closed, reported GPU totals were 564.55 MiB in DEV2 and 534.03 MiB
+in DEV3, a 30.52 MiB whole-package difference. These totals include other scene
+and backend allocations and remain above cold startup. The within-package
+open/close deltas directly measure the preview release.
+
+Opening and reopening images are pixel-identical within each package. The two
+1100×1200 beam images are also identical across packages. Cross-package full
+windows differ only in 635 pixels in the exposed top hub strip, maximum channel
+error 6/255; the shop content is identical. Original portrait dimensions,
+selection, catalog and unchanged loadout checks passed. Full counters, image
+and package hashes, comparisons and limits are in
+[`fps-commerce-residency.json`](fps-commerce-residency.json).
+
+A second source review found no new dangling preview owner: close detaches
+nodes before queued deletion, clears the selected-card reference and tween,
+and emits its control-restoring signal afterward. Deferred carousel layout
+checks the current card's validity. Reopening rebuilds presentation and resets
+showcase opacity. The remaining concrete tradeoff is that opening now recreates
+portrait textures and preview targets; a frozen image review cannot establish
+whether that causes a noticeable opening hitch on a phone.
+
+After the verified DEV candidate is available, use a review save on the same
+iPhone and browser mode as the original report:
+
+1. Confirm the DEV build label and show FPS. Record the canvas size, DPR, FPS,
+   p95, maximum frame time, GPU counter and node count before opening shops.
+2. Browse available wardrobe styles, close and reopen ten times; repeat in the
+   light workshop. Check the first opening, rapid reopening, portrait colors,
+   beam appearance, selected item and immediate return of movement controls.
+3. Repeat after changing available tools, including Crusher and Deepcore.
+   Confirm each reopened light preview shows the currently equipped tool.
+4. Return to the original mining area, then The Deep, and continue moving and
+   mining for at least ten minutes. Capture the same counters and any opening
+   hitch, missing preview, reload or sustained FPS drop. Judge physical smoothness
+   separately from desktop allocation and screenshot results.
+
+The final artifact's eight hub/arrival frames and six mobile wardrobe frames
+were also reviewed against their DEV2 counterparts. No visible regression was
+found; four wardrobe PNGs are byte-identical. The museum's 0/5, 3/5 and 5/5
+states, upgrade panels, carried relic on Tunnel Home arrival and all five outfit
+colors remain present. This is image evidence only. Filenames, artifact IDs,
+hashes, observations and comparison limits are recorded in
+[`fps-hub-wardrobe-review.json`](fps-hub-wardrobe-review.json).

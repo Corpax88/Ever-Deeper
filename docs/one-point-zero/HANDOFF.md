@@ -1,4 +1,36 @@
-# Current DEV correction — 1.0.0-dev.2
+# Reviewed FPS recovery candidate — 1.0.0-dev.3
+
+Runtime source: `42fffc163c940db2ab9df2e1924608e2d1659793`.
+All six jobs in [34361743735](https://github.com/Corpax88/Ever-Deeper/actions/runs/34361743735)
+passed. Exact DEV artifact **10108229398**, PCK SHA-256:
+`6ec691604a060bcad3a21ac2666385e3d1a0c0ac07822c6b74c2a31e33dc5d6d`.
+
+This changes D1 and continuous-Deep light receivers, releases closed shop previews
+and the wardrobe portrait, and avoids redundant guide sorting. Approved artwork,
+lighting strength, output resolution, gameplay and saves are retained. The relocated
+DEV button remains clear of the menu; the FPS display now identifies **DEV3**.
+
+The latest player screenshot reports **19.9 FPS** during Emberdeep mining. Its
+exact build is unknown. No physical iPhone recovery is established yet, and no
+final 1.0 or LIVE acceptance is granted. Independent review approves the exact
+package for DEV device testing. All six 180-second native comparisons completed:
+progressed Ember FPS improves 77.20% and post-fifth Deep FPS improves 49.69% on
+llvmpipe. Ember's worst frame worsens, and an unexplained old-Hub transient
+prevents clean Hub FPS attribution. Closed commerce previews release their GPU
+allocations; the final closed-shop fixture uses 30.52 MiB less. These figures
+are not iPhone FPS estimates. The provisional five-category critic mean remains
+8.4/10, with performance excluded and overall 1.0 approval unverified. See
+[the FPS critic review](../performance-diagnosis/fps-recovery-review.md) and
+[physical-device evidence](iphone-performance.md).
+
+DEV publication is pending. The publisher must use artifact **10108229398**
+without rebuilding and preserve all nine existing LIVE files. Later review and
+external diagnostic updates do not change the runtime source above. Raw sustained
+evidence, failed fixture histories and image review identities are persisted under
+`docs/performance-diagnosis/`. Source/review:
+[pull request 13](https://github.com/Corpax88/Ever-Deeper/pull/13).
+
+# Previous DEV correction — 1.0.0-dev.2
 
 Reviewed source: `246ee70cca3cff2eae0fe417800cf2d1724c6417`.
 All six jobs in [34349012950](https://github.com/Corpax88/Ever-Deeper/actions/runs/34349012950)
