@@ -221,6 +221,8 @@ func test_wardrobe() -> void:
 		check(RunState.endless_outfit == outfit, "Correct outfit equipped: " + outfit)
 		await gesture("capture", Vector2.ZERO, Vector2.ZERO, "wardrobe-wearing-" + outfit)
 	panel.close_commerce()
+	await settle()
+	check(not ResourceLoader.has_cached("res://assets/hero/dad/wardrobe/crossed-arms-v2.png"), "Closing wardrobe releases the full-resolution portrait from the resource cache")
 
 
 func test_light_lab() -> void:
@@ -262,5 +264,7 @@ func test_light_lab() -> void:
 		check(RunState.endless_light_style == style and RunState.cargo == cargo, "Explicit Use beam equips for free: "+style)
 		await gesture("capture",Vector2.ZERO,Vector2.ZERO,"light-equipped-"+style)
 	panel.close_commerce()
+	await settle()
+	check(panel.find_children("*", "SubViewport", true, false).is_empty(), "Closing light workshop releases all offscreen preview viewports")
 	var saved: Dictionary = RunState.serialize()
 	check(RunState.deserialize(saved) and RunState.endless_light_style == "deepheart", "Light choice persists after reload")

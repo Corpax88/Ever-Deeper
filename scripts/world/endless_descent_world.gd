@@ -18,6 +18,10 @@ signal relic_attached(relic_id: String, depth: int)
 signal relic_hauled_to_hub(relic_id: String, discovery_depth: int)
 signal rope_state_changed(attached: bool, relic_id: String)
 
+const LitDrawSectionsScript = preload("res://scripts/lighting/lit_draw_sections.gd")
+var lit_draw_sections: Node2D
+var _draw_canvas: CanvasItem
+
 const DeepLayout = preload("res://scripts/world/endless_deep_layout.gd")
 const HeadlampBeamScript = preload("res://scripts/lighting/headlamp_beam.gd")
 const CaveEdgeAssetDrawer = preload("res://scripts/world/cave_edge_asset_drawer.gd")
@@ -264,6 +268,8 @@ var _wave_active: bool = false
 
 
 func _ready() -> void :
+	lit_draw_sections = LitDrawSectionsScript.new()
+	add_child(lit_draw_sections)
 	player.process_physics_priority = -10
 	player.moved.connect(_on_player_moved)
 	player.facing_changed.connect(_on_player_facing_changed)
@@ -2401,10 +2407,10 @@ func _floor_texture_region(cell: Vector2i) -> Rect2:
 
 
 func _draw() -> void :
+	_draw_canvas = self
 	if floor_cells.is_empty() or stratum.is_empty():
 		return
 	_remember_draw_camera_bounds()
-	draw_rect(Rect2(Vector2.ZERO, WORLD_SIZE), Color("080e12"), true)
 	var visible_rect: = _visual_visible_rect(Vector2.ONE * TILE_SIZE * 3.0)
 	var min_cell: = _world_to_cell(visible_rect.position)
 	var max_cell: = _world_to_cell(visible_rect.end)
@@ -2412,6 +2418,11 @@ func _draw() -> void :
 	min_cell.y = clampi(min_cell.y, 0, GRID_SIZE.y - 1)
 	max_cell.x = clampi(max_cell.x, 0, GRID_SIZE.x - 1)
 	max_cell.y = clampi(max_cell.y, 0, GRID_SIZE.y - 1)
+	if lit_draw_sections.enabled:
+		_draw_partitioned_deep(min_cell, max_cell)
+		return
+	lit_draw_sections.hide()
+	_draw_canvas.draw_rect(Rect2(Vector2.ZERO, WORLD_SIZE), Color("080e12"), true)
 
 
 
@@ -2423,12 +2434,12 @@ func _draw() -> void :
 			if _is_floor(cell):
 				var alternate: = ((col * 17 + absolute_cell(cell).y * 31 + _seed_for_depth(depth_at_position(_cell_center(cell)))) & 3) == 0
 				if cave_floor_texture != null:
-					draw_texture_rect_region(
+					_draw_canvas.draw_texture_rect_region(
 						cave_floor_texture, rect, _floor_texture_region(cell), Color(0.88, 0.9, 0.92, 1.0)
 					)
-					draw_rect(rect, Color(stratum.floor_alt if alternate else stratum.floor, 0.28), true)
+					_draw_canvas.draw_rect(rect, Color(stratum.floor_alt if alternate else stratum.floor, 0.28), true)
 				else:
-					draw_rect(rect, Color(stratum.floor_alt if alternate else stratum.floor), true)
+					_draw_canvas.draw_rect(rect, Color(stratum.floor_alt if alternate else stratum.floor), true)
 				_draw_floor_detail(cell, rect)
 			else:
 				_draw_permanent_wall_mass(cell, rect)
@@ -2442,7 +2453,55 @@ func _draw() -> void :
 			_draw_wall_edges(cell, rect)
 	_select_draw_stratum(maxi(1, current_depth))
 	for impact in _crusher_impacts:
-		CrusherDebrisScript.draw_burst(self, impact)
+		CrusherDebrisScript.draw_burst(_draw_canvas, impact)
+
+
+func _draw_partitioned_deep(first: Vector2i, last: Vector2i) -> void:
+	lit_draw_sections.begin(self)
+	# Every visible cell has an opaque RGB floor or rock texture. The old
+	# full-world background was entirely covered; skip that hidden light pass.
+	# Original base pass, then original edge/corner pass, including overlaps.
+	for pass_index in 2:
+		for row in range(first.y, last.y + 1):
+			for col in range(first.x, last.x + 1, 4):
+				var last_col: int = mini(col + 3, last.x)
+				if pass_index == 0 or _section_has_wall_edges(row, col, last_col):
+					lit_draw_sections.add(_draw_terrain_section.bind(row, col, last_col, pass_index))
+	for impact in _crusher_impacts: lit_draw_sections.add(_draw_impact_section.bind(impact))
+	lit_draw_sections.finish()
+
+
+func _section_has_wall_edges(row: int, first_col: int, last_col: int) -> bool:
+	for col in range(first_col, last_col + 1):
+		var cell: Vector2i = Vector2i(col, row)
+		if not _is_floor(cell) and _has_floor_neighbor(cell): return true
+	return false
+
+
+func _draw_impact_section(impact: Dictionary) -> void:
+	CrusherDebrisScript.draw_burst(_draw_canvas, impact)
+
+
+func _draw_terrain_section(row: int, first_col: int, last_col: int, pass_index: int) -> void:
+	_select_draw_stratum(window_start_depth + row / DeepLayout.CHUNK_ROWS)
+	for col in range(first_col, last_col + 1):
+		var cell: Vector2i = Vector2i(col, row)
+		var rect: Rect2 = Rect2(Vector2(cell) * TILE_SIZE, Vector2.ONE * TILE_SIZE)
+		if pass_index == 1:
+			if not _is_floor(cell) and _has_floor_neighbor(cell): _draw_wall_edges(cell, rect)
+			continue
+		if _is_floor(cell):
+			var alternate: bool = ((col * 17 + absolute_cell(cell).y * 31 + _seed_for_depth(depth_at_position(_cell_center(cell)))) & 3) == 0
+			if cave_floor_texture != null:
+				_draw_canvas.draw_texture_rect_region(cave_floor_texture, rect, _floor_texture_region(cell), Color(0.88, 0.9, 0.92, 1.0))
+				_draw_canvas.draw_rect(rect, Color(stratum.floor_alt if alternate else stratum.floor, 0.28), true)
+			else:
+				_draw_canvas.draw_rect(rect, Color(stratum.floor_alt if alternate else stratum.floor), true)
+			_draw_floor_detail(cell, rect)
+		else:
+			_draw_permanent_wall_mass(cell, rect)
+	# Draw callbacks must never leave gameplay pointing at a neighbouring stratum.
+	_select_draw_stratum(maxi(1, current_depth))
 
 
 func _visual_visible_rect(margin: Vector2) -> Rect2:
@@ -2493,7 +2552,7 @@ func _draw_permanent_wall_mass(cell: Vector2i, rect: Rect2) -> void:
 	var region: Rect2 = Rect2(Vector2(posmod(cell.x,8),posmod(absolute_cell(cell).y,8))*96.0,Vector2(96,96))
 	var tint: Color = Color(stratum.wall).lightened(0.50)
 	if not _cell_diggable(cell): tint = tint.darkened(0.42)
-	draw_texture_rect_region(texture,rect.grow(0.5),region,tint)
+	_draw_canvas.draw_texture_rect_region(texture,rect.grow(0.5),region,tint)
 	if _cell_diggable(cell) and _has_floor_neighbor(cell):
 		var reward: Dictionary = DeepLayout.ore_for_cell(int(RunState.world_seed), depth_at_position(_cell_center(cell)), _chunk_cell_index(cell))
 		if bool(reward.rare):
@@ -2502,11 +2561,11 @@ func _draw_permanent_wall_mass(cell: Vector2i, rect: Rect2) -> void:
 				_ore_textures[kind] = _load_texture(String(RESOURCE_TEXTURE_PATHS[kind]))
 			var ore: Texture2D = _ore_textures[kind]
 			if ore != null:
-				draw_texture_rect(ore, Rect2(rect.position + Vector2(12, 10), Vector2(40, 40)), false, Color(0.76, 0.80, 0.86, 0.80))
+				_draw_canvas.draw_texture_rect(ore, Rect2(rect.position + Vector2(12, 10), Vector2(40, 40)), false, Color(0.76, 0.80, 0.86, 0.80))
 	var damage: int = int(dig_damage.get(cell,0))
 	if damage>0:
 		var center: Vector2 = rect.get_center()
-		draw_polyline(PackedVector2Array([rect.position+Vector2(10,12),center+Vector2(3,-4),center+Vector2(-6,9),rect.end-Vector2(8,13)]),Color(0.05,0.035,0.02,0.85),clampf(float(damage) / 200.0, 1.0, 3.0),true)
+		_draw_canvas.draw_polyline(PackedVector2Array([rect.position+Vector2(10,12),center+Vector2(3,-4),center+Vector2(-6,9),rect.end-Vector2(8,13)]),Color(0.05,0.035,0.02,0.85),clampf(float(damage) / 200.0, 1.0, 3.0),true)
 
 
 func _draw_floor_detail(cell: Vector2i, rect: Rect2) -> void :
@@ -2517,7 +2576,7 @@ func _draw_floor_detail(cell: Vector2i, rect: Rect2) -> void :
 	var offset: = Vector2(float(10 + key % 39), float(11 + (key / 7) % 37))
 	var color: = Color(stratum.wall_edge)
 	color.a = 0.17
-	draw_line(rect.position + offset - Vector2(7, 2), rect.position + offset + Vector2(8, 3), color, 2.0)
+	_draw_canvas.draw_line(rect.position + offset - Vector2(7, 2), rect.position + offset + Vector2(8, 3), color, 2.0)
 
 
 func _draw_wall_edges(cell: Vector2i, rect: Rect2) -> void :
@@ -2535,10 +2594,10 @@ func _draw_wall_edges(cell: Vector2i, rect: Rect2) -> void :
 
 func _draw_permanent_wall_face(cell: Vector2i, rect: Rect2, side: int) -> void :
 	if _cell_diggable(cell):
-		CaveEdgeAssetDrawer.draw_mineable_edge(self, diggable_wall_texture, cell, side, TILE_SIZE, depth_at_position(_cell_center(cell)) % 11)
+		CaveEdgeAssetDrawer.draw_mineable_edge(_draw_canvas, diggable_wall_texture, cell, side, TILE_SIZE, depth_at_position(_cell_center(cell)) % 11)
 		return
 	CaveEdgeAssetDrawer.draw_bedrock_edge(
-		self, cave_wall_texture, cell, side, TILE_SIZE, depth_at_position(_cell_center(cell)) % 11
+		_draw_canvas, cave_wall_texture, cell, side, TILE_SIZE, depth_at_position(_cell_center(cell)) % 11
 	)
 
 
@@ -2549,27 +2608,27 @@ func _draw_permanent_wall_corners(cell: Vector2i, _rect: Rect2, open_sides: Arra
 		if not bool(open_sides[int(pair[0])]) or not bool(open_sides[int(pair[1])]):
 			continue
 		if _cell_diggable(cell):
-			CaveEdgeAssetDrawer.draw_mineable_corner(self, diggable_corner_texture, cell, corner, TILE_SIZE)
+			CaveEdgeAssetDrawer.draw_mineable_corner(_draw_canvas, diggable_corner_texture, cell, corner, TILE_SIZE)
 			continue
 		CaveEdgeAssetDrawer.draw_bedrock_corner(
-			self, cave_wall_corner_texture, cell, corner, TILE_SIZE
+			_draw_canvas, cave_wall_corner_texture, cell, corner, TILE_SIZE
 		)
 
 
 func _draw_shaft(position: Vector2, upward: bool) -> void :
 	var color: = Color("91dcff") if upward else Color(stratum.accent)
-	draw_circle(position, 74.0, Color(0.025, 0.035, 0.045, 0.96))
+	_draw_canvas.draw_circle(position, 74.0, Color(0.025, 0.035, 0.045, 0.96))
 	if shaft_texture != null:
 		var shaft_rect: = Rect2(position - Vector2(85.0, 61.0), Vector2(170.0, 122.0))
 		var shaft_modulate: = Color(0.92, 0.97, 1.0, 0.98) if upward else Color.WHITE.lerp(color, 0.18)
-		draw_texture_rect(shaft_texture, shaft_rect, false, shaft_modulate)
-	draw_arc(position, 74.0, 0.0, TAU, 32, Color(color, 0.48), 8.0, true)
-	draw_arc(position, 52.0, 0.0, TAU, 28, Color(color, 0.24), 5.0, true)
+		_draw_canvas.draw_texture_rect(shaft_texture, shaft_rect, false, shaft_modulate)
+	_draw_canvas.draw_arc(position, 74.0, 0.0, TAU, 32, Color(color, 0.48), 8.0, true)
+	_draw_canvas.draw_arc(position, 52.0, 0.0, TAU, 28, Color(color, 0.24), 5.0, true)
 	var direction: = Vector2.UP if upward else Vector2.DOWN
 	var side: = Vector2( - direction.y, direction.x)
 	var tip: = position + direction * 25.0
 	var back: = position - direction * 17.0
-	draw_colored_polygon(PackedVector2Array([tip, back + side * 23.0, back - side * 23.0]), Color(color, 0.76))
+	_draw_canvas.draw_colored_polygon(PackedVector2Array([tip, back + side * 23.0, back - side * 23.0]), Color(color, 0.76))
 
 
 func _cell_index(cell: Vector2i) -> int:

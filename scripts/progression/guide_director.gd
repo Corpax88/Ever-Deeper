@@ -38,25 +38,29 @@ func resolve(proposal: Dictionary) -> Dictionary:
 		locked_waypoint_id = waypoint_id
 		_clear_target()
 
-	var candidates: = _normalized_candidates(Array(proposal.get("candidates", [])))
-	var selected: = _candidate_by_key(candidates, locked_target_key)
+	var raw_candidates: = Array(proposal.get("candidates", []))
+	# A live locked target keeps its priority until it disappears. Avoid rebuilding
+	# and sorting every other ore candidate just to select that same target again.
+	var selected: = _retained_candidate(raw_candidates, locked_target_key)
+	if selected.is_empty():
+		var candidates: = _normalized_candidates(raw_candidates)
+		selected = _candidate_by_key(candidates, locked_target_key)
+		if selected.is_empty() and not candidates.is_empty():
+			selected = Dictionary(candidates[0])
 	if selected.is_empty():
 		_clear_target()
-		if not candidates.is_empty():
-			selected = Dictionary(candidates[0])
-			locked_target_key = String(selected.key)
-			locked_target_position = Vector2(selected.position)
 	else:
-
-
+		locked_target_key = String(selected.key)
 		locked_target_position = Vector2(selected.position)
 
-	var result: = proposal.duplicate(true)
+	# The result does not contain candidates; do not deep-copy that discarded list.
+	var result: = proposal.duplicate()
+	result.erase("candidates")
+	result = result.duplicate(true)
 	result["objective_id"] = locked_objective_id
 	result["waypoint_id"] = locked_waypoint_id
 	result["target_key"] = locked_target_key
 	result["target_position"] = locked_target_position
-	result.erase("candidates")
 	return result
 
 
@@ -515,6 +519,24 @@ func _candidate_by_key(candidates: Array[Dictionary], key: String) -> Dictionary
 		if String(candidate.key) == key:
 			return candidate
 	return {}
+
+
+func _retained_candidate(candidates: Array, key: String) -> Dictionary:
+	if key.is_empty():
+		return {}
+	var selected: Dictionary = {}
+	for value in candidates:
+		if not value is Dictionary or String(value.get("key", "")) != key:
+			continue
+		if not value.get("position", Vector2.ZERO) is Vector2:
+			continue
+		# Duplicate keys still use the original priority/tie-breaking rules.
+		if not selected.is_empty():
+			return {}
+		selected = value
+	if selected.is_empty():
+		return {}
+	return {"key": key, "position": Vector2(selected.get("position", Vector2.ZERO))}
 
 
 func _clear_target() -> void :

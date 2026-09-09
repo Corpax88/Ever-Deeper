@@ -2,67 +2,25 @@
   "schema": 1,
   "dev_only": true,
   "live_publication_authorized": false,
-  "dev_version": "1.0.0-dev.2",
-  "source_commit": "246ee70cca3cff2eae0fe417800cf2d1724c6417",
-  "qa_run_id": 34349012950,
-  "candidate_artifact_id": 10102987319,
-  "candidate_zip_sha256": "eb5d344c9368192c345637640dfc3fc3697ec84e373339daaefa7a0322e6a38f",
-  "candidate_manifest_sha256": "9ad20f8e94964274680fab5ec43576fdc2b30daf3844b2d1b52b05b4c48b34a2",
-  "package_checks_passed": true,
-  "visual_reviewed": true,
-  "mobile_touch_reviewed": true,
-  "web_audio_reviewed": true,
-  "full_progression_reviewed": true,
-  "critic_reviewed": true,
-  "dev_test_ready": true,
+  "dev_version": "1.0.0-dev.3",
+  "source_commit": "",
+  "qa_run_id": 0,
+  "candidate_artifact_id": 0,
+  "candidate_zip_sha256": "",
+  "candidate_manifest_sha256": "",
+  "package_checks_passed": false,
+  "visual_reviewed": false,
+  "mobile_touch_reviewed": false,
+  "web_audio_reviewed": false,
+  "full_progression_reviewed": false,
+  "critic_reviewed": false,
+  "dev_test_ready": false,
   "final_one_point_zero_approved": false,
   "critic_score": 8.4,
   "critical_bug_count": 0,
   "physical_iphone_verified": false,
-  "files": {
-    "index.apple-touch-icon.png": {
-      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5",
-      "size": 66421
-    },
-    "index.audio.position.worklet.js": {
-      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
-      "size": 2973
-    },
-    "index.audio.worklet.js": {
-      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
-      "size": 7298
-    },
-    "index.html": {
-      "sha256": "bd2e00a51f612a4a5d41dda10f418ae233d433dfe828f980682fb972b01b42b0",
-      "size": 7855
-    },
-    "index.icon.png": {
-      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
-      "size": 470687
-    },
-    "index.js": {
-      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
-      "size": 279815
-    },
-    "index.pck": {
-      "sha256": "c331cde35f64edf26a9d10c921e46ad1ef9bd3001aea225b521a38c86ea0ca36",
-      "size": 220937608
-    },
-    "index.png": {
-      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
-      "size": 1981427
-    },
-    "index.wasm": {
-      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
-      "size": 39514754
-    }
-  },
-  "reviewed_at": "2026-09-09T12:14:51.673608+00:00",
+  "files": {},
   "notes": [
-    "DEV-only menu placement correction; final 1.0, physical iPhone and LIVE approval remain false.",
-    "All six matching CI jobs passed. All 13 source and 13 exact-PCK cases passed; mobile WebKit passed 869 gameplay and 193 menu/touch assertions.",
-    "Independent critic inspected all 12 exact-package mobile/desktop layout images and approved this bounded fix at 9/10. Whole-game provisional assessment remains 8.4/10; the new score is not an overall 1.0 rating.",
-    "DEV sits below the top HUD controls. First-open drawer now fits its settled content and all lower commands remain reachable. Existing art, gameplay, saves, lighting and sound are preserved.",
-    "Publish only artifact 10102987319 without rebuilding and preserve the nine existing LIVE files. Baseline receipt pins current DEV 1.0.0-dev.1."
+    "FPS recovery candidate awaiting exact-package validation and independent review. DEV only; physical iPhone and final 1.0 acceptance remain open."
   ]
 }

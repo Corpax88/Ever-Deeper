@@ -1,16 +1,49 @@
-# 1.0 iPhone lighting performance
+# 1.0 iPhone performance
 
 ## Release status
 
-A small hub texture-margin optimization is included **provisionally for DEV device
-measurement**. It is not a demonstrated fix for the physical iPhone bottleneck and
-is not approval for LIVE or a 9/10 performance score. The final exported candidate
-has completed all five paired lighting-style captures at the target mobile viewport;
-physical iPhone acceptance remains open.
+**Physical iPhone acceptance remains open.** The latest player report says FPS is
+still low across areas; the supplied active-play screenshot records **19.9 FPS**.
+Its exact build version is not visible. This is a severe observed performance
+failure, not evidence that the problem has been fixed or grounds for 1.0/LIVE
+approval. Current optimization work requires new rendered comparisons, gameplay
+and visual verification, followed by sustained measurement on the actual phone.
+
+The historical hub texture-margin optimization documented below was included
+provisionally for DEV device measurement. Its five paired lighting-style captures
+passed the visual gate, but did not demonstrate a fix for physical iPhone performance.
+Those earlier results do not certify the current work or justify a 9/10 performance
+score.
 
 ## Established physical-device evidence
 
-The last actual iPhone measurement is DEV9: **52.1 FPS** with normal lighting,
+The latest supplied screenshot is `IMG_1749.jpeg` from Mats's report that FPS remains
+low wherever he plays. The visible Emberdeep Works goal and mine artwork are
+consistent with **Emberdeep Depth 1 while mining**; the exact area is not encoded
+in the meter. The screenshot shows:
+
+| Meter value | Observed value |
+|---|---:|
+| FPS | 19.9 |
+| Frame P95 / maximum | 56.0 / 58.0 ms |
+| Frames over 33.34 ms in the window | 40 |
+| Engine process / physics monitor | 23.0 / 1.0 ms |
+| Canvas / device pixel ratio | 2328×1260 / 3.0 |
+| Draw calls / nodes | 155 / 1,091 |
+| Reported GPU memory | 567 MiB |
+| Static memory | Unavailable |
+| Time since the meter was enabled | 554 seconds |
+
+`D2` is the **frame meter revision**, not Depth 2 or a game build identifier.
+The FPS and percentile summarize the last approximately two seconds; 554 seconds
+does not mean every frame in that interval was sampled by this displayed result.
+The engine process monitor is not an exclusive GDScript timing measurement, so its
+value cannot establish a CPU/GPU split. Neither this image nor the elapsed time
+establishes thermal throttling, a memory leak or the exact failing source revision.
+DEV `1.0.0-dev.2` was the published candidate being discussed, but the screenshot
+alone cannot prove which package was running.
+
+The earlier version-identified physical measurement is DEV9: **52.1 FPS** with normal lighting,
 **60.0 FPS** with pet lights disabled, and **52.1 FPS** after the final 70-second
 restoration stage. Normal-light P95 is 20–21 ms. Each displayed row summarizes its
 stage's last eight seconds, not its entire duration. This does not establish thermal

@@ -314,6 +314,21 @@ func close_commerce() -> void :
 	_items.clear()
 	_selected_item_id = ""
 	_selected_card = null
+	# Open rebuilds the catalog and showcase. Release their offscreen viewports,
+	# item textures and previous hero atlases when returning to the actual mine.
+	if _page_tween != null:
+		_page_tween.kill()
+		_page_tween = null
+	for container in [catalog_strip, overview_content]:
+		for child in container.get_children():
+			container.remove_child(child)
+			child.queue_free()
+	_update_outfit_preview(hero_icon, {})
+	_update_light_preview({})
+	hero_icon.texture = null
+	catalog_scroll.held = false
+	catalog_scroll.moving = false
+	catalog_scroll.speed = 0.0
 	closed.emit()
 
 

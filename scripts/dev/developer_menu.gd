@@ -3,6 +3,8 @@ extends Control
 
 signal command_requested(command: String)
 
+const ReleaseMenu = preload("res://scripts/ui/premium_menu.gd")
+
 const GOLD: = Color("d7b45a")
 const GOLD_BRIGHT: = Color("ffe3a0")
 const MINT: = Color("a8e3bc")
@@ -20,6 +22,7 @@ class FrameMeter extends Label:
 	var latest: Dictionary = {}
 	var history: Array[Dictionary] = []
 	var started_msec: int = 0
+	var build_label: String = ""
 
 	func start() -> void:
 		samples.clear()
@@ -28,6 +31,7 @@ class FrameMeter extends Label:
 		latest = {}
 		history.clear()
 		started_msec = Time.get_ticks_msec()
+		build_label = "DEV" + String(ReleaseMenu.DEV_RELEASE_VERSION).get_slice("-dev.", 1)
 		text = "Measuring FPS…"
 		show()
 		set_process(true)
@@ -65,7 +69,7 @@ class FrameMeter extends Label:
 		var video_memory: float = Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0
 		var nodes: int = int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT))
 		var calls: int = int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
-		latest.merge({"meter_revision": 2, "elapsed_seconds": (Time.get_ticks_msec() - started_msec) / 1000.0,
+		latest.merge({"meter_revision": 2, "release_version": ReleaseMenu.DEV_RELEASE_VERSION, "elapsed_seconds": (Time.get_ticks_msec() - started_msec) / 1000.0,
 			"cpu_monitor_ms": cpu_ms, "physics_monitor_ms": physics_ms,
 			"static_mib": memory, "video_mib": video_memory, "nodes": nodes,
 			"draw_calls": calls, "canvas_width": canvas_size.x, "canvas_height": canvas_size.y, "dpr": dpr})
@@ -73,7 +77,7 @@ class FrameMeter extends Label:
 		if history.size() > 60: history.pop_front()
 		var memory_label: String = "%.0f" % memory if memory > 0.0 else "n/a"
 		var video_label: String = "%.0f" % video_memory if video_memory > 0.0 else "n/a"
-		text = "D2 · %.0fs · %.1f FPS · p95 %.1f ms\nMax %.1f ms · >33 ms: %d · CPU %.1f / Phys %.1f ms\nCanvas %d×%d · DPR %.1f · Draw %d\nMem %s MiB · GPU %s MiB · Nodes %d" % [latest.elapsed_seconds, fps, p95, samples[-1], slow, cpu_ms, physics_ms, canvas_size.x, canvas_size.y, dpr, calls, memory_label, video_label, nodes]
+		text = "%s · %.0fs · %.1f FPS · p95 %.1f ms\nMax %.1f ms · >33 ms: %d · CPU %.1f / Phys %.1f ms\nCanvas %d×%d · DPR %.1f · Draw %d\nMem %s MiB · GPU %s MiB · Nodes %d" % [build_label, latest.elapsed_seconds, fps, p95, samples[-1], slow, cpu_ms, physics_ms, canvas_size.x, canvas_size.y, dpr, calls, memory_label, video_label, nodes]
 		# Bounded memory-only history; no autosave, network or per-frame logging.
 		samples.clear()
 		elapsed_ms = 0.0
