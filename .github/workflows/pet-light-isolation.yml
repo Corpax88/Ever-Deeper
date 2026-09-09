@@ -1,0 +1,50 @@
+name: Isolate DEV9 pet light cost from published package
+on:
+  push:
+    branches: [codex-dev9-pet-light-isolation]
+    paths: ['tools/review-pet-light-isolation.gd', '.github/workflows/pet-light-isolation.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  lifecycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: dev-lighting-candidate
+          run-id: 34281591200
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - name: Verify manifest and install renderer
+        run: |
+          python3 - <<'PY'
+          import os,json,hashlib
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'candidate'
+          for name,info in json.loads((root/'manifest.json').read_text()).items():
+            data=(root/name).read_bytes()
+            assert len(data)==info['size'] and hashlib.sha256(data).hexdigest()==info['sha256'],name
+          PY
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb libgl1-mesa-dri ripgrep
+          curl -L --fail --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Measure pet cone and bounce separately with restoration
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          mkdir -p "$RUNNER_TEMP/review" "$RUNNER_TEMP/pack-run"
+          cd "$RUNNER_TEMP/pack-run"
+          xvfb-run -a -s '-screen 0 2560x1440x24' timeout 300 Godot_v4.7.2-stable_linux.x86_64 --path . --main-pack "$RUNNER_TEMP/candidate/index.pck" --script "$GITHUB_WORKSPACE/tools/review-pet-light-isolation.gd" --resolution 2328x1260 --audio-driver Dummy -- --output="$RUNNER_TEMP/review" > "$RUNNER_TEMP/review/native.log" 2>&1
+          if rg 'SCRIPT ERROR|Parse Error|^ERROR:' "$RUNNER_TEMP/review/native.log"; then exit 1; fi
+          rg 'PET_LIGHT_ISOLATION_OK' "$RUNNER_TEMP/review/native.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dev9-pet-light-isolation
+          path: ${{ runner.temp }}/review
+          retention-days: 30
