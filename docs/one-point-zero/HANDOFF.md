@@ -6,6 +6,11 @@ DEV version: **1.0.0-dev.1**. Reviewed source:
 The six required jobs passed. This is a candidate for device testing, not final
 1.0 approval. LIVE remains the existing `0.46.9` package.
 
+Published and verified by [run 34337134929](https://github.com/Corpax88/Ever-Deeper/actions/runs/34337134929).
+All nine DEV files match the reviewed artifact; all nine LIVE files remain unchanged.
+The durable receipt is `.github/one-point-zero/publication-receipt.json`; rollback
+artifact **10098196867** contains both previous public packages.
+
 ## Implemented scope
 
 - The Deep is a continuous procedural mountain. Three resident geology bands
