@@ -52,6 +52,10 @@ const CASES: Array[Dictionary] = [
 	{"flags": ["--visual-capture-suite"], "method": "_start_visual_capture_suite", "suite": "main", "surface": false},
 	{"flags": ["--qa-dev-tools"], "method": "_run_dev_tools_qa", "suite": "build_flavor", "surface": false},
 	{"flags": ["--qa-build-flavor"], "method": "_run_build_flavor_qa", "suite": "build_flavor", "surface": false},
+	{"flags": ["--qa-one-point-zero-state"], "method": "_run_state_qa", "suite": "one_point_zero", "surface": false},
+	{"flags": ["--qa-one-point-zero-world"], "method": "run", "suite": "one_point_zero_world", "surface": false},
+	{"flags": ["--qa-one-point-zero-migration"], "method": "run", "suite": "one_point_zero_migration", "surface": false},
+	{"flags": ["--qa-one-point-zero-ui"], "method": "run", "suite": "one_point_zero_ui", "surface": false},
 ]
 
 var main: Node

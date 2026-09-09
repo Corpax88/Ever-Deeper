@@ -11,10 +11,11 @@ const SKILLS: Array[Dictionary] = [
 	{"id":"shake","name":"Earthshaker","detail":"Tap a nearby wall: one mighty shake opens up to 2×2 ordinary terrain cells. 8 second recharge. Sealed gates and bedrock remain solid.","gold":140,"bond":25,"requires":"big_paws"},
 	{"id":"teamwork","name":"Teamwork","detail":"Helps open one ordinary wall cell every 2.5 seconds while you mine beside it.","gold":210,"bond":35,"requires":"shake"},
 	{"id":"echo","name":"Echo Scout","detail":"Marks the way deeper and points toward it for 20 seconds, even when the entrance is off-screen.","gold":170,"bond":25,"requires":"long_beam"},
-	{"id":"homeward","name":"Homeward","detail":"Leads you toward the return shaft, waits for you to catch up, and keeps the destination marked.","gold":240,"bond":40,"requires":"echo"},
+	{"id":"homeward","name":"Tunnel Home","detail":"A quick tunnel brings you and your attached relic home from The Deep. Your dig site is saved for the return trip. Ready automatically when the Deepheart is restored; before then, leads you toward the exit.","gold":240,"bond":40,"requires":"echo"},
 ]
 
 static func has_skill(id: String) -> bool:
+	if id == "homeward" and bool(RunState.victory): return true
 	return id in ["lantern","fetch"] or int(Dictionary(RunState.overhaul_progress.get("skills",{})).get(id,0)) == 1
 
 static func bond() -> int:
@@ -47,7 +48,7 @@ static func config(selected: String = "mole:fetch") -> Dictionary:
 		var locked: bool = not String(skill.requires).is_empty() and not has_skill(String(skill.requires))
 		var ready: bool = not locked and RunState.gold >= int(skill.gold) and bond() >= int(skill.bond)
 		var usable: bool = id in ["fetch","ore_nose","shake","echo","homeward"]
-		var labels: Dictionary = {"fetch":"Recall companion","ore_nose":"Scout ore","shake":"Shake nearby wall","echo":"Find passage","homeward":"Lead me home"}
+		var labels: Dictionary = {"fetch":"Recall companion","ore_nose":"Scout ore","shake":"Shake nearby wall","echo":"Find passage","homeward":"Tunnel Home" if RunState.current_scene == "endless" else "Lead me home"}
 		items.append({
 			"id":"mole:"+id,"title":skill.name,"description":skill.detail,
 			"texture":"res://assets/companion/mole.png","current":owned,"state_label":"Learned" if owned else "Locked" if locked else "Ready" if ready else "Keep exploring",

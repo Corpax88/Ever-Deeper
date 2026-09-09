@@ -1,0 +1,132 @@
+{
+	"device": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"lights_preserved": true,
+	"mode": "comparison",
+	"physical_iphone": false,
+	"rendered": true,
+	"renderer": "gl_compatibility",
+	"stages": [
+		{
+			"draw_calls": 123.0,
+			"fps": 14.9308069080862,
+			"frames": 120,
+			"p95_ms": 89.102,
+			"stage": "00-standard-broad",
+			"visible_sections": 17
+		},
+		{
+			"draw_calls": 123.0,
+			"fps": 15.8087199654548,
+			"frames": 127,
+			"p95_ms": 75.164,
+			"stage": "00-standard-narrow",
+			"visible_sections": 48
+		},
+		{
+			"draw_calls": 123.0,
+			"fps": 16.2537873806091,
+			"frames": 131,
+			"p95_ms": 72.181,
+			"stage": "00-standard-restored",
+			"visible_sections": 17
+		},
+		{
+			"draw_calls": 150.0,
+			"fps": 14.8099380907252,
+			"frames": 119,
+			"p95_ms": 79.785,
+			"stage": "01-wide-broad",
+			"visible_sections": 17
+		},
+		{
+			"draw_calls": 150.0,
+			"fps": 15.5272655677917,
+			"frames": 125,
+			"p95_ms": 73.758,
+			"stage": "01-wide-narrow",
+			"visible_sections": 48
+		},
+		{
+			"draw_calls": 150.0,
+			"fps": 15.3390950133475,
+			"frames": 123,
+			"p95_ms": 73.93,
+			"stage": "01-wide-restored",
+			"visible_sections": 17
+		},
+		{
+			"draw_calls": 140.0,
+			"fps": 17.4548813136643,
+			"frames": 140,
+			"p95_ms": 71.326,
+			"stage": "02-focused-broad",
+			"visible_sections": 17
+		},
+		{
+			"draw_calls": 142.0,
+			"fps": 16.9264334884508,
+			"frames": 136,
+			"p95_ms": 76.67,
+			"stage": "02-focused-narrow",
+			"visible_sections": 48
+		},
+		{
+			"draw_calls": 140.0,
+			"fps": 19.360426438998,
+			"frames": 155,
+			"p95_ms": 58.635,
+			"stage": "02-focused-restored",
+			"visible_sections": 17
+		},
+		{
+			"draw_calls": 134.0,
+			"fps": 21.427492045355,
+			"frames": 172,
+			"p95_ms": 54.951,
+			"stage": "03-prismatic-broad",
+			"visible_sections": 17
+		},
+		{
+			"draw_calls": 134.0,
+			"fps": 21.9450386506993,
+			"frames": 176,
+			"p95_ms": 52.098,
+			"stage": "03-prismatic-narrow",
+			"visible_sections": 48
+		},
+		{
+			"draw_calls": 134.0,
+			"fps": 21.3038106537242,
+			"frames": 171,
+			"p95_ms": 57.511,
+			"stage": "03-prismatic-restored",
+			"visible_sections": 17
+		},
+		{
+			"draw_calls": 122.0,
+			"fps": 20.4097734938272,
+			"frames": 164,
+			"p95_ms": 55.944,
+			"stage": "04-deepheart-broad",
+			"visible_sections": 17
+		},
+		{
+			"draw_calls": 124.0,
+			"fps": 20.9757860769474,
+			"frames": 168,
+			"p95_ms": 57.433,
+			"stage": "04-deepheart-narrow",
+			"visible_sections": 48
+		},
+		{
+			"draw_calls": 122.0,
+			"fps": 21.2320933832429,
+			"frames": 170,
+			"p95_ms": 54.993,
+			"stage": "04-deepheart-restored",
+			"visible_sections": 17
+		}
+	],
+	"terminal_visual_fixture": "repaired",
+	"window": "(2328, 1260)"
+}

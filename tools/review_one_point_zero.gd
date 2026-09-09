@@ -1,0 +1,386 @@
+extends SceneTree
+## External acceptance harness for the immutable exported DEV PCK.
+## Fixture funding accelerates campaign transactions; relics are generated,
+## hauled, placed and built through their real runtime owners. No release claim.
+const LARGE_VIEW: = Vector2i(2532, 1170)
+const SMALL_VIEW: = Vector2i(844, 390)
+const FIXTURE_SEED: int = 4608
+var output_dir: String = ""
+var pack_source: String = ""
+var main: Node
+var state: Node
+var world: Node
+var journey: RefCounted
+var checks: Array[Dictionary] = []
+var captures: Array[Dictionary] = []
+var failures: Array[String] = []
+var seen_strata: Dictionary = {}
+var frame_size: Vector2i = LARGE_VIEW
+var started_usec: int = 0
+
+func _initialize() -> void:
+	_run.call_deferred()
+
+func _check(ok: bool, message: String) -> bool:
+	checks.append({"passed": ok, "assertion": message})
+	if not ok:
+		failures.append(message)
+		print("ONE_POINT_ZERO_RENDER_FAIL " + message)
+	return ok
+
+func _run() -> void:
+	started_usec = Time.get_ticks_usec()
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--output="): output_dir = arg.trim_prefix("--output=")
+		if arg.begins_with("--pack-source="): pack_source = arg.trim_prefix("--pack-source=")
+	if not _check(not output_dir.is_empty(), "Explicit isolated output directory required"): quit(3); return
+	DirAccess.make_dir_recursive_absolute(output_dir)
+	if not _check(DisplayServer.get_name() != "headless", "Rendered display required"): _finish(); return
+	if not _check("--main-pack" in OS.get_cmdline_args() and FileAccess.file_exists(pack_source), "Exact --main-pack artifact required"): _finish(); return
+	if not _check(OS.has_feature("ever_deeper_dev"), "DEV export required; source execution is not release evidence"): _finish(); return
+	await _resize(LARGE_VIEW)
+	state = root.get_node("RunState")
+	main = load("res://scenes/main/main.tscn").instantiate()
+	root.add_child(main)
+	current_scene = main
+	await _settle(5)
+	state.initialize_persistence(output_dir.path_join("isolated-capture-save.json"))
+	state.reset_run(false)
+	state.world_seed = FIXTURE_SEED
+	seed(FIXTURE_SEED)
+	main._start_new_game()
+	main._dev_ensure_playing()
+	main._enter_mine("mossMine", false, false)
+	await _settle(8)
+	_check(String(main.mine_button.icon.resource_path) == "res://assets/tools/pickaxe-iron.png", "Mine action uses approved pickaxe asset")
+	await _capture("01-new-player-hud", {"fixture": "Fresh player inside first mine"}, true)
+	if not await _recipe_capture(): _finish(); return
+
+	journey = load("res://scripts/qa/suites/one_point_zero_world.gd").new(main, null)
+	if not _check(journey._new_player_to_deep(), "Campaign prerequisites completed through real transactions"): _finish(); return
+	state.world_seed = FIXTURE_SEED
+	main._enter_endless(true, false)
+	world = main.endless_world
+	journey.world = world
+	await _settle(8)
+	_check(bool(world.stream_snapshot().continuous), "The Deep uses a continuous resident window")
+	await _capture("03-deep-entrance", {"fixture": "First entry; ordinary approved camera"})
+	if not await _mine_corner("04-deep-mined-corner"): _finish(); return
+	if not _bedrock_fixture(): _finish(); return
+	await _capture("05-diggable-and-bedrock", {"fixture": "Approach excavated through actual wall owner; boundary intact"})
+	seen_strata[1] = true
+
+	for relic_value in state.ENDLESS_RELIC_IDS:
+		var relic_id: String = String(relic_value)
+		if main.phase == "hub": main._enter_endless(true, false)
+		world = main.endless_world
+		journey.world = world
+		var target_depth: int = int(state.next_endless_relic_depth())
+		while int(world.current_depth) < target_depth:
+			var next_depth: int = int(world.current_depth) + 1
+			var absolute: Vector2 = _absolute_position()
+			var target: Vector2 = Vector2(absolute.x, float(next_depth - 1) * float(world.CHUNK_HEIGHT) + 320.0)
+			if not _check(await journey._walk_and_mine_to(target), "Held mining reaches continuous band %d" % next_depth): _finish(); return
+			_thaw()
+			if next_depth <= 5 and not seen_strata.has(next_depth):
+				seen_strata[next_depth] = true
+				if not await _mine_corner("stratum-%d-mined-edge" % next_depth): _finish(); return
+		if not await _relic_cycle(relic_id, relic_id == "forge_heart"): _finish(); return
+
+	var complete: Dictionary = state.endless_descent_status()
+	_check(int(complete.placed_relic_count) == 5 and int(complete.built_workshop_count) == 5, "Five generated relics complete five Hub workshops")
+	main._sync_hub_runtime()
+	main.hub_world.restore_position(Vector2(720, 495))
+	main.hub_world.player.set_facing(Vector2.UP)
+	await _settle_hub()
+	await _capture("hub-five-workshops-complete", {"fixture": "Five actual relic placements and workshop transactions"}, true)
+	main.hub_world.restore_position(Vector2(main.hub_world.RELIC_PEDESTAL_POSITION))
+	await _capture("hub-museum-complete-selected", {"fixture": "Completed museum with actual pedestal proximity selection"})
+	await _workshop_capture("tool_forge", "hub-tool-forge-upgrade")
+	await _workshop_capture("lift_workshop", "hub-tunnel-workshop-bonus")
+	main._enter_endless(true, false)
+	world = main.endless_world
+	journey.world = world
+	var before: int = int(state.total_mined_resources())
+	var farther: Vector2 = _absolute_position() + Vector2(0, float(world.CHUNK_HEIGHT) * 1.1)
+	if not _check(await journey._walk_and_mine_to(farther), "Mining continues beyond fifth relic"): _finish(); return
+	_thaw()
+	_check(int(state.total_mined_resources()) > before, "Post-fifth excavation grants real materials")
+	_check(not bool(state.endless_descent_status().exploration_complete), "The Deep never reports a final floor")
+	await _capture("post-fifth-deeper-mining", {"fixture": "Actual held mining beyond the fifth relic"})
+	_check(Array(journey.failures).is_empty(), "Reused journey assertions remain clean")
+	_finish()
+
+func _recipe_capture() -> bool:
+	main._dev_seed_all_zones_state()
+	state.victory = false
+	state.singularity_secured = false
+	state.mark_hub_tutorial_seen()
+	for drill_level in [1, 2]:
+		state.set_drill_level(drill_level)
+		var recipe: Dictionary = state.next_drill_recipe()
+		var requirements: Array = Array(recipe.get("requirements", []))
+		var expected_rows: int = drill_level + 3
+		if not _check(requirements.size() + 1 == expected_rows, "Actual %d-row campaign recipe exists" % expected_rows): return false
+		for resource_id in state.cargo:
+			state.cargo[resource_id] = 0
+		state.gold = int(recipe.gold) * 2 / 3
+		for index in requirements.size():
+			var row: Dictionary = requirements[index]
+			state.cargo[String(row.type)] = int(row.amount) if index == 1 else maxi(1, int(row.amount) / 3)
+		state.cargo["copper"] = 14
+		state.changed.emit()
+		main._enter_mine("emberMine", false, false)
+		main._enter_depth(false, false)
+		await _settle(6)
+		var snapshot: Dictionary = main.premium_hud.progression_goal_snapshot()
+		if not _check(Array(snapshot.get("requirements", [])).size() == expected_rows, "HUD displays all %d real drill requirements" % expected_rows): return false
+		await _capture("02-%d-row-recipe" % expected_rows, {"fixture": "Partial recipe materials; banked gold and explicitly pending sale value", "recipe_rows": expected_rows}, true)
+	return true
+
+func _mine_corner(label: String) -> bool:
+	_thaw()
+	var edge: Dictionary = _find_diggable_edge()
+	if not _check(not edge.is_empty(), "Mineable rock beside open floor for " + label): return false
+	world.restore_position(Vector2(edge.stand))
+	world.player.set_facing(Vector2(edge.facing))
+	await _settle(4)
+	var cell: Vector2i = edge.cell
+	var before: int = int(state.total_mined_resources())
+	var before_floor: bool = bool(world._is_floor(cell))
+	_mouse_button(main.mine_button, true)
+	await process_frame
+	if not _check(bool(main.mine_held) and bool(world.external_mine_held), "Viewport input starts held mine action"): return false
+	# The input is held normally; repeated gameplay ticks accelerate the wait.
+	journey._freeze_world()
+	for step in 120:
+		world._process(0.10)
+		world._physics_process(0.10)
+		if bool(world._is_floor(cell)): break
+		if step % 6 == 0: await process_frame
+	_mouse_button(main.mine_button, false)
+	await process_frame
+	_thaw()
+	_check(not bool(main.mine_held), "Releasing pointer releases mine action")
+	if not _check(not before_floor and bool(world._is_floor(cell)), "Real held mining opens selected rock"): return false
+	_check(int(state.total_mined_resources()) > before, "Excavated rock grants materials")
+	await _capture(label, {"fixture": "Actual mine-button input; simulation wait accelerated", "cell": str(cell), "stratum_index": int(world.current_depth) % 5})
+	return true
+
+func _find_diggable_edge() -> Dictionary:
+	var center: Vector2i = world._world_to_cell(world.player.global_position)
+	for radius in range(1, 24):
+		for y in range(maxi(2, center.y - radius), mini(int(world.GRID_SIZE.y) - 2, center.y + radius + 1)):
+			for x in range(maxi(3, center.x - radius), mini(int(world.GRID_SIZE.x) - 3, center.x + radius + 1)):
+				var cell: Vector2i = Vector2i(x, y)
+				if not world._cell_diggable(cell) or world._is_floor(cell): continue
+				if int(world.depth_at_position(world._cell_center(cell))) != int(world.current_depth): continue
+				for offset in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+					var stand_cell: Vector2i = cell + offset
+					if world._is_floor(stand_cell):
+						return {"cell": cell, "stand": world._cell_center(stand_cell), "facing": -Vector2(offset)}
+	return {}
+
+func _bedrock_fixture() -> bool:
+	for y in range(1, 5):
+		for x in range(2, 6):
+			var cell: Vector2i = Vector2i(x, y)
+			if not world._is_floor(cell): world._break_diggable_cell(cell)
+	var boundary: Vector2i = Vector2i(1, 2)
+	if not _check(not world._cell_diggable(boundary) and not world._break_diggable_cell(boundary), "Permanent boundary cannot be mined"): return false
+	world.restore_position(world._cell_center(Vector2i(3, 2)))
+	world.player.set_facing(Vector2.LEFT)
+	world.queue_redraw()
+	return true
+
+func _relic_cycle(relic_id: String, capture_return: bool) -> bool:
+	_thaw()
+	world._select_native_relic()
+	if not _check(String(world.native_relic_id) == relic_id, "Generated milestone present: " + relic_id): return false
+	world.restore_position(Vector2(world.native_relic_position) + Vector2(64, 32))
+	world._update_discoveries()
+	world._update_context(world.player.global_position)
+	main.endless_context = String(world.current_context())
+	main._refresh_context_button()
+	await _settle(3)
+	if not _check(String(world.current_context()) == "endless_relic:" + relic_id, "Relic reached through actual proximity context"): return false
+	await _tap(main.premium_hud.context_button)
+	if not _check(bool(state.relic_status(relic_id).attached), "Action-button input attaches physical relic: " + relic_id): return false
+	world.qa_step_rope(20, Vector2(0.2, -0.2))
+	_check(bool(world.rope_debug_snapshot().finite), "Rope remains finite")
+	await _capture("relic-" + relic_id + "-on-rope", {"fixture": "Generated relic; position accelerated, real context attachment"})
+	var cargo: Dictionary = state.cargo.duplicate(true)
+	# Context fallback is naturally available away from discovery interactions.
+	if String(main.premium_hud.context_button.text) == "HOME":
+		await _tap(main.premium_hud.context_button)
+	else:
+		_check(main.request_tunnel_home(), "Tunnel Home action owner accepts request")
+	if not _check(bool(main.tunnel_home_in_progress), "Tunnel Home preparation is observable"): return false
+	if capture_return:
+		Engine.time_scale = 0.0
+		var mole: Node = world.get_node_or_null("MoleCompanion")
+		if mole != null: mole._physics_process(0.18)
+		_check(mole != null and String(mole.action) == "tunnel", "Authored mole digging action active")
+		await _capture("tunnel-home-digging", {"frozen_time_for_transient_capture": true, "mole": mole.debug_snapshot() if mole != null else {}})
+		Engine.time_scale = 1.0
+	for frame in 120:
+		if main.phase == "hub": break
+		await process_frame
+	if not _check(main.phase == "hub", "Tunnel Home reaches Hub"): return false
+	_check(state.cargo == cargo, "Home keeps collected materials")
+	_check(bool(state.relic_status(relic_id).attached), "Home retains relic and rope")
+	if capture_return:
+		await _settle_hub()
+		await _capture("tunnel-home-hub-arrival", {"fixture": "Actual completed Tunnel Home with attached relic"})
+	var hub: Node = main.hub_world
+	var pedestal: Vector2 = hub.RELIC_PEDESTAL_POSITION
+	hub.restore_position(pedestal)
+	hub.qa_set_hub_relic_endpoint(pedestal + Vector2(0, -16))
+	if capture_return:
+		await _capture("hub-pedestal-ready-unbuilt-museum", {"fixture": "First generated relic at real pedestal; selection visible before placement"})
+	hub.perform_context()
+	if not _check(bool(state.relic_status(relic_id).placed), "Pedestal physically places " + relic_id): return false
+	var relic: Dictionary = state.relic_status(relic_id)
+	var workshop_id: String = String(relic.workshop_id)
+	var status: Dictionary = state.workshop_status(workshop_id)
+	var resource: String = String(status.build_resource)
+	var remaining: int = int(status.remaining)
+	state.add_resource(resource, maxi(0, remaining - int(state.cargo.get(resource, 0))), false)
+	var delivered: Dictionary = state.deliver_workshop_material(workshop_id, resource, remaining)
+	if not _check(bool(delivered.get("ok", false)), "Real workshop material delivery"): return false
+	if not _check(bool(state.build_workshop(workshop_id).get("ok", false)), "Real workshop construction"): return false
+	main._sync_hub_runtime()
+	if relic_id == "memory_loom":
+		hub.restore_position(pedestal)
+		await _capture("hub-museum-three-relics", {"fixture": "Three actual placed relics; chamber still unbuilt"})
+	return true
+
+func _workshop_capture(workshop_id: String, label: String) -> void:
+	var hub: Node = main.hub_world
+	hub.restore_position(Vector2(hub.WORKSHOP_POSITIONS[workshop_id]) + Vector2(0, 70))
+	var status: Dictionary = state.workshop_status(workshop_id)
+	var recipe: Dictionary = Dictionary(status.get("next_upgrade", {}))
+	if not recipe.is_empty():
+		state.add_resource(String(recipe.resource), int(recipe.cost), false)
+		status = state.workshop_status(workshop_id)
+	var catalog: Script = load("res://scripts/ui/commerce_catalog.gd")
+	var config: Dictionary = catalog.workshop_config(workshop_id, status, hub.workshop_selection_preview(workshop_id))
+	main._open_commerce(config, "workshop:" + workshop_id)
+	await _settle(8)
+	_check(bool(main.commerce_panel.visible), "Existing premium workshop shop opens")
+	await _capture(label, {"fixture": "Real workshop status and transaction-backed upgrade preview"})
+	main.commerce_panel.close_commerce()
+	await _settle(3)
+
+func _absolute_position() -> Vector2:
+	return Vector2(world.player.global_position) + Vector2(0, float(world.window_start_depth - 1) * float(world.CHUNK_HEIGHT))
+
+func _thaw() -> void:
+	world.set_process(true)
+	world.set_physics_process(true)
+	world.player.set_physics_process(true)
+	world.player.set_external_movement(Vector2.ZERO)
+	world.set_external_movement(Vector2.ZERO)
+	var mole: Node = world.get_node_or_null("MoleCompanion")
+	if mole != null: mole.set_physics_process(true)
+
+func _mouse_button(control: Control, pressed: bool) -> void:
+	var point: Vector2 = control.get_global_transform_with_canvas() * (control.size * 0.5)
+	var move: = InputEventMouseMotion.new()
+	move.position = point
+	move.global_position = point
+	root.push_input(move, true)
+	var event: = InputEventMouseButton.new()
+	event.button_index = MOUSE_BUTTON_LEFT
+	event.button_mask = MOUSE_BUTTON_MASK_LEFT if pressed else 0
+	event.position = point
+	event.global_position = point
+	event.pressed = pressed
+	root.push_input(event, true)
+
+func _tap(control: Control) -> void:
+	_mouse_button(control, true)
+	await process_frame
+	_mouse_button(control, false)
+	await process_frame
+
+func _resize(dimensions: Vector2i) -> void:
+	root.position = Vector2i.ZERO
+	root.size = dimensions
+	DisplayServer.window_set_size(dimensions)
+	frame_size = dimensions
+	await _settle(5)
+
+func _settle(frames: int = 6) -> void:
+	for frame in frames: await process_frame
+	await RenderingServer.frame_post_draw
+
+func _settle_hub() -> void:
+	await _settle(8)
+	var field: Node = main.hub_world.get("static_light_field")
+	if field == null: return
+	for frame in 200:
+		if bool(field.get("ready_for_use")) and not bool(field.get("baking")): return
+		await process_frame
+	_check(false, "Hub fixed lighting finishes before capture")
+
+func _capture(label: String, details: Dictionary = {}, also_small: bool = false) -> void:
+	main._refresh_hud()
+	main._update_visual_guide()
+	main.premium_hud.set_status("")
+	await _settle(6)
+	await _save_frame(label, details)
+	if also_small:
+		await _resize(SMALL_VIEW)
+		await _save_frame(label + "-small", details)
+		await _resize(LARGE_VIEW)
+
+func _save_frame(label: String, details: Dictionary) -> void:
+	await RenderingServer.frame_post_draw
+	var image: Image = root.get_texture().get_image()
+	var filename: String = label + ".png"
+	_check(image.get_size() == frame_size, "Exact framebuffer " + filename)
+	_check(image.save_png(output_dir.path_join(filename)) == OK, "Saved " + filename)
+	var goal: Dictionary = main.premium_hud.progression_goal_snapshot()
+	var metrics: Dictionary = main.premium_hud.layout_snapshot(root.get_visible_rect().size)
+	var goal_rect: Rect2 = goal.get("panel_rect", Rect2())
+	var minimap: Dictionary = main.minimap_overlay.debug_snapshot()
+	var minimap_rect: Rect2 = minimap.get("map_rect", Rect2())
+	if bool(goal.get("visible", false)) and not bool(main.commerce_panel.visible):
+		_check(Rect2(metrics.safe_rect).encloses(goal_rect), "Goal stays inside mobile safe area: " + label)
+		_check(not goal_rect.intersects(Rect2(metrics.mine)) and not goal_rect.intersects(Rect2(metrics.context)), "Goal clears touch actions: " + label)
+		_check(not bool(goal.get("input_blocking", true)), "Goal never blocks touch: " + label)
+		if bool(minimap.get("visible", false)):
+			_check(not goal_rect.intersects(minimap_rect), "Minimap and progression goal stay separate: " + label)
+			_check(Rect2(metrics.safe_rect).encloses(minimap_rect), "Minimap stays inside mobile safe area: " + label)
+			_check(not minimap_rect.intersects(Rect2(metrics.mine)) and not minimap_rect.intersects(Rect2(metrics.context)), "Minimap clears touch actions: " + label)
+	var record: Dictionary = details.duplicate(true)
+	record.merge({
+		"file": filename, "sha256": FileAccess.get_sha256(output_dir.path_join(filename)),
+		"framebuffer": {"width": image.get_width(), "height": image.get_height()},
+		"logical_viewport": str(root.get_visible_rect().size), "phase": String(main.phase),
+		"goal": goal, "minimap": minimap, "mine_icon": String(main.mine_button.icon.resource_path),
+		"context_caption": String(main.premium_hud.context_button.text),
+		"stream": world.stream_snapshot() if world != null and main.phase == "endless" else {},
+		"physical_iphone": false,
+	}, true)
+	captures.append(record)
+	print("ONE_POINT_ZERO_CAPTURE " + filename)
+
+func _finish() -> void:
+	Engine.time_scale = 1.0
+	var report: Dictionary = {
+		"automated_assertions_passed": failures.is_empty() and not captures.is_empty(),
+		"visual_review_pending": true, "physical_iphone": false, "rendered": DisplayServer.get_name() != "headless",
+		"artifact": {"path": pack_source, "sha256": FileAccess.get_sha256(pack_source) if FileAccess.file_exists(pack_source) else "", "version": str(ProjectSettings.get_setting("application/config/version", ""))},
+		"engine": Engine.get_version_info(), "renderer": RenderingServer.get_current_rendering_method(), "adapter": RenderingServer.get_video_adapter_name(),
+		"fixture_seed": FIXTURE_SEED, "captures": captures, "assertions": checks, "failures": failures,
+		"elapsed_seconds": float(Time.get_ticks_usec() - started_usec) / 1000000.0,
+		"limitations": "Native software renderer; accelerated campaign funding and held-gameplay waits; no pacing, browser or physical-device performance certification.",
+	}
+	var file: FileAccess = FileAccess.open(output_dir.path_join("review.json"), FileAccess.WRITE)
+	if file != null:
+		file.store_string(JSON.stringify(report, "\t"))
+		file.close()
+	print("ONE_POINT_ZERO_RENDER_COMPLETE captures=%d failures=%d" % [captures.size(), failures.size()])
+	quit(0 if failures.is_empty() and not captures.is_empty() else 4)

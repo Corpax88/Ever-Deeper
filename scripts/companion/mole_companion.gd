@@ -92,6 +92,13 @@ func _physics_process(delta: float) -> void:
 		_spawn_beside_hero()
 	was_active = true
 	if failed_loot.size()>80: failed_loot.clear()
+	if action == "tunnel":
+		action_clock += delta
+		animation_clock += delta
+		bubble.visible = true
+		bubble.text = "I'll dig us home!"
+		_draw_pose()
+		return
 	if not bool(hero.get("control_enabled")):
 		_draw_pose()
 		return
@@ -158,6 +165,26 @@ func recall() -> void:
 	assist_action=false
 	route.clear()
 	route_goal=Vector2(INF,INF)
+
+
+func begin_tunnel_home() -> void:
+	_spawn_beside_hero()
+	was_active = true
+	action = "tunnel"
+	action_clock = 0.0
+	_react("I'll dig us home!", 1.2)
+
+
+func rebase_world(offset: Vector2) -> void:
+	# Every remembered destination shares the world's floating local origin.
+	global_position += offset
+	destination += offset
+	task_point += offset
+	if is_finite(route_goal.x): route_goal += offset
+	if is_finite(guide_point.x): guide_point += offset
+	if is_finite(last_sniff.x): last_sniff += offset
+	for index in range(route.size()): route[index] += offset
+	if is_instance_valid(marker): marker.global_position += offset
 	destination=hero.global_position
 
 func command(point: Vector2) -> bool:
@@ -284,9 +311,9 @@ func _draw_pose() -> void:
 	elif action=="pickup":
 		sprite.texture=PICKUP
 		frame=mini(3,int(action_clock/0.18))
-	elif action=="shake":
+	elif action in ["shake", "tunnel"]:
 		sprite.texture=SHAKE
-		frame=mini(3,int(action_clock/0.21))
+		frame=int(action_clock/0.21)%4 if action=="tunnel" else mini(3,int(action_clock/0.21))
 	sprite.frame=row*4+frame
 	# Small whole-body gestures layer over the existing authored directional frames.
 	var breath: float=sin(animation_clock*2.6)*0.016 if action=="idle" else 0.0
@@ -396,7 +423,9 @@ func scout(kind: String) -> bool:
 	if kind=="ore_nose" and world.has_method("companion_ore_target"):
 		point=world.call("companion_ore_target",global_position)
 	elif kind in ["echo","homeward"]:
-		if world.has_method("_is_floor"): point=world.get("up_shaft_position") if kind=="homeward" else world.get("down_shaft_position")
+		if world.has_method("prepare_tunnel_home"):
+			point=world.call("guide_target","return" if kind=="homeward" else "deeper")
+		elif world.has_method("_is_floor"): point=world.get("up_shaft_position") if kind=="homeward" else world.get("down_shaft_position")
 		elif world.has_method("_terrain_is_solid"): point=world.call("entry_spawn") if kind=="homeward" else world.get("depth_entrance")
 		elif world.has_method("_entry_spawn"):
 			point=world.call("_entry_spawn") if kind=="homeward" else world.get("depth_entrance")

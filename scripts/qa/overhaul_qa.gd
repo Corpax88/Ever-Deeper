@@ -178,19 +178,39 @@ func _test_endless_dig() -> void:
 		var cell: Vector2i=world.call("_nearest_diggable_wall")
 		check(cell.x>=0,"Ordinary wall can be targeted "+str(layer))
 		if cell.x<0: continue
-		var resources: String=JSON.stringify(world.resources)
-		for hit in range(1,4):
-			world.call("_update_wall_mining",float(world.call("_mining_cycle_duration"))+0.01)
-			check(bool(world.call("_is_floor",cell))==(hit==3),"Free dig takes three strikes "+str(layer)+":"+str(hit))
-		var depth: int=int(world.current_depth)
-		var index: int=int(world.call("_cell_index",cell))
+		var resources: Dictionary=_endless_resource_identities(world)
+		# 1.0 ordinary rock responds to actual upgraded tool damage. The prior
+		# fixed three-hit rule intentionally no longer applies (see QA review).
+		var duration: float = float(world.call("_mining_cycle_duration"))
+		world.call("_cancel_mining")
+		world.call("_update_wall_mining", duration * 0.2)
+		check(not bool(world.call("_is_floor",cell)) and int(world.dig_damage.get(cell,0)) == 0,"Free dig waits for physical contact "+str(layer))
+		world.call("_update_wall_mining", duration * 0.65)
+		check(bool(world.call("_is_floor",cell)) or int(world.dig_damage.get(cell,0)) > 0,"Physical impact applies real tool damage "+str(layer))
+		for _hit in range(16):
+			if bool(world.call("_is_floor",cell)): break
+			world.call("_update_wall_mining",duration+0.01)
+		check(bool(world.call("_is_floor",cell)),"Equipped tool opens ordinary rock "+str(layer))
+		var depth: int=int(world.call("depth_at_position",world.call("_cell_center",cell)))
+		var index: int=int(world.call("_chunk_cell_index",cell))
+		var absolute: Vector2i=Vector2i(world.call("absolute_cell",cell))
 		check(RunState.endless_dug_cells(depth).has(index),"Free dig saved "+str(layer))
 		var saved: Dictionary=RunState.serialize()
 		check(RunState.deserialize(saved),"The Deep save reload")
 		world.call("_generate_depth",depth,"up")
-		check(bool(world.call("_is_floor",cell)),"Free dig survives reentry "+str(layer))
-		check(JSON.stringify(world.resources)==resources,"Free dig preserves resource identities "+str(layer))
+		var restored_cell: Vector2i=absolute-Vector2i(0,(int(world.window_start_depth)-1)*22)
+		check(bool(world.call("_is_floor",restored_cell)),"Free dig survives reentry "+str(layer))
+		check(_endless_resource_identities(world)==resources,"Free dig preserves resource identities "+str(layer))
 		check(not world.call("companion_can_dig",Vector2(32,32)),"Permanent outer wall protected")
+
+func _endless_resource_identities(world: Node) -> Dictionary:
+	# HP/depletion legitimately change when the restored Crusher shockwave hits
+	# nearby deposits; their generated identity and absolute position must not.
+	var result: Dictionary = {}
+	for value in world.resources:
+		result[String(value.id)] = {"kind":String(value.kind),"amount":int(value.amount),
+			"cell":Vector2i(world.call("absolute_cell",Vector2i(value.cell)))}
+	return result
 
 func _test_companion() -> void:
 	var world: Node=driver.call("_load_d1","mossMine")

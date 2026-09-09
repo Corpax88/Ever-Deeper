@@ -8,6 +8,12 @@ extends Node
 
 const SAMPLE_RATE: = 22050
 const VOICE_COUNT: = 10
+const FEEDBACK_PRIORITY: = {
+	"pickup_rare": 1, "mine_break": 1,
+	"ui_confirm": 1, "ui_cancel": 1, "ui_open": 1, "blocked": 1,
+	"sell": 2, "build": 2, "transition": 2,
+	"upgrade": 3, "discovery": 3,
+}
 const SETTINGS_PATH: = "user://ever_deeper_audio_v1.json"
 const MUSIC_CROSSFADE_SECONDS: = 3.0
 const MUSIC_TRACKS: = [
@@ -182,7 +188,9 @@ func play_pickup(resource_id: String = "stone", amount: int = 1) -> void :
 		pitch = 0.98
 	if amount > 1:
 		pitch += minf(0.1, float(amount - 1) * 0.025)
-	_play("pickup_rare" if rare else "pickup", "pickup", 62, -10.0 if rare else -12.0, pitch, 0.045)
+	# A common drop in the same collection batch must not swallow the rare cue.
+	var group: = "pickup_rare" if rare else "pickup"
+	_play(group, group, 62, -10.0 if rare else -12.0, pitch, 0.045)
 
 
 func play_ui(kind: String = "confirm") -> void :
@@ -320,18 +328,48 @@ func _play(
 	var now: = Time.get_ticks_msec()
 	if now - int(_last_played_ms.get(cooldown_group, - cooldown_ms)) < cooldown_ms:
 		return
-	_last_played_ms[cooldown_group] = now
-	_start_ambience()
 	var variants: Array = _library[group]
 	if variants.is_empty():
 		return
-	var voice: = _voices[_voice_index]
-	_voice_index = (_voice_index + 1) % _voices.size()
+	var priority: = int(FEEDBACK_PRIORITY.get(group, 0))
+	var slot: = _feedback_voice_slot(priority)
+	if slot < 0:
+		return
+	_last_played_ms[cooldown_group] = now
+	_start_ambience()
+	var voice: = _voices[slot]
+	_voice_index = (slot + 1) % _voices.size()
 	voice.stop()
 	voice.stream = variants[_rng.randi_range(0, variants.size() - 1)]
 	voice.volume_db = volume_db + linear_to_db(maxf(0.001, sfx_volume)) + _rng.randf_range(-0.7, 0.45)
 	voice.pitch_scale = maxf(0.55, pitch + _rng.randf_range( - pitch_variation, pitch_variation))
+	voice.set_meta("feedback_priority", priority)
+	voice.set_meta("feedback_started_ms", now)
 	voice.play()
+
+
+func _feedback_voice_slot(priority: int) -> int:
+	# Reuse completed sounds first. Blind rotation cuts long milestone cues even
+	# while shorter mining and pickup voices elsewhere in this pool are idle.
+	for offset in _voices.size():
+		var slot: = (_voice_index + offset) % _voices.size()
+		if not _voices[slot].playing:
+			return slot
+	var selected: = -1
+	var lowest_priority: = priority
+	var oldest_ms: = 0
+	for offset in _voices.size():
+		var slot: = (_voice_index + offset) % _voices.size()
+		var voice: = _voices[slot]
+		var voice_priority: = int(voice.get_meta("feedback_priority", 0))
+		if voice_priority > priority:
+			continue
+		var started_ms: = int(voice.get_meta("feedback_started_ms", 0))
+		if selected < 0 or voice_priority < lowest_priority or (voice_priority == lowest_priority and started_ms < oldest_ms):
+			selected = slot
+			lowest_priority = voice_priority
+			oldest_ms = started_ms
+	return selected
 
 
 func _build_library() -> void :

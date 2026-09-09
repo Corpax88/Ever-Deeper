@@ -5,6 +5,10 @@ signal bag_requested
 signal context_requested
 signal hub_build_requested
 signal menu_requested
+signal minimap_layout_changed(map_rect: Rect2)
+
+const ProgressionGoalPanelScript: = preload("res://scripts/ui/progression_goal_panel.gd")
+const ProgressionGuideScript: = preload("res://scripts/progression/guide_director.gd")
 
 const BAG_ICON: = preload("res://assets/ui/bag-premium-v1.png")
 const MENU_ICON: = preload("res://assets/ui/hud-menu-v1.png")
@@ -12,6 +16,7 @@ const GUIDE_ICON: = preload("res://assets/ui/hud-guide-v1.png")
 const INTERACT_ICON: = preload("res://assets/ui/hud-interact-v1.png")
 const BUILD_ICON: = preload("res://assets/ui/hud-build-v1.png")
 const GOLD_ICON: = preload("res://assets/ui/gold-bars-v1.png")
+const MOLE_ICON: = preload("res://assets/companion/mole-hud.png")
 const GOLD: = Color("d7b45a")
 const GOLD_BRIGHT: = Color("ffe3a0")
 const MINT: = Color("a8e3bc")
@@ -33,6 +38,11 @@ const IPHONE_CONTEXT_SIZE: = Vector2(206.0, 104.0)
 const DEFAULT_CONTEXT_SIZE: = Vector2(158.0, 64.0)
 const IPHONE_GOLD_ICON_SIZE: = 60.0
 const IPHONE_ACTION_GAP: = 18.0
+
+var progression_goal_panel: Control
+var _progression_guide: RefCounted = ProgressionGuideScript.new()
+var _progression_row_count: = 0
+var _minimap_layout_rect: = Rect2()
 
 var objective_chip: PanelContainer
 var objective_title: Label
@@ -76,8 +86,11 @@ func _ready() -> void :
 		DisplayServer.orientation_changed.connect(_on_display_orientation_changed)
 	_build_icon_chrome()
 	_build_objective_popover()
+	_build_progression_goal()
 	_build_context_action()
 	_build_status_toast()
+	RunState.changed.connect(_refresh_progression_goal)
+	_refresh_progression_goal()
 	call_deferred("_apply_platform_safe_area")
 
 
@@ -127,7 +140,9 @@ func set_context_action(label: String, enabled: bool) -> void :
 		context_button.visible = not caption.is_empty()
 		context_button.tooltip_text = label.replace("\n", " · ").capitalize()
 		var upper: = caption.to_upper()
-		if upper == "SELL":
+		if upper == "HOME":
+			context_button.icon = MOLE_ICON
+		elif upper == "SELL":
 			context_button.icon = GOLD_ICON
 		elif upper in ["FORGE", "UPGRADE", "POWER", "DELIVER", "LOAD", "BUILD"]:
 			context_button.icon = BUILD_ICON
@@ -158,6 +173,32 @@ func set_objective(title: String, detail: String) -> void :
 			_hide_objective()
 	if detail_changed:
 		objective_detail.text = detail
+
+
+func set_progression_goal(goal: Dictionary) -> void:
+	set_objective(String(goal.get("title", "")), String(goal.get("detail", "")))
+	if progression_goal_panel == null:
+		return
+	progression_goal_panel.present(goal)
+	var row_count: = Array(goal.get("requirements", [])).size()
+	if row_count != _progression_row_count:
+		_progression_row_count = row_count
+		_apply_platform_safe_area()
+
+
+func progression_goal_snapshot() -> Dictionary:
+	return progression_goal_panel.snapshot() if progression_goal_panel != null else {}
+
+
+func _refresh_progression_goal() -> void:
+	# Updating the visible counts does not wait for the slower world-route timer.
+	set_progression_goal(_progression_guide.goal_for_state())
+
+
+func _build_progression_goal() -> void:
+	progression_goal_panel = ProgressionGoalPanelScript.new()
+	progression_goal_panel.name = "ProgressionGoal"
+	add_child(progression_goal_panel)
 
 
 func set_status(message: String) -> void :
@@ -218,6 +259,10 @@ func layout_snapshot(viewport_size: Vector2) -> Dictionary:
 	return _layout_metrics(viewport_size, Vector4.ZERO)
 
 
+func minimap_layout_rect() -> Rect2:
+	return _minimap_layout_rect
+
+
 func icon_size_snapshot() -> Dictionary:
 	return {
 		"menu": button_icon_visual_size(menu_button),
@@ -245,6 +290,8 @@ func _apply_responsive_layout(viewport_size: Vector2, native_insets: Vector4) ->
 	_place(bag_button, Rect2(metrics.bag))
 	_place(bag_count, Rect2(metrics.bag_count))
 	_place(objective_chip, Rect2(metrics.objective))
+	_place(progression_goal_panel, Rect2(metrics.progression_goal))
+	progression_goal_panel.set_mobile_layout(bool(metrics.iphone))
 	_place(context_button, Rect2(metrics.context))
 	_place(status_panel, Rect2(metrics.status))
 	for button in [menu_button, guide_button, build_button]:
@@ -266,6 +313,8 @@ func _apply_responsive_layout(viewport_size: Vector2, native_insets: Vector4) ->
 	objective_title.add_theme_font_size_override("font_size", 22 if bool(metrics.iphone) else 9)
 	objective_detail.add_theme_font_size_override("font_size", 20 if bool(metrics.iphone) else 8)
 	status_label.add_theme_font_size_override("font_size", 20 if bool(metrics.iphone) else 8)
+	_minimap_layout_rect = Rect2(metrics.minimap)
+	minimap_layout_changed.emit(_minimap_layout_rect)
 	queue_redraw()
 
 
@@ -316,6 +365,13 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 		context_size.x,
 		context_size.y
 	)
+	var goal_width: = 340.0 if iphone else 286.0
+	var goal_height: = (76.0 + 33.0 * _progression_row_count) if iphone else (62.0 + 27.0 * _progression_row_count)
+	if iphone and _progression_row_count >= 5:
+		goal_height -= 27.0
+	var progression_rect: = Rect2(viewport_size.x - right - goal_width, gold_rect.end.y + 10.0, goal_width, goal_height)
+	var minimap_size: = Vector2(246, 136) if iphone else Vector2(184, 106)
+	var minimap_rect: = Rect2(progression_rect.position.x - gap - minimap_size.x, progression_rect.position.y, minimap_size.x, minimap_size.y)
 	var status_size: = Vector2(680, 50) if iphone else Vector2(580, 28)
 	var status_rect: = Rect2((viewport_size.x - status_size.x) * 0.5, viewport_size.y - bottom - status_size.y, status_size.x, status_size.y)
 	return {
@@ -330,6 +386,8 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 		"bag": bag_rect,
 		"bag_count": bag_count_rect,
 		"objective": objective_rect,
+		"progression_goal": progression_rect,
+		"minimap": minimap_rect,
 		"context": context_rect,
 		"status": status_rect,
 	}
@@ -367,6 +425,8 @@ func _context_icon_max_width() -> int:
 	if not _iphone_layout_active:
 		return 68
 	var upper: = _compact_context_caption(_context_label).to_upper()
+	if upper == "HOME":
+		return IPHONE_CONTEXT_GUIDE_ICON_MAX
 	if upper == "SELL":
 		return IPHONE_CONTEXT_GOLD_ICON_MAX
 	if upper in ["FORGE", "UPGRADE", "POWER", "DELIVER", "LOAD", "BUILD"]:
@@ -565,6 +625,7 @@ func _compact_context_caption(label: String) -> String:
 		"LOAD ORE": "LOAD",
 		"SEALED": "LOCKED",
 		"ATTACH ROPE": "ATTACH",
+		"TUNNEL HOME": "HOME",
 		"CUSTOMIZE": "CUSTOM",
 	}.get(caption, caption)
 

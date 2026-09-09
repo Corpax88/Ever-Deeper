@@ -21,10 +21,17 @@ CASES = {
     'dev-tools': (['--qa-dev-tools'], 'EVER_DEEPER_DEV_TOOLS_QA_OK'),
     'workshops': (['--qa-workshop-panel'], 'EVER_DEEPER_WORKSHOP_PANEL_OK'),
     'crusher': (['--qa-crusher-impact'], 'EVER_DEEPER_CRUSHER_IMPACT_OK'),
+    'one-point-zero-state': (['--qa-one-point-zero-state'], 'EVER_DEEPER_ONE_POINT_ZERO_STATE_OK'),
+    'one-point-zero-world': (['--qa-one-point-zero-world'], 'EVER_DEEPER_ONE_POINT_ZERO_WORLD_OK'),
+    'one-point-zero-migration': (['--qa-one-point-zero-migration'], 'EVER_DEEPER_ONE_POINT_ZERO_MIGRATION_OK'),
+    'one-point-zero-ui': (['--qa-one-point-zero-ui'], 'EVER_DEEPER_ONE_POINT_ZERO_UI_OK'),
 }
-CORE = ['input','overhaul','touch','endgame','endless','onboarding','layout','portrait','dev-tools','crusher']
-# These pre-existing checks retain their assertions and remain available explicitly.
-LEGACY = ['commerce','landscape','smoke','workshops']
+CORE = ['input','overhaul','touch','endgame','onboarding','layout','portrait','dev-tools','crusher',
+        'one-point-zero-state','one-point-zero-world','one-point-zero-migration','one-point-zero-ui']
+# Preserve historical assertions explicitly. Endless describes the retired
+# floor/elevator design; 1.0 world/migration replace its applicable protections.
+# See docs/one-point-zero/qa-round-1.md for every intentional contract change.
+LEGACY = ['commerce','landscape','smoke','workshops','endless']
 ERROR = re.compile(r'SCRIPT ERROR|Parse Error|(^|\n)ERROR:|Assertion failed|CHECK_FAILED', re.M)
 def run_case(name, args):
     flags, marker = CASES[name]

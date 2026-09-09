@@ -1,3 +1,9 @@
+# Current work — Ever-Deeper 1.0 candidate
+
+Continue from `docs/one-point-zero/HANDOFF.md`. This branch is DEV-first;
+physical iPhone performance and final 1.0 acceptance must not be assumed.
+The following publication is the unchanged starting baseline.
+
 # Latest publication — Wardrobe portrait, 9 September 2026
 
 Published and verified on both DEV and LIVE. Read `docs/wardrobe-portrait-handoff.md`

@@ -77,7 +77,10 @@ func _run_endgame_qa() -> void :
 	if not _endgame_qa_require(main.phase == "endless" and bool(Dictionary(RunState.endless_descent_status()).get("active", false)), "postgame_elevator_enters_endless"):
 		return
 	var world_snapshot= Dictionary(main.endless_world.debug_snapshot())
-	if not _endgame_qa_require(bool(world_snapshot.get("path_connected", false)) and not bool(world_snapshot.get("health_required", true)), "endless_world_safe_connected"):
+	# 1.0 requires mining through ordinary strata; a clear walking route is no
+	# longer the design. Verify every generated target is reachable by real digging.
+	var navigation: Dictionary = preload("res://scripts/qa/suites/one_point_zero_terrain.gd").connectivity(main.endless_world)
+	if not _endgame_qa_require(bool(navigation.spawn_clear) and bool(navigation.all_targets_reachable) and int(navigation.target_count) > 1 and not bool(world_snapshot.get("health_required", true)), "endless_world_safe_mineable_connected"):
 		return
 	main._on_endless_depth_change_requested(0, "from_below")
 	main._on_endless_hub_exit_requested()
@@ -111,4 +114,3 @@ func _endgame_qa_require(condition: bool, step: String) -> bool:
 	push_error("Endgame QA failed: %s" % step)
 	main.get_tree().quit(3)
 	return false
-

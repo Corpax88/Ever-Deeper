@@ -1,6 +1,8 @@
 class_name GuideDirector
 extends RefCounted
 
+const ProgressionGoalScript: = preload("res://scripts/progression/progression_goal.gd")
+
 
 
 
@@ -59,6 +61,10 @@ func resolve(proposal: Dictionary) -> Dictionary:
 
 
 func goal_for_state() -> Dictionary:
+	return ProgressionGoalScript.decorate(_resolve_goal_for_state())
+
+
+func _resolve_goal_for_state() -> Dictionary:
 	if bool(RunState.victory):
 		return _endless_goal()
 	if bool(RunState.get("singularity_secured")):
@@ -67,12 +73,12 @@ func goal_for_state() -> Dictionary:
 	if not bool(RunState.area_unlocked):
 		if int(RunState.pickaxe_level) < 3:
 			return _pickaxe_goal("mossMine")
-		return _gate_goal("moonglass", "mossMine", 120, "Open the Moonglass Gate")
+		return _gate_goal("moonglass", "mossMine", int(GameData.data.GATE_COST), "Open the Moonglass Gate")
 
 	if not bool(RunState.emberdeep_unlocked):
 		if int(RunState.pickaxe_level) < 4:
 			return _pickaxe_goal("moonMine")
-		return _gate_goal("emberdeep", "moonMine", 360, "Break the Emberdeep Seal")
+		return _gate_goal("emberdeep", "moonMine", int(GameData.data.EMBER_GATE_COST), "Break the Emberdeep Seal")
 
 	if not bool(RunState.fourth_unlocked):
 		if int(RunState.pickaxe_level) < 5:
@@ -90,72 +96,45 @@ func goal_for_state() -> Dictionary:
 	if RunState.hub_tutorial_pending():
 		return _goal(
 			"hub:first_visit", "hub", "Inspect the Underground Hub",
-			"The Starfall base lift is awake", {"station_id": "hubEntrance"}
+			"The Hub entrance is open in Starfall", {"station_id": "hubEntrance"}
 		)
 
 	return _drill_goal()
 
 
 func _endless_goal() -> Dictionary:
-	var descent: = Dictionary(RunState.endless_descent_status())
+	var descent: Dictionary = RunState.endless_descent_status()
+	var active: = bool(descent.get("active", false))
 	var carried: = Dictionary(descent.get("carried_relic", {}))
 	var carried_id: = String(carried.get("id", ""))
 	if not carried_id.is_empty():
-		var relic: = Dictionary(RunState.relic_status(carried_id))
+		var relic: Dictionary = RunState.relic_status(carried_id)
 		var relic_name: = String(relic.get("display_name", "Relic"))
-		if bool(descent.get("active", false)):
+		if active:
+			var attached: = bool(carried.get("attached", false))
 			return _goal(
 				"endless:haul:%s" % carried_id, "endless_return",
-				"Haul the %s home" % relic_name,
-				"Bring it back to the Hub · ascend with the rope attached",
-				{"relic_id": carried_id}
+				"Bring the relic home", relic_name,
+				{
+					"relic_id": carried_id,
+					"hud_action": "Tunnel Home · your mole" if attached else "Attach the rope to the relic",
+				}
 			)
 		return _goal(
 			"endless:place:%s" % carried_id, "relic_place",
-			"Place the %s in the Museum" % relic_name,
-			"Bring it to the open pedestal and set it in place",
-			{"station_id": "relicPedestal", "relic_id": carried_id}
+			"Place the %s" % relic_name, "Place the relic on the Museum pedestal",
+			{
+				"station_id": "relicPedestal", "relic_id": carried_id,
+				"hud_title": "Place your relic", "hud_action": "Museum pedestal · Hub",
+			}
 		)
 
+	# Each relic earns its physical Hub milestone before the next discovery.
 	for workshop_id_value in RunState.ENDLESS_WORKSHOP_IDS:
 		var workshop_id: = String(workshop_id_value)
-		var status: = Dictionary(RunState.workshop_status(workshop_id))
-		if not bool(status.get("blueprint_unlocked", false)) or bool(status.get("built", false)):
-			continue
-		var resource_id: = String(status.get("build_resource", ""))
-		var remaining: = int(status.get("remaining", 200))
-		var carried_amount: = int(RunState.cargo.get(resource_id, 0))
-		var workshop_name: = String(status.get("display_name", workshop_id.capitalize()))
-		if bool(status.get("ready_to_build", false)) or ( not bool(descent.get("active", false)) and carried_amount > 0):
-			return _goal(
-				"endless:workshop:%s" % workshop_id, "workshop",
-				"Build the %s" % workshop_name,
-				"%d / %d %s delivered" % [
-					int(status.get("delivered", 0)), int(status.get("build_cost", 200)),
-					resource_id.capitalize(),
-				],
-				{"station_id": workshop_id, "resource_id": resource_id, "required_amount": remaining}
-			)
-		if bool(descent.get("active", false)) and carried_amount >= remaining:
-			return _goal(
-				"endless:return:%s" % workshop_id, "endless_return",
-				"Bring %s to the %s" % [resource_id.capitalize(), workshop_name],
-				"The fixed workshop site is waiting in the Hub",
-				{"station_id": workshop_id, "resource_id": resource_id}
-			)
-		if bool(descent.get("active", false)):
-			return _goal(
-				"endless:gather:%s" % workshop_id, "endless_resource",
-				"Gather %d %s" % [remaining, resource_id.capitalize()],
-				"Explore the Endless Descent until the workshop cost is ready",
-				{"station_id": workshop_id, "resource_id": resource_id, "required_amount": remaining}
-			)
-		return _goal(
-			"endless:enter:%s" % workshop_id, "endless_enter",
-			"Gather %d %s" % [remaining, resource_id.capitalize()],
-			"Take the Deep Elevator into the Endless Descent",
-			{"station_id": "deepElevator", "resource_id": resource_id, "required_amount": remaining}
-		)
+		var status: Dictionary = RunState.workshop_status(workshop_id)
+		if bool(status.get("blueprint_unlocked", false)) and not bool(status.get("built", false)):
+			return _workshop_goal(workshop_id, status, active, false)
 
 	var next_relic_id: = ""
 	for relic_id_value in RunState.ENDLESS_RELIC_IDS:
@@ -163,32 +142,72 @@ func _endless_goal() -> Dictionary:
 		if not bool(Dictionary(RunState.relic_status(relic_id)).get("placed", false)):
 			next_relic_id = relic_id
 			break
-	if bool(descent.get("active", false)):
+	if not next_relic_id.is_empty():
+		var milestone: = mini(int(descent.get("placed_relic_count", 0)) + 1, int(descent.get("total_relics", 5)))
 		return _goal(
-			"endless:explore:%s" % (next_relic_id if not next_relic_id.is_empty() else "deeper"),
-			"endless_explore", "Explore one layer deeper",
-			"Search every branch for relics, ruins, and unfamiliar materials",
-			{"relic_id": next_relic_id}
+			"endless:explore:%s" % next_relic_id, "endless_explore" if active else "endless_enter",
+			"Find relic %d of %d" % [milestone, int(descent.get("total_relics", 5))],
+			"Keep mining deeper. Relics expand your Hub.",
+			{
+				"relic_id": next_relic_id, "station_id": "deepElevator",
+				"hud_action": "Mine deeper · The Deep" if active else "Enter The Deep · Hub",
+			}
 		)
+
+	# Completed Hub: rotate through the least-developed available workshop.
+	# Its transaction-owned recipe disappears at its real maximum; mining never does.
+	var next_workshop: = ""
+	var next_status: Dictionary = {}
+	for workshop_id_value in RunState.ENDLESS_WORKSHOP_IDS:
+		var workshop_id: = String(workshop_id_value)
+		var status: Dictionary = RunState.workshop_status(workshop_id)
+		if not bool(status.get("built", false)) or Dictionary(status.get("next_upgrade", {})).is_empty():
+			continue
+		if next_status.is_empty() or int(status.get("level", 0)) < int(next_status.get("level", 0)):
+			next_workshop = workshop_id
+			next_status = status
+	if not next_workshop.is_empty():
+		return _workshop_goal(next_workshop, next_status, active, true)
 	return _goal(
-		"endless:enter", "endless_enter", "Enter the Endless Descent",
-		"Deepheart opened a passage with no final floor",
-		{"station_id": "deepElevator", "relic_id": next_relic_id}
+		"endless:deeper", "endless_explore" if active else "endless_enter",
+		"Keep digging deeper", "Your Hub is complete. The mountain keeps going.",
+		{
+			"station_id": "deepElevator",
+			"hud_action": "Richer seams below" if active else "Return to The Deep · Hub",
+		}
+	)
+
+
+func _workshop_goal(workshop_id: String, status: Dictionary, active: bool, upgrading: bool) -> Dictionary:
+	var recipe: = Dictionary(status.get("next_upgrade", {})) if upgrading else {}
+	var resource_id: = String(recipe.get("resource", status.get("build_resource", "")))
+	var required: = int(recipe.get("cost", status.get("remaining", 0)))
+	var carried_amount: = int(RunState.cargo.get(resource_id, 0))
+	var ready: = carried_amount >= required
+	var workshop_name: = String(status.get("display_name", workshop_id.capitalize()))
+	var kind: = "endless_resource" if active else "endless_enter"
+	var action: = "Mine · The Deep" if active else "Enter The Deep · Hub"
+	if active and ready:
+		kind = "endless_return"
+		action = "Tunnel Home · upgrade ready" if upgrading else "Tunnel Home · materials ready"
+	elif not active and (ready or (not upgrading and carried_amount > 0)):
+		kind = "workshop"
+		action = "Upgrade · Hub" if upgrading else "Build · Hub" if bool(status.get("ready_to_build", false)) else "Deliver materials · Hub"
+	return _goal(
+		"endless:%s:%s" % ["upgrade" if upgrading else "workshop", workshop_id], kind,
+		"Upgrade the %s" % workshop_name if upgrading else "Build the %s" % workshop_name,
+		"%s · level %d" % [workshop_name, int(recipe.get("level", 1))] if upgrading else "A permanent home for your discovery",
+		{
+			"station_id": workshop_id if kind == "workshop" else "deepElevator",
+			"workshop_id": workshop_id, "resource_id": resource_id,
+			"required_amount": required, "hud_action": action,
+			"hud_title": "%s · %d" % [workshop_name, int(recipe.get("level", 1))] if upgrading else workshop_name,
+		}
 	)
 
 
 func sellable_value() -> int:
-	var protected: = Dictionary(RunState.protected_progress_cargo())
-	var result: = 0
-	for resource_id_value in RunState.cargo:
-		var resource_id: = String(resource_id_value)
-		var sellable: = maxi(
-			0,
-			int(RunState.cargo.get(resource_id, 0)) - int(protected.get(resource_id, 0))
-		)
-		var rock: = Dictionary(GameData.data.ROCK_TYPES.get(resource_id, {}))
-		result += sellable * int(rock.get("value", 0))
-	return result
+	return int(Dictionary(RunState.assay_sale_snapshot()).get("total", 0))
 
 
 func purchase_action(cost: int, recipe_ready: bool = true) -> String:
@@ -293,23 +312,27 @@ func _mastery_goal() -> Dictionary:
 
 
 func _starforge_goal() -> Dictionary:
+	# The first form is still a player choice. All first-form prices come from
+	# the same crafting authority used by the shop, including the guide target.
+	var status: Dictionary = RunState.starforge_crafting_status("crusher")
+	var recipe: = Dictionary(Dictionary(status.get("variant", {})).get("cost", {}))
 	var missing_resource: = ""
-	for resource_id in ["astralite", "crownstone"]:
-		if int(RunState.cargo.get(resource_id, 0)) < int(GameData.data.STARFORGE_MATERIAL_REQUIRED):
-			missing_resource = resource_id
+	for resource_id in recipe:
+		if int(RunState.cargo.get(resource_id, 0)) < int(recipe[resource_id]):
+			missing_resource = String(resource_id)
 			break
 	if missing_resource.is_empty():
 		return _goal(
 			"starforge:first", "starforge", "Forge a Starforge Pickaxe",
-			"Astralite and Crownstone are ready",
+			"Your crafting materials are ready",
 			{"station_id": "starforge", "mine_id": "starMine"}
 		)
 	return _goal(
 		"starforge:first", "mine_resource", "Forge a Starforge Pickaxe",
-		"Mine 200 Astralite and 200 Crownstone",
+		"Mine Astralite and Crownstone in Starfall",
 		{
 			"mine_id": "starMine", "resource_id": missing_resource,
-			"required_amount": int(GameData.data.STARFORGE_MATERIAL_REQUIRED),
+			"required_amount": int(recipe.get(missing_resource, 0)),
 		}
 	)
 
@@ -319,7 +342,7 @@ func _drill_goal() -> Dictionary:
 	var reason: = String(status.get("reason", ""))
 	if reason == "maximum_level" or Dictionary(status.get("recipe", {})).is_empty():
 		if bool(RunState.singularity_secured):
-			return _goal("endgame:hub", "hub", "Enter the Underground Hub", "The Starfall lift is awake", {"station_id": "hubEntrance"})
+			return _goal("endgame:hub", "hub", "Enter the Underground Hub", "The Hub entrance is open in Starfall", {"station_id": "hubEntrance"})
 		return _goal(
 			"endgame:singularity", "depth_resource", "Mine the Singularity Core",
 			"The final discovery waits in Voidstar",
@@ -396,12 +419,12 @@ func _deep_elevator_goal() -> Dictionary:
 				"All four world seals are open", {"station_id": "deepElevator"}
 			)
 		return _goal(
-			"endgame:final_descent", "hub_elevator", "Begin the Final Descent",
-			"The repaired elevator is fully powered", {"station_id": "deepElevator"}
+			"endgame:final_descent", "hub_elevator", "Enter Deepheart",
+			"The Deepheart passage is ready", {"station_id": "deepElevator"}
 		)
 	if bool(status.get("repaired", false)):
 		return _goal(
-			"endgame:power_elevator", "hub_elevator", "Power the Deep Elevator",
+			"endgame:power_elevator", "hub_elevator", "Awaken the Deepheart Passage",
 			"Install the secured Singularity Core", {"station_id": "deepElevator"}
 		)
 	var missing: = Dictionary(status.get("missing", {}))
@@ -425,14 +448,14 @@ func _deep_elevator_goal() -> Dictionary:
 			break
 	if selected_resource.is_empty():
 		return _goal(
-			"endgame:repair_elevator", "hub_elevator", "Repair the Deep Elevator",
+			"endgame:repair_elevator", "hub_elevator", "Restore the Deepheart Passage",
 			"All repair materials have been delivered", {"station_id": "deepElevator"}
 		)
 	var amount: = int(missing.get(selected_resource, 0))
 	var mine_id: = String(resource_to_mine[selected_resource])
 	if carrying_resource:
 		return _goal(
-			"endgame:repair_elevator", "hub_elevator", "Repair the Deep Elevator",
+			"endgame:repair_elevator", "hub_elevator", "Restore the Deepheart Passage",
 			"Deliver %s to the Hub" % selected_resource.capitalize(),
 			{
 				"station_id": "deepElevator", "mine_id": mine_id,
@@ -440,7 +463,7 @@ func _deep_elevator_goal() -> Dictionary:
 			}
 		)
 	return _goal(
-		"endgame:repair_elevator", "depth_resource", "Repair the Deep Elevator",
+		"endgame:repair_elevator", "depth_resource", "Restore the Deepheart Passage",
 		"Mine %d more %s" % [amount, selected_resource.capitalize()],
 		{
 			"mine_id": mine_id, "resource_id": selected_resource,

@@ -8,6 +8,8 @@ var lit_draw_sections: Node2D
 const StaticLightFieldScript = preload("res://scripts/lighting/static_light_field.gd")
 var static_light_field: Node2D
 var _draw_canvas: CanvasItem
+var trimmed_hub_texture_margins: bool = true
+var _hub_texture_regions: Dictionary = {}
 
 signal context_changed(context: String)
 signal hub_exit_context_changed(active: bool)
@@ -57,7 +59,7 @@ const WORKSHOP_NAMES: Dictionary = {
 	"light_lab": "LIGHT LAB",
 	"wardrobe": "WARDROBE",
 	"treasure_chamber": "TREASURE CHAMBER",
-	"lift_workshop": "LIFT WORKSHOP",
+	"lift_workshop": "TUNNEL WORKSHOP",
 }
 const WORKSHOP_POSITIONS: Dictionary = {
 	"tool_forge": Vector2(286, 304),
@@ -1145,7 +1147,7 @@ func _use_deep_elevator() -> void :
 		if not carried.is_empty():
 			message_changed.emit("MUSEUM PEDESTAL · PLACE %s BEFORE DESCENDING" % _relic_name(carried))
 			return
-		message_changed.emit("ENDLESS DESCENT · ELEVATOR READY")
+		message_changed.emit("THE DEEP · TUNNEL READY")
 		deep_elevator_enter_requested.emit()
 		return
 	if RunState.can_enter_final_expedition():
@@ -1167,10 +1169,10 @@ func _use_deep_elevator() -> void :
 		powered_now = RunState.power_deep_elevator()
 	_refresh_backend_state()
 	if powered_now:
-		message_changed.emit("DEEP ELEVATOR POWERED · USE AGAIN TO DESCEND")
+		message_changed.emit("DEEPHEART PASSAGE READY · ENTER WHEN READY")
 	elif delivered_total > 0:
 		message_changed.emit(
-			"DEEP ELEVATOR · %d MATERIALS DELIVERED" % delivered_total
+			"DEEPHEART PASSAGE · %d MATERIALS DELIVERED" % delivered_total
 		)
 	else:
 		message_changed.emit(_deep_elevator_status_message())
@@ -1179,18 +1181,18 @@ func _use_deep_elevator() -> void :
 
 func _deep_elevator_status_message() -> String:
 	if bool(elevator_status.get("powered", false)):
-		return "DEEP ELEVATOR POWERED · USE TO DESCEND"
+		return "DEEPHEART PASSAGE · READY TO ENTER"
 	if bool(elevator_status.get("repaired", false)):
-		return "DEEP ELEVATOR REPAIRED · POWER CORE READY"
+		return "DEEPHEART PASSAGE · CORE READY"
 	var missing: Dictionary = Dictionary(elevator_status.get("missing", {}))
 	if missing.is_empty():
-		return "DEEP ELEVATOR · AWAITING POWER"
+		return "DEEPHEART PASSAGE · AWAITING POWER"
 	var parts: Array[String] = []
 	for resource_id in ["ambercore", "lunacore", "furnaceheart", "singularity"]:
 		var amount: = int(missing.get(resource_id, 0))
 		if amount > 0:
 			parts.append("%s %d" % [resource_id.to_upper(), amount])
-	return "DEEP ELEVATOR · NEED " + " · ".join(parts)
+	return "DEEPHEART PASSAGE · NEED " + " · ".join(parts)
 
 
 func _deep_hoard_status_message() -> String:
@@ -1399,7 +1401,7 @@ func _relic_name(relic: Dictionary) -> String:
 func _place_carried_relic() -> void :
 	var carried: = _carried_relic()
 	if carried.is_empty():
-		message_changed.emit("RELIC PEDESTAL · BRING A FIND FROM THE ENDLESS DESCENT")
+		message_changed.emit("RELIC PEDESTAL · BRING A FIND FROM THE DEEP")
 		return
 	if _relic_rope_points.size() < 2:
 		AudioDirector.play_blocked()
@@ -2963,7 +2965,7 @@ func _draw_texture_bounded(texture: Texture2D, center: Vector2, bounds: Vector2,
 	var source: = Vector2(texture.get_size())
 	var scale_factor: = minf(bounds.x / maxf(1.0, source.x), bounds.y / maxf(1.0, source.y))
 	var size: = source * scale_factor
-	_draw_canvas.draw_texture_rect(texture, Rect2(center - size * 0.5, size), false, modulate)
+	_draw_hub_texture_rect(texture, Rect2(center - size * 0.5, size), modulate)
 
 
 func _draw_texture_rotated_bounded(texture: Texture2D, center: Vector2, bounds: Vector2, rotation: float, modulate: Color = Color.WHITE) -> void :
@@ -2971,8 +2973,32 @@ func _draw_texture_rotated_bounded(texture: Texture2D, center: Vector2, bounds: 
 	var scale_factor: = minf(bounds.x / maxf(1.0, source.x), bounds.y / maxf(1.0, source.y))
 	var size: = source * scale_factor
 	_draw_canvas.draw_set_transform(center, rotation, Vector2.ONE)
-	_draw_canvas.draw_texture_rect(texture, Rect2( - size * 0.5, size), false, modulate)
+	_draw_hub_texture_rect(texture, Rect2( - size * 0.5, size), modulate)
 	_draw_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
+func _draw_hub_texture_rect(texture: Texture2D, destination: Rect2, tint: Color) -> void:
+	if not trimmed_hub_texture_margins or texture.resource_path not in [
+		"res://assets/voidstar/wall.png", "res://assets/starfall/route-marker.png",
+		TREASURE_CHAMBER_TEXTURE_PATH, RELIC_PEDESTAL_TEXTURE_PATH,
+	]:
+		_draw_canvas.draw_texture_rect(texture, destination, false, tint)
+		return
+	var source_size: Vector2 = texture.get_size()
+	if not _hub_texture_regions.has(texture):
+		var region: Rect2i = Rect2i(Vector2i.ZERO, Vector2i(source_size))
+		var bitmap: Image = texture.get_image()
+		# Derive from the actual resource, so later approved art changes cannot be
+		# clipped by stale bounds. The two transparent texels retain bilinear edges.
+		if bitmap != null and not bitmap.is_empty() and not bitmap.has_mipmaps():
+			var painted: Rect2i = bitmap.get_used_rect()
+			if painted.has_area():
+				region = painted.grow(2).intersection(region)
+		_hub_texture_regions[texture] = Rect2(region)
+	var source: Rect2 = _hub_texture_regions[texture]
+	var ratio: Vector2 = destination.size / source_size
+	var trimmed: Rect2 = Rect2(destination.position + source.position * ratio, source.size * ratio)
+	_draw_canvas.draw_texture_rect_region(texture, trimmed, source, tint, false, false)
 
 
 func _draw_ellipse_shape(center: Vector2, radii: Vector2, color: Color) -> void :

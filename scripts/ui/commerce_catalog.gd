@@ -280,33 +280,53 @@ static func _starforge_stats(variant_id: String, variant: Dictionary) -> Array:
 
 
 static func _workshop_stats(workshop_id: String, current_level: int, next_level: int) -> Array:
+	var current: Dictionary = RunState.workshop_effects_at_level(workshop_id, current_level)
+	var next: Dictionary = RunState.workshop_effects_at_level(workshop_id, next_level)
 	match workshop_id:
 		"tool_forge":
 			return [
-				{"label": "TOOL POWER", "current": "%d%%" % roundi((1.0 + 0.04 * current_level) * 100.0), "next": "%d%%" % roundi((1.0 + 0.04 * next_level) * 100.0)},
-				{"label": "TOOL SPEED", "current": "%d%%" % roundi((1.0 + 0.025 * current_level) * 100.0), "next": "%d%%" % roundi((1.0 + 0.025 * next_level) * 100.0)},
-				{"label": "PICKUP RANGE", "current": "%d%%" % roundi((1.0 + 0.03 * current_level) * 100.0), "next": "%d%%" % roundi((1.0 + 0.03 * next_level) * 100.0)},
+				_effect_stat("TOOL POWER", current, next, "power"),
+				_effect_stat("TOOL SPEED", current, next, "speed"),
+				_effect_stat("MINING REACH", current, next, "reach"),
 			]
 		"light_lab":
 			return [
-				{"label": "LIGHT RANGE", "current": "%d%%" % roundi(RunState.light_range_for_level(current_level) * 100.0), "next": "%d%%" % roundi(RunState.light_range_for_level(next_level) * 100.0)},
-				{"label": "BRIGHTNESS", "current": "%d%%" % roundi(RunState.light_energy_for_level(current_level) * 100.0), "next": "%d%%" % roundi(RunState.light_energy_for_level(next_level) * 100.0)},
+				_effect_stat("LIGHT RANGE", current, next, "light_range"),
+				_effect_stat("BRIGHTNESS", current, next, "light_energy"),
 			]
 		"wardrobe":
 			return [{"label": "OUTFIT SLOTS", "current": current_level, "next": next_level}]
 	return []
 
 
+static func _effect_stat(label: String, current: Dictionary, next: Dictionary, key: String) -> Dictionary:
+	return {
+		"label": label,
+		"current": "%d%%" % roundi(float(current.get(key, 1.0)) * 100.0),
+		"next": "%d%%" % roundi(float(next.get(key, 1.0)) * 100.0),
+	}
+
+
 static func _workshop_inspection_stats(workshop_id: String) -> Array:
 	if workshop_id == "treasure_chamber":
-		var status: Dictionary = Dictionary(RunState.endless_descent_status())
+		var status: Dictionary = RunState.endless_descent_status()
+		var before: Dictionary = RunState.workshop_effects_at_level(workshop_id, 0)
+		var after: Dictionary = RunState.workshop_effects_at_level(workshop_id, 1)
+		var pickup_radius: = float(RunState.resource_pickup_radius())
+		var baseline_radius: = maxf(1.0, pickup_radius - float(after.get("pickup_bonus", 0.0)))
 		return [
-			{"label": "SITE CACHE YIELD", "current": "100%", "next": "125%"},
+			_effect_stat("SITE CACHE YIELD", before, after, "cache_yield"),
+			{"label": "PICKUP REACH", "current": "100%", "next": "%d%%" % roundi(pickup_radius / baseline_radius * 100.0)},
 			{"label": "RELICS ARCHIVED", "current": int(status.get("placed_relic_count", 0)), "next": int(status.get("total_relics", 5))},
 		]
 	if workshop_id == "lift_workshop":
-		var status: Dictionary = Dictionary(RunState.endless_descent_status())
-		return [{"label": "START CHECKPOINT", "current": "DEPTH 1", "next": "DEPTH %d" % int(status.get("start_depth_checkpoint", 1))}]
+		var before: Dictionary = RunState.workshop_effects_at_level(workshop_id, 0)
+		var after: Dictionary = RunState.workshop_effects_at_level(workshop_id, 1)
+		return [{
+			"label": "TUNNEL HOME PREPARATION",
+			"current": "%.2fs" % float(before.get("tunnel_duration", 0.0)),
+			"next": "%.2fs" % float(after.get("tunnel_duration", 0.0)),
+		}]
 	return []
 
 
@@ -327,7 +347,7 @@ static func _workshop_option_texture(workshop_id: String, option: String) -> Str
 
 static func _workshop_option_subtitle(workshop_id: String, option: String) -> String:
 	match workshop_id:
-		"tool_forge": return "Endless mining tool appearance"
+		"tool_forge": return "Deep mining tool appearance"
 		"light_lab": return _light_style_description(option)
 		"wardrobe": return "Expedition outfit"
 	return "Workshop selection"
@@ -335,7 +355,7 @@ static func _workshop_option_subtitle(workshop_id: String, option: String) -> St
 
 static func _workshop_option_note(workshop_id: String) -> String:
 	match workshop_id:
-		"tool_forge": return "Appearance only - power, speed and pickup range come from workshop level."
+		"tool_forge": return "Appearance only - power, speed and mining reach come from workshop level."
 		"light_lab": return "Beam shape and color change; range and energy come from workshop level."
 		"wardrobe": return "Appearance only - outfits do not alter mining balance."
 	return "Workshop loadout selection."
@@ -353,17 +373,17 @@ static func _light_style_description(option: String) -> String:
 
 static func _workshop_description(workshop_id: String) -> String:
 	match workshop_id:
-		"tool_forge": return "Raises power, mining speed and resource pickup range throughout the Endless Descent."
+		"tool_forge": return "Break tougher rock, strike faster and reach farther with every mining tool."
 		"light_lab": return "Extends the headlamp and strengthens its response in the deepest darkness."
 		"wardrobe": return "Unlocks complete expedition silhouettes without changing combat balance."
-		"treasure_chamber": return "Archives every recovered relic and adds +25% yield to stabilized and overloaded site caches."
-		"lift_workshop": return "Automatically advances your next expedition checkpoint whenever you reach a new depth."
+		"treasure_chamber": return "Draws loose discoveries in from farther away and makes every site cache more rewarding."
+		"lift_workshop": return "Your mole prepares Tunnel Home faster. Resume mining where your last expedition ended."
 	return "Permanent Hub workshop."
 
 
 static func _workshop_upgrade_subtitle(workshop_id: String) -> String:
 	return {
-		"tool_forge": "Permanent mining multipliers", "light_lab": "Permanent lamp multipliers",
+		"tool_forge": "Stronger strikes. Faster mining.", "light_lab": "Reveal more of the mountain",
 		"wardrobe": "Unlock another expedition outfit",
 	}.get(workshop_id, "Permanent workshop upgrade")
 

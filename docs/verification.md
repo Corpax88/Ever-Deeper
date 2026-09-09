@@ -3,13 +3,16 @@
 ## Current source gate
 
 GitHub Actions runs `Godot source checks` for source pull requests and changes on main.
-It imports the event's tested commit, checks protected files and runs the ten current cases;
+It imports the event's tested commit, checks protected files and runs the thirteen current cases;
 logs are attached even when a check fails. The larger `Verify complete source cleanup`
 workflow is a one-time baseline comparison, separate from this reusable source gate.
 
 `python3 tools/qa.py --godot /path/to/Godot` runs input release, the 859-check gameplay
-suite, shop touch/state tests, endgame, endless, onboarding, iPhone layout, orientation,
-developer tools and Crusher integration. Native/headless checks do not validate rendered art.
+suite, shop touch/state tests, endgame, onboarding, iPhone layout, orientation,
+developer tools, Crusher integration and the four 1.0 state/world/migration/UI cases.
+The 1.0 journey checks actual held mining through streamed terrain, all five generated
+relics, physical delivery and paid construction, save recovery and continued mining.
+Native/headless checks do not validate rendered art or physical device performance.
 
 Run a subset with `--cases input overhaul touch`. Logs and machine-readable results are
 written to `qa-results/`. Each case has a timeout and a separate save directory. A success
@@ -32,10 +35,25 @@ as passing gates or silently skipped inside a test. Run them explicitly with `--
 | `landscape` | Old portal seam expects a 24×184 sprite before the approved surface replacement |
 | `smoke` | Old Emberdeep mountain context assertion; further old mining expectations also differ |
 | `workshops` | Old WorkshopPanel preview flow predates the shared CommercePanel workshop flow |
+| `endless` | Historical room/lift contract intentionally superseded by 1.0 continuous-world and migration suites; original assertions remain available |
 
 `--all --pack ...` includes all registered cases and remains red until those older
 expectations are reconciled in a dedicated test update. The current gameplay/touch suites
 exercise the corresponding active paths. These failures are recorded as remaining test debt.
+
+## 1.0 candidate acceptance
+
+`.github/workflows/one-point-zero.yml` runs the thirteen active cases against source
+and the exact DEV PCK, verifies both export flavors, and checks hero motion, audio
+playback and mobile WebKit touch. `tools/review_one_point_zero.gd` captures the same
+PCK at mobile resolution for independent inspection. The protected version and mine
+button changes are explicitly recorded in `one-point-zero/protected-changes.json`.
+Review rounds and remaining acceptance limits live in `one-point-zero/`.
+
+DEV test readiness is separate from final 1.0 approval. The latter requires a
+critic rating of at least 9/10, zero critical bugs and sustained smooth physical
+iPhone evidence. The DEV publisher accepts only immutable reviewed artifact bytes
+and preserves all nine existing LIVE files. It cannot publish a new LIVE build.
 
 ## Refactor invariants
 
