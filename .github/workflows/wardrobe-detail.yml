@@ -1,0 +1,47 @@
+name: Inspect wardrobe portrait at iPhone pixel density
+on:
+  push:
+    branches: [codex-wardrobe-detail-review]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  retina:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        side: [live, dev]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: wardrobe-portrait-candidate
+          run-id: 34324191544
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Capture exact candidate at 844 by 390 and DPR 3
+        env:
+          TOUCH_BROWSER: webkit
+          SMALL_IPHONE: '1'
+          CAPTURE_SCOPE: wardrobe
+          CAPTURE_END: '5'
+        run: |
+          npm ci
+          npx playwright install --with-deps webkit
+          python3 - <<'PY'
+          from pathlib import Path
+          source = Path('tools/capture-web.mjs').read_text()
+          assert source.count('deviceScaleFactor: 1,') == 1
+          Path('tools/capture-wardrobe-detail.mjs').write_text(source.replace('deviceScaleFactor: 1,', 'deviceScaleFactor: 3,'))
+          PY
+          node tools/capture-wardrobe-detail.mjs --web-dir "$RUNNER_TEMP/candidate/${{ matrix.side }}" --output-dir "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wardrobe-retina-${{ matrix.side }}
+          path: ${{ runner.temp }}/review
+          retention-days: 30
