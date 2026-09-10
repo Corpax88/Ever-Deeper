@@ -3,13 +3,14 @@
 ## Current source gate
 
 GitHub Actions runs `Godot source checks` for source pull requests and changes on main.
-It imports the event's tested commit, checks protected files and runs the thirteen current cases;
+It imports the event's tested commit, checks protected files and runs the fourteen current cases;
 logs are attached even when a check fails. The larger `Verify complete source cleanup`
 workflow is a one-time baseline comparison, separate from this reusable source gate.
 
-`python3 tools/qa.py --godot /path/to/Godot` runs input release, the 859-check gameplay
+`python3 tools/qa.py --godot /path/to/Godot` runs input release, the 869-check gameplay
 suite, shop touch/state tests, endgame, onboarding, iPhone layout, orientation,
-developer tools, Crusher integration and the four 1.0 state/world/migration/UI cases.
+developer tools, Crusher integration, the four 1.0 state/world/migration/UI cases
+and 50 automatic-companion behavior checks in `mole-autonomy`.
 The 1.0 journey checks actual held mining through streamed terrain, all five generated
 relics, physical delivery and paid construction, save recovery and continued mining.
 Native/headless checks do not validate rendered art or physical device performance.
@@ -43,7 +44,7 @@ exercise the corresponding active paths. These failures are recorded as remainin
 
 ## 1.0 candidate acceptance
 
-`.github/workflows/one-point-zero.yml` runs the thirteen active cases against source
+`.github/workflows/one-point-zero.yml` runs the fourteen active cases against source
 and the exact DEV PCK, verifies both export flavors, and checks hero motion, audio
 playback and mobile WebKit touch. `tools/review_one_point_zero.gd` captures the same
 PCK at mobile resolution for independent inspection. The protected version and mine

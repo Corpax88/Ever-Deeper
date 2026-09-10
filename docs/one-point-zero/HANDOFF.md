@@ -1,3 +1,23 @@
+# Reviewed automatic companion — 1.0.0-dev.4
+
+Runtime source: `15c5cf464a2449166637348cded89f8cfb80ca2e`.
+All six jobs in [34439447936](https://github.com/Corpax88/Ever-Deeper/actions/runs/34439447936)
+pass. Immutable DEV artifact **10137430221** is approved for DEV testing by the
+author review in [mole-autonomy-review.md](../mole-autonomy-review.md).
+
+Learned Earthshaker, Teamwork, Ore Nose and Echo activate during ordinary mining
+and exploration. Fetch stays nearby; stale errands cancel; Homeward waits for
+the player's choice. The journal explains automatic help and optional commands.
+Fourteen active source/package suites include 50 real companion assertions.
+Native and WebKit images are inspected; physical iPhone FPS remains unverified.
+
+DEV4 publication is in progress. Use the immutable reviewed artifact without
+rebuilding. The baseline is the actual DEV3 receipt; preserve all existing LIVE
+bytes. After publication, verify all 18 files and persist the publication receipt.
+Phone steps and ongoing normal-flow authorization are in
+[mole-autonomy.md](../mole-autonomy.md). PR:
+[14](https://github.com/Corpax88/Ever-Deeper/pull/14).
+
 # Reviewed FPS recovery candidate — 1.0.0-dev.3
 
 Runtime source: `42fffc163c940db2ab9df2e1924608e2d1659793`.
@@ -23,7 +43,8 @@ are not iPhone FPS estimates. The provisional five-category critic mean remains
 [the FPS critic review](../performance-diagnosis/fps-recovery-review.md) and
 [physical-device evidence](iphone-performance.md).
 
-DEV publication is pending. The publisher must use artifact **10108229398**
+DEV3 was published and all 18 files verified by run **34368126228**. Its
+receipt is `.github/one-point-zero/dev3-publication-receipt.json`. The publisher used artifact **10108229398**
 without rebuilding and preserve all nine existing LIVE files. Later review and
 external diagnostic updates do not change the runtime source above. Raw sustained
 evidence, failed fixture histories and image review identities are persisted under

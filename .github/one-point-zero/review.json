@@ -3,25 +3,69 @@
   "dev_only": true,
   "live_publication_authorized": false,
   "dev_version": "1.0.0-dev.4",
-  "source_commit": null,
-  "qa_run_id": 0,
-  "candidate_artifact_id": 0,
-  "candidate_zip_sha256": "",
-  "candidate_manifest_sha256": "",
-  "package_checks_passed": false,
-  "visual_reviewed": false,
-  "mobile_touch_reviewed": false,
-  "web_audio_reviewed": false,
-  "full_progression_reviewed": false,
-  "critic_reviewed": false,
-  "dev_test_ready": false,
+  "source_commit": "15c5cf464a2449166637348cded89f8cfb80ca2e",
+  "qa_run_id": 34439447936,
+  "candidate_artifact_id": 10137430221,
+  "candidate_zip_sha256": "b3c6fc0131b03fd1dd49eaa6e200e2cfb208656404c5aa6a597f8d89cf8c9fc4",
+  "candidate_manifest_sha256": "ed51f9ed7bbf57d1d5df0abe8097939c575153fb7c8f279de1c6ebe76e383169",
+  "package_checks_passed": true,
+  "visual_reviewed": true,
+  "mobile_touch_reviewed": true,
+  "web_audio_reviewed": true,
+  "full_progression_reviewed": true,
+  "critic_reviewed": true,
+  "dev_test_ready": true,
   "final_one_point_zero_approved": false,
-  "critic_score": 8.4,
+  "critic_score": 8.0,
   "critical_bug_count": 0,
   "physical_iphone_verified": false,
-  "files": {},
+  "files": {
+    "index.apple-touch-icon.png": {
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5",
+      "size": 66421
+    },
+    "index.audio.position.worklet.js": {
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+      "size": 2973
+    },
+    "index.audio.worklet.js": {
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+      "size": 7298
+    },
+    "index.html": {
+      "sha256": "da4aa5262bd06f5a82ddd3945e041c474f41e1191e2527e1c18511ff4ddb343f",
+      "size": 7855
+    },
+    "index.icon.png": {
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+      "size": 470687
+    },
+    "index.js": {
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+      "size": 279815
+    },
+    "index.pck": {
+      "sha256": "1c511229ba168f54a828d7e5bab00f9d18d2000fa0e602f1c7ca4b70dbf31327",
+      "size": 220955412
+    },
+    "index.png": {
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+      "size": 1981427
+    },
+    "index.wasm": {
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+      "size": 39514754
+    }
+  },
   "notes": [
-    "Automatic mole candidate awaiting exact-package checks and visual review. Mats explicitly approved the normal GitHub/DEV publication flow on 2026-09-10."
+    "Mats explicitly authorized the normal public GitHub and DEV publication flow on 2026-09-10. This author review approves only the bounded automatic-companion change for DEV testing; it is not an independent review or final LIVE 1.0 acceptance.",
+    "All six required jobs passed in run 34439447936. Fourteen active suites pass on source and exact DEV PCK, including 50 real companion checks. WebKit passes 869 gameplay and 195 touch assertions; both browsers pass actual WebAudio; hero motion and twelve real damage combinations pass.",
+    "Native artifact 10137619297 contains 34 journey captures / 431 passing assertions, 75 receiver stages with no failures, and seven new mobile companion/journal captures. The new fixture records four actual automatic digs and four collected units against this PCK hash. Inspected images and their precise limits are recorded in docs/mole-autonomy-review.md and docs/mole-autonomy-evidence/review-index.json.",
+    "Bounded author critic score 8/10: automatic skill choice, cancellations, restrictions and accounting pass; authored UI/art remain intact. No critical issue reproduced in the tested paths. Sustained physical iPhone FPS and full-session perceived helpfulness remain unverified; the previous overall game rating is not revised here.",
+    "The accelerated rendering fixture overlaps hero and mole during windup, and its paused world drawing retains cached drops in the final collection image. Therefore these images prove terrain/HUD/journal appearance; the real action and inventory assertions establish impact timing and collected amounts. They are not a full-motion animation or physical-device performance assessment.",
+    "Functional progression uses accelerated funding, positions and waits. Legacy suites remain documented test debt. No final 1.0 approval, physical-iPhone approval or new LIVE publication is granted.",
+    "The rollback baseline is the verified DEV3 publication from run 34368126228. Its exact 18-file receipt is persisted in dev3-publication-receipt.json; all nine LIVE identities remain the prior baseline.",
+    "Subsequent review metadata, documentation and the external-harness UID do not change the immutable reviewed runtime package. The publisher must download artifact 10137430221 without rebuilding."
   ],
-  "reviewed_at": null
+  "reviewed_at": "2026-09-10T05:19:08.068699+00:00"
 }
