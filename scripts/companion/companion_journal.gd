@@ -242,7 +242,7 @@ func select_tab(id: String) -> void:
 func _together() -> void:
 	var heading=_label(body,"Your little helper, ready to go.",25,true)
 	heading.position=Vector2(0,0)
-	var description=_label(body,"I follow, light the way and scoop up loose ore.\nTap the ground to send me somewhere!",19)
+	var description=_label(body,"I use my learned skills as we explore and mine.\nCommands are optional. You choose when we go home.",19)
 	description.position=Vector2(0,42);description.size=Vector2(800,44)
 	status=_label(body,"",20,true);status.position=Vector2(0,88);status.size=Vector2(790,28)
 	var home_label: String = "Tunnel Home" if RunState.current_scene == "endless" else "Lead me home"
@@ -256,14 +256,14 @@ func _together() -> void:
 		b.position=Vector2((i%2)*406,120+(i/2)*77)
 		b.size=Vector2(394,75)
 		b.disabled=not owned
-		if skill_id=="shake": b.tooltip_text="Tap an ordinary wall, or let me find one nearby."
+		if skill_id=="shake": b.tooltip_text="I help automatically while you mine. You can also ask me to dig here."
 
 func _how() -> void:
 	var lines=[
 		["1. Your shadow with little paws", "I follow and light nearby tunnels automatically. Loose ore goes straight into your backpack."],
-		["2. A tap tells me where", "Tap open ground to send me. Drag to move yourself. Learn Earthshaker, then tap an ordinary wall to dig."],
-		["3. Learn it once. Feel it every trip.", "'Always helping' skills work on their own. Command buttons live in Together. Mining earns paw points."],
-		["4. Watch my little signals", "I tell you when I find, fetch or dig. My portrait shows what I am doing and when Earthshaker is ready."]]
+		["2. Your work is my cue", "Mine a wall and I use Earthshaker and Teamwork when ready. Explore and I sniff out ore and point the way deeper."],
+		["3. Learn it once. Feel it every trip.", "Learned skills help automatically. I stay close, finish fetching and return when you move on. Mining earns paw points."],
+		["4. A little nudge, if you want", "Tap a spot or use Together for an optional command. Tunnel Home waits for your choice; I never take you away mid-dig."]]
 	for i in lines.size():
 		var h=_label(body,lines[i][0],21,true);h.position=Vector2(0,i*88)
 		var d=_label(body,lines[i][1],17);d.position=Vector2(0,i*88+31);d.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;d.set_deferred("size",Vector2(800,53))
@@ -279,7 +279,7 @@ func _skills() -> void:
 		var stack=VBoxContainer.new();stack.add_theme_constant_override("separation",6);card.add_child(stack)
 		var skill_id: String=skill.id
 		var owned: bool=Skills.has_skill(skill_id)
-		var passive: bool=skill_id in ["lantern","fetch","trailrunner","big_paws","ore_nose","long_beam","teamwork"]
+		var passive: bool=skill_id!="homeward"
 		_label(stack,String(skill.name)+("   ·   Always helping" if owned and passive else "   ·   Command ready" if owned else ""),21,true)
 		var detail=_label(stack,String(skill.detail),17);detail.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;detail.custom_minimum_size.x=725
 		if owned: continue
@@ -300,7 +300,7 @@ func _skill_name(id: String) -> String:
 func _learn(id: String) -> void:
 	var offset: int=scroll.scroll_vertical if scroll!=null else 0
 	if Skills.learn(id):
-		response=_skill_name(id)+" learned! "+("Try it in Together." if id in ["shake","echo","homeward"] else "Already helping you.")
+		response=_skill_name(id)+" learned! "+("Choose home in Together." if id=="homeward" else "Already helping you.")
 		AudioDirector.play_economy("upgrade")
 		var mole: MoleCompanion=owner_ui.active_mole()
 		if mole!=null: mole.pet()
@@ -335,7 +335,7 @@ func _update_live() -> void:
 		tally.tooltip_text="Your mole's help this session"
 		if status!=null:
 			status.text=mole.status_text()
-			if Skills.has_skill("shake"): status.text+="  ·  "+("Dig ready" if mole.shake_cooldown<=0.0 else "Dig in %ds" % ceili(mole.shake_cooldown))
+			if Skills.has_skill("shake"): status.text+="  ·  "+("Auto dig ready" if mole.shake_cooldown<=0.0 else "Auto dig · %ds" % ceili(mole.shake_cooldown))
 		var shake_button=body.get_node_or_null("Command_shake")
 		if shake_button!=null and Skills.has_skill("shake"):
 			shake_button.disabled=mole.shake_cooldown>0.0

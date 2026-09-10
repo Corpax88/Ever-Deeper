@@ -2,12 +2,12 @@
   "schema": 1,
   "dev_only": true,
   "live_publication_authorized": false,
-  "dev_version": "1.0.0-dev.3",
-  "source_commit": "42fffc163c940db2ab9df2e1924608e2d1659793",
-  "qa_run_id": 34361743735,
-  "candidate_artifact_id": 10108229398,
-  "candidate_zip_sha256": "dd727bb1cc109d7536201694e668c7db5994cef9ed26192420c7878cd54bc77c",
-  "candidate_manifest_sha256": "a2787c8974aadafe358455807f31ee4385c533cf3538eed6086da12d746db21c",
+  "dev_version": "1.0.0-dev.4",
+  "source_commit": "15c5cf464a2449166637348cded89f8cfb80ca2e",
+  "qa_run_id": 34439447936,
+  "candidate_artifact_id": 10137430221,
+  "candidate_zip_sha256": "b3c6fc0131b03fd1dd49eaa6e200e2cfb208656404c5aa6a597f8d89cf8c9fc4",
+  "candidate_manifest_sha256": "ed51f9ed7bbf57d1d5df0abe8097939c575153fb7c8f279de1c6ebe76e383169",
   "package_checks_passed": true,
   "visual_reviewed": true,
   "mobile_touch_reviewed": true,
@@ -16,7 +16,7 @@
   "critic_reviewed": true,
   "dev_test_ready": true,
   "final_one_point_zero_approved": false,
-  "critic_score": 8.4,
+  "critic_score": 8.0,
   "critical_bug_count": 0,
   "physical_iphone_verified": false,
   "files": {
@@ -33,7 +33,7 @@
       "size": 7298
     },
     "index.html": {
-      "sha256": "4f52aa5115a0c4a18b27091f0a90c33b13a830865f740ac4431eba775c50259c",
+      "sha256": "da4aa5262bd06f5a82ddd3945e041c474f41e1191e2527e1c18511ff4ddb343f",
       "size": 7855
     },
     "index.icon.png": {
@@ -45,8 +45,8 @@
       "size": 279815
     },
     "index.pck": {
-      "sha256": "6ec691604a060bcad3a21ac2666385e3d1a0c0ac07822c6b74c2a31e33dc5d6d",
-      "size": 220944136
+      "sha256": "1c511229ba168f54a828d7e5bab00f9d18d2000fa0e602f1c7ca4b70dbf31327",
+      "size": 220955412
     },
     "index.png": {
       "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
@@ -58,15 +58,14 @@
     }
   },
   "notes": [
-    "Independent review approves this exact DEV artifact for physical-device testing. Provisional critic_score 8.4 averages gameplay 8, progression 8, UX 9, visuals 9 and code 8 only; performance and overall 1.0 approval remain unverified. No critical bug reproduced in the tested paths.",
-    "All six required jobs passed in run 34361743735 for source 42fffc163c940db2ab9df2e1924608e2d1659793. Thirteen source and exact-PCK suites, 869 WebKit gameplay assertions, 195 touch assertions, real WebAudio in both browsers, 44 hero transitions and twelve actual mining damage combinations passed.",
-    "Exact-PCK progression journey covers a new player, all five generated relics, paid completion of all five workshops and continued Deep mining. Funding, position and wait acceleration limit this to functional coverage, not human pacing or subjective audio approval.",
-    "Native review covers 34 journey captures / 431 assertions, 75 receiver captures across all four D1 mines and five light styles plus five Deep strata, and fifteen additional captures proving mined corners, actual cleared gates and an accelerated damaged-gate fixture. Numeric comparisons cover all triplets; representative actual image inspections and precise limits are recorded in docs/performance-diagnosis/.",
-    "Six serial 180-second native llvmpipe runs compare unchanged DEV2 and DEV3 packages at 2328x1260 using actual joystick, held mine and collision timing. Progressed Ember mean FPS improves 77.20%, P95 136.368 to 76.201 ms; its worst frame worsens 188.786 to 233.086 ms. Post-fifth Deep FPS improves 49.69%, P95 154.611 to 105.704 ms. An unexplained old-Hub transient prevents clean Hub FPS attribution. These are not iPhone FPS estimates.",
-    "Rendered commerce tests pass 44 baseline and 58 candidate checks with zero engine errors. Closed wardrobe and Light Lab release 16.30 / 20.34 MiB respectively; final closed-shop GPU allocation is 30.52 MiB lower. Reopen and beam image comparisons pass. Phone cold-reopen hitch behavior remains unverified.",
-    "Corrected source attribution supports approximately 2.2x in a short frozen software-renderer fixture; the earlier 2.7x reference estimate is explicitly withdrawn. Failed sustained fixtures and raw accepted interval evidence are retained in repository archives.",
-    "The latest supplied physical screenshot shows 19.9 FPS, P95 56 ms and no visible build version. DEV3 adds a visible build identifier to SHOW FPS. Physical iPhone acceptance, final 1.0 approval and LIVE publication remain false; only DEV may be published.",
-    "Later review metadata, documentation and external diagnostic harness edits do not alter the reviewed immutable runtime package. Publication must download artifact 10108229398 without rebuilding and preserve all nine existing LIVE files."
+    "Mats explicitly authorized the normal public GitHub and DEV publication flow on 2026-09-10. This author review approves only the bounded automatic-companion change for DEV testing; it is not an independent review or final LIVE 1.0 acceptance.",
+    "All six required jobs passed in run 34439447936. Fourteen active suites pass on source and exact DEV PCK, including 50 real companion checks. WebKit passes 869 gameplay and 195 touch assertions; both browsers pass actual WebAudio; hero motion and twelve real damage combinations pass.",
+    "Native artifact 10137619297 contains 34 journey captures / 431 passing assertions, 75 receiver stages with no failures, and seven new mobile companion/journal captures. The new fixture records four actual automatic digs and four collected units against this PCK hash. Inspected images and their precise limits are recorded in docs/mole-autonomy-review.md and docs/mole-autonomy-evidence/review-index.json.",
+    "Bounded author critic score 8/10: automatic skill choice, cancellations, restrictions and accounting pass; authored UI/art remain intact. No critical issue reproduced in the tested paths. Sustained physical iPhone FPS and full-session perceived helpfulness remain unverified; the previous overall game rating is not revised here.",
+    "The accelerated rendering fixture overlaps hero and mole during windup, and its paused world drawing retains cached drops in the final collection image. Therefore these images prove terrain/HUD/journal appearance; the real action and inventory assertions establish impact timing and collected amounts. They are not a full-motion animation or physical-device performance assessment.",
+    "Functional progression uses accelerated funding, positions and waits. Legacy suites remain documented test debt. No final 1.0 approval, physical-iPhone approval or new LIVE publication is granted.",
+    "The rollback baseline is the verified DEV3 publication from run 34368126228. Its exact 18-file receipt is persisted in dev3-publication-receipt.json; all nine LIVE identities remain the prior baseline.",
+    "Subsequent review metadata, documentation and the external-harness UID do not change the immutable reviewed runtime package. The publisher must download artifact 10137430221 without rebuilding."
   ],
-  "reviewed_at": "2026-09-09T15:02:53.082482+00:00"
+  "reviewed_at": "2026-09-10T05:19:08.068699+00:00"
 }

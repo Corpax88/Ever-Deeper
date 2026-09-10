@@ -6,6 +6,7 @@ from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 ROOT = Path(__file__).resolve().parents[1]
 CASES = {
+    'mole-autonomy': (['--qa-mole-autonomy'], 'EVER_DEEPER_MOLE_AUTONOMY_OK'),
     'input': (['--qa-input-release'], 'EVER_DEEPER_INPUT_RELEASE_OK'),
     'overhaul': (['--visual-capture-suite','--overhaul-gameplay','--visual-capture-auto-ack'], 'EVER_DEEPER_OVERHAUL_GAMEPLAY_OK'),
     'touch': (['--visual-capture-suite','--menu-touch-only','--visual-capture-auto-ack'], 'EVER_DEEPER_OVERHAUL_GAMEPLAY_OK'),
@@ -27,7 +28,7 @@ CASES = {
     'one-point-zero-ui': (['--qa-one-point-zero-ui'], 'EVER_DEEPER_ONE_POINT_ZERO_UI_OK'),
 }
 CORE = ['input','overhaul','touch','endgame','onboarding','layout','portrait','dev-tools','crusher',
-        'one-point-zero-state','one-point-zero-world','one-point-zero-migration','one-point-zero-ui']
+        'one-point-zero-state','one-point-zero-world','one-point-zero-migration','one-point-zero-ui','mole-autonomy']
 # Preserve historical assertions explicitly. Endless describes the retired
 # floor/elevator design; 1.0 world/migration replace its applicable protections.
 # See docs/one-point-zero/qa-round-1.md for every intentional contract change.

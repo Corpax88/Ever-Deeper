@@ -10,7 +10,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 REPOSITORY = "Corpax88/Ever-Deeper"
 BRANCH = "codex-ever-deeper-1-0"
-DEV_VERSION = "1.0.0-dev.3"
+DEV_VERSION = "1.0.0-dev.4"
 PRODUCTION_VERSION = "1.0.0-rc.1"
 ARTIFACT_NAME = "ever-deeper-one-point-zero-dev-candidate"
 WORKFLOW = ".github/workflows/one-point-zero.yml"
@@ -22,7 +22,7 @@ WEB_FILES = frozenset((
 CASES = [
     "input", "overhaul", "touch", "endgame", "onboarding", "layout", "portrait",
     "dev-tools", "crusher", "one-point-zero-state", "one-point-zero-world",
-    "one-point-zero-migration", "one-point-zero-ui",
+    "one-point-zero-migration", "one-point-zero-ui", "mole-autonomy",
 ]
 REQUIRED_JOBS = {"build", "mobile", "hero-motion", "native-visual", "web-audio (webkit)", "web-audio (chromium)"}
 

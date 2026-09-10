@@ -41,6 +41,14 @@ var guide_time: float = 0.0
 var idle_clock: float = 0.0
 var assist_action: bool = false
 var failed_loot: Dictionary = {}
+var automatic_task: bool = false
+var auto_feedback_cooldown: float = 0.0
+var echo_clock: float = 5.0
+var last_echo_origin: Vector2 = Vector2(INF,INF)
+var path_cooldown: float = 0.0
+var path_searches: int = 0
+const HELP_RADIUS: float = 300.0
+const THINK_INTERVAL: float = 0.30
 
 
 func _ready() -> void:
@@ -102,6 +110,12 @@ func _physics_process(delta: float) -> void:
 	if not bool(hero.get("control_enabled")):
 		_draw_pose()
 		return
+	auto_feedback_cooldown = maxf(0.0,auto_feedback_cooldown-delta)
+	path_cooldown = maxf(0.0,path_cooldown-delta)
+	sniff_clock = maxf(0.0,sniff_clock-delta)
+	echo_clock = maxf(0.0,echo_clock-delta)
+	# Autonomous errands belong to the player's current work, never an old dig site.
+	if _automatic_task_expired(): recall()
 	feedback_time = maxf(0.0,feedback_time-delta)
 	bubble.visible = feedback_time>0.0
 	bubble.text = feedback
@@ -115,16 +129,13 @@ func _physics_process(delta: float) -> void:
 	marker_time = maxf(0.0,marker_time-delta)
 	if is_instance_valid(marker): marker.visible = marker_time>0.0
 	animation_clock += delta
-	if not bool(hero.get("control_enabled")):
-		_draw_pose()
-		return
 	if action in ["pickup","shake"]:
 		_update_action(delta)
 		_draw_pose()
 		return
 	think_clock -= delta
 	if think_clock<=0.0:
-		think_clock=0.30
+		think_clock=THINK_INTERVAL
 		_think()
 	if action in ["pickup","shake"]:
 		_draw_pose()
@@ -139,9 +150,12 @@ func _physics_process(delta: float) -> void:
 	elif mode=="dig":
 		_begin_shake()
 	elif mode in ["command","scout","homeward"]:
-		mode="hold"
-		hold_time=0.0
-		_react("Here we are!",2.0)
+		if automatic_task:
+			recall()
+		else:
+			mode="hold"
+			hold_time=0.0
+			_react("Here we are!",2.0)
 	if action not in ["pickup","shake"]:
 		action = "walk" if moving else "idle"
 	_draw_pose()
@@ -154,6 +168,11 @@ func _spawn_beside_hero() -> void:
 			break
 	failed_loot.clear()
 	last_sniff=Vector2(INF,INF)
+	last_echo_origin=Vector2(INF,INF)
+	sniff_clock=3.0
+	echo_clock=5.0
+	auto_feedback_cooldown=0.0
+	path_cooldown=0.0
 	guide_time=0.0
 	guide_kind=""
 	recall()
@@ -163,6 +182,8 @@ func recall() -> void:
 	action="idle"
 	loot_id=""
 	assist_action=false
+	automatic_task=false
+	destination=hero.global_position if is_instance_valid(hero) else global_position
 	route.clear()
 	route_goal=Vector2(INF,INF)
 
@@ -183,9 +204,9 @@ func rebase_world(offset: Vector2) -> void:
 	if is_finite(route_goal.x): route_goal += offset
 	if is_finite(guide_point.x): guide_point += offset
 	if is_finite(last_sniff.x): last_sniff += offset
+	if is_finite(last_echo_origin.x): last_echo_origin += offset
 	for index in range(route.size()): route[index] += offset
 	if is_instance_valid(marker): marker.global_position += offset
-	destination=hero.global_position
 
 func command(point: Vector2) -> bool:
 	if point.distance_to(hero.global_position)>680.0:
@@ -207,6 +228,8 @@ func command(point: Vector2) -> bool:
 		mode="command"
 	action="idle"
 	loot_id=""
+	assist_action=false
+	automatic_task=false
 	route.clear()
 	route_goal=Vector2(INF,INF)
 	_ping(point)
@@ -216,29 +239,10 @@ func command(point: Vector2) -> bool:
 func _think() -> void:
 	var range_value: float = 440.0 if Skills.has_skill("long_beam") else 220.0
 	if lamp.base_beam_length != range_value: lamp.configure(Color("ffe0a0"),facing,0.0,range_value)
-	if mode in ["follow","fetch","hold"] and Skills.has_skill("teamwork") and assist_cooldown<=0.0 and world.has_method("companion_can_dig") and (world.get("external_mine_held") == true or Input.is_action_pressed("mine")):
-		var point: Vector2 = hero.global_position+Vector2(hero.get("facing_vector"))*52.0
-		if global_position.distance_to(point)<170.0 and world.has_method("companion_can_dig") and bool(world.call("companion_can_dig",point)):
-			assist_action=true
-			assist_cooldown=2.5
-			action="shake"
-			action_clock=0.0
-			task_point=point
-			facing=(point-global_position).normalized()
-			return
 	if mode=="hold" and (hold_time>6.0 or hero.global_position.distance_to(global_position)>300.0): recall()
-	sniff_clock-=0.30
-	if Skills.has_skill("ore_nose") and sniff_clock<=0.0 and mode in ["follow","hold"]:
-		sniff_clock=10.0
-		if world.has_method("companion_ore_target"):
-			var ore: Vector2=world.call("companion_ore_target",global_position)
-			if is_finite(ore.x) and (not is_finite(last_sniff.x) or ore.distance_to(last_sniff)>16.0):
-				last_sniff=ore
-				guide_kind="ore_nose"
-				guide_point=ore
-				guide_time=12.0
-				_ping(ore)
-				_react("Sniff sniff... ore!",2.4)
+	# A deliberate command keeps priority until it finishes. Routine help then resumes.
+	if mode not in ["follow","fetch"]: return
+	if _try_auto_dig(): return
 	if mode=="fetch":
 		var found: bool = false
 		for drop in _loot():
@@ -247,24 +251,107 @@ func _think() -> void:
 				found=true
 				break
 		if not found: recall()
-	if mode in ["follow","hold"]:
-		if mode=="follow": destination=hero.global_position
+	if mode=="follow":
+		destination=hero.global_position
 		var best: float = 440.0 if Skills.has_skill("ore_nose") else 280.0
 		for drop in _loot():
 			var distance: float = global_position.distance_to(Vector2(drop.position))
-			if int(failed_loot.get(String(drop.id),0))<Time.get_ticks_msec() and distance<best and float(drop.get("age",1.0))>0.15 and not _blocked(Vector2(drop.position)):
+			if Vector2(drop.position).distance_to(hero.global_position)<=HELP_RADIUS and int(failed_loot.get(String(drop.id),0))<Time.get_ticks_msec() and distance<best and float(drop.get("age",1.0))>0.15 and not _blocked(Vector2(drop.position)):
 				best=distance
 				loot_id=String(drop.id)
 				destination=Vector2(drop.position)
 				mode="fetch"
+				automatic_task=true
+	if mode=="follow": _auto_scout()
+
+func _mining_held() -> bool:
+	return world.get("external_mine_held")==true or Input.is_action_pressed("mine")
+
+func _automatic_task_expired() -> bool:
+	if not automatic_task: return false
+	if destination.distance_to(hero.global_position)>HELP_RADIUS or global_position.distance_to(hero.global_position)>HELP_RADIUS+80.0: return true
+	if mode=="scout": return _mining_held()
+	if mode=="dig":
+		if not _mining_held(): return true
+		# Retarget a wall the hero finished first, but preserve our own recovery frames.
+		if action!="shake" or action_clock<0.44: return not bool(world.call("companion_can_dig",task_point))
+	return false
+
+func _try_auto_dig() -> bool:
+	var square: bool = Skills.has_skill("shake") and shake_cooldown<=0.0
+	var assist: bool = Skills.has_skill("teamwork") and assist_cooldown<=0.0
+	if not (square or assist) or not _mining_held() or not world.has_method("companion_can_dig"): return false
+	# Sample only the wall being faced. Do not scan or dig unrelated terrain.
+	var aim: Vector2 = Vector2(hero.get("facing_vector")).normalized()
+	for reach in [40.0,64.0,88.0]:
+		var point: Vector2 = hero.global_position+aim*reach
+		if not bool(world.call("companion_can_dig",point)): continue
+		point=world.call("_cell_center",world.call("_world_to_cell",point))
+		var landing: Vector2 = _reachable_floor(point)
+		if not is_finite(landing.x) or landing.distance_to(hero.global_position)>160.0: continue
+		mode="dig"
+		automatic_task=true
+		assist_action=not square
+		task_point=point
+		destination=landing
+		loot_id=""
+		route.clear()
+		if global_position.distance_to(landing)<=9.0: _begin_shake()
+		return true
+	return false
+
+func _reachable_floor(point: Vector2) -> Vector2:
+	if not _blocked(point) and _segment_clear(global_position,point): return point
+	var tile: float = 64.0 if world.has_method("_is_floor") else 48.0
+	var best: Vector2 = Vector2(INF,INF)
+	var distance: float = INF
+	for offset in [Vector2.LEFT,Vector2.RIGHT,Vector2.UP,Vector2.DOWN]:
+		var candidate: Vector2 = point+offset*tile
+		var score: float = global_position.distance_squared_to(candidate)
+		if score<distance and not _blocked(candidate) and _segment_clear(global_position,candidate):
+			best=candidate
+			distance=score
+	return best
+
+func _auto_scout() -> void:
+	# Ore Nose and Echo assist exploration without moving the player or changing worlds.
+	if _mining_held(): return
+	if Skills.has_skill("ore_nose") and sniff_clock<=0.0 and world.has_method("companion_ore_target"):
+		sniff_clock=10.0
+		var ore: Vector2 = world.call("companion_ore_target",hero.global_position)
+		if is_finite(ore.x) and ore.distance_to(hero.global_position)<=HELP_RADIUS and (not is_finite(last_sniff.x) or ore.distance_to(last_sniff)>16.0):
+			last_sniff=ore
+			guide_kind="ore_nose"
+			guide_point=ore
+			guide_time=12.0
+			_ping(ore)
+			_react("Sniff sniff... ore!",2.4,true)
+			var landing: Vector2 = _reachable_floor(ore)
+			if is_finite(landing.x) and landing.distance_to(hero.global_position)<=HELP_RADIUS:
+				destination=landing
+				mode="scout"
+				automatic_task=true
+			return
+	if not Skills.has_skill("echo") or echo_clock>0.0 or guide_time>0.0: return
+	echo_clock=12.0
+	if is_finite(last_echo_origin.x) and last_echo_origin.distance_to(hero.global_position)<160.0: return
+	var passage: Vector2 = _scout_target("echo")
+	if not is_finite(passage.x) or passage.distance_to(hero.global_position)<96.0: return
+	last_echo_origin=hero.global_position
+	guide_kind="echo"
+	guide_point=passage
+	guide_time=20.0
+	_ping(passage)
+	_react("A way deeper!",2.4,true)
 
 func _loot() -> Array:
 	return world.call("companion_loot_candidates") if world.has_method("companion_loot_candidates") else []
 
 func _begin_shake() -> void:
-	if shake_cooldown>0.0:
+	if (assist_cooldown if assist_action else shake_cooldown)>0.0:
 		recall()
 		return
+	if assist_action: assist_cooldown=2.5
 	action="shake"
 	action_clock=0.0
 	facing=(task_point-global_position).normalized()
@@ -292,14 +379,17 @@ func _update_action(delta: float) -> void:
 		var collected: int = int(world.call("companion_collect_loot",global_position,radius)) if world.has_method("companion_collect_loot") else 0
 		collected_total += collected
 		Skills.earn(collected)
-		if collected>0: _react("Got %d! +%d paws" % [collected,collected],2.2)
+		if collected>0: _react("Got %d! +%d paws" % [collected,collected],2.2,true)
 		elif not loot_id.is_empty(): failed_loot[loot_id]=Time.get_ticks_msec()+10000
 	if action=="shake" and (mode=="dig" or assist_action) and previous<0.44 and action_clock>=0.44:
+		if automatic_task and (not _mining_held() or task_point.distance_to(hero.global_position)>170.0 or Vector2(hero.get("facing_vector")).dot(task_point-hero.global_position)<=0.0):
+			recall()
+			return
 		var count: int = int(world.call("companion_dig",task_point,not assist_action)) if world.has_method("companion_dig") else 0
 		dug_total+=count
 		if not assist_action: shake_cooldown=8.0 if count>0 else 1.0
 		if count>0:
-			_react("Teamwork!" if assist_action else "%d blocks!" % count,2.2)
+			_react("Teamwork!" if assist_action else "%d blocks!" % count,2.2,automatic_task)
 			AudioDirector.play_mining("stone",true,false)
 	if action_clock>=(0.72 if action=="pickup" else 0.84): recall()
 
@@ -357,12 +447,14 @@ func _move(delta: float) -> void:
 	var next: Vector2 = destination
 	if not _segment_clear(global_position,destination):
 		if route.is_empty() or route_goal.distance_to(destination)>30.0:
+			if path_cooldown>0.0: return
+			path_cooldown=0.9
 			route=_path_to(destination)
 			route_goal=destination
 		if route.is_empty():
 			if mode!="follow":
 				if mode=="fetch": failed_loot[loot_id]=Time.get_ticks_msec()+10000
-				_react("Need an open path",2.0)
+				if not automatic_task: _react("Need an open path",2.0)
 				recall()
 			return
 		while not route.is_empty() and global_position.distance_to(route[0])<0.5: route.pop_front()
@@ -385,6 +477,7 @@ func _move(delta: float) -> void:
 		moving=true
 
 func _path_to(point: Vector2) -> Array[Vector2]:
+	path_searches+=1
 	var tile: float = 64.0 if world.has_method("_is_floor") else 48.0
 	var start: Vector2i = Vector2i((global_position/tile).floor())
 	var goal: Vector2i = Vector2i((point/tile).floor())
@@ -417,20 +510,26 @@ func _path_to(point: Vector2) -> Array[Vector2]:
 	result.append(point)
 	return result
 
-func scout(kind: String) -> bool:
-	if not Skills.has_skill(kind): return false
+func _scout_target(kind: String) -> Vector2:
 	var point: Vector2 = Vector2(INF,INF)
 	if kind=="ore_nose" and world.has_method("companion_ore_target"):
 		point=world.call("companion_ore_target",global_position)
 	elif kind in ["echo","homeward"]:
 		if world.has_method("prepare_tunnel_home"):
-			point=world.call("guide_target","return" if kind=="homeward" else "deeper")
+			point=world.call("guide_target","up" if kind=="homeward" else "down")
 		elif world.has_method("_is_floor"): point=world.get("up_shaft_position") if kind=="homeward" else world.get("down_shaft_position")
 		elif world.has_method("_terrain_is_solid"): point=world.call("entry_spawn") if kind=="homeward" else world.get("depth_entrance")
 		elif world.has_method("_entry_spawn"):
 			point=world.call("_entry_spawn") if kind=="homeward" else world.get("depth_entrance")
 		elif world.has_method("guide_target"): point=world.call("guide_target","hubEntrance")
+	return point
+
+func scout(kind: String) -> bool:
+	if not Skills.has_skill(kind): return false
+	var point: Vector2 = _scout_target(kind)
 	if not is_finite(point.x): return false
+	automatic_task=false
+	assist_action=false
 	guide_kind=kind
 	guide_point=point
 	guide_time=20.0 if kind!="homeward" else 120.0
@@ -456,9 +555,12 @@ func _ping(point: Vector2) -> void:
 	marker.visible=true
 
 func debug_snapshot() -> Dictionary:
-	return {"mode":mode,"action":action,"position":global_position,"destination":destination,"collected":collected_total,"dug":dug_total,"frame":sprite.frame,"light":lamp.debug_snapshot(),"shake_cooldown":shake_cooldown}
+	return {"mode":mode,"action":action,"position":global_position,"destination":destination,"collected":collected_total,"dug":dug_total,"frame":sprite.frame,"light":lamp.debug_snapshot(),"shake_cooldown":shake_cooldown,"automatic_task":automatic_task,"path_searches":path_searches}
 
-func _react(message: String, duration: float=2.0) -> void:
+func _react(message: String, duration: float=2.0, automatic: bool=false) -> void:
+	if automatic:
+		if auto_feedback_cooldown>0.0: return
+		auto_feedback_cooldown=8.0
 	feedback=message
 	feedback_time=duration
 
