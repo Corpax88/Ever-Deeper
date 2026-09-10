@@ -21,7 +21,7 @@ func _ready() -> void:
 	button.texture_normal=preload("res://assets/companion/mole-hud.png")
 	button.ignore_texture_size=true
 	button.stretch_mode=TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-	button.tooltip_text="Mining companion · skills and commands"
+	button.tooltip_text="Mining companion · automatic help and skills"
 	button.pressed.connect(open_skills)
 	add_child(button)
 	journal=preload("res://scripts/companion/companion_journal.gd").new()
@@ -73,7 +73,7 @@ func _process(_delta: float) -> void:
 	if active!=null and activity.visible:
 		var next_text: String=active.direction_hint()
 		if next_text.is_empty(): next_text=active.status_text()
-		if Skills.has_skill("shake"): next_text+="\n"+("Dig ready" if active.shake_cooldown<=0.0 else "Dig in %ds" % ceili(active.shake_cooldown))
+		if Skills.has_skill("shake"): next_text+="\n"+("Auto dig ready" if active.shake_cooldown<=0.0 else "Auto dig · %ds" % ceili(active.shake_cooldown))
 		if activity.text!=next_text: activity.text=next_text
 
 func active_mole() -> MoleCompanion:

@@ -3,15 +3,15 @@ extends RefCounted
 
 const SKILLS: Array[Dictionary] = [
 	{"id":"lantern","name":"Little Lantern","detail":"A warm helmet beam lights the tunnel beside you.","gold":0,"bond":0,"requires":""},
-	{"id":"fetch","name":"Fetch","detail":"Automatically collects loose ore nearby. Ore goes straight into your backpack. Tap open ground to send your mole there.","gold":0,"bond":0,"requires":""},
+	{"id":"fetch","name":"Fetch","detail":"Automatically collects nearby loose ore into your backpack and stays close as you move. No commands needed.","gold":0,"bond":0,"requires":""},
 	{"id":"trailrunner","name":"Trailrunner","detail":"Runs 60% faster while fetching and following. Faster feet bring ore back sooner.","gold":35,"bond":5,"requires":"fetch"},
 	{"id":"big_paws","name":"Big Paws","detail":"Scoops up a whole nearby cluster with more than triple the pickup reach. Works automatically.","gold":60,"bond":10,"requires":"fetch"},
-	{"id":"ore_nose","name":"Ore Nose","detail":"Automatically sniffs out exposed ore every 10 seconds. Tap Find ore to send your mole beside a marked vein.","gold":90,"bond":15,"requires":"big_paws"},
+	{"id":"ore_nose","name":"Ore Nose","detail":"Sniffs for exposed ore every 10 seconds while exploring and lights a reachable vein nearby. Returns to help when you start mining.","gold":90,"bond":15,"requires":"big_paws"},
 	{"id":"long_beam","name":"Long Beam","detail":"Twice the helmet-light reach, so you can see farther down the tunnel. Always on after learning.","gold":75,"bond":12,"requires":"lantern"},
-	{"id":"shake","name":"Earthshaker","detail":"Tap a nearby wall: one mighty shake opens up to 2×2 ordinary terrain cells. 8 second recharge. Sealed gates and bedrock remain solid.","gold":140,"bond":25,"requires":"big_paws"},
-	{"id":"teamwork","name":"Teamwork","detail":"Helps open one ordinary wall cell every 2.5 seconds while you mine beside it.","gold":210,"bond":35,"requires":"shake"},
-	{"id":"echo","name":"Echo Scout","detail":"Marks the way deeper and points toward it for 20 seconds, even when the entrance is off-screen.","gold":170,"bond":25,"requires":"long_beam"},
-	{"id":"homeward","name":"Tunnel Home","detail":"A quick tunnel brings you and your attached relic home from The Deep. Your dig site is saved for the return trip. Ready automatically when the Deepheart is restored; before then, leads you toward the exit.","gold":240,"bond":40,"requires":"echo"},
+	{"id":"shake","name":"Earthshaker","detail":"Automatically helps at the wall you are mining: one shake opens up to 2×2 ordinary cells. 8 second recharge. Respects sealed gates and bedrock.","gold":140,"bond":25,"requires":"big_paws"},
+	{"id":"teamwork","name":"Teamwork","detail":"Automatically helps with one ordinary wall cell every 2.5 seconds between Earthshaker uses. Stops digging when you do.","gold":210,"bond":35,"requires":"shake"},
+	{"id":"echo","name":"Echo Scout","detail":"Automatically points the way deeper as you explore new ground. The hint lasts 20 seconds without interrupting your movement or mining.","gold":170,"bond":25,"requires":"long_beam"},
+	{"id":"homeward","name":"Tunnel Home","detail":"Choose when to go home; your mole handles the tunnel and brings your attached relic. Your dig site is saved. Ready when the Deepheart is restored; elsewhere, leads toward the exit.","gold":240,"bond":40,"requires":"echo"},
 ]
 
 static func has_skill(id: String) -> bool:
@@ -61,4 +61,4 @@ static func config(selected: String = "mole:fetch") -> Dictionary:
 			"future_unlock_label":"Companion bond",
 			"future_unlock":"%d bond available · earned by collecting ore together" % bond(),
 		})
-	return {"panel_id":"companion","title":"Your Mining Companion","subtitle":"Tap the ground to guide your mole · collect ore to earn bond","catalog_label":"Skills","selected_item_id":selected,"items":items}
+	return {"panel_id":"companion","title":"Your Mining Companion","subtitle":"Skills help automatically · collect ore to earn bond","catalog_label":"Skills","selected_item_id":selected,"items":items}
