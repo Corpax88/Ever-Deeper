@@ -81,3 +81,33 @@ iPhone FPS, touch comfort, perceived helpfulness over a full human session or
 subjective audio quality. The task adds no lights or particles; its scheduler and
 path-search bounds are tested, but no new performance improvement is claimed.
 The three-minute phone steps are in `mole-autonomy.md`.
+
+## Publication
+
+[34440695093](https://github.com/Corpax88/Ever-Deeper/actions/runs/34440695093)
+passed package, Pages deployment and public verification. All nine DEV files
+match artifact **10137430221**; all nine LIVE files retain their previous bytes.
+The signed receipt artifact is **10137859122**, persisted with publication
+metadata in `.github/one-point-zero/mole-publication-receipt.json`. Rollback
+artifact **10137836004** contains both previous public packages.
+
+The additional source check after merge, run `34440695207` attempt 1, hit the
+previously documented dummy-renderer `texture_2d_initialize` null-parameter
+error during companion creation in overhaul startup. Its 24 KB raw log artifact
+**10137847560** is retained, and the failing log is archived below. This is the
+same class of intermittent headless engine error documented in
+`performance-diagnosis/iphone-dev2-resources.md`; it is not relabeled as passed.
+The exact published package already passed all six required jobs and rendered
+checks. A retry of the same merged source was requested to distinguish this
+known headless failure from a new reproducible regression.
+
+The same runner lacked `rg`, so the source workflow's import check could fall
+through without scanning its log. That independent gate defect is corrected by
+using Python's standard-library regex with the same fatal-error patterns. The
+original import log was read directly and contains no script/engine errors. No
+runtime code or approved package bytes change in this workflow repair.
+
+Attempt 2 of the same merged commit (`34440695207`, job `102755736419`)
+passed all fourteen source suites with no runtime errors. The first failure
+remains archived as `mole-autonomy-evidence/post-merge-headless-failure.txt`.
+This bounded rerun did not change the source or the public package.

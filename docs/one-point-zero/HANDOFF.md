@@ -11,9 +11,12 @@ the player's choice. The journal explains automatic help and optional commands.
 Fourteen active source/package suites include 50 real companion assertions.
 Native and WebKit images are inspected; physical iPhone FPS remains unverified.
 
-DEV4 publication is in progress. Use the immutable reviewed artifact without
-rebuilding. The baseline is the actual DEV3 receipt; preserve all existing LIVE
-bytes. After publication, verify all 18 files and persist the publication receipt.
+DEV4 was published and all 18 public files verified by
+[34440695093](https://github.com/Corpax88/Ever-Deeper/actions/runs/34440695093).
+The durable receipt is `.github/one-point-zero/mole-publication-receipt.json`;
+rollback artifact **10137836004** retains both previous public packages.
+All nine DEV files match the reviewed artifact, and all nine LIVE bytes retain
+the existing 0.46.9 package.
 Phone steps and ongoing normal-flow authorization are in
 [mole-autonomy.md](../mole-autonomy.md). PR:
 [14](https://github.com/Corpax88/Ever-Deeper/pull/14).
