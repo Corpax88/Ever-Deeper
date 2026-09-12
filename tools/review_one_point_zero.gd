@@ -178,6 +178,7 @@ func _drill_resource_guide_capture() -> bool:
 	fixture.set("_main", main)
 	for mine_id in ["mossMine", "moonMine", "emberMine"]:
 		if not _check(fixture._prepare_d2_gate(mine_id, 0, "intact"), "Gate ore render fixture " + mine_id): return false
+		main._dev_seed_all_zones_state()
 		var depth: Node = main.depth_world
 		depth.set_process(false)
 		var gate: Dictionary = depth.get_drill_gates()[0]
