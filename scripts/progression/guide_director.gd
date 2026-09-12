@@ -67,8 +67,8 @@ func resolve(proposal: Dictionary) -> Dictionary:
 func goal_for_state(discovery: Dictionary = {}) -> Dictionary:
 	var goal: Dictionary = _resolve_goal_for_state()
 	# Nearby, actually discovered opportunities take precedence while exploring.
-	# Carrying a relic, construction and a chosen resource recipe keep priority.
-	if String(goal.get("kind", "")) == "endless_explore" and not discovery.is_empty():
+	# Carrying a relic, construction and a ready upgrade keep priority.
+	if String(goal.get("kind", "")) in ["endless_explore", "endless_resource"] and not discovery.is_empty():
 		goal = discovery
 	return ProgressionGoalScript.decorate(goal)
 

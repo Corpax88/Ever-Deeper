@@ -666,12 +666,13 @@ func _dev_build_all_workshops_state() -> bool:
 			continue
 		var resource_id: = String(status.get("build_resource", ""))
 		var remaining: = int(status.get("remaining", 0))
-		if resource_id.is_empty() or remaining <= 0:
+		if resource_id.is_empty():
 			return false
-		RunState.add_resource(resource_id, remaining, false)
-		var delivered: = Dictionary(RunState.deliver_workshop_material(workshop_id, resource_id, remaining))
-		if not bool(delivered.get("ok", false)):
-			return false
+		if remaining > 0:
+			RunState.add_resource(resource_id, remaining, false)
+			var delivered: = Dictionary(RunState.deliver_workshop_material(workshop_id, resource_id, remaining))
+			if not bool(delivered.get("ok", false)):
+				return false
 		if not bool(Dictionary(RunState.build_workshop(workshop_id)).get("ok", false)):
 			return false
 	return true

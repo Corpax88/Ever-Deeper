@@ -35,9 +35,14 @@ not claim to solve unlimited late-game variety or certify iPhone FPS.
 
 ## Verification and release
 
-In progress. Source diffs and protected-file checks pass; Godot and final-package
-checks are pending. The local cached Godot ZIP is incomplete and a fresh release
-download timed out. Use the existing six-job GitHub DEV validation workflow.
+In progress. Source diffs, protected-file checks and eight offline release tests
+pass. First CI run 34699520146 imported cleanly and passed 12/14 source cases,
+including all four revised 1.0 cases and automatic mole behavior. Touch and DEV
+tools exposed a shared developer-fixture bug: its workshop helper rejected an
+already supplied building. That helper now proceeds directly to construction;
+the original touch and DEV-tool assertions remain intact. Full revalidation and
+final-package captures are pending. The local cached Godot ZIP is incomplete and
+a fresh release download timed out; validation uses the established GitHub jobs.
 Never publish this candidate before its tests and actual mobile captures pass.
 Keep the existing LIVE 0.46.9 package. Review flags must remain false until the
 new immutable artifact has been inspected; DEV4's receipt is historical evidence.

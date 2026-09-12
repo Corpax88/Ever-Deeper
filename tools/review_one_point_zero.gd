@@ -74,6 +74,7 @@ func _run() -> void:
 	await _settle(8)
 	_check(bool(world.stream_snapshot().continuous), "The Deep uses a continuous resident window")
 	await _capture("03-deep-entrance", {"fixture": "First entry; ordinary approved camera"})
+	if not await _local_discovery_capture(): _finish(); return
 	if not await _mine_corner("04-deep-mined-corner"): _finish(); return
 	if not _bedrock_fixture(): _finish(); return
 	await _capture("05-diggable-and-bedrock", {"fixture": "Approach excavated through actual wall owner; boundary intact"})
@@ -272,6 +273,23 @@ func _relic_cycle(relic_id: String, capture_return: bool) -> bool:
 		hub.restore_position(pedestal)
 		await _capture("hub-museum-three-relics", {"fixture": "Three actual placed relics; chamber still unbuilt"})
 	return true
+
+func _local_discovery_capture() -> bool:
+	var position: Vector2 = world.player.global_position
+	var site: Dictionary = world.discovery_sites[0]
+	world.restore_position(Vector2(site.position))
+	world._update_discoveries()
+	await _settle(4)
+	var goal: Dictionary = main._progression_goal()
+	if not _check(String(goal.get("objective_id", "")).begins_with("endless:discovery:"), "Actual exposed discovery supplies the local goal"): return false
+	await _capture("03-local-cache-choice", {"fixture": "Player positioned at generated cache; ordinary proximity/line-of-sight discovery"}, true)
+	if not _check(world._start_site_activity(int(site.index), "stabilize"), "Actual cache recovery begins"): return false
+	await _capture("03-local-cache-rune", {"fixture": "Actual active cache activity; guide follows the authored next rune"}, true)
+	world._cancel_site_activity()
+	world.restore_position(position)
+	await _settle(4)
+	return true
+
 
 func _workshop_capture(workshop_id: String, label: String) -> void:
 	var hub: Node = main.hub_world
