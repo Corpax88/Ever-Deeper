@@ -262,12 +262,11 @@ func _relic_cycle(relic_id: String, capture_return: bool) -> bool:
 	var relic: Dictionary = state.relic_status(relic_id)
 	var workshop_id: String = String(relic.workshop_id)
 	var status: Dictionary = state.workshop_status(workshop_id)
-	var resource: String = String(status.build_resource)
-	var remaining: int = int(status.remaining)
-	state.add_resource(resource, maxi(0, remaining - int(state.cargo.get(resource, 0))), false)
-	var delivered: Dictionary = state.deliver_workshop_material(workshop_id, resource, remaining)
-	if not _check(bool(delivered.get("ok", false)), "Real workshop material delivery"): return false
+	if not _check(bool(status.ready_to_build) and int(status.remaining) == 0, "Actual relic return supplies construction"): return false
+	await _capture("relic-powered-" + workshop_id, {"fixture": "Generated relic physically delivered; workshop ready without additional resource funding"}, true)
+	var before_build: Dictionary = state.cargo.duplicate(true)
 	if not _check(bool(state.build_workshop(workshop_id).get("ok", false)), "Real workshop construction"): return false
+	_check(state.cargo == before_build, "Relic-powered construction preserves gathered resources")
 	main._sync_hub_runtime()
 	if relic_id == "memory_loom":
 		hub.restore_position(pedestal)

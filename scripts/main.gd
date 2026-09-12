@@ -30,7 +30,7 @@ const WORLD_BY_MINE = WorldCatalog.WORLD_BY_MINE
 const GATE_REQUIREMENTS: = {
 	"moonglass": {"pickaxe": 3, "gold": 120, "mastery": 0, "title": "Moonglass Gate"},
 	"emberdeep": {"pickaxe": 4, "gold": 360, "mastery": 0, "title": "Emberdeep Seal"},
-	"starfall": {"pickaxe": 0, "gold": 0, "mastery": 5, "title": "Starfall Master Seal"}
+	"starfall": {"pickaxe": WorldCatalog.ENTRY_GATES.starfall.min_pickaxe_level, "gold": 0, "mastery": WorldCatalog.ENTRY_GATES.starfall.min_ember_mastery, "title": "Starfall Master Seal"}
 }
 const STARFORGE_VARIANT_IDS: = ["crusher", "swift", "prospector"]
 const ENDLESS_RESOURCE_NAMES: = {
@@ -860,11 +860,18 @@ func _auto_sort_inventory() -> void :
 	)
 
 
+func _progression_goal() -> Dictionary:
+	var discovery: Dictionary = {}
+	if phase == "endless" and is_instance_valid(endless_world):
+		discovery = endless_world.discovery_goal()
+	return guide_director.goal_for_state(discovery)
+
+
 func _update_visual_guide() -> void :
 	if guide_overlay == null or menu_open or inventory_open or not game_started:
 		return
 	guide_route_update_count += 1
-	var goal: Dictionary = guide_director.goal_for_state()
+	var goal: Dictionary = _progression_goal()
 	if goal.is_empty():
 		guide_director.reset()
 		guide_overlay.clear_target()
@@ -954,6 +961,10 @@ func _guide_route_proposal(goal: Dictionary) -> Dictionary:
 		"deepheart":
 			proposal = _deepheart_guide_proposal(proposal)
 		"endless":
+			if goal.has("discovery_target"):
+				proposal.waypoint_id = String(goal.objective_id)
+				proposal.candidates = [_guide_candidate(proposal.waypoint_id, Vector2(goal.discovery_target), 0.0)]
+				return proposal
 			var target_kind: = ""
 			if kind == "endless_return":
 				# The mole's home command is always available; no uphill waypoint.
@@ -3272,7 +3283,7 @@ func _deep_hoard_status_text() -> String:
 
 func _endless_objective() -> String:
 	var status: = Dictionary(RunState.endless_descent_status())
-	var goal: = Dictionary(guide_director.goal_for_state())
+	var goal: = _progression_goal()
 	return "%d m · %s" % [
 		endless_world.depth_metres(),
 		String(goal.get("title", "Keep digging deeper")).to_upper(),

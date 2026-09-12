@@ -1515,6 +1515,12 @@ func place_carried_relic() -> Dictionary:
 	state["placed"] = true
 	endless_relics[relic_id] = state
 	var definition: Dictionary = Dictionary(ENDLESS_RELIC_CATALOG[relic_id])
+	# The discovery pays for its first physical Hub change. Later upgrades still
+	# consume mined resources. Credit construction directly, never pocket currency.
+	var workshop_id: String = String(definition.workshop_id)
+	var workshop: Dictionary = Dictionary(endless_workshops.get(workshop_id, _default_endless_workshop_state()))
+	workshop["delivered"] = int(definition.build_cost)
+	endless_workshops[workshop_id] = workshop
 	carried_relic = _default_carried_relic()
 	_state_changed()
 	return {
@@ -3980,6 +3986,10 @@ func _sanitize_endless_workshops(raw: Variant, relics: Dictionary) -> Dictionary
 			int(definition.build_cost)
 		)
 		var built: = blueprint_unlocked and _strict_bool(state_source.get("built", false))
+		# Existing placed relics receive the same construction credit. Repeated
+		# loads are idempotent; cargo, upgrades and workshop style are untouched.
+		if blueprint_unlocked:
+			delivered = int(definition.build_cost)
 		var level: = 0
 		if built:
 			delivered = int(definition.build_cost)

@@ -106,4 +106,21 @@ func run() -> void:
 	main._enter_endless(true, false)
 	_check(main.phase == "endless" and int(RunState.endless_descent_status().current_depth) == 12, "Prior final workshop checkpoint becomes usable tunnel resume")
 	_check(not main.endless_world.collision_at(main.endless_world.player.global_position), "Prior checkpoint resumes safely")
+	# A previously displayed, partly funded relic receives only the missing
+	# construction credit. No pocket refund can repeat across save/load cycles.
+	var construction: Dictionary = mature.duplicate(true)
+	var old_workshops: Dictionary = construction.state.endless_descent.workshops
+	old_workshops.light_lab = {"built": false, "level": 0, "style": "original", "delivered": 73}
+	var old_cargo: Dictionary = construction.state.cargo.duplicate(true)
+	main.endless_world.set_active(false)
+	main.phase = "surface"
+	_check(RunState.deserialize(construction), "Legacy partially funded workshop loads")
+	_check(bool(RunState.workshop_status("light_lab").ready_to_build), "Previously placed relic supplies remaining construction")
+	_check(int(RunState.workshop_status("light_lab").delivered) == 200, "Construction credit is capped at the original cost")
+	_check(RunState.cargo == old_cargo, "Construction migration leaves every pocket resource unchanged")
+	for _round in 2:
+		var credited: Dictionary = RunState.serialize()
+		_check(RunState.deserialize(credited), "Construction-credit save round trip")
+		_check(RunState.cargo == old_cargo and int(RunState.workshop_status("light_lab").delivered) == 200, "Reload never repeats construction credit into cargo")
+	_check(int(RunState.workshop_status("tool_forge").level) == 5 and String(RunState.endless_loadout_status().outfit) == "deepheart", "Earned levels and outfit survive the construction change")
 	_finish("migration")

@@ -44,7 +44,7 @@ static func decorate(goal: Dictionary) -> Dictionary:
 			var recipe: = Dictionary(status.get("next_upgrade", {}))
 			if not recipe.is_empty():
 				rows.append(_row(String(recipe.get("resource", "")), int(recipe.get("cost", 0))))
-		else:
+		elif not bool(status.get("ready_to_build", false)):
 			rows.append(_row(String(status.get("build_resource", "")), int(status.get("build_cost", 0)), int(status.get("delivered", 0))))
 	result["requirements"] = rows
 	var ready: = not rows.is_empty()

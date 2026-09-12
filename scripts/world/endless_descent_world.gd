@@ -400,12 +400,62 @@ func perform_context() -> String:
 	return ""
 
 
+func discovery_goal() -> Dictionary:
+	# Read only the bounded resident window. Never reveal a hidden relic or
+	# mark a cache claimed merely because its hint is displayed.
+	if not active or not is_instance_valid(player) or rope_attached:
+		return {}
+	if not site_activity.is_empty():
+		var index: int = int(site_activity.get("array_index", -1))
+		if index >= 0 and index < discovery_sites.size():
+			var site: Dictionary = discovery_sites[index]
+			var next_rune: int = int(site_activity.get("next_rune", 0))
+			var runes: Array = Array(site.get("rune_positions", []))
+			if next_rune >= 0 and next_rune < runes.size():
+				return _discovery_goal(String(site.id) + ":rune:%d" % next_rune,
+					String(site.title).to_lower().capitalize(), "Follow the lit seals",
+					Vector2(runes[next_rune]))
+	var nearest_relic: Dictionary = {}
+	var nearest_distance: float = 640.0 * 640.0
+	for relic in _native_relics:
+		if not bool(relic.get("discovered", false)) or _relic_already_claimed(String(relic.id)):
+			continue
+		var distance: float = player.global_position.distance_squared_to(Vector2(relic.position))
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest_relic = relic
+	if not nearest_relic.is_empty():
+		var name: String = String(RELIC_NAMES.get(String(nearest_relic.id), "Relic")).to_lower().capitalize()
+		return _discovery_goal(String(nearest_relic.id), name, "Bring it home · awaken a workshop", Vector2(nearest_relic.position))
+	var nearest_site: Dictionary = {}
+	nearest_distance = 480.0 * 480.0
+	for site in discovery_sites:
+		if not bool(site.get("discovered", false)) or bool(site.get("resolved", false)):
+			continue
+		var distance: float = player.global_position.distance_squared_to(Vector2(site.position))
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest_site = site
+	if not nearest_site.is_empty():
+		return _discovery_goal(String(nearest_site.id), String(nearest_site.title).to_lower().capitalize(),
+			"Calm the surge · or double loot", Vector2(nearest_site.position))
+	return {}
+
+
+func _discovery_goal(id: String, title: String, action: String, target: Vector2) -> Dictionary:
+	return {
+		"objective_id": "endless:discovery:" + id, "kind": "endless_explore",
+		"title": title, "hud_title": title, "hud_action": action,
+		"discovery_target": target,
+	}
+
+
 func guide_target(kind: String = "") -> Vector2:
 	if kind == "up" or rope_attached:
 		return player.global_position
 	if kind == "down":
 		return down_shaft_position
-	if kind == "relic" and not native_relic_id.is_empty():
+	if kind == "relic" and native_relic_discovered and not native_relic_id.is_empty():
 		return native_relic_position
 	var target: Vector2 = down_shaft_position
 	var nearest: float = INF
@@ -1586,6 +1636,8 @@ func _update_discoveries() -> void :
 		if bool(site.discovered):
 			continue
 		if player.global_position.distance_to(Vector2(site.position)) > SITE_DISCOVERY_RADIUS:
+			continue
+		if not _clear_mining_line(player.global_position, Vector2(site.position)):
 			continue
 		site.discovered = true
 		discovery_sites[index] = site

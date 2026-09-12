@@ -53,6 +53,38 @@ func _claim_integrity() -> bool:
 	return true
 
 
+func _discovery_guidance() -> void:
+	_freeze_world()
+	var saved_position: Vector2 = world.player.global_position
+	var saved_cells: PackedByteArray = world.floor_cells.duplicate()
+	var site: Dictionary = world.discovery_sites[0]
+	var position: Vector2 = Vector2(site.position)
+	world.player.global_position = position + Vector2(128, 0)
+	var wall: Vector2i = world._world_to_cell(position + Vector2(64, 0))
+	world.floor_cells[world._cell_index(wall)] = 0
+	world._update_discoveries()
+	_check(not bool(world.discovery_sites[0].discovered), "Rock between player and cache prevents discovery through walls")
+	_check(String(world.discovery_goal().get("objective_id", "")) != "endless:discovery:" + String(site.id), "Hidden cache cannot become a guide target")
+	world.floor_cells = saved_cells
+	world.player.global_position = position
+	world._update_discoveries()
+	_check(bool(world.discovery_sites[0].discovered), "Exposed cache is discovered by actual exploration")
+	var local: Dictionary = world.discovery_goal()
+	_check(String(local.get("objective_id", "")) == "endless:discovery:" + String(site.id), "Nearby discovery replaces the generic deeper objective")
+	var cargo: Dictionary = RunState.cargo.duplicate(true)
+	var goal: Dictionary = main.guide_director.goal_for_state(local)
+	_check(goal.has("discovery_target") and Array(goal.get("requirements", [])).is_empty(), "Local opportunity is a route choice without a resource bill")
+	_check(RunState.cargo == cargo, "Reading a discovery hint awards no cache resources")
+	_check(world._start_site_activity(int(site.index), "stabilize"), "Discovered site starts its real activity")
+	var rune_goal: Dictionary = world.discovery_goal()
+	_check(String(rune_goal.get("objective_id", "")).contains(":rune:0"), "Active recovery points to its first authored rune")
+	world._cancel_site_activity()
+	world.player.global_position = saved_position
+	world.load_depth(int(world.current_depth), "from_above")
+	world.restore_position(saved_position)
+	_freeze_world()
+
+
 func _freeze_world() -> void:
 	world.set_process(false)
 	world.set_physics_process(false)
@@ -142,21 +174,23 @@ func _place_and_build(relic_id: String) -> bool:
 	var workshop_id: String = String(relic.workshop_id)
 	var resource_id: String = String(relic.build_resource)
 	var price: int = int(relic.build_cost)
-	_check(price == 200, "Preserved 200-material hub building cost")
-	# Exact boundary fixtures check no free build, over-delivery or double spend.
-	RunState.cargo[resource_id] = 0
-	_fund_resource(resource_id, price - 1)
-	var partial: Dictionary = RunState.deliver_workshop_material(workshop_id, resource_id, price - 1)
-	_check(bool(partial.get("ok", false)) and int(partial.get("accepted", 0)) == price - 1, "Workshop accepts 199 exactly")
-	_check(not bool(RunState.build_workshop(workshop_id).get("ok", true)), "Workshop cannot build at 199")
-	_goal(workshop_id + " one material remaining")
-	_fund_resource(resource_id, 1)
-	var last: Dictionary = RunState.deliver_workshop_material(workshop_id, resource_id, 500)
-	_check(bool(last.get("ok", false)) and int(last.get("accepted", 0)) == 1, "Final delivery caps to remaining one")
-	_check(bool(RunState.workshop_status(workshop_id).ready_to_build), "Workshop ready at exact cost")
+	_check(price == 200, "Existing construction value retained")
+	var cargo_before: Dictionary = RunState.cargo.duplicate(true)
+	var status: Dictionary = RunState.workshop_status(workshop_id)
+	_check(bool(status.ready_to_build) and int(status.delivered) == price, "Delivered relic supplies its complete construction value")
+	_check(not bool(RunState.deliver_workshop_material(workshop_id, resource_id, 500).get("ok", true)), "Supplied construction rejects an unnecessary extra payment")
+	_check(not bool(RunState.place_carried_relic().get("ok", true)), "Relic placement cannot be replayed for more credit")
+	_goal(workshop_id + " ready from discovery")
 	_check(bool(RunState.build_workshop(workshop_id).get("ok", false)), "Workshop builds through real transaction")
 	_check(not bool(RunState.build_workshop(workshop_id).get("ok", true)), "Workshop cannot be built twice")
-	_check(int(RunState.cargo.get(resource_id, 0)) == 0, "Workshop consumes exact material total")
+	_check(RunState.cargo == cargo_before, "Relic construction neither consumes nor grants pocket materials")
+	var upgrade: Dictionary = Dictionary(RunState.workshop_status(workshop_id).next_upgrade)
+	if not upgrade.is_empty():
+		var upgrade_resource: String = String(upgrade.resource)
+		var saved_amount: int = int(RunState.cargo.get(upgrade_resource, 0))
+		RunState.cargo[upgrade_resource] = int(upgrade.cost) - 1
+		_check(not bool(RunState.upgrade_workshop(workshop_id).get("ok", true)), "Optional upgrade still rejects one material short")
+		RunState.cargo[upgrade_resource] = saved_amount
 	_goal(workshop_id + " built")
 	return true
 
@@ -177,6 +211,7 @@ func _claim_generated_relic(relic_id: String) -> bool:
 	world.perform_context()
 	if not _check(bool(RunState.relic_status(relic_id).attached), "Actual context attaches " + relic_id):
 		return false
+	_check(String(main.guide_director.goal_for_state({"kind": "endless_explore", "objective_id": "ignored-local-cache"}).get("kind", "")) == "endless_return", "Hauling a relic keeps priority over optional cache hints")
 	var rope: Dictionary = world.rope_debug_snapshot()
 	_check(bool(rope.get("finite", false)) and int(rope.get("point_count", 0)) > 2, "Relic uses finite physical rope")
 	world.qa_step_rope(45, Vector2(0.2, -0.2))
@@ -207,6 +242,7 @@ func run() -> void:
 	if not _claim_integrity():
 		_finish("world")
 		return
+	_discovery_guidance()
 	for relic_id in RunState.ENDLESS_RELIC_IDS:
 		if main.phase == "hub":
 			main._enter_endless(true, false)
