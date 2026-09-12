@@ -1,4 +1,4 @@
-# Starforge Hub guide loop — DEV6 candidate
+# Starforge Hub guide loop — DEV6 published
 
 Mats reports that after crafting Starforge Crusher, the guide repeatedly asks
 him to inspect the Hub and sends him back whenever he leaves.
@@ -38,7 +38,8 @@ harness includes before-entry, after-entry and after-exit at both mobile sizes.
 - Accepted DEV6 artifact: 10304559817. Its PCK hash is
   `02e8d59d1c1f2ddf53de4128763559b59ec89aaabc78b41ba907720d32de37a0`.
   This is the CI artifact, distinct from the earlier local export.
-- DEV acceptance flags now bind only that exact artifact. Publication is next.
+- DEV6 publication run 34717418294 passed packaging, deployment and verification.
+  All nine DEV files match the accepted artifact; all nine LIVE files retain 0.46.9.
 
 ## Authorization and release progress
 
@@ -49,11 +50,14 @@ uploaded the identical source tree `e8588e2c5b2970415a5749c3a851eeb7f4ceea06`.
 Validation source: `d60922cb13a4ad521ef5d1721434574e097fdc7f`.
 Validation run: `34716507336`.
 
-Complete the established `one-point-zero.yml` checks, inspect the exact-pack
-Hub captures, and record the actual artifact identities in review.json before
-merging and publishing. The baseline now pins the verified DEV5 receipt. DEV6
-version checks are synchronized; LIVE remains the separately approved 0.46.9.
-Do not ship the locally exported PCK as though it were an accepted CI artifact.
+PR #16 is merged at `bf51e54ab2cadd8a462c8afcbb0fe603f9a6f0df`.
+Publication receipt: `.github/one-point-zero/hub-guide-publication-receipt.json`.
+Receipt artifact: `10305650934`. Rollback artifact: `10305735709` (previous DEV5
+and LIVE packages). The exact 18-file receipt was downloaded and checked against
+the accepted candidate and previous LIVE identities. No release task remains.
+
+Test URL: https://corpax88.github.io/Ever-Deeper/dev/?v=1.0.0-dev.6
+The menu must show `1.0.0-dev.6`. Use the current save; no reset is needed.
 
 Phone acceptance: continue the existing Starforge save. Enter and leave the Hub,
 reload, and confirm the guide continues toward the first drill without resetting.

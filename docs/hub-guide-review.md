@@ -68,3 +68,14 @@ checks. Publication must use the reviewed immutable candidate, preserve all
 nine LIVE 0.46.9 files, back up current DEV5 and verify all eighteen public files.
 The baseline pins discovery-publication-receipt.json. No new LIVE release is
 approved by this review.
+
+## Publication verified
+
+PR #16 merged at `bf51e54ab2cadd8a462c8afcbb0fe603f9a6f0df`.
+Run 34717418294 passed packaging, Pages deployment and public verification.
+All nine DEV files match artifact 10304559817; all nine LIVE files remain the
+previous 0.46.9 bytes. Receipt artifact 10305650934 was downloaded, ZIP hash
+verified and all eighteen identities compared with the approved manifests.
+Rollback artifact 10305735709 retains DEV5 and LIVE. The raw receipt and the
+publication metadata are committed with this handoff. Physical phone acceptance
+remains the user test, not a claim made by automated browser checks.
