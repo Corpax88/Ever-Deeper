@@ -1,4 +1,4 @@
-# Discovery loop correction — DEV5 candidate
+# Discovery loop correction — reviewed DEV5 candidate
 
 Mats asked on 2026-09-12 to fix Ever-Deeper using the critic's findings. The
 retrieved source is the 2026-09-11 *Finding the Fun* handoff, summarizing that
@@ -37,8 +37,8 @@ not claim to solve unlimited late-game variety or certify iPhone FPS.
 
 ## Verification and release
 
-In progress. Source diffs, protected-file checks and eight offline release tests
-pass. First CI run 34699520146 imported cleanly and passed 12/14 source cases,
+Source diffs, protected-file checks and eight offline release tests pass.
+First CI run 34699520146 imported cleanly and passed 12/14 source cases,
 including all four revised 1.0 cases and automatic mole behavior. Touch and DEV
 tools exposed a shared developer-fixture bug: its workshop helper rejected an
 already supplied building. That helper now proceeds directly to construction;
@@ -46,17 +46,31 @@ the original touch and DEV-tool assertions remain intact. Second CI run
 34699791396 passed all 14 source cases and both exports. Two packaged cases
 correctly rejected an old DEV4 expectation in the capture harness; the DEV5
 version pins are now synchronized without weakening the exact-version check.
-Full revalidation and final-package captures are pending. The local cached Godot ZIP is incomplete and
-a fresh release download timed out; validation uses the established GitHub jobs.
-Never publish this candidate before its tests and actual mobile captures pass.
-Keep the existing LIVE 0.46.9 package. Review flags must remain false until the
-new immutable artifact has been inspected; DEV4's receipt is historical evidence.
+Final run [34700053177](https://github.com/Corpax88/Ever-Deeper/actions/runs/34700053177)
+passed all six jobs at runtime source `256dec9a688801e22bd23c4e946215f957eec578`.
+Fourteen source and fourteen exported-DEV cases pass, alongside both export
+flavors. Native journey validation passes 567 assertions / 50 captures; WebKit
+passes 869 gameplay and 195 touch assertions. Both browser audio jobs, hero
+motion, automatic-companion checks and 75 lighting-receiver stages pass.
+The local cached Godot ZIP is incomplete and a fresh release download timed out;
+the established GitHub jobs provide these actual engine and browser results.
+
+The author inspected all eight new small mobile states, the large ready Forge,
+a mined corner, the completed Hub and two WebKit menu/wardrobe images from the
+exact package. See [the scoped review](discovery-loop-review.md) and the image
+identities in `discovery-loop-evidence/review-index.json`.
+Immutable candidate artifact: **10299643209**. DEV PCK SHA-256:
+`0f5462e4fadb3b0292dfdf0643f594f37c05cfcad95355789f44edaaaade847c`.
+Later review/docs commits do not alter this runtime artifact. The author accepts
+DEV testing with a provisional bounded 8/10; no new independent or full-game
+approval is claimed. Publication through PR #15 is pending. LIVE stays 0.46.9.
 
 Acceptance includes actual early gate transactions, all five generated relics,
 construction without extra pocket spending, paid upgrade boundaries, no replay,
 legacy partial-construction migration, blocked/visible discovery, rune guidance,
-and the current gameplay/touch/package suites. Inspect the new relic-ready HUD
-on small iPhone viewports in the exported build.
+and the current gameplay/touch/package suites. These checks and the rendered
+small-mobile relic-ready HUD review are complete; accelerated fixtures do not
+establish enjoyable pacing or physical-device performance.
 
 Phone playtest after publication: continue an existing save, return a relic and
 build its workshop without another material trip. Explore a side discovery and
