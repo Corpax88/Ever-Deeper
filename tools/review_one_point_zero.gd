@@ -197,6 +197,9 @@ func _drill_resource_guide_capture() -> bool:
 		for i in depth.rocks.size():
 			if String(depth.rocks[i].deposit_id) == String(gate.id) and depth._rock_is_exposed(i): target = i; break
 		if not _check(target >= 0, "Exposed ore gate " + mine_id): return false
+		var ore_position: Vector2 = Vector2(depth.rocks[target].position)
+		var approach: Vector2 = (ore_position - depth.player.global_position).normalized()
+		depth.restore_position(ore_position - approach * 72.0)
 		await _capture("02-drill-guide-" + mine_id + "-barrier", {"fixture":"First required drill, intact authored gate"}, true)
 		for hit in 10: depth._hit_rock(target)
 		if not _check(int(depth.get_drill_gates()[0].remaining) == 0, "Gate opens through actual strikes " + mine_id): return false
@@ -508,6 +511,11 @@ func _save_frame(label: String, details: Dictionary) -> void:
 		main._update_visual_guide()
 		var player_screen: Vector2 = depth.player.get_global_transform_with_canvas().origin
 		_check(player_screen.distance_to(root.get_visible_rect().get_center()) < 60.0, "Guide capture keeps player centered: " + label)
+		var current_goal: Dictionary = main._progression_goal()
+		if String(current_goal.get("mine_id", "")) == String(main.current_mine_id):
+			var guide: Dictionary = main.guide_director.debug_snapshot()
+			var target_screen: Vector2 = depth.get_global_transform_with_canvas() * Vector2(guide.target_position)
+			_check(root.get_visible_rect().grow(-48).has_point(target_screen), "Required local ore stays visible: " + label)
 	await RenderingServer.frame_post_draw
 	var image: Image = root.get_texture().get_image()
 	var filename: String = label + ".png"
