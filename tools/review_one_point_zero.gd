@@ -54,6 +54,10 @@ func _run() -> void:
 	seed(FIXTURE_SEED)
 	main._start_new_game()
 	main._dev_ensure_playing()
+	if "--drill-guide-only" in OS.get_cmdline_user_args():
+		await _drill_resource_guide_capture()
+		_finish()
+		return
 	main._enter_mine("mossMine", false, false)
 	await _settle(8)
 	_check(String(main.mine_button.icon.resource_path) == "res://assets/tools/pickaxe-iron.png", "Mine action uses approved pickaxe asset")
@@ -481,6 +485,23 @@ func _clear_fixture_feedback() -> Dictionary:
 	return discarded
 
 func _save_frame(label: String, details: Dictionary) -> void:
+	if label.begins_with("02-drill-guide-"):
+		# The gate fixture can be near a camera limit. Center the reviewed action,
+		# and flush drawings explicitly because its simulation clock is frozen.
+		var depth: Node = main.depth_world
+		var camera: Camera2D = depth.player.camera
+		camera.limit_left = -100000
+		camera.limit_top = -100000
+		camera.limit_right = 100000
+		camera.limit_bottom = 100000
+		camera.position = Vector2.ZERO
+		camera.offset = Vector2.ZERO
+		camera.force_update_scroll()
+		depth.queue_redraw()
+		await _settle(6)
+		main._update_visual_guide()
+		var player_screen: Vector2 = depth.player.get_global_transform_with_canvas().origin
+		_check(player_screen.distance_to(root.get_visible_rect().get_center()) < 60.0, "Guide capture keeps player centered: " + label)
 	await RenderingServer.frame_post_draw
 	var image: Image = root.get_texture().get_image()
 	var filename: String = label + ".png"
