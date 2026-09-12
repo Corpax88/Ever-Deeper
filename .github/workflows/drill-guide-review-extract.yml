@@ -1,0 +1,49 @@
+name: Extract reviewed DEV7 guide images from the original artifact
+on:
+  push:
+    branches: [codex-ever-deeper-1-0]
+    paths: [.github/workflows/drill-guide-review-extract.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download and verify the immutable original native artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api repos/Corpax88/Ever-Deeper/actions/artifacts/10306892797/zip > "$RUNNER_TEMP/native.zip"
+          python3 - <<'PY'
+          import hashlib, json, os, zipfile
+          from pathlib import Path, PurePosixPath
+          root = Path(os.environ['RUNNER_TEMP'])
+          archive = root / 'native.zip'
+          expected = '643fc257155bf2e7baaa1d6b6af0bffad8f7719e53bcea999c5e84d47dde1831'
+          assert hashlib.sha256(archive.read_bytes()).hexdigest() == expected
+          output = root / 'guide-review'
+          output.mkdir()
+          with zipfile.ZipFile(archive) as source:
+              review = json.loads(source.read('review.json'))
+              assert review['automated_assertions_passed'] and review['failures'] == []
+              assert review['artifact']['sha256'] == 'a3885cc33cc80174d961df0c2149180e6b9ea7cb2f63158b6c4302bdc9329dd6'
+              selected = [item for item in review['captures'] if item['file'].startswith('02-drill-guide-')]
+              assert len(selected) == 18
+              for item in selected:
+                  name = item['file']
+                  assert PurePosixPath(name).name == name and name.endswith('.png')
+                  data = source.read(name)
+                  assert hashlib.sha256(data).hexdigest() == item['sha256']
+                  (output / name).write_bytes(data)
+              for name in ['review.json', 'mole/mole-review.json', 'receivers/mining-receivers.json']:
+                  (output / PurePosixPath(name).name).write_bytes(source.read(name))
+          (output / 'source-artifact.json').write_text(json.dumps({'source_run_id':34723555713, 'source_artifact_id':10306892797, 'source_zip_sha256':expected, 'captures':selected}, indent=2) + '\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-drill-guide-review-extract
+          path: ${{ runner.temp }}/guide-review
+          retention-days: 30
+          if-no-files-found: error
