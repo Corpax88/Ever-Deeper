@@ -490,13 +490,19 @@ func _save_frame(label: String, details: Dictionary) -> void:
 		# and flush drawings explicitly because its simulation clock is frozen.
 		var depth: Node = main.depth_world
 		var camera: Camera2D = depth.player.camera
-		camera.limit_left = -100000
-		camera.limit_top = -100000
-		camera.limit_right = 100000
-		camera.limit_bottom = 100000
+		camera.set_physics_process(false)
+		camera.drag_horizontal_enabled = false
+		camera.drag_vertical_enabled = false
+		camera.limit_left = 0
+		camera.limit_top = 0
+		camera.limit_right = int(depth.world_size.x)
+		camera.limit_bottom = int(depth.world_size.y)
+		camera.zoom = Vector2(2.5, 2.5)
 		camera.position = Vector2.ZERO
 		camera.offset = Vector2.ZERO
+		camera.reset_smoothing()
 		camera.force_update_scroll()
+		main.quick_tutorial.visible = false
 		depth.queue_redraw()
 		await _settle(6)
 		main._update_visual_guide()

@@ -2,7 +2,7 @@ name: Extract reviewed DEV7 guide images from the original artifact
 on:
   push:
     branches: [codex-ever-deeper-1-0]
-    paths: [.github/workflows/drill-guide-review-extract.yml]
+    paths: [.github/workflows/drill-guide-review-extract.yml, tools/review_one_point_zero.gd]
 permissions:
   contents: read
   actions: read
