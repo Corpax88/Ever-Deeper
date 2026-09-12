@@ -138,6 +138,64 @@ func _test_d2_barriers() -> void:
 			world.call("_build_rocks")
 			world.call("_update_rocks")
 			check(int(world.call("get_drill_gates")[gate_index].remaining)==0,"D2 cleared gate never regrows "+id)
+			_test_open_gate_ore(world, gate, gate_index)
+
+func _test_open_gate_ore(world: Node, gate: Dictionary, gate_index: int) -> void:
+	var seam_indices: Array[int] = []
+	for i in world.rocks.size():
+		if String(world.rocks[i].deposit_id) == "seam:" + String(gate.id): seam_indices.append(i)
+	check(seam_indices.size() == Array(gate.positions).size(), "Opened gate retains renewable ore " + String(gate.id))
+	if seam_indices.is_empty(): return
+	var target: int = seam_indices[0]
+	var node_id: String = String(world.rocks[target].state_id)
+	check(bool(world.rocks[target].broken), "New seam waits for normal ore regrowth")
+	var saved: Dictionary = RunState.serialize()
+	check(RunState.deserialize(saved), "Seam depletion reload")
+	world.call("_build_rocks")
+	check(bool(world.rocks[target].broken) and RunState.mine_resource_depletions(String(world.mine_id), 2).has(node_id), "Seam timer survives reload")
+	var count: int = world.rocks.size()
+	world.call("_restore_open_gate_seams")
+	check(world.rocks.size() == count, "Seam reconstruction is idempotent")
+	var kind: String = String(world.rocks[target].type)
+	var before: int = int(RunState.cargo[kind])
+	var required_yield: int = 60 if String(world.mine_id) == "mossMine" and gate_index == 0 else 2
+	for cycle in required_yield:
+		# Accelerate only the respawn clock; mining damage and loot collection are real.
+		var origin: Vector2 = Vector2(world.rocks[target].position)
+		world.player.global_position = origin + Vector2(1000, 0)
+		world.rocks[target].respawn_until_unix = Time.get_unix_time_from_system() - 1.0
+		world.call("_update_rocks")
+		check(not bool(world.rocks[target].broken), "Opened gate ore regrows")
+		world.player.global_position = origin + Vector2(-80, 0)
+		for hit in 100:
+			world.call("_hit_rock", target)
+			if bool(world.rocks[target].broken): break
+		check(bool(world.rocks[target].broken), "Renewable ore is mined through tool damage")
+		for drop in world.drops: drop.age = 1.0
+		world.call("companion_collect_loot", origin, 10000.0)
+		if int(RunState.cargo[kind]) - before >= required_yield: break
+	check(int(RunState.cargo[kind]) - before >= required_yield, "Renewable supply reaches recipe quantity " + kind)
+	check(int(world.call("get_drill_gates")[gate_index].remaining) == 0, "Harvesting ore never closes the passage")
+	var goal: Dictionary = {"resource_id":kind}
+	var proposal: Dictionary = main.call("_depth_guide_proposal", goal, {}, "depth_resource", String(world.mine_id))
+	for candidate in proposal.candidates:
+		var candidate_index: int = int(String(candidate.key).get_slice(":", String(candidate.key).get_slice_count(":") - 1))
+		check(String(world.rocks[candidate_index].type) == kind, "Guide targets the requested resource")
+	# Exhaust every matching vein and remove pickup fixtures: never fall back to another ore or the exit.
+	for rock in world.rocks:
+		if String(rock.type) == kind:
+			rock.broken = true
+			rock.respawn_remaining = INF
+	world.drops.clear()
+	proposal = main.call("_depth_guide_proposal", goal, {}, "depth_resource", String(world.mine_id))
+	check(Array(proposal.candidates).is_empty(), "Unavailable objective has no unrelated fallback")
+	world.rocks[target].respawn_remaining = 24.0
+	proposal = main.call("_depth_guide_proposal", goal, {}, "depth_resource", String(world.mine_id))
+	check(Array(proposal.candidates).size() == 1 and String(proposal.hud_action).begins_with("Regrowing"), "Exhausted resource points to its regrowth with truthful action")
+	world.drops.append({"kind":kind,"position":Vector2(world.rocks[target].position),"persistent_id":"guide-test"})
+	proposal = main.call("_depth_guide_proposal", goal, {}, "depth_resource", String(world.mine_id))
+	check(Array(proposal.candidates).size() == 1 and String(proposal.candidates[0].key).ends_with("guide-test") and String(proposal.hud_action).begins_with("Collect"), "Matching pickup takes priority over regrowth")
+	world.drops.clear()
 
 func _test_depth_commerce() -> void:
 	for profile in driver.MINE_PROFILES:

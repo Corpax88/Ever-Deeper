@@ -65,6 +65,7 @@ func _run() -> void:
 	await _capture("01-new-player-hud", {"fixture": "Fresh player inside first mine"}, true)
 	if not await _recipe_capture(): _finish(); return
 	if not await _hub_guide_capture(): _finish(); return
+	if not await _drill_resource_guide_capture(): _finish(); return
 
 	journey = load("res://scripts/qa/suites/one_point_zero_world.gd").new(main, null)
 	if not _check(journey._new_player_to_deep(), "Campaign prerequisites completed through real transactions"): _finish(); return
@@ -169,6 +170,65 @@ func _hub_guide_capture() -> bool:
 	main._exit_hub()
 	if not _check(String(main.guide_director.goal_for_state().objective_id) == "drill:1", "Exiting the Hub retains the drill goal"): return false
 	await _capture("02-hub-guide-after-exit", {"fixture": "Real Hub exit; no return-to-Hub loop"}, true)
+	return true
+
+func _drill_resource_guide_capture() -> bool:
+	var fixture: Node = load("res://scripts/dev/visual_capture_driver.gd").new()
+	main.add_child(fixture)
+	fixture.set("_main", main)
+	for mine_id in ["mossMine", "moonMine", "emberMine"]:
+		if not _check(fixture._prepare_d2_gate(mine_id, 0, "intact"), "Gate ore render fixture " + mine_id): return false
+		var depth: Node = main.depth_world
+		depth.set_process(false)
+		var gate: Dictionary = depth.get_drill_gates()[0]
+		state.drill_level = int(gate.required_drill_level)
+		state.pickaxe_level = 5
+		state.starforge_variant = "crusher"
+		state.hub["visited"] = true
+		state.hub["tutorialSeen"] = true
+		for resource_id in state.cargo: state.cargo[resource_id] = 0
+		state.gold = 22618
+		var target: int = -1
+		for i in depth.rocks.size():
+			if String(depth.rocks[i].deposit_id) == String(gate.id) and depth._rock_is_exposed(i): target = i; break
+		if not _check(target >= 0, "Exposed ore gate " + mine_id): return false
+		await _capture("02-drill-guide-" + mine_id + "-barrier", {"fixture":"First required drill, intact authored gate"}, true)
+		for hit in 10: depth._hit_rock(target)
+		if not _check(int(depth.get_drill_gates()[0].remaining) == 0, "Gate opens through actual strikes " + mine_id): return false
+		for drop in depth.drops: drop.age = 1.0
+		depth.companion_collect_loot(depth.player.global_position, 10000.0)
+		var stand: Vector2 = depth.player.global_position
+		depth.player.global_position = stand + Vector2(1000, 0)
+		for rock in depth.rocks:
+			if String(rock.state_id).begins_with("seam:"): rock.respawn_until_unix = Time.get_unix_time_from_system() - 1.0
+		depth._update_rocks()
+		depth.player.global_position = stand
+		depth._request_redraw()
+		await _capture("02-drill-guide-" + mine_id + "-renewable-ore", {"fixture":"Actual cleared gate; only ore regrowth clock accelerated"}, true)
+		if mine_id == "mossMine":
+			for i in depth.rocks.size():
+				if String(depth.rocks[i].state_id).begins_with("seam:") and depth._rock_is_exposed(i):
+					for hit in 100:
+						depth._hit_rock(i)
+						if bool(depth.rocks[i].broken): break
+					break
+			await _capture("02-drill-guide-moss-loot", {"fixture":"Actual mined Burrowsteel pickup"}, true)
+			for i in depth.rocks.size():
+				if bool(depth.rocks[i].drill_gated) and not bool(depth.rocks[i].broken):
+					for hit in 10: depth._strike_drill_gate(i)
+			for i in depth.rocks.size():
+				if String(depth.rocks[i].state_id).begins_with("seam:") and not bool(depth.rocks[i].broken): depth._break_rock(i)
+			for drop in depth.drops: drop.age = 1.0
+			depth.companion_collect_loot(stand, 10000.0)
+			state.cargo.burrowsteel = 25
+			var pending: Dictionary = main._guide_route_proposal(main._progression_goal())
+			if not _check(String(pending.get("hud_action", "")).begins_with("Regrowing"), "Exhausted Burrowsteel displays regrowth instead of Rootiron"): return false
+			await _capture("02-drill-guide-moss-regrowing", {"fixture":"All barriers completed via barrier transaction; depleted seams; cargo set to screenshot's 25"}, true)
+			state.cargo.burrowsteel = 60
+			var next: Dictionary = main._progression_goal()
+			if not _check(String(next.get("resource_id", "")) == "prismite", "Satisfied Burrowsteel advances to Prismite"): return false
+			await _capture("02-drill-guide-next-mine", {"fixture":"Burrowsteel requirement funded to isolate next-mine route"}, true)
+	fixture.queue_free()
 	return true
 
 func _mine_corner(label: String) -> bool:

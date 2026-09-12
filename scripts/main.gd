@@ -879,9 +879,11 @@ func _update_visual_guide() -> void :
 		if premium_hud != null:
 			premium_hud.set_progression_goal({})
 		return
+	var proposal: = _guide_route_proposal(goal)
+	if proposal.has("hud_action"):
+		goal["hud_action"] = proposal.hud_action
 	if premium_hud != null:
 		premium_hud.set_progression_goal(goal)
-	var proposal: = _guide_route_proposal(goal)
 	var resolved: Dictionary = guide_director.resolve(proposal)
 	if resolved.is_empty() or String(resolved.get("target_key", "")).is_empty():
 		guide_overlay.clear_target()
@@ -1051,11 +1053,13 @@ func _depth_guide_proposal(goal: Dictionary, proposal: Dictionary, kind: String,
 		proposal.candidates = [_guide_candidate("depth:%s:%s" % [current_mine_id, station_id], position, 0.0)]
 		return proposal
 	var requested_resource: = String(goal.get("resource_id", ""))
-	var all_candidates: Array[Dictionary] = []
 	var matching_candidates: Array[Dictionary] = []
+	var regrowing_candidates: Array[Dictionary] = []
 	for index in depth_world.rocks.size():
 		var rock: = Dictionary(depth_world.rocks[index])
-		if bool(rock.get("broken", false)):
+		if not requested_resource.is_empty() and String(rock.get("type", "")) != requested_resource:
+			continue
+		if bool(rock.get("broken", false)) and (bool(rock.get("drill_gated", false)) or is_inf(float(rock.get("respawn_remaining", 0.0)))):
 			continue
 		if int(rock.get("requires_drill_level", 0)) > int(RunState.drill_level):
 			continue
@@ -1066,14 +1070,26 @@ func _depth_guide_proposal(goal: Dictionary, proposal: Dictionary, kind: String,
 			position,
 			depth_world.player.global_position.distance_squared_to(position)
 		)
-		all_candidates.append(candidate)
-		if requested_resource.is_empty() or String(rock.get("type", "")) == requested_resource:
+		if bool(rock.get("broken", false)):
+			regrowing_candidates.append(candidate)
+		else:
 			matching_candidates.append(candidate)
+	var loot_candidates: Array[Dictionary] = []
+	for index in depth_world.drops.size():
+		var drop: Dictionary = depth_world.drops[index]
+		if String(drop.get("kind", "")) != requested_resource: continue
+		var position: Vector2 = Vector2(drop.position)
+		loot_candidates.append(_guide_candidate("depth:%s:loot:%s" % [current_mine_id, String(drop.get("persistent_id", str(index)))], position, depth_world.player.global_position.distance_squared_to(position)))
 	proposal.waypoint_id = "depth:%s:resource:%s" % [current_mine_id, requested_resource]
-	proposal.candidates = matching_candidates if not matching_candidates.is_empty() else all_candidates
-	if Array(proposal.candidates).is_empty():
-		proposal.waypoint_id = "depth:%s:exit" % current_mine_id
-		proposal.candidates = [_guide_candidate("depth:%s:exit" % current_mine_id, depth_world.depth_entrance, 0.0)]
+	proposal.candidates = loot_candidates if not loot_candidates.is_empty() else (matching_candidates if not matching_candidates.is_empty() else regrowing_candidates)
+	var resource_name: String = requested_resource.capitalize()
+	for requirement in goal.get("requirements", []):
+		if String(requirement.get("id", "")) == requested_resource:
+			resource_name = String(requirement.get("name", resource_name))
+	if not loot_candidates.is_empty():
+		proposal.hud_action = "Collect · " + resource_name
+	elif matching_candidates.is_empty():
+		proposal.hud_action = ("Regrowing · " if not regrowing_candidates.is_empty() else "Unavailable · ") + resource_name
 	return proposal
 
 
