@@ -63,7 +63,13 @@ Immutable candidate artifact: **10299643209**. DEV PCK SHA-256:
 `0f5462e4fadb3b0292dfdf0643f594f37c05cfcad95355789f44edaaaade847c`.
 Later review/docs commits do not alter this runtime artifact. The author accepts
 DEV testing with a provisional bounded 8/10; no new independent or full-game
-approval is claimed. Publication through PR #15 is pending. LIVE stays 0.46.9.
+approval is claimed. PR #15 is merged. Publication run
+[34701246397](https://github.com/Corpax88/Ever-Deeper/actions/runs/34701246397)
+passed package, deployment and public verification. All nine DEV files match
+the reviewed artifact and all nine LIVE files remain 0.46.9. The verified
+receipt is `.github/one-point-zero/discovery-publication-receipt.json`; rollback
+artifact **10299504564** retains both previous public packages. The additional
+source check after merge, run **34701246402**, also passed all fourteen cases.
 
 Acceptance includes actual early gate transactions, all five generated relics,
 construction without extra pocket spending, paid upgrade boundaries, no replay,
@@ -72,7 +78,8 @@ and the current gameplay/touch/package suites. These checks and the rendered
 small-mobile relic-ready HUD review are complete; accelerated fixtures do not
 establish enjoyable pacing or physical-device performance.
 
-Phone playtest after publication: continue an existing save, return a relic and
+Phone playtest: open [DEV5](https://corpax88.github.io/Ever-Deeper/dev/?v=1.0.0-dev.5)
+and check the menu says `1.0.0-dev.5`. Continue an existing save, return a relic and
 build its workshop without another material trip. Explore a side discovery and
 return to mining. On an earlier save, try Starfall after Ember mastery 1. Judge
 whether these discoveries actually make you want another trip; keep normal

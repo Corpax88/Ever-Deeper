@@ -94,3 +94,16 @@ public files. Normal GitHub/DEV flow remains authorized as recorded in
 The first two CI failures and their fixes remain in the handoff. No failing
 assertion was removed or weakened. Later documentation/review commits do not
 change the tested runtime source or authorize a different build.
+
+## Publication
+
+[34701246397](https://github.com/Corpax88/Ever-Deeper/actions/runs/34701246397)
+passed package, Pages deployment and public verification. All nine DEV files
+match artifact **10299643209** and all nine LIVE files retain 0.46.9 bytes.
+Receipt artifact **10300193212** was downloaded, its ZIP SHA-256 verified, and
+all 18 identities compared with the reviewed candidate and prior baseline.
+The original JSON is persisted in `discovery-loop-evidence/publication-receipt-raw.json`;
+publication metadata is in `.github/one-point-zero/discovery-publication-receipt.json`.
+Rollback artifact **10299504564** retains both earlier public packages.
+The additional post-merge source run **34701246402** passed all fourteen cases.
+The public test URL is https://corpax88.github.io/Ever-Deeper/dev/?v=1.0.0-dev.5.

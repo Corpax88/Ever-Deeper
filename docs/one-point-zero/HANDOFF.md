@@ -10,7 +10,11 @@ and touch, both browser audio checks and the changed mobile views pass review.
 This is a bounded author review, not independent or final 1.0 acceptance.
 Physical iPhone performance and human pacing remain unverified. Continue from
 [the current handoff](../discovery-loop-HANDOFF.md) and [review](../discovery-loop-review.md).
-PR: [15](https://github.com/Corpax88/Ever-Deeper/pull/15). Publication pending.
+PR: [15](https://github.com/Corpax88/Ever-Deeper/pull/15), merged. Publication run
+[34701246397](https://github.com/Corpax88/Ever-Deeper/actions/runs/34701246397)
+passed package, deployment and verification of all nine DEV files and nine
+unchanged LIVE files. Receipt: `.github/one-point-zero/discovery-publication-receipt.json`.
+Rollback artifact **10299504564** retains both previous public packages.
 
 # Reviewed automatic companion — 1.0.0-dev.4
 

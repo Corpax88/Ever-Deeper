@@ -4,7 +4,9 @@ Continue from `docs/discovery-loop-HANDOFF.md` and `docs/discovery-loop-review.m
 Relics supply initial workshop construction, local discoveries get clues, and
 Starfall opens after Ember mastery 1. Runtime source: `256dec9a688801e22bd23c4e946215f957eec578`.
 All six jobs in run `34700053177` pass; the exact mobile images are author-reviewed.
-Artifact `10299643209` is ready for DEV publication through PR #15.
+Artifact `10299643209` is published in DEV5 through merged PR #15.
+Run `34701246397` verified all nine DEV files and nine unchanged LIVE files.
+Receipt: `.github/one-point-zero/discovery-publication-receipt.json`.
 Physical iPhone FPS, human pacing and final LIVE 1.0 acceptance remain open.
 The older checkpoints below are historical; current LIVE remains 0.46.9.
 
