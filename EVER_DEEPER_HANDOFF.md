@@ -1,4 +1,14 @@
-# Current work — Ever-Deeper 1.0 candidate
+# Current work — discovery loop, 1.0.0-dev.5
+
+Continue from `docs/discovery-loop-HANDOFF.md` and `docs/discovery-loop-review.md`.
+Relics supply initial workshop construction, local discoveries get clues, and
+Starfall opens after Ember mastery 1. Runtime source: `256dec9a688801e22bd23c4e946215f957eec578`.
+All six jobs in run `34700053177` pass; the exact mobile images are author-reviewed.
+Artifact `10299643209` is ready for DEV publication through PR #15.
+Physical iPhone FPS, human pacing and final LIVE 1.0 acceptance remain open.
+The older checkpoints below are historical; current LIVE remains 0.46.9.
+
+# Previous work — Ever-Deeper 1.0 candidate
 
 Continue from `docs/one-point-zero/HANDOFF.md`. This branch is DEV-first;
 physical iPhone performance and final 1.0 acceptance must not be assumed.

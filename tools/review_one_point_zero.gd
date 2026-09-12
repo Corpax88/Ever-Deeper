@@ -74,6 +74,7 @@ func _run() -> void:
 	await _settle(8)
 	_check(bool(world.stream_snapshot().continuous), "The Deep uses a continuous resident window")
 	await _capture("03-deep-entrance", {"fixture": "First entry; ordinary approved camera"})
+	if not await _local_discovery_capture(): _finish(); return
 	if not await _mine_corner("04-deep-mined-corner"): _finish(); return
 	if not _bedrock_fixture(): _finish(); return
 	await _capture("05-diggable-and-bedrock", {"fixture": "Approach excavated through actual wall owner; boundary intact"})
@@ -262,17 +263,38 @@ func _relic_cycle(relic_id: String, capture_return: bool) -> bool:
 	var relic: Dictionary = state.relic_status(relic_id)
 	var workshop_id: String = String(relic.workshop_id)
 	var status: Dictionary = state.workshop_status(workshop_id)
-	var resource: String = String(status.build_resource)
-	var remaining: int = int(status.remaining)
-	state.add_resource(resource, maxi(0, remaining - int(state.cargo.get(resource, 0))), false)
-	var delivered: Dictionary = state.deliver_workshop_material(workshop_id, resource, remaining)
-	if not _check(bool(delivered.get("ok", false)), "Real workshop material delivery"): return false
+	if not _check(bool(status.ready_to_build) and int(status.remaining) == 0, "Actual relic return supplies construction"): return false
+	await _capture("relic-powered-" + workshop_id, {"fixture": "Generated relic physically delivered; workshop ready without additional resource funding"}, true)
+	var before_build: Dictionary = state.cargo.duplicate(true)
 	if not _check(bool(state.build_workshop(workshop_id).get("ok", false)), "Real workshop construction"): return false
+	_check(state.cargo == before_build, "Relic-powered construction preserves gathered resources")
 	main._sync_hub_runtime()
 	if relic_id == "memory_loom":
 		hub.restore_position(pedestal)
 		await _capture("hub-museum-three-relics", {"fixture": "Three actual placed relics; chamber still unbuilt"})
 	return true
+
+func _local_discovery_capture() -> bool:
+	var position: Vector2 = world.player.global_position
+	var relic: Dictionary = world._native_relics[0]
+	world.restore_position(Vector2(relic.position) + Vector2(-512, -64))
+	await _settle(4)
+	if not _check(String(main._progression_goal().get("hud_title", "")) == "A buried signal", "Undiscovered relic offers an excavation clue"): return false
+	await _capture("03-buried-relic-signal", {"fixture": "Player positioned on nearby walkable ground; relic remains undiscovered"}, true)
+	var site: Dictionary = world.discovery_sites[0]
+	world.restore_position(Vector2(site.position))
+	world._update_discoveries()
+	await _settle(4)
+	var goal: Dictionary = main._progression_goal()
+	if not _check(String(goal.get("objective_id", "")).begins_with("endless:discovery:"), "Actual exposed discovery supplies the local goal"): return false
+	await _capture("03-local-cache-choice", {"fixture": "Player positioned at generated cache; ordinary proximity/line-of-sight discovery"}, true)
+	if not _check(world._start_site_activity(int(site.index), "stabilize"), "Actual cache recovery begins"): return false
+	await _capture("03-local-cache-rune", {"fixture": "Actual active cache activity; guide follows the authored next rune"}, true)
+	world._cancel_site_activity()
+	world.restore_position(position)
+	await _settle(4)
+	return true
+
 
 func _workshop_capture(workshop_id: String, label: String) -> void:
 	var hub: Node = main.hub_world

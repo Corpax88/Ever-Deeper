@@ -2,12 +2,12 @@
   "schema": 1,
   "dev_only": true,
   "live_publication_authorized": false,
-  "dev_version": "1.0.0-dev.4",
-  "source_commit": "15c5cf464a2449166637348cded89f8cfb80ca2e",
-  "qa_run_id": 34439447936,
-  "candidate_artifact_id": 10137430221,
-  "candidate_zip_sha256": "b3c6fc0131b03fd1dd49eaa6e200e2cfb208656404c5aa6a597f8d89cf8c9fc4",
-  "candidate_manifest_sha256": "ed51f9ed7bbf57d1d5df0abe8097939c575153fb7c8f279de1c6ebe76e383169",
+  "dev_version": "1.0.0-dev.5",
+  "source_commit": "256dec9a688801e22bd23c4e946215f957eec578",
+  "qa_run_id": 34700053177,
+  "candidate_artifact_id": 10299643209,
+  "candidate_zip_sha256": "2ec0fcedf6cc57ae200c75954ea6930c339a4edc9c4dc27ef6f7f98962f41b2b",
+  "candidate_manifest_sha256": "1811a7802f282bede53c2557cff6bd66317714cae1913bdaf49b6668d00e7f88",
   "package_checks_passed": true,
   "visual_reviewed": true,
   "mobile_touch_reviewed": true,
@@ -33,7 +33,7 @@
       "size": 7298
     },
     "index.html": {
-      "sha256": "da4aa5262bd06f5a82ddd3945e041c474f41e1191e2527e1c18511ff4ddb343f",
+      "sha256": "c8e75d07c808aa111ae49729ec09a4011f3493326b8e659a6e67ed866bfa6f76",
       "size": 7855
     },
     "index.icon.png": {
@@ -45,8 +45,8 @@
       "size": 279815
     },
     "index.pck": {
-      "sha256": "1c511229ba168f54a828d7e5bab00f9d18d2000fa0e602f1c7ca4b70dbf31327",
-      "size": 220955412
+      "sha256": "0f5462e4fadb3b0292dfdf0643f594f37c05cfcad95355789f44edaaaade847c",
+      "size": 220961748
     },
     "index.png": {
       "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
@@ -58,14 +58,15 @@
     }
   },
   "notes": [
-    "Mats explicitly authorized the normal public GitHub and DEV publication flow on 2026-09-10. This author review approves only the bounded automatic-companion change for DEV testing; it is not an independent review or final LIVE 1.0 acceptance.",
-    "All six required jobs passed in run 34439447936. Fourteen active suites pass on source and exact DEV PCK, including 50 real companion checks. WebKit passes 869 gameplay and 195 touch assertions; both browsers pass actual WebAudio; hero motion and twelve real damage combinations pass.",
-    "Native artifact 10137619297 contains 34 journey captures / 431 passing assertions, 75 receiver stages with no failures, and seven new mobile companion/journal captures. The new fixture records four actual automatic digs and four collected units against this PCK hash. Inspected images and their precise limits are recorded in docs/mole-autonomy-review.md and docs/mole-autonomy-evidence/review-index.json.",
-    "Bounded author critic score 8/10: automatic skill choice, cancellations, restrictions and accounting pass; authored UI/art remain intact. No critical issue reproduced in the tested paths. Sustained physical iPhone FPS and full-session perceived helpfulness remain unverified; the previous overall game rating is not revised here.",
-    "The accelerated rendering fixture overlaps hero and mole during windup, and its paused world drawing retains cached drops in the final collection image. Therefore these images prove terrain/HUD/journal appearance; the real action and inventory assertions establish impact timing and collected amounts. They are not a full-motion animation or physical-device performance assessment.",
-    "Functional progression uses accelerated funding, positions and waits. Legacy suites remain documented test debt. No final 1.0 approval, physical-iPhone approval or new LIVE publication is granted.",
-    "The rollback baseline is the verified DEV3 publication from run 34368126228. Its exact 18-file receipt is persisted in dev3-publication-receipt.json; all nine LIVE identities remain the prior baseline.",
-    "Subsequent review metadata, documentation and the external-harness UID do not change the immutable reviewed runtime package. The publisher must download artifact 10137430221 without rebuilding."
+    "Normal GitHub and DEV publication flow remains authorized as recorded in docs/mole-autonomy.md. This author review approves only the bounded discovery-loop correction for DEV testing, not an independent review or final LIVE 1.0 acceptance.",
+    "All six required jobs pass in run 34700053177. Fourteen active suites pass on source and exact DEV PCK; both build flavors are checked. WebKit passes 869 gameplay and 195 touch assertions, both browser audio checks pass, and existing hero/companion checks remain green.",
+    "Native artifact 10300017712 contains 50 journey captures and 567 passing assertions, plus 75 receiver stages and seven companion captures without failures. PCK identity matches the candidate and browser reports. The author inspected all eight new small-mobile states and five supporting images; exact identities and raw reports are persisted in docs/discovery-loop-evidence/.",
+    "Bounded author critic score 8/10: real placement supplies initial construction, replay and old-save migration preserve accounting, paid upgrades retain benefits, the early gate proceeds after mastery 1, and local clues retain hauling/build/ready-upgrade priority. No critical issue reproduced in the tested paths. This is not a new overall game rating.",
+    "Physical iPhone FPS, human pacing, long-session variety, voluntary return and subjective listening remain unverified. Accelerated functional fixtures and native software rendering do not establish those outcomes. Known legacy suites remain documented in docs/verification.md.",
+    "The first two CI runs exposed an already-funded developer helper rejection and stale DEV4 harness labels. Both were fixed; the original assertions remain. Full revalidation passed on the exact source recorded here.",
+    "The rollback baseline is the verified DEV4 publication from run 34440695093. Its exact 18-file receipt is persisted in mole-publication-receipt.json; all nine LIVE identities retain 0.46.9. Later documentation and review metadata do not change the immutable runtime package; download artifact 10299643209 without rebuilding."
   ],
-  "reviewed_at": "2026-09-10T05:19:08.068699+00:00"
+  "reviewed_at": "2026-09-12T15:04:57.202801+00:00",
+  "reviewer_type": "author",
+  "independent_critic_reviewed": false
 }

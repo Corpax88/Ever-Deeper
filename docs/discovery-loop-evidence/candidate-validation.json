@@ -1,0 +1,664 @@
+{
+  "passed": true,
+  "checks": {
+    "source": {
+      "passed": true,
+      "cases": [
+        {
+          "case": "input",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.71,
+          "marker": "EVER_DEEPER_INPUT_RELEASE_OK",
+          "completion": [
+            "EVER_DEEPER_INPUT_RELEASE_OK hide=true matching_touch=true canceled_touch=true unrelated_touch_ignored=true mouse=true worlds=5 focus_pause=true"
+          ],
+          "log": "/home/runner/work/_temp/review/source/input.log"
+        },
+        {
+          "case": "overhaul",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 7.62,
+          "marker": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK",
+          "completion": [
+            "EVER_DEEPER_SURFACE_GAMEPLAY_OK locked/open both-directions solid-pillars copper=24 regrowth=360 branch-both-directions shop-access",
+            "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=859 failures=[]"
+          ],
+          "log": "/home/runner/work/_temp/review/source/overhaul.log"
+        },
+        {
+          "case": "touch",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 14.84,
+          "marker": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK",
+          "completion": [
+            "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=123 failures=[]"
+          ],
+          "log": "/home/runner/work/_temp/review/source/touch.log"
+        },
+        {
+          "case": "endgame",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.81,
+          "marker": "EVER_DEEPER_ENDGAME_OK",
+          "completion": [
+            "EVER_DEEPER_ENDGAME_OK seals=4 endless=unlocked gateway=true persistence=true conclusion=true deepheart_reentry=blocked"
+          ],
+          "log": "/home/runner/work/_temp/review/source/endgame.log"
+        },
+        {
+          "case": "onboarding",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.71,
+          "marker": "EVER_DEEPER_ONBOARDING_OK",
+          "completion": [
+            "EVER_DEEPER_ONBOARDING_OK minimap=transparent_organic_overlap_fade tutorial=nonblocking shrine_respawn=75"
+          ],
+          "log": "/home/runner/work/_temp/review/source/onboarding.log"
+        },
+        {
+          "case": "layout",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.91,
+          "marker": "EVER_DEEPER_IPHONE_LAYOUT_OK",
+          "completion": [
+            "EVER_DEEPER_IPHONE_LAYOUT_OK devices=844x390,852x393,874x402,912x420,932x430,956x440 touch=44css icons=optically-normalized safe=notch/home overlays=menu,bag,museum,starforge,conclusion"
+          ],
+          "log": "/home/runner/work/_temp/review/source/layout.log"
+        },
+        {
+          "case": "portrait",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.71,
+          "marker": "EVER_DEEPER_PORTRAIT_GUARD_OK",
+          "completion": [
+            "EVER_DEEPER_PORTRAIT_GUARD_OK portrait=1280x2770 landscape=1558x720 card=1080x720"
+          ],
+          "log": "/home/runner/work/_temp/review/source/portrait.log"
+        },
+        {
+          "case": "dev-tools",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 4.31,
+          "marker": "EVER_DEEPER_DEV_TOOLS_QA_OK",
+          "completion": [
+            "EVER_DEEPER_DEV_TOOLS_QA_OK commands=23 isolated_save=true iphone=932x430 finger_scroll=true readable_text=true exact_depths=true relics=5 workshops=5"
+          ],
+          "log": "/home/runner/work/_temp/review/source/dev-tools.log"
+        },
+        {
+          "case": "crusher",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 4.01,
+          "marker": "EVER_DEEPER_CRUSHER_IMPACT_OK",
+          "completion": [
+            "EVER_DEEPER_CRUSHER_IMPACT_OK footprint=5x5 real_loot=true sectors=8 bundles_max=12 merge_window=0.15 arc=true drill_stress=600 accounting=exact depth2=true pickup=48/80/112/144 singularity=48 cleanup=0.30"
+          ],
+          "log": "/home/runner/work/_temp/review/source/crusher.log"
+        },
+        {
+          "case": "one-point-zero-state",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 4.11,
+          "marker": "EVER_DEEPER_ONE_POINT_ZERO_STATE_OK",
+          "completion": [
+            "EVER_DEEPER_ONE_POINT_ZERO_STATE_OK checks=187"
+          ],
+          "log": "/home/runner/work/_temp/review/source/one-point-zero-state.log"
+        },
+        {
+          "case": "one-point-zero-world",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 11.83,
+          "marker": "EVER_DEEPER_ONE_POINT_ZERO_WORLD_OK",
+          "completion": [
+            "EVER_DEEPER_ONE_POINT_ZERO_WORLD_OK checks=461"
+          ],
+          "log": "/home/runner/work/_temp/review/source/one-point-zero-world.log"
+        },
+        {
+          "case": "one-point-zero-migration",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 4.01,
+          "marker": "EVER_DEEPER_ONE_POINT_ZERO_MIGRATION_OK",
+          "completion": [
+            "EVER_DEEPER_ONE_POINT_ZERO_MIGRATION_OK checks=216"
+          ],
+          "log": "/home/runner/work/_temp/review/source/one-point-zero-migration.log"
+        },
+        {
+          "case": "one-point-zero-ui",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 4.11,
+          "marker": "EVER_DEEPER_ONE_POINT_ZERO_UI_OK",
+          "completion": [
+            "EVER_DEEPER_ONE_POINT_ZERO_UI_OK checks=305"
+          ],
+          "log": "/home/runner/work/_temp/review/source/one-point-zero-ui.log"
+        },
+        {
+          "case": "mole-autonomy",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 4.01,
+          "marker": "EVER_DEEPER_MOLE_AUTONOMY_OK",
+          "completion": [
+            "EVER_DEEPER_MOLE_AUTONOMY_OK checks=50"
+          ],
+          "log": "/home/runner/work/_temp/review/source/mole-autonomy.log"
+        }
+      ]
+    },
+    "dev": {
+      "passed": true,
+      "cases": [
+        {
+          "case": "input",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.01,
+          "marker": "EVER_DEEPER_INPUT_RELEASE_OK",
+          "completion": [
+            "EVER_DEEPER_INPUT_RELEASE_OK hide=true matching_touch=true canceled_touch=true unrelated_touch_ignored=true mouse=true worlds=5 focus_pause=true"
+          ],
+          "log": "/home/runner/work/_temp/review/dev/input.log"
+        },
+        {
+          "case": "overhaul",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 6.82,
+          "marker": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK",
+          "completion": [
+            "EVER_DEEPER_SURFACE_GAMEPLAY_OK locked/open both-directions solid-pillars copper=24 regrowth=360 branch-both-directions shop-access",
+            "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=859 failures=[]"
+          ],
+          "log": "/home/runner/work/_temp/review/dev/overhaul.log"
+        },
+        {
+          "case": "touch",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 14.24,
+          "marker": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK",
+          "completion": [
+            "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=125 failures=[]"
+          ],
+          "log": "/home/runner/work/_temp/review/dev/touch.log"
+        },
+        {
+          "case": "endgame",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.21,
+          "marker": "EVER_DEEPER_ENDGAME_OK",
+          "completion": [
+            "EVER_DEEPER_ENDGAME_OK seals=4 endless=unlocked gateway=true persistence=true conclusion=true deepheart_reentry=blocked"
+          ],
+          "log": "/home/runner/work/_temp/review/dev/endgame.log"
+        },
+        {
+          "case": "onboarding",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.11,
+          "marker": "EVER_DEEPER_ONBOARDING_OK",
+          "completion": [
+            "EVER_DEEPER_ONBOARDING_OK minimap=transparent_organic_overlap_fade tutorial=nonblocking shrine_respawn=75"
+          ],
+          "log": "/home/runner/work/_temp/review/dev/onboarding.log"
+        },
+        {
+          "case": "layout",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.21,
+          "marker": "EVER_DEEPER_IPHONE_LAYOUT_OK",
+          "completion": [
+            "EVER_DEEPER_IPHONE_LAYOUT_OK devices=844x390,852x393,874x402,912x420,932x430,956x440 touch=44css icons=optically-normalized safe=notch/home overlays=menu,bag,museum,starforge,conclusion"
+          ],
+          "log": "/home/runner/work/_temp/review/dev/layout.log"
+        },
+        {
+          "case": "portrait",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.11,
+          "marker": "EVER_DEEPER_PORTRAIT_GUARD_OK",
+          "completion": [
+            "EVER_DEEPER_PORTRAIT_GUARD_OK portrait=1280x2770 landscape=1558x720 card=1080x720"
+          ],
+          "log": "/home/runner/work/_temp/review/dev/portrait.log"
+        },
+        {
+          "case": "dev-tools",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.81,
+          "marker": "EVER_DEEPER_DEV_TOOLS_QA_OK",
+          "completion": [
+            "EVER_DEEPER_DEV_TOOLS_QA_OK commands=23 isolated_save=true iphone=932x430 finger_scroll=true readable_text=true exact_depths=true relics=5 workshops=5"
+          ],
+          "log": "/home/runner/work/_temp/review/dev/dev-tools.log"
+        },
+        {
+          "case": "crusher",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.31,
+          "marker": "EVER_DEEPER_CRUSHER_IMPACT_OK",
+          "completion": [
+            "EVER_DEEPER_CRUSHER_IMPACT_OK footprint=5x5 real_loot=true sectors=8 bundles_max=12 merge_window=0.15 arc=true drill_stress=600 accounting=exact depth2=true pickup=48/80/112/144 singularity=48 cleanup=0.30"
+          ],
+          "log": "/home/runner/work/_temp/review/dev/crusher.log"
+        },
+        {
+          "case": "one-point-zero-state",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.31,
+          "marker": "EVER_DEEPER_ONE_POINT_ZERO_STATE_OK",
+          "completion": [
+            "EVER_DEEPER_ONE_POINT_ZERO_STATE_OK checks=187"
+          ],
+          "log": "/home/runner/work/_temp/review/dev/one-point-zero-state.log"
+        },
+        {
+          "case": "one-point-zero-world",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 11.23,
+          "marker": "EVER_DEEPER_ONE_POINT_ZERO_WORLD_OK",
+          "completion": [
+            "EVER_DEEPER_ONE_POINT_ZERO_WORLD_OK checks=460"
+          ],
+          "log": "/home/runner/work/_temp/review/dev/one-point-zero-world.log"
+        },
+        {
+          "case": "one-point-zero-migration",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.31,
+          "marker": "EVER_DEEPER_ONE_POINT_ZERO_MIGRATION_OK",
+          "completion": [
+            "EVER_DEEPER_ONE_POINT_ZERO_MIGRATION_OK checks=216"
+          ],
+          "log": "/home/runner/work/_temp/review/dev/one-point-zero-migration.log"
+        },
+        {
+          "case": "one-point-zero-ui",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.51,
+          "marker": "EVER_DEEPER_ONE_POINT_ZERO_UI_OK",
+          "completion": [
+            "EVER_DEEPER_ONE_POINT_ZERO_UI_OK checks=305"
+          ],
+          "log": "/home/runner/work/_temp/review/dev/one-point-zero-ui.log"
+        },
+        {
+          "case": "mole-autonomy",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.31,
+          "marker": "EVER_DEEPER_MOLE_AUTONOMY_OK",
+          "completion": [
+            "EVER_DEEPER_MOLE_AUTONOMY_OK checks=50"
+          ],
+          "log": "/home/runner/work/_temp/review/dev/mole-autonomy.log"
+        }
+      ]
+    },
+    "dev-flavor": {
+      "passed": true,
+      "version": "1.0.0-dev.5",
+      "pack": {
+        "sha256": "0f5462e4fadb3b0292dfdf0643f594f37c05cfcad95355789f44edaaaade847c",
+        "size": 220961748
+      }
+    },
+    "production-flavor": {
+      "passed": true,
+      "version": "1.0.0-rc.1",
+      "pack": {
+        "sha256": "2dccc0beccd98606cdca25e9890d5cee8b15cd26d839e0836e4e7dcf3d6602c1",
+        "size": 220929600
+      }
+    },
+    "hero-audio": {
+      "audio_driver": "Dummy",
+      "common_pickup_started": true,
+      "discovery_completes_without_leaking_voice": true,
+      "discovery_playback_seconds": 0.702403604984283,
+      "discovery_started": true,
+      "discovery_survives_mining_pickup_overlap": true,
+      "engine": "4.7.2-stable (official)",
+      "failures": [],
+      "milestone_voice_saturation_fixture": true,
+      "mining_cannot_cut_saturated_milestones": true,
+      "mute_stops_active_feedback": true,
+      "new_upgrade_is_not_silenced": true,
+      "overlap_elapsed_ms": 734,
+      "passed": true,
+      "physical_iphone_sound_verified": false,
+      "rare_pickup_burst_is_throttled": true,
+      "real_audio_playback_advances": true,
+      "same_cluster_rare_pickup_audible": true,
+      "voice_pool_remains_bounded": true
+    },
+    "hero-transitions": {
+      "cases": [
+        {
+          "direction": "down",
+          "gear": "worn",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "left",
+          "gear": "worn",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "up",
+          "gear": "worn",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "right",
+          "gear": "worn",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "down",
+          "gear": "iron",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "left",
+          "gear": "iron",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "up",
+          "gear": "iron",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "right",
+          "gear": "iron",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "down",
+          "gear": "runed",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "left",
+          "gear": "runed",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "up",
+          "gear": "runed",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "right",
+          "gear": "runed",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "down",
+          "gear": "moonglass",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "left",
+          "gear": "moonglass",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "up",
+          "gear": "moonglass",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "right",
+          "gear": "moonglass",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "down",
+          "gear": "ember",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "left",
+          "gear": "ember",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "up",
+          "gear": "ember",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "right",
+          "gear": "ember",
+          "mining_frames": 43,
+          "walk_frames": 48
+        },
+        {
+          "direction": "down",
+          "gear": "crusher",
+          "mining_frames": 61,
+          "walk_frames": 48
+        },
+        {
+          "direction": "left",
+          "gear": "crusher",
+          "mining_frames": 61,
+          "walk_frames": 48
+        },
+        {
+          "direction": "up",
+          "gear": "crusher",
+          "mining_frames": 61,
+          "walk_frames": 48
+        },
+        {
+          "direction": "right",
+          "gear": "crusher",
+          "mining_frames": 61,
+          "walk_frames": 48
+        },
+        {
+          "direction": "down",
+          "gear": "comet",
+          "mining_frames": 38,
+          "walk_frames": 48
+        },
+        {
+          "direction": "left",
+          "gear": "comet",
+          "mining_frames": 38,
+          "walk_frames": 48
+        },
+        {
+          "direction": "up",
+          "gear": "comet",
+          "mining_frames": 38,
+          "walk_frames": 48
+        },
+        {
+          "direction": "right",
+          "gear": "comet",
+          "mining_frames": 38,
+          "walk_frames": 48
+        },
+        {
+          "direction": "down",
+          "gear": "crown",
+          "mining_frames": 47,
+          "walk_frames": 48
+        },
+        {
+          "direction": "left",
+          "gear": "crown",
+          "mining_frames": 47,
+          "walk_frames": 48
+        },
+        {
+          "direction": "up",
+          "gear": "crown",
+          "mining_frames": 47,
+          "walk_frames": 48
+        },
+        {
+          "direction": "right",
+          "gear": "crown",
+          "mining_frames": 47,
+          "walk_frames": 48
+        },
+        {
+          "direction": "down",
+          "gear": "burrower",
+          "mining_frames": 47,
+          "walk_frames": 48
+        },
+        {
+          "direction": "left",
+          "gear": "burrower",
+          "mining_frames": 47,
+          "walk_frames": 48
+        },
+        {
+          "direction": "up",
+          "gear": "burrower",
+          "mining_frames": 47,
+          "walk_frames": 48
+        },
+        {
+          "direction": "right",
+          "gear": "burrower",
+          "mining_frames": 47,
+          "walk_frames": 48
+        },
+        {
+          "direction": "down",
+          "gear": "pulse",
+          "mining_frames": 47,
+          "walk_frames": 48
+        },
+        {
+          "direction": "left",
+          "gear": "pulse",
+          "mining_frames": 47,
+          "walk_frames": 48
+        },
+        {
+          "direction": "up",
+          "gear": "pulse",
+          "mining_frames": 47,
+          "walk_frames": 48
+        },
+        {
+          "direction": "right",
+          "gear": "pulse",
+          "mining_frames": 47,
+          "walk_frames": 48
+        },
+        {
+          "direction": "down",
+          "gear": "deepcore",
+          "mining_frames": 47,
+          "walk_frames": 48
+        },
+        {
+          "direction": "left",
+          "gear": "deepcore",
+          "mining_frames": 47,
+          "walk_frames": 48
+        },
+        {
+          "direction": "up",
+          "gear": "deepcore",
+          "mining_frames": 47,
+          "walk_frames": 48
+        },
+        {
+          "direction": "right",
+          "gear": "deepcore",
+          "mining_frames": 48,
+          "walk_frames": 48
+        }
+      ],
+      "engine": "4.7.2-stable (official)",
+      "failures": [],
+      "outfits": 5,
+      "passed": true,
+      "physical_iphone_fps_verified": false,
+      "rendered_visual_quality_verified": false
+    }
+  }
+}

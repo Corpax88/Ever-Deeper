@@ -64,8 +64,13 @@ func resolve(proposal: Dictionary) -> Dictionary:
 	return result
 
 
-func goal_for_state() -> Dictionary:
-	return ProgressionGoalScript.decorate(_resolve_goal_for_state())
+func goal_for_state(discovery: Dictionary = {}) -> Dictionary:
+	var goal: Dictionary = _resolve_goal_for_state()
+	# Nearby, actually discovered opportunities take precedence while exploring.
+	# Carrying a relic, construction and a ready upgrade keep priority.
+	if String(goal.get("kind", "")) in ["endless_explore", "endless_resource"] and not discovery.is_empty():
+		goal = discovery
+	return ProgressionGoalScript.decorate(goal)
 
 
 func _resolve_goal_for_state() -> Dictionary:
@@ -87,11 +92,12 @@ func _resolve_goal_for_state() -> Dictionary:
 	if not bool(RunState.fourth_unlocked):
 		if int(RunState.pickaxe_level) < 5:
 			return _pickaxe_goal("emberMine")
-		if int(RunState.ember_mastery) < 5:
+		var required_mastery: int = int(WorldCatalog.ENTRY_GATES.starfall.min_ember_mastery)
+		if int(RunState.ember_mastery) < required_mastery:
 			return _mastery_goal()
 		return _goal(
 			"gate:starfall", "gate", "Open the Starfall Master Seal",
-			"Depth Mastery 5 has awakened the seal",
+			"Ember Mastery %d has awakened the seal" % required_mastery,
 			{"world_id": "starfall", "station_id": "starfallGate"}
 		)
 
@@ -183,6 +189,17 @@ func _endless_goal() -> Dictionary:
 
 
 func _workshop_goal(workshop_id: String, status: Dictionary, active: bool, upgrading: bool) -> Dictionary:
+	if not upgrading and bool(status.get("ready_to_build", false)):
+		var workshop_name: String = String(status.get("display_name", workshop_id.capitalize()))
+		return _goal(
+			"endless:workshop:%s" % workshop_id, "endless_return" if active else "workshop",
+			"Awaken the %s" % workshop_name, "Your relic supplies the construction materials",
+			{
+				"station_id": workshop_id, "workshop_id": workshop_id,
+				"hud_title": workshop_name,
+				"hud_action": "Tunnel Home · workshop ready" if active else "Awaken · materials supplied",
+			}
+		)
 	var recipe: = Dictionary(status.get("next_upgrade", {})) if upgrading else {}
 	var resource_id: = String(recipe.get("resource", status.get("build_resource", "")))
 	var required: = int(recipe.get("cost", status.get("remaining", 0)))

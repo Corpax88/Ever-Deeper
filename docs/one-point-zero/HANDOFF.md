@@ -1,3 +1,17 @@
+# Reviewed discovery loop — 1.0.0-dev.5
+
+Runtime source: `256dec9a688801e22bd23c4e946215f957eec578`.
+All six jobs in [34700053177](https://github.com/Corpax88/Ever-Deeper/actions/runs/34700053177)
+pass. Immutable artifact **10299643209** is author-reviewed for DEV testing.
+Relics supply initial workshop construction, nearby discoveries get actionable
+clues, and Starfall requires Ember mastery 1 instead of five repeated purchases.
+Fourteen source/package cases, 567 native journey assertions, WebKit gameplay
+and touch, both browser audio checks and the changed mobile views pass review.
+This is a bounded author review, not independent or final 1.0 acceptance.
+Physical iPhone performance and human pacing remain unverified. Continue from
+[the current handoff](../discovery-loop-HANDOFF.md) and [review](../discovery-loop-review.md).
+PR: [15](https://github.com/Corpax88/Ever-Deeper/pull/15). Publication pending.
+
 # Reviewed automatic companion — 1.0.0-dev.4
 
 Runtime source: `15c5cf464a2449166637348cded89f8cfb80ca2e`.

@@ -12,7 +12,9 @@ suite, shop touch/state tests, endgame, onboarding, iPhone layout, orientation,
 developer tools, Crusher integration, the four 1.0 state/world/migration/UI cases
 and 50 automatic-companion behavior checks in `mole-autonomy`.
 The 1.0 journey checks actual held mining through streamed terrain, all five generated
-relics, physical delivery and paid construction, save recovery and continued mining.
+relics, physical delivery and relic-funded initial construction, paid upgrade
+boundaries, save recovery and continued mining. DEV5 also checks the earlier
+Starfall gate, old-save construction credit, buried signals and cache visibility.
 Native/headless checks do not validate rendered art or physical device performance.
 
 Run a subset with `--cases input overhaul touch`. Logs and machine-readable results are

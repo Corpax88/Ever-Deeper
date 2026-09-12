@@ -1435,7 +1435,7 @@ func _place_carried_relic() -> void :
 	_update_context(player.global_position)
 	AudioDirector.play_discovery(true)
 	_start_feedback(RELIC_PEDESTAL_POSITION + Vector2(0, -18), _relic_color(String(carried.get("id", ""))), 1.1)
-	message_changed.emit("%s DISPLAYED · %s BLUEPRINT UNLOCKED" % [_relic_name(carried), workshop_name])
+	message_changed.emit("%s READY TO BUILD · YOUR RELIC SUPPLIES THE MATERIALS" % workshop_name)
 	queue_redraw()
 
 

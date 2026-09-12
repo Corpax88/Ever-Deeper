@@ -109,11 +109,15 @@ func _new_player_to_deep() -> bool:
 		return false
 	if not _purchase_forge("pickaxe"):
 		return false
-	for _rank in range(5):
+	main._try_unlock_gate("starfall")
+	_check(not RunState.fourth_unlocked, "Starfall remains locked before the first Ember mastery")
+	for _rank in range(int(WorldCatalog.ENTRY_GATES.starfall.min_ember_mastery)):
 		if not _purchase_forge("ember_mastery"):
 			return false
 	if not _open_gate("starfall"):
 		return false
+	_check(RunState.ember_mastery == 1, "Starfall opens after one mastery purchase")
+	_check(not RunState.next_ember_mastery().is_empty(), "Further Ember mastery remains an optional upgrade")
 	var starforge: Dictionary = RunState.starforge_crafting_status("crusher")
 	var starforge_cost: Dictionary = Dictionary(Dictionary(starforge.get("variant", {})).get("cost", {}))
 	for resource_id in starforge_cost:
