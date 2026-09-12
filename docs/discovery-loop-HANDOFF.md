@@ -21,8 +21,10 @@ playtest or proof of enjoyment. The earlier technical/FPS reviews remain separat
 - The HUD and guide prioritize nearby discoveries during exploration, then the
   authored rune route while recovering a cache. Hauling a relic and building an
   earned workshop retain priority. Completed or distant discoveries drop away.
-  Hidden relic locations are not exposed by the generic guide; solid rock also
-  prevents cache discovery through walls.
+  A nearby buried relic gives a short directional excavation signal before its
+  real reveal, so the main route does not lead the player past every side find.
+  Its identity and exact hidden position stay concealed; solid rock also prevents
+  cache discovery through walls.
 
 ## Boundaries
 
@@ -40,8 +42,11 @@ pass. First CI run 34699520146 imported cleanly and passed 12/14 source cases,
 including all four revised 1.0 cases and automatic mole behavior. Touch and DEV
 tools exposed a shared developer-fixture bug: its workshop helper rejected an
 already supplied building. That helper now proceeds directly to construction;
-the original touch and DEV-tool assertions remain intact. Full revalidation and
-final-package captures are pending. The local cached Godot ZIP is incomplete and
+the original touch and DEV-tool assertions remain intact. Second CI run
+34699791396 passed all 14 source cases and both exports. Two packaged cases
+correctly rejected an old DEV4 expectation in the capture harness; the DEV5
+version pins are now synchronized without weakening the exact-version check.
+Full revalidation and final-package captures are pending. The local cached Godot ZIP is incomplete and
 a fresh release download timed out; validation uses the established GitHub jobs.
 Never publish this candidate before its tests and actual mobile captures pass.
 Keep the existing LIVE 0.46.9 package. Review flags must remain false until the

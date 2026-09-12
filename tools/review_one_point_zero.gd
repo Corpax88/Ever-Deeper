@@ -276,6 +276,11 @@ func _relic_cycle(relic_id: String, capture_return: bool) -> bool:
 
 func _local_discovery_capture() -> bool:
 	var position: Vector2 = world.player.global_position
+	var relic: Dictionary = world._native_relics[0]
+	world.restore_position(Vector2(relic.position) + Vector2(-512, -64))
+	await _settle(4)
+	if not _check(String(main._progression_goal().get("hud_title", "")) == "A buried signal", "Undiscovered relic offers an excavation clue"): return false
+	await _capture("03-buried-relic-signal", {"fixture": "Player positioned on nearby walkable ground; relic remains undiscovered"}, true)
 	var site: Dictionary = world.discovery_sites[0]
 	world.restore_position(Vector2(site.position))
 	world._update_discoveries()

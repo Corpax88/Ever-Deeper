@@ -57,6 +57,12 @@ func _discovery_guidance() -> void:
 	_freeze_world()
 	var saved_position: Vector2 = world.player.global_position
 	var saved_cells: PackedByteArray = world.floor_cells.duplicate()
+	var hidden_relic: Dictionary = world._native_relics[0]
+	world.player.global_position = Vector2(hidden_relic.position) + Vector2(-640, 0)
+	var signal_goal: Dictionary = world.discovery_goal()
+	_check(String(signal_goal.get("hud_title", "")) == "A buried signal", "Nearby hidden relic gives a directional excavation clue")
+	_check(Vector2(signal_goal.get("discovery_target", Vector2.ZERO)).distance_to(Vector2(hidden_relic.position)) > 300.0, "Clue does not disclose the hidden relic's exact position")
+	_check(not bool(RunState.relic_status(String(hidden_relic.id)).discovered), "Sensing a clue does not award the actual discovery")
 	var site: Dictionary = world.discovery_sites[0]
 	var position: Vector2 = Vector2(site.position)
 	world.player.global_position = position + Vector2(128, 0)

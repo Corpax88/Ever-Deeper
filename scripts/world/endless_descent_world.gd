@@ -439,6 +439,17 @@ func discovery_goal() -> Dictionary:
 	if not nearest_site.is_empty():
 		return _discovery_goal(String(nearest_site.id), String(nearest_site.title).to_lower().capitalize(),
 			"Calm the surge · or double loot", Vector2(nearest_site.position))
+	# Give the player a reason to leave the main route before the reveal. A
+	# short directional signal suggests excavation, without naming the relic
+	# or exposing its exact position on an otherwise unexplored map.
+	for relic in _native_relics:
+		if int(relic.depth) != current_depth or bool(relic.get("discovered", false)) or _relic_already_claimed(String(relic.id)):
+			continue
+		var offset: Vector2 = Vector2(relic.position) - player.global_position
+		if offset.length() > 1152.0:
+			continue
+		var approach: Vector2 = player.global_position + offset.limit_length(TILE_SIZE * 3.0)
+		return _discovery_goal("signal:" + String(relic.id), "A buried signal", "Mine toward the signal", approach)
 	return {}
 
 
