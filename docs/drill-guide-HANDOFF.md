@@ -54,3 +54,17 @@ Mats's authorization to upload and publish DEV after release checks persists.
 The baseline pins the verified DEV6 receipt from publication run 34717418294.
 Use the immutable accepted artifact; preserve all nine published LIVE 0.46.9 files.
 Final LIVE 1.0 acceptance and physical iPhone performance remain outside this fix.
+
+## Published and verified
+
+PR 17 merged at `bef995e2169fb9313f52a148271ab5f87320ff0d`.
+Publication run 34725035279 passes package, deploy and public verification.
+Receipt artifact 10308040747 verifies all eighteen files: all nine DEV identities
+match candidate 10307350837 and all nine LIVE identities match the prior receipt.
+The exact receipt is `.github/one-point-zero/drill-guide-publication-receipt.json`.
+Rollback artifact 10307876323 retains the previous public files.
+
+Open https://corpax88.github.io/Ever-Deeper/dev/?v=1.0.0-dev.7 and continue the
+existing DEV save. No reset is needed. After Burrower Drill, the primary marker
+should target Burrowsteel for Pulse Drill, show Collect/Regrowing when appropriate,
+and move on to Prismite after sixty Burrowsteel. Opened passages remain open.

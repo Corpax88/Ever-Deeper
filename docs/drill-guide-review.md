@@ -87,3 +87,7 @@ The Mole's independent nearby-ore scout is unchanged.
 DEV publication is approved for the exact reviewed artifact. Its rollback baseline
 is the verified DEV6 receipt, and all nine LIVE
 0.46.9 files must remain identical. No new LIVE release is approved here.
+
+Publication completed in run 34725035279. Its three jobs pass, and receipt
+artifact 10308040747 verifies all eighteen public files. The downloaded receipt
+was checked against the accepted candidate and previous LIVE file identities.

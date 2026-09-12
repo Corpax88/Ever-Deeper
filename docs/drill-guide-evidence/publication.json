@@ -1,0 +1,215 @@
+{
+  "run_id": 34725035279,
+  "jobs": [
+    {
+      "conclusion": "success",
+      "id": 103637578810,
+      "logs_url": null,
+      "name": "package",
+      "run_id": 34725035279,
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Download reviewed artifact and preserve all existing LIVE bytes",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/upload-pages-artifact@v3",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 12,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "id": 103637757779,
+      "logs_url": null,
+      "name": "deploy",
+      "run_id": 34725035279,
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/deploy-pages@v4",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 3,
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "id": 103637803873,
+      "logs_url": null,
+      "name": "verify",
+      "run_id": 34725035279,
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Verify nine DEV files and all nine unchanged LIVE files",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 8,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 9,
+          "status": "completed"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "archive_download_url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10308040747/zip",
+      "created_at": "2026-09-12T23:20:05Z",
+      "digest": "sha256:5a2f62e6ec50531062058d4d6c4a1bee7bce866d0667a602c11a43e3de2633c6",
+      "expired": false,
+      "expires_at": "2026-10-12T23:20:04Z",
+      "id": 10308040747,
+      "name": "ever-deeper-one-point-zero-publication-receipt",
+      "size_in_bytes": 926,
+      "updated_at": "2026-09-12T23:20:05Z",
+      "url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10308040747",
+      "workflow_run": {
+        "head_branch": "main",
+        "head_repository_id": 1329194199,
+        "head_sha": "bef995e2169fb9313f52a148271ab5f87320ff0d",
+        "id": 34725035279,
+        "repository_id": 1329194199
+      }
+    },
+    {
+      "archive_download_url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10307876323/zip",
+      "created_at": "2026-09-12T23:19:04Z",
+      "digest": "sha256:e51e0d77c5fe44c30f04c1579274debaf3efc17019608d8829e9cc2aab6706ad",
+      "expired": false,
+      "expires_at": "2026-10-12T23:18:48Z",
+      "id": 10307876323,
+      "name": "ever-deeper-before-one-point-zero-dev-rollback",
+      "size_in_bytes": 465242462,
+      "updated_at": "2026-09-12T23:19:04Z",
+      "url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10307876323",
+      "workflow_run": {
+        "head_branch": "main",
+        "head_repository_id": 1329194199,
+        "head_sha": "bef995e2169fb9313f52a148271ab5f87320ff0d",
+        "id": 34725035279,
+        "repository_id": 1329194199
+      }
+    },
+    {
+      "archive_download_url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10307442250/zip",
+      "created_at": "2026-09-12T23:19:04Z",
+      "digest": "sha256:55c205d51886d07249dc6955fb75e3c77dd489f938f5ccae57305a30ba35c2a3",
+      "expired": false,
+      "expires_at": "2026-10-12T23:19:04Z",
+      "id": 10307442250,
+      "name": "ever-deeper-one-point-zero-publication-evidence",
+      "size_in_bytes": 6898,
+      "updated_at": "2026-09-12T23:19:04Z",
+      "url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10307442250",
+      "workflow_run": {
+        "head_branch": "main",
+        "head_repository_id": 1329194199,
+        "head_sha": "bef995e2169fb9313f52a148271ab5f87320ff0d",
+        "id": 34725035279,
+        "repository_id": 1329194199
+      }
+    },
+    {
+      "archive_download_url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10307083337/zip",
+      "created_at": "2026-09-12T23:19:21Z",
+      "digest": "sha256:fdaf58097455b40fbd6844d294ce1cbc888ecb0acbb20cf061ca9bf6f2b8e187",
+      "expired": false,
+      "expires_at": "2026-09-13T23:19:05Z",
+      "id": 10307083337,
+      "name": "github-pages",
+      "size_in_bytes": 465252692,
+      "updated_at": "2026-09-12T23:19:21Z",
+      "url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10307083337",
+      "workflow_run": {
+        "head_branch": "main",
+        "head_repository_id": 1329194199,
+        "head_sha": "bef995e2169fb9313f52a148271ab5f87320ff0d",
+        "id": 34725035279,
+        "repository_id": 1329194199
+      }
+    }
+  ]
+}
