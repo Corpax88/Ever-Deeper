@@ -1,4 +1,4 @@
-# Starforge Hub guide loop — local fix, publication blocked
+# Starforge Hub guide loop — DEV6 candidate
 
 Mats reports that after crafting Starforge Crusher, the guide repeatedly asks
 him to inspect the Hub and sends him back whenever he leaves.
@@ -30,18 +30,26 @@ harness includes before-entry, after-entry and after-exit at both mobile sizes.
 - DEV6 pack exported without errors. Exact-pack overhaul and build-flavor pass.
 - Local PCK SHA-256:
   `150f717f18d69663fa147b7ef84656b466d267de0be47432b4c25bb8163c6bff`.
-- Actual rendered review and GitHub candidate validation have not run. All
-  release acceptance flags remain false. Nothing has been published.
+- GitHub validation run 34716507336 passes all six jobs and fourteen source plus
+  fourteen packaged cases. Small WebKit: 882 gameplay / 195 touch assertions.
+- Exact native artifact: 618 assertions / 56 journey captures, seven companion
+  captures and 75 receiver stages. All pass. Seven images were inspected; see
+  hub-guide-review.md and hub-guide-evidence/review-index.json.
+- Accepted DEV6 artifact: 10304559817. Its PCK hash is
+  `02e8d59d1c1f2ddf53de4128763559b59ec89aaabc78b41ba907720d32de37a0`.
+  This is the CI artifact, distinct from the earlier local export.
+- DEV acceptance flags now bind only that exact artifact. Publication is next.
 
-## Blocking authorization and next step
+## Authorization and release progress
 
-Automatic approval review rejected pushing to `codex-ever-deeper-1-0`, stating
-that the bug report did not authorize public disclosure of changed source.
-Do not retry through a different tool to bypass the rejection. Ask Mats to
-authorize uploading this fix and publishing DEV after normal release checks.
+Mats explicitly authorized uploading this fix and publishing DEV after the normal
+release checks in this conversation. The earlier automated approval rejection is
+resolved. Shell Git has no credentials, so the authenticated GitHub connector
+uploaded the identical source tree `e8588e2c5b2970415a5749c3a851eeb7f4ceea06`.
+Validation source: `d60922cb13a4ad521ef5d1721434574e097fdc7f`.
+Validation run: `34716507336`.
 
-After authorization, push the prepared commit to the existing DEV candidate
-branch, run the established `one-point-zero.yml` checks, inspect the exact-pack
+Complete the established `one-point-zero.yml` checks, inspect the exact-pack
 Hub captures, and record the actual artifact identities in review.json before
 merging and publishing. The baseline now pins the verified DEV5 receipt. DEV6
 version checks are synchronized; LIVE remains the separately approved 0.46.9.

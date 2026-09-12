@@ -1,0 +1,536 @@
+{
+  "run_id": 34716507336,
+  "jobs": [
+    {
+      "conclusion": "success",
+      "id": 103614602896,
+      "logs_url": null,
+      "name": "build",
+      "run_id": 34716507336,
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check DEV-only staging protections offline",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Install Godot 4.7.2 and matching web templates",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Build exact source, verify gameplay and both flavors",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 7,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 14,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 15,
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "id": 103615026201,
+      "logs_url": null,
+      "name": "hero-motion",
+      "run_id": 34716507336,
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/download-artifact@v4",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v4",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Inspect real hero movement and twelve mining combinations",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@v4",
+          "number": 11,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 12,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "id": 103615026214,
+      "logs_url": null,
+      "name": "mobile",
+      "run_id": 34716507336,
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/download-artifact@v4",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v4",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Install mobile WebKit",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Check exact-package gameplay and small-iPhone touch",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 7,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@v4",
+          "number": 13,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 14,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 15,
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "id": 103615026215,
+      "logs_url": null,
+      "name": "web-audio (chromium)",
+      "run_id": 34716507336,
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/download-artifact@v4",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v4",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Measure real Web Audio unlock, overlap and mute",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@v4",
+          "number": 11,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 12,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "id": 103615026216,
+      "logs_url": null,
+      "name": "native-visual",
+      "run_id": 34716507336,
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/download-artifact@v4",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Install matching Godot native renderer",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Capture and verify the exact DEV package",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Capture autonomous mole behavior and mobile journal from the same package",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Compare all mine receivers and light styles in the same package",
+          "number": 7,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 8,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 16,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 17,
+          "status": "completed"
+        }
+      ]
+    },
+    {
+      "conclusion": "success",
+      "id": 103615026263,
+      "logs_url": null,
+      "name": "web-audio (webkit)",
+      "run_id": 34716507336,
+      "status": "completed",
+      "steps": [
+        {
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/checkout@v4",
+          "number": 2,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/download-artifact@v4",
+          "number": 3,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v4",
+          "number": 4,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Measure real Web Audio unlock, overlap and mute",
+          "number": 5,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@v4",
+          "number": 6,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@v4",
+          "number": 11,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v4",
+          "number": 12,
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 13,
+          "status": "completed"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "archive_download_url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10305690382/zip",
+      "created_at": "2026-09-12T20:26:42Z",
+      "digest": "sha256:57478769f83aca44991f5f5b66d23a4b5e84b952701ae1a1c673fc86176fe0be",
+      "expired": false,
+      "expires_at": "2026-10-12T20:26:26Z",
+      "id": 10305690382,
+      "name": "ever-deeper-one-point-zero-native-visual",
+      "size_in_bytes": 510780347,
+      "updated_at": "2026-09-12T20:26:42Z",
+      "url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10305690382",
+      "workflow_run": {
+        "head_branch": "codex-ever-deeper-1-0",
+        "head_repository_id": 1329194199,
+        "head_sha": "d60922cb13a4ad521ef5d1721434574e097fdc7f",
+        "id": 34716507336,
+        "repository_id": 1329194199
+      }
+    },
+    {
+      "archive_download_url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10305395259/zip",
+      "created_at": "2026-09-12T20:20:02Z",
+      "digest": "sha256:3139d73ee08882dbc4530296c32d82ae7f19c553cb8a20af4a5a71cb65bb2d77",
+      "expired": false,
+      "expires_at": "2026-10-12T20:20:01Z",
+      "id": 10305395259,
+      "name": "ever-deeper-one-point-zero-hero-motion-review",
+      "size_in_bytes": 9966663,
+      "updated_at": "2026-09-12T20:20:02Z",
+      "url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10305395259",
+      "workflow_run": {
+        "head_branch": "codex-ever-deeper-1-0",
+        "head_repository_id": 1329194199,
+        "head_sha": "d60922cb13a4ad521ef5d1721434574e097fdc7f",
+        "id": 34716507336,
+        "repository_id": 1329194199
+      }
+    },
+    {
+      "archive_download_url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10305325275/zip",
+      "created_at": "2026-09-12T20:18:41Z",
+      "digest": "sha256:a1bd47a9efe39762cff9d59e2ed8cac29682ba993428cc11695ca3ccdf9ba038",
+      "expired": false,
+      "expires_at": "2026-10-12T20:18:41Z",
+      "id": 10305325275,
+      "name": "ever-deeper-one-point-zero-web-audio-webkit",
+      "size_in_bytes": 4995,
+      "updated_at": "2026-09-12T20:18:41Z",
+      "url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10305325275",
+      "workflow_run": {
+        "head_branch": "codex-ever-deeper-1-0",
+        "head_repository_id": 1329194199,
+        "head_sha": "d60922cb13a4ad521ef5d1721434574e097fdc7f",
+        "id": 34716507336,
+        "repository_id": 1329194199
+      }
+    },
+    {
+      "archive_download_url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10304714417/zip",
+      "created_at": "2026-09-12T20:17:32Z",
+      "digest": "sha256:436ab2cfab0d601f91f504c1bf1383a9bf367f548e0acc88fa22d489d2cf7e19",
+      "expired": false,
+      "expires_at": "2026-10-12T20:17:31Z",
+      "id": 10304714417,
+      "name": "ever-deeper-one-point-zero-build-review",
+      "size_in_bytes": 86628,
+      "updated_at": "2026-09-12T20:17:32Z",
+      "url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10304714417",
+      "workflow_run": {
+        "head_branch": "codex-ever-deeper-1-0",
+        "head_repository_id": 1329194199,
+        "head_sha": "d60922cb13a4ad521ef5d1721434574e097fdc7f",
+        "id": 34716507336,
+        "repository_id": 1329194199
+      }
+    },
+    {
+      "archive_download_url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10304644699/zip",
+      "created_at": "2026-09-12T20:18:28Z",
+      "digest": "sha256:36b62f7203433999089ac54246208559e4cfdd41cec0e354bcf556f30dc23516",
+      "expired": false,
+      "expires_at": "2026-10-12T20:18:27Z",
+      "id": 10304644699,
+      "name": "ever-deeper-one-point-zero-web-audio-chromium",
+      "size_in_bytes": 5869,
+      "updated_at": "2026-09-12T20:18:28Z",
+      "url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10304644699",
+      "workflow_run": {
+        "head_branch": "codex-ever-deeper-1-0",
+        "head_repository_id": 1329194199,
+        "head_sha": "d60922cb13a4ad521ef5d1721434574e097fdc7f",
+        "id": 34716507336,
+        "repository_id": 1329194199
+      }
+    },
+    {
+      "archive_download_url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10304559817/zip",
+      "created_at": "2026-09-12T20:17:31Z",
+      "digest": "sha256:e901952e02da251cd8cb571b1131520fce590f5cf34266df596d8dce70161e96",
+      "expired": false,
+      "expires_at": "2026-10-12T20:17:22Z",
+      "id": 10304559817,
+      "name": "ever-deeper-one-point-zero-dev-candidate",
+      "size_in_bytes": 232536615,
+      "updated_at": "2026-09-12T20:17:31Z",
+      "url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10304559817",
+      "workflow_run": {
+        "head_branch": "codex-ever-deeper-1-0",
+        "head_repository_id": 1329194199,
+        "head_sha": "d60922cb13a4ad521ef5d1721434574e097fdc7f",
+        "id": 34716507336,
+        "repository_id": 1329194199
+      }
+    },
+    {
+      "archive_download_url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10304149695/zip",
+      "created_at": "2026-09-12T20:20:42Z",
+      "digest": "sha256:b2e7212aa1e54603b343aaa1ead0bfeed3323260e40fdd1f20134c8cd886adeb",
+      "expired": false,
+      "expires_at": "2026-10-12T20:20:40Z",
+      "id": 10304149695,
+      "name": "ever-deeper-one-point-zero-mobile-review",
+      "size_in_bytes": 16530031,
+      "updated_at": "2026-09-12T20:20:42Z",
+      "url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10304149695",
+      "workflow_run": {
+        "head_branch": "codex-ever-deeper-1-0",
+        "head_repository_id": 1329194199,
+        "head_sha": "d60922cb13a4ad521ef5d1721434574e097fdc7f",
+        "id": 34716507336,
+        "repository_id": 1329194199
+      }
+    }
+  ]
+}
