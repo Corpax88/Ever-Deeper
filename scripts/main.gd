@@ -2756,6 +2756,7 @@ func _enter_hub(entering: bool = true, persist_location: bool = true) -> void :
 		AudioDirector.play_blocked()
 		_set_status("The base lift is dormant")
 		return
+	var first_visit: = RunState.hub_tutorial_pending()
 	if entering:
 		RunState.begin_state_batch()
 		surface_world.persist_ore_mountain_state()
@@ -2785,7 +2786,7 @@ func _enter_hub(entering: bool = true, persist_location: bool = true) -> void :
 	objective_label.text = _hub_objective()
 	if bool(RunState.victory):
 		_set_status(_deep_hoard_status_text())
-	elif RunState.hub_tutorial_pending():
+	elif first_visit:
 		_set_status("Base Hub unlocked · store ore and return to Starfall whenever you choose")
 		RunState.mark_hub_tutorial_seen()
 	else:

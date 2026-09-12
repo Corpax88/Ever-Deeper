@@ -64,6 +64,7 @@ func _run() -> void:
 	main.quick_tutorial.dismiss()
 	await _capture("01-new-player-hud", {"fixture": "Fresh player inside first mine"}, true)
 	if not await _recipe_capture(): _finish(); return
+	if not await _hub_guide_capture(): _finish(); return
 
 	journey = load("res://scripts/qa/suites/one_point_zero_world.gd").new(main, null)
 	if not _check(journey._new_player_to_deep(), "Campaign prerequisites completed through real transactions"): _finish(); return
@@ -146,6 +147,28 @@ func _recipe_capture() -> bool:
 		var snapshot: Dictionary = main.premium_hud.progression_goal_snapshot()
 		if not _check(Array(snapshot.get("requirements", [])).size() == expected_rows, "HUD displays all %d real drill requirements" % expected_rows): return false
 		await _capture("02-%d-row-recipe" % expected_rows, {"fixture": "Partial recipe materials; banked gold and explicitly pending sale value", "recipe_rows": expected_rows}, true)
+	return true
+
+func _hub_guide_capture() -> bool:
+	main._dev_seed_all_zones_state()
+	state.victory = false
+	state.singularity_secured = false
+	state.drill_level = 0
+	state.starforge_variant = "crusher"
+	state.hub["visited"] = false
+	state.hub["tutorialSeen"] = false
+	for resource_id in state.cargo: state.cargo[resource_id] = 0
+	main._dev_jump_surface()
+	main.surface_world.restore_position(Vector2(state.HUB_SURFACE_ENTRANCE))
+	if not _check(String(main.guide_director.goal_for_state().objective_id) == "hub:first_visit", "Unvisited Starforge player is guided to the Hub"): return false
+	await _capture("02-hub-guide-before-entry", {"fixture": "Starforge Crusher, no drill, first Hub visit"}, true)
+	main._enter_hub()
+	main._checkpoint_location()
+	if not _check(not state.hub_tutorial_pending() and String(main.guide_director.goal_for_state().objective_id) == "drill:1", "Actual Hub entry and checkpoint advance the guide"): return false
+	await _capture("02-hub-guide-after-entry", {"fixture": "Real Hub entry followed by checkpoint; next drill is active"}, true)
+	main._exit_hub()
+	if not _check(String(main.guide_director.goal_for_state().objective_id) == "drill:1", "Exiting the Hub retains the drill goal"): return false
+	await _capture("02-hub-guide-after-exit", {"fixture": "Real Hub exit; no return-to-Hub loop"}, true)
 	return true
 
 func _mine_corner(label: String) -> bool:

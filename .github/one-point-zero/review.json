@@ -2,61 +2,24 @@
   "schema": 1,
   "dev_only": true,
   "live_publication_authorized": false,
-  "dev_version": "1.0.0-dev.5",
-  "source_commit": "256dec9a688801e22bd23c4e946215f957eec578",
-  "qa_run_id": 34700053177,
-  "candidate_artifact_id": 10299643209,
-  "candidate_zip_sha256": "2ec0fcedf6cc57ae200c75954ea6930c339a4edc9c4dc27ef6f7f98962f41b2b",
-  "candidate_manifest_sha256": "1811a7802f282bede53c2557cff6bd66317714cae1913bdaf49b6668d00e7f88",
-  "package_checks_passed": true,
-  "visual_reviewed": true,
-  "mobile_touch_reviewed": true,
-  "web_audio_reviewed": true,
-  "full_progression_reviewed": true,
-  "critic_reviewed": true,
-  "dev_test_ready": true,
+  "dev_version": "1.0.0-dev.6",
+  "source_commit": "",
+  "qa_run_id": 0,
+  "candidate_artifact_id": 0,
+  "candidate_zip_sha256": "",
+  "candidate_manifest_sha256": "",
+  "package_checks_passed": false,
+  "visual_reviewed": false,
+  "mobile_touch_reviewed": false,
+  "web_audio_reviewed": false,
+  "full_progression_reviewed": false,
+  "critic_reviewed": false,
+  "dev_test_ready": false,
   "final_one_point_zero_approved": false,
   "critic_score": 8.0,
   "critical_bug_count": 0,
   "physical_iphone_verified": false,
-  "files": {
-    "index.apple-touch-icon.png": {
-      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5",
-      "size": 66421
-    },
-    "index.audio.position.worklet.js": {
-      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
-      "size": 2973
-    },
-    "index.audio.worklet.js": {
-      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
-      "size": 7298
-    },
-    "index.html": {
-      "sha256": "c8e75d07c808aa111ae49729ec09a4011f3493326b8e659a6e67ed866bfa6f76",
-      "size": 7855
-    },
-    "index.icon.png": {
-      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
-      "size": 470687
-    },
-    "index.js": {
-      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
-      "size": 279815
-    },
-    "index.pck": {
-      "sha256": "0f5462e4fadb3b0292dfdf0643f594f37c05cfcad95355789f44edaaaade847c",
-      "size": 220961748
-    },
-    "index.png": {
-      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
-      "size": 1981427
-    },
-    "index.wasm": {
-      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
-      "size": 39514754
-    }
-  },
+  "files": {},
   "notes": [
     "Normal GitHub and DEV publication flow remains authorized as recorded in docs/mole-autonomy.md. This author review approves only the bounded discovery-loop correction for DEV testing, not an independent review or final LIVE 1.0 acceptance.",
     "All six required jobs pass in run 34700053177. Fourteen active suites pass on source and exact DEV PCK; both build flavors are checked. WebKit passes 869 gameplay and 195 touch assertions, both browser audio checks pass, and existing hero/companion checks remain green.",
@@ -66,7 +29,7 @@
     "The first two CI runs exposed an already-funded developer helper rejection and stale DEV4 harness labels. Both were fixed; the original assertions remain. Full revalidation passed on the exact source recorded here.",
     "The rollback baseline is the verified DEV4 publication from run 34440695093. Its exact 18-file receipt is persisted in mole-publication-receipt.json; all nine LIVE identities retain 0.46.9. Later documentation and review metadata do not change the immutable runtime package; download artifact 10299643209 without rebuilding."
   ],
-  "reviewed_at": "2026-09-12T15:04:57.202801+00:00",
+  "reviewed_at": "",
   "reviewer_type": "author",
   "independent_critic_reviewed": false
 }
