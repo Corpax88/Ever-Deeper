@@ -2,12 +2,12 @@
   "schema": 1,
   "dev_only": true,
   "live_publication_authorized": false,
-  "dev_version": "1.0.0-dev.6",
-  "source_commit": "d60922cb13a4ad521ef5d1721434574e097fdc7f",
-  "qa_run_id": 34716507336,
-  "candidate_artifact_id": 10304559817,
-  "candidate_zip_sha256": "e901952e02da251cd8cb571b1131520fce590f5cf34266df596d8dce70161e96",
-  "candidate_manifest_sha256": "37b6fde76a53fd7182b0b94be01810e7df440a3a6f5c8fd5c60f42fa1b46bcfb",
+  "dev_version": "1.0.0-dev.7",
+  "source_commit": "0bdad8b065dc38b0e8f65414e3756968f8417878",
+  "qa_run_id": 34723555713,
+  "candidate_artifact_id": 10307350837,
+  "candidate_zip_sha256": "c4feaae44d10d9e20ecb1fa738a7fda57bbab8a0ac1b91cc8b8a58248e347ab0",
+  "candidate_manifest_sha256": "b7d57c8ac0091dd4b76fde4f2847af8fc6d83be3cd7e1b0152f6bf01180cfb1b",
   "package_checks_passed": true,
   "visual_reviewed": true,
   "mobile_touch_reviewed": true,
@@ -33,7 +33,7 @@
       "size": 7298
     },
     "index.html": {
-      "sha256": "7d27a1bd5abad33afa9200e27fc8891f7fd78fd28f393a27d12b4ef1ec31c71d",
+      "sha256": "3e607ee912c513d57c0d01fe82d301fe8bebbe3a2ce4ccb2af7b6244ce7b1fd1",
       "size": 7855
     },
     "index.icon.png": {
@@ -45,8 +45,8 @@
       "size": 279815
     },
     "index.pck": {
-      "sha256": "02e8d59d1c1f2ddf53de4128763559b59ec89aaabc78b41ba907720d32de37a0",
-      "size": 220963636
+      "sha256": "a3885cc33cc80174d961df0c2149180e6b9ea7cb2f63158b6c4302bdc9329dd6",
+      "size": 220968708
     },
     "index.png": {
       "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
@@ -58,14 +58,15 @@
     }
   },
   "notes": [
-    "Mats explicitly authorized upload and DEV publication after release checks in this conversation. This is a bounded author review, not an independent critic review or final LIVE 1.0 approval.",
-    "All six required jobs pass in run 34716507336. Fourteen current source and exact-packaged cases pass; WebKit passes 882 gameplay and 195 touch assertions. Both audio browsers and twelve hero mining combinations pass.",
-    "Native artifact 10305690382 passes 618 assertions with 56 journey images, seven companion images and 75 receiver stages. The author inspected all six Hub-guide images at small and large mobile sizes plus one supporting WebKit first-mine image. See docs/hub-guide-review.md and docs/hub-guide-evidence/.",
-    "The guide changes from the first Hub visit to Burrower Drill on actual entry/checkpoint and retains that goal on exit. Old visited saves recover; unvisited saves keep the introduction. No art, economy, equipment or save-schema change.",
-    "Physical iPhone FPS, human pacing and subjective listening remain unverified. Known legacy QA failures are documented separately. Initial local dummy-renderer errors and successful unchanged retries are recorded; the CI source and package suites passed.",
-    "The baseline is the verified DEV5 publication receipt from run 34701246397. Publish only artifact 10304559817, preserve all nine LIVE 0.46.9 files, retain rollback bytes and verify all eighteen public files."
+    "Mats authorized upload and DEV publication after release checks. This is a bounded author review, not an independent critic review or final LIVE approval.",
+    "All six jobs in 34723555713 pass. Fourteen source and fourteen packaged cases pass; WebKit passes 1248 gameplay and 195 touch checks. Both audio browsers and hero-motion checks pass.",
+    "The original native artifact passes 773 assertions with 74 journey images, seven companion captures and 75 receiver stages. Its ZIP digest was verified by the extraction workflow.",
+    "Original guide captures were rejected for fixture framing and stale drawing. Supplemental run 34724674299 renders the identical PCK with a frozen 2.5x detail camera; 190 assertions and eighteen captures pass. The author inspected nine small states and three large ore images. See docs/drill-guide-review.md and docs/drill-guide-evidence/review-index.json.",
+    "Required-resource targets, matching pickups, regrowth, and the next-mine transition are covered. Renewable ore preserves permanent passages and saved depletion; original artwork, recipes and production camera remain unchanged.",
+    "Physical iPhone FPS, human pacing and subjective listening remain unverified. Known legacy QA failures remain documented separately. No critical issue reproduced in the tested scope; author DEV readiness 8/10.",
+    "Publish only artifact 10307350837. The baseline pins DEV6 receipt 34717418294; preserve all nine LIVE 0.46.9 files, retain rollback bytes and verify all eighteen public files."
   ],
-  "reviewed_at": "2026-09-12T20:31:34.841763+00:00",
+  "reviewed_at": "2026-09-12T23:16:10.930932+00:00",
   "reviewer_type": "author",
   "independent_critic_reviewed": false
 }

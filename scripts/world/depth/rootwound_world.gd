@@ -786,6 +786,39 @@ func _build_rocks() -> void :
 			rock.respawn_remaining = INF
 			rock.respawn_until_unix = 0.0
 		rocks[index] = rock
+	_restore_open_gate_seams()
+
+
+func _restore_open_gate_seams(fresh_gate: String = "") -> void:
+	# Passage progress stays permanent; its ore remains a renewable mining source.
+	var known: Dictionary = {}
+	for rock in rocks:
+		known[String(rock.state_id)] = true
+	for index in rocks.size():
+		var gate: Dictionary = rocks[index]
+		if not bool(gate.drill_gated): continue
+		if RunState.barrier_hits(mine_id + ":d2:" + String(gate.deposit_id)) < 10: continue
+		var state_id: String = "seam:" + String(gate.state_id)
+		if known.has(state_id): continue
+		var seam: Dictionary = gate.duplicate(true)
+		seam.id = 1000 + rocks.size()
+		seam.state_id = state_id
+		seam.deposit_id = "seam:" + String(gate.deposit_id)
+		seam.pocket_reward_id = ""
+		seam.drill_gated = false
+		seam.broken = false
+		seam.hp = seam.max_hp
+		seam.shell = seam.max_shell
+		seam.respawn_remaining = 0.0
+		seam.respawn_until_unix = 0.0
+		if String(gate.deposit_id) == fresh_gate:
+			RunState.deplete_mine_resource_node(mine_id, DEPTH, state_id, float(GameData.data.ROCK_TYPES[seam.type].respawn))
+		var indices: Array = Array(rocks_by_cell.get(seam.cell, []))
+		indices.append(rocks.size())
+		rocks_by_cell[seam.cell] = indices
+		rocks.append(seam)
+		known[state_id] = true
+	_restore_persistent_resource_depletion()
 
 
 func _apply_claimed_pocket_rocks() -> void :
@@ -804,6 +837,8 @@ func _restore_persistent_resource_depletion() -> void :
 	var depleted: Dictionary = RunState.mine_resource_depletions(mine_id, DEPTH)
 	for index in rocks.size():
 		var rock: Dictionary = Dictionary(rocks[index])
+		if bool(rock.drill_gated) and RunState.barrier_hits(mine_id + ":d2:" + String(rock.deposit_id)) >= 10:
+			continue
 		var state_id: = String(rock.get("state_id", ""))
 		if not depleted.has(state_id):
 			continue
@@ -3151,6 +3186,7 @@ func _strike_drill_gate(rock_index: int) -> bool:
 		part.hp = maxi(1,ceili(float(part.max_hp)*(1.0-float(hits)/10.0)))
 		rocks[i] = part
 		if hits == 10: _break_rock(i)
+	if hits == 10: _restore_open_gate_seams(gate_id)
 	_append_impact({"position":Vector2(rock.position),"age":0.0,"life":0.42,"broken":hits==10,"style":""})
 	AudioDirector.play_mining(String(rock.type),hits==10,false)
 	message_changed.emit("PASSAGE OPEN" if hits == 10 else "WALL · %d / 10 strikes" % hits)

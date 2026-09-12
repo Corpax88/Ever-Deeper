@@ -4723,6 +4723,9 @@ func _mine_resource_node_kind(mine_id: String, depth: int, node_id: String) -> S
 		return ""
 	if depth != 2:
 		return String(_depth_one_resource_node_kinds(mine_id).get(node_id, ""))
+	var is_seam: bool = node_id.begins_with("seam:")
+	if is_seam:
+		node_id = node_id.trim_prefix("seam:")
 	if not node_id.begins_with("rock:"):
 		return ""
 	var raw_index: = node_id.trim_prefix("rock:")
@@ -4734,6 +4737,8 @@ func _mine_resource_node_kind(mine_id: String, depth: int, node_id: String) -> S
 	)
 	var rocks: Array = Array(discoveries.get("rocks", []))
 	if index < 0 or index >= rocks.size():
+		return ""
+	if is_seam and not bool(Dictionary(rocks[index]).get("drillGated", false)):
 		return ""
 	return String(Dictionary(rocks[index]).get("type", ""))
 
