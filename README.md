@@ -2,6 +2,8 @@
 
 The current game is a **Godot 4.7.2** project. Open `project.godot` in this directory.
 The current candidate is `1.0.0-rc.1`; its DEV label is `1.0.0-dev.7`.
+The post-drill guide targets required ore, and opened drill barriers retain renewable ore.
+Read [the drill guide handoff](docs/drill-guide-HANDOFF.md) for DEV7 validation and publication status.
 The Starforge Hub visit now stays completed across checkpoints, exit and reload; older affected saves recover automatically.
 Read [the Hub guide handoff](docs/hub-guide-HANDOFF.md) for DEV6.
 Discoveries supply their first Hub building, nearby finds get visible clues, and Starfall opens after Ember mastery 1.
