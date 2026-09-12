@@ -2059,6 +2059,7 @@ func enter_hub(surface_position: Variant = null) -> bool:
 	hub["surfaceX"] = return_position.x
 	hub["surfaceY"] = return_position.y
 	hub["visited"] = true
+	hub["tutorialSeen"] = true
 	last_surface_position = return_position
 	current_scene = "hub"
 	current_depth = 1
@@ -2218,6 +2219,10 @@ func commit_hub_runtime_state(
 	if not is_hub_unlocked():
 		return false
 	var clean_hub: = _sanitize_hub_state(next_hub_state, victory or is_hub_unlocked())
+	# Runtime snapshots own construction, not completed progression. A snapshot
+	# taken before a tutorial completes must never make that tutorial pending again.
+	for flag in ["visited", "tutorialSeen", "buildTutorialSeen"]:
+		clean_hub[flag] = bool(clean_hub.get(flag, false)) or bool(hub.get(flag, false))
 	var clean_base: = _sanitize_base_state(next_base_state, bool(clean_hub.unlocked))
 	var clean_gold: = _nonnegative_int(next_economy_state.get("gold", gold), gold)
 	var clean_cargo: = _sanitize_resource_store(next_economy_state.get("cargo", cargo))
@@ -4190,7 +4195,8 @@ func _sanitize_hub_state(raw: Variant, unlock_allowed: bool = false) -> Dictiona
 	var result: = _default_hub_state()
 	result["unlocked"] = unlock_allowed or _strict_bool(source.get("unlocked", false))
 	result["visited"] = _strict_bool(source.get("visited", false))
-	result["tutorialSeen"] = _strict_bool(source.get(
+	# Older saves may contain a visit with a tutorial flag overwritten by the Hub.
+	result["tutorialSeen"] = bool(result["visited"]) or _strict_bool(source.get(
 		"tutorialSeen", source.get("tutorial_seen", false)
 	))
 	result["buildTutorialSeen"] = _strict_bool(source.get(

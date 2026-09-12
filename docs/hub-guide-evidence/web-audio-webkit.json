@@ -1,0 +1,1124 @@
+{
+  "passed": true,
+  "browser": "webkit",
+  "pckSha256": "02e8d59d1c1f2ddf53de4128763559b59ec89aaabc78b41ba907720d32de37a0",
+  "htmlSha256": "7d27a1bd5abad33afa9200e27fc8891f7fd78fd28f393a27d12b4ef1ec31c71d",
+  "checks": {
+    "trusted_gesture_unlock": true,
+    "same_cluster_common_and_rare_output": true,
+    "discovery_survives_actual_effect_overlap": true,
+    "mute_stops_output_and_blocks_new_effects": true,
+    "unmute_restores_actual_output": true
+  },
+  "subjective_listening_verified": false,
+  "physical_iphone_verified": false,
+  "browser_version": "26.5",
+  "initial": {
+    "state": {
+      "driver": "AudioWorklet",
+      "headless": false,
+      "muted": false,
+      "operation": "ready",
+      "playing": [],
+      "sample_backend": true,
+      "version": "1.0.0-dev.6",
+      "voices": 10
+    },
+    "supported": true,
+    "contexts": 1
+  },
+  "discovery": {
+    "id": 2,
+    "context": 0,
+    "phase": "discovery",
+    "start": 6.478367346938776,
+    "wallStart": 9685.48,
+    "duration": 0.92,
+    "rate": 0.9387240409851074,
+    "loop": false,
+    "pcmRms": 0.0743761581117684,
+    "pcmPeak": 0.3156834542751312,
+    "stop": 7.471020408163265,
+    "end": 7.471020408163265
+  },
+  "measurements": {
+    "supported": true,
+    "sources": [
+      {
+        "id": 0,
+        "context": 0,
+        "phase": "cluster",
+        "start": 5.979138321995465,
+        "wallStart": 9185,
+        "duration": 0.24,
+        "rate": 0.9933326244354248,
+        "loop": false,
+        "pcmRms": 0.10694928060866789,
+        "pcmPeak": 0.45670947432518005,
+        "stop": 6.237460317460317,
+        "end": 6.237460317460317
+      },
+      {
+        "id": 1,
+        "context": 0,
+        "phase": "cluster",
+        "start": 5.98204081632653,
+        "wallStart": 9186.94,
+        "duration": 0.34,
+        "rate": 1.105813980102539,
+        "loop": false,
+        "pcmRms": 0.10397626524735952,
+        "pcmPeak": 0.4755088984966278,
+        "stop": 6.30421768707483,
+        "end": 6.30421768707483
+      },
+      {
+        "id": 2,
+        "context": 0,
+        "phase": "discovery",
+        "start": 6.478367346938776,
+        "wallStart": 9685.48,
+        "duration": 0.92,
+        "rate": 0.9387240409851074,
+        "loop": false,
+        "pcmRms": 0.0743761581117684,
+        "pcmPeak": 0.3156834542751312,
+        "stop": 7.471020408163265,
+        "end": 7.471020408163265
+      },
+      {
+        "id": 3,
+        "context": 0,
+        "phase": "overlap",
+        "start": 6.588662131519274,
+        "wallStart": 9796.72,
+        "duration": 0.20199546485260772,
+        "rate": 1.0576938390731812,
+        "loop": false,
+        "pcmRms": 0.11073508508721831,
+        "pcmPeak": 0.9599902629852295,
+        "stop": 6.786031746031746,
+        "end": 6.786031746031746
+      },
+      {
+        "id": 4,
+        "context": 0,
+        "phase": "overlap",
+        "start": 6.655419501133787,
+        "wallStart": 9862.64,
+        "duration": 0.24,
+        "rate": 0.9820754528045654,
+        "loop": false,
+        "pcmRms": 0.10672866432188845,
+        "pcmPeak": 0.4617297947406769,
+        "stop": 6.902131519274376,
+        "end": 6.902131519274376
+      },
+      {
+        "id": 5,
+        "context": 0,
+        "phase": "overlap",
+        "start": 6.722176870748299,
+        "wallStart": 9929.36,
+        "duration": 0.19002267573696144,
+        "rate": 1.1001511812210083,
+        "loop": false,
+        "pcmRms": 0.1059402974706322,
+        "pcmPeak": 0.7394635081291199,
+        "stop": 6.902131519274376,
+        "end": 6.902131519274376
+      },
+      {
+        "id": 6,
+        "context": 0,
+        "phase": "overlap",
+        "start": 6.791836734693877,
+        "wallStart": 9996.78,
+        "duration": 0.24,
+        "rate": 0.9637082815170288,
+        "loop": false,
+        "pcmRms": 0.10672866432188845,
+        "pcmPeak": 0.4617297947406769,
+        "stop": 7.053061224489796,
+        "end": 7.053061224489796
+      },
+      {
+        "id": 7,
+        "context": 0,
+        "phase": "overlap",
+        "start": 6.855691609977324,
+        "wallStart": 10061.96,
+        "duration": 0.21401360544217687,
+        "rate": 1.0681990385055542,
+        "loop": false,
+        "pcmRms": 0.10292007957761563,
+        "pcmPeak": 0.921048641204834,
+        "stop": 7.070476190476191,
+        "end": 7.070476190476191
+      },
+      {
+        "id": 8,
+        "context": 0,
+        "phase": "overlap",
+        "start": 6.922448979591837,
+        "wallStart": 10128.9,
+        "duration": 0.24,
+        "rate": 1.0433579683303833,
+        "loop": false,
+        "pcmRms": 0.10672866432188845,
+        "pcmPeak": 0.4617297947406769,
+        "stop": 7.154648526077097,
+        "end": 7.154648526077097
+      },
+      {
+        "id": 9,
+        "context": 0,
+        "phase": "overlap",
+        "start": 6.986303854875284,
+        "wallStart": 10194.56,
+        "duration": 0.20199546485260772,
+        "rate": 1.0437111854553223,
+        "loop": false,
+        "pcmRms": 0.11073508508721831,
+        "pcmPeak": 0.9599902629852295,
+        "stop": 7.186575963718821,
+        "end": 7.186575963718821
+      },
+      {
+        "id": 10,
+        "context": 0,
+        "phase": "overlap",
+        "start": 7.055963718820862,
+        "wallStart": 10261.24,
+        "duration": 0.24,
+        "rate": 1.0293439626693726,
+        "loop": false,
+        "pcmRms": 0.10672866432188845,
+        "pcmPeak": 0.4617297947406769,
+        "stop": 7.302675736961452,
+        "end": 7.302675736961452
+      },
+      {
+        "id": 11,
+        "context": 0,
+        "phase": "overlap",
+        "start": 7.122721088435374,
+        "wallStart": 10328.02,
+        "duration": 0.20199546485260772,
+        "rate": 1.0863935947418213,
+        "loop": false,
+        "pcmRms": 0.11073508508721831,
+        "pcmPeak": 0.9599902629852295,
+        "stop": 7.320090702947846,
+        "end": 7.320090702947846
+      },
+      {
+        "id": 12,
+        "context": 0,
+        "phase": "overlap",
+        "start": 7.189478458049886,
+        "wallStart": 10395.84,
+        "duration": 0.24,
+        "rate": 1.0220139026641846,
+        "loop": false,
+        "pcmRms": 0.1076487125589577,
+        "pcmPeak": 0.4500564634799957,
+        "stop": 7.436190476190476,
+        "end": 7.436190476190476
+      },
+      {
+        "id": 13,
+        "context": 0,
+        "phase": "overlap",
+        "start": 7.2562358276643995,
+        "wallStart": 10461.34,
+        "duration": 0.19002267573696144,
+        "rate": 1.0362998247146606,
+        "loop": false,
+        "pcmRms": 0.1059402974706322,
+        "pcmPeak": 0.7394635081291199,
+        "stop": 7.453605442176871,
+        "end": 7.453605442176871
+      },
+      {
+        "id": 14,
+        "context": 0,
+        "phase": "overlap",
+        "start": 7.320090702947846,
+        "wallStart": 10528.06,
+        "duration": 0.24,
+        "rate": 0.959673285484314,
+        "loop": false,
+        "pcmRms": 0.10672866432188845,
+        "pcmPeak": 0.4617297947406769,
+        "stop": 7.5029478458049885,
+        "end": null
+      },
+      {
+        "id": 15,
+        "context": 0,
+        "phase": "upgrade",
+        "start": 7.523265306122449,
+        "wallStart": 10729.76,
+        "duration": 0.62,
+        "rate": 0.9971787929534912,
+        "loop": false,
+        "pcmRms": 0.08690749173964564,
+        "pcmPeak": 0.33468887209892273,
+        "stop": 7.6538775510204085,
+        "end": null
+      },
+      {
+        "id": 16,
+        "context": 0,
+        "phase": "unmuted",
+        "start": 8.037006802721088,
+        "wallStart": 11244.6,
+        "duration": 0.24,
+        "rate": 1.044938564300537,
+        "loop": false,
+        "pcmRms": 0.10694928060866789,
+        "pcmPeak": 0.45670947432518005,
+        "stop": 8.219863945578231,
+        "end": null
+      }
+    ],
+    "samples": [
+      {
+        "phase": "boot",
+        "context": 0,
+        "time": 5.755646258503401,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "boot",
+        "context": 0,
+        "time": 5.787573696145125,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "baseline",
+        "context": 0,
+        "time": 5.819501133786848,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "baseline",
+        "context": 0,
+        "time": 5.854331065759637,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "baseline",
+        "context": 0,
+        "time": 5.8717460317460315,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "baseline",
+        "context": 0,
+        "time": 5.88625850340136,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "baseline",
+        "context": 0,
+        "time": 5.903673469387755,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "baseline",
+        "context": 0,
+        "time": 5.935600907029478,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "baseline",
+        "context": 0,
+        "time": 5.953015873015873,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 5.9878458049886625,
+        "rms": 0.03162170772455071,
+        "peak": 0.19682392477989197
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.002358276643991,
+        "rms": 0.08766784638946709,
+        "peak": 0.375434935092926
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.03718820861678,
+        "rms": 0.11232467895405142,
+        "peak": 0.34238678216934204
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.054603174603175,
+        "rms": 0.09753659795311515,
+        "peak": 0.2686725854873657
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.069115646258504,
+        "rms": 0.08711430225165351,
+        "peak": 0.2530718445777893
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.086530612244898,
+        "rms": 0.07792075827827259,
+        "peak": 0.2530718445777893
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.103945578231293,
+        "rms": 0.05472611859644882,
+        "peak": 0.16807067394256592
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.135873015873016,
+        "rms": 0.02974425677021757,
+        "peak": 0.09469258785247803
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.15328798185941,
+        "rms": 0.020047886243188318,
+        "peak": 0.06446347385644913
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.170702947845805,
+        "rms": 0.013013398664181131,
+        "peak": 0.04043136164546013
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.188117913832199,
+        "rms": 0.008675104901634069,
+        "peak": 0.027399733662605286
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.202630385487528,
+        "rms": 0.005929941812815097,
+        "peak": 0.02117314375936985
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.254875283446712,
+        "rms": 0.0011240036083184173,
+        "peak": 0.004018641542643309
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.2693877551020405,
+        "rms": 0.0006435791344500024,
+        "peak": 0.0025226541329175234
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.286802721088435,
+        "rms": 0.00026782061867656966,
+        "peak": 0.0011633816175162792
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.30421768707483,
+        "rms": 0.00007994498184435447,
+        "peak": 0.0004006075905635953
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.336145124716554,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.353560090702948,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.370975056689343,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.388390022675737,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "cluster",
+        "context": 0,
+        "time": 6.42031746031746,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "reset",
+        "context": 0,
+        "time": 6.455147392290249,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "discovery",
+        "context": 0,
+        "time": 6.487074829931973,
+        "rms": 0.012173425396324475,
+        "peak": 0.06442703306674957
+      },
+      {
+        "phase": "discovery",
+        "context": 0,
+        "time": 6.519002267573696,
+        "rms": 0.05765969601329284,
+        "peak": 0.10963355004787445
+      },
+      {
+        "phase": "discovery",
+        "context": 0,
+        "time": 6.553832199546485,
+        "rms": 0.06090033283042727,
+        "peak": 0.10399260371923447
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.603174603174603,
+        "rms": 0.09956315140224527,
+        "peak": 0.5050426721572876
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.638004535147393,
+        "rms": 0.14114236196246505,
+        "peak": 0.5234537124633789
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.669931972789116,
+        "rms": 0.08554048329688185,
+        "peak": 0.24956677854061127
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.6873469387755105,
+        "rms": 0.0911397320668374,
+        "peak": 0.24308645725250244
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.704761904761905,
+        "rms": 0.09483992582220872,
+        "peak": 0.24308645725250244
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.736689342403628,
+        "rms": 0.11191298936615104,
+        "peak": 0.5005049705505371
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.754104308390023,
+        "rms": 0.12565384027160217,
+        "peak": 0.5005049705505371
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.771519274376417,
+        "rms": 0.1228457893564619,
+        "peak": 0.5005049705505371
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.791836734693877,
+        "rms": 0.08531218886827543,
+        "peak": 0.3166026473045349
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.820861678004535,
+        "rms": 0.08189773272801094,
+        "peak": 0.2062636762857437
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.852789115646258,
+        "rms": 0.07845902259406064,
+        "peak": 0.2062636762857437
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.870204081632653,
+        "rms": 0.09801299672156291,
+        "peak": 0.41306763887405396
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.887619047619047,
+        "rms": 0.11551011039553254,
+        "peak": 0.41306763887405396
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.902131519274376,
+        "rms": 0.11917402334163549,
+        "peak": 0.41306763887405396
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.936961451247165,
+        "rms": 0.0734835251328974,
+        "peak": 0.21076521277427673
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.9543764172335605,
+        "rms": 0.08277545849409462,
+        "peak": 0.21147353947162628
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.971791383219955,
+        "rms": 0.08939427020772675,
+        "peak": 0.21147353947162628
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 6.989206349206349,
+        "rms": 0.07850599157031526,
+        "peak": 0.21147353947162628
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.003718820861678,
+        "rms": 0.10536173083658251,
+        "peak": 0.4798719584941864
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.035646258503402,
+        "rms": 0.12242154226334485,
+        "peak": 0.4798719584941864
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.055963718820862,
+        "rms": 0.07417689009853373,
+        "peak": 0.3101162314414978
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.087891156462585,
+        "rms": 0.08115463721539114,
+        "peak": 0.2143034189939499
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.102403628117914,
+        "rms": 0.08636672648597075,
+        "peak": 0.2143034189939499
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.137233560090703,
+        "rms": 0.1026632663214859,
+        "peak": 0.5090360045433044
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.169160997732426,
+        "rms": 0.12259387871271715,
+        "peak": 0.5090360045433044
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.189478458049886,
+        "rms": 0.0680105565021679,
+        "peak": 0.2736644148826599
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.203990929705215,
+        "rms": 0.05704143990714163,
+        "peak": 0.1645556390285492
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.2359183673469385,
+        "rms": 0.07011055980405188,
+        "peak": 0.1878235936164856
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.270748299319728,
+        "rms": 0.09174665722750519,
+        "peak": 0.45813223719596863
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.288163265306123,
+        "rms": 0.1106755846517832,
+        "peak": 0.45813223719596863
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.302675736961452,
+        "rms": 0.11299145649140988,
+        "peak": 0.45813223719596863
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.337505668934241,
+        "rms": 0.06501639746517944,
+        "peak": 0.20650172233581543
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.354920634920635,
+        "rms": 0.07183429965823261,
+        "peak": 0.20650172233581543
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.369433106575964,
+        "rms": 0.07724226905738096,
+        "peak": 0.20650172233581543
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.386848072562358,
+        "rms": 0.060121397732605095,
+        "peak": 0.15301868319511414
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.421678004535147,
+        "rms": 0.04412246247411222,
+        "peak": 0.11506626009941101
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.453605442176871,
+        "rms": 0.027949191535783496,
+        "peak": 0.07661107927560806
+      },
+      {
+        "phase": "overlap",
+        "context": 0,
+        "time": 7.471020408163265,
+        "rms": 0.017932292545161006,
+        "peak": 0.05567118152976036
+      },
+      {
+        "phase": "reset",
+        "context": 0,
+        "time": 7.505850340136054,
+        "rms": 0.007012817178812532,
+        "peak": 0.021457234397530556
+      },
+      {
+        "phase": "upgrade",
+        "context": 0,
+        "time": 7.5377777777777775,
+        "rms": 0.04376069093617656,
+        "peak": 0.13866369426250458
+      },
+      {
+        "phase": "upgrade",
+        "context": 0,
+        "time": 7.555192743764172,
+        "rms": 0.06615740932882243,
+        "peak": 0.13866369426250458
+      },
+      {
+        "phase": "upgrade",
+        "context": 0,
+        "time": 7.569705215419501,
+        "rms": 0.07654581376488036,
+        "peak": 0.13866369426250458
+      },
+      {
+        "phase": "upgrade",
+        "context": 0,
+        "time": 7.587120181405895,
+        "rms": 0.06981092340423467,
+        "peak": 0.1247028112411499
+      },
+      {
+        "phase": "upgrade",
+        "context": 0,
+        "time": 7.604535147392291,
+        "rms": 0.05979618442160409,
+        "peak": 0.10617946088314056
+      },
+      {
+        "phase": "mute",
+        "context": 0,
+        "time": 7.6538775510204085,
+        "rms": 0.07005905845864438,
+        "peak": 0.1806057095527649
+      },
+      {
+        "phase": "mute",
+        "context": 0,
+        "time": 7.671292517006803,
+        "rms": 0.06492604841568439,
+        "peak": 0.1806057095527649
+      },
+      {
+        "phase": "mute",
+        "context": 0,
+        "time": 7.685804988662132,
+        "rms": 0.04390905825996295,
+        "peak": 0.15653780102729797
+      },
+      {
+        "phase": "mute",
+        "context": 0,
+        "time": 7.703219954648526,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "mute",
+        "context": 0,
+        "time": 7.738049886621315,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "mute",
+        "context": 0,
+        "time": 7.75546485260771,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "mute",
+        "context": 0,
+        "time": 7.7699773242630386,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "mute",
+        "context": 0,
+        "time": 7.787392290249433,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "muted",
+        "context": 0,
+        "time": 7.854149659863945,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "muted",
+        "context": 0,
+        "time": 7.87156462585034,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "muted",
+        "context": 0,
+        "time": 7.886077097505669,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "muted",
+        "context": 0,
+        "time": 7.903492063492063,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "muted",
+        "context": 0,
+        "time": 7.938321995464853,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "muted",
+        "context": 0,
+        "time": 7.952834467120182,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "muted",
+        "context": 0,
+        "time": 7.970249433106576,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "muted",
+        "context": 0,
+        "time": 7.987664399092971,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "unmute",
+        "context": 0,
+        "time": 8.019591836734694,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "unmuted",
+        "context": 0,
+        "time": 8.054421768707483,
+        "rms": 0.04791358468072043,
+        "peak": 0.16429823637008667
+      },
+      {
+        "phase": "unmuted",
+        "context": 0,
+        "time": 8.068934240362811,
+        "rms": 0.06317065086736198,
+        "peak": 0.16429823637008667
+      },
+      {
+        "phase": "unmuted",
+        "context": 0,
+        "time": 8.086349206349206,
+        "rms": 0.07163908707237752,
+        "peak": 0.16429823637008667
+      },
+      {
+        "phase": "unmuted",
+        "context": 0,
+        "time": 8.103764172335602,
+        "rms": 0.057202788580059415,
+        "peak": 0.13085299730300903
+      },
+      {
+        "phase": "unmuted",
+        "context": 0,
+        "time": 8.135691609977325,
+        "rms": 0.042276701250362904,
+        "peak": 0.11272292584180832
+      },
+      {
+        "phase": "unmuted",
+        "context": 0,
+        "time": 8.153106575963719,
+        "rms": 0.03142183130271544,
+        "peak": 0.08768637478351593
+      },
+      {
+        "phase": "unmuted",
+        "context": 0,
+        "time": 8.170521541950114,
+        "rms": 0.021786321305132087,
+        "peak": 0.06431744247674942
+      },
+      {
+        "phase": "unmuted",
+        "context": 0,
+        "time": 8.187936507936508,
+        "rms": 0.013580024570842335,
+        "peak": 0.043143533170223236
+      },
+      {
+        "phase": "finish",
+        "context": 0,
+        "time": 8.219863945578231,
+        "rms": 0.005464919892940845,
+        "peak": 0.01851711794734001
+      },
+      {
+        "phase": "finish",
+        "context": 0,
+        "time": 8.237278911564626,
+        "rms": 0.0027661131082231437,
+        "peak": 0.010050157085061073
+      },
+      {
+        "phase": "finish",
+        "context": 0,
+        "time": 8.25469387755102,
+        "rms": 0.0011661760253764608,
+        "peak": 0.00518161803483963
+      },
+      {
+        "phase": "finish",
+        "context": 0,
+        "time": 8.286621315192743,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "finish",
+        "context": 0,
+        "time": 8.321451247165532,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "finish",
+        "context": 0,
+        "time": 8.353378684807256,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "finish",
+        "context": 0,
+        "time": 8.370793650793651,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "finish",
+        "context": 0,
+        "time": 8.388208616780044,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "finish",
+        "context": 0,
+        "time": 8.420136054421768,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "finish",
+        "context": 0,
+        "time": 8.454965986394559,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "finish",
+        "context": 0,
+        "time": 8.469478458049887,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "finish",
+        "context": 0,
+        "time": 8.486893424036282,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "finish",
+        "context": 0,
+        "time": 8.504308390022675,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "finish",
+        "context": 0,
+        "time": 8.536235827664399,
+        "rms": 0,
+        "peak": 0
+      },
+      {
+        "phase": "finish",
+        "context": 0,
+        "time": 8.553650793650794,
+        "rms": 0,
+        "peak": 0
+      }
+    ],
+    "trustedUnlock": true,
+    "contexts": [
+      {
+        "state": "running",
+        "time": 8.571065759637188,
+        "sampleRate": 44100
+      }
+    ]
+  },
+  "errors": []
+}

@@ -2,12 +2,12 @@
   "schema": 1,
   "dev_only": true,
   "live_publication_authorized": false,
-  "dev_version": "1.0.0-dev.5",
-  "source_commit": "256dec9a688801e22bd23c4e946215f957eec578",
-  "qa_run_id": 34700053177,
-  "candidate_artifact_id": 10299643209,
-  "candidate_zip_sha256": "2ec0fcedf6cc57ae200c75954ea6930c339a4edc9c4dc27ef6f7f98962f41b2b",
-  "candidate_manifest_sha256": "1811a7802f282bede53c2557cff6bd66317714cae1913bdaf49b6668d00e7f88",
+  "dev_version": "1.0.0-dev.6",
+  "source_commit": "d60922cb13a4ad521ef5d1721434574e097fdc7f",
+  "qa_run_id": 34716507336,
+  "candidate_artifact_id": 10304559817,
+  "candidate_zip_sha256": "e901952e02da251cd8cb571b1131520fce590f5cf34266df596d8dce70161e96",
+  "candidate_manifest_sha256": "37b6fde76a53fd7182b0b94be01810e7df440a3a6f5c8fd5c60f42fa1b46bcfb",
   "package_checks_passed": true,
   "visual_reviewed": true,
   "mobile_touch_reviewed": true,
@@ -33,7 +33,7 @@
       "size": 7298
     },
     "index.html": {
-      "sha256": "c8e75d07c808aa111ae49729ec09a4011f3493326b8e659a6e67ed866bfa6f76",
+      "sha256": "7d27a1bd5abad33afa9200e27fc8891f7fd78fd28f393a27d12b4ef1ec31c71d",
       "size": 7855
     },
     "index.icon.png": {
@@ -45,8 +45,8 @@
       "size": 279815
     },
     "index.pck": {
-      "sha256": "0f5462e4fadb3b0292dfdf0643f594f37c05cfcad95355789f44edaaaade847c",
-      "size": 220961748
+      "sha256": "02e8d59d1c1f2ddf53de4128763559b59ec89aaabc78b41ba907720d32de37a0",
+      "size": 220963636
     },
     "index.png": {
       "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
@@ -58,15 +58,14 @@
     }
   },
   "notes": [
-    "Normal GitHub and DEV publication flow remains authorized as recorded in docs/mole-autonomy.md. This author review approves only the bounded discovery-loop correction for DEV testing, not an independent review or final LIVE 1.0 acceptance.",
-    "All six required jobs pass in run 34700053177. Fourteen active suites pass on source and exact DEV PCK; both build flavors are checked. WebKit passes 869 gameplay and 195 touch assertions, both browser audio checks pass, and existing hero/companion checks remain green.",
-    "Native artifact 10300017712 contains 50 journey captures and 567 passing assertions, plus 75 receiver stages and seven companion captures without failures. PCK identity matches the candidate and browser reports. The author inspected all eight new small-mobile states and five supporting images; exact identities and raw reports are persisted in docs/discovery-loop-evidence/.",
-    "Bounded author critic score 8/10: real placement supplies initial construction, replay and old-save migration preserve accounting, paid upgrades retain benefits, the early gate proceeds after mastery 1, and local clues retain hauling/build/ready-upgrade priority. No critical issue reproduced in the tested paths. This is not a new overall game rating.",
-    "Physical iPhone FPS, human pacing, long-session variety, voluntary return and subjective listening remain unverified. Accelerated functional fixtures and native software rendering do not establish those outcomes. Known legacy suites remain documented in docs/verification.md.",
-    "The first two CI runs exposed an already-funded developer helper rejection and stale DEV4 harness labels. Both were fixed; the original assertions remain. Full revalidation passed on the exact source recorded here.",
-    "The rollback baseline is the verified DEV4 publication from run 34440695093. Its exact 18-file receipt is persisted in mole-publication-receipt.json; all nine LIVE identities retain 0.46.9. Later documentation and review metadata do not change the immutable runtime package; download artifact 10299643209 without rebuilding."
+    "Mats explicitly authorized upload and DEV publication after release checks in this conversation. This is a bounded author review, not an independent critic review or final LIVE 1.0 approval.",
+    "All six required jobs pass in run 34716507336. Fourteen current source and exact-packaged cases pass; WebKit passes 882 gameplay and 195 touch assertions. Both audio browsers and twelve hero mining combinations pass.",
+    "Native artifact 10305690382 passes 618 assertions with 56 journey images, seven companion images and 75 receiver stages. The author inspected all six Hub-guide images at small and large mobile sizes plus one supporting WebKit first-mine image. See docs/hub-guide-review.md and docs/hub-guide-evidence/.",
+    "The guide changes from the first Hub visit to Burrower Drill on actual entry/checkpoint and retains that goal on exit. Old visited saves recover; unvisited saves keep the introduction. No art, economy, equipment or save-schema change.",
+    "Physical iPhone FPS, human pacing and subjective listening remain unverified. Known legacy QA failures are documented separately. Initial local dummy-renderer errors and successful unchanged retries are recorded; the CI source and package suites passed.",
+    "The baseline is the verified DEV5 publication receipt from run 34701246397. Publish only artifact 10304559817, preserve all nine LIVE 0.46.9 files, retain rollback bytes and verify all eighteen public files."
   ],
-  "reviewed_at": "2026-09-12T15:04:57.202801+00:00",
+  "reviewed_at": "2026-09-12T20:31:34.841763+00:00",
   "reviewer_type": "author",
   "independent_critic_reviewed": false
 }

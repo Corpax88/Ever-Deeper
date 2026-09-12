@@ -411,10 +411,37 @@ func _test_surface_and_guide() -> void:
 	main.call("_dev_seed_all_zones_state")
 	RunState.drill_level=0
 	RunState.starforge_variant="crusher"
+	RunState.hub["visited"]=false
 	RunState.hub["tutorialSeen"]=false
 	var first: Dictionary=guide.goal_for_state()
 	check(String(first.get("objective_id",""))=="hub:first_visit","Starforge leads to the hub first")
-	RunState.mark_hub_tutorial_seen()
+	main.call("_dev_jump_surface")
+	var stale_hub: Dictionary=RunState.hub_state_snapshot()
+	main.call("_enter_hub")
+	check(String(main.phase)=="hub","Starforge player enters the actual Hub")
+	check(not RunState.hub_tutorial_pending(),"Entering the Hub completes its guide step")
+	check(String(guide.goal_for_state().get("objective_id",""))=="drill:1","Hub visit immediately guides toward the first drill")
+	main.call("_checkpoint_location")
+	check(not RunState.hub_tutorial_pending(),"Hub checkpoint cannot reset its completed guide")
+	main.call("_exit_hub")
+	check(String(main.phase)=="surface" and not RunState.hub_tutorial_pending(),"Leaving the Hub does not restart its guide")
+	main.call("_enter_hub")
+	check(not RunState.hub_tutorial_pending(),"Reentering the Hub keeps its guide complete")
+	RunState.mark_hub_build_tutorial_seen()
+	RunState.commit_hub_runtime_state(stale_hub,RunState.base_state_snapshot(),RunState.hub_economy_snapshot())
+	check(bool(RunState.hub.get("visited",false)) and not RunState.hub_tutorial_pending(),"Stale runtime state cannot erase the Hub visit")
+	check(bool(RunState.hub.get("buildTutorialSeen",false)),"Stale runtime state cannot erase the building tutorial")
+	var hub_save: Dictionary=RunState.serialize()
+	RunState.reset_run(false)
+	check(RunState.deserialize(hub_save) and not RunState.hub_tutorial_pending(),"Completed Hub guide survives save reload")
+	hub_save.state.hub["tutorialSeen"]=false
+	check(RunState.deserialize(hub_save) and not RunState.hub_tutorial_pending(),"Already visited legacy save recovers from the Hub loop")
+	check(String(RunState.starforge_variant)=="crusher" and RunState.gold==int(hub_save.state.gold),"Hub recovery preserves equipment and gold")
+	hub_save.state.hub["visited"]=false
+	check(RunState.deserialize(hub_save) and RunState.hub_tutorial_pending(),"An unvisited Hub still receives its first guide step")
+	main.call("_enter_hub",false,false)
+	check(not RunState.hub_tutorial_pending(),"Restoring inside the Hub completes a pending visit")
+	main.call("_exit_hub")
 	RunState.gold=10000
 	for kind in RunState.cargo: RunState.cargo[kind]=0
 	for level in range(3):

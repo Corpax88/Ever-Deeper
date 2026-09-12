@@ -1,8 +1,10 @@
 # Ever Deeper
 
 The current game is a **Godot 4.7.2** project. Open `project.godot` in this directory.
-The current candidate is `1.0.0-rc.1`; its DEV label is `1.0.0-dev.5`.
-Discoveries now supply their first Hub building, nearby finds get visible clues, and Starfall opens after Ember mastery 1.
+The current candidate is `1.0.0-rc.1`; its DEV label is `1.0.0-dev.6`.
+The Starforge Hub visit now stays completed across checkpoints, exit and reload; older affected saves recover automatically.
+Read [the Hub guide handoff](docs/hub-guide-HANDOFF.md) for DEV6.
+Discoveries supply their first Hub building, nearby finds get visible clues, and Starfall opens after Ember mastery 1.
 Read [the discovery-loop handoff](docs/discovery-loop-HANDOFF.md) for this change and [the 1.0 handoff](docs/one-point-zero/HANDOFF.md) for earlier work and remaining acceptance gates.
 LIVE remains the separate published 0.46.9 package until explicitly accepted.
 
