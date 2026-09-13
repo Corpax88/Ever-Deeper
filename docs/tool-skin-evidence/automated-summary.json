@@ -1,0 +1,240 @@
+{
+  "qa_run_id": 34728099178,
+  "jobs": [
+    {
+      "id": 103645773792,
+      "name": "build",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 103646115775,
+      "name": "native-visual",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 103646115777,
+      "name": "hero-motion",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 103646115816,
+      "name": "mobile",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 103646115859,
+      "name": "web-audio (chromium)",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 103646115899,
+      "name": "web-audio (webkit)",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 10309160566,
+      "name": "ever-deeper-one-point-zero-build-review",
+      "size_in_bytes": 86676,
+      "digest": "sha256:9a4d7719c170e063c6cd729b1b40f01a863e00630439150696b127e95bbf115f"
+    },
+    {
+      "id": 10308986147,
+      "name": "ever-deeper-one-point-zero-mobile-review",
+      "size_in_bytes": 16975894,
+      "digest": "sha256:fc54cff9a327afe3f3fe01691fef5853749dca0b98e91f1bb51a2b0e81d5df92"
+    },
+    {
+      "id": 10308746307,
+      "name": "ever-deeper-one-point-zero-dev-candidate",
+      "size_in_bytes": 232542541,
+      "digest": "sha256:2900ca81dbe6564778ca2a9688f411dc3de029818585eab90d7f6e0ae1f7c71a"
+    },
+    {
+      "id": 10308616790,
+      "name": "ever-deeper-one-point-zero-web-audio-chromium",
+      "size_in_bytes": 5890,
+      "digest": "sha256:fbc0d2f87a3207d329da21af563103c94130d0cca176026920c7db120536515c"
+    },
+    {
+      "id": 10308506683,
+      "name": "ever-deeper-one-point-zero-native-visual",
+      "size_in_bytes": 619529896,
+      "digest": "sha256:b2daf4a5e880969da196338c6dc156ea03d99108438509d82e7510f780e309f5"
+    },
+    {
+      "id": 10308391826,
+      "name": "ever-deeper-one-point-zero-tool-skin-review",
+      "size_in_bytes": 73262501,
+      "digest": "sha256:434b9a8157bbdbd6e1809d8def9102bcc69f575b74ddff5e14b30a34e9ca6d6e"
+    },
+    {
+      "id": 10308231802,
+      "name": "ever-deeper-one-point-zero-hero-motion-review",
+      "size_in_bytes": 9419917,
+      "digest": "sha256:1ea866cf6b69197e7459930175b4522a1a9b9d81240275215b27b43e7fe8248e"
+    },
+    {
+      "id": 10308206857,
+      "name": "ever-deeper-one-point-zero-web-audio-webkit",
+      "size_in_bytes": 4760,
+      "digest": "sha256:24a052445a366060e65edb715d2ee1ca98e89b52fc08df1d0e2c9bae9d4cb482"
+    }
+  ],
+  "candidate_checks": {
+    "source": {
+      "passed": true,
+      "cases": 14
+    },
+    "dev": {
+      "passed": true,
+      "cases": 14
+    },
+    "dev-flavor": {
+      "passed": true,
+      "cases": 0
+    },
+    "production-flavor": {
+      "passed": true,
+      "cases": 0
+    },
+    "hero-audio": {
+      "passed": true,
+      "cases": 0
+    },
+    "hero-transitions": {
+      "passed": true,
+      "cases": 44
+    }
+  },
+  "native": {
+    "assertions": 1016,
+    "failures": [],
+    "rendered": true,
+    "elapsed_seconds": 292.445509,
+    "artifact": {
+      "external_harness_sha256": "823c3b2f5dfb4e3312703052d79ce9e5d25567d53e029738be644cf38b178bda",
+      "invocation_verified_by": "Exact --main-pack launcher/workflow; Godot consumes this switch before script arguments",
+      "path": "/home/runner/work/_temp/candidate/dev/index.pck",
+      "project_binary_sha256": "789fd05236d2ea383fa1e59cc4f7749528e992ac0c1d504bd4aaef8554b5427d",
+      "sha256": "2d75bc116e12039360bfd4b4e327c622e2bcc919b078386f24ebfd385ae80bd5",
+      "source_project_config_present": false,
+      "version": "1.0.0-rc.1"
+    },
+    "skin_checks": [
+      {
+        "assertion": "Paid skin unlock level",
+        "passed": true
+      },
+      {
+        "assertion": "Actual shop action equips crusher",
+        "passed": true
+      },
+      {
+        "assertion": "Skin fixture enters The Deep crusher",
+        "passed": true
+      },
+      {
+        "assertion": "Skin fixture requests Tunnel Home crusher",
+        "passed": true
+      },
+      {
+        "assertion": "Skin fixture completes return crusher",
+        "passed": true
+      },
+      {
+        "assertion": "Paid skin unlock level",
+        "passed": true
+      },
+      {
+        "assertion": "Actual shop action equips comet",
+        "passed": true
+      },
+      {
+        "assertion": "Skin fixture enters The Deep comet",
+        "passed": true
+      },
+      {
+        "assertion": "Skin fixture requests Tunnel Home comet",
+        "passed": true
+      },
+      {
+        "assertion": "Skin fixture completes return comet",
+        "passed": true
+      },
+      {
+        "assertion": "Paid skin unlock level",
+        "passed": true
+      },
+      {
+        "assertion": "Actual shop action equips crownseeker",
+        "passed": true
+      },
+      {
+        "assertion": "Skin fixture enters The Deep crownseeker",
+        "passed": true
+      },
+      {
+        "assertion": "Skin fixture requests Tunnel Home crownseeker",
+        "passed": true
+      },
+      {
+        "assertion": "Skin fixture completes return crownseeker",
+        "passed": true
+      },
+      {
+        "assertion": "Paid skin unlock level",
+        "passed": true
+      },
+      {
+        "assertion": "Actual shop action equips deepheart",
+        "passed": true
+      },
+      {
+        "assertion": "Skin fixture enters The Deep deepheart",
+        "passed": true
+      },
+      {
+        "assertion": "Skin fixture requests Tunnel Home deepheart",
+        "passed": true
+      },
+      {
+        "assertion": "Skin fixture completes return deepheart",
+        "passed": true
+      },
+      {
+        "assertion": "Actual shop action equips original",
+        "passed": true
+      },
+      {
+        "assertion": "Skin fixture enters The Deep original",
+        "passed": true
+      },
+      {
+        "assertion": "Skin fixture requests Tunnel Home original",
+        "passed": true
+      },
+      {
+        "assertion": "Skin fixture completes return original",
+        "passed": true
+      }
+    ]
+  },
+  "supporting_reports": {
+    "mole/mole-review.json": {
+      "sha256": "07090c5cf711b60586fe55ca4b90ae1f66d30368fb62a6bca3138eb2f900af5d",
+      "size": 527
+    },
+    "receivers/mining-receivers.json": {
+      "sha256": "0870ae8fdfeaf8ae17c9e1e42ffa70bb0e8fa990ec3825af5025c0ff7a823509",
+      "size": 30197
+    }
+  }
+}

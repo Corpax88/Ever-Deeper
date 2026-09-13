@@ -4,18 +4,14 @@ const TOOLS: Array[String] = ["worn", "iron", "runed", "moonglass", "ember", "cr
 const DIRECTIONS: Array[String] = ["down", "left", "up", "right"]
 
 static func resolve_tool(pickaxe_level: int, drill_level: int, starforge: String, cosmetic: String = "original") -> String:
-	if drill_level > 0:
-		var level: int = clampi(drill_level, 1, 3)
-		match cosmetic:
-			"crusher": level = 1
-			"comet": level = 2
-			"crownseeker", "deepheart": level = 3
-		return ["burrower", "pulse", "deepcore"][level - 1]
+	# Workshop appearances select their authored model, independent of tool power.
 	match cosmetic:
 		"crusher": return "crusher"
 		"comet": return "comet"
 		"crownseeker": return "crown"
 		"deepheart": return "ember"
+	if drill_level > 0:
+		return ["burrower", "pulse", "deepcore"][clampi(drill_level, 1, 3) - 1]
 	match starforge:
 		"crusher": return "crusher"
 		"swift", "comet": return "comet"

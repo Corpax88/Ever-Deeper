@@ -67,6 +67,8 @@ func run() -> void:
 	_check(bool(RunState.relic_status("forge_heart").placed), "Prior placed relic retained")
 	_check(bool(RunState.workshop_status("tool_forge").built) and int(RunState.workshop_status("tool_forge").level) == 2, "Prior paid workshop level retained")
 	_check(String(RunState.endless_loadout_status().tool) == "crusher", "Prior unlocked equipment style retained")
+	var gear: Script = load("res://scripts/player/hero_gear.gd")
+	_check(gear.resolve_tool(RunState.pickaxe_level, RunState.drill_level, RunState.starforge_variant, String(RunState.endless_loadout_status().tool)) == "crusher", "Saved equipped Crusher remains a pickaxe even with an owned drill")
 	_check(RunState.endless_dug_cells(1).has(253) and RunState.endless_dug_cells(3).has(294) and RunState.endless_dug_cells(3).has(335), "Legacy excavation arrays survive compact migration")
 	_check((int(RunState.endless_floor_resource_state(3).mined_mask) & 16) != 0, "Legacy active resource depletion retained")
 	var site: Dictionary = RunState.endless_floor_site_state(3, 1)
@@ -123,4 +125,19 @@ func run() -> void:
 		_check(RunState.deserialize(credited), "Construction-credit save round trip")
 		_check(RunState.cargo == old_cargo and int(RunState.workshop_status("light_lab").delivered) == 200, "Reload never repeats construction credit into cargo")
 	_check(int(RunState.workshop_status("tool_forge").level) == 5 and String(RunState.endless_loadout_status().outfit) == "deepheart", "Earned levels and outfit survive the construction change")
+	var original_drill_level: int = RunState.drill_level
+	var appearances: Dictionary = {"crusher":"crusher", "comet":"comet", "crownseeker":"crown", "deepheart":"ember"}
+	for level in range(1, 4):
+		RunState.drill_level = level
+		var drill_before: Dictionary = RunState.current_drill().duplicate(true)
+		var power_before: float = RunState.endless_tool_power_multiplier()
+		var speed_before: float = RunState.endless_tool_speed_multiplier()
+		var range_before: float = RunState.endless_tool_range_multiplier()
+		for style in appearances:
+			_check(RunState.set_endless_tool_style(style), "Unlocked appearance equips " + style)
+			_check(gear.resolve_tool(RunState.pickaxe_level, level, RunState.starforge_variant, String(RunState.endless_loadout_status().tool)) == appearances[style], "Shop appearance overrides owned drill model " + style)
+			_check(RunState.current_drill() == drill_before and RunState.endless_tool_power_multiplier() == power_before and RunState.endless_tool_speed_multiplier() == speed_before and RunState.endless_tool_range_multiplier() == range_before, "Appearance preserves all mining stats " + style)
+		_check(RunState.set_endless_tool_style("original"), "Original appearance can be restored")
+		_check(gear.resolve_tool(RunState.pickaxe_level, level, RunState.starforge_variant, "original") == ["burrower", "pulse", "deepcore"][level-1], "Original retains actual drill tier")
+	RunState.drill_level = original_drill_level
 	_finish("migration")

@@ -1,7 +1,9 @@
 # Ever Deeper
 
 The current game is a **Godot 4.7.2** project. Open `project.godot` in this directory.
-The current candidate is `1.0.0-rc.1`; its DEV label is `1.0.0-dev.7`.
+The current candidate is `1.0.0-rc.1`; its DEV label is `1.0.0-dev.8`.
+Tool Forge appearances now select their advertised models even when a drill is owned.
+Read [the tool skin handoff](docs/tool-skin-HANDOFF.md) for DEV8 validation status.
 The post-drill guide targets required ore, and opened drill barriers retain renewable ore.
 Read [the drill guide handoff](docs/drill-guide-HANDOFF.md) for DEV7 validation and publication status.
 The Starforge Hub visit now stays completed across checkpoints, exit and reload; older affected saves recover automatically.
