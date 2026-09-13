@@ -253,7 +253,10 @@ func _mine_corner(label: String) -> bool:
 	var before_floor: bool = bool(world._is_floor(cell))
 	_mouse_button(main.mine_button, true)
 	await process_frame
-	if not _check(bool(main.mine_held) and bool(world.external_mine_held), "Viewport input starts held mine action"): return false
+	if not _check(bool(main.mine_held) and bool(world.external_mine_held), "Viewport input starts held mine action"):
+		var hovered: Control = root.gui_get_hovered_control()
+		await _capture(label + "-input-failure", {"phase":main.phase, "held":main.mine_held, "world_held":world.external_mine_held, "mouse_held":main.mine_mouse_held, "touch_index":main.mine_touch_index, "shop_open":main._shop_panel_is_open(), "tunnel_home":main.tunnel_home_in_progress, "mine_visible":main.mine_button.is_visible_in_tree(), "hovered":str(hovered.get_path()) if hovered != null else "none"})
+		return false
 	# The input is held normally; repeated gameplay ticks accelerate the wait.
 	journey._freeze_world()
 	for step in 120:
@@ -424,6 +427,8 @@ func _tool_skin_capture() -> bool:
 		if not _check(String(state.endless_loadout_status().tool) == style, "Actual shop action equips " + style): return false
 		if not await _wait_for_skin(appearances[style]): return false
 		await _capture("skin-hub-" + style, {"fixture":"Actual shop equip; existing native model; ordinary gameplay camera"}, true)
+		main.hub_world.player.set_facing(Vector2.LEFT)
+		await _capture("skin-hub-side-" + style, {"fixture":"Actual equipped skin silhouette from the side"})
 		if style == "crusher":
 			config = catalog.workshop_config("tool_forge", state.workshop_status("tool_forge"), main.hub_world.workshop_selection_preview("tool_forge"))
 			config.selected_item_id = "workshop:equip:crusher"
@@ -434,6 +439,10 @@ func _tool_skin_capture() -> bool:
 		world = main.endless_world
 		journey.world = world
 		if not await _wait_for_skin(appearances[style]): return false
+		# Equip/resize and phase switches schedule responsive HUD updates.
+		# Wait for the final layout before synthesizing viewport input.
+		main._refresh_hud()
+		await _settle(12)
 		if not await _mine_corner("skin-mining-" + style): return false
 		main._enter_hub(false, false)
 		await _settle_hub()
