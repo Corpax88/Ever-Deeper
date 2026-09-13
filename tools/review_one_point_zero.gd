@@ -114,6 +114,7 @@ func _run() -> void:
 	await _capture("hub-museum-complete-selected", {"fixture": "Completed museum with actual pedestal proximity selection"})
 	await _workshop_capture("tool_forge", "hub-tool-forge-upgrade")
 	await _workshop_capture("lift_workshop", "hub-tunnel-workshop-bonus")
+	if not await _tool_skin_capture(): _finish(); return
 	main._enter_endless(true, false)
 	world = main.endless_world
 	journey.world = world
@@ -403,6 +404,47 @@ func _workshop_capture(workshop_id: String, label: String) -> void:
 	await _capture(label, {"fixture": "Real workshop status and transaction-backed upgrade preview"})
 	main.commerce_panel.close_commerce()
 	await _settle(3)
+
+func _tool_skin_capture() -> bool:
+	var appearances: Dictionary = {"crusher":"crusher", "comet":"comet", "crownseeker":"crown", "deepheart":"ember", "original":"deepcore"}
+	var catalog: Script = load("res://scripts/ui/commerce_catalog.gd")
+	for style in appearances:
+		var required_level: int = ["original", "crusher", "comet", "crownseeker", "deepheart"].find(style) + 1
+		while int(state.workshop_status("tool_forge").level) < required_level:
+			var recipe: Dictionary = state.workshop_status("tool_forge").next_upgrade
+			state.add_resource(String(recipe.resource), int(recipe.cost), false)
+			if not _check(bool(state.upgrade_workshop("tool_forge").get("ok", false)), "Paid skin unlock level"): return false
+		main._sync_hub_runtime()
+		main.hub_world.restore_position(Vector2(main.hub_world.WORKSHOP_POSITIONS.tool_forge) + Vector2(0, 100))
+		main.hub_world.player.set_facing(Vector2.DOWN)
+		var config: Dictionary = catalog.workshop_config("tool_forge", state.workshop_status("tool_forge"), main.hub_world.workshop_selection_preview("tool_forge"))
+		config.selected_item_id = "workshop:equip:" + style
+		main._open_commerce(config, "workshop:tool_forge")
+		main._confirm_workshop_commerce_action("workshop:equip:" + style)
+		if not _check(String(state.endless_loadout_status().tool) == style, "Actual shop action equips " + style): return false
+		if not await _wait_for_skin(appearances[style]): return false
+		await _capture("skin-hub-" + style, {"fixture":"Actual shop equip; existing native model; ordinary gameplay camera"}, true)
+		if style == "crusher":
+			config = catalog.workshop_config("tool_forge", state.workshop_status("tool_forge"), main.hub_world.workshop_selection_preview("tool_forge"))
+			config.selected_item_id = "workshop:equip:crusher"
+			main._open_commerce(config, "workshop:tool_forge")
+			await _capture("skin-shop-crusher-equipped", {"fixture":"Level 2 Tool Forge after real equip action"}, true)
+			main.commerce_panel.close_commerce()
+		main._enter_endless(true, false)
+		world = main.endless_world
+		journey.world = world
+		if not await _wait_for_skin(appearances[style]): return false
+		if not await _mine_corner("skin-mining-" + style): return false
+		main._enter_hub(false, false)
+		await _settle_hub()
+	return true
+
+func _wait_for_skin(expected: String) -> bool:
+	var visual: Node = main._active_player_node().visual
+	for frame in 300:
+		await process_frame
+		if String(visual.tool_visual_snapshot().gear) == expected: return true
+	return _check(false, "Hero loads equipped appearance " + expected)
 
 func _absolute_position() -> Vector2:
 	return Vector2(world.player.global_position) + Vector2(0, float(world.window_start_depth - 1) * float(world.CHUNK_HEIGHT))
