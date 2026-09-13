@@ -13,4 +13,8 @@ The first two native review runs (34727200071 and 34727654611) were rejected: th
 
 Exact-package review is complete: all six jobs pass in run 34728099178; 1016 native assertions and 22 skin captures pass. The author inspected 16 affected images at mobile viewports and accepted the existing models. See [visual review](tool-skin-review.md) and [evidence](tool-skin-evidence/review-index.json).
 
-Publish only candidate artifact 10308746307 (source 800a993e206be5b381df4709c74dcb2bb72140b8). DEV8 publication receipt is pending. No final 1.0 or LIVE approval.
+Publish only candidate artifact 10308746307 (source 800a993e206be5b381df4709c74dcb2bb72140b8). DEV8 is published and verified at https://corpax88.github.io/Ever-Deeper/dev/?v=1.0.0-dev.8. Publication run 34728884989 passed package, deploy and verify. All eighteen public files match: DEV is the reviewed artifact, and all nine LIVE 0.46.9 files match the previous receipt.
+
+Receipt artifact: 10308093269; receipt SHA-256: `194db3eb75dad0ddc41e445c5b6698ea1f7c9c2bdcc073c3b85cd01e2a21a7ff`. Rollback artifact: 10309081710. The durable receipt is `.github/one-point-zero/tool-skin-publication-receipt.json`.
+
+Use the existing DEV save and equipped Crusher; refresh the game to load DEV8. No save reset or new purchase is required. No final 1.0 or LIVE approval.

@@ -193,5 +193,23 @@
       "reason": "Extra HUD settling did not fix the same fixture error. Diagnostic showed phase=hub and mine_visible=false."
     }
   ],
-  "fixture_resolution": "Use actual Tunnel Home transaction and assert completed descent before next shop/entry cycle."
+  "fixture_resolution": "Use actual Tunnel Home transaction and assert completed descent before next shop/entry cycle.",
+  "publication": {
+    "run_id": 34728884989,
+    "merge_commit": "2605c2ca034fdb133e8e8997961ab48e39d1964b",
+    "review_commit": "e054cb82ccd495399267605f923194019c801285",
+    "jobs": [
+      "package: success",
+      "deploy: success",
+      "verify: success"
+    ],
+    "receipt_artifact_id": 10308093269,
+    "receipt_zip_sha256": "37601ade776cfda39feb09cfa815e25d474e90673b6e67c15124989a0f6a566b",
+    "receipt_sha256": "194db3eb75dad0ddc41e445c5b6698ea1f7c9c2bdcc073c3b85cd01e2a21a7ff",
+    "rollback_artifact_id": 10309081710,
+    "rollback_zip_sha256": "c5abef772a7a74c476f05267299fc15aab86cf8ba653ffebd4b9973a437da66f",
+    "verified_public_files": 18,
+    "live_files_unchanged": 9,
+    "url": "https://corpax88.github.io/Ever-Deeper/dev/?v=1.0.0-dev.8"
+  }
 }
