@@ -3,27 +3,70 @@
   "dev_only": true,
   "live_publication_authorized": false,
   "dev_version": "1.0.0-dev.8",
-  "source_commit": "",
-  "qa_run_id": 0,
-  "candidate_artifact_id": 0,
-  "candidate_zip_sha256": "",
-  "candidate_manifest_sha256": "",
-  "package_checks_passed": false,
-  "visual_reviewed": false,
-  "mobile_touch_reviewed": false,
-  "web_audio_reviewed": false,
-  "full_progression_reviewed": false,
-  "critic_reviewed": false,
-  "dev_test_ready": false,
+  "source_commit": "800a993e206be5b381df4709c74dcb2bb72140b8",
+  "qa_run_id": 34728099178,
+  "candidate_artifact_id": 10308746307,
+  "candidate_zip_sha256": "2900ca81dbe6564778ca2a9688f411dc3de029818585eab90d7f6e0ae1f7c71a",
+  "candidate_manifest_sha256": "93c0b85eba4cc16aca592f0e9d4a19aa7ea2aeee100b5899ead1c33d654a9303",
+  "package_checks_passed": true,
+  "visual_reviewed": true,
+  "mobile_touch_reviewed": true,
+  "web_audio_reviewed": true,
+  "full_progression_reviewed": true,
+  "critic_reviewed": true,
+  "dev_test_ready": true,
   "final_one_point_zero_approved": false,
-  "critic_score": 0,
+  "critic_score": 8.0,
   "critical_bug_count": 0,
   "physical_iphone_verified": false,
-  "files": {},
+  "files": {
+    "index.apple-touch-icon.png": {
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5",
+      "size": 66421
+    },
+    "index.audio.position.worklet.js": {
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+      "size": 2973
+    },
+    "index.audio.worklet.js": {
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+      "size": 7298
+    },
+    "index.html": {
+      "sha256": "a51246ced60ef59d52bf1797bf0cf4a86c648fbf0839de3191f7c15f68f50e84",
+      "size": 7855
+    },
+    "index.icon.png": {
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+      "size": 470687
+    },
+    "index.js": {
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+      "size": 279815
+    },
+    "index.pck": {
+      "sha256": "2d75bc116e12039360bfd4b4e327c622e2bcc919b078386f24ebfd385ae80bd5",
+      "size": 220969812
+    },
+    "index.png": {
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+      "size": 1981427
+    },
+    "index.wasm": {
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+      "size": 39514754
+    }
+  },
   "notes": [
-    "Pending exact-package Tool Forge skin visual and gameplay review."
+    "Mats authorized upload and DEV publication after release checks. This is a bounded author review, not an independent critic review or final LIVE approval.",
+    "All six jobs in 34728099178 pass. Fourteen source and fourteen packaged gameplay cases, 44 hero-transition cases, mobile WebKit, both audio browsers, and hero-motion checks pass.",
+    "The native review passes 1016 assertions with 96 captures, including 22 skin captures. Same-package companion and 75 receiver stages pass.",
+    "The author inspected 16 affected images: five small Hub fronts, five native Hub side views, five actual held-mining result views and the small equipped Crusher shop. Existing authored models match advertised appearances; Original retains the owned drill. See docs/tool-skin-review.md and docs/tool-skin-evidence/review-index.json.",
+    "Two rejected fixture runs bypassed the real return transaction; no rejected run is publication evidence. The corrected fixture completes Tunnel Home between each skin cycle and verifies the descent ended.",
+    "Mining power, speed, reach, recipes and saved progression are unchanged. Physical iPhone FPS, human pacing and subjective listening remain unverified; known legacy failures remain documented. No critical issue reproduced in the tested scope; author DEV readiness 8/10.",
+    "Publish only artifact 10308746307. Baseline pins DEV7 receipt 34725035279; preserve all nine LIVE 0.46.9 files, retain rollback bytes and verify all eighteen public files."
   ],
-  "reviewed_at": "",
+  "reviewed_at": "2026-09-13T00:46:49.887314+00:00",
   "reviewer_type": "author",
   "independent_critic_reviewed": false
 }

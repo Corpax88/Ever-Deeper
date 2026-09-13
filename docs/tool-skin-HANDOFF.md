@@ -9,4 +9,8 @@ The intentional protected change is `scripts/player/hero_gear.gd`; all other pro
 
 Migration coverage exercises saved Crusher, all four appearances with all three drills, restoring Original, and unchanged mining stats. Native review exercises real shop equip, Hub and held mining with each appearance.
 
-Exact-package visual review and DEV publication are pending. No final 1.0 or LIVE approval.
+The first two native review runs (34727200071 and 34727654611) were rejected: the new fixture moved directly to the Hub without ending the active descent. The next descent was correctly refused, leaving the mine button hidden. The fixture now uses the real Tunnel Home transaction and asserts phase plus completed descent state. Extra waiting alone did not fix it. Runtime code is unchanged by these fixture corrections.
+
+Exact-package review is complete: all six jobs pass in run 34728099178; 1016 native assertions and 22 skin captures pass. The author inspected 16 affected images at mobile viewports and accepted the existing models. See [visual review](tool-skin-review.md) and [evidence](tool-skin-evidence/review-index.json).
+
+Publish only candidate artifact 10308746307 (source 800a993e206be5b381df4709c74dcb2bb72140b8). DEV8 publication receipt is pending. No final 1.0 or LIVE approval.
