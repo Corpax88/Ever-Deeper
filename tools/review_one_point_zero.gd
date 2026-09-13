@@ -436,15 +436,18 @@ func _tool_skin_capture() -> bool:
 			await _capture("skin-shop-crusher-equipped", {"fixture":"Level 2 Tool Forge after real equip action"}, true)
 			main.commerce_panel.close_commerce()
 		main._enter_endless(true, false)
+		if not _check(main.phase == "endless", "Skin fixture enters The Deep " + style): return false
 		world = main.endless_world
 		journey.world = world
 		if not await _wait_for_skin(appearances[style]): return false
-		# Equip/resize and phase switches schedule responsive HUD updates.
-		# Wait for the final layout before synthesizing viewport input.
-		main._refresh_hud()
-		await _settle(12)
+		await _settle(8)
 		if not await _mine_corner("skin-mining-" + style): return false
-		main._enter_hub(false, false)
+		# Use the real return transaction so the descent ends before re-entry.
+		if not _check(main.request_tunnel_home(), "Skin fixture requests Tunnel Home " + style): return false
+		for frame in 120:
+			if main.phase == "hub": break
+			await process_frame
+		if not _check(main.phase == "hub" and not bool(state.endless_descent_status().active), "Skin fixture completes return " + style): return false
 		await _settle_hub()
 	return true
 
