@@ -1,0 +1,36 @@
+name: Hero material comparison on Mac
+on:
+  push:
+    branches: [codex/hero-world-material-v2-20260914]
+    paths: ['tools/hero_style/**', '.github/hero-world-material/**', '.github/workflows/hero-world-material.yml']
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install exact Godot version
+        run: |
+          curl --fail -L --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --version
+      - name: Import and capture unchanged environments on Apple GPU
+        run: |
+          mkdir -p "$RUNNER_TEMP/evidence"
+          sw_vers > "$RUNNER_TEMP/evidence/macos.txt"
+          system_profiler SPDisplaysDataType >> "$RUNNER_TEMP/evidence/macos.txt"
+          git rev-parse HEAD > "$RUNNER_TEMP/evidence/source.txt"
+          shasum -a 256 .github/hero-world-material/down-idle-000.png > "$RUNNER_TEMP/evidence/candidate.sha256"
+          "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --headless --editor --path . --import > "$RUNNER_TEMP/evidence/import.log" 2>&1
+          "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --path . --audio-driver Dummy --script tools/hero_style/capture.gd -- --output="$RUNNER_TEMP/evidence" --candidate="$GITHUB_WORKSPACE/.github/hero-world-material" > "$RUNNER_TEMP/evidence/capture.log" 2>&1
+          test -f "$RUNNER_TEMP/evidence/capture-report.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hero-world-material-macos
+          path: ${{ runner.temp }}/evidence
+          retention-days: 14
