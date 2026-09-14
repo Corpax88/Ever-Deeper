@@ -1,5 +1,8 @@
 # Ever Deeper project rules
 
+Latest static hero review: [material study v2](docs/hero-world-material-v2-HANDOFF.md).
+Read [automatic test-environment recovery](docs/TESTMILJO-HANDOFF.md) at the start of every game chat.
+
 ## Visual release gate
 
 These rules are mandatory for every visual change, in every chat and for every agent.

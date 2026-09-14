@@ -1,5 +1,8 @@
 # Ever Deeper
 
+Latest static hero review: [material study v2](docs/hero-world-material-v2-HANDOFF.md).
+Read [automatic test-environment recovery](docs/TESTMILJO-HANDOFF.md) at the start of every game chat.
+
 The current game is a **Godot 4.7.2** project. Open `project.godot` in this directory.
 The current candidate is `1.0.0-rc.1`; its DEV label is `1.0.0-dev.8`.
 Tool Forge appearances now select their advertised models even when a drill is owned.
