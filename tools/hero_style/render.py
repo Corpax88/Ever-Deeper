@@ -183,7 +183,7 @@ if a.style == 'world':
   fine=ns.new('ShaderNodeTexNoise');fine.inputs['Scale'].default_value=95 if cloth else 65
   fine.inputs['Detail'].default_value=2;ls.new(mapping.outputs['Vector'],fine.inputs['Vector'])
   ramp=ns.new('ShaderNodeValToRGB');ramp.color_ramp.interpolation='EASE'
-  lo,hi=(.44,1.5) if cloth else (.36,1.7) if metal else (.45,1.35) if leather or hair else (.90,1.08)
+  lo,hi=(.44,1.5) if cloth else (.36,1.7) if metal else (.74,1.20) if leather else (.45,1.35) if hair else (.90,1.08)
   ramp.color_ramp.elements[0].position=.28;ramp.color_ramp.elements[0].color=(lo,lo*.98,lo*.94,1)
   ramp.color_ramp.elements[1].position=.72;ramp.color_ramp.elements[1].color=(hi,hi*.98,hi*.91,1)
   ls.new(coarse.outputs['Fac'],ramp.inputs[0])
@@ -195,16 +195,16 @@ if a.style == 'world':
   ao=ns.new('ShaderNodeAmbientOcclusion');ao.inputs['Distance'].default_value=.16;ao.samples=16
   shade=ns.new('ShaderNodeMixRGB');shade.blend_type='MULTIPLY';shade.inputs[0].default_value=.6 if skin else .78
   ls.new(var.outputs[0],shade.inputs[1]);ls.new(ao.outputs['AO'],shade.inputs[2]);ls.new(shade.outputs[0],base)
-  bump=ns.new('ShaderNodeBump');bump.inputs['Strength'].default_value=.42 if cloth or hair else .3 if metal or leather else .06
+  bump=ns.new('ShaderNodeBump');bump.inputs['Strength'].default_value=.42 if cloth or hair else .26 if metal else .16 if leather else .06
   bump.inputs['Distance'].default_value=.035 if cloth else .018 if metal or hair or leather else .006
   ls.new(coarse.outputs['Fac'],bump.inputs['Height'])
   micro=ns.new('ShaderNodeBump');micro.inputs['Strength'].default_value=.16 if cloth else .10
   micro.inputs['Distance'].default_value=.007 if cloth else .003
   ls.new(fine.outputs['Fac'],micro.inputs['Height']);ls.new(bump.outputs['Normal'],micro.inputs['Normal']);ls.new(micro.outputs['Normal'],bs.inputs['Normal'])
-  bs.inputs['Metallic'].default_value=.52 if metal else 0
-  bs.inputs['Specular IOR Level'].default_value=.32 if metal else .15 if leather else .08
-  rough=ns.new('ShaderNodeMapRange');rough.inputs['To Min'].default_value=.40 if metal else .76 if leather else .9
-  rough.inputs['To Max'].default_value=.74 if metal else .96
+  bs.inputs['Metallic'].default_value=.66 if metal else 0
+  bs.inputs['Specular IOR Level'].default_value=.40 if metal else .15 if leather else .08
+  rough=ns.new('ShaderNodeMapRange');rough.inputs['To Min'].default_value=.27 if metal else .76 if leather else .9
+  rough.inputs['To Max'].default_value=.65 if metal else .96
   ls.new(coarse.outputs['Fac'],rough.inputs['Value']);ls.new(rough.outputs[0],bs.inputs['Roughness'])
   changes.append(mat.name)
  for light in [o for o in s.objects if o.type=='LIGHT']:
