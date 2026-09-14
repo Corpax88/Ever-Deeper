@@ -29,7 +29,7 @@ func start() -> void:
 	assert(DisplayServer.get_name() != "headless")
 	root.size = Vector2i(1864,860)
 	root.content_scale_size = Vector2i(1560,720)
-	root.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+	root.content_scale_mode = Window.CONTENT_SCALE_MODE_VIEWPORT
 	root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_IGNORE
 	main = load("res://scenes/main/main.tscn").instantiate()
 	root.add_child(main)
@@ -78,5 +78,5 @@ func start() -> void:
 		report.append(entry)
 	paused = false
 	var f := FileAccess.open(output.path_join("capture-report.json"),FileAccess.WRITE)
-	f.store_string(JSON.stringify({"source_review_only":true,"production_assets_replaced":false,"engine":Engine.get_version_info(),"display":DisplayServer.get_name(),"renderer":RenderingServer.get_video_adapter_name(),"viewport":[1864,860],"logical":[1560,720],"hud_hidden_for_art_review":true,"cases":report},"\t"))
+	f.store_string(JSON.stringify({"source_review_only":true,"production_assets_replaced":false,"engine":Engine.get_version_info(),"display":DisplayServer.get_name(),"renderer":RenderingServer.get_video_adapter_name(),"viewport":[root.get_texture().get_width(),root.get_texture().get_height()],"window":[root.size.x,root.size.y],"logical":[1560,720],"hud_hidden_for_art_review":true,"cases":report},"\t"))
 	quit(0)

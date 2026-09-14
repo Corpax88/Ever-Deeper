@@ -24,7 +24,8 @@ for i,(fixture,label,box) in enumerate(fixtures):
  d.text((44,top),label,font=font(24,True),fill='#e4d8b6')
  for j,state in enumerate(['before','after']):
   im=Image.open(a.captures/f'{fixture}-{state}.png').convert('RGB')
-  crop=im.crop(box).resize((802,531),Image.Resampling.LANCZOS)
+  scaled_box=tuple(round(v*(im.width/1864 if k%2==0 else im.height/860)) for k,v in enumerate(box))
+  crop=im.crop(scaled_box).resize((802,531),Image.Resampling.LANCZOS)
   sheet.paste(crop,(44+j*849,top+39))
   d.rectangle((44+j*849,top+39,845+j*849,top+569),outline='#485046')
 for fixture in ['surface','mossvein','moonglass','hub']:
