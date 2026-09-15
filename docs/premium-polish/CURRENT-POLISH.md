@@ -48,3 +48,9 @@ Current changes, still WIP:
 3. Native motion still cuts between walk/mine and briefly recovers while moving. The current walk has substantial planted-foot sliding. Author physical locomotion and contact-aware transitions with the recovered native sources; update render fingerprint and atlas schema before production.
 4. Continue critic-guided hub composition, nearby labels and ground integration. Pre-refinement critic scores: surface7.5/10, hub4.5/10, HUD7.5/10. No overall9/10 acceptance.
 5. Complete current source/packaged gates and longer excavated/UI/biome workloads, then exact exported mobile captures. Physical iPhone heat/battery/Safari acceptance remains separate. Do not deploy WIP or describe this polish as finished.
+
+## Third working milestone
+
+See `iteration-three-20260915/README.md` for retained evidence, rejected trials and current blockers. Stable terrain command caching, actual light-footprint caster coverage, real counter collision, wrapped Guide and complete workshop captions are implemented. One presented mining contact now survives automatic retargeting. Native motion has a real115-frame Worn/right pilot; numeric geometry checks pass but its running support/pose-bridge velocity/rotor recovery remain unapproved. Production atlases are unchanged. Current critic composition: hubabout7/10, surfaceabout7.5/10.
+
+The second Mac source b4bf5e completed Actions35022974768: fully built hub48.0–56.8 averageFPS, Ember22.9–36.9, Deep18.6–25.0 across30s windows. All functionally passed and all failed the strict sustained50FPS gate. `session-review-20260915/mac-composite-*.json` retains the exact source-bound results. No release or deployment has occurred.

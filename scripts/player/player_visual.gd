@@ -37,6 +37,10 @@ var _last_state: = "idle"
 var _last_local_frame: = 0
 var _last_direction: = ""
 var _released: = false
+var _impact_serial: int = 0
+var _impact_presented_frame: int = -1
+var _impact_direction: String = ""
+var _impact_pending: bool = false
 var redraw_request_count: = 0
 var state_update_count: = 0
 var state_skip_count: = 0
@@ -57,8 +61,13 @@ func advance_motion(distance: float, delta: float) -> void:
 	if distance > 0.001:
 		_walk_phase = fposmod(_walk_phase + minf(distance / WALK_STRIDE, delta * 2.8), 1.0)
 
-func set_state(direction: String, _frame: int, walking: bool, active: bool = false, progress: float = 0.0, _recoil: float = 0.0, hit_phase: float = -1.0) -> void:
+func set_state(direction: String, _frame: int, walking: bool, active: bool = false, progress: float = 0.0, _recoil: float = 0.0, hit_phase: float = -1.0, impact_serial: int = 0) -> void:
 	state_update_count += 1
+	if impact_serial != _impact_serial:
+		_impact_serial = impact_serial
+		_impact_presented_frame = Engine.get_frames_drawn()
+		_impact_direction = direction
+		_impact_pending = DisplayServer.get_name() != "headless"
 	if moving and not walking and not active:
 		_walk_settle = true
 		_walk_target = roundf(_walk_phase * 2.0) * 0.5
@@ -127,7 +136,17 @@ func _draw_frame(delta: float) -> void:
 	if _manifest.is_empty() or _sprite == null: return
 	var state: = "idle"
 	var phase: = _idle_clock / 3.6
-	if mining:
+	if _impact_pending and (Engine.get_frames_drawn() != _impact_presented_frame or moving):
+		_impact_pending = false
+	var presenting_impact: bool = _impact_pending and String(_manifest.family) != "drill"
+	var displayed_direction: String = _impact_direction if presenting_impact else direction_name
+	if presenting_impact:
+		# Damage and its authored contact share one actually presented frame,
+		# even when a slow frame advances beyond the contact sample.
+		state = "mine"
+		phase = float(_manifest.native_impact)
+		_last_native_phase = phase
+	elif mining:
 		state = "mine"
 		phase = _native_phase(mining_progress)
 		if String(_manifest.family) == "drill":
@@ -152,34 +171,47 @@ func _draw_frame(delta: float) -> void:
 		local_frame = 0
 		for i in Array(info.times).size():
 			if float(info.times[i]) <= _idle_clock: local_frame = i
+	elif presenting_impact:
+		var best_distance: float = INF
+		for i in Array(info.times).size():
+			var distance: float = absf(float(info.times[i]) / float(info.duration) - phase)
+			if distance < best_distance:
+				best_distance = distance
+				local_frame = i
 	var index: = int(info.offset) + local_frame
 	_last_state = state
 	_last_local_frame = local_frame
-	if index == _last_frame and direction_name == _last_direction:
+	if index == _last_frame and displayed_direction == _last_direction:
 		state_skip_count += 1
 		return
-	var base: = ROOT + active_gear + "/" + direction_name
+	var base: = ROOT + active_gear + "/" + displayed_direction
 	_sprite.texture = _atlases[base + ".png"]
 	_cloth.set_shader_parameter("cloth_mask", _atlases[base + "-cloth.png"])
 	var cell: = Vector2(float(_manifest.cell[0]), float(_manifest.cell[1]))
 	var columns: = int(_manifest.columns)
 	_sprite.region_rect = Rect2(Vector2(index % columns, index / columns) * cell, cell)
-	var anchor: Array = _manifest.directions[direction_name].ground_anchor
+	var anchor: Array = _manifest.directions[displayed_direction].ground_anchor
 	# Same feet anchor in every view/state; character size does not affect physics.
 	var display_scale: = 1.0
 	_sprite.scale = Vector2.ONE * display_scale
 	_sprite.position = Vector2(0, GROUND_Y) - Vector2(float(anchor[0]), float(anchor[1])) * display_scale
 	_last_frame = index
-	_last_direction = direction_name
+	_last_direction = displayed_direction
 	redraw_request_count += 1
+
+func cancel_pending_impact() -> void:
+	_impact_pending = false
+
 
 func prepare_visual_cache() -> void:
 	_released = false
+	_impact_pending = false
 	_wanted_gear = ""
 	_refresh_equipment()
 
 func release_visual_cache() -> void:
 	_released = true
+	_impact_pending = false
 	_atlases = {}
 	_manifest = {}
 	active_gear = ""

@@ -3570,7 +3570,7 @@ func _refresh_context_button() -> void :
 				var workshop_id: = hub_context.trim_prefix("workshop:")
 				var workshop: = Dictionary(RunState.workshop_status(workshop_id))
 				if bool(workshop.get("built", false)):
-					label = "OPEN"
+					label = {"tool_forge":"TOOL FORGE", "light_lab":"LIGHT LAB", "wardrobe":"WARDROBE", "treasure_chamber":"RELICS", "lift_workshop":"TUNNELS"}.get(workshop_id, "WORKSHOP")
 				elif bool(workshop.get("ready_to_build", false)):
 					label = "BUILD"
 				elif bool(workshop.get("blueprint_unlocked", false)):

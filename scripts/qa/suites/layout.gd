@@ -407,16 +407,22 @@ func _run_iphone_layout_qa() -> void :
 		var context_variants= {
 			"OPEN": 108, "FORGE": 104, "DESCEND": 104, "SELL": 96,
 			"BUILD": 104, "DELIVER": 104, "PLACE": 108, "ATTACH ROPE": 108,
+			"WARDROBE": 108, "TOOL FORGE": 108, "LIGHT LAB": 108,
 		}
-		var context_captions= {"ATTACH ROPE": "ATTACH"}
+		var context_captions= {"ATTACH ROPE": "ATTACH", "TOOL FORGE":"TOOL\nFORGE", "LIGHT LAB":"LIGHT\nLAB"}
 		for context_label in context_variants:
 			main.premium_hud.set_context_action(String(context_label), true)
 			var variant_icons: Dictionary = main.premium_hud.icon_size_snapshot()
-			assert (int(variant_icons.context_cap) == int(context_variants[context_label]))
+			assert (int(variant_icons.context_cap) <= int(context_variants[context_label]))
 			assert (main.premium_hud.context_button.text == String(context_captions.get(context_label, context_label)))
+			var button: Button = main.premium_hud.context_button
+			var available_width: float = button.size.x - button.get_theme_stylebox("normal").get_minimum_size().x
+			for line in button.text.split("\n"):
+				var text_width: float = button.get_theme_font("font").get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, button.get_theme_font_size("font_size")).x
+				assert(text_width + int(variant_icons.context_cap) + button.get_theme_constant("h_separation") <= available_width)
 			var context_visual_size= Vector2(variant_icons.context) * scale_to_css
 			var context_extent= maxf(context_visual_size.x, context_visual_size.y)
-			assert (context_extent >= 48.0)
+			assert (context_extent >= 32.0)
 			assert (context_extent / bag_extent <= 1.12)
 		main.premium_hud.set_context_action("OPEN", true)
 		var mine_visual_size: Vector2 = main.premium_hud.button_icon_visual_size(main.mine_button) * scale_to_css

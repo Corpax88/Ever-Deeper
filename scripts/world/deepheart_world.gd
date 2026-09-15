@@ -459,6 +459,7 @@ func _strike_seal(seal_id: String) -> void :
 			state.hp = 1
 	state.opened = opened
 	seal_state[seal_id] = state
+	player.set_mining_visual(true, mining_elapsed / maxf(0.001, mining_duration), 1.0, 0.38)
 	AudioDirector.play_mining(_seal_resource_id(seal_id), opened, false)
 	if reached_resonance and not opened:
 		AudioDirector.play_blocked()

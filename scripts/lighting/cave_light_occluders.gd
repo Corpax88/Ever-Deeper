@@ -1,18 +1,24 @@
 extends Node2D
 
-# Nearby solid rows become real light occluders. Inactive worlds inherit the
-# world's disabled processing; unchanged geometry is reused after mining/motion.
-var _clock: float = 0.0
+# Shadow coverage follows actual light footprints, including upgraded lamps.
+# Geometry is reused until coverage, an emitter cell or terrain changes.
 var _signature: int = 0
+var _input_signature: int = 0
+var _input_valid: bool = false
+var _lamps: Array[PointLight2D] = []
+var _hero_lamp: Node2D
+var _companion_lamp: Node2D
 var _pool: Array[LightOccluder2D] = []
 var active_count: int = 0
 var row_span_count: int = 0
+var scanned_cells: int = 0
+var rebuild_count: int = 0
 
-func _process(delta: float) -> void:
-	_clock += delta
-	if _clock < 0.16:
-		return
-	_clock = 0.0
+func _ready() -> void:
+	# Run after world/camera/companion motion, before this frame is rendered.
+	process_priority = 100
+
+func _process(_delta: float) -> void:
 	refresh()
 
 func refresh() -> void:
@@ -21,30 +27,58 @@ func refresh() -> void:
 	if not is_instance_valid(player) or not world.is_visible_in_tree():
 		return
 	var tile: float = 64.0 if world.has_method("_is_floor") else 48.0
-	var center: Vector2i = Vector2i((player.position / tile).floor())
 	var lamp: Node2D = player.get_node_or_null("PremiumHeadlamp")
-	var emitter: Vector2i = center
-	if lamp != null:
-		emitter = Vector2i((world.to_local(lamp.global_position) / tile).floor())
 	var companion: Node2D = world.get_node_or_null("MoleCompanion/PremiumHeadlamp")
-	var companion_cell: Vector2i = Vector2i(-99999,-99999)
-	if companion != null: companion_cell = Vector2i((world.to_local(companion.global_position)/tile).floor())
+	if lamp != _hero_lamp or companion != _companion_lamp:
+		_hero_lamp = lamp
+		_companion_lamp = companion
+		_lamps.clear()
+		for source in [lamp, companion]:
+			if source == null: continue
+			for child in source.get_children():
+				if child is PointLight2D: _lamps.append(child)
+	var coverage: Array[Rect2i] = []
+	var emitters: Array[Vector2i] = []
+	for light in _lamps:
+		if not is_instance_valid(light) or not light.enabled or not light.shadow_enabled or not light.is_visible_in_tree(): continue
+		coverage.append(_source_cell_bounds(world, light, tile))
+		var origin: Vector2i = Vector2i((world.to_local(light.global_position) / tile).floor())
+		if not emitters.has(origin): emitters.append(origin)
+	var terrain: int = hash(world.floor_cells) if world.has_method("_is_floor") else world._terrain_draw_fingerprint() if world.has_method("_terrain_draw_fingerprint") else hash(world.blocks)
+	var input_signature: int = hash(coverage) ^ hash(emitters) ^ terrain
+	if _input_valid and input_signature == _input_signature: return
+	_input_valid = true
+	_input_signature = input_signature
+	rebuild_count += 1
+	# Union only the covered row intervals. A distant companion never creates
+	# a huge scan across the empty space between the two light sources.
+	var row_intervals: Dictionary = {}
+	for area in coverage:
+		for y in range(area.position.y, area.end.y):
+			if not row_intervals.has(y): row_intervals[y] = []
+			row_intervals[y].append(Vector2i(area.position.x, area.end.x))
+	var ys: Array = row_intervals.keys()
+	ys.sort()
 	var spans: Array[Rect2] = []
-	var first: Vector2i = center-Vector2i(13,13)
-	var last: Vector2i = center+Vector2i(13,13)
-	if companion != null:
-		first=first.min(companion_cell-Vector2i(7,7))
-		last=last.max(companion_cell+Vector2i(7,7))
-	for y in range(first.y,last.y+1):
-		var start: int = -100000
-		for x in range(first.x,last.x+2):
-			var cell: Vector2i = Vector2i(x,y)
-			var filled: bool = x <= last.x and cell != emitter and cell != companion_cell and _solid(world,cell)
-			if filled and start == -100000:
-				start = x
-			if not filled and start != -100000:
-				spans.append(Rect2(float(start) * tile, float(y) * tile, float(x - start) * tile, tile))
-				start = -100000
+	scanned_cells = 0
+	for y in ys:
+		var intervals: Array = row_intervals[y]
+		intervals.sort_custom(func(a: Vector2i, b: Vector2i): return a.x < b.x)
+		var merged: Array[Vector2i] = []
+		for interval in intervals:
+			if not merged.is_empty() and interval.x <= merged[-1].y:
+				merged[-1].y = maxi(merged[-1].y, interval.y)
+			else: merged.append(interval)
+		for interval in merged:
+			var start: int = -100000
+			for x in range(interval.x, interval.y + 1):
+				var cell: Vector2i = Vector2i(x, y)
+				var filled: bool = x < interval.y and not emitters.has(cell) and _solid(world, cell)
+				if x < interval.y: scanned_cells += 1
+				if filled and start == -100000: start = x
+				if not filled and start != -100000:
+					spans.append(Rect2(float(start) * tile, float(y) * tile, float(x - start) * tile, tile))
+					start = -100000
 	row_span_count = spans.size()
 	spans = _merge_vertical_spans(spans)
 	var signature: int = hash(spans)
@@ -63,6 +97,17 @@ func refresh() -> void:
 			continue
 		var r: Rect2 = spans[i]
 		_pool[i].occluder.polygon = PackedVector2Array([r.position, Vector2(r.end.x,r.position.y),r.end,Vector2(r.position.x,r.end.y)])
+
+
+func _source_cell_bounds(world: Node2D, light: PointLight2D, tile: float) -> Rect2i:
+	var size: Vector2 = light.texture.get_size() * light.texture_scale
+	var transform: Transform2D = world.global_transform.affine_inverse() * light.global_transform
+	var bounds: Rect2 = transform * Rect2(light.offset - size * 0.5, size)
+	# Include the emitter-to-receiver segment and a full tile for PCF filtering.
+	bounds = bounds.expand(transform.origin).grow(tile)
+	var first: Vector2i = Vector2i((bounds.position / tile).floor())
+	var last: Vector2i = Vector2i((bounds.end / tile).ceil())
+	return Rect2i(first, last - first)
 
 
 func _merge_vertical_spans(rows: Array[Rect2]) -> Array[Rect2]:

@@ -252,6 +252,7 @@ const SURFACE_LOOSE_DROP_TOTAL_LIMIT: = 72
 const BASE_MODULE_INTERACT_RADIUS: = 118.0
 const SURFACE_STATION_INTERACT_RADIUS: = 112.0
 const SURFACE_STATION_APPROACH_OFFSET: = Vector2(0, 140)
+const SURFACE_STATION_FOOTPRINT: = Vector2(110, 72)
 const ORE_DROP_LANDING_OFFSETS: = [
 	Vector2(-132, 18), Vector2(132, 18),
 	Vector2(-98, 32), Vector2(98, 32),
@@ -4590,6 +4591,12 @@ func route_steering_snapshot() -> Dictionary:
 
 
 func _surface_collides(position: Vector2) -> bool:
+	# The painted counters sit above their shared feet anchors. Include the
+	# actor radius in these footprints, as in the other surface solids.
+	for station in ["sell", "forge"]:
+		var counter: Vector2 = (position - (_station_position(station) + Vector2(0, 4))) / SURFACE_STATION_FOOTPRINT
+		if counter.length_squared() < 1.0:
+			return true
 	# The stall's front edge and its approach use the same world anchor.
 	var wayfarer_footprint: Vector2 = (position - (MOSS_WAYFARER_POSITION + Vector2(0, 13))) / Vector2(86, 53)
 	if wayfarer_footprint.length_squared() < 1.0:

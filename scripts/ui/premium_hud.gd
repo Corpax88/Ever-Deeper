@@ -139,6 +139,7 @@ func set_context_action(label: String, enabled: bool) -> void :
 		else:
 			context_button.icon = INTERACT_ICON
 		context_button.add_theme_constant_override("icon_max_width", _context_icon_max_width())
+		_fit_context_contents()
 	if enabled_changed:
 		context_button.disabled = not enabled
 
@@ -293,6 +294,7 @@ func _apply_responsive_layout(viewport_size: Vector2, native_insets: Vector4) ->
 	context_button.add_theme_constant_override("icon_max_width", _context_icon_max_width())
 	context_button.add_theme_font_size_override("font_size", 19 if bool(metrics.iphone) else 12)
 	context_button.add_theme_constant_override("h_separation", 7 if bool(metrics.iphone) else 4)
+	_fit_context_contents()
 	var gold_icon_size: = IPHONE_GOLD_ICON_SIZE if bool(metrics.iphone) else 32.0
 	_place(gold_icon, Rect2(4, (touch_target - gold_icon_size) * 0.5, gold_icon_size, gold_icon_size))
 	_place(gold_value, Rect2(58 if bool(metrics.iphone) else 27, 0, 92 if bool(metrics.iphone) else 55, touch_target))
@@ -341,10 +343,9 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 	var gold_rect: = Rect2(companion_rect.end.x + gap if iphone else viewport_size.x - right - gold_width, top, gold_width, touch_target)
 	var badge_size: = Vector2(42, 30) if iphone else Vector2(27, 20)
 	var bag_count_rect: = Rect2(bag_rect.end.x - badge_size.x + 4, bag_rect.end.y - badge_size.y + 3, badge_size.x, badge_size.y)
-	var objective_width: = 660.0 if iphone else 620.0
-	var objective_height: = touch_target if iphone else 54.0
-	var objective_top: = top if iphone else 62.0
-	var objective_rect: = Rect2((viewport_size.x - objective_width) * 0.5, objective_top, objective_width, objective_height)
+	var objective_width: = minf(660.0 if iphone else 620.0, viewport_size.x - left - right)
+	var objective_height: = 128.0 if iphone else 90.0
+	var objective_rect: = Rect2(left, top + top_button_size + gap, objective_width, objective_height)
 
 
 
@@ -362,6 +363,7 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 	var minimap_size: = Vector2(188, 96) if iphone else Vector2(184, 106)
 	var minimap_rect: = Rect2(progression_rect.position.x - gap - minimap_size.x, progression_rect.position.y, minimap_size.x, minimap_size.y)
 	var onboarding_top: = maxf(progression_rect.end.y, minimap_rect.end.y) + 12.0
+	objective_rect.position.y = maxf(objective_rect.position.y, onboarding_top)
 	var onboarding_bottom: = minf(mine_rect.position.y, bag_rect.position.y) - 12.0
 	var onboarding_rect: = Rect2(left, onboarding_top, context_rect.position.x - left - 12.0, maxf(0.0, onboarding_bottom - onboarding_top))
 	var status_size: = Vector2(minf(680.0, context_rect.position.x - left - 12.0), 50) if iphone else Vector2(580, 28)
@@ -427,6 +429,19 @@ func _context_icon_max_width() -> int:
 	if upper in ["DESCEND", "ASCEND", "RETURN", "EXIT"]:
 		return IPHONE_CONTEXT_GUIDE_ICON_MAX
 	return IPHONE_SECONDARY_ICON_MAX
+
+
+func _fit_context_contents() -> void:
+	# Retain full shop names. Share the available width between their actual
+	# font metrics and the icon, including the current layout's margins.
+	var font: Font = context_button.get_theme_font("font")
+	var font_size: int = context_button.get_theme_font_size("font_size")
+	var text_width: float = 0.0
+	for line in context_button.text.split("\n"):
+		text_width = maxf(text_width, font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x)
+	var margins: Vector2 = context_button.get_theme_stylebox("normal").get_minimum_size()
+	var available: float = context_button.size.x - margins.x - text_width - context_button.get_theme_constant("h_separation") - 2.0
+	context_button.add_theme_constant_override("icon_max_width", maxi(1, mini(_context_icon_max_width(), floori(available))))
 
 
 func _on_display_orientation_changed(_orientation: int) -> void :
@@ -517,10 +532,10 @@ func _build_objective_popover() -> void :
 	copy.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	objective_chip.add_child(copy)
 	objective_title = _label("", 9, GOLD_BRIGHT, HORIZONTAL_ALIGNMENT_LEFT)
-	objective_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	objective_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	copy.add_child(objective_title)
 	objective_detail = _label("", 8, MINT, HORIZONTAL_ALIGNMENT_LEFT)
-	objective_detail.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	objective_detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	copy.add_child(objective_detail)
 	objective_chip.visible = false
 
@@ -605,6 +620,8 @@ func _hide_objective() -> void :
 func _compact_context_caption(label: String) -> String:
 	var caption: = label.get_slice("\n", 0).strip_edges().to_upper()
 	return {
+		"TOOL FORGE": "TOOL\nFORGE",
+		"LIGHT LAB": "LIGHT\nLAB",
 		"SELL ORE": "SELL",
 		"LOAD ORE": "LOAD",
 		"SEALED": "LOCKED",

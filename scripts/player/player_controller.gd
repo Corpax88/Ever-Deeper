@@ -24,6 +24,7 @@ var control_enabled: = true
 var mining_visual_active: = false
 var mining_visual_progress: = 0.0
 var mining_visual_recoil: = 0.0
+var _mining_impact_serial: int = 0
 var _actual_moving: = false
 var mining_strike_phase: = -1.0
 var _last_strike_phase: = -2.0
@@ -70,7 +71,7 @@ func _physics_process(delta: float) -> void :
 	if control_enabled:
 		movement = (Input.get_vector("move_left", "move_right", "move_up", "move_down") + external_movement).limit_length(1.0)
 	if movement.length_squared() > 0.0025:
-		_update_aim(movement)
+		_update_aim(movement, true)
 	var before: = global_position
 	if motion_resolver.is_valid():
 		var has_motion_intent: = not movement.is_zero_approx()
@@ -108,7 +109,7 @@ func _update_walk_direction(motion: Vector2) -> void :
 		direction_name = "down" if motion.y > 0.0 else "up"
 
 
-func _update_aim(intent: Vector2) -> void :
+func _update_aim(intent: Vector2, from_input: bool = false) -> void :
 	if absf(intent.x) > absf(intent.y) * 1.15:
 		direction_name = "right" if intent.x > 0.0 else "left"
 	elif absf(intent.y) > absf(intent.x) * 1.15:
@@ -124,6 +125,8 @@ func _update_aim(intent: Vector2) -> void :
 			next_facing = Vector2.UP
 	if next_facing == facing_vector:
 		return
+	if from_input:
+		visual.cancel_pending_impact()
 	facing_vector = next_facing
 	facing_changed.emit(facing_vector)
 
@@ -165,7 +168,7 @@ func _update_visual(is_moving: bool) -> void :
 	):
 		visual_state_skip_count += 1
 		return
-	visual.set_state(direction_name, animation_frame, is_moving, mining_visual_active, next_progress, mining_visual_recoil, mining_strike_phase)
+	visual.set_state(direction_name, animation_frame, is_moving, mining_visual_active, next_progress, mining_visual_recoil, mining_strike_phase, _mining_impact_serial)
 	_visual_state_initialized = true
 	_last_visual_direction = direction_name
 	_last_visual_frame = animation_frame
@@ -183,6 +186,9 @@ func _update_visual(is_moving: bool) -> void :
 
 
 func set_mining_visual(active: bool, progress: float = 0.0, recoil: float = 0.0, strike_phase: float = -1.0) -> void :
+	if recoil > 0.0:
+		_mining_impact_serial += 1
+		_visual_state_initialized = false
 	mining_strike_phase = strike_phase
 	mining_visual_active = active
 	mining_visual_progress = progress

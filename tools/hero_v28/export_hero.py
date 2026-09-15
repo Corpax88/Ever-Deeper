@@ -5,7 +5,7 @@ from mathutils import Vector, Matrix
 from bpy_extras.object_utils import world_to_camera_view
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT))
-import motion_v9, motion_v3
+import motion_v9, motion_v3, premium_motion
 from native_pose import create_applier
 from eyelids import create_blink
 from hero_expression_v7 import blink_at
@@ -15,12 +15,14 @@ ap.add_argument('--native-tools',type=Path,required=True)
 ap.add_argument('--output',type=Path,required=True)
 ap.add_argument('--gear',default='iron',choices=list(motion_v3.PROFILES))
 ap.add_argument('--review',action='store_true')
+ap.add_argument('--premium-pilot',action='store_true')
 ap.add_argument('--direction',default='all')
 ap.add_argument('--threads',type=int,default=2)
 a=ap.parse_args(sys.argv[sys.argv.index('--')+1:])
 s=bpy.context.scene;r=bpy.data.objects['EverDeeper_Hero_Rig'];kind=a.gear;family=motion_v3.PROFILES[kind]['family']
 out=a.output/kind;out.mkdir(parents=True,exist_ok=True)
-fingerprint=hashlib.sha256(b''.join(p.read_bytes() for p in sorted(ROOT.glob('*.py')))+Path(bpy.data.filepath).read_bytes()+str(a.review).encode()).hexdigest()
+template=ROOT.parent.parent/'assets/hero/dad'/kind/'manifest.json'
+fingerprint=hashlib.sha256(b''.join(p.read_bytes() for p in sorted(ROOT.glob('*.py')))+Path(bpy.data.filepath).read_bytes()+(ROOT/'gear_profiles.json').read_bytes()+(a.native_tools/kind/'hero.blend').read_bytes()+template.read_bytes()+str((a.review,a.premium_pilot)).encode()).hexdigest()
 stamp=out/'render-config.sha256'
 if stamp.exists():assert stamp.read_text()==fingerprint,'Output belongs to a different render configuration'
 else:stamp.write_text(fingerprint)
@@ -93,9 +95,25 @@ lights={o.name:o.location.copy() for o in s.objects if o.type=='LIGHT'}
 blink=create_blink(r)
 rest=motion_v9.rest(family);apply=create_applier(r,rest)
 skin=[m for o in s.objects for m in o.modifiers if m.type=='ARMATURE' and m.show_viewport]
-def pose(t,mode):
- p=motion_v9.directional_sample(t,mode,family,'down')
- if family=='drill':p['bit_angle']=t*math.tau*motion_v3.PROFILES[kind]['rotor_rps'] if mode=='mine' else 0
+def ground_vector(direction):
+ origin=world_to_camera_view(s,c,Vector((0,0,0)))
+ dx=(world_to_camera_view(s,c,Vector((1,0,0)))-origin)*160
+ dy=(world_to_camera_view(s,c,Vector((0,1,0)))-origin)*160
+ jacobian=Matrix(((dx.x,dy.x),(-dx.y,-dy.y)))
+ screen=Vector({'down':(0,1),'up':(0,-1),'left':(-1,0),'right':(1,0)}[direction])
+ ground=jacobian.inverted()@screen
+ return Vector((ground.x,ground.y,0))
+def pose(t,mode,direction):
+ if a.premium_pilot:
+  ground=ground_vector(direction)
+  if mode=='walk_to_mine':
+   p=premium_motion.blend(kind,premium_motion.sample(kind,'walk',.25,ground),premium_motion.sample(kind,'mine',.06,ground),t)
+  elif mode=='mine_to_walk':
+   p=premium_motion.blend(kind,premium_motion.sample(kind,'mine',.65,ground),premium_motion.sample(kind,'walk',.25,ground),t)
+  else:p=premium_motion.sample(kind,mode,t,ground)
+ else:
+  p=motion_v9.directional_sample(t,mode,family,direction)
+  if family=='drill':p['bit_angle']=t*math.tau*motion_v3.PROFILES[kind]['rotor_rps'] if mode=='mine' else 0
  p['head']=p['head']@head_offset
  for m in skin:m.show_viewport=False
  apply(p)
@@ -103,9 +121,17 @@ def pose(t,mode):
  for m in skin:m.show_viewport=True
  bpy.context.view_layer.update()
  return p
-template=ROOT.parent.parent/'assets/hero/dad'/kind/'manifest.json'
 m=json.loads(template.read_text())
 m['cell']=[200,200];m['source']='approved native Gruvepappa v28';m['poses_are_real']=True;m['frames']=[];m.pop('qa',None)
+if a.premium_pilot:
+ m['pilot_only']=True
+ m['states']={state:{'times':times} for state,times in {
+  'idle':[0,.25,.5,.75],
+  'walk':[i/48 for i in range(48)],
+  'mine':sorted(set([i/48 for i in range(48)]+[.55])),
+  'walk_to_mine':[i/6 for i in range(7)],
+  'mine_to_walk':[i/6 for i in range(7)],
+ }.items()}
 error=0.0
 views=[('down',(1.6,-6)),('left',(6,-1)),('up',(6,6)),('right',(-6,-1))]
 views=[v for v in views if a.direction in ['all',v[0]]]
@@ -121,22 +147,27 @@ for mode,info in m['states'].items():
  times=info['times'];indices=list(range(len(times)))
  if a.review:indices=([0,6] if mode=='idle' else [len(times)//4] if mode=='walk' else [0,round(len(times)*.30),round(len(times)*.55),round(len(times)*.80)])
  for i in indices:
-  t=times[i];p=pose(t,mode)
-  for side in ['R','L']:
-   b=r.pose.bones['hand.'+side];delta=b.matrix@r.data.bones[b.name].matrix_local.inverted()
-   error=max(error,(delta@rest['grips'][side]-p['grips'][side]).length)
+  t=times[i]
   for direction,xy in views:
    view(direction,xy)
+   p=pose(t,mode,direction)
+   for side in ['R','L']:
+    b=r.pose.bones['hand.'+side];delta=b.matrix@r.data.bones[b.name].matrix_local.inverted()
+    error=max(error,(delta@rest['grips'][side]-p['grips'][side]).length)
    key=f'{direction}-{mode}-{i:03}'
    s.render.filepath=str(out/(key+'.png'));mask.file_slots[0].path='mask-'+key+'-';s.frame_current=1
    done=out/(key+'.done')
    if not (done.exists() and (out/(key+'.png')).exists() and (out/('mask-'+key+'-0001.png')).exists()):
     bpy.ops.render.render(write_still=True)
     done.write_text(fingerprint)
-   m['frames'].append({'direction':direction,'state':mode,'index':i,'path':key+'.png','mask':'mask-'+key+'-0001.png'})
+   sample={'direction':direction,'state':mode,'index':i,'time':t,'path':key+'.png','mask':'mask-'+key+'-0001.png'}
+   if a.premium_pilot:
+    sample['feet']={side:list(world_to_camera_view(s,c,p['legs'][side][2])) for side in ['R','L']}
+    sample['contacts']=p['contacts']
+   m['frames'].append(sample)
    print('FRAME_OK',kind,key,flush=True)
  assert error<1e-5,error
  print('STATE_RENDERED',kind,mode,flush=True)
 m['max_grip_error']=error
-(out/('review-manifest.json' if a.review else 'manifest.json')).write_text(json.dumps(m,indent=2)+'\n')
+(out/('pilot-manifest.json' if a.premium_pilot else 'review-manifest.json' if a.review else 'manifest.json')).write_text(json.dumps(m,indent=2)+'\n')
 print('HERO_V28_REVIEW_COMPLETE' if a.review else 'HERO_V28_EXPORT_COMPLETE',kind,len(m['frames']),flush=True)

@@ -2210,11 +2210,12 @@ func _exposed_floor_regions(start: Vector2i, finish: Vector2i) -> Array[Rect2]:
 
 func _draw_partitioned_depth(start: Vector2i, finish: Vector2i) -> void:
 	lit_draw_sections.begin(self)
+	var revision: int = _terrain_draw_fingerprint()
 	# Preserve both original passes and exact row/column order, including overlaps.
 	for pass_index in 2:
 		for row in range(maxi(0, start.y), mini(rows - 1, finish.y) + 1):
-			for first_col in range(maxi(0, start.x), mini(cols - 1, finish.x) + 1, 6):
-				lit_draw_sections.add(_draw_terrain_section.bind(row, first_col, mini(first_col + 5, mini(cols - 1, finish.x)), pass_index))
+			for first_col in range(maxi(0, start.x) / 6 * 6, mini(cols - 1, finish.x) + 1, 6):
+				lit_draw_sections.add_cached(Vector3i(row, first_col, pass_index), revision, _draw_terrain_section.bind(row, first_col, mini(first_col + 5, cols - 1), pass_index))
 	lit_draw_sections.add(_draw_pocket_landmarks)
 	lit_draw_sections.add(_draw_drill_gates)
 	lit_draw_sections.add(_draw_resources)
@@ -2223,6 +2224,17 @@ func _draw_partitioned_depth(start: Vector2i, finish: Vector2i) -> void:
 	for drop in drops: lit_draw_sections.add(_draw_drop.bind(drop))
 	lit_draw_sections.add(_draw_target)
 	lit_draw_sections.finish()
+
+
+func _terrain_draw_fingerprint() -> int:
+	# Packed terrain is hashed in native code. Small scalar resource flags cover
+	# mineral hints, including respawn/discovery and direct restored-save changes.
+	var signature: int = hash(terrain_hp) ^ hash(concealed_cells) ^ mine_id.hash() ^ int(RunState.world_seed)
+	for rock in rocks:
+		signature = ((signature * 31) ^ int(bool(rock.broken))) & 0x7fffffff
+	for cavern in caverns:
+		signature = ((signature * 31) ^ int(_cavern_is_discovered(String(cavern.id)))) & 0x7fffffff
+	return signature
 
 
 func _draw_terrain_section(row: int, first_col: int, last_col: int, pass_index: int) -> void:
@@ -2695,8 +2707,7 @@ func _draw_station(texture: Texture2D, position: Vector2, label: String, selecte
 	_draw_canvas.draw_circle(position + Vector2(0, 48), 76.0, Color(0.01, 0.008, 0.005, 0.32))
 	_draw_landmark_texture(texture, position, Vector2(220, 154), 57.0)
 	if selected:
-		_draw_canvas.draw_arc(position + Vector2(0, 8), 88.0, 0, TAU, 48, Color(_profile_color("detail", "f0c47d"), 0.72), 2.0)
-	_draw_canvas.draw_string(preload("res://assets/ui/fonts/DejaVuSerif-Bold.ttf"), position + Vector2(-110, 78), label, HORIZONTAL_ALIGNMENT_CENTER, 220, 18, _profile_color("detail", "f0c47d"))
+		_draw_canvas.draw_string(preload("res://assets/ui/fonts/ChakraPetch-SemiBold.ttf"), position + Vector2(-110, -110), label, HORIZONTAL_ALIGNMENT_CENTER, 220, 16, Color("e6d5ac"))
 
 
 func _draw_landmark_texture(texture: Texture2D, position: Vector2, bounds: Vector2, bottom: float) -> void :

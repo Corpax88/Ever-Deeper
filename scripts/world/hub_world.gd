@@ -1619,10 +1619,8 @@ func _draw_foundation_route() -> void :
 		if workshop_id == "treasure_chamber" or not bool(status.get("built", false)):
 			continue
 		var destination: = _workshop_position(workshop_id)
-		# Short overlapping stone aprons connect the working floor to each bench.
-		for step in 3:
-			var at: Vector2 = destination + Vector2(0, 53 + step * 23)
-			_draw_painted_span(HUB_ROUTE_TEXTURE, at, 144.0, 0.0, Color(0.92, 0.88, 0.8, 0.9))
+		var span: float = 126.0 if workshop_id in ["tool_forge", "lift_workshop"] else 106.0
+		_draw_painted_span(HUB_ROUTE_TEXTURE, destination + Vector2(0, 48), span, 0.0, Color(0.92, 0.88, 0.8, 0.9))
 
 
 func _draw_foundation_sconces() -> void :
@@ -1644,7 +1642,7 @@ func _draw_stations() -> void :
 		_draw_relic_museum(active_context in ["deepHoard", "relicPedestal", "workshop:treasure_chamber"])
 
 
-func _draw_lift(position: Vector2, locked: bool, selected: bool) -> void :
+func _draw_lift(position: Vector2, locked: bool, _selected: bool) -> void :
 	_draw_ellipse_shape(position + Vector2(0, 43), Vector2(78, 23), Color(0, 0, 0, 0.45))
 	_draw_texture_bounded(PORTAL_TEXTURE, position + Vector2(0, -27), Vector2(178, 154))
 	if locked:
@@ -1652,8 +1650,6 @@ func _draw_lift(position: Vector2, locked: bool, selected: bool) -> void :
 		for x in range(-36, 37, 24):
 			_draw_canvas.draw_line(position + Vector2(x, -38), position + Vector2(x, 35), Color("8b7540"), 5.0)
 		_draw_canvas.draw_circle(position + Vector2(0, -1), 8, Color("d0ae55"))
-	if selected:
-		_draw_canvas.draw_arc(position + Vector2(0, -2), 82, 0, TAU, 48, Color("d5b760") if locked else Color("78e1c5"), 2.0)
 
 
 func _workshop_color(workshop_id: String) -> Color:
@@ -1684,12 +1680,10 @@ func _draw_workshops() -> void :
 		)
 
 
-func _draw_workshop_site(workshop_id: String, status: Dictionary, selected: bool) -> void :
+func _draw_workshop_site(workshop_id: String, status: Dictionary, _selected: bool) -> void :
 	var interaction_position: = _workshop_position(workshop_id)
 	var color: = _workshop_color(workshop_id)
 	var built: = bool(status.get("built", false))
-	var level: = maxi(0, int(status.get("level", 0)))
-	var max_level: = maxi(1, int(status.get("max_level", 1)))
 	var required: = _workshop_required(status)
 	var delivered: = _workshop_delivered(status)
 	var progress: = clampf(float(delivered) / float(required), 0.0, 1.0)
@@ -1722,19 +1716,12 @@ func _draw_workshop_site(workshop_id: String, status: Dictionary, selected: bool
 		_draw_canvas.draw_rect(Rect2(interaction_position - Vector2(22, 28), Vector2(44, 54)), Color("302b32"), true)
 		_draw_canvas.draw_rect(Rect2(interaction_position - Vector2(22, 28), Vector2(44, 54)), Color(color, 0.62), false, 2.0)
 		_draw_canvas.draw_circle(interaction_position + Vector2(0, -7), 7.0, Color(color, 0.82 if built else 0.36))
-	if not is_chamber and (selected or not built):
-		var title_y: = position.y + (84.0 if built else 67.0)
+	if not is_chamber and not built:
+		var title_y: float = position.y - float(WORKSHOP_VISIBLE_SIZES[workshop_id].y) + 26.0
 		var title: = _workshop_name(workshop_id, status)
-		if built and max_level > 1:
-			title += " · L%d" % level
 		_draw_centered_text(title, Vector2(position.x, title_y), 14, Color(color, 0.96))
-		if not built:
-			var resource_id: = _workshop_resource(status).replace("_", " ").to_upper()
-			_draw_centered_text("%d / %d %s" % [delivered, required, resource_id], Vector2(position.x, title_y + 19), 12, Color(0.91, 0.87, 0.76, 0.86))
-		elif selected:
-			_draw_workshop_selection_preview(workshop_id, position, color)
-	if selected:
-		_draw_canvas.draw_arc(interaction_position + Vector2(0, 4), 88.0 if not is_chamber else 48.0, 0, TAU, 48, Color(color, 0.88), 2.4)
+		var resource_id: = _workshop_resource(status).replace("_", " ").to_upper()
+		_draw_centered_text("%d / %d %s" % [delivered, required, resource_id], Vector2(position.x, title_y + 19), 12, Color(0.91, 0.87, 0.76, 0.86))
 
 
 func _draw_workshop_icon(
@@ -1785,26 +1772,6 @@ func _draw_workshop_icon(
 			_draw_canvas.draw_circle(position + Vector2.from_angle(angle) * 72.0, 2.8, Color(finish_color, 0.86 * alpha))
 	elif finish_id == "deepheart":
 		_draw_canvas.draw_circle(position + Vector2(0, -5), 75.0, Color(finish_color, 0.045 * alpha))
-
-
-func _draw_workshop_selection_preview(workshop_id: String, position: Vector2, color: Color) -> void :
-	var selection: = workshop_selection_preview(workshop_id)
-	var options: Array = Array(selection.get("options", []))
-	if options.is_empty():
-		return
-	var current: = String(selection.get("current", String(options[0])))
-	var preview: = current
-	if String(_workshop_panel_preview.get("workshop_id", "")) == workshop_id:
-		preview = String(_workshop_panel_preview.get("value", current))
-	var rail_center: = position + Vector2(0, -101)
-	_draw_canvas.draw_rect(Rect2(rail_center - Vector2(82, 18), Vector2(164, 36)), Color(0.025, 0.035, 0.045, 0.84), true)
-	_draw_canvas.draw_rect(Rect2(rail_center - Vector2(82, 18), Vector2(164, 36)), Color(color, 0.48), false, 1.5)
-	var preview_label: = "EQUIPPED" if preview == current else "PREVIEW"
-	_draw_centered_text("%s · %s" % [preview_label, preview.replace("_", " ").to_upper()], rail_center + Vector2(0, 4), 11, Color(color, 0.96))
-	var dot_start: = rail_center.x - float(options.size() - 1) * 8.0
-	for option_index in range(options.size()):
-		var is_current: = String(options[option_index]) == preview
-		_draw_canvas.draw_circle(Vector2(dot_start + option_index * 16.0, rail_center.y + 24.0), 4.0, Color(color, 0.94 if is_current else 0.24))
 
 
 func _workshop_texture(workshop_id: String) -> Texture2D:
@@ -1871,14 +1838,13 @@ func _draw_relic_museum(selected: bool) -> void :
 	var placed_count: = relics.size()
 	var total_count: = _relic_catalog_entries().size()
 	var chamber_title: = "TREASURE CHAMBER" if chamber_built else "RELIC CHAMBER"
-	_draw_centered_text("%s · %d / %d" % [chamber_title, placed_count, total_count], DEEP_HOARD_POSITION + Vector2(0, -164), 15, Color(museum_color, 0.96))
+	if selected:
+		_draw_centered_text("%s · %d / %d" % [chamber_title, placed_count, total_count], DEEP_HOARD_POSITION + Vector2(0, -164), 15, Color(museum_color, 0.96))
 	if _workshop_unlocked(chamber_status) and not chamber_built:
 		var delivered: = _workshop_delivered(chamber_status)
 		var required: = _workshop_required(chamber_status)
 		var resource_id: = _workshop_resource(chamber_status).replace("_", " ").to_upper()
 		_draw_centered_text("BUILD · %d / %d %s" % [delivered, required, resource_id], DEEP_HOARD_POSITION + Vector2(0, -146), 11, Color(museum_color, 0.9))
-	if selected:
-		_draw_canvas.draw_arc(RELIC_PEDESTAL_POSITION + Vector2(0, 4), 80.0, 0, TAU, 52, Color(museum_color, 0.9), 2.5)
 
 
 func _museum_slot_positions(slot_count: int) -> Array[Vector2]:
@@ -1952,7 +1918,7 @@ func _draw_carried_relic() -> void :
 	_draw_centered_text(_relic_name(carried), relic_position + Vector2(0, -57), 11, Color(0.95, 0.84, 0.64, 0.94))
 
 
-func _draw_deep_elevator(selected: bool) -> void :
+func _draw_deep_elevator(_selected: bool) -> void :
 	var stage: = _deep_elevator_visual_stage()
 	var modulate: = Color(0.72, 0.73, 0.76, 1.0)
 	if stage == "repaired":
@@ -1983,9 +1949,6 @@ func _draw_deep_elevator(selected: bool) -> void :
 			Color(0.54, 0.98, 1.0, pulse),
 			2.2
 		)
-	if selected:
-		var selected_color: = Color("7cf1dd") if stage in ["powered", "complete"] else Color("efc267")
-		_draw_canvas.draw_arc(DEEP_ELEVATOR + Vector2(0, 7), 151, 0, TAU, 64, selected_color, 2.7)
 
 
 func _draw_elevator_resource_sockets() -> void :

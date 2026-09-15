@@ -1,0 +1,20 @@
+[
+  {
+    "path": "scripts/lighting/cave_light_occluders.gd",
+    "before": "f4b01cf5ede3b6d2e1e5aea140bf8f4e608e9207b2f6080c891c32dade86c103",
+    "after": "451584a5843dde1fa9365e1bc28987a05dc6039cdbf15d64e43a5462623f85db",
+    "reason": "Cover actual upgraded cone/bounce light footprints with separate interval union, reused geometry and immediate refresh. Sixteen rendered pairs match an oversized reference in static terrain; maximum pet Long Beam remains to be exercised."
+  },
+  {
+    "path": "scripts/player/player_controller.gd",
+    "before": "e1feffb2e22e25278d928d75eb2de318b3e66c7520c733478c8fd9285e5d89a5",
+    "after": "7d1d26fd727c4bfae6c86867eba44dc980bccc34a681c07002e7ba52172d4fee",
+    "reason": "One explicit mining impact event; distinguish actual player input turns from automatic target aiming."
+  },
+  {
+    "path": "scripts/player/player_visual.gd",
+    "before": "5035feb52cf5c694754ef5effa200ed7e305d9ac2a6114ec8e6d2c72fecac1ff",
+    "after": "ba50a787db08620fde3a2da7a44305406fff0a442c82cbea64a061a7146f5fc4",
+    "reason": "Present the authored impact once even when the game step overshoots or automatically retargets. Bypass headless and clear on release/input. Actual rendered contact harness passes."
+  }
+]

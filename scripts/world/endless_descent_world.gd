@@ -2570,6 +2570,7 @@ func _draw() -> void :
 
 func _draw_partitioned_deep(first: Vector2i, last: Vector2i) -> void:
 	lit_draw_sections.begin(self)
+	var revision: int = hash(floor_cells) ^ hash(dig_damage) ^ window_start_depth ^ int(RunState.world_seed)
 	# Every visible cell has an opaque RGB floor or rock texture. The old
 	# full-world background was entirely covered; skip that hidden light pass.
 	# Composite the floor before lighting, then stone mass and projecting rims.
@@ -2577,10 +2578,10 @@ func _draw_partitioned_deep(first: Vector2i, last: Vector2i) -> void:
 	for pass_index in 3:
 		for row in range(first.y, last.y + 1):
 			var material: ShaderMaterial = _deep_floor_material(window_start_depth + row / DeepLayout.CHUNK_ROWS) if pass_index == 0 else null
-			for col in range(first.x, last.x + 1, 4):
-				var last_col: int = mini(col + 3, last.x)
+			for col in range(first.x / 4 * 4, last.x + 1, 4):
+				var last_col: int = mini(col + 3, GRID_SIZE.x - 1)
 				if pass_index != 2 or _section_has_wall_edges(row, col, last_col):
-					lit_draw_sections.add(_draw_terrain_section.bind(row, col, last_col, pass_index), material)
+					lit_draw_sections.add_cached(Vector3i(row, col, pass_index), revision, _draw_terrain_section.bind(row, col, last_col, pass_index), material)
 	for impact in _crusher_impacts: lit_draw_sections.add(_draw_impact_section.bind(impact))
 	lit_draw_sections.finish()
 

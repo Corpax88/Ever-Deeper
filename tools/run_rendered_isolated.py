@@ -72,7 +72,30 @@ def main() -> int:
                     print("Xvfb did not become ready; inspect", args.output / "xvfb.log")
                     return 2
                 command = [str(args.godot), "--path", str(args.project.resolve()), "--display-driver", "x11", "--resolution", args.resolution, "--audio-driver", "Dummy"] + extra
-                result = subprocess.run(command, env=env, stdout=game_log, stderr=subprocess.STDOUT, timeout=args.timeout)
+                result = subprocess.Popen(command, env=env, stdout=game_log, stderr=subprocess.STDOUT)
+                deadline = time.monotonic() + args.timeout
+                failure = 0
+                with (args.output / "godot.log").open() as reader:
+                    carry = ""
+                    while result.poll() is None:
+                        chunk = carry + reader.read()
+                        if re.search(r"SCRIPT ERROR|Parse Error|^ERROR:|Assertion failed|CHECK_FAILED", chunk, re.M):
+                            failure = 3
+                            break
+                        carry = chunk[-100:]
+                        if time.monotonic() >= deadline:
+                            failure = 124
+                            break
+                        time.sleep(0.1)
+                if failure:
+                    result.terminate()
+                    try:
+                        result.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        result.kill()
+                        result.wait()
+                    print("Rendered check failed:", failure, "log:", args.output / "godot.log")
+                    return failure
                 game_log.flush()
                 errors = re.search(r"SCRIPT ERROR|Parse Error|^ERROR:|Assertion failed|CHECK_FAILED", (args.output / "godot.log").read_text(errors="replace"), re.M)
                 if errors:

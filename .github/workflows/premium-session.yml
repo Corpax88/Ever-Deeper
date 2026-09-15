@@ -54,6 +54,21 @@ jobs:
           assert not re.search('llvmpipe|swiftshader|software',report['renderer'],re.I),report['renderer']
           print(json.dumps(report,indent=2))
           PY
+      - name: Controlled renderer profile with GPU timings
+        env:
+          PREMIUM_AREA: ${{ matrix.area }}
+        run: |
+          "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --path . --resolution 1696x780 --rendering-method gl_compatibility --audio-driver Dummy --script tools/profile_premium_render.gd -- --output="$RUNNER_TEMP/review/profile" --area="$PREMIUM_AREA" > "$RUNNER_TEMP/review/profile.log" 2>&1
+          python3 - <<'PY'
+          import json,os,re
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'review'
+          log=(root/'profile.log').read_text()
+          assert not re.search(r'SCRIPT ERROR|Parse Error|^ERROR:',log,re.M),log[-4000:]
+          report=json.loads((root/'profile/render-profile.json').read_text())
+          assert len(report['stages']) == 6
+          print(json.dumps(report,indent=2))
+          PY
       - name: Actual mobile composition and interaction approaches
         if: matrix.area == 'hub'
         run: |

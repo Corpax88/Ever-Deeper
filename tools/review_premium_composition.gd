@@ -29,6 +29,9 @@ func _run() -> void:
 		var world: Node=main.surface_world
 		world.restore_position(world.station_interaction_position(station))
 		world.player.set_facing(Vector2.UP)
+		world.player.set_external_movement(Vector2.UP)
+		await create_timer(0.8).timeout
+		world.player.set_external_movement(Vector2.ZERO)
 		await _capture("surface_approach_"+station,world)
 	main._dev_jump_hub()
 	await _capture("hub_fresh_entrance",main.hub_world)
@@ -42,6 +45,9 @@ func _run() -> void:
 	for workshop in ["tool_forge", "light_lab", "wardrobe", "lift_workshop"]:
 		main.hub_world.restore_position(main.hub_world._workshop_position(workshop)+Vector2(0,105))
 		main.hub_world.player.set_facing(Vector2.UP)
+		main.hub_world.player.set_external_movement(Vector2.UP)
+		await create_timer(0.8).timeout
+		main.hub_world.player.set_external_movement(Vector2.ZERO)
 		await _capture("hub_approach_"+workshop,main.hub_world)
 	main._dev_jump_mine("emberMine",2)
 	state.victory=false

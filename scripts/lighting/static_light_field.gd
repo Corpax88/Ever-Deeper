@@ -10,6 +10,9 @@ var enabled: bool = true:
 	set(value):
 		enabled = value
 		_apply()
+		if enabled and is_instance_valid(_world) and not ready_for_use and not _scheduled:
+			_scheduled = true
+			_rebuild.call_deferred()
 var ready_for_use: bool = false
 var baking: bool = false
 var generation: int = 0
@@ -118,6 +121,7 @@ func _apply() -> void:
 
 func _rebuild() -> void:
 	_scheduled = false
+	if not enabled: return
 	if not is_instance_valid(_source_root) or not is_instance_valid(_world): return
 	if DisplayServer.get_name() == "headless": return
 	# Never change the source set during an opt-in lighting diagnostic.
