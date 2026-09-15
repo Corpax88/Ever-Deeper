@@ -1,0 +1,62 @@
+name: Premium sustained gameplay
+on:
+  push:
+    branches: [codex/premium-polish-recovery-20260915]
+    paths: ['scripts/**', 'assets/**', 'project.godot', 'tools/review_premium_session.gd', '.github/workflows/premium-session.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: premium-session-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  native:
+    runs-on: macos-15
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        area: [hub, ember, deep]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install matching renderer and inspect host
+        run: |
+          curl -L --fail --retry 3 --retry-all-errors https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          mkdir -p "$RUNNER_TEMP/review"
+          system_profiler SPDisplaysDataType > "$RUNNER_TEMP/review/display.txt"
+          git rev-parse HEAD > "$RUNNER_TEMP/review/source-sha.txt"
+          "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --version > "$RUNNER_TEMP/review/godot-version.txt"
+      - name: Import source
+        run: |
+          "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --headless --editor --path . --import > "$RUNNER_TEMP/review/import.log" 2>&1
+          python3 - <<'PY'
+          import os,re
+          from pathlib import Path
+          log=(Path(os.environ['RUNNER_TEMP'])/'review/import.log').read_text()
+          assert not re.search(r'SCRIPT ERROR|Parse Error|^ERROR:',log,re.M),log[-4000:]
+          PY
+      - name: Five minutes of real input with autosaves and pet
+        env:
+          PREMIUM_AREA: ${{ matrix.area }}
+        run: |
+          "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --path . --resolution 1696x780 --rendering-method gl_compatibility --audio-driver Dummy --script tools/review_premium_session.gd -- --output="$RUNNER_TEMP/review/session" --area="$PREMIUM_AREA" --seconds=300 > "$RUNNER_TEMP/review/session.log" 2>&1
+          python3 - <<'PY'
+          import json,os,re
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'review'
+          log=(root/'session.log').read_text()
+          assert not re.search(r'SCRIPT ERROR|Parse Error|^ERROR:',log,re.M),log[-4000:]
+          report=json.loads((root/'session/session.json').read_text())
+          assert report['functional'] and report['persistence_enabled'],report
+          assert not re.search('llvmpipe|swiftshader|software',report['renderer'],re.I),report['renderer']
+          print(json.dumps(report,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: premium-native-${{ matrix.area }}-${{ github.sha }}
+          path: ${{ runner.temp }}/review
+          retention-days: 30
