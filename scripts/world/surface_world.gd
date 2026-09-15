@@ -1850,7 +1850,7 @@ func debug_later_surface_life_snapshot() -> Dictionary:
 func _build_stations() -> void :
 
 
-	_create_station(WAYFARER_SHOP, GameData.station("speedShop"), Vector2(142, 130), 45.0, "WAYFARER", "speedShop")
+	_create_station(WAYFARER_SHOP, GameData.station("speedShop"), Vector2(177.5, 162.5), 45.0, "WAYFARER", "speedShop")
 	_create_station(STARFORGE_STATION, GameData.station("starforge"), Vector2(158, 142), 50.0, "STARFORGE")
 
 
@@ -4372,7 +4372,7 @@ func _nearest_surface_station_context(world_position: Vector2) -> String:
 	var candidates: Array[Dictionary] = [
 		{"id": "sell", "position": station_interaction_position("sell"), "radius": SURFACE_STATION_INTERACT_RADIUS},
 		{"id": "forge", "position": station_interaction_position("forge"), "radius": SURFACE_STATION_INTERACT_RADIUS},
-		{"id": "speedShop", "position": _station_position("speedShop"), "radius": float(GameData.station("speedShop").radius)},
+		{"id": "speedShop", "position": station_interaction_position("speedShop"), "radius": float(GameData.station("speedShop").radius)},
 	]
 	if RunState.fourth_unlocked:
 		candidates.append({
@@ -4590,6 +4590,10 @@ func route_steering_snapshot() -> Dictionary:
 
 
 func _surface_collides(position: Vector2) -> bool:
+	# The stall's front edge and its approach use the same world anchor.
+	var wayfarer_footprint: Vector2 = (position - (MOSS_WAYFARER_POSITION + Vector2(0, 13))) / Vector2(86, 53)
+	if wayfarer_footprint.length_squared() < 1.0:
+		return true
 	# Solid feet are registered to the same canvas as the complete gate artwork.
 	for boundary in BOUNDARIES:
 		var anchor: Vector2 = Vector2(float(boundary.x), GATE_Y)
@@ -4852,6 +4856,8 @@ func station_interaction_position(station_id: String) -> Vector2:
 	var position: = _station_position(station_id)
 	if station_id in ["sell", "forge"]:
 		return position + SURFACE_STATION_APPROACH_OFFSET
+	if station_id == "speedShop":
+		return position + Vector2(0, 110)
 	return position
 
 

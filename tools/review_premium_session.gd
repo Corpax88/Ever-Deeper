@@ -34,7 +34,9 @@ func _run() -> void:
 	seed(4608)
 	var entered: bool = false
 	match area:
-		"hub": entered = main._dev_jump_hub()
+		"hub":
+			main._dev_seed_victory_state()
+			entered = main._dev_build_all_workshops_state() and main._dev_jump_hub()
 		"ember": entered = main._dev_jump_mine("emberMine", 2)
 		"deep": entered = main._dev_jump_endless(12)
 	if not entered:
@@ -99,7 +101,8 @@ func _run() -> void:
 	var mined: int = state.total_mined_resources() - mined_before
 	var functional: bool = distance > 100.0 and (area == "hub" or mined > 0)
 	var report: Dictionary = {
-		"area": area, "seconds": seconds, "windows": windows, "distance": distance, "mined_resources": mined,
+		"seed": state.world_seed, "area": area, "seconds": seconds, "windows": windows, "distance": distance, "mined_resources": mined,
+		"built_hub_visible": bool(state.victory) and area == "hub",
 		"functional": functional, "meets_50_fps": meets, "rendered": true, "physical_iphone": false,
 		"display": DisplayServer.get_name(), "renderer": RenderingServer.get_video_adapter_name(),
 		"rendering_method": RenderingServer.get_current_rendering_method(), "os": OS.get_name(),

@@ -21,6 +21,7 @@ signal rope_state_changed(attached: bool, relic_id: String)
 const LitDrawSectionsScript = preload("res://scripts/lighting/lit_draw_sections.gd")
 var lit_draw_sections: Node2D
 var _draw_canvas: CanvasItem
+var _floor_materials: Dictionary = {}
 
 const DeepLayout = preload("res://scripts/world/endless_deep_layout.gd")
 const HeadlampBeamScript = preload("res://scripts/lighting/headlamp_beam.gd")
@@ -2511,12 +2512,9 @@ func _floor_texture_region(cell: Vector2i) -> Rect2:
 		return Rect2(Vector2.ZERO, Vector2.ONE * TILE_SIZE)
 	var source_width: = maxi(roundi(cave_floor_texture.get_width()), roundi(TILE_SIZE))
 	var source_height: = maxi(roundi(cave_floor_texture.get_height()), roundi(TILE_SIZE))
-	var span_x: = maxi(1, source_width - roundi(TILE_SIZE) + 1)
-	var span_y: = maxi(1, source_height - roundi(TILE_SIZE) + 1)
 	var absolute: Vector2i = absolute_cell(cell)
-	var key: int = absi(absolute.x * 92821 + absolute.y * 68917 + _seed_for_depth(depth_at_position(_cell_center(cell))) * 3)
-	var source_x: = float(key % span_x)
-	var source_y: = float((key / 11) % span_y)
+	var source_x: = float(posmod(absolute.x * int(TILE_SIZE), source_width))
+	var source_y: = float(posmod(absolute.y * int(TILE_SIZE), source_height))
 	return Rect2(Vector2(source_x, source_y), Vector2.ONE * TILE_SIZE)
 
 
@@ -2574,13 +2572,15 @@ func _draw_partitioned_deep(first: Vector2i, last: Vector2i) -> void:
 	lit_draw_sections.begin(self)
 	# Every visible cell has an opaque RGB floor or rock texture. The old
 	# full-world background was entirely covered; skip that hidden light pass.
-	# Original base pass, then original edge/corner pass, including overlaps.
-	for pass_index in 2:
+	# Composite the floor before lighting, then stone mass and projecting rims.
+	# Contiguous floor strips keep their world UVs through excavation/rebasing.
+	for pass_index in 3:
 		for row in range(first.y, last.y + 1):
+			var material: ShaderMaterial = _deep_floor_material(window_start_depth + row / DeepLayout.CHUNK_ROWS) if pass_index == 0 else null
 			for col in range(first.x, last.x + 1, 4):
 				var last_col: int = mini(col + 3, last.x)
-				if pass_index == 0 or _section_has_wall_edges(row, col, last_col):
-					lit_draw_sections.add(_draw_terrain_section.bind(row, col, last_col, pass_index))
+				if pass_index != 2 or _section_has_wall_edges(row, col, last_col):
+					lit_draw_sections.add(_draw_terrain_section.bind(row, col, last_col, pass_index), material)
 	for impact in _crusher_impacts: lit_draw_sections.add(_draw_impact_section.bind(impact))
 	lit_draw_sections.finish()
 
@@ -2598,24 +2598,43 @@ func _draw_impact_section(impact: Dictionary) -> void:
 
 func _draw_terrain_section(row: int, first_col: int, last_col: int, pass_index: int) -> void:
 	_select_draw_stratum(window_start_depth + row / DeepLayout.CHUNK_ROWS)
+	if pass_index == 0:
+		var col: int = first_col
+		while col <= last_col:
+			if not _is_floor(Vector2i(col, row)):
+				col += 1
+				continue
+			var start: int = col
+			while col <= last_col and _is_floor(Vector2i(col, row)): col += 1
+			var rect: Rect2 = Rect2(Vector2(start, row) * TILE_SIZE, Vector2(col - start, 1) * TILE_SIZE)
+			var source: Rect2 = _floor_texture_region(Vector2i(start, row))
+			source.size = rect.size
+			_draw_canvas.draw_texture_rect_region(cave_floor_texture, rect, source, Color.WHITE, false, false)
+		_select_draw_stratum(maxi(1, current_depth))
+		return
 	for col in range(first_col, last_col + 1):
 		var cell: Vector2i = Vector2i(col, row)
 		var rect: Rect2 = Rect2(Vector2(cell) * TILE_SIZE, Vector2.ONE * TILE_SIZE)
-		if pass_index == 1:
+		if pass_index == 2:
 			if not _is_floor(cell) and _has_floor_neighbor(cell): _draw_wall_edges(cell, rect)
 			continue
 		if _is_floor(cell):
-			var alternate: bool = ((col * 17 + absolute_cell(cell).y * 31 + _seed_for_depth(depth_at_position(_cell_center(cell)))) & 3) == 0
-			if cave_floor_texture != null:
-				_draw_canvas.draw_texture_rect_region(cave_floor_texture, rect, _floor_texture_region(cell), Color(0.88, 0.9, 0.92, 1.0))
-				_draw_canvas.draw_rect(rect, Color(stratum.floor_alt if alternate else stratum.floor, 0.28), true)
-			else:
-				_draw_canvas.draw_rect(rect, Color(stratum.floor_alt if alternate else stratum.floor), true)
 			_draw_floor_detail(cell, rect)
 		else:
 			_draw_permanent_wall_mass(cell, rect)
 	# Draw callbacks must never leave gameplay pointing at a neighbouring stratum.
 	_select_draw_stratum(maxi(1, current_depth))
+
+
+func _deep_floor_material(depth: int) -> ShaderMaterial:
+	var index: int = posmod(depth, STRATA.size())
+	if not _floor_materials.has(index):
+		var material: ShaderMaterial = ShaderMaterial.new()
+		material.shader = preload("res://shaders/lit_floor_composite.gdshader")
+		material.set_shader_parameter("floor_tint", Color(0.88, 0.9, 0.92, 1.0))
+		material.set_shader_parameter("floor_wash", Color(STRATA[index].floor, 0.28))
+		_floor_materials[index] = material
+	return _floor_materials[index]
 
 
 func _visual_visible_rect(margin: Vector2) -> Rect2:

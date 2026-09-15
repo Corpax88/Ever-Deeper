@@ -33,6 +33,8 @@ var _recover_phase: = -1.0
 var _recover_direction: = 1.0
 var _last_native_phase: = 0.0
 var _last_frame: = -1
+var _last_state: = "idle"
+var _last_local_frame: = 0
 var _last_direction: = ""
 var _released: = false
 var redraw_request_count: = 0
@@ -151,6 +153,8 @@ func _draw_frame(delta: float) -> void:
 		for i in Array(info.times).size():
 			if float(info.times[i]) <= _idle_clock: local_frame = i
 	var index: = int(info.offset) + local_frame
+	_last_state = state
+	_last_local_frame = local_frame
 	if index == _last_frame and direction_name == _last_direction:
 		state_skip_count += 1
 		return
@@ -187,7 +191,7 @@ func grounding_snapshot() -> Dictionary:
 	return {"walk": GROUND_Y, "side_mining": GROUND_Y, "up_mining": GROUND_Y, "drill_walk": GROUND_Y, "drill_mining": GROUND_Y}
 
 func tool_visual_snapshot() -> Dictionary:
-	return {"gear": active_gear, "pickaxe_level": int(RunState.pickaxe_level), "endless_outfit_style": active_endless_outfit_style, "endless_tool_style": active_endless_tool_style, "native_two_handed": true, "direction": direction_name, "frame": _last_frame, "native_phase": _last_native_phase, "hit_phase": strike_phase, "textures_loaded": _atlases.size()}
+	return {"gear": active_gear, "pickaxe_level": int(RunState.pickaxe_level), "endless_outfit_style": active_endless_outfit_style, "endless_tool_style": active_endless_tool_style, "native_two_handed": true, "direction": direction_name, "frame": _last_frame, "state": _last_state, "local_frame": _last_local_frame, "native_phase": _last_native_phase, "hit_phase": strike_phase, "textures_loaded": _atlases.size()}
 
 func mobile_render_budget_snapshot() -> Dictionary:
 	return {"redraw_requests": redraw_request_count, "state_updates": state_update_count, "state_skips": state_skip_count, "tool_signature": active_gear, "walk_fps": 60.0, "state_change_driven": true, "textures_loaded": _atlases.size(), "runtime_3d": false}

@@ -22,6 +22,8 @@ signal workshop_panel_requested(workshop_id: String)
 signal workshop_action_committed(transaction: Dictionary)
 
 const WORLD_SIZE: = Vector2(1440, 960)
+const WALK_MIN: = Vector2(124, 124)
+const WALK_MAX: = WORLD_SIZE - Vector2(124, 124)
 const SURFACE_LIFT: = Vector2(240, 820)
 const SURFACE_LIFT_RADIUS: = 126.0
 const DEEP_ELEVATOR: = Vector2(720, 142)
@@ -52,6 +54,12 @@ const WORKSHOP_POSITIONS: Dictionary = {
 	"wardrobe": Vector2(1120, 520),
 	"treasure_chamber": RELIC_PEDESTAL_POSITION,
 	"lift_workshop": Vector2(1120, 290),
+}
+const WORKSHOP_VISIBLE_SIZES: Dictionary = {
+	"tool_forge": Vector2(315, 210),
+	"light_lab": Vector2(180, 176),
+	"wardrobe": Vector2(228, 166),
+	"lift_workshop": Vector2(248, 226),
 }
 const WORKSHOP_FALLBACK_POSITIONS: Array[Vector2] = [
 	Vector2(710, 735), Vector2(860, 292), Vector2(720, 480),
@@ -190,7 +198,7 @@ func set_active(enabled: bool, entering: bool = false) -> void :
 		_ensure_player_safe(Vector2.RIGHT)
 		player.camera.make_current()
 		player.camera.reset_smoothing()
-		_update_context(player.global_position)
+		_on_player_moved(player.global_position)
 	queue_redraw()
 
 
@@ -1127,11 +1135,11 @@ func _resolve_motion(origin: Vector2, motion: Vector2) -> Vector2:
 	var next_y: = Vector2(result.x, origin.y + motion.y)
 	if not _hub_wall_collision(next_y):
 		result.y = next_y.y
-	return result.clamp(Vector2(52, 70), WORLD_SIZE - Vector2(52, 58))
+	return result.clamp(WALK_MIN, WALK_MAX)
 
 
 func _hub_wall_collision(position: Vector2) -> bool:
-	return _station_collision(position)
+	return position.x < WALK_MIN.x or position.y < WALK_MIN.y or position.x > WALK_MAX.x or position.y > WALK_MAX.y or _station_collision(position)
 
 
 func player_position_clear() -> bool:
@@ -1155,8 +1163,8 @@ func _ensure_player_safe(escape_hint: Vector2 = Vector2.ZERO) -> bool:
 func _nearest_safe_hub_position(
 	preferred: Vector2, escape_hint: Vector2 = Vector2.ZERO
 ) -> Vector2:
-	var minimum: = Vector2(52, 70)
-	var maximum: = WORLD_SIZE - Vector2(52, 58)
+	var minimum: = WALK_MIN
+	var maximum: = WALK_MAX
 	var origin: = preferred.clamp(minimum, maximum)
 	if not _hub_wall_collision(origin):
 		return origin
@@ -1194,14 +1202,22 @@ func _station_collision(position: Vector2) -> bool:
 			return true
 	for workshop_id in _workshop_ids():
 		var status: = _workshop_status(workshop_id)
-		var collision_radius: = 31.0 if workshop_id == "treasure_chamber" else 48.0
-		if bool(status.get("built", false)) and position.distance_to(_workshop_position(workshop_id)) < collision_radius + PLAYER_RADIUS:
+		if workshop_id == "treasure_chamber" or not bool(status.get("built", false)):
+			continue
+		var size: Vector2 = WORKSHOP_VISIBLE_SIZES[workshop_id]
+		var offset: Vector2 = position - (_workshop_position(workshop_id) + Vector2(0, 8))
+		if (offset / Vector2(size.x * 0.42 + PLAYER_RADIUS, 58)).length_squared() < 1.0:
 			return true
 	return position.distance_to(DEEP_ELEVATOR + Vector2(0, -18)) < 70.0 + PLAYER_RADIUS
 
 
 func _on_player_moved(world_position: Vector2) -> void :
+	player.z_index = actor_draw_depth(world_position)
 	_update_context(world_position)
+
+
+func actor_draw_depth(world_position: Vector2) -> int:
+	return 10 + roundi(world_position.y)
 
 
 func _update_context(world_position: Vector2) -> void :
@@ -1564,18 +1580,18 @@ func _draw_partitioned_hub() -> void:
 	lit_draw_sections.add(_draw_foundation_route)
 	for position_value in FOUNDATION_LIGHT_POSITIONS:
 		lit_draw_sections.add(_draw_foundation_sconce.bind(Vector2(position_value)))
-	lit_draw_sections.add(_draw_deep_elevator.bind(active_context == "deepElevator"))
-	lit_draw_sections.add(_draw_lift.bind(SURFACE_LIFT, false, active_context == "hubExit"))
+	lit_draw_sections.add(_draw_deep_elevator.bind(active_context == "deepElevator"), null, actor_draw_depth(DEEP_ELEVATOR + Vector2(0, 50)))
+	lit_draw_sections.add(_draw_lift.bind(SURFACE_LIFT, false, active_context == "hubExit"), null, actor_draw_depth(SURFACE_LIFT))
 	if RunState.victory:
 		for workshop_id in _workshop_ids():
 			if workshop_id == "treasure_chamber": continue
 			var status: Dictionary = _workshop_status(workshop_id)
 			if not _workshop_unlocked(status) and not bool(status.get("built", false)): continue
-			lit_draw_sections.add(_draw_workshop_site.bind(workshop_id, status, active_context == "workshop:%s" % workshop_id))
-		lit_draw_sections.add(_draw_relic_museum.bind(active_context in ["deepHoard", "relicPedestal", "workshop:treasure_chamber"]))
-	lit_draw_sections.add(_draw_workshop_presentation)
-	lit_draw_sections.add(_draw_feedback)
-	lit_draw_sections.add(_draw_carried_relic)
+			lit_draw_sections.add(_draw_workshop_site.bind(workshop_id, status, active_context == "workshop:%s" % workshop_id), null, actor_draw_depth(_workshop_position(workshop_id) + Vector2(0, 30)))
+		lit_draw_sections.add(_draw_relic_museum.bind(active_context in ["deepHoard", "relicPedestal", "workshop:treasure_chamber"]), null, actor_draw_depth(DEEP_HOARD_POSITION + Vector2(0, 80)))
+	lit_draw_sections.add(_draw_workshop_presentation, null, 2000)
+	lit_draw_sections.add(_draw_feedback, null, 2000)
+	lit_draw_sections.add(_draw_carried_relic, null, actor_draw_depth(player.position))
 	lit_draw_sections.finish()
 
 
@@ -1585,30 +1601,28 @@ func _draw_hub_wall_frame() -> void :
 	_draw_canvas.draw_rect(Rect2(0, 0, 58, WORLD_SIZE.y), Color("111015"), true)
 	_draw_canvas.draw_rect(Rect2(WORLD_SIZE.x - 58, 0, 58, WORLD_SIZE.y), Color("111015"), true)
 	for center_x in [236.0, 720.0, 1204.0]:
-		_draw_texture_bounded(HUB_WALL_TEXTURE, Vector2(center_x, 72), Vector2(500, 178), Color(0.9, 0.88, 0.94, 1.0))
-		_draw_texture_rotated_bounded(HUB_WALL_TEXTURE, Vector2(center_x, 938), Vector2(500, 154), PI, Color(0.74, 0.7, 0.78, 0.95))
+		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(center_x, 0), 520.0, 0.0, Color(0.9, 0.88, 0.94, 1.0))
+		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(center_x, WORLD_SIZE.y), 520.0, PI, Color(0.74, 0.7, 0.78, 1.0))
 	for center_y in [250.0, 566.0, 842.0]:
-		_draw_texture_rotated_bounded(HUB_WALL_TEXTURE, Vector2(42, center_y), Vector2(360, 132), PI * 0.5, Color(0.76, 0.74, 0.8, 0.96))
-		_draw_texture_rotated_bounded(HUB_WALL_TEXTURE, Vector2(1398, center_y), Vector2(360, 132), - PI * 0.5, Color(0.76, 0.74, 0.8, 0.96))
-	_draw_canvas.draw_rect(Rect2(70, 64, WORLD_SIZE.x - 140, WORLD_SIZE.y - 124), Color(0.95, 0.73, 0.34, 0.25), false, 3.0)
-	_draw_canvas.draw_rect(Rect2(80, 74, WORLD_SIZE.x - 160, WORLD_SIZE.y - 144), Color(0.35, 0.84, 0.73, 0.16), false, 1.5)
+		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(20, center_y), 350.0, -PI * 0.5, Color(0.76, 0.74, 0.8, 1.0))
+		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(WORLD_SIZE.x - 20, center_y), 350.0, PI * 0.5, Color(0.76, 0.74, 0.8, 1.0))
 
 
 func _draw_foundation_route() -> void :
-	_draw_texture_bounded(HUB_ROUTE_TEXTURE, Vector2(336, 821), Vector2(250, 82), Color(0.98, 0.88, 0.66, 0.95))
-	_draw_texture_rotated_bounded(HUB_ROUTE_TEXTURE, Vector2(430, 755), Vector2(176, 64), PI * 0.5, Color(0.88, 0.82, 0.66, 0.86))
-	_draw_texture_bounded(HUB_ROUTE_TEXTURE, Vector2(720, 220), Vector2(282, 88), Color(0.88, 0.78, 0.58, 0.86))
+	_draw_painted_span(HUB_ROUTE_TEXTURE, Vector2(336, 821), 250.0, 0.0, Color(0.98, 0.88, 0.66, 0.95))
+	_draw_painted_span(HUB_ROUTE_TEXTURE, Vector2(430, 780), 176.0, 0.0, Color(0.88, 0.82, 0.66, 0.86))
+	_draw_painted_span(HUB_ROUTE_TEXTURE, Vector2(720, 220), 282.0, 0.0, Color(0.88, 0.78, 0.58, 0.86))
 	if not RunState.victory:
 		return
-	var route_origin: = Vector2(720, 690)
 	for workshop_id in _workshop_ids():
 		var status: = _workshop_status(workshop_id)
-		if not bool(status.get("built", false)):
+		if workshop_id == "treasure_chamber" or not bool(status.get("built", false)):
 			continue
 		var destination: = _workshop_position(workshop_id)
-		var color: = _workshop_color(workshop_id)
-		_draw_canvas.draw_line(route_origin, destination, Color(color, 0.16), 18.0, true)
-		_draw_canvas.draw_line(route_origin, destination, Color(color, 0.42), 2.0, true)
+		# Short overlapping stone aprons connect the working floor to each bench.
+		for step in 3:
+			var at: Vector2 = destination + Vector2(0, 53 + step * 23)
+			_draw_painted_span(HUB_ROUTE_TEXTURE, at, 144.0, 0.0, Color(0.92, 0.88, 0.8, 0.9))
 
 
 func _draw_foundation_sconces() -> void :
@@ -1617,8 +1631,9 @@ func _draw_foundation_sconces() -> void :
 
 
 func _draw_foundation_sconce(at: Vector2) -> void:
-	_draw_ellipse_shape(at + Vector2(0, 11), Vector2(38, 12), Color(0, 0, 0, 0.34))
-	_draw_texture_bounded(HUB_LAMP_TEXTURE, at, Vector2(76, 50), Color(1.0, 0.88, 0.68, 1.0))
+	_draw_painted_span(HUB_ROUTE_TEXTURE, at + Vector2(0, 6), 58.0, 0.0, Color(0.9, 0.85, 0.78, 1.0))
+	_draw_ellipse_shape(at + Vector2(0, 6), Vector2(23, 7), Color(0, 0, 0, 0.4))
+	_draw_texture_grounded(HUB_LAMP_TEXTURE, at + Vector2(0, 7), Vector2(43, 30), Color(1.0, 0.88, 0.68, 1.0))
 
 
 func _draw_stations() -> void :
@@ -1681,10 +1696,8 @@ func _draw_workshop_site(workshop_id: String, status: Dictionary, selected: bool
 	var is_chamber: = workshop_id == "treasure_chamber"
 	var position: = DEEP_HOARD_POSITION if is_chamber else interaction_position
 	if built:
-		var floor_size: = Vector2(300, 218) if is_chamber else Vector2(190, 154)
-		_draw_canvas.draw_rect(Rect2(position - floor_size * 0.5, floor_size), Color(color, 0.08), true)
-		_draw_canvas.draw_rect(Rect2(position - floor_size * 0.5, floor_size), Color(color, 0.42), false, 2.0)
-		_draw_canvas.draw_arc(position + Vector2(0, 22), 64.0 if not is_chamber else 114.0, PI, TAU, 36, Color(color, 0.34), 4.0)
+		var footprint_width: float = 160.0 if is_chamber else float(WORKSHOP_VISIBLE_SIZES[workshop_id].x) * 0.46
+		_draw_ellipse_shape(position + Vector2(0, 24), Vector2(footprint_width, 27), Color(0, 0, 0, 0.3))
 	else:
 		_draw_ellipse_shape(position + Vector2(0, 26), Vector2(76, 25), Color(0, 0, 0, 0.37))
 		_draw_ellipse_shape(position + Vector2(0, 17), Vector2(67, 18), Color("302a28"))
@@ -1703,26 +1716,18 @@ func _draw_workshop_site(workshop_id: String, status: Dictionary, selected: bool
 	if not is_chamber:
 		var build_progress: = _workshop_presentation_progress(workshop_id, "build")
 		var workshop_alpha: = 1.0 if build_progress < 0.0 else lerpf(0.16, 1.0, clampf((build_progress - 0.3) / 0.48, 0.0, 1.0))
-		_draw_workshop_icon(workshop_id, position + Vector2(0, -14), built, color, workshop_alpha, status)
+		_draw_workshop_icon(workshop_id, position, built, color, workshop_alpha, status)
 	else:
 		_draw_ellipse_shape(interaction_position + Vector2(0, 22), Vector2(34, 11), Color(0, 0, 0, 0.35))
 		_draw_canvas.draw_rect(Rect2(interaction_position - Vector2(22, 28), Vector2(44, 54)), Color("302b32"), true)
 		_draw_canvas.draw_rect(Rect2(interaction_position - Vector2(22, 28), Vector2(44, 54)), Color(color, 0.62), false, 2.0)
 		_draw_canvas.draw_circle(interaction_position + Vector2(0, -7), 7.0, Color(color, 0.82 if built else 0.36))
-	if not is_chamber:
+	if not is_chamber and (selected or not built):
 		var title_y: = position.y + (84.0 if built else 67.0)
 		var title: = _workshop_name(workshop_id, status)
 		if built and max_level > 1:
 			title += " · L%d" % level
 		_draw_centered_text(title, Vector2(position.x, title_y), 14, Color(color, 0.96))
-		if built and max_level > 1:
-			var dot_start: = position.x - float(max_level - 1) * 7.0
-			for dot_index in range(max_level):
-				_draw_canvas.draw_circle(
-					Vector2(dot_start + float(dot_index) * 14.0, title_y + 18.0),
-					3.5,
-					Color(color, 0.9 if dot_index < level else 0.18)
-				)
 		if not built:
 			var resource_id: = _workshop_resource(status).replace("_", " ").to_upper()
 			_draw_centered_text("%d / %d %s" % [delivered, required, resource_id], Vector2(position.x, title_y + 19), 12, Color(0.91, 0.87, 0.76, 0.86))
@@ -1756,7 +1761,7 @@ func _draw_workshop_icon(
 	var tint: = Color(finish_tint, alpha) if built else Color(0.48, 0.46, 0.43, 0.68)
 	if built:
 		_draw_canvas.draw_circle(position + Vector2(0, -4), 68.0, Color(color, 0.045 * alpha))
-	_draw_texture_bounded(_workshop_texture(workshop_id), position, Vector2(184, 124), tint)
+	_draw_texture_grounded(_workshop_texture(workshop_id), position + Vector2(0, 46), WORKSHOP_VISIBLE_SIZES[workshop_id], tint)
 	if not built or finish_id == "original":
 		return
 	var finish_color: Color = {
@@ -2006,11 +2011,30 @@ func _draw_elevator_resource_sockets() -> void :
 			_draw_canvas.draw_circle(socket_position, 4.2, Color(resource_color, 0.88))
 
 
+func _draw_painted_span(texture: Texture2D, center: Vector2, span: float, rotation: float, tint: Color) -> void:
+	var painted: Rect2 = Rect2(6, 65, 500, 208) if texture == HUB_WALL_TEXTURE else Rect2(15, 132, 482, 121)
+	var scale_factor: float = span / painted.size.x
+	# Preserve the whole image and its aspect; position by the visible stone,
+	# not the large transparent canvas surrounding the authored artwork.
+	_draw_canvas.draw_set_transform(center, rotation, Vector2.ONE)
+	_draw_hub_texture_rect(texture, Rect2(-painted.get_center() * scale_factor, texture.get_size() * scale_factor), tint)
+	_draw_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
 func _draw_texture_bounded(texture: Texture2D, center: Vector2, bounds: Vector2, modulate: Color = Color.WHITE) -> void :
 	var source: = Vector2(texture.get_size())
 	var scale_factor: = minf(bounds.x / maxf(1.0, source.x), bounds.y / maxf(1.0, source.y))
 	var size: = source * scale_factor
 	_draw_hub_texture_rect(texture, Rect2(center - size * 0.5, size), modulate)
+
+
+func _draw_texture_grounded(texture: Texture2D, feet: Vector2, bounds: Vector2, tint: Color) -> void:
+	if not _hub_texture_regions.has(texture):
+		_hub_texture_regions[texture] = Rect2(texture.get_image().get_used_rect())
+	var painted: Rect2 = _hub_texture_regions[texture]
+	var scale_factor: float = minf(bounds.x / painted.size.x, bounds.y / painted.size.y)
+	var origin: Vector2 = feet - Vector2(painted.get_center().x, painted.end.y) * scale_factor
+	_draw_canvas.draw_texture_rect_region(texture, Rect2(origin + painted.position * scale_factor, painted.size * scale_factor), painted, tint, false, false)
 
 
 func _draw_texture_rotated_bounded(texture: Texture2D, center: Vector2, bounds: Vector2, rotation: float, modulate: Color = Color.WHITE) -> void :

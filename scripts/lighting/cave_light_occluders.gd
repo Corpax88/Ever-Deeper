@@ -6,6 +6,7 @@ var _clock: float = 0.0
 var _signature: int = 0
 var _pool: Array[LightOccluder2D] = []
 var active_count: int = 0
+var row_span_count: int = 0
 
 func _process(delta: float) -> void:
 	_clock += delta
@@ -44,6 +45,8 @@ func refresh() -> void:
 			if not filled and start != -100000:
 				spans.append(Rect2(float(start) * tile, float(y) * tile, float(x - start) * tile, tile))
 				start = -100000
+	row_span_count = spans.size()
+	spans = _merge_vertical_spans(spans)
 	var signature: int = hash(spans)
 	if signature == _signature:
 		return
@@ -60,6 +63,22 @@ func refresh() -> void:
 			continue
 		var r: Rect2 = spans[i]
 		_pool[i].occluder.polygon = PackedVector2Array([r.position, Vector2(r.end.x,r.position.y),r.end,Vector2(r.position.x,r.end.y)])
+
+
+func _merge_vertical_spans(rows: Array[Rect2]) -> Array[Rect2]:
+	# Adjacent rectangles with the same horizontal interval describe the same
+	# solid silhouette. Remove their internal edges from every shadow pass.
+	var merged: Array[Rect2] = []
+	var tails: Dictionary = {}
+	for rect in rows:
+		var key: Vector2 = Vector2(rect.position.x, rect.size.x)
+		var index: int = int(tails.get(key, -1))
+		if index >= 0 and is_equal_approx(merged[index].end.y, rect.position.y):
+			merged[index].size.y += rect.size.y
+		else:
+			tails[key] = merged.size()
+			merged.append(rect)
+	return merged
 
 func _solid(world: Node, cell: Vector2i) -> bool:
 	if world.has_method("_terrain_is_solid"):

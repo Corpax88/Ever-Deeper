@@ -201,6 +201,10 @@ func set_external_movement(direction: Vector2) -> void :
 	external_movement = direction.limit_length(1.0)
 
 
+func is_actually_moving() -> bool:
+	return _actual_moving
+
+
 func prepare_visual_cache() -> void :
 	if visual.has_method("prepare_visual_cache"):
 		visual.prepare_visual_cache()

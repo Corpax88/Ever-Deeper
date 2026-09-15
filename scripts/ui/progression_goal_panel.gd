@@ -9,7 +9,7 @@ const CREAM: = Color("e7e6d2")
 
 var _title: Label
 var _action: Label
-var _rows: VBoxContainer
+var _rows: GridContainer
 var _row_controls: Dictionary = {}
 var _texture_cache: Dictionary = {}
 var _goal: Dictionary = {}
@@ -41,9 +41,10 @@ func _ready() -> void:
 	_action.name = "NextAction"
 	_action.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_content.add_child(_action)
-	_rows = VBoxContainer.new()
+	_rows = GridContainer.new()
 	_rows.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_rows.add_theme_constant_override("separation", 1)
+	_rows.add_theme_constant_override("h_separation", 14)
+	_rows.add_theme_constant_override("v_separation", 2)
 	_content.add_child(_rows)
 	visible = false
 	set_mobile_layout(false)
@@ -104,12 +105,15 @@ func set_mobile_layout(iphone: bool) -> void:
 		return
 	_title.add_theme_font_size_override("font_size", 22 if iphone else 18)
 	_action.add_theme_font_size_override("font_size", 18 if iphone else 15)
+	var compact_grid: bool = iphone and _row_controls.size() > 2
+	_rows.columns = 2 if compact_grid else 1
 	_update_action_visibility()
 	for value in _row_controls.values():
 		var controls: = Dictionary(value)
 		var icon: TextureRect = controls.icon
 		var label: Label = controls.label
 		var counter: Label = controls.counter
+		label.visible = not compact_grid
 		icon.custom_minimum_size = Vector2(34, 32) if iphone else Vector2(27, 26)
 		label.add_theme_font_size_override("font_size", 18 if iphone else 15)
 		counter.add_theme_font_size_override("font_size", 19 if iphone else 16)
@@ -135,9 +139,9 @@ func snapshot() -> Dictionary:
 
 
 func _update_action_visibility() -> void:
-	# The final campaign recipe needs five full-size resource rows. Its location
-	# subtitle remains in Guide; the compact HUD keeps the title and every cost.
-	_action.visible = not _action.text.is_empty() and (not _iphone or Array(_goal.get("requirements", [])).size() < 5)
+	# The guide retains directions and full resource names; the mobile ledger
+	# keeps every live cost within the top band, including five-part recipes.
+	_action.visible = not _action.text.is_empty() and (not _iphone or Array(_goal.get("requirements", [])).is_empty())
 
 
 func _rebuild_rows(requirements: Array) -> void:
@@ -151,6 +155,8 @@ func _rebuild_rows(requirements: Array) -> void:
 		var row: = HBoxContainer.new()
 		row.name = "GoalResource_%s" % String(requirement.get("resource_id", ""))
 		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.tooltip_text = String(requirement.get("name", ""))
 		row.add_theme_constant_override("separation", 6)
 		_rows.add_child(row)
 		var icon: = TextureRect.new()

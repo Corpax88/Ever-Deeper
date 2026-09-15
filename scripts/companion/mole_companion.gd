@@ -99,6 +99,8 @@ func _physics_process(delta: float) -> void:
 	if not was_active or global_position.distance_to(hero.global_position)>1000.0:
 		_spawn_beside_hero()
 	was_active = true
+	if world.has_method("actor_draw_depth"):
+		z_index = world.actor_draw_depth(position)
 	if failed_loot.size()>80: failed_loot.clear()
 	if action == "tunnel":
 		action_clock += delta

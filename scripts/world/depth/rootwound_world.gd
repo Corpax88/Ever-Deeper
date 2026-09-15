@@ -2158,11 +2158,14 @@ func _draw() -> void :
 	if mine.is_empty():
 		return
 	_remember_draw_camera_bounds()
-	# Opaque floor texture supplies the background without a hidden lit layer.
-	lit_floor_chunks.draw_floor(self, floor_texture, Rect2(Vector2.ZERO, world_size), Color(0.92,0.90,0.88,1.0), Color(_profile_color("floor", "100e0c"), 0.12))
 	var visible_rect: = _resource_visible_rect(Vector2.ONE * TILE_SIZE * 3.0)
 	var start: = _world_to_cell(visible_rect.position)
 	var finish: = _world_to_cell(visible_rect.end)
+	# Solid tops are opaque. Light the visible floor once, retaining it beneath
+	# every resource, entrance and transparent rim in the excavated cells.
+	lit_floor_chunks.restrict_to_regions = true
+	lit_floor_chunks.visible_regions = _exposed_floor_regions(start, finish)
+	lit_floor_chunks.draw_floor(self, floor_texture, Rect2(Vector2.ZERO, world_size), Color(0.92,0.90,0.88,1.0), Color(_profile_color("floor", "100e0c"), 0.12))
 	if lit_draw_sections.enabled:
 		_draw_partitioned_depth(start, finish)
 		return
@@ -2188,6 +2191,21 @@ func _draw() -> void :
 	for drop in drops:
 		_draw_drop(drop)
 	_draw_target()
+
+
+func _exposed_floor_regions(start: Vector2i, finish: Vector2i) -> Array[Rect2]:
+	var regions: Array[Rect2] = []
+	var first_col: int = maxi(0, start.x)
+	var last_col: int = mini(cols - 1, finish.x)
+	for row in range(maxi(0, start.y), mini(rows - 1, finish.y) + 1):
+		var run_start: int = -1
+		for col in range(first_col, last_col + 2):
+			var exposed: bool = col <= last_col and not _visual_is_solid(Vector2i(col, row))
+			if run_start >= 0 and (not exposed or col - run_start >= 6):
+				regions.append(Rect2(Vector2(run_start, row) * TILE_SIZE, Vector2(col - run_start, 1) * TILE_SIZE))
+				run_start = -1
+			if exposed and run_start < 0: run_start = col
+	return regions
 
 
 func _draw_partitioned_depth(start: Vector2i, finish: Vector2i) -> void:

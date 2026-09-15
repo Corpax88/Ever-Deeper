@@ -51,9 +51,11 @@ func _layout() -> void:
 	var size: Vector2=get_viewport().get_visible_rect().size
 	var mobile: bool=size.x/maxf(1.0,size.y)>1.9
 	var extent: float=90.0 if mobile else 52.0
-	button.position=Vector2(440.0 if mobile else 184.0,18.0 if mobile else 8.0)
-	button.size=Vector2.ONE*extent
-	activity.position=button.position+Vector2(extent+10,12)
+	var layout: Dictionary = main.premium_hud.layout_snapshot(size)
+	var portrait: Rect2 = layout.companion
+	button.position=portrait.position if mobile else Vector2(184,8)
+	button.size=portrait.size if mobile else Vector2.ONE*extent
+	activity.position=button.position+Vector2(0,extent+2) if mobile else button.position+Vector2(extent+10,12)
 	activity.size=Vector2(230 if mobile else 150,72)
 	activity.add_theme_font_size_override("font_size",16 if mobile else 12)
 
@@ -72,8 +74,11 @@ func _process(_delta: float) -> void:
 	var active: MoleCompanion=active_mole()
 	if active!=null and activity.visible:
 		var next_text: String=active.direction_hint()
-		if next_text.is_empty(): next_text=active.status_text()
-		if Skills.has_skill("shake"): next_text+="\n"+("Auto dig ready" if active.shake_cooldown<=0.0 else "Auto dig · %ds" % ceili(active.shake_cooldown))
+		if next_text.is_empty():
+			next_text=active.status_text()
+			if next_text == "Right beside you": next_text=""
+		if Skills.has_skill("shake") and active.shake_cooldown>0.0:
+			next_text+=("\n" if not next_text.is_empty() else "")+"Auto dig · %ds" % ceili(active.shake_cooldown)
 		if activity.text!=next_text: activity.text=next_text
 
 func active_mole() -> MoleCompanion:

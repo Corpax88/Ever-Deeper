@@ -54,6 +54,19 @@ jobs:
           assert not re.search('llvmpipe|swiftshader|software',report['renderer'],re.I),report['renderer']
           print(json.dumps(report,indent=2))
           PY
+      - name: Actual mobile composition and interaction approaches
+        if: matrix.area == 'hub'
+        run: |
+          "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --path . --resolution 1696x780 --rendering-method gl_compatibility --audio-driver Dummy --script tools/review_premium_composition.gd -- --output="$RUNNER_TEMP/review/composition" > "$RUNNER_TEMP/review/composition.log" 2>&1
+          python3 - <<'PY'
+          import json,os,re
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'review'
+          log=(root/'composition.log').read_text()
+          assert not re.search(r'SCRIPT ERROR|Parse Error|^ERROR:',log,re.M),log[-4000:]
+          report=json.loads((root/'composition/composition.json').read_text())
+          assert report['rendered'] and len(report['captures']) >= 13
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -26,7 +26,7 @@ func begin(world: Node2D) -> void:
 	_used = 0
 	show()
 
-func add(paint: Callable) -> void:
+func add(paint: Callable, draw_material: Material = null, draw_depth: int = 0) -> void:
 	if _used == _pool.size():
 		var created: DrawSection = DrawSection.new()
 		created.use_parent_material = true
@@ -34,7 +34,11 @@ func add(paint: Callable) -> void:
 		add_child(created)
 	var section: DrawSection = _pool[_used]
 	section.world = _world
+	section.z_index = draw_depth
 	section.paint = paint
+	section.use_parent_material = draw_material == null
+	section.material = draw_material
+	section.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED if draw_material != null else CanvasItem.TEXTURE_REPEAT_PARENT_NODE
 	section.light_mask = _world.light_mask
 	section.self_modulate = _world.self_modulate
 	section.show()

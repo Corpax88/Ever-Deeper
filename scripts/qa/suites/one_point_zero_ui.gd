@@ -58,7 +58,7 @@ func _recipe_geometry(drill_level: int, expected_rows: int) -> void:
 		var panel: Rect2 = Rect2(_snapshot().panel_rect)
 		var map: Rect2 = Rect2(main.minimap_overlay.debug_snapshot().map_rect)
 		_check(panel.has_area() and Rect2(layout.safe_rect).encloses(panel), "Actual recipe panel stays inside scaled iPhone safe area")
-		_check(Rect2(layout.progression_goal).grow(1.0).encloses(panel), "Container sizing cannot silently expand the assigned goal rect")
+		_check(Rect2(layout.progression_goal).grow(1.0).encloses(panel), "Recipe %d panel %s fits assigned %s" % [expected_rows, panel, layout.progression_goal])
 		_check(map.is_equal_approx(Rect2(layout.minimap)), "Rendered minimap consumes same applied safe-area layout")
 		_check(not panel.intersects(map), "Actual recipe goal never overlays minimap")
 		_check(Rect2(layout.safe_rect).encloses(map), "Relocated minimap remains inside iPhone safe area")
@@ -70,6 +70,9 @@ func _recipe_geometry(drill_level: int, expected_rows: int) -> void:
 			var row: Dictionary = Dictionary(value)
 			for name in ["icon", "label", "counter"]:
 				var control: Control = row[name]
+				if not control.visible:
+					_check(name == "label" and not String(control.text).is_empty(), "Compact resource icons retain their full names in the guide")
+					continue
 				_check(control.size.x > 0.0 and control.size.y > 0.0 and panel.grow(1.0).encloses(control.get_global_rect()), "Visible goal " + name + " stays within panel")
 	hud._apply_platform_safe_area()
 

@@ -1,0 +1,26 @@
+[
+  {
+    "path": "scenes/surface/surface_world.tscn",
+    "before": "3d8c8044af487c1fa09e06f26290be83aec0bdfd1fb5c12fc93b0491ee9483de",
+    "after": "23a501c016fa9e24c2ecc570115ede77931e106bcbd3667b435572c735d6457a",
+    "reason": "Restore human-scale assay/forge entrances using complete approved art, captured at real interaction positions."
+  },
+  {
+    "path": "scripts/player/player_controller.gd",
+    "before": "81dee1f486281b26439ac168b39f1614ce6ff98046b87491ca78dd8d14941afc",
+    "after": "e1feffb2e22e25278d928d75eb2de318b3e66c7520c733478c8fd9285e5d89a5",
+    "reason": "Expose actual movement to real-motion evidence; gameplay unchanged."
+  },
+  {
+    "path": "scripts/player/player_visual.gd",
+    "before": "4c9cd25ab7ed8c330214b4cb0fbd303d69bd06e937e8cc77e7ea35ecf9f26e01",
+    "after": "5035feb52cf5c694754ef5effa200ed7e305d9ac2a6114ec8e6d2c72fecac1ff",
+    "reason": "Record actual native state and local frame for transition review; current v28 motion remains unchanged."
+  },
+  {
+    "path": "scripts/lighting/cave_light_occluders.gd",
+    "before": "50f9817f278fc21b08cf0557508879c9323cc06f8f01c65d7478ae47d943f32f",
+    "after": "f4b01cf5ede3b6d2e1e5aea140bf8f4e608e9207b2f6080c891c32dade86c103",
+    "reason": "Merge vertically adjacent identical occluder spans without changing their solid union; controlled scene shows equivalent light. No measurable FPS gain claimed."
+  }
+]

@@ -337,7 +337,8 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 		bag_size
 	)
 	var gold_width: = 150.0 if iphone else 82.0
-	var gold_rect: = Rect2(viewport_size.x - right - gold_width, top, gold_width, touch_target)
+	var companion_rect: = Rect2(guide_rect.end.x + gap, top, 86.0 if iphone else 52.0, touch_target)
+	var gold_rect: = Rect2(companion_rect.end.x + gap if iphone else viewport_size.x - right - gold_width, top, gold_width, touch_target)
 	var badge_size: = Vector2(42, 30) if iphone else Vector2(27, 20)
 	var bag_count_rect: = Rect2(bag_rect.end.x - badge_size.x + 4, bag_rect.end.y - badge_size.y + 3, badge_size.x, badge_size.y)
 	var objective_width: = 660.0 if iphone else 620.0
@@ -349,29 +350,29 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 
 	var context_size: = IPHONE_CONTEXT_SIZE if iphone else DEFAULT_CONTEXT_SIZE
 	var context_rect: = Rect2(
-		mine_rect.end.x - context_size.x,
-		mine_rect.position.y - action_gap - context_size.y,
+		bag_rect.position.x - action_gap - context_size.x if iphone else mine_rect.end.x - context_size.x,
+		mine_rect.position.y + (mine_size - context_size.y) * 0.5 if iphone else mine_rect.position.y - action_gap - context_size.y,
 		context_size.x,
 		context_size.y
 	)
-	var goal_width: = 340.0 if iphone else 286.0
-	var goal_height: = (76.0 + 33.0 * _progression_row_count) if iphone else (62.0 + 27.0 * _progression_row_count)
-	if iphone and _progression_row_count >= 5:
-		goal_height -= 27.0
-	var progression_rect: = Rect2(viewport_size.x - right - goal_width, gold_rect.end.y + 10.0, goal_width, goal_height)
-	var minimap_size: = Vector2(246, 136) if iphone else Vector2(184, 106)
+	var goal_width: = 400.0 if iphone else 286.0
+	var goal_rows: int = ceili(float(_progression_row_count) / 2.0) if _progression_row_count > 2 else _progression_row_count
+	var goal_height: = maxf(76.0, 50.0 + 34.0 * goal_rows) if iphone else (62.0 + 27.0 * _progression_row_count)
+	var progression_rect: = Rect2(viewport_size.x - right - goal_width, top if iphone else gold_rect.end.y + 10.0, goal_width, goal_height)
+	var minimap_size: = Vector2(188, 96) if iphone else Vector2(184, 106)
 	var minimap_rect: = Rect2(progression_rect.position.x - gap - minimap_size.x, progression_rect.position.y, minimap_size.x, minimap_size.y)
 	var onboarding_top: = maxf(progression_rect.end.y, minimap_rect.end.y) + 12.0
 	var onboarding_bottom: = minf(mine_rect.position.y, bag_rect.position.y) - 12.0
 	var onboarding_rect: = Rect2(left, onboarding_top, context_rect.position.x - left - 12.0, maxf(0.0, onboarding_bottom - onboarding_top))
-	var status_size: = Vector2(680, 50) if iphone else Vector2(580, 28)
-	var status_rect: = Rect2((viewport_size.x - status_size.x) * 0.5, viewport_size.y - bottom - status_size.y, status_size.x, status_size.y)
+	var status_size: = Vector2(minf(680.0, context_rect.position.x - left - 12.0), 50) if iphone else Vector2(580, 28)
+	var status_rect: = Rect2(left if iphone else (viewport_size.x - status_size.x) * 0.5, viewport_size.y - bottom - status_size.y, status_size.x, status_size.y)
 	return {
 		"iphone": iphone,
 		"touch_target": touch_target,
 		"safe_rect": Rect2(left, top, viewport_size.x - left - right, viewport_size.y - top - bottom),
 		"menu": menu_rect,
 		"guide": guide_rect,
+		"companion": companion_rect,
 		"gold": gold_rect,
 		"mine": mine_rect,
 		"bag": bag_rect,
