@@ -1,7 +1,6 @@
 extends Control
 
 signal movement_changed(direction: Vector2)
-signal build_pointer(screen_position: Vector2, pressed: bool, dragging: bool)
 
 const DESIGN_OUTER_RADIUS: = 52.0
 const DESIGN_INPUT_RADIUS: = 32.0
@@ -20,8 +19,6 @@ var active_pointer: = -2
 var input_origin: = Vector2.ZERO
 var origin: = Vector2.ZERO
 var knob: = Vector2.ZERO
-var build_mode: = false
-var active_build_pointer: = -2
 var outer_radius: = DESIGN_OUTER_RADIUS
 var input_radius: = DESIGN_INPUT_RADIUS
 var knob_radius: = 22.0
@@ -37,9 +34,6 @@ func _ready() -> void :
 
 
 func _gui_input(event: InputEvent) -> void :
-	if build_mode:
-		_handle_build_input(event)
-		return
 	if event is InputEventScreenTouch:
 		var touch: = event as InputEventScreenTouch
 		if touch.pressed and active_pointer == -2 and _is_in_movement_zone(touch.position):
@@ -73,49 +67,6 @@ func _gui_input(event: InputEvent) -> void :
 func cancel() -> void :
 	if active_pointer != -2:
 		_end()
-
-
-func set_build_mode(enabled: bool) -> void :
-	if build_mode == enabled:
-		return
-	cancel()
-	build_mode = enabled
-	active_build_pointer = -2
-	queue_redraw()
-
-
-func _handle_build_input(event: InputEvent) -> void :
-	if event is InputEventScreenTouch:
-		var touch: = event as InputEventScreenTouch
-		if touch.pressed and active_build_pointer == -2:
-			active_build_pointer = touch.index
-			build_pointer.emit(touch.position, true, false)
-			accept_event()
-		elif not touch.pressed and touch.index == active_build_pointer:
-			build_pointer.emit(touch.position, false, false)
-			active_build_pointer = -2
-			accept_event()
-	elif event is InputEventScreenDrag:
-		var drag: = event as InputEventScreenDrag
-		if drag.index == active_build_pointer:
-			build_pointer.emit(drag.position, true, true)
-			accept_event()
-	elif event is InputEventMouseButton:
-		var button: = event as InputEventMouseButton
-		if button.button_index != MOUSE_BUTTON_LEFT:
-			return
-		if button.pressed and active_build_pointer == -2:
-			active_build_pointer = -1
-			build_pointer.emit(button.position, true, false)
-			accept_event()
-		elif not button.pressed and active_build_pointer == -1:
-			build_pointer.emit(button.position, false, false)
-			active_build_pointer = -2
-			accept_event()
-	elif event is InputEventMouseMotion and active_build_pointer == -1:
-		var motion: = event as InputEventMouseMotion
-		build_pointer.emit(motion.position, true, true)
-		accept_event()
 
 
 func _begin(pointer: int, position: Vector2) -> void :
@@ -171,7 +122,7 @@ func _end() -> void :
 
 
 func _draw() -> void :
-	if build_mode or active_pointer == -2:
+	if active_pointer == -2:
 		return
 
 	draw_circle(origin + Vector2(0.0, 4.0), outer_radius, Color(MOSS_DEEP, 0.3))

@@ -2,17 +2,14 @@
   "source": "Ever-Deeper",
   "source_version": "0.38.1",
   "source_commit": "d175489fd0bbd3d934481493eb9b4b7a668f461e",
-  "game_data_sha256": "fa93b98d3ff51dbce95b5a290ac5d3e84736a35e9e2103bcd833c9707f85d3cf",
+  "game_data_sha256": "120e9739f3ecbf3bb05275213f3485440206658e57069a1830aa465611dff8b2",
   "exported_top_level_keys": [
     "ACHIEVEMENTS_KEY",
     "ACHIEVEMENT_BY_ID",
     "ACHIEVEMENT_DEFINITIONS",
     "ACHIEVEMENT_REASONS",
-    "AUTO_SORT_RADIUS",
     "BASE_MODULE_INTERACT_RADIUS",
     "BIOMES",
-    "CHEST_DEFINITIONS",
-    "CHEST_INTERACT_RADIUS",
     "COIN_DROP",
     "DEPTH2_RESOURCE_PROFILES",
     "DEPTH_ROUTE_LABELS",
@@ -60,7 +57,6 @@
     "STARFORGE_MATERIAL_REQUIRED",
     "STARFORGE_VARIANTS",
     "STATIONS",
-    "STORAGE_CHEST_CAPACITY",
     "SURFACE_BOUNDARIES",
     "VEIN_DEFINITIONS",
     "VEIN_ROCK_LAYOUT",
@@ -68,8 +64,6 @@
   ],
   "omitted_function_routes": [
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.burrower.predicate",
-    "EverDeeperGameData.ACHIEVEMENT_BY_ID.cache_hunter.predicate",
-    "EverDeeperGameData.ACHIEVEMENT_BY_ID.chestmaster.predicate",
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.crowned.predicate",
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.deep_hoard.predicate",
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.deepcore.predicate",
@@ -95,10 +89,8 @@
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.keen_eye.predicate",
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.mineral_crown.predicate",
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.minewalker.predicate",
-    "EverDeeperGameData.ACHIEVEMENT_BY_ID.mobile_base.predicate",
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.moon_unsealed.predicate",
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.moonforged.predicate",
-    "EverDeeperGameData.ACHIEVEMENT_BY_ID.more_storage.predicate",
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.moss_below.predicate",
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.ore_mountain.predicate",
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.pulse_driver.predicate",
@@ -112,7 +104,6 @@
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.sunstruck.predicate",
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.three_hearts.predicate",
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.threefold_star.predicate",
-    "EverDeeperGameData.ACHIEVEMENT_BY_ID.treasure_found.predicate",
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.true_aim.predicate",
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.tunnel_hand.predicate",
     "EverDeeperGameData.ACHIEVEMENT_BY_ID.vein_runner.predicate",
@@ -176,30 +167,19 @@
     "EverDeeperGameData.seededRandom"
   ],
   "parity_counts": {
-    "assets": 263,
+    "assets": 243,
     "biomes": 4,
     "mines": 4,
     "rock_types": 26,
     "pickaxes": 6,
     "drills": 4,
-    "achievements": 50,
-    "chests": 8
+    "achievements": 45
   },
   "assets": [
     {
       "path": "achievements/burrower.png",
       "bytes": 229834,
       "sha256": "843dbf59f0ef93ae9fe27bb4bfbcdbeadcfa1664746bf01d866ebe6626d825c5"
-    },
-    {
-      "path": "achievements/cache_hunter.png",
-      "bytes": 229761,
-      "sha256": "708a37805491222f0d2c3e8b7ec098f5971afc34e8e7dabb24a2c7b9fb5399d3"
-    },
-    {
-      "path": "achievements/chestmaster.png",
-      "bytes": 255675,
-      "sha256": "fbbf6a4b426f4fd51c630d26181a4dedaa99a8fcae4bb9f82acb14676e6439d9"
     },
     {
       "path": "achievements/crowned.png",
@@ -327,11 +307,6 @@
       "sha256": "27c5de371e4159217e7939f8fb6339ef9ac9b85dcc4a5c3dfd849bdd343785cd"
     },
     {
-      "path": "achievements/mobile_base.png",
-      "bytes": 252745,
-      "sha256": "119fdf097c116e5c617dcf8b691811e6a39e9cb008134f3281c29d7028a62483"
-    },
-    {
       "path": "achievements/moon_unsealed.png",
       "bytes": 322540,
       "sha256": "608bbe01c9c9560146d92ba9e6782b62e7d7a34659d75fc67af3e2a4085d6901"
@@ -340,11 +315,6 @@
       "path": "achievements/moonforged.png",
       "bytes": 400582,
       "sha256": "88d9a37e2d733097f8698d029f5c9bc5b3e87fa7ceb074d243082477d774f6f9"
-    },
-    {
-      "path": "achievements/more_storage.png",
-      "bytes": 226369,
-      "sha256": "2bf17a844b5ce36696663803c65ce92604969c76ab88570d6d1761b53d5d4d2e"
     },
     {
       "path": "achievements/moss_below.png",
@@ -410,11 +380,6 @@
       "path": "achievements/threefold_star.png",
       "bytes": 232000,
       "sha256": "86a32c8bc3c459e0aab4a1abad0c997c32b9ef0223dd1a50b907ddf171871f6e"
-    },
-    {
-      "path": "achievements/treasure_found.png",
-      "bytes": 219337,
-      "sha256": "bef8105d685ca4e68ed854aa931dd52e3d05a113660c189a866ceebd224aeea4"
     },
     {
       "path": "achievements/true_aim.png",
@@ -1097,16 +1062,6 @@
       "sha256": "741f3fd0aee5cf0b7ee5ce1fd49e6ed76c2a692487f5c6b61ab87f6ee6e444f0"
     },
     {
-      "path": "surface/astral-cache-closed.png",
-      "bytes": 43367,
-      "sha256": "d096e67873c1a40c3db545b20d7fbc0a361271f72c598ebd44d532c75e420cd3"
-    },
-    {
-      "path": "surface/astral-cache-open.png",
-      "bytes": 40245,
-      "sha256": "110579061bb165cfe84da3a5020e4dc56b133c3daf3365078419ec653cc92078"
-    },
-    {
       "path": "surface/boundary-emberdeep-starfall.png",
       "bytes": 346603,
       "sha256": "e6298a4451a49b51c01106961fd08131bfa0fe16c412a8c4d38af391250996b2"
@@ -1120,36 +1075,6 @@
       "path": "surface/boundary-mossvein-moonglass.png",
       "bytes": 393288,
       "sha256": "cadc48de7e328dbcb7fbaf5c2966c6e211fe2cc7e79e6ec86800dd562fc5e9fb"
-    },
-    {
-      "path": "surface/celestial-coffer-closed.png",
-      "bytes": 63221,
-      "sha256": "9f66e0a04d564476bfc4121f258630afc35013a01a359c8ed0221d43948e8dc5"
-    },
-    {
-      "path": "surface/celestial-coffer-open.png",
-      "bytes": 53719,
-      "sha256": "ad6c267d60f1726d68c5f6eb6d02066ce41a304504995a1a17d0de425a069297"
-    },
-    {
-      "path": "surface/crystal-cache-closed.png",
-      "bytes": 62638,
-      "sha256": "42cabcc7c22f0bb67cee33f8843a40725639add0d99052818aab958545b28d39"
-    },
-    {
-      "path": "surface/crystal-cache-open.png",
-      "bytes": 59614,
-      "sha256": "7bda7a6b01de5b2ef916be886eca8130dde813f1c1b21e8500412fa26268ef84"
-    },
-    {
-      "path": "surface/ember-vault-closed.png",
-      "bytes": 137577,
-      "sha256": "46400f19ba35c10defd89a8a767e392fbe89e4d0e2eaba4b4aab3d2dc5a0fe0f"
-    },
-    {
-      "path": "surface/ember-vault-open.png",
-      "bytes": 130130,
-      "sha256": "8a72b847f8513f656597e91875479a95e129c0ada53ecbd65175a60079652d57"
     },
     {
       "path": "surface/emberdeep-fault-bed.png",
@@ -1187,16 +1112,6 @@
       "sha256": "25e23c68a679a87f6ef531a665e59bc76605a7007b48b07f7d44a416bc447adb"
     },
     {
-      "path": "surface/foundry-lockbox-closed.png",
-      "bytes": 139231,
-      "sha256": "bd9694ce704e4977be07914bd2d13e5550263e805dda9e2dfd64a18b9de29478"
-    },
-    {
-      "path": "surface/foundry-lockbox-open.png",
-      "bytes": 74479,
-      "sha256": "cd90f2813ac269e4a7e134333ce62a73806cf4b6bb1523ee32f8fa04e4635328"
-    },
-    {
       "path": "surface/moonglass-bloom-bed.png",
       "bytes": 67429,
       "sha256": "15119ab33ce48a60bd00115f0d75ad234cb4fdfb61c5e3a6940b9cdf16d680b6"
@@ -1220,16 +1135,6 @@
       "path": "surface/moonglass-ground.png",
       "bytes": 166037,
       "sha256": "91fcf2c686b7b25d76e144bb5cfd6f318864ed79d99217bab30b020c16bf9425"
-    },
-    {
-      "path": "surface/moonglass-reliquary-closed.png",
-      "bytes": 70519,
-      "sha256": "ee8609589ec737ee90a047c55516911ed35fbaf2af1739056e13ed30a8b2bda5"
-    },
-    {
-      "path": "surface/moonglass-reliquary-open.png",
-      "bytes": 64007,
-      "sha256": "bac9b787f662e6997e842a05d1d40ff206f8777e675f4caf2c54d3547bcbc656"
     },
     {
       "path": "surface/mossvein-ground.png",
@@ -1295,21 +1200,6 @@
       "path": "surface/starforge-station.png",
       "bytes": 84636,
       "sha256": "7a420173ef9297cc220b42bf2436e77c0a20c53e3ac5dc4217676278e9a05848"
-    },
-    {
-      "path": "surface/storage-chest.png",
-      "bytes": 70433,
-      "sha256": "9adba8bf01a34acd9e1c9ce137964477cb3679b943c5dab22048405fa4cf5257"
-    },
-    {
-      "path": "surface/treasure-cache-closed.png",
-      "bytes": 85277,
-      "sha256": "e4f206067d5224bc9f968ab9bb5e2ca5c887ba21bf9043459e2893f0c4d9aae4"
-    },
-    {
-      "path": "surface/treasure-cache-open.png",
-      "bytes": 83112,
-      "sha256": "0c266b1a05be6572f2426d30d7e4e72f382fc7c31af269d1f185833f24efbeb8"
     },
     {
       "path": "surface/wayfarer-shop.png",

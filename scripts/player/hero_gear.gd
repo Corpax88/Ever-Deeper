@@ -28,6 +28,20 @@ static var manifest: Dictionary = {}
 static var pending: Array[String] = []
 static var load_error: String = ""
 
+static func shutdown() -> void:
+	# Finish owned loader requests before the scene tree and renderer disappear.
+	for path in pending:
+		var state: = ResourceLoader.load_threaded_get_status(path)
+		if state in [ResourceLoader.THREAD_LOAD_IN_PROGRESS, ResourceLoader.THREAD_LOAD_LOADED]:
+			ResourceLoader.load_threaded_get(path)
+	pending.clear()
+	textures.clear()
+	manifest.clear()
+	current_gear = ""
+	wanted_gear = ""
+	loading_gear = ""
+	load_error = ""
+
 static func request(gear: String) -> void:
 	wanted_gear = gear
 	if pending.is_empty() and current_gear != wanted_gear:

@@ -418,17 +418,6 @@ const MINE_ASSETS: = {
 	},
 }
 
-const CHEST_ASSETS: = {
-	"moss_supply": {"closed": "res://assets/surface/treasure-cache-closed.png", "open": "res://assets/surface/treasure-cache-open.png"},
-	"moss_ironbound": {"closed": "res://assets/surface/treasure-cache-closed.png", "open": "res://assets/surface/treasure-cache-open.png"},
-	"moon_cache": {"closed": "res://assets/surface/crystal-cache-closed.png", "open": "res://assets/surface/crystal-cache-open.png"},
-	"moon_reliquary": {"closed": "res://assets/surface/moonglass-reliquary-closed.png", "open": "res://assets/surface/moonglass-reliquary-open.png"},
-	"ember_cache": {"closed": "res://assets/surface/foundry-lockbox-closed.png", "open": "res://assets/surface/foundry-lockbox-open.png"},
-	"ember_vault": {"closed": "res://assets/surface/ember-vault-closed.png", "open": "res://assets/surface/ember-vault-open.png"},
-	"star_cache": {"closed": "res://assets/surface/astral-cache-closed.png", "open": "res://assets/surface/astral-cache-open.png"},
-	"star_coffer": {"closed": "res://assets/surface/celestial-coffer-closed.png", "open": "res://assets/surface/celestial-coffer-open.png"},
-}
-
 var _source: Dictionary
 
 
@@ -500,7 +489,6 @@ func world(world_id: String) -> Dictionary:
 	surface["ground_blend_width"] = GROUND_BLEND_WIDTH
 	surface["road_crossfade_width"] = ROAD_CROSSFADE_WIDTH
 	var entry_gate: = _entry_gate(world_id)
-	var chests: = _chests_for_world(world_id)
 	return {
 		"index": index,
 		"id": world_id,
@@ -518,7 +506,6 @@ func world(world_id: String) -> Dictionary:
 			"drill_gated": Dictionary(DRILL_GATED_RESOURCES[mine_id]).duplicate(true),
 		},
 		"surface_vein": _surface_vein(String(surface["surface_vein_id"])),
-		"chests": chests,
 		"mine_assets": Dictionary(MINE_ASSETS[world_id]).duplicate(true),
 	}
 
@@ -588,18 +575,6 @@ func _surface_vein(vein_id: String) -> Dictionary:
 	return {}
 
 
-func _chests_for_world(world_id: String) -> Array:
-	var result: Array = []
-	for chest_value in _source["CHEST_DEFINITIONS"]:
-		var chest: = Dictionary(chest_value)
-		if String(chest["biome"]) != world_id:
-			continue
-		var copy: = chest.duplicate(true)
-		copy["assets"] = Dictionary(CHEST_ASSETS[String(chest["id"])]).duplicate(true)
-		result.append(copy)
-	return result
-
-
 func _state_value(state: Dictionary, source_key: String, default_value: Variant) -> Variant:
 	if state.has(source_key):
 		return state[source_key]
@@ -635,7 +610,7 @@ func _validate_source_contract() -> void :
 	var required_keys: = [
 		"WORLD", "MINE_DEFINITIONS", "MINE_SCENES", "MINE_DEPTH_PROFILES",
 		"DEPTH2_RESOURCE_PROFILES", "BIOMES", "SURFACE_BOUNDARIES",
-		"MINE_DISCOVERY_PROFILES", "PICKAXES", "STATIONS", "CHEST_DEFINITIONS",
+		"MINE_DISCOVERY_PROFILES", "PICKAXES", "STATIONS",
 		"VEIN_DEFINITIONS", "GATE_COST", "EMBER_GATE_COST",
 	]
 	for key in required_keys:

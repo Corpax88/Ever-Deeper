@@ -17,26 +17,11 @@ signal hub_exit_requested
 signal deep_elevator_checked
 signal deep_elevator_enter_requested
 signal deep_elevator_status_changed(status: Dictionary)
-signal belt_status_changed(snapshot: Dictionary)
-signal belt_transaction_committed(transaction: Dictionary)
 signal message_changed(message: String)
 signal workshop_panel_requested(workshop_id: String)
 signal workshop_action_committed(transaction: Dictionary)
-signal build_mode_changed(active: bool)
-signal build_tool_changed(tool: String)
-signal build_transaction_committed(transaction: Dictionary)
-signal build_rejected(reason: String, request: Dictionary)
-signal refund_committed(refund: Dictionary)
-signal module_packed(module_id: String, kind: String)
-signal module_placed(module_id: String, kind: String, position: Vector2)
-signal module_activated(module_id: String, kind: String)
-signal runtime_state_changed(hub_state: Dictionary, base_state: Dictionary, economy_state: Dictionary)
 
 const WORLD_SIZE: = Vector2(1440, 960)
-const GRID_ORIGIN: = Vector2(192, 240)
-const GRID_TILE_SIZE: = 48.0
-const GRID_COLS: = 22
-const GRID_ROWS: = 10
 const SURFACE_LIFT: = Vector2(240, 820)
 const SURFACE_LIFT_RADIUS: = 126.0
 const DEEP_ELEVATOR: = Vector2(720, 142)
@@ -82,37 +67,6 @@ const WORKSHOP_PRESENTATION_DURATIONS: Dictionary = {
 	"upgrade": 1.25,
 	"equip": 0.9,
 }
-const MODULE_INTERACT_RADIUS: = 118.0
-const AUTO_SORT_RADIUS: = 360.0
-const STORAGE_TYPE_CAPACITY: = 20
-const PLAYER_BUILD_CLEARANCE: = 68.0
-const WALL_COST_STONE: = 5
-const LAMP_COST_GOLD: = 80
-const BELT_TOOL_IDS: = ["belt_up", "belt_right", "belt_down", "belt_left"]
-const VALID_BUILD_TOOLS: = [
-	"wall", "lamp", "storage", "forge", "sell",
-	"belt_up", "belt_right", "belt_down", "belt_left", "erase",
-]
-const BELT_DIRECTION_BY_TOOL: = {
-	"belt_up": "up",
-	"belt_right": "right",
-	"belt_down": "down",
-	"belt_left": "left",
-}
-const BELT_LOADER_ID: = "hub_loader"
-const BELT_LOADER_POSITION: = Vector2(264, 648)
-const BELT_LOADER_CELL: = Vector2i(3, 8)
-const BELT_LOADER_RADIUS: = 104.0
-const BELT_ELEVATOR_SINK_CELL: = Vector2i(12, 0)
-const BELT_SEGMENT_CAPACITY: = 4
-const BELT_SIMULATION_HZ: = 8.0
-const BELT_VISUAL_HZ: = 30.0
-const BELT_MAX_STEPS_PER_FRAME: = 2
-const BELT_MAX_DRAW_PACKETS: = 48
-const BELT_MAX_DRAW_SEGMENTS: = 176
-const BELT_CULL_MARGIN: = 112.0
-const MAX_ACTIVE_HUB_LAMP_LIGHTS: = 4
-const HUB_LAMP_LIGHT_REFRESH_DISTANCE: = 120.0
 const ELEVATOR_RESOURCE_ORDER: = [
 	"ambercore", "lunacore", "furnaceheart", "singularity",
 ]
@@ -130,15 +84,10 @@ const ELEVATOR_SOCKET_OFFSETS: = {
 }
 
 const PORTAL_TEXTURE: = preload("res://assets/voidstar/depth-portal.png")
-const SELL_TEXTURE: = preload("res://assets/surface/assay-station.png")
-const FORGE_TEXTURE: = preload("res://assets/surface/forge-station.png")
-const STORAGE_TEXTURE: = preload("res://assets/surface/storage-chest.png")
 const HUB_FLOOR_TEXTURE: = preload("res://assets/voidstar/floor.png")
 const HUB_WALL_TEXTURE: = preload("res://assets/voidstar/wall.png")
 const HUB_ROUTE_TEXTURE: = preload("res://assets/starfall/route-marker.png")
 const HUB_LAMP_TEXTURE: = preload("res://assets/entrances/depth-work-lamp.png")
-const BELT_SEGMENT_TEXTURE: = preload("res://assets/hub/ore-conveyor-segment.png")
-const BELT_LOADER_TEXTURE: = preload("res://assets/hub/ore-belt-loader.png")
 const DEEP_ELEVATOR_TERMINAL_TEXTURE: = preload("res://assets/hub/deep-elevator-terminal.png")
 const TOOL_FORGE_WORKSHOP_TEXTURE_PATH: = "res://assets/endless/workshop-tool-forge-v1.png"
 const LIGHT_LAB_WORKSHOP_TEXTURE_PATH: = "res://assets/endless/workshop-light-lab-v1.png"
@@ -165,27 +114,9 @@ const FOUNDATION_LIGHT_POSITIONS: = [
 var active: = false
 var active_context: = ""
 var hub_exit_context: = false
-var build_mode: = false
-var selected_build_tool: = "wall"
-var preview_cell: = Vector2i(-1, -1)
-var hub_state: Dictionary = {"tiles": []}
-var base_state: Dictionary = {}
-var economy_state: Dictionary = {"gold": 0, "cargo": {}}
-var belt_state: Dictionary = {}
 var elevator_status: Dictionary = {}
-var callbacks: Dictionary = {}
 var movement_speed_multiplier: = 1.0
-var _backend_sync_guard: = false
-var _belt_accumulator: = 0.0
-var _belt_visual_accumulator: = 0.0
-var _belt_previous_cells: Dictionary = {}
-var _drop_textures: Dictionary = {}
-var _last_drawn_packets: = 0
-var _last_drawn_segments: = 0
 var shared_hub_light_texture: Texture2D
-var active_hub_lamp_light_ids: Array[String] = []
-var last_hub_lamp_light_refresh_position: = Vector2(INF, INF)
-var backend_refresh_pending: = false
 var interior_initialized: = false
 var interior_build_count: = 0
 var _relic_rope_points: Array[Vector2] = []
@@ -216,9 +147,6 @@ func _ready() -> void :
 	static_light_field = StaticLightFieldScript.new()
 	add_child(static_light_field)
 	_draw_canvas = self
-	base_state = _sanitize_base_state(base_state)
-	hub_state = _sanitize_hub_state(hub_state)
-	economy_state = _sanitize_economy_state(economy_state)
 	_configure_player(PLAYER_SPAWN)
 	player.set_facing(Vector2.RIGHT)
 	player.moved.connect(_on_player_moved)
@@ -229,76 +157,30 @@ func _ready() -> void :
 func _ensure_interior_initialized() -> void :
 	if interior_initialized:
 		return
-	_load_drop_textures()
-	_relocate_legacy_hub_modules()
 	_refresh_backend_state(false, false)
 	_build_lighting()
-	backend_refresh_pending = false
 	interior_initialized = true
 	interior_build_count += 1
 	queue_redraw()
 
 
-func _relocate_legacy_hub_modules() -> void :
-	var changed_state: = false
-	var authored_positions: Dictionary = {
-		"forge": Vector2(455, 250), "sell": Vector2(205, 250),
-	}
-	for module_id in ["forge", "sell"]:
-		var module: Dictionary = Dictionary(base_state.get(module_id, {}))
-		if String(module.get("scene", "")) != "hub":
-			continue
-		var position: Vector2 = Vector2(authored_positions[module_id])
-		module["scene"] = "surface"
-		module["depth"] = 1
-		module["x"] = position.x
-		module["y"] = position.y
-		module["packed"] = false
-		base_state[module_id] = module
-		changed_state = true
-	var chests: Array = Array(base_state.get("chests", []))
-	for index in range(chests.size()):
-		var chest: Dictionary = Dictionary(chests[index])
-		if String(chest.get("scene", "")) != "hub":
-			continue
-		var column: = index % 5
-		var row: = index / 5
-		chest["scene"] = "surface"
-		chest["depth"] = 1
-		chest["x"] = 335.0 + float(column) * 126.0
-		chest["y"] = 390.0 + float(row) * 112.0
-		chest["packed"] = false
-		chests[index] = chest
-		changed_state = true
-	base_state["chests"] = chests
-	if changed_state:
-		runtime_state_changed.emit(
-			hub_state.duplicate(true), base_state.duplicate(true), economy_state.duplicate(true)
-		)
-
-
 func set_active(enabled: bool, entering: bool = false) -> void :
 	if enabled:
+		_invalidate_endless_cache()
 		_ensure_interior_initialized()
 	active = enabled
 	visible = enabled
 	process_mode = Node.PROCESS_MODE_INHERIT if enabled else Node.PROCESS_MODE_DISABLED
-	player.control_enabled = enabled and not build_mode
+	player.control_enabled = enabled
 	player.camera.enabled = enabled
 	if enabled:
-		if backend_refresh_pending:
-			backend_refresh_pending = false
-			_refresh_backend_state(false)
+		_refresh_backend_state(false)
 		player.prepare_visual_cache()
 	else:
 		player.release_visual_cache()
 	if not enabled:
 		_clear_workshop_presentation("inactive")
 		clear_workshop_panel_preview()
-		if build_mode:
-			build_mode = false
-			build_mode_changed.emit(false)
-		preview_cell = Vector2i(-1, -1)
 		player.set_external_movement(Vector2.ZERO)
 		_set_context("")
 	if entering:
@@ -323,7 +205,7 @@ func restore_position(position: Vector2) -> void :
 
 
 func set_external_movement(direction: Vector2) -> void :
-	player.set_external_movement(Vector2.ZERO if build_mode else direction)
+	player.set_external_movement(direction)
 
 
 func set_movement_speed_multiplier(multiplier: float) -> void :
@@ -421,46 +303,6 @@ func perform_context() -> String:
 	return ""
 
 
-func load_runtime_state(next_hub_state: Dictionary, next_base_state: Dictionary, next_economy_state: Dictionary = {}) -> void :
-	_invalidate_endless_cache()
-	hub_state = _sanitize_hub_state(next_hub_state)
-	base_state = _sanitize_base_state(next_base_state)
-	economy_state = _sanitize_economy_state(next_economy_state)
-	if not interior_initialized:
-		backend_refresh_pending = true
-		return
-	_refresh_backend_state(true, false)
-	if is_node_ready():
-		_build_lighting()
-		if active and not build_mode:
-			_update_context(player.global_position)
-	queue_redraw()
-
-
-func configure_state(next_hub_state: Dictionary, next_base_state: Dictionary, next_economy_state: Dictionary = {}) -> void :
-	load_runtime_state(next_hub_state, next_base_state, next_economy_state)
-
-
-func set_build_callbacks(next_callbacks: Dictionary) -> void :
-	callbacks = next_callbacks.duplicate()
-
-
-func runtime_state_snapshot() -> Dictionary:
-	return {
-		"hub": hub_state.duplicate(true),
-		"base": base_state.duplicate(true),
-		"economy": economy_state.duplicate(true),
-	}
-
-
-func build_tool_ids() -> Array[String]:
-	return []
-
-
-func belt_build_tool_ids() -> Array[String]:
-	return []
-
-
 func deep_elevator_snapshot() -> Dictionary:
 	var result: = elevator_status.duplicate(true)
 	result["position"] = DEEP_ELEVATOR
@@ -469,46 +311,11 @@ func deep_elevator_snapshot() -> Dictionary:
 	return result
 
 
-func belt_runtime_snapshot() -> Dictionary:
-	return {
-		"enabled": false,
-		"state": {},
-		"tools": belt_build_tool_ids(),
-		"loader": {},
-		"sink": {},
-		"performance": belt_performance_snapshot(),
-	}
-
-
-func belt_performance_snapshot() -> Dictionary:
-	return {
-		"enabled": false,
-		"simulation_hz": BELT_SIMULATION_HZ,
-		"visual_hz": BELT_VISUAL_HZ,
-		"max_steps_per_frame": 0,
-		"max_draw_packets": 0,
-		"max_draw_segments": 0,
-		"cull_margin": 0.0,
-		"last_drawn_packets": 0,
-		"last_drawn_segments": 0,
-		"total_packets": 0,
-		"total_segments": 0,
-	}
-
-
 func runtime_contract() -> Dictionary:
 	return {
 		"initialized": interior_initialized,
 		"build_count": interior_build_count,
 		"world_size": WORLD_SIZE,
-		"grid": {
-			"origin": GRID_ORIGIN,
-			"tile_size": GRID_TILE_SIZE,
-			"cols": GRID_COLS,
-			"rows": GRID_ROWS,
-			"first_center": cell_center(0, 0),
-			"last_center": cell_center(GRID_COLS - 1, GRID_ROWS - 1),
-		},
 		"stations": {
 			"surface_lift": {"position": SURFACE_LIFT, "radius": SURFACE_LIFT_RADIUS},
 			"deep_elevator": {
@@ -526,10 +333,6 @@ func runtime_contract() -> Dictionary:
 			"workshops": _workshop_runtime_snapshot(),
 		},
 		"player_spawn": PLAYER_SPAWN,
-		"costs": {},
-		"build_tools": build_tool_ids(),
-		"belt_tools": belt_build_tool_ids(),
-		"freeform_building": false,
 		"relic_rope": {"points": RELIC_ROPE_POINTS, "segment_length": RELIC_ROPE_SEGMENT_LENGTH},
 		"deep_elevator_online": bool(elevator_status.get("powered", false)),
 		"deep_elevator_repaired": bool(elevator_status.get("repaired", false)),
@@ -537,7 +340,6 @@ func runtime_contract() -> Dictionary:
 		"assets": {
 			"surface_lift": "res://assets/voidstar/depth-portal.png",
 			"deep_elevator": "res://assets/hub/deep-elevator-terminal.png",
-			"workshop_forge": "res://assets/surface/forge-station.png",
 			"floor": "res://assets/voidstar/floor.png",
 			"wall_frame": "res://assets/voidstar/wall.png",
 			"route_inlay": "res://assets/starfall/route-marker.png",
@@ -587,334 +389,6 @@ func lighting_snapshot() -> Dictionary:
 	}
 
 
-func set_build_mode(enabled: bool) -> bool:
-	var _requested: = enabled
-	if not build_mode:
-		return false
-	build_mode = false
-	preview_cell = Vector2i(-1, -1)
-	player.control_enabled = active
-	player.set_external_movement(Vector2.ZERO)
-	_update_context(player.global_position)
-	build_mode_changed.emit(false)
-	queue_redraw()
-	return false
-
-
-func select_build_tool(tool: String) -> bool:
-	var _requested: = tool
-	return false
-
-
-func set_preview_world(world_position: Vector2) -> bool:
-	var _requested: = world_position
-	preview_cell = Vector2i(-1, -1)
-	return false
-
-
-func cell_center(col: int, row: int) -> Vector2:
-	return GRID_ORIGIN + (Vector2(col, row) + Vector2(0.5, 0.5)) * GRID_TILE_SIZE
-
-
-func cell_at_world(world_position: Vector2) -> Vector2i:
-	var cell: = Vector2i(
-		floori((world_position.x - GRID_ORIGIN.x) / GRID_TILE_SIZE),
-		floori((world_position.y - GRID_ORIGIN.y) / GRID_TILE_SIZE)
-	)
-	return cell if _cell_in_bounds(cell.x, cell.y) else Vector2i(-1, -1)
-
-
-func build_cost(kind: String) -> Dictionary:
-	match kind:
-		"wall":
-			return {"resource": "stone", "amount": WALL_COST_STONE}
-		"lamp":
-			return {"gold": LAMP_COST_GOLD}
-		"storage":
-			return {"gold": storage_cost()}
-	return {}
-
-
-func storage_cost() -> int:
-	var chest_count: = Array(base_state.get("chests", [])).size()
-	return roundi(250.0 * pow(1.65, float(maxi(0, chest_count - 1))) / 10.0) * 10
-
-
-func can_place(kind: String, col: int, row: int) -> Dictionary:
-	var request: = {"action": "place", "kind": kind, "col": col, "row": row}
-	if not _freeform_building_enabled():
-		return {"ok": false, "reason": "freeform_building_removed", "request": request}
-	if not active or not build_mode:
-		return {"ok": false, "reason": "build_mode_inactive", "request": request}
-	if kind not in ["wall", "lamp", "storage"] and kind not in BELT_TOOL_IDS:
-		return {"ok": false, "reason": "unsupported_building", "request": request}
-	if not _cell_in_bounds(col, row):
-		return {"ok": false, "reason": "outside_grid", "request": request}
-	if not _occupant_at_cell(col, row).is_empty():
-		return {"ok": false, "reason": "occupied", "request": request}
-	if cell_center(col, row).distance_to(player.global_position) < PLAYER_BUILD_CLEARANCE:
-		return {"ok": false, "reason": "player_clearance", "request": request}
-	var cost: = build_cost(kind)
-	if cost.has("resource") and int(_cargo().get(String(cost.resource), 0)) < int(cost.amount):
-		return {"ok": false, "reason": "insufficient_resource", "request": request, "cost": cost}
-	if cost.has("gold") and int(economy_state.get("gold", 0)) < int(cost.gold):
-		return {"ok": false, "reason": "insufficient_gold", "request": request, "cost": cost}
-	return {"ok": true, "request": request, "cost": cost, "position": cell_center(col, row)}
-
-
-func place_selected_cell(col: int, row: int) -> bool:
-	if not _freeform_building_enabled():
-		_reject("freeform_building_removed", {"action": "place", "col": col, "row": row})
-		return false
-	if selected_build_tool == "erase":
-		return remove_cell(col, row)
-	if selected_build_tool in ["forge", "sell"]:
-		return place_module(selected_build_tool, col, row)
-	if selected_build_tool in BELT_TOOL_IDS:
-		return place_belt_segment(selected_build_tool, col, row)
-	return place_building(selected_build_tool, col, row)
-
-
-func place_at_world(kind: String, world_position: Vector2) -> bool:
-	if not _freeform_building_enabled():
-		_reject("freeform_building_removed", {"action": "place", "kind": kind, "position": world_position})
-		return false
-	var cell: = cell_at_world(world_position)
-	if cell == Vector2i(-1, -1):
-		_reject("outside_grid", {"action": "place", "kind": kind, "position": world_position})
-		return false
-	if kind == "erase":
-		return remove_cell(cell.x, cell.y)
-	if kind in ["forge", "sell"]:
-		return place_module(kind, cell.x, cell.y)
-	if kind in BELT_TOOL_IDS:
-		return place_belt_segment(kind, cell.x, cell.y)
-	return place_building(kind, cell.x, cell.y)
-
-
-func place_belt_segment(tool_id: String, col: int, row: int) -> bool:
-	if not _freeform_building_enabled():
-		_reject("freeform_building_removed", {"action": "place_belt", "tool": tool_id, "col": col, "row": row})
-		return false
-	var validation: = can_place(tool_id, col, row)
-	if not bool(validation.get("ok", false)):
-		_reject(String(validation.get("reason", "belt_unavailable")), Dictionary(validation.request))
-		return false
-	var direction: = String(BELT_DIRECTION_BY_TOOL.get(tool_id, ""))
-	var result: Dictionary = RunState.configure_hub_belt_segment(
-		col, row, direction, BELT_SEGMENT_CAPACITY
-	)
-	if not bool(result.get("ok", false)):
-		_reject(String(result.get("reason", "belt_unavailable")), {
-			"action": "place_belt", "tool": tool_id, "col": col, "row": row,
-		})
-		return false
-	_refresh_backend_state()
-	var transaction: = {
-		"action": "place_belt",
-		"kind": "belt",
-		"tool": tool_id,
-		"direction": direction,
-		"cell": Vector2i(col, row),
-		"position": cell_center(col, row),
-		"cost": {},
-		"canonical": true,
-	}
-	belt_transaction_committed.emit(transaction.duplicate(true))
-	_commit_transaction(transaction)
-	queue_redraw()
-	return true
-
-
-func place_building(kind: String, col: int, row: int) -> bool:
-	if not _freeform_building_enabled():
-		_reject("freeform_building_removed", {"action": "place", "kind": kind, "col": col, "row": row})
-		return false
-	var validation: = can_place(kind, col, row)
-	if not bool(validation.ok):
-		_reject(String(validation.reason), Dictionary(validation.request))
-		return false
-	var cost: Dictionary = Dictionary(validation.cost)
-	_apply_cost(cost)
-	var transaction: = {
-		"action": "place",
-		"kind": kind,
-		"cell": Vector2i(col, row),
-		"position": cell_center(col, row),
-		"cost": cost.duplicate(true),
-	}
-	if kind in ["wall", "lamp"]:
-		var tiles: Array = Array(hub_state.get("tiles", []))
-		tiles.append({"col": col, "row": row, "kind": kind})
-		hub_state["tiles"] = tiles
-	else:
-		var next_id: = maxi(2, int(base_state.get("nextChestId", 2)))
-		var module: = {
-			"id": "storage-%d" % next_id,
-			"kind": "storage",
-			"scene": "hub",
-			"depth": 1,
-			"x": cell_center(col, row).x,
-			"y": cell_center(col, row).y,
-			"packed": false,
-			"items": _empty_resource_store(),
-		}
-		var chests: Array = Array(base_state.get("chests", []))
-		chests.append(module)
-		base_state["chests"] = chests
-		base_state["nextChestId"] = next_id + 1
-		transaction["module"] = module.duplicate(true)
-		module_placed.emit(String(module.id), "storage", Vector2(module.x, module.y))
-		_call_callback("module_placed", transaction)
-	_commit_transaction(transaction)
-	_build_lighting()
-	queue_redraw()
-	return true
-
-
-func place_module(module_id: String, col: int, row: int) -> bool:
-	if not _freeform_building_enabled():
-		_reject("freeform_building_removed", {
-			"action": "place_module", "module_id": module_id, "col": col, "row": row,
-		})
-		return false
-	var module: = _module_by_id(module_id)
-	var request: = {"action": "place_module", "module_id": module_id, "col": col, "row": row}
-	if module.is_empty() or not bool(module.get("packed", false)):
-		_reject("module_not_packed", request)
-		return false
-	if not _cell_in_bounds(col, row):
-		_reject("outside_grid", request)
-		return false
-	if not _occupant_at_cell(col, row).is_empty():
-		_reject("occupied", request)
-		return false
-	var position: = cell_center(col, row)
-	if position.distance_to(player.global_position) < PLAYER_BUILD_CLEARANCE:
-		_reject("player_clearance", request)
-		return false
-	module["scene"] = "hub"
-	module["depth"] = 1
-	module["x"] = position.x
-	module["y"] = position.y
-	module["packed"] = false
-	_write_module(module)
-	var transaction: = {"action": "place_module", "module": module.duplicate(true), "cell": Vector2i(col, row), "cost": {}}
-	module_placed.emit(module_id, String(module.kind), position)
-	_call_callback("module_placed", transaction)
-	_commit_transaction(transaction)
-	queue_redraw()
-	return true
-
-
-func remove_cell(col: int, row: int) -> bool:
-	if not _freeform_building_enabled():
-		_reject("freeform_building_removed", {"action": "remove", "col": col, "row": row})
-		return false
-	if not active or not build_mode:
-		_reject("build_mode_inactive", {"action": "remove", "col": col, "row": row})
-		return false
-	if not _cell_in_bounds(col, row):
-		_reject("outside_grid", {"action": "remove", "col": col, "row": row})
-		return false
-	var tiles: Array = Array(hub_state.get("tiles", []))
-	for index in tiles.size():
-		var tile: Dictionary = Dictionary(tiles[index])
-		if int(tile.col) != col or int(tile.row) != row:
-			continue
-		tiles.remove_at(index)
-		hub_state["tiles"] = tiles
-		var refund: = {"resource": "stone", "amount": WALL_COST_STONE} if String(tile.kind) == "wall" else {"gold": LAMP_COST_GOLD}
-		_apply_refund(refund)
-		var transaction: = {"action": "remove", "kind": String(tile.kind), "cell": Vector2i(col, row), "refund": refund.duplicate(true)}
-		refund_committed.emit(refund.duplicate(true))
-		_call_callback("refund", transaction)
-		_commit_transaction(transaction)
-		_build_lighting()
-		queue_redraw()
-		return true
-	var module: = _module_at_cell(col, row)
-	if not module.is_empty():
-		return _pack_module(module, false)
-	if not _fixed_station_at_cell(col, row).is_empty():
-		_reject("fixed_endpoint", {"action": "remove_belt", "col": col, "row": row})
-		return false
-	if _is_fixed_belt_endpoint_cell(col, row):
-		_reject("fixed_endpoint", {"action": "remove_belt", "col": col, "row": row})
-		return false
-	if not _belt_segment_at_cell(col, row).is_empty():
-		var belt_result: Dictionary = RunState.remove_hub_belt_segment(col, row)
-		if not bool(belt_result.get("ok", false)):
-			_reject(String(belt_result.get("reason", "belt_unavailable")), {
-				"action": "remove_belt", "col": col, "row": row,
-			})
-			return false
-		_refresh_backend_state()
-		var belt_transaction: = {
-			"action": "remove_belt",
-			"kind": "belt",
-			"cell": Vector2i(col, row),
-			"refund": {},
-			"canonical": true,
-		}
-		belt_transaction_committed.emit(belt_transaction.duplicate(true))
-		_commit_transaction(belt_transaction)
-		queue_redraw()
-		return true
-	_reject("empty_cell", {"action": "remove", "col": col, "row": row})
-	return false
-
-
-func pack_module(module_id: String, require_nearby: bool = true) -> bool:
-	if not _freeform_building_enabled():
-		_reject("freeform_building_removed", {
-			"action": "pack_module", "module_id": module_id,
-		})
-		return false
-	var module: = _module_by_id(module_id)
-	if module.is_empty():
-		_reject("unknown_module", {"action": "pack_module", "module_id": module_id})
-		return false
-	return _pack_module(module, require_nearby)
-
-
-func activate_nearest_module() -> String:
-	return ""
-
-
-func nearest_module(range: float = MODULE_INTERACT_RADIUS) -> Dictionary:
-	var _legacy_range: = range
-	return {}
-
-
-func _nearest_module_at(position: Vector2, range: float = MODULE_INTERACT_RADIUS) -> Dictionary:
-	var result: = {}
-	var best: = range
-	for module in _all_modules():
-		if not _module_is_here(module):
-			continue
-		var distance: = position.distance_to(Vector2(float(module.x), float(module.y)))
-		if distance <= best:
-			best = distance
-			result = module
-	return result
-
-
-func nearby_storage_modules(range: float = AUTO_SORT_RADIUS) -> Array[Dictionary]:
-	var _legacy_range: = range
-	return []
-
-
-func storage_type_count(module_id: String) -> int:
-	var _legacy_module_id: = module_id
-	return 0
-
-
-func module_at_cell(col: int, row: int) -> Dictionary:
-	var _legacy_cell: = Vector2i(col, row)
-	return {}
-
-
 func collision_at(position: Vector2) -> bool:
 	return _hub_wall_collision(position)
 
@@ -923,8 +397,6 @@ func _process(delta: float) -> void :
 	if not active:
 		return
 
-	if not Array(belt_state.get("packets", [])).is_empty():
-		_process_belts(delta)
 	_update_relic_rope(delta)
 	_update_feedback(delta)
 	_update_workshop_presentation(delta)
@@ -1084,21 +556,9 @@ func _update_relic_rope(delta: float) -> void :
 	queue_redraw()
 
 
-func _load_drop_textures() -> void :
-	_drop_textures.clear()
-	for resource_value in GameData.data.ROCK_TYPES:
-		var resource_id: = String(resource_value)
-		var path: = "res://assets/drops/%s-drop.png" % resource_id
-		if ResourceLoader.exists(path):
-			_drop_textures[resource_id] = load(path)
-
-
 func _on_run_state_changed() -> void :
 	_invalidate_endless_cache()
-	if _backend_sync_guard:
-		return
 	if not active:
-		backend_refresh_pending = true
 		return
 	_refresh_backend_state()
 
@@ -1114,22 +574,9 @@ func _invalidate_endless_cache() -> void :
 	_workshop_status_cache.clear()
 
 
-func _ensure_belt_endpoints() -> void :
-
-	return
-
-
 func _refresh_backend_state(emit_events: bool = true, rebuild_lighting: bool = true) -> void :
 	var previous_elevator: = elevator_status.duplicate(true)
-	var previous_belt_tick: = int(belt_state.get("tick", 0))
-	belt_state = RunState.hub_belt_snapshot()
-	if (
-		int(belt_state.get("tick", 0)) < previous_belt_tick
-		or Array(belt_state.get("packets", [])).is_empty()
-	):
-		_belt_previous_cells.clear()
 	elevator_status = RunState.deep_elevator_status()
-	economy_state = _sanitize_economy_state(RunState.hub_economy_snapshot())
 	var elevator_changed: = previous_elevator != elevator_status
 	if rebuild_lighting and elevator_changed and is_node_ready():
 		_build_lighting()
@@ -1137,7 +584,6 @@ func _refresh_backend_state(emit_events: bool = true, rebuild_lighting: bool = t
 		return
 	if elevator_changed:
 		deep_elevator_status_changed.emit(deep_elevator_snapshot())
-	belt_status_changed.emit(belt_runtime_snapshot())
 
 
 func _use_deep_elevator() -> void :
@@ -1653,54 +1099,6 @@ func _grouped_number(value: int) -> String:
 	return digits + grouped
 
 
-func _use_belt_loader() -> void :
-	_ensure_belt_endpoints()
-	_refresh_backend_state(false)
-	var missing: Dictionary = Dictionary(elevator_status.get("missing", {}))
-	var queued_total: = 0
-	var drill_reserve_blocked: = false
-	for resource_id in ["ambercore", "lunacore", "furnaceheart", "singularity"]:
-		var needed: = maxi(
-			0,
-			int(missing.get(resource_id, 0)) - _belt_amount_in_network(resource_id)
-		)
-		var deliverable: = RunState.deep_elevator_deliverable_amount(resource_id)
-		if needed > 0 and int(RunState.cargo.get(resource_id, 0)) > deliverable:
-			drill_reserve_blocked = true
-		var offered: = mini(needed, deliverable)
-		if offered <= 0:
-			continue
-		var queued: Dictionary = RunState.enqueue_hub_belt_from_cargo(
-			BELT_LOADER_ID, resource_id, offered
-		)
-		queued_total += int(queued.get("accepted", 0))
-	_refresh_backend_state()
-	if queued_total > 0:
-		message_changed.emit("ORE LOADER CHARGED · %d MATERIALS IN TRANSIT" % queued_total)
-	elif missing.is_empty():
-		message_changed.emit("ORE LOADER · ELEVATOR RECIPE COMPLETE")
-	elif drill_reserve_blocked:
-		message_changed.emit("ORE LOADER · NEXT DRILL MATERIALS REMAIN RESERVED")
-	else:
-		message_changed.emit("ORE LOADER · NO REQUIRED MATERIALS IN BAG")
-	queue_redraw()
-
-
-func _belt_amount_in_network(resource_id: String) -> int:
-	var result: = 0
-	for packet_value in Array(belt_state.get("packets", [])):
-		var packet: Dictionary = Dictionary(packet_value)
-		if String(packet.get("resource", "")) == resource_id:
-			result += int(packet.get("amount", 0))
-	var elevator_sink: Dictionary = Dictionary(
-		Dictionary(belt_state.get("delivered", {})).get(
-			RunState.DEEP_ELEVATOR_SINK_ID, {}
-		)
-	)
-	result += int(elevator_sink.get(resource_id, 0))
-	return result
-
-
 func _deep_elevator_visual_stage() -> String:
 	if bool(elevator_status.get("victory", false)):
 		return "complete"
@@ -1711,90 +1109,12 @@ func _deep_elevator_visual_stage() -> String:
 	return "delivery"
 
 
-func _process_belts(delta: float) -> void :
-	if Array(belt_state.get("packets", [])).is_empty():
-		_belt_accumulator = 0.0
-		_belt_visual_accumulator = 0.0
-		_belt_previous_cells.clear()
-		return
-	var safe_delta: = maxf(0.0, delta)
-	var interval: = 1.0 / BELT_SIMULATION_HZ
-	_belt_accumulator += safe_delta
-	var steps: = 0
-	while _belt_accumulator >= interval and steps < BELT_MAX_STEPS_PER_FRAME:
-		_belt_accumulator -= interval
-		_run_belt_step()
-		steps += 1
-	if steps >= BELT_MAX_STEPS_PER_FRAME and _belt_accumulator >= interval:
-		_belt_accumulator = fmod(_belt_accumulator, interval)
-	var visual_interval: = 1.0 / BELT_VISUAL_HZ
-	_belt_visual_accumulator += safe_delta
-	if _belt_visual_accumulator >= visual_interval:
-		_belt_visual_accumulator = fmod(_belt_visual_accumulator, visual_interval)
-		queue_redraw()
-
-
-func _run_belt_step() -> void :
-	var before_packets: Dictionary = {}
-	for packet_value in Array(belt_state.get("packets", [])):
-		var packet: Dictionary = Dictionary(packet_value)
-		before_packets[int(packet.get("id", 0))] = packet.duplicate(true)
-	_backend_sync_guard = true
-	var result: Dictionary = RunState.process_hub_belts(1)
-	_backend_sync_guard = false
-	_refresh_backend_state()
-	var previous_cells: = {}
-	for packet_value in Array(belt_state.get("packets", [])):
-		var packet: Dictionary = Dictionary(packet_value)
-		var packet_id: = int(packet.get("id", 0))
-		var current_cell: = Vector2i(
-			int(packet.get("col", 0)), int(packet.get("row", 0))
-		)
-		if before_packets.has(packet_id):
-			var previous: Dictionary = Dictionary(before_packets[packet_id])
-			previous_cells[packet_id] = Vector2i(
-				int(previous.get("col", current_cell.x)),
-				int(previous.get("row", current_cell.y))
-			)
-		else:
-			previous_cells[packet_id] = _infer_split_packet_origin(
-				packet, before_packets, current_cell
-			)
-	_belt_previous_cells = previous_cells
-	if (
-		int(result.get("moved", 0)) > 0
-		or int(result.get("delivered", 0)) > 0
-		or int(result.get("committed", 0)) > 0
-	):
-		queue_redraw()
-
-
-func _infer_split_packet_origin(
-	packet: Dictionary,
-	before_packets: Dictionary,
-	fallback: Vector2i
-) -> Vector2i:
-	for previous_value in before_packets.values():
-		var previous: Dictionary = Dictionary(previous_value)
-		if String(previous.get("resource", "")) != String(packet.get("resource", "")):
-			continue
-		var previous_cell: = Vector2i(
-			int(previous.get("col", fallback.x)),
-			int(previous.get("row", fallback.y))
-		)
-		if previous_cell.distance_squared_to(fallback) <= 1:
-			return previous_cell
-	return fallback
-
-
 func _configure_player(position: Vector2) -> void :
 	var speed: = float(GameData.data.PLAYER_SPEED) * movement_speed_multiplier
 	player.configure(position, WORLD_SIZE, speed, _resolve_motion)
 
 
 func _resolve_motion(origin: Vector2, motion: Vector2) -> Vector2:
-	if build_mode:
-		return origin
 	if _hub_wall_collision(origin):
 		var escape_hint: = motion
 		if escape_hint.length_squared() <= 0.01:
@@ -1881,8 +1201,7 @@ func _station_collision(position: Vector2) -> bool:
 
 
 func _on_player_moved(world_position: Vector2) -> void :
-	if not build_mode:
-		_update_context(world_position)
+	_update_context(world_position)
 
 
 func _update_context(world_position: Vector2) -> void :
@@ -1915,242 +1234,6 @@ func _set_context(next: String) -> void :
 	if previous_exit != hub_exit_context:
 		hub_exit_context_changed.emit(hub_exit_context)
 	queue_redraw()
-
-
-func _cell_in_bounds(col: int, row: int) -> bool:
-	return col >= 0 and row >= 0 and col < GRID_COLS and row < GRID_ROWS
-
-
-func _tile_at_cell(col: int, row: int) -> Dictionary:
-	for tile_value in hub_state.get("tiles", []):
-		var tile: Dictionary = Dictionary(tile_value)
-		if int(tile.col) == col and int(tile.row) == row:
-			return tile
-	return {}
-
-
-func _module_at_cell(col: int, row: int) -> Dictionary:
-	for module in _all_modules():
-		if not _module_is_here(module):
-			continue
-		var cell: = cell_at_world(Vector2(float(module.x), float(module.y)))
-		if cell == Vector2i(col, row):
-			return module
-	return {}
-
-
-func _occupant_at_cell(col: int, row: int) -> Dictionary:
-	var tile: = _tile_at_cell(col, row)
-	if not tile.is_empty():
-		return tile
-	var module: = _module_at_cell(col, row)
-	if not module.is_empty():
-		return module
-	var fixed_station: = _fixed_station_at_cell(col, row)
-	if not fixed_station.is_empty():
-		return fixed_station
-	var segment: = _belt_segment_at_cell(col, row)
-	if not segment.is_empty():
-		return segment
-	return _belt_endpoint_at_cell(col, row)
-
-
-func _belt_segment_at_cell(col: int, row: int) -> Dictionary:
-	for segment_value in Array(belt_state.get("segments", [])):
-		var segment: Dictionary = Dictionary(segment_value)
-		if int(segment.get("col", -1)) == col and int(segment.get("row", -1)) == row:
-			return segment
-	return {}
-
-
-func _belt_endpoint_at_cell(col: int, row: int) -> Dictionary:
-	for endpoint_value in Array(belt_state.get("endpoints", [])):
-		var endpoint: Dictionary = Dictionary(endpoint_value)
-		if int(endpoint.get("col", -1)) == col and int(endpoint.get("row", -1)) == row:
-			return endpoint
-	return {}
-
-
-func _is_fixed_belt_endpoint_cell(col: int, row: int) -> bool:
-	return Vector2i(col, row) in [BELT_LOADER_CELL, BELT_ELEVATOR_SINK_CELL]
-
-
-func _fixed_station_at_cell(col: int, row: int) -> Dictionary:
-	if col >= 0 and col <= 3 and row >= 7 and row <= 9:
-		return {"kind": "belt_loader", "fixed": true, "col": col, "row": row}
-	if col >= 8 and col <= 13 and row == 0:
-		return {"kind": "deep_elevator", "fixed": true, "col": col, "row": row}
-	if cell_center(col, row).distance_to(DEEP_HOARD_POSITION) <= DEEP_HOARD_RADIUS + GRID_TILE_SIZE * 0.5:
-		return {"kind": "deep_hoard", "fixed": true, "col": col, "row": row}
-	return {}
-
-
-func _all_modules() -> Array[Dictionary]:
-	var result: Array[Dictionary] = []
-	for key in ["forge", "sell"]:
-		var module: Dictionary = Dictionary(base_state.get(key, {}))
-		if not module.is_empty():
-			result.append(module)
-	for chest_value in base_state.get("chests", []):
-		result.append(Dictionary(chest_value))
-	return result
-
-
-func _module_by_id(module_id: String) -> Dictionary:
-	for module in _all_modules():
-		if String(module.get("id", "")) == module_id:
-			return module
-	return {}
-
-
-func _write_module(module: Dictionary) -> void :
-	var module_id: = String(module.id)
-	if module_id in ["forge", "sell"]:
-		base_state[module_id] = module
-		return
-	var chests: Array = Array(base_state.get("chests", []))
-	for index in chests.size():
-		if String(Dictionary(chests[index]).get("id", "")) == module_id:
-			chests[index] = module
-			base_state["chests"] = chests
-			return
-
-
-func _module_is_here(module: Dictionary) -> bool:
-	return not bool(module.get("packed", true)) and String(module.get("scene", "")) == "hub" and int(module.get("depth", 1)) == 1
-
-
-func _pack_module(module: Dictionary, require_nearby: bool) -> bool:
-	if not _module_is_here(module):
-		_reject("module_not_here", {"action": "pack_module", "module_id": String(module.get("id", ""))})
-		return false
-	if require_nearby and player.global_position.distance_to(Vector2(float(module.x), float(module.y))) > MODULE_INTERACT_RADIUS:
-		_reject("module_out_of_range", {"action": "pack_module", "module_id": String(module.id)})
-		return false
-	module["packed"] = true
-	_write_module(module)
-	var transaction: = {"action": "pack_module", "module": module.duplicate(true), "lossless": true}
-	module_packed.emit(String(module.id), String(module.kind))
-	_call_callback("module_packed", transaction)
-	_commit_transaction(transaction)
-	if active and not build_mode:
-		_update_context(player.global_position)
-	queue_redraw()
-	return true
-
-
-func _cargo() -> Dictionary:
-	var cargo: Dictionary = Dictionary(economy_state.get("cargo", {}))
-	economy_state["cargo"] = cargo
-	return cargo
-
-
-func _apply_cost(cost: Dictionary) -> void :
-	if cost.has("resource"):
-		var cargo: = _cargo()
-		var resource_id: = String(cost.resource)
-		cargo[resource_id] = int(cargo.get(resource_id, 0)) - int(cost.amount)
-		economy_state["cargo"] = cargo
-	elif cost.has("gold"):
-		economy_state["gold"] = int(economy_state.get("gold", 0)) - int(cost.gold)
-
-
-func _apply_refund(refund: Dictionary) -> void :
-	if refund.has("resource"):
-		var cargo: = _cargo()
-		var resource_id: = String(refund.resource)
-		cargo[resource_id] = int(cargo.get(resource_id, 0)) + int(refund.amount)
-		economy_state["cargo"] = cargo
-	elif refund.has("gold"):
-		economy_state["gold"] = int(economy_state.get("gold", 0)) + int(refund.gold)
-
-
-func _commit_transaction(transaction: Dictionary) -> void :
-	build_transaction_committed.emit(transaction.duplicate(true))
-	_call_callback("transaction", transaction)
-	runtime_state_changed.emit(hub_state.duplicate(true), base_state.duplicate(true), economy_state.duplicate(true))
-
-
-func _reject(reason: String, request: Dictionary) -> void :
-	build_rejected.emit(reason, request.duplicate(true))
-	message_changed.emit(_rejection_message(reason))
-
-
-func _rejection_message(reason: String) -> String:
-	match reason:
-		"freeform_building_removed":
-			return "HUB CONSTRUCTION NOW USES FIXED WORKSHOP SITES"
-		"occupied":
-			return "CELL OCCUPIED"
-		"player_clearance":
-			return "MOVE CLEAR OF THE BUILD CELL"
-		"insufficient_resource":
-			return "MORE STONE REQUIRED"
-		"insufficient_gold":
-			return "MORE GOLD REQUIRED"
-		"module_out_of_range":
-			return "MOVE CLOSER TO THE MODULE"
-		"segment_occupied":
-			return "BELT BUSY · COLLECT OR ADVANCE THE MATERIAL FIRST"
-		"fixed_endpoint":
-			return "PERMANENT HUB STATION"
-		"endpoint_cell_occupied", "segment_cell_occupied":
-			return "BELT CONNECTION OCCUPIED"
-	return "BUILD ACTION UNAVAILABLE"
-
-
-func _freeform_building_enabled() -> bool:
-	return false
-
-
-func _call_callback(name: String, payload: Dictionary) -> void :
-	var callback = callbacks.get(name, Callable())
-	if callback is Callable and callback.is_valid():
-		callback.call(payload.duplicate(true))
-
-
-func _empty_resource_store() -> Dictionary:
-	var result: = {}
-	for resource_id in GameData.data.ROCK_TYPES:
-		result[String(resource_id)] = 0
-	return result
-
-
-func _sanitize_hub_state(source: Dictionary) -> Dictionary:
-	var result: = source.duplicate(true)
-	var clean_tiles: Array[Dictionary] = []
-	var occupied: = {}
-	for tile_value in source.get("tiles", []):
-		var tile: Dictionary = Dictionary(tile_value)
-		var kind: = String(tile.get("kind", ""))
-		var col: = int(tile.get("col", -1))
-		var row: = int(tile.get("row", -1))
-		var key: = "%d:%d" % [col, row]
-		if kind not in ["wall", "lamp"] or not _cell_in_bounds(col, row) or occupied.has(key):
-			continue
-		occupied[key] = true
-		clean_tiles.append({"col": col, "row": row, "kind": kind})
-	result["tiles"] = clean_tiles
-	return result
-
-
-func _sanitize_base_state(source: Dictionary) -> Dictionary:
-	var result: = source.duplicate(true)
-	if not result.has("forge"):
-		result["forge"] = {"id": "forge", "kind": "forge", "scene": "surface", "depth": 1, "x": 455.0, "y": 350.0, "packed": true}
-	if not result.has("sell"):
-		result["sell"] = {"id": "sell", "kind": "sell", "scene": "surface", "depth": 1, "x": 245.0, "y": 350.0, "packed": true}
-	if not result.has("chests"):
-		result["chests"] = []
-	result["nextChestId"] = maxi(2, int(result.get("nextChestId", Array(result.chests).size() + 1)))
-	return result
-
-
-func _sanitize_economy_state(source: Dictionary) -> Dictionary:
-	var result: = source.duplicate(true)
-	result["gold"] = maxi(0, int(result.get("gold", 0)))
-	result["cargo"] = Dictionary(result.get("cargo", {})).duplicate(true)
-	return result
 
 
 func _build_lighting() -> void :
@@ -2190,44 +1273,6 @@ func _build_lighting() -> void :
 				"Workshop_%s" % workshop_id,
 				0.58
 			)
-	active_hub_lamp_light_ids.clear()
-	static_light_field.configure(self, world_lights)
-
-
-func _refresh_hub_lamp_lights(force: bool = false) -> void :
-	if not force and player.global_position.distance_to(last_hub_lamp_light_refresh_position) < HUB_LAMP_LIGHT_REFRESH_DISTANCE:
-		return
-	last_hub_lamp_light_refresh_position = player.global_position
-	var candidates: Array[Dictionary] = []
-	for tile_value in hub_state.get("tiles", []):
-		var tile: Dictionary = Dictionary(tile_value)
-		if String(tile.kind) != "lamp":
-			continue
-		var light_position: = cell_center(int(tile.col), int(tile.row)) + Vector2(0, -18)
-		candidates.append({
-			"id": "%d:%d" % [int(tile.col), int(tile.row)],
-			"position": light_position,
-			"distance": player.global_position.distance_squared_to(light_position),
-		})
-	candidates.sort_custom( func(left: Dictionary, right: Dictionary) -> bool: return float(left.distance) < float(right.distance))
-	var selected_ids: Array[String] = []
-	for index in range(mini(MAX_ACTIVE_HUB_LAMP_LIGHTS, candidates.size())):
-		selected_ids.append(String(candidates[index].id))
-	if not force and selected_ids == active_hub_lamp_light_ids:
-		return
-	active_hub_lamp_light_ids = selected_ids
-	for child in world_lights.get_children():
-		if String(child.get_meta("hub_lamp_id", "")).is_empty():
-			continue
-		world_lights.remove_child(child)
-		child.queue_free()
-	for index in range(mini(MAX_ACTIVE_HUB_LAMP_LIGHTS, candidates.size())):
-		var candidate: Dictionary = candidates[index]
-		var light: = _make_light(265.0, 0.72, Color("72e6c7"))
-		light.name = "Lamp_%s" % String(candidate.id).replace(":", "_")
-		light.position = Vector2(candidate.position)
-		light.set_meta("hub_lamp_id", String(candidate.id))
-		world_lights.add_child(light)
 	static_light_field.configure(self, world_lights)
 
 

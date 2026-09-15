@@ -1,3 +1,6 @@
+Current work: [premium-polish recovery](docs/premium-polish/HANDOFF.md).
+Test setup: [environment handoff](docs/TESTMILJO-HANDOFF.md).
+
 # Current work — discovery loop, 1.0.0-dev.5
 
 Continue from `docs/discovery-loop-HANDOFF.md` and `docs/discovery-loop-review.md`.

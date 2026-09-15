@@ -249,11 +249,9 @@ const LOOSE_RESOURCE_LIFETIME: = 50.0
 const LOOSE_RESOURCE_FADE_SECONDS: = 3.0
 const SURFACE_LOOSE_DROP_SOURCE_LIMIT: = 28
 const SURFACE_LOOSE_DROP_TOTAL_LIMIT: = 72
-const CHEST_INTERACT_RADIUS: = 108.0
 const BASE_MODULE_INTERACT_RADIUS: = 118.0
 const SURFACE_STATION_INTERACT_RADIUS: = 112.0
 const SURFACE_STATION_APPROACH_OFFSET: = Vector2(0, 140)
-const CHEST_DROP_PICKUP_RADIUS: = 132.0
 const ORE_DROP_LANDING_OFFSETS: = [
 	Vector2(-132, 18), Vector2(132, 18),
 	Vector2(-98, 32), Vector2(98, 32),
@@ -349,42 +347,30 @@ const EMBER_FAULT: = preload("res://assets/surface/emberdeep-fault-bed.png")
 const STAR_SHARDS: = preload("res://assets/surface/starfall-shard-clusters.png")
 const STAR_LATTICE: = preload("res://assets/surface/starfall-lattice-bed.png")
 const STARFORGE_STATION: = preload("res://assets/surface/starforge-station.png")
-const STORAGE_CHEST: = preload("res://assets/surface/storage-chest.png")
 const WAYFARER_SHOP: = preload("res://assets/surface/wayfarer-shop.png")
-const SURFACE_CHEST_TEXTURES: = {
-	"moss_supply": {
-		"closed": preload("res://assets/surface/treasure-cache-closed.png"),
-		"open": preload("res://assets/surface/treasure-cache-open.png"),
-	},
-	"moss_ironbound": {
-		"closed": preload("res://assets/surface/treasure-cache-closed.png"),
-		"open": preload("res://assets/surface/treasure-cache-open.png"),
-	},
-	"moon_cache": {
-		"closed": preload("res://assets/surface/crystal-cache-closed.png"),
-		"open": preload("res://assets/surface/crystal-cache-open.png"),
-	},
-	"moon_reliquary": {
-		"closed": preload("res://assets/surface/moonglass-reliquary-closed.png"),
-		"open": preload("res://assets/surface/moonglass-reliquary-open.png"),
-	},
-	"ember_cache": {
-		"closed": preload("res://assets/surface/foundry-lockbox-closed.png"),
-		"open": preload("res://assets/surface/foundry-lockbox-open.png"),
-	},
-	"ember_vault": {
-		"closed": preload("res://assets/surface/ember-vault-closed.png"),
-		"open": preload("res://assets/surface/ember-vault-open.png"),
-	},
-	"star_cache": {
-		"closed": preload("res://assets/surface/astral-cache-closed.png"),
-		"open": preload("res://assets/surface/astral-cache-open.png"),
-	},
-	"star_coffer": {
-		"closed": preload("res://assets/surface/celestial-coffer-closed.png"),
-		"open": preload("res://assets/surface/celestial-coffer-open.png"),
-	},
+
+const GROUND_RECTS: = {
+	"mossvein": Rect2(0, 0, 1134, 1280),
+	"moonglass": Rect2(1110, 0, 1130, 1280),
+	"emberdeep": Rect2(2240, 0, 1120, 1280),
+	"starfall": Rect2(3360, 0, 1120, 1280)
 }
+const ROAD_RECTS: = {
+	"mossvein": Rect2(-40, 550, 1190, 220),
+	"moonglass": Rect2(1070, 525, 1190, 240),
+	"emberdeep": Rect2(2200, 525, 1190, 240),
+	"starfall": Rect2(3320, 525, 1190, 240)
+}
+const BOUNDARIES: = [
+	{"id": "moonglass", "x": 1110.0, "station": "gate", "unlock_key": "area_unlocked"},
+	{"id": "emberdeep", "x": 2240.0, "station": "emberGate", "unlock_key": "emberdeep_unlocked"},
+	{"id": "starfall", "x": 3360.0, "station": "starfallGate", "unlock_key": "fourth_unlocked"}
+]
+const MINE_IDS: = WorldCatalog.MINE_ORDER
+
+@onready var player: CharacterBody2D = $Player
+@onready var surface_parallax: SurfaceParallax = $SurfaceParallax
+
 const MOSS_ORE_MOUNTAIN: = preload("res://assets/surface/v2/copper-mountain-0.png")
 const MOSS_ORE_MOUNTAIN_DAMAGE_1: = preload("res://assets/surface/v2/copper-mountain-1.png")
 const MOSS_ORE_MOUNTAIN_DAMAGE_2: = preload("res://assets/surface/v2/copper-mountain-2.png")
@@ -458,27 +444,6 @@ const SURFACE_RESOURCE_MOUNTAIN_CONFIGS: = {
 }
 
 
-const GROUND_RECTS: = {
-	"mossvein": Rect2(0, 0, 1134, 1280),
-	"moonglass": Rect2(1110, 0, 1130, 1280),
-	"emberdeep": Rect2(2240, 0, 1120, 1280),
-	"starfall": Rect2(3360, 0, 1120, 1280)
-}
-const ROAD_RECTS: = {
-	"mossvein": Rect2(-40, 550, 1190, 220),
-	"moonglass": Rect2(1070, 525, 1190, 240),
-	"emberdeep": Rect2(2200, 525, 1190, 240),
-	"starfall": Rect2(3320, 525, 1190, 240)
-}
-const BOUNDARIES: = [
-	{"id": "moonglass", "x": 1110.0, "station": "gate", "unlock_key": "area_unlocked"},
-	{"id": "emberdeep", "x": 2240.0, "station": "emberGate", "unlock_key": "emberdeep_unlocked"},
-	{"id": "starfall", "x": 3360.0, "station": "starfallGate", "unlock_key": "fourth_unlocked"}
-]
-const MINE_IDS: = WorldCatalog.MINE_ORDER
-
-@onready var player: CharacterBody2D = $Player
-@onready var surface_parallax: SurfaceParallax = $SurfaceParallax
 
 var entrance_position: = Vector2.ZERO
 var active_context: = ""
@@ -546,12 +511,6 @@ var starfall_hub_lift_glow: Sprite2D
 var starfall_hub_lift_base_scale: = Vector2.ONE
 var starfall_hub_lift_visual_time: = 0.0
 var external_mine_held: = false
-var surface_chest_nodes: Dictionary = {}
-var surface_storage_nodes: Dictionary = {}
-var chest_loot_drops: Array[Dictionary] = []
-var chest_visual_state: Dictionary = {}
-var storage_visual_signature: = ""
-var chest_loot_signature: = ""
 var moss_decor_sprites: Array[Sprite2D] = []
 var moss_glowmoths: Array[Dictionary] = []
 var moss_drifts: Array[Dictionary] = []
@@ -609,8 +568,6 @@ func _ready() -> void :
 	_build_moonglass_resource()
 	_build_timed_surface_resources()
 	_build_stations()
-	_build_surface_chests()
-	_refresh_surface_storage_nodes()
 	_build_starfall_hub_lift()
 	_build_entrances()
 	_build_gates()
@@ -647,7 +604,6 @@ func _process(delta: float) -> void :
 	_update_mossvein_environment(safe_delta)
 	_update_mobile_surface_resources(safe_delta, now_unix)
 	_update_surface_material_sprays(safe_delta)
-	_update_chest_loot_drops(safe_delta)
 	_update_starfall_hub_lift(safe_delta)
 
 
@@ -764,12 +720,6 @@ func reset_for_new_run() -> void :
 	moon_bloom_passive_elapsed = 0.0
 	timed_surface_passive_elapsed[EMBER_FAULT_ID] = 0.0
 	timed_surface_passive_elapsed[STARFALL_LATTICE_ID] = 0.0
-	for drop in chest_loot_drops:
-		var chest_drop_sprite: Sprite2D = drop.get("sprite")
-		if is_instance_valid(chest_drop_sprite):
-			chest_drop_sprite.queue_free()
-	chest_loot_drops.clear()
-	chest_loot_signature = ""
 	for drop in ore_drops:
 		var sprite: Sprite2D = drop.get("sprite")
 		if is_instance_valid(sprite):
@@ -839,11 +789,6 @@ func reset_for_new_run() -> void :
 	player.set_mining_visual(false)
 	player.camera.reset_smoothing()
 	_reset_portal_transition_observations()
-	chest_visual_state.clear()
-	storage_visual_signature = ""
-	_refresh_surface_chest_visuals()
-	_refresh_surface_storage_nodes()
-	_sync_pending_chest_loot_drops()
 	_refresh_unlock_visibility()
 	_evaluate_context(player.global_position)
 
@@ -1909,103 +1854,6 @@ func _build_stations() -> void :
 	_create_station(STARFORGE_STATION, GameData.station("starforge"), Vector2(158, 142), 50.0, "STARFORGE")
 
 
-func _build_surface_chests() -> void :
-	for chest_value in Array(GameData.data.CHEST_DEFINITIONS):
-		var chest: Dictionary = Dictionary(chest_value)
-		var chest_id: = String(chest.id)
-		assert (SURFACE_CHEST_TEXTURES.has(chest_id), "Missing surface chest art: %s" % chest_id)
-		var textures: Dictionary = Dictionary(SURFACE_CHEST_TEXTURES[chest_id])
-		var chest_position: = surface_chest_position(chest_id)
-		var sprite: = _create_world_asset(
-			textures.closed,
-			chest_position,
-			Vector2(104, 88),
-			35.0,
-			6
-		)
-		surface_chest_nodes[chest_id] = sprite
-	_refresh_surface_chest_visuals()
-	_sync_pending_chest_loot_drops()
-
-
-func _refresh_surface_chest_visuals() -> void :
-	for chest_value in Array(GameData.data.CHEST_DEFINITIONS):
-		var chest: Dictionary = Dictionary(chest_value)
-		var chest_id: = String(chest.id)
-		if not surface_chest_nodes.has(chest_id):
-			continue
-		var opened: = RunState.is_surface_chest_opened(chest_id)
-		var ready: = _surface_chest_requirement_met(chest)
-		var visual_key: = "%s:%s" % [str(opened), str(ready)]
-		if String(chest_visual_state.get(chest_id, "")) == visual_key:
-			continue
-		chest_visual_state[chest_id] = visual_key
-		var textures: Dictionary = Dictionary(SURFACE_CHEST_TEXTURES[chest_id])
-		var texture: Texture2D = textures.open if opened else textures.closed
-		var sprite: Sprite2D = surface_chest_nodes[chest_id]
-		var chest_position: = surface_chest_position(chest_id)
-		_place_world_asset_sprite(
-			sprite,
-			texture,
-			chest_position,
-			Vector2(104, 88),
-			35.0
-		)
-		sprite.modulate = Color(1.0, 1.0, 1.0, 0.72 if opened else 1.0 if ready else 0.58)
-
-
-func _refresh_surface_storage_nodes() -> void :
-	var active_modules: Dictionary = {}
-	var signature_rows: Array[String] = []
-	for module_value in RunState.all_base_modules():
-		var module: Dictionary = Dictionary(module_value)
-		if (
-			String(module.get("kind", "")) != "storage"
-			or bool(module.get("packed", false))
-			or String(module.get("scene", "")) != "surface"
-			or int(module.get("depth", 1)) != 1
-		):
-			continue
-		var module_id: = String(module.id)
-		active_modules[module_id] = module
-		signature_rows.append("%s:%.2f:%.2f" % [module_id, float(module.x), float(module.y)])
-	signature_rows.sort()
-	var signature: = "|".join(signature_rows)
-	if signature == storage_visual_signature:
-		return
-	storage_visual_signature = signature
-	for module_id_value in surface_storage_nodes.keys():
-		var module_id: = String(module_id_value)
-		if active_modules.has(module_id):
-			continue
-		var stale: Sprite2D = surface_storage_nodes[module_id]
-		if is_instance_valid(stale):
-			stale.queue_free()
-		surface_storage_nodes.erase(module_id)
-	for module_id_value in active_modules:
-		var module_id: = String(module_id_value)
-		var module: Dictionary = Dictionary(active_modules[module_id])
-		var sprite: Sprite2D
-		if surface_storage_nodes.has(module_id):
-			sprite = surface_storage_nodes[module_id]
-		else:
-			sprite = _create_world_asset(
-				STORAGE_CHEST,
-				Vector2(float(module.x), float(module.y)),
-				Vector2(104, 78),
-				34.0,
-				5
-			)
-			surface_storage_nodes[module_id] = sprite
-		_place_world_asset_sprite(
-			sprite,
-			STORAGE_CHEST,
-			Vector2(float(module.x), float(module.y)),
-			Vector2(104, 78),
-			34.0
-		)
-
-
 func _place_world_asset_sprite(
 	sprite: Sprite2D,
 	texture: Texture2D,
@@ -2019,13 +1867,6 @@ func _place_world_asset_sprite(
 	sprite.texture = texture
 	sprite.scale = Vector2.ONE * scale_factor
 	sprite.position = anchor + Vector2( - size.x * 0.5, bottom - size.y)
-
-
-func _surface_chest_requirement_met(chest: Dictionary) -> bool:
-	var requirement: Dictionary = Dictionary(chest.get("requires", {}))
-	if bool(requirement.get("starforge", false)):
-		return not String(RunState.starforge_variant).is_empty()
-	return int(RunState.pickaxe_level) >= int(requirement.get("pickaxeLevel", 1))
 
 
 func _build_starfall_hub_lift() -> void :
@@ -2288,9 +2129,6 @@ func _on_run_state_changed() -> void :
 
 
 func _refresh_from_run_state() -> void :
-	_refresh_surface_chest_visuals()
-	_refresh_surface_storage_nodes()
-	_sync_pending_chest_loot_drops()
 	for boundary_value in BOUNDARIES:
 		var boundary: Dictionary = Dictionary(boundary_value)
 		var gate_id: = String(boundary.id)
@@ -2997,8 +2835,6 @@ func _update_timed_surface_resources(delta: float, now_unix: int = -1) -> void :
 		if active_context == String(config.context):
 			active_vein_id = vein_id
 	if active_vein_id.is_empty():
-		if active_context != "ore_mountain" and active_context != "moonglass_resource":
-			player.set_mining_visual(false)
 		return
 	var runtime: Dictionary = timed_surface_veins[active_vein_id]
 	var held: = external_mine_held or Input.is_action_pressed("mine")
@@ -4044,170 +3880,6 @@ func _spawn_ore_drop(kind: String, amount: int) -> void :
 	_enforce_surface_loose_drop_budget()
 
 
-func _sync_pending_chest_loot_drops() -> void :
-	var signature_rows: Array[String] = []
-	for chest_value in Array(GameData.data.CHEST_DEFINITIONS):
-		var chest: Dictionary = Dictionary(chest_value)
-		var chest_id: = String(chest.id)
-		var pending: = RunState.pending_chest_reward_loot(chest_id)
-		var reward_ids: Array = pending.keys()
-		reward_ids.sort()
-		for reward_id_value in reward_ids:
-			var reward_id: = String(reward_id_value)
-			var amount: = int(pending.get(reward_id, 0))
-			if amount > 0:
-				signature_rows.append("%s:%s:%d" % [chest_id, reward_id, amount])
-	var signature: = "|".join(signature_rows)
-	if signature == chest_loot_signature:
-		return
-	chest_loot_signature = signature
-	for index in range(chest_loot_drops.size() - 1, -1, -1):
-		var drop: Dictionary = chest_loot_drops[index]
-		var pending: = RunState.pending_chest_reward_loot(String(drop.chest_id))
-		if int(pending.get(String(drop.reward_id), 0)) > 0:
-			continue
-		var sprite: Sprite2D = drop.sprite
-		if is_instance_valid(sprite):
-			sprite.queue_free()
-		chest_loot_drops.remove_at(index)
-	for chest_value in Array(GameData.data.CHEST_DEFINITIONS):
-		var chest: Dictionary = Dictionary(chest_value)
-		var chest_id: = String(chest.id)
-		var pending: = RunState.pending_chest_reward_loot(chest_id)
-		for reward_id_value in pending:
-			var reward_id: = String(reward_id_value)
-			var pending_amount: = int(pending.get(reward_id, 0))
-			var visible_amount: = _visible_chest_drop_amount(chest_id, reward_id)
-			if pending_amount > visible_amount:
-				_spawn_chest_loot_reward(chest, reward_id, pending_amount - visible_amount)
-
-
-func _visible_chest_drop_amount(chest_id: String, reward_id: String) -> int:
-	var total: = 0
-	for drop in chest_loot_drops:
-		if String(drop.chest_id) == chest_id and String(drop.reward_id) == reward_id:
-			total += int(drop.amount)
-	return total
-
-
-func _spawn_chest_loot_reward(chest: Dictionary, reward_id: String, total_amount: int) -> void :
-	if total_amount <= 0:
-		return
-
-
-
-	var piece_count: = mini(6, maxi(3, ceili(float(total_amount) / 100.0))) if reward_id == "coin" else total_amount
-	var remaining: = total_amount
-	for piece_index in range(piece_count):
-		var piece_amount: = ceili(float(remaining) / float(piece_count - piece_index)) if reward_id == "coin" else 1
-		remaining -= piece_amount
-		_spawn_chest_loot_piece(chest, reward_id, piece_amount, piece_index, piece_count)
-
-
-func _spawn_chest_loot_piece(
-	chest: Dictionary,
-	reward_id: String,
-	amount: int,
-	piece_index: int,
-	piece_count: int
-) -> void :
-	var texture: Texture2D = GOLD_DROP
-	var sprite: = Sprite2D.new()
-	sprite.texture = texture
-	sprite.centered = true
-	sprite.offset = DropVisuals.sprite_offset(reward_id, texture)
-	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	sprite.z_index = 9
-	sprite.scale = DropVisuals.sprite_scale(reward_id, texture)
-	var chest_position: = Vector2(float(chest.x), float(chest.y))
-	var seed: = int(chest.get("tier", 0)) * 41 + piece_index * 17 + piece_count * 7 + int(chest_position.x)
-	var angle: = fmod(float(seed) * 2.399963, TAU)
-	var radius: = 48.0 + float(seed % 4) * 7.0
-	var landing_position: = (
-		chest_position + Vector2(cos(angle) * radius, 26.0 + sin(angle) * radius * 0.58)
-	).clamp(Vector2(52, 70), _world_size() - Vector2(52, 58))
-	sprite.position = chest_position + Vector2(0, -8)
-	add_child(sprite)
-	chest_loot_drops.append({
-		"chest_id": String(chest.id),
-		"reward_id": reward_id,
-		"amount": amount,
-		"sprite": sprite,
-		"base_scale": sprite.scale,
-		"launch_position": sprite.position,
-		"landing_position": landing_position,
-		"age": 0.0,
-		"budget_serial": _next_surface_drop_budget_serial(),
-		"collecting": false,
-		"collect_elapsed": 0.0,
-		"collect_origin": Vector2.ZERO,
-		"seed": seed,
-		"settled": false,
-	})
-	_enforce_surface_loose_drop_budget()
-
-
-func _update_chest_loot_drops(delta: float) -> void :
-	for index in range(chest_loot_drops.size() - 1, -1, -1):
-		var drop: Dictionary = chest_loot_drops[index]
-		var sprite: Sprite2D = drop.sprite
-		if not is_instance_valid(sprite):
-			chest_loot_drops.remove_at(index)
-			continue
-		var age: = float(drop.age) + delta
-		if age >= LOOSE_RESOURCE_LIFETIME:
-			var expired_chest_id: = String(drop.chest_id)
-			var expired_reward_id: = String(drop.reward_id)
-			var expired_amount: = int(drop.amount)
-			sprite.queue_free()
-			chest_loot_drops.remove_at(index)
-			var auto_collected: = RunState.collect_chest_loot(expired_chest_id, expired_reward_id, expired_amount)
-			if auto_collected > 0:
-				AudioDirector.play_pickup("gold" if expired_reward_id == "coin" else expired_reward_id, auto_collected)
-			continue
-		if bool(drop.collecting):
-			var collect_elapsed: = float(drop.collect_elapsed) + delta
-			var collect_progress: = clampf(collect_elapsed / ORE_DROP_COLLECT_DURATION, 0.0, 1.0)
-			var collect_eased: = collect_progress * collect_progress * (3.0 - 2.0 * collect_progress)
-			sprite.global_position = Vector2(drop.collect_origin).lerp(player.global_position + Vector2(0, -28), collect_eased)
-			sprite.global_position.y -= sin(collect_progress * PI) * 13.0
-			sprite.scale = Vector2(drop.base_scale) * lerpf(1.0, 0.28, collect_eased)
-			sprite.modulate.a = 1.0 - clampf((collect_progress - 0.68) / 0.32, 0.0, 1.0)
-			drop.collect_elapsed = collect_elapsed
-			chest_loot_drops[index] = drop
-			if collect_progress >= 1.0:
-				var chest_id: = String(drop.chest_id)
-				var reward_id: = String(drop.reward_id)
-				var amount: = int(drop.amount)
-				sprite.queue_free()
-				chest_loot_drops.remove_at(index)
-				var collected: = RunState.collect_chest_loot(chest_id, reward_id, amount)
-				if collected > 0:
-					AudioDirector.play_pickup("gold" if reward_id == "coin" else reward_id, collected)
-					message_changed.emit("%d GOLD COLLECTED" % collected if reward_id == "coin" else "%s COLLECTED" % reward_id.to_upper())
-			continue
-		if age < ORE_DROP_FLIGHT_DURATION:
-			var flight_progress: = clampf(age / ORE_DROP_FLIGHT_DURATION, 0.0, 1.0)
-			var eased: = 1.0 - pow(1.0 - flight_progress, 2.0)
-			sprite.position = Vector2(drop.launch_position).lerp(Vector2(drop.landing_position), eased)
-			sprite.position.y -= sin(flight_progress * PI) * 76.0
-			sprite.rotation = flight_progress * TAU * (1.25 if int(drop.seed) % 2 == 0 else -1.25)
-			sprite.scale = Vector2(drop.base_scale) * (1.0 + sin(flight_progress * PI) * 0.18)
-		elif not bool(drop.get("settled", false)):
-			sprite.position = Vector2(drop.landing_position)
-			sprite.rotation = sin(float(drop.seed) * 2.1) * 0.14
-			sprite.scale = Vector2(drop.base_scale)
-			drop.settled = true
-		sprite.modulate.a = _loose_resource_alpha(age)
-		drop.age = age
-		chest_loot_drops[index] = drop
-		if age >= ORE_DROP_FLIGHT_DURATION and sprite.global_position.distance_to(player.global_position) <= CHEST_DROP_PICKUP_RADIUS:
-			drop.collecting = true
-			drop.collect_elapsed = 0.0
-			drop.collect_origin = sprite.global_position
-			chest_loot_drops[index] = drop
-
-
 func _gold_glow_texture() -> GradientTexture2D:
 	if is_instance_valid(gold_glow_texture):
 		return gold_glow_texture
@@ -4474,12 +4146,6 @@ func _surface_drop_budget_candidates() -> Array[Dictionary]:
 			candidates.append(_surface_drop_budget_candidate(
 				"timed_vein", "vein:%s" % vein_id, vein_id, index, drop, candidates.size()
 			))
-	for index in range(chest_loot_drops.size()):
-		var drop: Dictionary = chest_loot_drops[index]
-		var chest_id: = String(drop.get("chest_id", "unknown"))
-		candidates.append(_surface_drop_budget_candidate(
-			"chest", "chest:%s" % chest_id, chest_id, index, drop, candidates.size()
-		))
 	return candidates
 
 
@@ -4559,11 +4225,6 @@ func _trim_surface_drop_candidate(candidate: Dictionary) -> bool:
 			drops.remove_at(index)
 			runtime.drops = drops
 			timed_surface_veins[owner_id] = runtime
-		"chest":
-			if index < 0 or index >= chest_loot_drops.size():
-				return false
-			drop = chest_loot_drops[index]
-			chest_loot_drops.remove_at(index)
 		_:
 			return false
 	var sprite: Sprite2D = drop.get("sprite")
@@ -4575,17 +4236,9 @@ func _trim_surface_drop_candidate(candidate: Dictionary) -> bool:
 	var amount: = maxi(0, int(drop.get("amount", 0)))
 	if amount <= 0:
 		return true
-	if bucket == "chest":
-		var collected: = RunState.collect_chest_loot(
-			String(drop.get("chest_id", owner_id)),
-			String(drop.get("reward_id", "")),
-			amount
-		)
-		surface_drop_budget_auto_collected += collected
-	else:
-		var count_as_mined: = bucket in ["ore", "surface_mountain"]
-		RunState.add_resource(String(drop.get("kind", "")), amount, count_as_mined)
-		surface_drop_budget_auto_collected += amount
+	var count_as_mined: = bucket in ["ore", "surface_mountain"]
+	RunState.add_resource(String(drop.get("kind", "")), amount, count_as_mined)
+	surface_drop_budget_auto_collected += amount
 	return true
 
 
@@ -4668,13 +4321,6 @@ func _surface_restored_drop_rows(kind_amounts: Dictionary, kind_order: Array) ->
 
 func _evaluate_context(world_position: Vector2) -> void :
 	var next_context: = ""
-	var storage_id: = _nearest_surface_storage(world_position)
-	if not storage_id.is_empty():
-		next_context = "storage:%s" % storage_id
-	if next_context.is_empty():
-		var chest_id: = _nearest_unopened_surface_chest(world_position)
-		if not chest_id.is_empty():
-			next_context = "chest:%s" % chest_id
 	if (
 		next_context.is_empty()
 		and
@@ -4710,44 +4356,13 @@ func _evaluate_context(world_position: Vector2) -> void :
 		next_context = _nearest_surface_mining_context(world_position)
 	if next_context == active_context:
 		return
+	# Only the current mining owner may publish the hero's pose. Background
+	# growth of another deposit must not cancel/re-enter that pose every frame.
+	player.set_mining_visual(false)
 	active_context = next_context
 	context_changed.emit(active_context)
 	if active_context == "enter:mossMine":
 		mossvein_entrance_reached.emit()
-
-
-func _nearest_unopened_surface_chest(world_position: Vector2) -> String:
-	var nearest_id: = ""
-	var nearest_distance: = CHEST_INTERACT_RADIUS
-	for chest_value in Array(GameData.data.CHEST_DEFINITIONS):
-		var chest: Dictionary = Dictionary(chest_value)
-		var chest_id: = String(chest.id)
-		if RunState.is_surface_chest_opened(chest_id):
-			continue
-		var distance: = world_position.distance_to(surface_chest_position(chest_id))
-		if distance <= nearest_distance:
-			nearest_distance = distance
-			nearest_id = chest_id
-	return nearest_id
-
-
-func _nearest_surface_storage(world_position: Vector2) -> String:
-	var nearest_id: = ""
-	var nearest_distance: = BASE_MODULE_INTERACT_RADIUS
-	for module_value in RunState.all_base_modules():
-		var module: Dictionary = Dictionary(module_value)
-		if (
-			String(module.get("kind", "")) != "storage"
-			or bool(module.get("packed", false))
-			or String(module.get("scene", "")) != "surface"
-			or int(module.get("depth", 1)) != 1
-		):
-			continue
-		var distance: = world_position.distance_to(Vector2(float(module.x), float(module.y)))
-		if distance <= nearest_distance:
-			nearest_distance = distance
-			nearest_id = String(module.id)
-	return nearest_id
 
 
 func _nearest_surface_station_context(world_position: Vector2) -> String:
@@ -5231,14 +4846,6 @@ func _station_position(station_id: String) -> Vector2:
 	return Vector2(float(data.x), float(data.y))
 
 
-func surface_chest_position(chest_id: String) -> Vector2:
-	for chest_value in Array(GameData.data.CHEST_DEFINITIONS):
-		var chest: Dictionary = Dictionary(chest_value)
-		if String(chest.id) == chest_id:
-			return Vector2(float(chest.x), float(chest.y))
-	return Vector2.ZERO
-
-
 func station_interaction_position(station_id: String) -> Vector2:
 
 
@@ -5610,22 +5217,10 @@ func surface_route_snapshot() -> Dictionary:
 			"locked": not _is_boundary_unlocked(boundary),
 		})
 
-	var chest_rows: Array[Dictionary] = []
-	for chest_value in Array(GameData.data.CHEST_DEFINITIONS):
-		var chest: Dictionary = Dictionary(chest_value)
-		var chest_id: = String(chest.id)
-		chest_rows.append({
-			"id": chest_id,
-			"biome": String(chest.biome),
-			"position": surface_chest_position(chest_id),
-			"off_main_road": absf(surface_chest_position(chest_id).y - GATE_Y) >= 180.0,
-		})
-
 	return {
 		"main_routes": main_routes,
 		"branches": branches,
 		"boundaries": boundaries,
-		"chests": chest_rows,
 		"stations": {
 			"assay": _station_position("sell"),
 			"forge": _station_position("forge"),
@@ -6324,7 +5919,6 @@ func _companion_surface_drop(candidate: Dictionary) -> Dictionary:
 		"moonglass": return moon_bloom_drops[index]
 		"surface_mountain": return surface_resource_mountain_drops[index]
 		"timed_vein": return timed_surface_veins[String(candidate.owner)].drops[index]
-		"chest": return chest_loot_drops[index]
 	return {}
 
 func companion_loot_candidates() -> Array[Dictionary]:

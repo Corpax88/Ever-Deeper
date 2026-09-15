@@ -70,7 +70,7 @@ func run(d: Node, m: Node) -> bool:
 	journal.close_journal()
 	var cargo: Dictionary={}
 	for id in RunState.RESOURCE_IDS:cargo[id]=20
-	main.resource_inventory.open_inventory(cargo,{},false);await settle()
+	main.resource_inventory.open_inventory(cargo,{});await settle()
 	await swipe(main.resource_inventory.find_child("Scroll",true,false),false,"inventory-swiped")
 	main.resource_inventory.close_inventory()
 	main.premium_menu.open_menu(true,"Mossvein",true,false);main.premium_menu.show_achievements();await settle()

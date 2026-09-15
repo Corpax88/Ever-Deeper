@@ -2,7 +2,6 @@ class_name ResourceInventory
 extends Control
 
 signal close_requested
-signal auto_sort_requested
 
 const DropVisuals = preload("res://scripts/world/drop_visuals.gd")
 const GOLD: = Color("d7b45a")
@@ -14,7 +13,6 @@ const IPHONE_LANDSCAPE_ASPECT: = 1.95
 
 var item_grid: GridContainer
 var summary_label: Label
-var auto_sort_button: Button
 var empty_label: Label
 var equipped_icon: TextureRect
 var equipped_name: Label
@@ -36,15 +34,15 @@ func _ready() -> void :
 	visible = false
 
 
-func open_inventory(cargo: Dictionary, protected: Dictionary, auto_sort_enabled: bool) -> void :
+func open_inventory(cargo: Dictionary, protected: Dictionary) -> void :
 	visible = true
-	_refresh(cargo, protected, auto_sort_enabled)
+	_refresh(cargo, protected)
 	var close_button: = get_node("Card/Layout/Header/Close") as Button
 	close_button.grab_focus()
 
 
-func refresh_contents(cargo: Dictionary, protected: Dictionary, auto_sort_enabled: bool) -> void :
-	_refresh(cargo, protected, auto_sort_enabled)
+func refresh_contents(cargo: Dictionary, protected: Dictionary) -> void :
+	_refresh(cargo, protected)
 
 
 func close_inventory() -> void :
@@ -155,11 +153,6 @@ func _build_interface() -> void :
 	summary_label = _label("POUCH EMPTY", 10, MINT, HORIZONTAL_ALIGNMENT_LEFT)
 	summary_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	summary_row.add_child(summary_label)
-	auto_sort_button = _button("AUTO-SORT", true)
-	auto_sort_button.custom_minimum_size = Vector2(118, 46)
-	auto_sort_button.tooltip_text = "Move non-protected materials into a nearby Hub storage chest"
-	auto_sort_button.pressed.connect( func(): auto_sort_requested.emit())
-	summary_row.add_child(auto_sort_button)
 
 	var protected_note: = _label("GOLD MARKS MATERIALS RESERVED FOR YOUR NEXT UPGRADE", 11, MUTED, HORIZONTAL_ALIGNMENT_LEFT)
 	protected_note.name = "ProtectedNote"
@@ -222,7 +215,6 @@ func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void :
 		equipped_card.custom_minimum_size.y = 102
 		equipped_icon.custom_minimum_size = Vector2(130, 84)
 		summary_row.custom_minimum_size.y = 74
-		auto_sort_button.custom_minimum_size = Vector2(176, 82)
 		protected_note.custom_minimum_size.y = 38
 		footer.custom_minimum_size.y = 40
 		title.add_theme_font_size_override("font_size", 29)
@@ -232,7 +224,6 @@ func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void :
 		equipped_name.add_theme_font_size_override("font_size", 22)
 		equipped_stats.add_theme_font_size_override("font_size", 19)
 		summary_label.add_theme_font_size_override("font_size", 19)
-		auto_sort_button.add_theme_font_size_override("font_size", 18)
 		protected_note.add_theme_font_size_override("font_size", 18)
 		footer.add_theme_font_size_override("font_size", 18)
 		if is_instance_valid(empty_label):
@@ -253,7 +244,6 @@ func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void :
 		equipped_card.custom_minimum_size.y = 86
 		equipped_icon.custom_minimum_size = Vector2(104, 70)
 		summary_row.custom_minimum_size.y = 50
-		auto_sort_button.custom_minimum_size = Vector2(118, 46)
 		protected_note.custom_minimum_size.y = 28
 		footer.custom_minimum_size.y = 32
 		title.add_theme_font_size_override("font_size", 21)
@@ -263,7 +253,6 @@ func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void :
 		equipped_name.add_theme_font_size_override("font_size", 13)
 		equipped_stats.add_theme_font_size_override("font_size", 11)
 		summary_label.add_theme_font_size_override("font_size", 12)
-		auto_sort_button.add_theme_font_size_override("font_size", 11)
 		protected_note.add_theme_font_size_override("font_size", 11)
 		footer.add_theme_font_size_override("font_size", 11)
 		if is_instance_valid(empty_label):
@@ -284,13 +273,12 @@ func layout_snapshot(viewport_size: Vector2) -> Dictionary:
 		"safe_rect": Rect2(110, 18, viewport_size.x - 220, viewport_size.y - 36),
 		"card": card_rect,
 		"close_height": close_button.custom_minimum_size.y,
-		"auto_sort_height": auto_sort_button.custom_minimum_size.y,
 		"columns": item_grid.columns,
 	}
 
 
 func minimum_touch_targets_are_valid(minimum_height: float = 44.0) -> bool:
-	return close_button.custom_minimum_size.y >= minimum_height and auto_sort_button.custom_minimum_size.y >= minimum_height
+	return close_button.custom_minimum_size.y >= minimum_height
 
 
 func _place(control: Control, rect: Rect2) -> void :
@@ -304,7 +292,7 @@ func _place(control: Control, rect: Rect2) -> void :
 	control.offset_bottom = rect.end.y
 
 
-func _refresh(cargo: Dictionary, protected: Dictionary, auto_sort_enabled: bool) -> void :
+func _refresh(cargo: Dictionary, protected: Dictionary) -> void :
 	_cargo = cargo.duplicate(true)
 	_protected = protected.duplicate(true)
 	_refresh_equipped_tool()
@@ -342,8 +330,6 @@ func _refresh(cargo: Dictionary, protected: Dictionary, auto_sort_enabled: bool)
 		empty_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		item_grid.add_child(empty_label)
 	summary_label.text = "%d ITEMS  ·  %d RESOURCE TYPES" % [total, resources.size()]
-	auto_sort_button.visible = auto_sort_enabled
-	auto_sort_button.disabled = not auto_sort_enabled or resources.is_empty()
 
 
 func _refresh_equipped_tool() -> void :
@@ -431,7 +417,7 @@ func _resource_card(resource_id: String, amount: int, protected_amount: int) -> 
 	if protected_amount > 0:
 		var badge: = _label("CRAFT %d RESERVED" % protected_amount, 15 if iphone else 10, GOLD, HORIZONTAL_ALIGNMENT_LEFT)
 		badge.name = "ProtectedBadge"
-		badge.tooltip_text = "This material will not be sold or auto-sorted while your next upgrade needs it."
+		badge.tooltip_text = "This material will not be sold while your next upgrade needs it."
 		copy.add_child(badge)
 	else:
 		var value: = int(rock.get("value", 0))

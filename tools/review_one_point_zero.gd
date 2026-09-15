@@ -105,7 +105,6 @@ func _run() -> void:
 
 	var complete: Dictionary = state.endless_descent_status()
 	_check(int(complete.placed_relic_count) == 5 and int(complete.built_workshop_count) == 5, "Five generated relics complete five Hub workshops")
-	main._sync_hub_runtime()
 	main.hub_world.restore_position(Vector2(720, 495))
 	main.hub_world.player.set_facing(Vector2.UP)
 	await _settle_hub()
@@ -363,7 +362,6 @@ func _relic_cycle(relic_id: String, capture_return: bool) -> bool:
 	var before_build: Dictionary = state.cargo.duplicate(true)
 	if not _check(bool(state.build_workshop(workshop_id).get("ok", false)), "Real workshop construction"): return false
 	_check(state.cargo == before_build, "Relic-powered construction preserves gathered resources")
-	main._sync_hub_runtime()
 	if relic_id == "memory_loom":
 		hub.restore_position(pedestal)
 		await _capture("hub-museum-three-relics", {"fixture": "Three actual placed relics; chamber still unbuilt"})
@@ -417,7 +415,6 @@ func _tool_skin_capture() -> bool:
 			var recipe: Dictionary = state.workshop_status("tool_forge").next_upgrade
 			state.add_resource(String(recipe.resource), int(recipe.cost), false)
 			if not _check(bool(state.upgrade_workshop("tool_forge").get("ok", false)), "Paid skin unlock level"): return false
-		main._sync_hub_runtime()
 		main.hub_world.restore_position(Vector2(main.hub_world.WORKSHOP_POSITIONS.tool_forge) + Vector2(0, 100))
 		main.hub_world.player.set_facing(Vector2.DOWN)
 		var config: Dictionary = catalog.workshop_config("tool_forge", state.workshop_status("tool_forge"), main.hub_world.workshop_selection_preview("tool_forge"))

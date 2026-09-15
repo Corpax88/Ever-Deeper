@@ -216,22 +216,6 @@ func _run_landscape_qa() -> void :
 	var floor_bottom: Vector2 = continuous_floor.to_global(floor_rect.end)
 	assert (maxf(floor_top.y, floor_bottom.y) >= main.surface_world._world_size().y - 1.0)
 	assert ((surface_parallax.get_node("NearSilhouette") as Node2D).z_index > main.surface_world.player.z_index)
-	var chest_ids: Dictionary = {}
-	var chest_positions: Dictionary = {}
-	for chest_value in Array(GameData.data.CHEST_DEFINITIONS):
-		var chest: Dictionary = Dictionary(chest_value)
-		var chest_id: String = String(chest.id)
-		var chest_position: Vector2 = main.surface_world.surface_chest_position(chest_id)
-		assert ( not chest_ids.has(chest_id))
-		assert ( not chest_positions.has(chest_position))
-		chest_ids[chest_id] = true
-		chest_positions[chest_position] = chest_id
-	assert (chest_ids.size() == 8)
-	assert (main.surface_world.surface_chest_position("moss_supply") == Vector2(750, 640))
-	assert (main.surface_world.surface_chest_position("moss_ironbound") == Vector2(700, 720))
-	for routed_chest in Array(surface_routes.chests):
-		var routed_chest_row= Dictionary(routed_chest)
-		assert ( not main.surface_world._surface_collides(Vector2(routed_chest_row.position)), "Surface chest must remain on visible walkable terrain: %s at %s" % [String(routed_chest_row.id), Vector2(routed_chest_row.position)])
 	assert ( not main.surface_world._surface_collides(Vector2(2860, 788)), "The Ember collision must follow the visible mine path")
 	assert (main.surface_world._surface_collides(Vector2(2860, 700)), "Open Ember ground outside the path must not be invisibly walkable")
 	assert ( not main.surface_world._surface_collides(Vector2(3890, 930)), "The Starfall collision must follow the visible mine path")
@@ -445,7 +429,7 @@ func _run_iphone_layout_qa() -> void :
 			var target_rect: Rect2 = menu[target_name]
 			assert (target_rect.size.y * scale_to_css >= 44.0)
 		assert (float(inventory.close_height) * scale_to_css >= 44.0)
-		assert (float(inventory.auto_sort_height) * scale_to_css >= 44.0)
+		assert (not inventory.has("auto_sort_height"), "Retired chest sorting must not leave an inventory control")
 		assert (int(inventory.columns) == 4)
 		assert (Rect2(menu.safe_rect).encloses(Rect2(menu.main)))
 		assert (Rect2(menu.safe_rect).encloses(Rect2(menu.detail)))
@@ -487,7 +471,6 @@ func _run_iphone_layout_qa() -> void :
 			assert (Rect2(Vector2.ZERO, main.starforge_panel.size).encloses(Rect2(starforge_button.position, starforge_button.size)))
 		assert (main.conclusion_continue_button.size.y * scale_to_css >= 44.0)
 		assert (main.conclusion_hub_button.size.y * scale_to_css >= 44.0)
-		assert ( not main.premium_hud.build_button.visible and main.premium_hud.build_button.disabled)
 	print("EVER_DEEPER_IPHONE_LAYOUT_OK devices=844x390,852x393,874x402,912x420,932x430,956x440 touch=44css icons=optically-normalized safe=notch/home overlays=menu,bag,museum,starforge,conclusion")
 	main.get_tree().quit(0)
 
@@ -508,4 +491,3 @@ func _run_portrait_qa() -> void :
 	assert ( not main.orientation_guard_active and not main.orientation_guard.visible)
 	print("EVER_DEEPER_PORTRAIT_GUARD_OK portrait=1280x2770 landscape=1558x720 card=%dx%d" % [roundi(card.size.x), roundi(card.size.y)])
 	main.get_tree().quit(0)
-

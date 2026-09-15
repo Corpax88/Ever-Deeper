@@ -397,8 +397,10 @@ func _effective_seal_range() -> float:
 
 func _update_mining(delta: float) -> void :
 	var held: = external_mine_held or Input.is_action_pressed("mine")
-	var target: = _nearest_closed_seal(player.global_position)
-	if not held or target.is_empty() or player.global_position.distance_to(Vector2(SEAL_POSITIONS[target])) > _effective_seal_range():
+	# Preserve the opened seal during the current strike follow-through.
+	var recovering: bool = mining_active and mining_hit
+	var target: String = mining_target if recovering else _nearest_closed_seal(player.global_position)
+	if not held or player.is_actually_moving() or target.is_empty() or player.global_position.distance_to(Vector2(SEAL_POSITIONS[target])) > _effective_seal_range():
 		_cancel_mining()
 		return
 	if not mining_active or mining_target != target:

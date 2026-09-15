@@ -3,7 +3,6 @@ extends Control
 
 signal bag_requested
 signal context_requested
-signal hub_build_requested
 signal menu_requested
 signal minimap_layout_changed(map_rect: Rect2)
 signal onboarding_layout_changed(available_rect: Rect2)
@@ -59,7 +58,6 @@ var bag_button: Button
 var menu_button: Button
 var guide_button: Button
 var context_button: Button
-var build_button: Button
 
 var _objective_available: = false
 var _objective_open: = false
@@ -73,8 +71,6 @@ var _objective_detail_signature: = ""
 var _objective_signature_valid: = false
 var _gold_signature: = 0
 var _cargo_signature: = 0
-var _build_visible_signature: = false
-var _hub_build_mode_signature: = false
 var _state_signature_valid: = false
 var _iphone_layout_active: = false
 
@@ -97,11 +93,10 @@ func _ready() -> void :
 
 
 func refresh_from_state(
-	phase: String,
+	_phase: String,
 	_current_mine_id: String,
 	context_label: String,
-	context_enabled: bool,
-	hub_build_mode: bool
+	context_enabled: bool
 ) -> void :
 	var gold: = int(RunState.gold)
 	if not _state_signature_valid or gold != _gold_signature:
@@ -116,15 +111,6 @@ func refresh_from_state(
 		bag_button.tooltip_text = "Bag · %d items" % total
 	set_context_action(context_label, context_enabled)
 
-
-	var build_visible: = false
-	if not _state_signature_valid or build_visible != _build_visible_signature:
-		_build_visible_signature = build_visible
-		build_button.visible = build_visible
-	if not _state_signature_valid or hub_build_mode != _hub_build_mode_signature:
-		_hub_build_mode_signature = hub_build_mode
-		build_button.modulate = Color.WHITE if not hub_build_mode else Color(0.72, 1.0, 0.82, 1.0)
-		build_button.tooltip_text = "Finish Hub building" if hub_build_mode else "Build in the Hub"
 	_state_signature_valid = true
 
 
@@ -223,7 +209,7 @@ func set_status(message: String) -> void :
 
 
 func minimum_touch_targets_are_valid() -> bool:
-	for button in [menu_button, guide_button, bag_button, context_button, build_button]:
+	for button in [menu_button, guide_button, bag_button, context_button]:
 		if button != null and (button.custom_minimum_size.x < 44.0 or button.custom_minimum_size.y < 44.0):
 			return false
 	return true
@@ -273,12 +259,10 @@ func icon_size_snapshot() -> Dictionary:
 	return {
 		"menu": button_icon_visual_size(menu_button),
 		"guide": button_icon_visual_size(guide_button),
-		"build": button_icon_visual_size(build_button),
 		"bag": button_icon_visual_size(bag_button),
 		"context": button_icon_visual_size(context_button),
 		"menu_cap": menu_button.get_theme_constant("icon_max_width"),
 		"guide_cap": guide_button.get_theme_constant("icon_max_width"),
-		"build_cap": build_button.get_theme_constant("icon_max_width"),
 		"bag_cap": bag_button.get_theme_constant("icon_max_width"),
 		"context_cap": context_button.get_theme_constant("icon_max_width"),
 		"gold": gold_icon.size,
@@ -291,7 +275,6 @@ func _apply_responsive_layout(viewport_size: Vector2, native_insets: Vector4) ->
 	var touch_target: float = float(metrics.touch_target)
 	_place(menu_button, Rect2(metrics.menu))
 	_place(guide_button, Rect2(metrics.guide))
-	_place(build_button, Rect2(metrics.build))
 	_place(gold_cluster, Rect2(metrics.gold))
 	_place(bag_button, Rect2(metrics.bag))
 	_place(bag_count, Rect2(metrics.bag_count))
@@ -300,11 +283,10 @@ func _apply_responsive_layout(viewport_size: Vector2, native_insets: Vector4) ->
 	progression_goal_panel.set_mobile_layout(bool(metrics.iphone))
 	_place(context_button, Rect2(metrics.context))
 	_place(status_panel, Rect2(metrics.status))
-	for button in [menu_button, guide_button, build_button]:
+	for button in [menu_button, guide_button]:
 		button.custom_minimum_size = Rect2(metrics.menu).size
 	menu_button.add_theme_constant_override("icon_max_width", IPHONE_MENU_ICON_MAX if bool(metrics.iphone) else 46)
-	for button in [guide_button, build_button]:
-		button.add_theme_constant_override("icon_max_width", IPHONE_TOP_ICON_MAX if bool(metrics.iphone) else 42)
+	guide_button.add_theme_constant_override("icon_max_width", IPHONE_TOP_ICON_MAX if bool(metrics.iphone) else 42)
 	bag_button.custom_minimum_size = Rect2(metrics.bag).size
 	bag_button.add_theme_constant_override("icon_max_width", IPHONE_BAG_ICON_MAX if bool(metrics.iphone) else 68)
 	context_button.custom_minimum_size = Rect2(metrics.context).size
@@ -337,7 +319,6 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 	var top_button_size: = IPHONE_TOP_BUTTON_SIZE if iphone else touch_target
 	var menu_rect: = Rect2(left, top, top_button_size, top_button_size)
 	var guide_rect: = Rect2(menu_rect.end.x + gap, top, top_button_size, top_button_size)
-	var build_rect: = Rect2(guide_rect.end.x + gap, top, top_button_size, top_button_size)
 	var mine_size: = IPHONE_MINE_SIZE if iphone else 112.0
 	var mine_right: = maxf(native_insets.z, IPHONE_MINE_RIGHT if iphone else 16.0)
 	var mine_bottom: = maxf(native_insets.w, IPHONE_MINE_BOTTOM if iphone else 88.0)
@@ -391,7 +372,6 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 		"safe_rect": Rect2(left, top, viewport_size.x - left - right, viewport_size.y - top - bottom),
 		"menu": menu_rect,
 		"guide": guide_rect,
-		"build": build_rect,
 		"gold": gold_rect,
 		"mine": mine_rect,
 		"bag": bag_rect,
@@ -469,15 +449,6 @@ func _build_icon_chrome() -> void :
 	guide_button.pressed.connect(_toggle_objective)
 	guide_button.visible = false
 	add_child(guide_button)
-
-	build_button = _icon_button("HubBuild", BUILD_ICON, "Build in the Hub")
-	build_button.offset_left = 120.0
-	build_button.offset_top = 8.0
-	build_button.offset_right = 168.0
-	build_button.offset_bottom = 56.0
-	build_button.pressed.connect( func(): hub_build_requested.emit())
-	build_button.visible = false
-	add_child(build_button)
 
 	gold_cluster = Control.new()
 	gold_cluster.name = "GoldCluster"

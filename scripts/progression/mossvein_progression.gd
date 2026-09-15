@@ -18,7 +18,6 @@ var _source: Dictionary
 var _pocket_index: Dictionary = {}
 var _cavern_index: Dictionary = {}
 var _depth_access_by_mine: Dictionary = {}
-var _surface_chest_index: Dictionary = {}
 
 
 func _init(source_data: Dictionary) -> void :
@@ -327,33 +326,6 @@ func starforge_crafting_status(
 	}
 
 
-func surface_chest_ids() -> Array:
-	var result: Array = _surface_chest_index.keys()
-	result.sort()
-	return result
-
-
-func surface_chest_claim_plan(
-	chest_id: String,
-	pickaxe_level: int,
-	has_starforge: bool
-) -> Dictionary:
-	if not _surface_chest_index.has(chest_id):
-		return {"ok": false, "reason": "unknown_chest"}
-	var chest: Dictionary = Dictionary(_surface_chest_index[chest_id]).duplicate(true)
-	var requirement: Dictionary = chest.requires
-	if bool(requirement.get("starforge", false)) and not has_starforge:
-		return {"ok": false, "reason": "starforge_required", "chest": chest}
-	if pickaxe_level < int(requirement.get("pickaxeLevel", 1)):
-		return {"ok": false, "reason": "pickaxe_required", "chest": chest}
-	return {
-		"ok": true,
-		"reason": "ready",
-		"chest": chest,
-		"pending_loot": _normalized_reward_store(Dictionary(chest.rewards)),
-	}
-
-
 func _build_indexes() -> void :
 	for mine_id in MINE_IDS:
 		for depth in [DEPTH_ONE, ROOTWOUND_DEPTH]:
@@ -411,10 +383,6 @@ func _build_indexes() -> void :
 			mine_access[resource_id] = rule
 		_depth_access_by_mine[mine_id] = mine_access
 
-	for chest_value in Array(_source.CHEST_DEFINITIONS):
-		var chest: Dictionary = chest_value
-
-		_surface_chest_index[String(chest.id)] = chest.duplicate(true)
 
 
 func _normalized_reward_store(raw: Dictionary) -> Dictionary:
@@ -458,7 +426,7 @@ func _validate_source_contract() -> void :
 	for key in [
 		"MINE_DEPTH_PROFILES", "DEPTH2_RESOURCE_PROFILES", "MINE_DISCOVERY_PROFILES",
 		"MINE_DISCOVERIES", "MINE_DEPTH_DISCOVERIES", "DRILLS", "DRILL_RECIPES",
-		"STARFORGE_VARIANTS", "CHEST_DEFINITIONS",
+		"STARFORGE_VARIANTS",
 	]:
 		assert (_source.has(key), "Mine progression source is missing %s" % key)
 	assert (String(_source.MINE_DEPTH_PROFILES[MINE_ID].name) == "ROOTWOUND DEPTHS")

@@ -4,7 +4,6 @@ signal changed
 signal resource_collected(resource_id: String, amount: int)
 
 const MossveinProgressionScript: = preload("res://scripts/progression/mossvein_progression.gd")
-const BeltNetworkScript: = preload("res://scripts/progression/belt_network.gd")
 const SaveEpochScript: = preload("res://scripts/state/save_epoch.gd")
 const EndlessTerrainStateScript = preload("res://scripts/state/endless_terrain_state.gd")
 
@@ -52,24 +51,13 @@ const SURFACE_WORLD_SIZE: = Vector2(4480.0, 1280.0)
 const HUB_WORLD_SIZE: = Vector2(1440.0, 960.0)
 const DEEPHEART_WORLD_SIZE: = Vector2(2400.0, 1080.0)
 const DEEPHEART_PLAYER_SPAWN: = Vector2(590.0, 776.0)
-const HUB_GRID_ORIGIN: = Vector2(192.0, 240.0)
-const HUB_GRID_TILE_SIZE: = 48.0
-const HUB_GRID_COLS: = 22
-const HUB_GRID_ROWS: = 10
 const HUB_SURFACE_ENTRANCE: = Vector2(4245.0, 650.0)
 const HUB_SURFACE_LIFT: = Vector2(240.0, 820.0)
 const HUB_PLAYER_SPAWN: = Vector2(332.0, 820.0)
-const BASE_MODULE_INTERACT_RADIUS: = 118.0
-const AUTO_SORT_RADIUS: = 360.0
 const DRILL_PICKUP_RADIUS_STEP: = 32.0
-const STORAGE_CHEST_CAPACITY: = 20
 const MINE_TILE_SIZE: = 48.0
 const MAX_MINE_LOOSE_DROPS_PER_SCOPE: = 32
 const MAX_MINE_LOOSE_DROP_AMOUNT: = 1000000
-const HUB_PLAYER_BUILD_CLEARANCE: = 68.0
-const HUB_WALL_STONE_COST: = 5
-const HUB_LAMP_GOLD_COST: = 80
-const DEEP_ELEVATOR_SINK_ID: = "deep_elevator"
 const DEEP_ELEVATOR_RECIPE: = {
 	"ambercore": 3,
 	"lunacore": 3,
@@ -203,19 +191,14 @@ var endless_workshops: Dictionary = _default_endless_workshops()
 var endless_light_style: = "standard"
 var endless_outfit: = "miner"
 var endless_tool_style: = "original"
-var belt_state: Dictionary = {}
 var world_seed: = 0
 var hub: Dictionary = _default_hub_state()
-var base: Dictionary = _default_base_state()
-
 var discovered_mines: Dictionary = _default_discovered_mines()
 var discovered_caverns: Dictionary = {}
 var discovered_depth_entrances: Dictionary = _default_discovered_mines()
 var visited_depths: Dictionary = _default_discovered_mines()
 var claimed_pocket_rewards: Dictionary = {}
 var pending_pocket_loot: Dictionary = {}
-var opened_chests: Dictionary = {}
-var pending_chest_loot: Dictionary = {}
 var cleared_mine_barriers: Dictionary = {}
 var terrain_dug: Dictionary = _default_terrain_dug()
 var terrain_dug_lookup: Dictionary = {}
@@ -257,7 +240,6 @@ var _state_batch_depth: = 0
 var _state_batch_dirty: = false
 var _game_data_cache: Dictionary = {}
 var _mossvein_progression: RefCounted
-var _belt_network: RefCounted
 var _commerce_transactions: Dictionary = {}
 var _commerce_transaction_order: Array = []
 var _next_commerce_transaction_id: = 1
@@ -270,8 +252,6 @@ func _init() -> void :
 
 	discovered_caverns = _default_discovered_caverns()
 	claimed_pocket_rewards = _default_claimed_pocket_rewards()
-	opened_chests = _default_opened_chests()
-	belt_state = _belt_rules().default_state()
 
 
 func initialize_persistence(path: String = DEFAULT_SAVE_PATH) -> bool:
@@ -1819,205 +1799,6 @@ func _unlock_hub_early_without_emit() -> bool:
 	return changed_state
 
 
-func hub_contract() -> Dictionary:
-	return {
-		"world_size": HUB_WORLD_SIZE,
-		"grid": {
-			"origin": HUB_GRID_ORIGIN,
-			"tile_size": HUB_GRID_TILE_SIZE,
-			"cols": HUB_GRID_COLS,
-			"rows": HUB_GRID_ROWS,
-		},
-		"stations": {
-			"surface_entrance": HUB_SURFACE_ENTRANCE,
-			"surface_lift": HUB_SURFACE_LIFT,
-		},
-		"player_spawn": HUB_PLAYER_SPAWN,
-		"module_interact_radius": BASE_MODULE_INTERACT_RADIUS,
-		"auto_sort_radius": AUTO_SORT_RADIUS,
-		"storage_type_capacity": STORAGE_CHEST_CAPACITY,
-		"player_build_clearance": HUB_PLAYER_BUILD_CLEARANCE,
-		"costs": {
-			"wall": {"resource": "stone", "amount": HUB_WALL_STONE_COST},
-			"lamp": {"gold": HUB_LAMP_GOLD_COST},
-			"storage": {"gold": storage_chest_cost()},
-		},
-		"full_refund": true,
-		"deep_elevator_online": deep_elevator_powered,
-		"deep_elevator_repaired": deep_elevator_repaired,
-		"deep_elevator_recipe": deep_elevator_recipe(),
-	}
-
-
-func hub_state_snapshot() -> Dictionary:
-	return hub.duplicate(true)
-
-
-func base_state_snapshot() -> Dictionary:
-	return base.duplicate(true)
-
-
-func hub_economy_snapshot() -> Dictionary:
-	return {"gold": gold, "cargo": cargo.duplicate(true)}
-
-
-func hub_runtime_snapshot() -> Dictionary:
-	return {
-		"hub": hub_state_snapshot(),
-		"base": base_state_snapshot(),
-		"economy": hub_economy_snapshot(),
-	}
-
-
-func hub_belt_snapshot() -> Dictionary:
-	belt_state = _belt_rules().sanitize_state(belt_state)
-	return belt_state.duplicate(true)
-
-
-func configure_hub_belt_segment(
-	col: int,
-	row: int,
-	direction: String,
-	capacity: int = 4
-) -> Dictionary:
-	if not is_hub_unlocked():
-		return {"ok": false, "reason": "hub_locked"}
-	var result: Dictionary = _belt_rules().set_segment(
-		belt_state, col, row, direction, capacity
-	)
-	if bool(result.get("ok", false)):
-		_state_changed()
-	return result
-
-
-func remove_hub_belt_segment(col: int, row: int) -> Dictionary:
-	if not is_hub_unlocked():
-		return {"ok": false, "reason": "hub_locked"}
-	var result: Dictionary = _belt_rules().remove_segment(belt_state, col, row)
-	if bool(result.get("ok", false)):
-		_state_changed()
-	return result
-
-
-func configure_hub_belt_endpoint(
-	endpoint_id: String,
-	kind: String,
-	col: int,
-	row: int,
-	direction: String = "right",
-	accepts: Array = [],
-	capacity: int = 64
-) -> Dictionary:
-	if not is_hub_unlocked():
-		return {"ok": false, "reason": "hub_locked"}
-	var result: Dictionary = _belt_rules().set_endpoint(
-		belt_state,
-		endpoint_id,
-		kind,
-		col,
-		row,
-		direction,
-		accepts,
-		capacity
-	)
-	if bool(result.get("ok", false)):
-		_state_changed()
-	return result
-
-
-func remove_hub_belt_endpoint(endpoint_id: String) -> Dictionary:
-	if not is_hub_unlocked():
-		return {"ok": false, "reason": "hub_locked"}
-	var result: Dictionary = _belt_rules().remove_endpoint(belt_state, endpoint_id)
-	if bool(result.get("ok", false)):
-		_state_changed()
-	return result
-
-
-func enqueue_hub_belt_from_cargo(
-	source_id: String,
-	resource_id: String,
-	amount: int
-) -> Dictionary:
-	if not is_hub_unlocked():
-		return {"ok": false, "reason": "hub_locked", "accepted": 0}
-	if resource_id not in RESOURCE_IDS or amount <= 0:
-		return {"ok": false, "reason": "invalid_resource", "accepted": 0}
-	var offered: = mini(amount, int(cargo.get(resource_id, 0)))
-	if offered <= 0:
-		return {"ok": false, "reason": "cargo_missing", "accepted": 0}
-	var result: Dictionary = _belt_rules().enqueue(
-		belt_state, source_id, resource_id, offered
-	)
-	var accepted: = int(result.get("accepted", 0))
-	if accepted > 0:
-		cargo[resource_id] = int(cargo.get(resource_id, 0)) - accepted
-		_state_changed()
-	return result
-
-
-func process_hub_belts(steps: int = 1) -> Dictionary:
-	if not is_hub_unlocked():
-		return {"ok": false, "reason": "hub_locked", "moved": 0, "delivered": 0}
-	var tick_result: Dictionary = _belt_rules().tick(belt_state, steps)
-	var committed: = 0
-	for resource_value in DEEP_ELEVATOR_RECIPE:
-		var resource_id: = String(resource_value)
-		var missing: = maxi(
-			0,
-			int(DEEP_ELEVATOR_RECIPE[resource_id])
-			- int(deep_elevator_deliveries.get(resource_id, 0))
-		)
-		if missing <= 0:
-			continue
-		if resource_id == "singularity" and not singularity_secured:
-			continue
-		var taken: int = _belt_rules().take_delivered(
-			belt_state, DEEP_ELEVATOR_SINK_ID, resource_id, missing
-		)
-		committed += _commit_deep_elevator_material_without_emit(resource_id, taken)
-
-
-
-	if int(tick_result.get("delivered", 0)) > 0 or committed > 0:
-		_state_changed()
-	return {
-		"ok": true,
-		"reason": "processed",
-		"steps": int(tick_result.get("steps", 0)),
-		"moved": int(tick_result.get("moved", 0)),
-		"delivered": int(tick_result.get("delivered", 0)),
-		"committed": committed,
-		"elevator": deep_elevator_status(),
-	}
-
-
-func hub_belt_delivered_snapshot(sink_id: String = "") -> Dictionary:
-	return _belt_rules().delivered_snapshot(belt_state, sink_id)
-
-
-func take_hub_belt_delivery(sink_id: String, resource_id: String, amount: int) -> int:
-
-
-	return collect_hub_belt_delivery(sink_id, resource_id, amount)
-
-
-func collect_hub_belt_delivery(
-	sink_id: String,
-	resource_id: String,
-	amount: int
-) -> int:
-	if resource_id not in RESOURCE_IDS or amount <= 0:
-		return 0
-	var taken: int = _belt_rules().take_delivered(
-		belt_state, sink_id, resource_id, amount
-	)
-	if taken > 0:
-		cargo[resource_id] = int(cargo.get(resource_id, 0)) + taken
-		_state_changed()
-	return taken
-
-
 func is_hub_unlocked() -> bool:
 	return hub_unlocked_early or bool(hub.get("unlocked", false))
 
@@ -2030,14 +1811,6 @@ func mark_hub_tutorial_seen() -> bool:
 	if not is_hub_unlocked() or bool(hub.get("tutorialSeen", false)):
 		return false
 	hub["tutorialSeen"] = true
-	_state_changed()
-	return true
-
-
-func mark_hub_build_tutorial_seen() -> bool:
-	if not is_hub_unlocked() or bool(hub.get("buildTutorialSeen", false)):
-		return false
-	hub["buildTutorialSeen"] = true
 	_state_changed()
 	return true
 
@@ -2078,365 +1851,6 @@ func exit_hub() -> bool:
 	last_surface_position = return_position
 	_state_changed()
 	return true
-
-
-func hub_cell_center(col: int, row: int) -> Vector2:
-	return HUB_GRID_ORIGIN + (Vector2(col, row) + Vector2(0.5, 0.5)) * HUB_GRID_TILE_SIZE
-
-
-func hub_cell_at_world(world_position: Vector2) -> Vector2i:
-	if not _valid_vector(world_position):
-		return Vector2i(-1, -1)
-	var cell: = Vector2i(
-		floori((world_position.x - HUB_GRID_ORIGIN.x) / HUB_GRID_TILE_SIZE),
-		floori((world_position.y - HUB_GRID_ORIGIN.y) / HUB_GRID_TILE_SIZE)
-	)
-	return cell if _hub_cell_in_bounds(cell.x, cell.y) else Vector2i(-1, -1)
-
-
-func hub_build_cost(kind: String) -> Dictionary:
-	match kind:
-		"wall":
-			return {"resource": "stone", "amount": HUB_WALL_STONE_COST}
-		"lamp":
-			return {"gold": HUB_LAMP_GOLD_COST}
-		"storage":
-			return {"gold": storage_chest_cost()}
-	return {}
-
-
-func hub_build_status(
-	kind: String,
-	col: int,
-	row: int,
-	player_position: Variant = null
-) -> Dictionary:
-	var request: = {"kind": kind, "col": col, "row": row}
-	if not is_hub_unlocked() or current_scene != "hub":
-		return {"ok": false, "reason": "hub_unavailable", "request": request}
-	if kind not in ["wall", "lamp", "storage"]:
-		return {"ok": false, "reason": "unsupported_building", "request": request}
-	if not _hub_cell_in_bounds(col, row):
-		return {"ok": false, "reason": "outside_grid", "request": request}
-	if not _hub_occupant_at_cell(col, row).is_empty():
-		return {"ok": false, "reason": "occupied", "request": request}
-	var actor_position: = current_position
-	if player_position is Vector2 and _valid_vector(player_position):
-		actor_position = player_position
-	if hub_cell_center(col, row).distance_to(actor_position) < HUB_PLAYER_BUILD_CLEARANCE:
-		return {"ok": false, "reason": "player_clearance", "request": request}
-	var cost: = hub_build_cost(kind)
-	if cost.has("resource") and int(cargo.get(String(cost.resource), 0)) < int(cost.amount):
-		return {"ok": false, "reason": "insufficient_resource", "request": request, "cost": cost}
-	if cost.has("gold") and gold < int(cost.gold):
-		return {"ok": false, "reason": "insufficient_gold", "request": request, "cost": cost}
-	return {
-		"ok": true,
-		"reason": "ready",
-		"request": request,
-		"cost": cost,
-		"position": hub_cell_center(col, row),
-	}
-
-
-func build_hub_cell(
-	kind: String,
-	col: int,
-	row: int,
-	player_position: Variant = null
-) -> Dictionary:
-	var status: = hub_build_status(kind, col, row, player_position)
-	if not bool(status.get("ok", false)):
-		return status
-	var cost: Dictionary = Dictionary(status.cost)
-	if cost.has("resource"):
-		var resource_id: = String(cost.resource)
-		cargo[resource_id] = int(cargo.get(resource_id, 0)) - int(cost.amount)
-	else:
-		gold -= int(cost.gold)
-	var result: = {
-		"ok": true,
-		"reason": "built",
-		"kind": kind,
-		"cell": Vector2i(col, row),
-		"position": hub_cell_center(col, row),
-		"cost": cost.duplicate(true),
-	}
-	if kind in ["wall", "lamp"]:
-		var tiles: Array = Array(hub.get("tiles", [])).duplicate(true)
-		tiles.append({"col": col, "row": row, "kind": kind})
-		hub["tiles"] = tiles
-	else:
-		var chest: = _new_storage_chest("hub", 1, hub_cell_center(col, row), false)
-		var chests: Array = Array(base.get("chests", [])).duplicate(true)
-		chests.append(chest)
-		base["chests"] = chests
-		result["module"] = chest.duplicate(true)
-	_state_changed()
-	return result
-
-
-func remove_hub_cell(col: int, row: int) -> Dictionary:
-	if not is_hub_unlocked() or current_scene != "hub":
-		return {"ok": false, "reason": "hub_unavailable"}
-	if not _hub_cell_in_bounds(col, row):
-		return {"ok": false, "reason": "outside_grid"}
-	var tiles: Array = Array(hub.get("tiles", [])).duplicate(true)
-	for index in tiles.size():
-		var tile: Dictionary = Dictionary(tiles[index])
-		if int(tile.get("col", -1)) != col or int(tile.get("row", -1)) != row:
-			continue
-		tiles.remove_at(index)
-		hub["tiles"] = tiles
-		var refund: = {"resource": "stone", "amount": HUB_WALL_STONE_COST} if String(tile.kind) == "wall" else {"gold": HUB_LAMP_GOLD_COST}
-		if refund.has("resource"):
-			var resource_id: = String(refund.resource)
-			cargo[resource_id] = int(cargo.get(resource_id, 0)) + int(refund.amount)
-		else:
-			gold += int(refund.gold)
-		_state_changed()
-		return {"ok": true, "reason": "refunded", "kind": String(tile.kind), "refund": refund}
-	var module: = _hub_module_at_cell(col, row)
-	if module.is_empty():
-		return {"ok": false, "reason": "empty_cell"}
-	module["packed"] = true
-	_write_base_module(module)
-	_state_changed()
-	return {
-		"ok": true,
-		"reason": "packed",
-		"kind": String(module.kind),
-		"module_id": String(module.id),
-		"lossless": true,
-	}
-
-
-func commit_hub_runtime_state(
-	next_hub_state: Dictionary,
-	next_base_state: Dictionary,
-	next_economy_state: Dictionary
-) -> bool:
-	if not is_hub_unlocked():
-		return false
-	var clean_hub: = _sanitize_hub_state(next_hub_state, victory or is_hub_unlocked())
-	# Runtime snapshots own construction, not completed progression. A snapshot
-	# taken before a tutorial completes must never make that tutorial pending again.
-	for flag in ["visited", "tutorialSeen", "buildTutorialSeen"]:
-		clean_hub[flag] = bool(clean_hub.get(flag, false)) or bool(hub.get(flag, false))
-	var clean_base: = _sanitize_base_state(next_base_state, bool(clean_hub.unlocked))
-	var clean_gold: = _nonnegative_int(next_economy_state.get("gold", gold), gold)
-	var clean_cargo: = _sanitize_resource_store(next_economy_state.get("cargo", cargo))
-	if hub == clean_hub and base == clean_base and gold == clean_gold and cargo == clean_cargo:
-		return false
-	hub = clean_hub
-	base = clean_base
-	gold = clean_gold
-	cargo = clean_cargo
-	_state_changed()
-	return true
-
-
-func all_base_modules() -> Array:
-	return _all_base_modules_internal().duplicate(true)
-
-
-func base_module_by_id(module_id: String) -> Dictionary:
-	return _base_module_by_id_internal(module_id).duplicate(true)
-
-
-func storage_chest_cost() -> int:
-	var existing: = Array(base.get("chests", [])).size()
-	return roundi(250.0 * pow(1.65, float(maxi(0, existing - 1))) / 10.0) * 10
-
-
-func storage_chest_type_count(chest_id: String) -> int:
-	var chest: = _base_module_by_id_internal(chest_id)
-	if String(chest.get("kind", "")) != "storage":
-		return 0
-	return _storage_type_count(chest)
-
-
-func buy_storage_chest(
-	scene: String = "",
-	depth: int = 0,
-	position: Variant = null
-) -> Dictionary:
-	var cost: = storage_chest_cost()
-	if gold < cost:
-		return {"ok": false, "reason": "insufficient_gold", "cost": cost}
-	var target_scene: = current_scene if scene.is_empty() else scene
-	var target_depth: = current_depth if depth <= 0 else depth
-	var target_position: = current_position
-	if position is Vector2 and _valid_vector(position):
-		target_position = position
-	if not _base_location_allowed(target_scene, target_depth):
-		return {"ok": false, "reason": "invalid_location", "cost": cost}
-	var chest: = _new_storage_chest(target_scene, target_depth, target_position, true)
-	var chests: Array = Array(base.get("chests", [])).duplicate(true)
-	chests.append(chest)
-	base["chests"] = chests
-	gold -= cost
-	_state_changed()
-	return {"ok": true, "reason": "purchased", "cost": cost, "module": chest.duplicate(true)}
-
-
-func place_base_module(
-	module_id: String,
-	scene: String = "",
-	depth: int = 0,
-	position: Variant = null
-) -> bool:
-	var module: = _base_module_by_id_internal(module_id)
-	if module.is_empty() or not bool(module.get("packed", false)):
-		return false
-	var target_scene: = current_scene if scene.is_empty() else scene
-	var target_depth: = current_depth if depth <= 0 else depth
-	var target_position: = current_position
-	if position is Vector2 and _valid_vector(position):
-		target_position = position
-	if not _base_location_allowed(target_scene, target_depth):
-		return false
-	if target_scene == "hub":
-		var cell: = hub_cell_at_world(target_position)
-		if cell == Vector2i(-1, -1) or not _hub_occupant_at_cell(cell.x, cell.y).is_empty():
-			return false
-		target_position = hub_cell_center(cell.x, cell.y)
-	module["scene"] = target_scene
-	module["depth"] = 1 if target_scene in ["surface", "hub"] else (2 if target_depth == 2 else 1)
-	module["x"] = target_position.x
-	module["y"] = target_position.y
-	module["packed"] = false
-	_write_base_module(module)
-	_state_changed()
-	return true
-
-
-func pack_base_module(
-	module_id: String,
-	player_position: Variant = null,
-	require_nearby: bool = true
-) -> bool:
-	var module: = _base_module_by_id_internal(module_id)
-	if module.is_empty() or not _module_is_at_location(module, current_scene, current_depth):
-		return false
-	var actor_position: = current_position
-	if player_position is Vector2 and _valid_vector(player_position):
-		actor_position = player_position
-	if require_nearby and actor_position.distance_to(Vector2(float(module.x), float(module.y))) > BASE_MODULE_INTERACT_RADIUS:
-		return false
-	module["packed"] = true
-	_write_base_module(module)
-	_state_changed()
-	return true
-
-
-func nearby_storage_chests(
-	player_position: Variant = null,
-	scene: String = "",
-	depth: int = 0,
-	radius: float = AUTO_SORT_RADIUS
-) -> Array:
-	var target_position: = current_position
-	if player_position is Vector2 and _valid_vector(player_position):
-		target_position = player_position
-	var target_scene: = current_scene if scene.is_empty() else scene
-	var target_depth: = current_depth if depth <= 0 else depth
-	var result: Array = []
-	for chest_value in Array(base.get("chests", [])):
-		var chest: Dictionary = Dictionary(chest_value)
-		if not _module_is_at_location(chest, target_scene, target_depth):
-			continue
-		if target_position.distance_to(Vector2(float(chest.x), float(chest.y))) <= maxf(0.0, radius):
-			result.append(chest.duplicate(true))
-	return result
-
-
-func auto_sort_resources(
-	player_position: Variant = null,
-	scene: String = "",
-	depth: int = 0,
-	radius: float = AUTO_SORT_RADIUS
-) -> int:
-	var target_position: = current_position
-	if player_position is Vector2 and _valid_vector(player_position):
-		target_position = player_position
-	var target_scene: = current_scene if scene.is_empty() else scene
-	var target_depth: = current_depth if depth <= 0 else depth
-	var chests: Array = Array(base.get("chests", [])).duplicate(true)
-	var nearby_indices: Array[int] = []
-	for index in chests.size():
-		var chest: Dictionary = Dictionary(chests[index])
-		if _module_is_at_location(chest, target_scene, target_depth) and target_position.distance_to(Vector2(float(chest.x), float(chest.y))) <= maxf(0.0, radius):
-			nearby_indices.append(index)
-	if nearby_indices.is_empty():
-		return 0
-	var protected: = _protected_progress_cargo()
-	var moved: = 0
-	for resource_id_value in RESOURCE_IDS:
-		var resource_id: = String(resource_id_value)
-		var remaining: = maxi(0, int(cargo.get(resource_id, 0)) - int(protected.get(resource_id, 0)))
-		if remaining <= 0:
-			continue
-		var target_index: = -1
-		for index in nearby_indices:
-			var existing: Dictionary = Dictionary(chests[index])
-			if int(Dictionary(existing.items).get(resource_id, 0)) > 0:
-				target_index = index
-				break
-		if target_index < 0:
-			for index in nearby_indices:
-				if _storage_type_count(Dictionary(chests[index])) < STORAGE_CHEST_CAPACITY:
-					target_index = index
-					break
-		if target_index < 0:
-			continue
-		var target: Dictionary = Dictionary(chests[target_index])
-		var items: Dictionary = Dictionary(target.get("items", _empty_resource_store()))
-		items[resource_id] = int(items.get(resource_id, 0)) + remaining
-		target["items"] = items
-		chests[target_index] = target
-		cargo[resource_id] = int(cargo.get(resource_id, 0)) - remaining
-		moved += remaining
-	if moved > 0:
-		base["chests"] = chests
-		_state_changed()
-	return moved
-
-
-func take_all_from_storage(
-	chest_id: String,
-	player_position: Variant = null,
-	scene: String = "",
-	depth: int = 0,
-	radius: float = AUTO_SORT_RADIUS
-) -> int:
-	var chest: = _base_module_by_id_internal(chest_id)
-	if String(chest.get("kind", "")) != "storage":
-		return 0
-	var target_position: = current_position
-	if player_position is Vector2 and _valid_vector(player_position):
-		target_position = player_position
-	var target_scene: = current_scene if scene.is_empty() else scene
-	var target_depth: = current_depth if depth <= 0 else depth
-	if not _module_is_at_location(chest, target_scene, target_depth):
-		return 0
-	if target_position.distance_to(Vector2(float(chest.x), float(chest.y))) > maxf(0.0, radius):
-		return 0
-	var items: Dictionary = Dictionary(chest.get("items", {}))
-	var moved: = 0
-	for resource_id_value in RESOURCE_IDS:
-		var resource_id: = String(resource_id_value)
-		var amount: = int(items.get(resource_id, 0))
-		if amount <= 0:
-			continue
-		cargo[resource_id] = int(cargo.get(resource_id, 0)) + amount
-		items[resource_id] = 0
-		moved += amount
-	if moved > 0:
-		chest["items"] = items
-		_write_base_module(chest)
-		_state_changed()
-	return moved
 
 
 func set_movement_speed_level(level: int) -> void :
@@ -2637,59 +2051,6 @@ func collect_pocket_loot(reward_id: String, resource_id: String, amount: int) ->
 		pending_pocket_loot[reward_id] = pending
 	_state_changed()
 	resource_collected.emit(resource_id, collected)
-	return collected
-
-
-func is_surface_chest_opened(chest_id: String) -> bool:
-	return _all_chest_ids().has(chest_id) and bool(opened_chests.get(chest_id, false))
-
-
-func open_surface_chest(chest_id: String) -> Dictionary:
-	if is_surface_chest_opened(chest_id):
-		return {"ok": false, "reason": "already_opened"}
-	var plan: Dictionary = _moss_rules().surface_chest_claim_plan(
-		chest_id,
-		pickaxe_level,
-		not starforge_variant.is_empty()
-	)
-	if not bool(plan.get("ok", false)):
-		return plan
-	opened_chests[chest_id] = true
-	pending_chest_loot[chest_id] = Dictionary(plan.pending_loot).duplicate(true)
-	_state_changed()
-	return plan
-
-
-func open_mossvein_chest(chest_id: String) -> Dictionary:
-
-	return open_surface_chest(chest_id)
-
-
-func pending_chest_reward_loot(chest_id: String) -> Dictionary:
-	return Dictionary(pending_chest_loot.get(chest_id, {})).duplicate(true)
-
-
-func collect_chest_loot(chest_id: String, reward_id: String, amount: int) -> int:
-	if amount <= 0 or (reward_id != "coin" and not RESOURCE_IDS.has(reward_id)):
-		return 0
-	var pending: Dictionary = Dictionary(pending_chest_loot.get(chest_id, {}))
-	var collected: = mini(amount, int(pending.get(reward_id, 0)))
-	if collected <= 0:
-		return 0
-	if reward_id == "coin":
-		gold += collected
-		total_gold_earned += collected
-	else:
-		cargo[reward_id] = int(cargo.get(reward_id, 0)) + collected
-	pending[reward_id] = int(pending.get(reward_id, 0)) - collected
-	if int(pending[reward_id]) <= 0:
-		pending.erase(reward_id)
-	if pending.is_empty():
-		pending_chest_loot.erase(chest_id)
-	else:
-		pending_chest_loot[chest_id] = pending
-	_state_changed()
-	resource_collected.emit("gold" if reward_id == "coin" else reward_id, collected)
 	return collected
 
 
@@ -3159,8 +2520,6 @@ func serialize() -> Dictionary:
 		or saved_victory
 	)
 	var saved_hub: = _sanitize_hub_state(hub, saved_hub_early)
-	var saved_base: = _sanitize_base_state(base, bool(saved_hub.unlocked))
-	var saved_belt_state: Dictionary = _belt_rules().sanitize_state(belt_state)
 	var saved_mine_resource_runtime: = _sanitize_mine_resource_runtime(mine_resource_runtime)
 	var saved_surface_mountains: = {}
 	for mountain_id_value in SURFACE_MOUNTAIN_IDS:
@@ -3233,18 +2592,14 @@ func serialize() -> Dictionary:
 				"outfit": endless_outfit if saved_victory else "miner",
 				"tool_style": endless_tool_style if saved_victory else "original",
 			},
-			"belt_state": saved_belt_state,
 			"world_seed": world_seed,
 			"hub": saved_hub,
-			"base": saved_base,
 			"discovered_mines": discovered_mines.duplicate(true),
 			"discovered_caverns": discovered_caverns.duplicate(true),
 			"discovered_depth_entrances": saved_depth_entrances,
 			"visited_depths": saved_visited_depths,
 			"claimed_pocket_rewards": claimed_pocket_rewards.duplicate(true),
 			"pending_pocket_loot": pending_pocket_loot.duplicate(true),
-			"opened_chests": opened_chests.duplicate(true),
-			"pending_chest_loot": pending_chest_loot.duplicate(true),
 			"cleared_mine_barriers": cleared_mine_barriers.duplicate(true),
 			"terrain_dug": terrain_dug.duplicate(true),
 			"mine_resource_runtime": saved_mine_resource_runtime,
@@ -3479,11 +2834,6 @@ func deserialize(raw: Variant) -> bool:
 		or victory
 	)
 	hub = _sanitize_hub_state(raw_hub, hub_unlocked_early)
-	base = _sanitize_base_state(
-		source.get("base", source.get("base_state", {})),
-		bool(hub.unlocked)
-	)
-	belt_state = _belt_rules().sanitize_state(source.get("belt_state", {}))
 	world_seed = _nonnegative_int(_first_value(source, "world_seed", "worldSeed"), 0)
 	discovered_mines = _sanitize_bool_map(source.get("discovered_mines", source.get("discoveredMines", {})), MINE_IDS)
 	discovered_caverns = _sanitize_bool_map(
@@ -3506,17 +2856,6 @@ func deserialize(raw: Variant) -> bool:
 		source.get("pending_pocket_loot", source.get("pendingPocketLoot", {})),
 		_all_pocket_reward_ids(),
 		RESOURCE_IDS
-	)
-	opened_chests = _sanitize_bool_map(
-		source.get("opened_chests", source.get("openedChests", {})),
-		_all_chest_ids()
-	)
-	var chest_reward_ids: Array = RESOURCE_IDS.duplicate()
-	chest_reward_ids.append("coin")
-	pending_chest_loot = _sanitize_pending_loot(
-		source.get("pending_chest_loot", source.get("pendingChestLoot", {})),
-		_all_chest_ids(),
-		chest_reward_ids
 	)
 	drill_goal_scene = _sanitize_allowed_id(
 		_first_value(source, "drill_goal_scene", "drillGoalScene"),
@@ -3758,18 +3097,14 @@ func _apply_defaults(emit_change: bool = true) -> void :
 	endless_light_style = "standard"
 	endless_outfit = "miner"
 	endless_tool_style = "original"
-	belt_state = _belt_rules().default_state()
 	world_seed = 0
 	hub = _default_hub_state()
-	base = _default_base_state()
 	discovered_mines = _default_discovered_mines()
 	discovered_caverns = _default_discovered_caverns()
 	discovered_depth_entrances = _default_discovered_mines()
 	visited_depths = _default_discovered_mines()
 	claimed_pocket_rewards = _default_claimed_pocket_rewards()
 	pending_pocket_loot = {}
-	opened_chests = _default_opened_chests()
-	pending_chest_loot = {}
 	cleared_mine_barriers = {}
 	terrain_dug = _default_terrain_dug()
 	_rebuild_terrain_dug_lookup()
@@ -3809,10 +3144,8 @@ func _default_hub_state() -> Dictionary:
 		"unlocked": false,
 		"visited": false,
 		"tutorialSeen": false,
-		"buildTutorialSeen": false,
 		"surfaceX": HUB_SURFACE_ENTRANCE.x,
 		"surfaceY": HUB_SURFACE_ENTRANCE.y,
-		"tiles": [],
 	}
 
 
@@ -4172,24 +3505,6 @@ func _endless_resource_snapshot() -> Dictionary:
 	return result
 
 
-func _default_base_state() -> Dictionary:
-	return {
-		"forge": {
-			"id": "forge", "kind": "forge", "scene": "surface", "depth": 1,
-			"x": 455.0, "y": 250.0, "packed": false,
-		},
-		"sell": {
-			"id": "sell", "kind": "sell", "scene": "surface", "depth": 1,
-			"x": 205.0, "y": 250.0, "packed": false,
-		},
-		"chests": [{
-			"id": "storage-1", "kind": "storage", "scene": "surface", "depth": 1,
-			"x": 335.0, "y": 390.0, "packed": false, "items": _empty_resource_store(),
-		}],
-		"nextChestId": 2,
-	}
-
-
 func _sanitize_hub_state(raw: Variant, unlock_allowed: bool = false) -> Dictionary:
 	var source: Dictionary = raw if raw is Dictionary else {}
 	var result: = _default_hub_state()
@@ -4198,9 +3513,6 @@ func _sanitize_hub_state(raw: Variant, unlock_allowed: bool = false) -> Dictiona
 	# Older saves may contain a visit with a tutorial flag overwritten by the Hub.
 	result["tutorialSeen"] = bool(result["visited"]) or _strict_bool(source.get(
 		"tutorialSeen", source.get("tutorial_seen", false)
-	))
-	result["buildTutorialSeen"] = _strict_bool(source.get(
-		"buildTutorialSeen", source.get("build_tutorial_seen", false)
 	))
 	result["surfaceX"] = clampf(
 		_source_coordinate(source.get("surfaceX", source.get("surface_x", HUB_SURFACE_ENTRANCE.x)), HUB_SURFACE_ENTRANCE.x),
@@ -4212,209 +3524,11 @@ func _sanitize_hub_state(raw: Variant, unlock_allowed: bool = false) -> Dictiona
 		70.0,
 		SURFACE_WORLD_SIZE.y - 58.0
 	)
-	var clean_tiles: Array = []
-	var occupied: = {}
-	var raw_tiles: Variant = source.get("tiles", [])
-	if raw_tiles is Array:
-		for tile_value in raw_tiles:
-			if not tile_value is Dictionary:
-				continue
-			var tile: Dictionary = tile_value
-			var kind: = String(tile.get("kind", ""))
-			var col: = _floor_int(tile.get("col", -1), -1)
-			var row: = _floor_int(tile.get("row", -1), -1)
-			var key: = "%d:%d" % [col, row]
-			if kind not in ["wall", "lamp"] or not _hub_cell_in_bounds(col, row) or occupied.has(key):
-				continue
-			occupied[key] = true
-			clean_tiles.append({"col": col, "row": row, "kind": kind})
-	result["tiles"] = clean_tiles
 	return result
-
-
-func _sanitize_base_state(raw: Variant, hub_unlocked: bool = false) -> Dictionary:
-	var fallback: = _default_base_state()
-	var source: Dictionary = raw if raw is Dictionary else {}
-	var result: = fallback.duplicate(true)
-	result["forge"] = _sanitize_base_module(source.get("forge", {}), fallback.forge, hub_unlocked)
-	result["sell"] = _sanitize_base_module(source.get("sell", {}), fallback.sell, hub_unlocked)
-	var raw_chests: Variant = source.get("chests", [])
-	if raw_chests is Array and not Array(raw_chests).is_empty():
-		var clean_chests: Array = []
-		var seen_ids: = {"forge": true, "sell": true}
-		for index in Array(raw_chests).size():
-			var raw_chest: Variant = Array(raw_chests)[index]
-			var chest_fallback: = {
-				"id": "storage-%d" % (index + 1),
-				"kind": "storage",
-				"scene": "surface",
-				"depth": 1,
-				"x": 335.0,
-				"y": 390.0,
-				"packed": true,
-			}
-			var chest: = _sanitize_base_module(raw_chest, chest_fallback, hub_unlocked)
-			var source_chest: Dictionary = raw_chest if raw_chest is Dictionary else {}
-			var requested_id: = String(source_chest.get("id", "")) if source_chest.get("id", null) is String else ""
-			var chest_id: = requested_id if not requested_id.is_empty() else String(chest_fallback.id)
-			var suffix: = index + 1
-			while seen_ids.has(chest_id):
-				suffix += 1
-				chest_id = "storage-%d" % suffix
-			seen_ids[chest_id] = true
-			chest["id"] = chest_id
-			chest["kind"] = "storage"
-			chest["items"] = _sanitize_resource_store(source_chest.get("items", {}))
-			clean_chests.append(chest)
-		result["chests"] = clean_chests
-	var requested_next: = _nonnegative_int(
-		source.get("nextChestId", source.get("next_chest_id", 0)), 0
-	)
-	result["nextChestId"] = maxi(2, maxi(Array(result.chests).size() + 1, requested_next))
-	return result
-
-
-func _sanitize_base_module(raw: Variant, fallback: Dictionary, hub_unlocked: bool) -> Dictionary:
-	var source: Dictionary = raw if raw is Dictionary else {}
-	var result: = fallback.duplicate(true)
-	var scene: = String(source.get("scene", fallback.scene)) if source.get("scene", null) is String else String(fallback.scene)
-	if not VALID_SCENES.has(scene):
-		scene = String(fallback.scene)
-	var depth: = 1 if scene in ["surface", "hub"] else (2 if _nonnegative_int(source.get("depth", 1), 1) == 2 else 1)
-	var fallback_position: = Vector2(float(fallback.x), float(fallback.y))
-	var position: = Vector2(
-		_source_coordinate(source.get("x", fallback_position.x), fallback_position.x),
-		_source_coordinate(source.get("y", fallback_position.y), fallback_position.y)
-	)
-	position = _clamp_module_position(scene, position)
-	result["scene"] = scene
-	result["depth"] = depth
-	result["x"] = position.x
-	result["y"] = position.y
-	result["packed"] = _strict_bool(source.get("packed", fallback.get("packed", false)))
-	if scene == "hub" and not hub_unlocked:
-		result["packed"] = true
-	return result
-
-
-func _clamp_module_position(scene: String, position: Vector2) -> Vector2:
-	if scene == "hub":
-		return position.clamp(Vector2(52.0, 70.0), HUB_WORLD_SIZE - Vector2(52.0, 58.0))
-	if scene == "surface":
-		return _clamp_surface_position(position)
-	if MINE_IDS.has(scene):
-		var mine: Dictionary = _game_data().MINE_DEFINITIONS[scene]
-		return position.clamp(Vector2(52.0, 70.0), Vector2(float(mine.width) - 52.0, float(mine.height) - 58.0))
-	return position
 
 
 func _clamp_surface_position(position: Vector2) -> Vector2:
 	return position.clamp(Vector2(52.0, 70.0), SURFACE_WORLD_SIZE - Vector2(52.0, 58.0))
-
-
-func _hub_cell_in_bounds(col: int, row: int) -> bool:
-	return col >= 0 and row >= 0 and col < HUB_GRID_COLS and row < HUB_GRID_ROWS
-
-
-func _hub_tile_at_cell(col: int, row: int) -> Dictionary:
-	for tile_value in Array(hub.get("tiles", [])):
-		var tile: Dictionary = Dictionary(tile_value)
-		if int(tile.get("col", -1)) == col and int(tile.get("row", -1)) == row:
-			return tile
-	return {}
-
-
-func _hub_module_at_cell(col: int, row: int) -> Dictionary:
-	for module in _all_base_modules_internal():
-		if not _module_is_at_location(module, "hub", 1):
-			continue
-		if hub_cell_at_world(Vector2(float(module.x), float(module.y))) == Vector2i(col, row):
-			return module
-	return {}
-
-
-func _hub_occupant_at_cell(col: int, row: int) -> Dictionary:
-	var tile: = _hub_tile_at_cell(col, row)
-	return tile if not tile.is_empty() else _hub_module_at_cell(col, row)
-
-
-func _all_base_modules_internal() -> Array:
-	var result: Array = []
-	for module_id in ["forge", "sell"]:
-		var module: Variant = base.get(module_id, {})
-		if module is Dictionary and not Dictionary(module).is_empty():
-			result.append(module)
-	for chest_value in Array(base.get("chests", [])):
-		if chest_value is Dictionary:
-			result.append(chest_value)
-	return result
-
-
-func _base_module_by_id_internal(module_id: String) -> Dictionary:
-	for module in _all_base_modules_internal():
-		if String(Dictionary(module).get("id", "")) == module_id:
-			return Dictionary(module)
-	return {}
-
-
-func _write_base_module(module: Dictionary) -> void :
-	var module_id: = String(module.get("id", ""))
-	if module_id in ["forge", "sell"]:
-		base[module_id] = module
-		return
-	var chests: Array = Array(base.get("chests", [])).duplicate(true)
-	for index in chests.size():
-		if String(Dictionary(chests[index]).get("id", "")) == module_id:
-			chests[index] = module
-			base["chests"] = chests
-			return
-
-
-func _new_storage_chest(scene: String, depth: int, position: Vector2, packed: bool) -> Dictionary:
-	var next_id: = maxi(2, int(base.get("nextChestId", 2)))
-	var module_id: = "storage-%d" % next_id
-	while not _base_module_by_id_internal(module_id).is_empty():
-		next_id += 1
-		module_id = "storage-%d" % next_id
-	base["nextChestId"] = next_id + 1
-	return {
-		"id": module_id,
-		"kind": "storage",
-		"scene": scene,
-		"depth": 1 if scene in ["surface", "hub"] else (2 if depth == 2 else 1),
-		"x": position.x,
-		"y": position.y,
-		"packed": packed,
-		"items": _empty_resource_store(),
-	}
-
-
-func _module_is_at_location(module: Dictionary, scene: String, depth: int) -> bool:
-	var normalized_depth: = 1 if scene in ["surface", "hub"] else (2 if depth == 2 else 1)
-	return (
-		not bool(module.get("packed", true))
-		and String(module.get("scene", "")) == scene
-		and int(module.get("depth", 1)) == normalized_depth
-	)
-
-
-func _base_location_allowed(scene: String, depth: int) -> bool:
-	if scene == "surface":
-		return true
-	if scene == "hub":
-		return is_hub_unlocked()
-	if not MINE_IDS.has(scene) or not is_world_unlocked(String(WORLD_BY_MINE[scene])):
-		return false
-	return depth != 2 or _depth_restore_allowed(scene) or (current_scene == scene and current_depth == 2)
-
-
-func _storage_type_count(chest: Dictionary) -> int:
-	var items: Dictionary = Dictionary(chest.get("items", {}))
-	var count: = 0
-	for resource_id in RESOURCE_IDS:
-		if int(items.get(resource_id, 0)) > 0:
-			count += 1
-	return count
 
 
 func _default_surface_mountains() -> Dictionary:
@@ -4639,13 +3753,6 @@ func _default_claimed_pocket_rewards() -> Dictionary:
 	var result: = {}
 	for reward_id in _all_pocket_reward_ids():
 		result[reward_id] = false
-	return result
-
-
-func _default_opened_chests() -> Dictionary:
-	var result: = {}
-	for chest_id in _all_chest_ids():
-		result[chest_id] = false
 	return result
 
 
@@ -4888,12 +3995,6 @@ func _moss_rules() -> RefCounted:
 	return _mossvein_progression
 
 
-func _belt_rules() -> RefCounted:
-	if _belt_network == null:
-		_belt_network = BeltNetworkScript.new(HUB_GRID_COLS, HUB_GRID_ROWS)
-	return _belt_network
-
-
 func _all_cavern_ids() -> Array:
 	var result: Array = []
 	var data: = _game_data()
@@ -4911,13 +4012,6 @@ func _all_pocket_reward_ids() -> Array:
 		for discoveries_key in ["MINE_DISCOVERIES", "MINE_DEPTH_DISCOVERIES"]:
 			for cavern_value in Array(data[discoveries_key][mine_id].caverns):
 				result.append(String(Dictionary(cavern_value).reward.id))
-	return result
-
-
-func _all_chest_ids() -> Array:
-	var result: Array = []
-	for chest_value in Array(_game_data().CHEST_DEFINITIONS):
-		result.append(String(Dictionary(chest_value).id))
 	return result
 
 

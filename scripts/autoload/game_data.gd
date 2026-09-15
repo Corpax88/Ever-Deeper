@@ -24,9 +24,13 @@ func _load_json(path: String) -> Dictionary:
 func _validate_core_contract() -> void :
 	assert (String(manifest.source_version) == "0.38.1")
 	assert (String(manifest.source_commit) == "d175489fd0bbd3d934481493eb9b4b7a668f461e")
-	assert (int(manifest.parity_counts.assets) == 263)
+	assert (int(manifest.parity_counts.assets) == 243)
 	assert (int(manifest.parity_counts.mines) == 4)
-	assert (int(manifest.parity_counts.achievements) == 50)
+	assert (int(manifest.parity_counts.achievements) == 45)
+	assert (Array(manifest.assets).size() == 243)
+	assert (Array(data.ACHIEVEMENT_DEFINITIONS).size() == 45)
+	assert (Dictionary(data.ACHIEVEMENT_BY_ID).size() == 45)
+	assert (FileAccess.get_sha256(DATA_PATH) == String(manifest.game_data_sha256))
 	assert (int(data.WORLD.width) == 4480)
 	assert (int(data.WORLD.height) == 1280)
 

@@ -59,7 +59,6 @@ func evaluate() -> void :
 	var metrics: = {
 		"total_mined": _total_mined(),
 		"terrain_tiles": _terrain_tiles_dug(),
-		"opened": _true_count(RunState.opened_chests),
 		"vein_counts": vein_counts,
 		"vein_total": _sum_values(vein_counts),
 		"endless": _endless_status(),
@@ -95,7 +94,6 @@ func _flush_queued_evaluation() -> void :
 func _condition_met(id: String, metrics: Dictionary) -> bool:
 	var total_mined: = int(metrics.total_mined)
 	var terrain_tiles: = int(metrics.terrain_tiles)
-	var opened: = int(metrics.opened)
 	var vein_counts: Dictionary = metrics.vein_counts
 	var vein_total: = int(metrics.vein_total)
 	var endless: Dictionary = Dictionary(metrics.get("endless", {}))
@@ -138,9 +136,6 @@ func _condition_met(id: String, metrics: Dictionary) -> bool:
 		"stars_below": return bool(RunState.discovered_mines.get("starMine", false))
 		"hidden_descent": return _true_count(RunState.discovered_depth_entrances) >= 1
 		"every_depth": return _all_true(RunState.visited_depths, MINE_IDS)
-		"treasure_found": return opened >= 1
-		"cache_hunter": return opened >= 4
-		"chestmaster": return opened >= 8
 		"vein_runner": return vein_total >= 1
 		"fourfold_veins": return _completed_all_veins(vein_counts)
 		"vein_veteran": return vein_total >= 10
@@ -248,7 +243,8 @@ func _load_records() -> void :
 	var parsed = JSON.parse_string(file.get_as_text())
 	if parsed is Dictionary:
 		for id in Dictionary(parsed).get("records", {}):
-			records[String(id)] = maxi(0, int(Dictionary(parsed).records[id]))
+			if Dictionary(GameData.data.ACHIEVEMENT_BY_ID).has(String(id)):
+				records[String(id)] = maxi(0, int(Dictionary(parsed).records[id]))
 
 
 func _save_records() -> void :

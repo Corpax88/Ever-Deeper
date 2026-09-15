@@ -141,6 +141,10 @@ var assay_auto_armed: = true
 var commerce_confirm_close: = false
 
 
+func _exit_tree() -> void:
+	preload("res://scripts/player/hero_gear.gd").shutdown()
+
+
 func _ready() -> void :
 	call_deferred("_install_mining_companion")
 	var args: = OS.get_cmdline_user_args()
@@ -192,8 +196,6 @@ func _ready() -> void :
 	hub_world.hub_exit_requested.connect(_exit_hub)
 	hub_world.deep_elevator_checked.connect(_on_deep_elevator_checked)
 	hub_world.message_changed.connect(_set_status)
-	hub_world.runtime_state_changed.connect(_on_hub_runtime_state_changed)
-	hub_world.module_activated.connect(_on_hub_module_activated)
 	if hub_world.has_signal("deep_elevator_enter_requested"):
 		hub_world.connect("deep_elevator_enter_requested", Callable(self, "_on_deep_elevator_enter_requested"))
 	deepheart_world.context_changed.connect(_on_deepheart_context_changed)
@@ -406,8 +408,6 @@ func _on_developer_command_requested(command: String) -> void :
 	if not ok:
 		message = "DEV ACTION BLOCKED · RESET DEV SAVE AND TRY AGAIN"
 	_apply_global_movement_speed()
-	if phase == "hub":
-		_sync_hub_runtime()
 	_refresh_context_button()
 	_refresh_hud()
 	if persistence_active:
@@ -699,9 +699,6 @@ func _install_premium_hud() -> void :
 	premium_hud.bag_requested.connect(_open_inventory)
 	premium_hud.context_requested.connect(_perform_context)
 	premium_hud.menu_requested.connect(_open_start_menu)
-	premium_hud.build_button.visible = false
-	premium_hud.build_button.disabled = true
-	premium_hud.build_button.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
 func _install_workshop_panel() -> void :
@@ -768,7 +765,6 @@ func _install_resource_inventory() -> void :
 	resource_inventory.name = "ResourceInventory"
 	$HUD.add_child(resource_inventory)
 	resource_inventory.close_requested.connect(_close_inventory)
-	resource_inventory.auto_sort_requested.connect(_auto_sort_inventory)
 
 
 func _install_achievement_toast() -> void :
@@ -825,8 +821,7 @@ func _open_inventory() -> void :
 	inventory_open = true
 	resource_inventory.open_inventory(
 		Dictionary(RunState.cargo),
-		Dictionary(RunState.protected_progress_cargo()),
-		phase == "hub"
+		Dictionary(RunState.protected_progress_cargo())
 	)
 	if quick_tutorial != null:
 		quick_tutorial.dismiss()
@@ -840,25 +835,6 @@ func _close_inventory() -> void :
 	inventory_open = false
 	resource_inventory.close_inventory()
 	_resume_current_phase()
-
-
-func _auto_sort_inventory() -> void :
-	if not inventory_open or phase != "hub":
-		AudioDirector.play_blocked()
-		return
-	var moved: = RunState.auto_sort_resources(hub_world.player.global_position, "hub", 1)
-	if moved > 0:
-		AudioDirector.play_pickup("stone", moved)
-		_set_status("Storage sorted · %d resources secured" % moved)
-		_sync_hub_runtime()
-	else:
-		AudioDirector.play_blocked()
-		_set_status("No nearby storage has room for sellable materials")
-	resource_inventory.refresh_contents(
-		Dictionary(RunState.cargo),
-		Dictionary(RunState.protected_progress_cargo()),
-		true
-	)
 
 
 func _progression_goal() -> Dictionary:
@@ -1774,9 +1750,7 @@ func _on_surface_context_changed(context: String) -> void :
 		if not automated_mode:
 			call_deferred("_start_assay_transaction")
 	_refresh_context_button()
-	if context.begins_with("chest:"):
-		_set_status(_surface_chest_status(context.trim_prefix("chest:")))
-	elif context.begins_with("gate:"):
+	if context.begins_with("gate:"):
 		_set_status(_gate_status(context.trim_prefix("gate:")))
 	else:
 		match context:
@@ -1905,7 +1879,7 @@ func _on_workshop_panel_action_confirmed(action: String, value: String) -> void 
 func _on_workshop_panel_closed() -> void :
 	hub_world.clear_workshop_panel_preview()
 	if phase == "hub" and bool(hub_world.active):
-		hub_world.player.control_enabled = not bool(hub_world.build_mode)
+		hub_world.player.control_enabled = true
 	AudioDirector.play_ui("cancel")
 	_refresh_context_button()
 
@@ -1958,7 +1932,7 @@ func _on_commerce_closed() -> void :
 	if phase == "surface":
 		surface_world.player.control_enabled = true
 	elif phase == "hub" and bool(hub_world.active):
-		hub_world.player.control_enabled = not bool(hub_world.build_mode)
+		hub_world.player.control_enabled = true
 	if not commerce_confirm_close:
 		AudioDirector.play_ui("cancel")
 	_refresh_context_button()
@@ -2495,12 +2469,6 @@ func _perform_context() -> void :
 		elif mine_exit_context:
 			_exit_mine()
 		return
-	if surface_context.begins_with("chest:"):
-		_open_surface_chest(surface_context.trim_prefix("chest:"))
-		return
-	if surface_context.begins_with("storage:"):
-		_use_surface_storage(surface_context.trim_prefix("storage:"))
-		return
 	if surface_context.begins_with("enter:"):
 		_enter_mine(surface_context.trim_prefix("enter:"))
 		return
@@ -2520,23 +2488,6 @@ func _perform_context() -> void :
 			_open_wayfarer_commerce()
 
 
-func _open_surface_chest(chest_id: String) -> void :
-	var definition: = _surface_chest_definition(chest_id)
-	if definition.is_empty():
-		AudioDirector.play_blocked()
-		return
-	var result: Dictionary = RunState.open_surface_chest(chest_id)
-	if bool(result.get("ok", false)):
-		AudioDirector.play_discovery()
-		_set_status("%s opened · %s scattered nearby" % [String(definition.name), _surface_chest_reward_label(definition)])
-		if persistence_active:
-			RunState.flush_save()
-	else:
-		AudioDirector.play_blocked()
-		_set_status(_surface_chest_status(chest_id))
-	_refresh_hud()
-
-
 func _buy_wayfarer_speed() -> void :
 	var result: Dictionary = RunState.buy_movement_speed()
 	if bool(result.get("ok", false)):
@@ -2548,25 +2499,6 @@ func _buy_wayfarer_speed() -> void :
 	else:
 		AudioDirector.play_blocked()
 		_set_status("Wayfarer · need %d more gold" % int(result.get("missing_gold", 0)))
-	_refresh_hud()
-
-
-func _use_surface_storage(module_id: String) -> void :
-	var actor_position: Vector2 = surface_world.player.global_position
-	var moved: = RunState.auto_sort_resources(actor_position, "surface", 1)
-	if moved > 0:
-		AudioDirector.play_pickup("stone", moved)
-		_set_status("Storage sorted · %d resources secured · active upgrades kept in pouch" % moved)
-	else:
-		var taken: = RunState.take_all_from_storage(module_id, actor_position, "surface", 1)
-		if taken > 0:
-			AudioDirector.play_pickup("gold", taken)
-			_set_status("Storage opened · %d resources returned to your pouch" % taken)
-		else:
-			AudioDirector.play_blocked()
-			_set_status("Storage empty · active upgrade materials remain in your pouch")
-	if persistence_active:
-		RunState.flush_save()
 	_refresh_hud()
 
 
@@ -2793,7 +2725,6 @@ func _enter_hub(entering: bool = true, persist_location: bool = true) -> void :
 	depth_world.set_active(false)
 	deepheart_world.set_active(false)
 	endless_world.set_active(false)
-	_sync_hub_runtime()
 	hub_world.set_active(true, entering)
 	AudioDirector.set_environment("hub")
 	if entering:
@@ -2803,7 +2734,7 @@ func _enter_hub(entering: bool = true, persist_location: bool = true) -> void :
 	if bool(RunState.victory):
 		_set_status(_deep_hoard_status_text())
 	elif first_visit:
-		_set_status("Base Hub unlocked · store ore and return to Starfall whenever you choose")
+		_set_status("Base Hub unlocked · prepare the lift and return to Starfall whenever you choose")
 		RunState.mark_hub_tutorial_seen()
 	else:
 		_set_status("Base Hub · your expedition remains intact")
@@ -2818,7 +2749,6 @@ func _enter_hub(entering: bool = true, persist_location: bool = true) -> void :
 func _exit_hub() -> void :
 	if phase != "hub":
 		return
-	_commit_hub_runtime_snapshot()
 	if not RunState.exit_hub():
 		return
 	phase = "surface"
@@ -2864,7 +2794,6 @@ func _enter_deepheart(entering: bool = true, persist_location: bool = true, allo
 	if phase == "deepheart" and bool(deepheart_world.active):
 		return
 	if phase == "hub":
-		_commit_hub_runtime_snapshot()
 		var elevator_position: = Vector2(hub_world.DEEP_ELEVATOR_POSITION)
 		var exit_direction: Vector2 = hub_world.player.global_position - elevator_position
 		if exit_direction.length_squared() < 1.0:
@@ -2912,7 +2841,6 @@ func _exit_deepheart() -> void :
 	surface_world.set_active(false)
 	mine_world.set_active(false)
 	depth_world.set_active(false)
-	_sync_hub_runtime()
 	hub_world.set_active(true, false)
 	hub_world.restore_position(_safe_hub_return_position(deepheart_hub_return_position))
 	hub_context = hub_world.current_context()
@@ -2934,7 +2862,6 @@ func _enter_endless(entering: bool = true, persist_location: bool = true, restor
 	if phase == "endless" and bool(endless_world.active):
 		return
 	if phase == "hub":
-		_commit_hub_runtime_snapshot()
 		var elevator_position: = Vector2(hub_world.DEEP_ELEVATOR_POSITION)
 		var exit_direction: = Vector2(hub_world.player.global_position) - elevator_position
 		if exit_direction.length_squared() < 1.0:
@@ -3035,7 +2962,6 @@ func _return_from_endless_to_hub(carried_relic_id: String = "") -> void :
 	mine_world.set_active(false)
 	depth_world.set_active(false)
 	deepheart_world.set_active(false)
-	_sync_hub_runtime()
 	hub_world.set_active(true, false)
 	hub_world.restore_position(_safe_hub_return_position(endless_hub_return_position))
 	hub_context = hub_world.current_context()
@@ -3378,60 +3304,10 @@ func _deep_elevator_status_text() -> String:
 	return "Deepheart passage · bring %s" % ", ".join(rows) if not rows.is_empty() else "Deepheart passage · awaiting repair"
 
 
-func _sync_hub_runtime() -> void :
-	var runtime: Dictionary = RunState.hub_runtime_snapshot()
-	hub_world.load_runtime_state(
-		Dictionary(runtime.hub),
-		Dictionary(runtime.base),
-		Dictionary(runtime.economy)
-	)
-
-
-func _commit_hub_runtime_snapshot() -> void :
-	var runtime: Dictionary = hub_world.runtime_state_snapshot()
-	RunState.commit_hub_runtime_state(
-		Dictionary(runtime.hub),
-		Dictionary(runtime.base),
-		Dictionary(runtime.economy)
-	)
-
-
-func _on_hub_runtime_state_changed(next_hub: Dictionary, next_base: Dictionary, next_economy: Dictionary) -> void :
-	RunState.commit_hub_runtime_state(next_hub, next_base, next_economy)
-	_refresh_hud()
-
-
 func _on_deep_elevator_checked() -> void :
 	if phase != "hub":
 		return
 	_set_status(_deep_hoard_status_text() if bool(RunState.victory) else _deep_elevator_status_text())
-
-
-func _on_hub_module_activated(module_id: String, kind: String) -> void :
-	match kind:
-		"sell":
-			var earned: = RunState.sell_all()
-			if earned > 0:
-				AudioDirector.play_economy("sell")
-			else:
-				AudioDirector.play_blocked()
-			_set_status("Assay complete · +%d gold" % earned if earned > 0 else "No sellable ore · progression materials remain protected")
-		"forge":
-			_use_forge()
-		"storage":
-			var moved: = RunState.auto_sort_resources(hub_world.player.global_position, "hub", 1)
-			if moved > 0:
-				AudioDirector.play_pickup("stone", moved)
-				_set_status("Storage sorted · %d resources secured" % moved)
-			else:
-				var taken: = RunState.take_all_from_storage(module_id, hub_world.player.global_position, "hub", 1)
-				if taken > 0:
-					AudioDirector.play_pickup("gold", taken)
-				else:
-					AudioDirector.play_blocked()
-				_set_status("Storage opened · %d resources returned to your pouch" % taken if taken > 0 else "Storage empty · upgrade materials remain in your pouch")
-	_sync_hub_runtime()
-	_refresh_hud()
 
 
 func _checkpoint_location() -> void :
@@ -3446,7 +3322,6 @@ func _checkpoint_location() -> void :
 	elif phase == "mine":
 		RunState.set_location(current_mine_id, mine_world.player.global_position)
 	elif phase == "hub":
-		_commit_hub_runtime_snapshot()
 		RunState.set_location("hub", hub_world.player.global_position)
 	else:
 		surface_world.persist_ore_mountain_state()
@@ -3472,48 +3347,6 @@ func _gate_requirements(world_id: String) -> Dictionary:
 	elif world_id == "emberdeep":
 		requirement["gold"] = int(GameData.data.EMBER_GATE_COST)
 	return requirement
-
-
-func _surface_chest_definition(chest_id: String) -> Dictionary:
-	for chest_value in Array(GameData.data.CHEST_DEFINITIONS):
-		var chest: Dictionary = Dictionary(chest_value)
-		if String(chest.id) == chest_id:
-			return chest.duplicate(true)
-	return {}
-
-
-func _surface_chest_reward_label(chest: Dictionary) -> String:
-	var labels: Array[String] = []
-	var rewards: Dictionary = Dictionary(chest.get("rewards", {}))
-	for reward_id_value in rewards:
-		var reward_id: = String(reward_id_value)
-		var amount: = int(rewards.get(reward_id, 0))
-		if reward_id == "coin":
-			labels.append("%d gold" % amount)
-		else:
-			var rock: Dictionary = Dictionary(GameData.data.ROCK_TYPES.get(reward_id, {}))
-			labels.append("%d %s" % [amount, String(rock.get("label", reward_id))])
-	return " + ".join(labels)
-
-
-func _surface_chest_status(chest_id: String) -> String:
-	var chest: = _surface_chest_definition(chest_id)
-	if chest.is_empty():
-		return "Sealed cache"
-	if RunState.is_surface_chest_opened(chest_id):
-		return "%s · opened" % String(chest.name)
-	var requirement: Dictionary = Dictionary(chest.get("requires", {}))
-	var ready: = _surface_chest_is_ready(chest)
-	if not ready:
-		return "%s · requires %s" % [String(chest.name), String(requirement.get("label", "a stronger pickaxe"))]
-	return "%s · %s · press OPEN" % [String(chest.name), _surface_chest_reward_label(chest)]
-
-
-func _surface_chest_is_ready(chest: Dictionary) -> bool:
-	var requirement: Dictionary = Dictionary(chest.get("requires", {}))
-	if bool(requirement.get("starforge", false)):
-		return not String(RunState.starforge_variant).is_empty()
-	return int(RunState.pickaxe_level) >= int(requirement.get("pickaxeLevel", 1))
 
 
 func _wayfarer_status() -> String:
@@ -3751,13 +3584,7 @@ func _refresh_context_button() -> void :
 	elif phase == "mine" and mine_exit_context:
 		label = "EXIT"
 	elif phase == "surface":
-		if surface_context.begins_with("chest:"):
-			var chest: = _surface_chest_definition(surface_context.trim_prefix("chest:"))
-			enabled = not chest.is_empty() and _surface_chest_is_ready(chest)
-			label = "OPEN" if enabled else "LOCKED"
-		elif surface_context.begins_with("storage:"):
-			label = "USE"
-		elif surface_context.begins_with("enter:"):
+		if surface_context.begins_with("enter:"):
 			label = "DESCEND"
 		elif surface_context.begins_with("gate:"):
 			label = "OPEN"
@@ -3921,17 +3748,13 @@ func _refresh_hud() -> void :
 			phase,
 			current_mine_id,
 			action_button.text,
-			not premium_hud.context_button.disabled,
-			false
+			not premium_hud.context_button.disabled
 		)
-		premium_hud.build_button.visible = false
-		premium_hud.build_button.disabled = true
 		_update_presented_gold_labels()
 	if inventory_open and resource_inventory != null:
 		resource_inventory.refresh_contents(
 			Dictionary(RunState.cargo),
-			Dictionary(RunState.protected_progress_cargo()),
-			phase == "hub"
+			Dictionary(RunState.protected_progress_cargo())
 		)
 
 
@@ -3946,14 +3769,7 @@ func _cargo_summary() -> String:
 			endless_world.depth_metres(), endless_world.deepest_metres(), RunState.cargo_count(),
 		]
 	if phase == "hub":
-		var stored: = 0
-		for module_value in RunState.all_base_modules():
-			var module: Dictionary = Dictionary(module_value)
-			if String(module.get("kind", "")) != "storage":
-				continue
-			for amount in Dictionary(module.get("items", {})).values():
-				stored += int(amount)
-		return "POUCH %d  ·  STORAGE %d  ·  GOLD %d" % [RunState.cargo_count(), stored, RunState.gold]
+		return "POUCH %d  ·  GOLD %d" % [RunState.cargo_count(), RunState.gold]
 	if phase == "depth":
 		var resources: = _depth_cargo_resources(current_mine_id)
 		var labels: Array[String] = []

@@ -1,3 +1,6 @@
+Current work: [premium-polish recovery](docs/premium-polish/HANDOFF.md).
+Test setup: [environment handoff](docs/TESTMILJO-HANDOFF.md).
+
 # Ever Deeper project rules
 
 ## Visual release gate

@@ -503,49 +503,6 @@ func _run_smoke_test() -> void :
 	RunState.reset_run(false)
 	main._apply_global_movement_speed()
 	main.surface_world.reset_for_new_run()
-	var moss_supply_position: Vector2 = main.surface_world.surface_chest_position("moss_supply")
-	assert (moss_supply_position == Vector2(750, 640))
-	assert ( not main.surface_world._surface_collides(moss_supply_position))
-	assert (main.surface_world._surface_collides(Vector2(930, 350)))
-	main.surface_world.restore_position(moss_supply_position)
-	assert (main.surface_world.player.global_position == moss_supply_position)
-	assert (main.surface_context == "chest:moss_supply" and main.action_button.text == "OPEN" and not main.action_button.disabled)
-	main._perform_context()
-	assert (RunState.is_surface_chest_opened("moss_supply") and RunState.gold == 0)
-	assert ( not RunState.is_surface_chest_opened("moss_ironbound"))
-	assert (RunState.pending_chest_reward_loot("moss_supply") == {"coin": 25})
-	assert (main.surface_world.chest_loot_drops.size() == 3, "Starter cache must spray three physical coin pieces")
-	for chest_drop in main.surface_world.chest_loot_drops:
-		assert ((Dictionary(chest_drop).sprite as Sprite2D).get_child_count() == 0, "Chest gold must use the resource sprite without a glow circle")
-	for starter_drop in main.surface_world.chest_loot_drops:
-		var starter_sprite: Sprite2D = Dictionary(starter_drop).sprite as Sprite2D
-		starter_sprite.queue_free()
-	main.surface_world.chest_loot_drops.clear()
-	RunState.pending_chest_loot.clear()
-	RunState.pickaxe_level = 3
-	var moon_cache: Dictionary = main._surface_chest_definition("moon_cache")
-	var moon_plan: Dictionary = RunState.open_surface_chest("moon_cache")
-	assert (bool(moon_plan.ok))
-	main.surface_world._sync_pending_chest_loot_drops()
-	assert ( not main.surface_world.chest_loot_drops.is_empty())
-	var moon_drop: Dictionary = main.surface_world.chest_loot_drops[0]
-	var moon_drop_sprite: Sprite2D = moon_drop.sprite as Sprite2D
-	moon_drop.age = main.surface_world.ORE_DROP_FLIGHT_DURATION
-	moon_drop.settled = true
-	moon_drop_sprite.position = Vector2(moon_drop.landing_position)
-	main.surface_world.chest_loot_drops[0] = moon_drop
-	main.surface_world.player.global_position = moon_drop_sprite.global_position + Vector2(main.surface_world.CHEST_DROP_PICKUP_RADIUS - 8.0, 0.0)
-	main.surface_world._update_chest_loot_drops(0.01)
-	assert (bool(Dictionary(main.surface_world.chest_loot_drops[0]).collecting), "Moonglass chest gold must magnetize from the nearby path")
-	main.surface_world._update_chest_loot_drops(main.surface_world.ORE_DROP_COLLECT_DURATION + 0.01)
-	assert (RunState.gold > 0, "Moonglass chest gold must enter the wallet")
-	RunState.cargo.stone = 5
-	main.surface_world.restore_position(Vector2(335, 390))
-	assert (main.surface_context == "storage:storage-1" and main.action_button.text == "USE")
-	main._perform_context()
-	assert (int(Dictionary(RunState.base_module_by_id("storage-1").items).stone) == 5, "Starter storage must be functional on Surface")
-
-
 	RunState.reset_run(false)
 	main.surface_world.reset_for_new_run()
 	RunState.add_resource("stone", 3)

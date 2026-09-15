@@ -57,8 +57,8 @@
         "y": 640
       },
       "surfaceEntrance": {
-		"x": 930,
-		"y": 900,
+        "x": 930,
+        "y": 900,
         "radius": 164
       },
       "accent": "#d2a65b",
@@ -1218,8 +1218,6 @@
   "GROUND_DROP_EDGE_TOP": 76,
   "GROUND_DROP_EDGE_BOTTOM": 64,
   "BASE_MODULE_INTERACT_RADIUS": 118,
-  "AUTO_SORT_RADIUS": 360,
-  "STORAGE_CHEST_CAPACITY": 20,
   "MAX_GROUND_DROPS": 160,
   "MAX_MINING_PARTICLES": 260,
   "EMBER_MASTERY": [
@@ -17124,18 +17122,18 @@
   ],
   "STATIONS": {
     "sell": {
-		"x": 130,
-		"y": 500,
+      "x": 130,
+      "y": 500,
       "radius": 132
     },
     "forge": {
-		"x": 373,
-		"y": 500,
+      "x": 373,
+      "y": 500,
       "radius": 132
     },
     "speedShop": {
-		"x": 800,
-		"y": 515,
+      "x": 800,
+      "y": 515,
       "radius": 128
     },
     "gate": {
@@ -17154,134 +17152,11 @@
       "radius": 145
     },
     "starforge": {
-		"x": 3600,
-		"y": 565,
+      "x": 3600,
+      "y": 565,
       "radius": 118
     }
   },
-  "CHEST_DEFINITIONS": [
-    {
-      "id": "moss_supply",
-      "name": "Miner's Supply Chest",
-      "biome": "mossvein",
-      "x": 750,
-      "y": 640,
-      "tier": 0,
-      "requires": {
-        "pickaxeLevel": 1,
-        "label": "Worn Pickaxe"
-      },
-      "rewards": {
-        "coin": 25
-      }
-    },
-    {
-      "id": "moss_ironbound",
-      "name": "Ironbound Chest",
-      "biome": "mossvein",
-		"x": 700,
-		"y": 720,
-      "tier": 1,
-      "requires": {
-        "pickaxeLevel": 2,
-        "label": "Iron Pickaxe"
-      },
-      "rewards": {
-        "coin": 75
-      }
-    },
-    {
-      "id": "moon_cache",
-      "name": "Crystal Cache",
-      "biome": "moonglass",
-      "x": 1460,
-      "y": 770,
-      "tier": 1,
-      "requires": {
-        "pickaxeLevel": 3,
-        "label": "Runed Pickaxe"
-      },
-      "rewards": {
-        "coin": 100
-      }
-    },
-    {
-      "id": "moon_reliquary",
-      "name": "Moonglass Reliquary",
-      "biome": "moonglass",
-      "x": 2070,
-      "y": 610,
-      "tier": 2,
-      "requires": {
-        "pickaxeLevel": 4,
-        "label": "Moonglass Pickaxe"
-      },
-      "rewards": {
-        "coin": 200
-      }
-    },
-    {
-      "id": "ember_cache",
-      "name": "Foundry Lockbox",
-      "biome": "emberdeep",
-      "x": 2630,
-      "y": 884,
-      "tier": 2,
-      "requires": {
-        "pickaxeLevel": 4,
-        "label": "Moonglass Pickaxe"
-      },
-      "rewards": {
-        "coin": 250
-      }
-    },
-    {
-      "id": "ember_vault",
-      "name": "Ember Vault",
-      "biome": "emberdeep",
-      "x": 3210,
-		"y": 610,
-      "tier": 3,
-      "requires": {
-        "pickaxeLevel": 5,
-        "label": "Ember Pickaxe"
-      },
-      "rewards": {
-        "coin": 400
-      }
-    },
-    {
-      "id": "star_cache",
-      "name": "Astral Cache",
-      "biome": "starfall",
-      "x": 3760,
-		"y": 972,
-      "tier": 3,
-      "requires": {
-        "pickaxeLevel": 5,
-        "label": "Ember Pickaxe"
-      },
-      "rewards": {
-        "coin": 800
-      }
-    },
-    {
-      "id": "star_coffer",
-      "name": "Celestial Coffer",
-      "biome": "starfall",
-      "x": 4310,
-		"y": 610,
-      "tier": 4,
-      "requires": {
-        "starforge": true,
-        "label": "Starforge Pickaxe"
-      },
-      "rewards": {
-        "coin": 2000
-      }
-    }
-  ],
-  "CHEST_INTERACT_RADIUS": 108,
   "ROCK_LAYOUT": [
     [
       "stone",
@@ -18020,30 +17895,6 @@
       "asset": "assets/achievements/every_depth.png"
     },
     {
-      "id": "treasure_found",
-      "title": "Treasure Found",
-      "description": "Open your first surface treasure chest.",
-      "category": "treasure",
-      "tier": "bronze",
-      "asset": "assets/achievements/treasure_found.png"
-    },
-    {
-      "id": "cache_hunter",
-      "title": "Cache Hunter",
-      "description": "Open four surface treasure chests.",
-      "category": "treasure",
-      "tier": "silver",
-      "asset": "assets/achievements/cache_hunter.png"
-    },
-    {
-      "id": "chestmaster",
-      "title": "Chestmaster",
-      "description": "Open all eight surface treasure chests.",
-      "category": "treasure",
-      "tier": "gold",
-      "asset": "assets/achievements/chestmaster.png"
-    },
-    {
       "id": "vein_runner",
       "title": "Vein Runner",
       "description": "Complete your first timed surface vein.",
@@ -18082,22 +17933,6 @@
       "category": "base",
       "tier": "gold",
       "asset": "assets/achievements/roadrunner.png"
-    },
-    {
-      "id": "more_storage",
-      "title": "First Workshop",
-      "description": "Build the first fixed workshop in the Hub.",
-      "category": "base",
-      "tier": "bronze",
-      "asset": "assets/achievements/more_storage.png"
-    },
-    {
-      "id": "mobile_base",
-      "title": "Living Hub",
-      "description": "Recover every workshop relic and build all five Hub rooms.",
-      "category": "base",
-      "tier": "silver",
-      "asset": "assets/achievements/mobile_base.png"
     },
     {
       "id": "mineral_crown",
@@ -18421,30 +18256,6 @@
       "tier": "mythic",
       "asset": "assets/achievements/every_depth.png"
     },
-    "treasure_found": {
-      "id": "treasure_found",
-      "title": "Treasure Found",
-      "description": "Open your first surface treasure chest.",
-      "category": "treasure",
-      "tier": "bronze",
-      "asset": "assets/achievements/treasure_found.png"
-    },
-    "cache_hunter": {
-      "id": "cache_hunter",
-      "title": "Cache Hunter",
-      "description": "Open four surface treasure chests.",
-      "category": "treasure",
-      "tier": "silver",
-      "asset": "assets/achievements/cache_hunter.png"
-    },
-    "chestmaster": {
-      "id": "chestmaster",
-      "title": "Chestmaster",
-      "description": "Open all eight surface treasure chests.",
-      "category": "treasure",
-      "tier": "gold",
-      "asset": "assets/achievements/chestmaster.png"
-    },
     "vein_runner": {
       "id": "vein_runner",
       "title": "Vein Runner",
@@ -18484,22 +18295,6 @@
       "category": "base",
       "tier": "gold",
       "asset": "assets/achievements/roadrunner.png"
-    },
-    "more_storage": {
-      "id": "more_storage",
-      "title": "First Workshop",
-      "description": "Build the first fixed workshop in the Hub.",
-      "category": "base",
-      "tier": "bronze",
-      "asset": "assets/achievements/more_storage.png"
-    },
-    "mobile_base": {
-      "id": "mobile_base",
-      "title": "Living Hub",
-      "description": "Recover every workshop relic and build all five Hub rooms.",
-      "category": "base",
-      "tier": "silver",
-      "asset": "assets/achievements/mobile_base.png"
     },
     "mineral_crown": {
       "id": "mineral_crown",
@@ -18557,16 +18352,11 @@
     "stars_below": "Entered Starfall Hollow.",
     "hidden_descent": "Uncovered a hidden Depth 2 entrance.",
     "every_depth": "Entered Depth 2 in all four mines.",
-    "treasure_found": "Opened the first surface treasure chest.",
-    "cache_hunter": "Opened four surface treasure chests.",
-    "chestmaster": "Opened all eight surface treasure chests.",
     "vein_runner": "Completed the first timed surface vein.",
     "fourfold_veins": "Completed all four timed surface vein types.",
     "vein_veteran": "Completed 10 timed surface veins.",
     "quick_step": "Bought the first movement-speed upgrade.",
     "roadrunner": "Bought 10 movement-speed upgrades.",
-    "more_storage": "Built the first fixed workshop in the Hub.",
-    "mobile_base": "Recovered every workshop relic and built all five Hub rooms.",
     "mineral_crown": "Recorded at least one of every mineable resource.",
     "ever_deeper": "Powered the Deep Elevator, opened all four world seals, and restored the Deepheart."
   }

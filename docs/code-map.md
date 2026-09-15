@@ -11,7 +11,7 @@ Read this map, then the named owner. You should not need to read the whole game 
 | Surface routes, mining, ambient art | `scripts/world/surface_world.gd` | Surface parallax and transition components |
 | Depth 1 blocks, barriers, drops | `scripts/world/mossvein_mine.gd` | `cave_edge_asset_drawer.gd` |
 | Depth 2 geology and gates | `scripts/world/depth/rootwound_world.gd` | `rootwound_layout.gd` |
-| Base hub and workshop placement | `scripts/world/hub_world.gd` | `station_transaction_fx.gd`, `belt_network.gd` |
+| Base hub and current workshops | `scripts/world/hub_world.gd` | `station_transaction_fx.gd`, RunState |
 | Continuous The Deep, relics and rope | `scripts/world/endless_descent_world.gd` | `endless_deep_layout.gd`, `scripts/state/endless_terrain_state.gd`, RunState |
 | Shop entries, costs and descriptions | `scripts/ui/commerce_catalog.gd` | RunState is the transaction authority |
 | Shop layout, browsing and touch | `scripts/ui/commerce_panel.gd` | `inertial_carousel.gd`, `swipe_pager.gd` |

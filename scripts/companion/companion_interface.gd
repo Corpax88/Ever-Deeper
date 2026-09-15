@@ -107,7 +107,7 @@ func _on_web_touch_cancel(arguments: Array) -> void:
 		web_canceled_touches[int(changed.item(index).identifier)]=true
 
 func _ground_input_enabled() -> bool:
-	return button.visible and not bool(main.tunnel_home_in_progress) and not main.call("_shop_panel_is_open") and not bool(main.menu_open) and not bool(main.inventory_open) and main.movement_pad.is_visible_in_tree() and not bool(main.movement_pad.build_mode) and (main.developer_menu==null or not main.developer_menu.is_open())
+	return button.visible and not bool(main.tunnel_home_in_progress) and not main.call("_shop_panel_is_open") and not bool(main.menu_open) and not bool(main.inventory_open) and main.movement_pad.is_visible_in_tree() and (main.developer_menu==null or not main.developer_menu.is_open())
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch or event is InputEventScreenDrag:
