@@ -1,3 +1,5 @@
+Read [START-HER.md](../../START-HER.md) for the saved source identity, original mandate, preserved evidence and next steps.
+
 # Premium polish — rebuilt source checkpoint
 
 This is a reconstructed subset of the premium-polish work, based on canonical
