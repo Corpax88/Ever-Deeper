@@ -6,6 +6,7 @@ from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 ROOT = Path(__file__).resolve().parents[1]
 CASES = {
+    'premium-core': (['--qa-premium-core'], 'EVER_DEEPER_ONE_POINT_ZERO_PREMIUM_CORE_OK'),
     'mole-autonomy': (['--qa-mole-autonomy'], 'EVER_DEEPER_MOLE_AUTONOMY_OK'),
     'input': (['--qa-input-release'], 'EVER_DEEPER_INPUT_RELEASE_OK'),
     'overhaul': (['--visual-capture-suite','--overhaul-gameplay','--visual-capture-auto-ack'], 'EVER_DEEPER_OVERHAUL_GAMEPLAY_OK'),
@@ -27,7 +28,7 @@ CASES = {
     'one-point-zero-migration': (['--qa-one-point-zero-migration'], 'EVER_DEEPER_ONE_POINT_ZERO_MIGRATION_OK'),
     'one-point-zero-ui': (['--qa-one-point-zero-ui'], 'EVER_DEEPER_ONE_POINT_ZERO_UI_OK'),
 }
-CORE = ['input','overhaul','touch','endgame','onboarding','layout','portrait','dev-tools','crusher',
+CORE = ['premium-core','input','overhaul','touch','endgame','onboarding','layout','portrait','dev-tools','crusher',
         'one-point-zero-state','one-point-zero-world','one-point-zero-migration','one-point-zero-ui','mole-autonomy']
 # Preserve historical assertions explicitly. Endless describes the retired
 # floor/elevator design; 1.0 world/migration replace its applicable protections.

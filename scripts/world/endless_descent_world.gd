@@ -239,6 +239,12 @@ var mining_active: = false
 var mining_elapsed: = 0.0
 var mining_hit: = false
 var mining_target_id: = ""
+var _swing_resource_index: = -1
+var _swing_wall: = Vector2i(-1, -1)
+var _swing_duration: = 0.68
+var _swing_facing: = Vector2.ZERO
+var _swing_input_direction: = Vector2.ZERO
+var _swing_origin: = Vector2.ZERO
 var dig_damage: Dictionary = {}
 var site_activity: Dictionary = {}
 var hazard_clock: = 0.0
@@ -581,6 +587,7 @@ func _generate_depth(depth: int, next_arrival: String) -> void:
 
 
 func _generate_stream_window(start_depth: int) -> void:
+	_cancel_mining()
 	_window_loading = true
 	var requested_depth: int = current_depth
 	var old_hp: Dictionary = {}
@@ -1445,6 +1452,8 @@ func collision_at(position: Vector2) -> bool:
 
 
 func _on_player_moved(world_position: Vector2) -> void:
+	if mining_active:
+		_cancel_mining()
 	if _window_loading:
 		return
 	_update_stream_depth()
@@ -1891,34 +1900,74 @@ func _site_array_index(site_index: int) -> int:
 
 func _update_mining(delta: float) -> void :
 	var held: = external_mine_held or Input.is_action_pressed("mine")
-	if not held:
+	# Intent into a solid wall is allowed; actual translation cancels the hit.
+	if not held or bool(player._actual_moving):
 		_cancel_mining()
 		return
-	var target_index: = _nearest_resource_index()
-	if target_index < 0:
-		_update_wall_mining(delta)
+	if mining_active and player.global_position.distance_squared_to(_swing_origin) > 0.001:
+		_cancel_mining()
 		return
-	var target: Dictionary = resources[target_index]
-	var target_id: = String(target.id)
-	if not mining_active or mining_target_id != target_id:
-		mining_active = true
-		mining_elapsed = 0.0
-		mining_hit = false
-		mining_target_id = target_id
-		player.set_facing((Vector2(target.position) - player.global_position).normalized())
+	var aim_input: Vector2 = _mining_input_direction()
+	if mining_active and ((not aim_input.is_zero_approx() and aim_input != _swing_input_direction) or (aim_input.is_zero_approx() and not Vector2(player.facing_vector).is_equal_approx(_swing_facing))):
+		# Turning while blocked starts a new aimed wind-up; it must never damage
+		# a stone behind the direction in which the tool is actually drawn.
+		_cancel_mining()
+	if not mining_active and not _begin_mining_swing():
+		_cancel_mining()
+		return
+	player.set_facing(_swing_facing)
 	mining_elapsed += maxf(0.0, delta)
-	var duration: = _mining_cycle_duration()
-	var progress: = clampf(mining_elapsed / duration, 0.0, 1.0)
+	var progress: = clampf(mining_elapsed / _swing_duration, 0.0, 1.0)
 	player.set_mining_visual(true, progress, 0.0, MINING_HIT_PROGRESS)
 	if not mining_hit and progress >= MINING_HIT_PROGRESS:
 		mining_hit = true
-		_strike_resource(target_index)
+		if _swing_resource_index >= 0:
+			if _swing_resource_index < resources.size() and String(resources[_swing_resource_index].id) == mining_target_id:
+				_strike_resource(_swing_resource_index)
+		else:
+			_strike_wall(_swing_wall, progress)
 	if progress >= 1.0:
-		var overflow: = maxf(0.0, mining_elapsed - duration)
-		mining_elapsed = fposmod(overflow, duration)
-		mining_hit = false
-		if _nearest_resource_index() < 0:
+		var overflow: = fposmod(maxf(0.0, mining_elapsed - _swing_duration), _swing_duration)
+		if _begin_mining_swing():
+			mining_elapsed = minf(overflow, _swing_duration * MINING_HIT_PROGRESS * 0.5)
+		else:
 			_cancel_mining()
+
+
+func _begin_mining_swing() -> bool:
+	# A struck/deleted target remains committed through the entire recovery.
+	# Resource and terrain hits share the same clock and reacquisition boundary.
+	_swing_input_direction = _mining_input_direction()
+	_swing_resource_index = _nearest_resource_index()
+	_swing_wall = Vector2i(-1, -1)
+	if _swing_resource_index >= 0:
+		var target: Dictionary = resources[_swing_resource_index]
+		mining_target_id = String(target.id)
+		player.set_facing((Vector2(target.position) - player.global_position).normalized())
+	else:
+		_swing_wall = _nearest_diggable_wall()
+		if _swing_wall.x < 0:
+			return false
+		mining_target_id = "wall:" + _cell_key(_swing_wall)
+		player.set_facing((_cell_center(_swing_wall) - player.global_position).normalized())
+	mining_active = true
+	mining_elapsed = 0.0
+	mining_hit = false
+	_swing_duration = _mining_cycle_duration()
+	_swing_facing = player.facing_vector
+	_swing_origin = player.global_position
+	return true
+
+
+func _mining_input_direction() -> Vector2:
+	var intent: Vector2 = Vector2(player.external_movement) + Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	if intent.length_squared() <= 0.0025:
+		return Vector2.ZERO
+	if absf(intent.x) > absf(intent.y) * 1.15:
+		return Vector2(signf(intent.x), 0)
+	if absf(intent.y) > absf(intent.x) * 1.15:
+		return Vector2(0, signf(intent.y))
+	return _swing_input_direction if mining_active else Vector2(player.facing_vector)
 
 
 func _nearest_resource_index() -> int:
@@ -2014,6 +2063,8 @@ func _cancel_mining() -> void :
 	mining_elapsed = 0.0
 	mining_hit = false
 	mining_target_id = ""
+	_swing_resource_index = -1
+	_swing_wall = Vector2i(-1, -1)
 	if is_instance_valid(player):
 		player.set_mining_visual(false)
 
@@ -3305,36 +3356,20 @@ func _apply_crusher_wave(center: Vector2i, tool: Dictionary) -> void:
 	queue_redraw()
 
 
-func _update_wall_mining(delta: float) -> void:
-	var cell: Vector2i = _nearest_diggable_wall()
-	if cell.x < 0:
-		_cancel_mining()
+func _strike_wall(cell: Vector2i, progress: float) -> void:
+	if cell.x < 0 or _is_floor(cell) or not _cell_diggable(cell):
 		return
-	var id: String = "wall:" + _cell_key(cell)
-	if not mining_active or mining_target_id != id:
-		mining_active = true
-		mining_target_id = id
-		mining_elapsed = 0.0
-		mining_hit = false
-	var duration: float = _mining_cycle_duration()
-	mining_elapsed += maxf(0.0, delta)
-	var progress: float = clampf(mining_elapsed / duration, 0.0, 1.0)
-	player.set_mining_visual(true, progress, 0.0, MINING_HIT_PROGRESS)
-	if not mining_hit and progress >= MINING_HIT_PROGRESS:
-		mining_hit = true
-		var damage: int = int(dig_damage.get(cell, 0)) + maxi(1, int(_current_endless_tool().get("power", 1)))
-		dig_damage[cell] = damage
-		var destroyed: bool = damage >= 520
-		AudioDirector.play_mining("deepstone", destroyed, false)
-		if destroyed:
-			_break_diggable_cell(cell)
-		player.set_mining_visual(true, progress, 1.0, MINING_HIT_PROGRESS)
-		if String(RunState.starforge_variant) == "crusher":
-			_apply_crusher_wave(cell, _current_endless_tool())
-		queue_redraw()
-	if progress >= 1.0:
-		mining_elapsed = maxf(0.0, mining_elapsed - duration)
-		mining_hit = false
+	var tool: Dictionary = _current_endless_tool()
+	var damage: int = int(dig_damage.get(cell, 0)) + maxi(1, int(tool.get("power", 1)))
+	dig_damage[cell] = damage
+	var destroyed: bool = damage >= 520
+	AudioDirector.play_mining("deepstone", destroyed, false)
+	if destroyed:
+		_break_diggable_cell(cell)
+	player.set_mining_visual(true, progress, 1.0, MINING_HIT_PROGRESS)
+	if String(RunState.starforge_variant) == "crusher":
+		_apply_crusher_wave(cell, tool)
+	queue_redraw()
 
 
 func companion_can_dig(point: Vector2) -> bool:

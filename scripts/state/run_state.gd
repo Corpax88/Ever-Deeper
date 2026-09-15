@@ -3462,12 +3462,12 @@ func _built_workshop_level(workshop_id: String) -> int:
 	var relic_id: = _relic_id_for_workshop(workshop_id)
 	if relic_id.is_empty():
 		return 0
-	var relic: Dictionary = Dictionary(endless_relics.get(
-		relic_id, _default_endless_relic_state()
-	))
-	var workshop: Dictionary = Dictionary(endless_workshops.get(
-		workshop_id, _default_endless_workshop_state()
-	))
+	# Dictionary.get evaluates its fallback eagerly. No default state needs to
+	# be allocated for an already-built workshop on a rendering/input tick.
+	if not endless_relics.has(relic_id) or not endless_workshops.has(workshop_id):
+		return 0
+	var relic: Dictionary = endless_relics[relic_id]
+	var workshop: Dictionary = endless_workshops[workshop_id]
 	if not bool(relic.get("placed", false)) or not bool(workshop.get("built", false)):
 		return 0
 	return clampi(

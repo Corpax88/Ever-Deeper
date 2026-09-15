@@ -1,3 +1,5 @@
+Current continuation: [CURRENT-POLISH.md](docs/premium-polish/CURRENT-POLISH.md). Read this before the historical checkpoint below.
+
 # Ever-Deeper — continue premium polish
 
 Checkpoint prepared 15 September 2026 at Mats's request so another chat can continue.

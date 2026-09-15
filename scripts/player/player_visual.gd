@@ -23,6 +23,7 @@ var _atlases: Dictionary = {}
 var _manifest: Dictionary = {}
 var _sprite: Sprite2D
 var _cloth: ShaderMaterial
+var _applied_outfit: = ""
 var _idle_clock: = 0.0
 var _walk_phase: = 0.0
 var _walk_settle: = false
@@ -84,13 +85,13 @@ func _mechanical_hit_phase() -> float:
 	return 0.36
 
 func _refresh_equipment() -> void:
-	var status: Dictionary = RunState.endless_loadout_status()
-	active_endless_outfit_style = String(status.get("outfit", "miner"))
-	active_endless_tool_style = String(status.get("tool", "original"))
+	active_endless_outfit_style = RunState.endless_outfit
+	active_endless_tool_style = RunState.endless_tool_style
 	var next: = Gear.resolve_tool(int(RunState.pickaxe_level), int(RunState.drill_level), String(RunState.starforge_variant), active_endless_tool_style)
-	if _cloth != null:
+	if _cloth != null and active_endless_outfit_style != _applied_outfit:
 		_cloth.set_shader_parameter("cloth_color", OUTFIT_COLORS.get(active_endless_outfit_style, OUTFIT_COLORS.miner))
 		_cloth.set_shader_parameter("recolor", 0.0 if active_endless_outfit_style == "miner" else 1.0)
+		_applied_outfit = active_endless_outfit_style
 	if _released or next == _wanted_gear:
 		return
 	_wanted_gear = next

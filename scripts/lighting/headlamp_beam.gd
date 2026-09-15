@@ -64,18 +64,20 @@ func refresh_workshop_effects() -> void :
 func _apply_endless_workshop_effects(force: bool = false) -> void :
 	if beam_light == null:
 		return
-	var settings: = _endless_light_settings()
-	var signature: = "%s|%.3f|%.3f" % [
-		String(settings.style),
-		float(settings.range_multiplier),
-		float(settings.energy_multiplier),
-	]
-	if not force and signature == applied_workshop_signature:
+	# Direction updates run every physics tick, including the companion's lamp.
+	# Read the selected values without constructing the three shop catalogs.
+	var level: int = RunState._built_workshop_level("light_lab")
+	var style: String = String(preview_settings.get("style", RunState.endless_light_style))
+	var reach: float = float(preview_settings.get("range_multiplier", RunState.light_range_for_level(level)))
+	var energy: float = float(preview_settings.get("energy_multiplier", RunState.light_energy_for_level(level)))
+	if style not in ["standard", "focused", "wide", "prismatic", "deepheart"]:
+		style = "standard"
+	if not force and not applied_workshop_signature.is_empty() and style == applied_style_id and is_equal_approx(reach, effective_range_multiplier) and is_equal_approx(energy, effective_energy_multiplier):
 		return
-	applied_workshop_signature = signature
-	applied_style_id = String(settings.style)
-	effective_range_multiplier = float(settings.range_multiplier)
-	effective_energy_multiplier = float(settings.energy_multiplier)
+	applied_workshop_signature = "%s|%.3f|%.3f" % [style, reach, energy]
+	applied_style_id = style
+	effective_range_multiplier = reach
+	effective_energy_multiplier = energy
 	effective_width_multiplier = _style_width_multiplier(applied_style_id)
 	beam_light.color = _styled_light_color(base_light_color.lightened(0.16), applied_style_id)
 	beam_light.energy = base_energy * effective_energy_multiplier
@@ -88,32 +90,6 @@ func _apply_endless_workshop_effects(force: bool = false) -> void :
 		- Vector2(BEAM_TEXTURE_SIZE) * 0.5
 	) * beam_light.texture_scale
 	beam_light.scale = Vector2(1.0, effective_width_multiplier)
-
-
-func _endless_light_settings() -> Dictionary:
-	if not preview_settings.is_empty(): return preview_settings.duplicate()
-	var style_id: = "standard"
-	var range_multiplier: = 1.0
-	var energy_multiplier: = 1.0
-	if RunState.has_method("endless_loadout_status"):
-		var raw_loadout: Variant = RunState.call("endless_loadout_status")
-		if raw_loadout is Dictionary:
-			style_id = String(Dictionary(raw_loadout).get("light", "standard"))
-	if RunState.has_method("endless_light_range_multiplier"):
-		range_multiplier = clampf(
-			float(RunState.call("endless_light_range_multiplier")), 1.0, 1.4
-		)
-	if RunState.has_method("endless_light_energy_multiplier"):
-		energy_multiplier = clampf(
-			float(RunState.call("endless_light_energy_multiplier")), 1.0, 1.3
-		)
-	if style_id not in ["standard", "focused", "wide", "prismatic", "deepheart"]:
-		style_id = "standard"
-	return {
-		"style": style_id,
-		"range_multiplier": range_multiplier,
-		"energy_multiplier": energy_multiplier,
-	}
 
 
 func _styled_light_color(color: Color, style_id: String) -> Color:

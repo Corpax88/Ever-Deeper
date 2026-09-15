@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import re
 from pathlib import Path
 import secrets
 import socket
@@ -72,6 +73,11 @@ def main() -> int:
                     return 2
                 command = [str(args.godot), "--path", str(args.project.resolve()), "--display-driver", "x11", "--resolution", args.resolution, "--audio-driver", "Dummy"] + extra
                 result = subprocess.run(command, env=env, stdout=game_log, stderr=subprocess.STDOUT, timeout=args.timeout)
+                game_log.flush()
+                errors = re.search(r"SCRIPT ERROR|Parse Error|^ERROR:|Assertion failed|CHECK_FAILED", (args.output / "godot.log").read_text(errors="replace"), re.M)
+                if errors:
+                    print("Rendered check reported runtime errors; inspect", args.output / "godot.log")
+                    return result.returncode or 3
                 print("Godot exit:", result.returncode, "log:", args.output / "godot.log")
                 return result.returncode
             except subprocess.TimeoutExpired:

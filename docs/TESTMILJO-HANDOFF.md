@@ -1,3 +1,14 @@
+Current continuation: [CURRENT-POLISH.md](premium-polish/CURRENT-POLISH.md).
+
+## Runtime restored 15 September, continuation
+
+Verified Godot: `/tmp/ever-deeper-runtime-20260915/Godot_v4.7.2-stable_linux.x86_64`. Extract the validated ZIP under `/tmp`, then run `--version`; a workspace extraction later appeared truncated/mode 644 despite an earlier successful version call. Do not execute incomplete bytes or solve this by changing access controls.
+Verified Xvfb: `/workspace/scratch/02374ae65f32/runtime/xvfb/usr/bin/Xvfb`; extracted ordinary Ubuntu packages plus xkbcomp.
+Verified Blender: `/tmp/ever-deeper-runtime-20260915/blender-4.5.3-linux-x64/blender` (`67807e1800cc`).
+Current source checkout: `/workspace/scratch/02374ae65f32/Ever-Deeper`, work branch from START-HER.
+Evidence: `/workspace/scratch/02374ae65f32/evidence/`; all paths are disposable, remote reports/source are authoritative.
+Native models remain at the existing saved identities from START-HER; task-local copies are outside the git tree.
+
 # Test environment — premium-polish source recovery
 
 Canonical source is the complete root project in `Corpax88/Ever-Deeper`.

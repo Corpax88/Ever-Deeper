@@ -38,7 +38,8 @@ var _last_visual_recoil: = -1.0
 var _last_visual_pickaxe_level: = -1
 var _last_visual_drill_level: = -1
 var _last_visual_starforge_variant: = ""
-var _last_visual_endless_loadout_signature: = ""
+var _last_visual_outfit: = ""
+var _last_visual_tool_style: = ""
 var physics_tick_count: = 0
 var motion_resolver_call_count: = 0
 var motion_resolver_idle_skip_count: = 0
@@ -145,7 +146,8 @@ func _update_visual(is_moving: bool) -> void :
 	var next_pickaxe_level: = int(RunState.pickaxe_level)
 	var next_drill_level: = int(RunState.drill_level)
 	var next_starforge_variant: = String(RunState.starforge_variant)
-	var next_endless_loadout_signature: = _endless_loadout_signature()
+	var next_outfit: String = RunState.endless_outfit
+	var next_tool_style: String = RunState.endless_tool_style
 	if (
 		_visual_state_initialized
 		and direction_name == _last_visual_direction
@@ -158,7 +160,8 @@ func _update_visual(is_moving: bool) -> void :
 		and next_pickaxe_level == _last_visual_pickaxe_level
 		and next_drill_level == _last_visual_drill_level
 		and next_starforge_variant == _last_visual_starforge_variant
-		and next_endless_loadout_signature == _last_visual_endless_loadout_signature
+		and next_outfit == _last_visual_outfit
+		and next_tool_style == _last_visual_tool_style
 	):
 		visual_state_skip_count += 1
 		return
@@ -174,22 +177,9 @@ func _update_visual(is_moving: bool) -> void :
 	_last_visual_pickaxe_level = next_pickaxe_level
 	_last_visual_drill_level = next_drill_level
 	_last_visual_starforge_variant = next_starforge_variant
-	_last_visual_endless_loadout_signature = next_endless_loadout_signature
+	_last_visual_outfit = next_outfit
+	_last_visual_tool_style = next_tool_style
 	visual_state_update_count += 1
-
-
-func _endless_loadout_signature() -> String:
-	if not RunState.has_method("endless_loadout_status"):
-		return "standard|miner|original"
-	var raw_status: Variant = RunState.call("endless_loadout_status")
-	if not raw_status is Dictionary:
-		return "standard|miner|original"
-	var status: Dictionary = raw_status
-	return "%s|%s|%s" % [
-		String(status.get("light", "standard")),
-		String(status.get("outfit", "miner")),
-		String(status.get("tool", "original")),
-	]
 
 
 func set_mining_visual(active: bool, progress: float = 0.0, recoil: float = 0.0, strike_phase: float = -1.0) -> void :
@@ -230,7 +220,7 @@ func mobile_physics_budget_snapshot() -> Dictionary:
 		"visual_state_skips": visual_state_skip_count,
 		"resolver_idle_synced": _resolver_idle_synced,
 		"visual_state_cached": _visual_state_initialized,
-		"endless_loadout_signature": _last_visual_endless_loadout_signature,
+		"endless_loadout_signature": "%s|%s|%s" % [RunState.endless_light_style, _last_visual_outfit, _last_visual_tool_style],
 	}
 
 

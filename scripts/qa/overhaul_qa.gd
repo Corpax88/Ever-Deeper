@@ -241,14 +241,17 @@ func _test_endless_dig() -> void:
 		# fixed three-hit rule intentionally no longer applies (see QA review).
 		var duration: float = float(world.call("_mining_cycle_duration"))
 		world.call("_cancel_mining")
-		world.call("_update_wall_mining", duration * 0.2)
+		world.set_mine_held(true)
+		world.player._actual_moving = false
+		world.call("_update_mining", duration * 0.2)
 		check(not bool(world.call("_is_floor",cell)) and int(world.dig_damage.get(cell,0)) == 0,"Free dig waits for physical contact "+str(layer))
-		world.call("_update_wall_mining", duration * 0.65)
+		world.call("_update_mining", duration * 0.65)
 		check(bool(world.call("_is_floor",cell)) or int(world.dig_damage.get(cell,0)) > 0,"Physical impact applies real tool damage "+str(layer))
 		for _hit in range(16):
 			if bool(world.call("_is_floor",cell)): break
-			world.call("_update_wall_mining",duration+0.01)
+			world.call("_update_mining",duration+0.01)
 		check(bool(world.call("_is_floor",cell)),"Equipped tool opens ordinary rock "+str(layer))
+		world.set_mine_held(false)
 		var depth: int=int(world.call("depth_at_position",world.call("_cell_center",cell)))
 		var index: int=int(world.call("_chunk_cell_index",cell))
 		var absolute: Vector2i=Vector2i(world.call("absolute_cell",cell))
