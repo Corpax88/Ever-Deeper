@@ -8,6 +8,10 @@ const HEX_COUNT: int = CELL_COUNT / 4
 const HEX: String = "0123456789abcdef"
 
 
+static func empty_chunk() -> Dictionary:
+	return {"dug": "", "nodes": 0, "sites": 0, "seen": 0}
+
+
 static func cells(mask: String) -> Array:
 	var result: Array = []
 	for digit_index in mini(mask.length(), HEX_COUNT):
@@ -41,11 +45,14 @@ static func sanitize(raw: Variant, max_depth: int) -> Dictionary:
 	if not raw is Dictionary:
 		return result
 	for key in raw:
-		var id: String = String(key)
+		if not key is String:
+			continue
+		var id: String = key
 		if not id.is_valid_int() or int(id) < 1 or int(id) > max_depth or not raw[key] is Dictionary:
 			continue
 		var source: Dictionary = raw[key]
-		var mask: String = String(source.get("dug", "")).to_lower().substr(0, HEX_COUNT)
+		var raw_mask: Variant = source.get("dug", "")
+		var mask: String = raw_mask.to_lower().substr(0, HEX_COUNT) if raw_mask is String else ""
 		var valid: bool = true
 		for digit in mask:
 			if HEX.find(digit) < 0:
@@ -53,8 +60,14 @@ static func sanitize(raw: Variant, max_depth: int) -> Dictionary:
 				break
 		result[str(int(id))] = {
 			"dug": mask if valid else "",
-			"nodes": clampi(int(source.get("nodes", 0)), 0, 2147483647),
-			"sites": clampi(int(source.get("sites", 0)), 0, 255),
-			"seen": clampi(int(source.get("seen", 0)), 0, 15),
+			"nodes": _bounded_mask(source.get("nodes", 0), 2147483647),
+			"sites": _bounded_mask(source.get("sites", 0), 255),
+			"seen": _bounded_mask(source.get("seen", 0), 15),
 		}
 	return result
+
+
+static func _bounded_mask(raw: Variant, maximum: int) -> int:
+	if (raw is int or raw is float) and is_finite(float(raw)):
+		return int(clampf(float(raw), 0.0, float(maximum)))
+	return 0

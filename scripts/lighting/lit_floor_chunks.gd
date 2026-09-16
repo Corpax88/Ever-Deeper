@@ -55,12 +55,16 @@ func _init() -> void:
 	name = "LitFloorChunks"
 	show_behind_parent = true
 
-func draw_floor(owner_canvas: CanvasItem, texture: Texture2D, bounds: Rect2, tint: Color, wash: Color, underlay: Color = Color.TRANSPARENT) -> void:
+func draw_floor(owner_canvas: CanvasItem, texture: Texture2D, bounds: Rect2, tint: Color, wash: Color, underlay: Color = Color.TRANSPARENT, texture_density: float = 1.0) -> void:
 	_owner_light_mask = owner_canvas.light_mask
 	if not enabled:
 		hide()
 		if underlay.a > 0.0: owner_canvas.draw_rect(bounds, underlay, true)
-		owner_canvas.draw_texture_rect(texture, bounds, true, tint)
+		if not is_equal_approx(texture_density, 1.0):
+			owner_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE / texture_density)
+		owner_canvas.draw_texture_rect(texture, Rect2(bounds.position * texture_density, bounds.size * texture_density), true, tint)
+		if not is_equal_approx(texture_density, 1.0):
+			owner_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		if wash.a > 0.0: owner_canvas.draw_rect(bounds, wash, true)
 		return
 	show()
@@ -102,7 +106,7 @@ func draw_floor(owner_canvas: CanvasItem, texture: Texture2D, bounds: Rect2, tin
 		var chunk: FloorChunk = _pool[used]
 		var draw_material: ShaderMaterial = _fixed_field_material if _fixed_field_material != null else _composite_material
 		var mask: int = _fixed_field_mask if composite_pass and _fixed_field_material != null else owner_canvas.light_mask
-		chunk.configure(texture, rect, Rect2(rect.position - bounds.position, rect.size), tint, wash, mask, draw_material if composite_pass else null, underlay)
+		chunk.configure(texture, rect, Rect2((rect.position - bounds.position) * texture_density, rect.size * texture_density), tint, wash, mask, draw_material if composite_pass else null, underlay)
 		chunk.show()
 		used += 1
 	for index in range(used, _pool.size()): _pool[index].hide()

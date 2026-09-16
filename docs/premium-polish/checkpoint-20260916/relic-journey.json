@@ -1,0 +1,192 @@
+{
+	"captures": [
+		{
+			"context": "endless_site:4:stabilize",
+			"framebuffer": "(1696, 780)",
+			"id": "site_discovered",
+			"player": "(480.0, 416.0)"
+		},
+		{
+			"context": "",
+			"framebuffer": "(1696, 780)",
+			"id": "site_sequence_start",
+			"player": "(480.0, 416.0)"
+		},
+		{
+			"context": "",
+			"framebuffer": "(1696, 780)",
+			"id": "site_seal_0",
+			"player": "(536.3817, 445.147)"
+		},
+		{
+			"context": "",
+			"framebuffer": "(1696, 780)",
+			"id": "site_seal_1",
+			"player": "(457.0197, 373.7469)"
+		},
+		{
+			"context": "",
+			"framebuffer": "(1696, 780)",
+			"id": "site_seal_2",
+			"player": "(537.6127, 277.6256)"
+		},
+		{
+			"context": "endless_relic:forge_heart",
+			"framebuffer": "(1696, 780)",
+			"id": "relic_discovered",
+			"player": "(2144.0, 1184.0)"
+		},
+		{
+			"context": "",
+			"framebuffer": "(1696, 780)",
+			"id": "relic_attached",
+			"player": "(2144.0, 1184.0)"
+		},
+		{
+			"context": "",
+			"framebuffer": "(1696, 780)",
+			"id": "relic_hauled",
+			"player": "(2145.449, 1290.573)"
+		},
+		{
+			"context": "",
+			"framebuffer": "(1696, 780)",
+			"id": "hub_arrival_with_relic",
+			"player": "(720.0, 300.0)"
+		},
+		{
+			"context": "relicPedestal",
+			"framebuffer": "(1696, 780)",
+			"id": "hub_relic_placement_ready",
+			"player": "(521.199, 596.9551)"
+		},
+		{
+			"context": "deepHoard",
+			"framebuffer": "(1696, 780)",
+			"id": "hub_relic_placed",
+			"player": "(521.199, 596.9551)"
+		}
+	],
+	"checks": [
+		{
+			"detail": {
+				"context": "endless_site:4:stabilize"
+			},
+			"id": "Discovery choice reachable",
+			"passed": true
+		},
+		{
+			"detail": {},
+			"id": "Real context starts seal sequence",
+			"passed": true
+		},
+		{
+			"detail": {},
+			"id": "Controller respects terrain while approaching (550.3858, 451.7491)",
+			"passed": true
+		},
+		{
+			"detail": {},
+			"id": "Controller respects terrain while approaching (456.3858, 357.7491)",
+			"passed": true
+		},
+		{
+			"detail": {},
+			"id": "Controller respects terrain while approaching (550.3858, 263.7491)",
+			"passed": true
+		},
+		{
+			"detail": {},
+			"id": "Walking actual seals resolves cache",
+			"passed": true
+		},
+		{
+			"detail": {},
+			"id": "A real generated relic exists",
+			"passed": true
+		},
+		{
+			"detail": {},
+			"id": "Relic attachment context reachable",
+			"passed": true
+		},
+		{
+			"detail": {},
+			"id": "Context attaches physical relic",
+			"passed": true
+		},
+		{
+			"detail": {},
+			"id": "Controller respects terrain while approaching (2144.0, 1312.0)",
+			"passed": true
+		},
+		{
+			"detail": {
+				"attached": true,
+				"collision_responses": 0,
+				"discovery_depth": 1,
+				"endpoint": "(2115.05, 1119.783)",
+				"endpoint_walkable": true,
+				"finite": true,
+				"fixed_step": 0.0166666666666667,
+				"max_segment_error": 0.425947189331055,
+				"peak_error_seen": 18.3801890611649,
+				"point_count": 13,
+				"recovery_count": 0,
+				"relic_id": "forge_heart",
+				"segment_count": 12,
+				"segment_length": 20.0,
+				"simulation_steps": 30,
+				"solver_iterations": 7,
+				"transition_ready_up": false
+			},
+			"id": "Hauling through real terrain preserves finite rope",
+			"passed": true
+		},
+		{
+			"detail": {},
+			"id": "Real Tunnel Home request accepted",
+			"passed": true
+		},
+		{
+			"detail": {},
+			"id": "Tunnel Home arrives in hub",
+			"passed": true
+		},
+		{
+			"detail": {},
+			"id": "Controller respects terrain while approaching (655.0, 490.0)",
+			"passed": true
+		},
+		{
+			"detail": {},
+			"id": "Controller respects terrain while approaching (520.0, 540.0)",
+			"passed": true
+		},
+		{
+			"detail": {},
+			"id": "Controller respects terrain while approaching (520.0, 605.0)",
+			"passed": true
+		},
+		{
+			"detail": {
+				"context": "relicPedestal",
+				"endpoint": "(591.858, 630.0051)",
+				"player": "(521.199, 596.9551)"
+			},
+			"id": "Physical pedestal approach offers placement",
+			"passed": true
+		},
+		{
+			"detail": {},
+			"id": "Real hauled endpoint permits placement",
+			"passed": true
+		}
+	],
+	"controller_step": 0.0166666666666667,
+	"fixture_seed": 4608,
+	"passed": true,
+	"performance_evidence": false,
+	"physical_iphone": false,
+	"rendered": true
+}

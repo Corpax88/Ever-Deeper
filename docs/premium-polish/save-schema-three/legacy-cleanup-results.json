@@ -1,0 +1,27 @@
+{
+  "passed": false,
+  "cases": [
+    {
+      "case": "endless",
+      "passed": false,
+      "exit_code": -15,
+      "reason": "runtime error",
+      "seconds": 3.33,
+      "marker": "EVER_DEEPER_ENDLESS_OK",
+      "completion": [],
+      "log": "/workspace/scratch/5a78be25fc28/evidence/schema-three-legacy-cleanup/endless.log"
+    },
+    {
+      "case": "overhaul",
+      "passed": false,
+      "exit_code": -15,
+      "reason": "runtime error",
+      "seconds": 5.66,
+      "marker": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK",
+      "completion": [
+        "EVER_DEEPER_SURFACE_GAMEPLAY_OK locked/open both-directions solid-pillars copper=24 regrowth=360 branch-both-directions shop-access"
+      ],
+      "log": "/workspace/scratch/5a78be25fc28/evidence/schema-three-legacy-cleanup/overhaul.log"
+    }
+  ]
+}

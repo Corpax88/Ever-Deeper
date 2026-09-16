@@ -161,11 +161,11 @@ func _start_qa_surface_mountains(mountain_id: String = "moonglass_mountain") -> 
 		},
 		"emberdeep_mountain": {
 			"name": "Emberdeep Mountain", "world": "emberdeep", "pickaxe": 4,
-			"position": Vector2(3078, 1030), "vein": "Fault",
+			"position": Vector2(2820, 662), "vein": "Fault",
 		},
 		"starfall_mountain": {
 			"name": "Starfall Mountain", "world": "starfall", "pickaxe": 5,
-			"position": Vector2(4020, 1042), "vein": "Lattice",
+			"position": Vector2(3900, 662), "vein": "Lattice",
 		},
 	}
 	var profile: Dictionary = Dictionary(profiles.get(mountain_id, profiles.moonglass_mountain))
@@ -200,7 +200,7 @@ func _start_qa_moon_resource() -> void :
 	main.mine_world.set_active(false)
 	main.depth_world.set_active(false)
 	main.surface_world.set_active(true)
-	main.surface_world.restore_position(Vector2(1820, 800))
+	main.surface_world.restore_position(Vector2(main.surface_world.LATER_RESOURCE_ACCESS_ROUTES.moonglass_bloom[2]))
 	main.surface_world.player.set_facing(Vector2.UP)
 	main.objective_label.text = "MOONGLASS BLOOM · BREAK THREE CRYSTALS IN 18 SECONDS"
 	main._set_status("QA · original timed Bloom · physical Moonglass and Starshard drops")
@@ -217,7 +217,7 @@ func _start_qa_surface_resource(resource_id: String) -> void :
 		DisplayServer.window_set_title("Ever Deeper · Ember Fault QA")
 		RunState.pickaxe_level = 4
 		RunState.unlock_world("emberdeep")
-		main.surface_world.restore_position(Vector2(3078, 1150))
+		main.surface_world.restore_position(Vector2(main.surface_world.LATER_RESOURCE_ACCESS_ROUTES.ember_fault[2]))
 		main.surface_world.player.set_facing(Vector2.UP)
 		main.objective_label.text = "EMBER FAULT · BREAK THE PRESSURE VENTS IN 22 SECONDS"
 		main._set_status("QA · armored heat fault · physical Emberstone and Sunslag drops")
@@ -227,7 +227,7 @@ func _start_qa_surface_resource(resource_id: String) -> void :
 		RunState.ember_mastery = 5
 		RunState.unlock_world("starfall")
 		RunState.set_starforge_variant("crusher")
-		main.surface_world.restore_position(Vector2(3810, 1050))
+		main.surface_world.restore_position(Vector2(main.surface_world.LATER_RESOURCE_ACCESS_ROUTES.starfall_lattice[2]))
 		main.surface_world.player.set_facing(Vector2.UP)
 		main.objective_label.text = "STARFALL LATTICE · DISCHARGE THREE ANCHORS IN 20 SECONDS"
 		main._set_status("QA · charged astral lattice · physical Astralite and Crownstone drops")
@@ -248,12 +248,12 @@ func _start_qa_surface_performance() -> void :
 	main.endless_world.set_active(false)
 	main.surface_world.reset_for_new_run()
 	main.surface_world.set_active(true)
-	var ember_route: Array = main.surface_world.LATER_MINE_BRANCH_ROUTES.emberMine
-	var edge_start: Vector2 = Vector2(ember_route[3])
-	var edge_end: Vector2 = Vector2(ember_route[4])
+	var ember_route: Array = main.surface_world.LATER_MAIN_ROUTES.emberdeep
+	var edge_start: Vector2 = Vector2(ember_route[2])
+	var edge_end: Vector2 = Vector2(ember_route[3])
 	var edge_tangent: Vector2 = (edge_end - edge_start).normalized()
 	var edge_normal: Vector2 = Vector2( - edge_tangent.y, edge_tangent.x)
-	var edge_position: Vector2 = (edge_start + edge_end) * 0.5 + edge_normal * (main.surface_world.LATER_BRANCH_ROUTE_HALF_WIDTH - 0.25)
+	var edge_position: Vector2 = (edge_start + edge_end) * 0.5 + edge_normal * (main.surface_world.LATER_MAIN_ROUTE_HALF_WIDTH - 0.25)
 	main.surface_world.restore_position(edge_position)
 	main.surface_world.player.set_facing(edge_tangent)
 	main.surface_world.player.set_external_movement((edge_tangent + edge_normal * 0.65).normalized())
@@ -354,8 +354,8 @@ func _start_qa_hub() -> void :
 	assert (RunState.secure_singularity("singularity"))
 	RunState.gold = 1000
 	RunState.cargo.stone = 100
-	RunState.set_location("surface", Vector2(4245, 650))
-	main.surface_world.restore_position(Vector2(4245, 650))
+	RunState.set_location("surface", main.surface_world.hub_guide_position())
+	main.surface_world.restore_position(main.surface_world.hub_guide_position())
 	main._enter_hub(true, false)
 	DisplayServer.window_set_title("Ever Deeper · Base Hub QA")
 	main._set_status("QA · permanent base · museum, workshops, and return without resetting")
@@ -387,4 +387,3 @@ func _start_qa_deepheart() -> void :
 	RunState.set_location("deepheart", main.deepheart_world.player.global_position, 1)
 	DisplayServer.window_set_title("Ever Deeper · Deepheart Finale QA")
 	main._set_status("Four worlds are ready · awaken one resonance at a time")
-

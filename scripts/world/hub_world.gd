@@ -33,10 +33,17 @@ const DEEP_HOARD_POSITION: = Vector2(790, 620)
 const DEEP_HOARD_RADIUS: = 196.0
 const RELIC_PEDESTAL_POSITION: = Vector2(520, 690)
 const RELIC_PEDESTAL_RADIUS: = 112.0
-const RELIC_PLACEMENT_DISTANCE: = 80.0
+const RELIC_PLACEMENT_DISTANCE: = 104.0
 const RELIC_ROPE_POINTS: = 9
 const RELIC_ROPE_SEGMENT_LENGTH: = 17.0
-const RELIC_ROPE_ITERATIONS: = 2
+const RELIC_ROPE_ITERATIONS: = 8
+const RELIC_ROPE_STEP: = 1.0 / 60.0
+const WORKSITE_TEXTURES: = {
+	"tool_forge": "res://assets/endless/ruin-silent-machine-v1.png",
+	"light_lab": "res://assets/endless/ruin-mineral-shrine-v1.png",
+	"wardrobe": "res://assets/endless/ruin-archive-v1.png",
+	"lift_workshop": "res://assets/endless/ruin-survey-camp-v1.png",
+}
 const WORKSHOP_INTERACT_RADIUS: = 116.0
 const WORKSHOP_IDS: Array[String] = [
 	"tool_forge", "light_lab", "wardrobe", "treasure_chamber", "lift_workshop",
@@ -92,7 +99,7 @@ const ELEVATOR_SOCKET_OFFSETS: = {
 }
 
 const PORTAL_TEXTURE: = preload("res://assets/voidstar/depth-portal.png")
-const HUB_FLOOR_TEXTURE: = preload("res://assets/voidstar/floor.png")
+const HUB_FLOOR_TEXTURE: = preload("res://assets/hub/hub-floor-v2.png")
 const HUB_WALL_TEXTURE: = preload("res://assets/voidstar/wall.png")
 const HUB_ROUTE_TEXTURE: = preload("res://assets/starfall/route-marker.png")
 const HUB_LAMP_TEXTURE: = preload("res://assets/entrances/depth-work-lamp.png")
@@ -130,6 +137,7 @@ var interior_initialized: = false
 var interior_build_count: = 0
 var _relic_rope_points: Array[Vector2] = []
 var _relic_rope_previous: Array[Vector2] = []
+var _relic_rope_accumulator: float = 0.0
 var _rope_relic_id: = ""
 var _endless_status_cache: Dictionary = {}
 var _relic_catalog_cache: Array[Dictionary] = []
@@ -349,7 +357,7 @@ func runtime_contract() -> Dictionary:
 		"assets": {
 			"surface_lift": "res://assets/voidstar/depth-portal.png",
 			"deep_elevator": "res://assets/hub/deep-elevator-terminal.png",
-			"floor": "res://assets/voidstar/floor.png",
+			"floor": "res://assets/hub/hub-floor-v2.png",
 			"wall_frame": "res://assets/voidstar/wall.png",
 			"route_inlay": "res://assets/starfall/route-marker.png",
 			"foundation_lamp": "res://assets/entrances/depth-work-lamp.png",
@@ -526,6 +534,7 @@ func _update_relic_rope(delta: float) -> void :
 	var relic_id: = String(carried.get("id", carried.get("relic_id", "")))
 	if relic_id.is_empty():
 		_rope_relic_id = ""
+		_relic_rope_accumulator = 0.0
 		_relic_rope_points.clear()
 		_relic_rope_previous.clear()
 		return
@@ -540,30 +549,38 @@ func _update_relic_rope(delta: float) -> void :
 			var point: = anchor + trail_direction * RELIC_ROPE_SEGMENT_LENGTH * float(index)
 			_relic_rope_points.append(point)
 			_relic_rope_previous.append(point)
-	var safe_delta: = minf(maxf(delta, 0.0), 1.0 / 30.0)
+	_relic_rope_accumulator = minf(_relic_rope_accumulator + maxf(delta, 0.0), RELIC_ROPE_STEP * 3.0)
+	while _relic_rope_accumulator >= RELIC_ROPE_STEP:
+		_relic_rope_accumulator -= RELIC_ROPE_STEP
+		_step_relic_rope(anchor)
+	queue_redraw()
+
+
+func _step_relic_rope(anchor: Vector2) -> void:
 	_relic_rope_points[0] = anchor
 	_relic_rope_previous[0] = anchor
 	for index in range(1, _relic_rope_points.size()):
-		var current: = _relic_rope_points[index]
-		var velocity: = (current - _relic_rope_previous[index]) * 0.91
+		var current: Vector2 = _relic_rope_points[index]
+		var velocity: Vector2 = (current - _relic_rope_previous[index]) * 0.91
 		_relic_rope_previous[index] = current
-		_relic_rope_points[index] = current + velocity + Vector2(0, 210.0) * safe_delta * safe_delta
-	for _iteration in range(RELIC_ROPE_ITERATIONS):
+		_relic_rope_points[index] = current + velocity + Vector2(0, 210.0) * RELIC_ROPE_STEP * RELIC_ROPE_STEP
+	for _iteration in RELIC_ROPE_ITERATIONS:
 		_relic_rope_points[0] = anchor
 		for index in range(1, _relic_rope_points.size()):
-			var previous: = _relic_rope_points[index - 1]
-			var current: = _relic_rope_points[index]
-			var delta_vector: = current - previous
-			var distance: = maxf(0.001, delta_vector.length())
-			var correction: = delta_vector * ((distance - RELIC_ROPE_SEGMENT_LENGTH) / distance)
-			if index == 1:
-				_relic_rope_points[index] -= correction
-			else:
-				_relic_rope_points[index - 1] += correction * 0.48
-				_relic_rope_points[index] -= correction * 0.52
+			var previous: Vector2 = _relic_rope_points[index - 1]
+			var current: Vector2 = _relic_rope_points[index]
+			var difference: Vector2 = current - previous
+			var distance: float = difference.length()
+			# Rope resists stretching, never compression. Forcing short segments
+			# apart made slack spring into a visible zigzag beside the pedestal.
+			if distance > RELIC_ROPE_SEGMENT_LENGTH:
+				var correction: Vector2 = difference * ((distance - RELIC_ROPE_SEGMENT_LENGTH) / distance)
+				if index == 1:
+					_relic_rope_points[index] -= correction
+				else:
+					_relic_rope_points[index - 1] += correction * 0.48
+					_relic_rope_points[index] -= correction * 0.52
 			_relic_rope_points[index] = _relic_rope_points[index].clamp(Vector2(72, 72), WORLD_SIZE - Vector2(72, 72))
-	queue_redraw()
-
 
 func _on_run_state_changed() -> void :
 	_invalidate_endless_cache()
@@ -1201,9 +1218,16 @@ func _station_collision(position: Vector2) -> bool:
 		var chamber_offset: = position - (DEEP_HOARD_POSITION + Vector2(0, 22))
 		if Vector2(chamber_offset.x / 172.0, chamber_offset.y / 94.0).length_squared() < 1.0:
 			return true
+	elif RunState.victory:
+		var worksite_offset: Vector2 = position - (DEEP_HOARD_POSITION + Vector2(0, 32))
+		if (worksite_offset / Vector2(105, 44)).length_squared() < 1.0: return true
 	for workshop_id in _workshop_ids():
 		var status: = _workshop_status(workshop_id)
-		if workshop_id == "treasure_chamber" or not bool(status.get("built", false)):
+		if workshop_id == "treasure_chamber" or (not _workshop_unlocked(status) and not bool(status.get("built", false))):
+			continue
+		if not bool(status.get("built", false)):
+			var worksite_offset: Vector2 = position - (_workshop_position(workshop_id) + Vector2(0, 18))
+			if (worksite_offset / Vector2(94, 42)).length_squared() < 1.0: return true
 			continue
 		var size: Vector2 = WORKSHOP_VISIBLE_SIZES[workshop_id]
 		var offset: Vector2 = position - (_workshop_position(workshop_id) + Vector2(0, 8))
@@ -1557,7 +1581,6 @@ func _draw_ground() -> void :
 	_draw_ground_border()
 	_draw_floor_surface()
 	_draw_hub_wall_frame()
-	_draw_foundation_route()
 	_draw_foundation_sconces()
 
 
@@ -1570,8 +1593,9 @@ func _draw_ground_border() -> void:
 
 
 func _draw_floor_surface() -> void:
-	var interior: Rect2 = Rect2(54, 48, WORLD_SIZE.x - 108, WORLD_SIZE.y - 96)
-	lit_floor_chunks.draw_floor(self, HUB_FLOOR_TEXTURE, interior, Color(0.96, 0.84, 0.72, 1.0), Color(0.18, 0.075, 0.018, 0.12))
+	# One authored floor grounds all bays at the same stone scale. World UVs
+	# keep its masonry junctions fixed beneath entrances and workshop stairs.
+	lit_floor_chunks.draw_floor(self, HUB_FLOOR_TEXTURE, Rect2(Vector2.ZERO, WORLD_SIZE), Color(.91, .87, .82, 1), Color(.10, .075, .05, .08), Color.TRANSPARENT, float(HUB_FLOOR_TEXTURE.get_width()) / WORLD_SIZE.x)
 
 
 func _draw_partitioned_hub() -> void:
@@ -1579,7 +1603,6 @@ func _draw_partitioned_hub() -> void:
 	lit_draw_sections.begin(self)
 	lit_draw_sections.add(_draw_ground_border)
 	lit_draw_sections.add(_draw_hub_wall_frame)
-	lit_draw_sections.add(_draw_foundation_route)
 	for position_value in FOUNDATION_LIGHT_POSITIONS:
 		lit_draw_sections.add(_draw_foundation_sconce.bind(Vector2(position_value)))
 	lit_draw_sections.add(_draw_deep_elevator.bind(active_context == "deepElevator"), null, actor_draw_depth(DEEP_ELEVATOR + Vector2(0, 50)))
@@ -1613,21 +1636,6 @@ func _draw_hub_wall_frame() -> void :
 		_draw_ellipse_shape(Vector2(WORLD_SIZE.x - 88 - section.y, section.x), Vector2(34,section.z*.57), Color(0,0,0,.54))
 		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(20 + section.y, section.x), section.z, -PI * .5 + section.w, Color(.76,.74,.8,1))
 		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(WORLD_SIZE.x - 20 - section.y, section.x), section.z, PI * .5 - section.w, Color(.76,.74,.8,1))
-
-
-func _draw_foundation_route() -> void :
-	_draw_painted_span(HUB_ROUTE_TEXTURE, Vector2(336, 821), 250.0, 0.0, Color(0.98, 0.88, 0.66, 0.95))
-	_draw_painted_span(HUB_ROUTE_TEXTURE, Vector2(430, 780), 176.0, 0.0, Color(0.88, 0.82, 0.66, 0.86))
-	_draw_painted_span(HUB_ROUTE_TEXTURE, Vector2(720, 220), 282.0, 0.0, Color(0.88, 0.78, 0.58, 0.86))
-	if not RunState.victory:
-		return
-	for workshop_id in _workshop_ids():
-		var status: = _workshop_status(workshop_id)
-		if workshop_id == "treasure_chamber" or not bool(status.get("built", false)):
-			continue
-		var destination: = _workshop_position(workshop_id)
-		var span: float = 126.0 if workshop_id in ["tool_forge", "lift_workshop"] else 106.0
-		_draw_painted_span(HUB_ROUTE_TEXTURE, destination + Vector2(0, 48), span, 0.0, Color(0.92, 0.88, 0.8, 0.9))
 
 
 func _draw_foundation_sconces() -> void :
@@ -1701,8 +1709,8 @@ func _draw_workshop_site(workshop_id: String, status: Dictionary, _selected: boo
 		_draw_ellipse_shape(position + Vector2(0, 24), Vector2(footprint_width, 27), Color(0, 0, 0, 0.3))
 	else:
 		_draw_ellipse_shape(position + Vector2(0, 26), Vector2(76, 25), Color(0, 0, 0, 0.37))
-		_draw_ellipse_shape(position + Vector2(0, 17), Vector2(67, 18), Color("302a28"))
-		_draw_canvas.draw_arc(position + Vector2(0, 4), 57.0, - PI * 0.5, - PI * 0.5 + TAU * progress, 28, Color(color, 0.86), 5.0)
+		if WORKSITE_TEXTURES.has(workshop_id):
+			_draw_texture_grounded(_premium_texture(WORKSITE_TEXTURES[workshop_id]), position + Vector2(0, 38), Vector2(190, 130), Color(0.86, 0.84, 0.79, 1.0))
 		var material_texture: = _workshop_material_texture(_workshop_resource(status))
 		var staged_parts: = ceili(progress * 5.0)
 		var stage_offsets: Array[Vector2] = [
@@ -1714,17 +1722,17 @@ func _draw_workshop_site(workshop_id: String, status: Dictionary, _selected: boo
 				_draw_texture_rotated_bounded(material_texture, part_position, Vector2(28, 24), float(stage_index) * 0.42, Color(1, 1, 1, 0.76))
 			else:
 				_draw_canvas.draw_circle(part_position, 7.0, Color(color, 0.72))
-	if not is_chamber:
+	if not is_chamber and built:
 		var build_progress: = _workshop_presentation_progress(workshop_id, "build")
 		var workshop_alpha: = 1.0 if build_progress < 0.0 else lerpf(0.16, 1.0, clampf((build_progress - 0.3) / 0.48, 0.0, 1.0))
 		_draw_workshop_icon(workshop_id, position, built, color, workshop_alpha, status)
-	else:
+	elif is_chamber:
 		_draw_ellipse_shape(interaction_position + Vector2(0, 22), Vector2(34, 11), Color(0, 0, 0, 0.35))
 		_draw_canvas.draw_rect(Rect2(interaction_position - Vector2(22, 28), Vector2(44, 54)), Color("302b32"), true)
 		_draw_canvas.draw_rect(Rect2(interaction_position - Vector2(22, 28), Vector2(44, 54)), Color(color, 0.62), false, 2.0)
 		_draw_canvas.draw_circle(interaction_position + Vector2(0, -7), 7.0, Color(color, 0.82 if built else 0.36))
 	if not is_chamber and not built:
-		var title_y: float = position.y - float(WORKSHOP_VISIBLE_SIZES[workshop_id].y) + 26.0
+		var title_y: float = position.y - 112.0
 		var title: = _workshop_name(workshop_id, status)
 		_draw_centered_text(title, Vector2(position.x, title_y), 14, Color(color, 0.96))
 		var resource_id: = _workshop_resource(status).replace("_", " ").to_upper()
@@ -1812,17 +1820,12 @@ func _draw_relic_museum(selected: bool) -> void :
 	var chamber_status: = _workshop_status("treasure_chamber")
 	var chamber_built: = bool(chamber_status.get("built", false))
 	var museum_color: = _workshop_color("treasure_chamber")
-	_draw_ellipse_shape(DEEP_HOARD_POSITION + Vector2(0, 126), Vector2(198, 21), Color(0, 0, 0, 0.44))
 	if chamber_built:
+		_draw_ellipse_shape(DEEP_HOARD_POSITION + Vector2(0, 126), Vector2(198, 21), Color(0, 0, 0, 0.44))
 		_draw_texture_bounded(_premium_texture(TREASURE_CHAMBER_TEXTURE_PATH), DEEP_HOARD_POSITION, Vector2(460, 307))
 	else:
-		_draw_texture_bounded(
-			_premium_texture(TREASURE_CHAMBER_TEXTURE_PATH),
-			DEEP_HOARD_POSITION,
-			Vector2(460, 307),
-			Color(0.42, 0.4, 0.38, 0.3)
-		)
-		_draw_canvas.draw_arc(DEEP_HOARD_POSITION + Vector2(0, 35), 126.0, - PI * 0.5, PI * 1.5, 56, Color(museum_color, 0.18), 3.0)
+		_draw_ellipse_shape(DEEP_HOARD_POSITION + Vector2(0, 62), Vector2(95, 16), Color(0, 0, 0, 0.35))
+		_draw_texture_grounded(_premium_texture("res://assets/endless/ruin-archive-v1.png"), DEEP_HOARD_POSITION + Vector2(0, 60), Vector2(230, 153), Color(0.86, 0.84, 0.79, 1.0))
 	_draw_ellipse_shape(RELIC_PEDESTAL_POSITION + Vector2(0, 40), Vector2(67, 20), Color(0, 0, 0, 0.44))
 	_draw_texture_bounded(
 		_premium_texture(RELIC_PEDESTAL_TEXTURE_PATH),

@@ -85,11 +85,16 @@ static func _carve(cells: PackedByteArray, center: Vector2i, radius: int) -> voi
 
 
 static func _corridor(cells: PackedByteArray, from: Vector2i, to: Vector2i, radius: int) -> void:
-	var cursor: Vector2i = from
-	while cursor != to:
-		_carve(cells, cursor, radius)
-		if cursor.x != to.x:
-			cursor.x += signi(to.x - cursor.x)
-		else:
-			cursor.y += signi(to.y - cursor.y)
+	# Follow the rock's broad curve instead of cutting a horizontal street with
+	# one right-angle turn. Oversampling keeps every neighbouring opening joined.
+	var start: Vector2 = Vector2(from)
+	var end: Vector2 = Vector2(to)
+	var delta: Vector2 = end - start
+	var bend_sign: float = -1.0 if posmod(from.x * 7 + to.y * 11, 2) == 0 else 1.0
+	var control: Vector2 = start.lerp(end, .5) + Vector2(-delta.y, delta.x).normalized() * minf(2.8, delta.length() * .18) * bend_sign
+	var steps: int = maxi(1, ceili(delta.length() * 3.0))
+	for step in range(steps + 1):
+		var t: float = float(step) / float(steps)
+		var point: Vector2 = start * (1.0-t) * (1.0-t) + control * 2.0 * (1.0-t) * t + end * t * t
+		_carve(cells, Vector2i(point.round()), radius)
 	_carve(cells, to, radius)

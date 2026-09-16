@@ -53,9 +53,11 @@ func _test_skills() -> void:
 	check(RunState.deserialize(saved),"Skill save reload")
 	for skill in MoleSkills.SKILLS: check(MoleSkills.has_skill(String(skill.id)),"Learned skill persists "+String(skill.id))
 	check(MoleSkills.bond()==expected_bond,"Bond persists")
-	var legacy: Dictionary=saved.duplicate(true)
-	legacy.state.erase("overhaul")
-	check(RunState.deserialize(legacy) and MoleSkills.has_skill("fetch"),"Legacy save has working starter companion")
+	var incomplete: Dictionary=saved.duplicate(true)
+	incomplete.state.erase("overhaul")
+	check(not RunState.deserialize(incomplete) and MoleSkills.bond()==expected_bond,"Incomplete save is rejected without clearing paid companion progress")
+	RunState.reset_run(false)
+	check(MoleSkills.has_skill("fetch"),"Fresh schema has a working starter companion")
 
 func _test_d1_barriers() -> void:
 	for definition in driver.DEPTH_ONE_BARRIERS:
@@ -65,6 +67,7 @@ func _test_d1_barriers() -> void:
 		world.set_process(false)
 		var cells: Array[Vector2i]=driver.call("_d1_barrier_cells",world,id,true)
 		check(not cells.is_empty(),"D1 barrier exists "+id)
+		check(not RunState.is_mine_barrier_cleared(id),"Fresh D1 generation grants no barrier completion "+id)
 		if cells.is_empty(): continue
 		var cell: Vector2i=cells[0]
 		var required: int=int(world.blocks[cell].requires_tool)
@@ -94,6 +97,9 @@ func _test_d1_barriers() -> void:
 			if hit==4:
 				var saved: Dictionary=RunState.serialize()
 				check(RunState.deserialize(saved) and RunState.barrier_hits(mine_id+":d1:"+id)==4,"Partial D1 save "+id)
+				world.call("_configure_mine",mine_id)
+				check(not RunState.is_mine_barrier_cleared(id) and driver.call("_d1_barrier_cells",world,id,true).size()==cells.size(),"Partial D1 rebuild preserves the closed gate "+id)
+		check(RunState.is_mine_barrier_cleared(id),"Tenth strike records explicit barrier completion "+id)
 		world.call("_configure_mine",mine_id)
 		var restored: Array[Vector2i]=driver.call("_d1_barrier_cells",world,id,true)
 		check(restored.is_empty(),"D1 cleared barrier stays open "+id)
@@ -447,7 +453,7 @@ func _test_surface_and_guide() -> void:
 			RunState.unlock_world(zone)
 			world.call("_sync_portal_transition",zone,true,false)
 			world.portal_transitions[zone].call("_process",2.0)
-		var route: Array=[Vector2(x-270,650),Vector2(x-120,680),Vector2(x,650),Vector2(x+160,610),Vector2(x+250,650)]
+		var route: Array=world.gate_approach_route(gate)
 		for backwards in [false,true]:
 			var points: Array=route.duplicate()
 			if backwards: points.reverse()
@@ -457,7 +463,7 @@ func _test_surface_and_guide() -> void:
 				check(position.distance_to(Vector2(target))<1.0,"Surface arch passage "+gate+":"+str(backwards))
 		var id: String=gate+"_mountain"
 		var mountain_x: float={"moonglass":1665.0,"emberdeep":2820.0,"starfall":3900.0}[gate]
-		world.restore_position(Vector2(mountain_x,620.0 if gate=="moonglass" else 650.0))
+		world.restore_position(Vector2(mountain_x,662.0))
 		world.call("_evaluate_context",world.player.global_position)
 		check(String(world.active_context)==id,"Later mountain target is reachable "+gate)
 		var limit: int=1000
@@ -491,7 +497,7 @@ func _test_surface_and_guide() -> void:
 	RunState.reset_run(false)
 	check(RunState.deserialize(hub_save) and not RunState.hub_tutorial_pending(),"Completed Hub guide survives save reload")
 	hub_save.state.hub["tutorialSeen"]=false
-	check(RunState.deserialize(hub_save) and not RunState.hub_tutorial_pending(),"Already visited legacy save recovers from the Hub loop")
+	check(RunState.deserialize(hub_save) and not RunState.hub_tutorial_pending(),"Visited Hub remains complete despite a stale tutorial flag")
 	check(String(RunState.starforge_variant)=="crusher" and RunState.gold==int(hub_save.state.gold),"Hub recovery preserves equipment and gold")
 	hub_save.state.hub["visited"]=false
 	check(RunState.deserialize(hub_save) and RunState.hub_tutorial_pending(),"An unvisited Hub still receives its first guide step")

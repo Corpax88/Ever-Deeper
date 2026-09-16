@@ -1,5 +1,5 @@
 extends "res://scripts/qa/qa_context.gd"
-## Endless checks moved intact from main.gd.
+## Post-victory journey with canonical saves and individual resource claims.
 
 
 func _run_endless_qa() -> void :
@@ -8,15 +8,16 @@ func _run_endless_qa() -> void :
 		return
 	RunState.mark_conclusion_seen()
 	RunState.set_location("hub", Vector2(main.hub_world.entry_spawn()))
-	var legacy_save= Dictionary(RunState.serialize())
-	var legacy_state= Dictionary(legacy_save.get("state", {}))
-	legacy_state.erase("endless_descent")
-	legacy_save["state"] = legacy_state
-	RunState.reset_run(false)
-	if not _endless_qa_require(RunState.deserialize(legacy_save), "legacy_victory_deserialize"):
+	var victory_save: Dictionary = RunState.serialize()
+	var incomplete_save: Dictionary = victory_save.duplicate(true)
+	incomplete_save.state.erase("endless_descent")
+	if not _endless_qa_require(not RunState.deserialize(incomplete_save) and RunState.serialize() == victory_save, "incomplete_save_rejected_without_progress_loss"):
 		return
-	var legacy_status= Dictionary(RunState.endless_descent_status())
-	if not _endless_qa_require(bool(RunState.victory) and bool(legacy_status.get("unlocked", false)) and int(legacy_status.get("start_depth", 0)) == 1, "legacy_victory_unlock"):
+	RunState.reset_run(false)
+	if not _endless_qa_require(RunState.deserialize(victory_save), "current_victory_deserialize"):
+		return
+	var victory_status: Dictionary = RunState.endless_descent_status()
+	if not _endless_qa_require(bool(RunState.victory) and bool(victory_status.get("unlocked", false)) and int(victory_status.get("start_depth", 0)) == 1, "restored_victory_unlock"):
 		return
 
 	main.game_started = true
@@ -32,9 +33,14 @@ func _run_endless_qa() -> void :
 		return
 	var layout= Dictionary(main.endless_world.debug_snapshot())
 	var signature= String(layout.get("signature", ""))
+	var stream: Dictionary = layout.get("stream", {})
 	if not _endless_qa_require(
 		not signature.is_empty()
-		and bool(layout.get("path_connected", false))
+		and bool(stream.get("continuous", false))
+		and int(stream.get("active_chunk_count", 0)) == 3
+		and int(stream.get("active_cells", 0)) == 2640
+		and not bool(stream.get("shaft_interactions", true))
+		and int(layout.get("walkable_cells", 0)) < int(stream.get("active_cells", 0))
 		and bool(layout.get("spawn_clear", false))
 		and int(layout.get("branch_count", 0)) >= 1
 		and int(layout.get("site_count", 0)) >= 2
@@ -78,6 +84,13 @@ func _run_endless_qa() -> void :
 	):
 		return
 	if not _endless_qa_require(RunState.collect_endless_resource("deep_alloy", 199) and int(RunState.cargo.get("deep_alloy", 0)) == 199, "resource_199"):
+		return
+	var resources_before: int = int(main.endless_world.debug_snapshot().resource_count)
+	if not _endless_qa_require(resources_before > 1, "individual_node_fixture"):
+		return
+	var claimed_node: Dictionary = Dictionary(main.endless_world.resources[0]).duplicate(true)
+	main.endless_world._strike_resource(0, int(claimed_node.hp), false)
+	if not _endless_qa_require(bool(main.endless_world.resources[0].mined), "individual_node_mined"):
 		return
 
 	main.endless_world.restore_position(Vector2(main.endless_world.native_relic_position))
@@ -136,10 +149,16 @@ func _run_endless_qa() -> void :
 		return
 
 	main._enter_endless(true, false)
+	var claimed_node_respawned: bool = false
+	for resource in main.endless_world.resources:
+		if String(resource.id) == String(claimed_node.id) and not bool(resource.mined):
+			claimed_node_respawned = true
+	var claims: Dictionary = RunState.endless_floor_resource_state(int(claimed_node.depth))
 	if not _endless_qa_require(
-		int(Dictionary(main.endless_world.debug_snapshot()).get("resource_count", -1)) == 0
-		and int(Dictionary(RunState.endless_descent_status()).get("resource_exhausted_through", 0)) >= 1,
-		"exhausted_floor_does_not_respawn"
+		not claimed_node_respawned
+		and int(main.endless_world.debug_snapshot().resource_count) == resources_before - 1
+		and (int(claims.mined_mask) & (1 << int(claimed_node.node_index))) != 0,
+		"claimed_node_stays_mined_without_deleting_untouched_ore"
 	):
 		return
 	if not _endless_qa_require(RunState.collect_endless_resource("deep_alloy", 1), "resource_200"):
@@ -221,7 +240,7 @@ func _run_endless_qa() -> void :
 	main._restore_saved_location()
 	if not _endless_qa_require(main.phase == "endless" and int(main.endless_world.configured_depth()) == 3, "restore_scene"):
 		return
-	print("EVER_DEEPER_ENDLESS_OK legacy=true depth=3 deterministic=true hazards=telegraphed sites=active cache=one_claim rope=true relic=physical assets=20 blueprint=tool_forge materials=200 workshop=two_press lift_checkpoint=true persistence=true")
+	print("EVER_DEEPER_ENDLESS_OK schema=3 depth=3 deterministic=true hazards=telegraphed sites=active cache=one_claim nodes=individual_persistence rope=true relic=physical assets=20 blueprint=tool_forge materials=200 workshop=two_press lift_checkpoint=true persistence=true")
 	main.get_tree().quit(0)
 
 
@@ -293,4 +312,3 @@ func _endless_qa_require(condition: bool, step: String) -> bool:
 	push_error("Endless QA failed: %s" % step)
 	main.get_tree().quit(4)
 	return false
-

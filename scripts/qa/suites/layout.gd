@@ -101,8 +101,9 @@ func _run_landscape_qa() -> void :
 		assert ( not bool(transition_debug.legacy_frame_visible) and not bool(boundary.legacy_arch_present))
 		assert (Vector2(transition_debug.seam_back_size) == Vector2(24, 184))
 		assert (Vector2(transition_debug.seam_front_size) == Vector2(8, 190))
-		assert (int(transition_debug.seam_back_z) < main.surface_world.player.z_index)
-		assert (int(transition_debug.seam_front_z) > main.surface_world.player.z_index)
+		var crossing_depth: int = main.surface_world.actor_draw_depth(anchor)
+		assert (transition.z_index + int(transition_debug.seam_back_z) < crossing_depth)
+		assert (transition.z_index + int(transition_debug.seam_front_z) > crossing_depth)
 		assert (is_equal_approx(float(transition_debug.crossing_pulse_duration), 0.42))
 		assert (is_equal_approx(float(transition_debug.effective_transition_duration), 0.42))
 		assert (int(transition_debug.particle_capacity) == 8)
@@ -216,9 +217,10 @@ func _run_landscape_qa() -> void :
 	var floor_bottom: Vector2 = continuous_floor.to_global(floor_rect.end)
 	assert (maxf(floor_top.y, floor_bottom.y) >= main.surface_world._world_size().y - 1.0)
 	assert ((surface_parallax.get_node("NearSilhouette") as Node2D).z_index > main.surface_world.player.z_index)
-	assert ( not main.surface_world._surface_collides(Vector2(2860, 788)), "The Ember collision must follow the visible mine path")
-	assert (main.surface_world._surface_collides(Vector2(2860, 700)), "Open Ember ground outside the path must not be invisibly walkable")
-	assert ( not main.surface_world._surface_collides(Vector2(3890, 930)), "The Starfall collision must follow the visible mine path")
+	assert ( not main.surface_world._surface_collides(Vector2(2860, 650)), "The Ember collision must follow the native terrace floor")
+	assert (main.surface_world._surface_collides(Vector2(2860, 788)), "The removed Ember branch must not remain invisibly walkable")
+	assert ( not main.surface_world._surface_collides(Vector2(3890, 650)), "The Starfall collision must follow the native terrace floor")
+	assert (main.surface_world._surface_collides(Vector2(3890, 930)), "The removed Starfall branch must not remain invisibly walkable")
 	assert (main.surface_world._surface_collides(Vector2(3890, 735)), "Open Starfall ground outside the path must not be invisibly walkable")
 	for routed_mine_id in main.surface_world.MINE_IDS:
 		assert ( not main.surface_world._surface_collides(main.surface_world._mine_entrance(String(routed_mine_id))), "Every mine entrance must meet its visible path: %s" % String(routed_mine_id))
@@ -232,9 +234,9 @@ func _run_landscape_qa() -> void :
 	assert (int(steering_contract.refine_steps) == 3)
 	assert (bool(steering_contract.never_reverses_input) and bool(steering_contract.visible_solids_remain_blocking))
 	var steering_cases: Array[Dictionary] = [
-		{"label": "Moonglass", "route": Array(main.surface_world.LATER_MINE_BRANCH_ROUTES.moonMine), "segment": 2},
-		{"label": "Emberdeep", "route": Array(main.surface_world.LATER_MINE_BRANCH_ROUTES.emberMine), "segment": 3},
-		{"label": "Starfall", "route": Array(main.surface_world.LATER_MINE_BRANCH_ROUTES.starMine), "segment": 2},
+		{"label": "Moonglass", "route": Array(main.surface_world.LATER_MAIN_ROUTES.moonglass), "segment": 4, "width": main.surface_world.LATER_MAIN_ROUTE_HALF_WIDTH},
+		{"label": "Emberdeep", "route": Array(main.surface_world.LATER_MAIN_ROUTES.emberdeep), "segment": 2, "width": main.surface_world.LATER_MAIN_ROUTE_HALF_WIDTH},
+		{"label": "Starfall", "route": Array(main.surface_world.LATER_MAIN_ROUTES.starfall), "segment": 2, "width": main.surface_world.LATER_MAIN_ROUTE_HALF_WIDTH},
 	]
 	var steering_events_before: int = int(main.surface_world.route_steering_snapshot().events)
 	for steering_case_value in steering_cases:
@@ -245,7 +247,7 @@ func _run_landscape_qa() -> void :
 		var steering_end: Vector2 = Vector2(steering_route[steering_segment + 1])
 		var steering_tangent: Vector2 = (steering_end - steering_start).normalized()
 		var steering_normal: Vector2 = Vector2( - steering_tangent.y, steering_tangent.x)
-		var steering_position: Vector2 = (steering_start + steering_end) * 0.5 + steering_normal * (main.surface_world.LATER_BRANCH_ROUTE_HALF_WIDTH - 0.25)
+		var steering_position: Vector2 = (steering_start + steering_end) * 0.5 + steering_normal * (float(steering_case.width) - 0.25)
 		var steering_intent: Vector2 = (steering_tangent + steering_normal * 0.65).normalized() * 8.0
 		assert ( not main.surface_world._surface_collides(steering_position), "%s soft-rail fixture must start on its visible road" % String(steering_case.label))
 		assert (main.surface_world._surface_collides(steering_position + steering_intent), "%s fixture must press outward through the invisible route edge" % String(steering_case.label))
@@ -260,13 +262,13 @@ func _run_landscape_qa() -> void :
 			assert (main.surface_world._is_on_surface_route(steered_position) and not main.surface_world._surface_collides(steered_position))
 			steering_position = steered_position
 	assert (int(main.surface_world.route_steering_snapshot().events) >= steering_events_before + steering_cases.size())
-	var ember_route: Array = main.surface_world.LATER_MINE_BRANCH_ROUTES.emberMine
-	var ember_start: Vector2 = Vector2(ember_route[3])
-	var ember_end: Vector2 = Vector2(ember_route[4])
+	var ember_route: Array = main.surface_world.LATER_MAIN_ROUTES.emberdeep
+	var ember_start: Vector2 = Vector2(ember_route[2])
+	var ember_end: Vector2 = Vector2(ember_route[3])
 	var ember_tangent: Vector2 = (ember_end - ember_start).normalized()
 	var ember_normal: Vector2 = Vector2( - ember_tangent.y, ember_tangent.x)
 	main.surface_world._reset_surface_route_steering()
-	var outward_position: Vector2 = (ember_start + ember_end) * 0.5 + ember_normal * (main.surface_world.LATER_BRANCH_ROUTE_HALF_WIDTH - 0.25)
+	var outward_position: Vector2 = (ember_start + ember_end) * 0.5 + ember_normal * (main.surface_world.LATER_MAIN_ROUTE_HALF_WIDTH - 0.25)
 	var outward_result: Vector2 = main.surface_world._resolve_motion(outward_position, ember_normal * 8.0)
 	var outward_delta: Vector2 = outward_result - outward_position
 	assert (outward_delta.length() >= 2.0, "A pure outward press must glide along the road instead of hard-stopping")

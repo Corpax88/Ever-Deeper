@@ -22,6 +22,8 @@ const LitDrawSectionsScript = preload("res://scripts/lighting/lit_draw_sections.
 var lit_draw_sections: Node2D
 var _draw_canvas: CanvasItem
 var _floor_materials: Dictionary = {}
+var _biome_boundary_noise: NoiseTexture2D
+var _ground_props: Dictionary = {}
 
 const DeepLayout = preload("res://scripts/world/endless_deep_layout.gd")
 const HeadlampBeamScript = preload("res://scripts/lighting/headlamp_beam.gd")
@@ -676,6 +678,7 @@ func _generate_stream_window(start_depth: int) -> void:
 	resources = all_resources
 	discovery_sites = all_sites
 	resonance_hazards = all_hazards
+	_index_ground_props()
 	# Runtime journals are bounded to the same three visible bands.
 	session_mined_nodes.clear()
 	session_discovered_sites.clear()
@@ -857,8 +860,6 @@ func _generate_resource_nodes(rng: RandomNumberGenerator) -> void :
 	var floor_state: Dictionary = {}
 	if RunState.has_method("endless_floor_resource_state"):
 		floor_state = Dictionary(RunState.endless_floor_resource_state(current_depth))
-	if bool(floor_state.get("exhausted", false)):
-		return
 	var persisted_mined_mask: = maxi(0, int(floor_state.get("mined_mask", 0)))
 	var occupied: Dictionary = {
 		_cell_key(up_shaft_cell): true,
@@ -878,6 +879,16 @@ func _generate_resource_nodes(rng: RandomNumberGenerator) -> void :
 				if not _cell_in_bounds(cell) or _base_floor_cells[_cell_index(cell)] == 0 or occupied.has(_cell_key(cell)):
 					continue
 				if cell.distance_to(up_shaft_cell) < 3.2 or cell.distance_to(down_shaft_cell) < 3.2:
+					continue
+				# A discovery is a usable space, including both choices, its circuit
+				# of stepping seals and the miner's stance. Reserving only its centre
+				# cell used to plant ore directly beneath those interaction points.
+				var clear_site: bool = true
+				for site in discovery_sites:
+					if _cell_center(cell).distance_squared_to(Vector2(site.position)) < 176.0 * 176.0:
+						clear_site = false
+						break
+				if not clear_site:
 					continue
 				candidates.append(cell)
 	_shuffle_cells(candidates, rng)
@@ -909,6 +920,38 @@ func _generate_resource_nodes(rng: RandomNumberGenerator) -> void :
 		resources.append(resource)
 		if not mined:
 			_build_resource_visual(resource)
+
+
+func _index_ground_props() -> void:
+	_ground_props.clear()
+	for index in resources.size():
+		var resource: Dictionary = resources[index]
+		_index_ground_prop(Vector2(resource.position) + Vector2(0, 18), Vector2(31, 22), index)
+	for site in discovery_sites:
+		_index_ground_prop(Vector2(site.position) + Vector2(0, 24), Vector2(70, 27), -1)
+
+
+func _index_ground_prop(center: Vector2, radii: Vector2, resource_index: int) -> void:
+	var cell: Vector2i = _world_to_cell(center)
+	if not _ground_props.has(cell): _ground_props[cell] = []
+	_ground_props[cell].append({"center":center, "radii":radii, "resource":resource_index})
+
+
+func _collides_ground_props(position: Vector2, radius: float) -> bool:
+	if _window_loading: return false
+	var extent: Vector2 = Vector2(70, 27) + Vector2.ONE * radius
+	var first: Vector2i = _world_to_cell(position - extent)
+	var last: Vector2i = _world_to_cell(position + extent)
+	for row in range(first.y, last.y + 1):
+		for col in range(first.x, last.x + 1):
+			var cell: Vector2i = Vector2i(col, row)
+			if not _ground_props.has(cell): continue
+			for prop in _ground_props[cell]:
+				var index: int = int(prop.resource)
+				if index >= 0 and bool(resources[index].mined): continue
+				var local: Vector2 = (position - Vector2(prop.center)) / (Vector2(prop.radii) + Vector2.ONE * radius)
+				if local.length_squared() < 1.0: return true
+	return false
 
 
 func _generate_native_relic(rng: RandomNumberGenerator) -> void :
@@ -1011,7 +1054,7 @@ func _build_resource_visual(resource: Dictionary) -> void :
 	var root: = Node2D.new()
 	root.name = "Resource_%s" % String(resource.id)
 	root.position = Vector2(resource.position)
-	root.z_index = 4
+	root.z_index = actor_draw_depth(root.position + Vector2(0, 25))
 	var kind: = String(resource.kind)
 	var sprite: = Sprite2D.new()
 	sprite.name = "PremiumNode"
@@ -1027,7 +1070,7 @@ func _build_site_visual(site: Dictionary) -> void :
 	var root: = Node2D.new()
 	root.name = "Discovery_%s" % String(site.id)
 	root.position = Vector2(site.position)
-	root.z_index = 2
+	root.z_index = actor_draw_depth(root.position + Vector2(0, 40))
 	var sprite: = Sprite2D.new()
 	sprite.name = "PremiumRuin"
 	sprite.texture = _load_texture(_site_texture_path(String(site.title)))
@@ -1045,49 +1088,30 @@ func _build_site_visual(site: Dictionary) -> void :
 	runes.visible = false
 	var rune_positions: Array = Array(site.get("rune_positions", []))
 	for rune_index in rune_positions.size():
-		var rune: = Node2D.new()
-		rune.name = "Rune_%d" % rune_index
-		rune.position = Vector2(rune_positions[rune_index]) - Vector2(site.position)
-		var fill: = Polygon2D.new()
-		fill.name = "Fill"
-		fill.polygon = _circle_points(SITE_RUNE_RADIUS - 8.0, 24)
-		fill.color = Color(0.2, 0.8, 0.72, 0.08)
-		rune.add_child(fill)
-		var ring: = Line2D.new()
-		ring.name = "Ring"
-		ring.closed = true
-		ring.points = _circle_points(SITE_RUNE_RADIUS, 28)
-		ring.width = 4.0
-		ring.default_color = Color(0.45, 0.92, 0.84, 0.24)
-		ring.antialiased = true
-		rune.add_child(ring)
-		runes.add_child(rune)
+		_add_site_pad(runes, "Rune_%d" % rune_index, Vector2(rune_positions[rune_index]) - Vector2(site.position), Color("7be6d0"))
 	root.add_child(runes)
 	if bool(site.discovered) or bool(site.get("resolved", false)):
 		root.modulate = Color(1.08, 1.08, 1.08, 1.0)
 	if bool(site.get("resolved", false)):
-		root.modulate = Color(0.76, 0.82, 0.8, 0.72)
+		root.modulate = Color(0.76, 0.82, 0.8, 1.0)
 	add_child(root)
 	discovery_visuals[String(site.id)] = root
 
 
-func _add_site_pad(parent: Node2D, name_value: String, position: Vector2, color: Color) -> void :
-	var pad: = Node2D.new()
+func _add_site_pad(parent: Node2D, name_value: String, position: Vector2, color: Color) -> void:
+	var pad: Sprite2D = Sprite2D.new()
 	pad.name = name_value
 	pad.position = position
-	var fill: = Polygon2D.new()
-	fill.polygon = _circle_points(27.0, 24)
-	fill.color = Color(color, 0.09)
-	pad.add_child(fill)
-	var ring: = Line2D.new()
-	ring.closed = true
-	ring.points = _circle_points(31.0, 28)
-	ring.width = 4.0
-	ring.default_color = Color(color, 0.72)
-	ring.antialiased = true
-	pad.add_child(ring)
+	pad.texture = preload("res://assets/surface/emberdeep-seal-mark.png")
+	_fit_sprite(pad, Vector2(88, 59))
+	pad.z_as_relative = false
+	pad.z_index = 1
+	var resonance: ShaderMaterial = ShaderMaterial.new()
+	resonance.shader = preload("res://shaders/lit_relic_seal.gdshader")
+	resonance.set_shader_parameter("resonance", color)
+	resonance.set_shader_parameter("strength", 0.65)
+	pad.material = resonance
 	parent.add_child(pad)
-
 
 func _circle_points(radius: float, count: int) -> PackedVector2Array:
 	var points: = PackedVector2Array()
@@ -1114,7 +1138,7 @@ func _build_relic_visual(relic_id: String, position: Vector2, carried: bool) -> 
 	var root: = Node2D.new()
 	root.name = "CarriedRelic" if carried else "Relic_%s" % relic_id
 	root.position = position
-	root.z_index = 7 if carried else 5
+	root.z_index = actor_draw_depth(position + Vector2(0, 32))
 	root.set_meta("rope_offset", _relic_rope_offset(relic_id))
 	var sprite: = Sprite2D.new()
 	sprite.name = "PremiumRelic"
@@ -1425,15 +1449,16 @@ func _configure_player(position: Vector2) -> void :
 	if RunState.has_method("movement_speed_multiplier"):
 		speed *= float(RunState.movement_speed_multiplier())
 	player.configure(position, WORLD_SIZE, speed, _resolve_motion)
+	player.z_index = actor_draw_depth(position)
 
 
 func _resolve_motion(origin: Vector2, motion: Vector2) -> Vector2:
 	var result: = origin
 	var next_x: = Vector2(origin.x + motion.x, origin.y)
-	if not _circle_collides_walls(next_x, PLAYER_RADIUS):
+	if _position_walkable(next_x):
 		result.x = next_x.x
 	var next_y: = Vector2(result.x, origin.y + motion.y)
-	if not _circle_collides_walls(next_y, PLAYER_RADIUS):
+	if _position_walkable(next_y):
 		result.y = next_y.y
 	result = result.clamp(Vector2.ONE * PLAYER_RADIUS, WORLD_SIZE - Vector2.ONE * PLAYER_RADIUS)
 	if rope_attached and rope_points.size() > 1:
@@ -1443,16 +1468,23 @@ func _resolve_motion(origin: Vector2, motion: Vector2) -> Vector2:
 		if toward_anchor.length() > limit:
 			anchor = rope_points[1] + toward_anchor.normalized() * limit
 			var limited: = anchor - Vector2(0, 7)
-			if not _circle_collides_walls(limited, PLAYER_RADIUS):
+			if _position_walkable(limited):
 				result = limited
 	return result
 
 
 func collision_at(position: Vector2) -> bool:
-	return _circle_collides_walls(position, PLAYER_RADIUS)
+	return not _position_walkable(position)
+
+
+func actor_draw_depth(position: Vector2) -> int:
+	# Half-unit depth keeps the full streamed 4,224px window inside Godot's Z
+	# range while preserving which grounded feet/base is nearer to the camera.
+	return 10 + roundi(position.y * 0.5)
 
 
 func _on_player_moved(world_position: Vector2) -> void:
+	player.z_index = actor_draw_depth(world_position)
 	if mining_active:
 		_cancel_mining()
 	if _window_loading:
@@ -1526,6 +1558,7 @@ func _rebase_stream_window(next_start: int) -> void:
 		saved_previous[index] += shift
 	_generate_stream_window(next_start)
 	player.global_position = position
+	player.z_index = actor_draw_depth(position)
 	player.set_facing(facing)
 	if rope_attached and not saved_points.is_empty():
 		rope_points = saved_points
@@ -1827,41 +1860,26 @@ func _update_site_activity_visual() -> void :
 	runes.visible = true
 	var next_rune: = int(site_activity.get("next_rune", 0))
 	var rune_count: = int(site_activity.get("rune_count", 0))
-	var elapsed: = float(site_activity.get("elapsed", 0.0))
-	var active_color: = Color("ffb45f") if String(site_activity.get("choice", "")) == "overload" else Color("7ff1d7")
+	var active_color: Color = Color("ffb45f") if String(site_activity.get("choice", "")) == "overload" else Color("7ff1d7")
 	for index in runes.get_child_count():
-		var rune: = runes.get_child(index) as Node2D
+		var rune: Sprite2D = runes.get_child(index) as Sprite2D
 		rune.visible = index < rune_count
 		if not rune.visible:
 			continue
-		var ring: = rune.get_node_or_null("Ring") as Line2D
-		var fill: = rune.get_node_or_null("Fill") as Polygon2D
-		if index < next_rune:
-			rune.scale = Vector2.ONE * 0.86
-			if is_instance_valid(ring):
-				ring.default_color = Color("86e6ae", 0.42)
-			if is_instance_valid(fill):
-				fill.color = Color("86e6ae", 0.08)
-		elif index == next_rune:
-			var pulse: = 1.0 + sin(elapsed * 6.0) * 0.09
-			rune.scale = Vector2.ONE * pulse
-			if is_instance_valid(ring):
-				ring.default_color = Color(active_color, 0.96)
-			if is_instance_valid(fill):
-				fill.color = Color(active_color, 0.18)
-		else:
-			rune.scale = Vector2.ONE * 0.9
-			if is_instance_valid(ring):
-				ring.default_color = Color(active_color, 0.18)
-			if is_instance_valid(fill):
-				fill.color = Color(active_color, 0.025)
-
+		# Inlay light pulses; carved stone remains planted at its native scale.
+		var resonance: ShaderMaterial = rune.material as ShaderMaterial
+		var completed: bool = index < next_rune
+		var lit: bool = index == next_rune
+		resonance.set_shader_parameter("resonance", Color("86e6ae") if completed else active_color)
+		resonance.set_shader_parameter("strength", 1.4 if lit else 0.38 if completed else 0.0)
+		resonance.set_shader_parameter("pulse", 0.13 if lit else 0.0)
+		rune.modulate = Color(1, 1, 1, 1) if lit else Color(0.75, 0.78, 0.78, 1) if completed else Color(0.52, 0.56, 0.58, 1)
 
 func _set_site_visual_resolved(site: Dictionary) -> void :
 	var visual: = discovery_visuals.get(String(site.id)) as Node2D
 	if not is_instance_valid(visual):
 		return
-	visual.modulate = Color(0.76, 0.82, 0.8, 0.72)
+	visual.modulate = Color(0.76, 0.82, 0.8, 1.0)
 	var choice_pads: = visual.get_node_or_null("ChoicePads") as Node2D
 	var runes: = visual.get_node_or_null("RuneSequence") as Node2D
 	if is_instance_valid(choice_pads):
@@ -2397,6 +2415,7 @@ func _update_rope_visual() -> void :
 	if is_instance_valid(relic_visual):
 		relic_visual.position = end
 		relic_visual.rotation = relic_rotation
+		relic_visual.z_index = actor_draw_depth(end + Vector2(0, 32))
 
 
 func _circle_collides_walls(position: Vector2, radius: float) -> bool:
@@ -2463,7 +2482,7 @@ func _resolve_circle_from_walls(position: Vector2, radius: float) -> Vector2:
 
 
 func _position_walkable(position: Vector2, radius: float = PLAYER_RADIUS) -> bool:
-	return not _circle_collides_walls(position, radius)
+	return not _circle_collides_walls(position, radius) and not _collides_ground_props(position, radius)
 
 
 func _nearest_walkable_position(position: Vector2, radius: float = PLAYER_RADIUS) -> Vector2:
@@ -2569,7 +2588,7 @@ func _draw() -> void :
 
 
 func _draw_partitioned_deep(first: Vector2i, last: Vector2i) -> void:
-	lit_draw_sections.begin(self)
+	lit_draw_sections.begin(self, true)
 	# A hit only changes its strip; excavation can also expose neighboring rims
 	# and mineral hints. Share each local signature across the three draw passes.
 	var revisions: Dictionary = {}
@@ -2649,12 +2668,38 @@ func _draw_terrain_section(row: int, first_col: int, last_col: int, pass_index: 
 func _deep_floor_material(depth: int) -> ShaderMaterial:
 	var index: int = posmod(depth, STRATA.size())
 	if not _floor_materials.has(index):
+		if _biome_boundary_noise == null:
+			var noise: FastNoiseLite = FastNoiseLite.new()
+			noise.seed = 1879
+			noise.frequency = 0.011
+			noise.fractal_octaves = 2
+			_biome_boundary_noise = NoiseTexture2D.new()
+			_biome_boundary_noise.width = 256
+			_biome_boundary_noise.height = 256
+			_biome_boundary_noise.noise = noise
+			_biome_boundary_noise.seamless = true
 		var material: ShaderMaterial = ShaderMaterial.new()
-		material.shader = preload("res://shaders/lit_floor_composite.gdshader")
+		material.shader = preload("res://shaders/lit_biome_floor.gdshader")
 		material.set_shader_parameter("floor_tint", Color(0.88, 0.9, 0.92, 1.0))
 		material.set_shader_parameter("floor_wash", Color(STRATA[index].floor, 0.28))
+		var previous: int = posmod(index - 1, STRATA.size())
+		var next: int = posmod(index + 1, STRATA.size())
+		material.set_shader_parameter("previous_floor", _stratum_texture_cache[previous].floor)
+		material.set_shader_parameter("next_floor", _stratum_texture_cache[next].floor)
+		material.set_shader_parameter("previous_wash", Color(STRATA[previous].floor, 0.28))
+		material.set_shader_parameter("next_wash", Color(STRATA[next].floor, 0.28))
+		material.set_shader_parameter("boundary_noise", _biome_boundary_noise)
 		_floor_materials[index] = material
-	return _floor_materials[index]
+	var material: ShaderMaterial = _floor_materials[index]
+	# Three resident bands use distinct materials. Rebase both bounds together
+	# so the original absolute texture coordinates and transition remain fixed.
+	if int(material.get_meta("draw_depth", -1)) != depth or int(material.get_meta("draw_origin", -1)) != window_start_depth:
+		material.set_shader_parameter("world_origin_y", float(window_start_depth - 1) * CHUNK_HEIGHT)
+		material.set_shader_parameter("band_start", float(depth - 1) * CHUNK_HEIGHT)
+		material.set_shader_parameter("first_band", depth == 1)
+		material.set_meta("draw_depth", depth)
+		material.set_meta("draw_origin", window_start_depth)
+	return material
 
 
 func _visual_visible_rect(margin: Vector2) -> Rect2:

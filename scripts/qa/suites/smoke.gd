@@ -13,19 +13,19 @@ func _run_surface_mountain_independence_smoke() -> void :
 	var cases: Array[Dictionary] = [
 		{
 			"mountain_id": "moonglass_mountain", "vein_context": "moonglass_resource",
-			"vein_position": Vector2(1820, 700), "mountain_position": Vector2(1580, 650),
+			"vein_position": Vector2(main.surface_world.LATER_RESOURCE_ACCESS_ROUTES.moonglass_bloom[2]), "mountain_position": Vector2(1580, 650),
 			"snapshot_method": "moonglass_resource_snapshot", "mine_method": "_mine_moonglass_resource_once",
 			"visual_method": "_update_moonglass_visual",
 		},
 		{
 			"mountain_id": "emberdeep_mountain", "vein_context": "ember_resource",
-			"vein_position": Vector2(3078, 1120), "mountain_position": Vector2(2899, 779),
+			"vein_position": Vector2(main.surface_world.LATER_RESOURCE_ACCESS_ROUTES.ember_fault[2]), "mountain_position": Vector2(2820, 662),
 			"snapshot_method": "ember_resource_snapshot", "mine_method": "_mine_timed_surface_resource_once",
 			"mine_arg": "ember_fault", "visual_method": "_update_timed_surface_visual",
 		},
 		{
 			"mountain_id": "starfall_mountain", "vein_context": "starfall_resource",
-			"vein_position": Vector2(3970, 1130), "mountain_position": Vector2(4300, 770),
+			"vein_position": Vector2(main.surface_world.LATER_RESOURCE_ACCESS_ROUTES.starfall_lattice[2]), "mountain_position": Vector2(3900, 662),
 			"snapshot_method": "starfall_resource_snapshot", "mine_method": "_mine_timed_surface_resource_once",
 			"mine_arg": "starfall_lattice", "visual_method": "_update_timed_surface_visual",
 		},

@@ -60,7 +60,14 @@ const SURFACE_LAYOUTS: = {
 		"road_flip_x": true,
 		"entrance_asset": "res://assets/entrances/moonglass-entrance.png",
 		"entrance_flip_x": false,
-		"approach": {},
+		"approach": {
+			"asset": "res://assets/surface/v2/moon-road-shelf.png",
+			"rect": {"x": 1070.0, "y": 425.0, "w": 1220.0, "h": 620.0},
+			"flip_x": false,
+			"rotation": 0.0,
+			"mouth_target": {"x": 1430.0, "y": 626.0},
+			"draw_layer": "road",
+		},
 		"decorations": [
 			{"asset": "res://assets/surface/moonglass-crystals.png", "x": 1185.0, "y": 220.0, "w": 112.0, "h": 48.0, "flip_x": false, "alpha": 0.48},
 			{"asset": "res://assets/surface/moonglass-crystals.png", "x": 1435.0, "y": 185.0, "w": 118.0, "h": 50.0, "flip_x": true, "alpha": 0.5},
@@ -71,7 +78,7 @@ const SURFACE_LAYOUTS: = {
 			{"asset": "res://assets/surface/moonglass-crystals.png", "x": 2160.0, "y": 930.0, "w": 112.0, "h": 48.0, "flip_x": false, "alpha": 0.44},
 		],
 		"features": [
-			{"id": "moonglass_bloom_bed", "asset": "res://assets/surface/moonglass-bloom-bed.png", "x": 1665.0, "y": 572.0, "w": 286.0, "h": 126.0, "alpha": 0.96, "draw_layer": "over_road"},
+			{"id": "moonglass_bloom_bed", "asset": "res://assets/surface/moonglass-bloom-bed.png", "x": 2000.0, "y": 660.0, "w": 318.0, "h": 140.0, "alpha": 1.0, "draw_layer": "over_road"},
 		],
 		"ambient_asset": "res://assets/ambient/moonglass-prism-moth.png",
 		"world_life": {
@@ -89,13 +96,12 @@ const SURFACE_LAYOUTS: = {
 		"entrance_asset": "res://assets/entrances/emberdeep-entrance.png",
 		"entrance_flip_x": true,
 		"approach": {
-			"asset": "res://assets/surface/emberdeep-mine-path.png",
-			"rect": {"x": 2456.0, "y": 772.0, "w": 500.0, "h": 222.0},
-			"flip_x": true,
-			"rotation": -0.105,
-			"pivot": {"x": 2956.0, "y": 809.0},
-			"mouth_target": {"x": 2480.0, "y": 1015.0},
-			"draw_layer": "under_road",
+			"asset": "res://assets/surface/v3/ember-road-shelf.png",
+			"rect": {"x": 2200.0, "y": 425.0, "w": 1220.0, "h": 610.0},
+			"flip_x": false,
+			"rotation": 0.0,
+			"mouth_target": {"x": 2460.0, "y": 626.0},
+			"draw_layer": "road",
 		},
 		"decorations": [
 			{"asset": "res://assets/surface/emberdeep-slag-clusters.png", "x": 2325.0, "y": 230.0, "w": 118.0, "h": 58.0, "flip_x": false, "alpha": 0.45},
@@ -106,7 +112,7 @@ const SURFACE_LAYOUTS: = {
 			{"asset": "res://assets/surface/emberdeep-slag-clusters.png", "x": 3120.0, "y": 1180.0, "w": 130.0, "h": 64.0, "flip_x": false, "alpha": 0.44},
 		],
 		"features": [
-			{"id": "ember_fault_bed", "asset": "res://assets/surface/emberdeep-fault-bed.png", "x": 3078.0, "y": 1015.0, "w": 350.0, "h": 154.0, "alpha": 0.98, "draw_layer": "over_road"},
+			{"id": "ember_fault_bed", "asset": "res://assets/surface/emberdeep-fault-bed.png", "x": 3130.0, "y": 651.3333, "w": 292.0, "h": 128.0, "alpha": 1.0, "draw_layer": "over_road"},
 		],
 		"ambient_asset": "res://assets/ambient/emberdeep-cinder-skink.png",
 		"world_life": {
@@ -124,12 +130,12 @@ const SURFACE_LAYOUTS: = {
 		"entrance_asset": "res://assets/entrances/starfall-entrance.png",
 		"entrance_flip_x": false,
 		"approach": {
-			"asset": "res://assets/surface/starfall-mine-path.png",
-			"rect": {"x": 3450.0, "y": 760.0, "w": 650.0, "h": 289.0},
+			"asset": "res://assets/surface/v3/star-road-shelf.png",
+			"rect": {"x": 3320.0, "y": 425.0, "w": 1220.0, "h": 610.0},
 			"flip_x": false,
 			"rotation": 0.0,
-			"mouth_target": {"x": 3505.0, "y": 1000.0},
-			"draw_layer": "under_road",
+			"mouth_target": {"x": 3740.0, "y": 620.0},
+			"draw_layer": "road",
 		},
 		"decorations": [
 			{"asset": "res://assets/surface/starfall-shard-clusters.png", "x": 3415.0, "y": 210.0, "w": 122.0, "h": 62.0, "flip_x": false, "alpha": 0.48},
@@ -140,7 +146,7 @@ const SURFACE_LAYOUTS: = {
 			{"asset": "res://assets/surface/starfall-shard-clusters.png", "x": 4230.0, "y": 1170.0, "w": 134.0, "h": 67.0, "flip_x": false, "alpha": 0.46},
 		],
 		"features": [
-			{"id": "starfall_lattice_bed", "asset": "res://assets/surface/starfall-lattice-bed.png", "x": 3810.0, "y": 1038.0, "w": 568.0, "h": 249.0, "alpha": 0.98, "draw_layer": "under_road"},
+			{"id": "starfall_lattice_bed", "asset": "res://assets/surface/starfall-lattice-bed.png", "x": 4340.0, "y": 652.3333, "w": 262.0, "h": 115.0, "alpha": 1.0, "draw_layer": "over_road"},
 		],
 		"ambient_asset": "res://assets/ambient/starfall-astral-ray.png",
 		"world_life": {

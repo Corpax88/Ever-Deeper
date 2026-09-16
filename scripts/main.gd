@@ -16,8 +16,8 @@ const QuickTutorialScript = preload("res://scripts/ui/quick_tutorial.gd")
 const WorldCatalogScript = preload("res://scripts/world/world_catalog.gd")
 const QaLauncher = preload("res://scripts/qa/qa_launcher.gd")
 const DEV_BUILD_FEATURE: = "ever_deeper_dev"
-const DEV_SAVE_PATH: = "user://ever_deeper_dev_run_v2.json"
-const DEV_QA_SAVE_PATH: = "user://ever_deeper_dev_qa_run_v2.json"
+const DEV_SAVE_PATH: = "user://ever_deeper_dev_run_v3.sav"
+const DEV_QA_SAVE_PATH: = "user://ever_deeper_dev_qa_run_v3.sav"
 const VISUAL_CAPTURE_SUITE_ARG: = "--visual-capture-suite"
 const VISUAL_CAPTURE_DRIVER_PATH: = "res://scripts/dev/visual_capture_driver.gd"
 const STARFORGE_BUTTON_ICONS: = {
@@ -970,7 +970,7 @@ func _surface_guide_proposal(goal: Dictionary, proposal: Dictionary, kind: Strin
 	var station_id: = String(goal.get("station_id", ""))
 	if kind in ["hub", "hub_elevator", "deepheart", "relic_place", "workshop", "endless_enter", "endless_return", "endless_resource", "endless_explore"]:
 		proposal.waypoint_id = "surface:hub_entrance"
-		proposal.candidates = [_guide_candidate("surface:hub_entrance", Vector2(4245, 650), 0.0)]
+		proposal.candidates = [_guide_candidate("surface:hub_entrance", surface_world.hub_guide_position(), 0.0)]
 		return proposal
 	if kind in ["station", "assay", "gate", "starforge"]:
 		if kind == "assay":
@@ -981,8 +981,7 @@ func _surface_guide_proposal(goal: Dictionary, proposal: Dictionary, kind: Strin
 				proposal.waypoint_id = "surface:station:%s" % station_id
 				proposal.candidates = [_guide_candidate("surface:station:%s" % station_id, station_position, 0.0)]
 				return proposal
-	var entrance: Dictionary = GameData.mine(target_mine).surfaceEntrance
-	var entrance_position: = Vector2(float(entrance.x), float(entrance.y))
+	var entrance_position: Vector2 = surface_world.mine_guide_position(target_mine)
 	proposal.waypoint_id = "surface:mine:%s" % target_mine
 	proposal.candidates = [_guide_candidate("surface:mine:%s" % target_mine, entrance_position, 0.0)]
 	return proposal
@@ -1061,7 +1060,7 @@ func _surface_station_guide_position(station_id: String) -> Vector2:
 	if station_id in ["sell", "forge"]:
 		return surface_world.station_interaction_position(station_id)
 	if station_id == "hubEntrance":
-		return Vector2(4245, 650)
+		return surface_world.hub_guide_position()
 	if station_id in ["gate", "emberGate", "starfallGate"]:
 		return surface_world.gate_interaction_position(station_id)
 	var station: Dictionary = GameData.station(station_id)

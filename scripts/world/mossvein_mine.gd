@@ -282,7 +282,6 @@ func _configure_mine(next_mine_id: String) -> void :
 	last_draw_viewport_size = Vector2.ZERO
 	last_draw_camera_zoom = Vector2.ZERO
 	_rebuild_role_counts()
-	_migrate_legacy_barrier_progress()
 	_rebuild_resource_guide_cells()
 	configured_world_seed = int(RunState.world_seed)
 	interior_build_count += 1
@@ -2263,13 +2262,6 @@ func _rebuild_role_counts() -> void :
 				role_block_counts[role] = int(role_block_counts[role]) + 1
 
 
-func _migrate_legacy_barrier_progress() -> void :
-	for barrier_value in mine.barriers:
-		var barrier_id: = String(Dictionary(barrier_value).id)
-		if int(role_block_counts.get(barrier_id, 0)) == 0 and not RunState.is_mine_barrier_cleared(barrier_id):
-			RunState.mark_barrier_cleared(barrier_id)
-
-
 func _erase_role(role: String) -> void :
 	var cells: Array = []
 	for cell in blocks:
@@ -2298,8 +2290,6 @@ func _draw_bedrock_surface_cell(cell: Vector2i, block: Dictionary) -> void :
 		return
 	var solid_index: = int(block.get("bedrock_solid_index", -1))
 	if solid_index < 0 or solid_index >= mine.solids.size():
-		solid_index = _bedrock_solid_index_for_cell(cell)
-	if solid_index < 0:
 		return
 	var solid_rect: = _bedrock_solid_draw_rect(solid_index)
 	if solid_rect.size.x <= 0.0 or solid_rect.size.y <= 0.0:
@@ -2340,15 +2330,6 @@ func _bedrock_surface_source_rect(solid_rect: Rect2, texture_size: Vector2) -> R
 		Vector2((texture_size.x - source_width) * 0.5, 0.0),
 		Vector2(source_width, texture_size.y)
 	)
-
-
-func _bedrock_solid_index_for_cell(cell: Vector2i) -> int:
-	# Later solids overwrite earlier cells during construction, so search in the
-	# same order when loading a legacy block that lacks the source index metadata.
-	for solid_index in range(mine.solids.size() - 1, -1, -1):
-		if _bedrock_solid_draw_rect(solid_index).has_point(_cell_center(cell)):
-			return solid_index
-	return -1
 
 
 func _bedrock_solid_draw_rect(solid_index: int) -> Rect2:

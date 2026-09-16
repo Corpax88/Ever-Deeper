@@ -1,5 +1,12 @@
 # Verification
 
+Current work-branch status: [16 September premium handoff](premium-polish/HANDOFF-20260916-PREMIUM.md).
+That checkpoint passes a fresh whole-project import, but is not a full source/visual release gate.
+The new binary save codec passed 341 focused assertions. Final surface movement and two
+updated QA fixtures need rerunning. The protected player-visual hash is intentionally still
+pending review; `check_invariants.py` currently reports that one changed file. Historical
+green counts below must not be applied to the complete new checkpoint.
+
 ## Current source gate
 
 GitHub Actions runs `Godot source checks` for source pull requests and changes on main.
@@ -65,7 +72,9 @@ setting, scene, game-data file, player/light implementation and the project conf
 Shaders and their resource identities are also protected. These hashes establish parity for
 this structural cleanup; update them only alongside an intentional, reviewed game change.
 It also checks that every QA entry resolves to a real method, and validates the fixed
-mine ordering/mapping owner. Save serialization and migration functions are unchanged.
+mine ordering/mapping owner. The original cleanup preserved save serialization; the current
+premium branch deliberately replaces it with one version-3 binary codec and rejects old saves.
+See `premium-polish/save-schema-three/HANDOFF-20260916.md` for exact evidence and limits.
 
 Removed helpers were private, disconnected render/presentation implementations. Full-token
 references, scene bindings, string calls and engine callback names were checked before

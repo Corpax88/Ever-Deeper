@@ -4,7 +4,7 @@ extends Node2D
 
 const AXIS: Transform3D = Transform3D(Basis(Vector3.RIGHT, Vector3(0, 0, -1), Vector3.UP), Vector3.ZERO)
 const SIDES: Array[String] = ["R", "L"]
-const BLEND_SECONDS: float = 0.085
+const BLEND_SECONDS: float = 0.075
 var viewport: SubViewport
 var sprite: Sprite2D
 var skeleton: Skeleton3D
@@ -28,6 +28,8 @@ var residuals: Dictionary = {}
 var blend_elapsed: float = BLEND_SECONDS
 var state: String = "idle"
 var phase: float = 0.0
+var gait_phase: float = 0.0
+var since_walk: float = 10.0
 var prior_position: Vector2
 var position_ready: bool = false
 var plants: Dictionary = {}
@@ -37,6 +39,7 @@ var last_phase: float = 0.0
 var maximum_reach_correction: float = 0.0
 var maximum_grip_error: float = 0.0
 var maximum_unreachable: float = 0.0
+var maximum_air_retarget: float = 0.0
 var reach_detail: Dictionary = {}
 var transitions: int = 0
 
@@ -207,6 +210,8 @@ func sample(mode: String, at: float) -> Dictionary:
 func set_reference_pose(mode: String, at: float) -> void:
 	state = mode
 	phase = at
+	gait_phase = float(data.flat_entry_phase)
+	since_walk = 10.0
 	root_native = Vector3.ZERO
 	offset = Vector3.ZERO
 	residuals.clear()
@@ -247,7 +252,11 @@ func advance(delta: float, world_position: Vector2, next_state: String, mining_p
 	var changed: bool = next_state != state
 	if changed:
 		if next_state == "walk":
-			phase = float(data.flat_entry_phase) + (.5 if plants.has("L") and not plants.has("R") else 0.0)
+			# Short interruptions preserve travelled gait distance. Restarting the
+			# same support foot for every input burst can drag a planted foot while
+			# the authoritative controller keeps advancing.
+			if since_walk >= .20:
+				gait_phase = float(data.flat_entry_phase) + (.5 if plants.has("L") and not plants.has("R") else 0.0)
 			release_phase = -1.0
 		elif next_state != "walk" and state == "walk":
 			var destination: Dictionary = sample(next_state, 0.0)
@@ -263,7 +272,9 @@ func advance(delta: float, world_position: Vector2, next_state: String, mining_p
 		state = next_state
 	var rate: float
 	if state == "walk":
-		phase = fposmod(phase + travelled / float(data.stride_pixels), 1.0)
+		gait_phase = fposmod(gait_phase + travelled / float(data.stride_pixels), 1.0)
+		phase = gait_phase
+		since_walk = 0.0
 		rate = travelled / maxf(delta, .000001) / float(data.stride_pixels)
 	elif state == "mine":
 		phase = mining_progress / hit * .55 if mining_progress <= hit else .55 + (mining_progress-hit) / (1.0-hit) * .45
@@ -271,6 +282,7 @@ func advance(delta: float, world_position: Vector2, next_state: String, mining_p
 	else:
 		phase = fposmod(phase + delta / 3.6, 1.0)
 		rate = 1.0 / 3.6
+	if state != "walk": since_walk += delta
 	if state == "walk" and not offset.is_zero_approx() and blend_elapsed >= BLEND_SECONDS:
 		_release_offset()
 	var wanted: Dictionary = _world_sample(state, phase, root_native + offset)
@@ -414,8 +426,15 @@ func _constrain(pose: Dictionary) -> void:
 			plants[side] = {"ankle": foot.origin, "roll": angle}
 		else:
 			foot.origin.z = maxf(foot.origin.z, support)
-		pose[foot_name] = foot
 		var hip: Vector3 = Transform3D(pose["thigh."+side]).origin
+		if not plants.has(side) and hip.distance_to(foot.origin) > .3638:
+			# A free ankle can be retargeted to the actual leg's reach sphere.
+			# Planted contacts never use this projection or slide with the root.
+			var reachable: Vector3 = hip + (foot.origin-hip).normalized()*.3638
+			reachable.z = maxf(reachable.z, support)
+			maximum_air_retarget = maxf(maximum_air_retarget, reachable.distance_to(foot.origin))
+			foot.origin = reachable
+		pose[foot_name] = foot
 		var horizontal: float = Vector2(hip.x-foot.origin.x, hip.y-foot.origin.y).length()
 		if horizontal < .3638:
 			lower_body = minf(lower_body, foot.origin.z + sqrt(.3638*.3638-horizontal*horizontal) - hip.z)
@@ -470,6 +489,7 @@ func snapshot() -> Dictionary:
 	var result: Dictionary = {"state": state, "phase": phase, "transitions": transitions,
 		"blend_elapsed": blend_elapsed, "visual_offset_native": [offset.x, offset.y, offset.z],
 		"reach_correction_max": maximum_reach_correction, "unreachable_max": maximum_unreachable,
+		"airborne_retarget_max": maximum_air_retarget,
 		"reach_detail": reach_detail, "contacts": plants.keys(), "bones": {}}
 	for name in ["body", "tool", "foot.R", "foot.L"]:
 		var value: Transform3D = shown[name]

@@ -1,5 +1,6 @@
-Current verified recovery: [16 September continuation](docs/premium-polish/RESUME-20260916.md).
-Current continuation: [CURRENT-POLISH.md](docs/premium-polish/CURRENT-POLISH.md). Read these before the historical checkpoint below.
+LATEST: [Premium polish handoff, 16 September 2026](docs/premium-polish/HANDOFF-20260916-PREMIUM.md).
+Mats explicitly paused work to save for a new chat. Read that handoff first.
+The recovery and chronological notes below are history, not the latest state.
 
 # Ever-Deeper — continue premium polish
 

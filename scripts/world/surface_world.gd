@@ -25,6 +25,12 @@ const MOSS_RAMP_SOURCE_START: = Vector2(99, 225)
 const MOSS_RAMP_SOURCE_END: = Vector2(1020, 700)
 const MOSS_MINE_INTERACTION_RADIUS: = 164.0
 const LATER_MINE_INTERACTION_RADIUS: = 132.0
+const TERRACE_MINE_ENTRANCES: = {
+	"moonMine": Vector2(1430, 626),
+	"emberMine": Vector2(2460, 626),
+	"starMine": Vector2(3740, 620),
+}
+const TERRACE_MINE_INTERACTION_RADII: = {"moonMine": 82.0, "emberMine": 82.0, "starMine": 72.0}
 const MOSS_GATE_ANCHOR: = Vector2(1110, MOSS_MAIN_Y)
 const MOON_PREVIEW_ANCHOR: = Vector2(1240, MOSS_MAIN_Y)
 const SURFACE_GATE_MAX_SIZE: = Vector2(220, 210)
@@ -50,28 +56,19 @@ const MOSS_MINE_BRANCH_ROUTE: = [
 ]
 const LATER_MINE_BRANCH_ROUTES: = {
 	"moonMine": [
-		Vector2(1259, 651), Vector2(1303, 668), Vector2(1360, 710),
-		Vector2(1426, 729), Vector2(1492, 759), Vector2(1558, 802),
-		Vector2(1590, 840), Vector2(1590, 875),
+		Vector2(1340, 660), Vector2(1390, 662), Vector2(1430, 666),
 	],
 	"emberMine": [
-		Vector2(2943, 690), Vector2(2943, 771), Vector2(2899, 779), Vector2(2831, 803),
-		Vector2(2766, 854), Vector2(2693, 875), Vector2(2619, 886),
-		Vector2(2552, 922), Vector2(2491, 961), Vector2(2480, 970),
+		Vector2(2590, 658), Vector2(2520, 660), Vector2(2460, 664),
 	],
 	"starMine": [
-		Vector2(4021, 690), Vector2(4021, 806), Vector2(3931, 910), Vector2(3839, 956),
-		Vector2(3742, 981), Vector2(3645, 985), Vector2(3554, 972),
-		Vector2(3505, 1000),
+		Vector2(3600, 662), Vector2(3670, 662), Vector2(3740, 664),
 	],
 }
 const LATER_MINE_RETURN_POSITIONS: = {
-
-
-
-	"moonMine": Vector2(1515, 805),
-	"emberMine": Vector2(2660, 820),
-	"starMine": Vector2(3760, 820),
+	"moonMine": Vector2(1430, 666),
+	"emberMine": Vector2(2460, 664),
+	"starMine": Vector2(3740, 664),
 }
 const MINE_ENTRANCE_MAX_SIZES: = {
 	"mossMine": Vector2(190, 155),
@@ -81,9 +78,9 @@ const MINE_ENTRANCE_MAX_SIZES: = {
 }
 const MINE_ENTRANCE_BOTTOM_OFFSETS: = {
 	"mossMine": 0.0,
-	"moonMine": 18.0,
-	"emberMine": 18.0,
-	"starMine": 30.0,
+	"moonMine": 0.0,
+	"emberMine": 0.0,
+	"starMine": 0.0,
 }
 const LATER_MAIN_ROUTES: = {
 	"moonglass": [
@@ -100,20 +97,19 @@ const LATER_MAIN_ROUTES: = {
 	],
 }
 const LATER_RESOURCE_ACCESS_ROUTES: = {
+	"moonglass_bloom": [
+		Vector2(1850, 674), Vector2(1910, 677), Vector2(2000, 684), Vector2(2090, 680),
+	],
 	"ember_fault": [
-		Vector2(3260, 650), Vector2(3300, 760), Vector2(3290, 880),
-		Vector2(3250, 1000), Vector2(3230, 1090), Vector2(3078, 1100), Vector2(2925, 1090),
+		Vector2(2980, 674), Vector2(3050, 678), Vector2(3130, 684), Vector2(3210, 684),
 	],
 	"starfall_lattice": [
-		Vector2(4250, 650), Vector2(4300, 770), Vector2(4290, 900),
-		Vector2(4210, 1010), Vector2(4120, 1080), Vector2(3970, 1130), Vector2(3820, 1080),
+		Vector2(4210, 674), Vector2(4280, 680), Vector2(4340, 682), Vector2(4390, 686),
 	],
 }
 const MOSS_MAIN_ROUTE_HALF_WIDTH: = 44.0
 const MOSS_BRANCH_ROUTE_HALF_WIDTH: = 42.0
 const LATER_MAIN_ROUTE_HALF_WIDTH: = 44.0
-const LATER_BRANCH_ROUTE_HALF_WIDTH: = 38.0
-const RESOURCE_ACCESS_ROUTE_HALF_WIDTH: = 44.0
 const MINE_LANDING_RADIUS: = 74.0
 const SURFACE_MOTION_SUBSTEP: = 10.0
 const SURFACE_ROUTE_STEER_ANGLE_STEP: = 8.0
@@ -123,7 +119,6 @@ const SURFACE_ROUTE_STEER_INPUT_RESET_DOT: = 0.55
 const SURFACE_ROUTE_STEER_CENTER_TIE: = 0.5
 const SURFACE_ROUTE_STEER_DIRECT_RESET_STEPS: = 10
 const SURFACE_ROUTE_NEAREST_MARGIN: = MINE_LANDING_RADIUS + SURFACE_MOTION_SUBSTEP
-const MOON_MINE_APPROACH_RECT: = Rect2(1250, 580, 440, 293)
 const MOSS_CAMP_TERRACE_RECT: = Rect2(24, 390, 490, 360)
 const MOSS_MINE_POCKET_RECT: = Rect2(790, 760, 280, 230)
 const MOSS_WALKABLE_BOTTOM: = 1015.0
@@ -148,6 +143,7 @@ const SURFACE_RESOURCE_MOUNTAIN_MINING_RANGE: = 132.0
 const SURFACE_RESOURCE_MOUNTAIN_TARGET_HYSTERESIS: = 22.0
 const SURFACE_RESOURCE_MOUNTAIN_HIT_DURATION: = 0.18
 const SURFACE_RESOURCE_MOUNTAIN_COLLAPSE_DURATION: = 0.72
+const MOUNTAIN_STAGE_TRANSITION_MSEC: = 140.0
 const MOSS_ENVIRONMENT_TICK: = 1.0 / 30.0
 const MOSS_ENVIRONMENT_CULL_HALF_SIZE: = Vector2(430, 520)
 const MOSS_GLOWMOTH_FPS: = 7.5
@@ -180,7 +176,7 @@ const LATER_SURFACE_LIFE_SPECS: = {
 	},
 	"emberdeep": {
 		"kind": "ground",
-		"anchors": [Vector2(2350, 790), Vector2(2600, 845), Vector2(2860, 1080), Vector2(3230, 780)],
+		"anchors": [Vector2(2380, 638), Vector2(2640, 649), Vector2(2960, 649), Vector2(3210, 654)],
 		"size": 62.0,
 		"color": Color(1.0, 0.83, 0.61, 0.92),
 		"route": Vector2(38, 3),
@@ -201,16 +197,14 @@ const LATER_SURFACE_DRIFT_ANCHORS: = {
 const MOON_BLOOM_ID: = "moonglass_bloom"
 const MOON_MOUNTAIN_ID: = "moonglass_mountain"
 const MOON_BLOOM_NODE_POSITIONS: = [
-	Vector2(1720, 650), Vector2(1820, 700), Vector2(1920, 650),
+	Vector2(1910, 584), Vector2(2000, 616), Vector2(2090, 586),
 ]
-const MOON_BLOOM_CENTER: = Vector2(1820, 666.6667)
-const MOON_BLOOM_PLATFORM_TOP_ANCHOR: = Vector2(1820, 748)
-const MOON_BLOOM_PLATFORM_UNDERSIDE_ANCHOR: = Vector2(1820, 790)
-const MOON_BLOOM_PLATFORM_APPROACH_CENTER: = Vector2(1900, 760)
-const MOON_BLOOM_PLATFORM_LANDING_ANCHOR: = Vector2(1960, 770)
-const MOON_BLOOM_PLATFORM_ACCESS_ROUTE: = [
-	Vector2(1820, 748), Vector2(1900, 760), MOON_BLOOM_PLATFORM_LANDING_ANCHOR,
-]
+const MOON_BLOOM_CENTER: = Vector2(2000, 595.3333)
+const MOON_BLOOM_GROUND_ANCHOR: = Vector2(2000, 660)
+# The 94px native clusters have a raised crown and an elliptical rock base.
+# Position remains the strike target; feet, sorting and collision share this base.
+const SURFACE_NODE_GROUND_OFFSET: = Vector2(0, 28)
+const SURFACE_NODE_GROUND_HALF_SIZE: = Vector2(34, 13)
 const MOON_BLOOM_NODE_CONTEXT_RADIUS: = 112.0
 const MOON_BLOOM_NODE_MAX_HP: = 42
 const MOON_BLOOM_TIME_LIMIT: = 18.0
@@ -219,9 +213,9 @@ const MOON_BLOOM_BONUS: = {"moonglass": 2, "starshard": 1}
 const EMBER_FAULT_ID: = "ember_fault"
 const EMBER_MOUNTAIN_ID: = "emberdeep_mountain"
 const EMBER_FAULT_NODE_POSITIONS: = [
-	Vector2(2925, 1090), Vector2(3078, 1120), Vector2(3230, 1090),
+	Vector2(3050, 584), Vector2(3130, 616), Vector2(3210, 586),
 ]
-const EMBER_FAULT_CENTER: = Vector2(3077.6667, 1100)
+const EMBER_FAULT_CENTER: = Vector2(3130, 595.3333)
 const EMBER_FAULT_NODE_MAX_HP: = 74
 const EMBER_FAULT_NODE_MAX_SHELL: = 32
 const EMBER_FAULT_TIME_LIMIT: = 22.0
@@ -230,18 +224,19 @@ const EMBER_FAULT_BONUS: = {"emberstone": 3, "sunslag": 1}
 const STARFALL_LATTICE_ID: = "starfall_lattice"
 const STAR_MOUNTAIN_ID: = "starfall_mountain"
 const STARFALL_LATTICE_NODE_POSITIONS: = [
-	Vector2(3820, 1080), Vector2(3970, 1130), Vector2(4120, 1080),
+	Vector2(4280, 581), Vector2(4400, 586), Vector2(4340, 616),
 ]
-const STARFALL_LATTICE_CENTER: = Vector2(3970, 1096.6667)
+const STARFALL_LATTICE_CENTER: = Vector2(4340, 594.3333)
 const STARFALL_LATTICE_NODE_MAX_HP: = 325
 const STARFALL_LATTICE_NODE_MAX_SHELL: = 72
 const STARFALL_LATTICE_TIME_LIMIT: = 20.0
 const STARFALL_LATTICE_RESPAWN_SECONDS: = 42.0
 const STARFALL_LATTICE_BONUS: = {"astralite": 3, "crownstone": 1}
 const TIMED_SURFACE_NODE_CONTEXT_RADIUS: = 116.0
-const STARFALL_HUB_LIFT_POSITION: = Vector2(4245, 650)
-const STARFALL_HUB_LIFT_RADIUS: = 146.0
-const STARFALL_HUB_APPROACH_RECT: = Rect2(4005, 472, 350, 156)
+const STARFALL_HUB_LIFT_POSITION: = Vector2(4200, 563)
+const STARFALL_HUB_LIFT_RADIUS: = 105.0
+const STARFALL_HUB_APPROACH_POSITION: = Vector2(4200, 650)
+const STARFALL_HUB_APPROACH_RECT: = Rect2(4115, 624, 170, 74)
 const ORE_DROP_FLIGHT_DURATION: = 0.62
 const ORE_DROP_PICKUP_RADIUS: = 52.0
 const ORE_DROP_COLLECT_DURATION: = 0.18
@@ -286,12 +281,10 @@ const LATER_SURFACE_DRIFT_TEXTURES: = {
 const MOON_GROUND: = preload("res://assets/surface/moonglass-ground.png")
 const EMBER_GROUND: = preload("res://assets/surface/emberdeep-ground.png")
 const STAR_GROUND: = preload("res://assets/surface/starfall-ground.png")
-const ROAD_TEXTURES: = {
-	"mossvein": preload("res://assets/surface/road-mossvein.png"),
-	"moonglass": preload("res://assets/surface/road-moonglass.png"),
-	"emberdeep": preload("res://assets/surface/road-emberdeep.png"),
-	"starfall": preload("res://assets/surface/road-starfall.png")
-}
+const MOON_TERRACE: = preload("res://assets/surface/v2/moon-road-shelf.png")
+const EMBER_TERRACE: = preload("res://assets/surface/v3/ember-road-shelf.png")
+const STAR_TERRACE: = preload("res://assets/surface/v3/star-road-shelf.png")
+const MOSS_ROAD_TEXTURE: = preload("res://assets/surface/road-mossvein.png")
 const ENTRANCE_TEXTURES: = {
 	"mossMine": preload("res://assets/entrances/mossvein-entrance.png"),
 	"moonMine": preload("res://assets/entrances/moonglass-entrance.png"),
@@ -338,9 +331,6 @@ const PORTAL_SEAM_COLORS: = {
 }
 const MOSS_CAMP_YARD: = preload("res://assets/surface/mossvein-camp-yard.png")
 const MOSS_CAMP_PATH: = preload("res://assets/surface/mossvein-camp-path.png")
-const MOON_MINE_APPROACH: = preload("res://assets/surface/moonglass-mine-approach-v1.png")
-const EMBER_BRANCH: = preload("res://assets/surface/emberdeep-mine-path.png")
-const STAR_BRANCH: = preload("res://assets/surface/starfall-mine-path.png")
 const MOON_CRYSTALS: = preload("res://assets/surface/moonglass-crystals.png")
 const MOON_BLOOM: = preload("res://assets/surface/moonglass-bloom-bed.png")
 const EMBER_SLAG: = preload("res://assets/surface/emberdeep-slag-clusters.png")
@@ -419,9 +409,9 @@ const SURFACE_RESOURCE_MOUNTAIN_TEXTURES: = {
 	STAR_MOUNTAIN_ID: [STAR_ORE_MOUNTAIN, STAR_ORE_MOUNTAIN_DAMAGE_1, STAR_ORE_MOUNTAIN_DAMAGE_2, STAR_ORE_MOUNTAIN_DAMAGE_3],
 }
 const SURFACE_RESOURCE_MOUNTAIN_COLLISIONS: = {
-	MOON_MOUNTAIN_ID: {"center": Vector2(1665, 490), "half_size": Vector2(168, 88)},
-	EMBER_MOUNTAIN_ID: {"center": Vector2(2820, 495), "half_size": Vector2(185, 87)},
-	STAR_MOUNTAIN_ID: {"center": Vector2(3900, 492), "half_size": Vector2(192, 90)},
+	MOON_MOUNTAIN_ID: {"center": Vector2(1665, 565), "half_size": Vector2(168, 62)},
+	EMBER_MOUNTAIN_ID: {"center": Vector2(2820, 575), "half_size": Vector2(185, 60)},
+	STAR_MOUNTAIN_ID: {"center": Vector2(3900, 575), "half_size": Vector2(192, 60)},
 }
 const SURFACE_RESOURCE_MOUNTAIN_CONFIGS: = {
 	MOON_MOUNTAIN_ID: {
@@ -453,7 +443,6 @@ var moss_camp_connector_sprite: Sprite2D
 var moss_wayfarer_access_sprite: Sprite2D
 var moss_mine_branch_sprite: Sprite2D
 var surface_mine_branch_sprites: Dictionary = {}
-var surface_mine_branch_backing_sprites: Dictionary = {}
 var entrance_nodes: Dictionary = {}
 var portal_transitions: Dictionary = {}
 var portal_generator_nodes: Dictionary = {}
@@ -461,7 +450,6 @@ var boundary_backing_nodes: Dictionary = {}
 var gate_unlock_state: Dictionary = {}
 var moonglass_transition: WorldTransitionVisual
 var ore_mountain_sprite: Sprite2D
-var ore_mountain_blend_sprite: Sprite2D
 var ore_mountain_base_scale: = Vector2.ONE
 var ore_mountain_base_position: = Vector2.ZERO
 var ore_mountain_impacts: Array[Dictionary] = []
@@ -505,7 +493,7 @@ var surface_resource_mountains: Dictionary = {}
 var surface_resource_mountain_impacts: Array[Dictionary] = []
 var surface_resource_mountain_drops: Array[Dictionary] = []
 var surface_material_sprays: Array[Dictionary] = []
-var moon_bloom_platform_nodes: Array[Sprite2D] = []
+var moon_bloom_ground_sprite: Sprite2D
 var timed_surface_glow_textures: Dictionary = {}
 var starfall_hub_lift_sprite: Sprite2D
 var starfall_hub_lift_glow: Sprite2D
@@ -545,6 +533,7 @@ var surface_route_steer_sign: = 0.0
 var surface_route_steer_input_direction: = Vector2.ZERO
 var surface_route_direct_steps: = 0
 var surface_route_corridors: Array[Dictionary] = []
+var surface_solid_footprints: Array[Dictionary] = []
 var surface_route_broadphase_rejects: = 0
 var surface_route_segment_checks: = 0
 var surface_drop_budget_enforcing: = false
@@ -572,6 +561,8 @@ func _ready() -> void :
 	_build_starfall_hub_lift()
 	_build_entrances()
 	_build_gates()
+	_build_surface_collision_footprints()
+	_configure_surface_draw_depth()
 	for boundary_value in BOUNDARIES:
 		var boundary: Dictionary = Dictionary(boundary_value)
 		gate_unlock_state[String(boundary.id)] = _raw_boundary_unlocked(boundary)
@@ -691,6 +682,14 @@ func gate_interaction_position(station_id: String) -> Vector2:
 	return Vector2.ZERO
 
 
+func gate_approach_route(gate_id: String) -> Array[Vector2]:
+	var anchor: = gate_interaction_position(gate_id)
+	if anchor == Vector2.ZERO:
+		return []
+	# The complete arch has a rear left foot and a nearer right foot.
+	return [anchor + Vector2(-120, 30), anchor, anchor + Vector2(80, -22), anchor + Vector2(160, -20), anchor + Vector2(230, 0)]
+
+
 func _nearest_safe_restore_position(position: Vector2) -> Vector2:
 	if not _surface_collides(position):
 		return position
@@ -798,6 +797,16 @@ func interaction_context() -> String:
 	return active_context
 
 
+func mine_guide_position(mine_id: String) -> Vector2:
+	if TERRACE_MINE_ENTRANCES.has(mine_id):
+		return _mine_return_position(mine_id)
+	return _mine_entrance(mine_id)
+
+
+func hub_guide_position() -> Vector2:
+	return STARFALL_HUB_APPROACH_POSITION
+
+
 func _draw() -> void :
 
 
@@ -819,8 +828,6 @@ func _build_surface_art() -> void :
 
 
 	_build_mossvein_mine_branch()
-	_build_later_mine_branches()
-	_build_later_resource_access_paths()
 	moss_camp_yard_sprite = _create_sprite(MOSS_CAMP_YARD, MOSS_CAMP_YARD_RECT, 2)
 	moss_camp_connector_sprite = _create_sprite(MOSS_CAMP_PATH, MOSS_CAMP_CONNECTOR_RECT, 2)
 	moss_wayfarer_access_sprite = _create_sprite(MOSS_CAMP_PATH, MOSS_WAYFARER_ACCESS_RECT, 2)
@@ -830,13 +837,15 @@ func _build_surface_art() -> void :
 
 
 
-	_create_sprite(STAR_BRANCH, STARFALL_HUB_APPROACH_RECT, 2)
-	_create_sprite(preload("res://assets/surface/v3/ember-road-shelf.png"), Rect2(2200,425,1220,620),3)
-	_create_sprite(preload("res://assets/surface/v3/star-road-shelf.png"), Rect2(3320,425,1220,620),3)
-	# Lower exploration terraces support the existing ore challenges and mine ramps.
-	_create_sprite(preload("res://assets/surface/v3/ember-road-shelf.png"), Rect2(2200,855,1220,620),1)
-	_create_sprite(preload("res://assets/surface/v3/star-road-shelf.png"), Rect2(3320,855,1220,620),1)
-	_create_sprite(preload("res://assets/surface/v2/moon-road-shelf.png"), Rect2(1070, 425, 1220, 620), 3)
+	var ember_shelf: = _create_sprite(EMBER_TERRACE, Rect2(2200, 425, 1220, 610), 3)
+	ember_shelf.name = "EmberdeepTerrace"
+	surface_mine_branch_sprites["emberMine"] = ember_shelf
+	var star_shelf: = _create_sprite(STAR_TERRACE, Rect2(3320, 425, 1220, 610), 3)
+	star_shelf.name = "StarfallTerrace"
+	surface_mine_branch_sprites["starMine"] = star_shelf
+	var moon_shelf: = _create_sprite(MOON_TERRACE, Rect2(1070, 425, 1220, 620), 3)
+	moon_shelf.name = "MoonglassTerrace"
+	surface_mine_branch_sprites["moonMine"] = moon_shelf
 	_create_sprite(preload("res://assets/surface/v2/moss-road-shelf.png"), Rect2(-40, 425, 1400, 620), 3)
 	_build_mossvein_portal_clearing()
 	_add_surface_decor()
@@ -856,86 +865,15 @@ func _build_mossvein_mine_branch() -> void :
 	surface_mine_branch_sprites["mossMine"] = moss_mine_branch_sprite
 
 
-func _build_later_mine_branches() -> void :
-	var moon_backing_rect: = MOON_MINE_APPROACH_RECT.grow(9.0)
-	var moon_branch_bank: = _create_sprite(MOON_MINE_APPROACH, moon_backing_rect, 4)
-	moon_branch_bank.name = "MoonglassMineBranchBank"
-	moon_branch_bank.modulate = Color(0.08, 0.26, 0.29, 0.72)
-	surface_mine_branch_backing_sprites["moonMine"] = moon_branch_bank
-	var moon_branch: = _create_sprite(MOON_MINE_APPROACH, MOON_MINE_APPROACH_RECT, 4)
-	moon_branch.name = "MoonglassMineBranch"
-	moon_branch.modulate = Color(0.94, 1.0, 1.0, 1.0)
-	surface_mine_branch_sprites["moonMine"] = moon_branch
-
-
-
-
-	var ember_branch: = _create_sprite(EMBER_BRANCH, Rect2(2456, 772, 500, 222), 2, true, -0.105)
-	ember_branch.name = "EmberdeepMineBranch"
-	surface_mine_branch_sprites["emberMine"] = ember_branch
-	var star_branch: = _create_sprite(STAR_BRANCH, Rect2(3450, 760, 650, 289), 2)
-	star_branch.name = "StarfallMineBranch"
-	surface_mine_branch_sprites["starMine"] = star_branch
-
-
-func _build_later_resource_access_paths() -> void :
-	_create_textured_walk_route(
-		Array(LATER_RESOURCE_ACCESS_ROUTES.ember_fault),
-		ROAD_TEXTURES.emberdeep,
-		124.0,
-		"EmberFaultAccess"
-	)
-	_create_textured_walk_route(
-		Array(LATER_RESOURCE_ACCESS_ROUTES.starfall_lattice),
-		ROAD_TEXTURES.starfall,
-		124.0,
-		"StarfallLatticeAccess"
-	)
-
-
-func _create_textured_walk_route(route: Array, texture: Texture2D, width: float, route_name: String) -> void :
-	var points: = PackedVector2Array(route)
-	var backing: = Line2D.new()
-	backing.name = "%sBank" % route_name
-	backing.points = points
-	backing.width = width + 28.0
-	backing.default_color = Color(0.055, 0.085, 0.075, 0.96)
-	backing.joint_mode = Line2D.LINE_JOINT_ROUND
-	backing.begin_cap_mode = Line2D.LINE_CAP_ROUND
-	backing.end_cap_mode = Line2D.LINE_CAP_ROUND
-	backing.z_index = 2
-	add_child(backing)
-	var path: = Line2D.new()
-	path.name = route_name
-	path.points = points
-	path.width = width
-	path.texture = texture
-	path.texture_mode = Line2D.LINE_TEXTURE_TILE
-	path.joint_mode = Line2D.LINE_JOINT_ROUND
-	path.begin_cap_mode = Line2D.LINE_CAP_ROUND
-	path.end_cap_mode = Line2D.LINE_CAP_ROUND
-	path.default_color = Color(0.93, 0.98, 1.0, 1.0)
-	path.z_index = 3
-	add_child(path)
-
-
 func _build_ore_mountain() -> void :
 	ore_mountain_sprite = _create_world_asset(MOSS_ORE_MOUNTAIN, MOSS_ORE_MOUNTAIN_POSITION, Vector2(450, 405), 30.0, 5)
+	ore_mountain_sprite.z_index = actor_draw_depth(MOSS_ORE_MOUNTAIN_COLLISION_CENTER)
 	var stage_material: = ShaderMaterial.new()
 	stage_material.shader = preload("res://shaders/surface_mountain_blend.gdshader")
 	stage_material.set_shader_parameter("next_stage", MOSS_ORE_MOUNTAIN)
 	ore_mountain_sprite.material = stage_material
 	ore_mountain_base_scale = ore_mountain_sprite.scale
 	ore_mountain_base_position = ore_mountain_sprite.position
-	ore_mountain_blend_sprite = Sprite2D.new()
-	ore_mountain_blend_sprite.centered = false
-	ore_mountain_blend_sprite.texture = MOSS_ORE_MOUNTAIN
-	ore_mountain_blend_sprite.position = ore_mountain_base_position
-	ore_mountain_blend_sprite.scale = ore_mountain_base_scale
-	ore_mountain_blend_sprite.z_index = 6
-	ore_mountain_blend_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	ore_mountain_blend_sprite.visible = false
-	add_child(ore_mountain_blend_sprite)
 
 
 func _build_moonglass_resource() -> void :
@@ -958,6 +896,7 @@ func _build_moonglass_resource() -> void :
 			6
 		)
 		moon_bloom_sprites.append(sprite)
+		sprite.z_index = actor_draw_depth(position + SURFACE_NODE_GROUND_OFFSET)
 		moon_bloom_base_scales.append(sprite.scale)
 		moon_bloom_nodes.append({
 			"position": position,
@@ -1036,6 +975,7 @@ func _build_timed_surface_resource(vein_id: String) -> void :
 			6
 		)
 		sprites.append(sprite)
+		sprite.z_index = actor_draw_depth(position + SURFACE_NODE_GROUND_OFFSET)
 		base_scales.append(sprite.scale)
 		var damage_overlay: = Sprite2D.new()
 		damage_overlay.texture = config.impact_texture
@@ -1045,7 +985,7 @@ func _build_timed_surface_resource(vein_id: String) -> void :
 		damage_overlay.position = position
 		damage_overlay.scale = Vector2.ONE * ((116.0 if vein_id == STARFALL_LATTICE_ID else 104.0) / 256.0)
 		damage_overlay.modulate = Color(config.color, 0.0)
-		damage_overlay.z_index = 7
+		damage_overlay.z_index = sprite.z_index + 1
 		damage_overlay.visible = false
 		add_child(damage_overlay)
 		damage_overlays.append(damage_overlay)
@@ -1154,101 +1094,27 @@ func _add_surface_decor() -> void :
 		[1415, 1235, 118, 50, true, 0.44], [1885, 1170, 124, 52, false, 0.46]
 	]:
 		_create_world_asset(MOON_CRYSTALS, Vector2(item[0], item[1]), Vector2(item[2], item[3]), 0.0, 2, item[4], item[5])
-	_build_moonglass_resource_platform()
+	_build_moonglass_resource_ground()
 	_build_surface_resource_mountain(MOON_MOUNTAIN_ID, MOON_ORE_MOUNTAIN, 3)
 	for item in [
 		[2350, 1190, 124, 62, true, 0.42], [3120, 1180, 130, 64, false, 0.44]
 	]:
 		_create_world_asset(EMBER_SLAG, Vector2(item[0], item[1]), Vector2(item[2], item[3]), 0.0, 2, item[4], item[5])
-	_create_world_asset(EMBER_FAULT, EMBER_FAULT_CENTER + Vector2(0, 62), Vector2(350, 154), 0.0, 2)
+	_create_world_asset(EMBER_FAULT, EMBER_FAULT_CENTER + Vector2(0, 56), Vector2(292, 128), 0.0, 4)
 	_build_surface_resource_mountain(EMBER_MOUNTAIN_ID, EMBER_ORE_MOUNTAIN, 3)
 	for item in [
 		[3480, 1190, 124, 62, true, 0.44], [4230, 1170, 134, 67, false, 0.46]
 	]:
 		_create_world_asset(STAR_SHARDS, Vector2(item[0], item[1]), Vector2(item[2], item[3]), 0.0, 2, item[4], item[5])
-	_create_world_asset(STAR_LATTICE, STARFALL_LATTICE_CENTER + Vector2(0, 62), Vector2(568, 249), 0.0, 2)
+	_create_world_asset(STAR_LATTICE, STARFALL_LATTICE_CENTER + Vector2(0, 58), Vector2(262, 115), 0.0, 4)
 	_build_surface_resource_mountain(STAR_MOUNTAIN_ID, STAR_ORE_MOUNTAIN, 3)
 
 
-func _build_moonglass_resource_platform() -> void :
-	moon_bloom_platform_nodes.clear()
-
-
-
-
-
-
-
-	var approach_angle: = (
-		Vector2(MOON_BLOOM_PLATFORM_ACCESS_ROUTE[-1])
-		- Vector2(MOON_BLOOM_PLATFORM_ACCESS_ROUTE[0])
-	).angle()
-	var approach_bank: = _create_centered_sprite(
-		ROAD_TEXTURES.moonglass,
-		MOON_BLOOM_PLATFORM_APPROACH_CENTER,
-		Vector2(190, 115),
-		2,
-		false,
-		approach_angle,
-		0.96
+func _build_moonglass_resource_ground() -> void:
+	moon_bloom_ground_sprite = _create_world_asset(
+		MOON_BLOOM, MOON_BLOOM_GROUND_ANCHOR, Vector2(318, 140), 0.0, 4
 	)
-	approach_bank.name = "MoonglassBloomApproachBank"
-	approach_bank.scale.y *= 1.58
-	approach_bank.modulate = Color(0.11, 0.34, 0.38, 0.98)
-	moon_bloom_platform_nodes.append(approach_bank)
-
-	var underside: = _create_world_asset(
-		MOON_BLOOM,
-		MOON_BLOOM_PLATFORM_UNDERSIDE_ANCHOR,
-		Vector2(535, 225),
-		0.0,
-		2,
-		false,
-		0.98
-	)
-	underside.name = "MoonglassBloomFloatingUnderside"
-	underside.modulate = Color(0.12, 0.32, 0.36, 0.98)
-	moon_bloom_platform_nodes.append(underside)
-
-	var approach: = _create_centered_sprite(
-		ROAD_TEXTURES.moonglass,
-		MOON_BLOOM_PLATFORM_APPROACH_CENTER,
-		Vector2(215, 100),
-		3,
-		false,
-		approach_angle,
-		1.0
-	)
-	approach.name = "MoonglassBloomRoadConnection"
-	approach.scale.y *= 1.22
-	approach.modulate = Color(0.76, 0.96, 1.0, 1.0)
-	moon_bloom_platform_nodes.append(approach)
-
-	var landing: = _create_world_asset(
-		MOON_CRYSTALS,
-		MOON_BLOOM_PLATFORM_LANDING_ANCHOR,
-		Vector2(240, 112),
-		0.0,
-		4,
-		false,
-		1.0
-	)
-	landing.name = "MoonglassBloomRoadLanding"
-	landing.modulate = Color(0.82, 0.98, 1.0, 1.0)
-	moon_bloom_platform_nodes.append(landing)
-
-	var shelf: = _create_world_asset(
-		MOON_BLOOM,
-		MOON_BLOOM_PLATFORM_TOP_ANCHOR,
-		Vector2(500, 190),
-		0.0,
-		3,
-		false,
-		1.0
-	)
-	shelf.name = "MoonglassBloomResonanceShelf"
-	shelf.modulate = Color(0.91, 0.98, 1.0, 1.0)
-	moon_bloom_platform_nodes.append(shelf)
+	moon_bloom_ground_sprite.name = "MoonglassBloomGround"
 
 
 func _build_surface_resource_mountain(mountain_id: String, texture: Texture2D, z: int) -> void :
@@ -1261,14 +1127,12 @@ func _build_surface_resource_mountain(mountain_id: String, texture: Texture2D, z
 	var root: = Node2D.new()
 	root.name = "%sRoot" % mountain_id.to_pascal_case()
 	root.position = anchor
+	root.z_index = actor_draw_depth(Vector2(SURFACE_RESOURCE_MOUNTAIN_COLLISIONS[mountain_id].center)) - z
 	add_child(root)
 	var sprite: = _new_surface_resource_mountain_sprite(root, z)
-	var blend_sprite: = _new_surface_resource_mountain_sprite(root, z + 1)
-	blend_sprite.visible = false
 	surface_resource_mountains[mountain_id] = {
 		"root": root,
 		"sprite": sprite,
-		"blend_sprite": blend_sprite,
 		"display_size": display_size,
 		"base_position": anchor,
 		"phase": 0,
@@ -1312,14 +1176,13 @@ func _layout_surface_resource_mountain_sprite(
 	sprite.position = Vector2( - rendered_size.x * 0.5, - rendered_size.y)
 
 
-func _update_surface_resource_mountain_visual(mountain_id: String) -> void :
+func _update_surface_resource_mountain_visual(mountain_id: String, instant: bool = false) -> void :
 	if not surface_resource_mountains.has(mountain_id):
 		return
 	var entry: Dictionary = surface_resource_mountains[mountain_id]
 	var root: Node2D = entry.root
 	var sprite: Sprite2D = entry.sprite
-	var blend_sprite: Sprite2D = entry.blend_sprite
-	if not is_instance_valid(root) or not is_instance_valid(sprite) or not is_instance_valid(blend_sprite):
+	if not is_instance_valid(root) or not is_instance_valid(sprite):
 		return
 	var hit_strength: = clampf(float(entry.hit_elapsed) / SURFACE_RESOURCE_MOUNTAIN_HIT_DURATION, 0.0, 1.0)
 	var collapse_strength: = clampf(float(entry.collapse_elapsed) / SURFACE_RESOURCE_MOUNTAIN_COLLAPSE_DURATION, 0.0, 1.0)
@@ -1353,23 +1216,10 @@ func _update_surface_resource_mountain_visual(mountain_id: String) -> void :
 	var stages: Array[Texture2D] = [textures[3], textures[2], textures[1], textures[0]]
 	var tint: = Color(1.13, 1.08, 1.02, 1.0) if float(entry.hit_flash) > 0.0 else Color.WHITE
 	var display_size: = Vector2(entry.display_size)
-	if hp_ratio >= 0.999:
-		_layout_surface_resource_mountain_sprite(sprite, stages[3], display_size, scale_multiplier)
-		sprite.modulate = tint
-		sprite.material.set_shader_parameter("stage_mix",0.0)
-		blend_sprite.visible = false
-		entry.phase = 0
-	else:
-		var stage_position: = hp_ratio * 3.0
-		var stage_index: = mini(2, floori(stage_position))
-		var blend: = smoothstep(0.0, 1.0, stage_position - float(stage_index))
-		_layout_surface_resource_mountain_sprite(sprite, stages[stage_index], display_size, scale_multiplier)
-		_layout_surface_resource_mountain_sprite(blend_sprite, stages[stage_index + 1], display_size, scale_multiplier)
-		sprite.modulate = tint
-		sprite.material.set_shader_parameter("next_stage",stages[stage_index+1])
-		sprite.material.set_shader_parameter("stage_mix",blend)
-		blend_sprite.visible=false
-		entry.phase = 3 - stage_index
+	_apply_mountain_stage(sprite, stages, hp_ratio, instant)
+	_layout_surface_resource_mountain_sprite(sprite, sprite.texture, display_size, scale_multiplier)
+	sprite.modulate = tint
+	entry.phase = 3 - int(sprite.get_meta("mountain_stage"))
 	surface_resource_mountains[mountain_id] = entry
 
 
@@ -1683,6 +1533,8 @@ func _update_later_surface_life_visuals() -> void :
 		var phase: = float(item.phase)
 		var route: = Vector2(item.route)
 		var kind: = String(item.kind)
+		if kind == "ground":
+			sprite.z_index = actor_draw_depth(anchor)
 		if moss_reduced_motion:
 			sprite.position = anchor
 			sprite.frame = 0
@@ -2055,7 +1907,8 @@ func _create_centered_sprite(
 
 func _create_station(texture: Texture2D, station_data: Dictionary, max_size: Vector2, bottom: float, label_text: String, station_id: String = "") -> void :
 	var position: = _station_position(station_id) if not station_id.is_empty() else Vector2(float(station_data.x), float(station_data.y))
-	_create_world_asset(texture, position, max_size, bottom, 5)
+	var sprite: = _create_world_asset(texture, position, max_size, bottom, 5)
+	sprite.z_index = actor_draw_depth(position + Vector2(0, bottom - 18))
 	_create_label(label_text, position + Vector2(-65, bottom + 7), Vector2(130, 20), Color("e9d9a6"))
 
 
@@ -2065,6 +1918,8 @@ func _create_world_asset(texture: Texture2D, anchor: Vector2, max_size: Vector2,
 	var size: = texture_size * scale_factor
 	var sprite: = _create_sprite(texture, Rect2(anchor + Vector2( - size.x * 0.5, bottom - size.y), size), z, flip_h)
 	sprite.modulate.a = alpha
+	if z >= 11:
+		sprite.z_index = actor_draw_depth(anchor + Vector2(0, bottom))
 	return sprite
 
 
@@ -2102,7 +1957,31 @@ func _create_label(text: String, position: Vector2, size: Vector2, color: Color)
 	return label
 
 
+func actor_draw_depth(position: Vector2) -> int:
+	return 100 + roundi(position.y * 0.5)
+
+
+func _configure_surface_draw_depth() -> void:
+	# Keep the authored foreground framing over the world, and all grounded
+	# objects in the same depth space as both the hero and companion.
+	surface_parallax.get_node("NearSilhouette").z_index = 2048
+	for station in ["ASSAY_flytt_hele_denne", "FORGE_flytt_hele_denne"]:
+		var root: Node2D = get_node("Flyttbare_Stasjoner/" + station)
+		root.get_node("Bilde").z_index = actor_draw_depth(root.position + Vector2(0, 4))
+	for mine_id in MINE_IDS:
+		entrance_nodes[mine_id].z_index = actor_draw_depth(_mine_entrance(mine_id) - Vector2(0, 14))
+	starfall_hub_lift_sprite.z_index = actor_draw_depth(STARFALL_HUB_LIFT_POSITION + Vector2(0, 60))
+	for boundary in BOUNDARIES:
+		var id: String = boundary.id
+		var anchor: = Vector2(float(boundary.x), GATE_Y)
+		portal_generator_nodes[id].sprite.z_index = actor_draw_depth(anchor - Vector2(0, 42))
+		portal_generator_nodes[id].front.z_index = actor_draw_depth(anchor + Vector2(0, 37))
+		# Transition children retain their relative back/front offsets.
+		portal_transitions[id].z_index = actor_draw_depth(anchor) - 10
+
+
 func _on_player_moved(world_position: Vector2) -> void :
+	player.z_index = actor_draw_depth(world_position)
 	for transition_value in portal_transitions.values():
 		var transition: WorldTransitionVisual = transition_value as WorldTransitionVisual
 		if is_instance_valid(transition):
@@ -2330,16 +2209,13 @@ func _update_ore_mountain(delta: float, now_unix: int = -1) -> void :
 	_update_ore_mountain_visual(hp_ratio)
 	var pulse: = 1.0 + (ore_mountain_hit_flash / 0.14) * 0.04 if ore_mountain_hit_flash > 0.0 else 1.0
 	ore_mountain_sprite.scale = ore_mountain_base_scale * pulse
-	ore_mountain_blend_sprite.scale = ore_mountain_base_scale * pulse
 	if ore_mountain_collapse_elapsed > 0.0:
 		var collapse_progress: = 1.0 - ore_mountain_collapse_elapsed / ore_mountain_collapse_duration
 		var collapse_strength: = (1.0 - collapse_progress) * 8.0
 		var collapse_offset: = Vector2(sin(collapse_progress * 73.0) * collapse_strength, cos(collapse_progress * 91.0) * collapse_strength * 0.45)
 		ore_mountain_sprite.position = ore_mountain_base_position + collapse_offset
-		ore_mountain_blend_sprite.position = ore_mountain_base_position + collapse_offset
 	else:
 		ore_mountain_sprite.position = ore_mountain_base_position
-		ore_mountain_blend_sprite.position = ore_mountain_base_position
 	if Input.is_action_just_pressed("mine"):
 		ore_mountain_input_buffer = MOSS_ORE_MOUNTAIN_INPUT_BUFFER
 	var held: = external_mine_held or Input.is_action_pressed("mine") or ore_mountain_input_buffer > 0.0
@@ -2379,7 +2255,7 @@ func _update_ore_mountain(delta: float, now_unix: int = -1) -> void :
 			player.set_mining_visual(false)
 
 
-func _update_ore_mountain_visual(hp_ratio: float) -> void :
+func _update_ore_mountain_visual(hp_ratio: float, instant: bool = false) -> void :
 	var stages: Array[Texture2D] = [
 		MOSS_ORE_MOUNTAIN_DAMAGE_3,
 		MOSS_ORE_MOUNTAIN_DAMAGE_2,
@@ -2387,20 +2263,39 @@ func _update_ore_mountain_visual(hp_ratio: float) -> void :
 		MOSS_ORE_MOUNTAIN,
 	]
 	var tint: = Color(1.14, 1.07, 0.98, 1.0) if ore_mountain_hit_flash > 0.0 else Color.WHITE
-	if hp_ratio >= 0.999:
-		ore_mountain_sprite.texture = stages[3]
-		ore_mountain_sprite.modulate = tint
-		ore_mountain_sprite.material.set_shader_parameter("stage_mix", 0.0)
-		ore_mountain_blend_sprite.visible = false
-		return
-	var stage_position: = clampf(hp_ratio, 0.0, 1.0) * 3.0
-	var stage_index: = mini(2, floori(stage_position))
-	var blend: = smoothstep(0.0, 1.0, stage_position - float(stage_index))
-	ore_mountain_sprite.texture = stages[stage_index]
+	_apply_mountain_stage(ore_mountain_sprite, stages, hp_ratio, instant)
 	ore_mountain_sprite.modulate = tint
-	ore_mountain_sprite.material.set_shader_parameter("next_stage", stages[stage_index + 1])
-	ore_mountain_sprite.material.set_shader_parameter("stage_mix", blend)
-	ore_mountain_blend_sprite.visible = false
+
+
+func _apply_mountain_stage(sprite: Sprite2D, stages: Array[Texture2D], reserve: float, instant: bool) -> void:
+	# Reserve selects solid authored damage stages. A short transition can follow
+	# a hit, but a half-mined mountain must never remain permanently translucent.
+	var stage: = clampi(roundi(clampf(reserve, 0.0, 1.0) * 3.0), 0, 3)
+	var previous: = int(sprite.get_meta("mountain_stage", stage))
+	var material: ShaderMaterial = sprite.material
+	var now: = Time.get_ticks_msec()
+	if instant or not sprite.has_meta("mountain_stage"):
+		sprite.texture = stages[stage]
+		sprite.set_meta("mountain_stage", stage)
+		sprite.set_meta("mountain_stage_started", 0)
+		material.set_shader_parameter("next_stage", stages[stage])
+		material.set_shader_parameter("stage_mix", 0.0)
+		return
+	if stage != previous:
+		sprite.texture = stages[previous]
+		material.set_shader_parameter("next_stage", stages[stage])
+		sprite.set_meta("mountain_stage", stage)
+		sprite.set_meta("mountain_stage_started", now)
+	var started: = int(sprite.get_meta("mountain_stage_started", 0))
+	if started == 0:
+		return
+	var progress: = clampf(float(now - started) / MOUNTAIN_STAGE_TRANSITION_MSEC, 0.0, 1.0)
+	if progress >= 1.0:
+		sprite.texture = stages[stage]
+		sprite.set_meta("mountain_stage_started", 0)
+		material.set_shader_parameter("stage_mix", 0.0)
+	else:
+		material.set_shader_parameter("stage_mix", smoothstep(0.0, 1.0, progress))
 
 
 func _apply_ore_mountain_regrowth(delta: float) -> void :
@@ -2508,7 +2403,7 @@ func _update_moonglass_visual() -> void :
 		var speed: = 5.4 if moon_bloom_status == "active" else 2.2
 		var pulse: = 0.5 + 0.5 * sin(moon_bloom_visual_time * speed + float(index) * 1.7)
 		if intact:
-			sprite.scale = moon_bloom_base_scales[index] * (1.0 + pulse * 0.035)
+			_layout_surface_node(sprite, Vector2(node.position), moon_bloom_base_scales[index] * (1.0 + pulse * 0.035))
 			sprite.modulate = Color(0.88, 1.04, 1.08, 1.0)
 		glow.visible = true
 		glow.scale = Vector2.ONE * (lerpf(80.0, 108.0, pulse) / float(glow.texture.get_width()))
@@ -2532,7 +2427,7 @@ func _advance_moonglass_bloom(delta: float) -> void :
 		if int(node.hp) > 0:
 			continue
 		node.respawn = maxf(0.0, float(node.respawn) - delta)
-		if float(node.respawn) <= 0.0:
+		if float(node.respawn) <= 0.0 and not _surface_node_occupied(Vector2(node.position)):
 			node.hp = MOON_BLOOM_NODE_MAX_HP
 			node.respawn = 0.0
 		moon_bloom_nodes[index] = node
@@ -2657,6 +2552,7 @@ func _spawn_moonglass_drop(
 		float((spread_index * 23) % 21) - 10.0,
 		float((spread_index * 31) % 15) - 7.0
 	)
+	var landing_position: = _nearest_safe_restore_position(origin + landing_offset)
 	sprite.position = origin + Vector2(
 		float((spread_index * 17) % 25) - 12.0,
 		-12.0
@@ -2668,7 +2564,7 @@ func _spawn_moonglass_drop(
 		"sprite": sprite,
 		"base_scale": sprite.scale,
 		"launch_position": sprite.position,
-		"landing_position": origin + landing_offset,
+		"landing_position": landing_position,
 		"age": 0.0,
 		"budget_serial": _next_surface_drop_budget_serial(),
 		"collecting": false,
@@ -2686,7 +2582,7 @@ func _spawn_moonglass_effect(pulse: bool, origin: Vector2) -> void :
 	sprite.frame = 0
 	sprite.centered = true
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	sprite.z_index = 9
+	sprite.z_index = actor_draw_depth(origin + SURFACE_NODE_GROUND_OFFSET) + 2
 	var jitter: = Vector2(
 		float((moon_bloom_hit_count * 29) % 21) - 10.0,
 		float((moon_bloom_hit_count * 19) % 15) - 7.0
@@ -2737,7 +2633,9 @@ func _update_moonglass_drops(delta: float) -> void :
 			sprite.queue_free()
 			moon_bloom_drops.remove_at(index)
 			continue
+		sprite.z_index = actor_draw_depth(Vector2(drop.landing_position)) + 1
 		if bool(drop.collecting):
+			sprite.z_index = player.z_index + 2
 			var collect_elapsed: = float(drop.collect_elapsed) + delta
 			var collect_progress: = clampf(
 				collect_elapsed / ORE_DROP_COLLECT_DURATION,
@@ -2916,7 +2814,7 @@ func _advance_timed_surface_resource(vein_id: String, delta: float) -> void :
 		if int(node.hp) > 0:
 			continue
 		node.respawn = maxf(0.0, float(node.respawn) - delta)
-		if float(node.respawn) <= 0.0:
+		if float(node.respawn) <= 0.0 and not _surface_node_occupied(Vector2(node.position)):
 			node.hp = int(config.max_hp)
 			node.shell = int(config.max_shell)
 			node.respawn = 0.0
@@ -3233,7 +3131,7 @@ func _update_timed_surface_visual(vein_id: String) -> void :
 		var hp_ratio: = clampf(float(node.hp) / float(config.max_hp), 0.0, 1.0)
 		var shell_ratio: = clampf(float(node.shell) / float(config.max_shell), 0.0, 1.0)
 		var integrity_scale: = lerpf(0.94, 1.0, sqrt(hp_ratio))
-		sprite.scale = Vector2(base_scales[index]) * integrity_scale * (1.0 + local_pulse * 0.025)
+		_layout_surface_node(sprite, Vector2(node.position), Vector2(base_scales[index]) * integrity_scale * (1.0 + local_pulse * 0.025))
 		if damage_overlay.visible:
 			match stage:
 				"shell_strained":
@@ -3295,6 +3193,9 @@ func _spawn_timed_surface_drop(
 		angle = - PI * 0.85 + float((spread_index * 7) % 13) * (TAU / 13.0)
 		radius = 62.0 + float((spread_index * 23) % 43)
 	var landing_offset: = Vector2(cos(angle) * radius, sin(angle) * radius * 0.58)
+	var landing_position: = _nearest_safe_restore_position((origin + landing_offset).clamp(
+		Vector2.ONE * PLAYER_RADIUS, _world_size() - Vector2.ONE * PLAYER_RADIUS
+	))
 	var launch_position: = origin + Vector2(float((spread_index * 19) % 27) - 13.0, -10.0)
 	sprite.position = launch_position
 	add_child(sprite)
@@ -3306,7 +3207,7 @@ func _spawn_timed_surface_drop(
 		"sprite": sprite,
 		"base_scale": sprite.scale,
 		"launch_position": launch_position,
-		"landing_position": origin + landing_offset,
+		"landing_position": landing_position,
 		"age": 0.0,
 		"budget_serial": _next_surface_drop_budget_serial(),
 		"collecting": false,
@@ -3336,7 +3237,9 @@ func _update_timed_surface_drops(vein_id: String, delta: float) -> void :
 			sprite.queue_free()
 			drops.remove_at(index)
 			continue
+		sprite.z_index = actor_draw_depth(Vector2(drop.landing_position)) + 1
 		if bool(drop.collecting):
+			sprite.z_index = player.z_index + 2
 			var collect_elapsed: = float(drop.collect_elapsed) + delta
 			var collect_progress: = clampf(collect_elapsed / ORE_DROP_COLLECT_DURATION, 0.0, 1.0)
 			var eased: = collect_progress * collect_progress * (3.0 - 2.0 * collect_progress)
@@ -3387,7 +3290,7 @@ func _spawn_timed_surface_effect(vein_id: String, kind: String, origin: Vector2)
 	sprite.frame = 0
 	sprite.centered = true
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	sprite.z_index = 9
+	sprite.z_index = actor_draw_depth(origin + SURFACE_NODE_GROUND_OFFSET) + 2
 	var runtime: Dictionary = timed_surface_veins[vein_id]
 	var jitter: = Vector2(
 		float((int(runtime.hit_count) * 29) % 25) - 12.0,
@@ -3486,7 +3389,7 @@ func _spawn_surface_material_spray(resource_id: String, origin: Vector2, heavy: 
 		sprite.texture = texture
 		sprite.centered = true
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-		sprite.z_index = 10
+		sprite.z_index = actor_draw_depth(origin + SURFACE_NODE_GROUND_OFFSET) + 2
 		sprite.position = origin + Vector2((piece - piece_count / 2.0) * 3.0, -4.0)
 		var target_size: = 10.0 + float((piece * 7 + surface_material_sprays.size()) % 7)
 		sprite.scale = Vector2.ONE * (target_size / maxf(1.0, float(texture.get_width())))
@@ -3720,11 +3623,8 @@ func _spawn_surface_resource_mountain_drop(mountain_id: String, kind: String, am
 	var tangent: = outward.orthogonal()
 	var lateral: = float((seed * 37) % 121) - 60.0
 	var landing_position: = contact + outward * (58.0 + float(seed % 4) * 13.0) + tangent * lateral
-	for _step in range(8):
-		if not _surface_collides(landing_position):
-			break
-		landing_position += outward * 18.0
 	landing_position = landing_position.clamp(Vector2(42, 52), _world_size() - Vector2(42, 46))
+	landing_position = _nearest_safe_restore_position(landing_position)
 	sprite.position = contact + Vector2(float((seed * 23) % 31) - 15.0, -8.0)
 	add_child(sprite)
 	surface_resource_mountain_drops.append({
@@ -3759,7 +3659,9 @@ func _update_surface_resource_mountain_drops(delta: float) -> void :
 			sprite.queue_free()
 			surface_resource_mountain_drops.remove_at(index)
 			continue
+		sprite.z_index = actor_draw_depth(Vector2(drop.landing_position)) + 1
 		if bool(drop.collecting):
+			sprite.z_index = player.z_index + 2
 			var collect_elapsed: = float(drop.collect_elapsed) + delta
 			var collect_progress: = clampf(collect_elapsed / ORE_DROP_COLLECT_DURATION, 0.0, 1.0)
 			var collect_eased: = collect_progress * collect_progress * (3.0 - 2.0 * collect_progress)
@@ -3810,7 +3712,7 @@ func _spawn_surface_resource_mountain_impact(
 	sprite.frame = 0
 	sprite.centered = true
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	sprite.z_index = 11
+	sprite.z_index = actor_draw_depth(Vector2(config.anchor)) + 2
 	var contact: = (
 		Vector2(entry.swing_target)
 		if bool(entry.swing_active)
@@ -3981,7 +3883,7 @@ func _spawn_mountain_impact(broken: bool, extra_offset: Vector2 = Vector2.ZERO) 
 	sprite.frame = 0
 	sprite.centered = true
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	sprite.z_index = 8
+	sprite.z_index = actor_draw_depth(MOSS_ORE_MOUNTAIN_POSITION) + 2
 	var contact: = ore_mountain_swing_target if ore_mountain_swing_active else _ore_mountain_hit_point(player.global_position)
 	var jitter: = Vector2(float((ore_mountain_hit_count * 31) % 25) - 12.0, float((ore_mountain_hit_count * 19) % 17) - 8.0)
 	sprite.position = contact + jitter + extra_offset
@@ -4036,7 +3938,9 @@ func _update_ore_drops(delta: float) -> void :
 			sprite.queue_free()
 			ore_drops.remove_at(index)
 			continue
+		sprite.z_index = actor_draw_depth(Vector2(drop.landing_position)) + 1
 		if bool(drop.collecting):
+			sprite.z_index = player.z_index + 2
 			var collect_elapsed: = float(drop.collect_elapsed) + delta
 			var collect_progress: = clampf(collect_elapsed / ORE_DROP_COLLECT_DURATION, 0.0, 1.0)
 			var collect_eased: = collect_progress * collect_progress * (3.0 - 2.0 * collect_progress)
@@ -4321,6 +4225,7 @@ func _surface_restored_drop_rows(kind_amounts: Dictionary, kind_order: Array) ->
 
 
 func _evaluate_context(world_position: Vector2) -> void :
+	player.z_index = actor_draw_depth(world_position)
 	var next_context: = ""
 	if (
 		next_context.is_empty()
@@ -4541,6 +4446,21 @@ func _resolve_surface_route_tangent_step(origin: Vector2, intent: Vector2, dista
 
 
 func _resolve_surface_solid_slide_step(origin: Vector2, motion: Vector2) -> Vector2:
+	for footprint in surface_solid_footprints:
+		var slide: = _slide_on_surface_ellipse(origin, motion, Vector2(footprint.center), Vector2(footprint.radii))
+		if not slide.is_equal_approx(origin):
+			return slide
+	for node in moon_bloom_nodes:
+		if int(node.hp) > 0:
+			var slide: = _slide_on_surface_ellipse(origin, motion, Vector2(node.position) + SURFACE_NODE_GROUND_OFFSET, SURFACE_NODE_GROUND_HALF_SIZE + Vector2.ONE * PLAYER_RADIUS)
+			if not slide.is_equal_approx(origin):
+				return slide
+	for vein_id in timed_surface_veins:
+		for node in timed_surface_veins[vein_id].nodes:
+			if int(node.hp) > 0:
+				var slide: = _slide_on_surface_ellipse(origin, motion, Vector2(node.position) + SURFACE_NODE_GROUND_OFFSET, SURFACE_NODE_GROUND_HALF_SIZE + Vector2.ONE * PLAYER_RADIUS)
+				if not slide.is_equal_approx(origin):
+					return slide
 	var candidates: Array[Vector2] = []
 	var next_x: = origin + Vector2(motion.x, 0.0)
 	if not next_x.is_equal_approx(origin) and not _surface_collides(next_x):
@@ -4564,6 +4484,41 @@ func _resolve_surface_solid_slide_step(origin: Vector2, motion: Vector2) -> Vect
 			selected_forward = forward
 			selected_continuity = continuity_score
 	return selected
+
+
+func _slide_on_surface_ellipse(origin: Vector2, motion: Vector2, center: Vector2, radii: Vector2) -> Vector2:
+	if not _inside_surface_ellipse(origin + motion, center, radii):
+		return origin
+	var normal: = ((origin - center) / (radii * radii)).normalized()
+	var tangent_motion: = motion - normal * minf(0.0, motion.dot(normal))
+	if tangent_motion.length_squared() < 0.001:
+		return origin
+	var candidate: = origin + tangent_motion
+	return candidate if not _surface_collides(candidate) else origin
+
+
+func _inside_surface_ellipse(position: Vector2, center: Vector2, radii: Vector2) -> bool:
+	var offset: = position - center
+	if absf(offset.x) >= radii.x or absf(offset.y) >= radii.y:
+		return false
+	return (offset / radii).length_squared() < 1.0
+
+
+func _build_surface_collision_footprints() -> void:
+	surface_solid_footprints.clear()
+	for station in ["sell", "forge"]:
+		surface_solid_footprints.append({"center": _station_position(station) + Vector2(0, 4), "radii": SURFACE_STATION_FOOTPRINT})
+	surface_solid_footprints.append({"center": MOSS_WAYFARER_POSITION + Vector2(0, 13), "radii": Vector2(86, 53)})
+	surface_solid_footprints.append({"center": _station_position("starforge") + Vector2(0, 32), "radii": Vector2(78, 42)})
+	for boundary in BOUNDARIES:
+		var anchor: = Vector2(float(boundary.x), GATE_Y)
+		for foot in [anchor + Vector2(-82, -42), anchor + Vector2(115, 37)]:
+			surface_solid_footprints.append({"center": foot, "radii": Vector2(58, 43)})
+	for side in [-1.0, 1.0]:
+		surface_solid_footprints.append({"center": STARFALL_HUB_LIFT_POSITION + Vector2(side * 80.0, 60), "radii": Vector2(48, 36)})
+	surface_solid_footprints.append({"center": MOSS_ORE_MOUNTAIN_COLLISION_CENTER, "radii": MOSS_ORE_MOUNTAIN_COLLISION_HALF_SIZE + Vector2.ONE * PLAYER_RADIUS})
+	for mountain in SURFACE_RESOURCE_MOUNTAIN_COLLISIONS.values():
+		surface_solid_footprints.append({"center": mountain.center, "radii": Vector2(mountain.half_size) + Vector2.ONE * PLAYER_RADIUS})
 
 
 func _reset_surface_route_steering() -> void :
@@ -4591,53 +4546,21 @@ func route_steering_snapshot() -> Dictionary:
 
 
 func _surface_collides(position: Vector2) -> bool:
-	# The painted counters sit above their shared feet anchors. Include the
-	# actor radius in these footprints, as in the other surface solids.
-	for station in ["sell", "forge"]:
-		var counter: Vector2 = (position - (_station_position(station) + Vector2(0, 4))) / SURFACE_STATION_FOOTPRINT
-		if counter.length_squared() < 1.0:
+	for node in moon_bloom_nodes:
+		if int(node.hp) > 0 and _inside_surface_node(position, Vector2(node.position)):
 			return true
-	# The stall's front edge and its approach use the same world anchor.
-	var wayfarer_footprint: Vector2 = (position - (MOSS_WAYFARER_POSITION + Vector2(0, 13))) / Vector2(86, 53)
-	if wayfarer_footprint.length_squared() < 1.0:
-		return true
-	# Solid feet are registered to the same canvas as the complete gate artwork.
-	for boundary in BOUNDARIES:
-		var anchor: Vector2 = Vector2(float(boundary.x), GATE_Y)
-		for foot in [anchor + Vector2(-82,-42), anchor + Vector2(115,37)]:
-			var normalized_foot: Vector2 = (position - Vector2(foot)) / Vector2(58,43)
-			if normalized_foot.length_squared() < 1.0:
+	for vein_id in timed_surface_veins:
+		for node in timed_surface_veins[vein_id].nodes:
+			if int(node.hp) > 0 and _inside_surface_node(position, Vector2(node.position)):
 				return true
+	for footprint in surface_solid_footprints:
+		if _inside_surface_ellipse(position, Vector2(footprint.center), Vector2(footprint.radii)):
+			return true
 	if not _is_on_surface_route(position):
 		return true
 	if position.x <= MOSS_GATE_ANCHOR.x + BOUNDARY_HALF_WIDTH + PLAYER_RADIUS and position.y > MOSS_WALKABLE_BOTTOM:
 		return true
 
-
-
-
-
-	var mountain_offset: = position - MOSS_ORE_MOUNTAIN_COLLISION_CENTER
-	var mountain_collision: = Vector2(
-		mountain_offset.x / (MOSS_ORE_MOUNTAIN_COLLISION_HALF_SIZE.x + PLAYER_RADIUS),
-		mountain_offset.y / (MOSS_ORE_MOUNTAIN_COLLISION_HALF_SIZE.y + PLAYER_RADIUS)
-	)
-	if mountain_collision.length_squared() < 1.0:
-		return true
-
-
-
-	for collision_value in SURFACE_RESOURCE_MOUNTAIN_COLLISIONS.values():
-		var collision: Dictionary = collision_value
-		var center: = Vector2(collision.center)
-		var half_size: = Vector2(collision.half_size)
-		var offset: = position - center
-		var normalized: = Vector2(
-			offset.x / (half_size.x + PLAYER_RADIUS),
-			offset.y / (half_size.y + PLAYER_RADIUS)
-		)
-		if normalized.length_squared() < 1.0:
-			return true
 	for boundary_value in BOUNDARIES:
 		var boundary: Dictionary = Dictionary(boundary_value)
 		var boundary_x: = float(boundary.x)
@@ -4648,6 +4571,23 @@ func _surface_collides(position: Vector2) -> bool:
 		if absf(position.y - GATE_Y) + PLAYER_RADIUS > GATE_HALF_GAP:
 			return true
 	return false
+
+
+func _inside_surface_node(actor_position: Vector2, node_position: Vector2) -> bool:
+	return _inside_surface_ellipse(actor_position, node_position + SURFACE_NODE_GROUND_OFFSET, SURFACE_NODE_GROUND_HALF_SIZE + Vector2.ONE * PLAYER_RADIUS)
+
+
+func _layout_surface_node(sprite: Sprite2D, strike_position: Vector2, visual_scale: Vector2) -> void:
+	sprite.scale = visual_scale
+	var size: = Vector2(sprite.texture.get_size()) * visual_scale
+	sprite.position = strike_position + Vector2(-size.x * 0.5, 47.0 - size.y)
+
+
+func _surface_node_occupied(node_position: Vector2) -> bool:
+	if _inside_surface_node(player.global_position, node_position):
+		return true
+	var mole: = get_node_or_null("MoleCompanion") as Node2D
+	return is_instance_valid(mole) and mole.visible and _inside_surface_node(mole.global_position, node_position)
 
 
 func _is_boundary_unlocked(boundary: Dictionary) -> bool:
@@ -4699,11 +4639,15 @@ func _is_mine_unlocked(mine_id: String) -> bool:
 func _mine_entrance(mine_id: String) -> Vector2:
 	if mine_id == "mossMine":
 		return MOSS_MINE_ENTRANCE
+	if TERRACE_MINE_ENTRANCES.has(mine_id):
+		return Vector2(TERRACE_MINE_ENTRANCES[mine_id])
 	var data: Dictionary = GameData.mine(mine_id).surfaceEntrance
 	return Vector2(float(data.x), float(data.y))
 
 
 func _mine_interaction_radius(mine_id: String) -> float:
+	if TERRACE_MINE_INTERACTION_RADII.has(mine_id):
+		return float(TERRACE_MINE_INTERACTION_RADII[mine_id])
 	var data_radius: = float(GameData.mine(mine_id).surfaceEntrance.radius)
 	if mine_id == "mossMine":
 		return maxf(data_radius, MOSS_MINE_INTERACTION_RADIUS)
@@ -4875,9 +4819,6 @@ func _is_on_surface_route(position: Vector2) -> bool:
 		return true
 	if MOSS_MINE_POCKET_RECT.has_point(position):
 		return true
-	var moon_platform_offset: = position - MOON_BLOOM_CENTER
-	if pow(moon_platform_offset.x / 238.0, 2.0) + pow(moon_platform_offset.y / 82.0, 2.0) <= 1.0:
-		return true
 	for corridor_value in surface_route_corridors:
 		var corridor: Dictionary = corridor_value
 		if not Rect2(corridor.bounds).has_point(position):
@@ -4902,12 +4843,8 @@ func _is_on_mossvein_route(position: Vector2) -> bool:
 
 
 func _surface_walk_routes() -> Array:
-	var routes: Array = [MOSS_MAIN_ROUTE, MOSS_MINE_BRANCH_ROUTE, MOON_BLOOM_PLATFORM_ACCESS_ROUTE]
+	var routes: Array = [MOSS_MAIN_ROUTE, MOSS_MINE_BRANCH_ROUTE]
 	for route_value in LATER_MAIN_ROUTES.values():
-		routes.append(Array(route_value))
-	for route_value in LATER_MINE_BRANCH_ROUTES.values():
-		routes.append(Array(route_value))
-	for route_value in LATER_RESOURCE_ACCESS_ROUTES.values():
 		routes.append(Array(route_value))
 	return routes
 
@@ -4916,13 +4853,8 @@ func _build_surface_route_corridors() -> void :
 	surface_route_corridors.clear()
 	_append_surface_route_corridor(MOSS_MAIN_ROUTE, MOSS_MAIN_ROUTE_HALF_WIDTH)
 	_append_surface_route_corridor(MOSS_MINE_BRANCH_ROUTE, MOSS_BRANCH_ROUTE_HALF_WIDTH)
-	_append_surface_route_corridor(MOON_BLOOM_PLATFORM_ACCESS_ROUTE, LATER_BRANCH_ROUTE_HALF_WIDTH)
 	for route_value in LATER_MAIN_ROUTES.values():
 		_append_surface_route_corridor(Array(route_value), LATER_MAIN_ROUTE_HALF_WIDTH)
-	for route_value in LATER_MINE_BRANCH_ROUTES.values():
-		_append_surface_route_corridor(Array(route_value), LATER_BRANCH_ROUTE_HALF_WIDTH)
-	for route_value in LATER_RESOURCE_ACCESS_ROUTES.values():
-		_append_surface_route_corridor(Array(route_value), RESOURCE_ACCESS_ROUTE_HALF_WIDTH)
 
 
 func _append_surface_route_corridor(route: Array, half_width: float) -> void :
@@ -4975,14 +4907,6 @@ func _nearest_surface_route_point(position: Vector2) -> Vector2:
 		if distance < nearest_distance:
 			nearest = candidate
 			nearest_distance = distance
-	var moon_offset: = position - MOON_BLOOM_CENTER
-	var moon_length: = sqrt(pow(moon_offset.x / 238.0, 2.0) + pow(moon_offset.y / 82.0, 2.0))
-	if moon_length > 0.001:
-		var moon_candidate: = MOON_BLOOM_CENTER + moon_offset / maxf(1.0, moon_length)
-		var moon_distance: = position.distance_squared_to(moon_candidate)
-		if moon_distance < nearest_distance:
-			nearest = moon_candidate
-			nearest_distance = moon_distance
 	return nearest.clamp(Vector2.ONE * PLAYER_RADIUS, _world_size() - Vector2.ONE * PLAYER_RADIUS)
 
 
@@ -5079,7 +5003,7 @@ func debug_worldflow_snapshot() -> Dictionary:
 		},
 		"assets": {
 			"branch": MOSS_MINE_RAMP.resource_path,
-			"road": ROAD_TEXTURES.mossvein.resource_path,
+			"road": MOSS_ROAD_TEXTURE.resource_path,
 			"mountain": MOSS_ORE_MOUNTAIN.resource_path,
 			"gate": GATE_TEXTURES.moonglass.resource_path,
 			"portal_generator": PORTAL_ARCH_TEXTURES.moonglass.resource_path,
@@ -5146,7 +5070,6 @@ func surface_route_snapshot() -> Dictionary:
 		var mine_id: = String(mine_id_value)
 		var route: Array = MOSS_MINE_BRANCH_ROUTE if mine_id == "mossMine" else Array(LATER_MINE_BRANCH_ROUTES[mine_id])
 		var sprite: Sprite2D = surface_mine_branch_sprites.get(mine_id)
-		var backing: Sprite2D = surface_mine_branch_backing_sprites.get(mine_id)
 		var entrance_sprite: Sprite2D = entrance_nodes.get(mine_id)
 		var entrance_size: = Vector2.ZERO
 		var entrance_rect: = Rect2()
@@ -5162,8 +5085,8 @@ func surface_route_snapshot() -> Dictionary:
 			"visual_present": is_instance_valid(sprite),
 			"visual_position": sprite.position if is_instance_valid(sprite) else Vector2.ZERO,
 			"visual_rotation": sprite.rotation if is_instance_valid(sprite) else 0.0,
-			"backing_present": is_instance_valid(backing),
-			"backing_asset": String(backing.texture.resource_path) if is_instance_valid(backing) and backing.texture != null else "",
+			"backing_present": false,
+			"backing_asset": "",
 			"entrance_visual_present": is_instance_valid(entrance_sprite),
 			"entrance_visible": entrance_sprite.visible if is_instance_valid(entrance_sprite) else false,
 			"entrance_asset": String(entrance_sprite.texture.resource_path) if is_instance_valid(entrance_sprite) and entrance_sprite.texture != null else "",
@@ -5249,7 +5172,7 @@ func surface_route_snapshot() -> Dictionary:
 			"no_route_mask": false,
 			"motion_substep": SURFACE_MOTION_SUBSTEP,
 			"main_route_half_width": LATER_MAIN_ROUTE_HALF_WIDTH,
-			"mine_route_half_width": LATER_BRANCH_ROUTE_HALF_WIDTH,
+			"mine_route_half_width": LATER_MAIN_ROUTE_HALF_WIDTH,
 		},
 	}
 
@@ -5305,14 +5228,14 @@ func moonglass_resource_snapshot() -> Dictionary:
 		"nonblocking": true,
 		"road_clearance": ROAD_RECTS.moonglass.position.y - (MOON_BLOOM_CENTER.y + 40.0),
 		"platform": {
-			"present": moon_bloom_platform_nodes.size() == 5,
-			"node_count": moon_bloom_platform_nodes.size(),
-			"top_anchor": MOON_BLOOM_PLATFORM_TOP_ANCHOR,
-			"underside_anchor": MOON_BLOOM_PLATFORM_UNDERSIDE_ANCHOR,
-			"access_route": PackedVector2Array(MOON_BLOOM_PLATFORM_ACCESS_ROUTE),
-			"road_touchpoint": Vector2(MOON_BLOOM_PLATFORM_ACCESS_ROUTE[-1]),
+			"present": is_instance_valid(moon_bloom_ground_sprite),
+			"node_count": 1,
+			"top_anchor": MOON_BLOOM_GROUND_ANCHOR,
+			"grounded": true,
+			"access_route": PackedVector2Array(LATER_RESOURCE_ACCESS_ROUTES.moonglass_bloom),
+			"road_touchpoint": Vector2(LATER_RESOURCE_ACCESS_ROUTES.moonglass_bloom[-1]),
 			"nonblocking": true,
-			"assets": [MOON_BLOOM.resource_path, ROAD_TEXTURES.moonglass.resource_path, MOON_CRYSTALS.resource_path],
+			"assets": [MOON_BLOOM.resource_path, MOON_TERRACE.resource_path],
 		},
 		"assets": [
 			"res://assets/surface/moonglass-bloom-bed.png",
@@ -5471,10 +5394,10 @@ func starfall_hub_lift_snapshot() -> Dictionary:
 		"active_context": active_context,
 		"automatic_teleport": false,
 		"nonblocking": true,
-		"approach": "authored_side_alcove",
-		"approach_asset": "res://assets/surface/starfall-mine-path.png",
+		"approach": "native_terrace_floor",
+		"approach_asset": STAR_TERRACE.resource_path,
 		"approach_rect": STARFALL_HUB_APPROACH_RECT,
-		"interaction_anchor_preserved": true,
+		"walkable_approach": STARFALL_HUB_APPROACH_POSITION,
 	}
 
 

@@ -70,6 +70,11 @@ func _ready() -> void:
 	add_child(lamp)
 	lamp.configure(Color("ffe0a0"),facing,0.0,220.0)
 	lamp.beam_light.energy = 0.72
+	# The hub has no light occluders. Its two empty shadow passes have no
+	# visual contribution; retain both original native light textures and colors.
+	if world.scene_file_path == "res://scenes/hub/hub_world.tscn":
+		for light in lamp.get_children():
+			if light is PointLight2D: light.shadow_enabled = false
 	marker = Sprite2D.new()
 	marker.texture = preload("res://assets/ui/hud-guide-v1.png")
 	marker.scale = Vector2.ONE * (30.0/float(marker.texture.get_width()))

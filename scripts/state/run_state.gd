@@ -4,14 +4,12 @@ signal changed
 signal resource_collected(resource_id: String, amount: int)
 
 const MossveinProgressionScript: = preload("res://scripts/progression/mossvein_progression.gd")
-const SaveEpochScript: = preload("res://scripts/state/save_epoch.gd")
 const EndlessTerrainStateScript = preload("res://scripts/state/endless_terrain_state.gd")
 
-const SAVE_SCHEMA_ID: = "ever_deeper_run_state"
-const SAVE_SCHEMA_VERSION: = 2
-const DEFAULT_SAVE_PATH: = "user://ever_deeper_run_v2.json"
-const LEGACY_SAVE_PATH: = "user://ever_deeper_run_v1.json"
-const SAVE_EPOCH_MARKER_PATH: = "user://ever_deeper_save_epoch_v2.applied"
+const SaveCodecScript = preload("res://scripts/state/run_save_codec.gd")
+const SAVE_SCHEMA_ID: String = SaveCodecScript.SCHEMA_ID
+const SAVE_SCHEMA_VERSION: int = SaveCodecScript.SCHEMA_VERSION
+const DEFAULT_SAVE_PATH: = "user://ever_deeper_run_v3.sav"
 const GAME_DATA_PATH: = "res://data/ever_deeper_v0381.json"
 const COMMERCE_TRANSACTION_HISTORY_LIMIT: = 24
 const GOLD_TEXTURE_PATH: = "res://assets/ui/gold-bars-v1.png"
@@ -51,7 +49,7 @@ const SURFACE_WORLD_SIZE: = Vector2(4480.0, 1280.0)
 const HUB_WORLD_SIZE: = Vector2(1440.0, 960.0)
 const DEEPHEART_WORLD_SIZE: = Vector2(2400.0, 1080.0)
 const DEEPHEART_PLAYER_SPAWN: = Vector2(590.0, 776.0)
-const HUB_SURFACE_ENTRANCE: = Vector2(4245.0, 650.0)
+const HUB_SURFACE_ENTRANCE: = Vector2(4200.0, 650.0)
 const HUB_SURFACE_LIFT: = Vector2(240.0, 820.0)
 const HUB_PLAYER_SPAWN: = Vector2(332.0, 820.0)
 const DRILL_PICKUP_RADIUS_STEP: = 32.0
@@ -179,10 +177,6 @@ var endless_current_depth: = 0
 var endless_deepest_depth: = 0
 var endless_deepest_metres: int = 0
 var endless_start_depth_checkpoint: = 1
-var endless_resource_exhausted_through: = 0
-var endless_active_floor_depth: = 0
-var endless_active_floor_mined_mask: = 0
-var endless_active_floor_site_mask: = 0
 var endless_chunks: Dictionary = {}
 var endless_stream_anchor: Dictionary = {}
 var endless_relics: Dictionary = _default_endless_relics()
@@ -215,16 +209,20 @@ var surface_ore_updated_unix: = 0
 var surface_ore_ground_loot: = {"copper": 0, "gold": 0}
 var surface_mountains: Dictionary = _default_surface_mountains()
 var surface_veins: Dictionary = _default_surface_veins()
-var surface_moonglass_nodes: Array = [
-	{"hp": 42, "respawn": 0.0},
-	{"hp": 42, "respawn": 0.0},
-	{"hp": 42, "respawn": 0.0},
-]
-var surface_moonglass_vein_status: = "idle"
-var surface_moonglass_vein_timer: = 0.0
-var surface_moonglass_completions: = 0
-var surface_moonglass_updated_unix: = 0
-var surface_moonglass_ground_loot: = {"moonglass": 0, "starshard": 0}
+# Surface rendering still reads these names; all values come from the one
+# canonical vein record. There is no second mutable Moonglass store.
+var surface_moonglass_nodes: Array:
+	get: return Array(surface_veins.moonglass_bloom.nodes).duplicate(true)
+var surface_moonglass_vein_status: String:
+	get: return String(surface_veins.moonglass_bloom.status)
+var surface_moonglass_vein_timer: float:
+	get: return float(surface_veins.moonglass_bloom.timer)
+var surface_moonglass_completions: int:
+	get: return int(surface_veins.moonglass_bloom.completions)
+var surface_moonglass_updated_unix: int:
+	get: return int(surface_veins.moonglass_bloom.updated_unix)
+var surface_moonglass_ground_loot: Dictionary:
+	get: return Dictionary(surface_veins.moonglass_bloom.ground_loot).duplicate(true)
 
 var last_load_status: = "not_initialized"
 var last_save_error: = OK
@@ -256,21 +254,8 @@ func _init() -> void :
 
 func initialize_persistence(path: String = DEFAULT_SAVE_PATH) -> bool:
 	_save_path = path if not path.is_empty() else DEFAULT_SAVE_PATH
-	if _save_path == DEFAULT_SAVE_PATH:
-		apply_save_epoch_reset(LEGACY_SAVE_PATH, SAVE_EPOCH_MARKER_PATH)
 	_persistence_enabled = true
 	return load_game(_save_path)
-
-
-func apply_save_epoch_reset(legacy_path: String, marker_path: String) -> bool:
-
-
-
-	return SaveEpochScript.apply_once(
-		legacy_path,
-		marker_path,
-		"ever_deeper_save_epoch=2\n"
-	)
 
 
 func persistence_enabled() -> bool:
@@ -1099,30 +1084,32 @@ func collect_endless_resource(resource_id: String, amount: int = 1) -> bool:
 	return true
 
 
+func _endless_chunk(depth: int) -> Dictionary:
+	var key: String = str(depth)
+	if endless_chunks.has(key):
+		return endless_chunks[key]
+	return EndlessTerrainStateScript.empty_chunk()
+
+
 func endless_floor_resource_state(depth: int) -> Dictionary:
 	var bounded_depth: int = clampi(depth, 0, ENDLESS_MAX_SAVED_DEPTH)
-	var exhausted: bool = bounded_depth > 0 and bounded_depth <= endless_resource_exhausted_through
 	var chunk: Dictionary = Dictionary(endless_chunks.get(str(bounded_depth), {}))
-	var legacy: int = endless_active_floor_mined_mask if bounded_depth == endless_active_floor_depth else 0
 	return {
-		"depth": bounded_depth, "exhausted": exhausted,
-		"mined_mask": int(chunk.get("nodes", 0)) | legacy,
-		"exhausted_through": endless_resource_exhausted_through,
+		"depth": bounded_depth,
+		"mined_mask": int(chunk.get("nodes", 0)),
 	}
 
 
 func mark_endless_resource_node_mined(depth: int, node_index: int) -> bool:
-	if not _endless_band_in_reach(depth) or depth <= endless_resource_exhausted_through or node_index < 0 or node_index >= 31:
+	if not _endless_band_in_reach(depth) or node_index < 0 or node_index >= 31:
 		return false
-	var chunk: Dictionary = Dictionary(endless_chunks.get(str(depth), {}))
+	var chunk: Dictionary = _endless_chunk(depth)
 	var mask: int = int(Dictionary(endless_floor_resource_state(depth)).get("mined_mask", 0))
 	var bit: int = 1 << node_index
 	if (mask & bit) != 0:
 		return false
 	chunk["nodes"] = mask | bit
 	endless_chunks[str(depth)] = chunk
-	if endless_active_floor_depth == depth:
-		endless_active_floor_mined_mask = mask | bit
 	_state_changed()
 	return true
 
@@ -1140,19 +1127,17 @@ func claim_endless_resource_node(depth: int, node_index: int, resource_id: Strin
 
 func endless_floor_site_state(depth: int, site_index: int = -1) -> Dictionary:
 	var bounded_depth: int = clampi(depth, 0, ENDLESS_MAX_SAVED_DEPTH)
-	var exhausted: bool = bounded_depth > 0 and bounded_depth <= endless_resource_exhausted_through
 	var chunk: Dictionary = Dictionary(endless_chunks.get(str(bounded_depth), {}))
-	var legacy: int = endless_active_floor_site_mask if bounded_depth == endless_active_floor_depth else 0
-	var mask: int = int(chunk.get("sites", 0)) | legacy
-	var resolved: bool = site_index >= 0 and site_index < ENDLESS_SITE_LIMIT and (exhausted or (mask & (1 << site_index)) != 0)
+	var mask: int = int(chunk.get("sites", 0))
+	var resolved: bool = site_index >= 0 and site_index < ENDLESS_SITE_LIMIT and (mask & (1 << site_index)) != 0
 	var choice: String = "overload" if resolved and (mask & (1 << (site_index + ENDLESS_SITE_OVERLOAD_SHIFT))) != 0 else "stabilize" if resolved else ""
-	return {"depth": bounded_depth, "site_index": site_index, "exhausted": exhausted, "mask": mask, "resolved": resolved, "choice": choice, "discovered": resolved or (site_index >= 0 and site_index < ENDLESS_SITE_LIMIT and (int(chunk.get("seen", 0)) & (1 << site_index)) != 0)}
+	return {"depth": bounded_depth, "site_index": site_index, "mask": mask, "resolved": resolved, "choice": choice, "discovered": resolved or (site_index >= 0 and site_index < ENDLESS_SITE_LIMIT and (int(chunk.get("seen", 0)) & (1 << site_index)) != 0)}
 
 
 func mark_endless_site_discovered(depth: int, site_index: int) -> void:
 	if not _endless_band_in_reach(depth) or site_index < 0 or site_index >= ENDLESS_SITE_LIMIT:
 		return
-	var chunk: Dictionary = Dictionary(endless_chunks.get(str(depth), {}))
+	var chunk: Dictionary = _endless_chunk(depth)
 	var before: int = int(chunk.get("seen", 0))
 	var after: int = before | (1 << site_index)
 	if before == after:
@@ -1174,7 +1159,6 @@ func claim_endless_site_cache(
 		or not endless_descent_active
 		or depth <= 0
 		or not _endless_band_in_reach(depth)
-		or depth <= endless_resource_exhausted_through
 		or site_index < 0
 		or site_index >= ENDLESS_SITE_LIMIT
 		or choice not in ["stabilize", "overload"]
@@ -1183,7 +1167,7 @@ func claim_endless_site_cache(
 		or base_amount > 120
 	):
 		return {"ok": false, "reason": "invalid_site_cache"}
-	var chunk: Dictionary = Dictionary(endless_chunks.get(str(depth), {}))
+	var chunk: Dictionary = _endless_chunk(depth)
 	var mask: int = int(Dictionary(endless_floor_site_state(depth)).get("mask", 0))
 	var resolved_bit: int = 1 << site_index
 	if (mask & resolved_bit) != 0:
@@ -1193,8 +1177,6 @@ func claim_endless_site_cache(
 		mask |= 1 << (site_index + ENDLESS_SITE_OVERLOAD_SHIFT)
 	chunk["sites"] = mask
 	endless_chunks[str(depth)] = chunk
-	if endless_active_floor_depth == depth:
-		endless_active_floor_site_mask = mask
 	var reward_multiplier: = 2.0 if choice == "overload" else 1.0
 	var chamber_built: = _built_workshop_level("treasure_chamber") > 0
 	if chamber_built:
@@ -1240,9 +1222,6 @@ func endless_descent_status() -> Dictionary:
 		"start_depth": endless_start_depth_checkpoint if victory else 1,
 		"start_depth_checkpoint": endless_start_depth_checkpoint if victory else 1,
 		"next_unknown_depth": mini(ENDLESS_MAX_SAVED_DEPTH, endless_deepest_depth + 1) if victory else 1,
-		"resource_exhausted_through": endless_resource_exhausted_through if victory else 0,
-		"resource_frontier_depth": clampi(endless_resource_exhausted_through + 1, 1, ENDLESS_MAX_SAVED_DEPTH) if victory else 1,
-		"active_floor_site_mask": endless_active_floor_site_mask if victory else 0,
 		"carried_relic_id": carried_id if victory else "",
 		"carried_relic": carried_relic.duplicate(true) if victory else _default_carried_relic(),
 		"discovered_relic_count": discovered_count if victory else 0,
@@ -1283,9 +1262,6 @@ func start_endless_descent(depth: int = 0) -> Dictionary:
 	endless_current_depth = target
 	endless_deepest_depth = maxi(endless_deepest_depth, target)
 	endless_descent_active = true
-	endless_active_floor_depth = target
-	endless_active_floor_mined_mask = 0
-	endless_active_floor_site_mask = 0
 	_state_changed()
 	return {
 		"ok": true, "reason": "started", "depth": target,
@@ -1312,9 +1288,6 @@ func reach_endless_depth(depth: int) -> bool:
 		carried_relic["current_depth"] = depth
 	endless_current_depth = depth
 	endless_deepest_depth = maxi(endless_deepest_depth, depth)
-	endless_active_floor_depth = depth
-	endless_active_floor_mined_mask = int(Dictionary(endless_chunks.get(str(depth), {})).get("nodes", 0))
-	endless_active_floor_site_mask = int(Dictionary(endless_chunks.get(str(depth), {})).get("sites", 0))
 	_state_changed()
 	return true
 
@@ -2434,7 +2407,6 @@ func surface_vein_state(vein_id: String) -> Dictionary:
 
 
 func surface_veins_snapshot() -> Dictionary:
-	_sync_surface_veins_from_legacy_moonglass()
 	return surface_veins.duplicate(true)
 
 
@@ -2458,8 +2430,6 @@ func set_surface_vein_state(
 		"ground_loot": ground_loot,
 	}
 	surface_veins[vein_id] = _sanitize_surface_vein(vein_id, raw)
-	if vein_id == "moonglass_bloom":
-		_sync_moonglass_legacy_from_surface_veins()
 	_state_changed()
 	return true
 
@@ -2484,7 +2454,6 @@ func set_surface_moonglass_state(
 
 
 func serialize() -> Dictionary:
-	_sync_surface_veins_from_legacy_moonglass()
 	_normalize_endless_state()
 	var saved_depth_entrances: = discovered_depth_entrances.duplicate(true)
 	var saved_visited_depths: = visited_depths.duplicate(true)
@@ -2545,7 +2514,7 @@ func serialize() -> Dictionary:
 		"version": SAVE_SCHEMA_VERSION,
 		"saved_at_unix": int(Time.get_unix_time_from_system()),
 		"state": {
-			"overhaul": overhaul_progress.duplicate(true),
+			"overhaul": _sanitize_overhaul(overhaul_progress),
 			"gold": gold,
 			"pickaxe_level": pickaxe_level,
 			"ember_mastery": ember_mastery,
@@ -2578,11 +2547,6 @@ func serialize() -> Dictionary:
 				"deepest_depth": endless_deepest_depth if saved_victory else 0,
 				"deepest_metres": endless_deepest_metres if saved_victory else 0,
 				"start_depth_checkpoint": endless_start_depth_checkpoint if saved_victory else 1,
-				"resource_exhausted_through": endless_resource_exhausted_through if saved_victory else 0,
-				"active_floor_depth": endless_active_floor_depth if saved_victory else 0,
-				"active_floor_mined_mask": endless_active_floor_mined_mask if saved_victory else 0,
-				"active_floor_site_mask": endless_active_floor_site_mask if saved_victory else 0,
-				"stream_version": 1,
 				"chunks": endless_chunks.duplicate(true) if saved_victory else {},
 				"stream_anchor": endless_stream_anchor.duplicate(true) if saved_victory else {},
 				"relics": endless_relics.duplicate(true) if saved_victory else _default_endless_relics(),
@@ -2612,14 +2576,6 @@ func serialize() -> Dictionary:
 			},
 			"surface_mountains": saved_surface_mountains,
 			"surface_veins": saved_surface_veins,
-			"surface_moonglass": {
-				"nodes": surface_moonglass_nodes.duplicate(true),
-				"vein_status": surface_moonglass_vein_status,
-				"vein_timer": surface_moonglass_vein_timer,
-				"completions": surface_moonglass_completions,
-				"updated_unix": surface_moonglass_updated_unix,
-				"ground_loot": surface_moonglass_ground_loot.duplicate(true),
-			},
 			"location": {
 				"scene": current_scene,
 				"depth": current_depth,
@@ -2633,110 +2589,80 @@ func serialize() -> Dictionary:
 
 
 func deserialize(raw: Variant) -> bool:
-	if not raw is Dictionary:
-		_apply_defaults()
+	# Rejection is read-only. Callers may attempt an import while a live run or
+	# a pending shop transaction exists; unsupported data must not clear either.
+	if not _is_current_save_document(raw):
 		return false
-	var document: Dictionary = raw
-	var source: Dictionary
-	var versioned_v2: = false
-	if document.get("schema", "") == SAVE_SCHEMA_ID:
-		var version: = _nonnegative_int(document.get("version", 0), 0)
-		if version != SAVE_SCHEMA_VERSION or not document.get("state") is Dictionary:
-			_apply_defaults()
-			return false
-		source = Dictionary(document.state)
-		versioned_v2 = true
-	else:
-
-
-
-		source = document
-
+	var source: Dictionary = raw.state
 	_apply_defaults(false)
 	overhaul_progress = _sanitize_overhaul(source.get("overhaul", {}))
-	gold = _nonnegative_int(_first_value(source, "gold"), 0)
+	gold = _nonnegative_int(source.get("gold"), 0)
 	var data: = _game_data()
 	pickaxe_level = clampi(
-		_nonnegative_int(_first_value(source, "pickaxe_level", "pickaxeLevel"), 1),
+		_nonnegative_int(source.get("pickaxe_level"), 1),
 		1,
 		maxi(1, Array(data.PICKAXES).size() - 1)
 	)
 	ember_mastery = clampi(
-		_nonnegative_int(_first_value(source, "ember_mastery", "emberMastery"), 0),
+		_nonnegative_int(source.get("ember_mastery"), 0),
 		0,
 		maxi(0, Array(data.EMBER_MASTERY).size() - 1)
 	)
 	if pickaxe_level < Array(data.PICKAXES).size() - 1:
 		ember_mastery = 0
 	drill_level = clampi(
-		_nonnegative_int(_first_value(source, "drill_level", "drillLevel"), 0),
+		_nonnegative_int(source.get("drill_level"), 0),
 		0,
 		maxi(0, Array(data.DRILLS).size() - 1)
 	)
 	starforge_unlocked = _sanitize_bool_map(
-		source.get("starforge_unlocked", source.get("starforgeUnlocked", {})),
+		source.get("starforge_unlocked", {}),
 		STARFORGE_VARIANT_IDS
 	)
 	starforge_variant = _sanitize_allowed_id(
-		_first_value(source, "starforge_variant", "starforgeVariant"),
+		source.get("starforge_variant"),
 		STARFORGE_VARIANT_IDS
 	)
 	if not bool(starforge_unlocked.get(starforge_variant, false)):
 		starforge_variant = ""
 	movement_speed_level = _nonnegative_int(
-		_first_value(source, "movement_speed_level", "movementSpeedLevel"), 0
+		source.get("movement_speed_level"), 0
 	)
-	total_swings = _nonnegative_int(_first_value(source, "total_swings", "totalSwings"), 0)
-	precision_hits = _nonnegative_int(_first_value(source, "precision_hits", "precisionHits"), 0)
-	total_gold_earned = _nonnegative_int(_first_value(source, "total_gold_earned", "totalGold"), gold)
+	total_swings = _nonnegative_int(source.get("total_swings"), 0)
+	precision_hits = _nonnegative_int(source.get("precision_hits"), 0)
+	total_gold_earned = _nonnegative_int(source.get("total_gold_earned"), gold)
 	cargo = _sanitize_resource_store(source.get("cargo", {}))
 	mined = _sanitize_resource_store(source.get("mined", {}))
 
-	area_unlocked = _strict_bool(_first_value(source, "area_unlocked", "areaUnlocked"))
-	emberdeep_unlocked = _strict_bool(_first_value(source, "emberdeep_unlocked", "emberdeepUnlocked"))
-	fourth_unlocked = _strict_bool(_first_value(source, "fourth_unlocked", "fourthUnlocked"))
+	area_unlocked = _strict_bool(source.get("area_unlocked"))
+	emberdeep_unlocked = _strict_bool(source.get("emberdeep_unlocked"))
+	fourth_unlocked = _strict_bool(source.get("fourth_unlocked"))
 
 	if fourth_unlocked:
 		emberdeep_unlocked = true
 	if emberdeep_unlocked:
 		area_unlocked = true
-	var maximum_drill_level: = maxi(0, Array(data.DRILLS).size() - 1)
-	var imported_legacy_victory: = (
-		not versioned_v2 and _strict_bool(source.get("victory", false))
-	)
-	singularity_secured = (
-		_strict_bool(source.get("singularity_secured", false))
-		or (
-			not versioned_v2
-			and drill_level == maximum_drill_level
-			and int(mined.get("singularity", 0)) > 0
-		)
-		or imported_legacy_victory
-	)
+	singularity_secured = _strict_bool(source.get("singularity_secured", false))
 	deep_elevator_deliveries = _sanitize_deep_elevator_deliveries(
 		source.get("deep_elevator_deliveries", {})
 	)
-	if imported_legacy_victory:
-		deep_elevator_deliveries = _default_deep_elevator_deliveries(true)
 	deep_elevator_repaired = _deep_elevator_deliveries_complete(deep_elevator_deliveries)
 	deep_elevator_powered = (
-		(imported_legacy_victory or _strict_bool(source.get("deep_elevator_powered", false)))
+		_strict_bool(source.get("deep_elevator_powered", false))
 		and deep_elevator_repaired
 		and singularity_secured
 	)
 	final_expedition_begun = (
-		(imported_legacy_victory or _strict_bool(source.get("final_expedition_begun", false)))
+		_strict_bool(source.get("final_expedition_begun", false))
 		and deep_elevator_powered
 	)
 	deepheart_seals = _sanitize_bool_map(
 		source.get("deepheart_seals", {}), DEEPHEART_SEAL_IDS
 	)
-	if imported_legacy_victory:
-		deepheart_seals = _default_deepheart_seals(true)
-	elif not final_expedition_begun:
+	if not final_expedition_begun:
 		deepheart_seals = _default_deepheart_seals()
 	victory = (
-		(imported_legacy_victory or _strict_bool(source.get("victory", false)))
+		_strict_bool(source.get("victory", false))
 		and deep_elevator_powered
 		and final_expedition_begun
 		and _deepheart_seals_complete(deepheart_seals)
@@ -2754,74 +2680,47 @@ func deserialize(raw: Variant) -> bool:
 		)
 		conclusion_seen = _strict_bool(source.get("conclusion_seen", false))
 	var endless_raw: Variant = source.get(
-		"endless_descent", source.get("endlessDescent", {})
+		"endless_descent", {}
 	)
 	if victory and endless_raw is Dictionary:
 		var endless_source: Dictionary = endless_raw
 		endless_descent_active = _strict_bool(endless_source.get("active", false))
 		endless_current_depth = clampi(_nonnegative_int(
-			endless_source.get("current_depth", endless_source.get("currentDepth", 0)), 0
+			endless_source.get("current_depth", 0), 0
 		), 0, ENDLESS_MAX_SAVED_DEPTH)
 		endless_deepest_depth = clampi(_nonnegative_int(
-			endless_source.get("deepest_depth", endless_source.get("deepestDepth", 0)), 0
+			endless_source.get("deepest_depth", 0), 0
 		), 0, ENDLESS_MAX_SAVED_DEPTH)
 		endless_deepest_metres = maxi(0, _nonnegative_int(endless_source.get("deepest_metres", maxi(0, endless_deepest_depth - 1) * 44), 0))
 		endless_start_depth_checkpoint = clampi(_nonnegative_int(
 			endless_source.get(
-				"start_depth_checkpoint", endless_source.get("startDepthCheckpoint", 1)
+				"start_depth_checkpoint", 1
 			),
 			1
 		), 1, ENDLESS_MAX_SAVED_DEPTH)
-		endless_resource_exhausted_through = clampi(_nonnegative_int(
-			endless_source.get(
-				"resource_exhausted_through",
-				endless_source.get("resourceExhaustedThrough", 0)
-			),
-			0
-		), 0, ENDLESS_MAX_SAVED_DEPTH)
-		endless_active_floor_depth = clampi(_nonnegative_int(
-			endless_source.get("active_floor_depth", endless_current_depth),
-			endless_current_depth
-		), 0, ENDLESS_MAX_SAVED_DEPTH)
-		endless_active_floor_mined_mask = clampi(_nonnegative_int(
-			endless_source.get("active_floor_mined_mask", 0), 0
-		), 0, 2147483647)
-		endless_active_floor_site_mask = clampi(_nonnegative_int(
-			endless_source.get(
-				"active_floor_site_mask",
-				endless_source.get("activeFloorSiteMask", 0)
-			),
-			0
-		), 0, 255)
 		endless_chunks = EndlessTerrainStateScript.sanitize(endless_source.get("chunks", {}), ENDLESS_MAX_SAVED_DEPTH)
 		endless_stream_anchor = _sanitize_endless_stream_anchor(endless_source.get("stream_anchor", {}))
-		# Keep the previous active masks as a migration journal before any travel.
-		if endless_active_floor_depth > 0:
-			var migrated: Dictionary = Dictionary(endless_chunks.get(str(endless_active_floor_depth), {}))
-			migrated["nodes"] = int(migrated.get("nodes", 0)) | endless_active_floor_mined_mask
-			migrated["sites"] = int(migrated.get("sites", 0)) | endless_active_floor_site_mask
-			endless_chunks[str(endless_active_floor_depth)] = migrated
 		endless_relics = _sanitize_endless_relics(endless_source.get("relics", {}))
 		carried_relic = _sanitize_carried_relic(
-			endless_source.get("carried_relic", endless_source.get("carriedRelic", {})),
+			endless_source.get("carried_relic", {}),
 			endless_relics
 		)
 		endless_workshops = _sanitize_endless_workshops(
 			endless_source.get("workshops", {}), endless_relics
 		)
 		endless_light_style = _sanitize_allowed_id(
-			endless_source.get("light_style", endless_source.get("lightStyle", "standard")),
+			endless_source.get("light_style", "standard"),
 			ENDLESS_LIGHT_STYLE_IDS
 		)
 		endless_outfit = _sanitize_allowed_id(
 			endless_source.get("outfit", "miner"), ENDLESS_OUTFIT_IDS
 		)
 		endless_tool_style = _sanitize_allowed_id(
-			endless_source.get("tool_style", endless_source.get("toolStyle", "original")),
+			endless_source.get("tool_style", "original"),
 			ENDLESS_TOOL_STYLE_IDS
 		)
 	_normalize_endless_state()
-	var raw_hub: Variant = source.get("hub", source.get("hub_state", {}))
+	var raw_hub: Variant = source.get("hub", {})
 	var saved_hub_unlocked: = (
 		raw_hub is Dictionary and _strict_bool(Dictionary(raw_hub).get("unlocked", false))
 	)
@@ -2834,31 +2733,31 @@ func deserialize(raw: Variant) -> bool:
 		or victory
 	)
 	hub = _sanitize_hub_state(raw_hub, hub_unlocked_early)
-	world_seed = _nonnegative_int(_first_value(source, "world_seed", "worldSeed"), 0)
-	discovered_mines = _sanitize_bool_map(source.get("discovered_mines", source.get("discoveredMines", {})), MINE_IDS)
+	world_seed = _nonnegative_int(source.get("world_seed"), 0)
+	discovered_mines = _sanitize_bool_map(source.get("discovered_mines", {}), MINE_IDS)
 	discovered_caverns = _sanitize_bool_map(
-		source.get("discovered_caverns", source.get("discoveredCaverns", {})),
+		source.get("discovered_caverns", {}),
 		_all_cavern_ids()
 	)
 	discovered_depth_entrances = _sanitize_bool_map(
-		source.get("discovered_depth_entrances", source.get("discoveredDepthEntrances", {})),
+		source.get("discovered_depth_entrances", {}),
 		MINE_IDS
 	)
 	visited_depths = _sanitize_bool_map(
-		source.get("visited_depths", source.get("visitedDepths", {})),
+		source.get("visited_depths", {}),
 		MINE_IDS
 	)
 	claimed_pocket_rewards = _sanitize_bool_map(
-		source.get("claimed_pocket_rewards", source.get("claimedPocketRewards", {})),
+		source.get("claimed_pocket_rewards", {}),
 		_all_pocket_reward_ids()
 	)
 	pending_pocket_loot = _sanitize_pending_loot(
-		source.get("pending_pocket_loot", source.get("pendingPocketLoot", {})),
+		source.get("pending_pocket_loot", {}),
 		_all_pocket_reward_ids(),
 		RESOURCE_IDS
 	)
 	drill_goal_scene = _sanitize_allowed_id(
-		_first_value(source, "drill_goal_scene", "drillGoalScene"),
+		source.get("drill_goal_scene"),
 		MINE_IDS
 	)
 	if drill_goal_scene.is_empty():
@@ -2866,20 +2765,20 @@ func deserialize(raw: Variant) -> bool:
 			if bool(visited_depths.get(mine_id, false)):
 				drill_goal_scene = String(mine_id)
 				break
-	cleared_mine_barriers = _sanitize_true_flags(source.get("cleared_mine_barriers", source.get("clearedMineBarriers", {})))
-	terrain_dug = _sanitize_terrain(source.get("terrain_dug", source.get("terrainDug", {})))
+	cleared_mine_barriers = _sanitize_true_flags(source.get("cleared_mine_barriers", {}))
+	terrain_dug = _sanitize_terrain(source.get("terrain_dug", {}))
 	_rebuild_terrain_dug_lookup()
 	mine_resource_runtime = _sanitize_mine_resource_runtime(
-		source.get("mine_resource_runtime", source.get("mineResourceRuntime", {}))
+		source.get("mine_resource_runtime", {})
 	)
-	var surface_ore_raw: Variant = source.get("surface_ore", source.get("surfaceOre", {}))
+	var surface_ore_raw: Variant = source.get("surface_ore", {})
 	if surface_ore_raw is Dictionary:
 		var surface_ore: Dictionary = surface_ore_raw
 		surface_ore_reserve = _bounded_float(surface_ore.get("reserve", 1.0), 1.0, 0.0, 1.0)
-		surface_ore_yield_buffer = _bounded_float(surface_ore.get("yield_buffer", surface_ore.get("yieldBuffer", 0.0)), 0.0, 0.0, 0.999999)
-		surface_ore_gold_ready = _strict_bool(surface_ore.get("gold_ready", surface_ore.get("goldReady", true)))
-		surface_ore_updated_unix = _nonnegative_int(surface_ore.get("updated_unix", surface_ore.get("updatedUnix", 0)), 0)
-		var ground_loot_raw: Variant = surface_ore.get("ground_loot", surface_ore.get("groundLoot", {}))
+		surface_ore_yield_buffer = _bounded_float(surface_ore.get("yield_buffer", 0.0), 0.0, 0.0, 0.999999)
+		surface_ore_gold_ready = _strict_bool(surface_ore.get("gold_ready", true))
+		surface_ore_updated_unix = _nonnegative_int(surface_ore.get("updated_unix", 0), 0)
+		var ground_loot_raw: Variant = surface_ore.get("ground_loot", {})
 		if ground_loot_raw is Dictionary:
 			var ground_loot: Dictionary = ground_loot_raw
 			surface_ore_ground_loot = {
@@ -2887,7 +2786,7 @@ func deserialize(raw: Variant) -> bool:
 				"gold": _nonnegative_int(ground_loot.get("gold", 0), 0),
 			}
 	var surface_mountains_raw: Variant = source.get(
-		"surface_mountains", source.get("surfaceMountains", {})
+		"surface_mountains", {}
 	)
 	if surface_mountains_raw is Dictionary:
 		var raw_mountains: Dictionary = surface_mountains_raw
@@ -2897,37 +2796,10 @@ func deserialize(raw: Variant) -> bool:
 				surface_mountains[mountain_id] = _sanitize_surface_mountain(
 					mountain_id, raw_mountains[mountain_id]
 				)
-	var canonical_vein_ids: = {}
-	var surface_veins_raw: Variant = source.get("surface_veins", source.get("surfaceVeins", {}))
-	if surface_veins_raw is Dictionary:
-		var raw_veins: Dictionary = surface_veins_raw
-		for vein_id_value in SURFACE_VEIN_IDS:
-			var vein_id: = String(vein_id_value)
-			if raw_veins.get(vein_id) is Dictionary:
-				surface_veins[vein_id] = _sanitize_surface_vein(vein_id, raw_veins[vein_id])
-				canonical_vein_ids[vein_id] = true
-	var surface_moonglass_raw: Variant = source.get(
-		"surface_moonglass",
-		source.get("surfaceMoonglass", {})
-	)
-	if surface_moonglass_raw is Dictionary and not canonical_vein_ids.has("moonglass_bloom"):
-		surface_veins["moonglass_bloom"] = _sanitize_surface_vein(
-			"moonglass_bloom", surface_moonglass_raw
-		)
-	var legacy_veins_raw: Variant = source.get(
-		"veins_completed",
-		source.get("veinsCompleted", {})
-	)
-	if legacy_veins_raw is Dictionary:
-		for vein_id_value in SURFACE_VEIN_IDS:
-			var vein_id: = String(vein_id_value)
-			var vein: Dictionary = Dictionary(surface_veins[vein_id])
-			vein["completions"] = maxi(
-				int(vein.completions),
-				_nonnegative_int(Dictionary(legacy_veins_raw).get(vein_id, 0), 0)
-			)
-			surface_veins[vein_id] = vein
-	_sync_moonglass_legacy_from_surface_veins()
+	var surface_veins_raw: Dictionary = source.surface_veins
+	for vein_id_value in SURFACE_VEIN_IDS:
+		var vein_id: = String(vein_id_value)
+		surface_veins[vein_id] = _sanitize_surface_vein(vein_id, surface_veins_raw.get(vein_id, {}))
 	_load_location(source.get("location", {}))
 	changed.emit()
 	return true
@@ -2936,57 +2808,76 @@ func deserialize(raw: Variant) -> bool:
 func save_game(path: String = "") -> bool:
 	var target: = path if not path.is_empty() else _save_path
 	last_save_error = OK
-	var encoded: = JSON.stringify(serialize(), "", true)
+	var document: Dictionary = serialize()
+	if not _is_current_save_document(document):
+		last_save_error = ERR_INVALID_DATA
+		return false
+	var encoded: PackedByteArray = SaveCodecScript.encode(document)
 	if encoded.is_empty():
 		last_save_error = ERR_INVALID_DATA
 		return false
 	var temp_path: = target + ".tmp"
 	var backup_path: = target + ".bak"
+	var temp_absolute: = ProjectSettings.globalize_path(temp_path)
+	var target_absolute: = ProjectSettings.globalize_path(target)
+	var backup_absolute: = ProjectSettings.globalize_path(backup_path)
 	var file: = FileAccess.open(temp_path, FileAccess.WRITE)
 	if file == null:
 		last_save_error = FileAccess.get_open_error()
 		return false
-	file.store_string(encoded)
+	file.store_buffer(encoded)
 	file.flush()
+	last_save_error = file.get_error()
 	file = null
-
-	var target_absolute: = ProjectSettings.globalize_path(target)
-	var temp_absolute: = ProjectSettings.globalize_path(temp_path)
-	var backup_absolute: = ProjectSettings.globalize_path(backup_path)
-	if FileAccess.file_exists(backup_path):
-		DirAccess.remove_absolute(backup_absolute)
-	var had_previous: = FileAccess.file_exists(target)
-	if had_previous:
+	# Verify the exact flushed bytes before moving either committed generation.
+	# The just-encoded document was validated above; it needs no second decode.
+	if last_save_error != OK or FileAccess.get_file_as_bytes(temp_path) != encoded:
+		if last_save_error == OK:
+			last_save_error = ERR_FILE_CORRUPT
+		DirAccess.remove_absolute(temp_absolute)
+		return false
+	# A corrupt primary must never replace the good backup that recovered it.
+	var rotate_primary: bool = _is_current_save_document(_read_save_document(target))
+	if rotate_primary:
+		if FileAccess.file_exists(backup_path):
+			last_save_error = DirAccess.remove_absolute(backup_absolute)
+			if last_save_error != OK:
+				DirAccess.remove_absolute(temp_absolute)
+				return false
 		last_save_error = DirAccess.rename_absolute(target_absolute, backup_absolute)
 		if last_save_error != OK:
 			DirAccess.remove_absolute(temp_absolute)
 			return false
 	last_save_error = DirAccess.rename_absolute(temp_absolute, target_absolute)
 	if last_save_error != OK:
-		if had_previous and FileAccess.file_exists(backup_path):
+		if rotate_primary:
 			DirAccess.rename_absolute(backup_absolute, target_absolute)
 		DirAccess.remove_absolute(temp_absolute)
 		return false
-	if FileAccess.file_exists(backup_path):
-		DirAccess.remove_absolute(backup_absolute)
+	# Keep the previous valid generation. It is needed for later corruption,
+	# not only for a crash between the two renames above.
 	return true
 
 
 func load_game(path: String = "") -> bool:
 	var target: String = path if not path.is_empty() else _save_path
 	var primary: Variant = _read_save_document(target)
-	if primary is Dictionary and deserialize(primary):
+	if _is_current_save_document(primary) and deserialize(primary):
 		last_load_status = "loaded"
 		return true
-	var backup_path: String = target + ".bak"
-	var backup: Variant = _read_save_document(backup_path)
-	if backup is Dictionary and deserialize(backup):
+	var backup: Variant = _read_save_document(target + ".bak")
+	if _is_current_save_document(backup) and deserialize(backup):
 		last_load_status = "recovered_backup"
 		return true
 	_apply_defaults(false)
 	world_seed = _new_world_seed()
 	changed.emit()
-	last_load_status = "missing" if not FileAccess.file_exists(target) else "corrupt"
+	if not FileAccess.file_exists(target) and not FileAccess.file_exists(target + ".bak"):
+		last_load_status = "missing"
+	elif primary is Dictionary and (primary.get("schema") != SAVE_SCHEMA_ID or primary.get("version") != SAVE_SCHEMA_VERSION):
+		last_load_status = "incompatible"
+	else:
+		last_load_status = "corrupt"
 	return false
 
 
@@ -3085,10 +2976,6 @@ func _apply_defaults(emit_change: bool = true) -> void :
 	endless_deepest_depth = 0
 	endless_deepest_metres = 0
 	endless_start_depth_checkpoint = 1
-	endless_resource_exhausted_through = 0
-	endless_active_floor_depth = 0
-	endless_active_floor_mined_mask = 0
-	endless_active_floor_site_mask = 0
 	endless_chunks = {}
 	endless_stream_anchor = {}
 	endless_relics = _default_endless_relics()
@@ -3120,7 +3007,6 @@ func _apply_defaults(emit_change: bool = true) -> void :
 	surface_ore_ground_loot = {"copper": 0, "gold": 0}
 	surface_mountains = _default_surface_mountains()
 	surface_veins = _default_surface_veins()
-	_sync_moonglass_legacy_from_surface_veins()
 	if emit_change:
 		changed.emit()
 
@@ -3247,7 +3133,7 @@ func _sanitize_endless_relics(raw: Variant) -> Dictionary:
 		var placed: = collected and _strict_bool(state_source.get("placed", false))
 		var found_depth: = clampi(
 			_nonnegative_int(
-				state_source.get("found_depth", state_source.get("foundDepth", 0)), 0
+				state_source.get("found_depth", 0), 0
 			),
 			0,
 			ENDLESS_MAX_SAVED_DEPTH
@@ -3282,7 +3168,7 @@ func _sanitize_carried_relic(raw: Variant, relics: Dictionary) -> Dictionary:
 	)
 	var origin_depth: = clampi(
 		_nonnegative_int(
-			source.get("origin_depth", source.get("originDepth", found_depth)), found_depth
+			source.get("origin_depth", found_depth), found_depth
 		),
 		1,
 		ENDLESS_MAX_SAVED_DEPTH
@@ -3291,7 +3177,7 @@ func _sanitize_carried_relic(raw: Variant, relics: Dictionary) -> Dictionary:
 		origin_depth = found_depth
 	var current_transport_depth: = clampi(
 		_nonnegative_int(
-			source.get("current_depth", source.get("currentDepth", origin_depth)), origin_depth
+			source.get("current_depth", origin_depth), origin_depth
 		),
 		0,
 		ENDLESS_MAX_SAVED_DEPTH
@@ -3324,8 +3210,7 @@ func _sanitize_endless_workshops(raw: Variant, relics: Dictionary) -> Dictionary
 			int(definition.build_cost)
 		)
 		var built: = blueprint_unlocked and _strict_bool(state_source.get("built", false))
-		# Existing placed relics receive the same construction credit. Repeated
-		# loads are idempotent; cargo, upgrades and workshop style are untouched.
+		# The placed relic funds its building; this never creates pocket resources.
 		if blueprint_unlocked:
 			delivered = int(definition.build_cost)
 		var level: = 0
@@ -3357,10 +3242,6 @@ func _normalize_endless_state() -> void :
 		endless_deepest_depth = 0
 		endless_deepest_metres = 0
 		endless_start_depth_checkpoint = 1
-		endless_resource_exhausted_through = 0
-		endless_active_floor_depth = 0
-		endless_active_floor_mined_mask = 0
-		endless_active_floor_site_mask = 0
 		endless_chunks = {}
 		endless_stream_anchor = {}
 		endless_relics = _default_endless_relics()
@@ -3385,23 +3266,6 @@ func _normalize_endless_state() -> void :
 	endless_start_depth_checkpoint = clampi(
 		endless_start_depth_checkpoint, 1, maxi(1, endless_deepest_depth)
 	)
-	endless_resource_exhausted_through = clampi(
-		endless_resource_exhausted_through, 0, endless_deepest_depth
-	)
-	endless_active_floor_mined_mask = clampi(
-		endless_active_floor_mined_mask, 0, 2147483647
-	)
-	endless_active_floor_site_mask = clampi(
-		endless_active_floor_site_mask, 0, 255
-	)
-	if not endless_descent_active or endless_current_depth <= 0:
-		endless_active_floor_depth = 0
-		endless_active_floor_mined_mask = 0
-		endless_active_floor_site_mask = 0
-	elif endless_active_floor_depth != endless_current_depth:
-		endless_active_floor_depth = endless_current_depth
-		endless_active_floor_mined_mask = 0
-		endless_active_floor_site_mask = 0
 	endless_relics = _sanitize_endless_relics(endless_relics)
 	carried_relic = _sanitize_carried_relic(carried_relic, endless_relics)
 	var carried_id: = String(carried_relic.get("id", ""))
@@ -3510,17 +3374,17 @@ func _sanitize_hub_state(raw: Variant, unlock_allowed: bool = false) -> Dictiona
 	var result: = _default_hub_state()
 	result["unlocked"] = unlock_allowed or _strict_bool(source.get("unlocked", false))
 	result["visited"] = _strict_bool(source.get("visited", false))
-	# Older saves may contain a visit with a tutorial flag overwritten by the Hub.
+	# Visiting the Hub completes its guide step, even if a stale flag disagrees.
 	result["tutorialSeen"] = bool(result["visited"]) or _strict_bool(source.get(
-		"tutorialSeen", source.get("tutorial_seen", false)
+		"tutorialSeen", false
 	))
 	result["surfaceX"] = clampf(
-		_source_coordinate(source.get("surfaceX", source.get("surface_x", HUB_SURFACE_ENTRANCE.x)), HUB_SURFACE_ENTRANCE.x),
+		_source_coordinate(source.get("surfaceX", HUB_SURFACE_ENTRANCE.x), HUB_SURFACE_ENTRANCE.x),
 		52.0,
 		SURFACE_WORLD_SIZE.x - 52.0
 	)
 	result["surfaceY"] = clampf(
-		_source_coordinate(source.get("surfaceY", source.get("surface_y", HUB_SURFACE_ENTRANCE.y)), HUB_SURFACE_ENTRANCE.y),
+		_source_coordinate(source.get("surfaceY", HUB_SURFACE_ENTRANCE.y), HUB_SURFACE_ENTRANCE.y),
 		70.0,
 		SURFACE_WORLD_SIZE.y - 58.0
 	)
@@ -3565,19 +3429,19 @@ func _sanitize_surface_mountain(mountain_id: String, raw: Variant) -> Dictionary
 		source.get("reserve", 1.0), 1.0, 0.0, 1.0
 	)
 	result["yield_buffer"] = _bounded_float(
-		source.get("yield_buffer", source.get("yieldBuffer", 0.0)),
+		source.get("yield_buffer", 0.0),
 		0.0,
 		0.0,
 		0.999999
 	)
 	var rare_ready_raw: Variant = source.get(
-		"rare_ready", source.get("rareReady", true)
+		"rare_ready", true
 	)
 	result["rare_ready"] = rare_ready_raw if rare_ready_raw is bool else true
 	result["updated_unix"] = _nonnegative_int(
-		source.get("updated_unix", source.get("updatedUnix", 0)), 0
+		source.get("updated_unix", 0), 0
 	)
-	var raw_ground: Variant = source.get("ground_loot", source.get("groundLoot", {}))
+	var raw_ground: Variant = source.get("ground_loot", {})
 	var ground: Dictionary = raw_ground if raw_ground is Dictionary else {}
 	var clean_ground_loot: = {}
 	for resource_id_value in Array(profile.ground_resources):
@@ -3633,13 +3497,7 @@ func _sanitize_surface_vein(vein_id: String, raw: Variant) -> Dictionary:
 				continue
 			var raw_node: Dictionary = Array(raw_nodes)[index]
 			var raw_hp: = _nonnegative_int(raw_node.get("hp", profile.node_hp), int(profile.node_hp))
-			var raw_shell: int
-			if raw_node.has("shell"):
-				raw_shell = _nonnegative_int(raw_node.get("shell", profile.node_shell), int(profile.node_shell))
-			else:
-
-				raw_shell = maxi(0, raw_hp - int(profile.node_hp))
-				raw_hp = mini(raw_hp, int(profile.node_hp))
+			var raw_shell: int = _nonnegative_int(raw_node.get("shell", profile.node_shell), int(profile.node_shell))
 			var hp: = clampi(
 				raw_hp,
 				0,
@@ -3659,72 +3517,27 @@ func _sanitize_surface_vein(vein_id: String, raw: Variant) -> Dictionary:
 				clean_node["shell"] = shell
 			clean_nodes[index] = clean_node
 		result["nodes"] = clean_nodes
-	var status: = String(source.get("status", source.get(
-		"vein_status", source.get("veinStatus", "idle")
-	)))
+	var status: String = _sanitize_allowed_id(source.get("status", "idle"), ["idle", "active", "completed", "failed"])
 	result["status"] = status if status in ["idle", "active", "completed", "failed"] else "idle"
 	result["timer"] = _bounded_float(
-		source.get("timer", source.get("vein_timer", source.get("veinTimer", 0.0))),
+		source.get("timer", 0.0),
 		0.0,
 		0.0,
 		float(profile.time_limit)
 	)
 	result["completions"] = _nonnegative_int(source.get("completions", 0), 0)
 	result["updated_unix"] = _nonnegative_int(
-		source.get("updated_unix", source.get("updatedUnix", 0)),
+		source.get("updated_unix", 0),
 		0
 	)
 	var clean_ground_loot: = {}
-	var raw_ground: Variant = source.get("ground_loot", source.get("groundLoot", {}))
+	var raw_ground: Variant = source.get("ground_loot", {})
 	var ground: Dictionary = raw_ground if raw_ground is Dictionary else {}
 	for resource_id in Array(profile.ground_resources):
 		clean_ground_loot[String(resource_id)] = _nonnegative_int(
 			ground.get(String(resource_id), 0), 0
 		)
 	result["ground_loot"] = clean_ground_loot
-	return result
-
-
-func _sync_moonglass_legacy_from_surface_veins() -> void :
-	var moon: = _sanitize_surface_vein(
-		"moonglass_bloom",
-		surface_veins.get("moonglass_bloom", {})
-	)
-	surface_veins["moonglass_bloom"] = moon
-	surface_moonglass_nodes = []
-	for node_value in Array(moon.nodes):
-		var node: Dictionary = Dictionary(node_value)
-		surface_moonglass_nodes.append({
-			"hp": int(node.hp),
-			"respawn": float(node.respawn),
-		})
-	surface_moonglass_vein_status = String(moon.status)
-	surface_moonglass_vein_timer = float(moon.timer)
-	surface_moonglass_completions = int(moon.completions)
-	surface_moonglass_updated_unix = int(moon.updated_unix)
-	surface_moonglass_ground_loot = Dictionary(moon.ground_loot).duplicate(true)
-
-
-func _sync_surface_veins_from_legacy_moonglass() -> void :
-	surface_veins["moonglass_bloom"] = _sanitize_surface_vein("moonglass_bloom", {
-		"nodes": surface_moonglass_nodes,
-		"status": surface_moonglass_vein_status,
-		"timer": surface_moonglass_vein_timer,
-		"completions": surface_moonglass_completions,
-		"updated_unix": surface_moonglass_updated_unix,
-		"ground_loot": surface_moonglass_ground_loot,
-	})
-
-
-func _default_surface_moonglass_nodes() -> Array:
-	return Array(_default_surface_vein("moonglass_bloom").nodes).duplicate(true)
-
-
-func _sanitize_surface_moonglass_nodes(raw: Array) -> Array:
-	var result: Array = []
-	for node_value in Array(_sanitize_surface_vein("moonglass_bloom", {"nodes": raw}).nodes):
-		var node: Dictionary = Dictionary(node_value)
-		result.append({"hp": int(node.hp), "respawn": float(node.respawn)})
 	return result
 
 
@@ -4138,8 +3951,8 @@ func _load_location(raw: Variant) -> void :
 		_safe_coordinate(location.get("y", DEFAULT_SURFACE_POSITION.y), DEFAULT_SURFACE_POSITION.y)
 	)
 	var surface_position: = Vector2(
-		_safe_coordinate(location.get("surface_x", location.get("surfaceX", DEFAULT_SURFACE_POSITION.x)), DEFAULT_SURFACE_POSITION.x),
-		_safe_coordinate(location.get("surface_y", location.get("surfaceY", DEFAULT_SURFACE_POSITION.y)), DEFAULT_SURFACE_POSITION.y)
+		_safe_coordinate(location.get("surface_x", DEFAULT_SURFACE_POSITION.x), DEFAULT_SURFACE_POSITION.x),
+		_safe_coordinate(location.get("surface_y", DEFAULT_SURFACE_POSITION.y), DEFAULT_SURFACE_POSITION.y)
 	)
 	if _valid_vector(surface_position):
 		last_surface_position = _clamp_surface_position(surface_position)
@@ -4194,14 +4007,6 @@ func _load_location(raw: Variant) -> void :
 		)
 	elif current_scene == "endless":
 		current_position = requested_position
-		if endless_stream_anchor.is_empty() and endless_current_depth > 0:
-			# Pre-1.0 coordinates described a single 22-row floor. Embed those
-			# coordinates in the equivalent band of the new three-band window.
-			var stream_start: int = maxi(1, endless_current_depth - 1)
-			var stream_slot: int = endless_current_depth - stream_start
-			current_position = Vector2(clampf(requested_position.x, 160.0, 2400.0), clampf(requested_position.y, 96.0, 1312.0) + float(stream_slot) * 1408.0)
-			endless_stream_anchor = {"start_depth": stream_start, "depth": endless_current_depth, "x": current_position.x, "y": current_position.y}
-			endless_deepest_metres = maxi(endless_deepest_metres, endless_depth_metres())
 	elif requested_scene == "surface" or not VALID_SCENES.has(requested_scene):
 		current_position = requested_position
 	else:
@@ -4228,17 +4033,72 @@ func _deepheart_restore_allowed() -> bool:
 	return victory or (deep_elevator_powered and final_expedition_begun)
 
 
+func _is_current_save_document(raw: Variant) -> bool:
+	if not raw is Dictionary or raw.get("schema") != SAVE_SCHEMA_ID or raw.get("version") != SAVE_SCHEMA_VERSION:
+		return false
+	if not raw.get("state") is Dictionary:
+		return false
+	var state: Dictionary = raw.state
+	# Schema 3 has one spelling and one owner for every persisted system.
+	# Missing current sections indicate corruption, not an older import format.
+	for key in [
+		"overhaul", "starforge_unlocked", "cargo", "mined", "deep_elevator_deliveries",
+		"deepheart_seals", "endless_descent", "hub", "discovered_mines", "discovered_caverns",
+		"discovered_depth_entrances", "visited_depths", "claimed_pocket_rewards",
+		"pending_pocket_loot", "cleared_mine_barriers", "terrain_dug", "mine_resource_runtime",
+		"surface_ore", "surface_mountains", "surface_veins", "location",
+	]:
+		if not state.get(key) is Dictionary:
+			return false
+	for key in [
+		"gold", "pickaxe_level", "ember_mastery", "drill_level", "movement_speed_level",
+		"total_swings", "precision_hits", "total_gold_earned", "world_seed", "deepheart_awakened_at_mined",
+	]:
+		if not _is_save_number(state.get(key)):
+			return false
+	for key in [
+		"area_unlocked", "emberdeep_unlocked", "fourth_unlocked", "victory", "conclusion_seen",
+		"singularity_secured", "hub_unlocked_early", "deep_elevator_repaired", "deep_elevator_powered", "final_expedition_begun",
+	]:
+		if not state.get(key) is bool:
+			return false
+	if not state.get("drill_goal_scene") is String or not state.get("starforge_variant") is String:
+		return false
+	var endless: Dictionary = state.endless_descent
+	for key in ["chunks", "stream_anchor", "relics", "carried_relic", "workshops"]:
+		if not endless.get(key) is Dictionary:
+			return false
+	for key in ["current_depth", "deepest_depth", "deepest_metres", "start_depth_checkpoint"]:
+		if not _is_save_number(endless.get(key)):
+			return false
+	if not endless.get("active") is bool:
+		return false
+	for key in ["light_style", "outfit", "tool_style"]:
+		if not endless.get(key) is String:
+			return false
+	var location: Dictionary = state.location
+	if not location.get("scene") is String:
+		return false
+	for key in ["depth", "x", "y", "surface_x", "surface_y"]:
+		if not _is_save_number(location.get(key)):
+			return false
+	return true
+
+
+func _is_save_number(value: Variant) -> bool:
+	return (value is int or value is float) and is_finite(float(value))
+
+
 func _read_save_document(path: String) -> Variant:
 	if not FileAccess.file_exists(path):
 		return null
 	var file: = FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return null
-	var parser: = JSON.new()
-	if parser.parse(file.get_as_text()) != OK:
+	var length: int = file.get_length()
+	if length < SaveCodecScript.HEADER_BYTES or length > SaveCodecScript.HEADER_BYTES + SaveCodecScript.MAX_PAYLOAD_BYTES:
 		return null
-	var parsed: Variant = parser.data
-	return parsed if parsed is Dictionary else null
+	return SaveCodecScript.decode(file.get_buffer(length))
 
 
 func _forge_purchase_snapshot_for_kind(requested_kind: String) -> Dictionary:
@@ -4582,16 +4442,10 @@ func _game_data() -> Dictionary:
 	return _game_data_cache
 
 
-func _first_value(source: Dictionary, snake_key: String, camel_key: String = "") -> Variant:
-	if source.has(snake_key):
-		return source[snake_key]
-	if not camel_key.is_empty() and source.has(camel_key):
-		return source[camel_key]
-	return null
-
-
 func _nonnegative_int(value: Variant, fallback: int) -> int:
-	if value is int or value is float:
+	if value is int:
+		return maxi(0, value)
+	if value is float:
 		var number: = float(value)
 		if is_finite(number):
 			return maxi(0, int(number))
@@ -4599,7 +4453,9 @@ func _nonnegative_int(value: Variant, fallback: int) -> int:
 
 
 func _floor_int(value: Variant, fallback: int) -> int:
-	if value is int or value is float:
+	if value is int:
+		return value
+	if value is float:
 		var number: = float(value)
 		if is_finite(number):
 			return floori(number)
@@ -4636,26 +4492,19 @@ func _valid_vector(value: Vector2) -> bool:
 
 
 func _sanitize_overhaul(raw: Variant) -> Dictionary:
-	if not raw is Dictionary:
-		return {}
+	var source: Dictionary = raw if raw is Dictionary else {}
 	var result: Dictionary = {}
-	for key in ["barriers", "dug", "skills"]:
-		var source: Variant = raw.get(key, {})
+	for key in ["barriers", "skills"]:
+		var entries: Variant = source.get(key, {})
 		var rows: Dictionary = {}
-		if source is Dictionary:
-			for id in source:
+		if entries is Dictionary:
+			for id in entries:
 				if rows.size() >= 20000:
 					break
-				if key == "dug" and source[id] is Array:
-					var cells: Array = []
-					for value in source[id]:
-						var cell: int = clampi(int(value),0,879)
-						if not cells.has(cell): cells.append(cell)
-					rows[String(id)] = cells
-				elif key != "dug":
-					rows[String(id)] = clampi(int(source[id]),0,10 if key == "barriers" else 1)
+				if id is String:
+					rows[id] = clampi(_nonnegative_int(entries[id], 0), 0, 10 if key == "barriers" else 1)
 		result[key] = rows
-	result["companion_xp"] = clampi(int(raw.get("companion_xp",0)),0,10000000)
+	result["companion_xp"] = clampi(_nonnegative_int(source.get("companion_xp", 0), 0), 0, 10000000)
 	return result
 
 
@@ -4673,18 +4522,14 @@ func strike_barrier(key: String) -> int:
 
 
 func endless_dug_cells(depth: int) -> Array:
-	var chunk: Dictionary = Dictionary(endless_chunks.get(str(depth), {}))
-	var result: Array = EndlessTerrainStateScript.cells(String(chunk.get("dug", "")))
-	for legacy_cell in Array(Dictionary(overhaul_progress.get("dug", {})).get(str(depth), [])):
-		if not result.has(legacy_cell):
-			result.append(legacy_cell)
-	return result
+	var chunk: Dictionary = _endless_chunk(depth)
+	return EndlessTerrainStateScript.cells(String(chunk.get("dug", "")))
 
 
 func mark_endless_dug(depth: int, cell: int) -> void:
 	if not _endless_band_in_reach(depth) or cell < 0 or cell >= EndlessTerrainStateScript.CELL_COUNT:
 		return
-	var chunk: Dictionary = Dictionary(endless_chunks.get(str(depth), {}))
+	var chunk: Dictionary = _endless_chunk(depth)
 	var before: String = String(chunk.get("dug", ""))
 	var after: String = EndlessTerrainStateScript.mark(before, cell)
 	if before == after:
@@ -4697,9 +4542,8 @@ func mark_endless_dug(depth: int, cell: int) -> void:
 func claim_endless_rock_cell(depth: int, cell: int, resource_id: String, amount: int) -> Dictionary:
 	if not _endless_band_in_reach(depth) or cell < 0 or cell >= EndlessTerrainStateScript.CELL_COUNT or resource_id not in ENDLESS_RESOURCE_IDS or amount <= 0 or amount > MAX_MINE_LOOSE_DROP_AMOUNT:
 		return {"ok": false, "reason": "invalid_rock_claim"}
-	var chunk: Dictionary = Dictionary(endless_chunks.get(str(depth), {}))
-	var legacy: Array = Array(Dictionary(overhaul_progress.get("dug", {})).get(str(depth), []))
-	if EndlessTerrainStateScript.contains(String(chunk.get("dug", "")), cell) or legacy.has(cell):
+	var chunk: Dictionary = _endless_chunk(depth)
+	if EndlessTerrainStateScript.contains(String(chunk.get("dug", "")), cell):
 		return {"ok": false, "reason": "already_claimed"}
 	begin_state_batch()
 	mark_endless_dug(depth, cell)

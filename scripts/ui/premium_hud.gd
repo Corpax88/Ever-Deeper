@@ -343,8 +343,8 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 	var gold_rect: = Rect2(companion_rect.end.x + gap if iphone else viewport_size.x - right - gold_width, top, gold_width, touch_target)
 	var badge_size: = Vector2(42, 30) if iphone else Vector2(27, 20)
 	var bag_count_rect: = Rect2(bag_rect.end.x - badge_size.x + 4, bag_rect.end.y - badge_size.y + 3, badge_size.x, badge_size.y)
-	var objective_width: = minf(660.0 if iphone else 620.0, viewport_size.x - left - right)
-	var objective_height: = 128.0 if iphone else 90.0
+	var objective_width: = minf(400.0 if iphone else 360.0, viewport_size.x - left - right)
+	var objective_height: = 152.0 if iphone else 104.0
 	var objective_rect: = Rect2(left, top + top_button_size + gap, objective_width, objective_height)
 
 
@@ -363,7 +363,9 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 	var minimap_size: = Vector2(188, 96) if iphone else Vector2(184, 106)
 	var minimap_rect: = Rect2(progression_rect.position.x - gap - minimap_size.x, progression_rect.position.y, minimap_size.x, minimap_size.y)
 	var onboarding_top: = maxf(progression_rect.end.y, minimap_rect.end.y) + 12.0
-	objective_rect.position.y = maxf(objective_rect.position.y, onboarding_top)
+	# The expanded guide belongs to the goal column, away from the hero and
+	# travel lane. It must not become a wide opaque banner across the world.
+	objective_rect.position = Vector2(progression_rect.end.x - objective_width, onboarding_top)
 	var onboarding_bottom: = minf(mine_rect.position.y, bag_rect.position.y) - 12.0
 	var onboarding_rect: = Rect2(left, onboarding_top, context_rect.position.x - left - 12.0, maxf(0.0, onboarding_bottom - onboarding_top))
 	var status_size: = Vector2(minf(680.0, context_rect.position.x - left - 12.0), 50) if iphone else Vector2(580, 28)
