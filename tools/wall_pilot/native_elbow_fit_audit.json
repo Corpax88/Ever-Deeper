@@ -1,0 +1,123 @@
+{
+  "base_commit": "90ac772232b8506f7146a495e8ae613cd178f663",
+  "source_only": true,
+  "rendered": false,
+  "visual_acceptance": false,
+  "source_artwork_modified": false,
+  "proposed_correction": "Use the actual upright bedrock elbow instead of intersecting two straight native bands at a NE turn.",
+  "source": "assets/caves/ancient-bedrock-corner-v1.png",
+  "source_sha256": "da1ddb3ccfa33aa252c1f40ea64ea187b780edfdfb058c95b84837915321e6b3",
+  "preserved_reference_sha256": {
+    "assets/caves/ancient-bedrock-corner-v1.png": "da1ddb3ccfa33aa252c1f40ea64ea187b780edfdfb058c95b84837915321e6b3",
+    "assets/caves/ancient-bedrock-edge-loop-v1.png": "09aaf0f2bb43a165c641b4f4ed41f55ec8cc207a236329f5477dfc3f124c374b",
+    "assets/voidstar/cave-corner-v1.png": "e1a18a17f089eb2df9cebf3a88f67a6ec1f31f8aa157aa02d1d6376f308ba83a",
+    "assets/voidstar/cave-edge-loop-v1.png": "5a721d5782c14b1ed4a2ab620d8e9b3c603bcf5e775f23ee80bbe4ba1db325ed",
+    "tools/wall_pilot/native_wall_mapper.gd": "fa29ae97baff7e4b41271986bb0ff8aab8a2019660a20e3081c06cf4fb0d352a",
+    "tools/wall_pilot/native_wall_contours.json": "94c27f8408bdf4b05d61e5ded66e1133b9048aa5b95a9ed50fe559d3319651f0",
+    "tools/wall_pilot/native_wall_v3_proof.json": "71976c61e79b5e8d5b7f4227a13233b9e26b4b9b11142acaf3657db5a52f97e7",
+    "scripts/world/cave_edge_asset_drawer.gd": "3b62dfe0403ffd6fc9c13d9f53b2f2854333f3cfa726fb8bb27617ede140967e",
+    "scripts/world/endless_descent_world.gd": "efc0781ad3ff826067bdd5db8cd7d876f6060540e96b31c4970239b73cc124ec"
+  },
+  "all_references_byte_identical_to_base": true,
+  "alpha_threshold": 250,
+  "v3_tile_size": 64,
+  "v3_visible_leg_thickness": 55,
+  "v3_floor_overlap": 8,
+  "uniform_scale": 0.22633744855967078,
+  "native_horizontal_measurement_columns_inclusive": [
+    256,
+    340
+  ],
+  "native_horizontal_center": 572.5,
+  "native_horizontal_median_opaque_height": 216.0,
+  "native_vertical_center": 511.5,
+  "physical_ne_vertex_in_source": [
+    597.6545454545454,
+    486.3454545454546
+  ],
+  "nearest_opaque_native_pixel": [
+    525,
+    540
+  ],
+  "nearest_opaque_distance_world_px": 20.44253625880217,
+  "translation_to_put_that_pixel_on_physical_corner": [
+    16.44444444444444,
+    -12.144032921810693
+  ],
+  "samples": [
+    {
+      "world_offset_from_physical_ne_vertex": [
+        0,
+        0
+      ],
+      "native_sample_xy": [
+        598,
+        486
+      ],
+      "native_alpha": 0
+    },
+    {
+      "world_offset_from_physical_ne_vertex": [
+        -8,
+        0
+      ],
+      "native_sample_xy": [
+        562,
+        486
+      ],
+      "native_alpha": 0
+    },
+    {
+      "world_offset_from_physical_ne_vertex": [
+        0,
+        8
+      ],
+      "native_sample_xy": [
+        598,
+        522
+      ],
+      "native_alpha": 0
+    },
+    {
+      "world_offset_from_physical_ne_vertex": [
+        -8,
+        8
+      ],
+      "native_sample_xy": [
+        562,
+        522
+      ],
+      "native_alpha": 0
+    },
+    {
+      "world_offset_from_physical_ne_vertex": [
+        -16,
+        16
+      ],
+      "native_sample_xy": [
+        527,
+        557
+      ],
+      "native_alpha": 255
+    },
+    {
+      "world_offset_from_physical_ne_vertex": [
+        -24,
+        24
+      ],
+      "native_sample_xy": [
+        492,
+        592
+      ],
+      "native_alpha": 255
+    }
+  ],
+  "fit_status": "rejected_before_runtime_integration",
+  "reason": "At the existing two arm anchors the physical corner and 8px-inside samples are transparent. Moving the native elbow to cover them changes both arm alignment and floor intrusion. Stamping, clipping, or fading does not supply the missing correctly placed grain.",
+  "limits": [
+    "This audits one measured upright NE placement, not all conceivable placements or orientations.",
+    "No claim is made that source alpha alone proves the final game's appearance.",
+    "No mass, collision, lighting, gameplay, or shared drawer changes are included.",
+    "Voidstar repetition and the other seven bedrock turn cases remain unresolved."
+  ]
+}

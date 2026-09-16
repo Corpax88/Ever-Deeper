@@ -4,6 +4,11 @@ This is an unpromoted rendering study, based on source tree
 `6810ea1cd4b6990ca6ee0adebebb9fbe02322c4b`. The candidate defaults off. Only the
 isolated worktree's Deep world invokes it; `CaveEdgeAssetDrawer` is unchanged.
 
+Continuation from exact saved study `90ac772232b8506f7146a495e8ae613cd178f663`:
+[V4 native elbow feasibility](NATIVE-ELBOW-V4-FEASIBILITY.md) rejects a measured
+upright NE elbow placement before integration. The mapper and artwork remain
+the preserved V3 bytes; no rendered V4 or newly accepted wall is claimed.
+
 The mapper uses the existing horizontal strip and the upright lower leg of each
 native corner PNG. Every individual piece scales uniformly. All sampling is
 anchored to absolute world coordinates and splits at source wrap boundaries.
