@@ -3,69 +3,67 @@
   "dev_only": true,
   "passed": true,
   "verified_files": 18,
-  "source_commit": "c8906f1d46309227344f101a6b0ae7c1a9b1e69b",
-  "qa_run_id": 35088488455,
-  "candidate_artifact_id": 10442929350,
-  "complete_artifact_id": 10443378936,
-  "candidate_zip_sha256": "9835f088b0ed464e5c5f8b17a012f6ae9fad68f0c1e70246489bd7eca9ff5c74",
-  "complete_zip_sha256": "a2822def5d1e4fc2e645e66050ed9bacf45ebeb936f4f904f1e097705a2a0f0e",
-  "review_sha256": "f48ee33215ce8359e50c4a2234cb0b1e44a04aaf6e7524ab7920d6bdbb1ecc39",
-  "baseline_receipt_sha256": "194db3eb75dad0ddc41e445c5b6698ea1f7c9c2bdcc073c3b85cd01e2a21a7ff",
-  "publication_source_commit": "4b9663a6ea9b8bc291c35dba02028edc2796afa1",
-  "publication_run_id": "35093477972",
-  "rollback_artifact_id": "10444774565",
-  "displayed_dev_version": "1.0.0-dev.8",
+  "source_commit": "e76a2b90a8a6da4d2673689ce2eeb646e5c2303b",
+  "qa_run_id": 35099632983,
+  "candidate_artifact_id": 10448000795,
+  "complete_artifact_id": 10448008790,
+  "candidate_zip_sha256": "9e70a36076a6f856a2bca94c284f0edac3b579d18197f033cd5091d2ebfe22a3",
+  "complete_zip_sha256": "4acbc9dcedb5ac2a64fdd8f914f00f404df92b52eb92c854894d21a83625c81c",
+  "review_sha256": "048066f16a6d7ec49fd2dbdb0c81589cdbf2f2038fb943c42c7ebc64868ead33",
+  "baseline_receipt_sha256": "e66a038406fa7b01ba1aaa4cf63741ef8f259978c86a64e7d980369f35cf3301",
+  "publication_source_commit": "4635e2a91ad55469c69e7fe5db2f220e0546c835",
+  "publication_run_id": "35101544556",
+  "rollback_artifact_id": "10448003043",
+  "displayed_dev_version": "1.0.0-dev.9",
   "live_version": "0.46.9",
   "final_one_point_zero_approved": false,
   "physical_iphone_verified": false,
   "limits": [
-    "DEV playtest only; no final whole-game score or final 1.0 acceptance is asserted.",
-    "Physical iPhone performance and acceptance remain unverified.",
-    "The exact reviewed package retains the displayed 1.0.0-dev.8 label; source c8906f1 and package hashes distinguish this build.",
-    "Save schema 3 uses user://ever_deeper_run_v3.sav. The previously authorized progress reset applies.",
-    "All three current sustained virtual-Mac runs complete 300 seconds and move in every 30-second window. Observed FPS ranges are Hub 44.98\u201356.60, Ember 20.79\u201339.54, Deep 18.01\u201330.91; none establishes a sustained 50 FPS minimum. These are not physical iPhone measurements.",
-    "Unaccepted wall/corner/native-model studies are not integrated in this DEV artifact.",
-    "The separate historical browser audio suite has not been rerun on this exact package; historical review flags and scores remain unchanged.",
-    "Current native animation readiness is bounded to the inspected fixed-step gameplay cases, not real-time FPS, speeds above 403.2, interruption immediately before contact, browser hazard/re-entry or final animation acceptance. The old protected player_visual baseline remains unchanged.",
-    "Deepcore harness damage expectation was narrowly corrected to accept excavation of the same originally solid cell, matching production semantics. Original failed attempt and exact harness diff are retained."
+    "DEV9 playable checkpoint, not final1.0 or9/10 approval.",
+    "Physical iPhone, sustained50FPS and complete animation acceptance remain unverified.",
+    "No save-schema change from the previous c8906f1 schema3 DEV; the earlier schema3 reset is historical.",
+    "Wall/corner, exact-union shadow and crop studies remain isolated and unaccepted. No optimization gain is claimed.",
+    "The animation comparison is behavioral and visual; global exact-RGBA equality is not claimed.",
+    "Browser audio and all gear/direction/hazard/re-entry animation cases remain future work.",
+    "Prior c8906f1 virtual-Mac sustained ranges were Hub44.98\u201356.60, Ember20.79\u201339.54, Deep18.01\u201330.91FPS. They did not establish the50FPS minimum and are not physical-device results."
   ],
   "files": {
     "dev": {
-      "index.js": {
-        "size": 279815,
-        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
-      },
-      "index.png": {
-        "size": 1981427,
-        "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
-      },
-      "index.html": {
-        "size": 5444,
-        "sha256": "2c1a8a7171639fbfabea3b6002052eae97e8405e979fac12494e3f7c75654fd2"
-      },
-      "index.audio.worklet.js": {
-        "size": 7298,
-        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
-      },
-      "index.icon.png": {
-        "size": 470687,
-        "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+      "index.apple-touch-icon.png": {
+        "size": 66421,
+        "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
       },
       "index.pck": {
-        "size": 221007716,
-        "sha256": "a60dc230728102a2cc6aceca9182579dc0533175235e44e80f3a343cd5443bd1"
+        "size": 221007780,
+        "sha256": "1270ea3974b0d551f0a10f8a72ec4ba56824030822526a8b1544bb295988e32f"
       },
       "index.audio.position.worklet.js": {
         "size": 2973,
         "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
       },
-      "index.apple-touch-icon.png": {
-        "size": 66421,
-        "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+      "index.js": {
+        "size": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      },
+      "index.html": {
+        "size": 5444,
+        "sha256": "93d25d45e511177e02d85a414654f51957a078015a33a411b36a3f15b5dacb28"
+      },
+      "index.audio.worklet.js": {
+        "size": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "index.png": {
+        "size": 1981427,
+        "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
       },
       "index.wasm": {
         "size": 39514754,
         "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      },
+      "index.icon.png": {
+        "size": 470687,
+        "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
       }
     },
     "live": {
