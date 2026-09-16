@@ -92,6 +92,7 @@ func _measure(id: String) -> void:
 	var draws: Array[float]=[]
 	var cpu: Array[float]=[]
 	var gpu: Array[float]=[]
+	var invalid_gpu_samples: int = 0
 	var started: int=Time.get_ticks_usec()
 	var previous: int=started
 	while Time.get_ticks_usec()-started<8000000:
@@ -100,12 +101,22 @@ func _measure(id: String) -> void:
 		frames.append(float(now-previous)/1000.0)
 		draws.append(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
 		cpu.append(RenderingServer.viewport_get_measured_render_time_cpu(root.get_viewport_rid())+RenderingServer.get_frame_setup_time_cpu())
-		gpu.append(RenderingServer.viewport_get_measured_render_time_gpu(root.get_viewport_rid()))
+		var gpu_ms: float = RenderingServer.viewport_get_measured_render_time_gpu(root.get_viewport_rid())
+		# Some Apple Paravirtual/ANGLE runs return an unsigned timestamp
+		# underflow (~1.84e13 ms). Positive alone does not mean supported.
+		if not is_finite(gpu_ms) or gpu_ms < 0.0 or gpu_ms >= 1000.0:
+			invalid_gpu_samples += 1
+			gpu_ms = 0.0
+		gpu.append(gpu_ms)
 		previous=now
 	var total: float=0.0
 	for value in frames: total+=value
 	frames.sort(); draws.sort(); cpu.sort(); gpu.sort()
 	var row: Dictionary={"stage":id,"fps":1000.0*frames.size()/total,"p95_ms":frames[mini(frames.size()-1,floori(frames.size()*.95))],"draws":draws[draws.size()/2],"render_cpu_median_ms":cpu[cpu.size()/2],"render_gpu_median_ms":gpu[gpu.size()/2],"gpu_timing_supported":gpu[gpu.size()/2]>0.0,"fixed_field":field.debug_snapshot() if field!=null else {}}
+	row["invalid_gpu_samples"] = invalid_gpu_samples
+	if invalid_gpu_samples > 0:
+		row["render_gpu_median_ms"] = 0.0
+		row["gpu_timing_supported"] = false
 	results.append(row)
 	row["terrain_cache"] = world.lit_draw_sections.debug_snapshot() if world.lit_draw_sections.has_method("debug_snapshot") else {}
 	print("PREMIUM_RENDER_STAGE "+JSON.stringify(row))

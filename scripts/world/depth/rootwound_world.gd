@@ -514,7 +514,8 @@ func _process(delta: float) -> void :
 	station_redraw_clock+=delta
 	if station_redraw_clock>=0.05 and player.global_position.distance_to(wayfarer_position)<760.0:
 		station_redraw_clock=0.0
-		_request_redraw()
+		if not lit_draw_sections.enabled or not lit_draw_sections.redraw_dynamic(_draw_depth_landmarks):
+			_request_redraw()
 	rock_respawn_check_elapsed += maxf(0.0, delta)
 	if rock_respawn_check_elapsed >= ROCK_RESPAWN_CHECK_INTERVAL:
 		rock_respawn_check_elapsed = fposmod(rock_respawn_check_elapsed, ROCK_RESPAWN_CHECK_INTERVAL)

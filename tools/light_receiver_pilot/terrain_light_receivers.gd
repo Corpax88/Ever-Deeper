@@ -3,6 +3,7 @@ extends Node
 ## outside the light's nonzero texture support. Art, shadows and shaders stay native.
 ## Bit 1 remains the nonterrain contract; bit 20 belongs to fixed floor fields.
 const RESERVED_MASK: int = 1 | (1 << 19)
+const SUPPORT_MARGIN: float = 24.0
 var enabled: bool = false
 var _world: Node2D
 var _sections: Node
@@ -76,6 +77,7 @@ func _collect() -> void:
 			_lights.clear()
 			return
 		_lights.append({"node": light, "bit": bit, "support_key": 0,
+			"shape_key": 0, "transform": Transform2D.IDENTITY,
 			"bounds": Rect2(), "axes": PackedVector2Array(), "limits": PackedFloat64Array()})
 	fallback_reason = ""
 
@@ -96,7 +98,7 @@ func _before_draw() -> void:
 			if _applied: _restore()
 			return
 	fallback_reason = ""
-	var signature: Array = [_sections._epoch, _world.global_transform, _world.material, _world.use_parent_material]
+	var signature: Array = [_sections.receiver_epoch, _world.global_transform, _world.material, _world.use_parent_material]
 	var active: Array[Dictionary] = []
 	for entry in _lights:
 		if not is_instance_valid(entry.node): _collect_pending = true; continue
@@ -115,14 +117,16 @@ func _before_draw() -> void:
 			var texture_id: int = light.texture.get_instance_id()
 			var hull: PackedVector2Array = _texture_hull(light)
 			var transform: Transform2D = _world.global_transform.affine_inverse() * light.global_transform
-			var key: int = hash([transform, light.offset, light.texture_scale, texture_id, hull])
-			signature.append(key)
-			if int(entry.support_key) != key:
-				entry.support_key = key
+			var shape_key: int = hash([light.offset, light.texture_scale, texture_id, hull])
+			if int(entry.shape_key) != shape_key or not _inside_cached_margin(entry, transform, light):
+				entry.shape_key = shape_key
+				entry.transform = transform
+				entry.support_key = hash([transform, shape_key])
 				var polygon: PackedVector2Array = []
 				for point in hull:
 					polygon.append(transform * ((point - light.texture.get_size() * 0.5) * light.texture_scale + light.offset))
 				_prepare_support(entry, polygon)
+			signature.append(entry.support_key)
 		active.append(entry)
 	_applied = true
 	var fingerprint: int = hash(signature)
@@ -169,6 +173,18 @@ func _supported_material(section: CanvasItem) -> bool:
 		"res://shaders/lit_visible_pixels.gdshader", "res://shaders/lit_floor_composite.gdshader",
 		"res://shaders/lit_biome_floor.gdshader"]
 
+func _inside_cached_margin(entry: Dictionary, transform: Transform2D, light: PointLight2D) -> bool:
+	# Every support point lies in this rectangle, including bilinear padding.
+	# An affine transform's maximum displacement is bounded by its four corners.
+	# Keep the old conservative mask until any corner moves beyond its margin.
+	var bounds: Rect2 = _textures[light.texture.get_instance_id()].hull_bounds
+	var previous: Transform2D = entry.transform
+	for point in [bounds.position, Vector2(bounds.end.x, bounds.position.y), bounds.end, Vector2(bounds.position.x, bounds.end.y)]:
+		var local: Vector2 = (Vector2(point) - light.texture.get_size() * 0.5) * light.texture_scale + light.offset
+		if (transform * local).distance_squared_to(previous * local) > SUPPORT_MARGIN * SUPPORT_MARGIN:
+			return false
+	return true
+
 func _texture_hull(light: PointLight2D) -> PackedVector2Array:
 	var texture: Texture2D = light.texture
 	var id: int = texture.get_instance_id()
@@ -197,7 +213,9 @@ func _texture_hull(light: PointLight2D) -> PackedVector2Array:
 					points.append(Vector2(first - 1, y + 2))
 					points.append(Vector2(last + 2, y + 2))
 			if not points.is_empty(): hull = Geometry2D.convex_hull(points)
-	_textures[id] = {"texture": weakref(texture), "hull": hull}
+	var hull_bounds: Rect2 = Rect2(hull[0], Vector2.ZERO)
+	for point in hull: hull_bounds = hull_bounds.expand(point)
+	_textures[id] = {"texture": weakref(texture), "hull": hull, "hull_bounds": hull_bounds}
 	texture.changed.connect(_texture_changed.bind(id))
 	return hull
 
@@ -222,8 +240,8 @@ func _prepare_support(entry: Dictionary, polygon: PackedVector2Array) -> void:
 		if edge.length_squared() < 0.000001: continue
 		var axis: Vector2 = Vector2(edge.y, -edge.x) * (1.0 if signed_area >= 0.0 else -1.0)
 		axes.append(axis)
-		limits.append(axis.dot(polygon[index]))
-	entry.bounds = bounds
+		limits.append(axis.dot(polygon[index]) + SUPPORT_MARGIN * axis.length())
+	entry.bounds = bounds.grow(SUPPORT_MARGIN)
 	entry.axes = axes
 	entry.limits = limits
 

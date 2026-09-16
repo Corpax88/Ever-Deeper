@@ -2588,7 +2588,7 @@ func _draw() -> void :
 
 
 func _draw_partitioned_deep(first: Vector2i, last: Vector2i) -> void:
-	lit_draw_sections.begin(self, true)
+	lit_draw_sections.begin(self)
 	# A hit only changes its strip; excavation can also expose neighboring rims
 	# and mineral hints. Share each local signature across the three draw passes.
 	var revisions: Dictionary = {}

@@ -26,6 +26,7 @@ def main() -> int:
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--resolution", default="2328x1260")
     parser.add_argument("--timeout", type=int, default=480)
+    parser.add_argument("--completion-marker", help="Require the suite's explicit success marker, even if the engine exits 0.")
     parser.add_argument("godot_args", nargs=argparse.REMAINDER)
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
@@ -101,6 +102,9 @@ def main() -> int:
                 if errors:
                     print("Rendered check reported runtime errors; inspect", args.output / "godot.log")
                     return result.returncode or 3
+                if args.completion_marker and args.completion_marker not in (args.output / "godot.log").read_text(errors="replace"):
+                    print("Rendered check did not complete:", args.completion_marker, "log:", args.output / "godot.log")
+                    return result.returncode or 4
                 print("Godot exit:", result.returncode, "log:", args.output / "godot.log")
                 return result.returncode
             except subprocess.TimeoutExpired:

@@ -1,0 +1,335 @@
+{
+  "scope": "Depth station clock refresh, real 1696x780 native render, 20-second live entry sample",
+  "physical_iphone": false,
+  "accepted_visible_animation_parity": true,
+  "first_control_visual_limit": "Boots outside timing viewpoint; B and A2 move visual-pair camera after unchanged timing workload. All six B pairs show actual visible boots.",
+  "boot_motion": {
+    "changed_pixels_between_clock_0_and_0_75": 4202,
+    "bounding_box": [
+      335,
+      53,
+      409,
+      131
+    ]
+  },
+  "reports": {
+    "A": {
+      "pairs": [
+        {
+          "draw_callbacks_during_animation": 5,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_0_0",
+          "setup_us_during_animation": 1195,
+          "terrain_reuses_during_animation": 252
+        },
+        {
+          "draw_callbacks_during_animation": 5,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_0_25",
+          "setup_us_during_animation": 6595,
+          "terrain_reuses_during_animation": 252
+        },
+        {
+          "draw_callbacks_during_animation": 5,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_0_75",
+          "setup_us_during_animation": 4019,
+          "terrain_reuses_during_animation": 252
+        },
+        {
+          "draw_callbacks_during_animation": 5,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_1_5",
+          "setup_us_during_animation": 1361,
+          "terrain_reuses_during_animation": 252
+        },
+        {
+          "draw_callbacks_during_animation": 5,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_3_5",
+          "setup_us_during_animation": 1258,
+          "terrain_reuses_during_animation": 252
+        },
+        {
+          "draw_callbacks_during_animation": 5,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_5_75",
+          "setup_us_during_animation": 1229,
+          "terrain_reuses_during_animation": 252
+        }
+      ],
+      "physical_iphone": false,
+      "player": "(404.0, 2628.0)",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "seed": 4608,
+      "source_sha256": {
+        "scripts/lighting/lit_draw_sections.gd": "b50e2b6bc8f4dc455a32127f647b34d4983f3cefc0ae96c520e636a1ea4d08d7",
+        "scripts/world/depth/rootwound_world.gd": "490492e71a04332554170055d91a5cca5c2daa5f26c7b49eb467b5a6ef6badda",
+        "tools/review_station_redraw.gd": "4f3067c5efda57610f72e3751e0e27d25f4b22c589924f07d4b049da6269f602"
+      },
+      "terrain_hash": 4231644570,
+      "timing": {
+        "after": {
+          "cached": 252,
+          "draw_callback_usec": 329401,
+          "draw_callbacks": 1720,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 252,
+          "reuses": 103992,
+          "setup_usec": 372608
+        },
+        "before": {
+          "cached": 252,
+          "draw_callback_usec": 0,
+          "draw_callbacks": 0,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 252,
+          "reuses": 17304,
+          "setup_usec": 0
+        },
+        "fps": 39.1570212534722,
+        "p95_ms": 30.43,
+        "seconds": 20.021952,
+        "station_distance": 433.866333007812
+      }
+    },
+    "B": {
+      "pairs": [
+        {
+          "draw_callbacks_during_animation": 1,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_0_0",
+          "setup_us_during_animation": 0,
+          "terrain_reuses_during_animation": 0
+        },
+        {
+          "draw_callbacks_during_animation": 1,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_0_25",
+          "setup_us_during_animation": 0,
+          "terrain_reuses_during_animation": 0
+        },
+        {
+          "draw_callbacks_during_animation": 1,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_0_75",
+          "setup_us_during_animation": 0,
+          "terrain_reuses_during_animation": 0
+        },
+        {
+          "draw_callbacks_during_animation": 1,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_1_5",
+          "setup_us_during_animation": 0,
+          "terrain_reuses_during_animation": 0
+        },
+        {
+          "draw_callbacks_during_animation": 1,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_3_5",
+          "setup_us_during_animation": 0,
+          "terrain_reuses_during_animation": 0
+        },
+        {
+          "draw_callbacks_during_animation": 1,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_5_75",
+          "setup_us_during_animation": 0,
+          "terrain_reuses_during_animation": 0
+        }
+      ],
+      "physical_iphone": false,
+      "player": "(312.0, 2304.0)",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "seed": 4608,
+      "source_sha256": {
+        "scripts/lighting/lit_draw_sections.gd": "260dc901a518ee71f18451bd9e1025889d1bb5fbce46f678aaf13a47a1f64eac",
+        "scripts/world/depth/rootwound_world.gd": "0eb30beafddbc5bfeb8f8400e8814e6a93cbb2b0fb13eb634f2006cfea0e1693",
+        "tools/review_station_redraw.gd": "49b95898bd495329e3d753a1d7db7970b1f98d2a96bd24dac70b6de58436a1a9"
+      },
+      "terrain_hash": 4231644570,
+      "timing": {
+        "after": {
+          "cached": 252,
+          "draw_callback_usec": 25077,
+          "draw_callbacks": 314,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 252,
+          "reuses": 420,
+          "setup_usec": 0
+        },
+        "before": {
+          "cached": 252,
+          "draw_callback_usec": 0,
+          "draw_callbacks": 0,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 252,
+          "reuses": 420,
+          "setup_usec": 0
+        },
+        "fps": 40.5915265188392,
+        "p95_ms": 29.637,
+        "seconds": 20.004175,
+        "station_distance": 433.866333007812
+      }
+    },
+    "A2": {
+      "pairs": [
+        {
+          "draw_callbacks_during_animation": 5,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_0_0",
+          "setup_us_during_animation": 1208,
+          "terrain_reuses_during_animation": 252
+        },
+        {
+          "draw_callbacks_during_animation": 5,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_0_25",
+          "setup_us_during_animation": 1194,
+          "terrain_reuses_during_animation": 252
+        },
+        {
+          "draw_callbacks_during_animation": 5,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_0_75",
+          "setup_us_during_animation": 1221,
+          "terrain_reuses_during_animation": 252
+        },
+        {
+          "draw_callbacks_during_animation": 5,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_1_5",
+          "setup_us_during_animation": 1291,
+          "terrain_reuses_during_animation": 252
+        },
+        {
+          "draw_callbacks_during_animation": 5,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_3_5",
+          "setup_us_during_animation": 1351,
+          "terrain_reuses_during_animation": 252
+        },
+        {
+          "draw_callbacks_during_animation": 5,
+          "exact_rgba": true,
+          "framebuffer_size": [
+            1696,
+            780
+          ],
+          "id": "clock_5_75",
+          "setup_us_during_animation": 1277,
+          "terrain_reuses_during_animation": 252
+        }
+      ],
+      "physical_iphone": false,
+      "player": "(312.0, 2304.0)",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "seed": 4608,
+      "source_sha256": {
+        "scripts/lighting/lit_draw_sections.gd": "b50e2b6bc8f4dc455a32127f647b34d4983f3cefc0ae96c520e636a1ea4d08d7",
+        "scripts/world/depth/rootwound_world.gd": "490492e71a04332554170055d91a5cca5c2daa5f26c7b49eb467b5a6ef6badda",
+        "tools/review_station_redraw.gd": "49b95898bd495329e3d753a1d7db7970b1f98d2a96bd24dac70b6de58436a1a9"
+      },
+      "terrain_hash": 4231644570,
+      "timing": {
+        "after": {
+          "cached": 252,
+          "draw_callback_usec": 335129,
+          "draw_callbacks": 1690,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 252,
+          "reuses": 100968,
+          "setup_usec": 372982
+        },
+        "before": {
+          "cached": 252,
+          "draw_callback_usec": 0,
+          "draw_callbacks": 0,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 252,
+          "reuses": 15792,
+          "setup_usec": 0
+        },
+        "fps": 39.3052784541748,
+        "p95_ms": 30.097,
+        "seconds": 20.022756,
+        "station_distance": 433.866333007812
+      }
+    }
+  }
+}

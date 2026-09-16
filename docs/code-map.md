@@ -57,6 +57,10 @@ public/debug APIs, active fallbacks and legacy save support remain.
 
 `scripts/lighting/lit_floor_chunks.gd` and `lit_draw_sections.gd` bound lighting work
 for the hub and Depth 2 while the world owners retain drawing and gameplay state.
+Depth workshop clock updates can redraw their existing dynamic section through
+`LitDrawSections.redraw_dynamic`; terrain/camera/gameplay changes still rebuild
+the normal draw request. The rejected receiver-mask controller lives only in
+`tools/light_receiver_pilot/`, explicitly substituted by its review harness.
 `headlamp_beam.gd` removes only transparent texture margins with a compensated offset.
 `scripts/qa/suites/lighting_release_review.gd` compares the exported package with
 the original draw paths and reconstructed original cone, including mining and corners.

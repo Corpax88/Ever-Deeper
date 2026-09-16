@@ -301,6 +301,13 @@ func run() -> void:
 			route_capture_output = argument.trim_prefix("--qa-world-route-output=")
 	main._enter_endless(true, false)
 	world = main.endless_world
+	if not route_capture_output.is_empty():
+		main.automated_mode = false
+		main._refresh_hud()
+		AudioDirector.muted = true
+		main.achievement_toast.clear()
+		main.quick_tutorial.dismiss()
+	print("ONE_POINT_ZERO_WORLD_STARTED seed=", RunState.world_seed)
 	if not _check(world.has_method("stream_snapshot"), "Continuous-world contract exists"):
 		_finish("world")
 		return
@@ -314,6 +321,7 @@ func run() -> void:
 		return
 	_discovery_guidance()
 	for relic_id in RunState.ENDLESS_RELIC_IDS:
+		print("ONE_POINT_ZERO_WORLD_RELIC ", relic_id)
 		if main.phase == "hub":
 			main._enter_endless(true, false)
 		_freeze_world()

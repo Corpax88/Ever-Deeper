@@ -127,8 +127,14 @@ func _new_deep(mode: bool) -> void:
 	state.reset_run(false)
 	state.world_seed = 4608
 	seed(4608)
-	main._dev_jump_endless(12)
+	# Rejected experimental renderer lives only in tools; production has no receiver controller.
 	world = main.endless_world
+	var previous_sections: Node2D = world.lit_draw_sections
+	world.remove_child(previous_sections)
+	previous_sections.queue_free()
+	world.lit_draw_sections = load("res://tools/light_receiver_pilot/lit_draw_sections.gd").new()
+	world.add_child(world.lit_draw_sections)
+	main._dev_jump_endless(12)
 	world.lit_draw_sections.receiver_masks_enabled = mode
 	world.queue_redraw()
 	main.achievement_toast.clear()
@@ -217,6 +223,7 @@ func _measure(mode: bool) -> void:
 	RenderingServer.viewport_set_measure_render_time(root.get_viewport_rid(), true)
 	var frames: Array[float] = []
 	var gpu: Array[float] = []
+	var invalid_gpu_samples: int = 0
 	var cpu: Array[float] = []
 	var draws: Array[float] = []
 	var distance: float = 0.0
@@ -237,7 +244,11 @@ func _measure(mode: bool) -> void:
 		var now: int = Time.get_ticks_usec()
 		frames.append(float(now - previous) / 1000.0)
 		cpu.append(RenderingServer.get_frame_setup_time_cpu() + RenderingServer.viewport_get_measured_render_time_cpu(root.get_viewport_rid()))
-		gpu.append(RenderingServer.viewport_get_measured_render_time_gpu(root.get_viewport_rid()))
+		var gpu_ms: float = RenderingServer.viewport_get_measured_render_time_gpu(root.get_viewport_rid())
+		if not is_finite(gpu_ms) or gpu_ms < 0.0 or gpu_ms >= 1000.0:
+			invalid_gpu_samples += 1
+			gpu_ms = 0.0
+		gpu.append(gpu_ms)
 		draws.append(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME))
 		var moved: float = previous_position.distance_to(world.player.global_position)
 		if moved < 100.0: distance += moved
@@ -252,7 +263,9 @@ func _measure(mode: bool) -> void:
 	timings.append({"mode": "receiver_masks" if mode else "native", "actors_and_gameplay_frozen": false,
 		"workload": "held_mining_down_v1", "seconds": total / 1000.0, "fps": frames.size() * 1000.0 / total,
 		"p95_ms": frames[floori(frames.size() * 0.95)], "render_cpu_median_ms": cpu[cpu.size() / 2],
-		"render_gpu_median_ms": gpu[gpu.size() / 2], "gpu_timing_supported": gpu[gpu.size() / 2] > 0.0,
+		"render_gpu_median_ms": gpu[gpu.size() / 2] if invalid_gpu_samples == 0 else 0.0,
+		"gpu_timing_supported": invalid_gpu_samples == 0 and gpu[gpu.size() / 2] > 0.0,
+		"invalid_gpu_samples": invalid_gpu_samples,
 		"draws_median": draws[draws.size() / 2], "distance": distance,
 		"mined_resources": state.total_mined_resources() - mined_before, "start_terrain_hash": start_hash,
 		"start_player": str(start_player), "start_depth": start_depth, "start_window": start_window, "start_gear": start_gear,
@@ -287,7 +300,7 @@ func _near_wall() -> Vector2i:
 
 func _write_report() -> void:
 	var hashes: Dictionary = {}
-	for path in ["scripts/lighting/terrain_light_receivers.gd", "scripts/lighting/lit_draw_sections.gd", "scripts/world/endless_descent_world.gd", "scripts/companion/mole_companion.gd", "tools/review_terrain_light_receivers.gd"]:
+	for path in ["tools/light_receiver_pilot/terrain_light_receivers.gd", "tools/light_receiver_pilot/lit_draw_sections.gd", "scripts/lighting/lit_draw_sections.gd", "scripts/world/endless_descent_world.gd", "scripts/companion/mole_companion.gd", "tools/review_terrain_light_receivers.gd"]:
 		hashes[path] = FileAccess.get_sha256("res://" + path)
 	var report: Dictionary = {"rendered": true, "physical_iphone": false, "failure": failure,
 		"engine": Engine.get_version_info(), "renderer": RenderingServer.get_video_adapter_name(),
