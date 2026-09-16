@@ -1,5 +1,45 @@
 # Continued premium review — 16 September 2026
 
+## DEV published for Mats's current device test
+
+Mats explicitly requested publishing the integrated work now for DEV testing.
+This supersedes the save-only/no-publication and pending-CI status below.
+The exact **c8906f1** candidate is now playable at
+<https://corpax88.github.io/Ever-Deeper/dev/?build=c8906f1>.
+Publication run **35093477972**, commit
+`4b9663a6ea9b8bc291c35dba02028edc2796afa1`, passed package, deploy and verify.
+The final receipt verifies all **nine exact DEV files and nine unchanged LIVE
+files** on the public site, with no errors, on the first verification attempt.
+The package retains its old displayed DEV8 label; source/PCK hashes identify it.
+Save schema 3 deliberately starts new progress, as previously authorized.
+
+Exact-package QA **35088488455** passed all 12 jobs: 15 DEV core cases, both
+flavors, nine browser suites (19 shop states, gameplay and six touch sections),
+and 58 native preview residency checks. The ordinary gameplay run has **1263**
+checks. Independent current static-image review found no DEV blocker.
+Current exact-PCK hero review additionally passes **27 checks** for Worn,
+Crusher and Deepcore, with **982 actual 1696×780 post-draw frames** and 54 PNG
+keyframes. All 90 actually moving mine-to-walk frames use walking. The Deepcore
+fixture's old damage-only expectation was narrowly corrected: the same initially
+solid cell [11,3] is excavated and therefore has no retained damage. Failed/invalid
+captures and the exact harness difference are preserved; no runtime/PCK changed.
+The old protected player_visual baseline remains unchanged. This bounded DEV
+observation is not a complete baseline A/B or final animation acceptance.
+
+Sustained run **35088488292** completes three 300-second functional sessions with
+movement in every 30-second window. Virtual-Mac FPS ranges: Hub 44.98–56.60,
+Ember 20.79–39.54, Deep 18.01–30.91. All still fail sustained minimum 50. No physical
+iPhone, new browser-audio, full active-hazard/re-entry, or final 9/10 claim exists.
+Unaccepted wall/corner/native-model studies remain separate and are not in DEV.
+
+Receipts and bounded reviews are in `dev-published-20260916/`. The separate
+publication adapter lives on main in `.github/premium-dev/`; it checks immutable
+candidate 10442929350 and complete 10443378936, pins the former DEV8 baseline,
+retains rollback artifact 10444774565, and cannot replace LIVE with a new build.
+Do not rerun its now-obsolete baseline stage to publish another version; prepare
+and review a new immutable candidate against the current publication receipt.
+
+
 ## Explicit upload checkpoint
 
 Mats requested saving the current work after repeated chat streaming failures.

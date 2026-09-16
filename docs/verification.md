@@ -1,11 +1,12 @@
 # Verification
 
 Current work-branch status: [16 September continued review](premium-polish/RESUME-20260916-REVIEW.md).
-Surface now passes 29/29 with 54 rendered captures; the reproducible world route passes
-461 assertions, binary saves 341, and mobile UI 305. Latest full run: 14/15, with an
-intermittent dummy-renderer texture initialization error in Overhaul; its isolated rerun
-passes 1,251. This is not a clean whole-suite release gate. The earlier player-visual
-protected hash remains pending review. See the review for invalid/incomplete attempts.
+The exact c8906f1 DEV export passes all 15 current core cases, both flavor checks,
+all nine browser suites and native preview residency. Current bounded static and
+hero visual reviews found no DEV blocker. Publication 35093477972 verifies all 18
+public files. This is DEV test readiness; minimum 50FPS, physical-iPhone evidence,
+final animation and whole-game 9/10 remain open. The old player_visual protected
+hash remains intentionally unchanged; see the recorded review limits.
 
 ## Current source gate
 
