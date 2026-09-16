@@ -109,6 +109,56 @@ The final run's `wall-study.json` records all source hashes and capture pairs;
 `godot.log` records successful completion. No production drawer or source artwork
 was changed, and no V4 geometry is included in this checkpoint.
 
+## Native source-art brief for the remaining rejected joins
+
+This is an authoring specification, not approval of replacement artwork or a V4
+implementation. Further crops of the present L-shaped sources cannot supply
+long nonrepeating Voidstar faces or all correctly lit bedrock turns.
+
+| Material | Exact native references | Required complementary artwork |
+| --- | --- | --- |
+| Voidstar | `assets/voidstar/cave-edge-loop-v1.png` (1024×128 RGBA), `assets/voidstar/cave-corner-v1.png` (1024×1024 RGBA) | At least two upright vertical loop variants with finer, less dominant clusters, matching the existing purple mineral, rock detail and world-up highlights. Author complementary left/right-facing contours where needed; do not mirror the lighting. |
+| Bedrock | `assets/caves/ancient-bedrock-edge-loop-v1.png` (1024×256 RGBA), `assets/caves/ancient-bedrock-corner-v1.png` (1024×1024 RGBA) | Four direction-authored convex elbows (NE, SE, SW, NW) and the four matching concave excavation joins. Carry the native facet grain continuously from each horizontal edge into its upright vertical face; retain the dark heavy bedrock material. |
+
+Use one transparent production PNG per asset with genuine RGBA alpha, no text,
+background, baked checkerboard or mockup composition. Keep native pixel detail,
+palette, local contrast and world-up light direction. Each piece must use one
+uniform scale; no stretched axes, rotated/mirrored lighting, painted seam masks
+or added translucent fades may conceal a mismatch.
+
+At a 64-pixel world tile, match the study's 48-pixel median visible Voidstar rim
+and 55-pixel bedrock rim. Measure the visible alpha footprint, not the padded
+canvas size. Bedrock's maximum opaque horizontal and vertical spans must remain
+within one 64-pixel solid (V3 measured 63.59 and 60.21 pixels). Retain the current
+5.33-pixel mineable and 8-pixel bedrock floor overlap. Source detail should be
+authored at a common texel density that reaches these dimensions by uniform
+scaling, with enough transparent padding for the native silhouette.
+
+Every connecting end must match its neighbor in RGBA, silhouette, grain
+direction and feature scale across a shared overlap band. Vertical variants
+must join A→A, A→B, B→A and B→B without an abrupt tone/alpha step or an obvious
+repeated large crystal. Test at least eight tiles of uninterrupted wall: the
+current 165.16-pixel Voidstar repeat is the rejected reference, not a target.
+For bedrock, verify all eight joins against the actual horizontal/vertical
+profiles; a rectangular crop meeting a cross-grained face does not pass.
+Measure the final alpha contours from the exact delivered PNGs and use those
+same contours for clipping and mass coverage, including the current irregular
+stratum overlap and absolute-coordinate phase after rebase.
+
+Acceptance requires actual target-resolution comparisons of all four turns,
+stairs, single-cell pillar, narrow column and excavated shapes, plus the five
+stratum boundaries and rebase pair. There must be no straight crop seams,
+floor leaks, swollen corner stamps or loss of the approved material detail.
+Rootwound, Moonglass, Emberdeep and Mossvein profiles/artwork stay unchanged.
+Gameplay clearance, performance and device quality require separate evidence.
+
+The two ImageGen previews `exec-bf784955-6915-4ee4-b22f-320cd220f0b6.png` and
+`exec-32b541d2-bf46-4140-8a3a-586aa9ec5e8b.png` in the sibling
+`generated_images` directory are 1254×1254 RGB images with a baked checkerboard,
+including the attempted transparency edit. They are unaccepted previews and
+must not be integrated or treated as transparent production assets. This brief
+adds no artwork, geometry, render, or change to the preserved V3 study.
+
 ## Capture
 
 Run one renderer at a time. The main task owns that renderer slot. From this
