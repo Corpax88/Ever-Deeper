@@ -8,7 +8,12 @@ import http from "node:http";
 import path from "node:path";
 
 const WEBKIT = process.env.TOUCH_BROWSER === "webkit";
-const VIEWPORT = process.env.SMALL_IPHONE === "1" ? {width:844,height:390} : { width: 932, height: 430 };
+const viewportMatch = /^(\d+)x(\d+)$/.exec(process.env.CAPTURE_VIEWPORT || (process.env.SMALL_IPHONE === "1" ? "844x390" : "932x430"));
+if (!viewportMatch) throw new Error("CAPTURE_VIEWPORT must be WIDTHxHEIGHT");
+const VIEWPORT = {width:Number(viewportMatch[1]), height:Number(viewportMatch[2])};
+const DPR = Number(process.env.CAPTURE_DPR || 1);
+if (VIEWPORT.width < 320 || VIEWPORT.height < 240 || VIEWPORT.width > 1920 || VIEWPORT.height > 1080 || ![1,2,3].includes(DPR)) throw new Error("Invalid capture viewport/DPR");
+const PHYSICAL_VIEWPORT = {width:VIEWPORT.width*DPR,height:VIEWPORT.height*DPR};
 let EXPECTED_CAPTURE_COUNT = 0;
 const HERO_MOTION = process.env.HERO_MOTION === "1";
 const GAMEPLAY = process.env.OVERHAUL_GAMEPLAY === "1";
@@ -237,7 +242,7 @@ function contactSheet(captures, metadata) {
   img { display: block; width: 100%; height: auto; aspect-ratio: 932 / 430; object-fit: contain; background: #000; }
   figcaption { padding: 8px 3px 2px; font: 600 13px/1.3 ui-monospace, monospace; }
 </style></head><body>
-<header><strong>${captures.length} final-build captures · 932×430 · SwiftShader WebGL2</strong><br>
+<header><strong>${captures.length} final-build captures · ${metadata.physicalViewport.width}×${metadata.physicalViewport.height} · ${escapeHtml(metadata.webgl.renderer)}</strong><br>
 <small>PCK sha256 ${escapeHtml(metadata.pckSha256)}</small></header>
 <main>${cards}</main></body></html>`;
 }
@@ -247,6 +252,7 @@ async function captureSuite(options) {
   const htmlSha256 = await sha256(path.join(options.webDir, "index.html"));
   const { server, url } = await createStaticServer(options.webDir);
   let browser;
+  const browserLogs = [], surfaces = [];
   try {
     const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || undefined;
     const constrainedFlags =
@@ -269,7 +275,7 @@ async function captureSuite(options) {
       viewport: VIEWPORT,
       ...(((GAMEPLAY && WEBKIT) || HERO_MOTION) ? { recordVideo: { dir: options.outputDir, size: VIEWPORT } } : {}),
       screen: VIEWPORT,
-      deviceScaleFactor: 1,
+      deviceScaleFactor: DPR,
       hasTouch: true,
       isMobile: true,
       colorScheme: "dark",
@@ -280,6 +286,26 @@ async function captureSuite(options) {
     });
     const webgl = await probeWebGL2(context);
     const page = await context.newPage();
+    await page.addInitScript(() => {
+      const original=HTMLCanvasElement.prototype.getContext;
+      HTMLCanvasElement.prototype.getContext=function(type,...args) {
+        const value=original.call(this,type,...args);
+        if(this.id==="canvas" && type==="webgl2" && value) {
+          window.__edCaptureGL=value;
+          HTMLCanvasElement.prototype.getContext=original;
+        }
+        return value;
+      };
+    });
+    const captureSurface = async label => {
+      const surface=await page.evaluate(() => {
+        const c=document.getElementById("canvas"), gl=window.__edCaptureGL, rect=c.getBoundingClientRect();
+        return {css:{width:rect.width,height:rect.height},canvas:{width:c.width,height:c.height},buffer:{width:gl?.drawingBufferWidth,height:gl?.drawingBufferHeight},dpr:devicePixelRatio};
+      });
+      surfaces.push({label,...surface});
+      await fs.writeFile(path.join(options.outputDir,"browser-surfaces.json"),JSON.stringify(surfaces,null,2));
+      if(surface.dpr!==DPR || surface.css.width!==VIEWPORT.width || surface.css.height!==VIEWPORT.height || surface.canvas.width!==PHYSICAL_VIEWPORT.width || surface.canvas.height!==PHYSICAL_VIEWPORT.height || surface.buffer.width!==PHYSICAL_VIEWPORT.width || surface.buffer.height!==PHYSICAL_VIEWPORT.height) throw new Error("Unexpected actual browser drawing surface: "+JSON.stringify(surface));
+    };
     page.setDefaultTimeout(NEXT_MARKER_TIMEOUT_MS);
     const markerQueue = [];
     const pageErrors = [];
@@ -288,8 +314,9 @@ async function captureSuite(options) {
     const requestFailures = [];
     page.on("console", (message) => {
       const text = message.text();
+      browserLogs.push({type:message.type(),text});
       if (GAMEPLAY && /OVERHAUL_|SCRIPT ERROR|Parse Error/.test(text)) process.stdout.write(text+"\n");
-      if (/SCRIPT ERROR|Parse Error|Failed to load/.test(text)) pageErrors.push(text);
+      if (/SCRIPT ERROR|Parse Error|^ERROR:|Failed to load|INVALID_OPERATION|INVALID_FRAMEBUFFER_OPERATION/.test(text)) pageErrors.push(text);
       if (text.startsWith("EVER_DEEPER_HERO_MOTION_DAMAGE ")) {
         motionDamage.push(text);
         // Damage is live progress. Long SwiftShader recordings must not look
@@ -348,6 +375,7 @@ async function captureSuite(options) {
           await page.keyboard.press("F8"); continue;
         }
         if (input.kind === "capture") {
+          await captureSurface(input.label);
           await page.screenshot({path:path.join(options.outputDir,input.label+".png")});
           await page.keyboard.press("F8");
           continue;
@@ -355,6 +383,7 @@ async function captureSuite(options) {
         gestureIndex++;
         if (gestureIndex===1) {
           await page.locator("#canvas").evaluate(canvas => { canvas.blur(); canvas.focus(); });
+          await captureSurface("before-first-tap");
           await page.screenshot({path:path.join(options.outputDir,"input-before-first-tap.png")});
         }
         const box = await page.locator("#canvas").boundingBox();
@@ -430,7 +459,8 @@ async function captureSuite(options) {
       }
       if (!/^EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=\d+ failures=\[\]$/.test(result)) throw new Error(result);
       if (pageErrors.length) throw new Error(pageErrors.join("\n"));
-      await fs.writeFile(path.join(options.outputDir,"gameplay.json"),JSON.stringify({result,pckSha256,htmlSha256,viewport:VIEWPORT,browser:browser.version(),webgl},null,2));
+      if(!surfaces.length) throw new Error("No actual browser drawing surface was verified");
+      await fs.writeFile(path.join(options.outputDir,"gameplay.json"),JSON.stringify({result,pckSha256,htmlSha256,viewport:VIEWPORT,physicalViewport:PHYSICAL_VIEWPORT,dpr:DPR,surfaces,browser:browser.version(),webgl,physicalIphone:false},null,2));
       process.stdout.write(result+"\n");
       return;
     }
@@ -477,10 +507,11 @@ async function captureSuite(options) {
         } finally { clearTimeout(frameDeadline); }
         const file = `${String(index + RANGE_START - 1).padStart(3, "0")}_${state}.png`;
         const filename = path.join(options.outputDir, file);
+        await captureSurface(state);
         await page.screenshot({ path: filename, animations: "disabled" });
         const image = await fs.readFile(filename);
         const dimensions = pngDimensions(image);
-        if (dimensions.width !== VIEWPORT.width || dimensions.height !== VIEWPORT.height) {
+        if (dimensions.width !== PHYSICAL_VIEWPORT.width || dimensions.height !== PHYSICAL_VIEWPORT.height) {
           throw new Error(`Wrong PNG dimensions for ${file}: ${dimensions.width}x${dimensions.height}`);
         }
         captures.push({ index: index + RANGE_START - 1, state, file, sha256: await sha256(filename) });
@@ -529,6 +560,10 @@ async function captureSuite(options) {
     const metadata = {
       generatedAt: new Date().toISOString(),
       viewport: VIEWPORT,
+      physicalViewport: PHYSICAL_VIEWPORT,
+      dpr: DPR,
+      surfaces,
+      physicalIphone: false,
       captureCount: captures.length,
       range: [RANGE_START, RANGE_END],
       fullMatrixCount: FULL_MATRIX_COUNT,
@@ -551,10 +586,11 @@ async function captureSuite(options) {
     );
     await context.close();
     process.stdout.write(
-      `Captured ${captures.length} final-build states at ${VIEWPORT.width}x${VIEWPORT.height}.\n` +
+      `Captured ${captures.length} final-build states at ${PHYSICAL_VIEWPORT.width}x${PHYSICAL_VIEWPORT.height} (${VIEWPORT.width}x${VIEWPORT.height} CSS, DPR ${DPR}).\n` +
         `PCK sha256: ${pckSha256}\nOutput: ${options.outputDir}\n`,
     );
   } finally {
+    await fs.writeFile(path.join(options.outputDir,"browser-console.json"),JSON.stringify(browserLogs,null,2));
     if (browser) await browser.close();
     await closeServer(server);
   }

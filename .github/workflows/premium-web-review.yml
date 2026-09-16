@@ -1,0 +1,124 @@
+name: Premium exact web package review
+on:
+  push:
+    branches: [codex/premium-polish-recovery-20260915]
+    paths: ['.github/workflows/premium-web-review.yml', 'tools/capture-web.mjs']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: premium-web-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install matching Godot and web templates
+        run: |
+          curl -fL --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+          curl -fL --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz -o "$RUNNER_TEMP/templates.tpz"
+          unzip -q "$RUNNER_TEMP/templates.tpz" 'templates/web*.zip' 'templates/version.txt' -d "$RUNNER_TEMP/templates"
+          test "$(cat "$RUNNER_TEMP/templates/templates/version.txt")" = '4.7.2.stable'
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          cp "$RUNNER_TEMP/templates/templates/"* "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+      - name: Export both packages and verify their actual contents
+        run: |
+          mkdir -p "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/production" "$RUNNER_TEMP/review"
+          git rev-parse HEAD > "$RUNNER_TEMP/review/source-sha.txt"
+          Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > "$RUNNER_TEMP/review/import.log" 2>&1
+          Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-release 'Web DEV' "$RUNNER_TEMP/candidate/index.html" > "$RUNNER_TEMP/review/export-dev.log" 2>&1
+          Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-release 'Web Production' "$RUNNER_TEMP/production/index.html" > "$RUNNER_TEMP/review/export-production.log" 2>&1
+          python3 - <<'PY'
+          import os,re
+          from pathlib import Path
+          for p in (Path(os.environ['RUNNER_TEMP'])/'review').glob('*.log'):
+              text=p.read_text(errors='replace')
+              assert not re.search(r'SCRIPT ERROR|Parse Error|^ERROR:',text,re.M),(str(p),text[-4000:])
+          PY
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --jobs 1 --pack "$RUNNER_TEMP/candidate/index.pck" --output "$RUNNER_TEMP/review/core"
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --jobs 1 --pack "$RUNNER_TEMP/candidate/index.pck" --cases build-flavor --output "$RUNNER_TEMP/review/dev-flavor"
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --jobs 1 --pack "$RUNNER_TEMP/production/index.pck" --cases build-flavor --output "$RUNNER_TEMP/review/production-flavor"
+      - name: Bind the exact browser candidate
+        run: |
+          python3 - <<'PY'
+          import os,json,hashlib,shutil
+          from pathlib import Path
+          base=Path(os.environ['RUNNER_TEMP'])
+          for name in ['candidate','production']:
+              root=base/name
+              rows={p.name:{'size':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(root.iterdir()) if p.is_file()}
+              (root/'manifest.json').write_text(json.dumps(rows,indent=2)+'\n')
+              shutil.copyfile(root/'manifest.json',base/'review'/(name+'-manifest.json'))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: premium-web-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/candidate
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: premium-web-package-review-${{ github.sha }}
+          path: ${{ runner.temp }}/review
+          retention-days: 30
+  browser:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [visual, gameplay, touch]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: premium-web-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser and verify candidate identity
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install --with-deps chromium
+          python3 - <<'PY'
+          import os,json,hashlib
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'candidate'
+          for name,info in json.loads((root/'manifest.json').read_text()).items():
+              data=(root/name).read_bytes()
+              assert len(data)==info['size'] and hashlib.sha256(data).hexdigest()==info['sha256'],name
+          PY
+      - name: Actual WebGL rendering and browser touch at 1696 by 780
+        env:
+          SUITE: ${{ matrix.suite }}
+          CAPTURE_VIEWPORT: 848x390
+          CAPTURE_DPR: '2'
+          CAPTURE_START: '1'
+          CAPTURE_END: '19'
+        run: |
+          mkdir -p "$RUNNER_TEMP/review"
+          if [ "$SUITE" = gameplay ] || [ "$SUITE" = touch ]; then export OVERHAUL_GAMEPLAY=1; fi
+          if [ "$SUITE" = touch ]; then export MENU_TOUCH=1; fi
+          node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review" > "$RUNNER_TEMP/browser.log" 2>&1
+      - name: Preserve completion or failure output
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/review"
+          if [ -f "$RUNNER_TEMP/browser.log" ]; then cp "$RUNNER_TEMP/browser.log" "$RUNNER_TEMP/review/runner.log"; tail -n 40 "$RUNNER_TEMP/browser.log"; fi
+          git rev-parse HEAD > "$RUNNER_TEMP/review/source-sha.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: premium-web-${{ matrix.suite }}-${{ github.sha }}
+          path: ${{ runner.temp }}/review
+          retention-days: 30
