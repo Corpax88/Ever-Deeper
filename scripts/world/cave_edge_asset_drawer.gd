@@ -6,6 +6,21 @@ const EDGE_SOURCE_HEIGHT: = 128.0
 const BEDROCK_SOURCE_HEIGHT: = 256.0
 const SOURCE_SEGMENT_WIDTH: = 128.0
 
+# Exact nonzero-alpha bounds, with two source pixels plus a bilinear guard.
+# Original lossless 1024px PNGs and import settings are verified offline by
+# tools/corner_quad_pilot/inspect_bounds.py. Compact joins keep their own UVs.
+const CORNER_SOURCE_SIZE: = Vector2(1024.0, 1024.0)
+const CORNER_SOURCE_REGIONS: = {
+	"res://assets/caves/ancient-bedrock-corner-v1.png": Rect2(0, 364, 653, 660),
+	"res://assets/rootwound/cave-corner-v1.png": Rect2(0, 424, 630, 600),
+	"res://assets/prismatic/cave-corner-v1.png": Rect2(0, 425, 585, 599),
+	"res://assets/molten/cave-corner-v1.png": Rect2(0, 398, 613, 626),
+	"res://assets/voidstar/cave-corner-v1.png": Rect2(0, 432, 590, 592),
+	"res://assets/mossvein/cave-corner-v2.png": Rect2(0, 232, 796, 792),
+	"res://assets/moonglass/cave-corner-v1.png": Rect2(0, 49, 978, 975),
+	"res://assets/emberdeep/cave-corner-v1.png": Rect2(0, 99, 976, 925),
+}
+
 
 static func draw_mineable_edge(
 	canvas: CanvasItem,
@@ -182,7 +197,15 @@ static func _draw_corner(
 		)
 		canvas.draw_texture_rect_region(texture, compact_destination, source, modulate)
 	else:
-		canvas.draw_texture_rect(texture, destination, false, modulate)
+		var source: Rect2 = CORNER_SOURCE_REGIONS.get(texture.resource_path, Rect2())
+		if source.has_area() and texture.get_size() == CORNER_SOURCE_SIZE:
+			var pixel_scale: Vector2 = destination.size / CORNER_SOURCE_SIZE
+			var cropped_destination: = Rect2(destination.position + source.position * pixel_scale, source.size * pixel_scale)
+			# Full-image drawing did not clip UVs. Keep the same texture sampler;
+			# padded geometry removes only fragments whose sampled alpha is zero.
+			canvas.draw_texture_rect_region(texture, cropped_destination, source, modulate, false, false)
+		else:
+			canvas.draw_texture_rect(texture, destination, false, modulate)
 	canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 

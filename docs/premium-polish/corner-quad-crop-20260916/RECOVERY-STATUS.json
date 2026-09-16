@@ -1,0 +1,25 @@
+{
+  "status": "Unverified isolated performance candidate; no renderer or timing result",
+  "original_local_commit": "392d93ee9c98e20c3ac0fa7d2be6bc17b2dd9cee",
+  "original_base": "ec8976622231bc70c5413775291e841d0e543353",
+  "recovered_base": "c8906f1d46309227344f101a6b0ae7c1a9b1e69b",
+  "reason": "The old shared Git directory disappeared; exact candidate and harness bytes were restored from the surviving worktree. User requested saving now.",
+  "runtime_changes": [
+    "scripts/world/cave_edge_asset_drawer.gd"
+  ],
+  "files": {
+    "scripts/world/cave_edge_asset_drawer.gd": "dc7b0b943c98d6430d2b61cd241df200af080b7eca8fa6ec85005736abc09baf",
+    "tools/corner_quad_pilot/review_matrix.gd": "6a9a05869fe30cfe90a166a99bf1511ea6fbb9f6326ce571ffe9c7828d7d5b40",
+    "tools/corner_quad_pilot/inspect_bounds.py": "197c1c84363ebc7d5b813bd4e2332ad2dce54bd03f0db61292cef86ff8dc3dc0",
+    "tools/corner_quad_pilot/run_study.py": "125c670dc74176302570780f064c5ff955a0c58863685e476cfab5a294aa3e4a",
+    "docs/premium-polish/corner-quad-crop-20260916/asset-bounds.json": "6d092cc3dd850e417e195e4bb1eed36e894a158302e06bcc8a416a4e1b9bb6c6",
+    "docs/premium-polish/corner-quad-crop-20260916/PLAN.md": "28d2c8a1294f1891f683f6e4ac39b6d0b1cf1a8b59d5568528d70e9cef4922ac"
+  },
+  "next_gate": [
+    "Import and parse in restored runtime",
+    "Exact full RGBA reference/candidate/reference matrix and untouched Depth1 controls",
+    "Integrated world/cache parity",
+    "Only then controlled performance timing"
+  ],
+  "accepted_into_main_work_branch": false
+}
