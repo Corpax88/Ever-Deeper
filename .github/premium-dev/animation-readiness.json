@@ -1,0 +1,132 @@
+{
+  "scope": "DEV device-testing readiness of the current immutable package; bounded hero gameplay observation only",
+  "source_sha": "c8906f1d46309227344f101a6b0ae7c1a9b1e69b",
+  "pack_sha256": "a60dc230728102a2cc6aceca9182579dc0533175235e44e80f3a343cd5443bd1",
+  "pack_unchanged": true,
+  "protected_player_visual_baseline_updated": false,
+  "player_visual_sha256": "ba3a54fc83efa883b4a68de7a032e334cb885bcb50427859fc85fdb2a5be2520",
+  "protected_baseline_sha256": "ba50a787db08620fde3a2da7a44305406fff0a442c82cbea64a061a7146f5fc4",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "renderer": "Linux native X11 / Mesa llvmpipe Compatibility; fixed 60 Hz simulation, not FPS evidence",
+  "dev_animation_blocker_observed": false,
+  "visual_review": "Inspected all three actual rendered contact sheets and full-size Worn/Deepcore keyframes. Current native hero/tool identity remains consistent; sampled walk/mining/release poses render, actual moving frames leave mining immediately, and stopped movement returns to idle. No visible animation blocker found in this short route. This is not final animation approval.",
+  "cases": [
+    {
+      "gear": "worn",
+      "evidence_directory": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/hero-current/worn-target",
+      "report_sha256": "c549af23138c06df084dedf65e78553c45851ed1f24d5a6bffabbf335aeb4bab",
+      "checks_passed": 9,
+      "frames": 330,
+      "actual_frame_size": [
+        1696,
+        780
+      ],
+      "moving_transition_frames": 30,
+      "moving_transition_non_walk_frames": 0,
+      "captured_directions": [
+        "left",
+        "right"
+      ],
+      "unique_walk_pose_indices": 47,
+      "unique_mining_pose_indices": 47,
+      "png_keyframes": 18,
+      "explicit_success_marker": true,
+      "runtime_errors": false,
+      "contact_sheet": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/hero-current/worn-contact-sheet.png"
+    },
+    {
+      "gear": "crusher",
+      "evidence_directory": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/hero-current/crusher-target2",
+      "report_sha256": "a7d9b33d76cc9a37f8cf28126b052637256e158371484922a74925b8050795d9",
+      "checks_passed": 9,
+      "frames": 330,
+      "actual_frame_size": [
+        1696,
+        780
+      ],
+      "moving_transition_frames": 30,
+      "moving_transition_non_walk_frames": 0,
+      "captured_directions": [
+        "left",
+        "right"
+      ],
+      "unique_walk_pose_indices": 47,
+      "unique_mining_pose_indices": 87,
+      "png_keyframes": 18,
+      "explicit_success_marker": true,
+      "runtime_errors": false,
+      "contact_sheet": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/hero-current/crusher-contact-sheet.png"
+    },
+    {
+      "gear": "deepcore",
+      "evidence_directory": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/hero-current/deepcore-target2",
+      "report_sha256": "488e87f07d779b6a2e88048947560753632b37fb244b6af32eed15161362cda5",
+      "checks_passed": 9,
+      "frames": 322,
+      "actual_frame_size": [
+        1696,
+        780
+      ],
+      "moving_transition_frames": 30,
+      "moving_transition_non_walk_frames": 0,
+      "captured_directions": [
+        "left",
+        "right",
+        "up"
+      ],
+      "unique_walk_pose_indices": 48,
+      "unique_mining_pose_indices": 48,
+      "png_keyframes": 18,
+      "explicit_success_marker": true,
+      "runtime_errors": false,
+      "contact_sheet": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/hero-current/deepcore-contact-sheet.png",
+      "contact_target": {
+        "after_excavated": true,
+        "before_solid": true,
+        "cell": [
+          11,
+          3
+        ],
+        "remaining_damage": 0
+      }
+    }
+  ],
+  "total_checks_passed": 27,
+  "total_rendered_frames": 982,
+  "capture_contract": "Every actual post-draw frame retained as 1696x780 JPEG at quality 0.94; [18, 18, 18] lossless PNG keyframes for Worn/Crusher/Deepcore respectively. Contact sheets are crops at native pixel size. No resize used for capture.",
+  "deepcore_harness_correction": {
+    "path": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/hero-current/deepcore-target-contract.patch",
+    "reason": "The same initially solid target [11,3] was actually excavated; _break_diggable_cell erases dig_damage. Accept retained damage OR excavation of that same original solid cell, as existing Overhaul does. All other assertions/inputs/fixture timing unchanged.",
+    "actual_target_before_solid": true,
+    "actual_target_after_excavated": true,
+    "actual_target_remaining_damage": 0,
+    "harness_sha256": "fd50162e210a5d9921936a7dd8990674780c8d630edeffc3fc0c08e97246383c"
+  },
+  "retained_failed_or_invalid_attempts": [
+    {
+      "path": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/hero-current/worn",
+      "reason": "Gameplay assertions passed, but Movie Maker encoded 1280x720 despite 1696x780 window. Excluded from target-size evidence."
+    },
+    {
+      "path": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/hero-current/viewport-probe",
+      "reason": "Readback proves actual1696x780; Movie Maker stayed1280x720 and ignored external override. Probe and ignored override retained."
+    },
+    {
+      "path": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/hero-current/crusher-target",
+      "reason": "Launcher typo in --pack-source rejected before gameplay."
+    },
+    {
+      "path": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/hero-current/deepcore-target",
+      "reason": "Old retained-damage-only assertion failed after actual wall excavation; full failed log and156frames retained."
+    }
+  ],
+  "remaining_limits": [
+    "No baseline-versus-current rendered A/B; the protected hash remains pending.",
+    "Fixed340px/s route: upgraded-speed cap removal above403.2px/s was not exercised.",
+    "Early anticipation release was exercised; just-before-contact recovery-direction boundary was not isolated.",
+    "Three tool families and captured directions only, not every tool/outfit/direction/transition.",
+    "Deepcore release damage assertion still checks the original cell; this is not a whole-world no-damage proof after retargeting.",
+    "No browser active hazard/re-entry visual cycle, physical iPhone performance, audio playback, sustained FPS or final9/10 claim."
+  ],
+  "render_slot_free": true
+}

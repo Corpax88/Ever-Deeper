@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "dev_only": true,
+  "live_publication_authorized": false,
+  "final_one_point_zero_approved": false,
+  "physical_iphone_verified": false,
+  "source_commit": "c8906f1d46309227344f101a6b0ae7c1a9b1e69b",
+  "qa_run_id": 35088488455,
+  "candidate_artifact_id": 10442929350,
+  "complete_artifact_id": 10443378936,
+  "dev_publication_authorized": true,
+  "authorization_record": {
+    "requested_by": "Mats",
+    "request": "Publish the current integrated DEV version now so I can test the changes. Explicit current conversation request; no LIVE publication requested.",
+    "recorded_at": "2026-09-16T11:55:16.769218+00:00"
+  },
+  "visual_readiness": {
+    "status": "approved_for_dev_playtest",
+    "reviewer": "wall_visual_review; root independently inspected representative package and composition frames",
+    "reviewed_at": "2026-09-16T11:55:16.769232+00:00",
+    "scope": "Static review of current c8906f1 exact exported package and same-source mobile composition captures for DEV device testing.",
+    "findings": "No blocking visual defect found. All 19 shop states, six native residency images, beam and outfit interactions, and nine gameplay/composition frames inspected. No missing reopened previews, serious clipping, obscured primary controls or corrupted geometry. Light Lab comparison and completed-workshop presentation are present. Minor copy and selection-style polish remains.",
+    "evidence": [
+      "https://github.com/Corpax88/Ever-Deeper/actions/runs/35088488455",
+      "https://github.com/Corpax88/Ever-Deeper/actions/runs/35088488292",
+      ".github/premium-dev/visual-readiness.json",
+      ".github/premium-dev/sustained-summary.json",
+      ".github/premium-dev/animation-readiness.json"
+    ],
+    "blocking_defects": []
+  },
+  "limitations": [
+    "DEV playtest only; no final whole-game score or final 1.0 acceptance is asserted.",
+    "Physical iPhone performance and acceptance remain unverified.",
+    "The exact reviewed package retains the displayed 1.0.0-dev.8 label; source c8906f1 and package hashes distinguish this build.",
+    "Save schema 3 uses user://ever_deeper_run_v3.sav. The previously authorized progress reset applies.",
+    "All three current sustained virtual-Mac runs complete 300 seconds and move in every 30-second window. Observed FPS ranges are Hub 44.98–56.60, Ember 20.79–39.54, Deep 18.01–30.91; none establishes a sustained 50 FPS minimum. These are not physical iPhone measurements.",
+    "Unaccepted wall/corner/native-model studies are not integrated in this DEV artifact.",
+    "The separate historical browser audio suite has not been rerun on this exact package; historical review flags and scores remain unchanged.",
+    "Current native animation readiness is bounded to the inspected fixed-step gameplay cases, not real-time FPS, speeds above 403.2, interruption immediately before contact, browser hazard/re-entry or final animation acceptance. The old protected player_visual baseline remains unchanged.",
+    "Deepcore harness damage expectation was narrowly corrected to accept excavation of the same originally solid cell, matching production semantics. Original failed attempt and exact harness diff are retained."
+  ],
+  "animation_readiness": {
+    "status": "approved_for_dev_playtest",
+    "reviewer": "animation_critic; root inspected exact harness delta and representative frames",
+    "reviewed_at": "2026-09-16T12:00:40.335017+00:00",
+    "evidence": ".github/premium-dev/animation-readiness.json",
+    "evidence_sha256": "b3d1ea06ce0e050d73bfbb1fefb055d47ecd79c5e71241679063db54d735657f",
+    "pck_sha256": "a60dc230728102a2cc6aceca9182579dc0533175235e44e80f3a343cd5443bd1",
+    "scope": "Worn, Crusher and Deepcore exact-package generated-terrain transitions at 1696x780; 27 checks, 982 presented frames, 54 lossless keyframes. All 90 actually moving mine-to-walk frames use walking."
+  }
+}

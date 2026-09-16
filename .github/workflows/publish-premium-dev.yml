@@ -1,0 +1,89 @@
+name: Publish exact premium DEV playtest
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/premium-dev/review.json'
+      - '.github/workflows/publish-premium-dev.yml'
+permissions:
+  contents: read
+concurrency:
+  group: pages-ever-deeper
+  cancel-in-progress: false
+jobs:
+  package:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      rollback_artifact_id: ${{ steps.rollback.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Require recorded readiness and stage only the immutable DEV artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          python3 .github/premium-dev/publish.py prepare "$RUNNER_TEMP/publish"
+      - name: Retain verified rollback before any deployment
+        id: rollback
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: premium-dev-rollback-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/publish/rollback
+          retention-days: 30
+          if-no-files-found: error
+      - name: Retain publication evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: premium-dev-publication-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/publish/*.json
+            ${{ runner.temp }}/publish/complete/complete-review.json
+          retention-days: 30
+          if-no-files-found: warn
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/publish/site
+  deploy:
+    needs: package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+  verify:
+    needs: [package, deploy]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Verify nine candidate DEV files and all nine unchanged LIVE files
+        env:
+          ROLLBACK_ARTIFACT_ID: ${{ needs.package.outputs.rollback_artifact_id }}
+        run: python3 .github/premium-dev/publish.py verify "$RUNNER_TEMP/verified"
+      - name: Retain success or failure receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: premium-dev-publication-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verified/publication-receipt.json
+          retention-days: 30
+          if-no-files-found: warn

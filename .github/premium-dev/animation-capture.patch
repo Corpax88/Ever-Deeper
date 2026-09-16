@@ -1,0 +1,90 @@
+--- tools/review_hero_gameplay.gd
++++ review_hero_gameplay_capture_deepcore.gd
+@@ -14,11 +14,16 @@
+ var samples: Array[Dictionary] = []
+ var stages: Array[Dictionary] = []
+ var failures: Array[String] = []
++var check_results: Array[Dictionary] = []
++var rendered_frames: Array[Dictionary] = []
++var capture_stage_counts: Dictionary = {}
++var contact_target_result: Dictionary = {}
+ 
+ func _initialize() -> void:
+ 	_run.call_deferred()
+ 
+ func _check(ok: bool, message: String) -> void:
++	check_results.append({"passed":ok,"assertion":message})
+ 	if not ok:
+ 		failures.append(message)
+ 		push_error("HERO_GAMEPLAY_FAIL " + message)
+@@ -38,6 +43,7 @@
+ 		quit(2)
+ 		return
+ 	DirAccess.make_dir_recursive_absolute(output)
++	DirAccess.make_dir_recursive_absolute(output.path_join("frames"))
+ 	root.size = Vector2i(1696, 780)
+ 	var state: Node = root.get_node("RunState")
+ 	state.initialize_persistence(output.path_join("isolated-save.json"))
+@@ -74,6 +80,7 @@
+ 		return
+ 	var direction: Vector2 = route.direction
+ 	var wall: Vector2i = route.wall
++	contact_target_result = {"cell":[wall.x,wall.y],"before_solid":not world._is_floor(wall)}
+ 	world.restore_position(route.start)
+ 	player.control_enabled = true
+ 	player.set_facing(direction)
+@@ -84,6 +91,7 @@
+ 	main.premium_hud.set_status("")
+ 	main._refresh_hud()
+ 	process_frame.connect(_sample)
++	RenderingServer.frame_post_draw.connect(_capture_presented_frame)
+ 	recording = true
+ 	await _stage("idle", 0.5)
+ 	var started: Vector2 = player.global_position
+@@ -94,7 +102,10 @@
+ 	_check(player.is_actually_moving() and not world.mining_active, "Moving body owns locomotion instead of sliding in a mining pose")
+ 	await _stage("push_into_wall_and_mine", 1.6)
+ 	_check(not player.is_actually_moving() and world.mining_active, "Blocked joystick continues physical mining")
+-	_check(int(world.dig_damage.get(wall, 0)) > 0, "Standing contact damages the original wall")
++	contact_target_result["after_excavated"] = world._is_floor(wall)
++	contact_target_result["remaining_damage"] = int(world.dig_damage.get(wall, 0))
++	print("HERO_ORIGINAL_TARGET ",JSON.stringify(contact_target_result))
++	_check(bool(contact_target_result.before_solid) and (bool(contact_target_result.after_excavated) or int(contact_target_result.remaining_damage)>0), "Standing contact damages or excavates the same original solid wall")
+ 	main._on_joystick_movement(Vector2.ZERO)
+ 	await _stage("stationary_contact_and_recovery", 0.9)
+ 	main._set_mine_held(false)
+@@ -153,6 +164,7 @@
+ 
+ func _finish(packed: bool) -> void:
+ 	var report := {"passed": failures.is_empty(), "failures": failures, "gear": selected_gear, "stages": stages, "samples": samples,
++		"contact_target":contact_target_result,"check_results":check_results,"rendered_frames":rendered_frames,"capture_method":"Actual post-draw images; fixed 60 Hz simulation; JPEG sequence quality 0.94 plus stage PNGs; no Movie Maker resizing",
+ 		"packed": packed, "pack_sha256": FileAccess.get_sha256(pack_source) if not pack_source.is_empty() else "",
+ 		"rendered": DisplayServer.get_name() != "headless", "physical_iphone": false, "actual_viewport": [root.size.x, root.size.y],
+ 		"manual_process_steps": false, "terrain_replaced": false, "fixed_movement_speed": 340,
+@@ -160,3 +172,26 @@
+ 	FileAccess.open(output.path_join("hero-gameplay.json"), FileAccess.WRITE).store_string(JSON.stringify(report, "\t"))
+ 	print("HERO_GAMEPLAY_COMPLETE failures=", failures.size())
+ 	quit(0 if failures.is_empty() else 1)
++
++func _capture_presented_frame() -> void:
++	if not recording: return
++	var img := root.get_texture().get_image()
++	if img.get_size() != Vector2i(1696,780):
++		_check(false, "Actual captured framebuffer must be 1696x780")
++		quit(3)
++		return
++	var index: int = rendered_frames.size()
++	var file: String = "frames/frame-%05d.jpg" % index
++	if img.save_jpg(output.path_join(file),0.94) != OK:
++		_check(false, "Actual captured framebuffer writes successfully")
++		quit(3)
++		return
++	var count: int = int(capture_stage_counts.get(stage,0))
++	capture_stage_counts[stage] = count + 1
++	if count == 0 or count == 10:
++		img.save_png(output.path_join("%s-%02d.png" % [stage,count]))
++	var pose: Dictionary = player.visual.tool_visual_snapshot()
++	var point: Vector2 = player.get_global_transform_with_canvas().origin
++	rendered_frames.append({"file":file,"size":[img.get_width(),img.get_height()],"stage":stage,"time":elapsed,
++		"position":[player.global_position.x,player.global_position.y],"screen_position":[point.x,point.y],
++		"pose":pose,"moving":player.is_actually_moving(),"mining":world.mining_active,"progress":player.mining_visual_progress})
