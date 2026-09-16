@@ -1,0 +1,327 @@
+{
+  "source_commit": "82c0f9b7be30c9049c6d6dea34056dfd2656aa5d",
+  "source_tree": "afddf873828e1f8e318257a45c41e10ea019d1aa",
+  "builds": [
+    {
+      "name": "import",
+      "exit_code": 0,
+      "seconds": 7.186,
+      "errors": []
+    },
+    {
+      "name": "dev",
+      "exit_code": 0,
+      "seconds": 8.702,
+      "errors": []
+    },
+    {
+      "name": "production",
+      "exit_code": 0,
+      "seconds": 5.737,
+      "errors": []
+    }
+  ],
+  "manifests": {
+    "dev": {
+      "index.apple-touch-icon.png": {
+        "size": 66421,
+        "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+      },
+      "index.audio.position.worklet.js": {
+        "size": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      },
+      "index.audio.worklet.js": {
+        "size": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "index.html": {
+        "size": 5444,
+        "sha256": "d2d6da62de206fae9b9eef492e78aae96427023b323bbc26b8d53c09ca8918d5"
+      },
+      "index.icon.png": {
+        "size": 470687,
+        "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+      },
+      "index.js": {
+        "size": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      },
+      "index.pck": {
+        "size": 221003008,
+        "sha256": "d3c4a2db2da1d72398fe24882fc9652affb72dd6f51b642ae63f35c6d271f677"
+      },
+      "index.png": {
+        "size": 1981427,
+        "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+      },
+      "index.wasm": {
+        "size": 39514754,
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      }
+    },
+    "production": {
+      "index.apple-touch-icon.png": {
+        "size": 66421,
+        "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+      },
+      "index.audio.position.worklet.js": {
+        "size": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      },
+      "index.audio.worklet.js": {
+        "size": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "index.html": {
+        "size": 5444,
+        "sha256": "2fccfc6dd0c5fa6e577d1eb6b3b8e9747edfa57e7cf79afa8939247e70394180"
+      },
+      "index.icon.png": {
+        "size": 470687,
+        "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+      },
+      "index.js": {
+        "size": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      },
+      "index.pck": {
+        "size": 220970844,
+        "sha256": "227a9721bee0af8a2b18514789debb87bcc303d6e0a3ebcdf0e221f16e633e29"
+      },
+      "index.png": {
+        "size": 1981427,
+        "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+      },
+      "index.wasm": {
+        "size": 39514754,
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      }
+    }
+  },
+  "checks": {
+    "dev-core": {
+      "passed": true,
+      "cases": [
+        {
+          "case": "premium-core",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.61,
+          "marker": "EVER_DEEPER_ONE_POINT_ZERO_PREMIUM_CORE_OK",
+          "completion": [
+            "EVER_DEEPER_ONE_POINT_ZERO_PREMIUM_CORE_OK checks=200"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-core/premium-core.log"
+        },
+        {
+          "case": "input",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 2.67,
+          "marker": "EVER_DEEPER_INPUT_RELEASE_OK",
+          "completion": [
+            "EVER_DEEPER_INPUT_RELEASE_OK hide=true matching_touch=true canceled_touch=true unrelated_touch_ignored=true mouse=true worlds=5 focus_pause=true"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-core/input.log"
+        },
+        {
+          "case": "overhaul",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 6.37,
+          "marker": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK",
+          "completion": [
+            "EVER_DEEPER_SURFACE_GAMEPLAY_OK locked/open both-directions solid-pillars copper=24 regrowth=360 branch-both-directions shop-access",
+            "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=1261 failures=[]"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-core/overhaul.log"
+        },
+        {
+          "case": "touch",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 13.97,
+          "marker": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK",
+          "completion": [
+            "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=125 failures=[]"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-core/touch.log"
+        },
+        {
+          "case": "endgame",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 2.83,
+          "marker": "EVER_DEEPER_ENDGAME_OK",
+          "completion": [
+            "EVER_DEEPER_ENDGAME_OK seals=4 endless=unlocked gateway=true persistence=true conclusion=true deepheart_reentry=blocked"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-core/endgame.log"
+        },
+        {
+          "case": "onboarding",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 2.62,
+          "marker": "EVER_DEEPER_ONBOARDING_OK",
+          "completion": [
+            "EVER_DEEPER_ONBOARDING_OK minimap=transparent_organic_overlap_fade tutorial=nonblocking shrine_respawn=75"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-core/onboarding.log"
+        },
+        {
+          "case": "layout",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 2.81,
+          "marker": "EVER_DEEPER_IPHONE_LAYOUT_OK",
+          "completion": [
+            "EVER_DEEPER_IPHONE_LAYOUT_OK devices=844x390,852x393,874x402,912x420,932x430,956x440 touch=44css icons=optically-normalized safe=notch/home overlays=menu,bag,museum,starforge,conclusion"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-core/layout.log"
+        },
+        {
+          "case": "portrait",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 2.52,
+          "marker": "EVER_DEEPER_PORTRAIT_GUARD_OK",
+          "completion": [
+            "EVER_DEEPER_PORTRAIT_GUARD_OK portrait=1280x2770 landscape=1558x720 card=1080x720"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-core/portrait.log"
+        },
+        {
+          "case": "dev-tools",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.73,
+          "marker": "EVER_DEEPER_DEV_TOOLS_QA_OK",
+          "completion": [
+            "EVER_DEEPER_DEV_TOOLS_QA_OK commands=23 isolated_save=true iphone=932x430 finger_scroll=true readable_text=true exact_depths=true relics=5 workshops=5"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-core/dev-tools.log"
+        },
+        {
+          "case": "crusher",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.03,
+          "marker": "EVER_DEEPER_CRUSHER_IMPACT_OK",
+          "completion": [
+            "EVER_DEEPER_CRUSHER_IMPACT_OK footprint=5x5 real_loot=true sectors=8 bundles_max=12 merge_window=0.15 arc=true drill_stress=600 accounting=exact depth2=true pickup=48/80/112/144 singularity=48 cleanup=0.30"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-core/crusher.log"
+        },
+        {
+          "case": "one-point-zero-state",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.02,
+          "marker": "EVER_DEEPER_ONE_POINT_ZERO_STATE_OK",
+          "completion": [
+            "EVER_DEEPER_ONE_POINT_ZERO_STATE_OK checks=187"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-core/one-point-zero-state.log"
+        },
+        {
+          "case": "one-point-zero-world",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 11.67,
+          "marker": "EVER_DEEPER_ONE_POINT_ZERO_WORLD_OK",
+          "completion": [
+            "EVER_DEEPER_ONE_POINT_ZERO_WORLD_OK checks=461"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-core/one-point-zero-world.log"
+        },
+        {
+          "case": "one-point-zero-migration",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.53,
+          "marker": "EVER_DEEPER_ONE_POINT_ZERO_MIGRATION_OK",
+          "completion": [
+            "EVER_DEEPER_ONE_POINT_ZERO_MIGRATION_OK checks=341"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-core/one-point-zero-migration.log"
+        },
+        {
+          "case": "one-point-zero-ui",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 3.75,
+          "marker": "EVER_DEEPER_ONE_POINT_ZERO_UI_OK",
+          "completion": [
+            "EVER_DEEPER_ONE_POINT_ZERO_UI_OK checks=305"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-core/one-point-zero-ui.log"
+        },
+        {
+          "case": "mole-autonomy",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 2.83,
+          "marker": "EVER_DEEPER_MOLE_AUTONOMY_OK",
+          "completion": [
+            "EVER_DEEPER_MOLE_AUTONOMY_OK checks=50"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-core/mole-autonomy.log"
+        }
+      ]
+    },
+    "dev-flavor": {
+      "passed": true,
+      "cases": [
+        {
+          "case": "build-flavor",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 2.72,
+          "marker": "EVER_DEEPER_BUILD_FLAVOR_QA_OK",
+          "completion": [
+            "EVER_DEEPER_BUILD_FLAVOR_QA_OK flavor=dev menu=true resource=true save=user://ever_deeper_dev_run_v3.sav user_dir=Ever Deeper- Godot Development Port path=/tmp/ever-deeper-qa-9k75i0ib/Ever Deeper- Godot Development Port isolated=true"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/dev-flavor/build-flavor.log"
+        }
+      ]
+    },
+    "production-flavor": {
+      "passed": true,
+      "cases": [
+        {
+          "case": "build-flavor",
+          "passed": true,
+          "exit_code": 0,
+          "reason": "",
+          "seconds": 2.81,
+          "marker": "EVER_DEEPER_BUILD_FLAVOR_QA_OK",
+          "completion": [
+            "EVER_DEEPER_BUILD_FLAVOR_QA_OK flavor=production menu=false resource=false save=user://ever_deeper_run_v3.sav user_dir=Ever Deeper- Godot Production Port path=/tmp/ever-deeper-qa-opsyi520/Ever Deeper- Godot Production Port isolated=true"
+          ],
+          "log": "/workspace/scratch/4e99473f21fc/evidence/export-82c0f9b/production-flavor/build-flavor.log"
+        }
+      ]
+    }
+  },
+  "browser_verified": false,
+  "physical_iphone_verified": false,
+  "published": false
+}

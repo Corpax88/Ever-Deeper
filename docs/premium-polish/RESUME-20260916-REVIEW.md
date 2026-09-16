@@ -102,6 +102,35 @@ gates and overall 9/10 remain open. Previous virtual Mac measurements and all
 physical-iPhone limitations in the premium handoff still apply. The new virtual
 Mac result above supersedes the previously pending Mac session.
 
+## Exact package and subsequent Mac checkpoint
+
+Source `82c0f9b7be30c9049c6d6dea34056dfd2656aa5d`, tree
+`afddf873828e1f8e318257a45c41e10ea019d1aa`, exports both Web DEV and Web Production
+with matching official 4.7.2 templates and no import/export errors. The exact DEV
+package passes all **15/15** current core cases. Both packages pass their own
+build-flavor gate. `resume-20260916/export-82c0f9b.json` binds all nine files per
+build to SHA-256 and retains every gate result. Browser rendering is a separate
+pending check at this checkpoint; neither build was published.
+
+The subsequent virtual Mac workflow **35070886032**, on the same `82c0f9b` source,
+also completed all three five-minute functional sessions. Hub windows measured
+41.35–52.98 FPS, The Deep 16.61–24.48 and Ember 27.32–33.72. Every area still
+fails the minimum-50 gate. All new profile GPU timings are marked unsupported,
+without interpreting zero as a fast GPU result. The Deep stopped accumulating
+travel during its final roughly 90 seconds, so those windows do not represent
+continuous moving excavation. This run is not a controlled cross-host A/B of
+the station change. Reports are in `resume-20260916/mac-station-completed.json`;
+the earlier Mac reports remain unchanged.
+
+The additional private evidence archive is saved as
+`Ever-Deeper-review-20260916-station-native-walls.tar.gz`, Library identity
+`libfile_dbce3d22f1c8819199e272c714e19776`, 437,649,538 bytes, SHA-256
+`a2ae6c44489fcd2c355b36dd9cbd92a56636a63506a3ba42178bd66fd3f13ea6`.
+Its 356 members preserve receiver-cache rejection, the completed world route,
+station A/B/A, the source gate, V2 wall evidence and bounded native donor probes.
+It excludes subsequent V3 wall captures and the new web exports. The receipt is
+`resume-20260916/station-native-walls-archive.json`.
+
 ## Current environment and next work
 
 - Canonical checkout: `/workspace/scratch/5a78be25fc28/Ever-Deeper`.
@@ -127,8 +156,26 @@ Unchanged polygon copies preserved normals within 1.79e-7; triangulation caused
 the larger error. The corrected helper preserves evaluated polygons, loops and
 edges, checking exact tessellation and the unchanged normal tolerance. Geometry
 validation passes for the sample and all 369 constant donors; full-group maximum
-normal error is 0.0000425875, with source/target/rig restoration verified. Fresh
-paired albedo, normal and AO bakes are still required. Neither the exporter nor
-the production character has been replaced.
+normal error is 0.0000425875, with source/target/rig restoration verified.
+
+The corrected four-donor albedo pair preserves raw RGB exactly, but fails the
+unchanged 1e-6 raw-RGBA criterion because alpha differs. Blender's legacy float
+PNG serialization also changes 126 colored padding texels. A live audit proves
+all 32 native materials and the pilot target are opaque (Alpha 1, Transmission
+0), and the pilot consumes RGB maps with geometric viewport transparency.
+The isolated helper now writes explicitly guarded opaque RGB PNGs; it preserves
+the failed raw arrays and legacy PNGs separately. Numeric swatches, decoding,
+orientation and rejection checks pass, and the corrected albedo files are exact.
+
+Fresh normal and AO sample pairs also produce exact encoded RGB PNGs. Normal's
+raw RGBA maximum is 1.19209e-7; AO still fails raw RGBA on alpha alone. Including
+helper preparation, normal and AO samples take longer than the four separate
+donors. The sparse AO sample has only 243 nonblack pixels, so it does not prove
+whole-character fidelity. The full reports and 60 evidence-file hashes are in
+`resume-20260916/native-donor-rgb-review.json`; usage and limits are in
+`tools/hero_v28/runtime_pilot/CONSTANT-DONOR-PROBE.md`.
+No full-scope bake, GLB, production exporter or production character replacement
+has been accepted. Native emission, SSS, coat and runtime lighting fidelity
+remain material blockers to a 3D switch, in addition to animation and cost.
 Private prepared native .blend files and all originals remain outside the
 public repository and in the prior archives.
