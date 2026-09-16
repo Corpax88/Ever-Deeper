@@ -1,0 +1,80 @@
+diff --git a/scripts/player/player_visual.gd b/scripts/player/player_visual.gd
+index 942b2ca..55331f7 100644
+--- a/scripts/player/player_visual.gd
++++ b/scripts/player/player_visual.gd
+@@ -57,9 +57,10 @@ func _ready() -> void:
+ 	add_child(_sprite)
+ 	prepare_visual_cache()
+ 
+-func advance_motion(distance: float, delta: float) -> void:
++func advance_motion(distance: float, _delta: float) -> void:
+ 	if distance > 0.001:
+-		_walk_phase = fposmod(_walk_phase + minf(distance / WALK_STRIDE, delta * 2.8), 1.0)
++		var stride: float = float(Dictionary(_manifest.get("motion", {})).get("stride_pixels", WALK_STRIDE))
++		_walk_phase = fposmod(_walk_phase + distance / maxf(1.0, stride), 1.0)
+ 
+ func set_state(direction: String, _frame: int, walking: bool, active: bool = false, progress: float = 0.0, _recoil: float = 0.0, hit_phase: float = -1.0, impact_serial: int = 0) -> void:
+ 	state_update_count += 1
+@@ -72,11 +73,11 @@ func set_state(direction: String, _frame: int, walking: bool, active: bool = fal
+ 		_walk_settle = true
+ 		_walk_target = roundf(_walk_phase * 2.0) * 0.5
+ 	if walking or active: _walk_settle = false
+-	if mining and not active:
++	if mining and not active and not walking:
+ 		# Settle through real recovery poses instead of snapping to the idle hand.
+ 		_recover_phase = _last_native_phase
+ 		_recover_direction = -1.0 if _last_native_phase < 0.55 else 1.0
+-	if active:
++	if active or walking:
+ 		_recover_phase = -1.0
+ 	direction_name = direction if direction in Gear.DIRECTIONS else "down"
+ 	moving = walking
+@@ -166,18 +167,13 @@ func _draw_frame(delta: float) -> void:
+ 				_walk_phase = fposmod(_walk_phase, 1.0)
+ 		phase = _walk_phase
+ 	var info: Dictionary = _manifest.states[state]
+-	var local_frame: = mini(roundi(phase * int(info.count)), int(info.count) - 1)
++	var local_frame: int = _sample_frame(info, phase, state == "walk" or (state == "mine" and String(_manifest.family) == "drill"))
+ 	if state == "idle":
+ 		local_frame = 0
+ 		for i in Array(info.times).size():
+ 			if float(info.times[i]) <= _idle_clock: local_frame = i
+-	elif presenting_impact:
+-		var best_distance: float = INF
+-		for i in Array(info.times).size():
+-			var distance: float = absf(float(info.times[i]) / float(info.duration) - phase)
+-			if distance < best_distance:
+-				best_distance = distance
+-				local_frame = i
++	if state == "mine":
++		_last_native_phase = _sample_phase(info, local_frame)
+ 	var index: = int(info.offset) + local_frame
+ 	_last_state = state
+ 	_last_local_frame = local_frame
+@@ -199,6 +195,26 @@ func _draw_frame(delta: float) -> void:
+ 	_last_direction = displayed_direction
+ 	redraw_request_count += 1
+ 
++
++func _sample_phase(info: Dictionary, index: int) -> float:
++	if info.has("phases"):
++		return float(info.phases[index])
++	return float(info.times[index]) / maxf(0.001, float(info.duration))
++
++
++func _sample_frame(info: Dictionary, phase: float, looping: bool) -> int:
++	# Nonuniform native samples include the actual impact and authored bridges.
++	# Pick the closest declared sample, never infer its time from atlas position.
++	var best: int = 0
++	var best_distance: float = INF
++	for index in int(info.count):
++		var distance: float = absf(_sample_phase(info, index) - phase)
++		if looping: distance = minf(distance, 1.0 - distance)
++		if distance < best_distance:
++			best_distance = distance
++			best = index
++	return best
++
+ func cancel_pending_impact() -> void:
+ 	_impact_pending = false
+ 

@@ -1,0 +1,24 @@
+{
+  "source_base": "4e1bb94531318ebe7a68d2ccd6eddf9a6df9bae7",
+  "base_sha256": "ba50a787db08620fde3a2da7a44305406fff0a442c82cbea64a061a7146f5fc4",
+  "current_sha256": "ba3a54fc83efa883b4a68de7a032e334cb885bcb50427859fc85fdb2a5be2520",
+  "introduced_by": "8ff2a3c; unchanged since that WIP checkpoint",
+  "path": "scripts/player/player_visual.gd",
+  "review": "Independent read-only history and evidence audit; no fresh animation renderer was run",
+  "changes": [
+    "Removes the old delta*2.8 walk-cycle cap; uses manifest stride_pixels or existing fallback",
+    "Selects nearest declared phase/time sample including loop distance",
+    "Walking cancels mine recovery; displayed mine sample becomes recorded native phase"
+  ],
+  "uncovered": [
+    "Historical motion-final worn/Crusher/Deepcore reports belong to a lost source/atlas candidate and cannot clear this current delta",
+    "Current Worn contact/Deepheart reports do not cover gait/sampling boundaries or every mine-to-walk transition",
+    "Browser overhaul Deep fixtures run synchronously with processing disabled; no awaited rendered active hazard/re-entry cycle is established"
+  ],
+  "next_gate": [
+    "Use unchanged production v28 atlases and exact baseline/current scripts in a bounded rendered comparison",
+    "Exercise walking speeds and direction changes, sample and loop boundaries, stop/start, and mine-to-walk recovery across affected tool families",
+    "Retain visible frames plus phase/frame/position/impact timing; use independent visual criticism before changing the protected baseline"
+  ],
+  "baseline_updated": false
+}

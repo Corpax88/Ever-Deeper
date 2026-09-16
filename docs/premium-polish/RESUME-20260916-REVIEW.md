@@ -1,5 +1,35 @@
 # Continued premium review — 16 September 2026
 
+## Explicit upload checkpoint
+
+Mats requested saving the current work after repeated chat streaming failures.
+Further local studies were paused. The integration was verified remotely as
+`c8906f1d46309227344f101a6b0ae7c1a9b1e69b`, tree
+`0802080c2a35a6a5b45185192cfe634fdc86fb7a`. Subsequent documentation-only commits
+add these preservation receipts; no new game version was deployed.
+
+At the saved status check, exact web review **35088488455** and sustained gameplay
+**35088488292** are running on that immutable integration. Read their actual
+conclusions on continuation. No outcome is asserted in advance.
+
+The unverified corner-crop study is separately saved on
+`codex/corner-quad-crop-study-20260916`, source
+`c113f86169460d3092a63a3e63d79f381028c39b`, tree
+`780adf5cec8c53c983c284405fbda909db43f4ed`. Its one runtime change and exact
+preflight harness were recovered, but no rendered or timing result exists yet.
+Do not adopt it without the listed parity and cost gates.
+
+The wall study's latest README is saved on its existing branch as
+`90ac772232b8506f7146a495e8ae613cd178f663`, tree
+`f0301bf69cd4586d715fcb9ef789d14fad899865`; the V3 mapper remains unaccepted.
+
+The separate protected player_visual mismatch now has a history/evidence audit
+and exact patch in `resume-20260916/pending-animation-audit.json` and
+`pending-player-visual.patch`. Historical lost-candidate movies do not verify its
+current stride/sample/recovery changes. Preserve the old baseline until a faithful
+current rendered gate clears those differences. A full browser active-hazard and
+re-entry cycle is also not established by the synchronous gameplay assertions.
+
 ## Latest integration after the app interruption
 
 The old canonical scratch directory disappeared. The remote `774f889` source
@@ -40,8 +70,10 @@ runtime hashes are in `resume-20260916/recovered-source-20260916.json`.
 Two additional raw-evidence archives are durably saved: `web-wall-uv-cache`
 (libfile_ac39156d2edc8191976e822707ffdbdb) and `browser-depth-native`
 (libfile_63092e5a531c8191b8bf134996f49a9f). Exact file hashes and scope are in
-`resume-20260916/` receipts. New UI and controlled-browser raw captures still
-need the next archive. Native UV component diagnosis is in `native-uv-20260916/`;
+`resume-20260916/` receipts. New UI and controlled-browser raw captures are now saved in the additional
+`Ever-Deeper-checkpoint-20260916-ui-browser-touch.tar.gz` archive, identity
+`libfile_025bc58c9a8481919f6146a047a460d1`; its exact receipt is
+`resume-20260916/ui-browser-touch-archive.json`. Native UV component diagnosis is in `native-uv-20260916/`;
 no UV repair or full bake is approved. The latest unpublished transfer guard was
 not recovered; do not treat earlier guarded audit results as current runnable code.
 
