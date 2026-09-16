@@ -32,6 +32,7 @@ var _drill_clock: = 0.0
 var _recover_phase: = -1.0
 var _recover_direction: = 1.0
 var _last_native_phase: = 0.0
+var _last_requested_native_phase: = 0.0
 var _last_frame: = -1
 var _last_state: = "idle"
 var _last_local_frame: = 0
@@ -76,7 +77,7 @@ func set_state(direction: String, _frame: int, walking: bool, active: bool = fal
 	if mining and not active and not walking:
 		# Settle through real recovery poses instead of snapping to the idle hand.
 		_recover_phase = _last_native_phase
-		_recover_direction = -1.0 if _last_native_phase < 0.55 else 1.0
+		_recover_direction = -1.0 if _last_requested_native_phase < 0.55 else 1.0
 	if active or walking:
 		_recover_phase = -1.0
 	direction_name = direction if direction in Gear.DIRECTIONS else "down"
@@ -173,6 +174,8 @@ func _draw_frame(delta: float) -> void:
 		for i in Array(info.times).size():
 			if float(info.times[i]) <= _idle_clock: local_frame = i
 	if state == "mine":
+		# A nearby contact sample does not mean the mechanical strike occurred.
+		_last_requested_native_phase = phase
 		_last_native_phase = _sample_phase(info, local_frame)
 	var index: = int(info.offset) + local_frame
 	_last_state = state
