@@ -2570,7 +2570,12 @@ func _draw() -> void :
 
 func _draw_partitioned_deep(first: Vector2i, last: Vector2i) -> void:
 	lit_draw_sections.begin(self)
-	var revision: int = hash(floor_cells) ^ hash(dig_damage) ^ window_start_depth ^ int(RunState.world_seed)
+	# A hit only changes its strip; excavation can also expose neighboring rims
+	# and mineral hints. Share each local signature across the three draw passes.
+	var revisions: Dictionary = {}
+	for row in range(first.y, last.y + 1):
+		for col in range(first.x / 4 * 4, last.x + 1, 4):
+			revisions[Vector2i(row, col)] = _terrain_section_fingerprint(row, col, mini(col + 3, GRID_SIZE.x - 1))
 	# Every visible cell has an opaque RGB floor or rock texture. The old
 	# full-world background was entirely covered; skip that hidden light pass.
 	# Composite the floor before lighting, then stone mass and projecting rims.
@@ -2581,9 +2586,23 @@ func _draw_partitioned_deep(first: Vector2i, last: Vector2i) -> void:
 			for col in range(first.x / 4 * 4, last.x + 1, 4):
 				var last_col: int = mini(col + 3, GRID_SIZE.x - 1)
 				if pass_index != 2 or _section_has_wall_edges(row, col, last_col):
-					lit_draw_sections.add_cached(Vector3i(row, col, pass_index), revision, _draw_terrain_section.bind(row, col, last_col, pass_index), material)
+					lit_draw_sections.add_cached(Vector3i(row, col, pass_index), int(revisions[Vector2i(row, col)]), _draw_terrain_section.bind(row, col, last_col, pass_index), material)
 	for impact in _crusher_impacts: lit_draw_sections.add(_draw_impact_section.bind(impact))
 	lit_draw_sections.finish()
+
+
+func _terrain_section_fingerprint(row: int, first_col: int, last_col: int) -> int:
+	# Native packed-array slices detect direct restores and pet/Crusher changes
+	# without relying on every mutator remembering to mark a cache dirty.
+	var signature: Array = [window_start_depth, int(RunState.world_seed)]
+	var left: int = maxi(0, first_col - 1)
+	var right: int = mini(GRID_SIZE.x, last_col + 2)
+	for neighbor_row in range(maxi(0, row - 1), mini(GRID_SIZE.y - 1, row + 1) + 1):
+		var offset: int = neighbor_row * GRID_SIZE.x
+		signature.append(floor_cells.slice(offset + left, offset + right))
+	for col in range(first_col, last_col + 1):
+		signature.append(int(dig_damage.get(Vector2i(col, row), 0)))
+	return hash(signature)
 
 
 func _section_has_wall_edges(row: int, first_col: int, last_col: int) -> bool:

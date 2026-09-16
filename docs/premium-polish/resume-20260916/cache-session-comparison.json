@@ -1,0 +1,152 @@
+[
+  {
+    "label": "deep-A",
+    "source_sha256": "84d5992c84043b37e888209b575cc3876bc4c969f363f2ba40accc3b41252ccb",
+    "exit": 0,
+    "functional": true,
+    "distance": 15594.527964592,
+    "mined_resources": 3403,
+    "meets_50_fps": false,
+    "windows": [
+      {
+        "average_fps": 39.5949278897373,
+        "cpu_p95_ms": 75.635,
+        "distance": 7797.36828613281,
+        "draws_p95": 214.0,
+        "elapsed": 29.978722,
+        "frames": 1188,
+        "nodes": 1679.0,
+        "orphans": 0.0,
+        "p95_ms": 30.713,
+        "p99_ms": 37.856,
+        "static_mib": 86.9700689315796,
+        "video_mib": 485.800746917725
+      },
+      {
+        "average_fps": 38.3727080509438,
+        "cpu_p95_ms": 71.573,
+        "distance": 15594.527964592,
+        "draws_p95": 221.0,
+        "elapsed": 59.999061,
+        "frames": 1152,
+        "nodes": 1687.0,
+        "orphans": 0.0,
+        "p95_ms": 32.775,
+        "p99_ms": 40.862,
+        "static_mib": 87.0551099777222,
+        "video_mib": 487.051303863525
+      }
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "workload": "held_mining_v1"
+  },
+  {
+    "label": "deep-B",
+    "source_sha256": "1c6e458b7e1bdeb4dfaa5787d5a5af682e6075e0bbf76056ca0a95684202760d",
+    "exit": 0,
+    "functional": true,
+    "distance": 15474.8062810898,
+    "mined_resources": 3403,
+    "meets_50_fps": false,
+    "windows": [
+      {
+        "average_fps": 38.6347479257553,
+        "cpu_p95_ms": 81.466,
+        "distance": 7757.70104980469,
+        "draws_p95": 215.0,
+        "elapsed": 29.999784,
+        "frames": 1160,
+        "nodes": 1679.0,
+        "orphans": 0.0,
+        "p95_ms": 30.685,
+        "p99_ms": 38.41,
+        "static_mib": 86.9767599105835,
+        "video_mib": 485.800746917725
+      },
+      {
+        "average_fps": 39.314542449252,
+        "cpu_p95_ms": 39.178,
+        "distance": 15474.8062810898,
+        "draws_p95": 222.0,
+        "elapsed": 60.0,
+        "frames": 1179,
+        "nodes": 1686.0,
+        "orphans": 0.0,
+        "p95_ms": 30.529,
+        "p99_ms": 36.149,
+        "static_mib": 87.0615568161011,
+        "video_mib": 487.051021575928
+      }
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "workload": "held_mining_v1"
+  },
+  {
+    "label": "deep-A2",
+    "source_sha256": "84d5992c84043b37e888209b575cc3876bc4c969f363f2ba40accc3b41252ccb",
+    "exit": 0,
+    "functional": true,
+    "distance": 15505.9641046524,
+    "mined_resources": 3403,
+    "meets_50_fps": false,
+    "windows": [
+      {
+        "average_fps": 39.2265601240438,
+        "cpu_p95_ms": 68.393,
+        "distance": 7769.03430175781,
+        "draws_p95": 215.0,
+        "elapsed": 29.998165,
+        "frames": 1178,
+        "nodes": 1679.0,
+        "orphans": 0.0,
+        "p95_ms": 31.732,
+        "p99_ms": 43.322,
+        "static_mib": 86.9685468673706,
+        "video_mib": 485.800746917725
+      },
+      {
+        "average_fps": 38.7766826838039,
+        "cpu_p95_ms": 58.849,
+        "distance": 15505.9641046524,
+        "draws_p95": 223.0,
+        "elapsed": 60.0,
+        "frames": 1163,
+        "nodes": 1686.0,
+        "orphans": 0.0,
+        "p95_ms": 32.156,
+        "p99_ms": 39.249,
+        "static_mib": 87.0531797409058,
+        "video_mib": 487.051021575928
+      }
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "workload": "held_mining_v1"
+  },
+  {
+    "label": "hub-route",
+    "source_sha256": "1c6e458b7e1bdeb4dfaa5787d5a5af682e6075e0bbf76056ca0a95684202760d",
+    "exit": 0,
+    "functional": true,
+    "distance": 1595.94606551528,
+    "mined_resources": 0,
+    "meets_50_fps": false,
+    "windows": [
+      {
+        "average_fps": 37.9249721411419,
+        "cpu_p95_ms": 55.197,
+        "distance": 1595.94606551528,
+        "draws_p95": 120.0,
+        "elapsed": 29.983943,
+        "frames": 1138,
+        "nodes": 695.0,
+        "orphans": 0.0,
+        "p95_ms": 31.763,
+        "p99_ms": 39.656,
+        "static_mib": 79.0433883666992,
+        "video_mib": 480.706932067871
+      }
+    ],
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "workload": "hub_curve_feedforward_v2"
+  }
+]

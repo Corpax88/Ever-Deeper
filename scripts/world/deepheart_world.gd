@@ -5,6 +5,7 @@ signal context_changed(context: String)
 signal message_changed(message: String)
 signal exit_requested
 signal finale_completed
+signal finale_presentation_changed(enabled: bool)
 
 const HeadlampBeamScript = preload("res://scripts/lighting/headlamp_beam.gd")
 
@@ -28,6 +29,7 @@ const FINALE_CORE_BUILD_START: = 2.05
 const VISUAL_REFRESH_INTERVAL: = 1.0 / 30.0
 const BACKGROUND_TEXTURE: = preload("res://assets/deepheart/deepheart-chamber-background.png")
 const CORE_TEXTURE: = preload("res://assets/deepheart/deepheart-core-machine.png")
+const SEAL_PEDESTAL_TEXTURE := preload("res://assets/endless/relic-pedestal-v1.png")
 const SEAL_TEXTURES: = {
 	"mossvein": preload("res://assets/rootwound/ambercore-node.png"),
 	"moonglass": preload("res://assets/prismatic/lunacore-node.png"),
@@ -41,10 +43,10 @@ const SEAL_COLORS: = {
 	"starfall": Color("bd8cff"),
 }
 const SEAL_POSITIONS: = {
-	"mossvein": Vector2(1425, 752),
-	"moonglass": Vector2(1600, 735),
-	"emberdeep": Vector2(1780, 735),
-	"starfall": Vector2(1960, 752),
+	"mossvein": Vector2(1140, 698),
+	"moonglass": Vector2(1315, 681),
+	"emberdeep": Vector2(1490, 681),
+	"starfall": Vector2(1665, 698),
 }
 const SEAL_ORDER: = ["mossvein", "moonglass", "emberdeep", "starfall"]
 const SEAL_CORE_INTAKES: = {
@@ -53,7 +55,6 @@ const SEAL_CORE_INTAKES: = {
 	"emberdeep": Vector2(1972, 622),
 	"starfall": Vector2(2032, 534),
 }
-const CORE_HEART_POSITION: = Vector2(1900, 516)
 
 @onready var player: CharacterBody2D = $Player
 @onready var darkness: CanvasModulate = $Darkness
@@ -67,12 +68,15 @@ var seal_sprites: Dictionary = {}
 var seal_lights: Dictionary = {}
 var seal_base_scales: Dictionary = {}
 var seal_pedestals: Dictionary = {}
-var seal_pedestal_rims: Dictionary = {}
-var seal_conduits: Dictionary = {}
+var seal_streams: Dictionary = {}
+var core_foundation: = PackedVector2Array([
+	Vector2(1555, 690), Vector2(2245, 690), Vector2(2240, 760),
+	Vector2(2204, 800), Vector2(2070, 843), Vector2(2004, 884),
+	Vector2(1806, 884), Vector2(1758, 854), Vector2(1702, 819),
+	Vector2(1638, 797), Vector2(1558, 765),
+])
 var background_sprite: Sprite2D
 var core_sprite: Sprite2D
-var core_base_scale: = Vector2.ONE
-var core_base_position: = Vector2.ZERO
 var core_light: PointLight2D
 var visual_time: = 0.0
 var visual_refresh_elapsed: = VISUAL_REFRESH_INTERVAL
@@ -87,7 +91,9 @@ var finale_committed: = false
 var finale_stage: = -1
 var finale_reveal_announced: = false
 var radial_texture: GradientTexture2D
-var core_resonance_ring: Line2D
+var finale_camera: Camera2D
+var finale_camera_origin: = Vector2.ZERO
+var finale_camera_zoom: = Vector2.ONE
 var interior_initialized: = false
 var interior_build_count: = 0
 
@@ -126,6 +132,7 @@ func set_active(enabled: bool, entering: bool = false) -> void :
 	external_mine_held = false
 	_cancel_mining()
 	if not enabled:
+		finish_finale_presentation()
 		_set_context("")
 		return
 	_restore_finale_state()
@@ -136,11 +143,15 @@ func set_active(enabled: bool, entering: bool = false) -> void :
 			RunState.begin_final_expedition()
 	player.camera.make_current()
 	player.camera.reset_smoothing()
+	if finale_active:
+		_begin_finale_presentation()
+		_update_finale_camera()
 	_update_context(player.global_position)
 	message_changed.emit("THE DEEPHEART · four worlds, one final resonance")
 
 
 func reset_runtime_state() -> void :
+	finish_finale_presentation()
 	external_mine_held = false
 	_cancel_mining()
 	finale_active = false
@@ -218,8 +229,6 @@ func _build_environment() -> void :
 
 	core_sprite = _create_bottom_anchored_sprite(CORE_TEXTURE, CORE_POSITION, Vector2(810, 690), 4)
 	core_sprite.name = "DeepheartCoreMachine"
-	core_base_scale = core_sprite.scale
-	core_base_position = core_sprite.position
 
 
 func _build_seals() -> void :
@@ -231,74 +240,54 @@ func _build_seals() -> void :
 		var sprite: = Sprite2D.new()
 		sprite.name = "%sSeal" % seal_id.capitalize()
 		sprite.texture = texture
-		sprite.position = Vector2(SEAL_POSITIONS[seal_id])
+		sprite.position = Vector2(SEAL_POSITIONS[seal_id]) + Vector2(0, 32)
+		sprite.centered = false
+		var painted: Rect2i = texture.get_image().get_used_rect()
+		sprite.offset = -Vector2(painted.get_center().x, painted.end.y)
 		var target_size: = 90.0 if seal_id != "starfall" else 96.0
-		sprite.scale = Vector2.ONE * (target_size / maxf(float(texture.get_width()), float(texture.get_height())))
+		sprite.scale = Vector2.ONE * (target_size / maxf(float(painted.size.x), float(painted.size.y)))
 		sprite.z_index = 6
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 		add_child(sprite)
 		seal_sprites[seal_id] = sprite
 		seal_base_scales[seal_id] = sprite.scale
 		seal_state[seal_id] = {"hp": SEAL_MAX_HP, "opened": false, "hits": 0}
-	core_resonance_ring = Line2D.new()
-	core_resonance_ring.name = "CoreResonanceRing"
-	core_resonance_ring.points = _circle_points(CORE_HEART_POSITION, 91.0, 40)
-	core_resonance_ring.width = 7.0
-	core_resonance_ring.default_color = Color(0.5, 0.94, 1.0, 0.0)
-	core_resonance_ring.joint_mode = Line2D.LINE_JOINT_ROUND
-	core_resonance_ring.z_index = 5
-	add_child(core_resonance_ring)
 
 
 func _build_seal_fixture(seal_id: String) -> void :
 	var seal_position: = Vector2(SEAL_POSITIONS[seal_id])
 	var seal_color: = Color(SEAL_COLORS[seal_id])
-	var pedestal: = Polygon2D.new()
+	# Original stone/brass pedestal, positioned by its actual top surface.
+	var pedestal := Sprite2D.new()
 	pedestal.name = "%sPedestal" % seal_id.capitalize()
-	pedestal.polygon = PackedVector2Array([
-		seal_position + Vector2(-54, 28),
-		seal_position + Vector2(54, 28),
-		seal_position + Vector2(68, 72),
-		seal_position + Vector2(-68, 72),
-	])
-	pedestal.color = Color(0.035, 0.055, 0.068, 0.96)
-	pedestal.z_index = 5
+	pedestal.texture = SEAL_PEDESTAL_TEXTURE
+	pedestal.centered = false
+	pedestal.scale = Vector2.ONE * .31
+	pedestal.position = seal_position + Vector2(0, 32) - Vector2(256, 96) * .31
+	pedestal.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	pedestal.material = preload("res://shaders/lit_visible_pixels.tres")
+	pedestal.z_index = 9
 	add_child(pedestal)
 	seal_pedestals[seal_id] = pedestal
 
-	var rim: = Line2D.new()
-	rim.name = "%sPedestalRim" % seal_id.capitalize()
-	rim.points = PackedVector2Array([
-		seal_position + Vector2(-54, 28),
-		seal_position + Vector2(54, 28),
-		seal_position + Vector2(68, 72),
-		seal_position + Vector2(-68, 72),
-		seal_position + Vector2(-54, 28),
-	])
-	rim.width = 4.0
-	rim.default_color = Color(seal_color, 0.3)
-	rim.joint_mode = Line2D.LINE_JOINT_ROUND
-	rim.z_index = 5
-	add_child(rim)
-	seal_pedestal_rims[seal_id] = rim
-
-	var intake: = Vector2(SEAL_CORE_INTAKES[seal_id])
-	var conduit: = Line2D.new()
-	conduit.name = "%sConduit" % seal_id.capitalize()
-	conduit.points = PackedVector2Array([
-		seal_position + Vector2(0, 48),
-		seal_position + Vector2(0, 82),
-		Vector2(lerpf(seal_position.x, intake.x, 0.58), 822.0),
-		intake,
-	])
-	conduit.width = 9.0
-	conduit.default_color = Color(seal_color, 0.08)
-	conduit.joint_mode = Line2D.LINE_JOINT_ROUND
-	conduit.begin_cap_mode = Line2D.LINE_CAP_ROUND
-	conduit.end_cap_mode = Line2D.LINE_CAP_ROUND
-	conduit.z_index = 5
-	add_child(conduit)
-	seal_conduits[seal_id] = conduit
+	# Transient motes carry each resonance above the hardware. The native
+	# brass pipes stay solid; no drawn lines cross the floor or machine.
+	var stream := Node2D.new()
+	stream.name = "%sResonance" % seal_id.capitalize()
+	stream.z_index = 13
+	var glow := CanvasItemMaterial.new()
+	glow.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	glow.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
+	stream.material = glow
+	var texture := _make_radial_texture()
+	for index in 8:
+		var mote := Sprite2D.new()
+		mote.texture = texture
+		mote.use_parent_material = true
+		mote.modulate = Color(seal_color, 0.0)
+		stream.add_child(mote)
+	add_child(stream)
+	seal_streams[seal_id] = stream
 
 
 func _build_lighting() -> void :
@@ -336,10 +325,45 @@ func _configure_player(position: Vector2) -> void :
 
 
 func _resolve_motion(origin: Vector2, motion: Vector2) -> Vector2:
-	var result: = origin + motion
-	result.x = clampf(result.x, WALKABLE_RECT.position.x, WALKABLE_RECT.end.x)
-	result.y = clampf(result.y, WALKABLE_RECT.position.y, WALKABLE_RECT.end.y)
+	var result := origin
+	var steps: int = maxi(1, ceili(motion.length() / 12.0))
+	var step := motion / float(steps)
+	for index in steps:
+		var next_x := Vector2(clampf(result.x + step.x, WALKABLE_RECT.position.x, WALKABLE_RECT.end.x), result.y)
+		if not _fixture_blocks(next_x): result = next_x
+		var next_y := Vector2(result.x, clampf(result.y + step.y, WALKABLE_RECT.position.y, WALKABLE_RECT.end.y))
+		if not _fixture_blocks(next_y): result = next_y
 	return result
+
+
+func restore_position(preferred: Vector2) -> void:
+	var safe := preferred.clamp(WALKABLE_RECT.position, WALKABLE_RECT.end)
+	if _fixture_blocks(safe):
+		var found := false
+		for radius in range(16, 337, 16):
+			for direction in 24:
+				var candidate := (safe + Vector2.from_angle(TAU * float(direction) / 24.0) * float(radius)).clamp(WALKABLE_RECT.position, WALKABLE_RECT.end)
+				if not _fixture_blocks(candidate):
+					safe = candidate
+					found = true
+					break
+			if found: break
+		if not found: safe = PLAYER_SPAWN
+	player.global_position = safe
+	player.camera.reset_smoothing()
+	if interior_initialized: _update_context(safe)
+
+
+func _fixture_blocks(position: Vector2) -> bool:
+	for seal_id in SEAL_ORDER:
+		# The physical base and the hero radius share one footprint. The crystal
+		# itself remains in reach from the unobstructed front of the pedestal.
+		var local: Vector2 = (position - (Vector2(SEAL_POSITIONS[seal_id]) + Vector2(0, 96))) / Vector2(59, 38)
+		if local.length_squared() < 1.0: return true
+	# The painted stone foundation narrows toward its front. Keep the native
+	# staircase open while preventing feet from entering either rock shoulder.
+	if Rect2(1862, 790, 86, 110).has_point(position): return false
+	return Geometry2D.is_point_in_polygon(position, core_foundation)
 
 
 func _on_player_moved(world_position: Vector2) -> void :
@@ -400,7 +424,9 @@ func _update_mining(delta: float) -> void :
 	# Preserve the opened seal during the current strike follow-through.
 	var recovering: bool = mining_active and mining_hit
 	var target: String = mining_target if recovering else _nearest_closed_seal(player.global_position)
-	if not held or player.is_actually_moving() or target.is_empty() or player.global_position.distance_to(Vector2(SEAL_POSITIONS[target])) > _effective_seal_range():
+	# Opening the last nearby seal hides MINE and releases its touch. That UI
+	# event must not cut off a committed impact; movement still cancels at once.
+	if (not held and not recovering) or player.is_actually_moving() or target.is_empty() or player.global_position.distance_to(Vector2(SEAL_POSITIONS[target])) > _effective_seal_range():
 		_cancel_mining()
 		return
 	if not mining_active or mining_target != target:
@@ -469,7 +495,8 @@ func _strike_seal(seal_id: String) -> void :
 	if opened:
 		AudioDirector.play_discovery(true)
 		message_changed.emit("%s RESONANCE OPEN" % seal_id.to_upper())
-		_cancel_mining()
+		# Opening is the contact event, not the end of the physical swing.
+		# _update_mining retains this target through follow-through/recovery.
 		_update_context(player.global_position)
 		if _all_seals_open():
 			message_changed.emit("THE DEEPHEART IS LISTENING · approach the core")
@@ -535,6 +562,7 @@ func _start_finale() -> void :
 		message_changed.emit("Four canonical resonances must reach the Deepheart")
 		return
 	finale_active = true
+	_begin_finale_presentation()
 	finale_elapsed = 0.0
 	finale_stage = -1
 	finale_reveal_announced = false
@@ -546,8 +574,48 @@ func _start_finale() -> void :
 	message_changed.emit("DEEPHEART ATTUNEMENT")
 
 
+func _begin_finale_presentation() -> void:
+	finale_camera_origin = player.camera.get_screen_center_position()
+	finale_camera_zoom = player.camera.zoom
+	if not is_instance_valid(finale_camera):
+		finale_camera = Camera2D.new()
+		finale_camera.name = "FinaleCamera"
+		finale_camera.enabled = false
+		finale_camera.limit_left = 0
+		finale_camera.limit_top = 0
+		finale_camera.limit_right = int(WORLD_SIZE.x)
+		finale_camera.limit_bottom = int(WORLD_SIZE.y)
+		add_child(finale_camera)
+	finale_camera.position = finale_camera_origin
+	finale_camera.zoom = finale_camera_zoom
+	finale_camera.enabled = true
+	finale_camera.make_current()
+	finale_presentation_changed.emit(true)
+
+
+func _update_finale_camera() -> void:
+	if not is_instance_valid(finale_camera) or not finale_camera.enabled: return
+	var viewport: Vector2 = get_viewport_rect().size
+	# Entire machine, all four seated seals and a margin around the bridge.
+	var target_zoom: float = minf(viewport.x / 1430.0, viewport.y / 850.0)
+	var t: float = _smooth_progress(0.0, 1.2, finale_elapsed)
+	finale_camera.zoom = finale_camera_zoom.lerp(Vector2.ONE * target_zoom, t)
+	finale_camera.position = finale_camera_origin.lerp(Vector2(1650, 535), t)
+	finale_camera.force_update_scroll()
+
+
+func finish_finale_presentation() -> void:
+	if not is_instance_valid(finale_camera) or not finale_camera.enabled: return
+	finale_camera.enabled = false
+	if active:
+		player.camera.make_current()
+		player.camera.reset_smoothing()
+	finale_presentation_changed.emit(false)
+
+
 func _advance_finale(delta: float) -> void :
 	finale_elapsed = minf(FINALE_DURATION, finale_elapsed + maxf(0.0, delta))
+	_update_finale_camera()
 	var next_stage: = -1
 	if finale_elapsed >= FINALE_FIRST_SEAL_BEAT:
 		next_stage = mini(
@@ -577,6 +645,7 @@ func _advance_finale(delta: float) -> void :
 		finale_reveal_announced = false
 		player.control_enabled = true
 		player.modulate = Color.WHITE
+		finish_finale_presentation()
 		return
 	finale_committed = true
 	finale_active = false
@@ -612,9 +681,10 @@ func _update_visuals() -> void :
 		var state: = Dictionary(seal_state[seal_id])
 		var sprite: Sprite2D = seal_sprites[seal_id]
 		var light: PointLight2D = seal_lights[seal_id]
-		var pedestal: Polygon2D = seal_pedestals[seal_id]
-		var rim: Line2D = seal_pedestal_rims[seal_id]
-		var conduit: Line2D = seal_conduits[seal_id]
+		var pedestal: Sprite2D = seal_pedestals[seal_id]
+		var depth: int = 9 if player.position.y >= Vector2(SEAL_POSITIONS[seal_id]).y + 104.0 else 11
+		pedestal.z_index = depth
+		sprite.z_index = depth
 		var seal_color: = Color(SEAL_COLORS[seal_id])
 		var pulse: = 0.5 + 0.5 * sin(visual_time * (2.1 if bool(state.opened) else 4.6) + float(index) * 1.4)
 		var hp_ratio: = clampf(float(state.hp) / float(SEAL_MAX_HP), 0.0, 1.0)
@@ -623,49 +693,57 @@ func _update_visuals() -> void :
 			var seated_scale: = 0.86 + pulse * 0.035 + finale_strength * 0.055
 			sprite.scale = Vector2(seal_base_scales[seal_id]) * seated_scale
 			sprite.modulate = Color(seal_color, 0.56 + pulse * 0.15 + finale_strength * 0.24)
-			light.energy = 0.58 + pulse * 0.18 + finale_strength * 0.58
+			light.energy = 0.38 + pulse * 0.09 + finale_strength * 0.22
 			light.texture_scale = (142.0 + pulse * 16.0 + finale_strength * 28.0) / 256.0
-			pedestal.color = Color(0.045 + seal_color.r * 0.045, 0.06 + seal_color.g * 0.045, 0.074 + seal_color.b * 0.045, 0.98)
-			rim.default_color = Color(seal_color, 0.48 + finale_strength * 0.42)
-			conduit.default_color = Color(seal_color, 0.13 + finale_strength * (0.58 + pulse * 0.18))
-			conduit.width = 8.0 + finale_strength * (3.0 + pulse * 2.0)
+			pedestal.modulate = Color.WHITE.lerp(Color(seal_color, 1.0), .10 + finale_strength * .10)
 		else:
 			sprite.scale = Vector2(seal_base_scales[seal_id]) * (0.97 + pulse * 0.025)
 			sprite.modulate = Color(lerpf(0.72, 1.0, hp_ratio), lerpf(0.74, 1.0, hp_ratio), lerpf(0.78, 1.0, hp_ratio), 1.0)
 			light.energy = 0.22 + (1.0 - hp_ratio) * 0.3 + pulse * 0.07
-			pedestal.color = Color(0.035, 0.055, 0.068, 0.96)
-			rim.default_color = Color(seal_color, 0.22 + (1.0 - hp_ratio) * 0.18)
-			conduit.default_color = Color(seal_color, 0.035)
-			conduit.width = 8.0
+			pedestal.modulate = Color(.84, .86, .88, 1.0)
+		_update_resonance_stream(seal_id, index)
 	var opened_ratio: = 0.0
 	for seal_id_value in SEAL_ORDER:
 		opened_ratio += 0.25 if bool(Dictionary(seal_state[String(seal_id_value)]).opened) else 0.0
 	var core_strength: = _finale_core_strength()
 	var core_pulse: = 0.5 + 0.5 * sin(visual_time * lerpf(1.35, 3.55, maxf(opened_ratio, core_strength)))
-	var scale_gain: = opened_ratio * 0.008 + core_strength * (0.02 + core_pulse * 0.014)
-	core_sprite.scale = core_base_scale * (1.0 + scale_gain)
-	var texture_size: = Vector2(core_sprite.texture.get_size())
-	var growth: = texture_size * core_base_scale * scale_gain
-	core_sprite.position = core_base_position - Vector2(growth.x * 0.5, growth.y)
 	core_sprite.modulate = Color(
 		lerpf(0.88, 0.98, opened_ratio) + core_strength * 0.02,
 		lerpf(0.9, 0.98, opened_ratio) + core_strength * 0.02,
 		0.94 + core_pulse * 0.035 + core_strength * 0.025,
 		1.0
 	)
-	core_light.energy = 0.28 + opened_ratio * 0.42 + core_strength * 0.9 + core_pulse * 0.1
+	core_light.energy = 0.28 + opened_ratio * 0.22 + core_strength * 0.36 + core_pulse * 0.055
 	core_light.texture_scale = (280.0 + opened_ratio * 100.0 + core_strength * 172.0) / 256.0
-	core_resonance_ring.default_color = Color(0.52, 0.94, 1.0, opened_ratio * 0.05 + core_strength * (0.52 + core_pulse * 0.2))
-	core_resonance_ring.width = 6.0 + core_strength * (3.0 + core_pulse * 2.0)
 	darkness.color = Color(
-		lerpf(0.48, 0.72, core_strength),
-		lerpf(0.44, 0.66, core_strength),
-		lerpf(0.58, 0.79, core_strength),
+		lerpf(0.48, 0.59, core_strength),
+		lerpf(0.44, 0.54, core_strength),
+		lerpf(0.58, 0.68, core_strength),
 		1.0
 	)
 	if finale_active:
 		var reveal_fade: = _smooth_progress(2.55, FINALE_BUILD_DURATION, finale_elapsed)
 		player.modulate = Color(1.0, 1.0, 1.0, lerpf(1.0, 0.14, reveal_fade))
+
+
+func _update_resonance_stream(seal_id: String, index: int) -> void:
+	var stream: Node2D = seal_streams[seal_id]
+	stream.visible = finale_active and not finale_committed
+	if not stream.visible: return
+	var start_time: float = FINALE_FIRST_SEAL_BEAT + float(index) * FINALE_SEAL_BEAT_SPACING
+	var progress: float = (finale_elapsed - start_time) / .78
+	var source: Vector2 = Vector2(SEAL_POSITIONS[seal_id]) + Vector2(0, -12)
+	var intake: Vector2 = SEAL_CORE_INTAKES[seal_id]
+	var color: Color = SEAL_COLORS[seal_id]
+	for part in stream.get_child_count():
+		var mote: Sprite2D = stream.get_child(part)
+		var t: float = progress - float(part) * .047
+		mote.visible = t > 0.0 and t < 1.0
+		if not mote.visible: continue
+		mote.position = source.bezier_interpolate(source + Vector2(100, -125), intake + Vector2(-80, 50), intake, t)
+		var tail: float = 1.0 - float(part) / 9.0
+		mote.scale = Vector2.ONE * (5.0 + tail * 13.0) / 512.0
+		mote.modulate = Color(color, sin(PI * t) * tail * .84)
 
 
 func _finale_seal_strength(index: int) -> float:
@@ -703,14 +781,6 @@ func _create_bottom_anchored_sprite(texture: Texture2D, anchor: Vector2, max_siz
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	add_child(sprite)
 	return sprite
-
-
-func _circle_points(center: Vector2, radius: float, segments: int) -> PackedVector2Array:
-	var points: = PackedVector2Array()
-	for index in range(maxi(8, segments) + 1):
-		var angle: = TAU * float(index) / float(maxi(8, segments))
-		points.append(center + Vector2(cos(angle), sin(angle)) * radius)
-	return points
 
 
 func _make_radial_texture() -> GradientTexture2D:

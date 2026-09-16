@@ -2,6 +2,7 @@ extends Node2D
 ## Execute existing drawing functions in bounded CanvasItems, in their original order.
 ## The world retains all geometry/state ownership; this layer only narrows light culling.
 var enabled: bool = true
+const VISIBLE_PIXELS_MATERIAL := preload("res://shaders/lit_visible_pixels.tres")
 var _pool: Array[DrawSection] = []
 var _used: int = 0
 var _world: Node2D
@@ -11,6 +12,11 @@ var _epoch: int = 0
 var _order: int = 0
 var cached_redraws: int = 0
 var cached_reuses: int = 0
+var profile_draws: bool = false
+var draw_callbacks: int = 0
+var draw_callback_usec: int = 0
+var setup_usec: int = 0
+var _setup_started: int = 0
 
 class DrawSection extends Node2D:
 	var world: Node2D
@@ -19,10 +25,15 @@ class DrawSection extends Node2D:
 	var seen: int = -1
 
 	func _draw() -> void:
+		var owner_sections: Node = get_parent()
+		var started: int = Time.get_ticks_usec() if owner_sections.profile_draws else 0
 		var previous: CanvasItem = world._draw_canvas
 		world._draw_canvas = self
 		paint.call()
 		world._draw_canvas = previous
+		if owner_sections.profile_draws:
+			owner_sections.draw_callbacks += 1
+			owner_sections.draw_callback_usec += Time.get_ticks_usec() - started
 
 func _init() -> void:
 	name = "LitDrawSections"
@@ -30,6 +41,7 @@ func _init() -> void:
 	use_parent_material = true
 
 func begin(world: Node2D) -> void:
+	_setup_started = Time.get_ticks_usec() if profile_draws else 0
 	_world = world
 	_used = 0
 	_order = 0
@@ -69,8 +81,11 @@ func _configure(section: DrawSection, paint: Callable, draw_material: Material, 
 	section.world = _world
 	section.z_index = draw_depth
 	section.paint = paint
-	section.use_parent_material = draw_material == null
-	section.material = draw_material
+	# Keep explicit/inherited world materials intact. Standard lit artwork can
+	# reject exact-zero alpha before the renderer evaluates lights and shadows.
+	var standard_lighting: bool = draw_material == null and _world.material == null and not _world.use_parent_material
+	section.use_parent_material = draw_material == null and not standard_lighting
+	section.material = VISIBLE_PIXELS_MATERIAL if standard_lighting else draw_material
 	section.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED if draw_material != null else CanvasItem.TEXTURE_REPEAT_PARENT_NODE
 	section.light_mask = _world.light_mask
 	section.self_modulate = _world.self_modulate
@@ -89,7 +104,8 @@ func finish() -> void:
 		section.hide()
 		_cached.erase(key)
 		_recycled.append(section)
+	if profile_draws: setup_usec += Time.get_ticks_usec() - _setup_started
 
 
 func debug_snapshot() -> Dictionary:
-	return {"cached": _cached.size(), "recycled": _recycled.size(), "dynamic": _pool.size(), "redraws": cached_redraws, "reuses": cached_reuses}
+	return {"cached": _cached.size(), "recycled": _recycled.size(), "dynamic": _pool.size(), "redraws": cached_redraws, "reuses": cached_reuses, "draw_callbacks": draw_callbacks, "draw_callback_usec": draw_callback_usec, "setup_usec": setup_usec}

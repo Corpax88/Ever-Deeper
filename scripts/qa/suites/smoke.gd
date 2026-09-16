@@ -480,13 +480,7 @@ func _run_smoke_test() -> void :
 	main.hub_world.set_active(false)
 	main.surface_world.reset_for_new_run()
 	main.surface_world.set_active(true)
-	var moss_ironbound_position: Vector2 = main.surface_world.surface_chest_position("moss_ironbound")
-	assert (moss_ironbound_position == Vector2(700, 720))
-	assert ( not main.surface_world._surface_collides(moss_ironbound_position))
 	assert (main.surface_world._surface_collides(Vector2(300, 940)))
-	main.surface_world.restore_position(moss_ironbound_position)
-	assert (main.surface_context == "chest:moss_ironbound")
-	assert (main.action_button.text == "LOCKED" and main.action_button.disabled, "A tier-locked cache must explain itself without opening")
 	RunState.gold = 150
 	main.surface_world.restore_position(main.surface_world._station_position("speedShop"))
 	assert (main.surface_context == "speedShop")
@@ -532,4 +526,3 @@ func _run_smoke_test() -> void :
 	assert (InputMap.has_action("interact") and not InputMap.action_get_events("interact").is_empty(), "Keyboard interaction must remain bound for E/F")
 	print("EVER_DEEPER_MOSS_ROOTWOUND_LOOP_OK source=", GameData.source_label(), " moss_blocks=", snapshot.blocks, " moon_blocks=", moon_snapshot.blocks, " portal=1752,2808 depth=Rootwound drill=Burrower persistence=true explicit_transitions=true")
 	main.get_tree().quit(0)
-

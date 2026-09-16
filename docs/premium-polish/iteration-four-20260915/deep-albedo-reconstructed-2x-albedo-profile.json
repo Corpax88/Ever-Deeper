@@ -1,0 +1,42 @@
+{
+	"bake_gpu_ms": 0.0,
+	"bake_gpu_timing_supported": false,
+	"bake_viewports_timed": 0,
+	"chunks": 40,
+	"density": 2.0,
+	"hybrid": false,
+	"initial_bake_wall_ms": 287.738,
+	"physical_iphone": false,
+	"pilot_only": true,
+	"reconstruct": true,
+	"renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"seed": 4608,
+	"stages": [
+		{
+			"draws": 188.0,
+			"fps": 38.3255640894255,
+			"id": "original",
+			"p95_ms": 29.748,
+			"root_gpu_ms": 20.4549999237061,
+			"vram_bytes": 508779136.0
+		},
+		{
+			"draws": 77.0,
+			"fps": 40.493114375295,
+			"id": "cached",
+			"p95_ms": 27.416,
+			"root_gpu_ms": 17.2980003356934,
+			"vram_bytes": 593981056.0
+		},
+		{
+			"draws": 188.0,
+			"fps": 38.1409577973297,
+			"id": "original_restored",
+			"p95_ms": 31.165,
+			"root_gpu_ms": 20.5659999847412,
+			"vram_bytes": 593981056.0
+		}
+	],
+	"terrain_hash": 1339482333,
+	"texture_bytes": 42600960.0
+}

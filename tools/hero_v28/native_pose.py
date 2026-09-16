@@ -24,6 +24,8 @@ def create_applier(rig,rest):
                 ob=rig.data.bones[name]
                 target[name]=(ob.tail_local-ob.head_local).rotation_difference(end-start).to_matrix().to_4x4()@mats[name]
                 target[name].translation=start
+            if 'foot_rotations' in p:
+                target['foot.'+side]=p['foot_rotations'][side].to_4x4()@mats['foot.'+side]
             target['foot.'+side].translation=foot
             old=motion_v3.frame_matrix(rest['hand_axes'][side],rest['radials'][side])
             new=motion_v3.frame_matrix(p['hand_axes'][side],p['radials'][side])

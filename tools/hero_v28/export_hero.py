@@ -5,7 +5,7 @@ from mathutils import Vector, Matrix
 from bpy_extras.object_utils import world_to_camera_view
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT))
-import motion_v9, motion_v3, premium_motion
+import motion_v9, motion_v3, premium_motion, locomotion
 from native_pose import create_applier
 from eyelids import create_blink
 from hero_expression_v7 import blink_at
@@ -16,13 +16,14 @@ ap.add_argument('--output',type=Path,required=True)
 ap.add_argument('--gear',default='iron',choices=list(motion_v3.PROFILES))
 ap.add_argument('--review',action='store_true')
 ap.add_argument('--premium-pilot',action='store_true')
+ap.add_argument('--gait-pilot',action='store_true')
 ap.add_argument('--direction',default='all')
 ap.add_argument('--threads',type=int,default=2)
 a=ap.parse_args(sys.argv[sys.argv.index('--')+1:])
 s=bpy.context.scene;r=bpy.data.objects['EverDeeper_Hero_Rig'];kind=a.gear;family=motion_v3.PROFILES[kind]['family']
 out=a.output/kind;out.mkdir(parents=True,exist_ok=True)
 template=ROOT.parent.parent/'assets/hero/dad'/kind/'manifest.json'
-fingerprint=hashlib.sha256(b''.join(p.read_bytes() for p in sorted(ROOT.glob('*.py')))+Path(bpy.data.filepath).read_bytes()+(ROOT/'gear_profiles.json').read_bytes()+(a.native_tools/kind/'hero.blend').read_bytes()+template.read_bytes()+str((a.review,a.premium_pilot)).encode()).hexdigest()
+fingerprint=hashlib.sha256(b''.join(p.read_bytes() for p in sorted(ROOT.glob('*.py')))+Path(bpy.data.filepath).read_bytes()+(ROOT/'gear_profiles.json').read_bytes()+(a.native_tools/kind/'hero.blend').read_bytes()+template.read_bytes()+str((a.review,a.premium_pilot,a.gait_pilot)).encode()).hexdigest()
 stamp=out/'render-config.sha256'
 if stamp.exists():assert stamp.read_text()==fingerprint,'Output belongs to a different render configuration'
 else:stamp.write_text(fingerprint)
@@ -104,7 +105,9 @@ def ground_vector(direction):
  ground=jacobian.inverted()@screen
  return Vector((ground.x,ground.y,0))
 def pose(t,mode,direction):
- if a.premium_pilot:
+ if a.gait_pilot:
+  p=locomotion.sample_walk(kind,t,ground_vector(direction),'run')
+ elif a.premium_pilot:
   ground=ground_vector(direction)
   if mode=='walk_to_mine':
    p=premium_motion.blend(kind,premium_motion.sample(kind,'walk',.25,ground),premium_motion.sample(kind,'mine',.06,ground),t)
@@ -132,6 +135,10 @@ if a.premium_pilot:
   'walk_to_mine':[i/6 for i in range(7)],
   'mine_to_walk':[i/6 for i in range(7)],
  }.items()}
+if a.gait_pilot:
+ m['pilot_only']=True
+ m['states']={'walk':{'times':[i/48 for i in range(48)]}}
+ m['gait']={'profile':'run','speed':200.,'stride':88.,'contact_ms':80.,'foot_roll':True}
 error=0.0
 views=[('down',(1.6,-6)),('left',(6,-1)),('up',(6,6)),('right',(-6,-1))]
 views=[v for v in views if a.direction in ['all',v[0]]]
@@ -161,7 +168,7 @@ for mode,info in m['states'].items():
     bpy.ops.render.render(write_still=True)
     done.write_text(fingerprint)
    sample={'direction':direction,'state':mode,'index':i,'time':t,'path':key+'.png','mask':'mask-'+key+'-0001.png'}
-   if a.premium_pilot:
+   if a.premium_pilot or a.gait_pilot:
     sample['feet']={side:list(world_to_camera_view(s,c,p['legs'][side][2])) for side in ['R','L']}
     sample['contacts']=p['contacts']
    m['frames'].append(sample)
@@ -169,5 +176,5 @@ for mode,info in m['states'].items():
  assert error<1e-5,error
  print('STATE_RENDERED',kind,mode,flush=True)
 m['max_grip_error']=error
-(out/('pilot-manifest.json' if a.premium_pilot else 'review-manifest.json' if a.review else 'manifest.json')).write_text(json.dumps(m,indent=2)+'\n')
+(out/('pilot-manifest.json' if a.premium_pilot or a.gait_pilot else 'review-manifest.json' if a.review else 'manifest.json')).write_text(json.dumps(m,indent=2)+'\n')
 print('HERO_V28_REVIEW_COMPLETE' if a.review else 'HERO_V28_EXPORT_COMPLETE',kind,len(m['frames']),flush=True)

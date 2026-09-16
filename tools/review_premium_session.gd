@@ -68,7 +68,11 @@ func _run() -> void:
 		var elapsed: float = float(Time.get_ticks_usec() - started) / 1000000.0
 		if area == "hub":
 			var target: Vector2 = start + Vector2(sin(elapsed * 0.3) * 240.0, cos(elapsed * 0.3) * 100.0 - 130.0)
-			world.player.set_external_movement(player.global_position.direction_to(target))
+			# Follow the route at its own speed. A normalized pursuit vector made
+			# the hero overshoot and reverse every frame once it caught the target.
+			var route_velocity: Vector2 = Vector2(cos(elapsed * 0.3) * 72.0, -sin(elapsed * 0.3) * 30.0)
+			var desired_velocity: Vector2 = route_velocity + (target - player.global_position) * 5.0
+			world.player.set_external_movement(desired_velocity / maxf(1.0, float(player.movement_speed)))
 		else:
 			world.set_mine_held(true)
 			var direction: Vector2 = Vector2.DOWN if area == "deep" else [Vector2.RIGHT, Vector2.DOWN, Vector2.LEFT, Vector2.UP][int(elapsed / 25.0) % 4]
@@ -102,6 +106,7 @@ func _run() -> void:
 	var functional: bool = distance > 100.0 and (area == "hub" or mined > 0)
 	var report: Dictionary = {
 		"seed": state.world_seed, "area": area, "seconds": seconds, "windows": windows, "distance": distance, "mined_resources": mined,
+		"workload": "hub_curve_feedforward_v2" if area == "hub" else "held_mining_v1",
 		"built_hub_visible": bool(state.victory) and area == "hub",
 		"functional": functional, "meets_50_fps": meets, "rendered": true, "physical_iphone": false,
 		"display": DisplayServer.get_name(), "renderer": RenderingServer.get_video_adapter_name(),

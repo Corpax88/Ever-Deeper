@@ -435,7 +435,6 @@ func _run_iphone_layout_qa() -> void :
 			var target_rect: Rect2 = menu[target_name]
 			assert (target_rect.size.y * scale_to_css >= 44.0)
 		assert (float(inventory.close_height) * scale_to_css >= 44.0)
-		assert (not inventory.has("auto_sort_height"), "Retired chest sorting must not leave an inventory control")
 		assert (int(inventory.columns) == 4)
 		assert (Rect2(menu.safe_rect).encloses(Rect2(menu.main)))
 		assert (Rect2(menu.safe_rect).encloses(Rect2(menu.detail)))

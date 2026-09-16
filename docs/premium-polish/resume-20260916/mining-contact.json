@@ -1,0 +1,111 @@
+{
+	"checks": [
+		{
+			"direction": "right",
+			"frame": 26,
+			"id": "deep_overshoot_retarget",
+			"passed": true
+		},
+		{
+			"id": "explicit_turn",
+			"passed": true
+		},
+		{
+			"direction": "right",
+			"frame": 26,
+			"id": "completion_cancels_cycle",
+			"passed": true
+		},
+		{
+			"distance": 135.999877929688,
+			"id": "deepheart_approach_mossvein",
+			"passed": true,
+			"position": "(1140.0, 833.9999)"
+		},
+		{
+			"distance": 135.999816894531,
+			"id": "deepheart_approach_moonglass",
+			"passed": true,
+			"position": "(1315.0, 816.9998)"
+		},
+		{
+			"distance": 135.999816894531,
+			"id": "deepheart_approach_emberdeep",
+			"passed": true,
+			"position": "(1490.0, 816.9998)"
+		},
+		{
+			"distance": 135.999877929688,
+			"id": "deepheart_approach_starfall",
+			"passed": true,
+			"position": "(1665.0, 833.9999)"
+		},
+		{
+			"direction": "up",
+			"frame": 26,
+			"id": "deepheart_normal_contact",
+			"passed": true
+		},
+		{
+			"direction": "up",
+			"frame": 26,
+			"id": "deepheart_final_opening_contact",
+			"passed": true
+		},
+		{
+			"id": "deepheart_complete_final_swing",
+			"passed": true
+		},
+		{
+			"fixed_simulation_step": true,
+			"id": "deepheart_camera_sequence",
+			"passed": true,
+			"physical_fps_evidence": false,
+			"samples": [
+				{
+					"center": "(1608.186, 752.2326)",
+					"time": 0.0333333333333333,
+					"zoom": "(0.999478, 0.999478)"
+				},
+				{
+					"center": "(1617.438, 704.1661)",
+					"time": 0.366666666666667,
+					"zoom": "(0.948713, 0.948713)"
+				},
+				{
+					"center": "(1569.501, 616.8997)",
+					"time": 0.7,
+					"zoom": "(0.85655, 0.85655)"
+				},
+				{
+					"center": "(1490.477, 546.4333)",
+					"time": 1.03333333333333,
+					"zoom": "(0.782128, 0.782128)"
+				},
+				{
+					"center": "(1476.215, 535.0)",
+					"time": 1.36666666666667,
+					"zoom": "(0.770053, 0.770053)"
+				}
+			]
+		},
+		{
+			"id": "deepheart_finale_rotation_resume",
+			"passed": true
+		},
+		{
+			"id": "deepheart_core_reachable",
+			"passed": true
+		},
+		{
+			"id": "deepheart_cinematic_restores_play",
+			"passed": true
+		},
+		{
+			"id": "deepheart_restore_clear_ground",
+			"passed": true
+		}
+	],
+	"physical_iphone": false,
+	"rendered": true
+}

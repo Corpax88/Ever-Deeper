@@ -1,4 +1,5 @@
-Current continuation: [CURRENT-POLISH.md](docs/premium-polish/CURRENT-POLISH.md). Read this before the historical checkpoint below.
+Current verified recovery: [16 September continuation](docs/premium-polish/RESUME-20260916.md).
+Current continuation: [CURRENT-POLISH.md](docs/premium-polish/CURRENT-POLISH.md). Read these before the historical checkpoint below.
 
 # Ever-Deeper — continue premium polish
 
@@ -162,4 +163,3 @@ ground anchors, tool identities, outfit masks and atomic export fingerprints.
 5. Complete exact-package, sustained GPU/browser and mobile acceptance,
    then the normal project release routine. Do not publish a WIP to satisfy
    this handoff request.
-

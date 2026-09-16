@@ -1,0 +1,34 @@
+{
+	"atlas_size": "(4096.0, 4112.0)",
+	"native_resolution": true,
+	"packing_ms": 61.819,
+	"physical_iphone": false,
+	"pilot_only": true,
+	"sources": 12,
+	"stages": [
+		{
+			"draws": 188.0,
+			"fps": 39.6679375024668,
+			"id": "original",
+			"p95_ms": 28.18,
+			"root_gpu_ms": 20.4449996948242,
+			"vram_bytes": 508779136.0
+		},
+		{
+			"draws": 149.0,
+			"fps": 38.5984715005286,
+			"id": "atlas",
+			"p95_ms": 30.822,
+			"root_gpu_ms": 20.1800003051758,
+			"vram_bytes": 598606804.0
+		},
+		{
+			"draws": 188.0,
+			"fps": 40.1312551599111,
+			"id": "original_restored",
+			"p95_ms": 28.9,
+			"root_gpu_ms": 20.0830001831055,
+			"vram_bytes": 598606804.0
+		}
+	]
+}

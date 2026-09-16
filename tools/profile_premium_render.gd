@@ -45,6 +45,20 @@ func _run() -> void:
 		fixed_enabled=bool(field._floor_material.get_shader_parameter("fixed_enabled"))
 	for node in world.find_children("*","PointLight2D",true,false):
 		lights.append({"node":node,"visible":node.visible,"shadow":node.shadow_enabled})
+	await _review()
+	var occluders: Node = world.get_node_or_null("CaveLightOccluders")
+	var refresh_mean_us: float = 0.0
+	if occluders != null:
+		var start_us: int = Time.get_ticks_usec()
+		for sample in 500: occluders.refresh()
+		refresh_mean_us = float(Time.get_ticks_usec() - start_us) / 500.0
+	var report: Dictionary={"area":area,"seed":root.get_node("RunState").world_seed,"terrain_hash":hash(world.floor_cells) if area=="deep" else 0 if area=="hub" else hash(world.terrain_hp),"player":str(world.player.position),"camera":str(world.player.camera.get_screen_center_position()),"renderer":RenderingServer.get_video_adapter_name(),"physical_iphone":false,"light_count":lights.size(),"stages":results}
+	report["occlusion_refresh_mean_us"] = refresh_mean_us
+	FileAccess.open(output.path_join("render-profile.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"\t"))
+	print("PREMIUM_RENDER_PROFILE_COMPLETE "+JSON.stringify(report))
+	quit()
+
+func _review() -> void:
 	await _measure("live_idle")
 	_freeze(world)
 	await _measure("frozen_scripts")
@@ -62,17 +76,6 @@ func _run() -> void:
 		entry.node.set_process(entry.process)
 		entry.node.set_physics_process(entry.physics)
 	await _measure("live_restored")
-	var occluders: Node = world.get_node_or_null("CaveLightOccluders")
-	var refresh_mean_us: float = 0.0
-	if occluders != null:
-		var start_us: int = Time.get_ticks_usec()
-		for sample in 500: occluders.refresh()
-		refresh_mean_us = float(Time.get_ticks_usec() - start_us) / 500.0
-	var report: Dictionary={"area":area,"seed":root.get_node("RunState").world_seed,"terrain_hash":hash(world.floor_cells) if area=="deep" else 0 if area=="hub" else hash(world.terrain_hp),"player":str(world.player.position),"camera":str(world.player.camera.get_screen_center_position()),"renderer":RenderingServer.get_video_adapter_name(),"physical_iphone":false,"light_count":lights.size(),"stages":results}
-	report["occlusion_refresh_mean_us"] = refresh_mean_us
-	FileAccess.open(output.path_join("render-profile.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"\t"))
-	print("PREMIUM_RENDER_PROFILE_COMPLETE "+JSON.stringify(report))
-	quit()
 
 func _freeze(node: Node) -> void:
 	process_nodes.append({"node":node,"process":node.is_processing(),"physics":node.is_physics_processing()})

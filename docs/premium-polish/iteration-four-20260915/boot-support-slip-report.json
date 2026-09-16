@@ -1,0 +1,274 @@
+{
+  "dense_2001_phase_reach": {
+    "run": {
+      "speed": 200.0,
+      "stride": 88.0,
+      "contact_ms": 80.0,
+      "steps_per_second": 4.545454545454546,
+      "roll_advance": 0.12601987740452708,
+      "directions": {
+        "down": {
+          "min_leg_margin": 0.010317807917941624,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.4025133334805469,
+            0.4440344939973791
+          ]
+        },
+        "left": {
+          "min_leg_margin": 0.0893092941265558,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.4025133334805469,
+            0.4440344939973791
+          ]
+        },
+        "up": {
+          "min_leg_margin": 0.039893018164658955,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.4025133334805469,
+            0.4440344939973791
+          ]
+        },
+        "right": {
+          "min_leg_margin": 0.08930929594150022,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.4025133334805469,
+            0.4440344939973791
+          ]
+        }
+      }
+    },
+    "sprint": {
+      "speed": 230.0,
+      "stride": 88.0,
+      "contact_ms": 69.56521739130434,
+      "steps_per_second": 5.2272727272727275,
+      "roll_advance": 0.12601987740452708,
+      "directions": {
+        "down": {
+          "min_leg_margin": 0.01122060653220286,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.4067775678491848,
+            0.43817353043280083
+          ]
+        },
+        "left": {
+          "min_leg_margin": 0.08704411274642859,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.4067775678491848,
+            0.43817353043280083
+          ]
+        },
+        "up": {
+          "min_leg_margin": 0.04071298581425442,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.4067775678491848,
+            0.43817353043280083
+          ]
+        },
+        "right": {
+          "min_leg_margin": 0.08704411449228505,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.4067775678491848,
+            0.43817353043280083
+          ]
+        }
+      }
+    },
+    "jog": {
+      "speed": 120.0,
+      "stride": 56.0,
+      "contact_ms": 133.33333333333334,
+      "steps_per_second": 4.285714285714286,
+      "roll_advance": 0.12601987740452708,
+      "directions": {
+        "down": {
+          "min_leg_margin": 0.018210089243095307,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.3991825398577939,
+            0.4322624969374383
+          ]
+        },
+        "left": {
+          "min_leg_margin": 0.09113605766892369,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.3991825398577939,
+            0.4322624969374383
+          ]
+        },
+        "up": {
+          "min_leg_margin": 0.04587693310842511,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.3991825398577939,
+            0.4322624969374383
+          ]
+        },
+        "right": {
+          "min_leg_margin": 0.09113605950340953,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.3991825398577939,
+            0.4322624969374383
+          ]
+        }
+      }
+    },
+    "walk": {
+      "speed": 60.0,
+      "stride": 26.0,
+      "contact_ms": 233.99999999999997,
+      "steps_per_second": 4.615384615384615,
+      "roll_advance": 0.05259467790186019,
+      "directions": {
+        "down": {
+          "min_leg_margin": 0.01749856057531035,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.423,
+            0.43499999260519484
+          ]
+        },
+        "left": {
+          "min_leg_margin": 0.06872805475814026,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.423,
+            0.43499999260519484
+          ]
+        },
+        "up": {
+          "min_leg_margin": 0.03855029254927195,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.423,
+            0.43499999260519484
+          ]
+        },
+        "right": {
+          "min_leg_margin": 0.0687280551046327,
+          "min_sole_clearance": 0.0,
+          "hip_range": [
+            0.423,
+            0.43499999260519484
+          ]
+        }
+      }
+    }
+  },
+  "contact_checks": {
+    "run": {
+      "down": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 0.00014134817054185916,
+        "join_fd_height_velocity_difference_native_units_per_second": 0.00015024370636496087,
+        "join_fd_roll_velocity_difference_radians_per_second": 2.6575080520013277e-05,
+        "max_planted_sole_slip_native_units_per_second": 1.7126476667614994e-08
+      },
+      "left": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 7.05269491797399e-05,
+        "join_fd_height_velocity_difference_native_units_per_second": 0.00015024370636496087,
+        "join_fd_roll_velocity_difference_radians_per_second": 2.6575080520013277e-05,
+        "max_planted_sole_slip_native_units_per_second": 1.7126459538326444e-08
+      },
+      "up": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 0.00012257379454861837,
+        "join_fd_height_velocity_difference_native_units_per_second": 0.00015024370636496087,
+        "join_fd_roll_velocity_difference_radians_per_second": 2.6575080520013277e-05,
+        "max_planted_sole_slip_native_units_per_second": 1.7126531672394233e-08
+      },
+      "right": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 7.05269491797399e-05,
+        "join_fd_height_velocity_difference_native_units_per_second": 0.00015024370636496087,
+        "join_fd_roll_velocity_difference_radians_per_second": 2.6575080520013277e-05,
+        "max_planted_sole_slip_native_units_per_second": 1.712645177711273e-08
+      }
+    },
+    "sprint": {
+      "down": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 0.00016255039612313803,
+        "join_fd_height_velocity_difference_native_units_per_second": 0.000172780262319705,
+        "join_fd_roll_velocity_difference_radians_per_second": 3.0561342598015266e-05,
+        "max_planted_sole_slip_native_units_per_second": 1.9695448167757243e-08
+      },
+      "left": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 8.110599155670089e-05,
+        "join_fd_height_velocity_difference_native_units_per_second": 0.000172780262319705,
+        "join_fd_roll_velocity_difference_radians_per_second": 3.0561342598015266e-05,
+        "max_planted_sole_slip_native_units_per_second": 1.969542846907541e-08
+      },
+      "up": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 0.00014095986373091114,
+        "join_fd_height_velocity_difference_native_units_per_second": 0.000172780262319705,
+        "join_fd_roll_velocity_difference_radians_per_second": 3.0561342598015266e-05,
+        "max_planted_sole_slip_native_units_per_second": 1.9695511423253367e-08
+      },
+      "right": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 8.110599155670089e-05,
+        "join_fd_height_velocity_difference_native_units_per_second": 0.000172780262319705,
+        "join_fd_roll_velocity_difference_radians_per_second": 3.0561342598015266e-05,
+        "max_planted_sole_slip_native_units_per_second": 1.9695419543679638e-08
+      }
+    },
+    "jog": {
+      "down": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 5.027347585847711e-05,
+        "join_fd_height_velocity_difference_native_units_per_second": 0.00014297467971451688,
+        "join_fd_roll_velocity_difference_radians_per_second": 3.44131865860829e-05,
+        "max_planted_sole_slip_native_units_per_second": 4.103862163191554e-09
+      },
+      "left": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 2.3886101430115048e-05,
+        "join_fd_height_velocity_difference_native_units_per_second": 0.00014297467971451688,
+        "join_fd_roll_velocity_difference_radians_per_second": 3.44131865860829e-05,
+        "max_planted_sole_slip_native_units_per_second": 4.103922644668379e-09
+      },
+      "up": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 4.327829761230362e-05,
+        "join_fd_height_velocity_difference_native_units_per_second": 0.00014297467971451688,
+        "join_fd_roll_velocity_difference_radians_per_second": 3.44131865860829e-05,
+        "max_planted_sole_slip_native_units_per_second": 4.103922781331686e-09
+      },
+      "right": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 2.3886101430115048e-05,
+        "join_fd_height_velocity_difference_native_units_per_second": 0.00014297467971451688,
+        "join_fd_roll_velocity_difference_radians_per_second": 3.44131865860829e-05,
+        "max_planted_sole_slip_native_units_per_second": 4.10409073796715e-09
+      }
+    },
+    "walk": {
+      "down": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 5.120814029223853e-05,
+        "join_fd_height_velocity_difference_native_units_per_second": 7.603417895296616e-05,
+        "join_fd_roll_velocity_difference_radians_per_second": 4.734565303912483e-05,
+        "max_planted_sole_slip_native_units_per_second": 3.843324822676807e-10
+      },
+      "left": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 2.3944628331389156e-05,
+        "join_fd_height_velocity_difference_native_units_per_second": 7.603417895296616e-05,
+        "join_fd_roll_velocity_difference_radians_per_second": 4.734565303912483e-05,
+        "max_planted_sole_slip_native_units_per_second": 3.881941374349676e-10
+      },
+      "up": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 4.398071650458545e-05,
+        "join_fd_height_velocity_difference_native_units_per_second": 7.603417895296616e-05,
+        "join_fd_roll_velocity_difference_radians_per_second": 4.734565303912483e-05,
+        "max_planted_sole_slip_native_units_per_second": 3.8852545248453096e-10
+      },
+      "right": {
+        "join_fd_forward_velocity_difference_native_units_per_second": 2.3944628331389156e-05,
+        "join_fd_height_velocity_difference_native_units_per_second": 7.603417895296616e-05,
+        "join_fd_roll_velocity_difference_radians_per_second": 4.734565303912483e-05,
+        "max_planted_sole_slip_native_units_per_second": 3.905858872767333e-10
+      }
+    }
+  }
+}

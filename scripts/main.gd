@@ -127,6 +127,8 @@ var orientation_guard_active: = false
 var guide_update_elapsed: = GUIDE_UPDATE_INTERVAL
 var guide_route_update_count: = 0
 var achievement_anchor_elapsed: = ACHIEVEMENT_ANCHOR_UPDATE_INTERVAL
+var deepheart_presentation: = false
+var presentation_hud_state: Array[Dictionary] = []
 var minimap_update_elapsed: = MINIMAP_UPDATE_INTERVAL
 var mine_held: = false
 var mine_touch_index: = -1
@@ -202,6 +204,7 @@ func _ready() -> void :
 	deepheart_world.message_changed.connect(_set_status)
 	deepheart_world.exit_requested.connect(_exit_deepheart)
 	deepheart_world.finale_completed.connect(_on_deepheart_finale_completed)
+	deepheart_world.finale_presentation_changed.connect(_set_deepheart_presentation)
 	_connect_optional_signal(endless_world, "context_changed", "_on_endless_context_changed")
 	_connect_optional_signal(endless_world, "message_changed", "_set_status")
 	_connect_optional_signal(endless_world, "depth_changed", "_on_endless_depth_changed")
@@ -235,12 +238,7 @@ func _ready() -> void :
 	for variant_id in STARFORGE_VARIANT_IDS:
 		var button: Button = starforge_buttons[variant_id]
 		button.pressed.connect(_on_starforge_choice.bind(variant_id))
-	surface_world.set_active(false)
-	mine_world.set_active(false)
-	depth_world.set_active(false)
-	hub_world.set_active(false)
-	deepheart_world.set_active(false)
-	endless_world.set_active(false)
+	_deactivate_worlds()
 	conclusion_overlay.visible = false
 	start_menu.visible = false
 	status_label.get_parent().visible = false
@@ -274,7 +272,7 @@ func _process(delta: float) -> void :
 		return
 	if qa_launcher != null and qa_launcher.advance_performance(delta):
 		return
-	if menu_open or inventory_open or conclusion_overlay.visible or _shop_panel_is_open():
+	if deepheart_presentation or menu_open or inventory_open or conclusion_overlay.visible or _shop_panel_is_open():
 		guide_overlay.clear_target()
 		return
 	if Input.is_action_just_pressed("interact"):
@@ -510,12 +508,7 @@ func _dev_jump_surface() -> void :
 	hub_context = ""
 	deepheart_context = ""
 	endless_context = ""
-	surface_world.set_active(false)
-	mine_world.set_active(false)
-	depth_world.set_active(false)
-	hub_world.set_active(false)
-	deepheart_world.set_active(false)
-	endless_world.set_active(false)
+	_deactivate_worlds()
 	surface_world.restore_position(Vector2(RunState.last_surface_position))
 	surface_world.set_active(true)
 	AudioDirector.set_environment("surface")
@@ -808,16 +801,11 @@ func _asset_button_style(color: Color) -> StyleBoxFlat:
 
 
 func _open_inventory() -> void :
-	if tunnel_home_in_progress or automated_mode or menu_open or inventory_open or conclusion_overlay.visible or _shop_panel_is_open() or not commerce_transaction.is_empty() or not game_started:
+	if deepheart_presentation or tunnel_home_in_progress or automated_mode or menu_open or inventory_open or conclusion_overlay.visible or _shop_panel_is_open() or not commerce_transaction.is_empty() or not game_started:
 		return
 	AudioDirector.play_ui("open")
 	_cancel_held_input()
-	surface_world.set_active(false)
-	mine_world.set_active(false)
-	depth_world.set_active(false)
-	hub_world.set_active(false)
-	deepheart_world.set_active(false)
-	endless_world.set_active(false)
+	_deactivate_worlds()
 	inventory_open = true
 	resource_inventory.open_inventory(
 		Dictionary(RunState.cargo),
@@ -1137,7 +1125,7 @@ func _unhandled_input(event: InputEvent) -> void :
 
 
 func _open_start_menu() -> void :
-	if tunnel_home_in_progress or automated_mode or menu_open or conclusion_overlay.visible or _shop_panel_is_open() or not commerce_transaction.is_empty():
+	if deepheart_presentation or tunnel_home_in_progress or automated_mode or menu_open or conclusion_overlay.visible or _shop_panel_is_open() or not commerce_transaction.is_empty():
 		return
 	if game_started:
 		AudioDirector.play_ui("open")
@@ -1150,12 +1138,7 @@ func _open_start_menu() -> void :
 	button_move = Vector2.ZERO
 	movement_pad.cancel()
 	_apply_button_movement()
-	surface_world.set_active(false)
-	mine_world.set_active(false)
-	depth_world.set_active(false)
-	hub_world.set_active(false)
-	deepheart_world.set_active(false)
-	endless_world.set_active(false)
+	_deactivate_worlds()
 	if quick_tutorial != null:
 		quick_tutorial.dismiss()
 	menu_open = true
@@ -1303,11 +1286,7 @@ func _start_new_game() -> void :
 	surface_world.reset_for_new_run()
 	mine_world.load_mine("mossMine")
 	depth_world.use_deterministic_depth_entrance()
-	mine_world.set_active(false)
-	depth_world.set_active(false)
-	hub_world.set_active(false)
-	deepheart_world.set_active(false)
-	endless_world.set_active(false)
+	_deactivate_worlds(surface_world)
 	_hide_start_menu()
 	surface_world.set_active(true)
 	objective_label.text = _surface_objective()
@@ -1332,7 +1311,7 @@ func _on_quick_tutorial_closed() -> void :
 func _update_minimap() -> void :
 	if minimap_overlay == null:
 		return
-	if not game_started or menu_open or inventory_open or conclusion_overlay.visible or orientation_guard_active:
+	if deepheart_presentation or not game_started or menu_open or inventory_open or conclusion_overlay.visible or orientation_guard_active:
 		minimap_overlay.hide_map()
 		return
 	var active_player: Node2D = _active_player_node()
@@ -1595,12 +1574,7 @@ func _set_orientation_guard_active(active: bool) -> void :
 
 
 func _pause_all_worlds_for_orientation() -> void :
-	surface_world.set_active(false)
-	mine_world.set_active(false)
-	depth_world.set_active(false)
-	hub_world.set_active(false)
-	deepheart_world.set_active(false)
-	endless_world.set_active(false)
+	_deactivate_worlds()
 
 
 func _notification(what: int) -> void :
@@ -1657,10 +1631,7 @@ func _restore_saved_location() -> void :
 	phase = "surface"
 	surface_world.set_active(true)
 	AudioDirector.set_environment("surface")
-	mine_world.set_active(false)
-	hub_world.set_active(false)
-	deepheart_world.set_active(false)
-	endless_world.set_active(false)
+	_deactivate_worlds(surface_world)
 	surface_world.restore_position(Vector2(RunState.last_surface_position))
 	objective_label.text = _surface_objective()
 	_set_status("Progress restored · follow the road deeper")
@@ -2562,6 +2533,14 @@ func _try_unlock_gate(world_id: String) -> void :
 	_refresh_hud()
 
 
+func _deactivate_worlds(except_world: Node = null) -> void:
+	# Every transition has one world owner. Keeping this list in one place
+	# prevents hidden worlds, lights and cached terrain surviving a transition.
+	for world: Node in [surface_world, mine_world, depth_world, hub_world, deepheart_world, endless_world]:
+		if world != except_world:
+			world.set_active(false)
+
+
 func _enter_mine(mine_id: String, entering: bool = true, persist_location: bool = true) -> void :
 	if not _mine_is_unlocked(mine_id):
 		AudioDirector.play_blocked()
@@ -2574,12 +2553,7 @@ func _enter_mine(mine_id: String, entering: bool = true, persist_location: bool 
 	button_move = Vector2.ZERO
 	movement_pad.cancel()
 	_apply_button_movement()
-	surface_world.set_active(false)
-	mine_world.set_active(false)
-	depth_world.set_active(false)
-	hub_world.set_active(false)
-	deepheart_world.set_active(false)
-	endless_world.set_active(false)
+	_deactivate_worlds()
 	mine_world.load_mine(mine_id)
 	mine_world.set_active(true, entering)
 	AudioDirector.set_environment("mine")
@@ -2617,12 +2591,7 @@ func _enter_depth(entering: bool = true, persist_location: bool = true) -> void 
 	button_move = Vector2.ZERO
 	movement_pad.cancel()
 	_apply_button_movement()
-	surface_world.set_active(false)
-	mine_world.set_active(false)
-	depth_world.set_active(false)
-	hub_world.set_active(false)
-	deepheart_world.set_active(false)
-	endless_world.set_active(false)
+	_deactivate_worlds()
 	RunState.begin_state_batch()
 	RunState.enter_depth(current_mine_id)
 	depth_world.set_active(true, entering)
@@ -2652,11 +2621,7 @@ func _exit_mine() -> void :
 	button_move = Vector2.ZERO
 	movement_pad.cancel()
 	_apply_button_movement()
-	mine_world.set_active(false)
-	depth_world.set_active(false)
-	hub_world.set_active(false)
-	deepheart_world.set_active(false)
-	endless_world.set_active(false)
+	_deactivate_worlds(surface_world)
 	surface_world.return_from_mine(exited_mine)
 	surface_world.set_active(true)
 	AudioDirector.set_environment("surface")
@@ -2675,10 +2640,7 @@ func _exit_depth() -> void :
 	button_move = Vector2.ZERO
 	movement_pad.cancel()
 	_apply_button_movement()
-	depth_world.set_active(false)
-	hub_world.set_active(false)
-	deepheart_world.set_active(false)
-	endless_world.set_active(false)
+	_deactivate_worlds(mine_world)
 	mine_world.set_active(true, false)
 	AudioDirector.set_environment("mine")
 	AudioDirector.play_transition("ascend")
@@ -2720,11 +2682,7 @@ func _enter_hub(entering: bool = true, persist_location: bool = true) -> void :
 	button_move = Vector2.ZERO
 	movement_pad.cancel()
 	_apply_button_movement()
-	surface_world.set_active(false)
-	mine_world.set_active(false)
-	depth_world.set_active(false)
-	deepheart_world.set_active(false)
-	endless_world.set_active(false)
+	_deactivate_worlds(hub_world)
 	hub_world.set_active(true, entering)
 	AudioDirector.set_environment("hub")
 	if entering:
@@ -2756,11 +2714,7 @@ func _exit_hub() -> void :
 	button_move = Vector2.ZERO
 	movement_pad.cancel()
 	_apply_button_movement()
-	hub_world.set_active(false)
-	mine_world.set_active(false)
-	depth_world.set_active(false)
-	deepheart_world.set_active(false)
-	endless_world.set_active(false)
+	_deactivate_worlds(surface_world)
 	surface_world.restore_position(Vector2(RunState.current_position))
 	surface_world.set_active(true)
 	AudioDirector.set_environment("surface")
@@ -2809,10 +2763,7 @@ func _enter_deepheart(entering: bool = true, persist_location: bool = true, allo
 	button_move = Vector2.ZERO
 	movement_pad.cancel()
 	_apply_button_movement()
-	surface_world.set_active(false)
-	mine_world.set_active(false)
-	depth_world.set_active(false)
-	hub_world.set_active(false)
+	_deactivate_worlds(deepheart_world)
 	deepheart_world.set_active(true, entering)
 	AudioDirector.set_environment("deepheart")
 	if entering:
@@ -2836,11 +2787,7 @@ func _exit_deepheart() -> void :
 	button_move = Vector2.ZERO
 	movement_pad.cancel()
 	_apply_button_movement()
-	deepheart_world.set_active(false)
-	endless_world.set_active(false)
-	surface_world.set_active(false)
-	mine_world.set_active(false)
-	depth_world.set_active(false)
+	_deactivate_worlds(hub_world)
 	hub_world.set_active(true, false)
 	hub_world.restore_position(_safe_hub_return_position(deepheart_hub_return_position))
 	hub_context = hub_world.current_context()
@@ -2892,11 +2839,7 @@ func _enter_endless(entering: bool = true, persist_location: bool = true, restor
 	button_move = Vector2.ZERO
 	movement_pad.cancel()
 	_apply_button_movement()
-	surface_world.set_active(false)
-	mine_world.set_active(false)
-	depth_world.set_active(false)
-	hub_world.set_active(false)
-	deepheart_world.set_active(false)
+	_deactivate_worlds(endless_world)
 	endless_world.load_depth(target_depth, "from_above")
 	endless_world.set_active(true, entering)
 	AudioDirector.set_environment("depth")
@@ -2957,11 +2900,7 @@ func _return_from_endless_to_hub(carried_relic_id: String = "") -> void :
 	button_move = Vector2.ZERO
 	movement_pad.cancel()
 	_apply_button_movement()
-	endless_world.set_active(false)
-	surface_world.set_active(false)
-	mine_world.set_active(false)
-	depth_world.set_active(false)
-	deepheart_world.set_active(false)
+	_deactivate_worlds(hub_world)
 	hub_world.set_active(true, false)
 	hub_world.restore_position(_safe_hub_return_position(endless_hub_return_position))
 	hub_context = hub_world.current_context()
@@ -3116,6 +3055,28 @@ func _safe_hub_return_position(preferred: Vector2) -> Vector2:
 	return Vector2(hub_world.entry_spawn())
 
 
+func _set_deepheart_presentation(enabled: bool) -> void:
+	if enabled == deepheart_presentation: return
+	deepheart_presentation = enabled
+	if enabled:
+		_cancel_held_input()
+		guide_overlay.clear_target()
+		for item in $HUD.get_children():
+			if item is CanvasItem and item != conclusion_overlay and item != orientation_guard:
+				presentation_hud_state.append({"item":item,"visible":item.visible})
+				item.hide()
+		var companion_interface: CanvasLayer = get_node_or_null("CompanionInterface")
+		if companion_interface != null:
+			presentation_hud_state.append({"item":companion_interface,"visible":companion_interface.visible})
+			companion_interface.hide()
+	else:
+		for saved in presentation_hud_state:
+			if is_instance_valid(saved.item): saved.item.visible = saved.visible
+		presentation_hud_state.clear()
+		_refresh_hud()
+		_update_minimap()
+
+
 func _on_deepheart_finale_completed() -> void :
 	objective_label.text = _deepheart_objective()
 	_set_status("The Deepheart beats again · The Deep is open")
@@ -3162,7 +3123,10 @@ func _stay_in_deepheart_from_conclusion() -> void :
 
 func _dismiss_deepheart_conclusion(restore_control: bool) -> void :
 	conclusion_overlay.visible = false
+	deepheart_world.finish_finale_presentation()
 	if restore_control and phase == "deepheart" and is_instance_valid(deepheart_world.player):
+		if not deepheart_world.active:
+			deepheart_world.set_active(true)
 		deepheart_world.player.control_enabled = true
 
 

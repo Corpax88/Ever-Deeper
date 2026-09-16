@@ -49,11 +49,11 @@ const WORKSHOP_NAMES: Dictionary = {
 	"lift_workshop": "TUNNEL WORKSHOP",
 }
 const WORKSHOP_POSITIONS: Dictionary = {
-	"tool_forge": Vector2(286, 304),
-	"light_lab": Vector2(405, 520),
-	"wardrobe": Vector2(1120, 520),
+	"tool_forge": Vector2(286, 246),
+	"light_lab": Vector2(198, 544),
+	"wardrobe": Vector2(1226, 544),
 	"treasure_chamber": RELIC_PEDESTAL_POSITION,
-	"lift_workshop": Vector2(1120, 290),
+	"lift_workshop": Vector2(1210, 254),
 }
 const WORKSHOP_VISIBLE_SIZES: Dictionary = {
 	"tool_forge": Vector2(315, 210),
@@ -125,6 +125,7 @@ var hub_exit_context: = false
 var elevator_status: Dictionary = {}
 var movement_speed_multiplier: = 1.0
 var shared_hub_light_texture: Texture2D
+var _contact_shadow_texture: Texture2D
 var interior_initialized: = false
 var interior_build_count: = 0
 var _relic_rope_points: Array[Vector2] = []
@@ -1266,7 +1267,7 @@ func _build_lighting() -> void :
 	_add_world_light(SURFACE_LIFT, 210.0, Color("72e6c7"), "SurfaceLiftLight")
 	var elevator_light: = _deep_elevator_light_profile()
 	_add_world_light(
-		DEEP_ELEVATOR,
+		DEEP_ELEVATOR + Vector2(0, 56),
 		float(elevator_light.radius),
 		Color(elevator_light.color),
 		"DeepElevatorLight",
@@ -1282,12 +1283,13 @@ func _build_lighting() -> void :
 	for workshop_id in _workshop_ids():
 		if bool(_workshop_status(workshop_id).get("built", false)):
 			var light_position: = DEEP_HOARD_POSITION if workshop_id == "treasure_chamber" else _workshop_position(workshop_id)
+			var large_hearth: bool = workshop_id in ["tool_forge", "lift_workshop"]
 			_add_world_light(
-				light_position + Vector2(0, -18),
-				190.0,
+				light_position + Vector2(0, 30),
+				270.0 if large_hearth else 245.0,
 				_workshop_color(workshop_id),
 				"Workshop_%s" % workshop_id,
-				0.58
+				1.12 if large_hearth else 0.92
 			)
 	static_light_field.configure(self, world_lights)
 
@@ -1295,9 +1297,9 @@ func _build_lighting() -> void :
 func _deep_elevator_light_profile() -> Dictionary:
 	match _deep_elevator_visual_stage():
 		"complete":
-			return {"radius": 246.0, "color": Color("aaf6e6"), "energy": 0.94}
+			return {"radius": 292.0, "color": Color("aaf6e6"), "energy": 1.12}
 		"powered":
-			return {"radius": 230.0, "color": Color("6de8ff"), "energy": 0.88}
+			return {"radius": 280.0, "color": Color("6de8ff"), "energy": 1.06}
 		"repaired":
 			return {"radius": 205.0, "color": Color("f5c669"), "energy": 0.68}
 	return {"radius": 176.0, "color": Color("d7a75a"), "energy": 0.42}
@@ -1600,12 +1602,17 @@ func _draw_hub_wall_frame() -> void :
 	_draw_canvas.draw_rect(Rect2(0, WORLD_SIZE.y - 54, WORLD_SIZE.x, 54), Color("111015"), true)
 	_draw_canvas.draw_rect(Rect2(0, 0, 58, WORLD_SIZE.y), Color("111015"), true)
 	_draw_canvas.draw_rect(Rect2(WORLD_SIZE.x - 58, 0, 58, WORLD_SIZE.y), Color("111015"), true)
-	for center_x in [236.0, 720.0, 1204.0]:
-		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(center_x, 0), 520.0, 0.0, Color(0.9, 0.88, 0.94, 1.0))
-		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(center_x, WORLD_SIZE.y), 520.0, PI, Color(0.74, 0.7, 0.78, 1.0))
-	for center_y in [250.0, 566.0, 842.0]:
-		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(20, center_y), 350.0, -PI * 0.5, Color(0.76, 0.74, 0.8, 1.0))
-		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(WORLD_SIZE.x - 20, center_y), 350.0, PI * 0.5, Color(0.76, 0.74, 0.8, 1.0))
+	# Authored overlaps follow the rough rock bed instead of a repeated border.
+	for section in [Vector4(212, -14, 564, -.024), Vector4(708, 4, 520, .015), Vector4(1198, -7, 552, -.018)]:
+		_draw_ellipse_shape(Vector2(section.x, 88 + section.y), Vector2(section.z*.56, 39), Color(0,0,0,.56))
+		_draw_ellipse_shape(Vector2(section.x, WORLD_SIZE.y - 72 - section.y), Vector2(section.z*.56, 38), Color(0,0,0,.54))
+		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(section.x, section.y), section.z, section.w, Color(0.9, 0.88, 0.94, 1.0))
+		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(section.x, WORLD_SIZE.y - section.y), section.z, PI - section.w, Color(0.74, 0.7, 0.78, 1.0))
+	for section in [Vector4(238, 3, 352, -.02), Vector4(568, -8, 372, .025), Vector4(847, 9, 356, -.015)]:
+		_draw_ellipse_shape(Vector2(88 + section.y, section.x), Vector2(34,section.z*.57), Color(0,0,0,.54))
+		_draw_ellipse_shape(Vector2(WORLD_SIZE.x - 88 - section.y, section.x), Vector2(34,section.z*.57), Color(0,0,0,.54))
+		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(20 + section.y, section.x), section.z, -PI * .5 + section.w, Color(.76,.74,.8,1))
+		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(WORLD_SIZE.x - 20 - section.y, section.x), section.z, PI * .5 - section.w, Color(.76,.74,.8,1))
 
 
 func _draw_foundation_route() -> void :
@@ -1746,8 +1753,6 @@ func _draw_workshop_icon(
 		"deepheart": Color("b9ffc8"),
 	}.get(finish_id, Color.WHITE))
 	var tint: = Color(finish_tint, alpha) if built else Color(0.48, 0.46, 0.43, 0.68)
-	if built:
-		_draw_canvas.draw_circle(position + Vector2(0, -4), 68.0, Color(color, 0.045 * alpha))
 	_draw_texture_grounded(_workshop_texture(workshop_id), position + Vector2(0, 46), WORKSHOP_VISIBLE_SIZES[workshop_id], tint)
 	if not built or finish_id == "original":
 		return
@@ -1807,9 +1812,8 @@ func _draw_relic_museum(selected: bool) -> void :
 	var chamber_status: = _workshop_status("treasure_chamber")
 	var chamber_built: = bool(chamber_status.get("built", false))
 	var museum_color: = _workshop_color("treasure_chamber")
-	_draw_ellipse_shape(DEEP_HOARD_POSITION + Vector2(0, 111), Vector2(202, 38), Color(0, 0, 0, 0.44))
+	_draw_ellipse_shape(DEEP_HOARD_POSITION + Vector2(0, 126), Vector2(198, 21), Color(0, 0, 0, 0.44))
 	if chamber_built:
-		_draw_canvas.draw_circle(DEEP_HOARD_POSITION + Vector2(0, -4), 180.0, Color(museum_color, 0.035))
 		_draw_texture_bounded(_premium_texture(TREASURE_CHAMBER_TEXTURE_PATH), DEEP_HOARD_POSITION, Vector2(460, 307))
 	else:
 		_draw_texture_bounded(
@@ -1927,10 +1931,7 @@ func _draw_deep_elevator(_selected: bool) -> void :
 		modulate = Color(0.93, 1.0, 1.0, 1.0)
 	elif stage == "complete":
 		modulate = Color(0.96, 1.0, 0.9, 1.0)
-	_draw_ellipse_shape(DEEP_ELEVATOR + Vector2(0, 104), Vector2(135, 31), Color(0, 0, 0, 0.46))
-	if stage in ["powered", "complete"]:
-		var aura_color: = Color(0.3, 0.92, 1.0, 0.12) if stage == "powered" else Color(0.62, 1.0, 0.76, 0.14)
-		_draw_canvas.draw_circle(DEEP_ELEVATOR + Vector2(0, 6), 148, aura_color)
+	_draw_ellipse_shape(DEEP_ELEVATOR + Vector2(0, 118), Vector2(128, 18), Color(0, 0, 0, 0.46))
 	_draw_texture_bounded(
 		DEEP_ELEVATOR_TERMINAL_TEXTURE,
 		DEEP_ELEVATOR + Vector2(0, 3),
@@ -2034,6 +2035,22 @@ func _draw_hub_texture_rect(texture: Texture2D, destination: Rect2, tint: Color)
 
 
 func _draw_ellipse_shape(center: Vector2, radii: Vector2, color: Color) -> void :
+	if color.r == 0.0 and color.g == 0.0 and color.b == 0.0:
+		if _contact_shadow_texture == null:
+			var gradient := Gradient.new()
+			gradient.offsets = PackedFloat32Array([0.0, .36, .68, 1.0])
+			gradient.colors = PackedColorArray([Color.WHITE, Color(1,1,1,.82), Color(1,1,1,.30), Color(1,1,1,0)])
+			var texture := GradientTexture2D.new()
+			texture.width = 128
+			texture.height = 128
+			texture.fill = GradientTexture2D.FILL_RADIAL
+			texture.fill_from = Vector2(.5,.5)
+			texture.fill_to = Vector2(1,.5)
+			texture.gradient = gradient
+			_contact_shadow_texture = texture
+		var extent: Vector2 = radii * 1.35
+		_draw_canvas.draw_texture_rect(_contact_shadow_texture, Rect2(center - extent, extent * 2.0), false, color)
+		return
 	var points: = PackedVector2Array()
 	for index in 32:
 		var angle: = TAU * float(index) / 32.0

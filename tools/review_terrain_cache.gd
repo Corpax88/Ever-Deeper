@@ -90,6 +90,18 @@ func _run() -> void:
 	world.player.camera.force_update_scroll()
 	world._update_stream_depth()
 	await _pair(world, "deep_rebase_up")
+	# Direct state replacement must update both sides of strip/row boundaries.
+	# This deliberately bypasses mutator callbacks, like a restored terrain array.
+	for row in [1, world.DeepLayout.CHUNK_ROWS - 1, world.GRID_SIZE.y - 2]:
+		var boundary: Vector2i = Vector2i(19, row)
+		world.player.position = world._cell_center(boundary + Vector2i(0, 2 if row < world.GRID_SIZE.y - 2 else -2))
+		for y in range(row - 1, row + 2):
+			for x in range(18, 22): world._set_floor(Vector2i(x, y), false)
+		world.dig_damage[boundary] = 40
+		await _pair(world, "deep_boundary_%d_intact" % row)
+		world._set_floor(boundary, true)
+		world.dig_damage.erase(boundary)
+		await _pair(world, "deep_boundary_%d_open" % row)
 	FileAccess.open(output.path_join("cache-review.json"), FileAccess.WRITE).store_string(JSON.stringify({"rendered":true,"physical_iphone":false,"pairs":samples}, "\t"))
 	quit()
 
@@ -99,11 +111,18 @@ func _freeze(node: Node) -> void:
 	for child in node.get_children(): _freeze(child)
 
 func _pair(world: Node, id: String) -> void:
+	# This is terrain-command parity, not a UI animation comparison. Keep
+	# transient pickup tweens and guide markers from changing between captures.
+	main.get_node("HUD").hide()
+	world.player.get_node("ResourcePickupBurst").hide()
+	for tween in get_processed_tweens(): tween.pause()
 	world.player.set_external_movement(Vector2.ZERO)
 	world.player.camera.position_smoothing_enabled = false
 	world.player.camera.reset_smoothing()
 	main.achievement_toast.clear()
 	main.quick_tutorial.dismiss()
+	world.lit_draw_sections.profile_draws = true
+	var requested: Dictionary = world.lit_draw_sections.debug_snapshot()
 	world.queue_redraw()
 	for frame in 3: await process_frame
 	await RenderingServer.frame_post_draw
@@ -114,7 +133,7 @@ func _pair(world: Node, id: String) -> void:
 	for frame in 3: await process_frame
 	await RenderingServer.frame_post_draw
 	root.get_texture().get_image().save_png(output.path_join(id+"-fresh.png"))
-	samples.append({"id":id,"before":before,"after":world.lit_draw_sections.debug_snapshot()})
+	samples.append({"id":id,"requested":requested,"before":before,"after":world.lit_draw_sections.debug_snapshot(), "mutation_redraws":int(before.redraws)-int(requested.redraws), "mutation_draw_usec":int(before.draw_callback_usec)-int(requested.draw_callback_usec), "mutation_setup_usec":int(before.setup_usec)-int(requested.setup_usec)})
 
 func _near_wall(world: Node, deep: bool) -> Vector2i:
 	var center: Vector2i = world._world_to_cell(world.player.position)

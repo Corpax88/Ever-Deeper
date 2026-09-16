@@ -1,0 +1,1047 @@
+{
+	"captures": [
+		{
+			"context": "sell",
+			"goal": {
+				"action_text": "Mine & sell · Mossvein",
+				"action_visible": false,
+				"cost": 30,
+				"detail": "Gather ore until the upgrade is fully affordable",
+				"hud_action": "Mine & sell · Mossvein",
+				"hud_title": "Iron Pickaxe",
+				"input_blocking": false,
+				"kind": "mine_resource",
+				"mine_id": "mossMine",
+				"objective_id": "pickaxe:2",
+				"panel_rect": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"rendered_rows": [
+					{
+						"id": "currency:gold",
+						"ready": false,
+						"text": "0 / 30"
+					}
+				],
+				"required_amount": 0,
+				"requirements": [
+					{
+						"delivered": 0,
+						"id": "currency:gold",
+						"in_pouch": 0,
+						"is_currency": true,
+						"name": "Gold",
+						"owned": 0,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 30,
+						"resource_id": "gold",
+						"texture_path": "res://assets/ui/gold-bars-v1.png"
+					}
+				],
+				"requirements_ready": false,
+				"resource_id": "",
+				"title": "Forge the Iron Pickaxe",
+				"title_text": "Iron Pickaxe",
+				"visible": true
+			},
+			"id": "surface_approach_sell",
+			"player": "(112.0, 577.6664)",
+			"size": "(1696, 780)",
+			"touch_layout": {
+				"bag": "[P: (1016.727, 476.5454), S: (118.0, 118.0)]",
+				"bag_count": "[P: (1096.727, 567.5454), S: (42.0, 30.0)]",
+				"companion": "[P: (332.0, 18.0), S: (86.0, 86.0)]",
+				"context": "[P: (792.7273, 483.5454), S: (206.0, 104.0)]",
+				"gold": "[P: (430.0, 18.0), S: (150.0, 86.0)]",
+				"guide": "[P: (224.0, 18.0), S: (96.0, 96.0)]",
+				"iphone": true,
+				"menu": "[P: (116.0, 18.0), S: (96.0, 96.0)]",
+				"mine": "[P: (1152.727, 458.5454), S: (154.0, 154.0)]",
+				"minimap": "[P: (706.7273, 18.0), S: (188.0, 96.0)]",
+				"objective": "[P: (116.0, 126.0), S: (660.0, 128.0)]",
+				"onboarding": "[P: (116.0, 126.0), S: (664.7273, 320.5454)]",
+				"progression_goal": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"safe_rect": "[P: (116.0, 18.0), S: (1190.727, 598.5454)]",
+				"status": "[P: (116.0, 566.5454), S: (664.7273, 50.0)]",
+				"touch_target": 86.0
+			}
+		},
+		{
+			"context": "forge",
+			"goal": {
+				"action_text": "Mine & sell · Mossvein",
+				"action_visible": false,
+				"cost": 30,
+				"detail": "Gather ore until the upgrade is fully affordable",
+				"hud_action": "Mine & sell · Mossvein",
+				"hud_title": "Iron Pickaxe",
+				"input_blocking": false,
+				"kind": "mine_resource",
+				"mine_id": "mossMine",
+				"objective_id": "pickaxe:2",
+				"panel_rect": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"rendered_rows": [
+					{
+						"id": "currency:gold",
+						"ready": false,
+						"text": "0 / 30"
+					}
+				],
+				"required_amount": 0,
+				"requirements": [
+					{
+						"delivered": 0,
+						"id": "currency:gold",
+						"in_pouch": 0,
+						"is_currency": true,
+						"name": "Gold",
+						"owned": 0,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 30,
+						"resource_id": "gold",
+						"texture_path": "res://assets/ui/gold-bars-v1.png"
+					}
+				],
+				"requirements_ready": false,
+				"resource_id": "",
+				"title": "Forge the Iron Pickaxe",
+				"title_text": "Iron Pickaxe",
+				"visible": true
+			},
+			"id": "surface_approach_forge",
+			"player": "(328.0, 582.6664)",
+			"size": "(1696, 780)",
+			"touch_layout": {
+				"bag": "[P: (1016.727, 476.5454), S: (118.0, 118.0)]",
+				"bag_count": "[P: (1096.727, 567.5454), S: (42.0, 30.0)]",
+				"companion": "[P: (332.0, 18.0), S: (86.0, 86.0)]",
+				"context": "[P: (792.7273, 483.5454), S: (206.0, 104.0)]",
+				"gold": "[P: (430.0, 18.0), S: (150.0, 86.0)]",
+				"guide": "[P: (224.0, 18.0), S: (96.0, 96.0)]",
+				"iphone": true,
+				"menu": "[P: (116.0, 18.0), S: (96.0, 96.0)]",
+				"mine": "[P: (1152.727, 458.5454), S: (154.0, 154.0)]",
+				"minimap": "[P: (706.7273, 18.0), S: (188.0, 96.0)]",
+				"objective": "[P: (116.0, 126.0), S: (660.0, 128.0)]",
+				"onboarding": "[P: (116.0, 126.0), S: (664.7273, 320.5454)]",
+				"progression_goal": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"safe_rect": "[P: (116.0, 18.0), S: (1190.727, 598.5454)]",
+				"status": "[P: (116.0, 566.5454), S: (664.7273, 50.0)]",
+				"touch_target": 86.0
+			}
+		},
+		{
+			"context": "speedShop",
+			"goal": {
+				"action_text": "Mine & sell · Mossvein",
+				"action_visible": false,
+				"cost": 30,
+				"detail": "Gather ore until the upgrade is fully affordable",
+				"hud_action": "Mine & sell · Mossvein",
+				"hud_title": "Iron Pickaxe",
+				"input_blocking": false,
+				"kind": "mine_resource",
+				"mine_id": "mossMine",
+				"objective_id": "pickaxe:2",
+				"panel_rect": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"rendered_rows": [
+					{
+						"id": "currency:gold",
+						"ready": false,
+						"text": "0 / 30"
+					}
+				],
+				"required_amount": 0,
+				"requirements": [
+					{
+						"delivered": 0,
+						"id": "currency:gold",
+						"in_pouch": 0,
+						"is_currency": true,
+						"name": "Gold",
+						"owned": 0,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 30,
+						"resource_id": "gold",
+						"texture_path": "res://assets/ui/gold-bars-v1.png"
+					}
+				],
+				"requirements_ready": false,
+				"resource_id": "",
+				"title": "Forge the Iron Pickaxe",
+				"title_text": "Iron Pickaxe",
+				"visible": true
+			},
+			"id": "surface_approach_speedShop",
+			"player": "(800.0, 585.3332)",
+			"size": "(1696, 780)",
+			"touch_layout": {
+				"bag": "[P: (1016.727, 476.5454), S: (118.0, 118.0)]",
+				"bag_count": "[P: (1096.727, 567.5454), S: (42.0, 30.0)]",
+				"companion": "[P: (332.0, 18.0), S: (86.0, 86.0)]",
+				"context": "[P: (792.7273, 483.5454), S: (206.0, 104.0)]",
+				"gold": "[P: (430.0, 18.0), S: (150.0, 86.0)]",
+				"guide": "[P: (224.0, 18.0), S: (96.0, 96.0)]",
+				"iphone": true,
+				"menu": "[P: (116.0, 18.0), S: (96.0, 96.0)]",
+				"mine": "[P: (1152.727, 458.5454), S: (154.0, 154.0)]",
+				"minimap": "[P: (706.7273, 18.0), S: (188.0, 96.0)]",
+				"objective": "[P: (116.0, 126.0), S: (660.0, 128.0)]",
+				"onboarding": "[P: (116.0, 126.0), S: (664.7273, 320.5454)]",
+				"progression_goal": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"safe_rect": "[P: (116.0, 18.0), S: (1190.727, 598.5454)]",
+				"status": "[P: (116.0, 566.5454), S: (664.7273, 50.0)]",
+				"touch_target": 86.0
+			}
+		},
+		{
+			"context": "",
+			"goal": {
+				"action_text": "Mine · Mossvein Depth 2",
+				"action_visible": false,
+				"detail": "Mine 3 more Ambercore",
+				"hud_action": "Mine · Mossvein Depth 2",
+				"hud_title": "Deepheart Passage",
+				"input_blocking": false,
+				"kind": "depth_resource",
+				"mine_id": "mossMine",
+				"objective_id": "endgame:repair_elevator",
+				"panel_rect": "[P: (906.7273, 18.0), S: (400.0, 118.0)]",
+				"rendered_rows": [
+					{
+						"id": "resource:ambercore",
+						"ready": false,
+						"text": "0 / 3"
+					},
+					{
+						"id": "resource:lunacore",
+						"ready": false,
+						"text": "0 / 3"
+					},
+					{
+						"id": "resource:furnaceheart",
+						"ready": false,
+						"text": "0 / 3"
+					},
+					{
+						"id": "resource:singularity",
+						"ready": false,
+						"text": "0 / 1"
+					}
+				],
+				"required_amount": 3,
+				"requirements": [
+					{
+						"delivered": 0,
+						"id": "resource:ambercore",
+						"in_pouch": 0,
+						"is_currency": false,
+						"name": "Ambercore",
+						"owned": 0,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 3,
+						"resource_id": "ambercore",
+						"texture_path": "res://assets/drops/ambercore-drop.png"
+					},
+					{
+						"delivered": 0,
+						"id": "resource:lunacore",
+						"in_pouch": 0,
+						"is_currency": false,
+						"name": "Lunacore",
+						"owned": 0,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 3,
+						"resource_id": "lunacore",
+						"texture_path": "res://assets/drops/lunacore-drop.png"
+					},
+					{
+						"delivered": 0,
+						"id": "resource:furnaceheart",
+						"in_pouch": 0,
+						"is_currency": false,
+						"name": "Furnace Heart",
+						"owned": 0,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 3,
+						"resource_id": "furnaceheart",
+						"texture_path": "res://assets/drops/furnaceheart-drop.png"
+					},
+					{
+						"delivered": 0,
+						"id": "resource:singularity",
+						"in_pouch": 0,
+						"is_currency": false,
+						"name": "Singularity Core",
+						"owned": 0,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 1,
+						"resource_id": "singularity",
+						"texture_path": "res://assets/drops/singularity-drop.png"
+					}
+				],
+				"requirements_ready": false,
+				"resource_id": "ambercore",
+				"title": "Restore the Deepheart Passage",
+				"title_text": "Deepheart Passage",
+				"visible": true
+			},
+			"id": "hub_fresh_entrance",
+			"player": "(430.0, 820.0)",
+			"size": "(1696, 780)",
+			"touch_layout": {
+				"bag": "[P: (1016.727, 476.5454), S: (118.0, 118.0)]",
+				"bag_count": "[P: (1096.727, 567.5454), S: (42.0, 30.0)]",
+				"companion": "[P: (332.0, 18.0), S: (86.0, 86.0)]",
+				"context": "[P: (792.7273, 483.5454), S: (206.0, 104.0)]",
+				"gold": "[P: (430.0, 18.0), S: (150.0, 86.0)]",
+				"guide": "[P: (224.0, 18.0), S: (96.0, 96.0)]",
+				"iphone": true,
+				"menu": "[P: (116.0, 18.0), S: (96.0, 96.0)]",
+				"mine": "[P: (1152.727, 458.5454), S: (154.0, 154.0)]",
+				"minimap": "[P: (706.7273, 18.0), S: (188.0, 96.0)]",
+				"objective": "[P: (116.0, 148.0), S: (660.0, 128.0)]",
+				"onboarding": "[P: (116.0, 148.0), S: (664.7273, 298.5454)]",
+				"progression_goal": "[P: (906.7273, 18.0), S: (400.0, 118.0)]",
+				"safe_rect": "[P: (116.0, 18.0), S: (1190.727, 598.5454)]",
+				"status": "[P: (116.0, 566.5454), S: (664.7273, 50.0)]",
+				"touch_target": 86.0
+			}
+		},
+		{
+			"context": "",
+			"goal": {
+				"action_text": "Enter The Deep · Hub",
+				"action_visible": false,
+				"detail": "Tool Forge · level 2",
+				"hud_action": "Enter The Deep · Hub",
+				"hud_title": "Tool Forge · 2",
+				"input_blocking": false,
+				"kind": "endless_enter",
+				"objective_id": "endless:upgrade:tool_forge",
+				"panel_rect": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"rendered_rows": [
+					{
+						"id": "resource:deep_alloy",
+						"ready": false,
+						"text": "0 / 100"
+					}
+				],
+				"required_amount": 100,
+				"requirements": [
+					{
+						"delivered": 0,
+						"id": "resource:deep_alloy",
+						"in_pouch": 0,
+						"is_currency": false,
+						"name": "Deep Alloy",
+						"owned": 0,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 100,
+						"resource_id": "deep_alloy",
+						"texture_path": "res://assets/endless/node-deep-alloy-v1.png"
+					}
+				],
+				"requirements_ready": false,
+				"resource_id": "deep_alloy",
+				"station_id": "deepElevator",
+				"title": "Upgrade the Tool Forge",
+				"title_text": "Tool Forge · 2",
+				"visible": true,
+				"workshop_id": "tool_forge"
+			},
+			"id": "hub_built_720_480",
+			"player": "(720.0, 480.0)",
+			"size": "(1696, 780)",
+			"touch_layout": {
+				"bag": "[P: (1016.727, 476.5454), S: (118.0, 118.0)]",
+				"bag_count": "[P: (1096.727, 567.5454), S: (42.0, 30.0)]",
+				"companion": "[P: (332.0, 18.0), S: (86.0, 86.0)]",
+				"context": "[P: (792.7273, 483.5454), S: (206.0, 104.0)]",
+				"gold": "[P: (430.0, 18.0), S: (150.0, 86.0)]",
+				"guide": "[P: (224.0, 18.0), S: (96.0, 96.0)]",
+				"iphone": true,
+				"menu": "[P: (116.0, 18.0), S: (96.0, 96.0)]",
+				"mine": "[P: (1152.727, 458.5454), S: (154.0, 154.0)]",
+				"minimap": "[P: (706.7273, 18.0), S: (188.0, 96.0)]",
+				"objective": "[P: (116.0, 126.0), S: (660.0, 128.0)]",
+				"onboarding": "[P: (116.0, 126.0), S: (664.7273, 320.5454)]",
+				"progression_goal": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"safe_rect": "[P: (116.0, 18.0), S: (1190.727, 598.5454)]",
+				"status": "[P: (116.0, 566.5454), S: (664.7273, 50.0)]",
+				"touch_target": 86.0
+			}
+		},
+		{
+			"context": "workshop:tool_forge",
+			"goal": {
+				"action_text": "Enter The Deep · Hub",
+				"action_visible": false,
+				"detail": "Tool Forge · level 2",
+				"hud_action": "Enter The Deep · Hub",
+				"hud_title": "Tool Forge · 2",
+				"input_blocking": false,
+				"kind": "endless_enter",
+				"objective_id": "endless:upgrade:tool_forge",
+				"panel_rect": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"rendered_rows": [
+					{
+						"id": "resource:deep_alloy",
+						"ready": false,
+						"text": "0 / 100"
+					}
+				],
+				"required_amount": 100,
+				"requirements": [
+					{
+						"delivered": 0,
+						"id": "resource:deep_alloy",
+						"in_pouch": 0,
+						"is_currency": false,
+						"name": "Deep Alloy",
+						"owned": 0,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 100,
+						"resource_id": "deep_alloy",
+						"texture_path": "res://assets/endless/node-deep-alloy-v1.png"
+					}
+				],
+				"requirements_ready": false,
+				"resource_id": "deep_alloy",
+				"station_id": "deepElevator",
+				"title": "Upgrade the Tool Forge",
+				"title_text": "Tool Forge · 2",
+				"visible": true,
+				"workshop_id": "tool_forge"
+			},
+			"id": "hub_built_180_200",
+			"player": "(180.0, 200.0)",
+			"size": "(1696, 780)",
+			"touch_layout": {
+				"bag": "[P: (1016.727, 476.5454), S: (118.0, 118.0)]",
+				"bag_count": "[P: (1096.727, 567.5454), S: (42.0, 30.0)]",
+				"companion": "[P: (332.0, 18.0), S: (86.0, 86.0)]",
+				"context": "[P: (792.7273, 483.5454), S: (206.0, 104.0)]",
+				"gold": "[P: (430.0, 18.0), S: (150.0, 86.0)]",
+				"guide": "[P: (224.0, 18.0), S: (96.0, 96.0)]",
+				"iphone": true,
+				"menu": "[P: (116.0, 18.0), S: (96.0, 96.0)]",
+				"mine": "[P: (1152.727, 458.5454), S: (154.0, 154.0)]",
+				"minimap": "[P: (706.7273, 18.0), S: (188.0, 96.0)]",
+				"objective": "[P: (116.0, 126.0), S: (660.0, 128.0)]",
+				"onboarding": "[P: (116.0, 126.0), S: (664.7273, 320.5454)]",
+				"progression_goal": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"safe_rect": "[P: (116.0, 18.0), S: (1190.727, 598.5454)]",
+				"status": "[P: (116.0, 566.5454), S: (664.7273, 50.0)]",
+				"touch_target": 86.0
+			}
+		},
+		{
+			"context": "",
+			"goal": {
+				"action_text": "Enter The Deep · Hub",
+				"action_visible": false,
+				"detail": "Tool Forge · level 2",
+				"hud_action": "Enter The Deep · Hub",
+				"hud_title": "Tool Forge · 2",
+				"input_blocking": false,
+				"kind": "endless_enter",
+				"objective_id": "endless:upgrade:tool_forge",
+				"panel_rect": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"rendered_rows": [
+					{
+						"id": "resource:deep_alloy",
+						"ready": false,
+						"text": "0 / 100"
+					}
+				],
+				"required_amount": 100,
+				"requirements": [
+					{
+						"delivered": 0,
+						"id": "resource:deep_alloy",
+						"in_pouch": 0,
+						"is_currency": false,
+						"name": "Deep Alloy",
+						"owned": 0,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 100,
+						"resource_id": "deep_alloy",
+						"texture_path": "res://assets/endless/node-deep-alloy-v1.png"
+					}
+				],
+				"requirements_ready": false,
+				"resource_id": "deep_alloy",
+				"station_id": "deepElevator",
+				"title": "Upgrade the Tool Forge",
+				"title_text": "Tool Forge · 2",
+				"visible": true,
+				"workshop_id": "tool_forge"
+			},
+			"id": "hub_built_1240_780",
+			"player": "(1240.0, 780.0)",
+			"size": "(1696, 780)",
+			"touch_layout": {
+				"bag": "[P: (1016.727, 476.5454), S: (118.0, 118.0)]",
+				"bag_count": "[P: (1096.727, 567.5454), S: (42.0, 30.0)]",
+				"companion": "[P: (332.0, 18.0), S: (86.0, 86.0)]",
+				"context": "[P: (792.7273, 483.5454), S: (206.0, 104.0)]",
+				"gold": "[P: (430.0, 18.0), S: (150.0, 86.0)]",
+				"guide": "[P: (224.0, 18.0), S: (96.0, 96.0)]",
+				"iphone": true,
+				"menu": "[P: (116.0, 18.0), S: (96.0, 96.0)]",
+				"mine": "[P: (1152.727, 458.5454), S: (154.0, 154.0)]",
+				"minimap": "[P: (706.7273, 18.0), S: (188.0, 96.0)]",
+				"objective": "[P: (116.0, 126.0), S: (660.0, 128.0)]",
+				"onboarding": "[P: (116.0, 126.0), S: (664.7273, 320.5454)]",
+				"progression_goal": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"safe_rect": "[P: (116.0, 18.0), S: (1190.727, 598.5454)]",
+				"status": "[P: (116.0, 566.5454), S: (664.7273, 50.0)]",
+				"touch_target": 86.0
+			}
+		},
+		{
+			"context": "workshop:tool_forge",
+			"goal": {
+				"action_text": "Enter The Deep · Hub",
+				"action_visible": false,
+				"detail": "Tool Forge · level 2",
+				"hud_action": "Enter The Deep · Hub",
+				"hud_title": "Tool Forge · 2",
+				"input_blocking": false,
+				"kind": "endless_enter",
+				"objective_id": "endless:upgrade:tool_forge",
+				"panel_rect": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"rendered_rows": [
+					{
+						"id": "resource:deep_alloy",
+						"ready": false,
+						"text": "0 / 100"
+					}
+				],
+				"required_amount": 100,
+				"requirements": [
+					{
+						"delivered": 0,
+						"id": "resource:deep_alloy",
+						"in_pouch": 0,
+						"is_currency": false,
+						"name": "Deep Alloy",
+						"owned": 0,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 100,
+						"resource_id": "deep_alloy",
+						"texture_path": "res://assets/endless/node-deep-alloy-v1.png"
+					}
+				],
+				"requirements_ready": false,
+				"resource_id": "deep_alloy",
+				"station_id": "deepElevator",
+				"title": "Upgrade the Tool Forge",
+				"title_text": "Tool Forge · 2",
+				"visible": true,
+				"workshop_id": "tool_forge"
+			},
+			"id": "hub_approach_tool_forge",
+			"player": "(286.0, 317.0001)",
+			"size": "(1696, 780)",
+			"touch_layout": {
+				"bag": "[P: (1016.727, 476.5454), S: (118.0, 118.0)]",
+				"bag_count": "[P: (1096.727, 567.5454), S: (42.0, 30.0)]",
+				"companion": "[P: (332.0, 18.0), S: (86.0, 86.0)]",
+				"context": "[P: (792.7273, 483.5454), S: (206.0, 104.0)]",
+				"gold": "[P: (430.0, 18.0), S: (150.0, 86.0)]",
+				"guide": "[P: (224.0, 18.0), S: (96.0, 96.0)]",
+				"iphone": true,
+				"menu": "[P: (116.0, 18.0), S: (96.0, 96.0)]",
+				"mine": "[P: (1152.727, 458.5454), S: (154.0, 154.0)]",
+				"minimap": "[P: (706.7273, 18.0), S: (188.0, 96.0)]",
+				"objective": "[P: (116.0, 126.0), S: (660.0, 128.0)]",
+				"onboarding": "[P: (116.0, 126.0), S: (664.7273, 320.5454)]",
+				"progression_goal": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"safe_rect": "[P: (116.0, 18.0), S: (1190.727, 598.5454)]",
+				"status": "[P: (116.0, 566.5454), S: (664.7273, 50.0)]",
+				"touch_target": 86.0
+			}
+		},
+		{
+			"context": "workshop:light_lab",
+			"goal": {
+				"action_text": "Enter The Deep · Hub",
+				"action_visible": false,
+				"detail": "Tool Forge · level 2",
+				"hud_action": "Enter The Deep · Hub",
+				"hud_title": "Tool Forge · 2",
+				"input_blocking": false,
+				"kind": "endless_enter",
+				"objective_id": "endless:upgrade:tool_forge",
+				"panel_rect": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"rendered_rows": [
+					{
+						"id": "resource:deep_alloy",
+						"ready": false,
+						"text": "0 / 100"
+					}
+				],
+				"required_amount": 100,
+				"requirements": [
+					{
+						"delivered": 0,
+						"id": "resource:deep_alloy",
+						"in_pouch": 0,
+						"is_currency": false,
+						"name": "Deep Alloy",
+						"owned": 0,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 100,
+						"resource_id": "deep_alloy",
+						"texture_path": "res://assets/endless/node-deep-alloy-v1.png"
+					}
+				],
+				"requirements_ready": false,
+				"resource_id": "deep_alloy",
+				"station_id": "deepElevator",
+				"title": "Upgrade the Tool Forge",
+				"title_text": "Tool Forge · 2",
+				"visible": true,
+				"workshop_id": "tool_forge"
+			},
+			"id": "hub_approach_light_lab",
+			"player": "(198.0, 614.9999)",
+			"size": "(1696, 780)",
+			"touch_layout": {
+				"bag": "[P: (1016.727, 476.5454), S: (118.0, 118.0)]",
+				"bag_count": "[P: (1096.727, 567.5454), S: (42.0, 30.0)]",
+				"companion": "[P: (332.0, 18.0), S: (86.0, 86.0)]",
+				"context": "[P: (792.7273, 483.5454), S: (206.0, 104.0)]",
+				"gold": "[P: (430.0, 18.0), S: (150.0, 86.0)]",
+				"guide": "[P: (224.0, 18.0), S: (96.0, 96.0)]",
+				"iphone": true,
+				"menu": "[P: (116.0, 18.0), S: (96.0, 96.0)]",
+				"mine": "[P: (1152.727, 458.5454), S: (154.0, 154.0)]",
+				"minimap": "[P: (706.7273, 18.0), S: (188.0, 96.0)]",
+				"objective": "[P: (116.0, 126.0), S: (660.0, 128.0)]",
+				"onboarding": "[P: (116.0, 126.0), S: (664.7273, 320.5454)]",
+				"progression_goal": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"safe_rect": "[P: (116.0, 18.0), S: (1190.727, 598.5454)]",
+				"status": "[P: (116.0, 566.5454), S: (664.7273, 50.0)]",
+				"touch_target": 86.0
+			}
+		},
+		{
+			"context": "workshop:wardrobe",
+			"goal": {
+				"action_text": "Enter The Deep · Hub",
+				"action_visible": false,
+				"detail": "Tool Forge · level 2",
+				"hud_action": "Enter The Deep · Hub",
+				"hud_title": "Tool Forge · 2",
+				"input_blocking": false,
+				"kind": "endless_enter",
+				"objective_id": "endless:upgrade:tool_forge",
+				"panel_rect": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"rendered_rows": [
+					{
+						"id": "resource:deep_alloy",
+						"ready": false,
+						"text": "0 / 100"
+					}
+				],
+				"required_amount": 100,
+				"requirements": [
+					{
+						"delivered": 0,
+						"id": "resource:deep_alloy",
+						"in_pouch": 0,
+						"is_currency": false,
+						"name": "Deep Alloy",
+						"owned": 0,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 100,
+						"resource_id": "deep_alloy",
+						"texture_path": "res://assets/endless/node-deep-alloy-v1.png"
+					}
+				],
+				"requirements_ready": false,
+				"resource_id": "deep_alloy",
+				"station_id": "deepElevator",
+				"title": "Upgrade the Tool Forge",
+				"title_text": "Tool Forge · 2",
+				"visible": true,
+				"workshop_id": "tool_forge"
+			},
+			"id": "hub_approach_wardrobe",
+			"player": "(1226.0, 614.9999)",
+			"size": "(1696, 780)",
+			"touch_layout": {
+				"bag": "[P: (1016.727, 476.5454), S: (118.0, 118.0)]",
+				"bag_count": "[P: (1096.727, 567.5454), S: (42.0, 30.0)]",
+				"companion": "[P: (332.0, 18.0), S: (86.0, 86.0)]",
+				"context": "[P: (792.7273, 483.5454), S: (206.0, 104.0)]",
+				"gold": "[P: (430.0, 18.0), S: (150.0, 86.0)]",
+				"guide": "[P: (224.0, 18.0), S: (96.0, 96.0)]",
+				"iphone": true,
+				"menu": "[P: (116.0, 18.0), S: (96.0, 96.0)]",
+				"mine": "[P: (1152.727, 458.5454), S: (154.0, 154.0)]",
+				"minimap": "[P: (706.7273, 18.0), S: (188.0, 96.0)]",
+				"objective": "[P: (116.0, 126.0), S: (660.0, 128.0)]",
+				"onboarding": "[P: (116.0, 126.0), S: (664.7273, 320.5454)]",
+				"progression_goal": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"safe_rect": "[P: (116.0, 18.0), S: (1190.727, 598.5454)]",
+				"status": "[P: (116.0, 566.5454), S: (664.7273, 50.0)]",
+				"touch_target": 86.0
+			}
+		},
+		{
+			"context": "workshop:lift_workshop",
+			"goal": {
+				"action_text": "Enter The Deep · Hub",
+				"action_visible": false,
+				"detail": "Tool Forge · level 2",
+				"hud_action": "Enter The Deep · Hub",
+				"hud_title": "Tool Forge · 2",
+				"input_blocking": false,
+				"kind": "endless_enter",
+				"objective_id": "endless:upgrade:tool_forge",
+				"panel_rect": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"rendered_rows": [
+					{
+						"id": "resource:deep_alloy",
+						"ready": false,
+						"text": "0 / 100"
+					}
+				],
+				"required_amount": 100,
+				"requirements": [
+					{
+						"delivered": 0,
+						"id": "resource:deep_alloy",
+						"in_pouch": 0,
+						"is_currency": false,
+						"name": "Deep Alloy",
+						"owned": 0,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 100,
+						"resource_id": "deep_alloy",
+						"texture_path": "res://assets/endless/node-deep-alloy-v1.png"
+					}
+				],
+				"requirements_ready": false,
+				"resource_id": "deep_alloy",
+				"station_id": "deepElevator",
+				"title": "Upgrade the Tool Forge",
+				"title_text": "Tool Forge · 2",
+				"visible": true,
+				"workshop_id": "tool_forge"
+			},
+			"id": "hub_approach_lift_workshop",
+			"player": "(1210.0, 325.0001)",
+			"size": "(1696, 780)",
+			"touch_layout": {
+				"bag": "[P: (1016.727, 476.5454), S: (118.0, 118.0)]",
+				"bag_count": "[P: (1096.727, 567.5454), S: (42.0, 30.0)]",
+				"companion": "[P: (332.0, 18.0), S: (86.0, 86.0)]",
+				"context": "[P: (792.7273, 483.5454), S: (206.0, 104.0)]",
+				"gold": "[P: (430.0, 18.0), S: (150.0, 86.0)]",
+				"guide": "[P: (224.0, 18.0), S: (96.0, 96.0)]",
+				"iphone": true,
+				"menu": "[P: (116.0, 18.0), S: (96.0, 96.0)]",
+				"mine": "[P: (1152.727, 458.5454), S: (154.0, 154.0)]",
+				"minimap": "[P: (706.7273, 18.0), S: (188.0, 96.0)]",
+				"objective": "[P: (116.0, 126.0), S: (660.0, 128.0)]",
+				"onboarding": "[P: (116.0, 126.0), S: (664.7273, 320.5454)]",
+				"progression_goal": "[P: (906.7273, 18.0), S: (400.0, 84.0)]",
+				"safe_rect": "[P: (116.0, 18.0), S: (1190.727, 598.5454)]",
+				"status": "[P: (116.0, 566.5454), S: (664.7273, 50.0)]",
+				"touch_target": 86.0
+			}
+		},
+		{
+			"context": "",
+			"goal": {
+				"action_text": "Mine · Moonglass Depth 2",
+				"action_visible": false,
+				"detail": "Mine Phasecrystal in Prismatic Depths · Moonglass Labyrinth, Depth 2",
+				"hud_action": "Mine · Moonglass Depth 2",
+				"hud_title": "Deepcore Drill",
+				"input_blocking": false,
+				"kind": "depth_resource",
+				"mine_id": "moonMine",
+				"objective_id": "drill:3",
+				"panel_rect": "[P: (906.7273, 18.0), S: (400.0, 152.0)]",
+				"rendered_rows": [
+					{
+						"id": "resource:phasecrystal",
+						"ready": false,
+						"text": "23 / 70"
+					},
+					{
+						"id": "resource:magmaite",
+						"ready": false,
+						"text": "16 / 50"
+					},
+					{
+						"id": "resource:furnaceheart",
+						"ready": false,
+						"text": "1 / 5"
+					},
+					{
+						"id": "resource:infernium",
+						"ready": false,
+						"text": "23 / 70"
+					},
+					{
+						"id": "currency:gold",
+						"ready": false,
+						"text": "17320 (+98) / 25000"
+					}
+				],
+				"required_amount": 70,
+				"requirements": [
+					{
+						"delivered": 0,
+						"id": "resource:phasecrystal",
+						"in_pouch": 23,
+						"is_currency": false,
+						"name": "Phase Crystal",
+						"owned": 23,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 70,
+						"resource_id": "phasecrystal",
+						"texture_path": "res://assets/drops/phasecrystal-drop.png"
+					},
+					{
+						"delivered": 0,
+						"id": "resource:magmaite",
+						"in_pouch": 16,
+						"is_currency": false,
+						"name": "Magmaite",
+						"owned": 16,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 50,
+						"resource_id": "magmaite",
+						"texture_path": "res://assets/drops/magmaite-drop.png"
+					},
+					{
+						"delivered": 0,
+						"id": "resource:furnaceheart",
+						"in_pouch": 1,
+						"is_currency": false,
+						"name": "Furnace Heart",
+						"owned": 1,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 5,
+						"resource_id": "furnaceheart",
+						"texture_path": "res://assets/drops/furnaceheart-drop.png"
+					},
+					{
+						"delivered": 0,
+						"id": "resource:infernium",
+						"in_pouch": 23,
+						"is_currency": false,
+						"name": "Infernium",
+						"owned": 23,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 70,
+						"resource_id": "infernium",
+						"texture_path": "res://assets/drops/infernium-drop.png"
+					},
+					{
+						"delivered": 0,
+						"id": "currency:gold",
+						"in_pouch": 17320,
+						"is_currency": true,
+						"name": "Gold",
+						"owned": 17320,
+						"pending_sale": 98,
+						"ready": false,
+						"required": 25000,
+						"resource_id": "gold",
+						"texture_path": "res://assets/ui/gold-bars-v1.png"
+					}
+				],
+				"requirements_ready": false,
+				"resource_id": "phasecrystal",
+				"title": "Forge the Deepcore Drill",
+				"title_text": "Deepcore Drill",
+				"visible": true
+			},
+			"id": "final_drill_five_costs",
+			"player": "(404.0, 2628.0)",
+			"size": "(1696, 780)",
+			"touch_layout": {
+				"bag": "[P: (1016.727, 476.5454), S: (118.0, 118.0)]",
+				"bag_count": "[P: (1096.727, 567.5454), S: (42.0, 30.0)]",
+				"companion": "[P: (332.0, 18.0), S: (86.0, 86.0)]",
+				"context": "[P: (792.7273, 483.5454), S: (206.0, 104.0)]",
+				"gold": "[P: (430.0, 18.0), S: (150.0, 86.0)]",
+				"guide": "[P: (224.0, 18.0), S: (96.0, 96.0)]",
+				"iphone": true,
+				"menu": "[P: (116.0, 18.0), S: (96.0, 96.0)]",
+				"mine": "[P: (1152.727, 458.5454), S: (154.0, 154.0)]",
+				"minimap": "[P: (706.7273, 18.0), S: (188.0, 96.0)]",
+				"objective": "[P: (116.0, 182.0), S: (660.0, 128.0)]",
+				"onboarding": "[P: (116.0, 182.0), S: (664.7273, 264.5454)]",
+				"progression_goal": "[P: (906.7273, 18.0), S: (400.0, 152.0)]",
+				"safe_rect": "[P: (116.0, 18.0), S: (1190.727, 598.5454)]",
+				"status": "[P: (116.0, 566.5454), S: (664.7273, 50.0)]",
+				"touch_target": 86.0
+			}
+		},
+		{
+			"context": "",
+			"goal": {
+				"action_text": "Mine · Moonglass Depth 2",
+				"action_visible": false,
+				"detail": "Mine Phasecrystal in Prismatic Depths · Moonglass Labyrinth, Depth 2",
+				"hud_action": "Mine · Moonglass Depth 2",
+				"hud_title": "Deepcore Drill",
+				"input_blocking": false,
+				"kind": "depth_resource",
+				"mine_id": "moonMine",
+				"objective_id": "drill:3",
+				"panel_rect": "[P: (906.7273, 18.0), S: (400.0, 152.0)]",
+				"rendered_rows": [
+					{
+						"id": "resource:phasecrystal",
+						"ready": false,
+						"text": "23 / 70"
+					},
+					{
+						"id": "resource:magmaite",
+						"ready": false,
+						"text": "16 / 50"
+					},
+					{
+						"id": "resource:furnaceheart",
+						"ready": false,
+						"text": "1 / 5"
+					},
+					{
+						"id": "resource:infernium",
+						"ready": false,
+						"text": "23 / 70"
+					},
+					{
+						"id": "currency:gold",
+						"ready": false,
+						"text": "17320 (+98) / 25000"
+					}
+				],
+				"required_amount": 70,
+				"requirements": [
+					{
+						"delivered": 0,
+						"id": "resource:phasecrystal",
+						"in_pouch": 23,
+						"is_currency": false,
+						"name": "Phase Crystal",
+						"owned": 23,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 70,
+						"resource_id": "phasecrystal",
+						"texture_path": "res://assets/drops/phasecrystal-drop.png"
+					},
+					{
+						"delivered": 0,
+						"id": "resource:magmaite",
+						"in_pouch": 16,
+						"is_currency": false,
+						"name": "Magmaite",
+						"owned": 16,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 50,
+						"resource_id": "magmaite",
+						"texture_path": "res://assets/drops/magmaite-drop.png"
+					},
+					{
+						"delivered": 0,
+						"id": "resource:furnaceheart",
+						"in_pouch": 1,
+						"is_currency": false,
+						"name": "Furnace Heart",
+						"owned": 1,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 5,
+						"resource_id": "furnaceheart",
+						"texture_path": "res://assets/drops/furnaceheart-drop.png"
+					},
+					{
+						"delivered": 0,
+						"id": "resource:infernium",
+						"in_pouch": 23,
+						"is_currency": false,
+						"name": "Infernium",
+						"owned": 23,
+						"pending_sale": 0,
+						"ready": false,
+						"required": 70,
+						"resource_id": "infernium",
+						"texture_path": "res://assets/drops/infernium-drop.png"
+					},
+					{
+						"delivered": 0,
+						"id": "currency:gold",
+						"in_pouch": 17320,
+						"is_currency": true,
+						"name": "Gold",
+						"owned": 17320,
+						"pending_sale": 98,
+						"ready": false,
+						"required": 25000,
+						"resource_id": "gold",
+						"texture_path": "res://assets/ui/gold-bars-v1.png"
+					}
+				],
+				"requirements_ready": false,
+				"resource_id": "phasecrystal",
+				"title": "Forge the Deepcore Drill",
+				"title_text": "Deepcore Drill",
+				"visible": true
+			},
+			"id": "final_drill_guide_open",
+			"player": "(404.0, 2628.0)",
+			"size": "(1696, 780)",
+			"touch_layout": {
+				"bag": "[P: (1016.727, 476.5454), S: (118.0, 118.0)]",
+				"bag_count": "[P: (1096.727, 567.5454), S: (42.0, 30.0)]",
+				"companion": "[P: (332.0, 18.0), S: (86.0, 86.0)]",
+				"context": "[P: (792.7273, 483.5454), S: (206.0, 104.0)]",
+				"gold": "[P: (430.0, 18.0), S: (150.0, 86.0)]",
+				"guide": "[P: (224.0, 18.0), S: (96.0, 96.0)]",
+				"iphone": true,
+				"menu": "[P: (116.0, 18.0), S: (96.0, 96.0)]",
+				"mine": "[P: (1152.727, 458.5454), S: (154.0, 154.0)]",
+				"minimap": "[P: (706.7273, 18.0), S: (188.0, 96.0)]",
+				"objective": "[P: (116.0, 182.0), S: (660.0, 128.0)]",
+				"onboarding": "[P: (116.0, 182.0), S: (664.7273, 264.5454)]",
+				"progression_goal": "[P: (906.7273, 18.0), S: (400.0, 152.0)]",
+				"safe_rect": "[P: (116.0, 18.0), S: (1190.727, 598.5454)]",
+				"status": "[P: (116.0, 566.5454), S: (664.7273, 50.0)]",
+				"touch_target": 86.0
+			}
+		}
+	],
+	"physical_iphone": false,
+	"rendered": true,
+	"source_only": true
+}
