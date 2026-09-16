@@ -2545,6 +2545,7 @@ func _floor_texture_region(cell: Vector2i) -> Rect2:
 
 func _draw() -> void :
 	_draw_canvas = self
+	if has_meta("wall_study_native_meshes"): set_meta("wall_study_native_meshes", [])
 	if floor_cells.is_empty() or stratum.is_empty():
 		return
 	_remember_draw_camera_bounds()
@@ -2643,6 +2644,8 @@ func _draw_impact_section(impact: Dictionary) -> void:
 
 
 func _draw_terrain_section(row: int, first_col: int, last_col: int, pass_index: int) -> void:
+	if _draw_canvas.has_meta("wall_study_native_meshes"):
+		_draw_canvas.set_meta("wall_study_native_meshes", [])
 	_select_draw_stratum(window_start_depth + row / DeepLayout.CHUNK_ROWS)
 	if pass_index == 0:
 		var col: int = first_col
@@ -2757,7 +2760,19 @@ func _draw_permanent_wall_mass(cell: Vector2i, rect: Rect2) -> void:
 	var region: Rect2 = Rect2(Vector2(posmod(cell.x,8),posmod(absolute_cell(cell).y,8))*96.0,Vector2(96,96))
 	var tint: Color = Color(stratum.wall).lightened(0.50)
 	if not _wall_study_draws_mineable(cell): tint = tint.darkened(0.42)
-	_draw_canvas.draw_texture_rect_region(texture,rect.grow(0.5),region,tint)
+	var transition: Dictionary = _wall_study_transition(cell) if wall_study_candidate else {}
+	if transition.is_empty():
+		_draw_canvas.draw_texture_rect_region(texture,rect.grow(0.5),region,tint)
+	else:
+		var next_profile: int = int(transition.next_profile)
+		var upper_tint: Color = Color(STRATA[posmod(next_profile - 1, 5)].wall).lightened(0.50)
+		var lower_tint: Color = Color(STRATA[next_profile].wall).lightened(0.50)
+		if not _wall_study_draws_mineable(cell):
+			upper_tint = upper_tint.darkened(0.42)
+			lower_tint = lower_tint.darkened(0.42)
+		NativeWallStudy.draw_mass_transition(_draw_canvas, texture, rect.grow(0.5), region,
+			upper_tint, lower_tint, float(transition.boundary_y),
+			float(absolute_cell(cell).x - cell.x) * TILE_SIZE, next_profile, TILE_SIZE)
 	if _wall_study_draws_mineable(cell) and _has_floor_neighbor(cell):
 		var reward: Dictionary = DeepLayout.ore_for_cell(int(RunState.world_seed), depth_at_position(_cell_center(cell)), _chunk_cell_index(cell))
 		if bool(reward.rare):
@@ -2807,7 +2822,8 @@ func _draw_wall_edges(cell: Vector2i, rect: Rect2) -> void :
 			diggable_wall_texture if mineable else cave_wall_texture,
 			diggable_corner_texture if mineable else cave_wall_corner_texture,
 			cell, absolute_cell(cell), open_sides, terminal_kinds, TILE_SIZE,
-			posmod(depth_at_position(_cell_center(cell)), 5), not mineable)
+			posmod(depth_at_position(_cell_center(cell)), 5), not mineable,
+			_wall_study_transition(cell))
 		return
 	for side in 4:
 		if bool(open_sides[side]):
@@ -2846,6 +2862,17 @@ func _wall_study_draws_mineable(cell: Vector2i) -> bool:
 
 func _wall_study_edge_continues(cell: Vector2i, normal: Vector2i) -> bool:
 	return _cell_in_bounds(cell) and not _is_floor(cell) and _is_floor(cell + normal)
+
+
+func _wall_study_transition(cell: Vector2i) -> Dictionary:
+	if wall_study_force_material >= 0: return {}
+	var row_in_band: int = posmod(cell.y, DeepLayout.CHUNK_ROWS)
+	var depth: int = window_start_depth + cell.y / DeepLayout.CHUNK_ROWS
+	if row_in_band == 0 and depth > 1:
+		return {"boundary_y": cell.y * TILE_SIZE, "next_profile": posmod(depth, 5), "at_start": true}
+	if row_in_band == DeepLayout.CHUNK_ROWS - 1:
+		return {"boundary_y": (cell.y + 1) * TILE_SIZE, "next_profile": posmod(depth + 1, 5), "at_start": false}
+	return {}
 
 
 func set_wall_study_mode(candidate: bool, force_material: int = -1) -> void:

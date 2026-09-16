@@ -10,12 +10,12 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[2]
 DEST = Path(__file__).resolve().parent
 PROFILES = [
-    ("rootwound", (431, 720, 165, 304)),
+    ("rootwound", (429, 669, 169, 352)),
     ("moonglass", (486, 720, 148, 304)),
     ("emberdeep", (475, 720, 154, 304)),
-    ("voidstar", (454, 720, 135, 304)),
+    ("voidstar", (449, 670, 142, 320)),
     ("mossvein", (420, 720, 377, 304)),
-    ("bedrock", (372, 720, 280, 304)),
+    ("bedrock", (362, 708, 291, 316)),
 ]
 OPAQUE = 250
 
@@ -49,6 +49,7 @@ def main() -> None:
         measured.append({
             "name": name,
             "edge_top": top.tolist(), "edge_bottom": bottom.tolist(),
+            "edge_top_anchor": float(np.median(top)),
             "leg_left": left.tolist(), "leg_right": right.tolist(),
             "edge_source": edge_path, "corner_source": corner_path,
             "edge_sha256": hashlib.sha256((ROOT / edge_path).read_bytes()).hexdigest(),

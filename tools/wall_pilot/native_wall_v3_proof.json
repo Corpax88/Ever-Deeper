@@ -1,0 +1,166 @@
+{
+  "source_only": true,
+  "rendered": false,
+  "visual_acceptance": false,
+  "reviewed_v2_commit": "83eb590c8953cbdf26b4a83c46ec4f849f51a263",
+  "accepted_profile_constants_and_contours_preserved": [
+    "moonglass",
+    "emberdeep",
+    "mossvein"
+  ],
+  "native_artwork_and_shared_drawer_unchanged": true,
+  "mass_mesh": "Explicit native-textured triangles between adjacent shared-contour samples; no polygon triangulator",
+  "bedrock_mesh": "Convex native-contour trapezoids split at texture wraps, explicitly triangulated; accepted three rim renderers unchanged",
+  "bedrock": {
+    "median_visible_thickness": 55,
+    "maximum_opaque_horizontal_span": 63.58536585365854,
+    "maximum_opaque_vertical_span": 60.205761316872426,
+    "both_fit_one_64px_solid": true
+  },
+  "transition_masks": [
+    {
+      "material": "rootwound",
+      "native_contour_world_range": [
+        -13.818181818181756,
+        8.0
+      ],
+      "mass_partition_max_area_error": 1.0913936421275139e-11,
+      "rim_mass_max_mask_error": 2.2737367544323206e-13,
+      "absolute_phase_rebase_invariant": true
+    },
+    {
+      "material": "moonglass",
+      "native_contour_world_range": [
+        -5.759999999999991,
+        3.839999999999918
+      ],
+      "mass_partition_max_area_error": 7.275957614183426e-12,
+      "rim_mass_max_mask_error": 2.2737367544323206e-13,
+      "absolute_phase_rebase_invariant": true
+    },
+    {
+      "material": "emberdeep",
+      "native_contour_world_range": [
+        -10.947368421052715,
+        10.105263157894797
+      ],
+      "mass_partition_max_area_error": 0.0,
+      "rim_mass_max_mask_error": 2.2737367544323206e-13,
+      "absolute_phase_rebase_invariant": true
+    },
+    {
+      "material": "voidstar",
+      "native_contour_world_range": [
+        -19.200000000000045,
+        17.454545454545496
+      ],
+      "mass_partition_max_area_error": 9.094947017729282e-12,
+      "rim_mass_max_mask_error": 2.2737367544323206e-13,
+      "absolute_phase_rebase_invariant": true
+    },
+    {
+      "material": "mossvein",
+      "native_contour_world_range": [
+        -7.384615384615472,
+        12.923076923076906
+      ],
+      "mass_partition_max_area_error": 3.637978807091713e-12,
+      "rim_mass_max_mask_error": 2.2737367544323206e-13,
+      "absolute_phase_rebase_invariant": true
+    }
+  ],
+  "native_band_selection": [
+    {
+      "name": "rootwound",
+      "source": "assets/rootwound/cave-corner-v1.png",
+      "source_sha256": "99eb6833de3485bdfc00a5f599bd040bb0bda6670eb2f1afd9173be67e2ae842",
+      "search_first_row": 605,
+      "minimum_source_span": 352,
+      "candidates_examined": 2346,
+      "region": [
+        429,
+        669,
+        169,
+        352
+      ],
+      "leg_width": 113.0,
+      "leg_center": 513.25,
+      "target_median_thickness": 48.0,
+      "uniform_scale": 0.4247787610619469,
+      "world_repeat_length": 149.52212389380531,
+      "maximum_opaque_width": 60.743362831858406,
+      "baseline_score": 67.99347677432692,
+      "selected_score": 53.85763737593804,
+      "relative_score_reduction": 0.2078999349497349,
+      "selected_rgb_mae": 25.917954836255493,
+      "selected_alpha_mae": 46.56613756613758,
+      "authored_seamless": false,
+      "repeating_motifs_eliminated": false
+    },
+    {
+      "name": "voidstar",
+      "source": "assets/voidstar/cave-corner-v1.png",
+      "source_sha256": "e1a18a17f089eb2df9cebf3a88f67a6ec1f31f8aa157aa02d1d6376f308ba83a",
+      "search_first_row": 605,
+      "minimum_source_span": 320,
+      "candidates_examined": 5050,
+      "region": [
+        449,
+        670,
+        142,
+        320
+      ],
+      "leg_width": 93.0,
+      "leg_center": 511.5,
+      "target_median_thickness": 48.0,
+      "uniform_scale": 0.5161290322580645,
+      "world_repeat_length": 165.16129032258064,
+      "maximum_opaque_width": 60.903225806451616,
+      "baseline_score": 72.43061701744918,
+      "selected_score": 37.74721444133208,
+      "relative_score_reduction": 0.47885002232911467,
+      "selected_rgb_mae": 32.05333689031168,
+      "selected_alpha_mae": 9.489795918367346,
+      "authored_seamless": false,
+      "repeating_motifs_eliminated": false
+    },
+    {
+      "name": "bedrock",
+      "source": "assets/caves/ancient-bedrock-corner-v1.png",
+      "source_sha256": "da1ddb3ccfa33aa252c1f40ea64ea187b780edfdfb058c95b84837915321e6b3",
+      "search_first_row": 682,
+      "minimum_source_span": 305,
+      "candidates_examined": 741,
+      "region": [
+        362,
+        708,
+        291,
+        316
+      ],
+      "leg_width": 243.0,
+      "leg_center": 511.5,
+      "target_median_thickness": 55.0,
+      "uniform_scale": 0.22633744855967078,
+      "world_repeat_length": 71.52263374485597,
+      "maximum_opaque_width": 60.205761316872426,
+      "baseline_score": 41.09794093075827,
+      "selected_score": 36.0165529980108,
+      "relative_score_reduction": 0.12364093717757252,
+      "selected_rgb_mae": 14.370900824097756,
+      "selected_alpha_mae": 36.07608695652174,
+      "authored_seamless": false,
+      "repeating_motifs_eliminated": false
+    }
+  ],
+  "source_sha256": {
+    "tools/wall_pilot/native_wall_mapper.gd": "fa29ae97baff7e4b41271986bb0ff8aab8a2019660a20e3081c06cf4fb0d352a",
+    "scripts/world/endless_descent_world.gd": "efc0781ad3ff826067bdd5db8cd7d876f6060540e96b31c4970239b73cc124ec",
+    "tools/wall_pilot/native_wall_contours.json": "94c27f8408bdf4b05d61e5ded66e1133b9048aa5b95a9ed50fe559d3319651f0"
+  },
+  "limitations": [
+    "Python source geometry checks do not validate Godot triangulation or actual pixels.",
+    "Long walls still repeat finite native motifs; better seam scores do not eliminate repetition.",
+    "Native bedrock/void corner grain remains directional; thickness and row selection cannot reauthor it.",
+    "No gameplay, device, or performance acceptance is represented."
+  ]
+}
