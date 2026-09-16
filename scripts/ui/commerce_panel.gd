@@ -907,7 +907,7 @@ func _item_card(item: Dictionary) -> Button:
 	if icon.texture != null and ("/tools/" in icon.texture.resource_path or item_id.begins_with("forge:")):
 		icon.rotation = deg_to_rad(-40.0)
 		icon.resized.connect(func(): icon.pivot_offset = icon.size * 0.5)
-	var item_title: = _label(_display_text(String(item.get("title", item_id))), 12, STEEL, HORIZONTAL_ALIGNMENT_CENTER)
+	var item_title: = _label(_display_text(String(item.get("card_title", item.get("title", item_id)))), 12, STEEL, HORIZONTAL_ALIGNMENT_CENTER)
 	item_title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	item_title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	item_title.max_lines_visible = 2
@@ -949,7 +949,7 @@ func _refresh_overview() -> void :
 		overview_content.add_child(status)
 	overview_content.add_child(_overview_title_plate(_display_text(String(item.get("title", _selected_item_id)))))
 	var description: = String(item.get("description", item.get("subtitle", "")))
-	if not description.is_empty() and (not single_item or stats.is_empty()):
+	if not description.is_empty() and (not single_item or stats.is_empty() or bool(item.get("show_description", false))):
 		var description_label: = _label(description, 15, STEEL, HORIZONTAL_ALIGNMENT_LEFT)
 		description_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		description_label.max_lines_visible = 2
@@ -1024,7 +1024,8 @@ func _stat_row(stat: Dictionary) -> Control:
 	var current: = _value_text(stat.get("current", "-"), decimals)
 	var next: = _value_text(stat.get("next", current), decimals)
 	var suffix: = String(stat.get("suffix", ""))
-	for entry in [[current + suffix, STEEL], ["→", Color("ef964e")], [next + suffix, _accent_bright]]:
+	var values: Array = [[_value_text(stat.value, decimals) + suffix, _accent_bright]] if stat.has("value") else [[current + suffix, STEEL], ["→", Color("ef964e")], [next + suffix, _accent_bright]]
+	for entry in values:
 		var value: = _label(entry[0], 18, entry[1], HORIZONTAL_ALIGNMENT_RIGHT)
 		value.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		row.add_child(value)
@@ -1104,6 +1105,8 @@ func _refresh_navigation() -> void:
 	page_navigation.visible = has_pages
 	catalog_scroll.visible = has_pages
 	page_label.text = "Swipe to browse · Tap to preview" if count > 3 else "Tap to preview"
+	if _visual_theme_id == "light_lab":
+		page_label.text += "\nFixed cave lighting · Same scale for every beam"
 	page_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	page_label.add_theme_font_override("font", SYMBOL_FONT)
 
@@ -1231,7 +1234,7 @@ func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void:
 	primary_button.custom_minimum_size = Vector2(0, foot)
 	total_panel.visible = false
 	var single: bool = _items.size() <= 1
-	var cards_h: float = 116*k
+	var cards_h: float = (148 if _visual_theme_id == "light_lab" else 116)*k
 	page_navigation.custom_minimum_size.y = 48*k
 	catalog_scroll.custom_minimum_size.y = cards_h
 	catalog_pane.clip_contents = true

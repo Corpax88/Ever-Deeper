@@ -1,5 +1,55 @@
 # Continued premium review — 16 September 2026
 
+## Latest integration after the app interruption
+
+The old canonical scratch directory disappeared. The remote `774f889` source
+and surviving reviewed worktrees restored the approved cache, polygon, UI and
+sectioned-QA bytes in `/workspace/scratch/4e99473f21fc/Ever-Deeper`. The older
+unpublished commit objects are not available. Recovery identities and exact
+runtime hashes are in `resume-20260916/recovered-source-20260916.json`.
+
+- **WebGL repair adopted:** official-engine repeated Polygon2D index updates
+  reproduce the original buffer-target error. A narrowly scoped CanvasItem draw
+  replacement preserves all 15 isolated native RGBA pairs. Browser workflow
+  35077842852 reproduces the control failure and passes the same two candidate
+  shop fixtures without graphics errors. All native assets remain unchanged.
+  See `webgl-polygon-20260916/`. Full hazard-cycle browser coverage remains open.
+- **Light and completed-workshop UI adopted:** four direct 1696×780 station
+  captures and eight light states pass independent bounded criticism. Completed
+  stations show active values; Light Lab previews now read at a fixed scale.
+  Original source hashes and the failed cropped capture attempt are retained in
+  `ui-completion-light-20260916/`. Combined browser and refreshed residency tests
+  are pending; the residency expectation is explicitly updated to 1100×900.
+- **Depth strip caching adopted:** all 27 candidate warm/fresh images and the
+  27 fresh A/B/A2 images are exact. This also fixes an older missed drill-gated
+  invalidation. Sustained moving A/B/A2 records 40.698/41.504/40.533 FPS, with
+  actual excavation in every 10-second window; combined setup/draw cost falls
+  only 3.6–4.2%. Do not turn the frozen 65% cost reduction into an FPS claim.
+  See `depth-strip-cache-20260916/` for all raw summaries and failed controls.
+- **Touch sections preserve coverage:** default and explicit all both pass 123;
+  pause 5, wardrobe 26, light 25, lists 10, starforge 31, workshops 26 reconcile exactly.
+  Four invalid selector forms reject with exit 4 before any section starts.
+  Browser acknowledgements and DEV-only assertions can increase these totals.
+  See `menu-touch-sections-20260916/`. The immutable browser gate now runs six
+  independent sections and requires every section to complete; splitting cannot
+  turn cancellation or partial coverage into a pass.
+- The earlier browser package 774 completed 1267 gameplay checks, but its visual
+  job failed the GL gate and the monolithic touch job was cancelled at 15 minutes.
+  Those failures remain evidence. The combined new integration is not yet green.
+
+Two additional raw-evidence archives are durably saved: `web-wall-uv-cache`
+(libfile_ac39156d2edc8191976e822707ffdbdb) and `browser-depth-native`
+(libfile_63092e5a531c8191b8bf134996f49a9f). Exact file hashes and scope are in
+`resume-20260916/` receipts. New UI and controlled-browser raw captures still
+need the next archive. Native UV component diagnosis is in `native-uv-20260916/`;
+no UV repair or full bake is approved. The latest unpublished transfer guard was
+not recovered; do not treat earlier guarded audit results as current runnable code.
+
+Stable minimum 50 FPS, final animation, Deep joins, physical-iPhone evidence and
+independently demonstrated whole-game 9/10 remain open. Nothing is deployed.
+The protected player_visual mismatch remains separate from the reviewed scene
+change. The historical checkpoints below retain their original scoped findings.
+
 This supersedes the pending checks in `HANDOFF-20260916-PREMIUM.md`, while
 retaining its native assets, private archives, user mandate and release limits.
 Work resumed from remote `856d4cfa001a1f969bd1c6427aa846e3b4718e7f`, exact tree
@@ -133,7 +183,7 @@ It excludes subsequent V3 wall captures and the new web exports. The receipt is
 
 ## Current environment and next work
 
-- Canonical checkout: `/workspace/scratch/5a78be25fc28/Ever-Deeper`.
+- Canonical checkout: `/workspace/scratch/4e99473f21fc/Ever-Deeper`.
 - Godot: `/tmp/ever-deeper-runtime-20260915/Godot_v4.7.2-stable_linux.x86_64`.
 - Blender: `/tmp/ever-deeper-runtime-20260915/blender-4.5.3-linux-x64/blender`.
 - Restored Xvfb: `/workspace/scratch/4e99473f21fc/runtime/xvfb/usr/bin/Xvfb`.

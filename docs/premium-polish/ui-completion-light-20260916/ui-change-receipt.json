@@ -1,0 +1,92 @@
+{
+  "commit": "36a286cf1867d82b1c8f35cf7bab2577bbea7e68",
+  "tree": "0783c5d98f97db61dd677fbeb0c186233389cd4f",
+  "worktree": "/workspace/scratch/4e99473f21fc/ui-completion-light-study",
+  "source_capture_hashes_match_commit": true,
+  "source_changes": [
+    "scripts/ui/commerce_catalog.gd",
+    "scripts/ui/commerce_panel.gd",
+    "scripts/ui/light_preview.gd"
+  ],
+  "checks": {
+    "premium_core": 200,
+    "touch_final": 123,
+    "native_review": "/workspace/scratch/4e99473f21fc/evidence/ui-completion-light-native2/review.json",
+    "native_current_restore_identical": true,
+    "native_current_upgraded_changed_pixels": 218241
+  },
+  "native_preview": {
+    "directory": "/workspace/scratch/4e99473f21fc/evidence/ui-completion-light-native2",
+    "png_count": 21,
+    "viewport": [
+      1100,
+      900
+    ],
+    "main_framebuffer": [
+      1696,
+      780
+    ]
+  },
+  "native_stations": {
+    "browser": false,
+    "captures": [
+      {
+        "file": "shop_workshop_light_lab_baseline.png",
+        "fixture": "workshop_light_lab_baseline",
+        "height": 780,
+        "selection": "workshop:equip:standard",
+        "sha256": "e58941c9393a0475f8b33893351784e6b4a5d16034c7c43f4d705cc4f6ac3aeb",
+        "subtitle": "Level 1 / 5 \u00b7 Preview your headlamp in the cave",
+        "width": 1696
+      },
+      {
+        "file": "shop_workshop_treasure_chamber_baseline.png",
+        "fixture": "workshop_treasure_chamber_baseline",
+        "height": 780,
+        "selection": "workshop:inspect",
+        "sha256": "f538ee2c60af6869ad4b11dbe8f9489d859f2bd4659845790c82fbad6196fe5b",
+        "subtitle": "Level 1 / 1 \u00b7 Complete \u00b7 Permanent benefits active",
+        "width": 1696
+      },
+      {
+        "file": "shop_workshop_lift_workshop_baseline.png",
+        "fixture": "workshop_lift_workshop_baseline",
+        "height": 780,
+        "selection": "workshop:inspect",
+        "sha256": "629522fbed24596585eb91c2fdeaeb4316fdecc27703500522727d8a8f5dbfbf",
+        "subtitle": "Level 1 / 1 \u00b7 Complete \u00b7 Permanent benefits active",
+        "width": 1696
+      },
+      {
+        "file": "shop_forge_ordinary_ready.png",
+        "fixture": "forge_ordinary_ready",
+        "height": 780,
+        "selection": "forge:pickaxe",
+        "sha256": "1b49d62795182a8a42a22d37a3613107bf0b4e6c6344bc248bdfb5006d593428",
+        "subtitle": "Inspect the change before the hammer falls",
+        "width": 1696
+      }
+    ],
+    "display": "X11",
+    "performance_test": false,
+    "physical_iphone": false,
+    "source_only": true,
+    "source_sha256": {
+      "res://scripts/dev/visual_capture_driver.gd": "dab40e68808ebe1dadacfc5c2b28eb158a38ce066b5f1df3c327f957eff5729a",
+      "res://scripts/ui/commerce_catalog.gd": "fbf78aba72f367d909838ae737692ef37557b7f75ff4dd6a2c554f222bfb9232",
+      "res://scripts/ui/commerce_panel.gd": "075d353fa79849128b6d0ed8778954aa5078f28ff1f82276258f8715022f3610",
+      "res://scripts/ui/light_preview.gd": "51781bdd0d16c0901e9871bad26c45f3519fdf5bd77c7fb2ff257fcf14822fb8"
+    }
+  },
+  "preserved_invalid_capture": {
+    "directory": "/workspace/scratch/4e99473f21fc/evidence/ui-completion-stations-native",
+    "reason": "Godot PNG movie writer fixed output to 1280x720 and cropped the 1696x780 live UI; no acceptance from these frames."
+  },
+  "limitations": [
+    "Browser review pending parent CI.",
+    "No physical iPhone or performance claim.",
+    "Legacy protected-hash check still reports unchanged scripts/player/player_visual.gd.",
+    "review_commerce_residency.gd still expects old 1100x1200 preview dimensions; parent will explicitly update after visual acceptance.",
+    "External capture adapter exists only in evidence; no QA or production harness change."
+  ]
+}

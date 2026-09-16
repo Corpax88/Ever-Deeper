@@ -2,7 +2,7 @@
 
 import { chromium, webkit } from "@playwright/test";
 import { createHash } from "node:crypto";
-import { createReadStream } from "node:fs";
+import { createReadStream, appendFileSync } from "node:fs";
 import { promises as fs } from "node:fs";
 import http from "node:http";
 import path from "node:path";
@@ -17,6 +17,12 @@ const PHYSICAL_VIEWPORT = {width:VIEWPORT.width*DPR,height:VIEWPORT.height*DPR};
 let EXPECTED_CAPTURE_COUNT = 0;
 const HERO_MOTION = process.env.HERO_MOTION === "1";
 const GAMEPLAY = process.env.OVERHAUL_GAMEPLAY === "1";
+const MENU_TOUCH = process.env.MENU_TOUCH === "1";
+const TOUCH_SECTIONS = ["pause", "wardrobe", "light", "lists", "starforge", "workshops"];
+const TOUCH_SECTION = process.env.MENU_TOUCH_SECTION ?? "all";
+if (TOUCH_SECTION !== "all" && !TOUCH_SECTIONS.includes(TOUCH_SECTION)) throw new Error("Invalid MENU_TOUCH_SECTION");
+if (MENU_TOUCH && !GAMEPLAY) throw new Error("MENU_TOUCH requires OVERHAUL_GAMEPLAY=1");
+if (!MENU_TOUCH && TOUCH_SECTION !== "all") throw new Error("MENU_TOUCH_SECTION requires MENU_TOUCH=1");
 const FULL_MATRIX_COUNT = HERO_MOTION ? 1 : (process.env.HERO_V28_CAPTURE === "1" ? 216 : 303);
 const RANGE_START = Number(process.env.CAPTURE_START || 1);
 const RANGE_END = Number(process.env.CAPTURE_END || 19);
@@ -107,7 +113,7 @@ function injectSuiteArgument(html) {
   const suiteArgs = existingArgs.filter((arg) => arg !== SUITE_ARG);
   // OS.get_cmdline_user_args() only exposes arguments after Godot's user separator.
   if (!suiteArgs.includes("--")) suiteArgs.push("--");
-  config.args = [...suiteArgs, SUITE_ARG, ...(HERO_MOTION ? ["--hero-motion"] : []), GAMEPLAY ? "--overhaul-gameplay" : (process.env.HERO_V28_CAPTURE === "1" ? "--hero-capture" : "--overhaul-capture"), ...(process.env.HERO_V28_CAPTURE === "1" ? ["--hero-v28-capture"] : []), ...(process.env.CAPTURE_SCOPE === "light" ? ["--light-capture"] : []), ...(process.env.CAPTURE_SCOPE === "wardrobe" ? ["--wardrobe-capture"] : []), ...(process.env.MENU_TOUCH === "1" ? ["--menu-touch-only"] : []),  ...(process.env.PET_REACTIONS === "1" ? ["--pet-reactions"] : []), `--capture-start=${RANGE_START}`, `--capture-end=${RANGE_END}`];
+  config.args = [...suiteArgs, SUITE_ARG, ...(HERO_MOTION ? ["--hero-motion"] : []), GAMEPLAY ? "--overhaul-gameplay" : (process.env.HERO_V28_CAPTURE === "1" ? "--hero-capture" : "--overhaul-capture"), ...(process.env.HERO_V28_CAPTURE === "1" ? ["--hero-v28-capture"] : []), ...(process.env.CAPTURE_SCOPE === "light" ? ["--light-capture"] : []), ...(process.env.CAPTURE_SCOPE === "wardrobe" ? ["--wardrobe-capture"] : []), ...(MENU_TOUCH ? ["--menu-touch-only", `--menu-touch-section=${TOUCH_SECTION}`] : []), ...(process.env.PET_REACTIONS === "1" ? ["--pet-reactions"] : []), `--capture-start=${RANGE_START}`, `--capture-end=${RANGE_END}`];
   return html.replace(pattern, `const GODOT_CONFIG = ${JSON.stringify(config)};`).replace("<body>", '<body><div id="ed-build-label" hidden>v0.46.6-dev.1</div>');
 }
 
@@ -253,6 +259,8 @@ async function captureSuite(options) {
   const { server, url } = await createStaticServer(options.webDir);
   let browser;
   const browserLogs = [], surfaces = [];
+  const consoleJournal = path.join(options.outputDir, "browser-console.ndjson");
+  await fs.writeFile(consoleJournal, "");
   try {
     const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || undefined;
     const constrainedFlags =
@@ -285,18 +293,52 @@ async function captureSuite(options) {
         "(KHTML, like Gecko) CriOS/124.0.0.0 Mobile/15E148 Safari/604.1",
     });
     const webgl = await probeWebGL2(context);
+    await fs.writeFile(path.join(options.outputDir,"browser-run.json"), JSON.stringify({
+      status:"started",pckSha256,htmlSha256,viewport:VIEWPORT,physicalViewport:PHYSICAL_VIEWPORT,
+      dpr:DPR,browser:browser.version(),webgl,physicalIphone:false,
+      gameplay:GAMEPLAY,menuTouch:MENU_TOUCH,touchSection:MENU_TOUCH ? TOUCH_SECTION : null,range:[RANGE_START,RANGE_END],
+      traceGLBuffers:process.env.TRACE_GL_BUFFERS==="1",
+    },null,2));
     const page = await context.newPage();
-    await page.addInitScript(() => {
+    await page.addInitScript(({traceBuffers}) => {
       const original=HTMLCanvasElement.prototype.getContext;
       HTMLCanvasElement.prototype.getContext=function(type,...args) {
         const value=original.call(this,type,...args);
         if(this.id==="canvas" && type==="webgl2" && value) {
           window.__edCaptureGL=value;
+          if(traceBuffers) {
+            // Observe buffer identity/targets without changing any GL arguments,
+            // consuming getError(), or making extra GL calls. Not a timing mode.
+            const seen=new WeakMap(), recent=[];
+            let nextId=0, conflicts=0;
+            const observe=(method,target,buffer)=>{
+              if(!buffer) return;
+              let entry=seen.get(buffer);
+              if(!entry) {entry={id:++nextId,target:null};seen.set(buffer,entry);}
+              if(target!==value.COPY_READ_BUFFER && target!==value.COPY_WRITE_BUFFER) {
+                if(entry.target!==null && (entry.target===value.ELEMENT_ARRAY_BUFFER)!==(target===value.ELEMENT_ARRAY_BUFFER)) {
+                  if(conflicts++<16) console.error("ED_GL_BIND_CONFLICT "+JSON.stringify({
+                    id:entry.id,firstTarget:entry.target,target,method,timeMs:performance.now(),
+                    recent:[...recent],stack:new Error().stack,
+                  }));
+                } else if(entry.target===null) entry.target=target;
+              }
+              recent.push({method,target,id:entry.id});
+              if(recent.length>16) recent.shift();
+            };
+            for(const method of ["bindBuffer","bindBufferBase","bindBufferRange"]) {
+              const native=value[method];
+              value[method]=function(...callArgs) {
+                observe(method,callArgs[0],callArgs[method==="bindBuffer"?1:2]);
+                return native.apply(this,callArgs);
+              };
+            }
+          }
           HTMLCanvasElement.prototype.getContext=original;
         }
         return value;
       };
-    });
+    },{traceBuffers:process.env.TRACE_GL_BUFFERS==="1"});
     const captureSurface = async label => {
       const surface=await page.evaluate(() => {
         const c=document.getElementById("canvas"), gl=window.__edCaptureGL, rect=c.getBoundingClientRect();
@@ -312,11 +354,28 @@ async function captureSuite(options) {
     const heroStates = [];
     const motionDamage = [];
     const requestFailures = [];
+    const touchSectionEvents = [];
+    const touchSectionResults = [];
     page.on("console", (message) => {
       const text = message.text();
       browserLogs.push({type:message.type(),text});
+      appendFileSync(consoleJournal,JSON.stringify({type:message.type(),text})+"\n");
       if (GAMEPLAY && /OVERHAUL_|SCRIPT ERROR|Parse Error/.test(text)) process.stdout.write(text+"\n");
-      if (/SCRIPT ERROR|Parse Error|^ERROR:|Failed to load|INVALID_OPERATION|INVALID_FRAMEBUFFER_OPERATION/.test(text)) pageErrors.push(text);
+      if (/SCRIPT ERROR|Parse Error|^ERROR:|Failed to load|INVALID_OPERATION|INVALID_FRAMEBUFFER_OPERATION|ED_GL_BIND_CONFLICT/.test(text)) {
+        pageErrors.push(text);
+        process.stderr.write(text+"\n");
+      }
+      const sectionMarker = /^EVER_DEEPER_MENU_TOUCH_SECTION_(BEGIN|COMPLETE) (.*)$/.exec(text);
+      if (sectionMarker) {
+        try {
+          const section = JSON.parse(sectionMarker[2]);
+          touchSectionEvents.push({phase:sectionMarker[1], ...section});
+          if (sectionMarker[1] === "COMPLETE") touchSectionResults.push(section);
+          process.stdout.write(text + "\n");
+        } catch (error) {
+          pageErrors.push("Malformed menu section marker: " + String(error));
+        }
+      }
       if (text.startsWith("EVER_DEEPER_HERO_MOTION_DAMAGE ")) {
         motionDamage.push(text);
         // Damage is live progress. Long SwiftShader recordings must not look
@@ -367,7 +426,7 @@ async function captureSuite(options) {
         }
       });
       while (true) {
-        result = await nextMarker(markerQueue, 10 * 60 * 1000);
+        result = await nextMarker(markerQueue, MENU_TOUCH ? options.timeoutMs : 10 * 60 * 1000);
         if (!result.startsWith("EVER_DEEPER_OVERHAUL_INPUT_READY ")) break;
         const input = JSON.parse(result.slice("EVER_DEEPER_OVERHAUL_INPUT_READY ".length));
         // Input regression evidence uses screenshots; MediaRecorder is unrelated.
@@ -458,9 +517,19 @@ async function captureSuite(options) {
         await page.keyboard.press("F8");
       }
       if (!/^EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=\d+ failures=\[\]$/.test(result)) throw new Error(result);
+      const totalChecks = Number(/checks=(\d+)/.exec(result)[1]);
+      if (totalChecks < 1) throw new Error("Gameplay completed without checks");
+      if (MENU_TOUCH) {
+        const expected = TOUCH_SECTION === "all" ? TOUCH_SECTIONS : [TOUCH_SECTION];
+        const actualEvents = touchSectionEvents.map(section => [section.phase, section.section]);
+        const expectedEvents = expected.flatMap(section => [["BEGIN", section], ["COMPLETE", section]]);
+        if (JSON.stringify(actualEvents) !== JSON.stringify(expectedEvents)) throw new Error("Incomplete or out-of-order menu section coverage: " + JSON.stringify(touchSectionEvents));
+        if (touchSectionResults.some(section => !Number.isInteger(section.checks) || section.checks < 1 || !Array.isArray(section.failures) || section.failures.length)) throw new Error("Invalid menu section result: " + JSON.stringify(touchSectionResults));
+        if (touchSectionResults.reduce((sum, section) => sum + section.checks, 0) !== totalChecks) throw new Error("Menu section checks do not reconcile with the final total");
+      } else if (touchSectionEvents.length) throw new Error("Unexpected menu section coverage in ordinary gameplay");
       if (pageErrors.length) throw new Error(pageErrors.join("\n"));
       if(!surfaces.length) throw new Error("No actual browser drawing surface was verified");
-      await fs.writeFile(path.join(options.outputDir,"gameplay.json"),JSON.stringify({result,pckSha256,htmlSha256,viewport:VIEWPORT,physicalViewport:PHYSICAL_VIEWPORT,dpr:DPR,surfaces,browser:browser.version(),webgl,physicalIphone:false},null,2));
+      await fs.writeFile(path.join(options.outputDir,"gameplay.json"),JSON.stringify({result,menuTouch:MENU_TOUCH,touchSection:MENU_TOUCH ? TOUCH_SECTION : null,touchSectionEvents,touchSectionResults,pckSha256,htmlSha256,viewport:VIEWPORT,physicalViewport:PHYSICAL_VIEWPORT,dpr:DPR,surfaces,browser:browser.version(),webgl,physicalIphone:false},null,2));
       process.stdout.write(result+"\n");
       return;
     }

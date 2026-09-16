@@ -2,7 +2,17 @@ name: Premium exact web package review
 on:
   push:
     branches: [codex/premium-polish-recovery-20260915]
-    paths: ['.github/workflows/premium-web-review.yml', 'tools/capture-web.mjs']
+    paths:
+      - '.github/workflows/premium-web-review.yml'
+      - 'tools/**'
+      - 'scripts/**'
+      - 'assets/**'
+      - 'data/**'
+      - 'scenes/**'
+      - 'shaders/**'
+      - 'project.godot'
+      - 'export_presets.cfg'
+      - 'package*.json'
   workflow_dispatch:
 permissions:
   contents: read
@@ -12,11 +22,24 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 25
+    outputs:
+      source_sha: ${{ steps.identity.outputs.source_sha }}
+      pck_sha256: ${{ steps.identity.outputs.pck_sha256 }}
+      html_sha256: ${{ steps.identity.outputs.html_sha256 }}
+      production_pck_sha256: ${{ steps.identity.outputs.production_pck_sha256 }}
+      production_html_sha256: ${{ steps.identity.outputs.production_html_sha256 }}
+      identity_sha256: ${{ steps.identity.outputs.identity_sha256 }}
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.sha }}
           persist-credentials: false
+      - name: Initialize immutable source receipt
+        run: |
+          mkdir -p "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/production" "$RUNNER_TEMP/review"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git rev-parse HEAD > "$RUNNER_TEMP/review/source-sha.txt"
       - name: Install matching Godot and web templates
         run: |
           curl -fL --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
@@ -27,98 +50,206 @@ jobs:
           test "$(cat "$RUNNER_TEMP/templates/templates/version.txt")" = '4.7.2.stable'
           mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
           cp "$RUNNER_TEMP/templates/templates/"* "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
-      - name: Export both packages and verify their actual contents
+      - name: Export DEV and Production once
         run: |
-          mkdir -p "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/production" "$RUNNER_TEMP/review"
-          git rev-parse HEAD > "$RUNNER_TEMP/review/source-sha.txt"
           Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > "$RUNNER_TEMP/review/import.log" 2>&1
           Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-release 'Web DEV' "$RUNNER_TEMP/candidate/index.html" > "$RUNNER_TEMP/review/export-dev.log" 2>&1
           Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-release 'Web Production' "$RUNNER_TEMP/production/index.html" > "$RUNNER_TEMP/review/export-production.log" 2>&1
           python3 - <<'PY'
-          import os,re
+          import os, re
           from pathlib import Path
-          for p in (Path(os.environ['RUNNER_TEMP'])/'review').glob('*.log'):
-              text=p.read_text(errors='replace')
-              assert not re.search(r'SCRIPT ERROR|Parse Error|^ERROR:',text,re.M),(str(p),text[-4000:])
+          for path in (Path(os.environ['RUNNER_TEMP']) / 'review').glob('*.log'):
+              text = path.read_text(errors='replace')
+              assert not re.search(r'SCRIPT ERROR|Parse Error|^ERROR:', text, re.M), (str(path), text[-4000:])
           PY
+      - name: Bind immutable export bytes to this source
+        id: identity
+        run: |
+          python3 tools/verify_premium_web_review.py bind --source "$GITHUB_SHA" --candidate "$RUNNER_TEMP/candidate" --production "$RUNNER_TEMP/production" --review "$RUNNER_TEMP/review" --github-output "$GITHUB_OUTPUT"
+      - name: All 15 DEV core cases and both package flavors
+        run: |
           python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --jobs 1 --pack "$RUNNER_TEMP/candidate/index.pck" --output "$RUNNER_TEMP/review/core"
           python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --jobs 1 --pack "$RUNNER_TEMP/candidate/index.pck" --cases build-flavor --output "$RUNNER_TEMP/review/dev-flavor"
           python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --jobs 1 --pack "$RUNNER_TEMP/production/index.pck" --cases build-flavor --output "$RUNNER_TEMP/review/production-flavor"
-      - name: Bind the exact browser candidate
-        run: |
-          python3 - <<'PY'
-          import os,json,hashlib,shutil
-          from pathlib import Path
-          base=Path(os.environ['RUNNER_TEMP'])
-          for name in ['candidate','production']:
-              root=base/name
-              rows={p.name:{'size':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(root.iterdir()) if p.is_file()}
-              (root/'manifest.json').write_text(json.dumps(rows,indent=2)+'\n')
-              shutil.copyfile(root/'manifest.json',base/'review'/(name+'-manifest.json'))
-          PY
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: premium-web-candidate-${{ github.sha }}
           path: ${{ runner.temp }}/candidate
+          if-no-files-found: warn
           retention-days: 30
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: premium-web-package-review-${{ github.sha }}
+          name: premium-web-review-build-${{ github.sha }}
           path: ${{ runner.temp }}/review
+          if-no-files-found: warn
           retention-days: 30
+
   browser:
     needs: build
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        suite: [visual, gameplay, touch]
+        suite: [visual-forge, visual-workshops, gameplay, touch-pause, touch-wardrobe, touch-light, touch-lists, touch-starforge, touch-workshops]
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.sha }}
           persist-credentials: false
+      - name: Initialize suite evidence
+        run: |
+          mkdir -p "$RUNNER_TEMP/review"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git rev-parse HEAD > "$RUNNER_TEMP/review/source-sha.txt"
       - uses: actions/download-artifact@v4
         with:
           name: premium-web-candidate-${{ github.sha }}
           path: ${{ runner.temp }}/candidate
+      - name: Verify exact candidate identity
+        id: identity
+        env:
+          PCK_SHA256: ${{ needs.build.outputs.pck_sha256 }}
+          HTML_SHA256: ${{ needs.build.outputs.html_sha256 }}
+          IDENTITY_SHA256: ${{ needs.build.outputs.identity_sha256 }}
+        run: |
+          python3 tools/verify_premium_web_review.py candidate --source "$GITHUB_SHA" --candidate "$RUNNER_TEMP/candidate" --review "$RUNNER_TEMP/review" --pck-sha256 "$PCK_SHA256" --html-sha256 "$HTML_SHA256" --identity-sha256 "$IDENTITY_SHA256"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install browser and verify candidate identity
+      - name: Install browser
         run: |
           npm ci --ignore-scripts
           npx playwright install --with-deps chromium
-          python3 - <<'PY'
-          import os,json,hashlib
-          from pathlib import Path
-          root=Path(os.environ['RUNNER_TEMP'])/'candidate'
-          for name,info in json.loads((root/'manifest.json').read_text()).items():
-              data=(root/name).read_bytes()
-              assert len(data)==info['size'] and hashlib.sha256(data).hexdigest()==info['sha256'],name
-          PY
-      - name: Actual WebGL rendering and browser touch at 1696 by 780
+      - name: Actual WebGL and touch at CSS 848 by 390, DPR 2
+        id: capture
+        timeout-minutes: 16
         env:
           SUITE: ${{ matrix.suite }}
           CAPTURE_VIEWPORT: 848x390
           CAPTURE_DPR: '2'
-          CAPTURE_START: '1'
-          CAPTURE_END: '19'
         run: |
-          mkdir -p "$RUNNER_TEMP/review"
-          if [ "$SUITE" = gameplay ] || [ "$SUITE" = touch ]; then export OVERHAUL_GAMEPLAY=1; fi
-          if [ "$SUITE" = touch ]; then export MENU_TOUCH=1; fi
-          node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review" > "$RUNNER_TEMP/browser.log" 2>&1
-      - name: Preserve completion or failure output
+          export CAPTURE_START=1 CAPTURE_END=14
+          unset OVERHAUL_GAMEPLAY MENU_TOUCH MENU_TOUCH_SECTION CAPTURE_SCOPE TOUCH_BROWSER
+          case "$SUITE" in
+            visual-forge) ;;
+            visual-workshops) export CAPTURE_START=15 CAPTURE_END=19 ;;
+            gameplay) export OVERHAUL_GAMEPLAY=1 ;;
+            touch-*) export OVERHAUL_GAMEPLAY=1 MENU_TOUCH=1 MENU_TOUCH_SECTION="${SUITE#touch-}" ;;
+            *) exit 2 ;;
+          esac
+          timeout 900 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review" > "$RUNNER_TEMP/review/runner.log" 2>&1
+      - name: Record success or partial failure evidence
         if: always()
+        env:
+          SUITE: ${{ matrix.suite }}
+          IDENTITY_OUTCOME: ${{ steps.identity.outcome }}
+          CAPTURE_OUTCOME: ${{ steps.capture.outcome }}
         run: |
-          mkdir -p "$RUNNER_TEMP/review"
-          if [ -f "$RUNNER_TEMP/browser.log" ]; then cp "$RUNNER_TEMP/browser.log" "$RUNNER_TEMP/review/runner.log"; tail -n 40 "$RUNNER_TEMP/browser.log"; fi
-          git rev-parse HEAD > "$RUNNER_TEMP/review/source-sha.txt"
+          python3 tools/verify_premium_web_review.py record --source "$GITHUB_SHA" --suite "$SUITE" --review "$RUNNER_TEMP/review" --identity-outcome "$IDENTITY_OUTCOME" --capture-outcome "$CAPTURE_OUTCOME"
+          if [ -f "$RUNNER_TEMP/review/runner.log" ]; then tail -n 40 "$RUNNER_TEMP/review/runner.log"; fi
+      - name: Verify complete suite evidence
+        env:
+          SUITE: ${{ matrix.suite }}
+        run: |
+          python3 tools/verify_premium_web_review.py suite --source "$GITHUB_SHA" --suite "$SUITE" --review "$RUNNER_TEMP/review"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: premium-web-${{ matrix.suite }}-${{ github.sha }}
+          name: premium-web-review-${{ matrix.suite }}-${{ github.sha }}
           path: ${{ runner.temp }}/review
+          if-no-files-found: warn
+          retention-days: 30
+
+  commerce-residency:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Initialize isolated native review
+        run: |
+          mkdir -p "$RUNNER_TEMP/review" "$RUNNER_TEMP/pack-run" "$RUNNER_TEMP/native-userdata"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git rev-parse HEAD > "$RUNNER_TEMP/review/source-sha.txt"
+      - uses: actions/download-artifact@v4
+        with:
+          name: premium-web-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/candidate
+      - name: Verify same immutable DEV package
+        id: identity
+        env:
+          PCK_SHA256: ${{ needs.build.outputs.pck_sha256 }}
+          HTML_SHA256: ${{ needs.build.outputs.html_sha256 }}
+          IDENTITY_SHA256: ${{ needs.build.outputs.identity_sha256 }}
+        run: |
+          python3 tools/verify_premium_web_review.py candidate --source "$GITHUB_SHA" --candidate "$RUNNER_TEMP/candidate" --review "$RUNNER_TEMP/review" --pck-sha256 "$PCK_SHA256" --html-sha256 "$HTML_SHA256" --identity-sha256 "$IDENTITY_SHA256"
+      - name: Install real Xvfb software GL and matching native Godot
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri libglx-mesa0
+          curl -fL --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Render exact-package commerce residency and require resource release
+        id: capture
+        timeout-minutes: 12
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          XDG_DATA_HOME: ${{ runner.temp }}/native-userdata
+        run: |
+          xvfb-run -a -e "$RUNNER_TEMP/review/xvfb.log" -s '-screen 0 2560x1440x24' timeout 600 Godot_v4.7.2-stable_linux.x86_64 --path "$RUNNER_TEMP/pack-run" --main-pack "$RUNNER_TEMP/candidate/index.pck" --script "$GITHUB_WORKSPACE/tools/review_commerce_residency.gd" --display-driver x11 --render-thread safe --verbose --resolution 2532x1170 --audio-driver Dummy -- --pack-source="$RUNNER_TEMP/candidate/index.pck" --output="$RUNNER_TEMP/review" --require-release > "$RUNNER_TEMP/review/native.log" 2>&1
+      - name: Record native success or partial failure evidence
+        if: always()
+        env:
+          IDENTITY_OUTCOME: ${{ steps.identity.outcome }}
+          CAPTURE_OUTCOME: ${{ steps.capture.outcome }}
+        run: |
+          python3 tools/verify_premium_web_review.py record --source "$GITHUB_SHA" --suite commerce-residency --review "$RUNNER_TEMP/review" --identity-outcome "$IDENTITY_OUTCOME" --capture-outcome "$CAPTURE_OUTCOME"
+          if [ -f "$RUNNER_TEMP/review/native.log" ]; then tail -n 40 "$RUNNER_TEMP/review/native.log"; fi
+      - name: Require native marker, actual images and complete lifetime checks
+        run: |
+          python3 tools/verify_premium_web_review.py suite --source "$GITHUB_SHA" --suite commerce-residency --review "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: premium-web-review-commerce-residency-${{ github.sha }}
+          path: ${{ runner.temp }}/review
+          if-no-files-found: warn
+          retention-days: 30
+
+  complete:
+    name: Complete premium review
+    if: always()
+    needs: [build, browser, commerce-residency]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        if: always()
+        with:
+          pattern: premium-web-review-*-${{ github.sha }}
+          path: ${{ runner.temp }}/reviews
+          merge-multiple: false
+      - name: Require every job, suite, source hash, package hash and actual image
+        if: always()
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+        run: |
+          python3 tools/verify_premium_web_review.py aggregate --source "$GITHUB_SHA" --artifacts "$RUNNER_TEMP/reviews" --needs-json "$NEEDS_JSON" --output "$RUNNER_TEMP/complete/complete-review.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: premium-web-review-complete-${{ github.sha }}
+          path: ${{ runner.temp }}/complete
+          if-no-files-found: error
           retention-days: 30

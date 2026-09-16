@@ -1,0 +1,27 @@
+{
+  "event": "Old canonical /workspace/scratch/5a78be25fc28 disappeared after an interruption; preserved current-task worktrees and evidence remained",
+  "new_canonical": "/workspace/scratch/4e99473f21fc/Ever-Deeper",
+  "remote_base": "774f889b132328bcf38bfa8be2797f9b716426a9",
+  "reviewed_recovery_sources": {
+    "depth_cache_and_touch": "menu-touch-sections-study preserved files; original base ec8976622231bc70c5413775291e841d0e543353 and section commit602171c265a3f7a4cd3f4be8debc6c4673f0191d",
+    "polygon": "remote affc812d7fd34e813938ccb6ef32539b37db737f cherry-picked",
+    "ui": "preserved ui-completion-light-study, receipt36a286cf1867d82b1c8f35cf7bab2577bbea7e68"
+  },
+  "runtime_sha256": {
+    "scripts/qa/menu_touch_qa.gd": "4e78735b4e856c04fae426985f0909fb57aeda1d0f395b01a7bd70709fbefb81",
+    "scripts/world/depth/rootwound_world.gd": "e77ebf3a76aedc31e183edf156ff7d028d91e0c324793045f39ca57d922fba6d",
+    "scripts/rendering/flat_polygon_2d.gd": "18b142ab9633fc46c4368ad3776d26567a2594ddcadc79b493a343691a1c4284",
+    "scenes/player/player.tscn": "8014c7ef271d5b659b2c71ac25717f0cd696a9fddb5853b77ca781f35f7119b6",
+    "scripts/lighting/static_light_field.gd": "46660ab55ee4369b5b13c2802c9a4b4f7aaeafa7050dfec32e01e2812a752d2e",
+    "scripts/world/endless_descent_world.gd": "5115995cf0b1b531d51a65af832a9a818f2e14136abee3bc922b2f47fb3667ac",
+    "scripts/ui/commerce_catalog.gd": "fbf78aba72f367d909838ae737692ef37557b7f75ff4dd6a2c554f222bfb9232",
+    "scripts/ui/commerce_panel.gd": "075d353fa79849128b6d0ed8778954aa5078f28ff1f82276258f8715022f3610",
+    "scripts/ui/light_preview.gd": "51781bdd0d16c0901e9871bad26c45f3519fdf5bd77c7fb2ff257fcf14822fb8"
+  },
+  "limitations": [
+    "The original unpublished local commit objects are absent; recovered source receives new commits.",
+    "Uncommitted combined CI is reconstructed and must run anew.",
+    "Latest unpublished native transfer guard1186e1fad42e267aa48a405b94ea7dbda7c839989bee4bcda592370c3f167115 was not recovered; older audited c596a5a4d74eb38c88e76800298f3724a875059137a0dcada7406f283b50a38b remains in private evidence. Do not infer approval to bake/export.",
+    "No publication, min50FPS or overall9/10 approval."
+  ]
+}

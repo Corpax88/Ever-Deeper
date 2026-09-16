@@ -2211,12 +2211,19 @@ func _exposed_floor_regions(start: Vector2i, finish: Vector2i) -> Array[Rect2]:
 
 func _draw_partitioned_depth(start: Vector2i, finish: Vector2i) -> void:
 	lit_draw_sections.begin(self)
-	var revision: int = _terrain_draw_fingerprint()
+	var revisions: Dictionary = {}
+	# Restored arrays and companion/Crusher edits must invalidate their own
+	# strips without relying on every gameplay mutator to notify the renderer.
+	# A rebuild changes assets/layout too, even when the visible HP is identical.
+	var base_revision: int = hash([mine_id, int(RunState.world_seed), cols, rows, terrain_max_hp, interior_build_count])
+	for row in range(maxi(0, start.y), mini(rows - 1, finish.y) + 1):
+		for first_col in range(maxi(0, start.x) / 6 * 6, mini(cols - 1, finish.x) + 1, 6):
+			revisions[Vector2i(row, first_col)] = _terrain_strip_fingerprint(row, first_col, mini(first_col + 5, cols - 1), base_revision)
 	# Preserve both original passes and exact row/column order, including overlaps.
 	for pass_index in 2:
 		for row in range(maxi(0, start.y), mini(rows - 1, finish.y) + 1):
 			for first_col in range(maxi(0, start.x) / 6 * 6, mini(cols - 1, finish.x) + 1, 6):
-				lit_draw_sections.add_cached(Vector3i(row, first_col, pass_index), revision, _draw_terrain_section.bind(row, first_col, mini(first_col + 5, cols - 1), pass_index))
+				lit_draw_sections.add_cached(Vector3i(row, first_col, pass_index), int(revisions[Vector2i(row, first_col)]), _draw_terrain_section.bind(row, first_col, mini(first_col + 5, cols - 1), pass_index))
 	lit_draw_sections.add(_draw_pocket_landmarks)
 	lit_draw_sections.add(_draw_drill_gates)
 	lit_draw_sections.add(_draw_resources)
@@ -2228,14 +2235,39 @@ func _draw_partitioned_depth(start: Vector2i, finish: Vector2i) -> void:
 
 
 func _terrain_draw_fingerprint() -> int:
-	# Packed terrain is hashed in native code. Small scalar resource flags cover
-	# mineral hints, including respawn/discovery and direct restored-save changes.
+	# CaveLightOccluders still uses this whole-world state query. Terrain drawing
+	# has a narrower strip signature, but must preserve this separate contract.
 	var signature: int = hash(terrain_hp) ^ hash(concealed_cells) ^ mine_id.hash() ^ int(RunState.world_seed)
 	for rock in rocks:
 		signature = ((signature * 31) ^ int(bool(rock.broken))) & 0x7fffffff
 	for cavern in caverns:
 		signature = ((signature * 31) ^ int(_cavern_is_discovered(String(cavern.id)))) & 0x7fffffff
 	return signature
+
+
+func _terrain_strip_fingerprint(row: int, first_col: int, last_col: int, base_revision: int) -> int:
+	var signature: Array = [base_revision]
+	var first_neighbor: int = maxi(0, first_col - 1)
+	var end_neighbor: int = mini(cols, last_col + 2)
+	# Edges and corner joins read cardinal neighbors. The one-cell halo is
+	# conservative at strip boundaries and also includes concealed chamber cells.
+	var concealed_mask: int = 0
+	var bit: int = 0
+	for neighbor_row in range(maxi(0, row - 1), mini(rows - 1, row + 1) + 1):
+		var offset: int = neighbor_row * cols
+		signature.append(terrain_hp.slice(offset + first_neighbor, offset + end_neighbor))
+		for col in range(first_neighbor, end_neighbor):
+			if concealed_cells.has(offset + col): concealed_mask |= 1 << bit
+			bit += 1
+	signature.append(concealed_mask)
+	# Only mineral hints in this strip depend on rock depletion, drill gating,
+	# type or chamber discovery. Preserve order when several rocks share a cell.
+	for col in range(first_col, last_col + 1):
+		for index_value in Array(rocks_by_cell.get(Vector2i(col, row), [])):
+			var rock: Dictionary = rocks[int(index_value)]
+			var cavern_id: String = String(rock.cavern_id)
+			signature.append([col, bool(rock.broken), bool(rock.drill_gated), String(rock.type), cavern_id, _cavern_is_discovered(cavern_id) if not cavern_id.is_empty() else true])
+	return hash(signature)
 
 
 func _draw_terrain_section(row: int, first_col: int, last_col: int, pass_index: int) -> void:

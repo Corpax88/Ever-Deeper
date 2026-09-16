@@ -1,0 +1,199 @@
+{
+  "approved": false,
+  "boundary_topology_limit": "Euler 0 plus six boundary edges and no nonmanifold edges is consistent with open tubes, but boundary cycle count, orientability, manifold vertex fans and nonintersection were not separately measured.",
+  "candidate_strategy": "Guard each fiber component as an orientable annulus with two simple boundary cycles, create one longitudinal UV-only seam and a strip chart, preserve all mesh/corner-normal/material/skin data; keep each strand unique for normal/AO. Validate geometry/UV chart topology and padding on a disposable UV-only copy before considering any bake.",
+  "case": "read_only_component_audit",
+  "execution": {
+    "command": [
+      "timeout",
+      "--signal=INT",
+      "--kill-after=15s",
+      "120s",
+      "/tmp/ever-deeper-runtime-20260915/blender-4.5.3-linux-x64/blender",
+      "--background",
+      "/workspace/scratch/5a78be25fc28/worn-native-runtime-b1/prepared.blend",
+      "--threads",
+      "2",
+      "--python-exit-code",
+      "1",
+      "--python",
+      "/workspace/scratch/4e99473f21fc/private-uv-components-c1/audit_components.py",
+      "--",
+      "--output",
+      "/workspace/scratch/4e99473f21fc/private-uv-components-c1/audit"
+    ],
+    "exit_code": 0,
+    "maximum_child_rss_kib": 1234124,
+    "method": "Python child getrusage; GNU time absent",
+    "system_seconds": 4.47655,
+    "user_seconds": 68.798147,
+    "wall_seconds": 71.89774427100201
+  },
+  "fiber_one_chart_hypothesis": {
+    "atlas_charts_if_other_charts_unchanged": 36119,
+    "chart_count_reduction_fraction": 0.8052371233871805,
+    "existing_charts": 144545,
+    "implemented": false,
+    "proposed_charts_if_all_topology_guards_pass": 28152,
+    "validated": false
+  },
+  "fiber_preparation_component_count_difference": 1148,
+  "fiber_rows": [
+    {
+      "all_target_triangles_attributed_by_exclusive_materials": true,
+      "evaluated_components": 25100,
+      "evaluated_triangles": 602400,
+      "prepared_components": 23953,
+      "prepared_triangles": 180286,
+      "source": "v17 fine curved facial groom",
+      "target_boundary_edge_histogram": {
+        "6": 23953
+      },
+      "target_euler_histogram": {
+        "0": 23953
+      },
+      "uv_chart_histogram_per_component": {
+        "10": 13,
+        "11": 4,
+        "2": 226,
+        "3": 3696,
+        "4": 5814,
+        "5": 7110,
+        "6": 4281,
+        "7": 1856,
+        "8": 837,
+        "9": 116
+      },
+      "uv_islands": 116938
+    },
+    {
+      "all_target_triangles_attributed_by_exclusive_materials": true,
+      "evaluated_components": 4200,
+      "evaluated_triangles": 100800,
+      "prepared_components": 4199,
+      "prepared_triangles": 46534,
+      "source": "v26 swept short hair fibers",
+      "target_boundary_edge_histogram": {
+        "6": 4199
+      },
+      "target_euler_histogram": {
+        "0": 4199
+      },
+      "uv_chart_histogram_per_component": {
+        "10": 22,
+        "11": 7,
+        "2": 2,
+        "3": 32,
+        "4": 84,
+        "5": 704,
+        "6": 1339,
+        "7": 1052,
+        "8": 657,
+        "9": 300
+      },
+      "uv_islands": 27607
+    }
+  ],
+  "fiber_single_triangle_island_fraction": 0.6423466740461448,
+  "fiber_single_triangle_islands": 92848,
+  "group_rows": [
+    {
+      "group": "face",
+      "prepared_components": 1,
+      "prepared_triangles": 27998,
+      "prepared_uv_islands": 1670,
+      "source_evaluated_components": 1,
+      "source_evaluated_triangles": 1156484,
+      "source_objects": 1
+    },
+    {
+      "group": "eyes",
+      "prepared_components": 10,
+      "prepared_triangles": 6681,
+      "prepared_uv_islands": 740,
+      "source_evaluated_components": 10,
+      "source_evaluated_triangles": 32494,
+      "source_objects": 10
+    },
+    {
+      "group": "cloth",
+      "prepared_components": 19,
+      "prepared_triangles": 9186,
+      "prepared_uv_islands": 301,
+      "source_evaluated_components": 21,
+      "source_evaluated_triangles": 231950,
+      "source_objects": 17
+    },
+    {
+      "group": "groom",
+      "prepared_components": 28158,
+      "prepared_triangles": 238487,
+      "prepared_uv_islands": 144718,
+      "source_evaluated_components": 29306,
+      "source_evaluated_triangles": 1145896,
+      "source_objects": 8
+    }
+  ],
+  "next_bake_decision": "No full 1024 transfer yet. Component-aware unwrap, measured positive-area coverage, chart separation, distortion, protected face/eye texel density and mip/filter footprint need acceptance first. 2048 is only an alternate layout budget, not an approved texture size.",
+  "original_scene_unchanged": true,
+  "padding_definition": "Per-side base-level pixel gutter around a zero-size rectangular/AABB chart. Useful chart area, row wastage, distortion and filtering footprints are additional; this is not a general packability proof.",
+  "prepared_file_unchanged": true,
+  "sha256": {
+    "audit/report.json": "58922ea7283fb2544a20a1051e7ec61d60d4d8ec7f9aacd37d457fff79e0a178",
+    "audit/target-connectivity.npz": "6f1fa3548b063d4f07495654f66f47d5425b7b2bf2c06cef9b7040188f221df3",
+    "audit_components.py": "33a62422ad51497c1ae0a21b345ff6ba313487888d65e386ee22646f30b607ad",
+    "pure-connectivity-check.json": "9ae93a1b24b62c6c737cece4d7c9563552dbdf8d6f6690c9879d92790f65f1d7",
+    "run_audit.py": "8d703569c9a25d3276e19a01e8ca0da8082df100210c26202563fe6846e5a311"
+  },
+  "source_evaluated_totals": {
+    "boundary_components": 30717,
+    "edge_closed_components": 122,
+    "edge_closed_euler_two_components": 111,
+    "edge_connected_components_touching": 30839,
+    "evaluated_vertices": 1693994,
+    "nonmanifold_edge_components": 0,
+    "triangles": 3130548,
+    "vertex_connected_components_touching": 30839
+  },
+  "square_cell_padding_floor_atlas_fraction": {
+    "152512": {
+      "1024": {
+        "1": 0.581787109375,
+        "2": 2.3271484375,
+        "4": 9.30859375
+      },
+      "2048": {
+        "1": 0.14544677734375,
+        "2": 0.581787109375,
+        "4": 2.3271484375
+      }
+    },
+    "29681": {
+      "1024": {
+        "1": 0.11322402954101562,
+        "2": 0.4528961181640625,
+        "4": 1.81158447265625
+      },
+      "2048": {
+        "1": 0.028306007385253906,
+        "2": 0.11322402954101562,
+        "4": 0.4528961181640625
+      }
+    },
+    "36119": {
+      "1024": {
+        "1": 0.13778305053710938,
+        "2": 0.5511322021484375,
+        "4": 2.20452880859375
+      },
+      "2048": {
+        "1": 0.034445762634277344,
+        "2": 0.13778305053710938,
+        "4": 0.5511322021484375
+      }
+    }
+  },
+  "target_components": 29681,
+  "target_edge_vertex_component_counts_match": true,
+  "target_uv_islands": 152512
+}

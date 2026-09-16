@@ -1,0 +1,120 @@
+# Depth 2 strip-cache study
+
+Isolated from `0623b63bc9ddb449c8b46d98e483c6b164a619f9`. This study is not
+accepted, merged or published until its rendered measurements are reviewed.
+
+The saved `resume-20260916/cache-pixel-comparison.json` reports 252 cached terrain
+sections redrawn by an Ember hit (7,047 microseconds of draw callbacks) and a pet
+dig (6,802 microseconds); depletion redraws 240 (10,193 microseconds). Depth 2
+currently shares one whole-world revision across every visible six-cell strip.
+The separate Deep already uses local revisions. The rejected light-receiver
+mask/support-cache studies are unrelated and are not reinstated here.
+
+## Candidate ownership and invalidators
+
+Only `scripts/world/depth/rootwound_world.gd` changes runtime behavior. Drawing
+order, six-cell CanvasItems, both passes, all native art, lighting, gameplay,
+save ownership and station-only redraw behavior stay identical.
+
+- Each strip hashes its HP values and one-cell halo. Neighbor changes can alter
+  edges/corners on either side of a strip or row boundary.
+- The same halo includes chamber concealment, including direct dictionary edits.
+- Local ordered rock entries include broken/drill-gated flags, resource type,
+  chamber identity and effective discovery state, which control mineral hints.
+- Mine, seed, dimensions, maximum HP and interior rebuild count invalidate
+  shared cache keys when a world/art/layout configuration is rebuilt.
+- Packed-array and dictionary reads detect direct state restoration; gameplay
+  mutators do not acquire renderer bookkeeping responsibilities.
+- `_terrain_draw_fingerprint()` remains available unchanged to
+  `CaveLightOccluders`. It is a separate occluder dependency, not dead code.
+
+The reference subclass overrides only the original draw dispatch and fingerprint
+from `0623b63`; all other gameplay and drawing methods are inherited. It is
+installed before the world enters the scene tree, only by this excluded tool.
+Production does not load the reference or expose a runtime study toggle.
+
+## Rendered review
+
+`review_depth_strip_cache.gd` extends the existing `review_terrain_cache.gd`
+warm-cache versus fresh-draw method. Each capture is decoded and must match in
+every RGBA byte. Incremental reports retain failures. `FINISHED` records that
+all fixtures ran; only a successful verdict prints `COMPLETE` and exits zero.
+See the [rendered review](../../docs/premium-polish/depth-strip-cache-20260916/REVIEW.md).
+
+Coverage includes real hits, Crusher and pet terrain removal; concealed chamber
+discovery; actual resource depletion and expiry-based respawn; covered mineral
+hints and gating; direct terrain/concealment restoration across a six-cell strip
+boundary; camera movement, zoom, cache recycling and offscreen edits; and all
+four Depth 2 native mine profiles using recycled cache keys.
+
+The 20-second timing is a **frozen redraw diagnostic**, changing one real cell's
+HP at 5 Hz. It records every frame interval, p95, callback/setup CPU counters,
+light state and mutations. It is not ordinary gameplay, sustained excavation,
+or a physical-device FPS certification. It isolates whether local invalidation
+saves enough callback work to offset the additional fingerprint calculations.
+The companion moving study below checks ordinary excavation separately.
+
+Run reference/local/reference in fresh isolated processes, sequentially, while
+no other local renderer or Blender job is running. For each run, use a distinct
+output path and set the final variant argument:
+
+```sh
+python3 tools/run_rendered_isolated.py \
+  --godot /tmp/ever-deeper-runtime-20260915/Godot_v4.7.2-stable_linux.x86_64 \
+  --xvfb /workspace/scratch/4e99473f21fc/runtime/xvfb/usr/bin/Xvfb \
+  --project /workspace/scratch/4e99473f21fc/depth-strip-cache \
+  --output /absolute/new-results \
+  --resolution 1696x780 --timeout 180 \
+  --completion-marker DEPTH_STRIP_REVIEW_FINISHED \
+  -- --verbose --render-thread safe \
+  --script res://tools/depth_strip_pilot/review_depth_strip_cache.gd \
+  -- --output=/absolute/new-results --variant=reference --timing-seconds=20
+```
+
+The first standalone `--check-only` invocation of the Node2D reference could not
+resolve `RunState`; it does not initialize the project's autoload context. A
+subsequent deferred-load headless check, with ordinary project autoloads and an
+isolated user-data path, successfully loads all three scripts and confirms that
+they can be instantiated
+(`DEPTH_STRIP_SOURCE_PARSES`). Neither check is rendered acceptance.
+
+## Moving Ember study
+
+`run_live_study.py` reads the unchanged `review_premium_session.gd`, checks ten
+exact source anchors, and writes an opt-in observer outside the project into
+the result directory. `live_workload.gd.inc` supplies a read-only route planner
+which follows existing floor and aims at nearby ordinary walls through Main's
+normal joystick and held-mine methods. It never edits terrain, teleports the
+hero, freezes simulation or forces frame stepping. The same generated bytes
+run every variant; only the reference command-line flag differs. The original
+harness, production entry point and exported runtime do not load this study.
+
+Every ten-second window retains chronological frame intervals and must travel
+more than 48 world pixels, mine resources and remove terrain. The first control,
+candidate and restored control each completed an actual 60-second session with
+six valid windows. This addresses the old Deep session's stalled final 90 s.
+The source, add-on and generated observer hashes accompany every raw run.
+
+Run these sequentially in separate unused result directories:
+
+```sh
+python3 tools/depth_strip_pilot/run_live_study.py \
+  --output /absolute/live-A --variant reference --seconds 60
+python3 tools/depth_strip_pilot/run_live_study.py \
+  --output /absolute/live-B --variant local --seconds 60
+python3 tools/depth_strip_pilot/run_live_study.py \
+  --output /absolute/live-A2 --variant reference --seconds 60
+python3 tools/depth_strip_pilot/summarize_live_study.py \
+  --reference /absolute/live-A --candidate /absolute/live-B \
+  --restored /absolute/live-A2 --output /absolute/live-comparison.json
+```
+
+The summarizer independently recomputes frame timing, validates each window's
+progress and checks hashes and explicit completion markers. Profiling begins
+before warmup in the original harness, so CPU/counter comparisons subtract the
+first measured snapshot from the last: about 50 seconds, not the full minute.
+The route planner costs about 11 ms in total per minute; its work, JSON report
+writes and existing Dummy-audio warnings remain inside measured intervals.
+Real-time routes can diverge slightly, and this software-renderer triplet does
+not establish a general or physical-device FPS improvement. See the saved
+review for the smaller moving-play CPU reduction versus the frozen diagnostic.

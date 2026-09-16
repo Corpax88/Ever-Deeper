@@ -178,6 +178,7 @@ static func workshop_config(workshop_id: String, status: Dictionary, selection: 
 	var max_level: = int(status.get("max_level", 1))
 	var items: Array = []
 	var upgrade: Dictionary = Dictionary(status.get("next_upgrade", {}))
+	var complete: bool = max_level <= 1 and upgrade.is_empty()
 	if not upgrade.is_empty():
 		var resource_id: = String(upgrade.get("resource", ""))
 		var cost: = int(upgrade.get("cost", 0))
@@ -193,9 +194,10 @@ static func workshop_config(workshop_id: String, status: Dictionary, selection: 
 		})
 	elif max_level <= 1:
 		items.append({
-			"id": "workshop:inspect", "title": title, "subtitle": "Complete Hub expansion",
+			"id": "workshop:inspect", "title": title, "subtitle": "Permanent benefits active",
 			"texture": String(WORKSHOP_TEXTURES.get(workshop_id, "")), "current": true,
-			"description": _workshop_description(workshop_id), "stats": _workshop_inspection_stats(workshop_id),
+			"description": _workshop_description(workshop_id), "show_description": true,
+			"stats": _workshop_inspection_stats(workshop_id, level), "state_label": "Complete",
 			"affordable": true, "action_enabled": false,
 			"action_label": "Complete", "footer_text": "Permanent effect active",
 			"total": {"label": "Status", "value": "Complete", "ready": true},
@@ -242,10 +244,10 @@ static func workshop_config(workshop_id: String, status: Dictionary, selection: 
 	)
 	return {
 		"panel_id": "workshop:%s" % workshop_id, "title": title,
-		"subtitle": "Level %d / %d - inspect upgrades and future unlocks" % [level, max_level],
+		"subtitle": ("Level %d / %d · Complete · Permanent benefits active" if complete else "Level %d / %d - inspect upgrades and future unlocks") % [level, max_level],
 		"catalog_label": "Workshop", "items": items,
 		"selected_item_id": preferred_item_id,
-		"primary_action_visible": not (max_level <= 1 and upgrade.is_empty()),
+		"primary_action_visible": not complete,
 	}
 
 
@@ -307,25 +309,21 @@ static func _effect_stat(label: String, current: Dictionary, next: Dictionary, k
 	}
 
 
-static func _workshop_inspection_stats(workshop_id: String) -> Array:
+static func _workshop_inspection_stats(workshop_id: String, level: int) -> Array:
+	var effects: Dictionary = RunState.workshop_effects_at_level(workshop_id, level)
 	if workshop_id == "treasure_chamber":
 		var status: Dictionary = RunState.endless_descent_status()
-		var before: Dictionary = RunState.workshop_effects_at_level(workshop_id, 0)
-		var after: Dictionary = RunState.workshop_effects_at_level(workshop_id, 1)
 		var pickup_radius: = float(RunState.resource_pickup_radius())
-		var baseline_radius: = maxf(1.0, pickup_radius - float(after.get("pickup_bonus", 0.0)))
+		var baseline_radius: = maxf(1.0, pickup_radius - float(effects.get("pickup_bonus", 0.0)))
 		return [
-			_effect_stat("SITE CACHE YIELD", before, after, "cache_yield"),
-			{"label": "PICKUP REACH", "current": "100%", "next": "%d%%" % roundi(pickup_radius / baseline_radius * 100.0)},
-			{"label": "RELICS ARCHIVED", "current": int(status.get("placed_relic_count", 0)), "next": int(status.get("total_relics", 5))},
+			{"label": "SITE CACHE YIELD", "value": "%d%%" % roundi(float(effects.get("cache_yield", 1.0)) * 100.0)},
+			{"label": "PICKUP REACH", "value": "%d%%" % roundi(pickup_radius / baseline_radius * 100.0)},
+			{"label": "RELICS ARCHIVED", "value": "%d / %d" % [int(status.get("placed_relic_count", 0)), int(status.get("total_relics", 5))]},
 		]
 	if workshop_id == "lift_workshop":
-		var before: Dictionary = RunState.workshop_effects_at_level(workshop_id, 0)
-		var after: Dictionary = RunState.workshop_effects_at_level(workshop_id, 1)
 		return [{
 			"label": "TUNNEL HOME PREPARATION",
-			"current": "%.2fs" % float(before.get("tunnel_duration", 0.0)),
-			"next": "%.2fs" % float(after.get("tunnel_duration", 0.0)),
+			"value": "%.2fs" % float(effects.get("tunnel_duration", 0.0)),
 		}]
 	return []
 
@@ -516,11 +514,13 @@ static func _light_lab_config(status: Dictionary, selection: Dictionary) -> Dict
 		"prismatic": "10% wider than Standard, with a violet tint. Same reach and brightness.",
 		"deepheart": "8% narrower than Standard, with a golden tint. Same reach and brightness.",
 	}
+	var card_widths: Dictionary = {"standard": 100, "focused": 76, "wide": 128, "prismatic": 110, "deepheart": 92}
 	for i in RunState.ENDLESS_LIGHT_STYLE_IDS.size():
 		var style: String = String(RunState.ENDLESS_LIGHT_STYLE_IDS[i])
 		var locked: bool = i + 1 > level
 		items.append({
 			"id": "workshop:equip:" + style, "title": style.capitalize(),
+			"card_title": "%s · %d%% width" % [style.capitalize(), int(card_widths[style])],
 			"description": String(notes[style]), "light_preview": style, "light_level": level,
 			"equipped": style == current, "locked": locked,
 			"affordable": not locked, "action_enabled": style != current,

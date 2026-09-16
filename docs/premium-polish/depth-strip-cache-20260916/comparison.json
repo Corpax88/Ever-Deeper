@@ -1,0 +1,1020 @@
+{
+  "scope": "Frozen Depth 2 strip redraw study, not sustained gameplay or physical iPhone",
+  "runs": {
+    "A": {
+      "complete": true,
+      "passed": false,
+      "failures": [
+        "Warm cache equals fresh draw: ember_hint_restored"
+      ],
+      "frames": 838,
+      "seconds": 20.00001,
+      "fps": 41.89997905001048,
+      "p95_ms": 33.06,
+      "mutations": 100,
+      "counter_deltas": {
+        "setup_usec": 144739,
+        "draw_callback_usec": 739820,
+        "draw_callbacks": 25448,
+        "redraws": 24948,
+        "reuses": 252
+      }
+    },
+    "B": {
+      "complete": true,
+      "passed": true,
+      "failures": [],
+      "frames": 888,
+      "seconds": 20.005653000000002,
+      "fps": 44.38745388615907,
+      "p95_ms": 27.403,
+      "mutations": 100,
+      "counter_deltas": {
+        "setup_usec": 174795,
+        "draw_callback_usec": 127831,
+        "draw_callbacks": 1094,
+        "redraws": 594,
+        "reuses": 24606
+      }
+    },
+    "A2": {
+      "complete": true,
+      "passed": false,
+      "failures": [
+        "Warm cache equals fresh draw: ember_hint_restored"
+      ],
+      "frames": 914,
+      "seconds": 20.015117999999998,
+      "fps": 45.665481462562454,
+      "p95_ms": 30.385,
+      "mutations": 100,
+      "counter_deltas": {
+        "setup_usec": 138353,
+        "draw_callback_usec": 726401,
+        "draw_callbacks": 25448,
+        "redraws": 24948,
+        "reuses": 252
+      }
+    }
+  },
+  "pairs": [
+    {
+      "id": "ember_initial",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "fixed_damage_restored",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "ember_hit",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "ember_crusher",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "ember_pet",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "ember_chamber_concealed",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "ember_chamber_discovered",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "ember_resource_intact",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "ember_resource_depleted",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "ember_resource_respawned",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "ember_hint_intact",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "ember_hint_depleted",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "ember_hint_gated",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "ember_hint_restored",
+      "within_run": {
+        "A": {
+          "equal": false,
+          "changed_pixels": 330,
+          "max_channel_delta": 76,
+          "bbox": [
+            788,
+            299,
+            810,
+            322
+          ]
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": false,
+          "changed_pixels": 330,
+          "max_channel_delta": 76,
+          "bbox": [
+            788,
+            299,
+            810,
+            322
+          ]
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "strip_boundary_intact",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "strip_boundary_open",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "strip_boundary_concealed",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "strip_boundary_revealed",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "camera_neighbor",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "camera_zoom_out",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "camera_far",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "offscreen_edit",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "camera_return_after_edit",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "mine_switch_moonMine",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "mine_switch_mossMine",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "mine_switch_starMine",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    },
+    {
+      "id": "mine_switch_emberMine",
+      "within_run": {
+        "A": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "B": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        },
+        "A2": {
+          "equal": true,
+          "changed_pixels": 0,
+          "max_channel_delta": 0,
+          "bbox": null
+        }
+      },
+      "candidate_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      },
+      "restored_vs_reference_fresh": {
+        "equal": true,
+        "changed_pixels": 0,
+        "max_channel_delta": 0,
+        "bbox": null
+      }
+    }
+  ],
+  "same_source_hashes": true,
+  "same_timing_lights": true,
+  "same_starting_terrain": true
+}

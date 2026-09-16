@@ -142,7 +142,7 @@ func _review_shop(workshop: String) -> void:
 		if workshop == "wardrobe":
 			_check(preview._sprite.texture.get_size() == Vector2(1600, 2000) and preview._sprite.texture.resource_path == PORTRAIT_PATH, label + " uses original full-resolution portrait")
 		else:
-			_check(preview.viewport.size == Vector2i(1100, 1200), label + " keeps original preview resolution")
+			_check(preview.viewport.size == Vector2i(1100, 900), label + " keeps reviewed preview resolution")
 			_check(preview.lamp.applied_style_id == "deepheart", label + " displays selected production beam")
 		var references: Array[WeakRef] = [weakref(preview)]
 		for viewport in panel.find_children("*", "SubViewport", true, false):
@@ -192,7 +192,7 @@ func _capture(label: String, light_preview: Node) -> void:
 	await RenderingServer.frame_post_draw
 	_save_image(label + ".png", root.get_texture().get_image(), FRAME_SIZE)
 	if light_preview != null:
-		_save_image(label + "-beam.png", light_preview.viewport.get_texture().get_image(), Vector2i(1100, 1200))
+		_save_image(label + "-beam.png", light_preview.viewport.get_texture().get_image(), Vector2i(1100, 900))
 
 func _save_image(filename: String, pixels: Image, expected: Vector2i) -> void:
 	_check(pixels != null and not pixels.is_empty() and pixels.get_size() == expected, "Exact rendered pixels for " + filename)

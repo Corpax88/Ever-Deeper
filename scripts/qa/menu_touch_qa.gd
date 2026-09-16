@@ -1,4 +1,8 @@
 extends RefCounted
+
+const SECTIONS: Array[String] = ["pause", "wardrobe", "light", "lists", "starforge", "workshops"]
+const SECTION_ARGUMENT: String = "--menu-touch-section="
+
 var driver: Node
 var main: Node
 var checks: int = 0
@@ -43,14 +47,57 @@ func swipe(scroll: ScrollContainer, horizontal: bool, label: String) -> void:
 	scroll.velocity=Vector2.ZERO
 	check((scroll.scroll_horizontal if horizontal else scroll.scroll_vertical)>before+20,label + " scrolls by dragging content")
 	await gesture("capture",Vector2.ZERO,Vector2.ZERO,label)
+func _requested_sections() -> Array[String]:
+	var selected: String = "all"
+	var seen: bool = false
+	for argument in OS.get_cmdline_user_args():
+		if not argument.begins_with("--menu-touch-section"):
+			continue
+		if seen or not argument.begins_with(SECTION_ARGUMENT):
+			failures.append("Use exactly one --menu-touch-section=<name> argument")
+			print("EVER_DEEPER_MENU_TOUCH_ARGUMENT_FAILED ", JSON.stringify({"argument":argument,"failures":failures}))
+			return []
+		seen = true
+		selected = argument.trim_prefix(SECTION_ARGUMENT)
+	if selected == "all":
+		return SECTIONS.duplicate()
+	if selected not in SECTIONS:
+		failures.append("Unknown menu touch section: " + selected + "; expected all, " + ", ".join(SECTIONS))
+		print("EVER_DEEPER_MENU_TOUCH_ARGUMENT_FAILED ", JSON.stringify({"section":selected,"failures":failures}))
+		return []
+	return [selected]
+
+func _finish() -> bool:
+	print("EVER_DEEPER_OVERHAUL_GAMEPLAY_%s checks=%d failures=%s" % ["OK" if failures.is_empty() else "FAILED",checks,JSON.stringify(failures)])
+	return failures.is_empty()
+
 func run(d: Node, m: Node) -> bool:
 	driver=d;main=m
+	checks=0;failures.clear()
+	var sections: Array[String] = _requested_sections()
+	if sections.is_empty():
+		return _finish()
 	driver.get_tree().root.content_scale_size=Vector2i(1560,720)
 	driver.get_tree().root.content_scale_aspect=Window.CONTENT_SCALE_ASPECT_IGNORE
 	await settle()
-	await test_pause_modal()
-	await test_wardrobe()
-	await test_light_lab()
+	# Omitting the selector preserves every original assertion in its original order.
+	for section in sections:
+		print("EVER_DEEPER_MENU_TOUCH_SECTION_BEGIN ", JSON.stringify({"section":section}))
+		var first_check: int = checks
+		var first_failure: int = failures.size()
+		match section:
+			"pause": await test_pause_modal()
+			"wardrobe": await test_wardrobe()
+			"light": await test_light_lab()
+			"lists": await test_lists()
+			"starforge": await test_starforge()
+			"workshops": await test_workshops()
+			_:
+				check(false, "Menu touch section has no runner: " + section)
+		print("EVER_DEEPER_MENU_TOUCH_SECTION_COMPLETE ", JSON.stringify({"section":section,"checks":checks-first_check,"failures":failures.slice(first_failure)}))
+	return _finish()
+
+func test_lists() -> void:
 	driver._prepare_pet_state({"location":"mine","variant":"ready","tab":"skills"})
 	await settle()
 	var journal = main.get_node("CompanionInterface").journal
@@ -76,6 +123,8 @@ func run(d: Node, m: Node) -> bool:
 	main.premium_menu.open_menu(true,"Mossvein",true,false);main.premium_menu.show_achievements();await settle()
 	await swipe(main.premium_menu.achievement_scroll,false,"achievements-swiped")
 	main.premium_menu.close_menu()
+
+func test_starforge() -> void:
 	# Preview is a deliberate selection, independent of browsing and buying.
 	driver._prepare_commerce_capture("starforge_ready_crusher");await settle()
 	var panel = main.commerce_panel
@@ -109,9 +158,12 @@ func run(d: Node, m: Node) -> bool:
 	check(RunState.starforge_variant=="swift" and RunState.cargo.astralite==33 and RunState.cargo.crownstone==33,"Only Forge Core purchases and equips the selected core")
 	panel.action_confirmed.disconnect(on_confirm)
 	panel.close_commerce()
+
+func test_workshops() -> void:
+	var panel = main.commerce_panel
 	for fixture in ["workshop_tool_forge_baseline","workshop_light_lab_baseline","workshop_wardrobe_baseline"]:
 		driver._prepare_commerce_capture(fixture);await settle()
-		carousel=panel.catalog_scroll
+		var carousel = panel.catalog_scroll
 		var selected: String = panel.selected_item_id()
 		var cargo_before: Dictionary = RunState.cargo.duplicate(true)
 		var first: Button = panel.catalog_strip.get_child(0)
@@ -148,8 +200,6 @@ func run(d: Node, m: Node) -> bool:
 		await settle()
 		await swipe(main.developer_menu.scroll,false,"dev-tools-swiped")
 		main.developer_menu.close_menu()
-	print("EVER_DEEPER_OVERHAUL_GAMEPLAY_%s checks=%d failures=%s" % ["OK" if failures.is_empty() else "FAILED",checks,JSON.stringify(failures)])
-	return failures.is_empty()
 
 func test_pause_modal() -> void:
 	driver._prepare_commerce_capture("starforge_owned_active")

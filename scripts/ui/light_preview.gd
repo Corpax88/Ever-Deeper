@@ -1,6 +1,11 @@
 extends VBoxContainer
 ## A separate cave viewport uses the real headlamp renderer and current hero.
 const Lamp = preload("res://scripts/lighting/headlamp_beam.gd")
+# One fixed view fits the entire level-five Wide beam, including its faint rim.
+# Keep the same geometry and ambient for every style and before/after selection.
+const CAVE_SIZE: = Vector2i(1100, 900)
+const LAMP_POSITION: = Vector2(117, 450)
+const CAVE_AMBIENT: = Color(0.42, 0.44, 0.46)
 var viewport: SubViewport
 var lamp: HeadlampBeam
 var style: String
@@ -39,7 +44,7 @@ func _build() -> void:
 		before_button.pressed.connect(func(): show_level(current_level))
 		after_button.pressed.connect(func(): show_level(upgraded_level))
 	viewport = SubViewport.new()
-	viewport.size = Vector2i(440, 480) if _thumbnail else Vector2i(1100, 1200)
+	viewport.size = Vector2i(440, 360) if _thumbnail else CAVE_SIZE
 	viewport.world_2d = World2D.new()
 	viewport.transparent_bg = false
 	# The cave, hero and beam are static between level/style selections.
@@ -53,12 +58,12 @@ func _build() -> void:
 	floor_sprite.centered = false
 	floor_sprite.region_enabled = true
 	floor_sprite.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
-	floor_sprite.region_rect = Rect2(0, 0, 1100, 1200)
+	floor_sprite.region_rect = Rect2(Vector2.ZERO, Vector2(CAVE_SIZE))
 	world.add_child(floor_sprite)
 	var ambient: CanvasModulate = CanvasModulate.new()
-	ambient.color = Color(0.13, 0.15, 0.16)
+	ambient.color = CAVE_AMBIENT
 	world.add_child(ambient)
-	for position_value in [Vector2(380, 600), Vector2(650, 635), Vector2(750, 740)]:
+	for position_value in [Vector2(380, 450), Vector2(650, 485), Vector2(750, 590)]:
 		var ore: Sprite2D = Sprite2D.new()
 		ore.texture = load("res://assets/minerals/copper-node.png")
 		ore.position = position_value
@@ -67,12 +72,12 @@ func _build() -> void:
 	var holder: Node2D = Node2D.new()
 	world.add_child(holder)
 	var hero = preload("res://scripts/ui/outfit_preview.gd").new()
-	hero.position = Vector2(20, 564)
+	hero.position = Vector2(20, 414)
 	hero.size = Vector2(160, 160)
 	holder.add_child(hero)
 	hero.configure(String(RunState.endless_loadout_status().get("outfit", "miner")), false, "right")
 	lamp = Lamp.new()
-	lamp.position = Vector2(117, 600)
+	lamp.position = LAMP_POSITION
 	holder.add_child(lamp)
 	var picture: TextureRect = TextureRect.new()
 	picture.texture = viewport.get_texture()

@@ -1,0 +1,13 @@
+{
+  "path": "scenes/player/player.tscn",
+  "before": "5a9c294d455ccb53b4dbcbd2ffdac603866c63f9031ca702c116790fe17c5fdf",
+  "after": "8014c7ef271d5b659b2c71ac25717f0cd696a9fddb5853b77ca781f35f7119b6",
+  "reason": "Reviewed equivalent shadow draw path avoids Godot4.7.2 repeated Polygon2D index buffer target error",
+  "scope": "Only added FlatPolygon2D resource and Shadow type/script binding; same hierarchy, six points, authored color, position, collision and production hero visual reference",
+  "independent_review": "Native15 decoded RGBA pairs exact; same-helper/use-site hashes; two-fixture browser comparison reproduces control graphics failure and candidate success",
+  "limits": [
+    "Browser images are not pixel-identical; animated regions differ.",
+    "Combined package and full active-hazard browser validation remain pending.",
+    "scripts/player/player_visual.gd baseline is deliberately unchanged."
+  ]
+}

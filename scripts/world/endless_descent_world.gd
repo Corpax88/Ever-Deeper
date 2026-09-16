@@ -1288,7 +1288,7 @@ func _build_hazard_visual(hazard: Dictionary) -> void :
 	root.name = "Resonance_%s" % String(hazard.id)
 	root.position = Vector2(hazard.position)
 	root.z_index = 1
-	var fill: = Polygon2D.new()
+	var fill: = FlatPolygon2D.new()
 	fill.name = "FieldFill"
 	fill.polygon = _circle_points(float(hazard.radius), 36)
 	fill.color = Color("62d8d0", 0.035)
@@ -1346,7 +1346,7 @@ func _update_hazard_visual(
 	if not is_instance_valid(visual):
 		return
 	visual.modulate = Color.WHITE
-	var fill: = visual.get_node_or_null("FieldFill") as Polygon2D
+	var fill: = visual.get_node_or_null("FieldFill") as FlatPolygon2D
 	var outer: = visual.get_node_or_null("OuterRing") as Line2D
 	var telegraph: = visual.get_node_or_null("TelegraphRing") as Line2D
 	var danger_color: = Color("ff8a52") if empowered else Color("ffc568")
