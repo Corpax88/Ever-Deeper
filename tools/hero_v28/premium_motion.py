@@ -37,13 +37,50 @@ def _body(lean, twist, translation):
     return T(translation)@T((0,0,.6))@Matrix.Rotation(twist,4,'Z')@Matrix.Rotation(lean,4,'X')@T((0,0,-.6))
 
 
-def _assemble(gear, torso, head, rear, axis, normal, hips, feet, bit=0., contacts=None):
+def tool_frame(axis, normal):
+    return Matrix((axis, normal.cross(axis).normalized(), normal)).transposed()
+
+
+def heading_matrix(ground_per_pixel):
+    ground = Vector(ground_per_pixel)
+    return Matrix.Rotation(math.atan2(ground.x, -ground.y), 3, 'Z')
+
+
+def orient_pose(p, ground_per_pixel):
+    """One heading operation for every native state, including its feet."""
+    h = heading_matrix(ground_per_pixel)
+    out = dict(p)
+    out['torso'], out['head'] = h.to_4x4()@p['torso'], h.to_4x4()@p['head']
+    for name in ('rear', 'axis', 'tool_normal'):
+        out[name] = h@p[name]
+    for name in ('grips', 'hand_axes', 'radials'):
+        out[name] = {side: h@v for side, v in p[name].items()}
+    for name in ('arms', 'legs'):
+        out[name] = {side: tuple(h@v for v in chain) for side, chain in p[name].items()}
+    rotations = p.get('foot_rotations', {s: Matrix.Identity(3) for s in ('R', 'L')})
+    out['foot_rotations'] = {side: h@rotation for side, rotation in rotations.items()}
+    return out
+
+
+def translate_pose(p, offset):
+    offset = Vector(offset)
+    out = dict(p)
+    out['torso'], out['head'] = T(offset)@p['torso'], T(offset)@p['head']
+    out['rear'] = p['rear']+offset
+    out['grips'] = {side: v+offset for side, v in p['grips'].items()}
+    for name in ('arms', 'legs'):
+        out[name] = {side: tuple(v+offset for v in chain) for side, chain in p[name].items()}
+    return out
+
+
+def _assemble(gear, torso, head, rear, axis, normal, hips, feet, bit=0., contacts=None, leg_poles=None):
     drill = gear in ROTOR
     rot = torso.to_3x3()
     if drill:
-        grips = {'R':rear, 'L':rear+rot@Vector((.065,-.140,.060))}
-        hand_axes = {'R':rot@Vector((0,-.2,.98)).normalized(), 'L':axis}
-        radials = {'R':rot@Vector((-1,0,0)), 'L':normal}
+        tool_rot = tool_frame(axis, normal)@tool_frame(Vector((0,-1,0)), Vector((0,0,-1))).transposed()
+        grips = {'R':rear, 'L':rear+tool_rot@Vector((.065,-.140,.060))}
+        hand_axes = {'R':tool_rot@Vector((0,-.2,.98)).normalized(), 'L':axis}
+        radials = {'R':tool_rot@Vector((-1,0,0)), 'L':normal}
     else:
         grips = {'R':rear, 'L':rear+axis*.145}
         lateral = axis.cross(normal).normalized()
@@ -58,7 +95,8 @@ def _assemble(gear, torso, head, rear, axis, normal, hips, feet, bit=0., contact
         elbow = solve(shoulder,wrist,wrist-approach*.35,.36,.35)
         arms[side] = (shoulder,elbow,wrist)
         hip,foot = hips[side],feet[side]
-        knee = solve(hip,foot,Vector((sign*.205,-.6,.30)),.180,.184)
+        pole = leg_poles[side] if leg_poles is not None else Vector((sign*.205,-.6,.30))
+        knee = solve(hip,foot,pole,.180,.184)
         legs[side] = (hip,knee,foot)
     return dict(torso=torso,head=head,rear=rear,axis=axis,tool_normal=normal,
                 grips=grips,hand_axes=hand_axes,radials=radials,arms=arms,legs=legs,

@@ -126,6 +126,9 @@ class Profile:
     front_overshoot_pixels: float = 1.5
     hip_edge: float = .420
     walking: bool = False
+    swing_lift_fraction: float = .055
+    back_overshoot_pixels: float = -1.
+    load_response: bool = False
 
     @property
     def contact(self):
@@ -142,6 +145,20 @@ PROFILES = {
     'jog': Profile(120., 56., 16.),
     'walk': Profile(60., 26., 14.04, -8., 12., .03, .055, .03, .45, .423, True),
 }
+
+
+def game_profile(speed=340.):
+    """A distance-driven native profile at the unchanged gameplay speed.
+
+    Eighty-eight screen pixels remain one gait cycle.  This deliberately does
+    not hide a speed change in playback.  The fast cadence needs gameplay
+    review; support is still computed from the actual native sole.
+    """
+    assert speed > 0.
+    return Profile(speed, 88., 16., back_clearance=.050,
+                   middle_clearance=.100, front_clearance=.070,
+                   swing_lift_fraction=.10, back_overshoot_pixels=1.5,
+                   front_overshoot_pixels=.6, load_response=True)
 
 
 @lru_cache(maxsize=4)
@@ -186,8 +203,10 @@ def foot_trajectory(phase, ground_units_per_pixel, profile):
             angle = 0.
         forward = start + roll.advance(angle) - d*u
         return forward, support_height(angle), angle, True
-    delta = .055
-    back_overshoot = .5*stride*g*delta
+    delta = profile.swing_lift_fraction
+    back_overshoot = (profile.back_overshoot_pixels*g
+                      if profile.back_overshoot_pixels >= 0.
+                      else .5*stride*g*delta)
     front_overshoot = profile.front_overshoot_pixels*g
     mid = (c+1.)*.5
     mid_speed = ((start-end+back_overshoot+front_overshoot)
@@ -222,8 +241,6 @@ def sample_walk(gear, phase, ground_per_pixel, profile='run'):
     ground = Vector(ground_per_pixel)
     assert abs(ground.z) < 1e-8 and ground.length > 0
     beta = math.atan2(ground.x, -ground.y)
-    heading = Matrix.Rotation(beta, 3, 'Z')
-    h4 = heading.to_4x4()
     T = Matrix.Translation
     hip = hip_height(q, cfg)
     lean = .035 if not cfg.walking else .015
@@ -236,9 +253,21 @@ def sample_walk(gear, phase, ground_per_pixel, profile='run'):
             @ Matrix.Rotation(-twist*.75, 4, 'Z') @ T((0, 0, -1.135)))
     family = 'drill' if gear in pm.ROTOR else 'pickaxe'
     rest = motion_v9.rest(family)
-    rear = torso @ rest['rear']
-    axis = torso.to_3x3() @ rest['axis']
-    normal = torso.to_3x3() @ rest['tool_normal']
+    # A carrying tool responds after the hips.  Both grips are solved again
+    # below; this never separates a hand or changes a mesh/tool scale.
+    weight = pm.WEIGHT.get(gear, {'burrower': .74, 'pulse': .90, 'deepcore': 1.}.get(gear, .75))
+    lag_q = q - (.024 + .018*weight) if cfg.load_response else q
+    delayed_hip = hip_height(lag_q % 1., cfg)
+    load_twist = .018*math.sin(lag_q*math.tau)
+    tool_body = (T((0, 0, delayed_hip-HIP_BIND_Z)) @ T((0, 0, HIP_BIND_Z))
+                 @ Matrix.Rotation(load_twist, 4, 'Z')
+                 @ Matrix.Rotation(lean + .003*weight*math.sin(lag_q*math.tau*2.), 4, 'X')
+                 @ T((0, 0, -HIP_BIND_Z)))
+    if not cfg.load_response:
+        tool_body = torso
+    rear = tool_body @ rest['rear']
+    axis = tool_body.to_3x3() @ rest['axis']
+    normal = tool_body.to_3x3() @ rest['tool_normal']
     hips, feet, contacts, angles = {}, {}, {}, {}
     for side, sign, offset in (('R', -1, 0.), ('L', 1, .5)):
         forward, z, angle, contact = foot_trajectory(q+offset, ground.length, cfg)
@@ -246,15 +275,8 @@ def sample_walk(gear, phase, ground_per_pixel, profile='run'):
         feet[side] = Vector((sign*.205, -forward, z))
         contacts[side], angles[side] = contact, angle
     p = pm._assemble(gear, torso, head, rear, axis, normal, hips, feet, 0., contacts)
-    # Rotate the entire solved pose, not just the feet under a sideways torso.
-    p['torso'], p['head'] = h4 @ p['torso'], h4 @ p['head']
-    for name in ('rear', 'axis', 'tool_normal'):
-        p[name] = heading @ p[name]
-    for name in ('grips', 'hand_axes', 'radials'):
-        p[name] = {s: heading @ v for s, v in p[name].items()}
-    for name in ('arms', 'legs'):
-        p[name] = {s: tuple(heading @ v for v in chain) for s, chain in p[name].items()}
-    p['foot_rotations'] = {s: heading @ Matrix.Rotation(angles[s], 3, 'X') for s in angles}
+    p['foot_rotations'] = {s: Matrix.Rotation(angles[s], 3, 'X') for s in angles}
+    p = pm.orient_pose(p, ground)
     p['trial_metadata'] = dict(profile=profile if isinstance(profile, str) else 'custom',
                                speed=cfg.speed, stride=cfg.stride,
                                contact_ms=1000.*cfg.contact*cfg.period,
