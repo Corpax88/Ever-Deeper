@@ -28,7 +28,13 @@ var _ground_props: Dictionary = {}
 const DeepLayout = preload("res://scripts/world/endless_deep_layout.gd")
 const HeadlampBeamScript = preload("res://scripts/lighting/headlamp_beam.gd")
 const CaveEdgeAssetDrawer = preload("res://scripts/world/cave_edge_asset_drawer.gd")
+const NativeWallStudy = preload("res://tools/wall_pilot/native_wall_mapper.gd")
 const CrusherDebrisScript = preload("res://scripts/world/crusher_debris.gd")
+
+# Opt-in isolated study only. Defaults preserve the reviewed baseline. The
+# material override affects drawings, never collision, mining, or saved terrain.
+var wall_study_candidate: bool = false
+var wall_study_force_material: int = -1 # -1: real terrain, 0: mineable, 1: bedrock
 
 const RESOURCE_TEXTURE_PATHS: = {
 	"lumenstone": "res://assets/endless/node-lumen-shard-v1.png",
@@ -2613,7 +2619,8 @@ func _draw_partitioned_deep(first: Vector2i, last: Vector2i) -> void:
 func _terrain_section_fingerprint(row: int, first_col: int, last_col: int) -> int:
 	# Native packed-array slices detect direct restores and pet/Crusher changes
 	# without relying on every mutator remembering to mark a cache dirty.
-	var signature: Array = [window_start_depth, int(RunState.world_seed)]
+	var signature: Array = [window_start_depth, int(RunState.world_seed),
+		wall_study_candidate, wall_study_force_material]
 	var left: int = maxi(0, first_col - 1)
 	var right: int = mini(GRID_SIZE.x, last_col + 2)
 	for neighbor_row in range(maxi(0, row - 1), mini(GRID_SIZE.y - 1, row + 1) + 1):
@@ -2749,9 +2756,9 @@ func _draw_permanent_wall_mass(cell: Vector2i, rect: Rect2) -> void:
 	var texture: Texture2D = preload("res://assets/surface/v3/cave-rock-mass.png")
 	var region: Rect2 = Rect2(Vector2(posmod(cell.x,8),posmod(absolute_cell(cell).y,8))*96.0,Vector2(96,96))
 	var tint: Color = Color(stratum.wall).lightened(0.50)
-	if not _cell_diggable(cell): tint = tint.darkened(0.42)
+	if not _wall_study_draws_mineable(cell): tint = tint.darkened(0.42)
 	_draw_canvas.draw_texture_rect_region(texture,rect.grow(0.5),region,tint)
-	if _cell_diggable(cell) and _has_floor_neighbor(cell):
+	if _wall_study_draws_mineable(cell) and _has_floor_neighbor(cell):
 		var reward: Dictionary = DeepLayout.ore_for_cell(int(RunState.world_seed), depth_at_position(_cell_center(cell)), _chunk_cell_index(cell))
 		if bool(reward.rare):
 			var kind: String = String(reward.kind)
@@ -2784,6 +2791,24 @@ func _draw_wall_edges(cell: Vector2i, rect: Rect2) -> void :
 		_is_floor(cell + Vector2i.DOWN),
 		_is_floor(cell + Vector2i.LEFT),
 	]
+	if wall_study_candidate:
+		var mineable: bool = _wall_study_draws_mineable(cell)
+		var terminal_kinds: Array[Vector2i] = []
+		var normals: Array[Vector2i] = [Vector2i.UP, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT]
+		for side in 4:
+			var horizontal: bool = side == 0 or side == 2
+			var tangent: Vector2i = Vector2i.RIGHT if horizontal else Vector2i.DOWN
+			var start_side: int = 3 if horizontal else 0
+			var end_side: int = 1 if horizontal else 2
+			terminal_kinds.append(Vector2i(
+				0 if _wall_study_edge_continues(cell - tangent, normals[side]) else (1 if bool(open_sides[start_side]) else -1),
+				0 if _wall_study_edge_continues(cell + tangent, normals[side]) else (1 if bool(open_sides[end_side]) else -1)))
+		NativeWallStudy.draw_cell(_draw_canvas,
+			diggable_wall_texture if mineable else cave_wall_texture,
+			diggable_corner_texture if mineable else cave_wall_corner_texture,
+			cell, absolute_cell(cell), open_sides, terminal_kinds, TILE_SIZE,
+			posmod(depth_at_position(_cell_center(cell)), 5), not mineable)
+		return
 	for side in 4:
 		if bool(open_sides[side]):
 			_draw_permanent_wall_face(cell, rect, side)
@@ -2791,7 +2816,7 @@ func _draw_wall_edges(cell: Vector2i, rect: Rect2) -> void :
 
 
 func _draw_permanent_wall_face(cell: Vector2i, rect: Rect2, side: int) -> void :
-	if _cell_diggable(cell):
+	if _wall_study_draws_mineable(cell):
 		CaveEdgeAssetDrawer.draw_mineable_edge(_draw_canvas, diggable_wall_texture, cell, side, TILE_SIZE, depth_at_position(_cell_center(cell)) % 11)
 		return
 	CaveEdgeAssetDrawer.draw_bedrock_edge(
@@ -2805,12 +2830,28 @@ func _draw_permanent_wall_corners(cell: Vector2i, _rect: Rect2, open_sides: Arra
 		var pair: Array = adjacent_pairs[corner]
 		if not bool(open_sides[int(pair[0])]) or not bool(open_sides[int(pair[1])]):
 			continue
-		if _cell_diggable(cell):
+		if _wall_study_draws_mineable(cell):
 			CaveEdgeAssetDrawer.draw_mineable_corner(_draw_canvas, diggable_corner_texture, cell, corner, TILE_SIZE)
 			continue
 		CaveEdgeAssetDrawer.draw_bedrock_corner(
 			_draw_canvas, cave_wall_corner_texture, cell, corner, TILE_SIZE
 		)
+
+
+func _wall_study_draws_mineable(cell: Vector2i) -> bool:
+	if wall_study_force_material >= 0:
+		return wall_study_force_material == 0
+	return _cell_diggable(cell)
+
+
+func _wall_study_edge_continues(cell: Vector2i, normal: Vector2i) -> bool:
+	return _cell_in_bounds(cell) and not _is_floor(cell) and _is_floor(cell + normal)
+
+
+func set_wall_study_mode(candidate: bool, force_material: int = -1) -> void:
+	wall_study_candidate = candidate
+	wall_study_force_material = clampi(force_material, -1, 1)
+	queue_redraw()
 
 
 func _draw_shaft(position: Vector2, upward: bool) -> void :

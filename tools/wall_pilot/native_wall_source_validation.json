@@ -1,0 +1,60 @@
+{
+  "source_only": true,
+  "visual_acceptance": false,
+  "source_artwork_modified": false,
+  "checks": [
+    {
+      "name": "rootwound",
+      "all_contour_samples_are_native_opaque_pixels": true,
+      "sample_count": 2656,
+      "minimum_edge_core_span": 37,
+      "minimum_leg_core_span": 97,
+      "vertical_band_wrap_is_authored_seamless": false
+    },
+    {
+      "name": "moonglass",
+      "all_contour_samples_are_native_opaque_pixels": true,
+      "sample_count": 2656,
+      "minimum_edge_core_span": 35,
+      "minimum_leg_core_span": 88,
+      "vertical_band_wrap_is_authored_seamless": false
+    },
+    {
+      "name": "emberdeep",
+      "all_contour_samples_are_native_opaque_pixels": true,
+      "sample_count": 2656,
+      "minimum_edge_core_span": 38,
+      "minimum_leg_core_span": 92,
+      "vertical_band_wrap_is_authored_seamless": false
+    },
+    {
+      "name": "voidstar",
+      "all_contour_samples_are_native_opaque_pixels": true,
+      "sample_count": 2656,
+      "minimum_edge_core_span": 31,
+      "minimum_leg_core_span": 50,
+      "vertical_band_wrap_is_authored_seamless": false
+    },
+    {
+      "name": "mossvein",
+      "all_contour_samples_are_native_opaque_pixels": true,
+      "sample_count": 2656,
+      "minimum_edge_core_span": 3,
+      "minimum_leg_core_span": 259,
+      "vertical_band_wrap_is_authored_seamless": false
+    },
+    {
+      "name": "bedrock",
+      "all_contour_samples_are_native_opaque_pixels": true,
+      "sample_count": 2656,
+      "minimum_edge_core_span": 175,
+      "minimum_leg_core_span": 229,
+      "vertical_band_wrap_is_authored_seamless": false
+    }
+  ],
+  "limitations": [
+    "Opaque contours validate source coverage, not rendered join appearance.",
+    "The vertical source band still has an unauthored wrap seam requiring rendered review.",
+    "No performance or gameplay checks are represented by this file."
+  ]
+}
