@@ -112,7 +112,7 @@ def verify(output):
         "publication_source_commit": os.environ.get("GITHUB_SHA"),
         "publication_run_id": os.environ.get("GITHUB_RUN_ID"),
         "rollback_artifact_id": os.environ.get("ROLLBACK_ARTIFACT_ID"),
-        "displayed_dev_version": "1.0.0-dev.8", "live_version": "0.46.9",
+        "displayed_dev_version": "1.0.0-dev.9", "live_version": "0.46.9",
         "final_one_point_zero_approved": False, "physical_iphone_verified": False,
         "limits": accepted["limitations"], "files": expected, "errors": [],
     }

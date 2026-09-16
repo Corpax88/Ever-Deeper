@@ -74,7 +74,8 @@ class PublisherChecks(unittest.TestCase):
 
     def test_pinned_real_baseline_is_dev8_with_all_18_files(self):
         base = c.baseline()
-        self.assertEqual(base["artifact_id"], 10308746307)
+        self.assertEqual(base["candidate_artifact_id"], 10442929350)
+        self.assertEqual(base["source_commit"], "c8906f1d46309227344f101a6b0ae7c1a9b1e69b")
         self.assertEqual(sum(len(rows) for rows in base["files"].values()), 18)
 
     def test_pending_visual_review_stops_before_network_or_workspace(self):
@@ -221,7 +222,7 @@ class PublisherChecks(unittest.TestCase):
         for kind in ("candidate", "complete"):
             c.extract_exact(EVIDENCE / (kind + ".zip"), self.root / ("real-" + kind), pin[kind])
         files = c.verify_bundle(self.root / "real-candidate", self.root / "real-complete", pin)
-        self.assertEqual(files["index.pck"]["sha256"], "a60dc230728102a2cc6aceca9182579dc0533175235e44e80f3a343cd5443bd1")
+        self.assertEqual(files["index.pck"]["sha256"], "1270ea3974b0d551f0a10f8a72ec4ba56824030822526a8b1544bb295988e32f")
         run_file, jobs_file = EVIDENCE / "qa-run-api.json", EVIDENCE / "qa-jobs-api.json"
         if run_file.exists() and jobs_file.exists():
             _, _, artifacts = self.metadata()

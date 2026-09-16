@@ -4,49 +4,45 @@
   "live_publication_authorized": false,
   "final_one_point_zero_approved": false,
   "physical_iphone_verified": false,
-  "source_commit": "c8906f1d46309227344f101a6b0ae7c1a9b1e69b",
-  "qa_run_id": 35088488455,
-  "candidate_artifact_id": 10442929350,
-  "complete_artifact_id": 10443378936,
+  "source_commit": "e76a2b90a8a6da4d2673689ce2eeb646e5c2303b",
+  "qa_run_id": 35099632983,
+  "candidate_artifact_id": 10448000795,
+  "complete_artifact_id": 10448008790,
   "dev_publication_authorized": true,
   "authorization_record": {
     "requested_by": "Mats",
-    "request": "Publish the current integrated DEV version now so I can test the changes. Explicit current conversation request; no LIVE publication requested.",
-    "recorded_at": "2026-09-16T11:55:16.769218+00:00"
+    "request": "Kan vi gjøre det spillklart med alt det nye nå? Så laste opp det vi har. Så vet vi hva vi skal fikse opp når vi får kvote igjen? Explicit DEV-only checkpoint request with 6% quota remaining.",
+    "recorded_at": "2026-09-16T13:15:20.493649+00:00"
   },
   "visual_readiness": {
     "status": "approved_for_dev_playtest",
-    "reviewer": "wall_visual_review; root independently inspected representative package and composition frames",
-    "reviewed_at": "2026-09-16T11:55:16.769232+00:00",
-    "scope": "Static review of current c8906f1 exact exported package and same-source mobile composition captures for DEV device testing.",
-    "findings": "No blocking visual defect found. All 19 shop states, six native residency images, beam and outfit interactions, and nine gameplay/composition frames inspected. No missing reopened previews, serious clipping, obscured primary controls or corrupted geometry. Light Lab comparison and completed-workshop presentation are present. Minor copy and selection-style polish remains.",
+    "reviewer": "animation_critic and root",
+    "reviewed_at": "2026-09-16T13:15:20.493649+00:00",
+    "scope": "Bounded recovery correction, unchanged approved v28 art; exact DEV9 exported package rendered without script substitution at1696x780. Existing integrated UI/world art retained.",
+    "findings": "Pre-contact release retracts; a delivered hit retains forward recovery. Source comparison:732 rendered frames,812 observations, unchanged body/damage/immediate walk. Exact new package:46 frames in four Worn/Crusher before/after-contact cases,50 observations,zero failed. Root inspected corrected pose sheets and actual final-package frames; no blocking defect found in the change.",
     "evidence": [
-      "https://github.com/Corpax88/Ever-Deeper/actions/runs/35088488455",
-      "https://github.com/Corpax88/Ever-Deeper/actions/runs/35088488292",
-      ".github/premium-dev/visual-readiness.json",
-      ".github/premium-dev/sustained-summary.json",
-      ".github/premium-dev/animation-readiness.json"
+      "https://github.com/Corpax88/Ever-Deeper/actions/runs/35099632983",
+      ".github/premium-dev/animation-readiness-dev9.json",
+      ".github/premium-dev/package-animation-readiness.json"
     ],
     "blocking_defects": []
   },
   "limitations": [
-    "DEV playtest only; no final whole-game score or final 1.0 acceptance is asserted.",
-    "Physical iPhone performance and acceptance remain unverified.",
-    "The exact reviewed package retains the displayed 1.0.0-dev.8 label; source c8906f1 and package hashes distinguish this build.",
-    "Save schema 3 uses user://ever_deeper_run_v3.sav. The previously authorized progress reset applies.",
-    "All three current sustained virtual-Mac runs complete 300 seconds and move in every 30-second window. Observed FPS ranges are Hub 44.98–56.60, Ember 20.79–39.54, Deep 18.01–30.91; none establishes a sustained 50 FPS minimum. These are not physical iPhone measurements.",
-    "Unaccepted wall/corner/native-model studies are not integrated in this DEV artifact.",
-    "The separate historical browser audio suite has not been rerun on this exact package; historical review flags and scores remain unchanged.",
-    "Current native animation readiness is bounded to the inspected fixed-step gameplay cases, not real-time FPS, speeds above 403.2, interruption immediately before contact, browser hazard/re-entry or final animation acceptance. The old protected player_visual baseline remains unchanged.",
-    "Deepcore harness damage expectation was narrowly corrected to accept excavation of the same originally solid cell, matching production semantics. Original failed attempt and exact harness diff are retained."
+    "DEV9 playable checkpoint, not final1.0 or9/10 approval.",
+    "Physical iPhone, sustained50FPS and complete animation acceptance remain unverified.",
+    "No save-schema change from the previous c8906f1 schema3 DEV; the earlier schema3 reset is historical.",
+    "Wall/corner, exact-union shadow and crop studies remain isolated and unaccepted. No optimization gain is claimed.",
+    "The animation comparison is behavioral and visual; global exact-RGBA equality is not claimed.",
+    "Browser audio and all gear/direction/hazard/re-entry animation cases remain future work.",
+    "Prior c8906f1 virtual-Mac sustained ranges were Hub44.98–56.60, Ember20.79–39.54, Deep18.01–30.91FPS. They did not establish the50FPS minimum and are not physical-device results."
   ],
   "animation_readiness": {
     "status": "approved_for_dev_playtest",
-    "reviewer": "animation_critic; root inspected exact harness delta and representative frames",
-    "reviewed_at": "2026-09-16T12:00:40.335017+00:00",
-    "evidence": ".github/premium-dev/animation-readiness.json",
-    "evidence_sha256": "b3d1ea06ce0e050d73bfbb1fefb055d47ecd79c5e71241679063db54d735657f",
-    "pck_sha256": "a60dc230728102a2cc6aceca9182579dc0533175235e44e80f3a343cd5443bd1",
-    "scope": "Worn, Crusher and Deepcore exact-package generated-terrain transitions at 1696x780; 27 checks, 982 presented frames, 54 lossless keyframes. All 90 actually moving mine-to-walk frames use walking."
+    "reviewer": "animation_critic and root",
+    "reviewed_at": "2026-09-16T13:15:20.493649+00:00",
+    "evidence": ".github/premium-dev/package-animation-readiness.json",
+    "evidence_sha256": "8a74d3ff455a3e7ce6e8981fa3331d13b3263a1a6789527bbef55c08d8b5104e",
+    "pck_sha256": "1270ea3974b0d551f0a10f8a72ec4ba56824030822526a8b1544bb295988e32f",
+    "scope": "Four exact-package Worn/Crusher before/after-contact release states; source A/B also retains immediate walking and upgraded gait."
   }
 }
