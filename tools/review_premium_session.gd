@@ -98,7 +98,8 @@ func _run() -> void:
 	state.flush_save()
 	await create_timer(4.0).timeout
 	await RenderingServer.frame_post_draw
-	root.get_texture().get_image().save_png(output.path_join("final.png"))
+	var final_frame: Image = root.get_texture().get_image()
+	final_frame.save_png(output.path_join("final.png"))
 	var meets: bool = not windows.is_empty()
 	for window in windows:
 		meets = meets and float(window.average_fps) >= 50.0 and float(window.p95_ms) <= 20.0
@@ -111,7 +112,7 @@ func _run() -> void:
 		"functional": functional, "meets_50_fps": meets, "rendered": true, "physical_iphone": false,
 		"display": DisplayServer.get_name(), "renderer": RenderingServer.get_video_adapter_name(),
 		"rendering_method": RenderingServer.get_current_rendering_method(), "os": OS.get_name(),
-		"window_pixels": [root.size.x, root.size.y], "persistence_enabled": state.persistence_enabled(),
+		"window_pixels": [root.size.x, root.size.y], "framebuffer_size": [final_frame.get_width(), final_frame.get_height()], "persistence_enabled": state.persistence_enabled(),
 		"save_bytes": FileAccess.get_file_as_bytes(state.persistence_path()).size(),
 		"end_nodes": Performance.get_monitor(Performance.OBJECT_NODE_COUNT),
 		"end_orphans": Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT),

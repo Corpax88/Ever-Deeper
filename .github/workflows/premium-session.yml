@@ -2,7 +2,7 @@ name: Premium sustained gameplay
 on:
   push:
     branches: [codex/premium-polish-recovery-20260915]
-    paths: ['scripts/**', 'assets/**', 'project.godot', 'tools/review_premium_session.gd', '.github/workflows/premium-session.yml']
+    paths: ['scripts/**', 'assets/**', 'project.godot', 'tools/review_premium_session.gd', 'tools/profile_premium_render.gd', 'tools/review_premium_composition.gd', 'tools/configure_review_display.swift', '.github/workflows/premium-session.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -29,6 +29,10 @@ jobs:
           system_profiler SPDisplaysDataType > "$RUNNER_TEMP/review/display.txt"
           git rev-parse HEAD > "$RUNNER_TEMP/review/source-sha.txt"
           "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --version > "$RUNNER_TEMP/review/godot-version.txt"
+      - name: Configure an advertised display mode for the requested framebuffer
+        run: |
+          swift tools/configure_review_display.swift > "$RUNNER_TEMP/review/display-setup.json" 2> "$RUNNER_TEMP/review/display-setup.log"
+          system_profiler SPDisplaysDataType > "$RUNNER_TEMP/review/display-after.txt"
       - name: Import source
         run: |
           "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --headless --editor --path . --import > "$RUNNER_TEMP/review/import.log" 2>&1
@@ -42,7 +46,7 @@ jobs:
         env:
           PREMIUM_AREA: ${{ matrix.area }}
         run: |
-          "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --path . --resolution 1696x780 --rendering-method gl_compatibility --audio-driver Dummy --script tools/review_premium_session.gd -- --output="$RUNNER_TEMP/review/session" --area="$PREMIUM_AREA" --seconds=300 > "$RUNNER_TEMP/review/session.log" 2>&1
+          "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --path . --resolution 1696x780 --rendering-method gl_compatibility --audio-driver Dummy --script tools/review_premium_session.gd -- --output="$RUNNER_TEMP/review/session" --area="$PREMIUM_AREA" --seconds=300 --expected-size=1696x780 > "$RUNNER_TEMP/review/session.log" 2>&1
           python3 - <<'PY'
           import json,os,re
           from pathlib import Path
@@ -50,6 +54,8 @@ jobs:
           log=(root/'session.log').read_text()
           assert not re.search(r'SCRIPT ERROR|Parse Error|^ERROR:',log,re.M),log[-4000:]
           report=json.loads((root/'session/session.json').read_text())
+          assert report.get('window_pixels') == [1696,780],f"Requested 1696x780 window, got {report.get('window_pixels')}"
+          assert report.get('framebuffer_size') == [1696,780],f"Requested 1696x780 framebuffer, got {report.get('framebuffer_size')}"
           assert report['functional'] and report['persistence_enabled'],report
           assert not re.search('llvmpipe|swiftshader|software',report['renderer'],re.I),report['renderer']
           print(json.dumps(report,indent=2))
@@ -58,7 +64,7 @@ jobs:
         env:
           PREMIUM_AREA: ${{ matrix.area }}
         run: |
-          "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --path . --resolution 1696x780 --rendering-method gl_compatibility --audio-driver Dummy --script tools/profile_premium_render.gd -- --output="$RUNNER_TEMP/review/profile" --area="$PREMIUM_AREA" > "$RUNNER_TEMP/review/profile.log" 2>&1
+          "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --path . --resolution 1696x780 --rendering-method gl_compatibility --audio-driver Dummy --script tools/profile_premium_render.gd -- --output="$RUNNER_TEMP/review/profile" --area="$PREMIUM_AREA" --expected-size=1696x780 > "$RUNNER_TEMP/review/profile.log" 2>&1
           python3 - <<'PY'
           import json,os,re
           from pathlib import Path
@@ -66,6 +72,8 @@ jobs:
           log=(root/'profile.log').read_text()
           assert not re.search(r'SCRIPT ERROR|Parse Error|^ERROR:',log,re.M),log[-4000:]
           report=json.loads((root/'profile/render-profile.json').read_text())
+          assert report.get('window_pixels') == [1696,780],f"Requested 1696x780 window, got {report.get('window_pixels')}"
+          assert report.get('framebuffer_size') == [1696,780],f"Requested 1696x780 framebuffer, got {report.get('framebuffer_size')}"
           assert len(report['stages']) == 6
           print(json.dumps(report,indent=2))
           PY

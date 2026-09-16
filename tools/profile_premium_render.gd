@@ -9,6 +9,7 @@ var process_nodes: Array[Dictionary] = []
 var results: Array[Dictionary] = []
 var field: Node
 var fixed_enabled: bool = false
+var last_capture_size: Vector2i
 
 func _initialize() -> void:
 	_run.call_deferred()
@@ -54,6 +55,8 @@ func _run() -> void:
 		refresh_mean_us = float(Time.get_ticks_usec() - start_us) / 500.0
 	var report: Dictionary={"area":area,"seed":root.get_node("RunState").world_seed,"terrain_hash":hash(world.floor_cells) if area=="deep" else 0 if area=="hub" else hash(world.terrain_hp),"player":str(world.player.position),"camera":str(world.player.camera.get_screen_center_position()),"renderer":RenderingServer.get_video_adapter_name(),"physical_iphone":false,"light_count":lights.size(),"stages":results}
 	report["occlusion_refresh_mean_us"] = refresh_mean_us
+	report["window_pixels"] = [root.size.x, root.size.y]
+	report["framebuffer_size"] = [last_capture_size.x, last_capture_size.y]
 	FileAccess.open(output.path_join("render-profile.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"\t"))
 	print("PREMIUM_RENDER_PROFILE_COMPLETE "+JSON.stringify(report))
 	quit()
@@ -107,4 +110,6 @@ func _measure(id: String) -> void:
 	row["terrain_cache"] = world.lit_draw_sections.debug_snapshot() if world.lit_draw_sections.has_method("debug_snapshot") else {}
 	print("PREMIUM_RENDER_STAGE "+JSON.stringify(row))
 	await RenderingServer.frame_post_draw
-	root.get_texture().get_image().save_png(output.path_join(id+".png"))
+	var picture: Image = root.get_texture().get_image()
+	last_capture_size = picture.get_size()
+	picture.save_png(output.path_join(id+".png"))
