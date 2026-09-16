@@ -9,7 +9,7 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[2]
-BASE = "ec8976622231bc70c5413775291e841d0e543353"
+BASE = "c8906f1d46309227344f101a6b0ae7c1a9b1e69b"
 OWNER = "scripts/world/cave_edge_asset_drawer.gd"
 
 

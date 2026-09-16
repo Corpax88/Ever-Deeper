@@ -137,6 +137,12 @@ func _case(path: String, tile: float, profile: String, compact: bool) -> bool:
 	var first: Image = await _capture(reference, name + "-A")
 	var local: Image = await _capture(candidate, name + "-B")
 	var restored: Image = await _capture(reference, name + "-A2")
+	if first.get_size() != Vector2i(1696, 780) or local.get_size() != Vector2i(1696, 780) or restored.get_size() != Vector2i(1696, 780):
+		push_error("Corner matrix requires actual 1696x780 framebuffers")
+		failed = true
+		_write_report(false)
+		quit(5)
+		return false
 	var equal: bool = first.get_data() == local.get_data()
 	var stable: bool = first.get_data() == restored.get_data()
 	rows.append({"id":name,"texture":path,"texture_sha256":FileAccess.get_sha256(path),"edge_texture":edge_path,"edge_sha256":FileAccess.get_sha256(edge_path),"tile":tile,"profile":profile,"rotations":4,"compact_join":compact,"equal_rgba":equal,"restored_equal_rgba":stable,"size":str(first.get_size())})

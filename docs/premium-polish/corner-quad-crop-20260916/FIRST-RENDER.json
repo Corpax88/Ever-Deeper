@@ -1,0 +1,49 @@
+{
+  "status": "Not accepted; stopped at required first native pixel-parity gate",
+  "published_base": "c8906f1d46309227344f101a6b0ae7c1a9b1e69b",
+  "candidate_base": "c113f86169460d3092a63a3e63d79f381028c39b",
+  "actual_resolution": [
+    1696,
+    780
+  ],
+  "rendered": true,
+  "cases_completed": 2,
+  "failure": {
+    "compact_join": false,
+    "edge_sha256": "09aaf0f2bb43a165c641b4f4ed41f55ec8cc207a236329f5477dfc3f124c374b",
+    "edge_texture": "res://assets/caves/ancient-bedrock-edge-loop-v1.png",
+    "equal_rgba": false,
+    "id": "caves_48_linear_fractional",
+    "profile": "linear_fractional",
+    "restored_equal_rgba": true,
+    "rotations": 4,
+    "size": "(1696, 780)",
+    "texture": "res://assets/caves/ancient-bedrock-corner-v1.png",
+    "texture_sha256": "da1ddb3ccfa33aa252c1f40ea64ea187b780edfdfb058c95b84837915321e6b3",
+    "tile": 48.0
+  },
+  "difference": {
+    "changed_pixels": 153,
+    "max_channel_delta": 1,
+    "changed_alpha": 0,
+    "bbox": [
+      83,
+      296,
+      1420,
+      596
+    ],
+    "deltas": {
+      "1": 194
+    },
+    "per_rotation": [
+      34,
+      12,
+      35,
+      72
+    ]
+  },
+  "cause": "Not established; cropped interpolation rounding is a hypothesis only.",
+  "performance_test_run": false,
+  "runtime_adopted": false,
+  "next": "Retain failed case; prioritize larger measured structural hotspots. No pixel-parity waiver or image tolerance introduced."
+}
