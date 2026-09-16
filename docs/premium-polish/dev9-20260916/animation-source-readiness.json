@@ -1,0 +1,102 @@
+{
+  "decision": "Narrow correction verified in the observed rendered fixtures; ready for root to adopt for bounded DEV testing. Not final whole-animation approval.",
+  "corrected_source": "/workspace/scratch/4e99473f21fc/animation-delta-study/owners/corrected.gd",
+  "corrected_sha256": "caaa2e411f9b83a3bbf5ac82bfe8801ec033f52f14734478725897bce02e8061",
+  "current_sha256": "ba3a54fc83efa883b4a68de7a032e334cb885bcb50427859fc85fdb2a5be2520",
+  "patch": "/workspace/scratch/4e99473f21fc/animation-delta-study/recovery-direction-correction.patch",
+  "package_source": "c8906f1d46309227344f101a6b0ae7c1a9b1e69b",
+  "package_sha256": "a60dc230728102a2cc6aceca9182579dc0533175235e44e80f3a343cd5443bd1",
+  "change": "Remember the continuous requested native phase only for recovery direction. Continue recovery from the displayed sample. Immediate walking, distance gait, sampling, atlas and gameplay remain unchanged.",
+  "runs": [
+    {
+      "name": "current-c1",
+      "frames": 342,
+      "fixtures": 11,
+      "observations": 380,
+      "failed_observations": 0,
+      "capture_complete": true,
+      "exit_code": 0,
+      "report": "/workspace/scratch/4e99473f21fc/animation-delta-study/evidence/current-c1/capture.json",
+      "report_sha256": "284868286555370ce7a553754c96de4a780a329050f1d9191ca3e23500953b11",
+      "harness_sha256": "d268c8f28b85a8bc98f69db2e1f1b15916a02dd58d316ddb4165735bf67b966d"
+    },
+    {
+      "name": "corrected-c1",
+      "frames": 342,
+      "fixtures": 11,
+      "observations": 380,
+      "failed_observations": 0,
+      "capture_complete": true,
+      "exit_code": 0,
+      "report": "/workspace/scratch/4e99473f21fc/animation-delta-study/evidence/corrected-c1/capture.json",
+      "report_sha256": "3131c1331cf69a91696ffbbd10fbc83eaa1a095745aa90724769d1d64cd95dac",
+      "harness_sha256": "d268c8f28b85a8bc98f69db2e1f1b15916a02dd58d316ddb4165735bf67b966d"
+    },
+    {
+      "name": "current-postrelease-c1",
+      "frames": 24,
+      "fixtures": 2,
+      "observations": 26,
+      "failed_observations": 0,
+      "capture_complete": true,
+      "exit_code": 0,
+      "report": "/workspace/scratch/4e99473f21fc/animation-delta-study/evidence/current-postrelease-c1/capture.json",
+      "report_sha256": "06b4854d1b207b69cf12a621497bcf3acf230ccbe37676a12d2578098d206d52",
+      "harness_sha256": "d59c6fe2e1f4642a45a1be13bb0c3bbe6ff66c0d0aeb6cca8f0f66aeb89e2fac"
+    },
+    {
+      "name": "corrected-postrelease-c1",
+      "frames": 24,
+      "fixtures": 2,
+      "observations": 26,
+      "failed_observations": 0,
+      "capture_complete": true,
+      "exit_code": 0,
+      "report": "/workspace/scratch/4e99473f21fc/animation-delta-study/evidence/corrected-postrelease-c1/capture.json",
+      "report_sha256": "a13033e7dc07f8e619fcc1f382f33db7f0e7e389539ba50510755773f079c6cf",
+      "harness_sha256": "d59c6fe2e1f4642a45a1be13bb0c3bbe6ff66c0d0aeb6cca8f0f66aeb89e2fac"
+    }
+  ],
+  "total_actual_frames": 732,
+  "actual_viewport": [
+    1696,
+    780
+  ],
+  "results": {
+    "same_fixture_inputs": true,
+    "maximum_body_position_error_px": 0.0,
+    "target_state_differences": 0,
+    "impact_serial_differences": 0,
+    "unchanged_pose_cases": 11,
+    "intentionally_changed_pose_cases": [
+      "worn_pre_release",
+      "crusher_pre_release"
+    ],
+    "all_60_moving_followup_frames_walk_immediately": true,
+    "upgraded_gait_sequences_unchanged": true,
+    "before_contact_release": "Worn and Crusher now retract from the actual displayed pose; no damage or impact occurs.",
+    "after_contact_release": "Both retain identical forward recovery pose sequences after actual same-target damage; no extra damage or impact occurs."
+  },
+  "visual_verdict": "Inspected actual native-pixel Worn/Crusher before/after-contact contact sheets. The correction removes the undelivered-hit follow-through and preserves delivered-hit recovery. Reviewed hero remains complete with unchanged grip and silhouette. No observed blocker to this narrow DEV correction.",
+  "pixel_limits": "This is not a global exact-RGBA pass. Six unaffected fixture crops are pixel-identical, including all168 upgraded-gait frames. Other crop pairs differ: first normal-speed fixture shows background illumination/companion differences, and Worn retreat crops have small light differences. Raw counts are retained in lossless-pixel-comparison.json; pose/body/damage equality is reported separately. No threshold was relaxed.",
+  "remaining_limits": [
+    "Controlled simulation using actual controller/mining, with background processing frozen after scene startup; not a real-time/device/FPS test.",
+    "Matched-distance upgraded gait uses variable timesteps; not full60Hz cadence coverage.",
+    "Only Worn/Crusher, miner outfit and the recorded directions/routes. No broad animation, active-browser-hazard or production-native-material acceptance.",
+    "Study substitutes isolated owner into unchanged c890 package. A newly built DEV package remains roots publication responsibility.",
+    "No production source, atlas, PCK or protected baseline edited by this study."
+  ],
+  "evidence_minimum": [
+    "/workspace/scratch/4e99473f21fc/animation-delta-study/correction-identity.json",
+    "/workspace/scratch/4e99473f21fc/animation-delta-study/recovery-direction-correction.patch",
+    "/workspace/scratch/4e99473f21fc/animation-delta-study/evidence/corrected-pair-c1/comparison.json",
+    "/workspace/scratch/4e99473f21fc/animation-delta-study/evidence/corrected-pair-c1/lossless-pixel-comparison.json",
+    "/workspace/scratch/4e99473f21fc/animation-delta-study/evidence/corrected-postrelease-pair-c1/comparison.json",
+    "/workspace/scratch/4e99473f21fc/animation-delta-study/evidence/corrected-pair-c1/current-worn_pre_release.png",
+    "/workspace/scratch/4e99473f21fc/animation-delta-study/evidence/corrected-pair-c1/current-crusher_pre_release.png",
+    "/workspace/scratch/4e99473f21fc/animation-delta-study/evidence/corrected-postrelease-pair-c1/current-worn_post_release.png",
+    "/workspace/scratch/4e99473f21fc/animation-delta-study/evidence/corrected-postrelease-pair-c1/current-crusher_post_release.png"
+  ],
+  "prior_evidence": "evidence/paired-b1/review.json and all retained failures remain intact.",
+  "renderer_slot": "released; all authorized processes exited; no further tests"
+}

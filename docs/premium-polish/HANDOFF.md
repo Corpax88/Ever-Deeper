@@ -1,3 +1,6 @@
+LATEST: [Published DEV9 and paused continuation](dev9-20260916/HANDOFF.md).
+The following rebuilt-source notes are historical.
+
 Read [START-HER.md](../../START-HER.md) for the saved source identity, original mandate, preserved evidence and next steps.
 
 # Premium polish — rebuilt source checkpoint

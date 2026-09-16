@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "sourceSha": "e76a2b90a8a6da4d2673689ce2eeb646e5c2303b",
+  "reviewOnly": true,
+  "physicalIphone": false,
+  "passed": true,
+  "complete": true,
+  "errors": [],
+  "units": {
+    "build": {
+      "passed": true,
+      "coreCases": 15,
+      "devFlavorCases": 1,
+      "productionFlavorCases": 1
+    },
+    "visual-forge": {
+      "passed": true,
+      "visualCases": [
+        1,
+        14
+      ],
+      "pngCount": 14
+    },
+    "visual-workshops": {
+      "passed": true,
+      "visualCases": [
+        15,
+        19
+      ],
+      "pngCount": 5
+    },
+    "gameplay": {
+      "passed": true,
+      "checks": 1269,
+      "touchSection": null,
+      "pngCount": 1
+    },
+    "touch-pause": {
+      "passed": true,
+      "checks": 9,
+      "touchSection": "pause",
+      "pngCount": 2
+    },
+    "touch-wardrobe": {
+      "passed": true,
+      "checks": 38,
+      "touchSection": "wardrobe",
+      "pngCount": 7
+    },
+    "touch-light": {
+      "passed": true,
+      "checks": 39,
+      "touchSection": "light",
+      "pngCount": 8
+    },
+    "touch-lists": {
+      "passed": true,
+      "checks": 20,
+      "touchSection": "lists",
+      "pngCount": 5
+    },
+    "touch-starforge": {
+      "passed": true,
+      "checks": 45,
+      "touchSection": "starforge",
+      "pngCount": 4
+    },
+    "touch-workshops": {
+      "passed": true,
+      "checks": 44,
+      "touchSection": "workshops",
+      "pngCount": 6
+    },
+    "commerce-residency": {
+      "passed": true,
+      "checks": 58,
+      "pngCount": 6
+    }
+  },
+  "limits": [
+    "CI evidence requires independent visual review.",
+    "No physical iPhone, sustained-device performance or publication approval."
+  ],
+  "pckSha256": "1270ea3974b0d551f0a10f8a72ec4ba56824030822526a8b1544bb295988e32f",
+  "htmlSha256": "93d25d45e511177e02d85a414654f51957a078015a33a411b36a3f15b5dacb28"
+}

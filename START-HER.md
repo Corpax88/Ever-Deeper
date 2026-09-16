@@ -1,6 +1,6 @@
-LATEST: [Continued premium review, 16 September 2026](docs/premium-polish/RESUME-20260916-REVIEW.md).
-Work has resumed. Read that review and the linked premium handoff first.
-The recovery and chronological notes below are history, not the latest state.
+LATEST: [DEV9 published quota checkpoint](docs/premium-polish/dev9-20260916/HANDOFF.md).
+Mats requested stopping new experiments and publishing the playable work. DEV9 is verified live.
+Read that handoff first; the following recovery mandate and chronology are historical.
 
 # Ever-Deeper — continue premium polish
 
