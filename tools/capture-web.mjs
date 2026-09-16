@@ -2,7 +2,7 @@
 
 import { chromium, webkit } from "@playwright/test";
 import { createHash } from "node:crypto";
-import { createReadStream } from "node:fs";
+import { createReadStream, appendFileSync } from "node:fs";
 import { promises as fs } from "node:fs";
 import http from "node:http";
 import path from "node:path";
@@ -253,6 +253,8 @@ async function captureSuite(options) {
   const { server, url } = await createStaticServer(options.webDir);
   let browser;
   const browserLogs = [], surfaces = [];
+  const consoleJournal = path.join(options.outputDir, "browser-console.ndjson");
+  await fs.writeFile(consoleJournal, "");
   try {
     const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE || undefined;
     const constrainedFlags =
@@ -285,18 +287,52 @@ async function captureSuite(options) {
         "(KHTML, like Gecko) CriOS/124.0.0.0 Mobile/15E148 Safari/604.1",
     });
     const webgl = await probeWebGL2(context);
+    await fs.writeFile(path.join(options.outputDir,"browser-run.json"), JSON.stringify({
+      status:"started",pckSha256,htmlSha256,viewport:VIEWPORT,physicalViewport:PHYSICAL_VIEWPORT,
+      dpr:DPR,browser:browser.version(),webgl,physicalIphone:false,
+      gameplay:GAMEPLAY,menuTouch:process.env.MENU_TOUCH==="1",range:[RANGE_START,RANGE_END],
+      traceGLBuffers:process.env.TRACE_GL_BUFFERS==="1",
+    },null,2));
     const page = await context.newPage();
-    await page.addInitScript(() => {
+    await page.addInitScript(({traceBuffers}) => {
       const original=HTMLCanvasElement.prototype.getContext;
       HTMLCanvasElement.prototype.getContext=function(type,...args) {
         const value=original.call(this,type,...args);
         if(this.id==="canvas" && type==="webgl2" && value) {
           window.__edCaptureGL=value;
+          if(traceBuffers) {
+            // Observe buffer identity/targets without changing any GL arguments,
+            // consuming getError(), or making extra GL calls. Not a timing mode.
+            const seen=new WeakMap(), recent=[];
+            let nextId=0, conflicts=0;
+            const observe=(method,target,buffer)=>{
+              if(!buffer) return;
+              let entry=seen.get(buffer);
+              if(!entry) {entry={id:++nextId,target:null};seen.set(buffer,entry);}
+              if(target!==value.COPY_READ_BUFFER && target!==value.COPY_WRITE_BUFFER) {
+                if(entry.target!==null && (entry.target===value.ELEMENT_ARRAY_BUFFER)!==(target===value.ELEMENT_ARRAY_BUFFER)) {
+                  if(conflicts++<16) console.error("ED_GL_BIND_CONFLICT "+JSON.stringify({
+                    id:entry.id,firstTarget:entry.target,target,method,timeMs:performance.now(),
+                    recent:[...recent],stack:new Error().stack,
+                  }));
+                } else if(entry.target===null) entry.target=target;
+              }
+              recent.push({method,target,id:entry.id});
+              if(recent.length>16) recent.shift();
+            };
+            for(const method of ["bindBuffer","bindBufferBase","bindBufferRange"]) {
+              const native=value[method];
+              value[method]=function(...callArgs) {
+                observe(method,callArgs[0],callArgs[method==="bindBuffer"?1:2]);
+                return native.apply(this,callArgs);
+              };
+            }
+          }
           HTMLCanvasElement.prototype.getContext=original;
         }
         return value;
       };
-    });
+    },{traceBuffers:process.env.TRACE_GL_BUFFERS==="1"});
     const captureSurface = async label => {
       const surface=await page.evaluate(() => {
         const c=document.getElementById("canvas"), gl=window.__edCaptureGL, rect=c.getBoundingClientRect();
@@ -315,8 +351,12 @@ async function captureSuite(options) {
     page.on("console", (message) => {
       const text = message.text();
       browserLogs.push({type:message.type(),text});
+      appendFileSync(consoleJournal,JSON.stringify({type:message.type(),text})+"\n");
       if (GAMEPLAY && /OVERHAUL_|SCRIPT ERROR|Parse Error/.test(text)) process.stdout.write(text+"\n");
-      if (/SCRIPT ERROR|Parse Error|^ERROR:|Failed to load|INVALID_OPERATION|INVALID_FRAMEBUFFER_OPERATION/.test(text)) pageErrors.push(text);
+      if (/SCRIPT ERROR|Parse Error|^ERROR:|Failed to load|INVALID_OPERATION|INVALID_FRAMEBUFFER_OPERATION|ED_GL_BIND_CONFLICT/.test(text)) {
+        pageErrors.push(text);
+        process.stderr.write(text+"\n");
+      }
       if (text.startsWith("EVER_DEEPER_HERO_MOTION_DAMAGE ")) {
         motionDamage.push(text);
         // Damage is live progress. Long SwiftShader recordings must not look

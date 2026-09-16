@@ -1,0 +1,113 @@
+name: Premium WebGL polygon comparison
+on:
+  push:
+    branches: [codex/webgl-polygon-repair-20260916]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Export with the same official engine and templates
+        run: |
+          curl -fL --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          curl -fL --retry 3 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz -o "$RUNNER_TEMP/templates.tpz"
+          unzip -q "$RUNNER_TEMP/templates.tpz" 'templates/web*.zip' 'templates/version.txt' -d "$RUNNER_TEMP/templates"
+          test "$(cat "$RUNNER_TEMP/templates/templates/version.txt")" = '4.7.2.stable'
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable" "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review"
+          cp "$RUNNER_TEMP/templates/templates/"* "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+          "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --headless --editor --path . --import > "$RUNNER_TEMP/review/import.log" 2>&1
+          "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path . --export-release 'Web DEV' "$RUNNER_TEMP/candidate/index.html" > "$RUNNER_TEMP/review/export.log" 2>&1
+          python3 - <<'PY'
+          import os,re,json,hashlib
+          from pathlib import Path
+          base=Path(os.environ['RUNNER_TEMP'])
+          for p in (base/'review').glob('*.log'):
+              text=p.read_text(errors='replace')
+              assert not re.search(r'SCRIPT ERROR|Parse Error|^ERROR:',text,re.M),(str(p),text[-4000:])
+          root=base/'candidate'
+          rows={p.name:{'size':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(root.iterdir()) if p.is_file()}
+          (root/'manifest.json').write_text(json.dumps(rows,indent=2)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: polygon-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/candidate
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: polygon-export-review-${{ github.sha }}
+          path: ${{ runner.temp }}/review
+          retention-days: 30
+  compare:
+    needs: candidate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [control, candidate]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        if: matrix.variant == 'control'
+        with:
+          name: premium-web-candidate-774f889b132328bcf38bfa8be2797f9b716426a9
+          run-id: 35073997927
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/download-artifact@v4
+        if: matrix.variant == 'candidate'
+        with:
+          name: polygon-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser and verify exact candidate bytes
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install --with-deps chromium
+          python3 - <<'PY'
+          import os,json,hashlib
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'candidate'
+          for name,info in json.loads((root/'manifest.json').read_text()).items():
+              data=(root/name).read_bytes()
+              assert len(data)==info['size'] and hashlib.sha256(data).hexdigest()==info['sha256'],name
+          PY
+      - name: Reproduce the first shop transition with passive GL diagnostics
+        env:
+          CAPTURE_VIEWPORT: 848x390
+          CAPTURE_DPR: '2'
+          CAPTURE_START: '1'
+          CAPTURE_END: '2'
+          TRACE_GL_BUFFERS: '1'
+        run: |
+          mkdir -p "$RUNNER_TEMP/review"
+          node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review" > "$RUNNER_TEMP/browser.log" 2>&1
+      - name: Preserve each actual result, including the failing control
+        if: always()
+        env:
+          VARIANT: ${{ matrix.variant }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/review"
+          if [ -f "$RUNNER_TEMP/browser.log" ]; then cp "$RUNNER_TEMP/browser.log" "$RUNNER_TEMP/review/runner.log"; tail -n 35 "$RUNNER_TEMP/browser.log"; fi
+          git rev-parse HEAD > "$RUNNER_TEMP/review/driver-source-sha.txt"
+          if [ "$VARIANT" = control ]; then echo 774f889b132328bcf38bfa8be2797f9b716426a9 > "$RUNNER_TEMP/review/package-source-sha.txt"; else git rev-parse HEAD > "$RUNNER_TEMP/review/package-source-sha.txt"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: polygon-${{ matrix.variant }}-review-${{ github.sha }}
+          path: ${{ runner.temp }}/review
+          retention-days: 30

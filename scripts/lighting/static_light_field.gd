@@ -163,7 +163,7 @@ func _rebuild() -> void:
 	viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	add_child(viewport)
 	viewport.canvas_transform = Transform2D(0.0, -field_bounds.position)
-	var background := Polygon2D.new()
+	var background := FlatPolygon2D.new()
 	background.polygon = PackedVector2Array([field_bounds.position, Vector2(field_bounds.end.x, field_bounds.position.y), field_bounds.end, Vector2(field_bounds.position.x, field_bounds.end.y)])
 	background.color = Color.BLACK
 	viewport.add_child(background)
