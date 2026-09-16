@@ -18,7 +18,7 @@ const MOSS_MINE_BRANCH_JUNCTION: = Vector2(650, 680)
 const MOSS_MINE_ENTRANCE: = Vector2(930, 900)
 const MOSS_MINE_RETURN_POSITION: = Vector2(760, 790)
 const DEFAULT_MINE_RETURN_OFFSET: = Vector2(126, 0)
-const MOSS_WAYFARER_POSITION: = Vector2(800, 515)
+const MOSS_WAYFARER_POSITION: = Vector2(812, 515)
 const MOSS_MINE_RAMP_POSITION: = Vector2(620, 576)
 const MOSS_MINE_RAMP_SCALE: = Vector2(0.304, 0.463)
 const MOSS_RAMP_SOURCE_START: = Vector2(99, 225)
@@ -35,9 +35,8 @@ const MOSS_GATE_ANCHOR: = Vector2(1110, MOSS_MAIN_Y)
 const MOON_PREVIEW_ANCHOR: = Vector2(1240, MOSS_MAIN_Y)
 const SURFACE_GATE_MAX_SIZE: = Vector2(220, 210)
 const SURFACE_GATE_BOTTOM: = 105.0
-const PORTAL_GENERATOR_SOURCE_RECT: = Rect2(181, 25, 150, 150)
-const PORTAL_GENERATOR_MAX_SIZE: = Vector2(150, 150)
-const PORTAL_GENERATOR_BOTTOM: = -118.0
+const PORTAL_ARCH_SIZE: = Vector2(360, 360)
+const PORTAL_ARCH_OFFSET: = Vector2(-180, -291)
 const PORTAL_CROSSING_DURATION: = 0.42
 const MOSS_PORTAL_LANTERN_POSITIONS: = [
 	Vector2(1007, 503), Vector2(1180, 577),
@@ -306,9 +305,9 @@ const GATE_TEXTURES: = {
 	"starfall": preload("res://assets/surface/starfall-seal.png")
 }
 const PORTAL_ARCH_TEXTURES: = {
-	"moonglass": preload("res://assets/surface/moonglass-portal-arch-v2.png"),
-	"emberdeep": preload("res://assets/surface/emberdeep-portal-arch-v1.png"),
-	"starfall": preload("res://assets/surface/starfall-portal-arch-v1.png"),
+	"moonglass": preload("res://assets/surface/v2/moonglass-port.png"),
+	"emberdeep": preload("res://assets/surface/v3/ember-port.png"),
+	"starfall": preload("res://assets/surface/v3/star-port.png"),
 }
 const GATE_MARK_TEXTURES: = {
 	"moonglass": preload("res://assets/surface/moonglass-open-threshold.png"),
@@ -1703,8 +1702,8 @@ func debug_later_surface_life_snapshot() -> Dictionary:
 func _build_stations() -> void :
 
 
-	_create_station(WAYFARER_SHOP, GameData.station("speedShop"), Vector2(177.5, 162.5), 45.0, "WAYFARER", "speedShop")
-	_create_station(STARFORGE_STATION, GameData.station("starforge"), Vector2(158, 142), 50.0, "STARFORGE")
+	_create_station(WAYFARER_SHOP, GameData.station("speedShop"), Vector2(198.8, 182), 45.0, "WAYFARER", "speedShop")
+	_create_station(STARFORGE_STATION, GameData.station("starforge"), Vector2(189.6, 170.4), 52.108, "STARFORGE")
 
 
 func _place_world_asset_sprite(
@@ -1752,7 +1751,8 @@ func _update_starfall_hub_lift(delta: float) -> void :
 	if not _surface_visual_focus_active(STARFALL_HUB_LIFT_POSITION):
 		return
 	var pulse: = 0.5 + 0.5 * sin(starfall_hub_lift_visual_time * 2.4)
-	starfall_hub_lift_sprite.scale = starfall_hub_lift_base_scale * (1.0 + pulse * 0.012)
+	# Masonry keeps its authored footing; only its inlay light breathes.
+	starfall_hub_lift_sprite.scale = starfall_hub_lift_base_scale
 	starfall_hub_lift_sprite.modulate = Color(0.94 + pulse * 0.06, 0.95 + pulse * 0.05, 1.0, 1.0)
 	starfall_hub_lift_glow.modulate = Color(0.42, 0.52, 1.0, 0.22 + pulse * 0.16)
 
@@ -1921,24 +1921,6 @@ func _create_world_asset(texture: Texture2D, anchor: Vector2, max_size: Vector2,
 	if z >= 11:
 		sprite.z_index = actor_draw_depth(anchor + Vector2(0, bottom))
 	return sprite
-
-
-func _create_portal_generator(texture: Texture2D, anchor: Vector2) -> Dictionary:
-	var generator_texture: = AtlasTexture.new()
-	generator_texture.atlas = texture
-	generator_texture.region = PORTAL_GENERATOR_SOURCE_RECT
-	var source_size: = PORTAL_GENERATOR_SOURCE_RECT.size
-	var scale_factor: = minf(
-		PORTAL_GENERATOR_MAX_SIZE.x / source_size.x,
-		PORTAL_GENERATOR_MAX_SIZE.y / source_size.y
-	)
-	var size: = source_size * scale_factor
-	var top_left: = anchor + Vector2( - size.x * 0.5, PORTAL_GENERATOR_BOTTOM - size.y)
-	var sprite: = _create_sprite(generator_texture, Rect2(top_left, size), 6)
-	return {
-		"sprite": sprite,
-		"rect": Rect2(top_left, size),
-	}
 
 
 func _create_label(text: String, position: Vector2, size: Vector2, color: Color) -> Label:
@@ -4508,8 +4490,10 @@ func _build_surface_collision_footprints() -> void:
 	surface_solid_footprints.clear()
 	for station in ["sell", "forge"]:
 		surface_solid_footprints.append({"center": _station_position(station) + Vector2(0, 4), "radii": SURFACE_STATION_FOOTPRINT})
-	surface_solid_footprints.append({"center": MOSS_WAYFARER_POSITION + Vector2(0, 13), "radii": Vector2(86, 53)})
-	surface_solid_footprints.append({"center": _station_position("starforge") + Vector2(0, 32), "radii": Vector2(78, 42)})
+	# Grow the native stations upward/backward while retaining their current
+	# front clearance on the travel lane and their opaque artwork baselines.
+	surface_solid_footprints.append({"center": MOSS_WAYFARER_POSITION + Vector2(0, 9.52), "radii": Vector2(93.44, 56.48)})
+	surface_solid_footprints.append({"center": _station_position("starforge") + Vector2(0, 28.4), "radii": Vector2(88.8, 45.6)})
 	for boundary in BOUNDARIES:
 		var anchor: = Vector2(float(boundary.x), GATE_Y)
 		for foot in [anchor + Vector2(-82, -42), anchor + Vector2(115, 37)]:
@@ -5012,11 +4996,11 @@ func debug_worldflow_snapshot() -> Dictionary:
 			"gate_anchor": MOSS_GATE_ANCHOR,
 			"gate_max_size": SURFACE_GATE_MAX_SIZE,
 			"gate_bottom": SURFACE_GATE_BOTTOM,
-			"generator_source_rect": PORTAL_GENERATOR_SOURCE_RECT,
-			"generator_max_size": PORTAL_GENERATOR_MAX_SIZE,
-			"generator_bottom": PORTAL_GENERATOR_BOTTOM,
+			"generator_source_rect": Rect2(Vector2.ZERO, PORTAL_ARCH_TEXTURES.moonglass.get_size()),
+			"generator_max_size": PORTAL_ARCH_SIZE,
+			"generator_bottom": PORTAL_ARCH_OFFSET.y + PORTAL_ARCH_SIZE.y,
 			"seam_gate": true,
-			"player_occlusion_split": false,
+			"player_occlusion_split": true,
 			"travel_axis": Vector2.RIGHT,
 			"lanterns": PackedVector2Array(MOSS_PORTAL_LANTERN_POSITIONS),
 			"decor_count": moss_portal_clearing_nodes.size(),
@@ -5142,13 +5126,13 @@ func surface_route_snapshot() -> Dictionary:
 			]),
 			"transition_debug": portal_snapshot,
 			"portal_generator_asset": String(PORTAL_ARCH_TEXTURES[boundary_id].resource_path),
-			"portal_generator_source_rect": PORTAL_GENERATOR_SOURCE_RECT,
+			"portal_generator_source_rect": Rect2(Vector2.ZERO, PORTAL_ARCH_TEXTURES[boundary_id].get_size()),
 			"generator_visual_present": generator_present,
 			"generator_rect": generator_rect,
 			"legacy_arch_present": false,
-			"portal_arch_asset": "",
-			"portal_arch_rect": Rect2(),
-			"player_occlusion_split": false,
+			"portal_arch_asset": String(PORTAL_ARCH_TEXTURES[boundary_id].resource_path),
+			"portal_arch_rect": generator_rect,
+			"player_occlusion_split": generator_present and is_instance_valid(portal_generator_nodes[boundary_id].get("front")),
 			"travel_axis": Vector2.RIGHT,
 			"locked": not _is_boundary_unlocked(boundary),
 		})
@@ -5833,9 +5817,8 @@ func _persist_timed_surface_resource_states() -> void :
 
 
 func _create_authored_arch(anchor: Vector2, gate_id: String) -> Dictionary:
-	var textures: Dictionary = {"moonglass": preload("res://assets/surface/v2/moonglass-port.png"), "emberdeep": preload("res://assets/surface/v3/ember-port.png"), "starfall": preload("res://assets/surface/v3/star-port.png")}
-	var texture: Texture2D = textures[gate_id]
-	var rect: = Rect2(anchor + Vector2(-180, -291), Vector2(360, 360))
+	var texture: Texture2D = PORTAL_ARCH_TEXTURES[gate_id]
+	var rect: = Rect2(anchor + PORTAL_ARCH_OFFSET, PORTAL_ARCH_SIZE)
 	var back: = _create_sprite(texture, rect, 7)
 	back.name = "MoonglassArchRear"
 	var front: = _create_sprite(texture, rect, 12)

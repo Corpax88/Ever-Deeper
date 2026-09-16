@@ -1,0 +1,1344 @@
+{
+  "accepted_for_production": false,
+  "decision": "No net gain; default stays off. Candidate GPU reduction is consumed by ~1.56 ms of receiver updates.",
+  "scope": "Godot 4.7.2, Mesa llvmpipe, actual 1696x780; three fresh processes, identical seeded initial world. Not Apple or physical iPhone FPS.",
+  "parity": {
+    "engine": {
+      "build": "official",
+      "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+      "hex": 263938,
+      "major": 4,
+      "minor": 7,
+      "patch": 2,
+      "status": "stable",
+      "string": "4.7.2-stable (official)",
+      "timestamp": 0
+    },
+    "exact_pixel_parity": true,
+    "failure": "",
+    "pairs": [
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "initial",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 0,
+            "lights": 0,
+            "mask_writes": 0,
+            "receivers": 0,
+            "texture_hulls": 0,
+            "update_usec": 0,
+            "updates": 0
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 76,
+            "lights": 5,
+            "mask_writes": 355,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 8739,
+            "updates": 1
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 76,
+            "lights": 5,
+            "mask_writes": 355,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 8739,
+            "updates": 1
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "max_wide_0",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 76,
+            "lights": 5,
+            "mask_writes": 355,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 8739,
+            "updates": 1
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 129,
+            "lights": 5,
+            "mask_writes": 710,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 10623,
+            "updates": 2
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 129,
+            "lights": 5,
+            "mask_writes": 710,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 10623,
+            "updates": 2
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "max_wide_1",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 129,
+            "lights": 5,
+            "mask_writes": 710,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 10623,
+            "updates": 2
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 115,
+            "lights": 5,
+            "mask_writes": 1065,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 12578,
+            "updates": 3
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 115,
+            "lights": 5,
+            "mask_writes": 1065,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 12578,
+            "updates": 3
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "max_wide_2",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 115,
+            "lights": 5,
+            "mask_writes": 1065,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 12578,
+            "updates": 3
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 89,
+            "lights": 5,
+            "mask_writes": 1420,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 14219,
+            "updates": 4
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 89,
+            "lights": 5,
+            "mask_writes": 1420,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 14219,
+            "updates": 4
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "max_wide_3",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 89,
+            "lights": 5,
+            "mask_writes": 1420,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 14219,
+            "updates": 4
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 112,
+            "lights": 5,
+            "mask_writes": 1775,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 15860,
+            "updates": 5
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 112,
+            "lights": 5,
+            "mask_writes": 1775,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 15860,
+            "updates": 5
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "max_wide_4",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 112,
+            "lights": 5,
+            "mask_writes": 1775,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 15860,
+            "updates": 5
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 138,
+            "lights": 5,
+            "mask_writes": 2130,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 17581,
+            "updates": 6
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 138,
+            "lights": 5,
+            "mask_writes": 2130,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 17581,
+            "updates": 6
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "max_wide_5",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 138,
+            "lights": 5,
+            "mask_writes": 2130,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 17581,
+            "updates": 6
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 108,
+            "lights": 5,
+            "mask_writes": 2485,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 19286,
+            "updates": 7
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 108,
+            "lights": 5,
+            "mask_writes": 2485,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 19286,
+            "updates": 7
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "max_wide_6",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 108,
+            "lights": 5,
+            "mask_writes": 2485,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 19286,
+            "updates": 7
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 85,
+            "lights": 5,
+            "mask_writes": 2840,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 21177,
+            "updates": 8
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 85,
+            "lights": 5,
+            "mask_writes": 2840,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 21177,
+            "updates": 8
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "max_wide_7",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 85,
+            "lights": 5,
+            "mask_writes": 2840,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 21177,
+            "updates": 8
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 111,
+            "lights": 5,
+            "mask_writes": 3195,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 23270,
+            "updates": 9
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 111,
+            "lights": 5,
+            "mask_writes": 3195,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 23270,
+            "updates": 9
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": true,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "max_focused_first_frame",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 111,
+            "lights": 5,
+            "mask_writes": 3195,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 23270,
+            "updates": 9
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 98,
+            "lights": 5,
+            "mask_writes": 3582,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 26385,
+            "updates": 11
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 98,
+            "lights": 5,
+            "mask_writes": 3582,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 26385,
+            "updates": 11
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "hit",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 98,
+            "lights": 5,
+            "mask_writes": 3582,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 26385,
+            "updates": 11
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 83,
+            "lights": 5,
+            "mask_writes": 3937,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 28025,
+            "updates": 12
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 83,
+            "lights": 5,
+            "mask_writes": 3937,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 28025,
+            "updates": 12
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "crusher",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 83,
+            "lights": 5,
+            "mask_writes": 3937,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 28025,
+            "updates": 12
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 83,
+            "lights": 5,
+            "mask_writes": 4292,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 29695,
+            "updates": 13
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 83,
+            "lights": 5,
+            "mask_writes": 4292,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 29695,
+            "updates": 13
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "pet_opening",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 83,
+            "lights": 5,
+            "mask_writes": 4292,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 29695,
+            "updates": 13
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 82,
+            "lights": 5,
+            "mask_writes": 4647,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 31262,
+            "updates": 14
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 82,
+            "lights": 5,
+            "mask_writes": 4647,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 31262,
+            "updates": 14
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "fractional_camera",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 82,
+            "lights": 5,
+            "mask_writes": 4647,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 31262,
+            "updates": 14
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 82,
+            "lights": 5,
+            "mask_writes": 5002,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 32825,
+            "updates": 15
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 82,
+            "lights": 5,
+            "mask_writes": 5002,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 32825,
+            "updates": 15
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1536,
+          864
+        ],
+        "id": "resize_1536x864",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 82,
+            "lights": 5,
+            "mask_writes": 5002,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 32825,
+            "updates": 15
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 82,
+            "lights": 5,
+            "mask_writes": 5315,
+            "receivers": 313,
+            "texture_hulls": 3,
+            "update_usec": 34584,
+            "updates": 16
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 82,
+            "lights": 5,
+            "mask_writes": 5315,
+            "receivers": 313,
+            "texture_hulls": 3,
+            "update_usec": 34584,
+            "updates": 16
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": true,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "new_nonhelmet_light",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 82,
+            "lights": 5,
+            "mask_writes": 5315,
+            "receivers": 313,
+            "texture_hulls": 3,
+            "update_usec": 34584,
+            "updates": 16
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 99,
+            "lights": 6,
+            "mask_writes": 5697,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 39056,
+            "updates": 18
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 99,
+            "lights": 6,
+            "mask_writes": 5697,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 39056,
+            "updates": 18
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": true,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "removed_nonhelmet_light",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 99,
+            "lights": 6,
+            "mask_writes": 5697,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 39056,
+            "updates": 18
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 82,
+            "lights": 5,
+            "mask_writes": 6079,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 43472,
+            "updates": 20
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 82,
+            "lights": 5,
+            "mask_writes": 6079,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 43472,
+            "updates": 20
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "rebase_down",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 82,
+            "lights": 5,
+            "mask_writes": 6079,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 43472,
+            "updates": 20
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 0,
+            "lights": 5,
+            "mask_writes": 6272,
+            "receivers": 193,
+            "texture_hulls": 3,
+            "update_usec": 45770,
+            "updates": 21
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 0,
+            "lights": 5,
+            "mask_writes": 6272,
+            "receivers": 193,
+            "texture_hulls": 3,
+            "update_usec": 45770,
+            "updates": 21
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "rebase_up",
+        "receiver_states": [
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 0,
+            "lights": 5,
+            "mask_writes": 6272,
+            "receivers": 193,
+            "texture_hulls": 3,
+            "update_usec": 45770,
+            "updates": 21
+          },
+          {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 0,
+            "lights": 5,
+            "mask_writes": 6627,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 48546,
+            "updates": 22
+          },
+          {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 0,
+            "lights": 5,
+            "mask_writes": 6627,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 48546,
+            "updates": 22
+          }
+        ]
+      },
+      {
+        "candidate": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "controls": {
+          "changed_pixels": 0,
+          "max_channel_delta": 0
+        },
+        "first_frame": false,
+        "framebuffer_size": [
+          1696,
+          780
+        ],
+        "id": "hub_empty_shadows",
+        "receiver_states": [
+          {},
+          {},
+          {}
+        ]
+      }
+    ],
+    "parity_report": "",
+    "physical_iphone": false,
+    "reference_verified": false,
+    "rendered": true,
+    "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "seed": 4608,
+    "source_sha256": {
+      "scripts/companion/mole_companion.gd": "4f190fcdc4bb16f6347d0c2856aab963d3620db7fca4c2116e41591a81965f95",
+      "scripts/lighting/lit_draw_sections.gd": "55494174374d672aa0bfd371b1f4c51250859a888e69574119db2a4477749ed9",
+      "scripts/lighting/terrain_light_receivers.gd": "a92d36e9f26d87e595805e718a3e6966516473b5da8fc7f1c13a11f4a0f6d5cc",
+      "scripts/world/endless_descent_world.gd": "3ee2cf1a48c6d8effb931c2869b840772379614bb9af357ecfcad1bee928c79c",
+      "tools/review_terrain_light_receivers.gd": "a0a824d3c551b72b838d144cbe0ed3025722f9a10ccf6f1bb83097ff95e6b0db"
+    },
+    "timing_mode": "",
+    "timing_requested": false,
+    "timing_skipped_for_pixel_difference": false,
+    "timings": []
+  },
+  "timing_runs": [
+    {
+      "engine": {
+        "build": "official",
+        "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+        "hex": 263938,
+        "major": 4,
+        "minor": 7,
+        "patch": 2,
+        "status": "stable",
+        "string": "4.7.2-stable (official)",
+        "timestamp": 0
+      },
+      "exact_pixel_parity": false,
+      "failure": "",
+      "pairs": [],
+      "parity_report": "/workspace/scratch/4e99473f21fc/evidence/receiver-parity-stable/terrain-light-receivers.json",
+      "physical_iphone": false,
+      "reference_verified": true,
+      "rendered": true,
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "seed": 4608,
+      "source_sha256": {
+        "scripts/companion/mole_companion.gd": "4f190fcdc4bb16f6347d0c2856aab963d3620db7fca4c2116e41591a81965f95",
+        "scripts/lighting/lit_draw_sections.gd": "55494174374d672aa0bfd371b1f4c51250859a888e69574119db2a4477749ed9",
+        "scripts/lighting/terrain_light_receivers.gd": "a92d36e9f26d87e595805e718a3e6966516473b5da8fc7f1c13a11f4a0f6d5cc",
+        "scripts/world/endless_descent_world.gd": "3ee2cf1a48c6d8effb931c2869b840772379614bb9af357ecfcad1bee928c79c",
+        "tools/review_terrain_light_receivers.gd": "a0a824d3c551b72b838d144cbe0ed3025722f9a10ccf6f1bb83097ff95e6b0db"
+      },
+      "timing_mode": "native",
+      "timing_requested": true,
+      "timing_skipped_for_pixel_difference": false,
+      "timings": [
+        {
+          "actors_and_gameplay_frozen": false,
+          "actual_world_seed": 4608,
+          "distance": 7653.91188716888,
+          "draws_median": 196.0,
+          "end_terrain_hash": 1316053542,
+          "fps": 36.3440255502163,
+          "gpu_timing_supported": true,
+          "masks_after": {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 0,
+            "lights": 0,
+            "mask_writes": 0,
+            "receivers": 0,
+            "texture_hulls": 0,
+            "update_usec": 0,
+            "updates": 0
+          },
+          "masks_before": {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 0,
+            "lights": 0,
+            "mask_writes": 0,
+            "receivers": 0,
+            "texture_hulls": 0,
+            "update_usec": 0,
+            "updates": 0
+          },
+          "mined_resources": 1699,
+          "mode": "native",
+          "p95_ms": 33.048,
+          "receiver_update_mean_us_per_frame": 0.0,
+          "render_cpu_median_ms": 18.7740003356934,
+          "render_gpu_median_ms": 18.6140003204346,
+          "seconds": 30.018689,
+          "start_depth": 12,
+          "start_gear": [
+            5,
+            3,
+            "crusher"
+          ],
+          "start_player": "(1440.0, 1504.0)",
+          "start_terrain_hash": 683738058,
+          "start_window": 11,
+          "workload": "held_mining_down_v1"
+        }
+      ]
+    },
+    {
+      "engine": {
+        "build": "official",
+        "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+        "hex": 263938,
+        "major": 4,
+        "minor": 7,
+        "patch": 2,
+        "status": "stable",
+        "string": "4.7.2-stable (official)",
+        "timestamp": 0
+      },
+      "exact_pixel_parity": false,
+      "failure": "",
+      "pairs": [],
+      "parity_report": "/workspace/scratch/4e99473f21fc/evidence/receiver-parity-stable/terrain-light-receivers.json",
+      "physical_iphone": false,
+      "reference_verified": true,
+      "rendered": true,
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "seed": 4608,
+      "source_sha256": {
+        "scripts/companion/mole_companion.gd": "4f190fcdc4bb16f6347d0c2856aab963d3620db7fca4c2116e41591a81965f95",
+        "scripts/lighting/lit_draw_sections.gd": "55494174374d672aa0bfd371b1f4c51250859a888e69574119db2a4477749ed9",
+        "scripts/lighting/terrain_light_receivers.gd": "a92d36e9f26d87e595805e718a3e6966516473b5da8fc7f1c13a11f4a0f6d5cc",
+        "scripts/world/endless_descent_world.gd": "3ee2cf1a48c6d8effb931c2869b840772379614bb9af357ecfcad1bee928c79c",
+        "tools/review_terrain_light_receivers.gd": "a0a824d3c551b72b838d144cbe0ed3025722f9a10ccf6f1bb83097ff95e6b0db"
+      },
+      "timing_mode": "receiver",
+      "timing_requested": true,
+      "timing_skipped_for_pixel_difference": false,
+      "timings": [
+        {
+          "actors_and_gameplay_frozen": false,
+          "actual_world_seed": 4608,
+          "distance": 7630.60714054108,
+          "draws_median": 194.0,
+          "end_terrain_hash": 1316053542,
+          "fps": 36.345068004254,
+          "gpu_timing_supported": true,
+          "masks_after": {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 113,
+            "lights": 4,
+            "mask_writes": 8296,
+            "receivers": 324,
+            "texture_hulls": 3,
+            "update_usec": 1723558,
+            "updates": 1090
+          },
+          "masks_before": {
+            "applied": true,
+            "enabled": true,
+            "fallback": "",
+            "light_assignments": 76,
+            "lights": 5,
+            "mask_writes": 355,
+            "receivers": 355,
+            "texture_hulls": 3,
+            "update_usec": 19854,
+            "updates": 1
+          },
+          "mined_resources": 1699,
+          "mode": "receiver_masks",
+          "p95_ms": 33.228,
+          "receiver_update_mean_us_per_frame": 1561.59853345555,
+          "render_cpu_median_ms": 17.7449999084473,
+          "render_gpu_median_ms": 17.5499992370605,
+          "seconds": 30.017828,
+          "start_depth": 12,
+          "start_gear": [
+            5,
+            3,
+            "crusher"
+          ],
+          "start_player": "(1440.0, 1504.0)",
+          "start_terrain_hash": 683738058,
+          "start_window": 11,
+          "workload": "held_mining_down_v1"
+        }
+      ]
+    },
+    {
+      "engine": {
+        "build": "official",
+        "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+        "hex": 263938,
+        "major": 4,
+        "minor": 7,
+        "patch": 2,
+        "status": "stable",
+        "string": "4.7.2-stable (official)",
+        "timestamp": 0
+      },
+      "exact_pixel_parity": false,
+      "failure": "",
+      "pairs": [],
+      "parity_report": "/workspace/scratch/4e99473f21fc/evidence/receiver-parity-stable/terrain-light-receivers.json",
+      "physical_iphone": false,
+      "reference_verified": true,
+      "rendered": true,
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "seed": 4608,
+      "source_sha256": {
+        "scripts/companion/mole_companion.gd": "4f190fcdc4bb16f6347d0c2856aab963d3620db7fca4c2116e41591a81965f95",
+        "scripts/lighting/lit_draw_sections.gd": "55494174374d672aa0bfd371b1f4c51250859a888e69574119db2a4477749ed9",
+        "scripts/lighting/terrain_light_receivers.gd": "a92d36e9f26d87e595805e718a3e6966516473b5da8fc7f1c13a11f4a0f6d5cc",
+        "scripts/world/endless_descent_world.gd": "3ee2cf1a48c6d8effb931c2869b840772379614bb9af357ecfcad1bee928c79c",
+        "tools/review_terrain_light_receivers.gd": "a0a824d3c551b72b838d144cbe0ed3025722f9a10ccf6f1bb83097ff95e6b0db"
+      },
+      "timing_mode": "native",
+      "timing_requested": true,
+      "timing_skipped_for_pixel_difference": false,
+      "timings": [
+        {
+          "actors_and_gameplay_frozen": false,
+          "actual_world_seed": 4608,
+          "distance": 7706.22534275055,
+          "draws_median": 196.0,
+          "end_terrain_hash": 1316053542,
+          "fps": 37.4294394239853,
+          "gpu_timing_supported": true,
+          "masks_after": {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 0,
+            "lights": 0,
+            "mask_writes": 0,
+            "receivers": 0,
+            "texture_hulls": 0,
+            "update_usec": 0,
+            "updates": 0
+          },
+          "masks_before": {
+            "applied": false,
+            "enabled": false,
+            "fallback": "",
+            "light_assignments": 0,
+            "lights": 0,
+            "mask_writes": 0,
+            "receivers": 0,
+            "texture_hulls": 0,
+            "update_usec": 0,
+            "updates": 0
+          },
+          "mined_resources": 1699,
+          "mode": "native",
+          "p95_ms": 32.322,
+          "receiver_update_mean_us_per_frame": 0.0,
+          "render_cpu_median_ms": 18.2640006561279,
+          "render_gpu_median_ms": 18.1019992828369,
+          "seconds": 30.003121,
+          "start_depth": 12,
+          "start_gear": [
+            5,
+            3,
+            "crusher"
+          ],
+          "start_player": "(1440.0, 1504.0)",
+          "start_terrain_hash": 683738058,
+          "start_window": 11,
+          "workload": "held_mining_down_v1"
+        }
+      ]
+    }
+  ],
+  "invalid_attempts": [
+    "receiver-A/B/A2: seed was overwritten by Main persistence startup; unequal initial states.",
+    "receiver-seeded-A: fixture retained a freed transient node during recursive pause; replaced by parent process-mode pause."
+  ]
+}

@@ -357,7 +357,7 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 		context_size.y
 	)
 	var goal_width: = 400.0 if iphone else 286.0
-	var goal_rows: int = ceili(float(_progression_row_count) / 2.0) if _progression_row_count > 2 else _progression_row_count
+	var goal_rows: int = ceili(float(_progression_row_count) / 2.0) if _progression_row_count > 1 else _progression_row_count
 	var goal_height: = maxf(76.0, 50.0 + 34.0 * goal_rows) if iphone else (62.0 + 27.0 * _progression_row_count)
 	var progression_rect: = Rect2(viewport_size.x - right - goal_width, top if iphone else gold_rect.end.y + 10.0, goal_width, goal_height)
 	var minimap_size: = Vector2(188, 96) if iphone else Vector2(184, 106)

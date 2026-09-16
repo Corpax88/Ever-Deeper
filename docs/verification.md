@@ -1,11 +1,11 @@
 # Verification
 
-Current work-branch status: [16 September premium handoff](premium-polish/HANDOFF-20260916-PREMIUM.md).
-That checkpoint passes a fresh whole-project import, but is not a full source/visual release gate.
-The new binary save codec passed 341 focused assertions. Final surface movement and two
-updated QA fixtures need rerunning. The protected player-visual hash is intentionally still
-pending review; `check_invariants.py` currently reports that one changed file. Historical
-green counts below must not be applied to the complete new checkpoint.
+Current work-branch status: [16 September continued review](premium-polish/RESUME-20260916-REVIEW.md).
+Surface now passes 29/29 with 54 rendered captures; the reproducible world route passes
+461 assertions, binary saves 341, and mobile UI 305. Latest full run: 14/15, with an
+intermittent dummy-renderer texture initialization error in Overhaul; its isolated rerun
+passes 1,251. This is not a clean whole-suite release gate. The earlier player-visual
+protected hash remains pending review. See the review for invalid/incomplete attempts.
 
 ## Current source gate
 

@@ -71,7 +71,10 @@ func _run() -> void:
 		for id in ["moonglass_bloom", "ember_fault", "starfall_lattice"]:
 			await _walk_route(id, Array(world.LATER_RESOURCE_ACCESS_ROUTES[id]))
 		await _walk_route("starforge", [Vector2(3690, 662), Vector2(3640, 662), Vector2(3600, 662)])
-		await _walk_route("hub_lift", [Vector2(4050, 650), Vector2(4130, 650), Vector2(4200, 650)])
+		# Aim at the actual doorway; the former intermediate point (4130,650)
+		# was inside the left support's physical footprint. The real controller
+		# must slide around that support without weakening its collision.
+		await _walk_route("hub_lift", [Vector2(4050, 650), world.hub_guide_position()])
 	if selection in ["all", "contact"]:
 		await _resource_contact_checks()
 	if selection in ["all", "routes"]:

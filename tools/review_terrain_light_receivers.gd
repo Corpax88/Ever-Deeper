@@ -13,6 +13,8 @@ var state: Node
 var pairs: Array[Dictionary] = []
 var timings: Array[Dictionary] = []
 var failure: String = ""
+var prepared_world_mode: int
+var prepared_visual_mode: int
 
 func _initialize() -> void:
 	_run.call_deferred()
@@ -41,6 +43,7 @@ func _run() -> void:
 		_write_report(); quit(3); return
 	if not timing_mode.is_empty():
 		root.get_texture().get_image().save_png(output.path_join("initial.png"))
+		_resume_prepared_world()
 		await _measure(timing_mode == "receiver")
 		_write_report()
 		quit()
@@ -114,20 +117,35 @@ func _new_deep(mode: bool) -> void:
 	if is_instance_valid(main):
 		main.queue_free()
 		for frame in 3: await process_frame
-	state.reset_run(false)
-	state.world_seed = 4608
-	seed(4608)
 	main = load("res://scenes/main/main.tscn").instantiate()
 	root.add_child(main)
 	current_scene = main
 	for frame in 5: await process_frame
+	# Main initializes persistence in _ready and can reset an absent save.
+	# Apply the isolated fixture afterwards, before any procedural generation.
+	state.initialize_persistence(output.path_join("isolated-save.sav"))
+	state.reset_run(false)
+	state.world_seed = 4608
+	seed(4608)
 	main._dev_jump_endless(12)
 	world = main.endless_world
 	world.lit_draw_sections.receiver_masks_enabled = mode
 	world.queue_redraw()
 	main.achievement_toast.clear()
 	main.quick_tutorial.dismiss()
+	# Warm renderer/texture loading without letting autonomous digging change
+	# the starting terrain by a frame-rate-dependent number of warm-up ticks.
+	prepared_world_mode = world.process_mode
+	prepared_visual_mode = world.player.visual.process_mode
+	world.process_mode = Node.PROCESS_MODE_DISABLED
+	world.player.visual.process_mode = Node.PROCESS_MODE_ALWAYS
 	await create_timer(4.0).timeout
+	world.player.visual.process_mode = prepared_visual_mode
+
+func _resume_prepared_world() -> void:
+	# Parent process mode preserves every child's existing processing flags
+	# and needs no references to transient effects freed during the warm-up.
+	world.process_mode = prepared_world_mode
 
 func _freeze(node: Node) -> void:
 	node.set_process(false)
@@ -238,6 +256,7 @@ func _measure(mode: bool) -> void:
 		"draws_median": draws[draws.size() / 2], "distance": distance,
 		"mined_resources": state.total_mined_resources() - mined_before, "start_terrain_hash": start_hash,
 		"start_player": str(start_player), "start_depth": start_depth, "start_window": start_window, "start_gear": start_gear,
+		"actual_world_seed": state.world_seed,
 		"end_terrain_hash": hash(world.floor_cells), "masks_before": before, "masks_after": after,
 		"receiver_update_mean_us_per_frame": float(int(after.update_usec) - int(before.update_usec)) / frames.size()})
 	print("RECEIVER_TIMING " + JSON.stringify(timings[-1]))

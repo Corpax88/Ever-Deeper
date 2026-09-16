@@ -1,5 +1,5 @@
-LATEST: [Premium polish handoff, 16 September 2026](docs/premium-polish/HANDOFF-20260916-PREMIUM.md).
-Mats explicitly paused work to save for a new chat. Read that handoff first.
+LATEST: [Continued premium review, 16 September 2026](docs/premium-polish/RESUME-20260916-REVIEW.md).
+Work has resumed. Read that review and the linked premium handoff first.
 The recovery and chronological notes below are history, not the latest state.
 
 # Ever-Deeper — continue premium polish

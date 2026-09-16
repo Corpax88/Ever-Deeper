@@ -5,6 +5,21 @@ extends "res://scripts/qa/suites/one_point_zero.gd"
 var world: Node
 var travelled_metres: Array[int] = []
 var seam_positions: Array[Vector2] = []
+var route_capture_output: String = ""
+var route_capture_index: int = 0
+
+
+func _capture_route(label: String) -> void:
+	if route_capture_output.is_empty() or DisplayServer.get_name() == "headless":
+		return
+	DirAccess.make_dir_recursive_absolute(route_capture_output)
+	world.player.camera.reset_smoothing()
+	world.player.camera.force_update_scroll()
+	for frame in 5:
+		await main.get_tree().process_frame
+	await RenderingServer.frame_post_draw
+	main.get_viewport().get_texture().get_image().save_png(route_capture_output.path_join("%02d_%s.png" % [route_capture_index, label]))
+	route_capture_index += 1
 
 
 func _claim_integrity() -> bool:
@@ -110,11 +125,20 @@ func _walk_and_mine_to(target: Vector2, max_steps: int = 2400) -> bool:
 	var collision_free: bool = true
 	var highest_nodes: int = 0
 	var before_depth: int = int(world.current_depth)
+	var waypoints: Array[Vector2] = [target]
+	var bypassed_sites: Dictionary = {}
+	var blocked_steps: int = 0
 	world.set_mine_held(true)
 	for step in max_steps:
 		var before: Vector2 = _absolute_position()
-		var remaining: Vector2 = target - before
+		var remaining: Vector2 = waypoints[0] - before
 		if remaining.length() <= 28.0:
+			if waypoints.size() > 1:
+				await _capture_route("ruin_detour_waypoint")
+			waypoints.pop_front()
+			if not waypoints.is_empty():
+				blocked_steps = 0
+				continue
 			world.set_mine_held(false)
 			world.set_external_movement(Vector2.ZERO)
 			_check(collision_free, "Real held movement never crosses solid terrain")
@@ -125,6 +149,33 @@ func _walk_and_mine_to(target: Vector2, max_steps: int = 2400) -> bool:
 		world.player._physics_process(0.1)
 		world._process(0.1)
 		world._physics_process(0.1)
+		blocked_steps = blocked_steps + 1 if _absolute_position().distance_to(before) < 0.01 else 0
+		if blocked_steps >= 60 and world._nearest_diggable_wall().x < 0 and world._nearest_resource_index() < 0:
+			# Ruins are physical scenery, not mineable terrain. Route the real
+			# controller around their base; never erase props or teleport past it.
+			for site in world.discovery_sites:
+				var id: String = String(site.id)
+				var center: Vector2 = Vector2(site.position) + Vector2(0, float(world.window_start_depth - 1) * world.CHUNK_HEIGHT + 24.0)
+				if bypassed_sites.has(id) or before.distance_to(center) > 160.0:
+					continue
+				bypassed_sites[id] = true
+				await _capture_route("ruin_blocks_straight_route")
+				var side: float
+				var first: Vector2
+				var second: Vector2
+				if direction.y != 0.0:
+					side = -1.0 if before.x < center.x else 1.0
+					first = Vector2(center.x + side * 144.0, before.y)
+					second = Vector2(first.x, center.y + direction.y * 112.0)
+				else:
+					side = -1.0 if before.y < center.y else 1.0
+					first = Vector2(before.x, center.y + side * 112.0)
+					second = Vector2(center.x + direction.x * 144.0, first.y)
+				waypoints.push_front(second)
+				waypoints.push_front(first)
+				journey.append({"step": "walk around ruin", "site": id, "from": before, "waypoints": [first, second]})
+				blocked_steps = 0
+				break
 		collision_free = collision_free and not world.collision_at(world.player.global_position)
 		highest_nodes = maxi(highest_nodes, Array(world.resources).size())
 		var current: int = int(world.current_depth)
@@ -140,6 +191,12 @@ func _walk_and_mine_to(target: Vector2, max_steps: int = 2400) -> bool:
 			await main.get_tree().process_frame
 	world.set_mine_held(false)
 	world.set_external_movement(Vector2.ZERO)
+	var nearby: Array[Dictionary] = []
+	for values in [world.resources, world.discovery_sites, world._native_relics]:
+		for value in values:
+			if Vector2(value.position).distance_to(world.player.global_position) < 220.0:
+				nearby.append(Dictionary(value))
+	print("WORLD_ROUTE_BLOCKED ", JSON.stringify({"seed": RunState.world_seed, "position": world.player.global_position, "depth": world.current_depth, "start": world.window_start_depth, "target_wall":world._nearest_diggable_wall(), "target_resource":world._nearest_resource_index(), "props":nearby}))
 	_check(false, "Held mining/movement reaches target; stopped at %s toward %s" % [_absolute_position(), target])
 	return false
 
@@ -235,6 +292,13 @@ func run() -> void:
 	if not _new_player_to_deep():
 		_finish("world")
 		return
+	# Reproduce the generated ruin that intersects the old straight-line route.
+	RunState.world_seed = 57988582
+	for argument in OS.get_cmdline_user_args():
+		if argument.begins_with("--qa-world-seed="):
+			RunState.world_seed = int(argument.trim_prefix("--qa-world-seed="))
+		if argument.begins_with("--qa-world-route-output="):
+			route_capture_output = argument.trim_prefix("--qa-world-route-output=")
 	main._enter_endless(true, false)
 	world = main.endless_world
 	if not _check(world.has_method("stream_snapshot"), "Continuous-world contract exists"):

@@ -105,7 +105,7 @@ func set_mobile_layout(iphone: bool) -> void:
 		return
 	_title.add_theme_font_size_override("font_size", 22 if iphone else 18)
 	_action.add_theme_font_size_override("font_size", 18 if iphone else 15)
-	var compact_grid: bool = iphone and _row_controls.size() > 2
+	var compact_grid: bool = iphone and _row_controls.size() > 1
 	_rows.columns = 2 if compact_grid else 1
 	_update_action_visibility()
 	for value in _row_controls.values():
