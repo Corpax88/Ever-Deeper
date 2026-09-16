@@ -1,6 +1,6 @@
 # Premium polish continuation — 15 September 2026
 
-Read [the verified 16 September continuation](RESUME-20260916.md) first. It preserves the fourth milestone, adds a reviewed Deep cache optimization and records the current remote-saving block.
+Read [the verified 16 September continuation](RESUME-20260916.md) first. It preserves the fourth milestone, adds a reviewed Deep cache optimization and records the confirmed source upload.
 
 Latest work: [fourth milestone](iteration-four-20260915/README.md). Deepheart visual review reaches 9/10 for that room; the whole game is still WIP. Production hero atlases are unchanged and sustained 50 FPS still fails. Earlier sections below are chronological history, not the current remaining-task list.
 
