@@ -1,0 +1,315 @@
+{
+  "source": "c8906f1d46309227344f101a6b0ae7c1a9b1e69b",
+  "reviewed_documentation_head": "9502675cc8735c9cfa16166dd51be43b187137ce",
+  "method": "Read-only source and existing artifact audit; no new renderer run",
+  "proposed_study": "Exact-union shadow contours, unmeasured",
+  "areas": {
+    "hub": {
+      "source": "c8906f1d46309227344f101a6b0ae7c1a9b1e69b",
+      "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Version 15.7.9 (Build 24G830))",
+      "physical_iphone": false,
+      "light_count": 15,
+      "occlusion_refresh_mean_us": 0.0,
+      "input_reports": [
+        {
+          "path": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/native-hub/profile/render-profile.json",
+          "sha256": "27d94ab026cbd6d8552523d939d4e4f690d579c5520de825b01602d9a73701b7"
+        },
+        {
+          "path": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/native-hub/session/session.json",
+          "sha256": "9cd30f370014e0dd66b77ee3d049ea69a12df5914ec22c595df48564fd70c2f5"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "live_idle",
+          "fps": 57.5238227861969,
+          "p95_ms": 22.407,
+          "draws": 91.0,
+          "render_cpu_median_ms": 14.0619999008179,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 0
+        },
+        {
+          "stage": "frozen_scripts",
+          "fps": 52.9540094427989,
+          "p95_ms": 28.536,
+          "draws": 91.0,
+          "render_cpu_median_ms": 15.810999961853,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 0
+        },
+        {
+          "stage": "frozen_no_shadows",
+          "fps": 51.4804181359515,
+          "p95_ms": 31.15,
+          "draws": 91.0,
+          "render_cpu_median_ms": 16.8279991455078,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 0
+        },
+        {
+          "stage": "frozen_no_lights",
+          "fps": 55.1151263963175,
+          "p95_ms": 32.387,
+          "draws": 87.0,
+          "render_cpu_median_ms": 13.2340003814697,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 0
+        },
+        {
+          "stage": "frozen_restored",
+          "fps": 53.0407513965006,
+          "p95_ms": 31.319,
+          "draws": 91.0,
+          "render_cpu_median_ms": 16.1320008087158,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 0
+        },
+        {
+          "stage": "live_restored",
+          "fps": 51.9691043674536,
+          "p95_ms": 32.159,
+          "draws": 91.0,
+          "render_cpu_median_ms": 16.6720003662109,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 0
+        }
+      ],
+      "session": {
+        "fps_range": [
+          44.9824148746117,
+          56.6044952298303
+        ],
+        "p95_ms_range": [
+          28.507,
+          38.293
+        ],
+        "distance_deltas": [
+          1605.03622370958,
+          1594.9943355023897,
+          1579.1826581954906,
+          1683.6398949325094,
+          1629.9869861304805,
+          1607.336291015149,
+          1583.8017878830015,
+          1588.0112498998988,
+          1585.9823621213,
+          1563.1478700936004
+        ],
+        "mined_resources": 0,
+        "per_window_mining_counters": false,
+        "meets_50_fps": false,
+        "functional": true
+      }
+    },
+    "ember": {
+      "source": "c8906f1d46309227344f101a6b0ae7c1a9b1e69b",
+      "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Version 15.7.9 (Build 24G830))",
+      "physical_iphone": false,
+      "light_count": 8,
+      "occlusion_refresh_mean_us": 238.442,
+      "input_reports": [
+        {
+          "path": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/native-ember/profile/render-profile.json",
+          "sha256": "9a6a8e5a83a138805ea3e62436e5289d66bd678e28ea596b9c184aea04724321"
+        },
+        {
+          "path": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/native-ember/session/session.json",
+          "sha256": "e7048a4cf9a3cec446f2cdd8dfd03640983aa94a8accfa0c52504069040265fb"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "live_idle",
+          "fps": 40.6839546850631,
+          "p95_ms": 32.949,
+          "draws": 157.0,
+          "render_cpu_median_ms": 22.5739994354248,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 218
+        },
+        {
+          "stage": "frozen_scripts",
+          "fps": 43.2110236566617,
+          "p95_ms": 33.71,
+          "draws": 157.0,
+          "render_cpu_median_ms": 21.994000869751,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 230
+        },
+        {
+          "stage": "frozen_no_shadows",
+          "fps": 42.7395822268322,
+          "p95_ms": 33.554,
+          "draws": 157.0,
+          "render_cpu_median_ms": 21.0019995727539,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 228
+        },
+        {
+          "stage": "frozen_no_lights",
+          "fps": 49.4411773592369,
+          "p95_ms": 26.455,
+          "draws": 141.0,
+          "render_cpu_median_ms": 19.0219993896484,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 264
+        },
+        {
+          "stage": "frozen_restored",
+          "fps": 33.4743879089511,
+          "p95_ms": 50.344,
+          "draws": 157.0,
+          "render_cpu_median_ms": 26.7019994354248,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 179
+        },
+        {
+          "stage": "live_restored",
+          "fps": 30.7641771996759,
+          "p95_ms": 62.066,
+          "draws": 157.0,
+          "render_cpu_median_ms": 27.2139993743896,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 165
+        }
+      ],
+      "session": {
+        "fps_range": [
+          20.7888336244992,
+          39.5432017307596
+        ],
+        "p95_ms_range": [
+          39.966,
+          107.068
+        ],
+        "distance_deltas": [
+          3116.67785644531,
+          3830.6031341552793,
+          5111.29223632811,
+          2946.6620941162,
+          6301.2919921875,
+          3479.2795257569014,
+          6335.3371429443,
+          5128.325317382798,
+          2929.6290130615016,
+          6284.292114257798
+        ],
+        "mined_resources": 1064,
+        "per_window_mining_counters": false,
+        "meets_50_fps": false,
+        "functional": true
+      }
+    },
+    "deep": {
+      "source": "c8906f1d46309227344f101a6b0ae7c1a9b1e69b",
+      "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Version 15.7.9 (Build 24G830))",
+      "physical_iphone": false,
+      "light_count": 5,
+      "occlusion_refresh_mean_us": 9.846,
+      "input_reports": [
+        {
+          "path": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/native-deep/profile/render-profile.json",
+          "sha256": "6f94d413ded339bfdaff9083833aece6cef33cbdd605d557133d45dccb851145"
+        },
+        {
+          "path": "/workspace/scratch/4e99473f21fc/evidence/dev-ready-c8906f1/native-deep/session/session.json",
+          "sha256": "08c4af84427aa6e9a57a54991537e5400ff97a25510f2fb7b8b547e6a1289169"
+        }
+      ],
+      "stages": [
+        {
+          "stage": "live_idle",
+          "fps": 31.2324939382831,
+          "p95_ms": 55.313,
+          "draws": 202.0,
+          "render_cpu_median_ms": 26.8779997406006,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 0
+        },
+        {
+          "stage": "frozen_scripts",
+          "fps": 31.7279807813378,
+          "p95_ms": 48.178,
+          "draws": 201.0,
+          "render_cpu_median_ms": 28.3220005340576,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 0
+        },
+        {
+          "stage": "frozen_no_shadows",
+          "fps": 37.8268180904573,
+          "p95_ms": 38.383,
+          "draws": 201.0,
+          "render_cpu_median_ms": 23.4099998779297,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 0
+        },
+        {
+          "stage": "frozen_no_lights",
+          "fps": 44.9145612758131,
+          "p95_ms": 36.475,
+          "draws": 166.0,
+          "render_cpu_median_ms": 18.4639996643066,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 0
+        },
+        {
+          "stage": "frozen_restored",
+          "fps": 33.5600361600033,
+          "p95_ms": 45.359,
+          "draws": 201.0,
+          "render_cpu_median_ms": 25.9499999847412,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 0
+        },
+        {
+          "stage": "live_restored",
+          "fps": 35.6172354426735,
+          "p95_ms": 39.557,
+          "draws": 202.0,
+          "render_cpu_median_ms": 24.2899995880127,
+          "gpu_timing_supported": false,
+          "invalid_gpu_samples": 0
+        }
+      ],
+      "session": {
+        "fps_range": [
+          18.0105997539706,
+          30.9053588326966
+        ],
+        "p95_ms_range": [
+          51.358,
+          96.575
+        ],
+        "distance_deltas": [
+          7593.36254882812,
+          7298.70349121098,
+          7774.699584960899,
+          7514.038208007802,
+          7655.699707031297,
+          7330.290246963501,
+          7417.273742675701,
+          7236.367553710996,
+          7383.6962890625,
+          7421.942039489702
+        ],
+        "mined_resources": 26949,
+        "per_window_mining_counters": false,
+        "meets_50_fps": false,
+        "functional": true
+      }
+    }
+  },
+  "engine_sources": {
+    "renderer_viewport.cpp": {
+      "ref": "4.7.2-stable",
+      "blob": "8098fea0269b241b063afaa461c8fe8944f07c7a"
+    },
+    "scene/2d/light_occluder_2d.cpp": {
+      "ref": "4.7.2-stable",
+      "blob": "a629ccc688bfa99e1733bc8a8f0fbdf76cdb795a"
+    }
+  }
+}
