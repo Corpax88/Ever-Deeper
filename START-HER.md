@@ -1,4 +1,5 @@
-CURRENT: [DEV10 published and verified](docs/premium-polish/dev10-20260917/PUBLISHED.md).
+CURRENT WORK: [DEV11 feedback candidate](docs/premium-polish/dev11-feedback-20260917/HANDOFF.md).
+PUBLISHED: [DEV10 verified](docs/premium-polish/dev10-20260917/PUBLISHED.md).
 Mats reset the quota and authorized continued premium polish, code uploads and gated DEV publication.
 Full premium polish and stable50FPS remain open. Read the current link first; older recovery chronology follows.
 

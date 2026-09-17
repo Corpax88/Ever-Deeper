@@ -29,6 +29,9 @@ New game-data SHA-256:
 New source-manifest SHA-256:
 `ec53a226c3296f510f54df5b5482c3024f023a4bcd8f683edd4935d405a52769`.
 
-The existing world, migration and UI suites must pass on the resulting source
-and exported candidate. At this checkpoint they have not yet been rerun after
-these removals. The independent audit does not substitute for those gates.
+The existing world, migration and UI suites passed on the resulting source;
+onboarding and iPhone layout also passed. Raw logs are retained under
+`evidence/dev10-feedback-overlap/cleanup-world-migration-cb1b865` and
+`targeted-source-qa-pickup-extension-fixed`. The invariant rerun reports only
+the documented older `scripts/player/player_visual.gd` mismatch. Exact exported
+candidate validation is still required before publication.

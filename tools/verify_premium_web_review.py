@@ -16,6 +16,7 @@ from qa import CASES as QA_CASES
 ROOT = Path(__file__).resolve().parents[1]
 SECTIONS = ("pause", "wardrobe", "light", "lists", "starforge", "workshops")
 BROWSER_SUITES = ("visual-forge", "visual-workshops", "gameplay", *("touch-" + s for s in SECTIONS))
+MAC_SUITES = ("gameplay", "touch-pause")
 RESIDENCY = "commerce-residency"
 CORE = (
     "premium-core", "input", "overhaul", "touch", "endgame", "onboarding", "layout",
@@ -99,6 +100,7 @@ def file_manifest(directory):
 def source_hashes():
     return {
         "harnessSha256": sha256(ROOT / "tools/review_commerce_residency.gd"),
+        "feedbackHarnessSha256": sha256(ROOT / "tools/review_feedback_overlap.gd"),
         "runnerSha256": sha256(ROOT / "tools/capture-web.mjs"),
         "verifierSha256": sha256(Path(__file__)),
     }
@@ -249,7 +251,7 @@ def actual_surfaces(surfaces):
         require(isinstance(row.get("label"), str) and row["label"], "Unlabelled actual surface")
 
 
-def browser_review(directory, suite, identity):
+def browser_review(directory, suite, identity, expected_engine="chromium"):
     pngs = suite_receipt(directory, suite, identity)
     require(all((row["width"], row["height"]) == (1696, 780) for row in pngs.values()), "Wrong browser PNG dimensions")
     log = checked_log(directory / "runner.log")
@@ -259,6 +261,9 @@ def browser_review(directory, suite, identity):
     started = read_json(directory / "browser-run.json")
     browser_identity(started, identity)
     require(started.get("status") == "started", "Missing browser start receipt")
+    require(started.get("browserEngine") == expected_engine, "Unexpected browser engine")
+    if expected_engine == "webkit":
+        require(started.get("platform") == "darwin", "WebKit gameplay must run on Mac")
     visual = suite.startswith("visual-")
     touch = suite.startswith("touch-")
     section = suite.removeprefix("touch-") if touch else None
@@ -309,6 +314,29 @@ def browser_review(directory, suite, identity):
     return {"checks": checks, "touchSection": section, "pngCount": len(pngs)}
 
 
+def feedback_review(directory, identity):
+    report = read_json(directory / "feedback-overlap.json")
+    log = checked_log(directory / "native.log")
+    require("FEEDBACK_OVERLAP_COMPLETE passed=true" in log, "Missing feedback completion marker")
+    require(report.get("passed") is True and report.get("failures") == [], "Feedback placement failed")
+    require(report.get("pack_sha256") == identity["devFiles"]["index.pck"]["sha256"], "Feedback used another package")
+    require(report.get("rendered") is True and report.get("physical_iphone") is False and report.get("manual_feedback_ticks") is False, "Feedback must use actual rendered lifecycle")
+    checks = report.get("checks", [])
+    require(len(checks) >= 300 and all(row.get("passed") is True for row in checks), "Incomplete or failed feedback checks")
+    require(report.get("activations") == ["rune_ready"], "Actual feedback activation was not verified")
+    movement = report.get("motion_displacement", {})
+    require(0 <= movement.get("maximum_camera_relative_reflow_pixels", -1) <= 32.0, "Feedback jumps during camera tracking")
+    require(0 <= movement.get("maximum_pickup_camera_relative_reflow_pixels", -1) <= 32.0, "Pickup group jumps during camera tracking")
+    expected = {"01_simultaneous.png", "02_zoomed.png", "03_left_edge.png", "04_right_edge.png", "05_lower_edge.png", "06_pickups_expired.png", "07_camera_moved.png", "08_pickups_without_achievement.png"}
+    captures = report.get("captures", [])
+    require(len(captures) == len(expected) and {Path(row.get("path", "")).name for row in captures} == expected, "Incomplete feedback captures")
+    for row in captures:
+        info = png_info(safe_file(directory, Path(row["path"]).name))
+        require(info["sha256"] == row.get("sha256") and [info["width"], info["height"]] == row.get("size"), "Feedback image identity changed")
+        require(row["size"] in ([1696, 780], [1688, 780]), "Wrong feedback mobile viewport")
+    return {"feedbackChecks": len(checks), "feedbackPngCount": len(captures)}
+
+
 def residency_review(directory, identity):
     pngs = suite_receipt(directory, RESIDENCY, identity)
     report_path = directory / "commerce-residency.json"
@@ -337,13 +365,13 @@ def residency_review(directory, identity):
             require(stage.get("previous_preview_nodes_freed") is True and stage.get("shop_viewports") == 0 and stage.get("gpu_released_bytes", 0) > 0, "Native preview resources remain after close")
     markers = re.findall(r"^COMMERCE_RESIDENCY_RESULT checks=(\d+) failed=0 captures=(\d+) sha256=([0-9a-f]{64})$", checked_log(directory / "native.log"), re.M)
     require(markers == [(str(len(checks)), str(len(captures)), sha256(report_path))], "Native completion marker/report hash mismatch")
-    return {"checks": len(checks), "pngCount": len(pngs)}
+    return {"checks": len(checks), "pngCount": len(pngs), **feedback_review(directory / "feedback", identity)}
 
 
 def suite(args):
     identity = read_json(args.review / "artifact-identity.json")
     identity_contract(identity, args.source)
-    result = residency_review(args.review, identity) if args.suite == RESIDENCY else browser_review(args.review, args.suite, identity)
+    result = residency_review(args.review, identity) if args.suite == RESIDENCY else browser_review(args.review, args.suite, identity, os.environ.get("REVIEW_BROWSER_ENGINE", "chromium"))
     print(json.dumps({"suite": args.suite, "passed": True, **result}))
 
 
@@ -366,8 +394,8 @@ def aggregate(args):
     needs = {}
     try:
         needs = json.loads(args.needs_json)
-        require(set(needs) == {"build", "browser", RESIDENCY}, "Missing required job conclusions")
-        for job in ("build", "browser", RESIDENCY):
+        require(set(needs) == {"build", "browser", "mobile-webkit", RESIDENCY}, "Missing required job conclusions")
+        for job in ("build", "browser", "mobile-webkit", RESIDENCY):
             require(needs[job].get("result") == "success", "Required job is not successful: " + job + "=" + str(needs[job].get("result")))
     except (ValueError, TypeError, KeyError, AttributeError) as error:
         report["errors"].append("job conclusions: " + str(error))
@@ -390,7 +418,10 @@ def aggregate(args):
             directory = args.artifacts / ("premium-web-review-" + name + "-" + args.source)
             operation = (lambda directory=directory: residency_review(directory, identity)) if name == RESIDENCY else (lambda directory=directory, name=name: browser_review(directory, name, identity))
             attempt(name, operation)
-    report["complete"] = set(report["units"]) == {"build", *BROWSER_SUITES, RESIDENCY} and all(row["passed"] for row in report["units"].values()) and not report["errors"]
+        for name in MAC_SUITES:
+            directory = args.artifacts / ("premium-web-review-mac-" + name + "-" + args.source)
+            attempt("mac-" + name, lambda directory=directory, name=name: browser_review(directory, name, identity, "webkit"))
+    report["complete"] = set(report["units"]) == {"build", *BROWSER_SUITES, RESIDENCY, *("mac-" + s for s in MAC_SUITES)} and all(row["passed"] for row in report["units"].values()) and not report["errors"]
     report["passed"] = report["complete"]
     write_json(args.output, report)
     print(json.dumps(report, indent=2))

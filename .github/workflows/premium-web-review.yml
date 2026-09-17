@@ -1,7 +1,7 @@
 name: Premium exact web package review
 on:
   push:
-    branches: [codex/premium-polish-recovery-20260915, codex/dev10-polish-20260917]
+    branches: [codex/premium-polish-recovery-20260915, codex/dev10-polish-20260917, codex/dev11-feedback-20260917]
     paths:
       - '.github/workflows/premium-web-review.yml'
       - 'tools/**'
@@ -163,6 +163,85 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
+  mobile-webkit:
+    needs: build
+    runs-on: macos-15
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [gameplay, touch-pause]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Initialize suite evidence
+        run: |
+          mkdir -p "$RUNNER_TEMP/review"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git rev-parse HEAD > "$RUNNER_TEMP/review/source-sha.txt"
+      - uses: actions/download-artifact@v4
+        with:
+          name: premium-web-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/candidate
+      - name: Verify exact candidate identity
+        id: identity
+        env:
+          PCK_SHA256: ${{ needs.build.outputs.pck_sha256 }}
+          HTML_SHA256: ${{ needs.build.outputs.html_sha256 }}
+          IDENTITY_SHA256: ${{ needs.build.outputs.identity_sha256 }}
+        run: |
+          python3 tools/verify_premium_web_review.py candidate --source "$GITHUB_SHA" --candidate "$RUNNER_TEMP/candidate" --review "$RUNNER_TEMP/review" --pck-sha256 "$PCK_SHA256" --html-sha256 "$HTML_SHA256" --identity-sha256 "$IDENTITY_SHA256"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install --with-deps webkit
+      - name: Actual Mac WebKit gameplay and touch at CSS 848 by 390, DPR 2
+        id: capture
+        timeout-minutes: 16
+        env:
+          SUITE: ${{ matrix.suite }}
+          CAPTURE_VIEWPORT: 848x390
+          CAPTURE_DPR: '2'
+          TOUCH_BROWSER: webkit
+        run: |
+          export CAPTURE_START=1 CAPTURE_END=14
+          unset OVERHAUL_GAMEPLAY MENU_TOUCH MENU_TOUCH_SECTION CAPTURE_SCOPE
+          case "$SUITE" in
+            visual-forge) ;;
+            visual-workshops) export CAPTURE_START=15 CAPTURE_END=19 ;;
+            gameplay) export OVERHAUL_GAMEPLAY=1 ;;
+            touch-*) export OVERHAUL_GAMEPLAY=1 MENU_TOUCH=1 MENU_TOUCH_SECTION="${SUITE#touch-}" ;;
+            *) exit 2 ;;
+          esac
+          node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review" > "$RUNNER_TEMP/review/runner.log" 2>&1
+      - name: Record success or partial failure evidence
+        if: always()
+        env:
+          SUITE: ${{ matrix.suite }}
+          IDENTITY_OUTCOME: ${{ steps.identity.outcome }}
+          CAPTURE_OUTCOME: ${{ steps.capture.outcome }}
+        run: |
+          python3 tools/verify_premium_web_review.py record --source "$GITHUB_SHA" --suite "$SUITE" --review "$RUNNER_TEMP/review" --identity-outcome "$IDENTITY_OUTCOME" --capture-outcome "$CAPTURE_OUTCOME"
+          if [ -f "$RUNNER_TEMP/review/runner.log" ]; then tail -n 40 "$RUNNER_TEMP/review/runner.log"; fi
+      - name: Verify complete suite evidence
+        env:
+          SUITE: ${{ matrix.suite }}
+          REVIEW_BROWSER_ENGINE: webkit
+        run: |
+          python3 tools/verify_premium_web_review.py suite --source "$GITHUB_SHA" --suite "$SUITE" --review "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: premium-web-review-mac-${{ matrix.suite }}-${{ github.sha }}
+          path: ${{ runner.temp }}/review
+          if-no-files-found: warn
+          retention-days: 30
+
   commerce-residency:
     needs: build
     runs-on: ubuntu-24.04
@@ -231,6 +310,34 @@ jobs:
               assert hashlib.sha256(Path(capture['path']).read_bytes()).hexdigest() == capture['sha256']
           print('EXACT_PACKAGE_HAZARD_LIFECYCLE_OK checks=47 captures=8')
           PY
+      - name: Render simultaneous feedback, camera movement and actual achievement activation
+        timeout-minutes: 4
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          XDG_DATA_HOME: ${{ runner.temp }}/feedback-userdata
+          PCK_SHA256: ${{ needs.build.outputs.pck_sha256 }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/review/feedback"
+          xvfb-run -a -e "$RUNNER_TEMP/review/feedback/xvfb.log" -s '-screen 0 2560x1440x24' timeout 180 Godot_v4.7.2-stable_linux.x86_64 --path "$RUNNER_TEMP/pack-run" --main-pack "$RUNNER_TEMP/candidate/index.pck" --script "$GITHUB_WORKSPACE/tools/review_feedback_overlap.gd" --display-driver x11 --resolution 1696x780 --audio-driver Dummy -- --pack-source="$RUNNER_TEMP/candidate/index.pck" --output="$RUNNER_TEMP/review/feedback" > "$RUNNER_TEMP/review/feedback/native.log" 2>&1
+          python3 - <<'PY'
+          import hashlib, json, os, re
+          from pathlib import Path
+          folder = Path(os.environ['RUNNER_TEMP']) / 'review/feedback'
+          log = (folder / 'native.log').read_text()
+          assert 'FEEDBACK_OVERLAP_COMPLETE passed=true' in log
+          assert not re.search(r'SCRIPT ERROR|Parse Error|^ERROR:', log, re.M)
+          report = json.loads((folder / 'feedback-overlap.json').read_text())
+          assert report['pack_sha256'] == os.environ['PCK_SHA256']
+          assert report['passed'] and not report['failures']
+          assert len(report['checks']) >= 300 and all(row['passed'] for row in report['checks'])
+          assert report['activations'] == ['rune_ready']
+          assert report['rendered'] and not report['manual_feedback_ticks']
+          assert len(report['captures']) == 8
+          for capture in report['captures']:
+              assert capture['size'] in ([1696, 780], [1688, 780])
+              assert hashlib.sha256(Path(capture['path']).read_bytes()).hexdigest() == capture['sha256']
+          print('EXACT_PACKAGE_FEEDBACK_OVERLAP_OK checks=%d captures=8' % len(report['checks']))
+          PY
       - name: Record native success or partial failure evidence
         if: always()
         env:
@@ -253,7 +360,7 @@ jobs:
   complete:
     name: Complete premium review
     if: always()
-    needs: [build, browser, commerce-residency]
+    needs: [build, browser, mobile-webkit, commerce-residency]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:

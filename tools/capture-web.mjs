@@ -295,7 +295,7 @@ async function captureSuite(options) {
     const webgl = await probeWebGL2(context);
     await fs.writeFile(path.join(options.outputDir,"browser-run.json"), JSON.stringify({
       status:"started",pckSha256,htmlSha256,viewport:VIEWPORT,physicalViewport:PHYSICAL_VIEWPORT,
-      dpr:DPR,browser:browser.version(),webgl,physicalIphone:false,
+      dpr:DPR,browser:browser.version(),browserEngine:browser.browserType().name(),platform:process.platform,webgl,physicalIphone:false,
       gameplay:GAMEPLAY,menuTouch:MENU_TOUCH,touchSection:MENU_TOUCH ? TOUCH_SECTION : null,range:[RANGE_START,RANGE_END],
       traceGLBuffers:process.env.TRACE_GL_BUFFERS==="1",
     },null,2));
