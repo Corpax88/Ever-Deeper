@@ -45,3 +45,20 @@ all existing lit/no_light pixel, identity, cleanup and scalar-state checks remai
 Re-run the two actual native controls, then a fresh full export and original WebGL
 error gates. The older native pass does not approve this new draw component. Full
 GLSL identity, normal startup/input/save parity and timing remain separate gates.
+
+## Actual replacement controls and new complete-package gate
+
+The exact1a31b9f helper was run in two new original-DEV13 native processes on
+17September: lit and no_light both exit0 with16checks, no script errors and
+closed/delayed-hash-verified output. All144 opaque target pixels are RGB51 without
+light and76 with light; alpha/exterior stay identical. Temporary nodes/texture
+and helper callback are released, and the original shared material IDs remain.
+The two early-menu pairs are byte-identical between the light controls; this is
+not a no-helper normal-startup control. Candidate Main hook remains unexercised.
+Independent result review is pending when this trigger is prepared.
+
+This documentation-only direct child triggers the unchanged14-job complete
+web-package workflow. Runtime bytes are exactly the1a31b9f avoidance candidate.
+Do not infer WebGL, shader identity, timing, input/save parity or publication
+approval from the native results or from workflow submission. The failed5e
+package and its original WebGL failures remain retained and rejected.
