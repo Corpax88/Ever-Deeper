@@ -1,3 +1,117 @@
+# Completed actual WebKit baseline: cadence passes, intermittent stalls remain
+
+[Actions 35207448460](https://github.com/Corpax88/Ever-Deeper/actions/runs/35207448460),
+job 105156583550, attempt 1, succeeded. Preparation 6f4e6849515c949e3f0b675a871930ef7b5c163b
+and request 108b5196a9311cf41f1e6088e82ed79e92c31d2e were independently tree/ref verified.
+The exact unchanged DEV11 source is 8f5680defb9083bbe1e044d39a10612f2186e7f3; PCK SHA256
+5b77b3a219011cb676895e41830c8dab32bec2346db93102c7894a3c084414e9. All nine original
+exported files passed their pinned identity checks. No gameplay, assets, effects,
+renderer settings or package bytes changed. Playwright 1.62.0 ran WebKit 26.5 revision 2336
+on an ordinary UID 501 ARM64 macOS 15.7.9 runner, headless with mobile viewport emulation.
+The actual canvas/backbuffer was 1696×780, CSS 848×390/DPR 2. This is not a physical iPhone.
+The current display inventory was empty; no specific GPU model is inferred.
+
+| Retained interval span | Intervals | Mean cadence | p95 | p99 | Maximum |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Full 60.01378 seconds | 3546 | 59.086 Hz | 18.60 ms | 20.58 ms | 440.00 ms |
+| First 30-second window | 1772 | 59.072 Hz | 18.80 ms | 21.00 ms | 440.00 ms |
+| Second 30-second window | 1773 | 59.100 Hz | 17.90 ms | 20.46 ms | 280.40 ms |
+
+There are 3547 raw callback records. The last interval crosses the exact 60-second
+window edge, so it is included in the full record but not either closed 30-second bin.
+Both window callback budgets pass. No warm-up or hitch samples were removed. These
+are MainLoop_runner start intervals, not engine-render counters or presented FPS.
+The selected callback can skip an iteration; pre/post actual draw evidence cannot
+prove every timed callback rendered. A 59 Hz mean with a 440 ms stall does not certify
+a sustained minimum 50 FPS. Conditional CPU sampling did not run because the configured
+mean/p95 callback budget passed; no browser CPU-stack or exclusive GPU attribution
+is claimed from this run.
+
+| Strict interval threshold | Count out of 3546 |
+| --- | ---: |
+| >20 ms | 38 |
+| >33.3 ms | 6 |
+| >50 ms | 3 |
+| >100 ms | 3 |
+
+The three long intervals are retained in full:
+
+| Relative interval start→end | Interval | Previous synchronous callback | Gap after that callback |
+| --- | ---: | ---: | ---: |
+| 0.82986→1.26986 s | 440.00 ms | 370.66 ms | 69.34 ms |
+| 44.98320→45.18548 s | 202.28 ms | 196.54 ms | 5.74 ms |
+| 46.04534→46.32574 s | 280.40 ms | 232.12 ms | 48.28 ms |
+
+The first is early in actual movement, not at the observer's start/stop boundary.
+The later pair clusters about 1.14 seconds apart mid-window; none occurs at completion.
+Synchronous callback wall time has mean 9.223 ms, median 9.080 ms, p95=12.000 ms,
+p99=12.340 ms and max 370.660 ms. It includes CPU work and synchronous waits; it is not
+exclusive CPU utilization or GPU time. Observer forwarding, console reception and
+timestamp storage have uncalibrated overhead. Of 3547 callbacks, 16 exceeded16.667ms,
+11 exceeded20ms and3 exceeded50ms. Summed callback wall time is32.71552s, or54.51%
+of the first-to-last-start interval span; that bookkeeping ratio is not CPU utilization.
+No draw wrappers, screenshots, OCR,
+save reads, profiling or percentile calculation ran in the measured window. The
+ordinary game emitted unsupported-vibration notices while mining; all are retained.
+
+Depth/biome attribution is unavailable: the record has pre/post depth 12→22 and saved
+chunks 12–22, but no time-stamped transitions during the window. Source confirms that
+_update_stream_depth() can synchronously rebase and regenerate the stream window;
+RunState separately schedules normal saves with AUTOSAVE_BATCH_SECONDS=6.0. Neither
+path is timestamped here. Similar cadence cannot distinguish generation, autosave,
+first-use effects, browser work or driver waits. No causal transition/biome claim is
+made. Relevant unchanged owners are scripts/world/endless_descent_world.gd and
+scripts/state/run_state.gd at the pinned source above.
+
+The specific remaining risk is intermittent 200–440 ms stalls during actual WebKit
+movement/mining. Most of each long interval lies inside a synchronous game callback,
+but its stack/cause is unknown. If performance work continues, it should first locate
+those callback stalls with event/stack correlation, rather than assume a sustained
+draw-throughput failure or reuse the native-only bounded-ANGLE-pool result. This
+evidence alone does not justify a new rendering optimization or another timing run.
+
+Root authorized a separate, explicitly diagnostic build after closing this baseline.
+The chosen attribution probe records bounded preallocated spans around only real
+_generate_stream_window(), _rebase_stream_window() and RunState.save_game() calls.
+It will retain ticks, frame/depth/window identity, results, a record cap/drop counter,
+and paired engine/browser clocks outside timing. The unchanged raw observer can
+then match long callbacks to spans, accounting for nested generation inside rebase
+without double counting. It changes no workload, input, visuals or quality settings.
+Timings will be labelled as carrying diagnostic overhead; unspanned stalls remain
+unattributed engine/browser/render work. This is an attribution test, not an adopted
+optimization. No diagnostic result exists at this baseline-report checkpoint.
+
+Normal UI preparation is fully evidenced: NEW GAME→Surface save→visible DEV drawer,
+three untimed DOM touch drags (explicitly untrusted), exact Layer 12 text at confidence
+0.5 in two settled originals with identical coordinates, then a trusted ordinary tap.
+The menu closed and saved scene=endless/current_depth=12/active=true was verified.
+Real trusted ArrowDown and Space events were held throughout the 60-second interval,
+then released. Before/after checked EVDR saves have unchanged seed 2421325703 and show
++4092 mined, +57 swings, depth 12→22 and 493→942 metres, with stream anchors advancing 11→21.
+Save progress brackets a slightly longer period than timing (pre/post checks and
+settling); those totals are mechanical proof, not exactly-per-window production rates.
+The standard/miner/original presentation was verified at entry. Actual untimed WebGL
+draw checks counted 311 before and 410 after, each restored immediately. Original
+entry/final images were inspected at 1696×780. All raw browser/input/scene/error and
+restoration gates passed, the explicit COMPLETE marker appeared once, and browser
+process 15762 exited 0 without a signal. No game or GL errors occurred.
+
+Untouched success ZIP: 18,582,210 bytes, SHA256
+fa5ccc0bd508144cdb533b098077832c003dca5a7edef9a3169c0dff6e415ac8.
+Every ZIP CRC and 46 closed-file hashes passed, followed by independent source, input,
+raw interval, draw-restoration and save-delta review. Raw 3547 records, all 38 intervals
+over 20 ms, original 9 PNGs, original three saves, metadata and the chronological plot
+are preserved. The four failed attempts below remain separately archived.
+
+Closed success archive: Ever-Deeper-DEV11-WebKit-moving-baseline-20260917.tar.gz,
+18,780,608 bytes, SHA256 a6071599ed575d962be8c63fb0e4e385fe2cf63b136792931f647b4d2f5131dd.
+All 13 archive members were reverified against their manifest before persistent saving.
+Archive Library ID: libfile_5aac5ceea2d88191b9a4f3f43c34404f. The inspected chronological
+cadence-and-stalls.png is also saved as libfile_48a070915fe481918a01390dcc8b77dc.
+The archive retains the untouched raw ZIP, original receipts and hashes, review.json,
+all 38 slow intervals in CSV, plot, remote APIs/logs and verified preparation/request
+receipts. Git-backed tested tools and the already pinned exported package are omitted.
+
 # Preserved first navigation failure
 
 One run was triggered at request a1225db9628e06122059d7be7453c6bc05ec2386:

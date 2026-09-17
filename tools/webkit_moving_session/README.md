@@ -1,12 +1,19 @@
 # Exact DEV11 WebKit moving baseline
 
+Run35207448460 completed the actual unchanged-export route and all functional gates.
+Its full60.01378-second record contains3546 intervals at59.086Hz mean callback cadence,
+p95=18.60ms, p99=20.58ms, with three202–440ms stalls retained. This is engine-loop
+cadence, not presented-frame FPS or a stable minimum50FPS certificate. See RESULTS.md
+for both30-second windows, exact stall timestamps, save proof and attribution limits.
+
 Authorized by root on 2026-09-17 after reviewing the concrete ownership/metric plan.
 Four previous navigation attempts failed before timing and are preserved in RESULTS.md.
 The ordinary NEW GAME-first route now verifies the closed modal, actual surface
 save and open DEV drawer. Root authorized one smaller, non-coasting scroll correction
 after originals showed the Layer12 row skipped by the prior inertial swipe. The new
 scrolling route exposed the correct button in two originals, but Vision assigned0.5
-confidence and the unchanged generic0.6 gate rejected it. No timing result exists.
+confidence and the unchanged generic0.6 gate rejected it. Those four failed runs have
+no accepted timing result; the subsequent corroborated-target run completed.
 Root authorized one corrected target lookup: the exact unique ENDLESSLAYER12 label
 may have confidence at least0.5, but must sit inside the verified scroll/left-column
 inset and be corroborated in a second settled original within2 CSS pixels. Generic
