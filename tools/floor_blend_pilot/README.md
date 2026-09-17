@@ -1,6 +1,6 @@
 # Isolated opaque-floor blend pilot
 
-Status: the four-state and full 22-state frozen gates passed with exact pixels. The first moving attempt stopped at original A's missing completion marker; no candidate timing exists. Reporting hardening is prepared for a fresh checkpoint, with no graphical retry yet. See `RESULTS.md`. No production file is changed. This is a hypothesis, not a measured dominant cost, an accepted optimization, or a 50 FPS claim.
+Final status: pixel parity passed, but the completed fresh A/B/A2 triplet established no useful FPS gain. FPS was 36.2730 / 36.2999 / 35.1184; B's 0.074% advantage over the first control is smaller than the 3.235% control drift. The candidate's full guard cost averaged 0.605 ms/frame. Root rejected adoption and further trials. See `RESULTS.md` for both controls, renderer costs and preserved failure evidence. Production is unchanged; this is not a 50 FPS or physical-device claim.
 
 ## Source and question
 
@@ -30,7 +30,7 @@ Checks run at `RenderingServer.frame_pre_draw`, after normal scene/draw updates 
 
 The [engine canvas shader](https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/gles3/shaders/canvas.glsl) applies canvas modulation after the user fragment shader. Checking the floor PNGs alone would therefore be insufficient. The [render submission source](https://github.com/godotengine/godot/blob/4.7.2-stable/servers/rendering/rendering_server_default.cpp) establishes the chosen pre-draw barrier.
 
-## Prepared gates
+## Gate protocol
 
 1. `check_opacity.gd` uses the actual DEV11 scene/resources and genuine section setup in headless mode. All 18 checks passed: normal opaque, opaque RGB tint, material/parent/world/world-self/section-owner/item/item-self/canvas alpha, unknown wash, replaced neighbor texture, missing noise, external shader preservation, transparent target, unknown paint, wrong paint bounds, and restored opaque state. Source shaders restored on exit. This proves guard behavior only; it does not execute or verify framebuffer blending.
 2. The first graphical run is bounded to `review.gd --quick-gate`: four frozen A/B/A2 states at 1696 × 780 covering normal floor, a real inherited-alpha fallback without terrain redraw, previous seam, and next seam. It stops at the first failure and cannot unlock timing. Only if this key claim passes may the prepared full 22-pair matrix follow: normal; material RGB/alpha; inherited, self, item, canvas and target alpha transitions; external shader; all five floor families; previous/next seams; strong grazing hero/pet lighting; actual wall damage; fractional camera/zoom; actual down/up rebases. Every A/B and A/A2 image must match exactly. Eligible B states must actually activate the candidate. Ineligible states must fall back. Visible alpha controls must alter pixels, branch/family coverage is recorded, and no-redraw transitions must have zero new terrain setup. An identity parent, shader TIME lock, paused scene/tweens, and fixed camera are applied equally to all variants; this is visual QA, not FPS evidence.
@@ -49,4 +49,4 @@ Evidence resides in the session's sibling `evidence/` directory, separate from p
 
 The original failed A remains untouched and excluded from comparison. The hardened generator retains the original final stdout print, adds a stderr mirror at the same final completion point, and records entry/final print settings and source/variant hashes in `execution-receipt.json`. Both receipt writes occur outside timed windows. The runner requires the receipt after the existing explicit-marker/error/process-exit gate; duration, functional, workload and raw-sample checks still apply. It does not force print flags or infer why the original output was missing. Controller, observer, pixel fixture, production code and timed route remain unchanged.
 
-Candidate timing, physical-device performance, and production adoption remain pending. No earlier rejected camera, receiver-mask, contour, shadow, or quad experiment is included in this change.
+One fresh reporting-hardened triplet subsequently completed every strict gate. Live output/userdata stayed under isolated `/tmp`, and closed verified evidence was copied atomically afterward. All three emitted both stdout/stderr markers; the old failed A remains excluded. The completed experiment does not justify production adoption or another trial. Physical-device performance remains unmeasured. No earlier rejected camera, receiver-mask, contour, shadow, or quad experiment is included in this change.

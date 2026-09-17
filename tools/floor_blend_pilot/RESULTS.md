@@ -1,6 +1,6 @@
 # Floor blend pilot results — 2026-09-17
 
-The complete frozen pixel gate passed. Performance remains unmeasured: the first authorized moving triplet stopped because original A did not emit its required completion marker. Candidate B and restored control A2 were never launched. A reporting-only hardening is now prepared for checkpoint; no fresh graphical run has started. The helper is not adopted.
+The complete frozen pixel gate passed, but the completed fresh moving A/B/A2 established no useful FPS gain. B was only 0.074% faster than the first control, while the controls drifted by 3.235%. Root rejected adoption and further trials. The earlier failed A remains excluded and preserved. Production is unchanged.
 
 ## Immutable tested source
 
@@ -36,15 +36,45 @@ No source code or launch flag disables stdout, and cgroup OOM counters were zero
 
 A subsequent minimal headless logging probe exited 0 and printed every stdout/stderr marker. Effective settings before Main, after Main, and after real Deep entry were `disable_stdout=false`, `disable_stderr=false`, `Engine.print_to_stdout=true`, and debug `flush_stdout_on_print=true`. No custom feature or project override was active; launch/user arguments were separated correctly and contained no quiet flag. The failure was not reproduced and no concrete logging correction was found. Those headless flags do not establish the failed X11 process’s runtime flags.
 
-There is no measured candidate gain or loss, no valid control comparison, and no 50 FPS claim. Renderer ownership was explicitly released after failure; no pilot source or fallback was changed.
+That failed attempt yields no valid candidate comparison or 50 FPS claim. Renderer ownership was explicitly released after failure; no controller or fallback was changed.
 
-## Reporting hardening prepared after the failure
+## Reporting hardening after the failure
 
 Root authorized a narrowly scoped change to the timing generator. The original stdout completion print is retained. Immediately after that same final point, after the final image and session report, a separate receipt records actual `Engine.print_to_stdout`, `Engine.print_error_messages`, effective stdout/stderr-disable and flush settings, source hashes, source revision, variant and functional status. A stderr mirror emits the same completion marker with this identity. A matching entry receipt is written before scene setup; neither adds work inside the timed windows.
 
 The existing renderer wrapper still rejects errors, nonzero process exits and missing explicit completion. The generator adds receipt validation after that gate. Duration, functional gameplay, input/counter/raw-sample identity and candidate activation/restoration checks remain required for a complete fresh A/B/A2. The old A is not reused or reclassified.
 
-Only `run_session.py`, this result document and the README change. Controller, observer, production route, production world and pixel fixture are unchanged. This is completion-reporting hardening, not an established causal fix or a timing optimization. The generated GDScript passed headless parsing. A remote checkpoint and renderer grant are still required before a fresh triplet; if reporting fails again, this avenue stops.
+Only `run_session.py`, this result document and the README changed. Controller, observer, production route, production world and pixel fixture remained unchanged. This was completion-reporting hardening, not an established causal fix or a timing optimization. The generated GDScript passed headless parsing. Root checkpointed the hardening and separately authorized the fresh triplet below.
+
+## Fresh triplet: complete, no useful FPS gain
+
+Root verified study checkpoint `6b5a2347cdf28bf37eb83f0dce1b83eeb125ce3e`, tree `2ee14fc54acba118ab1a7c1eb3b90747533e81b1`, before testing. The generator hash was `80bb5f7ed9d2ae91cb161e86d77fb6fb261f353c647199d3a5a94cb29cc2963e`; all three generated scripts had SHA-256 `6d67092c47eefafc7af02be36cf3c1812e77fb5d45a27d6190a8b65f78da67ad`. Production stayed at the exact DEV11 revision above, and controller/observer hashes were unchanged.
+
+All three fresh processes completed with exit 0, the original stdout marker, the final stderr mirror and matching entry/final receipts. Each passed real 60-second duration, two-window/raw-sample, held-mining, functional gameplay, persistence and source gates. B was active in every timed sample, with no fallback. Both control runs had zero candidate-active samples. The frozen A/A2 comparisons already prove same-scene shader restoration; the moving A2 is a fresh original process.
+
+| Metric | A original | B candidate | A2 original |
+| --- | ---: | ---: | ---: |
+| Weighted FPS | 36.2730 | 36.2999 | 35.1184 |
+| Timed frames / raw samples | 2,177 | 2,179 | 2,108 |
+| Frame p95, ms | 33.650 | 34.448 | 36.391 |
+| Guard mean, ms/frame | 0.00571 | 0.60472 | 0.00589 |
+| Guard p95, ms | 0.008 | 0.746 | 0.008 |
+| Renderer CPU median, ms | 18.388 | 17.916 | 18.652 |
+| Renderer CPU mean, ms | 18.839 | 18.437 | 19.494 |
+| Software GPU median, ms | 18.274 | 17.829 | 18.568 |
+| Setup + draw callbacks + guard mean, ms | 2.001 | 2.615 | 2.068 |
+| Reported draw calls, median | 202 | 202 | 202 |
+| Resources mined | 4,228 | 4,228 | 4,228 |
+| Distance, world units | 14,886.399 | 14,926.066 | 14,892.066 |
+| Candidate-active samples | 0 | 2,179 | 0 |
+
+B versus A was +0.074% FPS; B versus A2 was +3.364%. The control mean was 35.6957 FPS and their spread was 1.1546 FPS, or 3.235% of that mean. The two 30-second windows were A 37.5654 / 34.9813, B 36.8308 / 35.7693, and A2 37.4041 / 32.8311. B did not outperform either control in the first window. One triplet does not establish statistical significance or a stable benefit beyond this drift.
+
+B's renderer CPU median was 0.472 ms lower than A and 0.736 ms lower than A2, but its full opacity guard added about 0.599 ms/frame relative to either control. Lower renderer medians therefore do not establish useful total-frame gain. The renderer CPU/GPU measurements can overlap and include driver waits; they must not be added as disjoint work. Distances differed by less than 0.3%; all three mined the same count, although exact live route states can differ.
+
+All live logs, receipts, session JSON, raw samples, images and userdata were written under isolated `/tmp/ever-deeper-floor-reporting-20260917-lx100184`. Only after all processes closed and gates passed were 112 files (41,770,305 bytes) copied through a staging directory, verified by hash, and atomically renamed into shared evidence. A later tool call rechecked every hash. The `/tmp` originals remain. This output-location change applied equally to all three fresh variants; the old shared-output A is excluded. Workspace finalization remains a hypothesis for the older missing log, not a proved cause.
+
+The fresh entry/final receipts show stdout and error printing enabled and effective disable flags false. No print flags were forced. No physical iPhone or hardware-GPU benefit is established, and no window met the complete 50 FPS criterion. No further rendering or repeat trial is authorized for this pilot; renderer ownership was released.
 
 ## Evidence locations
 
@@ -55,5 +85,9 @@ All logs, state, original PNGs, exact tested tool snapshots and source bindings 
 - `floor-blend-moving-triplet/execution.json`: single attempt, wrapper status and stop.
 - `floor-blend-moving-triplet/failure-analysis.json`: bounded read-only failure analysis and artifact hashes.
 - `floor-blend-moving-triplet/A/`: untouched failed-run logs, raw windows/samples, generated script, images and session report.
+- `floor-blend-moving-triplet/headless-logging-probe/`: actual print flags, feature/override state, separated stdout/stderr logs and raw exit.
+- `floor-blend-moving-reporting-triplet/comparison.json`: completed-triplet metrics, both controls, drift, guard costs, renderer costs and explicit limits.
+- `floor-blend-moving-reporting-triplet/execution.json`: all fresh launches, source checks, gate results and receipts.
+- `floor-blend-moving-reporting-triplet/closed-copy-manifest.json`: original closed-file hashes before atomic shared copy.
 
-This results file is a later documentation addition. The hashes above describe the original checkpoint and failed attempt; the reporting-only generator revision is recorded separately in `floor-blend-reporting-parser/harness-generation.json` and its checkpoint manifest.
+The bounded evidence archive preserves all 78 parity PNGs, moving images, raw profiles, failure/probe evidence and source/hash manifests. Shader caches and git-pinned `tested-tools/` copies are excluded; the repository checkpoints identify those sources. This final README/RESULTS update changes documentation only.
