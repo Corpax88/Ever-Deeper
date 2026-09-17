@@ -7,6 +7,7 @@ var fallback_reason: String = ""
 var eligible_pairs: int = 0
 var baseline_pairs: int = 0
 var mask_update_usec: int = 0
+var total_refresh_usec: int = 0
 var _owned: Array[Dictionary] = []
 var _tracked_lights: Array[PointLight2D] = []
 var _inventory_dirty: bool = true
@@ -31,13 +32,19 @@ func invalidate_mask_inventory() -> void:
 	_mask_valid = false
 
 func _inventory_changed(node: Node) -> void:
-	if node is CanvasItem and node.get_parent() != self:
+	if node is CanvasItem and node.get_parent() != self and (node is PointLight2D or node is LightOccluder2D or (node.light_mask & RESERVED) != 0):
 		invalidate_mask_inventory()
 
 func _restore_owned() -> void:
+	var field: Node = get_parent().get_node_or_null("StaticLightField") if is_instance_valid(get_parent()) else null
 	for entry in _owned:
 		if is_instance_valid(entry.node):
 			entry.node.shadow_item_cull_mask &= ~int(entry.added)
+			# A field rebake can snapshot the temporary bit while the study is active.
+			# Remove only that bit from the matching saved mask before releasing ownership.
+			if field != null:
+				for actor in field._actors:
+					if actor.node == entry.node: actor.shadow_mask &= ~int(entry.added)
 	_owned.clear()
 	for caster in _pool: caster.occluder_light_mask = 1
 	_mask_valid = false
@@ -53,6 +60,7 @@ func _audit_inventory(world: Node2D) -> void:
 	_inventory_dirty = false
 
 func refresh() -> void:
+	var refresh_started: int = Time.get_ticks_usec()
 	var world: Node2D = get_parent()
 	# Rebuild the inherited lamp cache when children change inside the same actor.
 	if _inventory_dirty:
@@ -79,6 +87,7 @@ func refresh() -> void:
 	if not fallback_reason.is_empty():
 		_restore_owned()
 		mask_update_usec = Time.get_ticks_usec() - started
+		total_refresh_usec = Time.get_ticks_usec() - refresh_started
 		return
 	var tile: float = 64.0 if world.has_method("_is_floor") else 48.0
 	var areas: Array[Rect2] = []
@@ -95,7 +104,7 @@ func refresh() -> void:
 		# StaticLightField may restore the original mask after a rebake.
 		# Reassert only this study's bit; leave every other mask bit untouched.
 		if (light.shadow_item_cull_mask & bit) == 0: light.shadow_item_cull_mask |= bit
-		var active: bool = light.enabled and light.shadow_enabled and light.is_visible_in_tree()
+		var active: bool = light.enabled and light.shadow_enabled and light.is_visible_in_tree() and (light.shadow_item_cull_mask & 1) != 0
 		key.append([light.get_instance_id(), active, light.shadow_item_cull_mask])
 		if not active: continue
 		var cells: Rect2i = _source_cell_bounds(world, light, tile)
@@ -105,6 +114,7 @@ func refresh() -> void:
 	var signature: int = hash(key)
 	if _mask_valid and signature == _mask_signature:
 		mask_update_usec = Time.get_ticks_usec() - started
+		total_refresh_usec = Time.get_ticks_usec() - refresh_started
 		return
 	_mask_valid = true
 	_mask_signature = signature
@@ -120,3 +130,4 @@ func refresh() -> void:
 				eligible_pairs += 1
 		_pool[index].occluder_light_mask = mask
 	mask_update_usec = Time.get_ticks_usec() - started
+	total_refresh_usec = Time.get_ticks_usec() - refresh_started

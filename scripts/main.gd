@@ -1873,6 +1873,8 @@ func _open_commerce(config: Dictionary, context_id: String) -> void :
 	var current_world: Node = get(String(phase)+"_world")
 	if is_instance_valid(current_world):
 		current_world.player.control_enabled=false
+		current_world.set_meta(&"commerce_physics_was_enabled", current_world.is_physics_processing())
+		current_world.set_physics_process(false)
 		current_world.set_process(false)
 	_cancel_held_input()
 	button_move = Vector2.ZERO
@@ -1894,6 +1896,9 @@ func _on_commerce_closed() -> void :
 	var current_world: Node=get(String(phase)+"_world")
 	if is_instance_valid(current_world):
 		current_world.set_process(true)
+		if current_world.has_meta(&"commerce_physics_was_enabled"):
+			current_world.set_physics_process(bool(current_world.get_meta(&"commerce_physics_was_enabled")))
+			current_world.remove_meta(&"commerce_physics_was_enabled")
 		current_world.player.control_enabled=true
 	_set_developer_menu_shop_suppressed(false)
 	if commerce_context.begins_with("workshop:"):
