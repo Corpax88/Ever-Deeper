@@ -1,0 +1,60 @@
+name: DEV11 bounded Mac CPU stack diagnosis
+on:
+  push:
+    branches: [codex/dev11-mac-cpu-sampling-20260917]
+    paths: ['tools/mac_cpu_sampling/REQUEST.json']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: dev11-mac-cpu-sampling-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  sample-deep:
+    if: github.ref == 'refs/heads/codex/dev11-mac-cpu-sampling-20260917'
+    runs-on: macos-15
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Record the reviewed diagnostic source
+        run: |
+          mkdir -p "$RUNNER_TEMP/mac-cpu-host"
+          git rev-parse HEAD > "$RUNNER_TEMP/mac-cpu-host/study-source.txt"
+          python3 - <<'PY'
+          import hashlib,os,subprocess
+          from pathlib import Path
+          listing=subprocess.check_output(['git','ls-tree','HEAD','--','scripts','scenes','shaders','assets','project.godot','export_presets.cfg'])
+          (Path(os.environ['RUNNER_TEMP'])/'mac-cpu-host/runtime-tree.txt').write_bytes(listing)
+          assert hashlib.sha256(listing).hexdigest() == '8e557a28e6391eed9b1910fcd92339a50a43921024c7bbc028c241eadca16cff', 'Production tree changed'
+          assert hashlib.sha256(Path('tools/configure_review_display.swift').read_bytes()).hexdigest() == 'c8f1dcfd6b46c25750adc83da0cffc25169c8fec1db181a3ad7ba6e95309c494', 'Display helper changed'
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          name: premium-web-candidate-8f5680defb9083bbe1e044d39a10612f2186e7f3
+          run-id: '35186932201'
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - name: Install the matching released engine and record display
+        run: |
+          curl -L --fail --retry 2 --retry-all-errors https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip -o "$RUNNER_TEMP/godot.zip"
+          shasum -a 256 "$RUNNER_TEMP/godot.zip" > "$RUNNER_TEMP/mac-cpu-host/godot-archive-sha256.txt"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          system_profiler SPDisplaysDataType > "$RUNNER_TEMP/mac-cpu-host/display-before.txt"
+          swift tools/configure_review_display.swift > "$RUNNER_TEMP/mac-cpu-host/display-setup.json" 2> "$RUNNER_TEMP/mac-cpu-host/display-setup.log"
+          system_profiler SPDisplaysDataType > "$RUNNER_TEMP/mac-cpu-host/display-after.txt"
+      - name: One real moving Deep session and one bounded ordinary-user sample
+        timeout-minutes: 4
+        run: |
+          python3 tools/mac_cpu_sampling/run.py --project "$GITHUB_WORKSPACE" --candidate "$RUNNER_TEMP/candidate" --godot "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --output "$RUNNER_TEMP/mac-cpu-diagnostic"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dev11-mac-cpu-stacks-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/mac-cpu-host
+            ${{ runner.temp }}/mac-cpu-diagnostic
+          if-no-files-found: error
+          retention-days: 30
