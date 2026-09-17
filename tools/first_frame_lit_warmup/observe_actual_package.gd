@@ -76,7 +76,10 @@ func _compiled_identity(logical: String) -> Dictionary:
 	var status := config.load(remap)
 	if not _check(status == OK, "Compiled remap exists: " + logical): return {}
 	var target: String = config.get_value("remap", "path", "")
-	if not _check(target.begins_with("res://.godot/") and target.ends_with(".gdc") and FileAccess.file_exists(target),
+	var expected := {MAIN_SCRIPT: "res://scripts/main.gdc",
+		HELPER_SCRIPT: "res://scripts/lighting/first_frame_lit_warmup.gdc",
+		OWNER_SCRIPT: "res://scripts/lighting/lit_draw_sections.gdc"}
+	if not _check(target == expected.get(logical, "") and FileAccess.file_exists(target),
 		"Remap points to compiled package script: " + logical): return {}
 	return {"logical": logical, "remap": remap, "remap_sha256": FileAccess.get_sha256(remap),
 		"compiled": target, "compiled_sha256": FileAccess.get_sha256(target)}
@@ -207,9 +210,16 @@ func _finish() -> void:
 	report.events = events
 	var path := output.path_join("result.json")
 	var file := FileAccess.open(path + ".tmp", FileAccess.WRITE)
+	if file == null:
+		printerr("ACTUAL_WARMUP_OUTPUT_FAILED open")
+		quit(2)
+		return
 	file.store_string(JSON.stringify(report, "\t") + "\n")
 	file.flush()
 	file.close()
-	DirAccess.rename_absolute(path + ".tmp", path)
+	if DirAccess.rename_absolute(path + ".tmp", path) != OK:
+		printerr("ACTUAL_WARMUP_OUTPUT_FAILED rename")
+		quit(2)
+		return
 	print("ACTUAL_WARMUP_PACKAGE_", "COMPLETE" if failures.is_empty() else "FAILED")
 	quit(0 if failures.is_empty() else 1)
