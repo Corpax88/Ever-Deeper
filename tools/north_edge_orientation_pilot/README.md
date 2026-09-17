@@ -148,8 +148,12 @@ Exactly seven new A/B/A2 cases produce21full native PNGs:
 | `boundary-14-15` | Restore the native exit corridor on the Moss side of the Moss/Rootwound boundary with the same gates. |
 
 The original normal-light held evidence is reused. The strong cases use real
-level5energy/range multipliers1.3/1.4; fixture workshop/relic records are saved
-and restored before boundary cases. This is a loadout fixture, not a purchase
+level5energy/range multipliers1.3/1.4. The isolated ancient_lens record has
+discovered/collected/placed set and a fixture found_depth of14, then passes
+production normalization before the lamps refresh. Each intended strong case
+asserts the actual level and multipliers after serialization and at all three
+captures. Fixture workshop/relic records are saved and restored before boundary
+cases. This is a loadout fixture, not a purchase
 or progression test. No lamp, shadow, material or candidate drawing code is
 changed. The normal camera owner settles its own framing before each case;
 no viewport, camera offset, zoom or limit is invented. Corridor placements
@@ -173,15 +177,16 @@ only when the coordinator permits it. Run from the isolated study worktree:
 
 ```sh
 NORTH_EDGE_STUDY_REVISION=$(git rev-parse HEAD)
+NORTH_EDGE_STUDY_OUTPUT=/tmp/ever-deeper-north-edge-affected-new-attempt
 python3 tools/run_rendered_isolated.py \
   --godot /tmp/ever-deeper-runtime-20260917/Godot_v4.7.2-stable_linux.x86_64 \
   --xvfb /workspace/scratch/d5437d917805/runtime/xvfb/usr/bin/Xvfb \
   --project /workspace/scratch/d5437d917805/north-edge-study \
-  --output /workspace/scratch/d5437d917805/evidence/north-edge-affected-moss \
+  --output "$NORTH_EDGE_STUDY_OUTPUT" \
   --resolution 1696x780 --timeout 360 \
   --completion-marker NORTH_EDGE_AFFECTED_REVIEW_COMPLETE \
   -- --script res://tools/north_edge_orientation_pilot/affected_review.gd \
-  -- --output=/workspace/scratch/d5437d917805/evidence/north-edge-affected-moss \
+  -- --output="$NORTH_EDGE_STUDY_OUTPUT" \
   --retained-output=/workspace/scratch/d5437d917805/evidence/north-edge-orientation-moss \
   --source-revision="$NORTH_EDGE_STUDY_REVISION"
 ```
@@ -216,3 +221,32 @@ Real collision safety, gameplay, orientation candidate, phase/pixel guards
 and A/A2 restoration checks are unchanged. The contact report records the
 actual step, clearance and rejection results. A new remote checkpoint and
 renderer grant are required before retrying into a fresh output directory.
+
+## Preserved boundary and light-fixture failure
+
+The corrected contact run at checkpoint
+`373b37bf26c127102774f4b7b6d17eb7d54a56c4` is preserved at
+`/workspace/scratch/d5437d917805/evidence/north-edge-affected-moss-attempt-02-373b37bf/`.
+Its46copied files include18original PNGs. The first five case pixel/restoration
+gates passed, then `boundary-13-14` failed its required-cell pixel guard. All
+six captured A/A2 pairs restore exactly. `boundary-14-15` was not captured.
+
+The nearest eligible boundary cell(19,22) has north, south and west openings.
+The unchanged full NW/SW corners are drawn after its north face and cover the
+required inset ROI completely. The same pair already records2818changed pixels
+at adjacent cell(20,22). Boundary target selection now excludes lateral floor
+neighbors, which require these corner overlays, while retaining the actual
+nonzero pixel guard and all camera, seam and safe-position requirements.
+
+The prior isolated light fixture set only the relic's placed flag. Production
+serialization correctly cleared that invalid lifecycle state and reset the
+workshop to level0. Contact/struck/mined images retained cached1.3/1.4lamp
+multipliers; turning right refreshed the lamp to1.0/1.0. Therefore the prior
+short-step capture is ordinary-light evidence and those saved states are not
+valid level5loadouts. The complete fixture lifecycle and post-serialization
+level/lamp assertions above correct this test setup without changing gameplay,
+save normalization, real controller/mining or the orientation candidate.
+
+Never reuse either failed output directory. A retry uses a new temporary
+producer directory and a new closed, SHA-verified evidence copy. The seven
+cases and21PNG target are unchanged; no broader matrix is authorized.

@@ -1,6 +1,7 @@
 extends "res://tools/north_edge_orientation_pilot/review.gd"
 ## Seven affected poses only. The already reviewed held pair is read, not rerun.
 const REQUIRED_CASES: Array[String] = ["approach", "contact-strong", "struck", "mined-opening", "short-steps-grazing", "boundary-13-14", "boundary-14-15"]
+const STRONG_LIGHT_CASES: Array[String] = ["contact-strong", "struck", "mined-opening", "short-steps-grazing"]
 const WALL := Vector2i(13, 27)
 var retained_output: String = "/workspace/scratch/d5437d917805/evidence/north-edge-orientation-moss"
 var held_reference: Dictionary = {}
@@ -160,14 +161,23 @@ func _set_max_light_fixture() -> bool:
 	saved_light_workshop = Dictionary(state.endless_workshops.light_lab).duplicate(true)
 	saved_light_relic = Dictionary(state.endless_relics[relic_id]).duplicate(true)
 	# Explicit isolated loadout fixture; do not pretend this is a purchase test.
+	# Serialization requires the complete relic lifecycle before accepting placed.
+	state.endless_relics[relic_id]["discovered"] = true
+	state.endless_relics[relic_id]["collected"] = true
 	state.endless_relics[relic_id]["placed"] = true
+	state.endless_relics[relic_id]["found_depth"] = DEPTH
 	state.endless_workshops.light_lab["built"] = true
 	state.endless_workshops.light_lab["level"] = 5
+	state._normalize_endless_state()
 	state._state_changed()
 	_refresh_lamps()
+	return _verify_strong_light("contact-strong")
+
+func _verify_strong_light(id: String) -> bool:
+	if id not in STRONG_LIGHT_CASES: return true
 	var lamp: Node = world.player.get_node("PremiumHeadlamp")
-	if not is_equal_approx(lamp.effective_energy_multiplier, 1.3) or not is_equal_approx(lamp.effective_range_multiplier, 1.4):
-		_reject("The production headlamp did not apply level5"); return false
+	if state._built_workshop_level("light_lab") != 5 or not is_equal_approx(lamp.effective_energy_multiplier, 1.3) or not is_equal_approx(lamp.effective_range_multiplier, 1.4):
+		_reject("The normalized level5 fixture and actual headlamp disagree in " + id); return false
 	return true
 
 func _restore_light_fixture() -> void:
@@ -204,6 +214,9 @@ func _boundary_case(next: bool) -> bool:
 		for x in range(2, 38):
 			var cell := Vector2i(x, y)
 			if not _north_edge(cell) or not visible.encloses(transform * _cell_review_rect(cell)): continue
+			# A lateral opening adds full corner draws after the north face. The
+			# required pixel witness must be a straight run, not an occluded end.
+			if world._is_floor(cell + Vector2i.LEFT) or world._is_floor(cell + Vector2i.RIGHT): continue
 			var score: float = absf(float(y) * 64.0 - seam_y) + absf(float(x - column)) * 8.0
 			if score < best: best = score; chosen = cell
 	if chosen.x < 0: _reject("No visible affected Moss north edge beside the biome boundary"); return false
@@ -228,7 +241,8 @@ func _capture_case(id: String, required_cells: Array[Vector2i], regions_world: D
 	if save == null: _reject("Cannot save case state"); return false
 	save.store_string(JSON.stringify(state.serialize()))
 	save.close()
-	pair = {"id":id, "details":details, "player":str(world.player.position), "facing":str(world.player.facing_vector), "headlamp":world.player.get_node("PremiumHeadlamp").debug_snapshot(), "state_file":save_name, "state_sha256":FileAccess.get_sha256(output.path_join(save_name)), "required_cells":str(required_cells), "captures":[]}
+	if not _verify_strong_light(id): return false
+	pair = {"id":id, "details":details, "player":str(world.player.position), "facing":str(world.player.facing_vector), "headlamp":world.player.get_node("PremiumHeadlamp").debug_snapshot(), "normalized_light_lab_level":state._built_workshop_level("light_lab"), "intended_strong_light":id in STRONG_LIGHT_CASES, "state_file":save_name, "state_sha256":FileAccess.get_sha256(output.path_join(save_name)), "required_cells":str(required_cells), "captures":[]}
 	var pictures: Array[Image] = []
 	var reference_view: Array = []
 	var north_regions: Array[Dictionary] = []
@@ -241,6 +255,7 @@ func _capture_case(id: String, required_cells: Array[Vector2i], regions_world: D
 		world.queue_redraw()
 		for frame in 4: await process_frame
 		await RenderingServer.frame_post_draw
+		if not _verify_strong_light(id): return false
 		if _geometry_fingerprint() != geometry or not world._position_walkable(world.player.position): _reject("Geometry or safe hero placement changed in " + id); return false
 		if world.lit_draw_sections.draw_callbacks <= callbacks: _reject("Terrain was not freshly redrawn in " + id); return false
 		if mode:
