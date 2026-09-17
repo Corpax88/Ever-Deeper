@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "source": "8f5680defb9083bbe1e044d39a10612f2186e7f3",
+  "preparation_sha": "667b293f240fe350e7530586c531549d46310926",
+  "sessions": 1,
+  "diagnostic_only": true,
+  "probe": "selected_webgl_resources_v1",
+  "authorization": {
+    "by": "/root",
+    "scope": "One actual 60-second Mac WebKit session using the unchanged original DEV11 export and exactly the independently reviewed preparation. No automatic second measured run.",
+    "launch_gate": "Root must independently verify this commit is a REQUEST-only direct child, then advance the branch."
+  },
+  "independent_review": {
+    "reviewer": "/root/performance_critic",
+    "verdict": "accepted for one root-verified REQUEST-only child",
+    "report": "independent-prerun-review-667b293f.json",
+    "report_bytes": 17894,
+    "report_sha256": "08e8bc0c3563f6900c60cb3293f994f7d969439a0c138099756d64358a4e6627"
+  },
+  "candidate": {
+    "run_id": "35186932201",
+    "artifact_id": "10481858878",
+    "identity_sha256": "027b128fe5fa70d7814c0f0952ee06549f447afc9769426c3b5696c631579a7a",
+    "pck_sha256": "5b77b3a219011cb676895e41830c8dab32bec2346db93102c7894a3c084414e9"
+  }
+}
