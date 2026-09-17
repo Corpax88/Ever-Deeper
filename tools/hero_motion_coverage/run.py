@@ -57,21 +57,44 @@ def validate_report(case: dict, pack_sha: str) -> dict:
         errors.append("Hero/tool/target framing contract failed or was not observed")
     if case.get("all_frames") and not report.get("all_observed_frames_captured"):
         errors.append("Full ordered rendered frames were requested but are incomplete")
+    capture_format = case.get("capture_format", "png")
+    if report.get("capture_format", "png") != capture_format:
+        errors.append("Capture format mismatch")
     required = {"release_before_contact", "move_away_during_anticipation", "first_real_impact", "release_after_delivered_contact"}
     if not required.issubset({event.get("name") for event in report.get("events", [])}):
         errors.append("Missing impact or cancellation observation")
     captures = report.get("captures", [])
     if not captures:
         errors.append("No actual images")
+    def validate_png(name: str) -> None:
+        if Path(name).name != name:
+            errors.append("Invalid PNG name")
+            return
+        with (folder / name).open("rb") as stream:
+            header = stream.read(24)
+        if header[:8] != b"\x89PNG\r\n\x1a\n" or len(header) != 24 or struct.unpack(">II", header[16:24]) != (1696, 780):
+            errors.append(f"Invalid native PNG: {name}")
     for capture in captures:
         name = capture["file"]
         if Path(name).name != name:
             errors.append("Invalid capture name")
             continue
-        with (folder / name).open("rb") as stream:
-            header = stream.read(24)
-        if header[:8] != b"\x89PNG\r\n\x1a\n" or len(header) != 24 or struct.unpack(">II", header[16:24]) != (1696, 780):
-            errors.append(f"Invalid native frame: {name}")
+        if capture_format == "rgba8":
+            expected = {"format": "rgba8", "width": 1696, "height": 780, "byte_count": 1696 * 780 * 4,
+                        "row_stride_bytes": 1696 * 4, "row_order": "top_to_bottom", "channel_order": "RGBA"}
+            if (any(capture.get(key) != value for key, value in expected.items())
+                    or not name.endswith(".rgba") or (folder / name).stat().st_size != 1696 * 780 * 4):
+                errors.append(f"Invalid sized RGBA8 frame: {name}")
+        else:
+            validate_png(name)
+    if capture_format == "rgba8":
+        critical = report.get("critical_pngs", [])
+        if not critical:
+            errors.append("No critical native PNGs encoded from raw frames")
+        for entry in critical:
+            validate_png(entry["file"])
+            if entry.get("origin") != "godot_png_from_stored_rgba8":
+                errors.append("Critical native PNG origin mismatch")
     return {"passed": not errors, "errors": errors, "captures": len(captures),
             "samples": len(report.get("samples", [])), "report_sha256": digest(folder / "hero-motion-coverage.json")}
 
@@ -89,8 +112,10 @@ def main() -> int:
     parser.add_argument("--plan-only", action="store_true", help="Write receipts and commands without starting Godot/Xvfb")
     parser.add_argument("--all-frames", action="store_true", help="Save every observed rendered frame for a complete lossless motion archive")
     parser.add_argument("--archive-lossless", action="store_true", help="Implies --all-frames; encode and verify each case before starting the next")
+    parser.add_argument("--capture-format", choices=["png", "rgba8"], default="png",
+                        help="Optional fast raw RGBA8 captures plus critical native PNGs; raw implies --all-frames")
     args = parser.parse_args()
-    args.all_frames = args.all_frames or args.archive_lossless
+    args.all_frames = args.all_frames or args.archive_lossless or args.capture_format == "rgba8"
     project = args.project.resolve()
     output = args.output.resolve()
     gears, directions = approved_keys(project)
@@ -134,8 +159,11 @@ def main() -> int:
                 command += [f"--pack-source={pack}"]
             if args.all_frames:
                 command += ["--all-frames"]
+            if args.capture_format != "png":
+                command += [f"--capture-format={args.capture_format}"]
             case = {"gear": gear, "direction": direction, "source_sha": source_sha,
-                    "output": str(folder), "command": command, "all_frames": args.all_frames}
+                    "output": str(folder), "command": command, "all_frames": args.all_frames,
+                    "capture_format": args.capture_format}
             if args.archive_lossless:
                 case["archive_command"] = [sys.executable, str(archiver), "--input", str(folder),
                                            "--output", str(folder / "lossless"), "--require-complete", "--threads", "2"]
@@ -146,6 +174,7 @@ def main() -> int:
     receipt = {"schema": 1, "source_sha": source_sha, "pack_sha256": pack_sha,
                "approved_gears": gears, "approved_directions": directions,
                "fixture_sha256": digest(fixture), "runner_sha256": digest(Path(__file__)),
+               "capture_format": args.capture_format,
                "archive_lossless_per_case": args.archive_lossless,
                "archiver_sha256": digest(archiver) if args.archive_lossless else None,
                "runtime_sha256": runtime_hashes, "cases": cases,
@@ -175,7 +204,10 @@ def main() -> int:
                 proof = json.loads((archive_folder / "archive.json").read_text())
                 verified = (archived.returncode == 0 and proof.get("verified_rgb") is True
                             and proof.get("all_observed_frames_present") is True
-                            and proof.get("original_pngs_retained") is True
+                            and proof.get("source_captures_retained", proof.get("original_pngs_retained")) is True
+                            and proof.get("capture_format", "png") == args.capture_format
+                            and proof.get("opaque_alpha_verified") is True
+                            and proof.get("critical_source_pngs_retained") is True
                             and proof.get("source_report_sha256") == row["report_sha256"])
                 row["archive"] = {"verified": verified, "receipt": str(archive_folder / "archive.json"),
                                   "video_sha256": proof.get("video_sha256"), "video_bytes": proof.get("video_bytes"),

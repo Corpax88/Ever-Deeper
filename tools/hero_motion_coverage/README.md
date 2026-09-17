@@ -2,9 +2,10 @@
 
 This opt-in study extends `tools/review_hero_gameplay.gd` without changing its
 historical evidence, the production capture driver, browser harness, or approved
-v28 assets. The first exact-DEV11 Worn/right pilot passes its mechanical checks;
-the other combinations remain unrendered. Mechanical passes require separate
-inspection of the actual ordered PNGs before accepting animation.
+v28 assets. Corrected exact-DEV11 Worn/right and Deepcore/right pilots pass their
+mechanical, framing and lossless-storage checks and have independent bounded
+critical-frame acceptance. The broader combinations remain unrendered. Mechanical
+passes require separate inspection of the actual pixels before accepting motion.
 Godot 4.7.2 `--headless --check-only` passes against the exact downloaded DEV11
 PCK from source `8f5680defb9083bbe1e044d39a10612f2186e7f3` in an empty project.
 This validates parsing and packed resource resolution, not gameplay or imagery.
@@ -34,7 +35,7 @@ limitation: select a lower natural corridor with the ordinary HUD/camera before
 widening the matrix or accepting full swing clearance. No broad animation,
 browser, audio-output or performance acceptance follows from this pilot.
 
-The pending fixture now requires the start, adjacent contact and target cell
+The corrected fixture requires the start, adjacent contact and target cell
 centers to be at world Y>=320. Every rendered sample records a framing check:
 the full combined hero/tool sprite rectangle and complete target tile must be
 inside the viewport and at least 8 px clear of the current visible HUD, minimap,
@@ -43,6 +44,23 @@ the rectangles, minimum axis clearance, obstructions and failed sample indices.
 An obscured sample is retained as a PNG and fails the case; mechanical assertions
 remain unchanged. Full sprite-cell bounds are conservative. Natural world
 occlusion and the appearance of motion still need actual image review.
+
+Study checkpoint `382896abeb2da51c8f64d131dadbebd680285593` subsequently ran the
+two corrected pilots against the same exact DEV11 source/PCK. Worn/right passes
+29 checks and 195/195 frames, with 85.99 px minimum HUD/viewport clearance.
+Deepcore/right passes 28 checks and 171/171 frames, with 15.42 px clearance.
+All 366 decoded RGB hashes match; the 113 runtime/hero preservation hashes are
+unchanged. Both cases cancel before contact without damage and deliver one real
+impact. Right-facing contact is unobscured. The companion briefly overlaps the
+reversing leftward tool, so this does not establish separate left-direction
+tool visibility. Approved v28 artwork remains unchanged.
+
+Evidence: `/workspace/scratch/d5437d917805/evidence/hero-motion-coverage/dev11-lower-pilots-382896a/`.
+Lean bundle: `../dev11-lower-pilots-382896a-lean.tar.gz`, 75,821,486 bytes,
+SHA-256 `55b57a489ef886ca04d83a3db6229fe86d8ede0acbdeec1fdae37c891be18523`.
+It retains both complete lossless movies, 22 byte-identical critical PNGs,
+sample/event/hash records and the bounded review. All 143 first-pilot and 366
+corrected-pilot original PNGs were retained locally.
 
 ## Existing coverage at the DEV11 checkpoint
 
@@ -175,7 +193,7 @@ encodes and verifies before starting the next case. The archive uses
 `--require-complete`, which rejects missing PNG samples or a mismatching fixed
 60 Hz simulation timeline. A failed case or archive stops the sequence with
 its evidence retained. No unverified archive can clear a case. This option
-has passed plan validation; the corrected native pilots await their checkpoint.
+passed both corrected native pilots described above.
 
 Existing captured images can be archived separately with:
 
@@ -203,3 +221,63 @@ external upload. Once the owner verifies that each lossless bundle is durably
 saved, noncritical PNGs from later cases may be treated as a regenerable local
 cache. Preserve the verified archive and hash/timeline manifests before such
 cleanup. Lossless verification does not replace reviewing the actual motion.
+
+## Optional raw RGBA8 capture
+
+`--capture-format rgba8` is an optional storage path; the default remains `png`.
+Raw mode implies `--all-frames` and keeps the same post-draw observations, input
+events, physics, stage durations, framing checks and capture limits. Each frame
+is a headerless, tightly packed, top-to-bottom RGBA8 file: 1696x780 pixels,
+6,784 bytes per row and exactly **5,291,520 bytes**. Its capture record declares
+dimensions, channel/row order, byte count and any Godot image-format conversion.
+No PNG is claimed for these raw captures.
+
+After the final observed frame, Godot reads the exact stored event-boundary and
+recovery-endpoint frames and encodes the same 11 critical PNGs with `save_png`.
+It never reads a later viewport to create these images. The report marks them
+`godot_png_from_stored_rgba8`, links each original raw file/hash, and records
+each newly encoded PNG's own hash. The archive verifies that their decoded RGB
+pixels match their exact raw source and preserves the critical PNG bytes.
+
+The archiver checks each raw byte count, declared layout and alpha range before
+feeding RGB24 to the lossless encoder. Every alpha byte must be 255. It verifies
+every decoded RGB hash and the complete timeline, and keeps separate raw-capture,
+RGB and critical-PNG identities. `original_png_bytes` is zero for raw frame
+captures; `original_pngs_retained` is null rather than claiming they were PNGs.
+All raw source files and critical PNGs remain unchanged. Re-encoded noncritical
+PNGs are regenerated representations; their compressed file hashes can differ.
+
+Use isolated `/tmp` for mutable capture and encoding. A completed PNG in the
+shared workspace was observed truncated after its full-file hash was recorded;
+the archive correctly rejected it. Preserve that failure instead of relaxing
+decoding or hash checks. Close and verify outputs before copying a complete
+bundle into shared evidence, then verify its copied hash independently.
+
+```sh
+python3 tools/hero_motion_coverage/run.py \
+  --godot /verified/path/to/Godot --xvfb /verified/path/to/Xvfb \
+  --pack /absolute/accepted-candidate/index.pck --source-sha COMMIT_SHA \
+  --gear worn --direction right --archive-lossless --capture-format rgba8 \
+  --output /tmp/hero-motion-coverage-UNIQUE/worn-right-pilot
+```
+
+A 195-frame raw case occupies 1,031,846,400 bytes before critical PNGs and its
+archive; this trades temporary disk space for fewer PNG compression operations.
+Capture, encode and verify one case at a time. Raw files remain until the owner
+confirms durable verified storage. Do not accumulate a raw 44-case matrix.
+
+The fast path requires its own checkpoint and rendered pilot. Its first pilot
+must use the same exact DEV11 PCK, Worn/right events and 195-sample contract.
+Compare matching pose/time observations to the accepted PNG pilot; active
+world/companion/achievement pixels need not be bit-identical across runs.
+A saved-frame CPU format comparison and headless parser cannot establish new
+gameplay, animation acceptance, Godot critical-PNG execution or a speedup.
+
+The isolated `/tmp/ever-deeper-hero-raw-study-20260917/cpu-comparison/` check
+uses four already saved native frames around the accepted Worn contact.
+Legacy PNG input without a format field and declared raw RGBA8 input both
+encode/decode 4/4 identical RGB hashes. Raw alpha is fully opaque; both supplied
+critical PNGs match their exact raw pixels. Truncated data, nonopaque alpha and
+incorrect stride declarations are rejected. CPU-generated PNGs are explicitly
+labeled as such; they are not Godot capture evidence. The exact DEV11 PCK
+headless parser also passes. The raw graphical pilot remains pending.

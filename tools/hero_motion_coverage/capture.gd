@@ -33,6 +33,8 @@ var initial_serial := 0
 var expected_serial := 0
 var packed := false
 var all_frames := false
+var capture_format := "png"
+var critical_pngs: Array[Dictionary] = []
 var framing_failures: Array[int] = []
 var minimum_framing_clearance := 1000000.0
 
@@ -57,8 +59,10 @@ func _run() -> void:
 		elif arg.begins_with("--gear="): gear = arg.trim_prefix("--gear=")
 		elif arg.begins_with("--direction="): direction_name = arg.trim_prefix("--direction=")
 		elif arg == "--all-frames": all_frames = true
+		elif arg.begins_with("--capture-format="): capture_format = arg.trim_prefix("--capture-format=")
+	if capture_format == "rgba8": all_frames = true
 	packed = FileAccess.file_exists("res://project.binary")
-	if not output.is_absolute_path() or gear not in Gear.TOOLS or not DIRECTIONS.has(direction_name) or source_sha.length() != 40 or DisplayServer.get_name() == "headless":
+	if capture_format not in ["png", "rgba8"] or not output.is_absolute_path() or gear not in Gear.TOOLS or not DIRECTIONS.has(direction_name) or source_sha.length() != 40 or DisplayServer.get_name() == "headless":
 		print("HERO_COVERAGE_USAGE requires rendered display, absolute --output, --source-sha, approved --gear and --direction")
 		quit(2)
 		return
@@ -307,16 +311,74 @@ func _frame() -> bool:
 	if all_frames or dense or stage_frame % 6 == 0 or not bool(framing.passed):
 		if captures.size() >= PNG_LIMIT:
 			return _check(false, "Rendered PNG budget exceeded")
-		var filename: String = "%04d_%s.png" % [samples.size(), stage]
 		var frame_image: Image = root.get_texture().get_image()
 		if frame_image.get_size() != SIZE:
 			return _check(false, "Actual rendered frame differs from 1696x780")
-		if frame_image.save_png(output.path_join(filename)) != OK:
-			return _check(false, "Rendered frame could not be saved")
-		sample["png"] = filename
-		captures.append({"file": filename, "sample": samples.size(), "stage": stage, "drawn_frame": Engine.get_frames_drawn()})
+		if capture_format == "rgba8":
+			if frame_image.has_mipmaps():
+				return _check(false, "Raw capture unexpectedly contains mipmaps")
+			var original_format: int = frame_image.get_format()
+			frame_image.convert(Image.FORMAT_RGBA8)
+			var pixels: PackedByteArray = frame_image.get_data()
+			var expected_bytes: int = SIZE.x * SIZE.y * 4
+			if pixels.size() != expected_bytes:
+				return _check(false, "Raw RGBA8 frame byte count differs from declared dimensions")
+			var filename: String = "%04d_%s.rgba" % [samples.size(), stage]
+			var raw_file: FileAccess = FileAccess.open(output.path_join(filename), FileAccess.WRITE)
+			if raw_file == null:
+				return _check(false, "Raw rendered frame could not be opened")
+			raw_file.store_buffer(pixels)
+			raw_file.flush()
+			var stored_ok: bool = raw_file.get_error() == OK and raw_file.get_length() == expected_bytes
+			raw_file.close()
+			if not stored_ok:
+				return _check(false, "Raw rendered frame could not be saved completely")
+			sample["raw_frame"] = filename
+			captures.append({"file": filename, "sample": samples.size(), "stage": stage,
+				"drawn_frame": Engine.get_frames_drawn(), "format": "rgba8", "width": SIZE.x,
+				"height": SIZE.y, "byte_count": expected_bytes, "row_stride_bytes": SIZE.x * 4,
+				"row_order": "top_to_bottom", "channel_order": "RGBA", "origin": "godot_frame_post_draw",
+				"godot_image_format_before": original_format, "converted_to_rgba8": original_format != Image.FORMAT_RGBA8})
+		else:
+			var filename: String = "%04d_%s.png" % [samples.size(), stage]
+			if frame_image.save_png(output.path_join(filename)) != OK:
+				return _check(false, "Rendered frame could not be saved")
+			sample["png"] = filename
+			captures.append({"file": filename, "sample": samples.size(), "stage": stage, "drawn_frame": Engine.get_frames_drawn()})
 	samples.append(sample)
 	stage_frame += 1
+	return true
+
+
+func _save_raw_critical_pngs() -> bool:
+	# Encode only the event boundaries and recovery endpoints. Every source byte
+	# comes from the stored post-draw RGBA8 frame, never a later viewport readback.
+	var selected: Dictionary = {}
+	var names: Array[String] = ["release_before_contact", "move_away_during_anticipation", "first_real_impact", "release_after_delivered_contact"]
+	for event in events:
+		if String(event.name) not in names: continue
+		var before: int = int(event.after_sample)
+		if before >= 0 and before < captures.size(): selected[before] = true
+		if before + 1 < captures.size(): selected[before + 1] = true
+	for name in ["cancel_release", "walk_stop", "post_hit_release"]:
+		var last := -1
+		for capture in captures:
+			if String(capture.stage) == name: last = int(capture.sample)
+		if last >= 0: selected[last] = true
+	for capture in captures:
+		if not selected.has(int(capture.sample)): continue
+		var raw_path: String = output.path_join(String(capture.file))
+		var pixels: PackedByteArray = FileAccess.get_file_as_bytes(raw_path)
+		if pixels.size() != SIZE.x * SIZE.y * 4:
+			return _check(false, "Critical stored RGBA8 frame is incomplete")
+		var frame_image: Image = Image.create_from_data(SIZE.x, SIZE.y, false, Image.FORMAT_RGBA8, pixels)
+		var filename: String = String(capture.file).get_basename() + ".png"
+		if frame_image.save_png(output.path_join(filename)) != OK:
+			return _check(false, "Critical native PNG could not be encoded from its stored frame")
+		critical_pngs.append({"file": filename, "sample": capture.sample,
+			"origin": "godot_png_from_stored_rgba8", "generated_from_raw": true,
+			"source_raw_file": capture.file, "source_raw_sha256": FileAccess.get_sha256(raw_path),
+			"png_sha256": FileAccess.get_sha256(output.path_join(filename))})
 	return true
 
 
@@ -417,6 +479,7 @@ func _finish() -> void:
 	if is_instance_valid(main):
 		main._set_mine_held(false)
 		main._on_joystick_movement(Vector2.ZERO)
+	if capture_format == "rgba8": _save_raw_critical_pngs()
 	var fixture: Dictionary = {}
 	if not route.is_empty():
 		fixture = {"seed": SEED, "depth": 1, "wall": [route.wall.x, route.wall.y], "start": [route.start.x, route.start.y], "direction": direction_name}
@@ -427,6 +490,7 @@ func _finish() -> void:
 		"engine": Engine.get_version_info().string, "display": DisplayServer.get_name(),
 		"rendered": DisplayServer.get_name() != "headless", "actual_viewport": [root.size.x, root.size.y],
 		"fixture": fixture, "stages": stages, "events": events, "samples": samples, "captures": captures,
+		"capture_format": capture_format, "capture_origin": "godot_frame_post_draw", "critical_pngs": critical_pngs,
 		"all_frames_requested": all_frames, "all_observed_frames_captured": captures.size() == samples.size(),
 		"framing": {"passed": not samples.is_empty() and framing_failures.is_empty(),
 			"required_margin_px": FRAMING_MARGIN, "minimum_axis_clearance_px": minimum_framing_clearance,
