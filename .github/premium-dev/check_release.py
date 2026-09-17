@@ -74,10 +74,10 @@ class PublisherChecks(unittest.TestCase):
         artifacts = {kind: {"id": self.pin[kind]["id"], "name": self.pin[kind]["name"], "expired": False, "workflow_run": {"id": c.RUN, "head_sha": c.SOURCE}} for kind in ("candidate", "complete")}
         return run, jobs, artifacts
 
-    def test_pinned_real_baseline_is_dev11_with_all_18_files(self):
+    def test_pinned_real_baseline_is_dev12_with_all_18_files(self):
         base = c.baseline()
-        self.assertEqual(base["candidate_artifact_id"], 10481858878)
-        self.assertEqual(base["source_commit"], "8f5680defb9083bbe1e044d39a10612f2186e7f3")
+        self.assertEqual(base["candidate_artifact_id"], 10489135841)
+        self.assertEqual(base["source_commit"], "580a2e02eca1e000f5d5f58bb61ac09fd4b2a194")
         self.assertEqual(sum(len(rows) for rows in base["files"].values()), 18)
 
     def test_pending_visual_review_stops_before_network_or_workspace(self):
@@ -91,17 +91,32 @@ class PublisherChecks(unittest.TestCase):
         self.assertFalse((self.root / "publish").exists())
 
     def test_authorization_and_bounded_visual_record_are_required(self):
-        with patch.object(c, "read_json", return_value=self.accepted):
-            self.assertIs(c.reviewed(self.pin), self.accepted)
+        read = c.read_json
+        with patch.object(c, "read_json", side_effect=lambda path: self.accepted if Path(path).name == "review.json" else read(path)):
+            self.assertIs(c.reviewed(c.pinned()), self.accepted)
             for key in ("final_one_point_zero_approved", "live_publication_authorized", "physical_iphone_verified"):
                 with self.subTest(key=key):
                     self.accepted[key] = True
                     with self.assertRaises(RuntimeError):
-                        c.reviewed(self.pin)
+                        c.reviewed(c.pinned())
                     self.accepted[key] = False
             self.accepted["dev_publication_authorized"] = False
             with self.assertRaises(RuntimeError):
-                c.reviewed(self.pin)
+                c.reviewed(c.pinned())
+
+    def test_both_companion_directions_and_package_are_required(self):
+        read = c.read_json
+        for variant in ("pending", "missing-up", "wrong-pack", "partial-capture", "runtime-overlay", "wrong-report-bytes"):
+            data = copy.deepcopy(self.accepted)
+            companion = data["companion_readiness"]
+            if variant == "pending": companion["status"] = "pending"
+            elif variant == "missing-up": del companion["directions"]["up"]
+            elif variant == "wrong-pack": companion["pck_sha256"] = "0" * 64
+            elif variant == "partial-capture": companion["directions"]["up"]["samples"] = 194
+            elif variant == "runtime-overlay": companion["directions"]["up"]["runtime_replacements"] = ["pilot"]
+            else: companion["directions"]["up"]["independent_review_sha256"] = "0" * 64
+            with self.subTest(variant=variant), patch.object(c, "read_json", side_effect=lambda path: data if Path(path).name == "review.json" else read(path)):
+                with self.assertRaises(RuntimeError): c.reviewed(c.pinned())
 
     def test_exact_14_jobs_run_and_artifacts_are_required(self):
         run, jobs, artifacts = self.metadata()
@@ -234,7 +249,7 @@ class PublisherChecks(unittest.TestCase):
         for kind in ("candidate", "complete"):
             c.extract_exact(EVIDENCE / (kind + ".zip"), self.root / ("real-" + kind), pin[kind])
         files = c.verify_bundle(self.root / "real-candidate", self.root / "real-complete", pin)
-        self.assertEqual(files["index.pck"]["sha256"], "9dfcf913c867e36e6a16f4f5123fd5cce7654cfb435a753f9eb7bca12f574bd9")
+        self.assertEqual(files["index.pck"]["sha256"], "5016e16791f51790f7a10dfabe0719b308de82a80627aca8d740b0e355e6cdc3")
         run_file, jobs_file = EVIDENCE / "qa-run-api.json", EVIDENCE / "qa-jobs-api.json"
         if run_file.exists() and jobs_file.exists():
             _, _, artifacts = self.metadata()

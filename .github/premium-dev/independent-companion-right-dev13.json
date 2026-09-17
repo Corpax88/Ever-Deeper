@@ -1,0 +1,543 @@
+{
+  "schema": 1,
+  "reviewer": "independent_dev13_critic",
+  "reviewed_utc": "2026-09-17T15:40:19.492387+00:00",
+  "verdict": {
+    "status": "ACCEPT_BOUNDED_ACTUAL_DEV13_RIGHT_PACKAGE",
+    "blocking_findings": [],
+    "right_follow_correction_visual_acceptance": true,
+    "overall_publication_approval": false,
+    "up_acceptance": false,
+    "final_1_0_or_fps_acceptance": false
+  },
+  "scope": {
+    "source_sha": "5ca6f0f77a1f87eaead777613062208159325068",
+    "pack": {
+      "path": "/workspace/scratch/b465f3665b0c/evidence/dev13-ci/candidate/index.pck",
+      "sha256": "5016e16791f51790f7a10dfabe0719b308de82a80627aca8d740b0e355e6cdc3",
+      "bytes": 221020724
+    },
+    "fixture": {
+      "depth": 1,
+      "direction": "right",
+      "requested_wall": [],
+      "seed": 4608,
+      "selection": "first_valid_natural_wall",
+      "start": [
+        2016.0,
+        416.0
+      ],
+      "wall": [
+        35,
+        6
+      ]
+    },
+    "native_viewport": [
+      1696,
+      780
+    ],
+    "fixed_step_hz": 60,
+    "gear": "worn",
+    "earned_profile_sha256": "411ae47a354270ffc08b46ff1223db2a07ecb6fd4d35ed208ef1778037331811",
+    "independence": "Reviewer did not author runtime, release fixture or capture. Independently decoded image evidence, parsed PCK, compared traces and inspected actual images."
+  },
+  "visual_inspection": {
+    "whole_new_originals": [
+      "/tmp/ever-deeper-dev13-right-production/worn-right-production/0000_idle.png",
+      "/tmp/ever-deeper-dev13-right-production/worn-right-production/0045_blocked_windup.png",
+      "/tmp/ever-deeper-dev13-right-production/worn-right-production/0093_cancel_by_movement.png",
+      "/tmp/ever-deeper-dev13-right-production/worn-right-production/0128_return_to_wall.png",
+      "/tmp/ever-deeper-dev13-right-production/worn-right-production/0155_impact_windup.png",
+      "/tmp/ever-deeper-dev13-right-production/worn-right-production/0194_post_hit_release.png"
+    ],
+    "whole_old_decoded_frames": [
+      "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/old-decoded-0000.png",
+      "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/old-decoded-0045.png",
+      "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/old-decoded-0093.png",
+      "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/old-decoded-0128.png",
+      "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/old-decoded-0155.png",
+      "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/old-decoded-0194.png"
+    ],
+    "native_paired_sheets": [
+      {
+        "file": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-01.png",
+        "samples": [
+          0,
+          12,
+          13,
+          20
+        ],
+        "sha256": "217726f00063e10e8031a3c314941957a97f83aaec1e58dbdf2820454a530d0a",
+        "native_scale": 1
+      },
+      {
+        "file": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-02.png",
+        "samples": [
+          30,
+          40,
+          41,
+          42
+        ],
+        "sha256": "18232d4bb058c4b75483cbd0e6693aaffb5044c13d9c2377d89f8ae1294a054c",
+        "native_scale": 1
+      },
+      {
+        "file": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-03.png",
+        "samples": [
+          43,
+          44,
+          45,
+          46
+        ],
+        "sha256": "617dd381441245993d5134520a31faeabc0ab4c68cb227e3fae732287feeb0ec",
+        "native_scale": 1
+      },
+      {
+        "file": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-04.png",
+        "samples": [
+          47,
+          48,
+          55,
+          56
+        ],
+        "sha256": "a6e4981f5699ce921fa211d6f34356efd86636949884a2a52706e9099146967b",
+        "native_scale": 1
+      },
+      {
+        "file": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-05.png",
+        "samples": [
+          77,
+          84,
+          85,
+          86
+        ],
+        "sha256": "e1343c846d99ccfedf0bc27e70da0f103440d7e0c9c01f595a08b473ae7a093d",
+        "native_scale": 1
+      },
+      {
+        "file": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-06.png",
+        "samples": [
+          87,
+          88,
+          89,
+          90
+        ],
+        "sha256": "383161bda20938320629e15872ec68917694d9c966c393dae6fda845de3dd0cd",
+        "native_scale": 1
+      },
+      {
+        "file": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-07.png",
+        "samples": [
+          91,
+          92,
+          93,
+          94
+        ],
+        "sha256": "2fa9b7009f7af6d2e3f620cdded97bbb78d06f1dd0e8cb936ddc0080e5a6cc49",
+        "native_scale": 1
+      },
+      {
+        "file": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-08.png",
+        "samples": [
+          95,
+          96,
+          120,
+          124
+        ],
+        "sha256": "b28204725f6c1d5e478385956eea3a59a97d72e7f61b86f96d6bebebf5160c41",
+        "native_scale": 1
+      },
+      {
+        "file": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-09.png",
+        "samples": [
+          125,
+          126,
+          127,
+          128
+        ],
+        "sha256": "b255bba8b98569e15ac69e0a7eea23de882a4a75020f483ba024ecf46c5e4565",
+        "native_scale": 1
+      },
+      {
+        "file": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-10.png",
+        "samples": [
+          129,
+          130,
+          131,
+          132
+        ],
+        "sha256": "906d490c8a7fb92d612955d167d9a5238c8f9bdd732092cf7c42a5c3700ad353",
+        "native_scale": 1
+      },
+      {
+        "file": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-11.png",
+        "samples": [
+          133,
+          134,
+          135,
+          136
+        ],
+        "sha256": "b185e480e9fff625ab5c66988866e3f56c82f5219159cfaa317a3c0fa4dfab64",
+        "native_scale": 1
+      },
+      {
+        "file": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-12.png",
+        "samples": [
+          137,
+          138,
+          152,
+          153
+        ],
+        "sha256": "c637e8e93595bd1084ac530168a8d6c7d05e2c42ac47d18f5dae57deb4a705a1",
+        "native_scale": 1
+      },
+      {
+        "file": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-13.png",
+        "samples": [
+          154,
+          155,
+          156,
+          157
+        ],
+        "sha256": "ab2ce8e43a4e6d4c65bc5f7a60ab060de797687fcf047d339e37079054250e99",
+        "native_scale": 1
+      },
+      {
+        "file": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-14.png",
+        "samples": [
+          158,
+          166,
+          167,
+          168
+        ],
+        "sha256": "6fe41a92ac40188dc4efa1bd3b18cf4f8ccb38c0756c84842a02c1124f2101b7",
+        "native_scale": 1
+      },
+      {
+        "file": "/tmp/dev13-critic-right-repair/paired-15.png",
+        "samples": [
+          169,
+          170,
+          171,
+          172
+        ],
+        "sha256": "0f21649fcc97d2ca47dbf54274e4af84916859c3c38bc349a929cadbcdb22e6b",
+        "native_scale": 1,
+        "original_derived_file_failed_later_readback": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-15.png"
+      },
+      {
+        "file": "/tmp/dev13-critic-right-repair/paired-16.png",
+        "samples": [
+          194
+        ],
+        "sha256": "f34d4fe9ccecfafeff5f0905c17753208712f5ae89acdbd05a8204ecc3bd796a",
+        "native_scale": 1,
+        "original_derived_file_failed_later_readback": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-16.png"
+      }
+    ],
+    "paired_samples_inspected": [
+      0,
+      12,
+      13,
+      20,
+      30,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      55,
+      56,
+      77,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      120,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      194
+    ],
+    "pair_count": 61,
+    "whole_image_count": 12,
+    "all_frames_claim": false,
+    "normalization": "No scaling or camera/color correction; identical absolute native crop rectangles and original whole images.",
+    "tool_error_note": "An initially mistyped0045 filename was corrected using report captures; it is not counted as an inspection."
+  },
+  "findings": [
+    {
+      "id": "fixed_return_reversal",
+      "status": "pass",
+      "samples": [
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138
+      ],
+      "observation": "Actual135 retains the back-facing stationary mole, matching approved pilot;136 steps outward,137-138 settle with the same back-facing body. No old one-frame front/back flash returns."
+    },
+    {
+      "id": "crossing_and_ground",
+      "status": "pass",
+      "samples": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130
+      ],
+      "observation": "The companion stays farther north of the hero on this route. At closest45 the farther mole is correctly behind the hero with ordinary projected silhouette overlap. At prior problematic crossings93/128 the mole remains legible above/beside the hero, matching approved pilot without new wall entry, depth pop or body-through-body appearance."
+    },
+    {
+      "id": "cancel_contact_and_recovery",
+      "status": "pass",
+      "samples": [
+        55,
+        56,
+        77,
+        84,
+        85,
+        86,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        194
+      ],
+      "observation": "Companion stays outside the right-hand tool contact/recovery area and does not add pick obstruction. Hero cancellation, strike and release pose sequences visually match prior approved capture; no new companion turn jitter occurs."
+    },
+    {
+      "id": "presentation_and_framing",
+      "status": "pass_in_scope",
+      "observation": "Whole images retain coherent hero/companion scale, material and unchanged production art. HUD and actual target remain clear; measured full-cell framing checks pass. Existing hero-art/terrain-quality issues are outside this narrow transfer acceptance."
+    }
+  ],
+  "independent_trace_check": {
+    "samples": 195,
+    "events": 6,
+    "mechanics_match": true,
+    "mechanical_fields": [
+      "actual_input",
+      "hero_health",
+      "impact_serial",
+      "mine_held",
+      "mining",
+      "movement_input",
+      "moving",
+      "pose",
+      "position",
+      "progress",
+      "recover_direction",
+      "recover_phase",
+      "sample",
+      "simulated_seconds",
+      "stage",
+      "target",
+      "target_id",
+      "world_damage"
+    ],
+    "idle_pose_policy": "As in approved comparator, idle frame/local_frame ignored only; production and pilot actually have exact other companion state values.",
+    "events_match": true,
+    "companion_semantic_fields_exact": [
+      "action",
+      "action_clock",
+      "animation_clock",
+      "automatic_task",
+      "collected_total",
+      "destination",
+      "dug_total",
+      "expected_foot_depth",
+      "facing",
+      "hero_distance",
+      "hero_position",
+      "hero_z_as_relative",
+      "hero_z_index",
+      "local_position",
+      "mode",
+      "moving",
+      "path_searches",
+      "position",
+      "present",
+      "relative_to_hero",
+      "route_length",
+      "separation",
+      "sprite_frame",
+      "sprite_local_position",
+      "sprite_rotation",
+      "sprite_scale",
+      "sprite_texture",
+      "terrain_blocked_at_center",
+      "think_clock",
+      "visible",
+      "z_as_relative",
+      "z_index"
+    ],
+    "companion_semantic_match": true,
+    "excluded_companion_fields": [
+      "script (expected pilot-to-production path)",
+      "sprite_cell_rect_logical (actual camera-derived difference)"
+    ],
+    "actual_production_owner_helper_bound_every_sample": true,
+    "minimum_center_distance": 54.1718482971191,
+    "blocked_center_samples": 0,
+    "stale_foot_depth_samples": 0,
+    "steering_choice_counts": {
+      "route": 85,
+      "yield": 17,
+      "retreat": 24,
+      "wait": 10,
+      "restore": 59
+    },
+    "checks_pass": true,
+    "failure_count": 0,
+    "single_real_impact_at155": {
+      "damage": 4,
+      "excavated": false
+    },
+    "final_total_swings": 1
+  },
+  "camera_and_pixels": {
+    "logical_sprite_rect_delta_min": [
+      0.0,
+      -7.895828247070966,
+      0.0,
+      -1.5258789105132564e-05
+    ],
+    "logical_sprite_rect_delta_max": [
+      0.0,
+      -7.8957977294919885,
+      0.0,
+      1.5258789105132564e-05
+    ],
+    "interpretation": "New scene is about7.8958logical px higher than accepted pilot, about8.685native px. Small rectangle rounding variation is recorded; not claimed exact pixel parity.",
+    "whole_frame_rgb_identical_count": 0,
+    "no_camera_normalization": true
+  },
+  "integrity": {
+    "all195_old_movie_frames_independently_decoded_and_rgb_hash_matched": true,
+    "all195_new_original_pngs_independently_decoded_and_byte_hash_matched": true,
+    "new_report_sha256": "05120b8098191eb51c12e86c02f7dabbddd4e1521d1aead149dbf73a2438a00e",
+    "old_report_sha256": "6cd5d8db30f751a4f12580b6b70cc691f2ad49a7f4f94f28c9f9e9f5308ead77",
+    "new_release_plan_sha256": "75e068aa39c83c564269e8825801422095d1b362fd97e5e62ee4dd7c2baf819a",
+    "new_release_results_sha256": "bcc6f845d1660c2ff2cdc1e92ce023443acefbf00041f85f48c1ea08ce5aa34e",
+    "cpu_verification": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/verification.json",
+    "cpu_verification_sha256": "e82fcf64ca866def7376a08f420c1c03930de8ede2eaeed4e2a6a5ec61a8bfbe",
+    "direct_pck_directory_verification": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-package-binding.json",
+    "six_remap_and_compiled_blob_hashes_match_capture": true,
+    "execution_log_no_script_errors": true,
+    "captured_exit_code": 0,
+    "derived_transport_failures_retained": [
+      {
+        "path": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-15.png",
+        "bytes": 524413,
+        "sha256_now": "f9e6384839801d9285ee32a1f083a450701a89459198d50bd15ea95cbd88461e",
+        "expected_closed_sha256": "0f21649fcc97d2ca47dbf54274e4af84916859c3c38bc349a929cadbcdb22e6b",
+        "retained": true
+      },
+      {
+        "path": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-16.png",
+        "bytes": 477011,
+        "sha256_now": "f34d4fe9ccecfafeff5f0905c17753208712f5ae89acdbd05a8204ecc3bd796a",
+        "expected_closed_sha256": "f34d4fe9ccecfafeff5f0905c17753208712f5ae89acdbd05a8204ecc3bd796a",
+        "retained": true
+      }
+    ],
+    "derived_repair": [
+      {
+        "original_path": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-15.png",
+        "new_path": "/tmp/dev13-critic-right-repair/paired-15.png",
+        "sha256": "0f21649fcc97d2ca47dbf54274e4af84916859c3c38bc349a929cadbcdb22e6b",
+        "matches_recorded_pretransport_sha256": true,
+        "decoded": true
+      },
+      {
+        "original_path": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-right-images/paired-16.png",
+        "new_path": "/tmp/dev13-critic-right-repair/paired-16.png",
+        "sha256": "f34d4fe9ccecfafeff5f0905c17753208712f5ae89acdbd05a8204ecc3bd796a",
+        "matches_recorded_pretransport_sha256": true,
+        "decoded": true
+      }
+    ],
+    "repair_pixels": "Re-decoded exact source movie and source PNGs. Repaired two sheets byte-match originally recorded complete SHA256; failed scratch bytes remain preserved."
+  },
+  "limits": [
+    "Only original Worn/right seed4608 depth1 naturalwall35,6 path at fixed60; no general all-input/equipment/path promise.",
+    "No physical iPhone, browser, audio-output, elapsed-time/FPS or full-world/final1.0 approval.",
+    "This review inspects61 paired samples plus12 full images, not a continuous all195-frame movie viewing claim. Complete195-frame decode/hash validation is separate from visual inspection.",
+    "Full core/browser/lifecycle QA and up-package review remain separate gates.",
+    "Center distance and valid foot depth support but do not substitute for opaque-pixel visual inspection; trapped corridors remain possible."
+  ]
+}

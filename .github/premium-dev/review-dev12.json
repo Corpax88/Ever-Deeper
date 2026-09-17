@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "dev_only": true,
+  "live_publication_authorized": false,
+  "final_one_point_zero_approved": false,
+  "physical_iphone_verified": false,
+  "source_commit": "580a2e02eca1e000f5d5f58bb61ac09fd4b2a194",
+  "qa_run_id": 35203069938,
+  "candidate_artifact_id": 10489135841,
+  "complete_artifact_id": 10489068121,
+  "dev_publication_authorized": true,
+  "authorization_record": {
+    "requested_by": "Mats",
+    "request": "Jeg har kjørt en tilbakestilling av kvoten! Så kjør på og gjør dere ferdig! Followed by Alltid godkjen after the concrete request to upload the code and publish the verified DEV build. Authorization continues for Ever-Deeper code uploads and DEV publication after its gates.",
+    "recorded_at": "2026-09-17T04:30:18.194393+00:00"
+  },
+  "visual_readiness": {
+    "status": "approved_for_dev_playtest",
+    "reviewer": "Independent performance_critic and root; study/integration authorship disclosed in the underlying reports.",
+    "reviewed_at": "2026-09-17T09:32:53.826283+00:00",
+    "scope": "Only the accepted Moss mineable north-edge orientation in exact DEV12 at the target mobile viewport.",
+    "findings": "The independent critic inspected all3 original A/B/A2 images and both endpoints, finding no package-specific blocker. A/A2 restore exactly; actual production B changes53135pixels. Known corner/step seams remain open. All14 exact QA jobs pass and all15 raw artifacts plus extracted member hashes reverify; the local13-unit aggregate equals CI. Root inspected original packageB and the previously accepted source cases.",
+    "evidence": [
+      "https://github.com/Corpax88/Ever-Deeper/actions/runs/35203069938",
+      ".github/premium-dev/independent-north-review-dev12.json",
+      ".github/premium-dev/package-readiness-dev12.json"
+    ],
+    "blocking_defects": []
+  },
+  "limitations": [
+    "DEV12 is a narrow Moss north-edge playtest correction, not completed premium polish, final1.0 or an overall9/10 approval.",
+    "Existing corner/step/biome joins and complete all-tool motion quality remain open.",
+    "New native motion and rejected art/performance studies are not adopted.",
+    "Stable minimum50FPS has not been demonstrated in sustained browser/physical-iPhone play. Earlier virtual-Mac native sessions fell below50FPS; their ANGLE finding is not automatically a WebKit bottleneck.",
+    "The native held fixture freezes shader time and uses a walkable-floor teleport; actual gameplay/source cases and browser checks are separately retained.",
+    "Mac WebKit is virtual AppleGPU at1696x780, not a physical iPhone. No new sustained-performance or audio certification.",
+    "Only3 signed-effect pixels differ from both source references, maximum channel mismatch3; no exact cross-run full-frame or signed-effect parity claim.",
+    "The existing protected player_visual.gd baseline mismatch is unchanged."
+  ],
+  "north_readiness": {
+    "images": 3,
+    "changed_pixels": 53135,
+    "restored_changed_pixels": 0,
+    "actual_production_draw_calls": 40,
+    "pck_sha256": "9dfcf913c867e36e6a16f4f5123fd5cce7654cfb435a753f9eb7bca12f574bd9",
+    "independent_review": ".github/premium-dev/independent-north-review-dev12.json",
+    "independent_review_sha256": "9a1efec68b0218867ecd23ce8c0ddacc2accbb6d817913c0235522f070dfcf69",
+    "source_reference_exact_effect_parity": false,
+    "source_reference_effect_mismatch_pixels": 3
+  }
+}

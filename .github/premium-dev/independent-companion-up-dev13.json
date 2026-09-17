@@ -1,0 +1,489 @@
+{
+  "schema": 1,
+  "reviewer": "independent_dev13_critic",
+  "reviewed_utc": "2026-09-17T15:44:44.422653+00:00",
+  "verdict": {
+    "status": "ACCEPT_BOUNDED_ACTUAL_DEV13_UP_PACKAGE",
+    "blocking_findings": [],
+    "up_follow_correction_visual_acceptance": true,
+    "overall_publication_approval": false,
+    "final_1_0_or_fps_acceptance": false
+  },
+  "scope": {
+    "source_sha": "5ca6f0f77a1f87eaead777613062208159325068",
+    "pack": {
+      "path": "/workspace/scratch/b465f3665b0c/evidence/dev13-ci/candidate/index.pck",
+      "sha256": "5016e16791f51790f7a10dfabe0719b308de82a80627aca8d740b0e355e6cdc3",
+      "bytes": 221020724
+    },
+    "fixture": {
+      "depth": 1,
+      "direction": "up",
+      "requested_wall": [
+        13,
+        15
+      ],
+      "seed": 4608,
+      "selection": "explicit_natural_wall",
+      "start": [
+        864.0,
+        1248.0
+      ],
+      "wall": [
+        13,
+        15
+      ]
+    },
+    "native_viewport": [
+      1696,
+      780
+    ],
+    "fixed_step_hz": 60,
+    "gear": "worn",
+    "earned_profile_sha256": "411ae47a354270ffc08b46ff1223db2a07ecb6fd4d35ed208ef1778037331811",
+    "independence": "Reviewer did not author runtime, fixture or captures. Read-only package verification, independently decoded full streams/PNGs, independent trace comparison and actual image inspection."
+  },
+  "visual_inspection": {
+    "whole_new_originals": [
+      "/tmp/ever-deeper-dev13-up-production/worn-up-production/0000_idle.png",
+      "/tmp/ever-deeper-dev13-up-production/worn-up-production/0043_blocked_windup.png",
+      "/tmp/ever-deeper-dev13-up-production/worn-up-production/0093_cancel_by_movement.png",
+      "/tmp/ever-deeper-dev13-up-production/worn-up-production/0128_return_to_wall.png",
+      "/tmp/ever-deeper-dev13-up-production/worn-up-production/0155_impact_windup.png",
+      "/tmp/ever-deeper-dev13-up-production/worn-up-production/0194_post_hit_release.png"
+    ],
+    "whole_old_decoded_frames": [
+      "/tmp/dev13-critic-up-images/old-decoded-0000.png",
+      "/tmp/dev13-critic-up-images/old-decoded-0043.png",
+      "/tmp/dev13-critic-up-images/old-decoded-0093.png",
+      "/tmp/dev13-critic-up-images/old-decoded-0128.png",
+      "/tmp/dev13-critic-up-images/old-decoded-0155.png",
+      "/tmp/dev13-critic-up-images/old-decoded-0194.png"
+    ],
+    "native_paired_sheets": [
+      {
+        "file": "/tmp/dev13-critic-up-images/paired-01.png",
+        "samples": [
+          0,
+          12,
+          20,
+          35
+        ],
+        "sha256": "acbb42108716f5c17e95dae1402d5f8e90ee07ec5123cc63425fde787acbf49b",
+        "native_scale": 1
+      },
+      {
+        "file": "/tmp/dev13-critic-up-images/paired-02.png",
+        "samples": [
+          36,
+          37,
+          38,
+          39
+        ],
+        "sha256": "31c8b5d5e02af03f4e8df5f72fb8cdfb1d203f3d795305618a035783c855e1ad",
+        "native_scale": 1
+      },
+      {
+        "file": "/tmp/dev13-critic-up-images/paired-03.png",
+        "samples": [
+          40,
+          41,
+          42,
+          43
+        ],
+        "sha256": "a3e57092987fe129d85a060be31fe91632986da5e3991f6c7ed2d179f0aec23b",
+        "native_scale": 1
+      },
+      {
+        "file": "/tmp/dev13-critic-up-images/paired-04.png",
+        "samples": [
+          55,
+          56,
+          77,
+          88
+        ],
+        "sha256": "cde62981726cfea00af6a8561bc85b30e4169a26f382ba8f518a7c31015dbb63",
+        "native_scale": 1
+      },
+      {
+        "file": "/tmp/dev13-critic-up-images/paired-05.png",
+        "samples": [
+          89,
+          90,
+          91,
+          92
+        ],
+        "sha256": "5412e4b22d809cff81a9ac8f5210cf7f1a48c8df51ab1531142d3f7197602e73",
+        "native_scale": 1
+      },
+      {
+        "file": "/tmp/dev13-critic-up-images/paired-06.png",
+        "samples": [
+          93,
+          94,
+          95,
+          96
+        ],
+        "sha256": "694dfb512f85c49e4b2e5a9d0e0bcd8cc6850abd73dccedb78d724e08e9c624f",
+        "native_scale": 1
+      },
+      {
+        "file": "/tmp/dev13-critic-up-images/paired-07.png",
+        "samples": [
+          97,
+          98,
+          99,
+          100
+        ],
+        "sha256": "a995dbef89391d3c924998c46c616e9dee52ef30cc6b69c18b324c6ec00d29d1",
+        "native_scale": 1
+      },
+      {
+        "file": "/tmp/dev13-critic-up-images/paired-08.png",
+        "samples": [
+          120,
+          124,
+          125,
+          126
+        ],
+        "sha256": "92c5d95fd6b336294ea2e999fc187925eaae6d1f634fc531b49b31488ad7920f",
+        "native_scale": 1
+      },
+      {
+        "file": "/tmp/dev13-critic-up-images/paired-09.png",
+        "samples": [
+          127,
+          128,
+          129,
+          130
+        ],
+        "sha256": "38efe646a655b97368a4eaccac6e3eb977dbb1626510ca695db80383c21a76ae",
+        "native_scale": 1
+      },
+      {
+        "file": "/tmp/dev13-critic-up-images/paired-10.png",
+        "samples": [
+          131,
+          132,
+          133,
+          134
+        ],
+        "sha256": "c9c571b186c319f35f5b31ad14242b103a24e3d90f6cddacd34f10125165bd07",
+        "native_scale": 1
+      },
+      {
+        "file": "/tmp/dev13-critic-up-images/paired-11.png",
+        "samples": [
+          135,
+          152,
+          153,
+          154
+        ],
+        "sha256": "20d1b85d4f61a1a38f86e5afc54ba7f0ca7191411b4a8e5190ad14c71b949ebf",
+        "native_scale": 1
+      },
+      {
+        "file": "/tmp/dev13-critic-up-images/paired-12.png",
+        "samples": [
+          155,
+          156,
+          157,
+          158
+        ],
+        "sha256": "99b553c01a92b90e0b3df892b8fae37ba70c06ae0e8eed5d10eeda6adcd111b9",
+        "native_scale": 1
+      },
+      {
+        "file": "/tmp/dev13-critic-up-images/paired-13.png",
+        "samples": [
+          166,
+          167,
+          168,
+          169
+        ],
+        "sha256": "2c636af79759dc2b7e4d0676a7650fafb3560ab82135063bcb0ff3c88f0d4a80",
+        "native_scale": 1
+      },
+      {
+        "file": "/tmp/dev13-critic-up-images/paired-14.png",
+        "samples": [
+          170,
+          171,
+          172,
+          194
+        ],
+        "sha256": "0532d31d47719270fe851b91e3a23632edbb731e1434b434697fabff18a0e99e",
+        "native_scale": 1
+      }
+    ],
+    "paired_samples_inspected": [
+      0,
+      12,
+      20,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      55,
+      56,
+      77,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      120,
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      166,
+      167,
+      168,
+      169,
+      170,
+      171,
+      172,
+      194
+    ],
+    "pair_count": 56,
+    "whole_image_count": 12,
+    "all_frames_visual_claim": false,
+    "normalization": "None; same absolute crop for both cases, no scaling, translation, camera normalization or color adjustment. Labels are outside crops."
+  },
+  "findings": [
+    {
+      "id": "old_overlap_93_128_remains_resolved",
+      "status": "pass",
+      "samples": [
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130
+      ],
+      "observation": "Actual production mole remains clearly screen-right of hero at both formerly overlapping crossings. It does not mask the hero front or disappear through the hero body. Whole-scene and paired native views match the approved pilot separation."
+    },
+    {
+      "id": "give_way_rejoin",
+      "status": "pass",
+      "transitions": [
+        40,
+        96,
+        130
+      ],
+      "inspected_ranges": [
+        [
+          35,
+          43
+        ],
+        [
+          88,
+          100
+        ],
+        [
+          124,
+          135
+        ]
+      ],
+      "observation": "Mole holds aside while hero passes, turns once toward hero at40/96/130 and maintains coherent return direction on subsequent frames. No alternating front/back or side-to-side flash appears at these boundaries."
+    },
+    {
+      "id": "closest_approach_ground_depth",
+      "status": "pass",
+      "sample": 43,
+      "observation": "Both bodies/feet remain legible side by side at closest43 with coherent floor placement. No new wall penetration or foot-depth pop is visible in inspected sequences. Approximately64px center gap supports this observation without substituting for it."
+    },
+    {
+      "id": "cancellation_contact_recovery",
+      "status": "pass",
+      "samples": [
+        55,
+        56,
+        77,
+        152,
+        153,
+        154,
+        155,
+        156,
+        157,
+        158,
+        166,
+        167,
+        168,
+        169,
+        170,
+        171,
+        172,
+        194
+      ],
+      "observation": "Companion remains to hero right as unchanged up-facing pick rises/contacts/recovers on hero left. It adds no shaft/head/hand obstruction. Original hero animation limitations remain; this is not approval of any new native hero pose."
+    },
+    {
+      "id": "production_presentation",
+      "status": "pass_in_scope",
+      "observation": "Same approved art, scale, material/light appearance and HUD framing in inspected full frames. No presentation regression from transferring the helper/owner is evident."
+    }
+  ],
+  "independent_trace_check": {
+    "samples": 195,
+    "events": 6,
+    "mechanics_match": true,
+    "mechanical_fields": [
+      "actual_input",
+      "hero_health",
+      "impact_serial",
+      "mine_held",
+      "mining",
+      "movement_input",
+      "moving",
+      "pose",
+      "position",
+      "progress",
+      "recover_direction",
+      "recover_phase",
+      "sample",
+      "simulated_seconds",
+      "stage",
+      "target",
+      "target_id",
+      "world_damage"
+    ],
+    "idle_pose_policy": "Only idle frame/local_frame ignored, preserving the prior comparator contract; non-idle poses exact.",
+    "events_match": true,
+    "companion_semantic_fields_exact": [
+      "action",
+      "action_clock",
+      "animation_clock",
+      "automatic_task",
+      "collected_total",
+      "destination",
+      "dug_total",
+      "expected_foot_depth",
+      "facing",
+      "hero_distance",
+      "hero_position",
+      "hero_z_as_relative",
+      "hero_z_index",
+      "local_position",
+      "mode",
+      "moving",
+      "path_searches",
+      "position",
+      "present",
+      "relative_to_hero",
+      "route_length",
+      "separation",
+      "sprite_frame",
+      "sprite_local_position",
+      "sprite_rotation",
+      "sprite_scale",
+      "sprite_texture",
+      "terrain_blocked_at_center",
+      "think_clock",
+      "visible",
+      "z_as_relative",
+      "z_index"
+    ],
+    "companion_semantic_match": true,
+    "excluded_companion_fields": [
+      "script (intentional pilot-to-production path)",
+      "sprite_cell_rect_logical (recorded variable camera effect)"
+    ],
+    "actual_owner_helper_bound_every_sample": true,
+    "minimum_center_distance": 63.9999618530273,
+    "blocked_center_samples": 0,
+    "stale_foot_depth_samples": 0,
+    "steering_choice_counts": {
+      "route": 149,
+      "yield": 24,
+      "give_way": 22
+    },
+    "checks_pass": true,
+    "checks_count": 38,
+    "failure_count": 0,
+    "actual_impact155": {
+      "damage": 4,
+      "excavated": false
+    },
+    "final_total_swings": 1
+  },
+  "camera_and_pixels": {
+    "logical_sprite_rect_delta_min": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "logical_sprite_rect_delta_max": [
+      0.0,
+      0.868896484375,
+      0.0,
+      0.0
+    ],
+    "interpretation": "Variable new-minus-pilot vertical rectangle delta between0 and+0.868896484375logical px; not a constant camera offset and not pixel-identical.",
+    "full_frame_rgb_identical_count": 0,
+    "no_normalization": true
+  },
+  "integrity": {
+    "all195_old_movie_frames_independently_decoded_and_RGB_hash_matched": true,
+    "all195_new_PNGs_independently_decoded_and_file_hash_matched": true,
+    "new_report_sha256": "f67855a2ff90f3e632f8d63bee7acfb7dd0b074031385415b201d39268d7d4e2",
+    "old_report_sha256": "ce642a2ffaf70884ab14a030f1d0bb8e221d970282baefc2d98bf6c3f3944139",
+    "release_plan_sha256": "75d8fe9d30c46806223599f5436d5a8efe559c5a5e1b5438b8287bb7368efc9c",
+    "release_results_sha256": "33730f1c5278215c0d937fab814f87b072dc66ba9ec9bab3a76b1560f5947bf8",
+    "cpu_verification": "/tmp/dev13-critic-up-images/verification.json",
+    "cpu_verification_sha256": "f720a996ba482c49292d9f0fe3caebd55cb5b86f0f58b9de066f0d13a4fd5864",
+    "all14_derived_sheets_pass_delayed_closed_file_hash_and_full_decode": true,
+    "direct_package_verification": "/workspace/scratch/b465f3665b0c/evidence/dev13-critic-package-binding.json",
+    "all_six_remap_compiled_hashes_match_up_capture": true,
+    "execution_log_no_script_errors": true,
+    "captured_exit_code": 0
+  },
+  "limits": [
+    "OriginalWorn/up seed4608 depth1 naturalwall13,15 only; no general all-heading/equipment/input/task guarantee.",
+    "56 paired samples and12 full images visually inspected; complete195-frame media decode validation is separate from continuous motion viewing.",
+    "No physical iPhone, browser/audio-output, FPS or overall-world/final1.0 acceptance.",
+    "Other core/browser QA and actual six-world lifecycle gates are root-owned separately; this visual capture binds only active world.",
+    "No guarantee of perfect separation in physically trapped corridors. Center validity and matching foot-depth cannot alone prove opaque-pixel wall clearance."
+  ]
+}

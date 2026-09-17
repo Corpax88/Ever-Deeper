@@ -11,10 +11,10 @@ import zipfile
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 REPOSITORY = "Corpax88/Ever-Deeper"
-SOURCE = "580a2e02eca1e000f5d5f58bb61ac09fd4b2a194"
-BRANCH = "codex/premium-polish-dev12-20260917"
+SOURCE = "5ca6f0f77a1f87eaead777613062208159325068"
+BRANCH = "codex/dev13-companion-20260917"
 WORKFLOW = ".github/workflows/premium-web-review.yml"
-RUN = 35203069938
+RUN = 35238733050
 ATTEMPT = 1
 WEB_FILES = frozenset((
     "index.html", "index.js", "index.pck", "index.wasm", "index.png",
@@ -62,8 +62,8 @@ def valid_files(files, names):
 def pinned():
     data = read_json(HERE / "package.json")
     require(data["schema"] == 1 and data["source_commit"] == SOURCE and data["qa_run_id"] == RUN and data["qa_run_attempt"] == ATTEMPT, "Unexpected reviewed source/run")
-    require(data["candidate"]["id"] == 10489135841 and data["candidate"]["zip"]["sha256"] == "b2a43d16dd4eabf79b8eddb34207068ec45ae9d79cdb766278752ab867174bb5", "Candidate artifact pin changed")
-    require(data["complete"]["id"] == 10489068121 and data["complete"]["zip"]["sha256"] == "057961d22a388e82ab3fd12cd630f0f11866cfa9de0ff4581c57a4ba8c89c580", "Complete artifact pin changed")
+    require(data["candidate"]["id"] == 10504092798 and data["candidate"]["zip"]["sha256"] == "9b774adc2f32e1da4b70e049cc84109c985e027e0265379da0b240f9ad48961f", "Candidate artifact pin changed")
+    require(data["complete"]["id"] == 10505600545 and data["complete"]["zip"]["sha256"] == "91bebfa92baadc228747723569d87bf68855f44f799b1b63bc0677aeb72b3de5", "Complete artifact pin changed")
     require(data["candidate"]["name"] == "premium-web-candidate-" + SOURCE and data["complete"]["name"] == "premium-web-review-complete-" + SOURCE, "Artifact names changed")
     valid_files(data["candidate"]["members"], WEB_FILES | {"manifest.json", "artifact-identity.json"})
     valid_files(data["complete"]["members"], {"complete-review.json"})
@@ -72,13 +72,13 @@ def pinned():
 
 def baseline():
     pin = read_json(HERE / "baseline.json")
-    require(pin["source_receipt"] == ".github/premium-dev/baseline-dev11-receipt.json", "Wrong baseline receipt")
-    require(pin["source_receipt_sha256"] == "7bd53dd44ace7e8a860f75160a99e6728238e04e1c1a39eedbdf398fb3ba4afa", "Baseline pin changed")
+    require(pin["source_receipt"] == ".github/premium-dev/baseline-dev12-receipt.json", "Wrong baseline receipt")
+    require(pin["source_receipt_sha256"] == "107d1cc1655d3304b6b5e954572e71972a2372c25b485db9a72b964625be078d", "Baseline pin changed")
     path = ROOT / pin["source_receipt"]
     require(identity(path)["sha256"] == pin["source_receipt_sha256"], "Baseline receipt bytes changed")
     data = read_json(path)
-    require(data["dev_only"] is True and data["verified_files"] == 18 and data["candidate_artifact_id"] == 10481858878 and data["passed"] is True, "Invalid DEV11 baseline receipt")
-    require(data["displayed_dev_version"] == "1.0.0-dev.11" and data["live_version"] == "0.46.9", "Unexpected public baseline version")
+    require(data["dev_only"] is True and data["verified_files"] == 18 and data["candidate_artifact_id"] == 10489135841 and data["passed"] is True, "Invalid DEV12 baseline receipt")
+    require(data["displayed_dev_version"] == "1.0.0-dev.12" and data["live_version"] == "0.46.9", "Unexpected public baseline version")
     require(set(data["files"]) == {"dev", "live"}, "Incomplete rollback baseline")
     for files in data["files"].values():
         valid_files(files, WEB_FILES)
@@ -100,6 +100,23 @@ def reviewed(pin):
     require(isinstance(visual.get("evidence"), list) and visual["evidence"] and all(isinstance(x, str) and x.strip() for x in visual["evidence"]), "Actual visual evidence references are missing")
     require(visual.get("blocking_defects") == [], "Visual blockers remain or have not been evaluated")
     require(isinstance(data.get("limitations"), list) and data["limitations"], "Record the bounded DEV limitations")
+    companion = data.get("companion_readiness", {})
+    require(companion.get("status") == "approved_actual_package", "Actual-package companion readiness is unapproved")
+    require(companion.get("pck_sha256") == pin["candidate"]["members"]["index.pck"]["sha256"], "Companion review belongs to another package")
+    directions = companion.get("directions", {})
+    require(set(directions) == {"right", "up"}, "Both actual-package companion directions are required")
+    for direction, row in directions.items():
+        require(row.get("samples") == 195 and row.get("events") == 6 and row.get("original_pngs") == 195 and row.get("mechanical_parity") is True and row.get("runtime_replacements") == [], "Incomplete companion capture: " + direction)
+        expected_path = ".github/premium-dev/independent-companion-" + direction + "-dev13.json"
+        require(row.get("independent_review") == expected_path, "Unexpected companion review path")
+        path = ROOT / expected_path
+        require(identity(path)["sha256"] == row.get("independent_review_sha256"), "Independent companion review bytes changed")
+        report = read_json(path)
+        require(report.get("reviewer") == "independent_dev13_critic", "Unexpected independent companion reviewer")
+        require(report.get("scope", {}).get("source_sha") == SOURCE and report.get("scope", {}).get("pack", {}).get("sha256") == companion["pck_sha256"], "Independent companion review identity differs")
+        verdict = report.get("verdict", {})
+        require(verdict.get("status") == "ACCEPT_BOUNDED_ACTUAL_DEV13_" + direction.upper() + "_PACKAGE" and verdict.get("blocking_findings") == [], "Independent companion visual blocker remains")
+        require(verdict.get(direction + "_follow_correction_visual_acceptance") is True, "Independent companion direction is not accepted")
     return data
 
 

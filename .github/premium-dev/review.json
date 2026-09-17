@@ -4,48 +4,62 @@
   "live_publication_authorized": false,
   "final_one_point_zero_approved": false,
   "physical_iphone_verified": false,
-  "source_commit": "580a2e02eca1e000f5d5f58bb61ac09fd4b2a194",
-  "qa_run_id": 35203069938,
-  "candidate_artifact_id": 10489135841,
-  "complete_artifact_id": 10489068121,
+  "source_commit": "5ca6f0f77a1f87eaead777613062208159325068",
+  "qa_run_id": 35238733050,
+  "candidate_artifact_id": 10504092798,
+  "complete_artifact_id": 10505600545,
   "dev_publication_authorized": true,
   "authorization_record": {
     "requested_by": "Mats",
-    "request": "Jeg har kjørt en tilbakestilling av kvoten! Så kjør på og gjør dere ferdig! Followed by Alltid godkjen after the concrete request to upload the code and publish the verified DEV build. Authorization continues for Ever-Deeper code uploads and DEV publication after its gates.",
+    "request": "Jeg har kj\u00f8rt en tilbakestilling av kvoten! S\u00e5 kj\u00f8r p\u00e5 og gj\u00f8r dere ferdig! Followed by Alltid godkjen after the concrete request to upload the code and publish the verified DEV build. Authorization continues for Ever-Deeper code uploads and DEV publication after its gates.",
     "recorded_at": "2026-09-17T04:30:18.194393+00:00"
   },
   "visual_readiness": {
     "status": "approved_for_dev_playtest",
-    "reviewer": "Independent performance_critic and root; study/integration authorship disclosed in the underlying reports.",
-    "reviewed_at": "2026-09-17T09:32:53.826283+00:00",
-    "scope": "Only the accepted Moss mineable north-edge orientation in exact DEV12 at the target mobile viewport.",
-    "findings": "The independent critic inspected all3 original A/B/A2 images and both endpoints, finding no package-specific blocker. A/A2 restore exactly; actual production B changes53135pixels. Known corner/step seams remain open. All14 exact QA jobs pass and all15 raw artifacts plus extracted member hashes reverify; the local13-unit aggregate equals CI. Root inspected original packageB and the previously accepted source cases.",
+    "reviewer": "Independent dev13_critic (actual package source, fixture and images); root (full QA and integration)",
+    "reviewed_at": "2026-09-17T15:49:25.485128+00:00",
+    "scope": "DEV13 companion follow correction in actual immutable production package; Worn/right and Worn/up at native1696x780 plus complete core/native/browser QA.",
+    "findings": "Both independently reviewed actual-package directions accepted with no blocking findings; 390 original PNGs verified. All195 mechanical samples and six events per direction match approved pilots. This approves the narrow DEV13 follow correction, not full premium polish.",
     "evidence": [
-      "https://github.com/Corpax88/Ever-Deeper/actions/runs/35203069938",
-      ".github/premium-dev/independent-north-review-dev12.json",
-      ".github/premium-dev/package-readiness-dev12.json"
+      ".github/premium-dev/independent-companion-right-dev13.json",
+      ".github/premium-dev/independent-companion-up-dev13.json",
+      "QA run35238733050: all14jobs; candidate10504092798; complete10505600545"
     ],
     "blocking_defects": []
   },
   "limitations": [
-    "DEV12 is a narrow Moss north-edge playtest correction, not completed premium polish, final1.0 or an overall9/10 approval.",
-    "Existing corner/step/biome joins and complete all-tool motion quality remain open.",
-    "New native motion and rejected art/performance studies are not adopted.",
-    "Stable minimum50FPS has not been demonstrated in sustained browser/physical-iPhone play. Earlier virtual-Mac native sessions fell below50FPS; their ANGLE finding is not automatically a WebKit bottleneck.",
-    "The native held fixture freezes shader time and uses a walkable-floor teleport; actual gameplay/source cases and browser checks are separately retained.",
-    "Mac WebKit is virtual AppleGPU at1696x780, not a physical iPhone. No new sustained-performance or audio certification.",
-    "Only3 signed-effect pixels differ from both source references, maximum channel mismatch3; no exact cross-run full-frame or signed-effect parity claim.",
-    "The existing protected player_visual.gd baseline mismatch is unchanged."
+    "DEV13 is a narrow companion-follow correction; full premium polish and final1.0 remain open.",
+    "Physical-iPhone sustained minimum50FPS is not yet established. Native model/material/art and animation remain unchanged.",
+    "Existing terrain joins, all-tool animation and shader-hitch work remain separate.",
+    "The protected player_visual.gd invariant mismatch is pre-existing and unchanged.",
+    "Fixed-step native PNG capture establishes visual/mechanical evidence, not real-time or physical-device FPS."
   ],
-  "north_readiness": {
-    "images": 3,
-    "changed_pixels": 53135,
-    "restored_changed_pixels": 0,
-    "actual_production_draw_calls": 40,
-    "pck_sha256": "9dfcf913c867e36e6a16f4f5123fd5cce7654cfb435a753f9eb7bca12f574bd9",
-    "independent_review": ".github/premium-dev/independent-north-review-dev12.json",
-    "independent_review_sha256": "9a1efec68b0218867ecd23ce8c0ddacc2accbb6d817913c0235522f070dfcf69",
-    "source_reference_exact_effect_parity": false,
-    "source_reference_effect_mismatch_pixels": 3
+  "companion_readiness": {
+    "status": "approved_actual_package",
+    "pck_sha256": "5016e16791f51790f7a10dfabe0719b308de82a80627aca8d740b0e355e6cdc3",
+    "directions": {
+      "right": {
+        "samples": 195,
+        "events": 6,
+        "original_pngs": 195,
+        "mechanical_parity": true,
+        "runtime_replacements": [],
+        "capture_report_sha256": "05120b8098191eb51c12e86c02f7dabbddd4e1521d1aead149dbf73a2438a00e",
+        "independent_review": ".github/premium-dev/independent-companion-right-dev13.json",
+        "independent_review_sha256": "44dc2790ce8aab0ebc21daa24ac6dfbcfe91d61ecc5766f43d6e415348e16a38",
+        "original_capture_library_id": "libfile_46839953bac48191aebd870bfa1b955a"
+      },
+      "up": {
+        "samples": 195,
+        "events": 6,
+        "original_pngs": 195,
+        "mechanical_parity": true,
+        "runtime_replacements": [],
+        "capture_report_sha256": "f67855a2ff90f3e632f8d63bee7acfb7dd0b074031385415b201d39268d7d4e2",
+        "independent_review": ".github/premium-dev/independent-companion-up-dev13.json",
+        "independent_review_sha256": "15aa643c9372de0c77054e0f576fc19e500ca474364ccc95b40cff355a12b8c0",
+        "original_capture_library_id": "libfile_c9c7507ce08881919d2d46348c3d498f"
+      }
+    }
   }
 }
