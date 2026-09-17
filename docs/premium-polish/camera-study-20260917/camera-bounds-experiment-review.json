@@ -1,0 +1,152 @@
+{
+  "verdict": "v1_rejected_animation_cadence; restored_control_gate_incomplete",
+  "production_adopted": false,
+  "source_identity": {
+    "head": "fec3185e7aa78b644bfa1c1ddc2ebd5cd10b5cd3",
+    "tree": "599f28c4b301f676ceb7c39a77fa3b4c05314135",
+    "worktree": "/workspace/scratch/d5437d917805/camera-bounds-study",
+    "tracked_diff_empty": true,
+    "runtime_trees": {
+      "scripts": "7ee867e3fb13066781acc2e98ad29f5907584656",
+      "scenes": "3544e4062e8a8f6321086368d75d7a7d25f449ec",
+      "assets": "2ae8b81a4e0968cb0e075bfaef1bdf56483f689d",
+      "data": "bbd32d8d812cfa0e1c902fd03cefad00e02e558e",
+      "shaders": "7a34e4ec0d98530977381d307daf165f05a7ac1c",
+      "project.godot": "4f3f3a2fb5516f06cfbecfddd487b3890a7d7b07",
+      "export_presets.cfg": "3cbf516798f7439da91398ed30af511bbf2508b1"
+    },
+    "files": {
+      "scripts/main.gd": "7a2ab2903c3a96408a038af9d32fe230dc666742b71bf043c33baef484035ce6",
+      "scripts/world/endless_descent_world.gd": "5115995cf0b1b531d51a65af832a9a818f2e14136abee3bc922b2f47fb3667ac",
+      "scripts/lighting/lit_draw_sections.gd": "260dc901a518ee71f18451bd9e1025889d1bb5fbce46f678aaf13a47a1f64eac",
+      "tools/camera_bounds_pilot/candidate.gd": "ff736f2e3b46edf7661a8e15c4ab9c7440ab69317255bf8e74a68d79a05d240a",
+      "tools/camera_bounds_pilot/review.gd": "54234f271969ae00519b04bc6ac154177f8648dace2c22eb8fc527e897ebdb08",
+      "tools/moving_draw_diagnosis.gd": "1d7ff274ee129f4a2274e640a6c93b0bfc4a3344f8f78d584c05504764e9f5e4"
+    }
+  },
+  "frozen_parity": {
+    "passed": true,
+    "pairs": 17,
+    "rgba_changed_pixels": 0,
+    "setup_draw_key_usec_A_B_A2": [
+      298446,
+      87114,
+      298387
+    ],
+    "limit": "Frozen camera history counters; not a moving FPS comparison."
+  },
+  "moving": [
+    {
+      "label": "A",
+      "required_completion_marker": true,
+      "gate_passed": true,
+      "frames": 2164,
+      "actual_measured_seconds": 60.002436,
+      "weighted_fps": 36.06520241944843,
+      "p95_ms": 33.645,
+      "p99_ms": 43.091,
+      "setup_ms_per_frame": 1.8429704251386323,
+      "draw_ms_per_frame": 0.0885,
+      "guard_usec_including_warmup": 0,
+      "setup_draw_guard_ms_per_frame": 1.9314704251386323,
+      "dynamic_callback_proxy": 698.0,
+      "functional_report": true,
+      "mined_resources": 4228,
+      "distance": 14869.3988037109,
+      "window_fps": [
+        36.2410357981157,
+        35.8891344611438
+      ],
+      "generated_harness_sha256": "24b70fb5dfc28b194af4c2cf136d30678cc5fccc99e916e4cec9fa198dedbb6e",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "viewport": [
+        1696,
+        780
+      ],
+      "physical_iphone": false
+    },
+    {
+      "label": "B",
+      "required_completion_marker": true,
+      "gate_passed": true,
+      "frames": 2283,
+      "actual_measured_seconds": 60.013126,
+      "weighted_fps": 38.04167774896445,
+      "p95_ms": 31.992,
+      "p99_ms": 39.59,
+      "setup_ms_per_frame": 1.0953959702146299,
+      "draw_ms_per_frame": 0.08066491458607096,
+      "guard_usec_including_warmup": 47397,
+      "setup_draw_guard_ms_per_frame": 1.1968217257993867,
+      "dynamic_callback_proxy": 597.0,
+      "functional_report": true,
+      "mined_resources": 4228,
+      "distance": 14892.0659179688,
+      "window_fps": [
+        38.736176131228,
+        37.3463896311484
+      ],
+      "generated_harness_sha256": "24b70fb5dfc28b194af4c2cf136d30678cc5fccc99e916e4cec9fa198dedbb6e",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "viewport": [
+        1696,
+        780
+      ],
+      "physical_iphone": false
+    },
+    {
+      "label": "A2",
+      "required_completion_marker": false,
+      "gate_passed": false,
+      "frames": 2195,
+      "actual_measured_seconds": 60.013512000000006,
+      "weighted_fps": 36.575096621574154,
+      "p95_ms": 33.015,
+      "p99_ms": 43.161,
+      "setup_ms_per_frame": 1.8282045558086562,
+      "draw_ms_per_frame": 0.08733849658314351,
+      "guard_usec_including_warmup": 0,
+      "setup_draw_guard_ms_per_frame": 1.9155430523917996,
+      "dynamic_callback_proxy": 706.0,
+      "functional_report": true,
+      "mined_resources": 4228,
+      "distance": 14971.4005126953,
+      "window_fps": [
+        37.1146102496161,
+        36.035281640894
+      ],
+      "generated_harness_sha256": "24b70fb5dfc28b194af4c2cf136d30678cc5fccc99e916e4cec9fa198dedbb6e",
+      "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "viewport": [
+        1696,
+        780
+      ],
+      "physical_iphone": false
+    }
+  ],
+  "preliminary_setup_draw_guard_reduction_pct_A_to_B": 38.035720856896674,
+  "crusher_dependency": "The existing DEV route seeds crusher plus max drill. Deep has only Crusher effects in its dynamic section pool. Ages change per process while scheduled redraw is30Hz; camera redraws can supply extra frames. V1 skips some of those refreshes. Frozen same-age parity does not cover this animation cadence.",
+  "dynamic_counter_limit": "Proxy equals all section draw callbacks minus cached redraw counters; queue coalescing/boundary phase can affect it. It is not a dedicated per-impact timestamp measurement. Source establishes the missing dependency independently.",
+  "a2_marker_investigation": {
+    "wrapper_exit": 4,
+    "log_last_write_utc": "2026-09-17T04:52:43.132718+00:00",
+    "second_window_json_utc": "2026-09-17T04:52:50.423154+00:00",
+    "final_json_utc": "2026-09-17T04:52:55.608805+00:00",
+    "missing_markers": [
+      "second PREMIUM_SESSION_WINDOW",
+      "second MOVING_DRAW_WINDOW",
+      "PREMIUM_SESSION_COMPLETE"
+    ],
+    "both_stdout_and_native_log_stop": true,
+    "source_print_suppression_found": false,
+    "cause": "Unproven. Files establish continued execution after log output stopped; do not count this control as a passed gate."
+  },
+  "limits": [
+    "Only Linux Mesa llvmpipe; no Apple or physical-phone claim.",
+    "One A/B/A2 attempt; A2 completion gate failed despite retained complete JSON/captures.",
+    "Instrumentation, serialization, PNG capture and Dummy-audio warnings remain included.",
+    "Frame intervals are chronological wall clock. Engine process/physics monitor percentiles are stale repeated values, not per-frame CPU work.",
+    "V1 is rejected. No FPS improvement or final50FPS certification is accepted."
+  ],
+  "v2_status": "candidate_dynamic.gd preserves original camera queue and refreshes active dynamic nodes at parent draw barrier; only14 headless identity/lifecycle checks so far. Needs actual per-frame draw/callback parity before timing."
+}

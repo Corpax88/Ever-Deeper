@@ -1,8 +1,9 @@
 # Camera-bound setup study — 17 September 2026
 
 **V1 is rejected for a missing Crusher animation dependency. Nothing is adopted.**
-V2 is a separate, unmeasured prototype. Its short graphical cadence gate passes;
-no moving performance measurement or production adoption follows from that gate.
+V2 passes its short graphical cadence gate and saves measured terrain-setup work
+in one completed moving A/B/A2 triplet. It demonstrates no throughput gain on
+this host. No production adoption is made.
 
 The isolated checkout is `/workspace/scratch/d5437d917805/camera-bounds-study`,
 detached at `fec3185e7aa78b644bfa1c1ddc2ebd5cd10b5cd3`, tree
@@ -97,6 +98,59 @@ This fixture freezes ordinary processing and explicitly advances real impact
 ages, then lets the engine execute queued draws. It proves these tested callback
 and pixel cases, not free-running gameplay cadence or a performance gain.
 
+`review_visible_impact.gd` checks that the age-only comparison paints an actual
+visible effect. With, without, then restored real impact dictionaries change
+2,066 pixels within x=661, y=318, width=116, height=117. Maximum channel delta
+is 70/255. The restored frame is exact RGBA; actual callbacks are 1/0/1 and
+cached terrain redraws 0/0/0. Effect code, strength and materials are unchanged.
+The native renderer exits 0 with `CAMERA_VISIBLE_IMPACT_COMPLETE`.
+
+## V2 moving measurement
+
+`run_dynamic_session.py` composes the original route and observer with an option
+to load V2 only for B. All variants observe actual dynamic CanvasItem draw signals
+without replacing production paint callables, saving the bound live age/position
+at each callback. The same generated harness is used for all three variants.
+No timing run freezes or substitutes clocks, route, input or animation.
+
+Exactly one serialized 60-second A/B/A2 triplet completed successfully. Every
+process exits 0; all three have the final marker and both pairs of window markers.
+All source identities are unchanged from the isolated DEV10 checkout above.
+
+| Moving report | A | B V2 | A2 |
+|---|---:|---:|---:|
+| Frames | 2,173 | 2,167 | 2,147 |
+| Weighted FPS | 36.217 | 36.116 | 35.783 |
+| Frame p95, ms | 34.319 | 33.656 | 33.950 |
+| Setup, ms/frame | 1.855 | 1.057 | 1.859 |
+| Draw callbacks, ms/frame | 0.087 | 0.089 | 0.089 |
+| Candidate guards, ms/frame | 0 | 0.122 | 0 |
+| Setup + callbacks + guard, ms/frame | 1.942 | 1.268 | 1.948 |
+| Renderer CPU median, ms | 18.586 | 18.843 | 18.785 |
+| Actual dynamic callbacks | 704 | 678 | 698 |
+| Mined resources | 4,228 | 4,228 | 4,228 |
+
+B bypasses 788 terrain setups and explicitly requeues 132 dynamic sections in
+those fast paths. Measured setup + callback + guard work falls by 0.677 ms/frame,
+or 34.79%, against the mean of the two controls. Its weighted FPS is only 0.32%
+above their mean, within their spread. **This is setup CPU headroom, not a
+demonstrated throughput improvement.** The renderer remains the dominant cost.
+
+All three actual callback counts equal their total-minus-cache proxy, and all
+captured paints target visible `_draw_impact_section` sections with live ages.
+Each history contains 59 apparent bursts when grouped by age/position resets;
+that grouping is inferred. These free-running histories have different frame
+times, so their callback totals are not a deterministic cadence comparison.
+The earlier explicit-age callback/pixel gate is the equality evidence for its
+tested cases. No additional timing triplet was run.
+
+The narrow reusable idea is to bypass unchanged terrain setup at the original
+queued parent draw barrier while refreshing existing dynamic sections. A future
+production design would need to encapsulate pool/cache access in LitDrawSections
+and retain all conservative invalidation guards; the experimental subclass is
+not itself an adopted production change. The present evidence does not justify
+claiming a gameplay FPS gain or continuing repeated timing trials.
+
 ## Evidence and limits
 
 Evidence is under `/workspace/scratch/d5437d917805/evidence/`:
@@ -111,6 +165,11 @@ Evidence is under `/workspace/scratch/d5437d917805/evidence/`:
   and snapshots of the exact prototype versions they checked.
 - `camera-dynamic-cadence/`: passing V2 14-state graphical cadence gate, 42 PNGs,
   callback/pose rows, tested sources and source identity.
+- `camera-dynamic-moving-A/`, `-B/`, `-A2/`: the one completed V2 timing triplet,
+  raw frames, actual dynamic callback poses, all markers and exact source maps.
+- `camera-dynamic-experiment-review.json`: recomputed V2 timing comparison.
+- `camera-dynamic-visible-impact/`: real-effect present/absent/restored output,
+  visible-pixel bounds, exact restoration and tested sources.
 
 All rendering uses Godot 4.7.2 and Mesa llvmpipe at 1696×780. Instrumentation,
 JSON/PNG writes and Dummy-audio warnings remain in timing. Process/physics engine

@@ -1,0 +1,347 @@
+{
+  "scope": "Exactly one serialized 60-second free-running A/B/A2 on unchanged DEV10 fec3185, seed4608, Deep12, original held-mining route. Actual Godot4.7.2, 1696x780, Mesa llvmpipe. No production adoption and no physical iPhone or 50FPS claim.",
+  "rows": [
+    {
+      "label": "A",
+      "gate": {
+        "label": "A",
+        "variant": "original",
+        "wrapper_exit": 0,
+        "wall_seconds": 73.48450303077698,
+        "completion_marker": true,
+        "session_window_markers": 2,
+        "moving_window_markers": 2,
+        "reported_windows": 2,
+        "functional": true,
+        "source_unchanged": true,
+        "dynamic_callbacks_actual": 704.0,
+        "output": "/workspace/scratch/d5437d917805/evidence/camera-dynamic-moving-A",
+        "passed": true
+      },
+      "frames": 2173,
+      "seconds_measured": 60.000159,
+      "weighted_fps": 36.21657069275433,
+      "window_fps": [
+        36.8246746248399,
+        35.6081839476106
+      ],
+      "frame_ms": {
+        "p50": 26.308,
+        "p95": 34.319,
+        "p99": 50.902,
+        "max": 728.54
+      },
+      "cost_ms_per_observed_frame": {
+        "setup_usec": 1.8552084675563738,
+        "draw_usec": 0.08702715140358952,
+        "study_key_usec": 0.0,
+        "observer_usec": 0.05255131155085136
+      },
+      "setup_draw_guard_ms_per_frame": 1.9422356189599634,
+      "setup_only": {
+        "frames": 877,
+        "setup_usec": 2107589,
+        "mean_among_those_frames_ms": 2.4031801596351197
+      },
+      "render_cpu_ms": {
+        "p50": 18.5860004425049,
+        "p95": 23.1079998016357
+      },
+      "frame_setup_cpu_ms": {
+        "p50": 0.104,
+        "p95": 0.146
+      },
+      "resources": 4228,
+      "distance_px": 14931.7330322266,
+      "dynamic": {
+        "actual_callbacks": 704,
+        "counter_proxy": 704,
+        "all_visible": true,
+        "all_impact_method": true,
+        "age_min": 0.019845,
+        "age_max": 0.298024272727273,
+        "apparent_bursts_by_age_position_reset": 59,
+        "limit": "Burst grouping is inferred from age/position resets. Free-running histories have different frame timing; their total callback counts alone cannot prove equality of cadence."
+      },
+      "study": {
+        "key_usec": 0,
+        "skipped_setups": 0,
+        "dynamic_requeues": 0,
+        "original_requests": 0
+      },
+      "source": {
+        "before": {
+          "commit": "fec3185e7aa78b644bfa1c1ddc2ebd5cd10b5cd3",
+          "tree": "599f28c4b301f676ceb7c39a77fa3b4c05314135",
+          "tracked_diff": "",
+          "sha256": {
+            "scripts/main.gd": "7a2ab2903c3a96408a038af9d32fe230dc666742b71bf043c33baef484035ce6",
+            "scripts/world/endless_descent_world.gd": "5115995cf0b1b531d51a65af832a9a818f2e14136abee3bc922b2f47fb3667ac",
+            "scripts/lighting/lit_draw_sections.gd": "260dc901a518ee71f18451bd9e1025889d1bb5fbce46f678aaf13a47a1f64eac",
+            "tools/review_premium_session.gd": "c3a787767ff0dbfc5c13b2d9283ce0ae7b5a1a77d287a1a5c5e49512ef5b9edb",
+            "tools/moving_draw_diagnosis.gd": "1d7ff274ee129f4a2274e640a6c93b0bfc4a3344f8f78d584c05504764e9f5e4",
+            "tools/camera_bounds_pilot/candidate_dynamic.gd": "8aee513c9be01beac08e06f7ed7475f967234f30a662359a99178cc235b4e80f",
+            "tools/camera_bounds_pilot/run_dynamic_session.py": "3654b7479ab4b1685c3b07ce1b49489ccf6573be6ec530122bd6980e3412bbb1"
+          }
+        },
+        "after": {
+          "commit": "fec3185e7aa78b644bfa1c1ddc2ebd5cd10b5cd3",
+          "tree": "599f28c4b301f676ceb7c39a77fa3b4c05314135",
+          "tracked_diff": "",
+          "sha256": {
+            "scripts/main.gd": "7a2ab2903c3a96408a038af9d32fe230dc666742b71bf043c33baef484035ce6",
+            "scripts/world/endless_descent_world.gd": "5115995cf0b1b531d51a65af832a9a818f2e14136abee3bc922b2f47fb3667ac",
+            "scripts/lighting/lit_draw_sections.gd": "260dc901a518ee71f18451bd9e1025889d1bb5fbce46f678aaf13a47a1f64eac",
+            "tools/review_premium_session.gd": "c3a787767ff0dbfc5c13b2d9283ce0ae7b5a1a77d287a1a5c5e49512ef5b9edb",
+            "tools/moving_draw_diagnosis.gd": "1d7ff274ee129f4a2274e640a6c93b0bfc4a3344f8f78d584c05504764e9f5e4",
+            "tools/camera_bounds_pilot/candidate_dynamic.gd": "8aee513c9be01beac08e06f7ed7475f967234f30a662359a99178cc235b4e80f",
+            "tools/camera_bounds_pilot/run_dynamic_session.py": "3654b7479ab4b1685c3b07ce1b49489ccf6573be6ec530122bd6980e3412bbb1"
+          }
+        },
+        "unchanged": true
+      },
+      "harness": {
+        "route_sha256": "c3a787767ff0dbfc5c13b2d9283ce0ae7b5a1a77d287a1a5c5e49512ef5b9edb",
+        "observer_sha256": "1d7ff274ee129f4a2274e640a6c93b0bfc4a3344f8f78d584c05504764e9f5e4",
+        "candidate_sha256": "8aee513c9be01beac08e06f7ed7475f967234f30a662359a99178cc235b4e80f",
+        "generator_sha256": "3654b7479ab4b1685c3b07ce1b49489ccf6573be6ec530122bd6980e3412bbb1",
+        "generated_sha256": "db1d4c01a33c73fc763963e1a6a4f7877bf5cdbb00a71fe7202f8f5a9c7dc496",
+        "limit": "Both controls use the original world. Only B substitutes V2 before scene-tree entry. All runs observe actual dynamic CanvasItem draw signals without replacing paint callables. Route, input, mining, animation, persistence and clocks are unchanged; signal/pose collection adds diagnostic overhead equally. No production source changes."
+      }
+    },
+    {
+      "label": "B",
+      "gate": {
+        "label": "B",
+        "variant": "candidate",
+        "wrapper_exit": 0,
+        "wall_seconds": 73.37588882446289,
+        "completion_marker": true,
+        "session_window_markers": 2,
+        "moving_window_markers": 2,
+        "reported_windows": 2,
+        "functional": true,
+        "source_unchanged": true,
+        "dynamic_callbacks_actual": 678.0,
+        "output": "/workspace/scratch/d5437d917805/evidence/camera-dynamic-moving-B",
+        "passed": true
+      },
+      "frames": 2167,
+      "seconds_measured": 60.001932999999994,
+      "weighted_fps": 36.11550314554033,
+      "window_fps": [
+        36.393763322092,
+        35.8371655208997
+      ],
+      "frame_ms": {
+        "p50": 26.381,
+        "p95": 33.656,
+        "p99": 47.403,
+        "max": 719.604
+      },
+      "cost_ms_per_observed_frame": {
+        "setup_usec": 1.0574766958929394,
+        "draw_usec": 0.08931933548684817,
+        "study_key_usec": 0.12153576372865713,
+        "observer_usec": 0.06327134287032764
+      },
+      "setup_draw_guard_ms_per_frame": 1.2683317951084447,
+      "setup_only": {
+        "frames": 294,
+        "setup_usec": 693714,
+        "mean_among_those_frames_ms": 2.3595714285714284
+      },
+      "render_cpu_ms": {
+        "p50": 18.8430004119873,
+        "p95": 22.9060001373291
+      },
+      "frame_setup_cpu_ms": {
+        "p50": 0.012,
+        "p95": 0.135
+      },
+      "resources": 4228,
+      "distance_px": 14886.3992919922,
+      "dynamic": {
+        "actual_callbacks": 678,
+        "counter_proxy": 678,
+        "all_visible": true,
+        "all_impact_method": true,
+        "age_min": 0.021299,
+        "age_max": 0.299314592592593,
+        "apparent_bursts_by_age_position_reset": 59,
+        "limit": "Burst grouping is inferred from age/position resets. Free-running histories have different frame timing; their total callback counts alone cannot prove equality of cadence."
+      },
+      "study": {
+        "key_usec": 263368,
+        "skipped_setups": 788,
+        "dynamic_requeues": 132,
+        "original_requests": 1184
+      },
+      "source": {
+        "before": {
+          "commit": "fec3185e7aa78b644bfa1c1ddc2ebd5cd10b5cd3",
+          "tree": "599f28c4b301f676ceb7c39a77fa3b4c05314135",
+          "tracked_diff": "",
+          "sha256": {
+            "scripts/main.gd": "7a2ab2903c3a96408a038af9d32fe230dc666742b71bf043c33baef484035ce6",
+            "scripts/world/endless_descent_world.gd": "5115995cf0b1b531d51a65af832a9a818f2e14136abee3bc922b2f47fb3667ac",
+            "scripts/lighting/lit_draw_sections.gd": "260dc901a518ee71f18451bd9e1025889d1bb5fbce46f678aaf13a47a1f64eac",
+            "tools/review_premium_session.gd": "c3a787767ff0dbfc5c13b2d9283ce0ae7b5a1a77d287a1a5c5e49512ef5b9edb",
+            "tools/moving_draw_diagnosis.gd": "1d7ff274ee129f4a2274e640a6c93b0bfc4a3344f8f78d584c05504764e9f5e4",
+            "tools/camera_bounds_pilot/candidate_dynamic.gd": "8aee513c9be01beac08e06f7ed7475f967234f30a662359a99178cc235b4e80f",
+            "tools/camera_bounds_pilot/run_dynamic_session.py": "3654b7479ab4b1685c3b07ce1b49489ccf6573be6ec530122bd6980e3412bbb1"
+          }
+        },
+        "after": {
+          "commit": "fec3185e7aa78b644bfa1c1ddc2ebd5cd10b5cd3",
+          "tree": "599f28c4b301f676ceb7c39a77fa3b4c05314135",
+          "tracked_diff": "",
+          "sha256": {
+            "scripts/main.gd": "7a2ab2903c3a96408a038af9d32fe230dc666742b71bf043c33baef484035ce6",
+            "scripts/world/endless_descent_world.gd": "5115995cf0b1b531d51a65af832a9a818f2e14136abee3bc922b2f47fb3667ac",
+            "scripts/lighting/lit_draw_sections.gd": "260dc901a518ee71f18451bd9e1025889d1bb5fbce46f678aaf13a47a1f64eac",
+            "tools/review_premium_session.gd": "c3a787767ff0dbfc5c13b2d9283ce0ae7b5a1a77d287a1a5c5e49512ef5b9edb",
+            "tools/moving_draw_diagnosis.gd": "1d7ff274ee129f4a2274e640a6c93b0bfc4a3344f8f78d584c05504764e9f5e4",
+            "tools/camera_bounds_pilot/candidate_dynamic.gd": "8aee513c9be01beac08e06f7ed7475f967234f30a662359a99178cc235b4e80f",
+            "tools/camera_bounds_pilot/run_dynamic_session.py": "3654b7479ab4b1685c3b07ce1b49489ccf6573be6ec530122bd6980e3412bbb1"
+          }
+        },
+        "unchanged": true
+      },
+      "harness": {
+        "route_sha256": "c3a787767ff0dbfc5c13b2d9283ce0ae7b5a1a77d287a1a5c5e49512ef5b9edb",
+        "observer_sha256": "1d7ff274ee129f4a2274e640a6c93b0bfc4a3344f8f78d584c05504764e9f5e4",
+        "candidate_sha256": "8aee513c9be01beac08e06f7ed7475f967234f30a662359a99178cc235b4e80f",
+        "generator_sha256": "3654b7479ab4b1685c3b07ce1b49489ccf6573be6ec530122bd6980e3412bbb1",
+        "generated_sha256": "db1d4c01a33c73fc763963e1a6a4f7877bf5cdbb00a71fe7202f8f5a9c7dc496",
+        "limit": "Both controls use the original world. Only B substitutes V2 before scene-tree entry. All runs observe actual dynamic CanvasItem draw signals without replacing paint callables. Route, input, mining, animation, persistence and clocks are unchanged; signal/pose collection adds diagnostic overhead equally. No production source changes."
+      }
+    },
+    {
+      "label": "A2",
+      "gate": {
+        "label": "A2",
+        "variant": "original",
+        "wrapper_exit": 0,
+        "wall_seconds": 73.20761466026306,
+        "completion_marker": true,
+        "session_window_markers": 2,
+        "moving_window_markers": 2,
+        "reported_windows": 2,
+        "functional": true,
+        "source_unchanged": true,
+        "dynamic_callbacks_actual": 698.0,
+        "output": "/workspace/scratch/d5437d917805/evidence/camera-dynamic-moving-A2",
+        "passed": true
+      },
+      "frames": 2147,
+      "seconds_measured": 60.000021000000004,
+      "weighted_fps": 35.78332080917105,
+      "window_fps": [
+        36.2742356195806,
+        35.2917084866185
+      ],
+      "frame_ms": {
+        "p50": 26.956,
+        "p95": 33.95,
+        "p99": 44.16,
+        "max": 726.547
+      },
+      "cost_ms_per_observed_frame": {
+        "setup_usec": 1.8585952491849091,
+        "draw_usec": 0.08928458313926409,
+        "study_key_usec": 0.0,
+        "observer_usec": 0.05151746623195156
+      },
+      "setup_draw_guard_ms_per_frame": 1.9478798323241733,
+      "setup_only": {
+        "frames": 894,
+        "setup_usec": 2096972,
+        "mean_among_those_frames_ms": 2.345606263982103
+      },
+      "render_cpu_ms": {
+        "p50": 18.7849998474121,
+        "p95": 22.6499996185303
+      },
+      "frame_setup_cpu_ms": {
+        "p50": 0.103,
+        "p95": 0.144
+      },
+      "resources": 4228,
+      "distance_px": 14892.0655517578,
+      "dynamic": {
+        "actual_callbacks": 698,
+        "counter_proxy": 698,
+        "all_visible": true,
+        "all_impact_method": true,
+        "age_min": 0.0216666666666667,
+        "age_max": 0.299177888888889,
+        "apparent_bursts_by_age_position_reset": 59,
+        "limit": "Burst grouping is inferred from age/position resets. Free-running histories have different frame timing; their total callback counts alone cannot prove equality of cadence."
+      },
+      "study": {
+        "key_usec": 0,
+        "skipped_setups": 0,
+        "dynamic_requeues": 0,
+        "original_requests": 0
+      },
+      "source": {
+        "before": {
+          "commit": "fec3185e7aa78b644bfa1c1ddc2ebd5cd10b5cd3",
+          "tree": "599f28c4b301f676ceb7c39a77fa3b4c05314135",
+          "tracked_diff": "",
+          "sha256": {
+            "scripts/main.gd": "7a2ab2903c3a96408a038af9d32fe230dc666742b71bf043c33baef484035ce6",
+            "scripts/world/endless_descent_world.gd": "5115995cf0b1b531d51a65af832a9a818f2e14136abee3bc922b2f47fb3667ac",
+            "scripts/lighting/lit_draw_sections.gd": "260dc901a518ee71f18451bd9e1025889d1bb5fbce46f678aaf13a47a1f64eac",
+            "tools/review_premium_session.gd": "c3a787767ff0dbfc5c13b2d9283ce0ae7b5a1a77d287a1a5c5e49512ef5b9edb",
+            "tools/moving_draw_diagnosis.gd": "1d7ff274ee129f4a2274e640a6c93b0bfc4a3344f8f78d584c05504764e9f5e4",
+            "tools/camera_bounds_pilot/candidate_dynamic.gd": "8aee513c9be01beac08e06f7ed7475f967234f30a662359a99178cc235b4e80f",
+            "tools/camera_bounds_pilot/run_dynamic_session.py": "3654b7479ab4b1685c3b07ce1b49489ccf6573be6ec530122bd6980e3412bbb1"
+          }
+        },
+        "after": {
+          "commit": "fec3185e7aa78b644bfa1c1ddc2ebd5cd10b5cd3",
+          "tree": "599f28c4b301f676ceb7c39a77fa3b4c05314135",
+          "tracked_diff": "",
+          "sha256": {
+            "scripts/main.gd": "7a2ab2903c3a96408a038af9d32fe230dc666742b71bf043c33baef484035ce6",
+            "scripts/world/endless_descent_world.gd": "5115995cf0b1b531d51a65af832a9a818f2e14136abee3bc922b2f47fb3667ac",
+            "scripts/lighting/lit_draw_sections.gd": "260dc901a518ee71f18451bd9e1025889d1bb5fbce46f678aaf13a47a1f64eac",
+            "tools/review_premium_session.gd": "c3a787767ff0dbfc5c13b2d9283ce0ae7b5a1a77d287a1a5c5e49512ef5b9edb",
+            "tools/moving_draw_diagnosis.gd": "1d7ff274ee129f4a2274e640a6c93b0bfc4a3344f8f78d584c05504764e9f5e4",
+            "tools/camera_bounds_pilot/candidate_dynamic.gd": "8aee513c9be01beac08e06f7ed7475f967234f30a662359a99178cc235b4e80f",
+            "tools/camera_bounds_pilot/run_dynamic_session.py": "3654b7479ab4b1685c3b07ce1b49489ccf6573be6ec530122bd6980e3412bbb1"
+          }
+        },
+        "unchanged": true
+      },
+      "harness": {
+        "route_sha256": "c3a787767ff0dbfc5c13b2d9283ce0ae7b5a1a77d287a1a5c5e49512ef5b9edb",
+        "observer_sha256": "1d7ff274ee129f4a2274e640a6c93b0bfc4a3344f8f78d584c05504764e9f5e4",
+        "candidate_sha256": "8aee513c9be01beac08e06f7ed7475f967234f30a662359a99178cc235b4e80f",
+        "generator_sha256": "3654b7479ab4b1685c3b07ce1b49489ccf6573be6ec530122bd6980e3412bbb1",
+        "generated_sha256": "db1d4c01a33c73fc763963e1a6a4f7877bf5cdbb00a71fe7202f8f5a9c7dc496",
+        "limit": "Both controls use the original world. Only B substitutes V2 before scene-tree entry. All runs observe actual dynamic CanvasItem draw signals without replacing paint callables. Route, input, mining, animation, persistence and clocks are unchanged; signal/pose collection adds diagnostic overhead equally. No production source changes."
+      }
+    }
+  ],
+  "comparison": {
+    "all_three_gates_passed": true,
+    "same_harness": true,
+    "same_production_identity": true,
+    "control_mean_setup_draw_guard_ms_per_frame": 1.9450577256420685,
+    "candidate_setup_draw_guard_ms_per_frame": 1.2683317951084447,
+    "setup_draw_guard_saving_ms_per_frame": 0.6767259305336237,
+    "setup_draw_guard_saving_percent": 34.792074374565665,
+    "control_mean_weighted_fps": 35.999945750962695,
+    "candidate_weighted_fps": 36.11550314554033,
+    "candidate_fps_change_percent": 0.320993246426049
+  },
+  "limits": [
+    "Setup/draw/guard counters are observed per-frame completed-work deltas and may straddle a window boundary. They exclude other game code and must not be added to renderer times as independent disjoint work.",
+    "Both original controls use the unchanged production world; only B substitutes the exact cadence-tested V2 subclass. All three include identical observer signal/pose collection, I/O and native screenshot overhead.",
+    "The process and physics Performance monitors are stale multi-frame samples and are not per-frame CPU percentile evidence.",
+    "The deterministic explicit-age pixel/callback gate and this free-running performance triplet answer different questions. Only one triplet was run."
+  ]
+}
