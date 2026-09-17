@@ -1,0 +1,217 @@
+{
+  "schema": 1,
+  "reviewer": "independent_publication_critic",
+  "reviewed_at": "2026-09-17T15:55:09.271326+00:00",
+  "scope": {
+    "baseline_main_commit": "64f3fb1204f3d399783249244ca5d06beac2ea1e",
+    "staged_publisher_root": "/workspace/scratch/b465f3665b0c/publisher-source",
+    "source_commit": "5ca6f0f77a1f87eaead777613062208159325068",
+    "qa_run_id": 35238733050,
+    "qa_run_attempt": 1,
+    "pck_sha256": "5016e16791f51790f7a10dfabe0719b308de82a80627aca8d740b0e355e6cdc3",
+    "task": "Read-only review of proposed DEV13 publisher diff, immutable artifact/report bindings and existing release controls; no deploy or main mutation.",
+    "prepared_publication_tree": "465e210e0eae905b297fe987a737e6eb87dc1db0"
+  },
+  "verdict": {
+    "status": "READY_FOR_BOUNDED_DEV13_ONLY_PUBLICATION",
+    "ready_for_dev_only_publication": true,
+    "blocking_findings": [],
+    "already_published": false,
+    "live_change_approved": false,
+    "final_1_0_approved": false,
+    "physical_iphone_or_50fps_approved": false,
+    "scope_limit": "Approval applies to the exact eleven staged publisher files and immutable candidate below. The actual publisher must still revalidate current API/public bytes, retain rollback, deploy, and produce a successful all-18-file public receipt."
+  },
+  "independent_checks": {
+    "exact_changed_files_count": 11,
+    "source_runtime_or_artifacts_changed_by_review": false,
+    "workflow_and_permissions_byte_identical_to_main": true,
+    "dev12_baseline_exact_copy_of_main_publication_receipt": true,
+    "baseline_receipt_identity": {
+      "size": 4741,
+      "sha256": "107d1cc1655d3304b6b5e954572e71972a2372c25b485db9a72b964625be078d"
+    },
+    "baseline_passed": true,
+    "baseline_verified_files": 18,
+    "baseline_dev_version": "1.0.0-dev.12",
+    "baseline_live_version": "0.46.9",
+    "all_nine_live_file_pins_unchanged_from_dev11": true,
+    "archived_dev12_package_and_review_are_exact_prior_main_bytes": true,
+    "actual_candidate_and_complete_zip_checks": {
+      "candidate": {
+        "artifact_id": 10504092798,
+        "api_metadata_matches": true,
+        "zip_identity": {
+          "size": 232606191,
+          "sha256": "9b774adc2f32e1da4b70e049cc84109c985e027e0265379da0b240f9ad48961f"
+        },
+        "zip_members_and_crc_verified": 11,
+        "extracted_bytes_match": true
+      },
+      "complete": {
+        "artifact_id": 10505600545,
+        "api_metadata_matches": true,
+        "zip_identity": {
+          "size": 821,
+          "sha256": "91bebfa92baadc228747723569d87bf68855f44f799b1b63bc0677aeb72b3de5"
+        },
+        "zip_members_and_crc_verified": 1,
+        "extracted_bytes_match": true
+      }
+    },
+    "actual_api_receipts_validate_exact_run_attempt_source_branch_workflow_and_all_14_successful_jobs": true,
+    "candidate_manifest_identity_complete_report_and_all_required_units_match": true,
+    "both_independent_companion_reports": {
+      "right": {
+        "copied_report_bytes_exact": true,
+        "report_identity": {
+          "size": 17121,
+          "sha256": "44dc2790ce8aab0ebc21daa24ac6dfbcfe91d61ecc5766f43d6e415348e16a38"
+        },
+        "verdict": {
+          "status": "ACCEPT_BOUNDED_ACTUAL_DEV13_RIGHT_PACKAGE",
+          "blocking_findings": [],
+          "right_follow_correction_visual_acceptance": true,
+          "overall_publication_approval": false,
+          "up_acceptance": false,
+          "final_1_0_or_fps_acceptance": false
+        },
+        "capture_report_sha256": "05120b8098191eb51c12e86c02f7dabbddd4e1521d1aead149dbf73a2438a00e",
+        "root_closure_matches": true,
+        "original_capture_library_id": "libfile_46839953bac48191aebd870bfa1b955a"
+      },
+      "up": {
+        "copied_report_bytes_exact": true,
+        "report_identity": {
+          "size": 13775,
+          "sha256": "15aa643c9372de0c77054e0f576fc19e500ca474364ccc95b40cff355a12b8c0"
+        },
+        "verdict": {
+          "status": "ACCEPT_BOUNDED_ACTUAL_DEV13_UP_PACKAGE",
+          "blocking_findings": [],
+          "up_follow_correction_visual_acceptance": true,
+          "overall_publication_approval": false,
+          "final_1_0_or_fps_acceptance": false
+        },
+        "capture_report_sha256": "f67855a2ff90f3e632f8d63bee7acfb7dd0b074031385415b201d39268d7d4e2",
+        "root_closure_matches": true,
+        "original_capture_library_id": "libfile_c9c7507ce08881919d2d46348c3d498f"
+      }
+    },
+    "contract_readiness_functions_passed": true,
+    "version_owner": "scripts/ui/premium_menu.gd:DEV_RELEASE_VERSION=1.0.0-dev.13; main._validate_release_version synchronizes the runtime web label",
+    "full_publisher_check_log": {
+      "size": 2167,
+      "sha256": "1f15397cc700cab3618209036f7bc48bbc5f9fdf395a80e66c1517a5478821f0"
+    },
+    "root_recorded_offline_tests": "12 passed, including actual immutable ZIPs and six negative companion-gate variants. This agent inspected test implementation and log; did not re-run renderer or publication.",
+    "prepared_git_tree_has_exact_eleven_reviewed_changes": true,
+    "prepared_git_tree_workflow_unchanged": true,
+    "candidate_durable_file_id_parent_reported": "libfile_1f0de0c258f48191bbe211f0ac2376fe"
+  },
+  "release_controls_reviewed": [
+    "reviewed() fails before network/workspace creation unless explicit DEV authorization, bounded visual approval, matching artifacts, both package-bound companion reports, no blockers and recorded limitations are present.",
+    "Candidate and complete ZIP identities are hard-pinned. Extraction accepts exactly the pinned safe regular members, rejects duplicates/extras/encryption/symlinks, and checks individual bytes and hashes.",
+    "QA metadata is fetched again during prepare and must be exact source/branch/workflow/run/attempt with all 14 unique successful required jobs and unexpired candidate/complete artifacts.",
+    "All 18 existing DEV12/LIVE files are downloaded and size/hash verified before site creation. Staging copies every LIVE file from those verified bytes and the nine DEV files from the immutable candidate.",
+    "Rollback is uploaded before the Pages artifact/deploy; deployment cannot run when package preparation or rollback upload fails.",
+    "Workflow permissions remain contents:read/actions:read for package and pages:write/id-token:write only for deploy; Pages concurrency remains serialized without cancellation.",
+    "Actual post-deploy verification checks nine new DEV plus nine unchanged LIVE files, initializes a failed receipt, retains failure details, and only marks success after every file matches."
+  ],
+  "nonblocking_observations": [
+    "The mock test log prints PREMIUM_DEV_PUBLIC_VERIFY_OK and PREMIUM_DEV_STAGED. These are offline fixture outputs, not evidence of completed public deployment.",
+    "The existing publication-receipt.json still represents DEV12. Preserve it until an actual DEV13 workflow receipt is obtained; do not substitute the local tests or this review.",
+    "Both companion reports explicitly limit acceptance to Worn/right and Worn/up natural-wall fixtures; whole-game polish, trapped-corridor behavior, physical-iPhone/FPS and native-animation work remain outside approval.",
+    "One ad hoc reviewer assertion looked for a literal version in generic index.html and was rejected. Source review confirmed the existing runtime version owner is premium_menu.gd and main synchronizes the web label; no candidate mutation or version-failure conclusion followed.",
+    "Do not commit generated __pycache__ files; they are outside the eleven reviewed publisher changes."
+  ],
+  "remaining_actions_after_this_review": [
+    "Commit exactly reviewed publisher changes against unchanged expected main.",
+    "Let the existing real publish workflow revalidate inputs, preserve rollback, deploy DEV, and verify every public file.",
+    "Read the genuine successful publication receipt before saying DEV13 is published; then update handoff/docs."
+  ],
+  "reviewed_changed_files": {
+    ".github/premium-dev/baseline-dev12-receipt.json": {
+      "change": "added",
+      "size": 4741,
+      "sha256": "107d1cc1655d3304b6b5e954572e71972a2372c25b485db9a72b964625be078d"
+    },
+    ".github/premium-dev/baseline.json": {
+      "change": "modified",
+      "size": 286,
+      "sha256": "c2870a81d2a5c84d8d5c183d4be0a006c8b06a940b181139af8b1eeca5ab0b50"
+    },
+    ".github/premium-dev/check_release.py": {
+      "change": "modified",
+      "size": 16017,
+      "sha256": "e250aae3e453cd23623f908a972d4afeffd479d2c31bbf74328df8759fba6291"
+    },
+    ".github/premium-dev/contracts.py": {
+      "change": "modified",
+      "size": 14294,
+      "sha256": "48b0180267f6b3129c861a1b48aae374aeea0488274902369efa57d510c1d79f"
+    },
+    ".github/premium-dev/independent-companion-right-dev13.json": {
+      "change": "added",
+      "size": 17121,
+      "sha256": "44dc2790ce8aab0ebc21daa24ac6dfbcfe91d61ecc5766f43d6e415348e16a38"
+    },
+    ".github/premium-dev/independent-companion-up-dev13.json": {
+      "change": "added",
+      "size": 13775,
+      "sha256": "15aa643c9372de0c77054e0f576fc19e500ca474364ccc95b40cff355a12b8c0"
+    },
+    ".github/premium-dev/package-dev12.json": {
+      "change": "added",
+      "size": 3003,
+      "sha256": "106eb38b5498f95aed517e86c723cad551a0287a974862aa791cf2748f14561c"
+    },
+    ".github/premium-dev/package.json": {
+      "change": "modified",
+      "size": 3003,
+      "sha256": "c3d7d5b12865038ec793b16a597f1d0c2c8161e237e8016cd7f4c5c06d778fdd"
+    },
+    ".github/premium-dev/publish.py": {
+      "change": "modified",
+      "size": 8233,
+      "sha256": "302ad9dbb6a93756a3e48f0c399491dfb33e13cd289d6dcdb6ae89d7fa4fd70f"
+    },
+    ".github/premium-dev/review-dev12.json": {
+      "change": "added",
+      "size": 3408,
+      "sha256": "f73cb126820c7022640ae3cba5f908953320c0e95f9ab7bc41905b75a0ed9ed8"
+    },
+    ".github/premium-dev/review.json": {
+      "change": "modified",
+      "size": 3594,
+      "sha256": "03737a792502609a4aecb92017fcf13340a08c1fcaa87552089f492e0d2d1d2e"
+    }
+  },
+  "reviewed_unchanged_controls": {
+    ".github/workflows/publish-premium-dev.yml": {
+      "size": 2963,
+      "sha256": "94ce1af09d079942195d017094b096a585b32a3034067548a7891d2e7cc9a3d6"
+    },
+    "AGENTS.md": {
+      "size": 2118,
+      "sha256": "dd76a1c892f33e22d366aed8a33e7e3414e81814082ec027b27ec10a864503f4"
+    }
+  },
+  "evidence_api_bindings": {
+    "qa-run-api.json": {
+      "size": 12166,
+      "sha256": "2b10818f577a6a88483016f5801deb6d6afbd3753597ca8af55776c065532695"
+    },
+    "qa-jobs-api.json": {
+      "size": 45127,
+      "sha256": "adb2860d3809e6fb2d6d59677e8b105adea4c805497977f9e9f0705ceac179b5"
+    },
+    "qa-artifacts-api.json": {
+      "size": 10852,
+      "sha256": "f1d17d4ff599ac6d722652d9b5e94b965816d8242da4d976643c6f9d37974858"
+    }
+  },
+  "no_actions_performed": [
+    "No Git ref, commit, main update, renderer/browser session, CI dispatch, export, source/package mutation or publication was performed by this reviewer."
+  ]
+}
