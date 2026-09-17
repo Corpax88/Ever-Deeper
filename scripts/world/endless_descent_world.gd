@@ -65,12 +65,13 @@ const STRATUM_WALL_TEXTURE_PATHS: = [
 	"res://assets/caves/ancient-bedrock-edge-loop-v1.png",
 ]
 const BEDROCK_CORNER_TEXTURE_PATH: = "res://assets/caves/ancient-bedrock-corner-v1.png"
+const MOSS_EDGE_TEXTURE_PATH: = "res://assets/mossvein/cave-edge-loop-v2.png"
 const DIGGABLE_WALL_TEXTURE_PATHS: = [
 	"res://assets/rootwound/cave-edge-loop-v1.png",
 	"res://assets/moonglass/cave-edge-loop-v1.png",
 	"res://assets/emberdeep/cave-edge-loop-v1.png",
 	"res://assets/voidstar/cave-edge-loop-v1.png",
-	"res://assets/mossvein/cave-edge-loop-v2.png",
+	MOSS_EDGE_TEXTURE_PATH,
 ]
 const DIGGABLE_CORNER_TEXTURE_PATHS: = [
 	"res://assets/rootwound/cave-corner-v1.png",
@@ -2792,11 +2793,29 @@ func _draw_wall_edges(cell: Vector2i, rect: Rect2) -> void :
 
 func _draw_permanent_wall_face(cell: Vector2i, rect: Rect2, side: int) -> void :
 	if _cell_diggable(cell):
+		if side == 0 and diggable_wall_texture != null and diggable_wall_texture.resource_path == MOSS_EDGE_TEXTURE_PATH:
+			_draw_moss_north_edge(cell)
+			return
 		CaveEdgeAssetDrawer.draw_mineable_edge(_draw_canvas, diggable_wall_texture, cell, side, TILE_SIZE, depth_at_position(_cell_center(cell)) % 11)
 		return
 	CaveEdgeAssetDrawer.draw_bedrock_edge(
 		_draw_canvas, cave_wall_texture, cell, side, TILE_SIZE, depth_at_position(_cell_center(cell)) % 11
 	)
+
+
+func _draw_moss_north_edge(cell: Vector2i) -> void:
+	# Keep the full authored cap above its shaded face. The old PI rotation
+	# inverted both axes; retain its X reflection, segment phase and world quad.
+	var segment_count: int = maxi(1, floori(float(diggable_wall_texture.get_width()) / 128.0))
+	var seed_offset: int = depth_at_position(_cell_center(cell)) % 11
+	var segment: int = posmod(-cell.x + seed_offset, segment_count)
+	var source := Rect2(Vector2(float(segment) * 128.0, 0.0), Vector2(128.0, 128.0))
+	var origin: Vector2 = Vector2(cell) * TILE_SIZE + Vector2(TILE_SIZE * 0.5, 0.0)
+	var inset: float = TILE_SIZE * (10.0 / 48.0)
+	var destination := Rect2(Vector2(-TILE_SIZE * 0.5, -inset), Vector2.ONE * TILE_SIZE)
+	_draw_canvas.draw_set_transform(origin, 0.0, Vector2(-1.0, 1.0))
+	_draw_canvas.draw_texture_rect_region(diggable_wall_texture, destination, source, Color.WHITE)
+	_draw_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 func _draw_permanent_wall_corners(cell: Vector2i, _rect: Rect2, open_sides: Array) -> void :

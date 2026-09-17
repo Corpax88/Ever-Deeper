@@ -1,3 +1,5 @@
+CURRENT WORK: [DEV12 narrow Moss integration](docs/premium-polish/dev12-north-edge-20260917/HANDOFF.md). Published runtime remains the DEV11 identity below. This candidate is not published.
+
 CURRENT WORK: [Continue after verified DEV11](docs/premium-polish/dev11-feedback-20260917/HANDOFF.md).
 PUBLISHED: [DEV11 verified](docs/premium-polish/dev11-feedback-20260917/PUBLISHED.md) — [play DEV11](https://corpax88.github.io/Ever-Deeper/dev/?build=8f5680d).
 Mats reset the quota and authorized continued premium polish, code uploads and gated DEV publication.
