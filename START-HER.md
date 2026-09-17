@@ -1,12 +1,10 @@
-CURRENT WORK: [DEV12 narrow Moss integration](docs/premium-polish/dev12-north-edge-20260917/HANDOFF.md). Published runtime remains the DEV11 identity below. This candidate is not published.
+CURRENT WORK: [Continue premium polish after DEV12](docs/premium-polish/dev12-north-edge-20260917/HANDOFF.md).
+PUBLISHED: [DEV12 verified](docs/premium-polish/dev12-north-edge-20260917/PUBLISHED.md) — [play DEV12](https://corpax88.github.io/Ever-Deeper/dev/?build=580a2e0).
+Mats authorized continued work, independent critics, code uploads and gated DEV publication. Do not ask for the same authorization again.
+Published runtime is `580a2e02eca1e000f5d5f58bb61ac09fd4b2a194`, tree `da7949da4b04ddcff569389a244447cbad1e22a4`. QA `35203069938` passed all 14 jobs; publisher `13cf7244df555bdaa2d7e5b759da2643e6900d1f`, run `35206009701`, passed package/deploy/verify. All nine LIVE files remain at the exact `0.46.9` baseline. Documentation commits after the runtime commit are not another published build.
+The independent critic accepted only the Moss north-edge correction. Full polish, stable 50 FPS, all-tool motion, remaining world joins and physical-iPhone verification remain open. New native animation is isolated: the right pilot is accepted only for further study; the up pilot was rejected because the body hides the stroke and is being corrected in a separate study. Rejected art/performance studies are not adopted.
 
-CURRENT WORK: [Continue after verified DEV11](docs/premium-polish/dev11-feedback-20260917/HANDOFF.md).
-PUBLISHED: [DEV11 verified](docs/premium-polish/dev11-feedback-20260917/PUBLISHED.md) — [play DEV11](https://corpax88.github.io/Ever-Deeper/dev/?build=8f5680d).
-Mats reset the quota and authorized continued premium polish, code uploads and gated DEV publication.
-Source `8f5680defb9083bbe1e044d39a10612f2186e7f3` on `codex/dev11-feedback-20260917` is the published DEV11 runtime. QA `35186932201` passed all 14 jobs; publication `35188991326` passed package, deploy and verify. All nine LIVE files remain at the exact `0.46.9` baseline.
-Full premium polish, stable 50 FPS, all-tool motion, remaining world joins and physical-iPhone verification remain open. Rejected camera/corner studies are not adopted. Read the current handoff and [verification](docs/premium-polish/dev11-feedback-20260917/VERIFIED.md) first.
-
-The 15 September recovery chronology below is preserved history. Its old source, work branch and pending-export statements do not replace the current DEV11 identities above.
+The 15 September recovery chronology below is preserved history. Its old source, work branch and pending-export statements do not replace the current DEV12 identities above.
 
 # Ever-Deeper — continue premium polish
 

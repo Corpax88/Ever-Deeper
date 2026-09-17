@@ -1,6 +1,13 @@
-# DEV12 work in progress
+# DEV12 published; premium polish continues
 
-Published runtime remains DEV11 `8f5680defb9083bbe1e044d39a10612f2186e7f3`.
+Published runtime is DEV12 `580a2e02eca1e000f5d5f58bb61ac09fd4b2a194`.
+[Play DEV12](https://corpax88.github.io/Ever-Deeper/dev/?build=580a2e0).
+QA 35203069938 passed all 14 jobs; publication 35206009701 passed all three
+jobs and verified the nine exact DEV bytes plus nine unchanged LIVE files.
+See [PUBLISHED.md](PUBLISHED.md), [VERIFIED.md](VERIFIED.md) and the actual
+[publication receipt](publication-receipt.json). Documentation commits after
+580a2e02 are not a different published runtime.
+
 Branch `codex/premium-polish-dev12-20260917` starts at documented DEV11
 `900d4841b2761f2f62fc259c52b748281ab924f2` and integrates only the independently
 accepted upright Moss north-edge correction. Native full texture regions,
@@ -31,9 +38,10 @@ the fixture verifies its complete hash against the immutable build's expected
 PCK_SHA256. Godot strips --main-pack from exposed engine arguments, as an
 unchanged DEV11 package probe confirmed, so the fixture does not claim to
 observe that argument directly.
-Package acceptance and original image review remain required before publication. `tools/north_edge_release_review` calls the actual production
+Package acceptance and independent original image review passed before publication.
+`tools/north_edge_release_review` calls the actual production
 owner in B and exact legacy owner in A/A2; it is never loaded in ordinary play.
-No new release has been published. The nine LIVE files remain fixed.
+The nine LIVE files remain fixed at version 0.46.9. Only DEV was published.
 
 Game feel, all-tool coverage, new native motion, stable50FPS, other world joins
 and physical-iPhone acceptance remain open. The rejected compact-art and floor

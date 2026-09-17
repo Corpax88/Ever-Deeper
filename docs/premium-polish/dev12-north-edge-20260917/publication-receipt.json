@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "dev_only": true,
+  "passed": true,
+  "verified_files": 18,
+  "source_commit": "580a2e02eca1e000f5d5f58bb61ac09fd4b2a194",
+  "qa_run_id": 35203069938,
+  "candidate_artifact_id": 10489135841,
+  "complete_artifact_id": 10489068121,
+  "candidate_zip_sha256": "b2a43d16dd4eabf79b8eddb34207068ec45ae9d79cdb766278752ab867174bb5",
+  "complete_zip_sha256": "057961d22a388e82ab3fd12cd630f0f11866cfa9de0ff4581c57a4ba8c89c580",
+  "review_sha256": "f73cb126820c7022640ae3cba5f908953320c0e95f9ab7bc41905b75a0ed9ed8",
+  "baseline_receipt_sha256": "7bd53dd44ace7e8a860f75160a99e6728238e04e1c1a39eedbdf398fb3ba4afa",
+  "publication_source_commit": "13cf7244df555bdaa2d7e5b759da2643e6900d1f",
+  "publication_run_id": "35206009701",
+  "rollback_artifact_id": "10490017408",
+  "displayed_dev_version": "1.0.0-dev.12",
+  "live_version": "0.46.9",
+  "final_one_point_zero_approved": false,
+  "physical_iphone_verified": false,
+  "limits": [
+    "DEV12 is a narrow Moss north-edge playtest correction, not completed premium polish, final1.0 or an overall9/10 approval.",
+    "Existing corner/step/biome joins and complete all-tool motion quality remain open.",
+    "New native motion and rejected art/performance studies are not adopted.",
+    "Stable minimum50FPS has not been demonstrated in sustained browser/physical-iPhone play. Earlier virtual-Mac native sessions fell below50FPS; their ANGLE finding is not automatically a WebKit bottleneck.",
+    "The native held fixture freezes shader time and uses a walkable-floor teleport; actual gameplay/source cases and browser checks are separately retained.",
+    "Mac WebKit is virtual AppleGPU at1696x780, not a physical iPhone. No new sustained-performance or audio certification.",
+    "Only3 signed-effect pixels differ from both source references, maximum channel mismatch3; no exact cross-run full-frame or signed-effect parity claim.",
+    "The existing protected player_visual.gd baseline mismatch is unchanged."
+  ],
+  "files": {
+    "dev": {
+      "index.html": {
+        "size": 5444,
+        "sha256": "e19b9e4b708b1da1273fa44cabd5a1acc3da43cf7c4ed8ef76d7e1b52681c933"
+      },
+      "index.pck": {
+        "size": 221014560,
+        "sha256": "9dfcf913c867e36e6a16f4f5123fd5cce7654cfb435a753f9eb7bca12f574bd9"
+      },
+      "index.apple-touch-icon.png": {
+        "size": 66421,
+        "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+      },
+      "index.js": {
+        "size": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      },
+      "index.png": {
+        "size": 1981427,
+        "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+      },
+      "index.audio.worklet.js": {
+        "size": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "index.wasm": {
+        "size": 39514754,
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      },
+      "index.icon.png": {
+        "size": 470687,
+        "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+      },
+      "index.audio.position.worklet.js": {
+        "size": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      }
+    },
+    "live": {
+      "index.apple-touch-icon.png": {
+        "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5",
+        "size": 66421
+      },
+      "index.audio.position.worklet.js": {
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+        "size": 2973
+      },
+      "index.audio.worklet.js": {
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+        "size": 7298
+      },
+      "index.html": {
+        "sha256": "d2ec5489abc93466a5a0595074d1bcb39efc5ebd4dc3e69ee3ee4af0cf9c6c7b",
+        "size": 5444
+      },
+      "index.icon.png": {
+        "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+        "size": 470687
+      },
+      "index.js": {
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+        "size": 279815
+      },
+      "index.pck": {
+        "sha256": "3bb815dabf51f5146517d7ecb0ebbf7dfc7504d5d7030306f0daf46d6eac511b",
+        "size": 221175244
+      },
+      "index.png": {
+        "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+        "size": 1981427
+      },
+      "index.wasm": {
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+        "size": 39514754
+      }
+    }
+  },
+  "errors": [],
+  "verification_attempts": 1,
+  "live_files_unchanged": 9,
+  "dev_files": 9
+}

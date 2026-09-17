@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "sourceSha": "580a2e02eca1e000f5d5f58bb61ac09fd4b2a194",
+  "reviewOnly": true,
+  "physicalIphone": false,
+  "passed": true,
+  "complete": true,
+  "errors": [],
+  "units": {
+    "build": {
+      "passed": true,
+      "coreCases": 15,
+      "devFlavorCases": 1,
+      "productionFlavorCases": 1
+    },
+    "visual-forge": {
+      "passed": true,
+      "visualCases": [
+        1,
+        14
+      ],
+      "pngCount": 14
+    },
+    "visual-workshops": {
+      "passed": true,
+      "visualCases": [
+        15,
+        19
+      ],
+      "pngCount": 5
+    },
+    "gameplay": {
+      "passed": true,
+      "checks": 1273,
+      "touchSection": null,
+      "pngCount": 1
+    },
+    "touch-pause": {
+      "passed": true,
+      "checks": 9,
+      "touchSection": "pause",
+      "pngCount": 2
+    },
+    "touch-wardrobe": {
+      "passed": true,
+      "checks": 38,
+      "touchSection": "wardrobe",
+      "pngCount": 7
+    },
+    "touch-light": {
+      "passed": true,
+      "checks": 39,
+      "touchSection": "light",
+      "pngCount": 8
+    },
+    "touch-lists": {
+      "passed": true,
+      "checks": 20,
+      "touchSection": "lists",
+      "pngCount": 5
+    },
+    "touch-starforge": {
+      "passed": true,
+      "checks": 45,
+      "touchSection": "starforge",
+      "pngCount": 4
+    },
+    "touch-workshops": {
+      "passed": true,
+      "checks": 44,
+      "touchSection": "workshops",
+      "pngCount": 6
+    },
+    "commerce-residency": {
+      "passed": true,
+      "checks": 58,
+      "pngCount": 6,
+      "feedbackChecks": 346,
+      "feedbackPngCount": 8,
+      "northPngCount": 3,
+      "northChangedPixels": 53135
+    },
+    "mac-gameplay": {
+      "passed": true,
+      "checks": 1265,
+      "touchSection": null,
+      "pngCount": 1
+    },
+    "mac-touch-pause": {
+      "passed": true,
+      "checks": 9,
+      "touchSection": "pause",
+      "pngCount": 2
+    }
+  },
+  "limits": [
+    "CI evidence requires independent visual review.",
+    "No physical iPhone, sustained-device performance or publication approval."
+  ],
+  "pckSha256": "9dfcf913c867e36e6a16f4f5123fd5cce7654cfb435a753f9eb7bca12f574bd9",
+  "htmlSha256": "e19b9e4b708b1da1273fa44cabd5a1acc3da43cf7c4ed8ef76d7e1b52681c933"
+}

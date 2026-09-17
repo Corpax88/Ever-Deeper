@@ -1,0 +1,368 @@
+{
+  "review_id": "dev12-exact-package-north-independent-review",
+  "reviewer": "performance_critic",
+  "date_utc": "2026-09-17",
+  "independence": "Reviewer authored the isolated orientation study but did not author this production integration, DEV12 packaging changes, export or CI capture. Root separately reviewed and accepted the original affected-state matrix.",
+  "decision": "accept_narrow_north_orientation_in_exact_DEV12_package",
+  "blockers": [],
+  "scope": "Moss mineable north-edge upright perspective in the actual exported DEV12 PCK; held original A/B/A2, both endpoints, restoration and comparison with previously accepted source effect. This is a package visual review, not overall release approval.",
+  "identity": {
+    "source_revision": "580a2e02eca1e000f5d5f58bb61ac09fd4b2a194",
+    "source_tree": "da7949da4b04ddcff569389a244447cbad1e22a4",
+    "ci_run_id": "35203069938",
+    "ci_run_attempt": 1,
+    "package": {
+      "path": "/workspace/scratch/d5437d917805/evidence/dev12-ci/candidate/index.pck",
+      "size_bytes": 221014560,
+      "sha256": "9dfcf913c867e36e6a16f4f5123fd5cce7654cfb435a753f9eb7bca12f574bd9"
+    },
+    "candidate_zip": {
+      "path": "/workspace/scratch/d5437d917805/evidence/dev12-ci/candidate.zip",
+      "size_bytes": 232600897,
+      "sha256": "b2a43d16dd4eabf79b8eddb34207068ec45ae9d79cdb766278752ab867174bb5"
+    },
+    "commerce_review_zip": {
+      "path": "/workspace/scratch/d5437d917805/evidence/dev12-ci/premium-web-review-commerce-residency-580a2e02eca1e000f5d5f58bb61ac09fd4b2a194.zip",
+      "size_bytes": 55257428,
+      "sha256": "36982f6f34a92fe056232ad77f468f18d00ebd4229de1ee245fcd43f11cce648"
+    },
+    "artifact_identity_files": [
+      {
+        "path": "/workspace/scratch/d5437d917805/evidence/dev12-ci/candidate/artifact-identity.json",
+        "size_bytes": 3212,
+        "sha256": "bb0373d932195b86e28a5a0812abd5e6a83d79ff855eb4238c8fffc076e49446"
+      },
+      {
+        "path": "/workspace/scratch/d5437d917805/evidence/dev12-ci/artifacts/premium-web-review-commerce-residency-580a2e02eca1e000f5d5f58bb61ac09fd4b2a194/artifact-identity.json",
+        "size_bytes": 3212,
+        "sha256": "bb0373d932195b86e28a5a0812abd5e6a83d79ff855eb4238c8fffc076e49446"
+      }
+    ],
+    "capture_report": {
+      "path": "/workspace/scratch/d5437d917805/evidence/dev12-ci/artifacts/premium-web-review-commerce-residency-580a2e02eca1e000f5d5f58bb61ac09fd4b2a194/north/north-edge-orientation.json",
+      "size_bytes": 7114,
+      "sha256": "d832ce55ddbb2d4b8a3480fe3cda9bb9d1a715de22ca8e2d05131614655e417d"
+    },
+    "state_snapshot": {
+      "path": "/workspace/scratch/d5437d917805/evidence/dev12-ci/artifacts/premium-web-review-commerce-residency-580a2e02eca1e000f5d5f58bb61ac09fd4b2a194/north/moss-north-held-state.json",
+      "size_bytes": 9865,
+      "sha256": "0c5aba8cda26337c27c97a3c087bee7c53ff513dbee237c3a11376c89f0da197"
+    },
+    "loose_fixture_files": {
+      "README.md": {
+        "path": "/workspace/scratch/d5437d917805/premium-next/tools/north_edge_release_review/README.md",
+        "size_bytes": 2372,
+        "sha256": "10dfb0631866543b24799eb592909c3ad18561eb4cc671fab85378ddc63442f6"
+      },
+      "review.gd": {
+        "path": "/workspace/scratch/d5437d917805/premium-next/tools/north_edge_release_review/review.gd",
+        "size_bytes": 16383,
+        "sha256": "f003c8611b745f9f6f51d8df4e3bd7a5764ccbd5ed5fa12cd821db0e7db4a791"
+      },
+      "deep_reference.gd": {
+        "path": "/workspace/scratch/d5437d917805/premium-next/tools/north_edge_release_review/deep_reference.gd",
+        "size_bytes": 960,
+        "sha256": "ca3835a4ab1ed4d7e1a894665fc445bfc13b40f80255e5c8f974512d19bce1e1"
+      }
+    },
+    "production_world_source": {
+      "path": "/workspace/scratch/d5437d917805/premium-next/scripts/world/endless_descent_world.gd",
+      "size_bytes": 138174,
+      "sha256": "e71a2c1c3bf9e453164bbd0c666ef5811ed573e9f515eb87ac4c74dfb1e008c1"
+    },
+    "binding": "Actual local PCK SHA256/size match both artifact identities and the capture report expected/observed pack hashes. Inspected CI invocation starts native Godot with this PCK via --main-pack from an empty host path and supplies the recorded external fixture. Package contents, including imported or compiled source assets, are bound by the whole PCK hash."
+  },
+  "inspected_original_images": {
+    "A": {
+      "path": "/workspace/scratch/d5437d917805/evidence/dev12-ci/artifacts/premium-web-review-commerce-residency-580a2e02eca1e000f5d5f58bb61ac09fd4b2a194/north/moss-north-held-A.png",
+      "size_bytes": 2164625,
+      "sha256": "f5c1aa34703dd33812d5c86cb80bec388cb9d42c4a0273e00eeccdaec9d9905d",
+      "dimensions": [
+        1696,
+        780
+      ]
+    },
+    "B": {
+      "path": "/workspace/scratch/d5437d917805/evidence/dev12-ci/artifacts/premium-web-review-commerce-residency-580a2e02eca1e000f5d5f58bb61ac09fd4b2a194/north/moss-north-held-B.png",
+      "size_bytes": 2163291,
+      "sha256": "2ca07185c59fc9eec04e4a0bf7d087047f8e60f036aa9b563ce51e64ab9fac4b",
+      "dimensions": [
+        1696,
+        780
+      ]
+    },
+    "A2": {
+      "path": "/workspace/scratch/d5437d917805/evidence/dev12-ci/artifacts/premium-web-review-commerce-residency-580a2e02eca1e000f5d5f58bb61ac09fd4b2a194/north/moss-north-held-A2.png",
+      "size_bytes": 2164625,
+      "sha256": "f5c1aa34703dd33812d5c86cb80bec388cb9d42c4a0273e00eeccdaec9d9905d",
+      "dimensions": [
+        1696,
+        780
+      ]
+    }
+  },
+  "original_resolution_visual_review": {
+    "all_three_originals_viewed": true,
+    "dimensions": [
+      1696,
+      780
+    ],
+    "straight_band_framebuffer_rect_xywh": [
+      504.6819,
+      278.7777,
+      228.8787,
+      76.26667
+    ],
+    "west_endpoint_framebuffer_rect_xywh": [
+      199.5103,
+      142.1333,
+      305.1716,
+      305.0667
+    ],
+    "east_endpoint_framebuffer_rect_xywh": [
+      733.5607,
+      142.1333,
+      305.1716,
+      305.0667
+    ],
+    "findings": [
+      "B retains the accepted upright north band: authored top caps appear above the shaded wall faces. Material, stone scale and horizontal texture phase match the accepted source presentation.",
+      "Both endpoint regions were inspected at original resolution in A, B and A2. Existing broad full-corner shoulders, rotated vertical side-leg perspective and stepped overlaps remain. No additional visible endpoint defect attributable to packaging was found.",
+      "A2 visibly restores A and is also identical in PNG bytes and every decoded RGBA pixel. The package reproduces the narrow orientation improvement without completing short turns or pillars."
+    ]
+  },
+  "pixel_proof": {
+    "method": "Pillow decoding of complete original PNGs, NumPy signed int16 B minus A arrays at every RGBA channel; no crop, rescale or unsigned subtraction.",
+    "package_A_to_B_changed_rgba_pixels": 53135,
+    "package_maximum_absolute_effect_channel_delta": 123,
+    "package_A_to_A2_changed_rgba_pixels": 0,
+    "package_A_A2_png_bytes_identical": true,
+    "comparisons": {
+      "accepted_source_integration": {
+        "source_A_to_B_changed_rgba_pixels": 53137,
+        "cross_run_full_frame_changed_rgba_pixels": {
+          "A": 62695,
+          "B": 62695,
+          "A2": 62695
+        },
+        "cross_run_full_frame_identity": false,
+        "signed_effect_identical": false,
+        "signed_effect_mismatch_pixels": 3,
+        "signed_effect_maximum_channel_mismatch": 3,
+        "effect_support_xor_pixels": 2,
+        "mismatch_bbox_xyxy_exclusive": [
+          1035,
+          432,
+          1039,
+          434
+        ],
+        "mismatch_pixel_values": [
+          {
+            "xy": [
+              1035,
+              432
+            ],
+            "package_signed_B_minus_A": [
+              0,
+              -1,
+              -1,
+              0
+            ],
+            "reference_signed_B_minus_A": [
+              -2,
+              -3,
+              -3,
+              0
+            ]
+          },
+          {
+            "xy": [
+              1036,
+              432
+            ],
+            "package_signed_B_minus_A": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference_signed_B_minus_A": [
+              -1,
+              -1,
+              -1,
+              0
+            ]
+          },
+          {
+            "xy": [
+              1038,
+              433
+            ],
+            "package_signed_B_minus_A": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference_signed_B_minus_A": [
+              -1,
+              -1,
+              -3,
+              0
+            ]
+          }
+        ]
+      },
+      "accepted_initial_held_study": {
+        "source_A_to_B_changed_rgba_pixels": 53137,
+        "cross_run_full_frame_changed_rgba_pixels": {
+          "A": 63084,
+          "B": 63084,
+          "A2": 63084
+        },
+        "cross_run_full_frame_identity": false,
+        "signed_effect_identical": false,
+        "signed_effect_mismatch_pixels": 3,
+        "signed_effect_maximum_channel_mismatch": 3,
+        "effect_support_xor_pixels": 2,
+        "mismatch_bbox_xyxy_exclusive": [
+          1035,
+          432,
+          1039,
+          434
+        ],
+        "mismatch_pixel_values": [
+          {
+            "xy": [
+              1035,
+              432
+            ],
+            "package_signed_B_minus_A": [
+              0,
+              -1,
+              -1,
+              0
+            ],
+            "reference_signed_B_minus_A": [
+              -2,
+              -3,
+              -3,
+              0
+            ]
+          },
+          {
+            "xy": [
+              1036,
+              432
+            ],
+            "package_signed_B_minus_A": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference_signed_B_minus_A": [
+              -1,
+              -1,
+              -1,
+              0
+            ]
+          },
+          {
+            "xy": [
+              1038,
+              433
+            ],
+            "package_signed_B_minus_A": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "reference_signed_B_minus_A": [
+              -1,
+              -1,
+              -3,
+              0
+            ]
+          }
+        ]
+      }
+    },
+    "interpretation": "The package has 53,135 affected pixels versus 53,137 in the source captures. Exact signed effect identity is false: three pixels differ by at most three channel levels, with two support pixels changing. This bounded difference is recorded and does not present a visible orientation or endpoint regression in the original images. The cause of those small differences and all other between-run full-frame changes was not diagnosed; no exact cross-run image or signed-effect parity claim is made."
+  },
+  "reference_originals": {
+    "accepted_source_integration": {
+      "A": {
+        "path": "/workspace/scratch/d5437d917805/evidence/dev12-north-integration-f2ce35f/moss-north-held-A.png",
+        "size_bytes": 2171450,
+        "sha256": "aa4ea4f9486773153e241ab65e949ea24a8059181cf130f13c9cefd824526dbd",
+        "dimensions": [
+          1696,
+          780
+        ]
+      },
+      "B": {
+        "path": "/workspace/scratch/d5437d917805/evidence/dev12-north-integration-f2ce35f/moss-north-held-B.png",
+        "size_bytes": 2170345,
+        "sha256": "c382b340198d203b21ca7e7a20846f88c57c13f67e6bccbe4ef8cb52a6a8efe8",
+        "dimensions": [
+          1696,
+          780
+        ]
+      },
+      "A2": {
+        "path": "/workspace/scratch/d5437d917805/evidence/dev12-north-integration-f2ce35f/moss-north-held-A2.png",
+        "size_bytes": 2171450,
+        "sha256": "aa4ea4f9486773153e241ab65e949ea24a8059181cf130f13c9cefd824526dbd",
+        "dimensions": [
+          1696,
+          780
+        ]
+      }
+    },
+    "accepted_initial_held_study": {
+      "A": {
+        "path": "/workspace/scratch/d5437d917805/evidence/north-edge-orientation-moss/moss-north-held-A.png",
+        "size_bytes": 2171978,
+        "sha256": "4cd3dd9c978ccd0a5c026cddd2c9e6d9df5328f1ef446d0132e9d5ade30a9919",
+        "dimensions": [
+          1696,
+          780
+        ]
+      },
+      "B": {
+        "path": "/workspace/scratch/d5437d917805/evidence/north-edge-orientation-moss/moss-north-held-B.png",
+        "size_bytes": 2170913,
+        "sha256": "b4b09b27f004c63edb879633479bb8bbeb1ad41680858a659c1a96576e6504f9",
+        "dimensions": [
+          1696,
+          780
+        ]
+      },
+      "A2": {
+        "path": "/workspace/scratch/d5437d917805/evidence/north-edge-orientation-moss/moss-north-held-A2.png",
+        "size_bytes": 2171978,
+        "sha256": "4cd3dd9c978ccd0a5c026cddd2c9e6d9df5328f1ef446d0132e9d5ade30a9919",
+        "dimensions": [
+          1696,
+          780
+        ]
+      }
+    }
+  },
+  "source_and_fixture_review": {
+    "runtime_change": "Production north mapping is unchanged from the accepted f2ce35f integration. Guard remains diggable side 0 with the Moss edge texture. Full world quad, horizontal UV phase and X reflection are preserved; Y orientation is upright. No native art, corner, bedrock or other-biome change is included.",
+    "B_dispatch": "B calls actual production super._draw_permanent_wall_face; A/A2 use the old drawing owner. Each phase invalidates section caches; capture records 336 redrawn sections each and 40 eligible B draw calls.",
+    "state": "Seed 4608, Deep 14, window 13; ordinary camera, limits, zoom and culling; valid walkable-floor fixture teleport, zero terrain mutations and common topology fingerprint 234086245. This held pose is not continuous traversal.",
+    "capture_platform": "Actual exported PCK rendered through native Godot 4.7.2 X11 with Mesa/llvmpipe in CI. This is not a Safari, WebGL or physical iPhone rendering claim.",
+    "review_actions": "Read-only source/report/image review and CPU hash/pixel analysis; no renderer, production mutation, asset edit or new gameplay run."
+  },
+  "limits": [
+    "Existing corners, short steps, pillars and biome seams remain unresolved. No broad world-quality or premium rating is implied.",
+    "This exact package capture is one held pose. Previously accepted source affected-state coverage remains separate evidence, not a new package replay of all seven cases.",
+    "No native-motion, all-direction/all-tool, FPS, physical iPhone or sustained gameplay approval is given.",
+    "Commerce, feedback, remaining source gates and deployment verification are outside this review. Overall release approval belongs to the parent release workflow.",
+    "Producer report visual_approval=false and endpoint pending fields are retained as original pre-review evidence; this independent JSON records the completed narrow review."
+  ]
+}
