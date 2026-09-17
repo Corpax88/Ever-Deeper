@@ -1,0 +1,77 @@
+name: DEV11 isolated WebKit shader identity attribution
+on:
+  push:
+    branches: [codex/dev11-webkit-shader-identity-20260917]
+    paths: ['tools/webkit_shader_identity/REQUEST.json']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: dev11-webkit-shader-identity-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  moving-deep:
+    if: github.ref == 'refs/heads/codex/dev11-webkit-shader-identity-20260917'
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+          sparse-checkout: |
+            tools/webkit_shader_identity
+            .github/workflows
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify forwarding, restoration and unchanged observer
+        run: |
+          mkdir -p "$RUNNER_TEMP/webkit-shader-identity"
+          python3 tools/webkit_shader_identity/prepare.py --output "$RUNNER_TEMP/webkit-shader-identity/source-binding.json"
+          node tools/webkit_shader_identity/check.mjs > "$RUNNER_TEMP/webkit-shader-identity/observer-check.log" 2>&1
+          node tools/webkit_shader_identity/check-resources.mjs > "$RUNNER_TEMP/webkit-shader-identity/resource-check.log" 2>&1
+          node tools/webkit_shader_identity/check-identity.mjs > "$RUNNER_TEMP/webkit-shader-identity/identity-check.log" 2>&1
+          node --check tools/webkit_shader_identity/run.mjs
+          node --check tools/webkit_shader_identity/resources.js
+      - uses: actions/download-artifact@v4
+        with:
+          name: premium-web-candidate-8f5680defb9083bbe1e044d39a10612f2186e7f3
+          run-id: '35186932201'
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - name: Verify all nine original exported files without rebuilding
+        run: |
+          python3 tools/webkit_shader_identity/prepare.py --candidate "$RUNNER_TEMP/candidate" --output "$RUNNER_TEMP/webkit-shader-identity/package-binding.json"
+      - name: Install the established WebKit and UI reader
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install --with-deps webkit
+          swiftc tools/webkit_shader_identity/ocr.swift -o "$RUNNER_TEMP/webkit-ocr"
+          sw_vers > "$RUNNER_TEMP/webkit-shader-identity/macos-version.txt"
+          system_profiler SPDisplaysDataType > "$RUNNER_TEMP/webkit-shader-identity/display.txt"
+          cat node_modules/playwright-core/browsers.json > "$RUNNER_TEMP/webkit-shader-identity/playwright-browsers.json"
+      - name: One real moving diagnostic session
+        timeout-minutes: 6
+        run: |
+          node tools/webkit_shader_identity/run.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/webkit-shader-identity" "$RUNNER_TEMP/webkit-ocr" > "$RUNNER_TEMP/webkit-shader-identity/runner.log" 2>&1
+      - name: Hash closed evidence after exit
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'webkit-shader-identity'
+          root.mkdir(exist_ok=True)
+          manifest={p.name:{'size':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in root.iterdir() if p.is_file() and p.name!='closed-manifest.json'}
+          (root/'closed-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+          if (root/'result.json').exists() and json.loads((root/'result.json').read_text()).get('complete'):
+              assert (root/'runner.log').read_text().count('WEBKIT_SHADER_IDENTITY_COMPLETE ')==1
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dev11-webkit-shader-identity-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/webkit-shader-identity
+          if-no-files-found: error
+          retention-days: 30
