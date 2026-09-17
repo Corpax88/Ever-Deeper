@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "status": "unapproved_art_study",
+  "generator": "image_gen.imagegen",
+  "variants": [
+    {
+      "variant": "v1",
+      "original_path": "generated_images/exec-d88a9f9f-cf37-4dae-b924-5fec5251043a.png",
+      "prompt": "Use case: stylized-concept.\nAsset type: one production-ready transparent game-environment PNG, 1024 x 1024, a compact northeast convex cave-wall elbow for Ever-Deeper. This is an isolated art study, not a screenshot or a mockup sheet.\nReference image 1 (cave-corner-v2.png): approved olive-grey layered stone material, moss in crevices, stone grain, bevels, upright construction and orthographic three-quarter top-down viewing angle.\nReference image 2 (cave-edge-loop-v2.png): approved stone size, irregular cap shapes, dark stacked cliff face, exact muted material palette and top/face appearance.\nCreate a NEW compact geometry matching these references. Keep the reference's material quality and same apparent size of individual boulders. Use fewer complete large stones, not a miniaturized copy of the long L. A short west connection turns into a short south connection around one coherent massive outside northeast corner. The exposed outside northeast outline must be naturally closed with complete rounded/fractured stone forms, with a substantial dark layered face below upright top caps. All cap surfaces face upwards consistently; do not rotate painted rock faces sideways.\nCanvas/layout contract: transparent square 1024 x 1024; conceptual logical cell is x256..768 and y256..768. The complete opaque rock module, including antialiasing, stays approximately within x224..872 and y152..800. Only short connection tails touch the west connection plane x256 and south plane y768; keep them compact, extending at most 32 pixels beyond those planes. There are broad transparent margins all around; no image-edge cropping and no long arms running out of frame. This is a small local elbow occupying about one logical cell, with roughly two or three substantial capstones joined at the turn. The full cliff profile at its west connection should match the 128-pixel-tall strip reference when scaled consistently. Do not add a new ground plane.\nUse the same soft upper-left lighting and understated olive moss; no green glow, crystals, props or new decorative motif. Keep all small material detail readable. The actual output background must be transparent alpha, not black, white, grey, a painted checkerboard or a shadow-filled rectangle. No text, numbers, guides, grid, labels, icons, characters, borders, diagrams, multiple views, contact sheet, interface or watermark. One single complete transparent asset only.",
+      "references": [
+        "assets/mossvein/cave-corner-v2.png",
+        "assets/mossvein/cave-edge-loop-v2.png"
+      ]
+    },
+    {
+      "variant": "v2",
+      "original_path": "generated_images/exec-b9b7c4ef-1f90-487b-9d05-14b4a1de692d.png",
+      "prompt": "Use case: precise-object-edit. Asset type: one transparent game cave-wall module.\nImage 1 is the edit target, the generated compact Moss elbow. Image 2 is the approved straight Moss wall reference for material and apparent stone size.\nChange only the elbow's stone arrangement to solve its remaining long-arm/too-many-small-stones problem. Re-author it as THREE dominant complete large capstones, with small supporting chips only: one at the upper-left, one at the upper-right joining the bend, and one directly below the upper-right. Thus it is one compact northeast outside elbow connected toward west and south. Do not shrink the old L, simply crop it, or add another long extension.\nMaintain exactly the target's muted olive-grey layered rock, understated moss in cracks, soft upper-left light, substantial darker stacked faces beneath the caps, detailed natural stone grain, and upright orthographic three-quarter top-down camera. Keep cap planes facing upward everywhere, without sideways painted boulders. Match the approved reference's large boulder scale.\nLayout: square transparent canvas. Each of the THREE main capstones is about 32% of the canvas width (large stones, not a mosaic of small stones). Approximate cap centers are (40%,30%), (64%,30%), (64%,54%). Interlock and overlap their supporting cliff layers naturally into ONE coherent continuous elbow, no gaps inside the joined stone. Complete rock silhouette should occupy approximately x22%..86%, y15%..79%, with broad fully transparent margins. Only three dominant upper capstones, no long arms and no extra capstone extending below the bottom stone. Keep the west/south connections compact and the outer northeast face closed.\nActual transparent alpha background, clean empty margins with no stray specks, no painted checkerboard or rectangular ground/shadow backdrop. No text, numbers, guides, labels, UI, grid, diagram, border, multiple views, characters, crystals, invented decoration or watermark. One complete standalone production asset only.",
+      "references": [
+        "v1 original PNG",
+        "assets/mossvein/cave-edge-loop-v2.png"
+      ]
+    }
+  ],
+  "constraints": [
+    "Preserve original generated PNG bytes.",
+    "No approval of game integration follows from generation.",
+    "No production assets changed."
+  ]
+}
+
