@@ -122,9 +122,18 @@ def measure_parts(p, draw):
         tips = []
         if 'head' in obj.name.lower():
             for label, picker in [('minimum_normal', min), ('maximum_normal', max)]:
-                vertex = picker(vertices, key=lambda v:(v-p['rear']).dot(p['tool_normal']))
+                vertex_index = picker(range(len(vertices)), key=lambda i:(vertices[i]-p['rear']).dot(p['tool_normal']))
+                vertex = vertices[vertex_index]
+                normal = (evaluated.matrix_world.to_3x3().inverted().transposed()@mesh.vertices[vertex_index].normal).normalized()
+                faces = []
+                for triangle in triangles:
+                    if vertex_index in triangle:
+                        a,b,c = (vertices[i] for i in triangle)
+                        faces.append({'vertex_indices':list(triangle), 'world_normal':list((b-a).cross(c-a).normalized())})
                 xy = project(vertex)
-                tips.append({'selector':label, 'native_world':list(vertex), 'native_pixel':xy, 'recorded_screen_projection':scene_point(xy, draw), 'ore_alpha_at_projection':ore_alpha(scene_point(xy, draw), draw)})
+                tips.append({'selector':label, 'evaluated_mesh_vertex_index':vertex_index, 'native_world':list(vertex),
+                             'native_surface_normal':list(normal), 'adjacent_faces':faces, 'native_pixel':xy,
+                             'recorded_screen_projection':scene_point(xy, draw), 'ore_alpha_at_projection':ore_alpha(scene_point(xy, draw), draw)})
         parts.append({'object':obj.name, 'vertices':len(vertices), 'triangles':len(triangles), 'projected_bounds':box,
                       'projected_pixel_centers':len(pixels), 'visible_pixel_centers':len(visible),
                       'visible_fraction':len(visible)/len(pixels) if pixels else None,
