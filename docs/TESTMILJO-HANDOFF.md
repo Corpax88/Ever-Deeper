@@ -1,4 +1,18 @@
-Current continuation: [CURRENT-POLISH.md](premium-polish/CURRENT-POLISH.md).
+Current unpublished candidate: [DEV10](premium-polish/dev10-20260917/HANDOFF.md).
+
+## Runtime verified 17 September 2026
+
+Godot `/tmp/ever-deeper-runtime-20260917/Godot_v4.7.2-stable_linux.x86_64`
+returns `4.7.2.stable.official.ed1daf0bf`; the matching web templates are installed.
+Xvfb is `/workspace/scratch/d5437d917805/runtime/xvfb/usr/bin/Xvfb`.
+Use the authenticated `tools/run_rendered_isolated.py` route and an empty project
+directory for exact-PCK tests. The actual 1696×780 hazard/menu/return route passes
+47 checks on the exported DEV10 candidate; the 15 current package suites also pass.
+Local execution is Linux Mesa llvmpipe, not Apple or physical iPhone evidence.
+The browser service denied the loopback preview; existing Mac/browser CI remains
+the next route. The candidate has not been published or run in that CI yet.
+
+Historical continuation: [CURRENT-POLISH.md](premium-polish/CURRENT-POLISH.md).
 
 ## Runtime restored 15 September, continuation
 

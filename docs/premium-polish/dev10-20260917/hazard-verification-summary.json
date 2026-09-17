@@ -1,0 +1,69 @@
+{
+  "dev9-hazard-baseline": {
+    "passed": false,
+    "failures": [
+      "Journal pauses the pending physical push",
+      "Paused impulse remains available for normal resume"
+    ],
+    "maximum_paused_drift_px": 59.0882797241211,
+    "pack_sha256": "",
+    "checks": 47
+  },
+  "hazard-fixed": {
+    "passed": false,
+    "failures": [
+      "Resumed impulse settles"
+    ],
+    "maximum_paused_drift_px": 0.0,
+    "pack_sha256": "",
+    "checks": 47
+  },
+  "hazard-fixed-complete": {
+    "passed": true,
+    "failures": [],
+    "maximum_paused_drift_px": 0.0,
+    "pack_sha256": "",
+    "resume_settlement": {
+      "maximum_physics_frames": 120,
+      "maximum_wall_ms": 20000,
+      "physics_frames": 42,
+      "position": [
+        1697.97814941406,
+        871.161010742188
+      ],
+      "reason": "Wait for collision-constrained normal physics; do not assume an arbitrary .45-second timer consumes a blocked impulse.",
+      "remaining_push": [
+        0.0,
+        0.0
+      ],
+      "settled": true,
+      "wall_ms": 578
+    },
+    "checks": 47
+  },
+  "dev10-exact-hazard": {
+    "passed": true,
+    "failures": [],
+    "maximum_paused_drift_px": 0.0,
+    "pack_sha256": "8b83ed55d62841eac8e891ad6c224b101665d98f5ead63a022e66589d6266c3b",
+    "resume_settlement": {
+      "maximum_physics_frames": 120,
+      "maximum_wall_ms": 20000,
+      "physics_frames": 42,
+      "position": [
+        1697.97814941406,
+        871.161010742188
+      ],
+      "reason": "Wait for collision-constrained normal physics; do not assume an arbitrary .45-second timer consumes a blocked impulse.",
+      "remaining_push": [
+        0.0,
+        0.0
+      ],
+      "settled": true,
+      "wall_ms": 572
+    },
+    "checks": 47
+  },
+  "independent_review": "Bounded fix accepted; six actual source captures and five-line runtime change reviewed. No whole-game rating.",
+  "invariant_baseline": "DEV9 already mismatches protected player_visual.gd; baseline retained."
+}

@@ -1,7 +1,7 @@
 name: Premium exact web package review
 on:
   push:
-    branches: [codex/premium-polish-recovery-20260915]
+    branches: [codex/premium-polish-recovery-20260915, codex/dev10-polish-20260917]
     paths:
       - '.github/workflows/premium-web-review.yml'
       - 'tools/**'
@@ -204,6 +204,33 @@ jobs:
           XDG_DATA_HOME: ${{ runner.temp }}/native-userdata
         run: |
           xvfb-run -a -e "$RUNNER_TEMP/review/xvfb.log" -s '-screen 0 2560x1440x24' timeout 600 Godot_v4.7.2-stable_linux.x86_64 --path "$RUNNER_TEMP/pack-run" --main-pack "$RUNNER_TEMP/candidate/index.pck" --script "$GITHUB_WORKSPACE/tools/review_commerce_residency.gd" --display-driver x11 --render-thread safe --verbose --resolution 2532x1170 --audio-driver Dummy -- --pack-source="$RUNNER_TEMP/candidate/index.pck" --output="$RUNNER_TEMP/review" --require-release > "$RUNNER_TEMP/review/native.log" 2>&1
+      - name: Render actual hazard pause, resume and Deep re-entry in the same package
+        timeout-minutes: 4
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          XDG_DATA_HOME: ${{ runner.temp }}/hazard-userdata
+          PCK_SHA256: ${{ needs.build.outputs.pck_sha256 }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/review/hazard"
+          xvfb-run -a -e "$RUNNER_TEMP/review/hazard/xvfb.log" -s '-screen 0 2560x1440x24' timeout 180 Godot_v4.7.2-stable_linux.x86_64 --path "$RUNNER_TEMP/pack-run" --main-pack "$RUNNER_TEMP/candidate/index.pck" --script "$GITHUB_WORKSPACE/tools/review_hazard_pause.gd" --display-driver x11 --resolution 1696x780 --audio-driver Dummy -- --pack-source="$RUNNER_TEMP/candidate/index.pck" --output="$RUNNER_TEMP/review/hazard" > "$RUNNER_TEMP/review/hazard/native.log" 2>&1
+          python3 - <<'PY'
+          import hashlib, json, os, re
+          from pathlib import Path
+          folder = Path(os.environ['RUNNER_TEMP']) / 'review/hazard'
+          log = (folder / 'native.log').read_text()
+          assert 'HAZARD_PAUSE_COMPLETE passed=true' in log
+          assert not re.search(r'SCRIPT ERROR|Parse Error|^ERROR:', log, re.M)
+          report = json.loads((folder / 'hazard-pause.json').read_text())
+          assert report['pack_sha256'] == os.environ['PCK_SHA256']
+          assert report['passed'] and not report['failures']
+          assert len(report['checks']) == 47 and all(row['passed'] for row in report['checks'])
+          assert report['maximum_paused_drift_px'] <= .001
+          assert len(report['captures']) == 8
+          for capture in report['captures']:
+              assert capture['size'] == [1696, 780]
+              assert hashlib.sha256(Path(capture['path']).read_bytes()).hexdigest() == capture['sha256']
+          print('EXACT_PACKAGE_HAZARD_LIFECYCLE_OK checks=47 captures=8')
+          PY
       - name: Record native success or partial failure evidence
         if: always()
         env:

@@ -1,7 +1,7 @@
 name: Premium sustained gameplay
 on:
   push:
-    branches: [codex/premium-polish-recovery-20260915]
+    branches: [codex/premium-polish-recovery-20260915, codex/dev10-polish-20260917]
     paths: ['scripts/**', 'assets/**', 'project.godot', 'tools/review_premium_session.gd', 'tools/profile_premium_render.gd', 'tools/review_premium_composition.gd', 'tools/configure_review_display.swift', '.github/workflows/premium-session.yml']
   workflow_dispatch:
 permissions:

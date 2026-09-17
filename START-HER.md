@@ -1,4 +1,5 @@
-LATEST: [DEV9 published quota checkpoint](docs/premium-polish/dev9-20260916/HANDOFF.md).
+CURRENT UNPUBLISHED CANDIDATE: [DEV10 menu-physics fix](docs/premium-polish/dev10-20260917/HANDOFF.md).
+Last published baseline: [DEV9 published quota checkpoint](docs/premium-polish/dev9-20260916/HANDOFF.md).
 Mats requested stopping new experiments and publishing the playable work. DEV9 is verified live.
 Read that handoff first; the following recovery mandate and chronology are historical.
 
