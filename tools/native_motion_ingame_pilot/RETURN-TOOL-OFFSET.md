@@ -73,8 +73,17 @@ bridge. It checks grips, lengths, reach, unchanged lower body, and exact
 endpoints including the destination offset. World endpoint velocities use the
 existing native continuity observer with gameplay root motion restored.
 Only after these checks does it render exact quarter-clip poses and nearby
-continuous 60Hz time samples. This observer is unrun until an actual result
-is recorded; no runtime bank or production asset is changed.
+continuous 60Hz time samples. No runtime bank or production asset is changed.
+
+The actual `ddd49a0a657d90f7c4a8f9f091a86c9feeb4f450` run exited 0 in
+81.478 seconds. Result SHA256:
+`8081c6b391e798529da092a09a0a973c9456bb699366a14db06a03f780d1fd66`.
+All 50 observed mine poses reproduced exactly. The 130 new bridge rig poses
+passed; lower-body matrices were exactly unchanged, maximum reach was below
+.662 and endpoint matrix errors below 7.2e-7. All 24 color images and 24 cloth
+masks rendered. Root and independent critic inspected all 24 native color
+cells. No sampled boundary defect justified another pose variant. These are
+continuous local cells, not a naturalness, hidden-anatomy or gameplay pass.
 
 Those continuous images do not certify the five-sample bank's quantized
 handoffs. The preserved up pilot first shows canonical mine at elapsed
