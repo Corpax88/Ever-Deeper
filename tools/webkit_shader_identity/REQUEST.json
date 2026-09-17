@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "sessions": 1,
+  "source": "8f5680defb9083bbe1e044d39a10612f2186e7f3",
+  "probe": "selected_webgl_shader_identity_v1",
+  "diagnostic_only": true,
+  "preparation_sha": "f51304083e3ce33097be3da40453de4955d8d84d",
+  "preparation_tree": "3ae5447ba586cbb2a31abade7e93a13d57fc484c",
+  "independent_review": {
+    "reviewer": "root, independent of implementation author",
+    "report": "evidence/webkit-shader-identity-20260917/root-independent-pre-run-review-f5130408.json",
+    "bytes": 11206,
+    "sha256": "35b5296c6e742d5b2238e76d68028d76fde8ae56b770f5734525eb3ee82fffbc",
+    "verdict": "ACCEPT_FOR_ONE_REQUEST_ONLY_CHILD; no session yet"
+  },
+  "authorization": {
+    "granted_by": "root",
+    "scope": "One 60-second Mac WebKit shader/program identity diagnostic using the unchanged original DEV11 export and established real moving Deep route.",
+    "root_must_verify_request_only_child_before_ref_advance": true,
+    "automatic_retry": false,
+    "runtime_changes": false,
+    "build_export": false,
+    "warmup": false,
+    "adoption": false,
+    "deployment": false
+  },
+  "measurement": {
+    "seconds": 60,
+    "metric": "engine_loop_callback_cadence",
+    "presented_fps_verified": false,
+    "exclusive_gpu_time": false,
+    "overhead_bearing": true,
+    "retain_raw_sources_associations_intervals_errors_and_cleanup": true
+  }
+}
