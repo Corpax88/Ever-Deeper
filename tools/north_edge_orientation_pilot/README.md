@@ -1,17 +1,20 @@
 # Isolated Moss north-edge orientation study
 
-**Prepared, not rendered or visually accepted.** The coordinator owns the
-single-renderer schedule; this study has no slot until explicitly granted.
-It tests one upside-down straight-strip perspective defect, not short-turn or
-pillar completion. Do not broaden it into the rejected compact-corner mapper.
+**Held pilot rendered; independently approved for the affected-state matrix.**
+The seven-case extension below is prepared, not rendered or visually accepted.
+The coordinator owns the single-renderer schedule. This study tests an
+upside-down straight-strip perspective defect, not short-turn or pillar
+completion. Do not broaden it into the rejected compact-corner mapper.
 
 Base runtime: `8f5680defb9083bbe1e044d39a10612f2186e7f3`.
 Worktree: `/workspace/scratch/d5437d917805/north-edge-study`.
 Branch: `codex/north-edge-orientation-study-20260917`.
-Only these three files are added under `tools/north_edge_orientation_pilot/`:
-`deep_candidate.gd`, `review.gd`, and this `README.md`. No production file,
-scene, asset, import setting or earlier study is changed. Ordinary scenes do
-not load the candidate; its switch defaults to false.
+The original three files are `deep_candidate.gd`, `review.gd`, and this
+`README.md`. The opt-in extension adds `affected_review.gd` and
+`retained_held_evidence.json`; candidate and original held harness remain
+byte-identical. No production file, scene, asset, import setting or earlier
+study is changed. Ordinary scenes do not load the candidate; its switch
+defaults to false.
 
 ## Exact candidate
 
@@ -113,6 +116,77 @@ python3 tools/run_rendered_isolated.py \
   --source-revision="$NORTH_EDGE_STUDY_REVISION"
 ```
 
-The harness has no area, depth, matrix or excavation flags. It runs only the
-one named held pose. The coordinator independently reviews the originals
-before considering any further action or production adoption.
+The original harness has no area, depth, matrix or excavation flags. It runs
+only the one named held pose. Do not rerun it for the extension below.
+
+## Seven-case affected-state extension
+
+The retained pilot ran checkpoint
+`0e53f74983681d85954cfe799a712bf5b3f0c1bc`, tree
+`69fbde0828c8d8100360b66298a37e3a66a09c93`. A/A2 have identical PNG bytes and
+zero changed RGBA pixels. B changes53137pixels; the long strip reads upright,
+but the existing stepped/full-elbow endpoints remain. Root and the independent
+release critic approved proceeding to this matrix, not production adoption.
+
+`retained_held_evidence.json` preserves the original PNG/report/save hashes,
+19protected source/asset hashes, and one fully visible changed cell for every
+source phase0–7. The new harness verifies those hashes and recomputes the
+eight recorded pixel counts from the actual old originals. It does not render
+the old pose again. The phase counts are respectively4766,3767,5289,398,5037,
+5014,4734,4818; these are inset source-quad pixel counts, not draw-call claims.
+
+Exactly seven new A/B/A2 cases produce21full native PNGs:
+
+| Case | Required actual state |
+|---|---|
+| `approach` | Start on verified floor at(864,1632), then six real controller/resolver ticks toward cell(13,27), retaining clearance before contact. |
+| `contact-strong` | Continue40controller ticks; require blocked motion at the native23px collision radius. Apply an explicitly labelled isolated Light Lab level5loadout fixture, through the unchanged production headlamp settings. |
+| `struck` | The held-mining clock must select that exact wall, apply a real hit, and retain it with increased damage. No HP or terrain edits. |
+| `mined-opening` | Continue the actual committed mining clock until the cell becomes floor; require the newly revealed north edge at(13,28). |
+| `short-steps-grazing` | Retain the real stair at(16,27),(17,28),(18,29), face right from clear floor at(864,1696), and verify the target ray lies0.25–0.52radians off the native headlamp axis. This keeps the level5loadout and tests two actual changed stair cells. |
+| `boundary-13-14` | Restore the ordinary native entrance corridor on the Moss side of the Voidstar/Moss boundary. Require a visible affected Moss north edge and both sides of the actual seam. |
+| `boundary-14-15` | Restore the native exit corridor on the Moss side of the Moss/Rootwound boundary with the same gates. |
+
+The original normal-light held evidence is reused. The strong cases use real
+level5energy/range multipliers1.3/1.4; fixture workshop/relic records are saved
+and restored before boundary cases. This is a loadout fixture, not a purchase
+or progression test. No lamp, shadow, material or candidate drawing code is
+changed. The normal camera owner settles its own framing before each case;
+no viewport, camera offset, zoom or limit is invented. Corridor placements
+are labelled fixture teleports, not traversal/rebase claims. Every placement
+and every controller step must remain collision-free.
+
+Each case forces fresh terrain draws, freezes actual light/camera/game state
+equally across A/B/A2, preserves the state save and original full PNGs, and
+requires zero A/A2changed pixels. Every named affected north cell must have
+nonzero A/Bpixels inside its fully visible source quad, inset one native pixel.
+Changes outside the union of actual candidate north quads, with a two-pixel
+raster guard, fail. The report records per-cell phase/pixel evidence, actual
+camera/culling/ROI bounds, headlamp settings, controller samples and real
+mining mutations. Missing targets, blocked poses, invisible seams/endpoints,
+unchanged B pixels or incomplete case/phase coverage fail; no coverage fallback
+silently passes. Files already written remain available on any failure.
+
+After a remote source checkpoint and an explicit renderer grant, import/parser
+checks precede this bounded run. A lightweight headless parser may run earlier
+only when the coordinator permits it. Run from the isolated study worktree:
+
+```sh
+NORTH_EDGE_STUDY_REVISION=$(git rev-parse HEAD)
+python3 tools/run_rendered_isolated.py \
+  --godot /tmp/ever-deeper-runtime-20260917/Godot_v4.7.2-stable_linux.x86_64 \
+  --xvfb /workspace/scratch/d5437d917805/runtime/xvfb/usr/bin/Xvfb \
+  --project /workspace/scratch/d5437d917805/north-edge-study \
+  --output /workspace/scratch/d5437d917805/evidence/north-edge-affected-moss \
+  --resolution 1696x780 --timeout 360 \
+  --completion-marker NORTH_EDGE_AFFECTED_REVIEW_COMPLETE \
+  -- --script res://tools/north_edge_orientation_pilot/affected_review.gd \
+  -- --output=/workspace/scratch/d5437d917805/evidence/north-edge-affected-moss \
+  --retained-output=/workspace/scratch/d5437d917805/evidence/north-edge-orientation-moss \
+  --source-revision="$NORTH_EDGE_STUDY_REVISION"
+```
+
+The coordinator and independent release critic must inspect the original
+full images, struck/opened contact, both step endpoints and biome joins.
+Mechanical success is not visual acceptance, an FPS result or short-corner
+completion. Any new compact-asset study remains separate and is not loaded.

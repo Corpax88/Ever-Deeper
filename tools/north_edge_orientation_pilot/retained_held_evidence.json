@@ -1,0 +1,163 @@
+{
+  "scope": "Previously rendered held evidence reused without a new capture",
+  "checkpoint": "0e53f74983681d85954cfe799a712bf5b3f0c1bc",
+  "base_revision": "8f5680defb9083bbe1e044d39a10612f2186e7f3",
+  "framebuffer": [
+    1696,
+    780
+  ],
+  "camera": [
+    1056,
+    1808
+  ],
+  "viewport_size": [
+    1422.7272727273,
+    654.5454545455
+  ],
+  "phase_rule": "posmod(-cell.x + 14 % 11, 8)",
+  "roi_rule": "Full candidate north quad mapped through the retained actual canvas/viewport; inset1native pixel after ceil/floor; fully visible quads only. No two north quads overlap in their inset interiors.",
+  "files_sha256": {
+    "moss-north-held-A.png": "4cd3dd9c978ccd0a5c026cddd2c9e6d9df5328f1ef446d0132e9d5ade30a9919",
+    "moss-north-held-B.png": "b4b09b27f004c63edb879633479bb8bbeb1ad41680858a659c1a96576e6504f9",
+    "moss-north-held-A2.png": "4cd3dd9c978ccd0a5c026cddd2c9e6d9df5328f1ef446d0132e9d5ade30a9919",
+    "moss-north-held-state.json": "ed6e3eb35f8b6cf52fbfa79cd96a0431fc5fb1922fcf2e9341fd7b56d900d603",
+    "north-edge-orientation.json": "f5001c7617a7a21a3a2c9479592b13f8f7c8d6a41d173af5790481b17883fea5"
+  },
+  "protected_sources": {
+    "res://assets/mossvein/cave-corner-v2.png": "dc9ebc0bee817fc843ccab687fc3f0d99cf44e88fa3bbc1481c267c706eb5957",
+    "res://assets/mossvein/cave-edge-loop-v2.png": "99747fd2254b6a787bcdc85562820d62f6c17ae3fbe3f11943f3f1a1d5857593",
+    "res://project.godot": "c33ba1a3580f0d184224a9ff7da954fd2a18b72b2fc6de1fc5a612ce990e5668",
+    "res://scripts/lighting/lit_draw_sections.gd": "260dc901a518ee71f18451bd9e1025889d1bb5fbce46f678aaf13a47a1f64eac",
+    "res://scripts/world/cave_edge_asset_drawer.gd": "3b62dfe0403ffd6fc9c13d9f53b2f2854333f3cfa726fb8bb27617ede140967e",
+    "res://scripts/world/endless_descent_world.gd": "5115995cf0b1b531d51a65af832a9a818f2e14136abee3bc922b2f47fb3667ac",
+    "res://shaders/lit_relic_seal.gdshader": "8052324e90c112d8fd1ec7813c3899dc7986c2a94ac93e5cceba9b8879d5dfef",
+    "res://tools/north_edge_orientation_pilot/deep_candidate.gd": "100ed61d1e37f121306c2c6d06ac246e4cbb5bdd5c0dc16fd9a4ec3aad15890f",
+    "res://tools/north_edge_orientation_pilot/review.gd": "36dc7c71fa3457fbced647806a4fabd2d33af648ebe7ec49b9ba4d48c899ef2b",
+    "res://assets/rootwound/cave-edge-loop-v1.png": "bdcca7ee976c2742a3b3266f46bb8b9e96576f1a926c184436cf59160e72a760",
+    "res://assets/rootwound/cave-corner-v1.png": "99eb6833de3485bdfc00a5f599bd040bb0bda6670eb2f1afd9173be67e2ae842",
+    "res://assets/moonglass/cave-edge-loop-v1.png": "1f11839a7c1d572a35fbaee2ceace6d4c5e127ee48ab5bf3e07d3147f4fe85db",
+    "res://assets/moonglass/cave-corner-v1.png": "5204a55c5b78d74b6ed04cb9dc4a1e866ba03f7285dd5ba9ba5429baf7385ac7",
+    "res://assets/emberdeep/cave-edge-loop-v1.png": "1f77f1ca5847e684b089a7e623f3125fd36ba6424582a5be1a37e1b903de8e73",
+    "res://assets/emberdeep/cave-corner-v1.png": "1f7f75ec7ba7531b59c70316bc19f4eae7edeb48ae3f77cdc5d5b9d1154fe7b7",
+    "res://assets/voidstar/cave-edge-loop-v1.png": "5a721d5782c14b1ed4a2ab620d8e9b3c603bcf5e775f23ee80bbe4ba1db325ed",
+    "res://assets/voidstar/cave-corner-v1.png": "e1a18a17f089eb2df9cebf3a88f67a6ec1f31f8aa157aa02d1d6376f308ba83a",
+    "res://assets/caves/ancient-bedrock-edge-loop-v1.png": "09aaf0f2bb43a165c641b4f4ed41f55ec8cc207a236329f5477dfc3f124c374b",
+    "res://assets/caves/ancient-bedrock-corner-v1.png": "da1ddb3ccfa33aa252c1f40ea64ea187b780edfdfb058c95b84837915321e6b3"
+  },
+  "phase_samples": [
+    {
+      "phase": 0,
+      "cell": [
+        11,
+        27
+      ],
+      "inset_roi_xywh": [
+        430,
+        280,
+        73,
+        74
+      ],
+      "changed_rgba_pixels": 4766
+    },
+    {
+      "phase": 1,
+      "cell": [
+        26,
+        30
+      ],
+      "inset_roi_xywh": [
+        1574,
+        509,
+        74,
+        73
+      ],
+      "changed_rgba_pixels": 3767
+    },
+    {
+      "phase": 2,
+      "cell": [
+        25,
+        30
+      ],
+      "inset_roi_xywh": [
+        1498,
+        509,
+        73,
+        73
+      ],
+      "changed_rgba_pixels": 5289
+    },
+    {
+      "phase": 3,
+      "cell": [
+        16,
+        27
+      ],
+      "inset_roi_xywh": [
+        811,
+        280,
+        74,
+        74
+      ],
+      "changed_rgba_pixels": 398
+    },
+    {
+      "phase": 4,
+      "cell": [
+        23,
+        30
+      ],
+      "inset_roi_xywh": [
+        1345,
+        509,
+        74,
+        73
+      ],
+      "changed_rgba_pixels": 5037
+    },
+    {
+      "phase": 5,
+      "cell": [
+        14,
+        27
+      ],
+      "inset_roi_xywh": [
+        659,
+        280,
+        73,
+        74
+      ],
+      "changed_rgba_pixels": 5014
+    },
+    {
+      "phase": 6,
+      "cell": [
+        13,
+        27
+      ],
+      "inset_roi_xywh": [
+        582,
+        280,
+        74,
+        74
+      ],
+      "changed_rgba_pixels": 4734
+    },
+    {
+      "phase": 7,
+      "cell": [
+        12,
+        27
+      ],
+      "inset_roi_xywh": [
+        506,
+        280,
+        73,
+        74
+      ],
+      "changed_rgba_pixels": 4818
+    }
+  ],
+  "a_a2_zero_changed_rgba": true,
+  "visual_approval_scope": "Original pilot approved by independent release critic and root for affected-state matrix; not a full-world or short-corner approval."
+}
