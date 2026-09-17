@@ -1,0 +1,86 @@
+{
+  "canvas": {
+    "url": "https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/gles3/rasterizer_canvas_gles3.cpp",
+    "retrieved_via": "authenticated GitHub fetch of public primary source",
+    "note": "Hash of the exact decoded content returned by GitHub fetch, excluding the one additional newline in the temporary local snapshot. The Git blob hash is computed from those bytes, not independently checked against a Git tree.",
+    "retrieved_content_sha256": "9088855c87cfc4ad5d7bf4c019f80f573efa7dd1110556d246c5972001a698a5",
+    "retrieved_content_bytes": 123318,
+    "computed_git_blob_sha1": "3b570522c95561f7f8186fad781894265adae3bb"
+  },
+  "shader": {
+    "url": "https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/gles3/shader_gles3.cpp",
+    "retrieved_via": "authenticated GitHub fetch of public primary source",
+    "note": "Hash of the exact decoded content returned by GitHub fetch, excluding the one additional newline in the temporary local snapshot. The Git blob hash is computed from those bytes, not independently checked against a Git tree.",
+    "retrieved_content_sha256": "17c01277dc3468a1d53081f01a6f7665f5d0f82e7882a8198e1f486ee344d5d8",
+    "retrieved_content_bytes": 28071,
+    "computed_git_blob_sha1": "4fe333e3cb9bbd7b71ad8cd486b98fc6c31029f8"
+  },
+  "texture": {
+    "url": "https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/gles3/storage/texture_storage.cpp",
+    "retrieved_via": "authenticated GitHub fetch of public primary source",
+    "note": "Hash of the exact decoded content returned by GitHub fetch, excluding the one additional newline in the temporary local snapshot. The Git blob hash is computed from those bytes, not independently checked against a Git tree.",
+    "retrieved_content_sha256": "061ffc38fe2a378b61661c90bce54ffe4c5a7724c4c95d3c9acc0b300a67e6ad",
+    "retrieved_content_bytes": 127379,
+    "computed_git_blob_sha1": "83f8e898a8fe84a0b7f06ed1296f4bcfee348ddb"
+  },
+  "actual_shipped_js": {
+    "path": "index.js",
+    "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+    "bytes": 279815,
+    "source": "retained exact DEV11 nine-file candidate; same JS bytes also in diagnostic candidate",
+    "verified_dispatches": [
+      "texImage2D",
+      "compressedTexImage2D",
+      "texStorage2D",
+      "compileShader",
+      "linkProgram",
+      "getShaderParameter",
+      "getProgramParameter"
+    ],
+    "absent_2d_subimage_names": [
+      "texSubImage2D",
+      "compressedTexSubImage2D"
+    ],
+    "coverage_note": "This bounded proposal excludes 3D/array uploads and all buffer/draw/state calls, which remain explicit unmeasured work."
+  },
+  "shader_header": {
+    "url": "https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/gles3/shader_gles3.h",
+    "retrieved_via": "authenticated GitHub fetch of public primary source",
+    "retrieved_content_bytes": 9409,
+    "retrieved_content_sha256": "d17a9858ac8f7d55c34bb4d65f6dcd7eac467108b6c09cd12680d42c2d4e6c43",
+    "note": "Exact decoded response content, excluding the extra temporary snapshot newline."
+  },
+  "material": {
+    "url": "https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/gles3/storage/material_storage.cpp",
+    "retrieved_via": "authenticated GitHub fetch of public primary source",
+    "retrieved_content_bytes": 132498,
+    "retrieved_content_sha256": "8fa1b214a67605a5e3deeed941711933c4f4e6ccd96691ac55e78f993ffefcd7",
+    "note": "Exact decoded response content, excluding the extra temporary snapshot newline."
+  },
+  "application_owners": [
+    {
+      "source": "8f5680defb9083bbe1e044d39a10612f2186e7f3",
+      "path": "scripts/world/endless_descent_world.gd",
+      "git_blob_sha1": "5c7e76dc24bef140e39e1dea270f43d430d4b6b0",
+      "bytes": 137011,
+      "sha256": "5115995cf0b1b531d51a65af832a9a818f2e14136abee3bc922b2f47fb3667ac",
+      "url": "https://github.com/Corpax88/Ever-Deeper/blob/8f5680defb9083bbe1e044d39a10612f2186e7f3/scripts/world/endless_descent_world.gd"
+    },
+    {
+      "source": "8f5680defb9083bbe1e044d39a10612f2186e7f3",
+      "path": "scripts/lighting/lit_draw_sections.gd",
+      "git_blob_sha1": "e112666d5e16c3df1d93a14966b50bb390da7e29",
+      "bytes": 4555,
+      "sha256": "260dc901a518ee71f18451bd9e1025889d1bb5fbce46f678aaf13a47a1f64eac",
+      "url": "https://github.com/Corpax88/Ever-Deeper/blob/8f5680defb9083bbe1e044d39a10612f2186e7f3/scripts/lighting/lit_draw_sections.gd"
+    },
+    {
+      "source": "8f5680defb9083bbe1e044d39a10612f2186e7f3",
+      "path": "scripts/main.gd",
+      "git_blob_sha1": "a008f259424cbcaca92cc1bfa236ef408e1f47b0",
+      "bytes": 161132,
+      "sha256": "82410858baa28fe034fec345eac3e52d885d96d778d8918a2c603e81fc5d9cb0",
+      "url": "https://github.com/Corpax88/Ever-Deeper/blob/8f5680defb9083bbe1e044d39a10612f2186e7f3/scripts/main.gd"
+    }
+  ]
+}

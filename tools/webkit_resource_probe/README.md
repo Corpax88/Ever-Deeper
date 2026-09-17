@@ -1,9 +1,13 @@
 # Bounded WebKit resource-call attribution
 
-Prepared for independent review. **No REQUEST.json exists and no actual browser
-session has run for this probe.** It is an attribution diagnostic, not a runtime
+The one independently reviewed session completed as run **35225485863**, measured
+request `f311ec95fd43018c0e2747c9113fce3d882d9610`, preparation `667b293f`.
+[Results](RESULTS.md) attribute much of two large callbacks to LINK_STATUS host
+calls; a third remains unattributed. No further session or runtime change is
+authorized by this result. It is an attribution diagnostic, not a runtime
 optimization or an FPS acceptance test. The prior phase diagnostic and all of its
-failure evidence remain separately preserved.
+failure evidence remain separately preserved. The contract below describes the
+measured preparation; post-run analysis and report files were added afterward.
 
 Use the original DEV11 candidate from run 35186932201, artifact 10481858878,
 source `8f5680defb9083bbe1e044d39a10612f2186e7f3`. Its identity-file SHA256 is
@@ -145,4 +149,5 @@ is triggered only by adding `REQUEST.json` on
 the exact production `source`, `diagnostic_only: true`,
 `probe: "selected_webgl_resources_v1"`, and the reviewed `preparation_sha`.
 The request also records the parent agent's authorization and independent review.
-No request is included in this preparation checkpoint.
+No request was included in preparation `667b293f`; root independently verified the
+request-only child before advancing its branch to launch the completed session.
