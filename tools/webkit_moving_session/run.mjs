@@ -214,6 +214,18 @@ try {
     for(const type of ['touchstart','touchmove','touchend','touchcancel'])window.addEventListener(type,e=>window.__studyTouches.push({type:e.type,trusted:e.isTrusted,target:e.target.id,time:performance.now(),changed:Array.from(e.changedTouches,t=>({id:t.identifier,x:t.clientX,y:t.clientY}))}),true);
   });
   let rows=await scan('00-start');
+  const startReady=await page.evaluate(()=>window.__webkitMovingStudy.ready());
+  const newGame=findText(rows,'NEWGAME');
+  if(!newGame||!findText(rows,'NOEXPEDITIONFOUND'))throw Error('Fresh ordinary start-menu state not established');
+  await clickLabel(newGame,'start_new_game');
+  await pause(5000);
+  rows=await scan('00-surface');
+  if(rows.some(x=>x.confidence>=.6&&['NEWGAME','NOEXPEDITIONFOUND','THEDEPTHSARECALLING','BEGINAFRESHDESCENT'].includes(normal(x.text)))||!findText(rows,'DEVTOOLS'))throw Error('Start menu did not visibly close after NEW GAME');
+  const surface=await saveReceipt('save-surface');
+  if(surface.document.state.location.scene!=='surface'||surface.document.state.endless_descent.active)throw Error('Ordinary surface save not established');
+  const surfaceReady=await page.evaluate(()=>window.__webkitMovingStudy.ready());
+  if(surfaceReady.calls<=startReady.calls||surfaceReady.hidden)throw Error('Visible engine loop did not advance during NEW GAME navigation');
+  await write('surface-entry.json',{modal_labels_absent:true,dev_toggle_visible:true,scene:surface.document.state.location.scene,start_ready:startReady,surface_ready:surfaceReady,timing_started:false,...stamp()});
   const toggle=findText(rows,'DEVTOOLS');if(!toggle)throw Error('DEV TOOLS label not found');
   await clickLabel(toggle,'open_dev');
   let target=null;

@@ -1,8 +1,9 @@
 # Exact DEV11 WebKit moving baseline
 
 Authorized by root on 2026-09-17 after reviewing the concrete ownership/metric plan.
-The first navigation attempt failed before timing and is preserved in RESULTS.md.
-Root authorized one bounded navigation correction retry, with no package changes.
+Both previous navigation attempts failed before timing and are preserved in RESULTS.md.
+After source inspection explained the input-owning start-menu modal, root authorized
+one corrected ordinary NEW GAME-first route, with no package changes.
 The native Mac bounded ANGLE pool finding does not establish a WebKit bottleneck;
 see PLAN.md and source-bindings.json for exact ownership evidence.
 
@@ -18,6 +19,12 @@ The untouched shipped FrameMeter has no JS interval/frames-drawn export or copy
 report. The shipped render probe cannot measure normal moving endless play.
 
 The corrected navigation records viewport/hit-target/focus and actual touch events,
+starts through the actual NEW GAME control on a visibly fresh save, and requires
+the start-menu labels to disappear plus a committed ordinary surface save before DEV.
+This matters because PremiumMenu.move_to_front() controls GUI input picking even
+though DeveloperMenu has a larger visual z_index. The startup observer confirms
+loop advancement through navigation; no timing window or draw census starts there.
+The route then
 requires the visible drawer title before scrolling, and reuses the existing
 frame-spaced WebKit GUI swipe. That untimed swipe is explicitly untrusted DOM input;
 normal taps and all measured mining key events must be trusted. No game commands.
