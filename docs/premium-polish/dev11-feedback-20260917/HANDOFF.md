@@ -1,13 +1,23 @@
-# Feedback coordination — source gate passed, export gate pending
+# DEV11 feedback coordination — published and verified
+
+[Play DEV11](https://corpax88.github.io/Ever-Deeper/dev/?build=8f5680d).
+Source `8f5680defb9083bbe1e044d39a10612f2186e7f3`, version
+`1.0.0-dev.11`, passed all 14 exact-package QA jobs in run `35186932201`.
+Publication `35188991326` then completed package, deploy and verify successfully.
+All nine DEV files match the tested candidate; all nine LIVE files match the
+actual DEV10 receipt and remain version `0.46.9`. See [published status](PUBLISHED.md),
+[verification](VERIFIED.md) and the exact [publication receipt](publication-receipt.json).
+Full premium polish, stable 50 FPS and physical-iPhone acceptance remain open.
 
 This work continues the verified [published DEV10](../dev10-20260917/PUBLISHED.md)
 on `codex/dev11-feedback-20260917`. Source
 `cb1b865a795f17eb7960e4b8055bb205a4582edd`, tree
 `cde8a3fe7b3e5e5c2b51706f1592ef1905b89348`, passed the bounded rendered source
 gate. Root independently inspected all eight original-resolution images and
-accepted this UI result. This source has not been published. Its runtime label
-was still DEV10 during the gate; the accepted UI and bounded legacy cleanup will
-receive DEV11's own immutable export identity before publication.
+accepted this UI result. This was the pre-export source gate: its runtime label
+was still DEV10. The accepted UI and bounded legacy cleanup subsequently received
+the immutable DEV11 export identity above. The source-gate chronology and rejected
+attempts below remain preserved.
 
 The original moving Deep capture showed Waystone, Memory Silk and Deep Alloy
 colliding with Rune Ready. Review also found pickups over the minimap/objective
@@ -52,7 +62,7 @@ Failures reproduced achievement/pickup/hero collisions, minimap and objective
 collisions, mobile safe-bound overflow and the DEV toggle overlap. The package
 has 18 additional checks because its visible DEV toggle is checked against each
 of three labels in six pickup states. Local source mode lacks that build feature;
-the pending DEV export must verify that toggle as well.
+the final DEV11 export verified that toggle as part of its 346 passing checks.
 
 The eight inspected source images are `01_simultaneous`, `02_zoomed`,
 `03_left_edge`, `04_right_edge`, `05_lower_edge`, `06_pickups_expired`,
@@ -98,14 +108,28 @@ Rejected and superseded attempts remain intact:
   `get_viewport().get_visible_rect()`; the failed logs and successful rerun are
   both preserved.
 
-The next gate is the immutable DEV11 package. Its exact-package CI must bind the
-fixture hash and package identity, require all eight named images and at least
-300 checks, verify both motion bounds, and run the integrated Mac WebKit gameplay
-and pause checks with engine/platform receipts. The local source gate does not
-replace that exported DEV build review. No new candidate export or publication
-was performed by this implementation task.
+The immutable DEV11 package gate is complete. The fixture hash and PCK identity
+match the accepted source. Its feedback test passed 346 checks with all eight
+original images, actual activation, natural expiry and 20 camera-motion samples.
+Maximum camera-relative reflow was 11.817 pixels for the toast and 11.858 pixels
+for pickups, below the unchanged 32-pixel gate. Mac WebKit passed 1265 gameplay
+and nine pause checks on actual darwin/WebKit 26.5/Apple GPU. These are automated
+desktop browser fixtures, with the recorded trusted/synthetic input mix.
+
+The implementation author's [package review](PACKAGE-READINESS.json) discloses
+authorship and covers 25 actual originals. A separate critic approved all eight
+exact-package feedback originals and motion/expiry/activation evidence in
+[independent-feedback-review.json](independent-feedback-review.json).
+The actual publication receipt was independently bound to the nine candidate
+files, the nine preserved LIVE file records, all 14 completed QA jobs and all
+three completed publication jobs. That pass contains 102 successful checks in
+`evidence/dev11-publication/independent-verification.json`.
 
 The camera-bounds performance and corner studies remain separate and are not
-adopted by this UI gate. Stable 50 FPS, physical-iPhone gesture/feel and full
-premium-polish acceptance remain open. Mats has already authorized code uploads
-and gated DEV publication. Preserve the nine LIVE files.
+adopted. Camera V2 did not establish an FPS gain; the compact Moss corner study
+clipped opaque stone. Prior DEV10 virtual-Mac sessions failed the sustained
+50 FPS target; DEV11 has no new sustained-performance or physical-iPhone
+certification. All-tool motion quality, wall/Bedrock joins, repeated terrain
+patterns and full premium-polish acceptance remain open. Keep study evidence
+and rejected attempts intact. Mats has already authorized code uploads and
+gated DEV publication. Preserve the nine LIVE files.

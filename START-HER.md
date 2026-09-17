@@ -1,7 +1,10 @@
-CURRENT WORK: [DEV11 feedback candidate](docs/premium-polish/dev11-feedback-20260917/HANDOFF.md).
-PUBLISHED: [DEV10 verified](docs/premium-polish/dev10-20260917/PUBLISHED.md).
+CURRENT WORK: [Continue after verified DEV11](docs/premium-polish/dev11-feedback-20260917/HANDOFF.md).
+PUBLISHED: [DEV11 verified](docs/premium-polish/dev11-feedback-20260917/PUBLISHED.md) — [play DEV11](https://corpax88.github.io/Ever-Deeper/dev/?build=8f5680d).
 Mats reset the quota and authorized continued premium polish, code uploads and gated DEV publication.
-Full premium polish and stable50FPS remain open. Read the current link first; older recovery chronology follows.
+Source `8f5680defb9083bbe1e044d39a10612f2186e7f3` on `codex/dev11-feedback-20260917` is the published DEV11 runtime. QA `35186932201` passed all 14 jobs; publication `35188991326` passed package, deploy and verify. All nine LIVE files remain at the exact `0.46.9` baseline.
+Full premium polish, stable 50 FPS, all-tool motion, remaining world joins and physical-iPhone verification remain open. Rejected camera/corner studies are not adopted. Read the current handoff and [verification](docs/premium-polish/dev11-feedback-20260917/VERIFIED.md) first.
+
+The 15 September recovery chronology below is preserved history. Its old source, work branch and pending-export statements do not replace the current DEV11 identities above.
 
 # Ever-Deeper — continue premium polish
 
