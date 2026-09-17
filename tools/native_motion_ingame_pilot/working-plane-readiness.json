@@ -1,0 +1,134 @@
+{
+  "status": "HEADLESS_CONSTRAINTS_PASS_VISUAL_UNAPPROVED",
+  "baseline_source": "f34bf7486f560ba104c137009a5affe50d2a642b",
+  "runtime_source": "8f5680defb9083bbe1e044d39a10612f2186e7f3",
+  "local_native_offset": [
+    -0.2,
+    0.1,
+    0
+  ],
+  "approved_model": {
+    "bytes": 186445036,
+    "sha256": "94304c12a042b168c0d655dc0ceacffe2efb08997039a7a26c1ed0cc1770bc91"
+  },
+  "native_worn_equipment": {
+    "bytes": 33422457,
+    "sha256": "0f90a49329acfd6db5b62cfbe6361efce1c79bea4a9d57a93fab130d46ac5b2b"
+  },
+  "source_files": {
+    "tools/hero_v28/native_motion.py": {
+      "bytes": 12856,
+      "sha256": "03fce53d38b20ce8a203fbc9a87cf541496ff793e6394cb29ff68951dee3803e"
+    },
+    "tools/hero_v28/export_hero.py": {
+      "bytes": 16490,
+      "sha256": "7758b23adb7ec8e041a2fe7d109a403512b668b3d8802f5b58a703e3f9c9e482"
+    },
+    "tools/native_motion_ingame_pilot/review_working_plane.py": {
+      "bytes": 9081,
+      "sha256": "774a5cd232bc10fde0ce4f3656dbbb5961f022f6c4f234a849d0c1b2a22232ba"
+    },
+    "tools/native_motion_ingame_pilot/probe_working_plane.py": {
+      "bytes": 5273,
+      "sha256": "e9f2837c3c9ddc3175dbe3131ce8ed8bf182cc1ffeb65df104054c7cc9a77eb3"
+    },
+    "tools/native_motion_ingame_pilot/UP-WORKING-PLANE.md": {
+      "bytes": 5407,
+      "sha256": "5b77e46f6e7e4abd88198e3c1118b46809effa1205076dd54a8992d099ae46e4"
+    },
+    "tools/native_motion_ingame_pilot/README.md": {
+      "bytes": 9876,
+      "sha256": "fde1b2d2ca5be03c783e6caf61a6ae9abfc6057a572c5cd030a6d0c2eee47e8a"
+    }
+  },
+  "constraints": {
+    "path": "evidence/native-up-working-plane/constraints-01/constraints.json",
+    "bytes": 3771,
+    "sha256": "bdd6c15da81a853bfb8bd681b2555dca6427d589c6766ae45917a2e4064d2c23",
+    "canonical_mining_samples": 135,
+    "bridge_samples": 774,
+    "exact_control_poses": 2070,
+    "maximum_preserved_field_difference": 0.0,
+    "maximum_shoulder_wrist_distance": 0.6872561100744193,
+    "maximum_arm_length_error": 1.1202980987334854e-07,
+    "maximum_transition_endpoint_error": 2.384185791015625e-07,
+    "minimum_raw_sole_z": 0.011999949812889099
+  },
+  "evaluated_rig": {
+    "path": "evidence/native-up-working-plane/rig-01/worn/pose-manifest.json",
+    "bytes": 127888,
+    "sha256": "4b9e26a5126e806f5c0312d413d9709edabccd081243540449e9897c68945ddf",
+    "poses": 96,
+    "max_grip_error": 4.430433734452279e-07,
+    "native_bone_matrix_gate": 1e-05,
+    "native_grip_gate": 1e-05,
+    "fingerprint": "6ee776708b6c4197ece0de6dcbd9dd4d9dac9735f55a0c3d1c92be877440b59a",
+    "rendered": false
+  },
+  "exact_bank": {
+    "state_counts": {
+      "idle": 1,
+      "walk": 16,
+      "mine": 16,
+      "idle_to_walk-000000": 5,
+      "walk_to_mine-625000": 5,
+      "mine_to_walk-625000": 5
+    },
+    "frames_per_direction": 48,
+    "directions": [
+      "right",
+      "up"
+    ],
+    "source_phase_bank": [
+      0.625
+    ],
+    "transition_fps": 40,
+    "states_equal_to_original": true,
+    "direction_anchors_and_transition_metadata_equal_to_original": true,
+    "all_96_frame_native_foot_heading_and_time_records_equal_to_original": true,
+    "gameplay_mine_cycle": 0.68,
+    "gameplay_hit_phase": 0.42,
+    "native_hit_phase": 0.55,
+    "actual_requested_speed": 340
+  },
+  "unchanged_original_consumer": {
+    "bytes": 12418,
+    "sha256": "f95bf499156b7e61a557ca10f1d7b17ad81c9adea331dd03509d3a84374eef14"
+  },
+  "unchanged_original_capture": {
+    "bytes": 30320,
+    "sha256": "f04df632b17acc86a3a65ab67e71996fbea4ad0d1dea9b70b3108cea6fb74182"
+  },
+  "unchanged_original_assets": {
+    "up-cloth.png": {
+      "bytes": 58435,
+      "sha256": "36d4bf2221762ea35c440605baf9f820485606b08d24fc3f38be275757574d5b"
+    },
+    "manifest.json": {
+      "bytes": 130883,
+      "sha256": "9a7dd27227512941adbe61a87bd70c4ef6666b9de56606dff7b5f9e97bac4376"
+    },
+    "up.png": {
+      "bytes": 547612,
+      "sha256": "cac5c1bdb82d69f9fa2779243d69e3d23b9a72912582449424f7338f66beee91"
+    },
+    "right-cloth.png": {
+      "bytes": 53577,
+      "sha256": "26f7c1da8b5ceae391ff9ae41cabe2eacd1a019d6097f74b454f4787fda9cc3e"
+    },
+    "right.png": {
+      "bytes": 636842,
+      "sha256": "7ed5d73c5c3d94c7438efde183399ebc723374112cfeb2e2cc1e8aa624a7d857"
+    }
+  },
+  "pending": [
+    "Remote checkpoint before rendering",
+    "Actual native and cloth frames",
+    "Actual in-game contact/readability comparison and independent review"
+  ],
+  "limits": [
+    "Mine16 retained to isolate stance; sampling density not improved",
+    "No arbitrary-input, turn/recovery or interrupted-transition coverage",
+    "No production adoption or sustained FPS finding"
+  ]
+}
