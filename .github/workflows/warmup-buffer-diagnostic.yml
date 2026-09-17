@@ -1,0 +1,71 @@
+name: Isolated original and rejected warmup WebGL buffer diagnostic
+on:
+  push:
+    branches: [codex/warmup-buffer-diagnostic-20260917]
+    paths: ['tools/warmup_buffer_diagnostic/REQUEST.json']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: warmup-buffer-diagnostic-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  two-exact-packages:
+    if: github.ref == 'refs/heads/codex/warmup-buffer-diagnostic-20260917'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+          sparse-checkout: |
+            /package.json
+            /package-lock.json
+            tools/capture-web.mjs
+            tools/warmup_buffer_diagnostic
+            .github/workflows
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: premium-web-candidate-5ca6f0f77a1f87eaead777613062208159325068
+          run-id: '35238733050'
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/baseline
+      - uses: actions/download-artifact@v4
+        with:
+          name: premium-web-candidate-5e48e4e1c256bd60aef1c4ba94110ccb1ac802b9
+          run-id: '35248670186'
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - name: Install established browser dependency
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install --with-deps chromium
+          python3 -m py_compile tools/warmup_buffer_diagnostic/run.py
+          node --check tools/capture-web.mjs
+      - name: Two sequential fresh contexts, exact existing trace, original exits preserved
+        timeout-minutes: 9
+        run: |
+          python3 tools/warmup_buffer_diagnostic/run.py --baseline "$RUNNER_TEMP/baseline" --candidate "$RUNNER_TEMP/candidate" --output "$RUNNER_TEMP/buffer-diagnostic"
+      - name: Hash all closed diagnostic evidence
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'buffer-diagnostic'
+          root.mkdir(exist_ok=True)
+          files={str(p.relative_to(root)):{'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in root.rglob('*') if p.is_file() and p.name!='closed-manifest.json'}
+          (root/'closed-manifest.json').write_text(json.dumps(files,indent=2)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: warmup-buffer-diagnostic-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/buffer-diagnostic
+          if-no-files-found: error
+          retention-days: 30
