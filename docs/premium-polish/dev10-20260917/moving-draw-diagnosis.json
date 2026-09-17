@@ -1,0 +1,73 @@
+{
+  "source_revision": "23076019b53819c6c7f213b7e55d24a2f6194f83",
+  "tool_only": true,
+  "production_modified": false,
+  "renderer_released": true,
+  "timer_bug": "profile_premium_render.gd reads draw/setup counters without ever setting profile_draws=true; counters stay zero by construction. Its idle/frozen workload also misses ordinary moving terrain rebuild cost.",
+  "functional": true,
+  "mined_resources": 4228,
+  "distance": 14954.400390625,
+  "average_fps_windows": [
+    35.9099392049392,
+    36.3878140512661
+  ],
+  "p95_frame_ms_windows": [
+    35.007,
+    32.648
+  ],
+  "raw_summary": {
+    "frames": 2169,
+    "full_setup_frames": 1555,
+    "setup_no_redraw_frames": 884,
+    "setup_no_redraw_usec": 2089527,
+    "total_setup_usec": 4029914,
+    "total_draw_usec": 197197,
+    "total_observer_usec": 103087,
+    "no_redraw_setup_mean_usec": 2363.718325791855,
+    "occluder_rebuilds_during_samples": 1374
+  },
+  "setup_mean_ms_per_observed_frame": 1.857959428307976,
+  "draw_mean_ms_per_observed_frame": 0.09091609036422314,
+  "setup_only_mean_ms_per_observed_frame": 0.963359612724758,
+  "render_cpu_p50_ms_windows": [
+    18.9619998931885,
+    18.3719997406006
+  ],
+  "render_gpu_p50_ms_windows": [
+    18.8770008087158,
+    18.3050003051758
+  ],
+  "observed_bottleneck": "Measured renderer/driver work is about 18-19 ms median, versus 1.86 ms mean terrain-section setup and 0.091 ms mean draw callbacks. Setup is real but cannot alone recover minimum 50 FPS from this 36 FPS run.",
+  "new_bounded_lead": "Camera-only invalidation currently triggers each 8 world pixels although _draw_partitioned_deep consumes clamped integer first/last tile bounds (64 px tiles). A tool-only proof could skip camera-only reconfiguration while those exact bounds, viewport and zoom are unchanged, retaining every existing terrain/mining/pet/direct-restore/rebase invalidation. This differs from rejected light receiver/support caches and already-adopted local strip revisions / station-only redraw. No such candidate was implemented or adopted here.",
+  "lead_limit": "884 setup-only frames do not prove all of their 2.09 seconds removable. Some may hide/reorder cached items or update material state; no cause-level probes were added. Approx 0.963 ms/frame is opportunity size, not a measured optimization benefit. Even all 1.86 ms/frame setup elimination is inadequate as a 50 FPS solution.",
+  "prior_work_checked": [
+    "docs/premium-polish/RESUME-20260916-REVIEW.md",
+    "docs/premium-polish/depth-strip-cache-20260916/REVIEW.md",
+    "tools/depth_strip_pilot/README.md",
+    "docs/premium-polish/resume-20260916/receiver-cache-study.patch",
+    "docs/performance-diagnosis/fps-recovery-review.md"
+  ],
+  "monitor_limit": "Performance.TIME_PROCESS and TIME_PHYSICS_PROCESS yielded just 61 distinct values across 2169 samples and repeated unchanged for up to 41 frames. Their sampled p95/p99 is not a true per-frame CPU percentile, and report serialization/capture spikes can be repeated in those monitor samples. Use chronological wall frame intervals and explicit draw timers for this diagnosis.",
+  "other_limits": [
+    "Linux Mesa llvmpipe at 1696x780; not Apple GPU or physical iPhone.",
+    "One diagnostic run; timers and observer enabled, no new A/B performance claim.",
+    "Observer costs about 47.5 us/frame excluding JSON serialization and PNG capture; every workload frame includes their overhead.",
+    "Viewport render CPU, GPU, engine process/physics monitor and frame setup are not disjoint timings to add together.",
+    "moving-01.png is actual midroute held mining. moving-02.png follows final input release; final.png follows four-second settling.",
+    "Inspected actual moving-01 image retains native hero/world art and visibly shows overlapping reward/rune labels; this unchanged UI issue is outside this performance scope."
+  ],
+  "captured_files": {
+    "moving-01.png": {
+      "sha256": "9d89b7fb2fc57c316116d0af02550313db530a31763cec1b63f5e5bf11faeb72",
+      "bytes": 2306753
+    },
+    "moving-02.png": {
+      "sha256": "a6fe869098decfc02ed3fd11378b7879b62bc7a96b1b8819d7d78ff92f7be547",
+      "bytes": 2293418
+    },
+    "final.png": {
+      "sha256": "4737cc92b95e650679417e00208947d14900f3325608c3c8a144cdc907ca89b8",
+      "bytes": 2290462
+    }
+  }
+}
