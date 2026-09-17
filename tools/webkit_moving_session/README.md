@@ -1,13 +1,14 @@
 # Exact DEV11 WebKit moving baseline
 
 Authorized by root on 2026-09-17 after reviewing the concrete ownership/metric plan.
-One existing-runner session, no production modification or publishing.
+The first navigation attempt failed before timing and is preserved in RESULTS.md.
+Root authorized one bounded navigation correction retry, with no package changes.
 The native Mac bounded ANGLE pool finding does not establish a WebKit bottleneck;
 see PLAN.md and source-bindings.json for exact ownership evidence.
 
 The workflow runs only on codex/dev11-webkit-moving-study-20260917 and only when
 the new REQUEST.json is committed after verified preparation. No manual dispatch
-or rerun fallback is configured. Request must name its direct preparation parent.
+or automatic rerun fallback is configured. Request names its preparation parent.
 
 run.mjs verifies the immutable QA35186932201 candidate identity and all nine files,
 then serves them byte-for-byte to Playwright1.62.0 WebKit. Ordinary DEV UI opens
@@ -15,6 +16,11 @@ Deep12; real ArrowDown and Space hold for at least60 seconds. Built-in macOS Vis
 reads only untimed screenshots to locate buttons; it cannot issue game commands.
 The untouched shipped FrameMeter has no JS interval/frames-drawn export or copy
 report. The shipped render probe cannot measure normal moving endless play.
+
+The corrected navigation records viewport/hit-target/focus and actual touch events,
+requires the visible drawer title before scrolling, and reuses the existing
+frame-spaced WebKit GUI swipe. That untimed swipe is explicitly untrusted DOM input;
+normal taps and all measured mining key events must be trusted. No game commands.
 
 The measurement is engine-loop callback cadence, never presented-frame FPS.
 Two actual WebGL draw censuses run outside timing, restore original methods, and
@@ -52,4 +58,3 @@ Evidence remains in RUNNER_TEMP until the engine/browser has closed. The interna
 manifest excludes the still-open runner.log. A separate workflow step hashes every
 closed file afterward, before artifact upload. The artifact excludes browser caches
 and the already retained exact package; it includes original screenshots and saves.
-

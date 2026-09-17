@@ -40,10 +40,44 @@ function findText(rows,needle) {
   return match[0]||null;
 }
 async function clickLabel(row,label) {
-  const point={x:row.x*848,y:row.y*390};
-  actions.push({stage:label,text:row.text,confidence:row.confidence,point,...stamp()});
+  const point={x:Math.round(row.x*848),y:Math.round(row.y*390)};
+  const geometry=await page.evaluate(({x,y})=>{
+    const c=document.getElementById('canvas'),r=c.getBoundingClientRect(),v=window.visualViewport;
+    return {inner:[innerWidth,innerHeight],dpr:devicePixelRatio,canvas:{x:r.x,y:r.y,width:r.width,height:r.height},visual:v?{x:v.offsetLeft,y:v.offsetTop,width:v.width,height:v.height,scale:v.scale}:null,
+      target:document.elementFromPoint(x,y)?.id,active:document.activeElement?.id,focus:document.hasFocus(),touch_index:window.__studyTouches.length};
+  },point);
+  if(geometry.target!=='canvas'||geometry.active!=='canvas'||!geometry.focus)throw Error('Canvas focus/hit target missing before '+label+' '+JSON.stringify(geometry));
+  const action={stage:label,text:row.text,confidence:row.confidence,point,geometry,...stamp()};actions.push(action);
   await page.touchscreen.tap(point.x,point.y);
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  action.touch_events=await page.evaluate(i=>window.__studyTouches.slice(i),geometry.touch_index);
+  if(!['touchstart','touchend'].every(type=>action.touch_events.some(e=>e.type===type&&e.trusted&&e.target==='canvas')))throw Error('Trusted canvas tap receipt missing for '+label);
   await pause(400);
+}
+// Exact frame-spaced WebKit GUI-touch path already used by capture-web.mjs.
+// This untimed swipe is a DOM TouchEvent and explicitly is not trusted input.
+async function swipeDrawer() {
+  const action={stage:'swipe_dev',from:{x:180,y:330},to:{x:180,y:185},trusted:false,...stamp()};actions.push(action);
+  const before=await page.evaluate(()=>window.__studyTouches.length);
+  await page.evaluate(async()=>{
+    const canvas=document.getElementById('canvas');
+    const frame=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    const send=(type,y)=>{
+      const ended=type==='touchend';
+      const data={identifier:12,target:canvas,clientX:180,clientY:y,pageX:180+scrollX,pageY:y+scrollY,screenX:180,screenY:y,radiusX:3,radiusY:3,rotationAngle:0,force:ended?0:1};
+      let touch=data;if(typeof Touch==='function'){try{touch=new Touch(data);}catch{}}
+      const active=ended?[]:[touch];let event;
+      if(typeof TouchEvent==='function'){try{event=new TouchEvent(type,{bubbles:true,cancelable:true,touches:active,targetTouches:active,changedTouches:[touch]});}catch{}}
+      if(!event){const list=items=>Object.defineProperty(items,'item',{value:i=>items[i]??null});event=new Event(type,{bubbles:true,cancelable:true});Object.defineProperties(event,{touches:{value:list([...active])},targetTouches:{value:list([...active])},changedTouches:{value:list([touch])}});}
+      canvas.dispatchEvent(event);
+    };
+    send('touchstart',330);await frame();
+    for(let i=1;i<=8;i++){send('touchmove',330-145*i/8);await new Promise(resolve=>setTimeout(resolve,25));}
+    send('touchend',185);await frame();
+  });
+  action.touch_events=await page.evaluate(i=>window.__studyTouches.slice(i),before);
+  if(!action.touch_events.some(e=>e.type==='touchmove'&&!e.trusted&&e.target==='canvas'))throw Error('GUI swipe receipt missing');
+  await pause(350);
 }
 async function saveReceipt(label) {
   const remote=await page.evaluate(async()=> {
@@ -172,15 +206,23 @@ try {
   await page.goto('http://127.0.0.1:'+server.address().port+'/index.html',{waitUntil:'domcontentloaded',timeout:60000});
   await page.waitForFunction(()=>window.__webkitMovingStudy?.ready().version==='1.0.0-dev.11'&&window.__webkitMovingStudy.ready().calls>30,null,{timeout:60000});
   checkSurface(await page.evaluate(()=>window.__webkitMovingStudy.surface()));
+  await page.bringToFront();
+  await page.locator('#canvas').focus();
+  await page.locator('#canvas').evaluate(canvas=>{canvas.blur();canvas.focus();});
+  await page.evaluate(()=>{
+    window.__studyTouches=[];
+    for(const type of ['touchstart','touchmove','touchend','touchcancel'])window.addEventListener(type,e=>window.__studyTouches.push({type:e.type,trusted:e.isTrusted,target:e.target.id,time:performance.now(),changed:Array.from(e.changedTouches,t=>({id:t.identifier,x:t.clientX,y:t.clientY}))}),true);
+  });
   let rows=await scan('00-start');
   const toggle=findText(rows,'DEVTOOLS');if(!toggle)throw Error('DEV TOOLS label not found');
   await clickLabel(toggle,'open_dev');
   let target=null;
   for(let i=0;i<8;i++) {
     rows=await scan('01-menu-'+i);
+    if(!rows.some(x=>normal(x.text).includes('DEVELOPERTOOLS')&&x.confidence>=.6)||!findText(rows,'CLOSEDEV'))throw Error('DEV drawer/title not visually established; navigation stopped');
     target=findText(rows,'ENDLESSLAYER12');
     if(target)break;
-    await page.mouse.move(180,300);await page.mouse.wheel(0,140);actions.push({stage:'scroll_dev',delta:140,...stamp()});await pause(350);
+    await swipeDrawer();
   }
   if(!target)throw Error('Deep 12 label not found in bounded normal menu navigation');
   await clickLabel(target,'jump_deep_12');
@@ -190,7 +232,8 @@ try {
   if(b.location.scene!=='endless'||!b.endless_descent.active||b.endless_descent.current_depth!==12)throw Error('Persisted Deep-12 entry missing');
   if(b.endless_descent.light_style!=='standard'||b.endless_descent.outfit!=='miner'||b.endless_descent.tool_style!=='original')throw Error('Unexpected baseline loadout');
   await drawCheck('draw-before');
-  await scan('02-deep-entry');
+  const entry=await scan('02-deep-entry');
+  if(findText(entry,'CLOSEDEV')||!entry.some(x=>normal(x.text).includes('THEDEEP')))throw Error('Actual Deep entry not visually established');
   await pause(4000);
   actions.push({stage:'begin_real_keys',...stamp()});
   await page.keyboard.down('ArrowDown');await page.keyboard.down('Space');
