@@ -1,0 +1,81 @@
+name: Intact ordinary startup comparison
+on:
+  push:
+    branches: [codex/nonindexed-warmup-package-probe-20260917]
+    paths: ['tools/warmup_startup_review/REQUEST.json']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: warmup-startup-review-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  four-startups:
+    if: github.ref == 'refs/heads/codex/nonindexed-warmup-package-probe-20260917'
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+          sparse-checkout: |
+            tools/warmup_startup_review
+            .github/workflows
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: premium-web-candidate-5ca6f0f77a1f87eaead777613062208159325068
+          run-id: '35238733050'
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/baseline
+      - uses: actions/download-artifact@v4
+        with:
+          name: premium-web-candidate-9d52cb37a0a7162f0950a93610fa5ce5a4489171
+          run-id: '35253727925'
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/download-artifact@v4
+        with:
+          name: dev11-webkit-shader-identity-6eb65feb970a4a935ca9c4497e086145cdb43e4c-1
+          run-id: '35232918221'
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/original-save-evidence
+      - name: Verify immutable inputs and parse passive harness
+        run: |
+          mkdir -p "$RUNNER_TEMP/warmup-startup-review"
+          python3 tools/warmup_startup_review/prepare.py --baseline "$RUNNER_TEMP/baseline" --candidate "$RUNNER_TEMP/candidate" --fixture "$RUNNER_TEMP/original-save-evidence/save-surface.sav" --output "$RUNNER_TEMP/warmup-startup-review/input-binding.json"
+          node --check tools/warmup_startup_review/run.mjs
+          node --check tools/warmup_startup_review/passive.js
+          npm ci --ignore-scripts
+          npx playwright install --with-deps webkit
+          swiftc tools/warmup_startup_review/ocr.swift -o "$RUNNER_TEMP/startup-ocr"
+          sw_vers > "$RUNNER_TEMP/warmup-startup-review/macos-version.txt"
+          system_profiler SPDisplaysDataType > "$RUNNER_TEMP/warmup-startup-review/display.txt"
+          cp node_modules/playwright-core/browsers.json "$RUNNER_TEMP/warmup-startup-review/playwright-browsers.json"
+      - name: Four sequential intact normal launches
+        timeout-minutes: 12
+        run: |
+          node tools/warmup_startup_review/run.mjs "$RUNNER_TEMP/baseline" "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/original-save-evidence/save-surface.sav" "$RUNNER_TEMP/warmup-startup-review" "$RUNNER_TEMP/startup-ocr" > "$RUNNER_TEMP/warmup-startup-review/runner.log" 2>&1
+      - name: Hash closed evidence after process exit
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'warmup-startup-review'
+          root.mkdir(exist_ok=True)
+          manifest={str(p.relative_to(root)):{'size':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in root.rglob('*') if p.is_file() and p.name!='closed-manifest.json'}
+          (root/'closed-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+          if (root/'result.json').exists() and json.loads((root/'result.json').read_text()).get('complete'):
+              assert (root/'runner.log').read_text().count('INTACT_STARTUP_FOUR_LAUNCHES_COMPLETE ')==1
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: intact-startup-review-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/warmup-startup-review
+          if-no-files-found: error
+          retention-days: 30
