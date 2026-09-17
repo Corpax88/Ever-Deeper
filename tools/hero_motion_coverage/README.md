@@ -4,6 +4,9 @@ This opt-in study extends `tools/review_hero_gameplay.gd` without changing its
 historical evidence, the production capture driver, browser harness, or approved
 v28 assets. It has not yet been rendered. Mechanical passes require separate
 inspection of the actual ordered PNGs before accepting animation.
+Godot 4.7.2 `--headless --check-only` passes against the exact downloaded DEV11
+PCK from source `8f5680defb9083bbe1e044d39a10612f2186e7f3` in an empty project.
+This validates parsing and packed resource resolution, not gameplay or imagery.
 
 ## Existing coverage at the DEV11 checkpoint
 
@@ -38,6 +41,10 @@ first-band corridor, seed 4608, miner outfit and 340 px/s. It never substitutes
 terrain, calls mining/physics ticks, or changes production poses. It uses main's
 held-mine/movement routes while world, companion, lights and physics remain active.
 Route selection avoids naturally present hazard radii, without disabling hazards.
+Corridor checks interpolate between the actual adjacent-cell and start-cell
+centers, including both endpoints at intervals no larger than 12 px. With the
+current 64 px tiles this checks the full 64–256 px approach; it does not assume
+that four cells span only 192 px.
 
 The sequence observes held-mine approach, blocked anticipation, release before
 contact, anticipation interrupted by movement, walk-to-idle, real return to the

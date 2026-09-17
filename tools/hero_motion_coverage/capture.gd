@@ -215,10 +215,14 @@ func _find_route(direction: Vector2i) -> Dictionary:
 		for x in range(3, 37):
 			var wall := Vector2i(x, y)
 			if world._is_floor(wall) or not world._cell_diggable(wall): continue
+			var contact: Vector2 = world._cell_center(wall - direction)
+			var start: Vector2 = world._cell_center(wall - direction * 4)
+			var segments: int = maxi(1, ceili(contact.distance_to(start) / 12.0))
 			var open := true
-			for step in range(1, 17):
-				var point: Vector2 = world._cell_center(wall) - Vector2(direction) * float(step) * 12.0
-				if step < 4: continue
+			# Include both actual cell centers: 64px contact through 256px start
+			# on today's terrain, with no unchecked gap larger than 12px.
+			for step in range(segments + 1):
+				var point: Vector2 = contact.lerp(start, float(step) / float(segments))
 				if int(world.depth_at_position(point)) != 1 or world.collision_at(point):
 					open = false
 					break
@@ -227,10 +231,10 @@ func _find_route(direction: Vector2i) -> Dictionary:
 						open = false
 						break
 			if not open: continue
-			player.global_position = world._cell_center(wall - direction)
+			player.global_position = contact
 			player.set_facing(Vector2(direction))
 			if world._nearest_diggable_wall() != wall or world._nearest_resource_index() >= 0: continue
-			return {"wall": wall, "start": world._cell_center(wall - direction * 4), "direction": direction}
+			return {"wall": wall, "start": start, "direction": direction}
 	return {}
 
 
