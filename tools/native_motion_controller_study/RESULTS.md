@@ -1,11 +1,18 @@
 # Recorded-data boundary result
 
-The final headless replay passes 1036 checks using both actual 77-frame native
+The final headless replay passes 1044 checks using both actual 77-frame native
 candidate reports. Every one of the 154 original PNG hashes and draw IDs was
 verified before its recorded acknowledgment. The physical position/mining/HP
 records and input events remain exact; request coalescing retains source IDs and
 ordered physical records. Invalid fractional IDs, unpresented/changed source
 phases, mutated source IDs and out-of-order event batches are rejected.
+
+An independent reviewer verified all 154 original PNGs and all six actual input
+source dictionaries. They found that the initial replay gate matched input to
+capture by draw ID without itself asserting full source-dictionary equality.
+The exact current inputs were valid, but future altered records could pass that
+weaker gate. The corrected gate binds both raw report SHA-256 values and compares
+each complete event source to the captured visual record before resolving it.
 
 The original schema-2 manifest has 96 declared poses across right/up, including
 30 bridge samples. Across all 12 state/heading goals per pose, the audit gives

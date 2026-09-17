@@ -1,5 +1,9 @@
 extends SceneTree
 const Contract = preload("presentation_contract.gd")
+const REPORT_SHA := {
+	"right": "ac38eb42f11063accf3b071e99f21ed1d3c9c999086aa58749818cdac786d5cc",
+	"up": "011703e1f3c9af140d169e550b5b88828fce09a7214811c5e58ebb1d295267fd",
+}
 var checks: Array[Dictionary] = []
 var failures: Array[String] = []
 var bank_bytes: PackedByteArray
@@ -41,7 +45,11 @@ func run() -> void:
 	verify("Changed bank digest is rejected", not invalid.configure(bank_bytes, "0".repeat(64)))
 	var reports: Array = []
 	for report_path in [args[1], args[2]]:
-		var doc: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(report_path))
+		var raw_report := FileAccess.get_file_as_string(report_path)
+		var doc: Dictionary = JSON.parse_string(raw_report)
+		var bound_report: bool = REPORT_SHA.has(doc.direction) and raw_report.sha256_text() == REPORT_SHA[doc.direction]
+		verify("%s exact original raw report bytes" % doc.direction, bound_report)
+		if not bound_report: continue
 		var before := JSON.stringify(doc).sha256_text()
 		var contract = fresh()
 		var source_ids: Array = []
@@ -77,6 +85,9 @@ func run() -> void:
 			var matching: Array = doc.captures.filter(func(x): return int(x.drawn_frame) == int(event.actual_source_pose.drawn_frame))
 			verify("%s event %d has original source frame" % [doc.direction,index], matching.size() == 1)
 			if matching.size() != 1: continue
+			var actual_source: Dictionary = doc.samples[int(matching[0].sample)].visual
+			verify("%s event %d full source equals captured visual" % [doc.direction,index], event.actual_source_pose == actual_source)
+			if event.actual_source_pose != actual_source: continue
 			var ledger = fresh()
 			var identity: String = ledger.accept_recorded_draw(event.actual_source_pose, proof(matching[0]))
 			var wanted := "mine" if bool(event.mine) else "walk"
@@ -106,7 +117,7 @@ func run() -> void:
 			var fractional := packet(5,wanted,doc.direction)
 			fractional.request_id = 5.1
 			verify("%s fractional event/request IDs reject %d" % [doc.direction,index], not ledger.submit_request(fractional) and not ledger.submit_request(packet(5,wanted,doc.direction),[{"sequence":3.1}]))
-		reports.append({"direction":doc.direction,"source_report":report_path,"samples":doc.samples.size(),"recorded_bridge_frames":bridge_samples,"source_ids":source_ids})
+		reports.append({"direction":doc.direction,"source_report":report_path,"source_report_sha256":raw_report.sha256_text(),"samples":doc.samples.size(),"recorded_bridge_frames":bridge_samples,"source_ids":source_ids})
 	var output := {"schema":1,"kind":"headless_replay_of_verified_original_draw_records","passed":failures.is_empty(),
 		"manifest_sha256":bank_sha,"checks":checks,"failures":failures,"replays":reports,
 		"limits":["No new rendering, gameplay, timing or ordinary-input acceptance.","The caller verifies PNG hashes; ledger acknowledgments are recorded evidence, not a live renderer integration.","Only state/heading route metadata is resolved; deadlines, speed, cycle/lifecycle and actual event presentation remain unimplemented."]}
