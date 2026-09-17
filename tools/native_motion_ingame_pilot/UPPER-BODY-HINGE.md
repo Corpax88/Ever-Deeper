@@ -28,8 +28,12 @@ evaluated native-rig nor visibility approval.
 Before selecting an arc, `cache_upper_body_geometry.py` evaluates the unchanged
 approved scene once. It records **all 179 head-bound objects and 2,217,334 actual
 triangles**, including the full ears, face, beard, hair and helmet. Every source
-vertex must have exactly one full head weight and only the approved armature
-modifier. Its private point cache is analysis evidence, not a replacement mesh,
+vertex must have exactly one full head weight. The sole armature modifier must
+be last; the approved helmet's unchanged pre-armature `SOLIDIFY` is preserved,
+and evaluated generated vertices must also retain the full head weight. The
+first strict cache attempt stopped on that genuine helmet modifier; its failure
+is retained rather than treating the assumption as a native-scene defect.
+Its private point cache is analysis evidence, not a replacement mesh,
 LOD, image or public native-source export. Conservative hull projection may
 screen the shortlist but cannot prove shaft visibility, body/arm occlusion,
 material appearance or readable motion.

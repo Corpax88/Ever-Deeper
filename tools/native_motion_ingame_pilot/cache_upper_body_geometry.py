@@ -70,22 +70,28 @@ objects = [o for o in env['s'].objects if o.type == 'MESH' and not o.hide_render
 assert len(objects) == 629
 selected = [o for o in objects if any(g.name == 'head' for g in o.vertex_groups)]
 assert {o.name for o in selected} == set(expected_head)
+report['original_modifier_inventory'] = {
+    o.name:[{'type':m.type,'name':m.name,'show_viewport':m.show_viewport,'show_render':m.show_render}
+            for m in o.modifiers] for o in sorted(selected,key=lambda o:o.name)}
+output.write_text(json.dumps(report,indent=2)+'\n')
 depsgraph = bpy.context.evaluated_depsgraph_get()
 arrays = []; offset = 0
 for obj in sorted(selected,key=lambda o:o.name):
     assert [g.name for g in obj.vertex_groups] == ['head']
     head_index = obj.vertex_groups['head'].index
     assert all(len(v.groups) == 1 and v.groups[0].group == head_index and abs(v.groups[0].weight-1.) < 1e-8 for v in obj.data.vertices), obj.name
-    # With only the one rigid armature modifier, transporting every evaluated
-    # vertex by the changed head matrix is an exact rigid model, not a proxy
-    # based on the helmet dome or a fitted sphere.
+    # The actual helmet's SOLIDIFY runs before the sole armature modifier. Its
+    # unchanged generated vertices are transported rigidly with the entire head.
+    # No modifier may deform geometry after that armature operation.
     modifiers = [{'type':m.type,'name':m.name,'show_viewport':m.show_viewport,'show_render':m.show_render} for m in obj.modifiers]
-    assert len(obj.modifiers) == 1 and obj.modifiers[0].type == 'ARMATURE' and obj.modifiers[0].object == rig, (obj.name,modifiers)
-    assert obj.modifiers[0].show_viewport and obj.modifiers[0].show_render
+    assert obj.modifiers and obj.modifiers[-1].type == 'ARMATURE' and obj.modifiers[-1].object == rig, (obj.name,modifiers)
+    assert all(m.type == 'SOLIDIFY' for m in list(obj.modifiers)[:-1]), (obj.name,modifiers)
+    assert all(m.show_viewport and m.show_render for m in obj.modifiers)
     evaluated = obj.evaluated_get(depsgraph)
     mesh = evaluated.to_mesh(); mesh.calc_loop_triangles()
     assert len(mesh.vertices) == expected_head[obj.name]['vertices']
     assert len(mesh.loop_triangles) == expected_head[obj.name]['triangles']
+    assert all(len(v.groups) == 1 and v.groups[0].group == head_index and abs(v.groups[0].weight-1.) < 1e-8 for v in mesh.vertices), ('Evaluated head weights',obj.name)
     flat = np.empty(len(mesh.vertices)*3,dtype=np.float32)
     mesh.vertices.foreach_get('co',flat)
     local = flat.reshape(-1,3).astype(np.float64)
