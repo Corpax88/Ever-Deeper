@@ -3833,7 +3833,35 @@ func _update_achievement_toast_anchor() -> void :
 	if active_player == null or not is_instance_valid(active_player):
 		return
 	var player_screen_position: Vector2 = active_player.get_global_transform_with_canvas().origin
-	achievement_toast.set_screen_anchor(player_screen_position + Vector2(0.0, -112.0))
+	var exclusions: Array[Rect2] = []
+	var feedback: ResourcePickupBurst = active_player.get_node_or_null("ResourcePickupBurst") as ResourcePickupBurst
+	if feedback != null:
+		exclusions.append_array(feedback.screen_rects())
+	var visual: Node = active_player.get_node_or_null("Visual")
+	if visual != null:
+		for child in visual.get_children():
+			if child is Sprite2D and child.texture != null and child.is_visible_in_tree() and child.modulate.a > 0.01:
+				exclusions.append(child.get_global_transform_with_canvas() * child.get_rect())
+	var hud_controls: Array[Control] = [mine_button]
+	if premium_hud != null:
+		hud_controls.append_array([
+			premium_hud.menu_button, premium_hud.guide_button, premium_hud.gold_cluster,
+			premium_hud.bag_button, premium_hud.context_button, premium_hud.progression_goal_panel,
+			premium_hud.objective_chip, premium_hud.status_panel,
+		])
+	if premium_hud != null and minimap_overlay != null and minimap_overlay.is_visible_in_tree():
+		exclusions.append(minimap_overlay.get_global_transform_with_canvas() * premium_hud.minimap_layout_rect())
+	var companion_interface: Node = get_node_or_null("CompanionInterface")
+	if companion_interface != null:
+		hud_controls.append(companion_interface.button)
+		if not companion_interface.activity.text.is_empty():
+			hud_controls.append(companion_interface.activity)
+	if developer_menu != null:
+		hud_controls.append(developer_menu.get("toggle_button") as Control)
+	for control in hud_controls:
+		if is_instance_valid(control) and control.is_visible_in_tree() and control.modulate.a > 0.01:
+			exclusions.append(control.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, control.size))
+	achievement_toast.set_screen_anchor(player_screen_position + Vector2(0.0, -112.0), exclusions)
 
 
 func _active_player_node() -> Node2D:

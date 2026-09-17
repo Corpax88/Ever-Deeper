@@ -1,12 +1,13 @@
 # Verification
 
-Current work-branch status: [16 September continued review](premium-polish/RESUME-20260916-REVIEW.md).
-The exact c8906f1 DEV export passes all 15 current core cases, both flavor checks,
-all nine browser suites and native preview residency. Current bounded static and
-hero visual reviews found no DEV blocker. Publication 35093477972 verifies all 18
-public files. This is DEV test readiness; minimum 50FPS, physical-iPhone evidence,
-final animation and whole-game 9/10 remain open. The old player_visual protected
-hash remains intentionally unchanged; see the recorded review limits.
+Current published status: [DEV10 review and remaining limits](premium-polish/dev10-20260917/PUBLISHED.md).
+The exact 2307601 DEV export passes all 15 current core cases, both flavor checks,
+all nine Chromium suites, native commerce residency and the rendered hazard lifecycle.
+Audio output and three tools in four directions pass the additional package checks.
+Mac WebKit gameplay and pause pass; the retained Linux WebKit GL failure is unresolved.
+Publication 35182372885 verifies all 18 public files, preserving LIVE 0.46.9.
+Minimum 50 FPS, physical-iPhone evidence, final animation and whole-game 9/10 remain open.
+The old player_visual protected hash remains intentionally unchanged; see the review limits.
 
 ## Current source gate
 

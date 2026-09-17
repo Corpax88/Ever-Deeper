@@ -78,11 +78,33 @@ func show_pickup(kind: String, amount: int) -> void :
 			existing.age = APPEAR_SECONDS
 			existing.pulse = 0.22
 			(existing.label as Label).text = _pickup_text(resource_key, int(existing.amount))
+			existing.text_size = _text_size(existing.label as Label)
 			entries[index] = existing
+			_process(0.0)
 			return
 	while entries.size() >= MAX_VISIBLE:
 		_remove_entry(0)
 	entries.append(_make_entry(resource_key, amount))
+	_process(0.0)
+
+
+func screen_rects() -> Array[Rect2]:
+	# Measure the displayed text, not the fixed-width centering container. Its
+	# canvas transform includes the player's camera, zoom and current pop scale.
+	var rects: Array[Rect2] = []
+	for entry in entries:
+		var label: Label = entry.label as Label
+		if not is_instance_valid(label) or not label.is_visible_in_tree():
+			continue
+		var text_size: Vector2 = entry.text_size
+		var text_rect: = Rect2((label.size - text_size) * 0.5, text_size)
+		text_rect = text_rect.grow(float(label.get_theme_constant("outline_size")))
+		rects.append(label.get_global_transform_with_canvas() * text_rect)
+	return rects
+
+
+func _text_size(label: Label) -> Vector2:
+	return label.get_theme_font("font").get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, label.get_theme_font_size("font_size"))
 
 
 func _process(delta: float) -> void :
@@ -140,6 +162,7 @@ func _make_entry(kind: String, amount: int) -> Dictionary:
 		"amount": amount,
 		"age": 0.0,
 		"pulse": 0.0,
+		"text_size": _text_size(amount_label),
 	}
 
 
