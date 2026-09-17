@@ -2,11 +2,47 @@
 
 This opt-in study extends `tools/review_hero_gameplay.gd` without changing its
 historical evidence, the production capture driver, browser harness, or approved
-v28 assets. It has not yet been rendered. Mechanical passes require separate
+v28 assets. The first exact-DEV11 Worn/right pilot passes its mechanical checks;
+the other combinations remain unrendered. Mechanical passes require separate
 inspection of the actual ordered PNGs before accepting animation.
 Godot 4.7.2 `--headless --check-only` passes against the exact downloaded DEV11
 PCK from source `8f5680defb9083bbe1e044d39a10612f2186e7f3` in an empty project.
 This validates parsing and packed resource resolution, not gameplay or imagery.
+
+## First exact DEV11 pilot
+
+Study checkpoint `cda1e41a68c25cd48212b4f2f443f727175e0144` ran against source
+`8f5680defb9083bbe1e044d39a10612f2186e7f3`, exact PCK SHA-256
+`5b77b3a219011cb676895e41830c8dab32bec2346db93102c7894a3c084414e9`.
+Evidence directory: `/workspace/scratch/d5437d917805/evidence/hero-motion-coverage/dev11-worn-right-cda1e41/worn-right/`.
+`hero-motion-coverage.json` SHA-256:
+`89c0865239590dd3d832a79eef513872263a261a3a29880e15bc098643558af2`.
+
+The process exits 0: 28 checks, 195 rendered samples and 143 actual 1696x780 PNGs.
+Pre-contact release and movement cancellation retain zero impact events/damage.
+The actual contact at sample 155 delivers damage 4, impact serial 1 and authored
+native phase 0.55. Held follow-through reaches progress 0.7843 before release;
+the following tail adds no damage and returns to idle.
+
+Critical images inspected: `0055_blocked_windup.png`, `0060_cancel_release.png`,
+`0086_cancel_by_movement.png`, `0155_impact_windup.png`,
+`0169_held_follow_through.png`, and `0194_post_hit_release.png`.
+The hero remains intact through the observed poses and reverses into locomotion.
+However, the first natural wall is cell (22, 2), keeping the hero at world Y=160.
+The upper tool/target area reaches the minimap overlay. This is a coverage-framing
+limitation: select a lower natural corridor with the ordinary HUD/camera before
+widening the matrix or accepting full swing clearance. No broad animation,
+browser, audio-output or performance acceptance follows from this pilot.
+
+The pending fixture now requires the start, adjacent contact and target cell
+centers to be at world Y>=320. Every rendered sample records a framing check:
+the full combined hero/tool sprite rectangle and complete target tile must be
+inside the viewport and at least 8 px clear of the current visible HUD, minimap,
+achievement and pickup-text bounds. It uses actual canvas transforms and records
+the rectangles, minimum axis clearance, obstructions and failed sample indices.
+An obscured sample is retained as a PNG and fails the case; mechanical assertions
+remain unchanged. Full sprite-cell bounds are conservative. Natural world
+occlusion and the appearance of motion still need actual image review.
 
 ## Existing coverage at the DEV11 checkpoint
 
@@ -102,3 +138,68 @@ Browser integration is intentionally pending coordination: current
 `_run_hero_motion()` hardcodes three gears, and `capture-web.mjs` requires exactly
 twelve damage markers. Adding timestamps/cancellation and more gears needs a
 separate coordinated change to both owners and a freshly exported package.
+
+## Verified lossless storage
+
+The original pilot's 143 PNGs occupy 330,461,965 bytes. Keeping that volume for
+44 cases would use 13.54 GiB; saving all 195 observed frames at the same average
+PNG size projects 18.47 GiB. These are storage estimates from one route, not
+measurements of the unrun combinations.
+
+`archive.py` was tested on all 143 retained pilot PNGs using local ffmpeg 6.1.1,
+`libx264rgb -crf 0`, RGB24 input and two CPU threads. The 1696x780 video occupies
+29,481,486 bytes. Decoding produced **143/143 matching RGB SHA-256 hashes**, with
+no dropped, additional or mismatched frames. All original PNG hashes remain
+unchanged. The bundle also retains 11 byte-identical critical PNGs (25,417,532
+bytes), original sample/event JSON, the source plan and per-frame PNG/RGB hashes.
+The completed benchmark bundle totals 55,186,073 bytes and took 17.052 seconds.
+
+Benchmark folder: `/workspace/scratch/d5437d917805/evidence/hero-motion-coverage/dev11-worn-right-lossless-pilot/`.
+Video SHA-256: `c9fd1ad0d1de762ea4aa771d5dca1fec89645763e5ddd1353a36e44f3a0cdad0`.
+Its `archive.json` and `decoded-rgb.framehash` retain the complete comparison.
+The initial pilot has 195 observations but only 143 PNGs: its archive is an
+ordered frame sequence with explicitly recorded gaps, not continuous playback.
+
+For the next checkpointed Worn/right and Deepcore/right pilots, use:
+
+```sh
+python3 tools/hero_motion_coverage/run.py \
+  --godot /verified/path/to/Godot --xvfb /verified/path/to/Xvfb \
+  --pack /absolute/accepted-candidate/index.pck --source-sha COMMIT_SHA \
+  --gear worn deepcore --direction right --archive-lossless \
+  --output /absolute/evidence/hero-lower-corridor-pilot
+```
+
+`--archive-lossless` implies `--all-frames`. For each case, the runner captures,
+encodes and verifies before starting the next case. The archive uses
+`--require-complete`, which rejects missing PNG samples or a mismatching fixed
+60 Hz simulation timeline. A failed case or archive stops the sequence with
+its evidence retained. No unverified archive can clear a case. This option
+has passed plan validation; the corrected native pilots await their checkpoint.
+
+Existing captured images can be archived separately with:
+
+```sh
+python3 tools/hero_motion_coverage/archive.py \
+  --input /absolute/evidence/case --output /absolute/evidence/case/lossless \
+  --require-complete --threads 2
+```
+
+The default codec prefers available `libx264rgb`; RGB FFV1 is an available fallback.
+Every codec must independently pass decoded RGB hashes for every frame. Encoder
+and decoder have bounded timeouts, and all frame copies retain original hashes.
+The benchmark verified `libx264rgb`; it did not separately benchmark FFV1.
+
+The durable representation is the verified lossless video, critical original
+PNGs, source/sample/event JSON and both original-PNG and RGB hash manifests.
+Full-frame captures retain the exact sampled simulation timeline. Opaque RGB
+pixels can be regenerated from the video; re-encoded PNG compression/metadata
+and therefore PNG file hashes may differ from the original, while decoded RGB
+hashes must match. Alpha was checked to be 255 for every source pixel. Critical
+PNG files remain byte-identical originals.
+
+Original pilot PNGs remain local. The tools perform no source-PNG deletion or
+external upload. Once the owner verifies that each lossless bundle is durably
+saved, noncritical PNGs from later cases may be treated as a regenerable local
+cache. Preserve the verified archive and hash/timeline manifests before such
+cleanup. Lossless verification does not replace reviewing the actual motion.

@@ -8,6 +8,8 @@ const SEED := 4608
 const DIRECTIONS := {"down": Vector2i.DOWN, "left": Vector2i.LEFT, "up": Vector2i.UP, "right": Vector2i.RIGHT}
 const FRAME_LIMIT := 1200
 const PNG_LIMIT := 360
+const MIN_ROUTE_Y := 320.0
+const FRAMING_MARGIN := 8.0
 var output := ""
 var source_sha := ""
 var pack_source := ""
@@ -30,6 +32,9 @@ var simulated_seconds := 0.0
 var initial_serial := 0
 var expected_serial := 0
 var packed := false
+var all_frames := false
+var framing_failures: Array[int] = []
+var minimum_framing_clearance := 1000000.0
 
 
 func _initialize() -> void:
@@ -51,6 +56,7 @@ func _run() -> void:
 		elif arg.begins_with("--pack-source="): pack_source = arg.trim_prefix("--pack-source=")
 		elif arg.begins_with("--gear="): gear = arg.trim_prefix("--gear=")
 		elif arg.begins_with("--direction="): direction_name = arg.trim_prefix("--direction=")
+		elif arg == "--all-frames": all_frames = true
 	packed = FileAccess.file_exists("res://project.binary")
 	if not output.is_absolute_path() or gear not in Gear.TOOLS or not DIRECTIONS.has(direction_name) or source_sha.length() != 40 or DisplayServer.get_name() == "headless":
 		print("HERO_COVERAGE_USAGE requires rendered display, absolute --output, --source-sha, approved --gear and --direction")
@@ -217,6 +223,8 @@ func _find_route(direction: Vector2i) -> Dictionary:
 			if world._is_floor(wall) or not world._cell_diggable(wall): continue
 			var contact: Vector2 = world._cell_center(wall - direction)
 			var start: Vector2 = world._cell_center(wall - direction * 4)
+			var target: Vector2 = world._cell_center(wall)
+			if minf(target.y, minf(contact.y, start.y)) < MIN_ROUTE_Y: continue
 			var segments: int = maxi(1, ceili(contact.distance_to(start) / 12.0))
 			var open := true
 			# Include both actual cell centers: 64px contact through 256px start
@@ -291,8 +299,12 @@ func _frame() -> bool:
 	simulated_seconds += root.get_process_delta_time()
 	var sample: Dictionary = _snapshot()
 	sample["sample"] = samples.size()
+	var framing: Dictionary = _framing_snapshot()
+	sample["framing"] = framing
+	minimum_framing_clearance = minf(minimum_framing_clearance, float(framing.minimum_axis_clearance_px))
+	if not bool(framing.passed): framing_failures.append(samples.size())
 	var dense: bool = stage in ["blocked_windup", "cancel_release", "movement_cancel_windup", "cancel_by_movement", "impact_windup", "held_follow_through", "post_hit_release"]
-	if dense or stage_frame % 6 == 0:
+	if all_frames or dense or stage_frame % 6 == 0 or not bool(framing.passed):
 		if captures.size() >= PNG_LIMIT:
 			return _check(false, "Rendered PNG budget exceeded")
 		var filename: String = "%04d_%s.png" % [samples.size(), stage]
@@ -306,6 +318,71 @@ func _frame() -> bool:
 	samples.append(sample)
 	stage_frame += 1
 	return true
+
+
+func _framing_snapshot() -> Dictionary:
+	# A conservative full sprite-cell rectangle includes both the native body
+	# and tool; their pixels share one atlas and cannot be independently hidden.
+	var subjects: Dictionary = {}
+	for child in player.visual.get_children():
+		if child is Sprite2D and child.texture != null and child.is_visible_in_tree():
+			subjects["hero_and_tool"] = child.get_global_transform_with_canvas() * child.get_rect()
+	var target_world: Rect2 = Rect2(Vector2(world._cell_center(route.wall)) - Vector2.ONE * float(world.TILE_SIZE) * 0.5, Vector2.ONE * float(world.TILE_SIZE))
+	subjects["target_cell"] = world.get_global_transform_with_canvas() * target_world
+	var overlays: Dictionary = {}
+	var controls: Array = [main.mine_button]
+	var hud: Node = main.premium_hud
+	controls.append_array([hud.menu_button, hud.guide_button, hud.gold_cluster,
+		hud.bag_button, hud.context_button, hud.progression_goal_panel, hud.objective_chip, hud.status_panel])
+	var companion: Node = main.get_node_or_null("CompanionInterface")
+	if companion != null:
+		controls.append(companion.button)
+		if not String(companion.activity.text).is_empty(): controls.append(companion.activity)
+	if main.developer_menu != null: controls.append(main.developer_menu.get("toggle_button"))
+	for control in controls:
+		if is_instance_valid(control) and control.is_visible_in_tree() and control.modulate.a > 0.01:
+			overlays[String(control.get_path())] = control.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, control.size)
+	if main.minimap_overlay != null and main.minimap_overlay.is_visible_in_tree():
+		overlays["minimap"] = main.minimap_overlay.get_global_transform_with_canvas() * hud.minimap_layout_rect()
+	if main.achievement_toast != null and main.achievement_toast.is_presenting():
+		overlays["achievement"] = main.achievement_toast.get_global_transform_with_canvas() * Rect2(main.achievement_toast.debug_snapshot().toast_rect)
+	var pickup: Node = player.get_node_or_null("ResourcePickupBurst")
+	if pickup != null:
+		var index := 0
+		for rect in pickup.screen_rects():
+			overlays["pickup_%d" % index] = rect
+			index += 1
+	var viewport: Rect2 = root.get_visible_rect()
+	var violations: Array[Dictionary] = []
+	var minimum := 1000000.0
+	if not subjects.has("hero_and_tool"):
+		violations.append({"subject": "hero_and_tool", "obstruction": "missing_sprite"})
+	for key in subjects:
+		var rect: Rect2 = subjects[key]
+		var viewport_gap: float = minf(minf(rect.position.x - viewport.position.x, rect.position.y - viewport.position.y), minf(viewport.end.x - rect.end.x, viewport.end.y - rect.end.y))
+		minimum = minf(minimum, viewport_gap)
+		if viewport_gap < FRAMING_MARGIN:
+			violations.append({"subject": key, "obstruction": "viewport", "axis_clearance_px": viewport_gap})
+		for overlay in overlays:
+			var gap: float = _rect_axis_gap(rect, overlays[overlay])
+			minimum = minf(minimum, gap)
+			if gap < FRAMING_MARGIN:
+				violations.append({"subject": key, "obstruction": overlay, "axis_clearance_px": gap})
+	var serialized_subjects: Dictionary = {}
+	var serialized_overlays: Dictionary = {}
+	for key in subjects: serialized_subjects[key] = _rect_array(subjects[key])
+	for key in overlays: serialized_overlays[key] = _rect_array(overlays[key])
+	return {"passed": violations.is_empty(), "required_margin_px": FRAMING_MARGIN,
+		"minimum_axis_clearance_px": minimum, "subjects": serialized_subjects,
+		"overlays": serialized_overlays, "violations": violations}
+
+
+func _rect_axis_gap(first: Rect2, second: Rect2) -> float:
+	return maxf(maxf(first.position.x - second.end.x, second.position.x - first.end.x), maxf(first.position.y - second.end.y, second.position.y - first.end.y))
+
+
+func _rect_array(rect: Rect2) -> Array:
+	return [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
 
 
 func _snapshot() -> Dictionary:
@@ -343,12 +420,17 @@ func _finish() -> void:
 	var fixture: Dictionary = {}
 	if not route.is_empty():
 		fixture = {"seed": SEED, "depth": 1, "wall": [route.wall.x, route.wall.y], "start": [route.start.x, route.start.y], "direction": direction_name}
+	_check(not samples.is_empty() and framing_failures.is_empty(), "Hero/tool and target retain declared viewport/HUD clearance in every observed frame")
 	var report := {"schema": 1, "passed": failures.is_empty(), "checks": checks, "failures": failures,
 		"gear": gear, "direction": direction_name, "source_sha": source_sha,
 		"packed": packed, "pack_sha256": FileAccess.get_sha256(pack_source) if not pack_source.is_empty() else "",
 		"engine": Engine.get_version_info().string, "display": DisplayServer.get_name(),
 		"rendered": DisplayServer.get_name() != "headless", "actual_viewport": [root.size.x, root.size.y],
 		"fixture": fixture, "stages": stages, "events": events, "samples": samples, "captures": captures,
+		"all_frames_requested": all_frames, "all_observed_frames_captured": captures.size() == samples.size(),
+		"framing": {"passed": not samples.is_empty() and framing_failures.is_empty(),
+			"required_margin_px": FRAMING_MARGIN, "minimum_axis_clearance_px": minimum_framing_clearance,
+			"failed_samples": framing_failures, "contract": "Entire combined hero/tool sprite cell and target tile inside viewport, at least 8 px clear of current named HUD/minimap/achievement/pickup bounds. Natural-world occlusion still requires image review."},
 		"manual_process_steps": false, "terrain_replaced": false, "fixed_movement_speed": 340.0,
 		"visual_acceptance": false, "physical_iphone": false, "fps_claim": false,
 		"limits": "One original first-band wall, miner outfit and 340 px/s. Fixed-step native capture is not browser, audio-output, device or FPS acceptance. Inspect the actual PNG sequences before accepting motion."}

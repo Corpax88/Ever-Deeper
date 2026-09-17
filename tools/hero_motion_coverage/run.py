@@ -53,6 +53,10 @@ def validate_report(case: dict, pack_sha: str) -> dict:
         errors.append("Package identity mismatch")
     if report.get("manual_process_steps") is not False or report.get("terrain_replaced") is not False:
         errors.append("Fixture did not retain real processing/terrain")
+    if not report.get("framing", {}).get("passed"):
+        errors.append("Hero/tool/target framing contract failed or was not observed")
+    if case.get("all_frames") and not report.get("all_observed_frames_captured"):
+        errors.append("Full ordered rendered frames were requested but are incomplete")
     required = {"release_before_contact", "move_away_during_anticipation", "first_real_impact", "release_after_delivered_contact"}
     if not required.issubset({event.get("name") for event in report.get("events", [])}):
         errors.append("Missing impact or cancellation observation")
@@ -83,7 +87,10 @@ def main() -> int:
     parser.add_argument("--pack", type=Path, help="Exact exported candidate; external fixture runs against its resources")
     parser.add_argument("--source-sha", help="Source corresponding to the package; defaults to this checkout's HEAD")
     parser.add_argument("--plan-only", action="store_true", help="Write receipts and commands without starting Godot/Xvfb")
+    parser.add_argument("--all-frames", action="store_true", help="Save every observed rendered frame for a complete lossless motion archive")
+    parser.add_argument("--archive-lossless", action="store_true", help="Implies --all-frames; encode and verify each case before starting the next")
     args = parser.parse_args()
+    args.all_frames = args.all_frames or args.archive_lossless
     project = args.project.resolve()
     output = args.output.resolve()
     gears, directions = approved_keys(project)
@@ -108,6 +115,7 @@ def main() -> int:
     pack = args.pack.resolve() if args.pack else None
     pack_sha = digest(pack) if pack else ""
     fixture = Path(__file__).resolve().with_name("capture.gd")
+    archiver = Path(__file__).resolve().with_name("archive.py")
     cases = []
     for gear in selected_gears:
         for direction in selected_directions:
@@ -124,14 +132,22 @@ def main() -> int:
                         f"--output={folder}", f"--source-sha={source_sha}", f"--gear={gear}", f"--direction={direction}"]
             if pack:
                 command += [f"--pack-source={pack}"]
-            cases.append({"gear": gear, "direction": direction, "source_sha": source_sha,
-                          "output": str(folder), "command": command})
+            if args.all_frames:
+                command += ["--all-frames"]
+            case = {"gear": gear, "direction": direction, "source_sha": source_sha,
+                    "output": str(folder), "command": command, "all_frames": args.all_frames}
+            if args.archive_lossless:
+                case["archive_command"] = [sys.executable, str(archiver), "--input", str(folder),
+                                           "--output", str(folder / "lossless"), "--require-complete", "--threads", "2"]
+            cases.append(case)
     output.mkdir(parents=True, exist_ok=True)
     if any(Path(case["output"]).exists() for case in cases):
         parser.error("Use a new output directory; existing captures are never overwritten")
     receipt = {"schema": 1, "source_sha": source_sha, "pack_sha256": pack_sha,
                "approved_gears": gears, "approved_directions": directions,
                "fixture_sha256": digest(fixture), "runner_sha256": digest(Path(__file__)),
+               "archive_lossless_per_case": args.archive_lossless,
+               "archiver_sha256": digest(archiver) if args.archive_lossless else None,
                "runtime_sha256": runtime_hashes, "cases": cases,
                "execution": "pending", "visual_acceptance": False, "physical_iphone": False, "fps_claim": False}
     receipt_path = output / "coverage-plan.json"
@@ -151,6 +167,23 @@ def main() -> int:
             row = {"passed": False, "errors": [str(error)]}
         row.update(gear=case["gear"], direction=case["direction"], exit_code=result.returncode)
         row["passed"] = row["passed"] and result.returncode == 0
+        if args.archive_lossless and row.get("captures", 0) > 0:
+            print(f"ARCHIVE AND VERIFY {case['gear']} {case['direction']}", flush=True)
+            archived = subprocess.run(case["archive_command"], cwd=project)
+            try:
+                archive_folder = Path(case["output"]) / "lossless"
+                proof = json.loads((archive_folder / "archive.json").read_text())
+                verified = (archived.returncode == 0 and proof.get("verified_rgb") is True
+                            and proof.get("all_observed_frames_present") is True
+                            and proof.get("original_pngs_retained") is True
+                            and proof.get("source_report_sha256") == row["report_sha256"])
+                row["archive"] = {"verified": verified, "receipt": str(archive_folder / "archive.json"),
+                                  "video_sha256": proof.get("video_sha256"), "video_bytes": proof.get("video_bytes"),
+                                  "critical_png_bytes": proof.get("critical_png_bytes"), "exit_code": archived.returncode}
+                row["passed"] = row["passed"] and verified
+            except (OSError, ValueError, KeyError, TypeError) as error:
+                row["archive"] = {"verified": False, "error": str(error), "exit_code": archived.returncode}
+                row["passed"] = False
         results.append(row)
         (output / "coverage-results.json").write_text(json.dumps({
             "source_sha": source_sha, "pack_sha256": pack_sha, "planned_cases": len(cases),
