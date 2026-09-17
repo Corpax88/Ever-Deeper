@@ -27,9 +27,21 @@ before image review: 0, .6875, .75, .78125, .82, .828125, .875, .90625,
 .9375 and .9921875, plus original critical phases. Endpoint equality alone
 does not prove idle/walk transition compatibility or continuous IK anatomy.
 
-Preparation is unrun. Seven exact original JSON inputs are currently missing
-from the retired scratch location; supported archive recovery returned HTTP
-502. Do not rebuild those payloads from summaries or use missing old paths.
-Recover and hash-bind them before any engine execution. Source/parser review
-is separate from geometry and native-image acceptance. No production assets,
-runtime code, atlas, publishing workflow, score or FPS claim changes here.
+The exact original inputs have now been recovered and independently bound.
+The first actual eb61cefc run exited 0: 135 rig poses passed, including 69
+exactly unchanged work poses. The full unchanged control was reproduced.
+At .8125 the candidate exposed 22 pixels of each original hand and joined
+both hands, shaft and head in one 181-pixel component; original recovery had
+R0/L6 and three components. This is geometric evidence, not image approval.
+The closed result SHA256 is
+`ee653f7b14212dcce2ba039cd10d5a69cf329824452bb5c975208601fa8d3982`.
+
+`probe_return_tool_offset_late.py` is an additive observer for the same frozen
+candidate. It takes the original arguments plus `--reference-result`, bound
+to that exact closed result. It replays the unchanged control and all 135 rig
+poses, checks the full candidate result against the reference, then evaluates
+the 15 declared critical/late/end scenes. Work-window geometry must exactly
+match the original control. All results, including occlusion or disconnected
+components, are retained for independent review before any image rendering.
+No production assets, runtime code, atlas, publishing workflow, score or FPS
+claim changes here. The late observer is preparation until actually executed.
