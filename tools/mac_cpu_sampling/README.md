@@ -1,5 +1,10 @@
 # Unchanged DEV11: bounded Mac CPU stack preparation
 
+The one authorized session has now completed and its raw artifact has been
+independently verified. See [RESULTS.md](RESULTS.md) for the exact run, measured
+ANGLE/Metal wait path, profiler overhead and limits. The preparation description
+below records the reviewed launch design; it is not authorization to rerun it.
+
 This is a diagnostic preparation, not an optimization, completed profile or FPS
 approval. No production source, shader, asset, light, gameplay input policy or
 published package changes. The approved native v28 hero remains intact.
