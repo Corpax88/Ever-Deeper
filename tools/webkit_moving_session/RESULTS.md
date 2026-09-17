@@ -81,3 +81,50 @@ Library libfile_0f3c9cc494a081918537c8825c642207. It retains untouched ZIP, APIs
 job log, download verification, image comparison, source review and file manifest.
 
 Neither failed run establishes sustained Deep browser cadence or a browser bottleneck.
+
+# Preserved third failure: scroll overshoot before timing
+
+[Actions 35205477642](https://github.com/Corpax88/Ever-Deeper/actions/runs/35205477642)
+ran request c459fdfa89847b6b6d44e681b2cc47d68b50a567, job105150075595, attempt1.
+NEW GAME and DEV taps were trusted and worked. The start modal disappeared, the
+ordinary committed save reported scene=surface and endless inactive, and the visible
+DEVELOPER TOOLS/CLOSE DEV drawer passed. Callback counter advanced301 to792 over the
+start transition. No timed interval, mining key-down, draw census or CPU sample began.
+Browser exit0, no game/GL errors, all nine package/source identity checks passed.
+
+The failure was the bounded scroll route, not a label mismatch. The existing source
+label is ENDLESS · LAYER12 (space before12 in actual text); its normalized predicate
+ENDLESSLAYER12 was already correct. Original01-menu-1.png shows ENDLESS · LAYER1 as
+the last visible row at about702 image pixels, with the next Layer12 row clipped below.
+Original01-menu-2.png already shows resources/relics/reset. Scrolling worked but its
+inertia carried the target past the next captured viewport; scans3–7 remain at the end.
+
+TouchScrollContainer releases with coast=true when the last motion was less than120ms
+ago, then _process continues velocity/deceleration. The retained last-move/release gaps
+were about33ms. Root authorized a source-compatible correction plus one subsequent
+unchanged-package run:100 CSS pixels per drag, engine frames after the final motion,
+250ms stationary hold and further frames before release, then settling and capture.
+The original scroll area is approximatelyCSS x83–485/y190–371; the corrected drag
+at x180/y330→230 stays inside. Its100px step leaves over80px overlap, larger than a
+38px button row; at most eight scans/seven drags. A DOM receipt must independently
+show at least200ms between final move and release. Untimed DOM swipes remain untrusted,
+while ordinary taps and measured mining keys must be trusted. No label threshold or
+remaining save, entry, input, duration, restoration or exit gate changes.
+
+Remaining predicates were checked against exact owners and retained originals:
+NEW GAME/NO EXPEDITION FOUND from PremiumMenu and actual start OCR; DEV TOOLS/CLOSE DEV/
+DEVELOPER TOOLS from DeveloperMenu and actual opened-drawer OCR; ENDLESS · LAYER12 from
+LOCATION_ACTIONS; THE DEEP from the minimap location title and main's entry status,
+also visible in the retained exact-DEV11 web08_deep_reentry_idle original. The Layer12
+row and actual target scene still require new on-run original captures, not inference.
+Save owner run_state.gd serializes scene, active/current_depth, standard/miner/original,
+world_seed, mined, total_swings, deepest_metres and stream_anchor at the exact paths
+the read-only decoder checks. The existing real-save codec/native parity remains valid.
+
+Untouched raw ZIP:21592922 bytes, SHA256
+bd176691d7ff752c12333f7010f9e0d455f2504133421284bc8d92ffa60cd125.
+Every ZIP CRC and41 closed-file hashes passed. Original11 PNGs, surface save and all
+input/observer receipts remain inside the raw ZIP. Durable failure archive:
+Ever-Deeper-DEV11-WebKit-scroll-navigation-failure-20260917.tar.gz,21611463 bytes,
+SHA256 9cec21d6b31d06a96ff5c21362c7ccc25cd3623d0fcbe148ca2c4c81b5699553,
+Library libfile_f91e97631e1c81918f591d12d73f2378. No performance result is claimed.

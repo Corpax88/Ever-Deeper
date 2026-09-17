@@ -57,7 +57,7 @@ async function clickLabel(row,label) {
 // Exact frame-spaced WebKit GUI-touch path already used by capture-web.mjs.
 // This untimed swipe is a DOM TouchEvent and explicitly is not trusted input.
 async function swipeDrawer() {
-  const action={stage:'swipe_dev',from:{x:180,y:330},to:{x:180,y:185},trusted:false,...stamp()};actions.push(action);
+  const action={stage:'swipe_dev',from:{x:180,y:330},to:{x:180,y:230},stationary_hold_ms:250,trusted:false,...stamp()};actions.push(action);
   const before=await page.evaluate(()=>window.__studyTouches.length);
   await page.evaluate(async()=>{
     const canvas=document.getElementById('canvas');
@@ -72,11 +72,16 @@ async function swipeDrawer() {
       canvas.dispatchEvent(event);
     };
     send('touchstart',330);await frame();
-    for(let i=1;i<=8;i++){send('touchmove',330-145*i/8);await new Promise(resolve=>setTimeout(resolve,25));}
-    send('touchend',185);await frame();
+    for(let i=1;i<=8;i++){send('touchmove',330-100*i/8);await new Promise(resolve=>setTimeout(resolve,40));}
+    // TouchScrollContainer coasts only if the last move is <120 ms before release.
+    // Let the engine consume that move, then hold still to use its normal stop path.
+    await frame();await new Promise(resolve=>setTimeout(resolve,250));await frame();
+    send('touchend',230);await frame();
   });
   action.touch_events=await page.evaluate(i=>window.__studyTouches.slice(i),before);
   if(!action.touch_events.some(e=>e.type==='touchmove'&&!e.trusted&&e.target==='canvas'))throw Error('GUI swipe receipt missing');
+  const lastMove=action.touch_events.findLast(e=>e.type==='touchmove'),release=action.touch_events.findLast(e=>e.type==='touchend');
+  if(!release||release.time-lastMove.time<200)throw Error('Stationary scroll-release hold missing');
   await pause(350);
 }
 async function saveReceipt(label) {
@@ -234,6 +239,7 @@ try {
     if(!rows.some(x=>normal(x.text).includes('DEVELOPERTOOLS')&&x.confidence>=.6)||!findText(rows,'CLOSEDEV'))throw Error('DEV drawer/title not visually established; navigation stopped');
     target=findText(rows,'ENDLESSLAYER12');
     if(target)break;
+    if(i===7)break;
     await swipeDrawer();
   }
   if(!target)throw Error('Deep 12 label not found in bounded normal menu navigation');

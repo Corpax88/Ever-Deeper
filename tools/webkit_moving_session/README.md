@@ -1,9 +1,10 @@
 # Exact DEV11 WebKit moving baseline
 
 Authorized by root on 2026-09-17 after reviewing the concrete ownership/metric plan.
-Both previous navigation attempts failed before timing and are preserved in RESULTS.md.
-After source inspection explained the input-owning start-menu modal, root authorized
-one corrected ordinary NEW GAME-first route, with no package changes.
+Three previous navigation attempts failed before timing and are preserved in RESULTS.md.
+The ordinary NEW GAME-first route now verifies the closed modal, actual surface
+save and open DEV drawer. Root authorized one smaller, non-coasting scroll correction
+after originals showed the Layer12 row skipped by the prior inertial swipe.
 The native Mac bounded ANGLE pool finding does not establish a WebKit bottleneck;
 see PLAN.md and source-bindings.json for exact ownership evidence.
 
@@ -28,6 +29,11 @@ The route then
 requires the visible drawer title before scrolling, and reuses the existing
 frame-spaced WebKit GUI swipe. That untimed swipe is explicitly untrusted DOM input;
 normal taps and all measured mining key events must be trusted. No game commands.
+Each scroll is now100 CSS pixels within the actual scroll area, with a250ms stationary
+hold after engine frames consume the final move. This takes TouchScrollContainer's
+ordinary no-coast release branch (last move at least120ms ago), with over80 CSS pixels
+of overlap between adjacent captures. At most eight scans/seven drags run. The actual
+touch receipt must show a stationary release interval of at least200ms.
 
 The measurement is engine-loop callback cadence, never presented-frame FPS.
 Two actual WebGL draw censuses run outside timing, restore original methods, and
