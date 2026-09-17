@@ -1,0 +1,73 @@
+name: DEV11 exact WebKit moving baseline
+on:
+  push:
+    branches: [codex/dev11-webkit-moving-study-20260917]
+    paths: ['tools/webkit_moving_session/REQUEST.json']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: dev11-webkit-moving-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  moving-deep:
+    if: github.ref == 'refs/heads/codex/dev11-webkit-moving-study-20260917'
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+      - name: Bind unchanged production source
+        run: |
+          mkdir -p "$RUNNER_TEMP/webkit-moving"
+          git rev-parse HEAD > "$RUNNER_TEMP/webkit-moving/study-source.txt"
+          python3 - <<'PY'
+          import hashlib,os,subprocess
+          from pathlib import Path
+          data=subprocess.check_output(['git','ls-tree','HEAD','--','scripts','scenes','shaders','assets','project.godot','export_presets.cfg'])
+          (Path(os.environ['RUNNER_TEMP'])/'webkit-moving/runtime-tree.txt').write_bytes(data)
+          assert hashlib.sha256(data).hexdigest()=='8e557a28e6391eed9b1910fcd92339a50a43921024c7bbc028c241eadca16cff'
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          name: premium-web-candidate-8f5680defb9083bbe1e044d39a10612f2186e7f3
+          run-id: '35186932201'
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install exact existing WebKit and compile local UI reader
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install --with-deps webkit
+          swiftc tools/webkit_moving_session/ocr.swift -o "$RUNNER_TEMP/webkit-ocr"
+          sw_vers > "$RUNNER_TEMP/webkit-moving/macos-version.txt"
+          system_profiler SPDisplaysDataType > "$RUNNER_TEMP/webkit-moving/display.txt"
+          cat node_modules/playwright-core/browsers.json > "$RUNNER_TEMP/webkit-moving/playwright-browsers.json"
+      - name: One unchanged-export real moving session
+        timeout-minutes: 6
+        run: |
+          node tools/webkit_moving_session/run.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/webkit-moving" "$RUNNER_TEMP/webkit-ocr" > "$RUNNER_TEMP/webkit-moving/runner.log" 2>&1
+      - name: Hash closed evidence after the runner exits
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'webkit-moving'
+          root.mkdir(exist_ok=True)
+          manifest={p.name:{'size':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in root.iterdir() if p.is_file() and p.name!='closed-manifest.json'}
+          (root/'closed-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+          if (root/'result.json').exists() and json.loads((root/'result.json').read_text()).get('complete'):
+              assert (root/'runner.log').read_text().count('WEBKIT_MOVING_SESSION_COMPLETE ')==1
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dev11-webkit-moving-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/webkit-moving
+          if-no-files-found: error
+          retention-days: 30
