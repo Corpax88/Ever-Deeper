@@ -1,8 +1,15 @@
 # One unapproved compact Moss corner art study
 
-Prepared source only. No engine, import, capture, export or visual acceptance
-has run for this study. The coordinator must save this exact source and both
-original PNGs remotely, then grant the sole renderer slot before execution.
+Unapproved study. The first checkpoint passed import/parser but stopped after
+its original A capture: its save comparison wrongly included the serializer's
+wall-clock `saved_at_unix`. Complete failed evidence is preserved at
+`evidence/compact-art-moss/attempt-01-5c690dbe/`. It captured no candidate art.
+This fixture correction retains all raw per-mode saves and excludes only that
+envelope timestamp from equality. Every gameplay field and schema/version
+still must match. The first failing payload was not saved, so its other fields
+cannot retrospectively be certified equal. The coordinator must checkpoint
+this correction and grant a renderer slot before retrying. No art acceptance
+or export has occurred.
 
 Base runtime: `8f5680defb9083bbe1e044d39a10612f2186e7f3`.
 Base tree: `48b24a93faaa6f77d7a53c404cfb1228d7f825e0`.
@@ -90,7 +97,10 @@ four captures. The seal shader's TIME is fixed only in memory and restored.
 The harness invalidates the actual draw caches for every mode and requires
 fresh callbacks. It checks target draws, exact visited corner topology and
 native texture selections, unchanged geometry fingerprints and serialized
-save state, and unchanged camera/culling. It saves and hashes actual node
+save content/schema/version, and unchanged camera/culling. The sole ignored
+save field is the wall-clock `saved_at_unix` envelope timestamp. Every raw
+per-mode save and timestamp is retained before comparison, including failures.
+It saves and hashes actual node
 presentation properties, hero pose, material uniforms and occluder polygons;
 source resources referenced by those properties are hashed too. These are
 registered property snapshots, not a claim to serialize every GPU state.
@@ -99,7 +109,8 @@ registered property snapshots, not a claim to serialize every GPU state.
 while its base Git tree identifies the remaining unchanged tracked content.
 The original generated/native PNGs and copied north override must match their
 recorded hashes. All study source/provenance hashes go into the rendered report.
-The actual held save and visual-property snapshot are saved beside the images.
+The initial held save, all four raw per-mode saves and the visual-property
+snapshot are saved beside the images, with raw and comparable-content hashes.
 
 A/A2 must have zero changed RGBA pixels. A/B and B/C must have visible effect.
 B/C must have zero changed pixels outside the union of the old and new full

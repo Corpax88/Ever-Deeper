@@ -153,10 +153,12 @@ func _open_sides(cell: Vector2i) -> Array[bool]:
 
 func _capture_sequence() -> bool:
 	var original_geometry: int = _geometry_fingerprint()
-	var serialized_state: String = JSON.stringify(state.serialize())
+	var original_document: Dictionary = state.serialize()
+	var serialized_state: String = JSON.stringify(original_document)
+	var comparable_state: String = _comparable_save(original_document)
 	var save_name: String = "moss-compact-held-state.json"
 	if not _write_text(save_name, serialized_state): _reject("Could not save the actual held state"); return false
-	sequence = {"id":"moss-compact-held", "player":str(world.player.position), "topology":topology, "state_file":save_name, "state_sha256":FileAccess.get_sha256(output.path_join(save_name)), "captures":[]}
+	sequence = {"id":"moss-compact-held", "player":str(world.player.position), "topology":topology, "state_file":save_name, "state_sha256":FileAccess.get_sha256(output.path_join(save_name)), "comparable_state_sha256":comparable_state.sha256_text(), "save_comparison_ignored_envelope_fields":["saved_at_unix"], "save_observations":[], "captures":[]}
 	var pictures: Array[Image] = []
 	var reference_view: Array = []
 	var reference_contexts: String = ""
@@ -182,8 +184,17 @@ func _capture_sequence() -> bool:
 		world.queue_redraw()
 		for frame in 4: await process_frame
 		await RenderingServer.frame_post_draw
+		# Preserve every raw save before comparison, including a failing mode.
+		# Only the serializer's wall-clock envelope timestamp is excluded from
+		# equality; schema/version and every gameplay field remain mandatory.
+		var current_document: Dictionary = state.serialize()
+		var current_save: String = JSON.stringify(current_document)
+		var current_comparable: String = _comparable_save(current_document)
+		var mode_save_name: String = "moss-compact-held-" + String(mode.name) + "-state.json"
+		if not _write_text(mode_save_name, current_save): _reject("Could not retain the raw save for " + String(mode.name)); return false
+		sequence.save_observations.append({"mode":mode.name, "filename":mode_save_name, "sha256":current_save.sha256_text(), "saved_at_unix":current_document.get("saved_at_unix"), "comparable_state_sha256":current_comparable.sha256_text()})
 		if _geometry_fingerprint() != original_geometry: _reject("World geometry changed within A/B/C/A2"); return false
-		if JSON.stringify(state.serialize()) != serialized_state: _reject("Saved game state changed within A/B/C/A2"); return false
+		if current_comparable != comparable_state: _reject("Saved game content or schema/version changed within A/B/C/A2"); return false
 		if world.lit_draw_sections.draw_callbacks <= callbacks: _reject("Cached terrain was not repainted"); return false
 		if mode.north:
 			for cell in STRAIGHT_CELLS:
@@ -242,7 +253,7 @@ func _capture_sequence() -> bool:
 			"north_draw_calls":world.study_north_draw_calls, "north_drawn_cells":_cell_names(world.study_north_drawn_cells),
 			"compact_corner_draw_calls":world.study_corner_draw_calls, "compact_corner_drawn_cells":_cell_names(world.study_corner_drawn_cells),
 			"corner_contexts_sha256":contexts.sha256_text(), "visual_properties_sha256":visual_hash,
-			"save_state_sha256":serialized_state.sha256_text(), "geometry_fingerprint":original_geometry,
+			"save_state_sha256":current_save.sha256_text(), "comparable_state_sha256":current_comparable.sha256_text(), "geometry_fingerprint":original_geometry,
 		})
 		pictures.append(picture)
 		if not _save_report(): _reject("Could not write the capture report"); return false
@@ -337,6 +348,11 @@ func _write_text(filename: String, content: String) -> bool:
 	file.store_string(content)
 	file.close()
 	return true
+
+func _comparable_save(document: Dictionary) -> String:
+	var content: Dictionary = document.duplicate(true)
+	content.erase("saved_at_unix")
+	return JSON.stringify(content)
 
 func _geometry_fingerprint() -> int:
 	return hash([world.floor_cells, world.dig_damage, world.current_depth, world.window_start_depth])
