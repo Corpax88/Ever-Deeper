@@ -40,6 +40,33 @@ def verify_package(folder, pin):
     return {'identity_sha256': SHA(identity_bytes), 'source': pin['source'], 'files': verified}
 
 
+def verify_completion(messages, log, label, original_exit_code):
+    section_events = [line for line in messages if line.startswith('EVER_DEEPER_MENU_TOUCH_SECTION_')]
+    assert len(section_events) == 2
+    assert section_events[0].startswith('EVER_DEEPER_MENU_TOUCH_SECTION_BEGIN ')
+    assert json.loads(section_events[0].split(' ', 1)[1]) == {'section': 'pause'}
+    assert section_events[1].startswith('EVER_DEEPER_MENU_TOUCH_SECTION_COMPLETE ')
+    assert json.loads(section_events[1].split(' ', 1)[1]) == {'checks': 9, 'failures': [], 'section': 'pause'}
+    final = [line for line in messages if line.startswith('EVER_DEEPER_OVERHAUL_GAMEPLAY_')]
+    assert final == ['EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=9 failures=[]']
+    assert messages.index(section_events[0]) < messages.index(section_events[1]) < messages.index(final[0])
+    error_pattern = r'SCRIPT ERROR|Parse Error|^ERROR:|Failed to load|INVALID_OPERATION|INVALID_FRAMEBUFFER_OPERATION|ED_GL_BIND_CONFLICT'
+    errors = [line for line in messages if re.search(error_pattern, line)]
+    expected = {
+        'WebGL: INVALID_OPERATION: bindBuffer: element array buffers can not be bound to a different target',
+        'WebGL: INVALID_OPERATION: bufferSubData: no buffer',
+    }
+    if label == 'baseline':
+        assert original_exit_code == 0 and errors == [], 'Baseline error gate failed'
+    else:
+        assert original_exit_code == 1, 'Unexpected candidate exit'
+        assert errors and all(line in expected or line.startswith('ED_GL_BIND_CONFLICT ') for line in errors), 'Unrelated browser console failure'
+        # Byte-bound original runner line 530 joins every pageErrors entry.
+        # Exact reconciliation also rejects unjournalled uncaught page errors.
+        match = re.search(r'(?:^|\n)Error: (.*?)\n    at captureSuite \(file://[^\n]+/tools/capture-web\.mjs:530:36\)\n    at async main \(file://[^\n]+/tools/capture-web\.mjs:675:3\)\n?\Z', log, re.S)
+        assert match and match.group(1) == '\n'.join(errors), 'Final failure is not exactly the expected pageErrors gate'
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--baseline', required=True, type=Path)
@@ -109,6 +136,7 @@ def main():
             sections = [json.loads(line.split('EVER_DEEPER_MENU_TOUCH_SECTION_COMPLETE ', 1)[1]) for line in messages
                         if line.startswith('EVER_DEEPER_MENU_TOUCH_SECTION_COMPLETE ')]
             original_console = '\n'.join(messages)
+            verify_completion(messages, log, label, case['original_exit_code'])
             case.update(conflicts=conflicts, pause_sections=sections,
                         console_journal_sha256=SHA(journal),
                         raw_bind_error='WebGL: INVALID_OPERATION: bindBuffer: element array buffers can not be bound to a different target' in original_console,
