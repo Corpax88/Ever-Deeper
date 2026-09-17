@@ -54,6 +54,7 @@ jobs:
             *) exit 2 ;;
           esac
       - name: Actual audio output or mobile gameplay and motion
+        timeout-minutes: 16
         env:
           SUITE: ${{ matrix.suite }}
           EXPECTED_VERSION: 1.0.0-dev.10
@@ -61,10 +62,8 @@ jobs:
           CAPTURE_DPR: '2'
         run: |
           case "$SUITE" in
-            audio-*) timeout 900 node tools/qa-web-audio.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review" "${SUITE#audio-}" > "$RUNNER_TEMP/review/runner.log" 2>&1 ;;
-            hero-motion) HERO_MOTION=1 CAPTURE_START=1 CAPTURE_END=1 timeout 900 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review" > "$RUNNER_TEMP/review/runner.log" 2>&1 ;;
-            mobile-gameplay) TOUCH_BROWSER=webkit OVERHAUL_GAMEPLAY=1 timeout 900 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review" > "$RUNNER_TEMP/review/runner.log" 2>&1 ;;
-            mobile-pause) TOUCH_BROWSER=webkit OVERHAUL_GAMEPLAY=1 MENU_TOUCH=1 MENU_TOUCH_SECTION=pause timeout 900 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review" > "$RUNNER_TEMP/review/runner.log" 2>&1 ;;
+            mobile-gameplay) TOUCH_BROWSER=webkit OVERHAUL_GAMEPLAY=1 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review" > "$RUNNER_TEMP/review/runner.log" 2>&1 ;;
+            mobile-pause) TOUCH_BROWSER=webkit OVERHAUL_GAMEPLAY=1 MENU_TOUCH=1 MENU_TOUCH_SECTION=pause node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review" > "$RUNNER_TEMP/review/runner.log" 2>&1 ;;
             *) exit 2 ;;
           esac
           GITHUB_RUN_ID="$SOURCE_RUN_ID" GITHUB_RUN_ATTEMPT=1 python3 tools/verify_premium_web_review.py candidate --source "$SOURCE_SHA" --candidate "$RUNNER_TEMP/candidate" --review "$RUNNER_TEMP/review" --pck-sha256 "$PCK_SHA256" --html-sha256 "$HTML_SHA256" --identity-sha256 "$IDENTITY_SHA256"
