@@ -17,6 +17,8 @@ var source_sha := ""
 var pack_source := ""
 var gear := ""
 var direction_name := ""
+var requested_wall := Vector2i(-1, -1)
+var explicit_wall_requested := false
 var main: Node
 var world: Node
 var player: Node
@@ -65,12 +67,21 @@ func _run() -> void:
 		elif arg.begins_with("--pack-source="): pack_source = arg.trim_prefix("--pack-source=")
 		elif arg.begins_with("--gear="): gear = arg.trim_prefix("--gear=")
 		elif arg.begins_with("--direction="): direction_name = arg.trim_prefix("--direction=")
+		elif arg.begins_with("--natural-wall="):
+			explicit_wall_requested = true
+			var coordinates := arg.trim_prefix("--natural-wall=").split(",")
+			if coordinates.size() == 2 and coordinates[0].is_valid_int() and coordinates[1].is_valid_int():
+				requested_wall = Vector2i(int(coordinates[0]), int(coordinates[1]))
 		elif arg == "--all-frames": all_frames = true
 		elif arg.begins_with("--capture-format="): capture_format = arg.trim_prefix("--capture-format=")
 		elif arg.begins_with("--achievement-profile-records="): profile_records_file = arg.trim_prefix("--achievement-profile-records=")
 		elif arg.begins_with("--achievement-profile-sha256="): profile_records_sha = arg.trim_prefix("--achievement-profile-sha256=")
 		elif arg.begins_with("--achievement-provenance-sha256="): profile_provenance_sha = arg.trim_prefix("--achievement-provenance-sha256=")
 	if capture_format == "rgba8": all_frames = true
+	if explicit_wall_requested and (direction_name != "up" or requested_wall.x < 3 or requested_wall.x >= 37 or requested_wall.y < 2 or requested_wall.y >= 21):
+		print("HERO_COVERAGE_USAGE --natural-wall requires an explicit up candidate within the ordinary route search")
+		quit(2)
+		return
 	packed = FileAccess.file_exists("res://project.binary")
 	if capture_format not in ["png", "rgba8"] or not output.is_absolute_path() or gear not in Gear.TOOLS or not DIRECTIONS.has(direction_name) or source_sha.length() != 40 or DisplayServer.get_name() == "headless":
 		print("HERO_COVERAGE_USAGE requires rendered display, absolute --output, --source-sha, approved --gear and --direction")
@@ -334,6 +345,9 @@ func _find_route(direction: Vector2i) -> Dictionary:
 	for y in range(2, 21):
 		for x in range(3, 37):
 			var wall := Vector2i(x, y)
+			# An opt-in candidate still passes every original natural-route rule.
+			# No fallback: an obstructed or changed requested route fails setup.
+			if explicit_wall_requested and wall != requested_wall: continue
 			if world._is_floor(wall) or not world._cell_diggable(wall): continue
 			var contact: Vector2 = world._cell_center(wall - direction)
 			var start: Vector2 = world._cell_center(wall - direction * 4)
@@ -593,6 +607,8 @@ func _finish() -> void:
 	var fixture: Dictionary = {}
 	if not route.is_empty():
 		fixture = {"seed": SEED, "depth": 1, "wall": [route.wall.x, route.wall.y], "start": [route.start.x, route.start.y], "direction": direction_name}
+	fixture["selection"] = "explicit_natural_wall" if explicit_wall_requested else "first_valid_natural_wall"
+	fixture["requested_wall"] = [requested_wall.x, requested_wall.y] if explicit_wall_requested else []
 	_check(not samples.is_empty() and framing_failures.is_empty(), "Hero/tool and target retain declared viewport/HUD clearance in every observed frame")
 	var report := {"schema": 1, "passed": failures.is_empty(), "checks": checks, "failures": failures,
 		"gear": gear, "direction": direction_name, "source_sha": source_sha,

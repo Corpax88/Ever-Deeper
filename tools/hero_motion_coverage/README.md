@@ -5,7 +5,8 @@ historical evidence, the production capture driver, browser harness, or approved
 v28 assets. Corrected exact-DEV11 Worn/right and Deepcore/right pilots pass their
 mechanical, framing and lossless-storage checks and have independent bounded
 critical-frame acceptance. The first Worn/down matrix attempt stopped on the
-framing gate; left/up and the broader combinations remain unrendered. Mechanical
+framing gate. Its natural startup-settle retry and Worn/left pass; Worn/up has a
+separate preserved minimap framing failure. Broader combinations remain unrendered. Mechanical
 passes require separate inspection of the actual pixels before accepting motion.
 Godot 4.7.2 `--headless --check-only` passes against the exact downloaded DEV11
 PCK from source `8f5680defb9083bbe1e044d39a10612f2186e7f3` in an empty project.
@@ -201,8 +202,40 @@ motion still undergoes the unchanged framing gate.
 
 The exact-PCK headless autoload probe confirms matching loaded bytes/records;
 wrong-package and corrupted-profile inputs are rejected. This is load-identity
-validation, not rendered motion acceptance. Next graphical cases are Worn/left
-and Worn/up only, after the shared renderer owner grants the slot.
+validation, not rendered motion acceptance.
+
+At `a00903aee2196600dd1f5314b0e36b4001082226`, actual Worn/left and up captures
+both verified all 16 loaded records and the exact profile hash before main.
+Each archived all 195 frames and 11 native critical PNGs. Ordinary startup
+settling took 0.856 and 0.766 wall seconds; no new feedback was suppressed.
+Left passes 31 checks with 76.210 px minimum clearance. All 11 stage strips
+(33 native-pixel poses) and impact/cancellation full PNGs were inspected: left
+contact and recovery remain visible. Immediate opposite-facing swaps remain
+an existing motion limitation, not a newly accepted transition.
+
+Up passes 30 of 31 checks but fails the full-reserve framing gate at samples
+108–123. The natural wall is (22,9), start (1440,864). After moving down to
+cancel an upward windup, ordinary camera easing brings the original target's
+upper-right strip beneath the minimap border/translucent panel during walk-stop.
+The inspected actual sample120 PNG/crop has -9.569 px minimum clearance.
+Hero/tool and the wall's lower contact edge remain visible; impact155 itself
+has 77.231 px clearance. The failure is retained and is not waived.
+
+An optional `--up-wall 13 15` requests a specific natural candidate only for
+up-facing cases. The plan and native report record the requested and actual
+cell. It still must pass every original corridor, depth, hazard, target and
+resource check; a rejected requested cell fails setup instead of falling back.
+The normal camera, input choreography and measured 8px framing gate are unchanged.
+All other directions retain their ordinary route selection.
+
+Numerical diagnosis against the exact PCK tested the complete normal
+approach/reverse/return trajectory. Walls (22,9) and (19,14) reproduce the
+minimap failure; (13,15), start (864,1248), contact (864,1056), passes with
+40.451 px minimum clearance. Headless observations produce 196 samples versus
+the rendered 195: event/failure indices shift by one, while the original worst
+geometry matches exactly. These calculations establish a candidate, not
+rendered acceptance. The next graphical retry is Worn/up only after a saved
+source checkpoint and renderer grant; broader capture remains gated.
 
 ## Run through the existing renderer
 

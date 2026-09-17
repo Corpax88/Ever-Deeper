@@ -115,6 +115,14 @@ def validate_report(case: dict, pack_sha: str) -> dict:
             errors.append("Normally earned achievement profile load identity differs")
     elif loaded_profile.get("used"):
         errors.append("Unexpected achievement starting profile")
+    expected_wall = case.get("natural_wall")
+    selected = report.get("fixture", {})
+    if expected_wall:
+        if (selected.get("wall") != expected_wall or selected.get("requested_wall") != expected_wall
+                or selected.get("selection") != "explicit_natural_wall"):
+            errors.append("Explicit natural up-wall identity differs")
+    elif selected.get("requested_wall"):
+        errors.append("Unexpected natural wall override")
     if case.get("all_frames") and not report.get("all_observed_frames_captured"):
         errors.append("Full ordered rendered frames were requested but are incomplete")
     capture_format = case.get("capture_format", "png")
@@ -171,6 +179,8 @@ def main() -> int:
     parser.add_argument("--source-sha", help="Source corresponding to the package; defaults to this checkout's HEAD")
     parser.add_argument("--achievement-profile", type=Path,
                         help="Optional provenance JSON for an actual naturally settled DEV achievement save; never reuses RunState")
+    parser.add_argument("--up-wall", type=int, nargs=2, metavar=("X", "Y"),
+                        help="Optional explicit natural up-facing wall; retains all corridor, target and measured framing checks")
     parser.add_argument("--plan-only", action="store_true", help="Write receipts and commands without starting Godot/Xvfb")
     parser.add_argument("--all-frames", action="store_true", help="Save every observed rendered frame for a complete lossless motion archive")
     parser.add_argument("--archive-lossless", action="store_true", help="Implies --all-frames; encode and verify each case before starting the next")
@@ -186,6 +196,8 @@ def main() -> int:
     if (not set(selected_gears).issubset(gears) or not set(selected_directions).issubset(directions)
             or len(set(selected_gears)) != len(selected_gears) or len(set(selected_directions)) != len(selected_directions)):
         parser.error("Choose distinct approved gear/direction keys")
+    if args.up_wall and ("up" not in selected_directions or not 3 <= args.up_wall[0] < 37 or not 2 <= args.up_wall[1] < 21):
+        parser.error("--up-wall requires up in the selected directions and coordinates inside the ordinary route search")
     if not args.plan_only and (not args.godot or not args.xvfb):
         parser.error("Native execution requires --godot and --xvfb; use --plan-only to prepare without a renderer")
     source_sha = git(project, "rev-parse", f"{args.source_sha or 'HEAD'}^{{commit}}")
@@ -234,11 +246,15 @@ def main() -> int:
                 command += [f"--achievement-profile-records={profile['profile_file']}",
                             f"--achievement-profile-sha256={profile['profile_sha256']}",
                             f"--achievement-provenance-sha256={profile['provenance_sha256']}"]
+            if args.up_wall and direction == "up":
+                command += [f"--natural-wall={args.up_wall[0]},{args.up_wall[1]}"]
             case = {"gear": gear, "direction": direction, "source_sha": source_sha,
                     "output": str(folder), "command": command, "all_frames": args.all_frames,
                     "capture_format": args.capture_format}
             if profile:
                 case["achievement_profile"] = profile
+            if args.up_wall and direction == "up":
+                case["natural_wall"] = args.up_wall
             if args.archive_lossless:
                 case["archive_command"] = [sys.executable, str(archiver), "--input", str(folder),
                                            "--output", str(folder / "lossless"), "--require-complete", "--threads", "2"]
@@ -251,6 +267,7 @@ def main() -> int:
                "fixture_sha256": digest(fixture), "runner_sha256": digest(Path(__file__)),
                "capture_format": args.capture_format,
                "achievement_starting_profile": profile,
+               "requested_natural_walls": {"up": args.up_wall} if args.up_wall else {},
                "archive_lossless_per_case": args.archive_lossless,
                "archiver_sha256": digest(archiver) if args.archive_lossless else None,
                "runtime_sha256": runtime_hashes, "cases": cases,
