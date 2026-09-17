@@ -1,5 +1,7 @@
 # DEV12 immutable playtest publication
 
+Published successfully in [run 35206009701](https://github.com/Corpax88/Ever-Deeper/actions/runs/35206009701), attempt 1, from publisher source `13cf7244df555bdaa2d7e5b759da2643e6900d1f`. [Play DEV12](https://corpax88.github.io/Ever-Deeper/dev/?build=580a2e0). The actual `publication-receipt.json` verifies all nine DEV files and nine unchanged LIVE files. Root independently re-bound its bytes, API jobs and artifact identities in 35 checks; see `publication-binding-dev12.json`.
+
 Source580a2e02eca1e000f5d5f58bb61ac09fd4b2a194, QA35203069938, version1.0.0-dev.12.
 The Moss mineable north edge now has the accepted upright perspective. Original full texture regions, horizontal phase/reflection, world bounds and gameplay remain intact.
 

@@ -1,0 +1,184 @@
+{
+  "schema": 1,
+  "kind": "root_dev12_publication_receipt_binding",
+  "passed": true,
+  "verifiedAtUtc": "2026-09-17T09:52:42.916086+00:00",
+  "sourceCommit": "580a2e02eca1e000f5d5f58bb61ac09fd4b2a194",
+  "qaRunId": 35203069938,
+  "publicationSourceCommit": "13cf7244df555bdaa2d7e5b759da2643e6900d1f",
+  "publicationRunId": 35206009701,
+  "publishedUrl": "https://corpax88.github.io/Ever-Deeper/dev/?build=580a2e0",
+  "displayedDevVersion": "1.0.0-dev.12",
+  "liveVersion": "0.46.9",
+  "receiptBytes": 4741,
+  "receiptSha256": "107d1cc1655d3304b6b5e954572e71972a2372c25b485db9a72b964625be078d",
+  "checks": [
+    {
+      "name": "Successful DEV-only public verification of 9 DEV and 9 LIVE files",
+      "passed": true
+    },
+    {
+      "name": "Exact source, QA, publisher and publication run",
+      "passed": true
+    },
+    {
+      "name": "DEV12 and unchanged LIVE 0.46.9",
+      "passed": true
+    },
+    {
+      "name": "No final release or physical-device claim",
+      "passed": true
+    },
+    {
+      "name": "Exact verified DEV11 baseline receipt",
+      "passed": true
+    },
+    {
+      "name": "Publisher review bytes match receipt; staged JSON content is identical",
+      "passed": true
+    },
+    {
+      "name": "Staging and rollback file maps match actual receipts",
+      "passed": true
+    },
+    {
+      "name": "staging immutable source and QA binding",
+      "passed": true
+    },
+    {
+      "name": "review immutable source and QA binding",
+      "passed": true
+    },
+    {
+      "name": "pin immutable source and QA binding",
+      "passed": true
+    },
+    {
+      "name": "Candidate identity source/attempt and DEV file map",
+      "passed": true
+    },
+    {
+      "name": "Actual candidate bytes: index.html",
+      "passed": true
+    },
+    {
+      "name": "Actual candidate bytes: index.pck",
+      "passed": true
+    },
+    {
+      "name": "Actual candidate bytes: index.apple-touch-icon.png",
+      "passed": true
+    },
+    {
+      "name": "Actual candidate bytes: index.js",
+      "passed": true
+    },
+    {
+      "name": "Actual candidate bytes: index.png",
+      "passed": true
+    },
+    {
+      "name": "Actual candidate bytes: index.audio.worklet.js",
+      "passed": true
+    },
+    {
+      "name": "Actual candidate bytes: index.wasm",
+      "passed": true
+    },
+    {
+      "name": "Actual candidate bytes: index.icon.png",
+      "passed": true
+    },
+    {
+      "name": "Actual candidate bytes: index.audio.position.worklet.js",
+      "passed": true
+    },
+    {
+      "name": "All LIVE receipt entries exactly equal actual prior baseline",
+      "passed": true
+    },
+    {
+      "name": "QA actual completed run and attempt",
+      "passed": true
+    },
+    {
+      "name": "QA expected unique jobs all pass",
+      "passed": true
+    },
+    {
+      "name": "publication actual completed run and attempt",
+      "passed": true
+    },
+    {
+      "name": "publication expected unique jobs all pass",
+      "passed": true
+    },
+    {
+      "name": "Publication job steps all pass: package",
+      "passed": true
+    },
+    {
+      "name": "Publication job steps all pass: deploy",
+      "passed": true
+    },
+    {
+      "name": "Publication job steps all pass: verify",
+      "passed": true
+    },
+    {
+      "name": "Staged aggregate equals independently rederived package aggregate",
+      "passed": true
+    },
+    {
+      "name": "candidate actual ZIP size/digest equals pin and receipt",
+      "passed": true
+    },
+    {
+      "name": "complete actual ZIP size/digest equals pin and receipt",
+      "passed": true
+    },
+    {
+      "name": "Publication artifact verified bytes/CRC 10489723938",
+      "passed": true
+    },
+    {
+      "name": "Publication artifact verified bytes/CRC 10489648081",
+      "passed": true
+    },
+    {
+      "name": "Rollback artifact metadata bound to publication",
+      "passed": true
+    },
+    {
+      "name": "Independent north reviewer evidence remains exactly pinned",
+      "passed": true
+    }
+  ],
+  "rollbackArtifact": {
+    "archive_download_url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10490017408/zip",
+    "created_at": "2026-09-17T09:36:57Z",
+    "digest": "sha256:54e4da698205e1ceb0754b9e87a18aa8c3514f5edbf22bce23171a74fd612ab2",
+    "expired": false,
+    "expires_at": "2026-10-17T09:36:41Z",
+    "id": 10490017408,
+    "name": "premium-dev-rollback-35206009701-1",
+    "node_id": "MDg6QXJ0aWZhY3QxMDQ5MDAxNzQwOA==",
+    "size_in_bytes": 465309670,
+    "updated_at": "2026-09-17T09:36:57Z",
+    "url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10490017408",
+    "workflow_run": {
+      "head_branch": "main",
+      "head_repository_id": 1329194199,
+      "head_sha": "13cf7244df555bdaa2d7e5b759da2643e6900d1f",
+      "id": 35206009701,
+      "repository_id": 1329194199
+    }
+  },
+  "limits": [
+    "Root authored the integration and publisher; independent visual acceptance is separately pinned.",
+    "Uses the successful public HTTP verification job receipt; public game files were not downloaded again.",
+    "The large rollback archive was not downloaded or rehashed locally; its API metadata and verified staging map are retained.",
+    "This does not certify complete premium polish, native animation, stable browser FPS or a physical iPhone.",
+    "The first local verifier incorrectly compared reserialized staged review bytes with the source review digest. Publisher source hashes exactly match the receipt and staged JSON contents match; the corrected check preserves this distinction."
+  ]
+}
