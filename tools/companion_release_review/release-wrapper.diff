@@ -1,0 +1,138 @@
+--- 01409145/capture_companion.gd
++++ capture_release.gd
+@@ -1,51 +1,37 @@
+ extends "hero_capture_base.gd"
+-## The runner stages this subclass beside the hash-pinned 72f11bc hero fixture.
+-## Only a before-add_child hook and an extra report field are added to that base.
+-const EXPECTED_PACK := "9dfcf913c867e36e6a16f4f5123fd5cce7654cfb435a753f9eb7bca12f574bd9"
+-var companion_variant := ""
+-var overlay_path := ""
+-var expected_overlay_sha := ""
++## Read-only telemetry around the unchanged approved 195-frame choreography.
++## Main, world, companion and helper are loaded normally from the actual PCK.
++var expected_pack := ""
+ var binding: Dictionary = {}
+ var health_properties: Dictionary = {}
+ 
+ 
+ func _initialize() -> void:
+ 	for arg in OS.get_cmdline_user_args():
+-		if arg.begins_with("--companion-variant="): companion_variant = arg.trim_prefix("--companion-variant=")
+-		elif arg.begins_with("--companion-overlay="): overlay_path = arg.trim_prefix("--companion-overlay=")
+-		elif arg.begins_with("--companion-overlay-sha256="): expected_overlay_sha = arg.trim_prefix("--companion-overlay-sha256=")
+-	if companion_variant not in ["baseline", "candidate"] or "--trace-companion" in OS.get_cmdline_user_args():
+-		push_error("Companion capture requires baseline/candidate without a trace replacement")
++		if arg.begins_with("--expected-pack-sha256="): expected_pack = arg.trim_prefix("--expected-pack-sha256=")
++	if expected_pack.length() != 64:
++		push_error("Release capture requires the immutable package SHA256")
+ 		quit(2)
+ 		return
+-	if companion_variant == "candidate":
+-		if not overlay_path.is_absolute_path() or expected_overlay_sha.length() != 64 or FileAccess.get_sha256(overlay_path) != expected_overlay_sha:
+-			push_error("Candidate overlay identity differs")
+-			quit(2)
+-			return
+-		if not ProjectSettings.load_resource_pack(overlay_path, false):
+-			push_error("Candidate tools-only overlay could not be mounted")
+-			quit(2)
+-			return
+ 	super._initialize()
+ 
+ 
++func _compiled_identity(path: String) -> Dictionary:
++	var remap := ConfigFile.new()
++	var status := remap.load(path + ".remap")
++	var target: String = String(remap.get_value("remap", "path", "")) if status == OK else ""
++	return {"logical_path": path, "remap_status": status, "compiled_path": target,
++		"remap_sha256": FileAccess.get_sha256(path + ".remap"),
++		"compiled_sha256": FileAccess.get_sha256(target) if not target.is_empty() else ""}
++
++
+ func _companion_prepare_main(node: Node) -> void:
+-	binding = {"variant": companion_variant, "before_add_child": not node.is_inside_tree(),
++	binding = {"before_add_child": not node.is_inside_tree(), "overlay_loaded": false,
+ 		"original_main_script": node.get_script().resource_path,
+-		"overlay_loaded": companion_variant == "candidate",
+-		"overlay_sha256": FileAccess.get_sha256(overlay_path) if companion_variant == "candidate" else ""}
+-	if companion_variant == "candidate":
+-		var script: Script = load("res://tools/companion_spacing_study/pilot_main.gd")
+-		if script == null or not script.can_instantiate():
+-			_check(false, "Candidate main subclass can instantiate")
+-			return
+-		node.set_script(script)
+-	binding["installed_main_script"] = node.get_script().resource_path
+-	for label in ["player", "runstate"]: health_properties[label] = []
+-	# The player is created by main._ready, so its real properties are inspected
+-	# lazily in the first post-draw snapshot, never synthesized as zero HP.
+-
++		"installed_main_script": node.get_script().resource_path,
++		"main": _compiled_identity("res://scripts/main.gd"),
++		"companion": _compiled_identity("res://scripts/companion/mole_companion.gd"),
++		"helper": _compiled_identity("res://scripts/companion/follow_separation.gd")}
+ 
+ func _health_values(owner: Object) -> Dictionary:
+ 	var values: Dictionary = {}
+@@ -102,6 +88,10 @@
+ 	var sprite: Sprite2D = mole.sprite
+ 	var rect: Rect2 = sprite.get_global_transform_with_canvas() * sprite.get_rect()
+ 	var result := {"present": true, "script": mole.get_script().resource_path,
++		"helper_script": mole.separation.get_script().resource_path,
++		"actual_owner_bound": mole.get_script() == load("res://scripts/companion/mole_companion.gd"),
++		"actual_helper_bound": mole.separation.get_script() == load("res://scripts/companion/follow_separation.gd"),
++		"wrapper_methods": mole.has_method("_update_companion_actions") and mole.has_method("_move_task"),
+ 		"mode": String(mole.mode), "action": String(mole.action), "moving": bool(mole.moving),
+ 		"position": _xy(mole.global_position), "local_position": _xy(mole.position),
+ 		"hero_position": _xy(player.global_position), "hero_distance": mole.global_position.distance_to(player.global_position),
+@@ -117,7 +107,7 @@
+ 		"animation_clock": mole.animation_clock, "automatic_task": mole.automatic_task,
+ 		"collected_total": mole.collected_total, "dug_total": mole.dug_total,
+ 		"terrain_blocked_at_center": mole._blocked(mole.global_position)}
+-	if companion_variant == "candidate":
++	if true:
+ 		var steering: RefCounted = mole.separation
+ 		result["separation"] = {"choice": steering.choice, "trapped": steering.trapped,
+ 			"attempts": steering.attempts, "avoidance_active": steering.avoidance_active,
+@@ -126,27 +116,29 @@
+ 	return result
+ 
+ 
++
+ func _companion_report() -> Dictionary:
+-	return {"schema": 1, "binding": binding, "variant": companion_variant,
+-		"expected_pack_sha256": EXPECTED_PACK, "base_fixture_commit": "72f11bcd33ff129f8f0f694106bef509b68fd0f3",
++	return {"schema": 2, "binding": binding, "variant": "actual_production",
++		"expected_pack_sha256": expected_pack, "base_fixture_commit": "72f11bcd33ff129f8f0f694106bef509b68fd0f3",
+ 		"post_draw_samples": samples.size(), "health_properties_observed": health_properties,
+ 		"logical_to_native_pixels": {"scale": [1.1, 1.1], "offset": [0, 0]},
+-		"telemetry_source": "Read live companion and hero immediately after the inherited frame_post_draw wait.",
+-		"original_depth_order_preserved": true, "companion_repositioned_by_fixture": false,
+-		"manual_process_steps": false, "visual_acceptance": false,
+-		"limits": "Full sprite-cell rectangles are conservative geometry, not opaque-pixel occlusion. Inspect original frames and the independent A/B mechanics report."}
++		"companion_repositioned_by_fixture": false, "manual_process_steps": false,
++		"runtime_replacements": [], "visual_acceptance": false}
+ 
+ 
+ func _finish() -> void:
+-	_check(FileAccess.get_sha256(pack_source) == EXPECTED_PACK, "Exact DEV12 PCK used for companion comparison")
+-	var expected_main := "res://tools/companion_spacing_study/pilot_main.gd" if companion_variant == "candidate" else "res://scripts/main.gd"
+-	_check(bool(binding.get("before_add_child", false)) and binding.get("original_main_script") == "res://scripts/main.gd" and binding.get("installed_main_script") == expected_main,
+-		"Declared main owner installed before entering the tree")
+-	var expected_mole := "res://tools/companion_spacing_study/pilot_mole.gd" if companion_variant == "candidate" else "res://scripts/companion/mole_companion.gd"
++	_check(FileAccess.get_sha256(pack_source) == expected_pack, "Exact immutable DEV13 package")
++	_check(bool(binding.get("before_add_child", false)) and binding.get("original_main_script") == "res://scripts/main.gd" and binding.get("installed_main_script") == "res://scripts/main.gd",
++		"Actual main enters tree without substitution")
++	for owner in ["main", "companion", "helper"]:
++		var row: Dictionary = binding.get(owner, {})
++		_check(row.get("remap_status", -1) == OK and String(row.get("compiled_path", "")).ends_with(".gdc") and String(row.get("compiled_sha256", "")).length() == 64,
++			"Compiled package identity bound: " + owner)
+ 	var telemetry_ok := not samples.is_empty()
+ 	for sample in samples:
+-		telemetry_ok = telemetry_ok and sample.companion.get("present", false) and sample.companion.get("script") == expected_mole
+-	_check(telemetry_ok, "Every post-draw sample records the actual declared companion owner")
++		var mole: Dictionary = sample.companion
++		telemetry_ok = telemetry_ok and mole.get("present", false) and mole.get("script") == "res://scripts/companion/mole_companion.gd" and mole.get("helper_script") == "res://scripts/companion/follow_separation.gd" and mole.get("actual_owner_bound", false) and mole.get("actual_helper_bound", false) and mole.get("wrapper_methods", false)
++	_check(telemetry_ok, "Every sample observes the actual production owner and helper")
+ 	_check(gear == "worn" and direction_name in ["right", "up"] and samples.size() == 195,
+-		"Bounded Worn comparison retains all 195 rendered motion samples")
++		"All 195 approved input samples retained")
+ 	super._finish()
