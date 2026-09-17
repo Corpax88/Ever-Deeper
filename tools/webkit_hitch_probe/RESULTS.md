@@ -129,12 +129,23 @@ agrees with the zero-overlap result. It is a separate closure addendum because
 the original evidence archive was already sealed.
 
 The complete archive `Ever-Deeper-DEV11-WebKit-hitch-attribution-20260917.tar`
-contains45 verified members,494,305,280 bytes, SHA256
+contains 45 verified members, 494,305,280 bytes, SHA256
 `00cfddb343a1f2f6aedc46dce1102570f61e69ef6b9a80859ea88c40c4783574`.
-Both original candidate ZIPs, original success/failure artifacts, all13 original
+Both original candidate ZIPs, original success/failure artifacts, all 13 original
 PNGs inside them, raw clocks/samples and derived results are included. Git-pinned
-tested tools are not duplicated. The original and four independently verified
-125/125/125/119.305MB reconstruction parts remain intact. Initial whole-file and
-part01 client uploads timed out at60 seconds without a returned large-file
-receipt; root owns subsequent storage work. The chart, numerical review,
+tested tools are not duplicated. The original remains intact. Four independently verified
+125/125/125/119.305 MB reconstruction parts were prepared during recovery. Initial
+whole-file and part01 client uploads timed out at 60 seconds without a returned
+large-file receipt; root completed storage using the existing helper. The chart, numerical review,
 independent review and reconstruction manifest already have durable receipts.
+
+Final closure: root's existing helper successfully saved the full exact archive
+as `libfile_537aad1bc2748191afffd3745555a5af`, version 0,
+`file_00000000e01c82309d0cf65d0d575652`. No parts were uploaded successfully.
+After a fresh per-part and concatenated SHA verification against the retained
+original, only the four regenerable part copies were removed. The reconstruction
+draft is marked superseded; all failed upload receipts and the full archive stay.
+The independent review is retained as a small closure addendum.
+
+[Next bounded probe proposal](NEXT_PROBE.md) is source review only. It contains
+no implementation or new run request.
