@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-17",
+  "reviewer": "performance_critic independent agent",
+  "authored_feedback_implementation": false,
+  "decision": "approve_reviewed_feedback_scope_for_dev11",
+  "summary": "No feedback release blocker found in the eight original-resolution captures and their real-clock motion, expiry and GUI activation evidence. The restrained text-only pickup stack and achievement PNG/title remain readable and separated from the hero and visible controls.",
+  "source_revision": "8f5680defb9083bbe1e044d39a10612f2186e7f3",
+  "pack_sha256": "5b77b3a219011cb676895e41830c8dab32bec2346db93102c7894a3c084414e9",
+  "evidence_directory": "/workspace/scratch/d5437d917805/evidence/dev11-ci/artifacts/premium-web-review-commerce-residency-8f5680defb9083bbe1e044d39a10612f2186e7f3/feedback",
+  "report_sha256": "59abb1602719223291c6eb2712d0271460fd4a1b6749cf95a741474d830d4a5c",
+  "images": [
+    {
+      "file": "01_simultaneous.png",
+      "sha256": "2f84c6e6db6459602ed604f18cf7f5407440389c4477534d6d79bf9fcd1da701",
+      "size": [
+        1696,
+        780
+      ],
+      "inspected_original_resolution": true,
+      "finding": "Three distinct readable pickup rows sit above/right of the hero. Rune Ready is below/left with open space around it; no visible HUD or DEV-toggle contact."
+    },
+    {
+      "file": "02_zoomed.png",
+      "sha256": "a9c80e0827e6e558ba2d7f26d42a958184bf8fcc26e6ac31b12c51dc30c88ea8",
+      "size": [
+        1696,
+        780
+      ],
+      "inspected_original_resolution": true,
+      "finding": "At zoom1.35 the larger pickup stack remains clear of the hero and achievement. The bare icon/title remains legible without a new panel."
+    },
+    {
+      "file": "03_left_edge.png",
+      "sha256": "56237ac02499b0c0e501de31352b2e6f5c2f7f696d6ce72461959f495436b5a5",
+      "size": [
+        1688,
+        780
+      ],
+      "inspected_original_resolution": true,
+      "finding": "The full icon/title remains inside the left safe margin. Pickups occupy the clear area right of the hero and below the top HUD; DEV TOOLS remains unobscured."
+    },
+    {
+      "file": "04_right_edge.png",
+      "sha256": "3bb284c0c592ef339bb8c8c5907d4cc8d21be6799cab99afd819d5ca432294b5",
+      "size": [
+        1688,
+        780
+      ],
+      "inspected_original_resolution": true,
+      "finding": "Pickups move left of the right-edge hero; achievement stays farther left/below. All three amounts, the full title and the mine/context/bag controls remain visible."
+    },
+    {
+      "file": "05_lower_edge.png",
+      "sha256": "d58764f14ae5ac3dc8ccc32e4f4a7c1ad56b78012ec99375e54afc7490dfeb29",
+      "size": [
+        1696,
+        780
+      ],
+      "inspected_original_resolution": true,
+      "finding": "The pickup stack moves above the low hero and the achievement sits left of the action area. Feedback does not cover the hero, HOME, bag or MINE controls."
+    },
+    {
+      "file": "06_pickups_expired.png",
+      "sha256": "f79fcea1833d1013624f122c1771286a310574810d98074df2b79ab761d7273b",
+      "size": [
+        1696,
+        780
+      ],
+      "inspected_original_resolution": true,
+      "finding": "All pickup text has gone; Rune Ready remains at the same visible location as the camera-moved capture, with no stale label residue."
+    },
+    {
+      "file": "07_camera_moved.png",
+      "sha256": "d550181e4b5da82f172af5d09d2661c3328d8d855c4f15705983c81e22ca6221",
+      "size": [
+        1696,
+        780
+      ],
+      "inspected_original_resolution": true,
+      "finding": "Concurrent labels and achievement remain separated after camera movement. The hero, HUD and DEV toggle stay clear."
+    },
+    {
+      "file": "08_pickups_without_achievement.png",
+      "sha256": "df488d9bc91480489af4af9d2b1873e9b38f638e81b94a77e48d1415065b9baf",
+      "size": [
+        1696,
+        780
+      ],
+      "inspected_original_resolution": true,
+      "finding": "The three pickup rows remain coherent, legible and clear of the hero/HUD when no achievement is active."
+    }
+  ],
+  "motion_and_lifecycle": {
+    "rendered_samples_reviewed": 20,
+    "sample_span_msec": 750,
+    "three_pickups_present_every_sample": true,
+    "achievement_pickup_contacts": 0,
+    "hero_contact_samples": 0,
+    "recorded_achievement_placement_reflows": 0,
+    "recorded_pickup_placement_reflows": 0,
+    "maximum_observed_toast_step_logical_pixels": 10.923828125,
+    "achievement_shift_last_motion_to_expired_capture_logical_pixels": 0.0054,
+    "moving_hud_hero_safe_bounds_check_passed": true,
+    "pickup_expiry_stops_processing": true,
+    "achievement_expiry_hides_activation_target": true,
+    "activation_ids": [
+      "rune_ready"
+    ],
+    "pointer_activation_exactly_once": true,
+    "activation_dismisses_toast_and_opens_achievements": true,
+    "manual_feedback_ticks": false,
+    "mechanical_checks_passed": 346,
+    "mechanical_check_count": 346
+  },
+  "source_findings": [
+    "Pickup placement reserves the pulse/rise envelope, retains its offset while clear and excludes visible hero/HUD/DEV controls. Pickup-only placement follows the same owner.",
+    "Achievement placement retains its selected offset after pickup expiry and resets that offset for the next notification/current anchor. The icon/title, existing clock phases and at-least96x96 activation target remain.",
+    "Feedback placement does not change pickup quantities or lifetime owners; the inspected merged values are Waystone5, Memory Silk3 and Deep Alloy3."
+  ],
+  "source_sha256": {
+    "scripts/ui/feedback_placement.gd": "1073b9ee9fc63278c7e80671774e86c6f5979ada810eda1078feb25344e73cc3",
+    "scripts/ui/resource_pickup_burst.gd": "435af2c2ee8f6f87cc61dc245a223cff12660fca73067eb932fdef3cc8c686d5",
+    "scripts/ui/achievement_toast.gd": "3df706c9dd59acc85dfe2b6ca8cbc80a2fdba3733931a0c22e246de63e444479",
+    "scripts/main.gd": "82410858baa28fe034fec345eac3e52d885d96d778d8918a2c603e81fc5d9cb0",
+    "scenes/player/player.tscn": "8014c7ef271d5b659b2c71ac25717f0cd696a9fddb5853b77ca781f35f7119b6",
+    "tools/review_feedback_overlap.gd": "f6d5ccbb0e345b48d5b048123d4e54c430bbc398a6e4291c528058f36511ec50"
+  },
+  "blockers": [],
+  "scope_limits": [
+    "Approval covers this exported DEV11 feedback presentation: three pickup kinds, Rune Ready, zoom0.8/1.0/1.15/1.35, edge placement, one sampled camera move, expiry and GUI activation. It is not whole-game visual approval.",
+    "The harness freezes gameplay beneath real feedback clocks, injects resource/achievement events and sets root logical content size to each1696x780 or1688x780 fixture. It uses collision-free interior positions; this is not an uninterrupted mining session or an exact production1280x720 logical-camera comparison.",
+    "Tapping evidence is an injected mouse press/release through the actual GUI input path, not a physical iPhone touch test.",
+    "Camera drag remains enabled. The report camera-relative reflow metric uses camera-node global position, so it is a proxy rather than exact screen-center-relative displacement. Judgment here uses the rendered toast rectangles, retained-placement records and inspected endpoint images.",
+    "This review did not play a motion video or evaluate every intervening animation pose, achievement title, resource combination or tool. Overall world joins, FPS, physical-device evidence and all-tool coverage remain open. No numeric overall quality rating is assigned."
+  ],
+  "renderer_started_by_reviewer": false,
+  "production_source_changed_by_reviewer": false,
+  "fps_claim": false,
+  "physical_iphone_claim": false,
+  "whole_game_approval": false
+}

@@ -11,10 +11,10 @@ import zipfile
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 REPOSITORY = "Corpax88/Ever-Deeper"
-SOURCE = "23076019b53819c6c7f213b7e55d24a2f6194f83"
-BRANCH = "codex/dev10-polish-20260917"
+SOURCE = "8f5680defb9083bbe1e044d39a10612f2186e7f3"
+BRANCH = "codex/dev11-feedback-20260917"
 WORKFLOW = ".github/workflows/premium-web-review.yml"
-RUN = 35181119505
+RUN = 35186932201
 ATTEMPT = 1
 WEB_FILES = frozenset((
     "index.html", "index.js", "index.pck", "index.wasm", "index.png",
@@ -23,8 +23,9 @@ WEB_FILES = frozenset((
 ))
 SECTIONS = ("pause", "wardrobe", "light", "lists", "starforge", "workshops")
 BROWSER_SUITES = ("visual-forge", "visual-workshops", "gameplay", *("touch-" + s for s in SECTIONS))
-UNITS = {"build", "commerce-residency", *BROWSER_SUITES}
-JOBS = {"build", "commerce-residency", "Complete premium review", *("browser (" + s + ")" for s in BROWSER_SUITES)}
+MAC_SUITES = ("gameplay", "touch-pause")
+UNITS = {"build", "commerce-residency", *BROWSER_SUITES, *("mac-" + s for s in MAC_SUITES)}
+JOBS = {"build", "commerce-residency", "Complete premium review", *("browser (" + s + ")" for s in BROWSER_SUITES), *("mobile-webkit (" + s + ")" for s in MAC_SUITES)}
 
 
 def require(condition, message):
@@ -61,8 +62,8 @@ def valid_files(files, names):
 def pinned():
     data = read_json(HERE / "package.json")
     require(data["schema"] == 1 and data["source_commit"] == SOURCE and data["qa_run_id"] == RUN and data["qa_run_attempt"] == ATTEMPT, "Unexpected reviewed source/run")
-    require(data["candidate"]["id"] == 10479804355 and data["candidate"]["zip"]["sha256"] == "026fae146631d599c933d09b635574e8b1c7bb7ed3501c0dbc898ff79be45a3d", "Candidate artifact pin changed")
-    require(data["complete"]["id"] == 10480503718 and data["complete"]["zip"]["sha256"] == "0a60365fdb1f6ebd7df86296a048169b6ef97181296da2c313616ebcced331a0", "Complete artifact pin changed")
+    require(data["candidate"]["id"] == 10481858878 and data["candidate"]["zip"]["sha256"] == "82b9dc45b75c9f44a4a6b1afdf10e6ca3ca4207c750d1ada2643fe84d79b7858", "Candidate artifact pin changed")
+    require(data["complete"]["id"] == 10481719990 and data["complete"]["zip"]["sha256"] == "187e920dc91e90e9913fff37ba4c7770e82db2d85a1ecebd081823d3fe0d7020", "Complete artifact pin changed")
     require(data["candidate"]["name"] == "premium-web-candidate-" + SOURCE and data["complete"]["name"] == "premium-web-review-complete-" + SOURCE, "Artifact names changed")
     valid_files(data["candidate"]["members"], WEB_FILES | {"manifest.json", "artifact-identity.json"})
     valid_files(data["complete"]["members"], {"complete-review.json"})
@@ -71,13 +72,13 @@ def pinned():
 
 def baseline():
     pin = read_json(HERE / "baseline.json")
-    require(pin["source_receipt"] == ".github/premium-dev/baseline-dev9-receipt.json", "Wrong baseline receipt")
-    require(pin["source_receipt_sha256"] == "823c4d2e8e2cb2fb611aab48e63775dec11c461c109cdd06facaba70fab1747c", "Baseline pin changed")
+    require(pin["source_receipt"] == ".github/premium-dev/baseline-dev10-receipt.json", "Wrong baseline receipt")
+    require(pin["source_receipt_sha256"] == "f23caaadffbc662061483dbd8c1d3336d1b32f856c066c3f5d2921217bf6576e", "Baseline pin changed")
     path = ROOT / pin["source_receipt"]
     require(identity(path)["sha256"] == pin["source_receipt_sha256"], "Baseline receipt bytes changed")
     data = read_json(path)
-    require(data["dev_only"] is True and data["verified_files"] == 18 and data["candidate_artifact_id"] == 10448000795 and data["passed"] is True, "Invalid DEV9 baseline receipt")
-    require(data["displayed_dev_version"] == "1.0.0-dev.9" and data["live_version"] == "0.46.9", "Unexpected public baseline version")
+    require(data["dev_only"] is True and data["verified_files"] == 18 and data["candidate_artifact_id"] == 10479804355 and data["passed"] is True, "Invalid DEV10 baseline receipt")
+    require(data["displayed_dev_version"] == "1.0.0-dev.10" and data["live_version"] == "0.46.9", "Unexpected public baseline version")
     require(set(data["files"]) == {"dev", "live"}, "Incomplete rollback baseline")
     for files in data["files"].values():
         valid_files(files, WEB_FILES)
@@ -108,7 +109,7 @@ def check_run(pin, run, jobs, artifacts):
     require(run["repository"]["full_name"] == REPOSITORY, "Wrong QA repository")
     require(run["status"] == "completed" and run["conclusion"] == "success", "QA run did not complete successfully")
     rows = jobs["jobs"]
-    require(jobs["total_count"] == len(rows) == len(JOBS) and {row["name"] for row in rows} == JOBS, "Expected all 12 exact QA jobs without duplicates")
+    require(jobs["total_count"] == len(rows) == len(JOBS) and {row["name"] for row in rows} == JOBS, "Expected all 14 exact QA jobs without duplicates")
     require(all(row["status"] == "completed" and row["conclusion"] == "success" and row["run_id"] == RUN and row["head_sha"] == SOURCE for row in rows), "A required QA job failed, was cancelled, or belongs to another source/run")
     require(set(artifacts) == {"candidate", "complete"}, "Required artifact metadata missing")
     for kind, artifact in artifacts.items():
@@ -165,9 +166,11 @@ def verify_bundle(candidate, complete, pin):
     require(units["build"] == {"passed": True, "coreCases": 15, "devFlavorCases": 1, "productionFlavorCases": 1}, "Core/flavor review differs")
     for name, limits, count in (("visual-forge", [1, 14], 14), ("visual-workshops", [15, 19], 5)):
         require(units[name]["visualCases"] == limits and units[name]["pngCount"] == count, "Incomplete visual coverage: " + name)
-    for name in ("gameplay", "commerce-residency", *("touch-" + section for section in SECTIONS)):
+    for name in ("gameplay", "commerce-residency", *("touch-" + section for section in SECTIONS), *("mac-" + suite for suite in MAC_SUITES)):
         require(type(units[name]["checks"]) is int and units[name]["checks"] > 0 and type(units[name]["pngCount"]) is int and units[name]["pngCount"] > 0, "Missing actual checks/captures: " + name)
     require(units["gameplay"]["touchSection"] is None, "Ordinary gameplay was replaced by a touch section")
     for section in SECTIONS:
         require(units["touch-" + section]["touchSection"] == section, "Wrong touch section")
+    require(units["mac-gameplay"]["touchSection"] is None and units["mac-touch-pause"]["touchSection"] == "pause", "Incomplete Mac gameplay or pause coverage")
+    require(type(units["commerce-residency"].get("feedbackChecks")) is int and units["commerce-residency"]["feedbackChecks"] >= 300 and units["commerce-residency"].get("feedbackPngCount") == 8, "Incomplete exact-package feedback review")
     return files
