@@ -92,10 +92,17 @@ func choose(origin: Vector2, hero_before: Vector2, hero_now: Vector2, hero_veloc
 		choice = "retreat"
 		avoidance_active = true
 		return retreat
+	# Prefer a safe hold while an approaching hero passes. Rejoining between
+	# retreat steps creates a one-frame reversal at a wall. If holding is unsafe,
+	# retain the normal fallback escape and its full terrain/sweep checks.
+	var wait_before_follow := avoidance_active and not passed_or_stopped
+	if wait_before_follow and _safe(origin, hero_before, hero_now, hero_velocity, Vector2.ZERO, delta, terrain_clear):
+		choice = "wait"
+		return Vector2.ZERO
 	if _safe(origin, hero_before, hero_now, hero_velocity, preferred_step, delta, terrain_clear):
 		choice = "route_fallback"
 		return preferred_step
-	if _safe(origin, hero_before, hero_now, hero_velocity, Vector2.ZERO, delta, terrain_clear):
+	if not wait_before_follow and _safe(origin, hero_before, hero_now, hero_velocity, Vector2.ZERO, delta, terrain_clear):
 		choice = "wait"
 		return Vector2.ZERO
 	# An approaching player can trap the follower against solid terrain. Never
