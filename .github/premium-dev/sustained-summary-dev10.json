@@ -1,0 +1,62 @@
+{
+  "source_commit": "23076019b53819c6c7f213b7e55d24a2f6194f83",
+  "run_id": 35181119506,
+  "physical_iphone": false,
+  "sustained_50_fps_verified": false,
+  "areas": {
+    "hub": {
+      "functional": true,
+      "seconds": 300.0,
+      "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Version 15.7.9 (Build 24G830))",
+      "framebuffer": [
+        1696,
+        780
+      ],
+      "fps_min": 53.5977488945465,
+      "fps_max": 58.3903111010447,
+      "p95_frame_ms_min": 21.923,
+      "p95_frame_ms_max": 28.443,
+      "meets_50_fps": false,
+      "orphans": 0.0,
+      "mined_resources": 0
+    },
+    "deep": {
+      "functional": true,
+      "seconds": 300.0,
+      "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Version 15.7.9 (Build 24G830))",
+      "framebuffer": [
+        1696,
+        780
+      ],
+      "fps_min": 31.5298051481373,
+      "fps_max": 44.0437800504264,
+      "p95_frame_ms_min": 31.094,
+      "p95_frame_ms_max": 49.16,
+      "meets_50_fps": false,
+      "orphans": 0.0,
+      "mined_resources": 27378
+    },
+    "ember": {
+      "functional": true,
+      "seconds": 300.0,
+      "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Version 15.7.9 (Build 24G830))",
+      "framebuffer": [
+        1696,
+        780
+      ],
+      "fps_min": 37.5438806631011,
+      "fps_max": 51.3227403197314,
+      "p95_frame_ms_min": 29.524,
+      "p95_frame_ms_max": 44.21,
+      "meets_50_fps": false,
+      "orphans": 0.0,
+      "mined_resources": 1064
+    }
+  },
+  "limits": [
+    "Virtual Apple GPU, not a physical iPhone.",
+    "Separate run, no performance improvement may be inferred versus an older host.",
+    "Engine CPU monitor percentiles are stale sampled values; use frame interval percentiles.",
+    "Profile GPU timestamps are invalid on this Apple virtual adapter and are not reported as real GPU measurements."
+  ]
+}

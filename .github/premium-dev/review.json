@@ -4,45 +4,52 @@
   "live_publication_authorized": false,
   "final_one_point_zero_approved": false,
   "physical_iphone_verified": false,
-  "source_commit": "e76a2b90a8a6da4d2673689ce2eeb646e5c2303b",
-  "qa_run_id": 35099632983,
-  "candidate_artifact_id": 10448000795,
-  "complete_artifact_id": 10448008790,
+  "source_commit": "23076019b53819c6c7f213b7e55d24a2f6194f83",
+  "qa_run_id": 35181119505,
+  "candidate_artifact_id": 10479804355,
+  "complete_artifact_id": 10480503718,
   "dev_publication_authorized": true,
   "authorization_record": {
     "requested_by": "Mats",
-    "request": "Kan vi gjøre det spillklart med alt det nye nå? Så laste opp det vi har. Så vet vi hva vi skal fikse opp når vi får kvote igjen? Explicit DEV-only checkpoint request with 6% quota remaining.",
-    "recorded_at": "2026-09-16T13:15:20.493649+00:00"
+    "request": "Jeg har kj\u00f8rt en tilbakestilling av kvoten! S\u00e5 kj\u00f8r p\u00e5 og gj\u00f8r dere ferdig! Followed by Alltid godkjen after the concrete request to upload the code and publish the verified DEV build. Authorization continues for Ever-Deeper code uploads and DEV publication after its gates.",
+    "recorded_at": "2026-09-17T04:30:18.194393+00:00"
   },
   "visual_readiness": {
     "status": "approved_for_dev_playtest",
-    "reviewer": "animation_critic and root",
-    "reviewed_at": "2026-09-16T13:15:20.493649+00:00",
-    "scope": "Bounded recovery correction, unchanged approved v28 art; exact DEV9 exported package rendered without script substitution at1696x780. Existing integrated UI/world art retained.",
-    "findings": "Pre-contact release retracts; a delivered hit retains forward recovery. Source comparison:732 rendered frames,812 observations, unchanged body/damage/immediate walk. Exact new package:46 frames in four Worn/Crusher before/after-contact cases,50 observations,zero failed. Root inspected corrected pose sheets and actual final-package frames; no blocking defect found in the change.",
+    "reviewer": "release_critic and root",
+    "reviewed_at": "2026-09-17T04:30:18.194393+00:00",
+    "scope": "Bounded DEV10 menu-physics correction; unchanged approved v28 art, animation, balance and schema3. Actual immutable candidate rendered at1696x780.",
+    "findings": "Independent review of15 actual CI images found no blocker. Journal remains fixed during the pending surge;47 lifecycle checks pass with0px drift. Ordinary push and mining resume;hub/re-entry and repeated commerce previews retain coherent geometry and unobscured controls.",
     "evidence": [
-      "https://github.com/Corpax88/Ever-Deeper/actions/runs/35099632983",
-      ".github/premium-dev/animation-readiness-dev9.json",
-      ".github/premium-dev/package-animation-readiness.json"
+      "https://github.com/Corpax88/Ever-Deeper/actions/runs/35181119505",
+      ".github/premium-dev/package-hazard-readiness-dev10.json"
     ],
     "blocking_defects": []
   },
   "limitations": [
-    "DEV9 playable checkpoint, not final1.0 or9/10 approval.",
-    "Physical iPhone, sustained50FPS and complete animation acceptance remain unverified.",
-    "No save-schema change from the previous c8906f1 schema3 DEV; the earlier schema3 reset is historical.",
-    "Wall/corner, exact-union shadow and crop studies remain isolated and unaccepted. No optimization gain is claimed.",
-    "The animation comparison is behavioral and visual; global exact-RGBA equality is not claimed.",
-    "Browser audio and all gear/direction/hazard/re-entry animation cases remain future work.",
-    "Prior c8906f1 virtual-Mac sustained ranges were Hub44.98–56.60, Ember20.79–39.54, Deep18.01–30.91FPS. They did not establish the50FPS minimum and are not physical-device results."
+    "DEV10 playable correction, not final1.0, complete premium polish or9/10 approval.",
+    "Current virtual-Mac five-minute sessions: Hub53.60-58.39FPS, Ember37.54-51.32FPS, Deep31.53-44.04FPS. All fail the stable50FPS gate; physical iPhone remains unverified.",
+    "Linux WebKit gameplay and pause checks report framebuffer errors; the unchanged exact package passes those cases on Mac WebKit in run35181878479 without suppressing errors. Linux failure evidence remains retained.",
+    "Initial Mac browser run35181702247 did not launch because GNUtimeout was absent; the portable Actions time limit fixed the harness only.",
+    "Audio unlock, overlap, mute and unmute produce actual output in Chromium and WebKit; subjective listening is not certified.",
+    "New shadow-mask experiment remains isolated and unadopted; measured gain was not meaningful.",
+    "Full all-tool/all-direction animation acceptance, remaining world joins/clusters and long-session reward-label overlap remain open.",
+    "Original player_visual.gd protected-baseline mismatch remains documented; the baseline was not weakened."
   ],
+  "hazard_readiness": {
+    "evidence": ".github/premium-dev/package-hazard-readiness-dev10.json",
+    "pck_sha256": "8b83ed55d62841eac8e891ad6c224b101665d98f5ead63a022e66589d6266c3b"
+  },
+  "additional_browser_review": {
+    "audio_run_id": 35181478025,
+    "mac_webkit_run_id": 35181878479,
+    "audio_evidence": ".github/premium-dev/package-audio-readiness-dev10.json",
+    "mac_webkit_evidence": ".github/premium-dev/package-mobile-readiness-dev10.json"
+  },
   "animation_readiness": {
     "status": "approved_for_dev_playtest",
-    "reviewer": "animation_critic and root",
-    "reviewed_at": "2026-09-16T13:15:20.493649+00:00",
-    "evidence": ".github/premium-dev/package-animation-readiness.json",
-    "evidence_sha256": "8a74d3ff455a3e7ce6e8981fa3331d13b3263a1a6789527bbef55c08d8b5104e",
-    "pck_sha256": "1270ea3974b0d551f0a10f8a72ec4ba56824030822526a8b1544bb295988e32f",
-    "scope": "Four exact-package Worn/Crusher before/after-contact release states; source A/B also retains immediate walking and upgraded gait."
+    "evidence": ".github/premium-dev/package-motion-readiness-dev10.json",
+    "pck_sha256": "8b83ed55d62841eac8e891ad6c224b101665d98f5ead63a022e66589d6266c3b",
+    "scope": "Worn, Crusher and Deepcore across left/up/right/down; twelve positive-damage cases; walking/reversal and attack/recovery poses."
   }
 }

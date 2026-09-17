@@ -72,10 +72,10 @@ class PublisherChecks(unittest.TestCase):
         artifacts = {kind: {"id": self.pin[kind]["id"], "name": self.pin[kind]["name"], "expired": False, "workflow_run": {"id": c.RUN, "head_sha": c.SOURCE}} for kind in ("candidate", "complete")}
         return run, jobs, artifacts
 
-    def test_pinned_real_baseline_is_dev8_with_all_18_files(self):
+    def test_pinned_real_baseline_is_dev9_with_all_18_files(self):
         base = c.baseline()
-        self.assertEqual(base["candidate_artifact_id"], 10442929350)
-        self.assertEqual(base["source_commit"], "c8906f1d46309227344f101a6b0ae7c1a9b1e69b")
+        self.assertEqual(base["candidate_artifact_id"], 10448000795)
+        self.assertEqual(base["source_commit"], "e76a2b90a8a6da4d2673689ce2eeb646e5c2303b")
         self.assertEqual(sum(len(rows) for rows in base["files"].values()), 18)
 
     def test_pending_visual_review_stops_before_network_or_workspace(self):
@@ -222,7 +222,7 @@ class PublisherChecks(unittest.TestCase):
         for kind in ("candidate", "complete"):
             c.extract_exact(EVIDENCE / (kind + ".zip"), self.root / ("real-" + kind), pin[kind])
         files = c.verify_bundle(self.root / "real-candidate", self.root / "real-complete", pin)
-        self.assertEqual(files["index.pck"]["sha256"], "1270ea3974b0d551f0a10f8a72ec4ba56824030822526a8b1544bb295988e32f")
+        self.assertEqual(files["index.pck"]["sha256"], "8b83ed55d62841eac8e891ad6c224b101665d98f5ead63a022e66589d6266c3b")
         run_file, jobs_file = EVIDENCE / "qa-run-api.json", EVIDENCE / "qa-jobs-api.json"
         if run_file.exists() and jobs_file.exists():
             _, _, artifacts = self.metadata()

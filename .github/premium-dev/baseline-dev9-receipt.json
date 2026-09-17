@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "dev_only": true,
+  "passed": true,
+  "verified_files": 18,
+  "source_commit": "e76a2b90a8a6da4d2673689ce2eeb646e5c2303b",
+  "qa_run_id": 35099632983,
+  "candidate_artifact_id": 10448000795,
+  "complete_artifact_id": 10448008790,
+  "candidate_zip_sha256": "9e70a36076a6f856a2bca94c284f0edac3b579d18197f033cd5091d2ebfe22a3",
+  "complete_zip_sha256": "4acbc9dcedb5ac2a64fdd8f914f00f404df92b52eb92c854894d21a83625c81c",
+  "review_sha256": "048066f16a6d7ec49fd2dbdb0c81589cdbf2f2038fb943c42c7ebc64868ead33",
+  "baseline_receipt_sha256": "e66a038406fa7b01ba1aaa4cf63741ef8f259978c86a64e7d980369f35cf3301",
+  "publication_source_commit": "4635e2a91ad55469c69e7fe5db2f220e0546c835",
+  "publication_run_id": "35101544556",
+  "rollback_artifact_id": "10448003043",
+  "displayed_dev_version": "1.0.0-dev.9",
+  "live_version": "0.46.9",
+  "final_one_point_zero_approved": false,
+  "physical_iphone_verified": false,
+  "limits": [
+    "DEV9 playable checkpoint, not final1.0 or9/10 approval.",
+    "Physical iPhone, sustained50FPS and complete animation acceptance remain unverified.",
+    "No save-schema change from the previous c8906f1 schema3 DEV; the earlier schema3 reset is historical.",
+    "Wall/corner, exact-union shadow and crop studies remain isolated and unaccepted. No optimization gain is claimed.",
+    "The animation comparison is behavioral and visual; global exact-RGBA equality is not claimed.",
+    "Browser audio and all gear/direction/hazard/re-entry animation cases remain future work.",
+    "Prior c8906f1 virtual-Mac sustained ranges were Hub44.98\u201356.60, Ember20.79\u201339.54, Deep18.01\u201330.91FPS. They did not establish the50FPS minimum and are not physical-device results."
+  ],
+  "files": {
+    "dev": {
+      "index.apple-touch-icon.png": {
+        "size": 66421,
+        "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+      },
+      "index.pck": {
+        "size": 221007780,
+        "sha256": "1270ea3974b0d551f0a10f8a72ec4ba56824030822526a8b1544bb295988e32f"
+      },
+      "index.audio.position.worklet.js": {
+        "size": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      },
+      "index.js": {
+        "size": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      },
+      "index.html": {
+        "size": 5444,
+        "sha256": "93d25d45e511177e02d85a414654f51957a078015a33a411b36a3f15b5dacb28"
+      },
+      "index.audio.worklet.js": {
+        "size": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "index.png": {
+        "size": 1981427,
+        "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+      },
+      "index.wasm": {
+        "size": 39514754,
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      },
+      "index.icon.png": {
+        "size": 470687,
+        "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+      }
+    },
+    "live": {
+      "index.apple-touch-icon.png": {
+        "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5",
+        "size": 66421
+      },
+      "index.audio.position.worklet.js": {
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8",
+        "size": 2973
+      },
+      "index.audio.worklet.js": {
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3",
+        "size": 7298
+      },
+      "index.html": {
+        "sha256": "d2ec5489abc93466a5a0595074d1bcb39efc5ebd4dc3e69ee3ee4af0cf9c6c7b",
+        "size": 5444
+      },
+      "index.icon.png": {
+        "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec",
+        "size": 470687
+      },
+      "index.js": {
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+        "size": 279815
+      },
+      "index.pck": {
+        "sha256": "3bb815dabf51f5146517d7ecb0ebbf7dfc7504d5d7030306f0daf46d6eac511b",
+        "size": 221175244
+      },
+      "index.png": {
+        "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f",
+        "size": 1981427
+      },
+      "index.wasm": {
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0",
+        "size": 39514754
+      }
+    }
+  },
+  "errors": [],
+  "verification_attempts": 1,
+  "live_files_unchanged": 9,
+  "dev_files": 9
+}

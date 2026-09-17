@@ -11,10 +11,10 @@ import zipfile
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 REPOSITORY = "Corpax88/Ever-Deeper"
-SOURCE = "e76a2b90a8a6da4d2673689ce2eeb646e5c2303b"
-BRANCH = "codex/premium-polish-recovery-20260915"
+SOURCE = "23076019b53819c6c7f213b7e55d24a2f6194f83"
+BRANCH = "codex/dev10-polish-20260917"
 WORKFLOW = ".github/workflows/premium-web-review.yml"
-RUN = 35099632983
+RUN = 35181119505
 ATTEMPT = 1
 WEB_FILES = frozenset((
     "index.html", "index.js", "index.pck", "index.wasm", "index.png",
@@ -61,8 +61,8 @@ def valid_files(files, names):
 def pinned():
     data = read_json(HERE / "package.json")
     require(data["schema"] == 1 and data["source_commit"] == SOURCE and data["qa_run_id"] == RUN and data["qa_run_attempt"] == ATTEMPT, "Unexpected reviewed source/run")
-    require(data["candidate"]["id"] == 10448000795 and data["candidate"]["zip"]["sha256"] == "9e70a36076a6f856a2bca94c284f0edac3b579d18197f033cd5091d2ebfe22a3", "Candidate artifact pin changed")
-    require(data["complete"]["id"] == 10448008790 and data["complete"]["zip"]["sha256"] == "4acbc9dcedb5ac2a64fdd8f914f00f404df92b52eb92c854894d21a83625c81c", "Complete artifact pin changed")
+    require(data["candidate"]["id"] == 10479804355 and data["candidate"]["zip"]["sha256"] == "026fae146631d599c933d09b635574e8b1c7bb7ed3501c0dbc898ff79be45a3d", "Candidate artifact pin changed")
+    require(data["complete"]["id"] == 10480503718 and data["complete"]["zip"]["sha256"] == "0a60365fdb1f6ebd7df86296a048169b6ef97181296da2c313616ebcced331a0", "Complete artifact pin changed")
     require(data["candidate"]["name"] == "premium-web-candidate-" + SOURCE and data["complete"]["name"] == "premium-web-review-complete-" + SOURCE, "Artifact names changed")
     valid_files(data["candidate"]["members"], WEB_FILES | {"manifest.json", "artifact-identity.json"})
     valid_files(data["complete"]["members"], {"complete-review.json"})
@@ -71,13 +71,13 @@ def pinned():
 
 def baseline():
     pin = read_json(HERE / "baseline.json")
-    require(pin["source_receipt"] == ".github/premium-dev/baseline-c8906f1-receipt.json", "Wrong baseline receipt")
-    require(pin["source_receipt_sha256"] == "e66a038406fa7b01ba1aaa4cf63741ef8f259978c86a64e7d980369f35cf3301", "Baseline pin changed")
+    require(pin["source_receipt"] == ".github/premium-dev/baseline-dev9-receipt.json", "Wrong baseline receipt")
+    require(pin["source_receipt_sha256"] == "823c4d2e8e2cb2fb611aab48e63775dec11c461c109cdd06facaba70fab1747c", "Baseline pin changed")
     path = ROOT / pin["source_receipt"]
     require(identity(path)["sha256"] == pin["source_receipt_sha256"], "Baseline receipt bytes changed")
     data = read_json(path)
-    require(data["dev_only"] is True and data["verified_files"] == 18 and data["candidate_artifact_id"] == 10442929350 and data["passed"] is True, "Invalid DEV8 baseline receipt")
-    require(data["displayed_dev_version"] == "1.0.0-dev.8" and data["live_version"] == "0.46.9", "Unexpected public baseline version")
+    require(data["dev_only"] is True and data["verified_files"] == 18 and data["candidate_artifact_id"] == 10448000795 and data["passed"] is True, "Invalid DEV9 baseline receipt")
+    require(data["displayed_dev_version"] == "1.0.0-dev.9" and data["live_version"] == "0.46.9", "Unexpected public baseline version")
     require(set(data["files"]) == {"dev", "live"}, "Incomplete rollback baseline")
     for files in data["files"].values():
         valid_files(files, WEB_FILES)

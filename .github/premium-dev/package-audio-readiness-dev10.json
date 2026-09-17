@@ -1,0 +1,33 @@
+{
+  "source_commit": "23076019b53819c6c7f213b7e55d24a2f6194f83",
+  "pck_sha256": "8b83ed55d62841eac8e891ad6c224b101665d98f5ead63a022e66589d6266c3b",
+  "run_id": 35181478025,
+  "browsers": [
+    {
+      "browser": "chromium",
+      "browser_version": "151.0.7922.34",
+      "passed": true,
+      "checks": {
+        "trusted_gesture_unlock": true,
+        "same_cluster_common_and_rare_output": true,
+        "discovery_survives_actual_effect_overlap": true,
+        "mute_stops_output_and_blocks_new_effects": true,
+        "unmute_restores_actual_output": true
+      }
+    },
+    {
+      "browser": "webkit",
+      "browser_version": "26.5",
+      "passed": true,
+      "checks": {
+        "trusted_gesture_unlock": true,
+        "same_cluster_common_and_rare_output": true,
+        "discovery_survives_actual_effect_overlap": true,
+        "mute_stops_output_and_blocks_new_effects": true,
+        "unmute_restores_actual_output": true
+      }
+    }
+  ],
+  "subjective_listening_verified": false,
+  "physical_iphone_verified": false
+}

@@ -1,0 +1,80 @@
+{
+  "source_commit": "23076019b53819c6c7f213b7e55d24a2f6194f83",
+  "pck_sha256": "8b83ed55d62841eac8e891ad6c224b101665d98f5ead63a022e66589d6266c3b",
+  "run_id": 35181478025,
+  "artifact_id": 10480897650,
+  "artifact_zip_sha256": "5c22269e0e14f0d56843fe48fd24b77e01cfb19b0d50e915b7694d201dfbc32b",
+  "status": "approved_for_dev_playtest",
+  "reviewer": "release_critic and root",
+  "reviewed_at": "2026-09-17T04:31:21.855259+00:00",
+  "scope": "Worn, Crusher and Deepcore across left/up/right/down; twelve positive-damage cases; walking/reversal and attack/recovery poses.",
+  "findings": "Independent critic inspected47 full-scene timeline frames and240 closer native-video-resolution samples over15 windows. Tool orientation and attachment, swing/return and drill contact rings remain coherent; no new visual blocker.",
+  "damage_cases": [
+    [
+      "worn",
+      "(-1, 0)",
+      "12"
+    ],
+    [
+      "worn",
+      "(0, -1)",
+      "12"
+    ],
+    [
+      "worn",
+      "(1, 0)",
+      "12"
+    ],
+    [
+      "worn",
+      "(0, 1)",
+      "12"
+    ],
+    [
+      "crusher",
+      "(-1, 0)",
+      "13"
+    ],
+    [
+      "crusher",
+      "(0, -1)",
+      "26"
+    ],
+    [
+      "crusher",
+      "(1, 0)",
+      "13"
+    ],
+    [
+      "crusher",
+      "(0, 1)",
+      "13"
+    ],
+    [
+      "deepcore",
+      "(-1, 0)",
+      "6880"
+    ],
+    [
+      "deepcore",
+      "(0, -1)",
+      "6880"
+    ],
+    [
+      "deepcore",
+      "(1, 0)",
+      "6880"
+    ],
+    [
+      "deepcore",
+      "(0, 1)",
+      "6880"
+    ]
+  ],
+  "blocking_defects": [],
+  "limits": [
+    "Video848x390 at encoded25FPS on SwiftShader; PNG/WebGL buffer1696x780.",
+    "Source event sequence lacks video timestamps; sampled windows are approximate.",
+    "No precise contact-frame timing, smoothness, all11tools,50FPS orphysical-iPhone certification."
+  ]
+}
