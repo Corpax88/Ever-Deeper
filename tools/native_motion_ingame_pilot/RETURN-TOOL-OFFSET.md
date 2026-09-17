@@ -44,4 +44,42 @@ the 15 declared critical/late/end scenes. Work-window geometry must exactly
 match the original control. All results, including occlusion or disconnected
 components, are retained for independent review before any image rendering.
 No production assets, runtime code, atlas, publishing workflow, score or FPS
-claim changes here. The late observer is preparation until actually executed.
+claim changes here.
+
+## Closed image and timing observations
+
+The 15-phase geometry run, 26 native keyframe images, and 50 equally timed
+samples of both trajectories have now completed. All use the original model
+at 200px. The closed loop result is
+`d30fdffe5a1782dc847ebef4dfaff8af3b937069ec36dd741b9abc8c90b44770`.
+The source clock is .68 seconds, with the .42 gameplay hit mapped to native
+.55. The comparison film uses those actual renders without interpolation.
+Its encoding cadence is not measured game FPS. Independent sequence review
+finds a useful return-grip/shaft visibility gain, but does not approve robust
+two-hand readability, real-time motion, gameplay or production integration.
+
+## Mining entry and exit
+
+`return_tool_offset_motion.py` supplies the full frozen mine pose to both
+canonical sampling and a study-only `Transition` subclass. Idle and walk use
+the original resolver. `Transition.sample`, clock, foot, root and retained
+offset logic remain unchanged. The return offset is never added to an old
+already-blended bridge.
+
+`probe_return_tool_offset_transitions.py` prepares one bounded check of
+walk .625 to mine and mine .625 to walk. It first reproduces all 50 observed
+loop matrices with the shared resolver, then applies 65 actual rig poses per
+bridge. It checks grips, lengths, reach, unchanged lower body, and exact
+endpoints including the destination offset. World endpoint velocities use the
+existing native continuity observer with gameplay root motion restored.
+Only after these checks does it render exact quarter-clip poses and nearby
+continuous 60Hz time samples. This observer is unrun until an actual result
+is recorded; no runtime bank or production asset is changed.
+
+Those continuous images do not certify the five-sample bank's quantized
+handoffs. The preserved up pilot first shows canonical mine at elapsed
+.0666667s and walk at .0999993s, after the nominal .0513563s/.0838055s bridge
+ends. An eventual bank and actual input capture must judge their selected
+images and placement without inserting an endpoint hold. A 50-time mine bank
+also lacks the supported .625 exit phase. Stops to idle, arbitrary interrupts,
+other views/targets and production remain outside this two-bridge study.
