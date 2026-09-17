@@ -112,8 +112,12 @@ def save_progress():
 for row in reference['samples']:
     matrices = apply(motion.sample('mine', row['native_phase']))
     error = max(matrix_error(matrices[n], Matrix(row['after_matrices'][n])) for n in matrices)
-    assert error < 1e-5, (row['index'], error)
     report['frozen_loop_matrix_errors'].append(error)
+    if error >= 1e-5:
+        report['failure'] = {'gate': 'frozen_loop', 'index': row['index'], 'matrix_error': error,
+                             'actual_matrices': {n: rows(m) for n, m in matrices.items()}}
+        save_progress()
+        raise AssertionError(('Frozen loop matrix mismatch', row['index'], error))
 
 clips = []
 protected = ('root', 'hips', 'thigh.R', 'shin.R', 'foot.R', 'thigh.L', 'shin.L', 'foot.L')
@@ -124,23 +128,27 @@ for source, target in (('walk', 'mine'), ('mine', 'walk')):
     label = source + '-to-' + target
     info = {'name': label, 'metadata': clip.metadata(), 'samples': [], 'endpoint_errors': {}}
     clips.append((label, clip, info))
+    report['bridges'].append(info)
+    save_progress()
     for i in range(65):
         seconds = clip.duration * i / 64
         p = clip.sample(seconds)
         before = apply(old.sample(seconds))
         matrices, metrics = measure(p)
         metrics['old_lower_body_matrix_error'] = max(matrix_error(before[n], matrices[n]) for n in protected)
-        assert max(metrics['grip_error'], metrics['arm_length_error'], metrics['old_lower_body_matrix_error']) < 1e-5
-        assert metrics['maximum_arm_reach'] < .71, (label, i, metrics)
         info['samples'].append({'time_seconds': seconds, 'u': i / 64, **metrics,
                                 'matrices': {n: rows(m) for n, m in matrices.items()},
                                 'feet': native.frame_metadata(p, motion.ground)['feet']})
+        save_progress()
+        assert max(metrics['grip_error'], metrics['arm_length_error'], metrics['old_lower_body_matrix_error']) < 1e-5, (label, i, metrics)
+        assert metrics['maximum_arm_reach'] < .71, (label, i, metrics)
     start = apply(motion.sample(source, .625))
     end_phase = clip.phase_at(target, clip.target_phase, clip.duration)
     end = apply(pm.translate_pose(motion.sample(target, end_phase), clip.destination_offset))
     for key, expected, observed in (('start', start, info['samples'][0]), ('end', end, info['samples'][-1])):
         info['endpoint_errors'][key] = max(matrix_error(expected[n], Matrix(observed['matrices'][n])) for n in expected)
-    assert max(info['endpoint_errors'].values()) < 1e-5
+    save_progress()
+    assert max(info['endpoint_errors'].values()) < 1e-5, (label, info['endpoint_errors'])
     # Second-order endpoint velocities use the same existing continuity
     # observer and world-root convention as the native motion owner.
     eps = .0001
@@ -158,9 +166,8 @@ for source, target in (('walk', 'mine'), ('mine', 'walk')):
         velocities[key] = {'max_error': max(errors.values()), 'point': max(errors, key=errors.get), 'all_errors': errors}
     info['world_endpoint_velocity'] = velocities
     info['velocity_epsilon_seconds'] = eps
-    assert max(v['max_error'] for v in velocities.values()) < .1, (label, velocities)
-    report['bridges'].append(info)
     save_progress()
+    assert max(v['max_error'] for v in velocities.values()) < .1, (label, velocities)
 print('RETURN_TRANSITIONS_RIG_PASS', len(clips), 130, flush=True)
 
 # Render exact bridge fractions plus actual 60 Hz time samples immediately
@@ -183,13 +190,19 @@ for label, clip, info in clips:
             p = pm.translate_pose(motion.sample(state, phase), clip.destination_offset)
             placement = motion.ground * (clip.speed * seconds if state == 'walk' else 0.)
         matrices, metrics = measure(p)
+        report['pending_image'] = {'bridge': label, 'index': index, 'seconds': seconds,
+                                   'state': state, 'phase': phase, 'metrics': metrics,
+                                   'matrices': {n: rows(m) for n, m in matrices.items()}}
+        save_progress()
         assert max(metrics['grip_error'], metrics['arm_length_error']) < 1e-5 and metrics['maximum_arm_reach'] < .71
         env['blink'](0.)
         for modifier in env['skin']:
             modifier.show_viewport = True
         bpy.context.view_layer.update()
         render_error = max(matrix_error(matrices[n], rig.pose.bones[n].matrix) for n in matrices)
-        assert render_error < 1e-5
+        report['pending_image']['actual_render_matrix_error'] = render_error
+        save_progress()
+        assert render_error < 1e-5, (label, index, render_error)
         key = f'{label}-{index:02}'
         paths = [args.output / (key + '.png'), args.output / ('mask-' + key + '-0001.png')]
         scene.render.filepath = str(paths[0])
@@ -208,6 +221,7 @@ for label, clip, info in clips:
                                  'state': state, 'phase': phase, 'world_root_native': list(placement),
                                  'actual_render_matrix_error': render_error,
                                  'metrics': metrics, 'matrices': {n: rows(m) for n, m in matrices.items()}, 'files': files})
+        del report['pending_image']
         save_progress()
         print('RETURN_TRANSITIONS_FRAME', label, index, seconds, state, phase, flush=True)
 report['rendered'] = True
