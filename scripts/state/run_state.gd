@@ -2806,6 +2806,13 @@ func deserialize(raw: Variant) -> bool:
 
 
 func save_game(path: String = "") -> bool:
+	var hitch_span: int = HitchProbe.begin_span(3, endless_current_depth, int(endless_stream_anchor.get("start_depth", 0)))
+	var hitch_result: bool = _hitch_original_save_game(path)
+	HitchProbe.end_span(hitch_span, endless_current_depth, int(endless_stream_anchor.get("start_depth", 0)), int(hitch_result), int(last_save_error))
+	return hitch_result
+
+
+func _hitch_original_save_game(path: String = "") -> bool:
 	var target: = path if not path.is_empty() else _save_path
 	last_save_error = OK
 	var document: Dictionary = serialize()

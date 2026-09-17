@@ -590,6 +590,12 @@ func _generate_depth(depth: int, next_arrival: String) -> void:
 
 
 func _generate_stream_window(start_depth: int) -> void:
+	var hitch_span: int = HitchProbe.begin_span(1, current_depth, window_start_depth, start_depth)
+	_hitch_original_generate_stream_window(start_depth)
+	HitchProbe.end_span(hitch_span, current_depth, window_start_depth)
+
+
+func _hitch_original_generate_stream_window(start_depth: int) -> void:
 	_cancel_mining()
 	_window_loading = true
 	var requested_depth: int = current_depth
@@ -1544,6 +1550,12 @@ func _update_stream_depth() -> void:
 
 
 func _rebase_stream_window(next_start: int) -> void:
+	var hitch_span: int = HitchProbe.begin_span(2, current_depth, window_start_depth, next_start)
+	_hitch_original_rebase_stream_window(next_start)
+	HitchProbe.end_span(hitch_span, current_depth, window_start_depth)
+
+
+func _hitch_original_rebase_stream_window(next_start: int) -> void:
 	var shift: Vector2 = Vector2(0.0, float(window_start_depth - next_start) * CHUNK_HEIGHT)
 	var previous_center: Vector2 = player.camera.get_screen_center_position() + shift
 	var position: Vector2 = player.global_position + shift

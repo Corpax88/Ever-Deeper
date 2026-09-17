@@ -1,0 +1,128 @@
+name: DEV11 isolated WebKit hitch attribution
+on:
+  push:
+    branches: [codex/dev11-webkit-hitch-probe-20260917]
+    paths: ['tools/webkit_hitch_probe/REQUEST.json']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: dev11-webkit-hitch-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  diagnostic-build:
+    if: github.ref == 'refs/heads/codex/dev11-webkit-hitch-probe-20260917'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    outputs:
+      identity_sha256: ${{ steps.identity.outputs.identity_sha256 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify source and untouched browser observer
+        run: |
+          mkdir -p "$RUNNER_TEMP/hitch-build" "$RUNNER_TEMP/candidate"
+          python3 tools/webkit_hitch_probe/prepare.py verify --output "$RUNNER_TEMP/hitch-build/source-before.json"
+          node tools/webkit_hitch_probe/check.mjs > "$RUNNER_TEMP/hitch-build/observer-check.log" 2>&1
+          node tools/webkit_hitch_probe/check-phases.mjs > "$RUNNER_TEMP/hitch-build/phase-parser-check.log" 2>&1
+          git diff 8f5680defb9083bbe1e044d39a10612f2186e7f3 -- scripts project.godot > "$RUNNER_TEMP/hitch-build/diagnostic-source.diff"
+      - name: Install established Godot and matching web templates
+        run: |
+          curl -fL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+          curl -fL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz -o "$RUNNER_TEMP/templates.tpz"
+          unzip -q "$RUNNER_TEMP/templates.tpz" 'templates/web*.zip' 'templates/version.txt' -d "$RUNNER_TEMP/templates"
+          test "$(cat "$RUNNER_TEMP/templates/templates/version.txt")" = '4.7.2.stable'
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          cp "$RUNNER_TEMP/templates/templates/"* "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+          sha256sum "$RUNNER_TEMP/godot.zip" "$RUNNER_TEMP/templates.tpz" "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" "$RUNNER_TEMP/templates/templates/"* > "$RUNNER_TEMP/hitch-build/toolchain-hashes.txt"
+      - name: Check bounded recorder and export diagnostic DEV only
+        run: |
+          Godot_v4.7.2-stable_linux.x86_64 --version > "$RUNNER_TEMP/hitch-build/godot-version.txt"
+          python3 tools/webkit_hitch_probe/prepare.py recorder-check --godot "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --output "$RUNNER_TEMP/hitch-build/recorder-check.log"
+          Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > "$RUNNER_TEMP/hitch-build/import.log" 2>&1
+          Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-release 'Web DEV' "$RUNNER_TEMP/candidate/index.html" > "$RUNNER_TEMP/hitch-build/export.log" 2>&1
+          python3 - <<'PY'
+          import os,re
+          from pathlib import Path
+          for p in (Path(os.environ['RUNNER_TEMP'])/'hitch-build').glob('*.log'):
+              assert not re.search(r'SCRIPT ERROR|Parse Error|^ERROR:|Assertion failed',p.read_text(errors='replace'),re.M),str(p)
+          PY
+      - name: Verify real save and streaming functional gates on this diagnostic PCK
+        run: |
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --jobs 1 --pack "$RUNNER_TEMP/candidate/index.pck" --cases one-point-zero-state one-point-zero-world --output "$RUNNER_TEMP/hitch-build/functional"
+      - name: Bind diagnostic identity
+        id: identity
+        run: |
+          python3 tools/webkit_hitch_probe/prepare.py bind --candidate "$RUNNER_TEMP/candidate" --output "$RUNNER_TEMP/hitch-build/source-after.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dev11-hitch-diagnostic-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/candidate
+          if-no-files-found: warn
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dev11-hitch-diagnostic-build-${{ github.sha }}
+          path: ${{ runner.temp }}/hitch-build
+          if-no-files-found: error
+          retention-days: 30
+  moving-deep:
+    needs: diagnostic-build
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+      - uses: actions/download-artifact@v4
+        with:
+          name: dev11-hitch-diagnostic-candidate-${{ github.sha }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install the same WebKit and UI reader
+        run: |
+          mkdir -p "$RUNNER_TEMP/webkit-hitch"
+          npm ci --ignore-scripts
+          npx playwright install --with-deps webkit
+          swiftc tools/webkit_hitch_probe/ocr.swift -o "$RUNNER_TEMP/webkit-ocr"
+          sw_vers > "$RUNNER_TEMP/webkit-hitch/macos-version.txt"
+          system_profiler SPDisplaysDataType > "$RUNNER_TEMP/webkit-hitch/display.txt"
+          cat node_modules/playwright-core/browsers.json > "$RUNNER_TEMP/webkit-hitch/playwright-browsers.json"
+      - name: One diagnostic real moving session
+        timeout-minutes: 6
+        env:
+          DIAGNOSTIC_IDENTITY_SHA256: ${{ needs.diagnostic-build.outputs.identity_sha256 }}
+        run: |
+          node tools/webkit_hitch_probe/run.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/webkit-hitch" "$RUNNER_TEMP/webkit-ocr" > "$RUNNER_TEMP/webkit-hitch/runner.log" 2>&1
+      - name: Hash closed evidence after exit
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          root=Path(os.environ['RUNNER_TEMP'])/'webkit-hitch'
+          root.mkdir(exist_ok=True)
+          manifest={p.name:{'size':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in root.iterdir() if p.is_file() and p.name!='closed-manifest.json'}
+          (root/'closed-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+          if (root/'result.json').exists() and json.loads((root/'result.json').read_text()).get('complete'):
+              assert (root/'runner.log').read_text().count('WEBKIT_HITCH_PROBE_COMPLETE ')==1
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dev11-webkit-hitch-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/webkit-hitch
+          if-no-files-found: error
+          retention-days: 30
