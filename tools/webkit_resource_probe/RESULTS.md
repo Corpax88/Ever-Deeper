@@ -134,3 +134,9 @@ saves, exact identities, source hashes, process receipts and restoration.
 `review.json`, all 181 `resource-spans.csv` rows, all 876 `slow-intervals.csv` rows
 and the inspected `hitch-host-attribution.png` preserve independent arithmetic.
 The analysis/plot scripts were added only after the measured run completed.
+
+Root separately recomputed all 56 closed hashes, all 3,090 callbacks and 181
+spans, unions and three major events. Its closed review agrees with the scoped
+finding: `root-independent-resource-review.json`, 4,435 bytes, SHA256
+`0268c1dc40bb9f5d4531b16ed484d66d8a5aad95754e07ec6bdecf564e0a9412`.
+That review is included in the final evidence archive.
