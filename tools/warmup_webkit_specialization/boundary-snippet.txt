@@ -1,0 +1,9 @@
+  // PRE_NAVIGATION_RECEIPT_BEGIN: scalar original-recorder state, no GL query.
+  const menuBoundary=await page.evaluate(actionCount=>({
+    resource:window.__webkitResourceProbe.ready(),observer:window.__webkitMovingStudy.ready(),
+    touches:window.__studyTouches,events:window.__webkitMovingStudy.events,
+    action_count:actionCount,now_ms:performance.now()
+  }),actions.length);
+  await write('pre-navigation-boundary.json',menuBoundary);
+  validateMenuBoundary(menuBoundary);
+  // PRE_NAVIGATION_RECEIPT_END
