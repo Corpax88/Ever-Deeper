@@ -252,6 +252,7 @@ func _ready() -> void :
 		AudioDirector.set_environment("menu")
 		_open_start_menu()
 	call_deferred("_sync_orientation_guard")
+	add_child(preload("res://scripts/lighting/first_frame_lit_warmup.gd").new())
 
 
 func _process(delta: float) -> void :
