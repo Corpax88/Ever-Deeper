@@ -238,7 +238,6 @@ func _baseline_sequence() -> void:
 
 func _capture_frame(label: String) -> bool:
 	await RenderingServer.frame_post_draw
-	if mode == "candidate" and not _check(String(player.visual.fatal_error).is_empty(), "Consumer accepts actual normal state packet", player.visual.fatal_error): return false
 	if not _check(samples.size() < 180, "Bounded original-frame budget"): return false
 	capture_seconds += root.get_process_delta_time()
 	_record(label)
@@ -251,7 +250,9 @@ func _capture_frame(label: String) -> bool:
 	var name := "frame-%04d.png" % (samples.size() - 1)
 	if not _check(image.save_png(output.path_join(name)) == OK, "Original frame saved: " + name): return false
 	captures.append({"path": name, "sample": samples.size() - 1, "sha256": FileAccess.get_sha256(output.path_join(name)), "drawn_frame": Engine.get_frames_drawn(), "stage": label})
+	_append_jsonline("frames.jsonl", {"sample": sample, "capture": captures.back()})
 	# Save the actual failing frame before stopping on a layout gate.
+	if mode == "candidate" and not _check(String(player.visual.fatal_error).is_empty(), "Consumer accepts actual normal state packet", player.visual.fatal_error): return false
 	if not _check(bool(framing.passed), "Actual hero/tool and resource bounds clear viewport and visible HUD", framing): return false
 	if mode == "candidate":
 		var shown: Dictionary = sample.visual
@@ -427,6 +428,7 @@ func _walk_until(distance: float, label: String, origin: Vector2) -> bool:
 
 func _input(label: String, movement: Vector2, mine: bool) -> void:
 	events.append({"label": label, "process_frame": Engine.get_process_frames(), "physics_frame": Engine.get_physics_frames(), "relative_physics_tick": Engine.get_physics_frames() - capture_origin_tick, "movement": _array(movement), "mine": mine, "position": _array(player.global_position), "actual_source_pose": player.visual.presented_snapshot() if mode == "candidate" else {}})
+	_append_jsonline("events.jsonl", events.back())
 	main._set_mine_held(mine)
 	main._on_joystick_movement(movement)
 
@@ -458,6 +460,17 @@ func _write_json(name: String, value: Variant) -> void:
 		file.store_string(JSON.stringify(value, "\t"))
 		file.close()
 	else: _check(false, "Write report " + name)
+
+
+func _append_jsonline(name: String, value: Variant) -> void:
+	var path := output.path_join(name)
+	var file := FileAccess.open(path, FileAccess.READ_WRITE if FileAccess.file_exists(path) else FileAccess.WRITE)
+	if file == null:
+		_check(false, "Append evidence " + name)
+		return
+	file.seek_end()
+	file.store_line(JSON.stringify(value))
+	file.close()
 
 
 func _finish() -> void:

@@ -290,4 +290,6 @@ func _array(value: Vector2) -> Array:
 func _fail(reason: String) -> void:
 	if fatal_error.is_empty():
 		fatal_error = reason
-		push_error("NATIVE_PILOT_UNSUPPORTED: " + reason)
+		# The harness saves the failing draw and exits nonzero with its report.
+		# Do not let the outer runtime-error watchdog kill it before that write.
+		print("NATIVE_PILOT_UNSUPPORTED: " + reason)
