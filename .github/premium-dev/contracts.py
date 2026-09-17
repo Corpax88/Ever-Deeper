@@ -11,10 +11,10 @@ import zipfile
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 REPOSITORY = "Corpax88/Ever-Deeper"
-SOURCE = "8f5680defb9083bbe1e044d39a10612f2186e7f3"
-BRANCH = "codex/dev11-feedback-20260917"
+SOURCE = "580a2e02eca1e000f5d5f58bb61ac09fd4b2a194"
+BRANCH = "codex/premium-polish-dev12-20260917"
 WORKFLOW = ".github/workflows/premium-web-review.yml"
-RUN = 35186932201
+RUN = 35203069938
 ATTEMPT = 1
 WEB_FILES = frozenset((
     "index.html", "index.js", "index.pck", "index.wasm", "index.png",
@@ -62,8 +62,8 @@ def valid_files(files, names):
 def pinned():
     data = read_json(HERE / "package.json")
     require(data["schema"] == 1 and data["source_commit"] == SOURCE and data["qa_run_id"] == RUN and data["qa_run_attempt"] == ATTEMPT, "Unexpected reviewed source/run")
-    require(data["candidate"]["id"] == 10481858878 and data["candidate"]["zip"]["sha256"] == "82b9dc45b75c9f44a4a6b1afdf10e6ca3ca4207c750d1ada2643fe84d79b7858", "Candidate artifact pin changed")
-    require(data["complete"]["id"] == 10481719990 and data["complete"]["zip"]["sha256"] == "187e920dc91e90e9913fff37ba4c7770e82db2d85a1ecebd081823d3fe0d7020", "Complete artifact pin changed")
+    require(data["candidate"]["id"] == 10489135841 and data["candidate"]["zip"]["sha256"] == "b2a43d16dd4eabf79b8eddb34207068ec45ae9d79cdb766278752ab867174bb5", "Candidate artifact pin changed")
+    require(data["complete"]["id"] == 10489068121 and data["complete"]["zip"]["sha256"] == "057961d22a388e82ab3fd12cd630f0f11866cfa9de0ff4581c57a4ba8c89c580", "Complete artifact pin changed")
     require(data["candidate"]["name"] == "premium-web-candidate-" + SOURCE and data["complete"]["name"] == "premium-web-review-complete-" + SOURCE, "Artifact names changed")
     valid_files(data["candidate"]["members"], WEB_FILES | {"manifest.json", "artifact-identity.json"})
     valid_files(data["complete"]["members"], {"complete-review.json"})
@@ -72,13 +72,13 @@ def pinned():
 
 def baseline():
     pin = read_json(HERE / "baseline.json")
-    require(pin["source_receipt"] == ".github/premium-dev/baseline-dev10-receipt.json", "Wrong baseline receipt")
-    require(pin["source_receipt_sha256"] == "f23caaadffbc662061483dbd8c1d3336d1b32f856c066c3f5d2921217bf6576e", "Baseline pin changed")
+    require(pin["source_receipt"] == ".github/premium-dev/baseline-dev11-receipt.json", "Wrong baseline receipt")
+    require(pin["source_receipt_sha256"] == "7bd53dd44ace7e8a860f75160a99e6728238e04e1c1a39eedbdf398fb3ba4afa", "Baseline pin changed")
     path = ROOT / pin["source_receipt"]
     require(identity(path)["sha256"] == pin["source_receipt_sha256"], "Baseline receipt bytes changed")
     data = read_json(path)
-    require(data["dev_only"] is True and data["verified_files"] == 18 and data["candidate_artifact_id"] == 10479804355 and data["passed"] is True, "Invalid DEV10 baseline receipt")
-    require(data["displayed_dev_version"] == "1.0.0-dev.10" and data["live_version"] == "0.46.9", "Unexpected public baseline version")
+    require(data["dev_only"] is True and data["verified_files"] == 18 and data["candidate_artifact_id"] == 10481858878 and data["passed"] is True, "Invalid DEV11 baseline receipt")
+    require(data["displayed_dev_version"] == "1.0.0-dev.11" and data["live_version"] == "0.46.9", "Unexpected public baseline version")
     require(set(data["files"]) == {"dev", "live"}, "Incomplete rollback baseline")
     for files in data["files"].values():
         valid_files(files, WEB_FILES)
@@ -173,4 +173,5 @@ def verify_bundle(candidate, complete, pin):
         require(units["touch-" + section]["touchSection"] == section, "Wrong touch section")
     require(units["mac-gameplay"]["touchSection"] is None and units["mac-touch-pause"]["touchSection"] == "pause", "Incomplete Mac gameplay or pause coverage")
     require(type(units["commerce-residency"].get("feedbackChecks")) is int and units["commerce-residency"]["feedbackChecks"] >= 300 and units["commerce-residency"].get("feedbackPngCount") == 8, "Incomplete exact-package feedback review")
+    require(units["commerce-residency"].get("northPngCount") == 3 and type(units["commerce-residency"].get("northChangedPixels")) is int and units["commerce-residency"]["northChangedPixels"] > 0, "Incomplete actual-production north-edge review")
     return files

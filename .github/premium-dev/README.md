@@ -1,12 +1,10 @@
-# DEV11 immutable playtest publication
+# DEV12 immutable playtest publication
 
-Source: 8f5680defb9083bbe1e044d39a10612f2186e7f3.
-QA:35186932201. Version:1.0.0-dev.11.
-Publishes the exact reviewed candidate and preserves all nine LIVE files.
-The previous successful DEV10 receipt is copied unchanged to baseline-dev10-receipt.json; both previous packages are retained for rollback before deployment.
+Source580a2e02eca1e000f5d5f58bb61ac09fd4b2a194, QA35203069938, version1.0.0-dev.12.
+The Moss mineable north edge now has the accepted upright perspective. Original full texture regions, horizontal phase/reflection, world bounds and gameplay remain intact.
 
-Simultaneous pickup labels and achievement feedback now preserve readable placement around the hero and mobile HUD; labels remain above ore actors. Existing artwork, amounts and lifetimes remain intact. A bounded audit also removes unused portable-base data and code remnants while retaining the modern workshops, relics and inventory.
+All14 exact-package jobs pass. All15 artifacts and their extracted members independently reverify, and the local13-unit aggregate equals CI. The actual-production A/B/A2 triplet restores its control exactly. An independent critic inspected all3 originals and both endpoints and accepted only this correction. Three tiny signed-effect differences from source references are disclosed.
 
-All 14 immutable QA jobs pass:15 core suites, both export flavors, nine Chromium suites, Mac WebKit gameplay/pause and native residency. The same package passes 346 feedback checks with eight actual images, 47 hazard lifecycle checks and 58 commerce residency checks. Independent visual readiness must be recorded in review.json before the publisher can stage anything. The publisher's 11 offline checks also use the real downloaded artifacts and API receipts.
+The unchanged verified DEV11 receipt is the rollback baseline. The publisher verifies all18 old files before staging, preserves all9 LIVE0.46.9files, then verifies all18 public files after deployment. Its11 existing checks include real package/API evidence and reject missing/incomplete north review.
 
-This is a bounded DEV playtest. Stable 50 FPS, physical iPhone, world joins and complete all-tool animation quality remain open. Camera and compact-corner experiments were not adopted. LIVE remains 0.46.9; this adapter cannot publish a new LIVE package.
+New native animation remains an isolated pilot. Full premium polish, other world joins, all-tool motion, sustained50FPS and physical-iPhone acceptance remain open. This adapter cannot publish a new LIVE version.

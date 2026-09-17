@@ -44,7 +44,7 @@ class PublisherChecks(unittest.TestCase):
                  "visual-forge": {"passed": True, "visualCases": [1, 14], "pngCount": 14},
                  "visual-workshops": {"passed": True, "visualCases": [15, 19], "pngCount": 5},
                  "gameplay": {"passed": True, "checks": 1, "pngCount": 1, "touchSection": None},
-                 "commerce-residency": {"passed": True, "checks": 1, "pngCount": 6, "feedbackChecks": 346, "feedbackPngCount": 8},
+                 "commerce-residency": {"passed": True, "checks": 1, "pngCount": 6, "feedbackChecks": 346, "feedbackPngCount": 8, "northPngCount": 3, "northChangedPixels": 53137},
                  "mac-gameplay": {"passed": True, "checks": 1, "pngCount": 1, "touchSection": None},
                  "mac-touch-pause": {"passed": True, "checks": 1, "pngCount": 1, "touchSection": "pause"}}
         for section in c.SECTIONS:
@@ -74,10 +74,10 @@ class PublisherChecks(unittest.TestCase):
         artifacts = {kind: {"id": self.pin[kind]["id"], "name": self.pin[kind]["name"], "expired": False, "workflow_run": {"id": c.RUN, "head_sha": c.SOURCE}} for kind in ("candidate", "complete")}
         return run, jobs, artifacts
 
-    def test_pinned_real_baseline_is_dev10_with_all_18_files(self):
+    def test_pinned_real_baseline_is_dev11_with_all_18_files(self):
         base = c.baseline()
-        self.assertEqual(base["candidate_artifact_id"], 10479804355)
-        self.assertEqual(base["source_commit"], "23076019b53819c6c7f213b7e55d24a2f6194f83")
+        self.assertEqual(base["candidate_artifact_id"], 10481858878)
+        self.assertEqual(base["source_commit"], "8f5680defb9083bbe1e044d39a10612f2186e7f3")
         self.assertEqual(sum(len(rows) for rows in base["files"].values()), 18)
 
     def test_pending_visual_review_stops_before_network_or_workspace(self):
@@ -158,7 +158,7 @@ class PublisherChecks(unittest.TestCase):
     def test_complete_report_cannot_be_partial_or_another_package(self):
         path = self.complete / "complete-review.json"
         original = c.read_json(path)
-        for variant in ("missing-unit", "failed", "wrong-package", "wrong-section", "missing-mac", "incomplete-feedback"):
+        for variant in ("missing-unit", "failed", "wrong-package", "wrong-section", "missing-mac", "incomplete-feedback", "missing-north", "incomplete-north", "unchanged-north"):
             data = copy.deepcopy(original)
             if variant == "missing-unit":
                 del data["units"]["touch-light"]
@@ -170,6 +170,12 @@ class PublisherChecks(unittest.TestCase):
                 del data["units"]["mac-gameplay"]
             elif variant == "incomplete-feedback":
                 data["units"]["commerce-residency"]["feedbackPngCount"] = 7
+            elif variant == "missing-north":
+                del data["units"]["commerce-residency"]["northChangedPixels"]
+            elif variant == "incomplete-north":
+                data["units"]["commerce-residency"]["northPngCount"] = 2
+            elif variant == "unchanged-north":
+                data["units"]["commerce-residency"]["northChangedPixels"] = 0
             else:
                 data["units"]["touch-light"]["touchSection"] = "wardrobe"
             c.write_json(path, data)
@@ -228,7 +234,7 @@ class PublisherChecks(unittest.TestCase):
         for kind in ("candidate", "complete"):
             c.extract_exact(EVIDENCE / (kind + ".zip"), self.root / ("real-" + kind), pin[kind])
         files = c.verify_bundle(self.root / "real-candidate", self.root / "real-complete", pin)
-        self.assertEqual(files["index.pck"]["sha256"], "5b77b3a219011cb676895e41830c8dab32bec2346db93102c7894a3c084414e9")
+        self.assertEqual(files["index.pck"]["sha256"], "9dfcf913c867e36e6a16f4f5123fd5cce7654cfb435a753f9eb7bca12f574bd9")
         run_file, jobs_file = EVIDENCE / "qa-run-api.json", EVIDENCE / "qa-jobs-api.json"
         if run_file.exists() and jobs_file.exists():
             _, _, artifacts = self.metadata()
