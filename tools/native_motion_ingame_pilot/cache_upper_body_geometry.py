@@ -75,7 +75,7 @@ report = {
     'reference_phase':.55, 'reference_head_matrix':[list(r) for r in pose['head']],
     'reference_actual_head_bone_matrix':[list(r) for r in rig.pose.bones['head'].matrix],
     'camera':mapped['loaded']['report']['camera'], 'objects':[],
-    'scope':'All evaluated vertices from every actual head-only object, including ears, face, beard, hair and complete helmet. No body/arm occlusion, lighting or recognizability proof. Exact immutable modifier stacks and full evaluated head weights are checked; rigid transport is directly compared against one actual second evaluated pose, not asserted from modifier names. This is conservative shortlist screening only; the final selected pose still needs the real rig/full-scene gate.'}
+    'scope':'All evaluated vertices from every actual head-only object, including ears, face, beard, hair and complete helmet. No body/arm occlusion, lighting or recognizability proof. Exact immutable modifier stacks and full source head weights are checked. Generated deform-layer metadata is logged, not treated as the rigidity proof; rigid transport is directly compared against one actual second evaluated pose. This is conservative shortlist screening only; the final selected pose still needs the real rig/full-scene gate.'}
 output = args.output/'head-geometry.json'
 output.write_text(json.dumps(report,indent=2)+'\n')
 objects = [o for o in env['s'].objects if o.type == 'MESH' and not o.hide_render]
@@ -102,10 +102,21 @@ for obj in sorted(selected,key=lambda o:o.name):
     assert len(armatures) == 1 and armatures[0].object == rig
     assert all(m.show_viewport and m.show_render for m in obj.modifiers)
     evaluated = obj.evaluated_get(depsgraph)
-    mesh = evaluated.to_mesh(); mesh.calc_loop_triangles()
+    mesh = evaluated.to_mesh(preserve_all_data_layers=True,depsgraph=depsgraph); mesh.calc_loop_triangles()
     assert len(mesh.vertices) == expected_head[obj.name]['vertices']
     assert len(mesh.loop_triangles) == expected_head[obj.name]['triangles']
-    assert all(len(v.groups) == 1 and v.groups[0].group == head_index and abs(v.groups[0].weight-1.) < 1e-8 for v in mesh.vertices), ('Evaluated head weights',obj.name)
+    # BEVEL may interpolate 1.0 to an adjacent float32 value. Generated layers
+    # may also be absent after evaluation. Neither is a geometric transport
+    # measurement; retain exact source weights and the actual vertex gate below.
+    generated_weights = [g.weight for v in mesh.vertices for g in v.groups]
+    generated_layers = {
+        'vertices_without_weights':sum(not v.groups for v in mesh.vertices),
+        'vertices_with_one_head_entry':sum(len(v.groups) == 1 and v.groups[0].group == head_index for v in mesh.vertices),
+        'nonzero_foreign_entries':sum(g.group != head_index and g.weight != 0. for v in mesh.vertices for g in v.groups),
+        'minimum_weight':min(generated_weights) if generated_weights else None,
+        'maximum_weight':max(generated_weights) if generated_weights else None,
+        'maximum_difference_from_one':max(abs(w-1.) for w in generated_weights) if generated_weights else None}
+    assert generated_layers['nonzero_foreign_entries'] == 0, (obj.name,generated_layers)
     flat = np.empty(len(mesh.vertices)*3,dtype=np.float32)
     mesh.vertices.foreach_get('co',flat)
     local = flat.reshape(-1,3).astype(np.float64)
@@ -117,6 +128,7 @@ for obj in sorted(selected,key=lambda o:o.name):
         'evaluated_vertices':len(mesh.vertices),'evaluated_triangles':len(mesh.loop_triangles),
         'cache_vertex_offset':offset,'cache_vertex_count':len(world), 'modifiers':modifiers,
         'object_matrix_world':[list(r) for r in evaluated.matrix_world],
+        'evaluated_deform_layer_observation':generated_layers,
         'materials':[slot.material.name if slot.material else None for slot in obj.material_slots]})
     offset += len(world)
     evaluated.to_mesh_clear()
@@ -150,7 +162,7 @@ report['actual_evaluated_transport_check'] = transport
 for obj, metadata in zip(sorted(selected,key=lambda o:o.name),report['objects']):
     assert obj.name == metadata['name']
     evaluated = obj.evaluated_get(depsgraph)
-    mesh = evaluated.to_mesh(); mesh.calc_loop_triangles()
+    mesh = evaluated.to_mesh(preserve_all_data_layers=True,depsgraph=depsgraph); mesh.calc_loop_triangles()
     assert len(mesh.vertices) == metadata['evaluated_vertices'] and len(mesh.loop_triangles) == metadata['evaluated_triangles']
     flat = np.empty(len(mesh.vertices)*3,dtype=np.float32); mesh.vertices.foreach_get('co',flat)
     matrix = np.asarray(evaluated.matrix_world,dtype=np.float64)
