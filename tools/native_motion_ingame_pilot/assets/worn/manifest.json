@@ -1,0 +1,4614 @@
+{
+  "gear": "worn",
+  "family": "pickaxe",
+  "cell": [
+    160,
+    160
+  ],
+  "columns": 8,
+  "native_impact": 0.55,
+  "states": {
+    "idle": {
+      "offset": 0,
+      "count": 1,
+      "duration": 3.6,
+      "phases": [
+        0.0
+      ],
+      "loop": true,
+      "source_offset": 0,
+      "page": 0
+    },
+    "walk": {
+      "offset": 1,
+      "count": 16,
+      "duration": 0.25882352941176473,
+      "phases": [
+        0.0,
+        0.0625,
+        0.125,
+        0.1875,
+        0.25,
+        0.3125,
+        0.375,
+        0.4375,
+        0.5,
+        0.5625,
+        0.625,
+        0.6875,
+        0.75,
+        0.8125,
+        0.875,
+        0.9375
+      ],
+      "loop": true,
+      "source_offset": 1,
+      "page": 0
+    },
+    "mine": {
+      "offset": 17,
+      "count": 16,
+      "duration": 1.45,
+      "phases": [
+        0.0,
+        0.0625,
+        0.125,
+        0.1875,
+        0.25,
+        0.3125,
+        0.375,
+        0.4375,
+        0.5,
+        0.55,
+        0.625,
+        0.6875,
+        0.75,
+        0.8125,
+        0.875,
+        0.9375
+      ],
+      "loop": true,
+      "source_offset": 17,
+      "page": 0
+    },
+    "idle_to_walk-000000": {
+      "offset": 33,
+      "count": 5,
+      "phases": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "loop": false,
+      "duration_source": "directions.<direction>.transitions.<state>.duration",
+      "source_offset": 33,
+      "page": 0
+    },
+    "walk_to_mine-625000": {
+      "offset": 38,
+      "count": 5,
+      "phases": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "loop": false,
+      "duration_source": "directions.<direction>.transitions.<state>.duration",
+      "source_offset": 38,
+      "page": 0
+    },
+    "mine_to_walk-625000": {
+      "offset": 43,
+      "count": 5,
+      "phases": [
+        0.0,
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "loop": false,
+      "duration_source": "directions.<direction>.transitions.<state>.duration",
+      "source_offset": 43,
+      "page": 0
+    }
+  },
+  "directions": {
+    "up": {
+      "ground_anchor": [
+        83.86887550354004,
+        126.48400068283081
+      ],
+      "transitions": {
+        "idle_to_walk-000000": {
+          "source_state": "idle",
+          "source_phase": 0.0,
+          "target_state": "walk",
+          "target_start_phase": 0.076206181895746,
+          "destination_phase": 0.4,
+          "body_duration": 0.08380545880345398,
+          "duration": 0.08380545880345398,
+          "source_speed": 0.0,
+          "target_speed": 340.0,
+          "destination_offset_native": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "retained_support": null,
+          "rotor_coast": null,
+          "mining_timing": {
+            "cycle_seconds": 0.68,
+            "gameplay_hit_phase": 0.42,
+            "native_hit_phase": 0.55,
+            "drill_uses_independent_one_second_rotor_clock": false
+          },
+          "incoming_offset": "add_constant_screen_translation_through_clip",
+          "offset_release": "quintic_only_during_complete_airborne_walk_interval",
+          "root_motion_authority": "gameplay",
+          "interpolation": "ongoing native C1 pose targets",
+          "destination_offset_pixels": [
+            0.0,
+            -0.0
+          ]
+        },
+        "walk_to_mine-625000": {
+          "source_state": "walk",
+          "source_phase": 0.625,
+          "target_state": "mine",
+          "target_start_phase": 0.0,
+          "destination_phase": 0.09890038631093703,
+          "body_duration": 0.05135627332800658,
+          "duration": 0.05135627332800658,
+          "source_speed": 340.0,
+          "target_speed": 0.0,
+          "destination_offset_native": [
+            0.09484267234802246,
+            0.09642338752746582,
+            0.0
+          ],
+          "retained_support": "L",
+          "rotor_coast": null,
+          "mining_timing": {
+            "cycle_seconds": 0.68,
+            "gameplay_hit_phase": 0.42,
+            "native_hit_phase": 0.55,
+            "drill_uses_independent_one_second_rotor_clock": false
+          },
+          "incoming_offset": "add_constant_screen_translation_through_clip",
+          "offset_release": "quintic_only_during_complete_airborne_walk_interval",
+          "root_motion_authority": "gameplay",
+          "interpolation": "ongoing native C1 pose targets",
+          "destination_offset_pixels": [
+            0.0,
+            4.293856620788574
+          ]
+        },
+        "mine_to_walk-625000": {
+          "source_state": "mine",
+          "source_phase": 0.625,
+          "target_state": "walk",
+          "target_start_phase": 0.076206181895746,
+          "destination_phase": 0.4,
+          "body_duration": 0.08380545880345398,
+          "duration": 0.08380545880345398,
+          "source_speed": 0.0,
+          "target_speed": 340.0,
+          "destination_offset_native": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "retained_support": null,
+          "rotor_coast": null,
+          "mining_timing": {
+            "cycle_seconds": 0.68,
+            "gameplay_hit_phase": 0.42,
+            "native_hit_phase": 0.55,
+            "drill_uses_independent_one_second_rotor_clock": false
+          },
+          "incoming_offset": "add_constant_screen_translation_through_clip",
+          "offset_release": "quintic_only_during_complete_airborne_walk_interval",
+          "root_motion_authority": "gameplay",
+          "interpolation": "ongoing native C1 pose targets",
+          "destination_offset_pixels": [
+            0.0,
+            -0.0
+          ]
+        }
+      },
+      "pages": [
+        {
+          "page": 0,
+          "texture": "up.png",
+          "cloth": "up-cloth.png",
+          "size": [
+            1280,
+            960
+          ]
+        }
+      ]
+    },
+    "right": {
+      "ground_anchor": [
+        74.54380512237549,
+        126.35711669921875
+      ],
+      "transitions": {
+        "idle_to_walk-000000": {
+          "source_state": "idle",
+          "source_phase": 0.0,
+          "target_state": "walk",
+          "target_start_phase": 0.06804073617217804,
+          "destination_phase": 0.4,
+          "body_duration": 0.08591886828484806,
+          "duration": 0.08591886828484806,
+          "source_speed": 0.0,
+          "target_speed": 340.0,
+          "destination_offset_native": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "retained_support": null,
+          "rotor_coast": null,
+          "mining_timing": {
+            "cycle_seconds": 0.68,
+            "gameplay_hit_phase": 0.42,
+            "native_hit_phase": 0.55,
+            "drill_uses_independent_one_second_rotor_clock": false
+          },
+          "incoming_offset": "add_constant_screen_translation_through_clip",
+          "offset_release": "quintic_only_during_complete_airborne_walk_interval",
+          "root_motion_authority": "gameplay",
+          "interpolation": "ongoing native C1 pose targets",
+          "destination_offset_pixels": [
+            0.0,
+            -0.0
+          ]
+        },
+        "walk_to_mine-625000": {
+          "source_state": "walk",
+          "source_phase": 0.625,
+          "target_state": "mine",
+          "target_start_phase": 0.0,
+          "destination_phase": 0.17187399360681643,
+          "body_duration": 0.08924947740746685,
+          "duration": 0.08924947740746685,
+          "source_speed": 340.0,
+          "target_speed": 0.0,
+          "destination_offset_native": [
+            -0.013476744294166565,
+            0.08984490483999252,
+            0.0
+          ],
+          "retained_support": "L",
+          "rotor_coast": null,
+          "mining_timing": {
+            "cycle_seconds": 0.68,
+            "gameplay_hit_phase": 0.42,
+            "native_hit_phase": 0.55,
+            "drill_uses_independent_one_second_rotor_clock": false
+          },
+          "incoming_offset": "add_constant_screen_translation_through_clip",
+          "offset_release": "quintic_only_during_complete_airborne_walk_interval",
+          "root_motion_authority": "gameplay",
+          "interpolation": "ongoing native C1 pose targets",
+          "destination_offset_pixels": [
+            -5.012416839599609,
+            -0.0
+          ]
+        },
+        "mine_to_walk-625000": {
+          "source_state": "mine",
+          "source_phase": 0.625,
+          "target_state": "walk",
+          "target_start_phase": 0.06804073617217804,
+          "destination_phase": 0.4,
+          "body_duration": 0.08591886828484806,
+          "duration": 0.08591886828484806,
+          "source_speed": 0.0,
+          "target_speed": 340.0,
+          "destination_offset_native": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "retained_support": null,
+          "rotor_coast": null,
+          "mining_timing": {
+            "cycle_seconds": 0.68,
+            "gameplay_hit_phase": 0.42,
+            "native_hit_phase": 0.55,
+            "drill_uses_independent_one_second_rotor_clock": false
+          },
+          "incoming_offset": "add_constant_screen_translation_through_clip",
+          "offset_release": "quintic_only_during_complete_airborne_walk_interval",
+          "root_motion_authority": "gameplay",
+          "interpolation": "ongoing native C1 pose targets",
+          "destination_offset_pixels": [
+            0.0,
+            -0.0
+          ]
+        }
+      },
+      "pages": [
+        {
+          "page": 0,
+          "texture": "right.png",
+          "cloth": "right-cloth.png",
+          "size": [
+            1280,
+            960
+          ]
+        }
+      ]
+    }
+  },
+  "source": "approved native Gruvepappa v28",
+  "poses_are_real": true,
+  "max_grip_error": 4.86061168619993e-07,
+  "visual_model": "Gruvepappa v28, approved by Mats",
+  "runtime_3d": false,
+  "schema_version": 2,
+  "pilot_only": true,
+  "rendered": true,
+  "phase_domain": "normalized",
+  "motion": {
+    "reference_speed": 340.0,
+    "stride_pixels": 88.0,
+    "phase_source": "actual_gameplay_distance",
+    "heading": "one_camera_ground_heading_for_all_states",
+    "transition_selection": "exact_authored_source_phase",
+    "production_approved": false,
+    "interrupted_transition_coverage": false,
+    "gameplay_mining_timing": {
+      "cycle_seconds": 0.68,
+      "hit_phase": 0.42
+    },
+    "support_phase_windows": {
+      "R": [
+        0.0,
+        0.18181818181818182
+      ],
+      "L": [
+        0.5,
+        0.6818181818181819
+      ]
+    },
+    "source_phase_bank": [
+      0.625
+    ],
+    "frames_per_direction": 48
+  },
+  "render_fingerprint": "c0e7d6a1d7b25ed4fbcfba6270685346c978889f22d75d40a98fa28d38de4bc7",
+  "qa": {
+    "up": {
+      "frames": 48,
+      "unique": 46,
+      "edge_clipping": [],
+      "atlas_pages": [
+        {
+          "page": 0,
+          "texture": "up.png",
+          "cloth": "up-cloth.png",
+          "size": [
+            1280,
+            960
+          ]
+        }
+      ],
+      "silhouette_bounds": [
+        66,
+        34,
+        152,
+        171
+      ],
+      "previous_ground_anchor": [
+        85.4561996459961,
+        126.35711669921875
+      ],
+      "ground_anchor": [
+        83.86887550354004,
+        126.48400068283081
+      ]
+    },
+    "right": {
+      "frames": 48,
+      "unique": 47,
+      "edge_clipping": [],
+      "atlas_pages": [
+        {
+          "page": 0,
+          "texture": "right.png",
+          "cloth": "right-cloth.png",
+          "size": [
+            1280,
+            960
+          ]
+        }
+      ],
+      "silhouette_bounds": [
+        53,
+        38,
+        177,
+        170
+      ],
+      "previous_ground_anchor": [
+        83.8688735961914,
+        126.48400068283081
+      ],
+      "ground_anchor": [
+        74.54380512237549,
+        126.35711669921875
+      ]
+    }
+  },
+  "sample_metadata": {
+    "up": {
+      "idle": [
+        {
+          "phase": 0.0,
+          "time": 0.0,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        }
+      ],
+      "walk": [
+        {
+          "phase": 0.0,
+          "time": 0.0,
+          "contacts": {
+            "R": true,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.27336806058883667,
+                  0.014415502548217773,
+                  0.16766610741615295
+                ],
+                "sole_point": [
+                  -0.19152963161468506,
+                  0.09761792421340942,
+                  0.011999979615211487
+                ],
+                "roll": -0.20943951399382016,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.2160448133945465,
+                  -0.07269416004419327,
+                  0.2603047490119934
+                ],
+                "sole_point": [
+                  0.009957626461982727,
+                  -0.2822161316871643,
+                  0.10156847536563873
+                ],
+                "roll": 0.10195588795808257,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.0625,
+          "time": 0.016176470588235296,
+          "contacts": {
+            "R": true,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.17279119789600372,
+                  0.11666866391897202,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.3891374468803406,
+                  -0.1032833382487297,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1679195761680603,
+                  -0.12162148207426071,
+                  0.24238866567611694
+                ],
+                "sole_point": [
+                  -0.047368526458740234,
+                  -0.3404977023601532,
+                  0.11081047356128693
+                ],
+                "roll": 0.011626243895916976,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.125,
+          "time": 0.03235294117647059,
+          "contacts": {
+            "R": true,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.0564371794462204,
+                  0.23496191203594208,
+                  0.1563761979341507
+                ],
+                "sole_point": [
+                  -0.2676534652709961,
+                  0.020225360989570618,
+                  0.01199999451637268
+                ],
+                "roll": 0.053703783998353315,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.12100857496261597,
+                  -0.16931432485580444,
+                  0.2400200068950653
+                ],
+                "sole_point": [
+                  0.223115935921669,
+                  -0.06550518423318863,
+                  0.11098568141460419
+                ],
+                "roll": -0.00708127041176322,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.1875,
+          "time": 0.04852941176470589,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  0.0018031895160675049,
+                  0.2941729426383972,
+                  0.27032455801963806
+                ],
+                "sole_point": [
+                  -0.14708009362220764,
+                  0.14280828833580017,
+                  0.012465864419937134
+                ],
+                "roll": 0.48869226642698366,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.07907091081142426,
+                  -0.21195094287395477,
+                  0.24000556766986847
+                ],
+                "sole_point": [
+                  0.17733684182167053,
+                  -0.11204724758863449,
+                  0.10504196584224701
+                ],
+                "roll": -0.048576117860746365,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.25,
+          "time": 0.06470588235294118,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  0.030290618538856506,
+                  0.3231351673603058,
+                  0.3078939616680145
+                ],
+                "sole_point": [
+                  -0.11859266459941864,
+                  0.17177051305770874,
+                  0.0500352680683136
+                ],
+                "roll": 0.48869226642698366,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.04450400173664093,
+                  -0.24709397554397583,
+                  0.23956243693828583
+                ],
+                "sole_point": [
+                  0.13684146106243134,
+                  -0.15321755409240723,
+                  0.09633840620517731
+                ],
+                "roll": -0.10933852405189312,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.3125,
+          "time": 0.08088235294117647,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  0.022155821323394775,
+                  0.31486478447914124,
+                  0.3183513581752777
+                ],
+                "sole_point": [
+                  -0.12915310263633728,
+                  0.16103407740592957,
+                  0.0633801817893982
+                ],
+                "roll": 0.47520233925492217,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.019657909870147705,
+                  -0.2723541557788849,
+                  0.23862148821353912
+                ],
+                "sole_point": [
+                  0.10588598251342773,
+                  -0.18468895554542542,
+                  0.08785131573677063
+                ],
+                "roll": -0.16858959279431915,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.375,
+          "time": 0.09705882352941178,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  0.0023871511220932007,
+                  0.2947666645050049,
+                  0.306730180978775
+                ],
+                "sole_point": [
+                  -0.16486774384975433,
+                  0.12472417950630188,
+                  0.07289275527000427
+                ],
+                "roll": 0.3822279088903944,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.006882712244987488,
+                  -0.285342276096344,
+                  0.23776812851428986
+                ],
+                "sole_point": [
+                  0.08914503455162048,
+                  -0.20170892775058746,
+                  0.08255703747272491
+                ],
+                "roll": -0.20555067786911876,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.4375,
+          "time": 0.11323529411764707,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.032207801938056946,
+                  0.2595950961112976,
+                  0.2853873074054718
+                ],
+                "sole_point": [
+                  -0.2207881659269333,
+                  0.06787174940109253,
+                  0.08727574348449707
+                ],
+                "roll": 0.24165105950610302,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  -0.007211506366729736,
+                  -0.2996714115142822,
+                  0.21551766991615295
+                ],
+                "sole_point": [
+                  0.07462693005800247,
+                  -0.21646898984909058,
+                  0.05985154211521149
+                ],
+                "roll": -0.20943951399382016,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.5,
+          "time": 0.12941176470588237,
+          "contacts": {
+            "R": false,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.07625497132539749,
+                  0.21481382846832275,
+                  0.2603047490119934
+                ],
+                "sole_point": [
+                  -0.28234216570854187,
+                  0.005291864275932312,
+                  0.10156847536563873
+                ],
+                "roll": 0.10195588795808257,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.01893170177936554,
+                  -0.27309247851371765,
+                  0.16766610741615295
+                ],
+                "sole_point": [
+                  0.10077013820409775,
+                  -0.189890056848526,
+                  0.011999979615211487
+                ],
+                "roll": -0.20943951399382016,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.5625,
+          "time": 0.14558823529411766,
+          "contacts": {
+            "R": false,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1243802085518837,
+                  0.16588649153709412,
+                  0.24238866567611694
+                ],
+                "sole_point": [
+                  -0.33966830372810364,
+                  -0.05298973619937897,
+                  0.11081047356128693
+                ],
+                "roll": 0.011626243895916976,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.11950857937335968,
+                  -0.1708393096923828,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.09683766961097717,
+                  -0.39079129695892334,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.625,
+          "time": 0.16176470588235295,
+          "contacts": {
+            "R": false,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.17129120230674744,
+                  0.11819365620613098,
+                  0.2400200068950653
+                ],
+                "sole_point": [
+                  -0.0691838413476944,
+                  0.2220028042793274,
+                  0.11098568141460419
+                ],
+                "roll": -0.00708127041176322,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.235862597823143,
+                  -0.05254606902599335,
+                  0.1563761979341507
+                ],
+                "sole_point": [
+                  0.024646326899528503,
+                  -0.2672826051712036,
+                  0.01199999451637268
+                ],
+                "roll": 0.053703783998353315,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.6875,
+          "time": 0.17794117647058824,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.21322886645793915,
+                  0.07555703818798065,
+                  0.24000556766986847
+                ],
+                "sole_point": [
+                  -0.11496293544769287,
+                  0.17546072602272034,
+                  0.10504196584224701
+                ],
+                "roll": -0.048576117860746365,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.2941029667854309,
+                  0.006664976477622986,
+                  0.27032455801963806
+                ],
+                "sole_point": [
+                  0.14521968364715576,
+                  -0.14469967782497406,
+                  0.012465864419937134
+                ],
+                "roll": 0.48869226642698366,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.75,
+          "time": 0.19411764705882356,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.24779577553272247,
+                  0.040414005517959595,
+                  0.23956243693828583
+                ],
+                "sole_point": [
+                  -0.15545831620693207,
+                  0.1342904269695282,
+                  0.09633840620517731
+                ],
+                "roll": -0.10933852405189312,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.3225904107093811,
+                  0.03562718629837036,
+                  0.3078939616680145
+                ],
+                "sole_point": [
+                  0.17370712757110596,
+                  -0.11573746800422668,
+                  0.0500352680683136
+                ],
+                "roll": 0.48869226642698366,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.8125,
+          "time": 0.21029411764705885,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.2726418673992157,
+                  0.015153825283050537,
+                  0.23862148821353912
+                ],
+                "sole_point": [
+                  -0.18641379475593567,
+                  0.10281902551651001,
+                  0.08785131573677063
+                ],
+                "roll": -0.16858959279431915,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.3144555985927582,
+                  0.02735680341720581,
+                  0.3183513581752777
+                ],
+                "sole_point": [
+                  0.16314667463302612,
+                  -0.12647390365600586,
+                  0.0633801817893982
+                ],
+                "roll": 0.47520233925492217,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.875,
+          "time": 0.22647058823529415,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.2854170799255371,
+                  0.0021657049655914307,
+                  0.23776812851428986
+                ],
+                "sole_point": [
+                  -0.2031547576189041,
+                  0.08579905331134796,
+                  0.08255703747272491
+                ],
+                "roll": -0.20555067786911876,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.2946869134902954,
+                  0.007258668541908264,
+                  0.306730180978775
+                ],
+                "sole_point": [
+                  0.12743201851844788,
+                  -0.16278381645679474,
+                  0.07289275527000427
+                ],
+                "roll": 0.3822279088903944,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.9375,
+          "time": 0.24264705882352944,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.29951128363609314,
+                  -0.012163430452346802,
+                  0.21551766991615295
+                ],
+                "sole_point": [
+                  -0.21767285466194153,
+                  0.07103899121284485,
+                  0.05985154211521149
+                ],
+                "roll": -0.20943951399382016,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.26009196043014526,
+                  -0.02791287750005722,
+                  0.2853873074054718
+                ],
+                "sole_point": [
+                  0.07151159644126892,
+                  -0.2196362316608429,
+                  0.08727574348449707
+                ],
+                "roll": 0.24165105950610302,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        }
+      ],
+      "mine": [
+        {
+          "phase": 0.0,
+          "time": 0.0,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.0625,
+          "time": 0.090625,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.125,
+          "time": 0.18125,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.1875,
+          "time": 0.271875,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.25,
+          "time": 0.3625,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.3125,
+          "time": 0.453125,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.375,
+          "time": 0.54375,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.4375,
+          "time": 0.634375,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.5,
+          "time": 0.725,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.55,
+          "time": 0.7975,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.625,
+          "time": 0.90625,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.6875,
+          "time": 0.996875,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.75,
+          "time": 1.0875,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.8125,
+          "time": 1.1781249999999999,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.875,
+          "time": 1.26875,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.9375,
+          "time": 1.359375,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        }
+      ],
+      "idle_to_walk-000000": [
+        {
+          "phase": 0.0,
+          "time": 0.0,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.25,
+          "time": 0.020951364700863496,
+          "contacts": {
+            "R": true,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.03975847363471985,
+                  0.25191858410835266,
+                  0.24851298332214355
+                ],
+                "sole_point": [
+                  -0.20515307784080505,
+                  0.08376742899417877,
+                  0.01199999451637268
+                ],
+                "roll": 0.3935082164452039,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.2822892665863037,
+                  -0.0053456127643585205,
+                  0.15035954117774963
+                ],
+                "sole_point": [
+                  0.3848046064376831,
+                  0.09887831658124924,
+                  0.02198474109172821
+                ],
+                "roll": -0.0025608539612955927,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 7.123463998293588
+        },
+        {
+          "phase": 0.5,
+          "time": 0.04190272940172699,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  0.03224992752075195,
+                  0.32512712478637695,
+                  0.2995475232601166
+                ],
+                "sole_point": [
+                  -0.1166333556175232,
+                  0.1737624704837799,
+                  0.04168882966041565
+                ],
+                "roll": 0.48869226642698366,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.2556213140487671,
+                  -0.03245806694030762,
+                  0.19000542163848877
+                ],
+                "sole_point": [
+                  0.35388246178627014,
+                  0.06744076311588287,
+                  0.05503474175930023
+                ],
+                "roll": -0.048626661281582814,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 14.246927996587177
+        },
+        {
+          "phase": 0.75,
+          "time": 0.06285409410259049,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  0.020938485860824585,
+                  0.313627153635025,
+                  0.31765735149383545
+                ],
+                "sole_point": [
+                  -0.13145393133163452,
+                  0.15869487822055817,
+                  0.06400179862976074
+                ],
+                "roll": 0.4691266986191149,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.07986953854560852,
+                  -0.2111390233039856,
+                  0.2285156399011612
+                ],
+                "sole_point": [
+                  0.16743531823158264,
+                  -0.12211382389068604,
+                  0.07932160794734955
+                ],
+                "roll": -0.15587069337165063,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 21.370391994880766
+        },
+        {
+          "phase": 1.0,
+          "time": 0.08380545880345398,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.009972631931304932,
+                  0.2822008728981018,
+                  0.2991545498371124
+                ],
+                "sole_point": [
+                  -0.1857154667377472,
+                  0.10352899134159088,
+                  0.07833924889564514
+                ],
+                "roll": 0.32899452894045966,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.005678892135620117,
+                  -0.2865661382675171,
+                  0.23766611516475677
+                ],
+                "sole_point": [
+                  0.08751732856035233,
+                  -0.20336371660232544,
+                  0.08199998736381531
+                ],
+                "roll": -0.20943951399382016,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 28.493855993174353
+        }
+      ],
+      "walk_to_mine-625000": [
+        {
+          "phase": 0.0,
+          "time": 0.0,
+          "contacts": {
+            "R": false,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.17129120230674744,
+                  0.11819365620613098,
+                  0.2400200068950653
+                ],
+                "sole_point": [
+                  -0.0691838413476944,
+                  0.2220028042793274,
+                  0.11098568141460419
+                ],
+                "roll": -0.00708127041176322,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.235862597823143,
+                  -0.05254606902599335,
+                  0.1563761830329895
+                ],
+                "sole_point": [
+                  0.024646326899528503,
+                  -0.2672826051712036,
+                  0.011999979615211487
+                ],
+                "roll": 0.053703783998353315,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.25,
+          "time": 0.012839068332001645,
+          "contacts": {
+            "R": false,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.27562180161476135,
+                  0.012124195694923401,
+                  0.2296852171421051
+                ],
+                "sole_point": [
+                  -0.17597244679927826,
+                  0.11343437433242798,
+                  0.09680043160915375
+                ],
+                "roll": -0.0338454276858813,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.21351152658462524,
+                  -0.0752696543931961,
+                  0.20955896377563477
+                ],
+                "sole_point": [
+                  0.02464631199836731,
+                  -0.2672826051712036,
+                  0.01199999451637268
+                ],
+                "roll": 0.2395977897918413,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.5,
+          "time": 0.02567813666400329,
+          "contacts": {
+            "R": false,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.2393622100353241,
+                  0.04898812621831894,
+                  0.19002389907836914
+                ],
+                "sole_point": [
+                  -0.14044144749641418,
+                  0.14955756068229675,
+                  0.05603665113449097
+                ],
+                "roll": -0.04163193896709333,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.2189066857099533,
+                  -0.06978457421064377,
+                  0.19861729443073273
+                ],
+                "sole_point": [
+                  0.024646326899528503,
+                  -0.2672825753688812,
+                  0.011999979615211487
+                ],
+                "roll": 0.19954992701224253,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.75,
+          "time": 0.03851720499600494,
+          "contacts": {
+            "R": false,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.10270185023546219,
+                  0.18792617321014404,
+                  0.1503845751285553
+                ],
+                "sole_point": [
+                  -0.0012038648128509521,
+                  0.29111579060554504,
+                  0.020376205444335938
+                ],
+                "roll": -0.013790607507100826,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.23385369777679443,
+                  -0.054588451981544495,
+                  0.16220669448375702
+                ],
+                "sole_point": [
+                  0.024646326899528503,
+                  -0.2672826051712036,
+                  0.011999964714050293
+                ],
+                "roll": 0.07315301431463907,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 1.0,
+          "time": 0.05135627332800658,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.05130721628665924,
+                  0.24017737805843353,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.2676534652709961,
+                  0.02022537589073181,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.24099256098270416,
+                  -0.04733060300350189,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.02464631199836731,
+                  -0.2672826051712036,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        }
+      ],
+      "mine_to_walk-625000": [
+        {
+          "phase": 0.0,
+          "time": 0.0,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1461498886346817,
+                  0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.36249613761901855,
+                  -0.07619801163673401,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.1461498886346817,
+                  -0.1437539905309677,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.07019636034965515,
+                  -0.36370599269866943,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.25,
+          "time": 0.020951364700863496,
+          "contacts": {
+            "R": true,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.03975847363471985,
+                  0.25191858410835266,
+                  0.24851298332214355
+                ],
+                "sole_point": [
+                  -0.20515307784080505,
+                  0.08376742899417877,
+                  0.01199999451637268
+                ],
+                "roll": 0.3935082164452039,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.2822892665863037,
+                  -0.0053456127643585205,
+                  0.15035954117774963
+                ],
+                "sole_point": [
+                  0.3848046064376831,
+                  0.09887831658124924,
+                  0.02198474109172821
+                ],
+                "roll": -0.0025608539612955927,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 7.123463998293588
+        },
+        {
+          "phase": 0.5,
+          "time": 0.04190272940172699,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  0.03224992752075195,
+                  0.32512712478637695,
+                  0.2995475232601166
+                ],
+                "sole_point": [
+                  -0.1166333556175232,
+                  0.1737624704837799,
+                  0.04168882966041565
+                ],
+                "roll": 0.48869226642698366,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.2556213140487671,
+                  -0.03245806694030762,
+                  0.19000542163848877
+                ],
+                "sole_point": [
+                  0.35388246178627014,
+                  0.06744076311588287,
+                  0.05503474175930023
+                ],
+                "roll": -0.048626661281582814,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 14.246927996587177
+        },
+        {
+          "phase": 0.75,
+          "time": 0.06285409410259049,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  0.020938485860824585,
+                  0.313627153635025,
+                  0.31765735149383545
+                ],
+                "sole_point": [
+                  -0.13145393133163452,
+                  0.15869487822055817,
+                  0.06400179862976074
+                ],
+                "roll": 0.4691266986191149,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.07986953854560852,
+                  -0.2111390233039856,
+                  0.2285156399011612
+                ],
+                "sole_point": [
+                  0.16743531823158264,
+                  -0.12211382389068604,
+                  0.07932160794734955
+                ],
+                "roll": -0.15587069337165063,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 21.370391994880766
+        },
+        {
+          "phase": 1.0,
+          "time": 0.08380545880345398,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.009972631931304932,
+                  0.2822008728981018,
+                  0.2991545498371124
+                ],
+                "sole_point": [
+                  -0.1857154667377472,
+                  0.10352899134159088,
+                  0.07833924889564514
+                ],
+                "roll": 0.32899452894045966,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.005678892135620117,
+                  -0.2865661382675171,
+                  0.23766611516475677
+                ],
+                "sole_point": [
+                  0.08751732856035233,
+                  -0.20336371660232544,
+                  0.08199998736381531
+                ],
+                "roll": -0.20943951399382016,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": -0.777133932278477
+          },
+          "ground_root_pixels": 28.493855993174353
+        }
+      ]
+    },
+    "right": {
+      "idle": [
+        {
+          "phase": 0.0,
+          "time": 0.0,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        }
+      ],
+      "walk": [
+        {
+          "phase": 0.0,
+          "time": 0.0,
+          "contacts": {
+            "R": true,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1910559982061386,
+                  -0.10824946314096451,
+                  0.16766610741615295
+                ],
+                "sole_point": [
+                  -0.20836815237998962,
+                  0.007164843380451202,
+                  0.011999979615211487
+                ],
+                "roll": -0.20943950160131852,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.19595739245414734,
+                  0.07557351887226105,
+                  0.2603047490119934
+                ],
+                "sole_point": [
+                  0.23955321311950684,
+                  -0.21506507694721222,
+                  0.10156847536563873
+                ],
+                "roll": 0.10195588189156149,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.0625,
+          "time": 0.016176470588235296,
+          "contacts": {
+            "R": true,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20142099261283875,
+                  -0.039149507880210876,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.15565496683120728,
+                  -0.3442561626434326,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20063139498233795,
+                  0.04441355913877487,
+                  0.24238866567611694
+                ],
+                "sole_point": [
+                  0.24617356061935425,
+                  -0.259200781583786,
+                  0.11081047356128693
+                ],
+                "roll": 0.011626243202954484,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.125,
+          "time": 0.03235294117647059,
+          "contacts": {
+            "R": true,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.2151235044002533,
+                  0.05220046639442444,
+                  0.1563761979341507
+                ],
+                "sole_point": [
+                  -0.17044268548488617,
+                  -0.24567154049873352,
+                  0.01199999451637268
+                ],
+                "roll": 0.05370378079889693,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.2051437646150589,
+                  0.014331026002764702,
+                  0.2400200068950653
+                ],
+                "sole_point": [
+                  0.18354390561580658,
+                  0.15832999348640442,
+                  0.11098568141460419
+                ],
+                "roll": -0.007081269989690156,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.1875,
+          "time": 0.04852941176470589,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.21661439538002014,
+                  0.062139756977558136,
+                  0.27032455801963806
+                ],
+                "sole_point": [
+                  -0.18511953949928284,
+                  -0.14782589673995972,
+                  0.012465864419937134
+                ],
+                "roll": 0.4886922384442956,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.2091343253850937,
+                  -0.01227262057363987,
+                  0.24000556766986847
+                ],
+                "sole_point": [
+                  0.18834708631038666,
+                  0.126308873295784,
+                  0.10504196584224701
+                ],
+                "roll": -0.04857611496652285,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.25,
+          "time": 0.06470588235294118,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.22008204460144043,
+                  0.085257388651371,
+                  0.3078939616680145
+                ],
+                "sole_point": [
+                  -0.18858718872070312,
+                  -0.12470825761556625,
+                  0.0500352680683136
+                ],
+                "roll": 0.4886922384442956,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.21239438652992249,
+                  -0.03400636464357376,
+                  0.23956243693828583
+                ],
+                "sole_point": [
+                  0.19286125898361206,
+                  0.0962144061923027,
+                  0.09633840620517731
+                ],
+                "roll": -0.10933851104368114,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.3125,
+          "time": 0.08088235294117647,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.21915292739868164,
+                  0.079063281416893,
+                  0.3183513581752777
+                ],
+                "sole_point": [
+                  -0.1871449500322342,
+                  -0.1343231350183487,
+                  0.0633801817893982
+                ],
+                "roll": 0.47520233925492217,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.21472057700157166,
+                  -0.049514323472976685,
+                  0.23862148821353912
+                ],
+                "sole_point": [
+                  0.19647984206676483,
+                  0.07209055125713348,
+                  0.08785131573677063
+                ],
+                "roll": -0.16858959279431915,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.375,
+          "time": 0.09705882352941178,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.2172067016363144,
+                  0.0660884901881218,
+                  0.306730180978775
+                ],
+                "sole_point": [
+                  -0.18182550370693207,
+                  -0.16978606581687927,
+                  0.07289275527000427
+                ],
+                "roll": 0.38222788665854657,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.21590952575206757,
+                  -0.057440608739852905,
+                  0.23776812851428986
+                ],
+                "sole_point": [
+                  0.19850771129131317,
+                  0.0585714727640152,
+                  0.08255703747272491
+                ],
+                "roll": -0.20555067786911876,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.4375,
+          "time": 0.11323529411764707,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.2138112336397171,
+                  0.04345206171274185,
+                  0.2853873074054718
+                ],
+                "sole_point": [
+                  -0.17391882836818695,
+                  -0.22249716520309448,
+                  0.08727574348449707
+                ],
+                "roll": 0.24165105950610302,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.21759019792079926,
+                  -0.06864514946937561,
+                  0.21551766991615295
+                ],
+                "sole_point": [
+                  0.20027804374694824,
+                  0.0467691570520401,
+                  0.05985154211521149
+                ],
+                "roll": -0.20943950160131852,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.5,
+          "time": 0.12941176470588237,
+          "contacts": {
+            "R": false,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20950651168823242,
+                  0.014753902330994606,
+                  0.2603047490119934
+                ],
+                "sole_point": [
+                  -0.16591069102287292,
+                  -0.2758846879005432,
+                  0.10156847536563873
+                ],
+                "roll": 0.10195588189156149,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.21440790593624115,
+                  -0.047429852187633514,
+                  0.16766610741615295
+                ],
+                "sole_point": [
+                  0.19709575176239014,
+                  0.0679844543337822,
+                  0.011999979615211487
+                ],
+                "roll": -0.20943950160131852,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.5625,
+          "time": 0.14558823529411766,
+          "contacts": {
+            "R": false,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.2048325091600418,
+                  -0.01640605553984642,
+                  0.24238866567611694
+                ],
+                "sole_point": [
+                  -0.1592903435230255,
+                  -0.3200204074382782,
+                  0.11081047356128693
+                ],
+                "roll": 0.011626243202954484,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.20404291152954102,
+                  0.021670106798410416,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24980893731117249,
+                  -0.28343653678894043,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.625,
+          "time": 0.16176470588235295,
+          "contacts": {
+            "R": false,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20032013952732086,
+                  -0.04648859053850174,
+                  0.2400200068950653
+                ],
+                "sole_point": [
+                  -0.22191999852657318,
+                  0.09751037508249283,
+                  0.11098568141460419
+                ],
+                "roll": -0.007081269989690156,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.19034039974212646,
+                  0.11302007734775543,
+                  0.1563761979341507
+                ],
+                "sole_point": [
+                  0.2350212186574936,
+                  -0.18485192954540253,
+                  0.01199999451637268
+                ],
+                "roll": 0.05370378079889693,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.6875,
+          "time": 0.17794117647058824,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.19632957875728607,
+                  -0.07309223711490631,
+                  0.24000556766986847
+                ],
+                "sole_point": [
+                  -0.2171168178319931,
+                  0.065489262342453,
+                  0.10504196584224701
+                ],
+                "roll": -0.04857611496652285,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.18884950876235962,
+                  0.12295936793088913,
+                  0.27032455801963806
+                ],
+                "sole_point": [
+                  0.22034436464309692,
+                  -0.08700627833604813,
+                  0.012465864419937134
+                ],
+                "roll": 0.4886922384442956,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.75,
+          "time": 0.19411764705882356,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.19306951761245728,
+                  -0.09482597559690475,
+                  0.23956243693828583
+                ],
+                "sole_point": [
+                  -0.2126026451587677,
+                  0.03539479523897171,
+                  0.09633840620517731
+                ],
+                "roll": -0.10933851104368114,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.18538185954093933,
+                  0.1460770070552826,
+                  0.3078939616680145
+                ],
+                "sole_point": [
+                  0.21687671542167664,
+                  -0.06388863921165466,
+                  0.0500352680683136
+                ],
+                "roll": 0.4886922384442956,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.8125,
+          "time": 0.21029411764705885,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1907433271408081,
+                  -0.11033393442630768,
+                  0.23862148821353912
+                ],
+                "sole_point": [
+                  -0.20898406207561493,
+                  0.01127094030380249,
+                  0.08785131573677063
+                ],
+                "roll": -0.16858959279431915,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.18631097674369812,
+                  0.139882892370224,
+                  0.3183513581752777
+                ],
+                "sole_point": [
+                  0.21831895411014557,
+                  -0.0735035240650177,
+                  0.0633801817893982
+                ],
+                "roll": 0.47520233925492217,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.875,
+          "time": 0.22647058823529415,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1895543783903122,
+                  -0.1182602196931839,
+                  0.23776812851428986
+                ],
+                "sole_point": [
+                  -0.2069561928510666,
+                  -0.002248138189315796,
+                  0.08255703747272491
+                ],
+                "roll": -0.20555067786911876,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.18825720250606537,
+                  0.1269081085920334,
+                  0.306730180978775
+                ],
+                "sole_point": [
+                  0.2236384004354477,
+                  -0.10896645486354828,
+                  0.07289275527000427
+                ],
+                "roll": 0.38222788665854657,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.9375,
+          "time": 0.24264705882352944,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1878737062215805,
+                  -0.1294647604227066,
+                  0.21551766991615295
+                ],
+                "sole_point": [
+                  -0.20518586039543152,
+                  -0.014050453901290894,
+                  0.05985154211521149
+                ],
+                "roll": -0.20943950160131852,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.19165267050266266,
+                  0.10427167266607285,
+                  0.2853873074054718
+                ],
+                "sole_point": [
+                  0.2315450757741928,
+                  -0.1616775393486023,
+                  0.08727574348449707
+                ],
+                "roll": 0.24165105950610302,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        }
+      ],
+      "mine": [
+        {
+          "phase": 0.0,
+          "time": 0.0,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.0625,
+          "time": 0.090625,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.125,
+          "time": 0.18125,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.1875,
+          "time": 0.271875,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.25,
+          "time": 0.3625,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.3125,
+          "time": 0.453125,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.375,
+          "time": 0.54375,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.4375,
+          "time": 0.634375,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.5,
+          "time": 0.725,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.55,
+          "time": 0.7975,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.625,
+          "time": 0.90625,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.6875,
+          "time": 0.996875,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.75,
+          "time": 1.0875,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.8125,
+          "time": 1.1781249999999999,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.875,
+          "time": 1.26875,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.9375,
+          "time": 1.359375,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        }
+      ],
+      "idle_to_walk-000000": [
+        {
+          "phase": 0.0,
+          "time": 0.0,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.25,
+          "time": 0.021479717071212014,
+          "contacts": {
+            "R": true,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.21371662616729736,
+                  0.042821288108825684,
+                  0.23328660428524017
+                ],
+                "sole_point": [
+                  -0.1766015887260437,
+                  -0.20461216568946838,
+                  0.012000009417533875
+                ],
+                "roll": 0.3308765911894406,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.18555843830108643,
+                  0.14489984512329102,
+                  0.15035828948020935
+                ],
+                "sole_point": [
+                  0.16386429965496063,
+                  0.28952735662460327,
+                  0.02204476296901703
+                ],
+                "roll": -0.002141714042550967,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 7.303103804212085
+        },
+        {
+          "phase": 0.5,
+          "time": 0.04295943414242403,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.22035233676433563,
+                  0.08705936372280121,
+                  0.2965092360973358
+                ],
+                "sole_point": [
+                  -0.18885748088359833,
+                  -0.12290628254413605,
+                  0.03865054249763489
+                ],
+                "roll": 0.4886922384442956,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.18755115568637848,
+                  0.13161520659923553,
+                  0.19001156091690063
+                ],
+                "sole_point": [
+                  0.1667235940694809,
+                  0.27046558260917664,
+                  0.055330827832221985
+                ],
+                "roll": -0.046559568509547816,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 14.60620760842417
+        },
+        {
+          "phase": 0.75,
+          "time": 0.06443915121363604,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.2190726101398468,
+                  0.07852786779403687,
+                  0.31788718700408936
+                ],
+                "sole_point": [
+                  -0.18691085278987885,
+                  -0.13588371872901917,
+                  0.06379687786102295
+                ],
+                "roll": 0.47112961985431184,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.20749498903751373,
+                  -0.001343846321105957,
+                  0.22854211926460266
+                ],
+                "sole_point": [
+                  0.1889391988515854,
+                  0.12236133962869644,
+                  0.0795292854309082
+                ],
+                "roll": -0.15442083900927714,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 21.909311412636253
+        },
+        {
+          "phase": 1.0,
+          "time": 0.08591886828484806,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.21599218249320984,
+                  0.05799171328544617,
+                  0.2991545498371124
+                ],
+                "sole_point": [
+                  -0.17881543934345245,
+                  -0.18985314667224884,
+                  0.07833924889564514
+                ],
+                "roll": 0.32899449042493595,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.2160211205482483,
+                  -0.05818456411361694,
+                  0.23766611516475677
+                ],
+                "sole_point": [
+                  0.19870896637439728,
+                  0.05722974240779877,
+                  0.08199998736381531
+                ],
+                "roll": -0.20943950160131852,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 29.21241521684834
+        }
+      ],
+      "walk_to_mine-625000": [
+        {
+          "phase": 0.0,
+          "time": 0.0,
+          "contacts": {
+            "R": false,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20032013952732086,
+                  -0.04648859053850174,
+                  0.2400200068950653
+                ],
+                "sole_point": [
+                  -0.22191999852657318,
+                  0.09751037508249283,
+                  0.11098568141460419
+                ],
+                "roll": -0.007081269989690156,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.19034039974212646,
+                  0.11302007734775543,
+                  0.1563761830329895
+                ],
+                "sole_point": [
+                  0.2350212186574936,
+                  -0.18485192954540253,
+                  0.011999979615211487
+                ],
+                "roll": 0.05370378079889693,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.25,
+          "time": 0.02231236935186671,
+          "contacts": {
+            "R": false,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.1789064258337021,
+                  -0.18924658000469208,
+                  0.2295941412448883
+                ],
+                "sole_point": [
+                  -0.1993989795446396,
+                  -0.05262959003448486,
+                  0.09259791672229767
+                ],
+                "roll": -0.06318449862280859,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.1996651142835617,
+                  0.050855379551649094,
+                  0.24600982666015625
+                ],
+                "sole_point": [
+                  0.23502123355865479,
+                  -0.18485191464424133,
+                  0.01199999451637268
+                ],
+                "roll": 0.38295101373279616,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.5,
+          "time": 0.04462473870373342,
+          "contacts": {
+            "R": false,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.18331174552440643,
+                  -0.15987791121006012,
+                  0.18985675275325775
+                ],
+                "sole_point": [
+                  -0.2035057246685028,
+                  -0.025251492857933044,
+                  0.050860196352005005
+                ],
+                "roll": -0.07777047196674622,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.1977783888578415,
+                  0.06343346834182739,
+                  0.23230870068073273
+                ],
+                "sole_point": [
+                  0.2350212186574936,
+                  -0.18485192954540253,
+                  0.012000009417533875
+                ],
+                "roll": 0.32697488508084455,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.75,
+          "time": 0.06693710805560013,
+          "contacts": {
+            "R": false,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20710884034633636,
+                  -0.0012306459248065948,
+                  0.15039227902889252
+                ],
+                "sole_point": [
+                  -0.2284303903579712,
+                  0.14091293513774872,
+                  0.01927131414413452
+                ],
+                "roll": -0.021504162043534097,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.19188019633293152,
+                  0.10275478661060333,
+                  0.1762857884168625
+                ],
+                "sole_point": [
+                  0.2350212186574936,
+                  -0.18485192954540253,
+                  0.01199999451637268
+                ],
+                "roll": 0.12093733804467016,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 1.0,
+          "time": 0.08924947740746685,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.21620869636535645,
+                  0.059435099363327026,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.17044267058372498,
+                  -0.24567154049873352,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.18925520777702332,
+                  0.12025471031665802,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.23502123355865479,
+                  -0.18485192954540253,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        }
+      ],
+      "mine_to_walk-625000": [
+        {
+          "phase": 0.0,
+          "time": 0.0,
+          "contacts": {
+            "R": true,
+            "L": true
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.20273195207118988,
+                  -0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  -0.1569659411907196,
+                  -0.33551645278930664,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.20273195207118988,
+                  0.030409807339310646,
+                  0.14000000059604645
+                ],
+                "sole_point": [
+                  0.24849796295166016,
+                  -0.27469682693481445,
+                  0.01199999451637268
+                ],
+                "roll": 0.0,
+                "contact": true
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 0.0
+        },
+        {
+          "phase": 0.25,
+          "time": 0.021479717071212014,
+          "contacts": {
+            "R": true,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.21371662616729736,
+                  0.042821288108825684,
+                  0.23328660428524017
+                ],
+                "sole_point": [
+                  -0.1766015887260437,
+                  -0.20461216568946838,
+                  0.012000009417533875
+                ],
+                "roll": 0.3308765911894406,
+                "contact": true
+              },
+              "L": {
+                "ankle": [
+                  0.18555843830108643,
+                  0.14489984512329102,
+                  0.15035828948020935
+                ],
+                "sole_point": [
+                  0.16386429965496063,
+                  0.28952735662460327,
+                  0.02204476296901703
+                ],
+                "roll": -0.002141714042550967,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 7.303103804212085
+        },
+        {
+          "phase": 0.5,
+          "time": 0.04295943414242403,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.22035233676433563,
+                  0.08705936372280121,
+                  0.2965092360973358
+                ],
+                "sole_point": [
+                  -0.18885748088359833,
+                  -0.12290628254413605,
+                  0.03865054249763489
+                ],
+                "roll": 0.4886922384442956,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.18755115568637848,
+                  0.13161520659923553,
+                  0.19001156091690063
+                ],
+                "sole_point": [
+                  0.1667235940694809,
+                  0.27046558260917664,
+                  0.055330827832221985
+                ],
+                "roll": -0.046559568509547816,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 14.60620760842417
+        },
+        {
+          "phase": 0.75,
+          "time": 0.06443915121363604,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.2190726101398468,
+                  0.07852786779403687,
+                  0.31788718700408936
+                ],
+                "sole_point": [
+                  -0.18691085278987885,
+                  -0.13588371872901917,
+                  0.06379687786102295
+                ],
+                "roll": 0.47112961985431184,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.20749498903751373,
+                  -0.001343846321105957,
+                  0.22854211926460266
+                ],
+                "sole_point": [
+                  0.1889391988515854,
+                  0.12236133962869644,
+                  0.0795292854309082
+                ],
+                "roll": -0.15442083900927714,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 21.909311412636253
+        },
+        {
+          "phase": 1.0,
+          "time": 0.08591886828484806,
+          "contacts": {
+            "R": false,
+            "L": false
+          },
+          "native": {
+            "feet": {
+              "R": {
+                "ankle": [
+                  -0.21599218249320984,
+                  0.05799171328544617,
+                  0.2991545498371124
+                ],
+                "sole_point": [
+                  -0.17881543934345245,
+                  -0.18985314667224884,
+                  0.07833924889564514
+                ],
+                "roll": 0.32899449042493595,
+                "contact": false
+              },
+              "L": {
+                "ankle": [
+                  0.2160211205482483,
+                  -0.05818456411361694,
+                  0.23766611516475677
+                ],
+                "sole_point": [
+                  0.19870896637439728,
+                  0.05722974240779877,
+                  0.08199998736381531
+                ],
+                "roll": -0.20943950160131852,
+                "contact": false
+              }
+            },
+            "rotor_angle": 0.0,
+            "heading_radians": 0.14888992474282878
+          },
+          "ground_root_pixels": 29.21241521684834
+        }
+      ]
+    }
+  },
+  "atlas_page_budget": {
+    "max_frames": 200,
+    "max_dimension": 1280,
+    "loading": "Load the active direction/state page; do not preload the entire transition bank."
+  }
+}
