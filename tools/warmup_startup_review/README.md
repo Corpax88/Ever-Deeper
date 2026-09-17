@@ -1,4 +1,26 @@
-# Ordinary startup comparison — preparation only
+# Ordinary startup comparison — retained-video follow-up preparation
+
+The original request-only commit5b0afd9/run35259135095 remains FAILED.
+Both saved sessions passed mechanical checks; both fresh sessions missed the
+declared100–230pixel movement envelope. There were no browser errors and both
+settled menu pairs were byte-identical. No video was retained in the artifact.
+The original child, all267 closed files,133PNG originals and rejection remain
+unchanged. Saved stills support sampled release behavior; fresh has no later
+visual sample and continuous coverage is missing in all four.
+
+This distinct follow-up corrects that concrete retention failure with awaited
+`page.video().saveAs` after context closure and before browser disconnect.
+Nonempty EBML bytes and SHA256 are mandatory; decode and sequence coverage
+still need independent review. See the official Video API:
+https://playwright.dev/docs/api/class-video
+
+Exactly four sessions are justified by the four missing continuous recordings.
+Saved sessions retain the requested500ms protocol. Fresh sessions instead
+wait30passive DOM requestAnimationFrame opportunities between trusted down/up;
+actual timestamps are retained. These are neither engine frames nor a500ms
+guarantee. The same100–230pixel/y±1 envelope remains mandatory. Failure now
+retains the subsequent16s observation instead of aborting before that evidence.
+No first-run failure is reclassified or waived, and no automatic rerun occurs.
 
 Four disposable Mac WebKit launches on one origin/path: published DEV13 and
 the nonindexed warmup candidate, each with fresh storage and with the same
@@ -20,7 +42,7 @@ Godot installed its event listeners; that boundary remains inconclusive.
 
 OCR identifies the settled menu and the actual NEW GAME/CONTINUE control.
 The natural tutorial is retained. At first settled HUD, the Surface save must
-still have its expected starting location. A normal 500 ms ArrowRight hold
+still have its expected starting location. The declared normal ArrowRight hold
 and release follows. A naturally persisted bounded position change is then
 observed, followed by 16 seconds of uninterrupted gameplay/video/frames and
 unchanged saved location. The source has an 8 s location checkpoint and 6 s
@@ -38,6 +60,7 @@ early engine-input coverage is inconclusive, not silently accepted.
 Visual/state parity requires independent review of the actual four outputs;
 a zero runner exit only means its bounded mechanical checks passed.
 
-No REQUEST exists in a preparation commit. A separately reviewed direct child
-may add only REQUEST.json for four sessions, attempt 1. There is no rerun,
+The original REQUEST.json remains historical. No REQUEST-v2.json exists in a
+new preparation commit. A separately reviewed direct child may add only
+REQUEST-v2.json for four sessions, attempt 1. There is no automatic rerun,
 publication, FPS or physical-iPhone claim.

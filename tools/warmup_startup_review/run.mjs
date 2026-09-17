@@ -6,6 +6,7 @@ import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
+import { createRequire } from 'node:module';
 import { hash, decodeSave } from './codec.mjs';
 
 const exec = promisify(execFile), here = path.dirname(fileURLToPath(import.meta.url));
@@ -88,12 +89,12 @@ function startingState(s) {
 const sessions=[],requests=[];let server,active=null;
 await fs.mkdir(output,{recursive:true});
 try{
-  if(process.platform!=='darwin'||process.getuid()===0||process.env.GITHUB_REF!=='refs/heads/codex/nonindexed-warmup-package-probe-20260917'||process.env.GITHUB_RUN_ATTEMPT!=='1')throw Error('Wrong host/branch/attempt');
-  const request=JSON.parse(await fs.readFile(path.join(here,'REQUEST.json'),'utf8'));
-  if(request.sessions!==4||request.probe!=='intact_startup_four_launches_v1'||request.source!==pins.candidate.source||request.baseline_source!==pins.baseline.source||request.diagnostic_only!==true)throw Error('Wrong bounded request');
+  if(process.platform!=='darwin'||process.getuid()===0||process.env.GITHUB_REF!=='refs/heads/codex/nonindexed-startup-capture-v2-20260917'||process.env.GITHUB_RUN_ATTEMPT!=='1')throw Error('Wrong host/branch/attempt');
+  const request=JSON.parse(await fs.readFile(path.join(here,'REQUEST-v2.json'),'utf8'));
+  if(request.sessions!==4||request.probe!=='intact_startup_retained_video_v2'||request.source!==pins.candidate.source||request.baseline_source!==pins.baseline.source||request.diagnostic_only!==true||request.fresh_hold_raf_opportunities!==30||request.saved_hold_requested_ms!==500)throw Error('Wrong bounded request');
   const {stdout:parent}=await exec('git',['rev-parse','HEAD^']);
   const {stdout:diff}=await exec('git',['diff-tree','--no-commit-id','--name-status','-r','HEAD']);
-  if(parent.trim()!==request.preparation_sha||diff.trim()!=='A\ttools/warmup_startup_review/REQUEST.json')throw Error('Request must be the preparation-only child');
+  if(parent.trim()!==request.preparation_sha||diff.trim()!=='A\ttools/warmup_startup_review/REQUEST-v2.json')throw Error('Request must be the preparation-only child');
   for(const [name,sha]of Object.entries(pins.helpers))if(hash(await fs.readFile(path.join(here,name)))!==sha)throw Error('Original helper changed: '+name);
   const fixture=await fs.readFile(fixturePath);
   if(fixture.length!==pins.fixture.size||hash(fixture)!==pins.fixture.sha256)throw Error('Wrong unchanged normal-save fixture');
@@ -102,6 +103,15 @@ try{
   await write(output,'packages-before.json',{baseline:await verifyPackage('baseline',baseline),candidate:await verifyPackage('candidate',candidate)});
   const {stdout:head}=await exec('git',['rev-parse','HEAD']);
   await write(output,'host.json',{study_sha:head.trim(),request,platform:process.platform,release:os.release(),arch:process.arch,uid:process.getuid(),node:process.version,executable:webkit.executablePath(),executable_sha256:hash(await fs.readFile(webkit.executablePath()))});
+  const require=createRequire(import.meta.url),packagePath=require.resolve('playwright-core/package.json');
+  const packageBytes=await fs.readFile(packagePath),pw=JSON.parse(packageBytes);
+  if(pw.version!=='1.62.0')throw Error('Changed lockfile Playwright version');
+  const bundlePath=path.join(path.dirname(packagePath),'lib/coreBundle.js');let bundle='',bundleReadError=null;
+  try{bundle=await fs.readFile(bundlePath,'utf8');}catch(e){bundleReadError=String(e);}
+  const excerpt=needle=>{const i=bundle.indexOf(needle);return i<0?null:bundle.slice(Math.max(0,i-100),i+600);};
+  await write(output,'video-library-source.json',{package:pw,package_sha256:hash(packageBytes),bundle_sha256:bundle?hash(Buffer.from(bundle)):null,bundle_read_error:bundleReadError,
+    public_api:'https://playwright.dev/docs/api/class-video',server_recording:excerpt('params2.recordVideo.dir = void 0'),remote_copy:excerpt('saveAsStream({}, kNoTimeout)'),
+    retention_method:'page.video().saveAs after context close and before browser disconnect; no remote filesystem path assumption'});
   const mime={'.html':'text/html; charset=utf-8','.js':'application/javascript','.wasm':'application/wasm','.png':'image/png','.pck':'application/octet-stream'};
   server=http.createServer((req,res)=>{
     const name=new URL(req.url,'http://localhost').pathname.slice(1)||'index.html';
@@ -118,8 +128,9 @@ try{
   for(const saved of [false,true])for(const kind of ['baseline','candidate']){
     const id=kind+'-'+(saved?'saved':'fresh'),root=path.join(output,id);await fs.mkdir(root,{recursive:true});
     active={id,kind,directory:kind==='baseline'?baseline:candidate};
-    const result={id,kind,saved,started:stamp(),mechanical_complete:false,visual_parity_accepted:false,early_engine_boundary:'inconclusive; DOM status is not Main/helper or listener timing',mining_release_proven:false};
-    const logs=[],errors=[],actions=[],frames=[];let bs,browser,context,page,recording=false,recorder,childExit=null,exitPromise;
+    const result={id,kind,saved,started:stamp(),mechanical_complete:false,visual_parity_accepted:false,early_engine_boundary:'inconclusive; DOM status is not Main/helper or listener timing',mining_release_proven:false,
+      normal_hold_protocol:saved?'requested500ms_same_as_original':'30passive_DOM_RAF_opportunities_not_engine_frames_or_wall_time',original_failed_run:35259135095};
+    const logs=[],errors=[],actions=[],frames=[];let bs,browser,context,page,video,recording=false,recorder,childExit=null,exitPromise;
     const snapshot=async name=>{const before=stamp();await page.screenshot({path:path.join(root,name+'.png'),animations:'allow',timeout:15000});frames.push({name,before,after:stamp()});};
     const scan=async name=>{await snapshot(name);const {stdout}=await exec(ocr,[path.join(root,name+'.png')],{timeout:20000,maxBuffer:1024*1024});const rows=JSON.parse(stdout);await write(root,name+'-ocr.json',rows);return rows;};
     const key=async(type,name,stage)=>{const before=await page.evaluate(()=>window.__startupReview.events.length);const a={type,key:name,stage,before:stamp()};actions.push(a);await page.keyboard[type](name);a.events=await page.evaluate(n=>window.__startupReview.events.slice(n),before);a.after=stamp();if(!a.events.some(e=>e.type==='key'+(type==='down'?'down':'up')&&e.key===(name==='Space'?' ':name)&&e.trusted&&e.target==='canvas'&&e.active==='canvas'&&e.focused))throw Error('Missing trusted focused canvas '+name+' '+type);await write(root,'actions.json',actions);};
@@ -132,6 +143,7 @@ try{
         recordVideo:{dir:path.join(root,'video'),size:{width:1696,height:780}}});
       await context.addInitScript({path:path.join(here,'passive.js')});
       page=await context.newPage();page.setDefaultTimeout(15000);
+      video=page.video();if(!video)throw Error('Requested page video handle missing');
       page.on('console',m=>{const row={type:m.type(),text:m.text(),...stamp()};logs.push(row);if(m.type()==='error'||/SCRIPT ERROR|Parse Error|^ERROR:|Assertion failed|WebGL.*(?:INVALID_|GL_ERROR)/.test(m.text()))errors.push(row);});
       page.on('pageerror',e=>errors.push({page_error:String(e),...stamp()}));page.on('crash',()=>errors.push({crash:true,...stamp()}));
       page.on('requestfailed',r=>errors.push({request_failed:r.url(),failure:r.failure(),...stamp()}));
@@ -187,8 +199,34 @@ try{
       const before=await storage(page,root,'storage-before-movement');startingState(before.primary?.state);
       if(!same(progress(before.primary.state),progress(fixtureDocument.state)))throw Error('First HUD progression differs from declared fixture defaults');
       if(saved&&(!same(progress(before.primary.state),progress(fixtureDocument.state))||before.primary.state.world_seed!==fixtureDocument.state.world_seed))throw Error('Valid save progression/seed changed before movement');
-      await key('down','ArrowRight','normal_hold');
-      await pause(500);await key('up','ArrowRight','normal_release');
+      // During this held interval, no event read, screenshot or file write is
+      // inserted before release. The passive recorder already retains events.
+      const normalEventStart=await page.evaluate(()=>window.__startupReview.events.length);
+      const normalPress={type:'down',key:'ArrowRight',stage:'normal_hold',before:stamp()};
+      await page.keyboard.down('ArrowRight');normalPress.after_dispatch=stamp();
+      let opportunities=null,holdError=null;
+      try{
+        if(saved)await pause(500);
+        else{
+          opportunities=await bounded(page.evaluate(()=>new Promise(resolve=>{
+            const start=performance.now(),times=[];
+            const next=time=>{times.push(time);if(times.length===30)resolve({start_ms:start,times_ms:times,finished_ms:performance.now()});else requestAnimationFrame(next);};
+            requestAnimationFrame(next);
+          })),10000,'30 passive DOM RAF opportunities');
+        }
+      }catch(e){holdError=String(e);}
+      const normalRelease={type:'up',key:'ArrowRight',stage:'normal_release',before:stamp()};
+      await page.keyboard.up('ArrowRight');normalRelease.after_dispatch=stamp();
+      const normalEvents=await page.evaluate(i=>window.__startupReview.events.slice(i),normalEventStart);
+      normalPress.events=normalEvents.filter(e=>e.type==='keydown');normalRelease.events=normalEvents.filter(e=>e.type==='keyup');
+      actions.push(normalPress,normalRelease);await write(root,'actions.json',actions);
+      if(opportunities)await write(root,'normal-hold-raf-opportunities.json',opportunities);
+      for(const a of [normalPress,normalRelease])if(!a.events.some(e=>e.key==='ArrowRight'&&e.trusted&&e.target==='canvas'&&e.active==='canvas'&&e.focused))throw Error('Normal trusted focused canvas input missing');
+      if(holdError)throw Error(holdError);
+      if(!saved&&(opportunities?.times_ms.length!==30||opportunities.times_ms.some((t,i,a)=>i>0&&t<=a[i-1])))throw Error('Incomplete/nonmonotonic passive RAF opportunities');
+      const holdDown=actions.find(a=>a.stage==='normal_hold').events.find(e=>e.phase==='capture'&&e.type==='keydown');
+      const holdUp=actions.find(a=>a.stage==='normal_release').events.find(e=>e.phase==='capture'&&e.type==='keyup');
+      result.actual_trusted_hold_ms=holdUp.time_ms-holdDown.time_ms;
       await snapshot('hud-released');
       let moved;
       for(let i=0;i<12;i++){
@@ -196,14 +234,14 @@ try{
         const x=s.primary?.state?.location?.x;
         if(Number.isFinite(x)&&x!==240){moved=s;break;}
       }
-      if(!moved)throw Error('No natural post-movement save within 24 s');
-      const location=moved.primary.state.location,dx=location.x-240;
-      if(location.scene!=='surface'||Math.abs(location.y-680)>1||dx<100||dx>230)throw Error('Movement outside predeclared clear-lane envelope; possible missed/stuck input or route mismatch');
+      const location=moved?.primary?.state?.location??before.primary.state.location,dx=location.x-240;
+      result.movement_envelope_pass=!!moved&&location.scene==='surface'&&Number.isFinite(dx)&&Math.abs(location.y-680)<=1&&dx>=100&&dx<=230;
+      if(!result.movement_envelope_pass)result.movement_error='No natural changed save or outside unchanged100–230/y±1 envelope; retain the full tail, never waive this failure';
       result.actual_movement_delta=dx;
       await snapshot('hud-natural-movement-save');
       for(let i=0;i<4;i++){await pause(4000);await snapshot('hud-no-input-'+i);}
       const after=await storage(page,root,'storage-after-release-window');
-      if(!same(after.primary?.state.location,location)||!same(progress(after.primary.state),progress(moved.primary.state)))throw Error('Location/progression changed after release window');
+      if(!same(after.primary?.state.location,location)||!same(progress(after.primary.state),progress((moved??before).primary.state)))throw Error('Location/progression changed after release window');
       result.release_observation={location,uninterrupted_wait_ms:16000,same_persisted_location:true,same_total_swings:true,new_checkpoint_write_claim:false,visual_stationary_review_pending:true};
       // Focus loss itself cancels input and flushes a save in Main. It cannot
       // substitute for either our release or the natural checkpoint here.
@@ -222,6 +260,7 @@ try{
       result.release_observation.active_state_samples=normalSamples.length;
       result.release_observation.no_focus_visibility_cancellation=true;
       if(errors.length)throw Error('Raw browser errors: '+JSON.stringify(errors));
+      if(!result.movement_envelope_pass)throw Error(result.movement_error);
       result.mechanical_complete=true;
     }catch(e){result.error=String(e.stack??e);}
     finally{
@@ -230,10 +269,20 @@ try{
         try{await write(root,'lifecycle-final.json',await page.evaluate(()=>window.__startupReview??null));}catch(e){result.lifecycle_read_error=String(e);}
       }
       if(context)await bounded(context.close(),20000,'context/video closure').catch(e=>{result.closure_error=String(e);});
+      if(video){
+        try{
+          const videoPath=path.join(root,'continuous.webm');
+          await bounded(video.saveAs(videoPath),60000,'retained video transfer');
+          const handle=await fs.open(videoPath,'r+');try{await handle.sync();}finally{await handle.close();}
+          const bytes=await fs.readFile(videoPath);
+          if(bytes.length<1024||bytes.subarray(0,4).toString('hex')!=='1a45dfa3')throw Error('Saved video missing valid nonempty EBML header');
+          result.video_export={file:'continuous.webm',bytes:bytes.length,sha256:hash(bytes),closed_before_browser_disconnect:true,decode_and_coverage_review_pending:true};
+        }catch(e){result.video_error=String(e.stack??e);}
+      }
       if(browser)await bounded(browser.close(),10000,'browser connection closure').catch(e=>{result.closure_error=String(e);});
       if(bs){await bounded(bs.close(),10000,'browser server closure').catch(async e=>{result.closure_error=String(e);await bs.kill();});await bounded(exitPromise,10000,'browser child exit').catch(e=>{result.closure_error=String(e);});}
       result.child_exit=childExit;result.finished=stamp();
-      if(result.closure_error||result.lifecycle_read_error||errors.length||!childExit||childExit.code!==0)result.mechanical_complete=false;
+      if(result.closure_error||result.lifecycle_read_error||result.video_error||!result.video_export||errors.length||!childExit||childExit.code!==0)result.mechanical_complete=false;
       await write(root,'console.json',logs);await write(root,'errors.json',errors);await write(root,'actions.json',actions);await write(root,'frames.json',frames);await write(root,'result.json',result);sessions.push(result);
       await write(output,'sessions.json',sessions);
     }

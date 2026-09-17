@@ -1,8 +1,8 @@
-name: Intact ordinary startup comparison
+name: Intact startup retained-video follow-up
 on:
   push:
-    branches: [codex/nonindexed-warmup-package-probe-20260917]
-    paths: ['tools/warmup_startup_review/REQUEST.json']
+    branches: [codex/nonindexed-startup-capture-v2-20260917]
+    paths: ['tools/warmup_startup_review/REQUEST-v2.json']
 permissions:
   contents: read
   actions: read
@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   four-startups:
-    if: github.ref == 'refs/heads/codex/nonindexed-warmup-package-probe-20260917'
+    if: github.ref == 'refs/heads/codex/nonindexed-startup-capture-v2-20260917'
     runs-on: macos-15
     timeout-minutes: 20
     steps:
@@ -71,6 +71,7 @@ jobs:
           (root/'closed-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
           if (root/'result.json').exists() and json.loads((root/'result.json').read_text()).get('complete'):
               assert (root/'runner.log').read_text().count('INTACT_STARTUP_FOUR_LAUNCHES_COMPLETE ')==1
+              assert len(list(root.glob('*/continuous.webm')))==4
           PY
       - uses: actions/upload-artifact@v4
         if: always()
