@@ -1,5 +1,11 @@
 # Isolated DEV11 WebKit hitch attribution
 
+**Completed:** [RESULTS.md](RESULTS.md). Run35218778984 has three large callbacks
+with no overlap with the29 measured generation/rebase/save spans. The selected
+owners' unique union is80.38ms over60.01644s. This excludes their synchronous
+bodies as the direct source of those hitches; no optimization or GPU attribution
+is established. All original failures and the unchanged baseline are retained.
+
 This is an explicitly instrumented diagnostic build based on production
 `8f5680defb9083bbe1e044d39a10612f2186e7f3`. It is never published as the game.
 The unchanged WebKit baseline remains separately preserved at study commit
