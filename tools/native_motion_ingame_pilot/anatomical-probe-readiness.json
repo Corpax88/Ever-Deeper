@@ -1,0 +1,71 @@
+{
+  "status": "headless constraints passed; actual five native images pending",
+  "visually_accepted": false,
+  "base_source_sha": "354bc9bd04953f4e20e23c2eef87d1affe686ab2",
+  "runtime_base": "8f5680defb9083bbe1e044d39a10612f2186e7f3",
+  "fingerprint": "d5f7037306db94688923efc05dd4d726c7f8e5a4b63051aa2910da82d1872651",
+  "selection": {
+    "visually_accepted": false,
+    "source_base": "354bc9bd04953f4e20e23c2eef87d1affe686ab2",
+    "specification": {
+      "yaw_degrees": -45,
+      "windup_lateral": -0.35,
+      "contact_lateral": -0.5,
+      "windup_retreat": 0.1,
+      "contact_retreat": 0.15,
+      "tool_roll_degrees": 30
+    },
+    "phases": [
+      0.125,
+      0.375,
+      0.55,
+      0.625,
+      0.8125
+    ],
+    "model_sha256": "94304c12a042b168c0d655dc0ceacffe2efb08997039a7a26c1ed0cc1770bc91",
+    "gear_sha256": "0f90a49329acfd6db5b62cfbe6361efce1c79bea4a9d57a93fab130d46ac5b2b",
+    "visibility_evidence_sha256": "014c30fe212ed29a63ec6273b88828f811d0e4c116a0953ddf5699f78fd8ee44",
+    "visibility_evidence_path": "evidence/native-up-working-plane/envelope-visibility-01/visibility.json",
+    "target_max_reach": 0.6537191231485506,
+    "target_samples": 135,
+    "no_gameplay_or_transition_approval": true
+  },
+  "exact_executed_source_hashes": {
+    "tools/native_motion_ingame_pilot/render_anatomical_probe.py": "fededce87361e310d3d2866d0523464ad9fb7b25d4f69db747efedef4f3e07ea",
+    "tools/native_motion_ingame_pilot/anatomical-probe-selection.json": "438bb2d27d1f96903a952cc4aa5aa8cf7a43c446f5a1fc9d1e1782881c4a4fe7",
+    "tools/native_motion_ingame_pilot/probe_up_anatomy.py": "ebf8a71dea86db401dd10e26a666a04290fc338fc0e98c216c0de8340241f114",
+    "tools/native_motion_ingame_pilot/probe_contact_envelope.py": "e9c69d4e1f4b0bd47c48cc563ff3c2bbccd2fbc25390f92fa4c6523ac770d0f6",
+    "tools/native_motion_ingame_pilot/probe_up_occlusion.py": "02fa205675c50a3478a006deb6922f87d32ba51c56114fd0fdf0b3acfecee774",
+    "tools/hero_v28/native_motion.py": "03fce53d38b20ce8a203fbc9a87cf541496ff793e6394cb29ff68951dee3803e",
+    "tools/hero_v28/export_hero.py": "7758b23adb7ec8e041a2fe7d109a403512b668b3d8802f5b58a703e3f9c9e482"
+  },
+  "owned_probe_source_hashes": {
+    "tools/native_motion_ingame_pilot/probe_anatomical_visibility.py": "a34466ecfff3bfa33553047d35d9c35d295a0c8fd42366e8a34eb7beeabe5bef",
+    "tools/native_motion_ingame_pilot/probe_contact_envelope.py": "e9c69d4e1f4b0bd47c48cc563ff3c2bbccd2fbc25390f92fa4c6523ac770d0f6",
+    "tools/native_motion_ingame_pilot/probe_contact_visibility.py": "95b265459413416d8c51291e9d5b3044163ad70e566750d54e363bb60e6066d4",
+    "tools/native_motion_ingame_pilot/probe_envelope_visibility.py": "e7a2cafc18e4ea99edb15945370b48b344e888710c50a44c176dbdf0dfe3b211",
+    "tools/native_motion_ingame_pilot/probe_up_anatomy.py": "ebf8a71dea86db401dd10e26a666a04290fc338fc0e98c216c0de8340241f114",
+    "tools/native_motion_ingame_pilot/probe_up_occlusion.py": "02fa205675c50a3478a006deb6922f87d32ba51c56114fd0fdf0b3acfecee774",
+    "tools/native_motion_ingame_pilot/probe_working_plane.py": "e9f2837c3c9ddc3175dbe3131ce8ed8bf182cc1ffeb65df104054c7cc9a77eb3",
+    "tools/native_motion_ingame_pilot/render_anatomical_probe.py": "fededce87361e310d3d2866d0523464ad9fb7b25d4f69db747efedef4f3e07ea",
+    "tools/native_motion_ingame_pilot/anatomical-probe-selection.json": "438bb2d27d1f96903a952cc4aa5aa8cf7a43c446f5a1fc9d1e1782881c4a4fe7"
+  },
+  "actual_rig_report": {
+    "path": "evidence/native-up-working-plane/anatomical-rig-01/anatomical-probe.json",
+    "sha256": "e06b50fedb370051746f37e199cb64933505a7d799cd6aa5a47062a193a52119",
+    "exit_code": 0,
+    "dense_evaluated_poses": 135,
+    "max_grip_error": 6.901345358436949e-07,
+    "matrix_and_grip_gate": 1e-05,
+    "shaft_axis_and_complete_feet_unchanged": true
+  },
+  "boundaries": [
+    "Exactly five native poses at .125, .375, .55, .625 and .8125; no gameplay or transition trial",
+    "No production or original pilot asset change",
+    "Original model, gear, materials, 200px camera and full object geometry retained",
+    "Geometric ray results cannot establish visual readability",
+    "New tip position requires later ordinary-world contact review",
+    "Original and v1 up failures remain preserved",
+    "No full bank before actual visible-pick acceptance"
+  ]
+}

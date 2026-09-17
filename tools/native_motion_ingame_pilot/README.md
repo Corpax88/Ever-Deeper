@@ -4,8 +4,11 @@ This is an opt-in diagnostic based on published DEV11 source
 `8f5680defb9083bbe1e044d39a10612f2186e7f3`. The original pilot added only this
 study directory. This branch also contains the explicitly opt-in native
 exporter variant in [UP-WORKING-PLANE.md](UP-WORKING-PLANE.md), following the
-preserved up-view readability rejection. The five original pilot assets below
-remain unchanged while that variant awaits native rendering and review.
+preserved up-view readability rejection. That constant-plane variant was also
+rejected from actual native images. The next bounded five-pose anatomical
+trial is documented in [UP-ANATOMICAL-PROBE.md](UP-ANATOMICAL-PROBE.md).
+The five original pilot assets below remain unchanged; neither variant is an
+accepted replacement.
 The production player, world, collision, input, mining, save owners, atlases,
 materials, camera, shadow and HUD remain unchanged. Nothing here is adopted or
 published, and headless success is not visual acceptance.

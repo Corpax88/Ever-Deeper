@@ -1,5 +1,10 @@
 # Unapproved Worn/up working-plane study
 
+Historical status: this v1 was rendered at `354bc9bd` and independently
+rejected for hidden shaft/pick at contact. Its original images and reviews
+are preserved. No v1 in-game trial followed. The later five-pose anatomical
+investigation is separate: [UP-ANATOMICAL-PROBE.md](UP-ANATOMICAL-PROBE.md).
+
 This isolated branch starts from the exact in-game pilot fixture
 `f34bf7486f560ba104c137009a5affe50d2a642b`, whose ordinary runtime remains
 published DEV11 `8f5680defb9083bbe1e044d39a10612f2186e7f3`.
