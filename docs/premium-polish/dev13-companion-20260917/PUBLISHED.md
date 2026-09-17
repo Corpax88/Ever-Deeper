@@ -1,0 +1,14 @@
+# DEV13 published and verified — 17 September 2026
+
+[Play DEV13](https://corpax88.github.io/Ever-Deeper/dev/?build=5ca6f0f), version `1.0.0-dev.13`.
+The companion now yields space when the moving hero overtakes it, keeps terrain-valid steps within one movement budget and derives draw order from its final foot position. Original art, hero animation, task/mining/loot owners and save behavior are preserved.
+
+Runtime `5ca6f0f77a1f87eaead777613062208159325068`, tree `c754eb0084391ecdb69c04122b7181fff17d5083`, branch `codex/dev13-companion-20260917`. QA35238733050 passed all14jobs. Candidateartifact10504092798 (ZIP232606191bytes, SHA2569b774adc2f32e1da4b70e049cc84109c985e027e0265379da0b240f9ad48961f); completeartifact10505600545. Exact PCK221020724bytes, SHA2565016e16791f51790f7a10dfabe0719b308de82a80627aca8d740b0e355e6cdc3.
+
+Both new actual-package Worn/right and Worn/up captures are independently accepted. Each has195verified original1696x780 PNGs and six events with mechanical parity to its prior approved pilot. The exact main/owner/helper compiled bytes are bound directly to the immutable PCK; no pilot runtime replacement was used. Critic inspected61right and56up paired native samples plus24full images; all390PNGs/reference movie frames were decoded. Camera offsets were recorded rather than normalized. Fixed-step captures do not establish real-time FPS or whole-game acceptance.
+
+The separate capture fixture is checkpoint7c123a48c32b1022098efffe8880b08119635849 on `codex/dev13-companion-package-review-20260917`. Original capture archives are retained as libfile_46839953bac48191aebd870bfa1b955a (right) and libfile_c9c7507ce08881919d2d46348c3d498f (up). The exact web-package archive is libfile_1f0de0c258f48191bbe211f0ac2376fe.
+
+Publisher8c09499ae43cf64df9baa68eeda8b53a9fd53a18 passed an independent source/artifact review and twelve offline checks. Actual publish run35243448363 then passed package/deploy/verify. Its real receipt SHA256eed30911a77a31727d09333330f43599d0db479af2ccf4de7166ffcd8c966212 verifies all nine DEV files against the candidate and all nine unchanged LIVE0.46.9 files on the first attempt. Rollbackartifact10505824188 is retained by that workflow. `.github/premium-dev/` on main preserves both independent direction reports and the exact release pins. No local mock output was used as publication proof.
+
+Full premium polish, physical-iPhone sustained50FPS, native hero motion, remaining world joins/shops and all-tool/interrupt coverage remain open. The known protected-player_visual invariant mismatch is unchanged. LIVE/final1.0 is not authorized. The separate native54df118 geometry study now rejects recovery .8125 (right hand0/85 visible, left6/82); static elbow diagnostics and shader first-frame design studies have not changed this published game. Continue from the current saved Ever-Deeper-Fortsett-her.md and exact study handoffs.

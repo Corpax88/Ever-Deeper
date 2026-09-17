@@ -1,3 +1,9 @@
+# Current DEV13 status
+
+Published and verified; read [PUBLISHED.md](PUBLISHED.md) for exact source, package, QA and publication receipts. The earlier preparation notes below are preserved history and no longer describe a pending export.
+
+---
+
 # DEV13 companion follow candidate
 
 Status: preparing the first actual DEV13 export from checkpoint 50aeccea391163826a1c3ab5e474f394eacd7546. DEV12 remains published. This candidate is not yet package-reviewed or published.

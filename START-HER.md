@@ -1,10 +1,10 @@
-CURRENT WORK: [Continue premium polish after DEV12](docs/premium-polish/dev12-north-edge-20260917/HANDOFF.md).
-PUBLISHED: [DEV12 verified](docs/premium-polish/dev12-north-edge-20260917/PUBLISHED.md) — [play DEV12](https://corpax88.github.io/Ever-Deeper/dev/?build=580a2e0).
+CURRENT WORK: [DEV13 published; premium polish continues](docs/premium-polish/dev13-companion-20260917/PUBLISHED.md).
+PUBLISHED: [Play DEV13](https://corpax88.github.io/Ever-Deeper/dev/?build=5ca6f0f).
 Mats authorized continued work, independent critics, code uploads and gated DEV publication. Do not ask for the same authorization again.
-Published runtime is `580a2e02eca1e000f5d5f58bb61ac09fd4b2a194`, tree `da7949da4b04ddcff569389a244447cbad1e22a4`. QA `35203069938` passed all 14 jobs; publisher `13cf7244df555bdaa2d7e5b759da2643e6900d1f`, run `35206009701`, passed package/deploy/verify. All nine LIVE files remain at the exact `0.46.9` baseline. Documentation commits after the runtime commit are not another published build.
-The independent critic accepted only the Moss north-edge correction. Full polish, stable 50 FPS, all-tool motion, remaining world joins and physical-iPhone verification remain open. New native animation is isolated: the right pilot is accepted only for further study; the up pilot was rejected because the body hides the stroke and is being corrected in a separate study. Rejected art/performance studies are not adopted.
+Runtime5ca6f0f77a1f87eaead777613062208159325068, treec754eb0084391ecdb69c04122b7181fff17d5083. QA35238733050 passed all14jobs; publisher8c09499ae43cf64df9baa68eeda8b53a9fd53a18/run35243448363 passed all3jobs, nine exact DEV files and nine unchanged LIVE0.46.9 files. Later documentation commits are not another published build.
+Both actual-package companion directions are independently accepted. Full polish, sustained50FPS, native hero animation, remaining world joins/shops, all-tool/interrupt and physical-iPhone verification remain open. Original Blender art is preserved. Separate native recovery geometry remains rejected; no new animation or shader warmup is adopted. Use the current saved Ever-Deeper-Fortsett-her.md for exact ongoing study checkpoints.
 
-The 15 September recovery chronology below is preserved history. Its old source, work branch and pending-export statements do not replace the current DEV12 identities above.
+The 15 September recovery chronology below is preserved history. Its old source, work branch and pending-export statements do not replace the current DEV13 identities above.
 
 # Ever-Deeper — continue premium polish
 

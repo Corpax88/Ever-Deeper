@@ -1,13 +1,13 @@
 # Ever Deeper
 
-Published milestone: [DEV12 verified, 17 September 2026](docs/premium-polish/dev12-north-edge-20260917/PUBLISHED.md).
-DEV12 includes the independently reviewed upright Moss north edges.
+Published milestone: [DEV13 verified, 17 September 2026](docs/premium-polish/dev13-companion-20260917/PUBLISHED.md).
+DEV13 includes the independently reviewed companion-follow correction and retains the approved DEV12 Moss north edges.
 This branch now uses a clean version-3 binary save format; older saves are intentionally invalid.
 Premium polish continues; stable 50 FPS and final 1.0 acceptance remain open.
 
 The current game is a **Godot 4.7.2** project. Open `project.godot` in this directory.
 The production candidate label is `1.0.0-rc.1`; final acceptance remains open.
-The published DEV label is `1.0.0-dev.12`.
+The published DEV label is `1.0.0-dev.13`.
 Tool Forge appearances now select their advertised models even when a drill is owned.
 Read [the tool skin handoff](docs/tool-skin-HANDOFF.md) for DEV8 validation status.
 The post-drill guide targets required ore, and opened drill barriers retain renewable ore.

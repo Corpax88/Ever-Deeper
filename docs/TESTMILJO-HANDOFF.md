@@ -1,3 +1,8 @@
+CURRENT VERIFIED MILESTONE: [Published DEV13](premium-polish/dev13-companion-20260917/PUBLISHED.md).
+Godot4.7.2, Blender4.5.3 and authenticated Xvfb were restored and exercised in the17September continuation. A47-check/8-image actual-package environment probe passed; DEV13QA35238733050 then passed all14jobs, both actual-package companion captures passed independent visual review and publication35243448363 verified all18public files. Local Linux llvmpipe is not physical-iPhone performance evidence. Use one heavy local renderer at a time; current scratch /workspace/scratch/b465f3665b0c and preserved sources /workspace/scratch/d5437d917805. Keep1.5GBreserve and3424134400-byte image-startguard. The older continuation notes below remain history.
+
+---
+
 CURRENT VERIFIED MILESTONE: [Published DEV10](premium-polish/dev10-20260917/PUBLISHED.md).
 Exact browser/native QA35181119505, Mac WebKit35181878479 and publication35182372885 pass. Linux WebKit framebuffer failure remains retained; Mac uses Actions step timeouts, since GNUtimeout is absent. Virtual-Mac sustained performance still fails50FPS. Existing root Godot/Xvfb route remains valid; never run heavy renderers concurrently.
 
