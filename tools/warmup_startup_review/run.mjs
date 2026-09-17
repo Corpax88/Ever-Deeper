@@ -185,6 +185,7 @@ try{
       await pause(10000);const hud=await scan('hud-settled');
       if(label(hud,'NEWGAME')||label(hud,'NOEXPEDITIONFOUND')||!label(hud,'DEVTOOLS'))throw Error('Ordinary HUD not established');
       const before=await storage(page,root,'storage-before-movement');startingState(before.primary?.state);
+      if(!same(progress(before.primary.state),progress(fixtureDocument.state)))throw Error('First HUD progression differs from declared fixture defaults');
       if(saved&&(!same(progress(before.primary.state),progress(fixtureDocument.state))||before.primary.state.world_seed!==fixtureDocument.state.world_seed))throw Error('Valid save progression/seed changed before movement');
       await key('down','ArrowRight','normal_hold');
       await pause(500);await key('up','ArrowRight','normal_release');
@@ -192,7 +193,8 @@ try{
       let moved;
       for(let i=0;i<12;i++){
         await pause(2000);const s=await storage(page,root,'storage-movement-poll-'+String(i).padStart(2,'0'));
-        if(s.primary?.state.location.x!==240){moved=s;break;}
+        const x=s.primary?.state?.location?.x;
+        if(Number.isFinite(x)&&x!==240){moved=s;break;}
       }
       if(!moved)throw Error('No natural post-movement save within 24 s');
       const location=moved.primary.state.location,dx=location.x-240;
@@ -203,6 +205,22 @@ try{
       const after=await storage(page,root,'storage-after-release-window');
       if(!same(after.primary?.state.location,location)||!same(progress(after.primary.state),progress(moved.primary.state)))throw Error('Location/progression changed after release window');
       result.release_observation={location,uninterrupted_wait_ms:16000,same_persisted_location:true,same_total_swings:true,new_checkpoint_write_claim:false,visual_stationary_review_pending:true};
+      // Focus loss itself cancels input and flushes a save in Main. It cannot
+      // substitute for either our release or the natural checkpoint here.
+      const final=await page.evaluate(()=>({receipt:window.__startupReview,time_ms:performance.now(),
+        focused:document.hasFocus(),active:document.activeElement?.id??null,visibility:document.visibilityState}));
+      await write(root,'release-lifecycle.json',final);
+      const firstDown=actions.find(a=>a.type==='down').events.find(e=>e.phase==='capture'&&e.type==='keydown').time_ms;
+      const normalDown=actions.find(a=>a.stage==='normal_hold').events.find(e=>e.phase==='capture'&&e.type==='keydown').time_ms;
+      const receipt=final.receipt;
+      if(!receipt||receipt.overflow||!final.focused||final.active!=='canvas'||final.visibility!=='visible')throw Error('Final passive active-state receipt missing or invalid');
+      const lateEvents=receipt.events.filter(e=>e.time_ms>=firstDown);
+      if(lateEvents.some(e=>['blur','pagehide'].includes(e.type)||e.visibility==='hidden'||e.focused===false||(e.active!==undefined&&e.active!=='canvas')))throw Error('Focus/visibility changed after early press; cancellation/save could mask release');
+      const activeSamples=receipt.active_samples.filter(e=>e.time_ms>=firstDown);
+      const normalSamples=activeSamples.filter(e=>e.time_ms>=normalDown);
+      if(normalSamples.length<16||final.time_ms-normalSamples.at(-1).time_ms>1500||activeSamples.some(e=>!e.focused||e.active!=='canvas'||e.visibility!=='visible'))throw Error('Uninterrupted passive active-state coverage missing');
+      result.release_observation.active_state_samples=normalSamples.length;
+      result.release_observation.no_focus_visibility_cancellation=true;
       if(errors.length)throw Error('Raw browser errors: '+JSON.stringify(errors));
       result.mechanical_complete=true;
     }catch(e){result.error=String(e.stack??e);}
@@ -215,7 +233,7 @@ try{
       if(browser)await bounded(browser.close(),10000,'browser connection closure').catch(e=>{result.closure_error=String(e);});
       if(bs){await bounded(bs.close(),10000,'browser server closure').catch(async e=>{result.closure_error=String(e);await bs.kill();});await bounded(exitPromise,10000,'browser child exit').catch(e=>{result.closure_error=String(e);});}
       result.child_exit=childExit;result.finished=stamp();
-      if(result.closure_error||!childExit||childExit.code!==0)result.mechanical_complete=false;
+      if(result.closure_error||result.lifecycle_read_error||errors.length||!childExit||childExit.code!==0)result.mechanical_complete=false;
       await write(root,'console.json',logs);await write(root,'errors.json',errors);await write(root,'actions.json',actions);await write(root,'frames.json',frames);await write(root,'result.json',result);sessions.push(result);
       await write(output,'sessions.json',sessions);
     }

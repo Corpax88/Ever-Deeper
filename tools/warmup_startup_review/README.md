@@ -25,6 +25,10 @@ and release follows. A naturally persisted bounded position change is then
 observed, followed by 16 seconds of uninterrupted gameplay/video/frames and
 unchanged saved location. The source has an 8 s location checkpoint and 6 s
 autosave queue; unchanged bytes alone are not a new-checkpoint claim.
+Passive active-state samples continue after the menu. Any blur, hidden page,
+lost canvas focus or missing final lifecycle invalidates the release result:
+Main can cancel held input and flush a save on focus loss. The original
+preflight missing this gate is retained in the preceding preparation commit.
 The predeclared displacement envelope is 100–230 logical pixels rightward,
 within the clear camp terrace. No mining input or mining-release claim is made.
 

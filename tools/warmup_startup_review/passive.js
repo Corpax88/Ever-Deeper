@@ -1,7 +1,7 @@
 (() => {
   if (location.pathname !== '/index.html') return;
   const out = window.__startupReview = {
-    schema: 1, events: [], frames: [], status_seen: false,
+    schema: 1, events: [], frames: [], active_samples: [], status_seen: false,
     status_removed_ms: null, splash_seen: false, frames_stopped: false, overflow: false,
     scope: 'Passive DOM lifecycle and trusted-event receipts; no engine-listener observation.'
   };
@@ -42,4 +42,10 @@
     requestAnimationFrame(frame);
   };
   requestAnimationFrame(frame);
+  // This passive DOM sample is not an engine-loop or presented-frame counter.
+  setInterval(() => {
+    if (out.active_samples.length >= 2400) { out.overflow = true; return; }
+    out.active_samples.push({time_ms:performance.now(),focused:document.hasFocus(),
+      active:document.activeElement?.id??null,visibility:document.visibilityState});
+  },250);
 })();
