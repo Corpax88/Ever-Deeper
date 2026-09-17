@@ -1,6 +1,6 @@
 # Isolated opaque-floor blend pilot
 
-Status: prepared for review; no graphical comparison or timing run yet. No production file is changed. This is a new hypothesis, not a measured dominant cost, an accepted optimization, or a 50 FPS claim.
+Status: the four-state and full 22-state frozen gates passed with exact pixels. The first moving attempt stopped at original A's missing completion marker; no candidate timing exists. Reporting hardening is prepared for a fresh checkpoint, with no graphical retry yet. See `RESULTS.md`. No production file is changed. This is a hypothesis, not a measured dominant cost, an accepted optimization, or a 50 FPS claim.
 
 ## Source and question
 
@@ -47,4 +47,6 @@ Evidence resides in the session's sibling `evidence/` directory, separate from p
 - `floor-blend-guards-complete/`: final 18/18 checks, exit 0 and success marker; exact controller/fixture snapshots and source identity retained. `rendered` and `pixel_or_blend_equivalence_proved` are false.
 - `floor-blend-generated-check/`: generated moving harness and source hashes, parser check only.
 
-Graphical parity, timing, physical-device performance, and production adoption are all pending. No earlier rejected camera, receiver-mask, contour, shadow, or quad experiment is included in this change.
+The original failed A remains untouched and excluded from comparison. The hardened generator retains the original final stdout print, adds a stderr mirror at the same final completion point, and records entry/final print settings and source/variant hashes in `execution-receipt.json`. Both receipt writes occur outside timed windows. The runner requires the receipt after the existing explicit-marker/error/process-exit gate; duration, functional, workload and raw-sample checks still apply. It does not force print flags or infer why the original output was missing. Controller, observer, pixel fixture, production code and timed route remain unchanged.
+
+Candidate timing, physical-device performance, and production adoption remain pending. No earlier rejected camera, receiver-mask, contour, shadow, or quad experiment is included in this change.
