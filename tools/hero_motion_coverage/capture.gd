@@ -40,6 +40,10 @@ var critical_pngs: Array[Dictionary] = []
 var framing_failures: Array[int] = []
 var minimum_framing_clearance := 1000000.0
 var startup_feedback: Dictionary = {}
+var achievement_profile: Dictionary = {"used": false}
+var profile_records_file := ""
+var profile_records_sha := ""
+var profile_provenance_sha := ""
 
 
 func _initialize() -> void:
@@ -63,6 +67,9 @@ func _run() -> void:
 		elif arg.begins_with("--direction="): direction_name = arg.trim_prefix("--direction=")
 		elif arg == "--all-frames": all_frames = true
 		elif arg.begins_with("--capture-format="): capture_format = arg.trim_prefix("--capture-format=")
+		elif arg.begins_with("--achievement-profile-records="): profile_records_file = arg.trim_prefix("--achievement-profile-records=")
+		elif arg.begins_with("--achievement-profile-sha256="): profile_records_sha = arg.trim_prefix("--achievement-profile-sha256=")
+		elif arg.begins_with("--achievement-provenance-sha256="): profile_provenance_sha = arg.trim_prefix("--achievement-provenance-sha256=")
 	if capture_format == "rgba8": all_frames = true
 	packed = FileAccess.file_exists("res://project.binary")
 	if capture_format not in ["png", "rgba8"] or not output.is_absolute_path() or gear not in Gear.TOOLS or not DIRECTIONS.has(direction_name) or source_sha.length() != 40 or DisplayServer.get_name() == "headless":
@@ -77,6 +84,9 @@ func _run() -> void:
 	root.size = SIZE
 	root.content_scale_size = SIZE
 	state = root.get_node("RunState")
+	if not _verify_loaded_achievement_profile():
+		_finish()
+		return
 	state.initialize_persistence(output.path_join("isolated-save.json"))
 	main = load("res://scenes/main/main.tscn").instantiate()
 	root.add_child(main)
@@ -221,6 +231,27 @@ func _equip() -> void:
 		"deepcore": state.drill_level = 3
 	player.movement_speed = 340.0
 	player.prepare_visual_cache()
+
+
+func _verify_loaded_achievement_profile() -> bool:
+	if profile_records_file.is_empty() and profile_records_sha.is_empty() and profile_provenance_sha.is_empty(): return true
+	# The runner stages the unmodified earned save before engine startup. Read
+	# the normal autoload's result; do not assign records or invoke its loader.
+	var service = root.get_node("AchievementService")
+	var storage_path: String = service._storage_path()
+	var expected: Dictionary = {}
+	var parsed = JSON.parse_string(FileAccess.get_file_as_string(profile_records_file)) if FileAccess.file_exists(profile_records_file) else null
+	if parsed is Dictionary and parsed.get("records") is Dictionary:
+		for id in parsed.records: expected[String(id)] = int(parsed.records[id])
+	var storage_sha: String = FileAccess.get_sha256(storage_path) if FileAccess.file_exists(storage_path) else ""
+	var verified: bool = profile_records_file.is_absolute_path() and profile_records_sha.length() == 64 and profile_provenance_sha.length() == 64 and not expected.is_empty() and FileAccess.get_sha256(profile_records_file) == profile_records_sha and storage_path == "user://ever_deeper_dev_achievements_v2.json" and storage_sha == profile_records_sha and service.records == expected
+	achievement_profile = {"used": true, "load_verified": verified, "records_source_file": profile_records_file,
+		"profile_sha256": profile_records_sha, "provenance_sha256": profile_provenance_sha,
+		"storage_user_path": storage_path, "loaded_storage_sha256": storage_sha,
+		"loaded_records": service.records.duplicate(true), "loaded_record_count": service.records.size(),
+		"loaded_wall_ms": Time.get_ticks_msec(), "checked_before_main_instantiation": true,
+		"manual_record_assignment_or_loading": false}
+	return _check(verified, "Normally earned achievement starting profile loads with exact records and file identity")
 
 
 func _settle_startup_feedback() -> bool:
@@ -568,7 +599,7 @@ func _finish() -> void:
 		"packed": packed, "pack_sha256": FileAccess.get_sha256(pack_source) if not pack_source.is_empty() else "",
 		"engine": Engine.get_version_info().string, "display": DisplayServer.get_name(),
 		"rendered": DisplayServer.get_name() != "headless", "actual_viewport": [root.size.x, root.size.y],
-		"fixture": fixture, "startup_feedback": startup_feedback, "stages": stages, "events": events, "samples": samples, "captures": captures,
+		"fixture": fixture, "achievement_profile": achievement_profile, "startup_feedback": startup_feedback, "stages": stages, "events": events, "samples": samples, "captures": captures,
 		"capture_format": capture_format, "capture_origin": "godot_frame_post_draw", "critical_pngs": critical_pngs,
 		"all_frames_requested": all_frames, "all_observed_frames_captured": captures.size() == samples.size(),
 		"framing": {"passed": not samples.is_empty() and framing_failures.is_empty(),

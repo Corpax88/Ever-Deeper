@@ -10,6 +10,7 @@ import re
 import struct
 import subprocess
 import sys
+import shutil
 
 ROOT = Path(__file__).resolve().parents[2]
 MISSING_GEARS = ["iron", "runed", "moonglass", "ember", "comet", "crown", "burrower", "pulse"]
@@ -38,6 +39,49 @@ def approved_keys(project: Path) -> tuple[list[str], list[str]]:
                  for name in ("TOOLS", "DIRECTIONS"))
 
 
+def read_achievement_profile(path: Path, source_sha: str, pack_sha: str) -> dict:
+    """Validate an actual earned save against its unchanged rendered origin."""
+    path = path.resolve()
+    proof = json.loads(path.read_text())
+    def sibling(key: str, hash_key: str) -> Path:
+        name = proof[key]
+        if not isinstance(name, str) or Path(name).name != name:
+            raise ValueError("Profile attachments must be sibling filenames")
+        file = path.parent / name
+        if digest(file) != proof[hash_key]:
+            raise ValueError("Achievement profile attachment hash differs: " + name)
+        return file
+    records_file = sibling("profile_file", "profile_sha256")
+    origin = json.loads(sibling("origin_report_file", "origin_report_sha256").read_text())
+    startup = json.loads(sibling("origin_startup_file", "origin_startup_sha256").read_text())
+    records = json.loads(records_file.read_text())["records"]
+    last = startup["last_snapshot"]
+    seen = sorted({row["active_id"] for row in startup["observations"] if row["active_id"]})
+    if (not pack_sha or any(row.get("source_sha") != source_sha or row.get("pack_sha256") != pack_sha for row in (proof, origin))
+            or proof.get("kind") != "normally_earned_achievement_service_profile"
+            or proof.get("reuse_runstate") is not False or proof.get("fabricated_awards") is not False
+            or proof.get("feedback_cleared") is not False
+            or proof.get("userdata_relative_path") != "Ever Deeper- Godot Development Port/ever_deeper_dev_achievements_v2.json"
+            or proof.get("godot_user_path") != "user://ever_deeper_dev_achievements_v2.json"
+            or origin.get("passed") is not True or origin.get("rendered") is not True
+            or startup != origin.get("startup_feedback") or startup.get("passed") is not True
+            or startup.get("phase") != "settled" or startup.get("feedback_forcibly_cleared") is not False
+            or startup.get("manual_evaluation_or_clock_steps") is not False
+            or last.get("quiet_seconds", 0) < max(0.5, startup.get("quiet_required_seconds", 0.5))
+            or any(last.get(key) for key in ("evaluation_pending", "state_batch_depth", "state_batch_dirty", "hud_refresh_pending", "toast_active", "toast_visible", "queue_size", "queued_ids", "pickups"))
+            or not isinstance(records, dict) or not records
+            or any(type(value) is not int or value <= 0 for value in records.values())
+            or sorted(records) != proof.get("achievement_ids") or sorted(records) != seen
+            or len(records) != last.get("unlocked_count") or len(records) != proof.get("record_count")
+            or records_file.stat().st_size != proof.get("profile_bytes")):
+        raise ValueError("Achievement starting profile lacks matching earned, naturally settled native provenance")
+    return {"provenance_file": str(path), "provenance_sha256": digest(path),
+            "profile_file": str(records_file), "profile_sha256": proof["profile_sha256"],
+            "record_count": len(records), "achievement_ids": sorted(records),
+            "userdata_relative_path": proof["userdata_relative_path"], "godot_user_path": proof["godot_user_path"],
+            "origin_report_sha256": proof["origin_report_sha256"], "reuse_runstate": False}
+
+
 def validate_report(case: dict, pack_sha: str) -> dict:
     folder = Path(case["output"])
     report = json.loads((folder / "hero-motion-coverage.json").read_text())
@@ -61,6 +105,16 @@ def validate_report(case: dict, pack_sha: str) -> dict:
             or startup.get("manual_evaluation_or_clock_steps") is not False
             or startup.get("last_snapshot", {}).get("quiet_seconds", 0) < startup.get("quiet_required_seconds", 0.5)):
         errors.append("Ordinary startup feedback did not naturally settle before measured motion")
+    expected_profile = case.get("achievement_profile")
+    loaded_profile = report.get("achievement_profile", {})
+    if expected_profile:
+        if (loaded_profile.get("load_verified") is not True
+                or any(loaded_profile.get(key) != expected_profile[key] for key in ("profile_sha256", "provenance_sha256"))
+                or loaded_profile.get("loaded_record_count") != expected_profile["record_count"]
+                or loaded_profile.get("manual_record_assignment_or_loading") is not False):
+            errors.append("Normally earned achievement profile load identity differs")
+    elif loaded_profile.get("used"):
+        errors.append("Unexpected achievement starting profile")
     if case.get("all_frames") and not report.get("all_observed_frames_captured"):
         errors.append("Full ordered rendered frames were requested but are incomplete")
     capture_format = case.get("capture_format", "png")
@@ -115,6 +169,8 @@ def main() -> int:
     parser.add_argument("--xvfb", type=Path)
     parser.add_argument("--pack", type=Path, help="Exact exported candidate; external fixture runs against its resources")
     parser.add_argument("--source-sha", help="Source corresponding to the package; defaults to this checkout's HEAD")
+    parser.add_argument("--achievement-profile", type=Path,
+                        help="Optional provenance JSON for an actual naturally settled DEV achievement save; never reuses RunState")
     parser.add_argument("--plan-only", action="store_true", help="Write receipts and commands without starting Godot/Xvfb")
     parser.add_argument("--all-frames", action="store_true", help="Save every observed rendered frame for a complete lossless motion archive")
     parser.add_argument("--archive-lossless", action="store_true", help="Implies --all-frames; encode and verify each case before starting the next")
@@ -145,6 +201,12 @@ def main() -> int:
     runtime_hashes = {name: digest(project / name) for name in runtime_paths}
     pack = args.pack.resolve() if args.pack else None
     pack_sha = digest(pack) if pack else ""
+    profile = None
+    if args.achievement_profile:
+        try:
+            profile = read_achievement_profile(args.achievement_profile, source_sha, pack_sha)
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            parser.error("Invalid achievement starting profile: " + str(error))
     fixture = Path(__file__).resolve().with_name("capture.gd")
     archiver = Path(__file__).resolve().with_name("archive.py")
     cases = []
@@ -168,9 +230,15 @@ def main() -> int:
                 command += ["--all-frames"]
             if args.capture_format != "png":
                 command += [f"--capture-format={args.capture_format}"]
+            if profile:
+                command += [f"--achievement-profile-records={profile['profile_file']}",
+                            f"--achievement-profile-sha256={profile['profile_sha256']}",
+                            f"--achievement-provenance-sha256={profile['provenance_sha256']}"]
             case = {"gear": gear, "direction": direction, "source_sha": source_sha,
                     "output": str(folder), "command": command, "all_frames": args.all_frames,
                     "capture_format": args.capture_format}
+            if profile:
+                case["achievement_profile"] = profile
             if args.archive_lossless:
                 case["archive_command"] = [sys.executable, str(archiver), "--input", str(folder),
                                            "--output", str(folder / "lossless"), "--require-complete", "--threads", "2"]
@@ -182,6 +250,7 @@ def main() -> int:
                "approved_gears": gears, "approved_directions": directions,
                "fixture_sha256": digest(fixture), "runner_sha256": digest(Path(__file__)),
                "capture_format": args.capture_format,
+               "achievement_starting_profile": profile,
                "archive_lossless_per_case": args.archive_lossless,
                "archiver_sha256": digest(archiver) if args.archive_lossless else None,
                "runtime_sha256": runtime_hashes, "cases": cases,
@@ -195,6 +264,14 @@ def main() -> int:
         (output / "empty-project").mkdir(exist_ok=True)
     results = []
     for case in cases:
+        if profile:
+            staged = Path(case["output"]) / "userdata" / profile["userdata_relative_path"]
+            if staged.exists():
+                parser.error("Never overwrite an existing achievement save: " + str(staged))
+            staged.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(profile["profile_file"], staged)
+            if digest(staged) != profile["profile_sha256"]:
+                parser.error("Staged earned achievement profile hash differs")
         print(f"CAPTURE {case['gear']} {case['direction']}", flush=True)
         result = subprocess.run(case["command"], cwd=project)
         try:

@@ -161,8 +161,48 @@ transition, one-second heartbeats, timestamps, pending flags, active and queued
 IDs, visible bounds, pickup ages and the final quiet interval. It survives a
 timeout and is also embedded in the motion report. Its observations follow
 post-draw state; setup frames are explicitly outside the measured motion movie
-and are not claimed as archived imagery. The first rendered retry must be
-Worn/down alone; parsing or numerical geometry does not establish its success.
+and are not claimed as archived imagery.
+
+The Worn/down-only retry at `75e1500c45430c882891c75adb5badf98192cb06` passed
+30 checks with the exact DEV11 PCK: all 16 startup toasts completed normally in
+72.567 simulated / 95.221 wall seconds, followed by 0.517 seconds quiet. All
+195 measured samples and the six event indices match the failed case's logical
+gameplay; every mining pose/frame/phase also matches. Minimum full-reserve
+clearance is 27.476 px. All 195 decoded RGB hashes and 11 native critical PNGs
+verify, with all 113 runtime/hero hashes unchanged. The renderer was released
+before CPU-only encoding. The 33 native-pixel review crops cover all 11 stages;
+downward contact and recovery are visible. The ordinary companion crosses the
+body during approach/return, so this does not certify unobstructed body pixels
+in every frame or overall motion quality.
+
+Report SHA-256: `6053e7e8945a87274178d27768bcb01ce6a244235b0a53b883231692ed3c1f05`.
+Evidence: `/tmp/ever-deeper-hero-motion-startup-75e1500/worn-down-pilot/`.
+
+## Optional actual achievement starting profile
+
+After the natural-drain pilot, its actual, normally saved 426-byte
+AchievementService file was copied unchanged. SHA-256:
+`411ae47a354270ffc08b46ff1223db2a07ecb6fd4d35ed208ef1778037331811`.
+It contains the same 16 IDs observed passing through the ordinary startup
+queue. No records were fabricated or added by the capture tool.
+
+`--achievement-profile /absolute/profile-provenance.json` optionally reuses
+that earned achievement history before engine startup. The provenance names
+the exact profile bytes and unchanged rendered origin/settling reports. The
+runner rejects mismatching hashes, runtime/PCK identity, incomplete natural
+drain, changed IDs or an unsafe userdata destination. It stages only that file
+under a new case's isolated userdata; RunState/gameplay remain fresh. The
+production autoload performs its normal load, then the fixture checks the
+loaded file hash and complete records before main-scene instantiation. Its
+report records profile/provenance hashes, the loaded records and that no manual
+record assignment or loader invocation occurred. Newly queued achievements
+still undergo the same natural settling phase, and feedback during measured
+motion still undergoes the unchanged framing gate.
+
+The exact-PCK headless autoload probe confirms matching loaded bytes/records;
+wrong-package and corrupted-profile inputs are rejected. This is load-identity
+validation, not rendered motion acceptance. Next graphical cases are Worn/left
+and Worn/up only, after the shared renderer owner grants the slot.
 
 ## Run through the existing renderer
 
@@ -327,4 +367,8 @@ encode/decode 4/4 identical RGB hashes. Raw alpha is fully opaque; both supplied
 critical PNGs match their exact raw pixels. Truncated data, nonopaque alpha and
 incorrect stride declarations are rejected. CPU-generated PNGs are explicitly
 labeled as such; they are not Godot capture evidence. The exact DEV11 PCK
-headless parser also passes. The raw graphical pilot remains pending.
+headless parser also passes. The subsequent d217625 Worn/right native raw pilot
+passed 29 checks, all 195 RGB frames and 11 native critical PNGs, with matching
+logical events/mining poses and bounded image acceptance. Its 38,507,766-byte
+durably saved bundle has SHA-256
+`852e07545da14dc30a7473001030d49c8f2ae9fa5f1ce155fadd9fb69342c9db`.
