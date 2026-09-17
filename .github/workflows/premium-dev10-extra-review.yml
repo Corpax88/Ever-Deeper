@@ -1,0 +1,81 @@
+name: DEV10 audio and mobile motion review
+on:
+  push:
+    branches: [codex/dev10-polish-20260917]
+    paths: ['.github/workflows/premium-dev10-extra-review.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: premium-dev10-extra-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  SOURCE_SHA: 23076019b53819c6c7f213b7e55d24a2f6194f83
+  SOURCE_RUN_ID: '35181119505'
+  PCK_SHA256: 8b83ed55d62841eac8e891ad6c224b101665d98f5ead63a022e66589d6266c3b
+  HTML_SHA256: c1aa02da6856ca5d42c1e549fa6a6d8f6e41c3a6be46aba370a9c99076e39bae
+  IDENTITY_SHA256: d6ad96098f2aa76953389010b27fdf2b2e3a9f6db900e9ec628d144a7f39af3c
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [audio-chromium, audio-webkit, hero-motion, mobile-gameplay, mobile-pause]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SOURCE_SHA }}
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: premium-web-candidate-${{ env.SOURCE_SHA }}
+          run-id: ${{ env.SOURCE_RUN_ID }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/candidate
+      - name: Require the exact already-exported DEV10 bytes
+        run: |
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          mkdir -p "$RUNNER_TEMP/review"
+          GITHUB_RUN_ID="$SOURCE_RUN_ID" GITHUB_RUN_ATTEMPT=1 python3 tools/verify_premium_web_review.py candidate --source "$SOURCE_SHA" --candidate "$RUNNER_TEMP/candidate" --review "$RUNNER_TEMP/review" --pck-sha256 "$PCK_SHA256" --html-sha256 "$HTML_SHA256" --identity-sha256 "$IDENTITY_SHA256"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install the required browser
+        env:
+          SUITE: ${{ matrix.suite }}
+        run: |
+          npm ci --ignore-scripts
+          case "$SUITE" in
+            audio-chromium|hero-motion) npx playwright install --with-deps chromium ;;
+            audio-webkit|mobile-*) npx playwright install --with-deps webkit ;;
+            *) exit 2 ;;
+          esac
+      - name: Actual audio output or mobile gameplay and motion
+        env:
+          SUITE: ${{ matrix.suite }}
+          EXPECTED_VERSION: 1.0.0-dev.10
+          CAPTURE_VIEWPORT: 848x390
+          CAPTURE_DPR: '2'
+        run: |
+          case "$SUITE" in
+            audio-*) timeout 900 node tools/qa-web-audio.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review" "${SUITE#audio-}" > "$RUNNER_TEMP/review/runner.log" 2>&1 ;;
+            hero-motion) HERO_MOTION=1 CAPTURE_START=1 CAPTURE_END=1 timeout 900 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review" > "$RUNNER_TEMP/review/runner.log" 2>&1 ;;
+            mobile-gameplay) TOUCH_BROWSER=webkit OVERHAUL_GAMEPLAY=1 timeout 900 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review" > "$RUNNER_TEMP/review/runner.log" 2>&1 ;;
+            mobile-pause) TOUCH_BROWSER=webkit OVERHAUL_GAMEPLAY=1 MENU_TOUCH=1 MENU_TOUCH_SECTION=pause timeout 900 node tools/capture-web.mjs --web-dir "$RUNNER_TEMP/candidate" --output-dir "$RUNNER_TEMP/review" > "$RUNNER_TEMP/review/runner.log" 2>&1 ;;
+            *) exit 2 ;;
+          esac
+          GITHUB_RUN_ID="$SOURCE_RUN_ID" GITHUB_RUN_ATTEMPT=1 python3 tools/verify_premium_web_review.py candidate --source "$SOURCE_SHA" --candidate "$RUNNER_TEMP/candidate" --review "$RUNNER_TEMP/review" --pck-sha256 "$PCK_SHA256" --html-sha256 "$HTML_SHA256" --identity-sha256 "$IDENTITY_SHA256"
+      - name: Retain success or failure details
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/review/runner.log" ]; then tail -n 50 "$RUNNER_TEMP/review/runner.log"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: premium-dev10-extra-${{ matrix.suite }}-${{ env.SOURCE_SHA }}
+          path: ${{ runner.temp }}/review
+          if-no-files-found: warn
+          retention-days: 30
