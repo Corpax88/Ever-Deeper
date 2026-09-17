@@ -1,0 +1,61 @@
+{
+  "source_revision": "f2ce35f404eca5b1b1f35a01aae63dd2f01b9ac6",
+  "source_tree": "4feffd6c14a01181cd4f12fbf247886313f62a2a",
+  "initial_passes": 14,
+  "initial_total": 15,
+  "initial_failures": [
+    {
+      "case": "overhaul",
+      "passed": false,
+      "exit_code": -15,
+      "reason": "runtime error",
+      "seconds": 7.18,
+      "marker": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK",
+      "completion": [
+        "EVER_DEEPER_SURFACE_GAMEPLAY_OK locked/open both-directions solid-pillars copper=24 regrowth=360 branch-both-directions shop-access"
+      ],
+      "log": "/tmp/ever-deeper-dev12-integration-f2ce35f/source-qa/overhaul.log"
+    }
+  ],
+  "isolated_baseline_control": {
+    "passed": true,
+    "cases": [
+      {
+        "case": "overhaul",
+        "passed": true,
+        "exit_code": 0,
+        "reason": "",
+        "seconds": 7.68,
+        "marker": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK",
+        "completion": [
+          "EVER_DEEPER_SURFACE_GAMEPLAY_OK locked/open both-directions solid-pillars copper=24 regrowth=360 branch-both-directions shop-access",
+          "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=1259 failures=[]"
+        ],
+        "log": "/tmp/ever-deeper-dev12-integration-f2ce35f/unchanged-dev11-control/overhaul.log"
+      }
+    ]
+  },
+  "isolated_candidate_repeat": {
+    "passed": true,
+    "cases": [
+      {
+        "case": "overhaul",
+        "passed": true,
+        "exit_code": 0,
+        "reason": "",
+        "seconds": 7.68,
+        "marker": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK",
+        "completion": [
+          "EVER_DEEPER_SURFACE_GAMEPLAY_OK locked/open both-directions solid-pillars copper=24 regrowth=360 branch-both-directions shop-access",
+          "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=1263 failures=[]"
+        ],
+        "log": "/tmp/ever-deeper-dev12-integration-f2ce35f/candidate-overhaul-repeat/overhaul.log"
+      }
+    ]
+  },
+  "runtime_change_for_repeat": false,
+  "suppressed_errors": false,
+  "finding": "The one dummy-renderer null-texture error in unchanged Rootwound asset loading did not recur in either the unchanged DEV11 control or candidate repeat. Its cause is not proved; the initial failed gate remains preserved.",
+  "invariants": "Existing protected scripts/player/player_visual.gd mismatch remains. No protection baseline changed.",
+  "exact_export_gate": "Not yet run for this candidate."
+}

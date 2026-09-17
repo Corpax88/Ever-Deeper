@@ -16,11 +16,10 @@ const IDENTITY_PATHS: Array[String] = [
 	"res://shaders/lit_relic_seal.gdshader",
 	"res://assets/mossvein/cave-edge-loop-v2.png",
 	"res://assets/mossvein/cave-corner-v2.png",
-	"res://tools/north_edge_release_review/deep_reference.gd",
-	"res://tools/north_edge_release_review/review.gd",
-	"res://tools/north_edge_release_review/README.md",
 ]
 var output: String = ""
+var pack_source: String = ""
+var expected_pack_sha256: String = ""
 var report_ready: bool = false
 var source_revision: String = ""
 var main: Node
@@ -41,12 +40,21 @@ func _run() -> void:
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--output="): output = arg.trim_prefix("--output=")
 		elif arg.begins_with("--source-revision="): source_revision = arg.trim_prefix("--source-revision=")
+		elif arg.begins_with("--pack-source="): pack_source = arg.trim_prefix("--pack-source=")
 		else: _reject("Unknown argument: " + arg); return
 	if not output.is_absolute_path() or source_revision.length() != 40 or not source_revision.is_valid_hex_number():
 		_reject("Use an absolute output path and the exact 40-character checkpoint revision"); return
 	if DisplayServer.get_name() == "headless": _reject("An actual rendered framebuffer is required"); return
 	if DirAccess.make_dir_recursive_absolute(output) != OK: _reject("Could not create output directory"); return
 	report_ready = true
+	if not pack_source.is_empty():
+		expected_pack_sha256 = OS.get_environment("PCK_SHA256")
+		if not pack_source.is_absolute_path() or not FileAccess.file_exists(pack_source):
+			_reject("Pack identity requires an existing absolute package path"); return
+		if expected_pack_sha256.length() != 64 or not expected_pack_sha256.is_valid_hex_number() or FileAccess.get_sha256(pack_source) != expected_pack_sha256:
+			_reject("Package hash must match the immutable build's PCK_SHA256"); return
+		# Godot removes --main-pack from its exposed arguments. The pinned workflow
+		# supplies this same path to --main-pack and launches from an empty host.
 	# Match the retained corner smoke's frozen controls. TIME otherwise keeps
 	# moving even while the scene tree is paused. Restore the cached shader at exit.
 	seal = load("res://shaders/lit_relic_seal.gdshader")
@@ -54,7 +62,7 @@ func _run() -> void:
 	seal.code = original_seal_code.replace("TIME", "0.0")
 	original_time_scale = Engine.time_scale
 	main = load("res://scenes/main/main.tscn").instantiate()
-	main.get_node("EndlessDescentWorld").set_script(load("res://tools/north_edge_release_review/deep_reference.gd"))
+	main.get_node("EndlessDescentWorld").set_script(load(get_script().resource_path.get_base_dir().path_join("deep_reference.gd")))
 	root.add_child(main)
 	current_scene = main
 	for frame in 5: await process_frame
@@ -245,8 +253,20 @@ func _restore_controls() -> void:
 func _save_report() -> bool:
 	if not report_ready: return true
 	var hashes: Dictionary = {}
-	for path in IDENTITY_PATHS: hashes[path] = FileAccess.get_sha256(path)
+	var packed_only: Array[String] = []
+	for path in IDENTITY_PATHS:
+		if FileAccess.file_exists(path): hashes[path] = FileAccess.get_sha256(path)
+		elif not pack_source.is_empty(): packed_only.append(path)
+		else: hashes[path] = "missing"
+	var fixture_directory: String = get_script().resource_path.get_base_dir()
+	for filename in ["review.gd", "deep_reference.gd", "README.md"]:
+		var path: String = fixture_directory.path_join(filename)
+		hashes[path] = FileAccess.get_sha256(path)
 	var report: Dictionary = {"base_revision":BASE_REVISION, "source_revision":source_revision, "files_sha256":hashes, "seed":SEED, "depth":DEPTH, "scope":"production integration of the accepted north-edge orientation", "rendered":not pair.get("captures", []).is_empty(), "physical_iphone":false, "performance_evidence":false, "visual_approval":false, "endpoint_visual_review":"pending independent inspection of both original-resolution endpoints", "content_scale_size":str(root.content_scale_size), "viewport_size":str(root.get_visible_rect().size), "pair":pair, "failures":failures, "limits":"Frozen source-project pose with a valid-floor fixture teleport. This tests upright strip perspective only; it does not complete short corners or pillars. Inspect the full original frame and both reported endpoint regions. Exact restoration and nonzero B pixels are not visual acceptance."}
+	report["pack_source"] = pack_source
+	report["pack_sha256"] = FileAccess.get_sha256(pack_source) if not pack_source.is_empty() else ""
+	report["expected_pack_sha256"] = expected_pack_sha256
+	report["original_files_bound_by_pack"] = packed_only
 	var file: FileAccess = FileAccess.open(output.path_join("north-edge-orientation.json"), FileAccess.WRITE)
 	if file == null: return false
 	file.store_string(JSON.stringify(report, "\t"))

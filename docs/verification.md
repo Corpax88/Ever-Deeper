@@ -1,18 +1,20 @@
 # Verification
 
-Current published status: [DEV10 review and remaining limits](premium-polish/dev10-20260917/PUBLISHED.md).
-The exact 2307601 DEV export passes all 15 current core cases, both flavor checks,
-all nine Chromium suites, native commerce residency and the rendered hazard lifecycle.
-Audio output and three tools in four directions pass the additional package checks.
-Mac WebKit gameplay and pause pass; the retained Linux WebKit GL failure is unresolved.
-Publication 35182372885 verifies all 18 public files, preserving LIVE 0.46.9.
-Minimum 50 FPS, physical-iPhone evidence, final animation and whole-game 9/10 remain open.
-The old player_visual protected hash remains intentionally unchanged; see the review limits.
+Published status: [DEV11 review and remaining limits](premium-polish/dev11-feedback-20260917/PUBLISHED.md).
+Its exact 8f5680d export passed all15 current core cases, both flavor checks,
+nine Chromium suites, Mac WebKit gameplay/pause, commerce residency,
+hazard lifecycle and simultaneous feedback. All14 workflow jobs passed.
+Publication35188991326 verified all18 public files and preserved LIVE0.46.9.
+DEV12 adds the accepted Moss north orientation, with its actual-production
+A/B/A2 triplet required by the immutable-package workflow. That new package
+has not yet passed or been published. See its [handoff](premium-polish/dev12-north-edge-20260917/HANDOFF.md).
+Stable50FPS, physical-iPhone acceptance, final animation and overall9/10 remain open.
+The historical protected player_visual hash mismatch is retained honestly.
 
 ## Current source gate
 
 GitHub Actions runs `Godot source checks` for source pull requests and changes on main.
-It imports the event's tested commit, checks protected files and runs the fourteen current cases;
+It imports the event's tested commit, checks protected files and runs the fifteen current cases;
 logs are attached even when a check fails. The larger `Verify complete source cleanup`
 workflow is a one-time baseline comparison, separate from this reusable source gate.
 
@@ -55,7 +57,7 @@ exercise the corresponding active paths. These failures are recorded as remainin
 
 ## 1.0 candidate acceptance
 
-`.github/workflows/one-point-zero.yml` runs the fourteen active cases against source
+`.github/workflows/one-point-zero.yml` runs the fifteen active cases against source
 and the exact DEV PCK, verifies both export flavors, and checks hero motion, audio
 playback and mobile WebKit touch. `tools/review_one_point_zero.gd` captures the same
 PCK at mobile resolution for independent inspection. The protected version and mine

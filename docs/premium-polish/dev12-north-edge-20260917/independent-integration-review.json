@@ -1,0 +1,161 @@
+{
+  "review_id": "dev12-north-production-integration-independent-review",
+  "reviewer": "performance_critic",
+  "date_utc": "2026-09-17",
+  "independence": "Reviewer authored the prior isolated orientation study, but did not author this production integration or its release fixture. This is an independent integration review; independent visual acceptance of the original seven-case study is separately recorded by root.",
+  "decision": "accept_narrow_production_integration",
+  "blockers": [],
+  "scope": "Moss mineable north-edge upright orientation only. Actual production B dispatch, full original held-pose images, endpoint inspection, restoration and exact signed effect parity with the previously accepted held study.",
+  "source": {
+    "worktree": "/workspace/scratch/d5437d917805/premium-next",
+    "head": "f2ce35f404eca5b1b1f35a01aae63dd2f01b9ac6",
+    "tree": "4feffd6c14a01181cd4f12fbf247886313f62a2a",
+    "tracked_files_match_HEAD": true,
+    "remote_tracking_ref_observed": null,
+    "only_runtime_file_changed": "scripts/world/endless_descent_world.gd",
+    "all_capture_source_hashes_independently_verified": true,
+    "files_sha256": {
+      "res://assets/mossvein/cave-corner-v2.png": "dc9ebc0bee817fc843ccab687fc3f0d99cf44e88fa3bbc1481c267c706eb5957",
+      "res://assets/mossvein/cave-edge-loop-v2.png": "99747fd2254b6a787bcdc85562820d62f6c17ae3fbe3f11943f3f1a1d5857593",
+      "res://project.godot": "c33ba1a3580f0d184224a9ff7da954fd2a18b72b2fc6de1fc5a612ce990e5668",
+      "res://scripts/lighting/lit_draw_sections.gd": "260dc901a518ee71f18451bd9e1025889d1bb5fbce46f678aaf13a47a1f64eac",
+      "res://scripts/world/cave_edge_asset_drawer.gd": "3b62dfe0403ffd6fc9c13d9f53b2f2854333f3cfa726fb8bb27617ede140967e",
+      "res://scripts/world/endless_descent_world.gd": "e71a2c1c3bf9e453164bbd0c666ef5811ed573e9f515eb87ac4c74dfb1e008c1",
+      "res://shaders/lit_relic_seal.gdshader": "8052324e90c112d8fd1ec7813c3899dc7986c2a94ac93e5cceba9b8879d5dfef",
+      "res://tools/north_edge_release_review/README.md": "87aa7945b40df77c9f2c205d6efe62814369166bc11024a2121bd143e7223015",
+      "res://tools/north_edge_release_review/deep_reference.gd": "ca3835a4ab1ed4d7e1a894665fc445bfc13b40f80255e5c8f974512d19bce1e1",
+      "res://tools/north_edge_release_review/review.gd": "21e23cab9e872db8eebe87378fdf596a8c0d819afb59e6137f3f36e28dfa334d"
+    },
+    "candidate_draw_body_matches_accepted_study_exactly": true
+  },
+  "inspected_images": {
+    "integration": {
+      "A": {
+        "path": "/workspace/scratch/d5437d917805/evidence/dev12-north-integration-f2ce35f/moss-north-held-A.png",
+        "sha256": "aa4ea4f9486773153e241ab65e949ea24a8059181cf130f13c9cefd824526dbd",
+        "size_bytes": 2171450,
+        "dimensions": [
+          1696,
+          780
+        ]
+      },
+      "B": {
+        "path": "/workspace/scratch/d5437d917805/evidence/dev12-north-integration-f2ce35f/moss-north-held-B.png",
+        "sha256": "c382b340198d203b21ca7e7a20846f88c57c13f67e6bccbe4ef8cb52a6a8efe8",
+        "size_bytes": 2170345,
+        "dimensions": [
+          1696,
+          780
+        ]
+      },
+      "A2": {
+        "path": "/workspace/scratch/d5437d917805/evidence/dev12-north-integration-f2ce35f/moss-north-held-A2.png",
+        "sha256": "aa4ea4f9486773153e241ab65e949ea24a8059181cf130f13c9cefd824526dbd",
+        "size_bytes": 2171450,
+        "dimensions": [
+          1696,
+          780
+        ]
+      }
+    },
+    "accepted_held": {
+      "A": {
+        "path": "/workspace/scratch/d5437d917805/evidence/north-edge-orientation-moss/moss-north-held-A.png",
+        "sha256": "4cd3dd9c978ccd0a5c026cddd2c9e6d9df5328f1ef446d0132e9d5ade30a9919",
+        "size_bytes": 2171978,
+        "dimensions": [
+          1696,
+          780
+        ]
+      },
+      "B": {
+        "path": "/workspace/scratch/d5437d917805/evidence/north-edge-orientation-moss/moss-north-held-B.png",
+        "sha256": "b4b09b27f004c63edb879633479bb8bbeb1ad41680858a659c1a96576e6504f9",
+        "size_bytes": 2170913,
+        "dimensions": [
+          1696,
+          780
+        ]
+      },
+      "A2": {
+        "path": "/workspace/scratch/d5437d917805/evidence/north-edge-orientation-moss/moss-north-held-A2.png",
+        "sha256": "4cd3dd9c978ccd0a5c026cddd2c9e6d9df5328f1ef446d0132e9d5ade30a9919",
+        "size_bytes": 2171978,
+        "dimensions": [
+          1696,
+          780
+        ]
+      }
+    }
+  },
+  "original_resolution_visual_review": {
+    "all_three_integration_originals_viewed": true,
+    "frame_dimensions": [
+      1696,
+      780
+    ],
+    "straight_band_framebuffer_rect": [
+      504.6819,
+      278.7777,
+      228.8787,
+      76.26667
+    ],
+    "west_endpoint_framebuffer_rect": [
+      199.5103,
+      142.1333,
+      305.1716,
+      305.0667
+    ],
+    "east_endpoint_framebuffer_rect": [
+      733.5607,
+      142.1333,
+      305.1716,
+      305.0667
+    ],
+    "findings": [
+      "B places the authored top caps above the shaded faces on the central north band, reproducing the approved upright perspective while retaining the material and stone scale.",
+      "Both endpoint regions were inspected in the full originals. The existing full-corner shoulders, rotated side-leg perspective and stepped overlaps remain visible; this integration does not resolve them.",
+      "No additional visible defect attributable to production integration was found in this held pose. A2 visibly restores A and the full-frame decoded and file-byte comparisons are exact."
+    ]
+  },
+  "pixel_proof": {
+    "method": "Independently decoded full RGBA PNGs with Pillow; signed B minus A arrays computed with NumPy int16, then compared at every channel of every pixel. No crops or unsigned subtraction.",
+    "integration_A_to_B_changed_rgba_pixels": 53137,
+    "integration_A_to_A2_changed_rgba_pixels": 0,
+    "integration_A_A2_png_bytes_identical": true,
+    "historical_A_to_B_changed_rgba_pixels": 53137,
+    "signed_effect_changed_pixels_vs_historical": 0,
+    "signed_effect_maximum_channel_mismatch": 0,
+    "maximum_absolute_effect_channel_delta": 123,
+    "cross_run_full_frame_changed_rgba_pixels": {
+      "A": 35448,
+      "B": 35448,
+      "A2": 35448
+    },
+    "cross_run_full_frame_identity": false
+  },
+  "code_review": {
+    "production_owner": "scripts/world/endless_descent_world.gd::_draw_permanent_wall_face / _draw_moss_north_edge",
+    "guard": "Only diggable cells, side 0, non-null texture with the exact Moss edge resource path use the new draw path. Other sides, permanent bedrock and other biome textures keep their prior owner.",
+    "mapping": "Same eight 128 by 128 source segments, posmod(-cell.x + depth_at_position(center) % 11, segment_count), full 64 by 64 world quad and X reflection; only the Y orientation becomes upright. No asset changes, clipping or scaling adjustment.",
+    "transform_lifecycle": "The local draw transform resets to identity immediately after the one draw call.",
+    "fixture": "B invokes actual production super._draw_permanent_wall_face. A/A2 replay the old mineable/bedrock owner. Section caches are invalidated for each phase; the report records 336 redrawn sections per phase, and 40 eligible B draw calls.",
+    "state_contract": "Capture report retains the same camera, limits, zoom, culling rectangle and geometry fingerprint through A/B/A2. Seed 4608, Deep 14/window 13; held player is on walkable floor with no terrain mutation.",
+    "protected_scope": "Moss edge and corner assets, shared edge drawer, lighting owner, shader and project source hashes match the capture report; the commit makes no change to those files."
+  },
+  "evidence_report_hashes": {
+    "north-edge-orientation.json": "5b040e68afdde23647eec9020670871e8c6b226f7d2ab652cc73cb49fc95bc5b",
+    "integration-parity.json": "e90b3fa9bfb4011c4049287bd22a34396fc1375097fc6a5b4008cf30c1cef2a9",
+    "integration-effect-parity.json": "384bddb84fc1f31d1955a6e04005476a885d0013f4436da84f2339e01c2baca4"
+  },
+  "limits": [
+    "This frozen source-project held pose uses a valid-floor fixture teleport; it is not continuous player traversal or performance evidence. The separate accepted seven-case study covers affected gameplay states.",
+    "Cross-run full-frame identity is false: each matching phase differs from the historical capture at 35,448 RGBA pixels. Only the signed A-to-B effect is identical at every pixel; the cause of all between-run state differences was not independently diagnosed here.",
+    "Existing corners, short steps, pillars and biome seams remain unresolved. No broad world-quality, native-motion, all-tool, physical-iPhone or FPS acceptance is implied.",
+    "Normal exact-package release checks remain required. This review did not run a renderer, alter production source, or certify the published package."
+  ],
+  "source_gate_context": {
+    "basis": "Parent report only; not rerun or independently certified by this visual/code review.",
+    "reported": "Initial source gate had 14 of 15 passing; overhaul encountered an unchanged rootwound dummy-renderer texture-null failure. Isolated unchanged DEV11 control and candidate reruns passed; original failure was retained. No runtime workaround or output filter was introduced."
+  }
+}

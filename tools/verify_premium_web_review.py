@@ -101,6 +101,8 @@ def source_hashes():
     return {
         "harnessSha256": sha256(ROOT / "tools/review_commerce_residency.gd"),
         "feedbackHarnessSha256": sha256(ROOT / "tools/review_feedback_overlap.gd"),
+        "northHarnessSha256": sha256(ROOT / "tools/north_edge_release_review/review.gd"),
+        "northReferenceSha256": sha256(ROOT / "tools/north_edge_release_review/deep_reference.gd"),
         "runnerSha256": sha256(ROOT / "tools/capture-web.mjs"),
         "verifierSha256": sha256(Path(__file__)),
     }
@@ -337,6 +339,34 @@ def feedback_review(directory, identity):
     return {"feedbackChecks": len(checks), "feedbackPngCount": len(captures)}
 
 
+def north_review(directory, identity):
+    report = read_json(directory / "north-edge-orientation.json")
+    require("NORTH_EDGE_RELEASE_REVIEW_COMPLETE" in checked_log(directory / "native.log"), "Missing north integration completion marker")
+    require(report.get("source_revision") == identity["sourceSha"], "North source identity changed")
+    require(report.get("pack_sha256") == identity["devFiles"]["index.pck"]["sha256"], "North review used another package")
+    require(report.get("expected_pack_sha256") == report.get("pack_sha256"), "North expected package identity changed")
+    require(report.get("rendered") is True and report.get("failures") == [], "North integration did not render successfully")
+    require(report.get("physical_iphone") is False and report.get("performance_evidence") is False, "North fixture overstates device or performance evidence")
+    hashes = report.get("files_sha256", {})
+    for filename, key in (("review.gd", "northHarnessSha256"), ("deep_reference.gd", "northReferenceSha256")):
+        observed = [digest for path, digest in hashes.items() if path.endswith("/north_edge_release_review/" + filename)]
+        require(observed == [identity[key]], "North fixture source hash mismatch: " + filename)
+    pair = report.get("pair", {})
+    captures = pair.get("captures", [])
+    require(pair.get("id") == "moss-north-held" and len(captures) == 3, "Incomplete north integration triplet")
+    require([row.get("filename") for row in captures] == ["moss-north-held-" + mode + ".png" for mode in ("A", "B", "A2")], "North triplet order changed")
+    require([row.get("candidate") for row in captures] == [False, True, False], "North triplet did not restore its control")
+    for row in captures:
+        info = png_info(safe_file(directory, row["filename"]))
+        require(info["sha256"] == row.get("sha256") and (info["width"], info["height"]) == (1696, 780), "North original image identity/size changed")
+        require(positive_int(row.get("redrawn_sections")), "North triplet reused stale draw commands")
+    require(captures[0]["sha256"] == captures[2]["sha256"], "North A/A2 PNGs differ")
+    require(pair.get("restored_diff", {}).get("changed_rgba_pixels") == 0 and pair.get("restored_diff", {}).get("maximum_channel_delta") == 0, "North control pixels did not restore exactly")
+    require(positive_int(pair.get("candidate_diff", {}).get("changed_rgba_pixels")), "North production branch did not change visible pixels")
+    require(captures[0].get("candidate_draw_calls") == 0 and captures[2].get("candidate_draw_calls") == 0 and positive_int(captures[1].get("candidate_draw_calls")), "North actual-production dispatch was not observed")
+    return {"northPngCount": 3, "northChangedPixels": pair["candidate_diff"]["changed_rgba_pixels"]}
+
+
 def residency_review(directory, identity):
     pngs = suite_receipt(directory, RESIDENCY, identity)
     report_path = directory / "commerce-residency.json"
@@ -365,7 +395,7 @@ def residency_review(directory, identity):
             require(stage.get("previous_preview_nodes_freed") is True and stage.get("shop_viewports") == 0 and stage.get("gpu_released_bytes", 0) > 0, "Native preview resources remain after close")
     markers = re.findall(r"^COMMERCE_RESIDENCY_RESULT checks=(\d+) failed=0 captures=(\d+) sha256=([0-9a-f]{64})$", checked_log(directory / "native.log"), re.M)
     require(markers == [(str(len(checks)), str(len(captures)), sha256(report_path))], "Native completion marker/report hash mismatch")
-    return {"checks": len(checks), "pngCount": len(pngs), **feedback_review(directory / "feedback", identity)}
+    return {"checks": len(checks), "pngCount": len(pngs), **feedback_review(directory / "feedback", identity), **north_review(directory / "north", identity)}
 
 
 def suite(args):
