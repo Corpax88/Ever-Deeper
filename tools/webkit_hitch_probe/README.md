@@ -65,6 +65,19 @@ node tools/webkit_hitch_probe/check.mjs
 node tools/webkit_hitch_probe/check-phases.mjs
 ```
 
+The first workflow35210964673 stopped at binding, before Mac. Import/export,
+recorder/parser and the packed state187/world461 checks passed. Godot generated
+`scripts/ui/feedback_placement.gd.uid` for an unchanged existing8f script whose
+sidecar was absent from Git. The initial guard correctly reported this extra
+file; no timing was accepted. The corrected guard records only that exact
+generated UID as import metadata, requires an uncommitted valid UID and the
+owner's byte identity with8f, and rejects all other runtime differences. The
+game still preloads that helper by its original `res://` path. This binding
+correction does not change the recorder, observer, wrappers or exported inputs.
+First build artifact10492855609/SHA256
+`981b0b16c801fb239f69ace31bfd03d017cf26f26a140c4dfaaa7e6650426a2e`
+and its original error are preserved. The skipped Mac job supplied no samples.
+
 The existing full-project invariant check flags `project.godot` for the extra
 diagnostic autoload and the already known baseline `player_visual.gd` mismatch;
 the protected runtime expectations are not relaxed. The recorder/parser/source

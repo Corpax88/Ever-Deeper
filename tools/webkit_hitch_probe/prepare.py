@@ -49,6 +49,19 @@ def verify():
     changed = set(git('diff', '--name-only', BASE, '--', *RUNTIME).decode().splitlines())
     changed.update(git('ls-files', '--others', '--exclude-standard', '--', *RUNTIME).decode().splitlines())
     allowed = set(expected) | {RECORDER, RECORDER + '.uid'}
+    generated_metadata = {}
+    # Exact8f shipped this existing script without a .uid; editor import generates it.
+    # It is metadata, never an exception for any executable source or asset bytes.
+    sidecar = 'scripts/ui/feedback_placement.gd.uid'
+    owner = sidecar[:-4]
+    if sidecar in changed:
+        assert not git('ls-tree', BASE, '--', sidecar).strip(), 'Baseline unexpectedly contains UID'
+        assert not git('ls-tree', 'HEAD', '--', sidecar).strip(), 'Generated UID was committed'
+        assert (ROOT/owner).read_bytes() == git('show', BASE + ':' + owner), 'Generated UID owner changed'
+        content = (ROOT/sidecar).read_bytes()
+        assert re.fullmatch(rb'uid://[a-z0-9]{1,20}\n', content), 'Unexpected generated UID contents'
+        generated_metadata[sidecar] = {'content': content.decode(), 'sha256': sha(content), 'owner_sha256': sha((ROOT/owner).read_bytes()), 'baseline_owner_unchanged': True}
+        changed.remove(sidecar)
     assert changed <= allowed, ('Unauthorized runtime change', changed - allowed)
     assert set(expected) <= changed
     here = ROOT/'tools/webkit_hitch_probe'
@@ -64,7 +77,7 @@ def verify():
     first = "  await page.keyboard.up('Space');await page.keyboard.up('ArrowDown');actions.push({stage:'release_real_keys'"
     start = run.index(first)
     assert sha(run[start:run.index('}catch(e) {', start)].encode()) == '66730720baf1a6f070b7fa341b3a29a894983e55f063e9349aae798b614d078c', 'Original downstream functional gates changed'
-    return {'diagnostic_only': True, 'production_base': BASE, 'source': git('rev-parse', 'HEAD').decode().strip(), 'allowed_runtime_changes': sorted(changed), 'original_function_bodies_byte_equal': True, 'original_navigation_byte_equal': True, 'observer_byte_equal': True, 'source_hashes': {p: sha((ROOT/p).read_bytes()) for p in sorted(allowed) if (ROOT/p).exists()}, 'observer_sha256': OBSERVER}
+    return {'diagnostic_only': True, 'production_base': BASE, 'source': git('rev-parse', 'HEAD').decode().strip(), 'allowed_runtime_changes': sorted(changed), 'generated_import_metadata': generated_metadata, 'original_function_bodies_byte_equal': True, 'original_navigation_byte_equal': True, 'observer_byte_equal': True, 'source_hashes': {p: sha((ROOT/p).read_bytes()) for p in sorted(allowed) if (ROOT/p).exists()}, 'observer_sha256': OBSERVER}
 
 def recorder_check(binary, output):
     with tempfile.TemporaryDirectory(prefix='hitch-recorder-') as folder:
