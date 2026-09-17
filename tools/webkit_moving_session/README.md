@@ -1,10 +1,12 @@
 # Exact DEV11 WebKit moving baseline
 
 Authorized by root on 2026-09-17 after reviewing the concrete ownership/metric plan.
-Three previous navigation attempts failed before timing and are preserved in RESULTS.md.
+Four previous navigation attempts failed before timing and are preserved in RESULTS.md.
 The ordinary NEW GAME-first route now verifies the closed modal, actual surface
 save and open DEV drawer. Root authorized one smaller, non-coasting scroll correction
-after originals showed the Layer12 row skipped by the prior inertial swipe.
+after originals showed the Layer12 row skipped by the prior inertial swipe. The new
+scrolling route exposed the correct button in two originals, but Vision assigned0.5
+confidence and the unchanged generic0.6 gate rejected it. No timing result exists.
 The native Mac bounded ANGLE pool finding does not establish a WebKit bottleneck;
 see PLAN.md and source-bindings.json for exact ownership evidence.
 

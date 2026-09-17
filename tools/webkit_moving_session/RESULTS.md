@@ -128,3 +128,26 @@ input/observer receipts remain inside the raw ZIP. Durable failure archive:
 Ever-Deeper-DEV11-WebKit-scroll-navigation-failure-20260917.tar.gz,21611463 bytes,
 SHA256 9cec21d6b31d06a96ff5c21362c7ccc25cd3623d0fcbe148ca2c4c81b5699553,
 Library libfile_f91e97631e1c81918f591d12d73f2378. No performance result is claimed.
+
+# Preserved fourth failure: correctly read target below generic OCR threshold
+
+[Actions 35206469423](https://github.com/Corpax88/Ever-Deeper/actions/runs/35206469423)
+ran request b1e3e49706c8f1b33efe8b8213323ab5273c0232, job105153377962, attempt1.
+All identity, ordinary Surface, visible drawer and stationary-release gates passed.
+The seven actual release holds were344.30–361.74ms. Originals01-menu-3.png and
+01-menu-4.png both clearly show ENDLESS · LAYER 12, at CSS181.13,322.56 and181.13,221.87.
+Vision read the exact text ENDLESS • LAYER 12 both times with confidence0.5; normalized
+ENDLESSLAYER12 was correct but the unchanged generic findText threshold0.6 rejected it.
+Thus the non-coasting scroll correction worked; this failure was the OCR acceptance
+rule. Both originals were inspected at1696x780. No extra run or threshold change
+was made automatically. Browser exit0, no game/GL errors, no timing/draw census/mining
+key-down/sampler; observer timed partial=null. Startup callbacks are not FPS evidence.
+
+Untouched raw ZIP:21613955 bytes, SHA256
+3d64fa234b5ba3933eda5eb5578b15a36afdfb41defbb7a28e72052f8caca042.
+All ZIP CRCs and41 closed-file hashes passed. Durable archive retains all11 original
+PNGs, surface save, action/OCR/observer receipts, raw logs and checkpoint identity:
+Ever-Deeper-DEV11-WebKit-OCR-navigation-failure-20260917.tar.gz,21631398 bytes,
+SHA256 54c03353dc144e001d15e78be623596774be919c905a3048768bf109796f881e,
+Library libfile_c1b90a47597c8191b38f4cf0be32e330. The package remains unchanged and
+none of the four navigation failures establishes a browser performance bottleneck.
