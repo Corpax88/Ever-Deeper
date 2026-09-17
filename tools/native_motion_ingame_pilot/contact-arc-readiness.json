@@ -1,0 +1,85 @@
+{
+  "status": "Contact mapping complete; one target-bound native arc proposed from reach math only",
+  "runtime_changed": false,
+  "rendered_new_arc": false,
+  "visually_accepted": false,
+  "source_base": "7f1b22c42301cd6c6f7d3d7c446c728d66a73839",
+  "source_sha256": {
+    "query_up_contact_target.gd": "d8721eb9f72e1b6355b3327f5501b81c4281db2f7b5bc4855b755c8168402d74",
+    "map_up_contact.py": "8c17b9340f4317fc147cb8671678b6e6198fcff8fa8b0cc0ae64d9f9f14f73d5",
+    "probe_target_contact.py": "16ffb345b0040d65f899b2b6335272b3d0bb976eeb1b9b8b7437fd2bdc820062",
+    "target_contact_pose.py": "ae42ad0bd03ad659331e26c65bc5462a29c28e17e7134dc79c4f55672069b25d",
+    "UP-CONTACT-ARC.md": "1f283fe928c5361225e077f684e1207d12cb5ffc9b08b6a16e12b92be6974799"
+  },
+  "evidence": [
+    {
+      "path": "/workspace/scratch/d5437d917805/evidence/native-up-contact-arc/contact-mapping-bindings.json",
+      "sha256": "59d34b63d3fb77beb7fafb47c6b92faca6b1606306a96dbb768dfd0dbc21fd84",
+      "bytes": 1286
+    },
+    {
+      "path": "/workspace/scratch/d5437d917805/evidence/native-up-contact-arc/projection-02/contact-projection.json",
+      "sha256": "0705d0e52f85becb8c2119d8f23beda9d4faf39b1952e9a0487743ad9cceca21",
+      "bytes": 97261
+    },
+    {
+      "path": "/workspace/scratch/d5437d917805/evidence/native-up-contact-arc/target-reach-02/reach.json",
+      "sha256": "d5dfed4fdfedec22624acdb20923eb8d2d6ccbd34a710e848a3ab92d410becd4",
+      "bytes": 127139
+    }
+  ],
+  "selected_candidate": {
+    "specification": {
+      "lateral": -0.12,
+      "forward": -0.4,
+      "height": 1.0,
+      "pitch_degrees": -10,
+      "roll_degrees": 30
+    },
+    "passed": true,
+    "dense_samples": 135,
+    "max_reach": 0.6408004122620254,
+    "max_segment_error": 8.846323779065912e-08,
+    "contact_geometry": {
+      "shaft_projection_px_per_native_unit": 38.3065804269176,
+      "head_extrema_native_pixels": {
+        "minimum_normal": [
+          147.9881134033203,
+          66.97616577148438
+        ],
+        "maximum_normal": [
+          133.23373413085938,
+          86.05122375488281
+        ]
+      },
+      "nearest_ore_alpha_pixel_distance": {
+        "minimum_normal": 0.02812136557891843,
+        "maximum_normal": 18.30629408945991
+      },
+      "head_extrema_span": 24.115338698572636,
+      "rear_native_pixel": [
+        124.92993927001953,
+        92.3746109008789
+      ]
+    }
+  },
+  "target_ground_vector": [
+    -2.594033718109131,
+    -0.9830527901649475,
+    0.0
+  ],
+  "unchanged_cardinal_ground_vector": [
+    -0.02208799682557583,
+    -0.022456128150224686,
+    0.0
+  ],
+  "upper_body_yaw_delta_degrees": -24.71845802922223,
+  "limits": [
+    "Opaque-sample proximity is a reach heuristic, not surface contact",
+    "Working tip identity and approach across contact remain to bind",
+    "Actual evaluated rig, native part occlusion and five-pose visual gate pending",
+    "No existing gameplay owner or source changed",
+    "Ordinary target-facing presentation packet is a proposal, not implemented",
+    "No full bank, arbitrary input, mobile performance or full-polish acceptance"
+  ]
+}
