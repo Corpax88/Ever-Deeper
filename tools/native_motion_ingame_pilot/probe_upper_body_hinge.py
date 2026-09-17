@@ -96,6 +96,10 @@ for lean, twist in [(0,0), *[(a,b) for a in (6,10,14) for b in (-12,0,12)]]:
                 q, ground, target, selection['contact'], local_cap, tool_rotation,
                 body_joint, lean, twist)
             row['poses'].append({'phase':q, 'weight':upper_body_hinge_pose.action_weight(q),
+                'head_matrix':[list(r) for r in p['head']],
+                'torso_matrix':[list(r) for r in p['torso']],
+                'rear_world':list(p['rear']), 'axis_world':list(p['axis']),
+                'grips_world':{s:list(p['grips'][s]) for s in native.SIDES},
                 'head_joint_pixel':project(p['head']@head_joint),
                 'original_head_joint_pixel':project(original['head']@head_joint),
                 'grips_pixel':{s:project(p['grips'][s]) for s in native.SIDES},

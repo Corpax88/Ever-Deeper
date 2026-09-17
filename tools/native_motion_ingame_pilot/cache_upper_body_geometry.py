@@ -7,6 +7,7 @@ from pathlib import Path
 import argparse
 import hashlib
 import json
+import os
 import runpy
 import subprocess
 import sys
@@ -157,8 +158,10 @@ bpy.context.view_layer.update()
 depsgraph = bpy.context.evaluated_depsgraph_get()
 transform = np.asarray(check_pose['head']@pose['head'].inverted(),dtype=np.float64)
 transport = {'phase':.55,'side_lean_degrees':14,'twist_degrees':-12,
-             'maximum_world_vertex_error':0.,'checked_vertices':0,'objects':[]}
+             'maximum_world_vertex_error':0.,'checked_vertices':0,'objects':[],
+             'reference_to_checked_head_matrix':transform.tolist()}
 report['actual_evaluated_transport_check'] = transport
+actual_arrays = []
 for obj, metadata in zip(sorted(selected,key=lambda o:o.name),report['objects']):
     assert obj.name == metadata['name']
     evaluated = obj.evaluated_get(depsgraph)
@@ -167,6 +170,7 @@ for obj, metadata in zip(sorted(selected,key=lambda o:o.name),report['objects'])
     flat = np.empty(len(mesh.vertices)*3,dtype=np.float32); mesh.vertices.foreach_get('co',flat)
     matrix = np.asarray(evaluated.matrix_world,dtype=np.float64)
     actual = flat.reshape(-1,3).astype(np.float64)@matrix[:3,:3].T+matrix[:3,3]
+    actual_arrays.append(actual)
     start, count = metadata['cache_vertex_offset'], metadata['cache_vertex_count']
     predicted = vertices[start:start+count]@transform[:3,:3].T+transform[:3,3]
     error = float(np.max(np.linalg.norm(actual-predicted,axis=1)))
@@ -174,9 +178,38 @@ for obj, metadata in zip(sorted(selected,key=lambda o:o.name),report['objects'])
     transport['maximum_world_vertex_error'] = max(transport['maximum_world_vertex_error'],error)
     transport['checked_vertices'] += count
     evaluated.to_mesh_clear()
+actual_path = args.output/'checked-head-vertices.npz'
+actual_temporary_path = args.output/'checked-head-vertices.npz.pending'
+assert not actual_path.exists() and not actual_temporary_path.exists()
+with actual_temporary_path.open('xb') as handle:
+    np.savez_compressed(handle,world_vertices=np.concatenate(actual_arrays))
+    handle.flush(); os.fsync(handle.fileno())
+os.replace(actual_temporary_path,actual_path)
+transport['actual_vertices_file'] = actual_path.name
+transport['actual_vertices_sha256'] = sha(actual_path)
+transport['actual_vertices_bytes'] = actual_path.stat().st_size
 output.write_text(json.dumps(report,indent=2)+'\n')
 assert transport['checked_vertices'] == len(vertices)
 assert transport['maximum_world_vertex_error'] < 1e-5, transport['maximum_world_vertex_error']
 report['complete'] = True
 output.write_text(json.dumps(report,indent=2)+'\n')
+# Keep the reusable final receipt distinct from every progress snapshot. A
+# previous workspace run returned success but its later observed progress file
+# lacked the transport block; those bytes are retained as an integrity stop.
+# The runner must bind this final file after process exit before copying it.
+assert len(transport['objects']) == 179
+final_path = args.output/'head-geometry-final.json'
+temporary_path = args.output/'head-geometry-final.json.pending'
+assert not final_path.exists() and not temporary_path.exists()
+final_bytes = (json.dumps(report,indent=2)+'\n').encode()
+with temporary_path.open('xb') as handle:
+    handle.write(final_bytes); handle.flush(); os.fsync(handle.fileno())
+os.replace(temporary_path,final_path)
+directory_fd = os.open(args.output,os.O_RDONLY)
+try:
+    os.fsync(directory_fd)
+finally:
+    os.close(directory_fd)
+assert final_path.read_bytes() == final_bytes
+print('HEAD_GEOMETRY_FINAL_SHA256',sha(final_path),len(final_bytes),len(transport['objects']),flush=True)
 print('COMPLETE_HEAD_GEOMETRY_CACHE',len(selected),len(vertices),report['evaluated_triangles'],flush=True)

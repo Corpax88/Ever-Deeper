@@ -28,7 +28,7 @@ evaluated native-rig nor visibility approval.
 Before selecting an arc, `cache_upper_body_geometry.py` evaluates the unchanged
 approved scene once. It records **all 179 head-bound objects and 2,217,334 actual
 triangles**, including the full ears, face, beard, hair and helmet. Every source
-source vertex must have exactly one full head weight.
+vertex must have exactly one full head weight.
 The exact complete modifier inventory is pinned to the second retained cache
 attempt: 171 armature-only objects, one pre-armature solidify, three pre-armature
 bevels, and four post-armature beard/hair/spectacle stacks. Both earlier strict
@@ -43,6 +43,14 @@ single `1.0` weight to `0.9999999403953552`, both with and without preserved dat
 layers. This does not establish the native lamp's exact values. The corrected
 cache requests all layers and records the actual generated metadata, retaining
 the exact source-weight gate and the fixed `1e-5` actual vertex transport gate.
+The fourth run returned exit zero and an immediate successful final read, but
+the later persisted progress file lacked its entire transport block. That
+unresolved integrity stop is preserved; the missing metrics are not rebuilt
+from a success message. A subsequent run must use isolated temporary outputs
+and a distinct atomic/fsynced `head-geometry-final.json`, verified by hash after
+process exit before any copy or CPU screening. The complete measured second
+vertex array is retained separately, so all reported transport errors can be
+recomputed against the reference array and recorded matrix without Blender.
 Its private point cache is analysis evidence, not a replacement mesh,
 LOD, image or public native-source export. Conservative hull projection may
 screen the shortlist but cannot prove shaft visibility, body/arm occlusion,
