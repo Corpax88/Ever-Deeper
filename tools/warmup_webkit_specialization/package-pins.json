@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "source": "5e48e4e1c256bd60aef1c4ba94110ccb1ac802b9",
+  "candidate_run": "35248670186",
+  "candidate_artifact": "10509270459",
+  "candidate_identity_sha256": "de678655bb6249ab33d8d25abdbe5de256f5c28ccb811b5d7cfa686ccb50d497",
+  "files": {
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.html": {
+      "size": 5444,
+      "sha256": "5becf5047538cf762ab295949c93d83224eb3d64910830e944c23d95db91ed4d"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 221023008,
+      "sha256": "44888defe3c4a39751fc5d470faf425951f122ebffd358dac04502157429088b"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    }
+  },
+  "observer_sha256": "35db05eed667a6b95ec235d2b0673ea2ddf48cf7ccfa84ef193ed04ba0bf4424",
+  "route_source_commit": "1a85baf60983cb3e1de228239a025c5734d1819d",
+  "route_source_path": "tools/webkit_shader_identity/run.mjs",
+  "unchanged_sections": {
+    "navigation_helpers": {
+      "start": "function findText(rows,needle) {",
+      "end": "try {\n  await fs.mkdir(output",
+      "exclude_suffix": null,
+      "sha256": "8b2afd914699c3474fb367e36f34c125cc1680655c948445c3988e6cd5b5cb0f"
+    },
+    "route": {
+      "start": "  let rows=await scan('00-start');",
+      "end": "  actions.push({stage:'begin_real_keys'",
+      "exclude_suffix": null,
+      "sha256": "dff03773ced74ae4544e52ad25391e4b7f57ad18da1e212358282265acac36f3",
+      "reviewed_new_sha256": "a7743218edb1cd6f09217ebceda9f89c75a3d9def0eb807e71cd510687a5f950",
+      "only_insertion_file": "boundary-snippet.txt",
+      "insertion_sha256": "f084daf7dc56d3314e44fe8aaf8214133b154d982bf7ef40053ecae67b77648d"
+    },
+    "functional": {
+      "start": "  const final=await saveReceipt('save-after')",
+      "end": "  result.observer=await page.evaluate",
+      "exclude_suffix": "  result.resource_restoration=",
+      "sha256": "541d1d62181017d2740084058d4d1ed2b0b2f28801dfe3d6c032919246d7d248"
+    }
+  },
+  "runtime_paths": [
+    "scripts",
+    "scenes",
+    "shaders",
+    "assets",
+    "data",
+    "project.godot",
+    "export_presets.cfg",
+    "package.json",
+    "package-lock.json"
+  ],
+  "runtime_tree_sha256": "dbb29cb99eb306f9fb864e6e66aacf9f09b8db57dde8922f77413f970ae3c28c",
+  "candidate_version": "1.0.0-dev.13"
+}

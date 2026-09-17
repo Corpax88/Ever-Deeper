@@ -1,0 +1,87 @@
+{
+  "canvas": {
+    "url": "https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/gles3/rasterizer_canvas_gles3.cpp",
+    "retrieved_via": "authenticated GitHub fetch of public primary source",
+    "note": "Hash of the exact decoded content returned by GitHub fetch, excluding the one additional newline in the temporary local snapshot. The Git blob hash is computed from those bytes, not independently checked against a Git tree.",
+    "retrieved_content_sha256": "9088855c87cfc4ad5d7bf4c019f80f573efa7dd1110556d246c5972001a698a5",
+    "retrieved_content_bytes": 123318,
+    "computed_git_blob_sha1": "3b570522c95561f7f8186fad781894265adae3bb"
+  },
+  "shader": {
+    "url": "https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/gles3/shader_gles3.cpp",
+    "retrieved_via": "authenticated GitHub fetch of public primary source",
+    "note": "Hash of the exact decoded content returned by GitHub fetch, excluding the one additional newline in the temporary local snapshot. The Git blob hash is computed from those bytes, not independently checked against a Git tree.",
+    "retrieved_content_sha256": "17c01277dc3468a1d53081f01a6f7665f5d0f82e7882a8198e1f486ee344d5d8",
+    "retrieved_content_bytes": 28071,
+    "computed_git_blob_sha1": "4fe333e3cb9bbd7b71ad8cd486b98fc6c31029f8"
+  },
+  "texture": {
+    "url": "https://github.com/godotengine/godot/blob/4.7.2-stable/drivers/gles3/storage/texture_storage.cpp",
+    "retrieved_via": "authenticated GitHub fetch of public primary source",
+    "note": "Hash of the exact decoded content returned by GitHub fetch, excluding the one additional newline in the temporary local snapshot. The Git blob hash is computed from those bytes, not independently checked against a Git tree.",
+    "retrieved_content_sha256": "061ffc38fe2a378b61661c90bce54ffe4c5a7724c4c95d3c9acc0b300a67e6ad",
+    "retrieved_content_bytes": 127379,
+    "computed_git_blob_sha1": "83f8e898a8fe84a0b7f06ed1296f4bcfee348ddb"
+  },
+  "actual_shipped_js": {
+    "path": "index.js",
+    "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba",
+    "bytes": 279815,
+    "source": "Actual downloaded full warmup candidate from run35248670186; all bytes equal the previously inspected engine JS.",
+    "verified_dispatches": [
+      "texImage2D",
+      "compressedTexImage2D",
+      "texStorage2D",
+      "compileShader",
+      "linkProgram",
+      "getShaderParameter",
+      "getProgramParameter",
+      "shaderSource",
+      "attachShader"
+    ],
+    "absent_2d_subimage_names": [
+      "texSubImage2D",
+      "compressedTexSubImage2D"
+    ],
+    "coverage_note": "This bounded proposal excludes 3D/array uploads and all buffer/draw/state calls, which remain explicit unmeasured work.",
+    "absent_attachment_mutator_names": [
+      "detachShader"
+    ],
+    "identity_dispatch_receipts": {
+      "shaderSource": "var _emscripten_glShaderSource=(shader,count,string,length)=>{var source=GL.getSource(shader,count,string,length);GLctx.shaderSource(GL.shaders[shader],source)}",
+      "attachShader": "var _emscripten_glAttachShader=(program,shader)=>{GLctx.attachShader(GL.programs[program],GL.shaders[shader])}",
+      "GL.getSource": "getSource:(shader,count,string,length)=>{var source=\"\";for(var i=0;i<count;++i){var len=length?HEAPU32[length+i*4>>2]:undefined;source+=UTF8ToString(HEAPU32[string+i*4>>2],len)}return source}"
+    }
+  },
+  "identity_extension": {
+    "resource_preparation": "667b293f240fe350e7530586c531549d46310926",
+    "completed_resource_run": "35225485863",
+    "final_measured_report": "1069698e7889bc2859f650213904f6911897f380",
+    "timed_methods_unchanged": 7,
+    "new_metadata_methods": [
+      "shaderSource",
+      "attachShader"
+    ],
+    "extra_GL_queries": 0,
+    "assumption": "The exact shipped dispatch supplies the original source string. There is no detachShader dispatch in these pinned bytes. Associations are completion-ordered and no opaque object is coerced by the recorder."
+  },
+  "unchanged_resource_preparation_files": {
+    "observer.js": "35db05eed667a6b95ec235d2b0673ea2ddf48cf7ccfa84ef193ed04ba0bf4424",
+    "resources.js": "a25ecca71167702ac7b7f501429e938786c7a4a657da917af66f2c1753d65a48",
+    "identity.mjs": "5c051fafb4634cdb3518bcc09aa392089da3f9b06eeb2116e60e778a9b9a7333",
+    "resources.mjs": "fa85bdf1abfa81978b4f24ccf1c1ed1bff7ea85e32af12aa0eafd6527e5b7127",
+    "codec.mjs": "49ce1f272b54b6fbc4dff976e103037f0e28e5260a71704f587ec478ebc09d68",
+    "fixture.mjs": "7ee657285f20e4e1a98ddd67ad682bb7fef113674190c5b13499e2a59add8286",
+    "check.mjs": "3b4a142089bc39efa2ea2874b5942c62bc8e8df41495c5a5172418680d99eca5",
+    "check-resources.mjs": "b7f74ded711f9ec44b7febe223dc6a7cf83798d3b59530963d4c88e9b484484d",
+    "check-identity.mjs": "18de1439ce77e256bcfe97b5e280f3ab8f747d2674ee5ff0a11db155ad61d890",
+    "ocr.swift": "c64f1fd5912cd9506b1556b9fdac2ed51e6486c3f54e846c756f51d5a0de2495"
+  },
+  "unchanged_measurement_block": {
+    "start": "  const measurement=await bounded(page.evaluate(async()=>{",
+    "end": "  const {raw,capture,stop,start,clockAfter}=measurement;",
+    "sha256": "10f83e9a3602d869464962592695561aba95bff6891436e794d287d9406deeb5"
+  },
+  "old_preparation_sha": "1a85baf60983cb3e1de228239a025c5734d1819d",
+  "new_design_review_sha256": "34e5723249415c044e03350c77963eadcb503c6df36ae883a62e8592be2d6f7e"
+}
