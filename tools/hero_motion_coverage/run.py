@@ -55,6 +55,12 @@ def validate_report(case: dict, pack_sha: str) -> dict:
         errors.append("Fixture did not retain real processing/terrain")
     if not report.get("framing", {}).get("passed"):
         errors.append("Hero/tool/target framing contract failed or was not observed")
+    startup = report.get("startup_feedback", {})
+    if (startup.get("passed") is not True or startup.get("phase") != "settled"
+            or startup.get("feedback_forcibly_cleared") is not False
+            or startup.get("manual_evaluation_or_clock_steps") is not False
+            or startup.get("last_snapshot", {}).get("quiet_seconds", 0) < startup.get("quiet_required_seconds", 0.5)):
+        errors.append("Ordinary startup feedback did not naturally settle before measured motion")
     if case.get("all_frames") and not report.get("all_observed_frames_captured"):
         errors.append("Full ordered rendered frames were requested but are incomplete")
     capture_format = case.get("capture_format", "png")
@@ -149,7 +155,8 @@ def main() -> int:
                        "--godot", str(args.godot.resolve()) if args.godot else "GODOT_BIN",
                        "--xvfb", str(args.xvfb.resolve()) if args.xvfb else "XVFB_BIN",
                        "--project", str(output / "empty-project") if pack else str(project),
-                       "--output", str(folder), "--resolution", "1696x780", "--timeout", "180",
+                       # Up to 180s natural startup settling plus the existing measured-work budget.
+                       "--output", str(folder), "--resolution", "1696x780", "--timeout", "360",
                        "--completion-marker", "HERO_COVERAGE_COMPLETE failures=0", "--"]
             if pack:
                 command += ["--main-pack", str(pack)]

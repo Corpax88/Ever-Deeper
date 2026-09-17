@@ -10,6 +10,8 @@ const FRAME_LIMIT := 1200
 const PNG_LIMIT := 360
 const MIN_ROUTE_Y := 320.0
 const FRAMING_MARGIN := 8.0
+const STARTUP_SIMULATION_LIMIT := 110.0
+const STARTUP_WALL_LIMIT_MSEC := 180000
 var output := ""
 var source_sha := ""
 var pack_source := ""
@@ -37,6 +39,7 @@ var capture_format := "png"
 var critical_pngs: Array[Dictionary] = []
 var framing_failures: Array[int] = []
 var minimum_framing_clearance := 1000000.0
+var startup_feedback: Dictionary = {}
 
 
 func _initialize() -> void:
@@ -105,10 +108,12 @@ func _run() -> void:
 	player.control_enabled = true
 	player.camera.position_smoothing_enabled = false
 	player.camera.reset_smoothing()
-	main.achievement_toast.clear()
 	main.quick_tutorial.dismiss()
 	main.premium_hud.set_status("")
 	main._refresh_hud()
+	if not await _settle_startup_feedback():
+		_finish()
+		return
 	initial_serial = int(player._mining_impact_serial)
 	expected_serial = initial_serial
 	if not await _observe("idle", 0.2):
@@ -216,6 +221,80 @@ func _equip() -> void:
 		"deepcore": state.drill_level = 3
 	player.movement_speed = 340.0
 	player.prepare_visual_cache()
+
+
+func _settle_startup_feedback() -> bool:
+	# DEV entry seeds progression before its batched achievement evaluation.
+	# Observe the ordinary queue/lifetimes; never award, clear or dismiss a toast.
+	var service = root.get_node("AchievementService")
+	var evaluation_seconds: float = float(service.EVALUATION_BATCH_SECONDS)
+	var quiet_required: float = maxf(0.5, evaluation_seconds * 2.0)
+	var started_ms: int = Time.get_ticks_msec()
+	var elapsed := 0.0
+	var quiet := 0.0
+	var last_recorded := -1.0
+	var previous_signature := ""
+	startup_feedback = {"passed": false, "phase": "settling", "started_wall_ms": started_ms,
+		"simulation_limit_seconds": STARTUP_SIMULATION_LIMIT, "wall_limit_seconds": STARTUP_WALL_LIMIT_MSEC / 1000.0,
+		"evaluation_batch_seconds": evaluation_seconds, "quiet_required_seconds": quiet_required,
+		"toast_spin_seconds": main.achievement_toast.SPIN_SECONDS, "toast_hold_seconds": main.achievement_toast.HOLD_SECONDS,
+		"toast_fade_seconds": main.achievement_toast.FADE_SECONDS,
+		"feedback_forcibly_cleared": false, "manual_evaluation_or_clock_steps": false,
+		"observation_origin": "frame_post_draw_state_only", "rendered_frames_observed": 0,
+		"timeline_scope": "Startup diagnostics precede and are excluded from the measured motion movie.", "observations": []}
+	if not _write_startup_feedback(): return false
+	while elapsed < STARTUP_SIMULATION_LIMIT and Time.get_ticks_msec() - started_ms < STARTUP_WALL_LIMIT_MSEC:
+		await RenderingServer.frame_post_draw
+		var delta: float = root.get_process_delta_time()
+		elapsed += delta
+		var toast: Dictionary = main.achievement_toast.debug_snapshot()
+		var content: Control = main.achievement_toast.get("_toast") as Control
+		var visible: bool = content != null and content.is_visible_in_tree()
+		var pickup: Node = player.get_node_or_null("ResourcePickupBurst")
+		var pickup_entries: Array = []
+		if pickup != null:
+			for entry in pickup.entries:
+				pickup_entries.append({"kind": String(entry.kind), "amount": int(entry.amount), "age": float(entry.age)})
+		var busy: bool = bool(service.evaluation_pending) or int(state.get("_state_batch_depth")) > 0 or bool(state.get("_state_batch_dirty")) or bool(main.hud_refresh_pending) or bool(toast.active) or int(toast.queue_size) > 0 or visible or not pickup_entries.is_empty()
+		quiet = 0.0 if busy else quiet + delta
+		var snapshot := {"wall_ms": Time.get_ticks_msec(), "elapsed_wall_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0,
+			"elapsed_simulation_seconds": elapsed, "quiet_seconds": quiet, "drawn_frame": Engine.get_frames_drawn(),
+			"physics_frame": Engine.get_physics_frames(), "evaluation_pending": bool(service.evaluation_pending),
+			"state_batch_depth": int(state.get("_state_batch_depth")), "state_batch_dirty": bool(state.get("_state_batch_dirty")),
+			"hud_refresh_pending": bool(main.hud_refresh_pending), "unlocked_count": service.unlocked_count(),
+			"toast_active": bool(toast.active), "toast_visible": visible, "active_id": String(toast.active_id),
+			"phase": String(toast.phase), "phase_elapsed": float(toast.phase_elapsed), "queue_size": int(toast.queue_size),
+			"queued_ids": toast.queued_ids, "toast_rect": _rect_array(Rect2(toast.toast_rect)), "pickups": pickup_entries}
+		startup_feedback["rendered_frames_observed"] += 1
+		startup_feedback["last_snapshot"] = snapshot
+		var signature: String = str([snapshot.evaluation_pending, snapshot.state_batch_depth, snapshot.state_batch_dirty,
+			snapshot.hud_refresh_pending, snapshot.unlocked_count, snapshot.toast_active, snapshot.toast_visible,
+			snapshot.active_id, snapshot.phase, snapshot.queued_ids, pickup_entries.size(), busy])
+		if signature != previous_signature or elapsed - last_recorded >= 1.0 or quiet >= quiet_required:
+			startup_feedback.observations.append(snapshot)
+			previous_signature = signature
+			last_recorded = elapsed
+			if not _write_startup_feedback(): return false
+		if quiet >= quiet_required:
+			startup_feedback["passed"] = true
+			startup_feedback["phase"] = "settled"
+			startup_feedback["completed_wall_ms"] = Time.get_ticks_msec()
+			if not _write_startup_feedback(): return false
+			return _check(true, "Startup feedback naturally drains and remains quiet before measured motion")
+	startup_feedback["phase"] = "timeout"
+	startup_feedback["completed_wall_ms"] = Time.get_ticks_msec()
+	_write_startup_feedback()
+	return _check(false, "Startup feedback naturally drains and remains quiet before measured motion")
+
+
+func _write_startup_feedback() -> bool:
+	var file: FileAccess = FileAccess.open(output.path_join("startup-feedback.json"), FileAccess.WRITE)
+	if file == null: return _check(false, "Startup feedback diagnostics could not be written")
+	file.store_string(JSON.stringify(startup_feedback, "\t"))
+	file.flush()
+	var ok: bool = file.get_error() == OK
+	file.close()
+	return ok or _check(false, "Startup feedback diagnostics could not be written")
 
 
 func _find_route(direction: Vector2i) -> Dictionary:
@@ -489,7 +568,7 @@ func _finish() -> void:
 		"packed": packed, "pack_sha256": FileAccess.get_sha256(pack_source) if not pack_source.is_empty() else "",
 		"engine": Engine.get_version_info().string, "display": DisplayServer.get_name(),
 		"rendered": DisplayServer.get_name() != "headless", "actual_viewport": [root.size.x, root.size.y],
-		"fixture": fixture, "stages": stages, "events": events, "samples": samples, "captures": captures,
+		"fixture": fixture, "startup_feedback": startup_feedback, "stages": stages, "events": events, "samples": samples, "captures": captures,
 		"capture_format": capture_format, "capture_origin": "godot_frame_post_draw", "critical_pngs": critical_pngs,
 		"all_frames_requested": all_frames, "all_observed_frames_captured": captures.size() == samples.size(),
 		"framing": {"passed": not samples.is_empty() and framing_failures.is_empty(),

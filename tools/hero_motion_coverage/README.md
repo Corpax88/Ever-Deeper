@@ -4,7 +4,8 @@ This opt-in study extends `tools/review_hero_gameplay.gd` without changing its
 historical evidence, the production capture driver, browser harness, or approved
 v28 assets. Corrected exact-DEV11 Worn/right and Deepcore/right pilots pass their
 mechanical, framing and lossless-storage checks and have independent bounded
-critical-frame acceptance. The broader combinations remain unrendered. Mechanical
+critical-frame acceptance. The first Worn/down matrix attempt stopped on the
+framing gate; left/up and the broader combinations remain unrendered. Mechanical
 passes require separate inspection of the actual pixels before accepting motion.
 Godot 4.7.2 `--headless --check-only` passes against the exact downloaded DEV11
 PCK from source `8f5680defb9083bbe1e044d39a10612f2186e7f3` in an empty project.
@@ -116,6 +117,52 @@ sample limits, and failure evidence is retained.
 No original terrain route in a requested direction is a fixture failure, not a
 silent direction substitution. A destroyed wall counts through its actual floor
 state, so high-power drill excavation does not falsely appear to be zero damage.
+
+## Startup feedback and the preserved down failure
+
+At study `d21762579adcfcfc46f41b7e7735b232aa10910b`, Worn/down captured and
+losslessly verified all 195 frames but failed the full-reserve framing check.
+The other 28 checks passed. The first violation was sample 17; sample 32 had
+minimum axis clearance -79.24. The inspected native/verified raw frames at
+17, 32, 55 and 155 show FIRST CHIP's visible icon/text to the left of the target,
+while its full transparent 520x120 activation/title reserve intersects the
+target tile. This is not a claim that the UI is fixed or every frame is accepted.
+The run stopped before left/up. All failed raw frames remain retained.
+
+Failure bundle: `../evidence/hero-motion-coverage/dev11-worn-down-d217625-framing-failure.tar.gz`.
+It preserves the complete lossless timeline, original critical Godot PNGs,
+raw/RGB hashes, sample/event records, early/worst diagnostic regenerations and
+separately labeled headless route calculations. The latter are not rendered
+acceptance. No natural down candidate in the current seed/range was justified
+as a route-only correction; the two right-side candidates also reach HOME's
+reserved bounds during approach/reversal in the numerical diagnosis.
+
+DEV entry seeds mined/progression state. AchievementService evaluates changes
+after its ordinary 0.2-second batch timer, which could run after the fixture's
+old `achievement_toast.clear()`. That clear is now removed. After gear loading
+and placement on the natural route, setup waits for pending achievement
+evaluation, state batches, HUD refresh, visible/queued toasts and pickup entries
+to drain naturally and remain quiet for at least 0.5 seconds (also at least two
+evaluation intervals). No achievement is awarded, evaluated manually, dismissed
+or suppressed by this wait. The ordinary world, companion, camera and clocks
+continue processing with no measured input held.
+
+Toast durations are read from production: 0.92 seconds spin, 3.0 hold and
+0.55 fade. The failed Worn startup unlocked 16 achievements, about 72 simulated
+seconds of ordinary queue lifetime. Setup has separate caps of 110 simulated
+seconds and 180 wall seconds; exceeding either fails. The isolated runner's
+watchdog is 360 wall seconds, allowing setup plus the existing measured-work
+budget. Per-stage, sample, capture, mining and full-reserve 8px framing checks
+are unchanged. Fresh post-startup feedback during measured motion still counts
+against the same framing contract.
+
+`startup-feedback.json` is written during the wait, including every state/phase
+transition, one-second heartbeats, timestamps, pending flags, active and queued
+IDs, visible bounds, pickup ages and the final quiet interval. It survives a
+timeout and is also embedded in the motion report. Its observations follow
+post-draw state; setup frames are explicitly outside the measured motion movie
+and are not claimed as archived imagery. The first rendered retry must be
+Worn/down alone; parsing or numerical geometry does not establish its success.
 
 ## Run through the existing renderer
 
