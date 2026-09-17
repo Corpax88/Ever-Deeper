@@ -140,7 +140,7 @@ Exactly seven new A/B/A2 cases produce21full native PNGs:
 | Case | Required actual state |
 |---|---|
 | `approach` | Start on verified floor at(864,1632), then six real controller/resolver ticks toward cell(13,27), retaining clearance before contact. |
-| `contact-strong` | Continue40controller ticks; require blocked motion at the native23px collision radius. Apply an explicitly labelled isolated Light Lab level5loadout fixture, through the unchanged production headlamp settings. |
+| `contact-strong` | Continue40controller ticks; require four stable blocked samples, current walkability, rejection of the next intended step, and clearance within the native radius plus one step and0.05px upper tolerance. Apply an explicitly labelled isolated Light Lab level5loadout fixture, through the unchanged production headlamp settings. |
 | `struck` | The held-mining clock must select that exact wall, apply a real hit, and retain it with increased damage. No HP or terrain edits. |
 | `mined-opening` | Continue the actual committed mining clock until the cell becomes floor; require the newly revealed north edge at(13,28). |
 | `short-steps-grazing` | Retain the real stair at(16,27),(17,28),(18,29), face right from clear floor at(864,1696), and verify the target ray lies0.25–0.52radians off the native headlamp axis. This keeps the level5loadout and tests two actual changed stair cells. |
@@ -190,3 +190,29 @@ The coordinator and independent release critic must inspect the original
 full images, struck/opened contact, both step endpoints and biome joins.
 Mechanical success is not visual acceptance, an FPS result or short-corner
 completion. Any new compact-asset study remains separate and is not loaded.
+
+## Preserved contact-fixture failure and narrow correction
+
+The first affected-state run of checkpoint
+`bbac528c83b0af05186466ba396f74f44ac731a8` stopped after the successful
+`approach`A/B/A2 pair. Its closed, SHA-verified26file snapshot remains at
+`/workspace/scratch/d5437d917805/evidence/north-edge-affected-moss/`, with the
+original producer output retained at
+`/tmp/ever-deeper-north-edge-affected-bbac528c/`. The approach restored exactly,
+changed59167pixels in B, and changed zero pixels outside eligible north quads.
+No other affected cases were captured in that run.
+
+The fixture had incorrectly required clearance within0.2px of the23px
+collision radius. Actual recorded positions stopped safely atY1700 with28px
+clearance. The unchanged production `_resolve_motion` accepts/rejects complete
+axis steps. At340px/s and1/60s, the next5.667px step would leave22.333px
+clearance and is correctly rejected. Production does not snap to the radius.
+
+Only the fixture gate is corrected: four consecutive stationary samples;
+current position walkable; the next intended step not walkable; the unchanged
+production resolver returns the current position; and clearance in
+[radius,radius+one_step+0.05px]. The0.05px allowance is only on the upper bound.
+Real collision safety, gameplay, orientation candidate, phase/pixel guards
+and A/A2 restoration checks are unchanged. The contact report records the
+actual step, clearance and rejection results. A new remote checkpoint and
+renderer grant are required before retrying into a fresh output directory.

@@ -60,10 +60,21 @@ func _run() -> void:
 	if not await _capture_case("approach", [WALL], {"wall":_cell_review_rect(WALL)}, {"clearance":clearance, "owner":"player._physics_process -> world._resolve_motion"}): return
 	if not _drive_down(40): return
 	clearance = float(WALL.y) * world.TILE_SIZE - world.player.position.y
-	if bool(world.player._actual_moving) or absf(clearance - float(world.PLAYER_RADIUS)) > 0.2:
-		_reject("The real controller did not stop outside the north wall"); return
+	# Production accepts/rejects complete axis steps; it does not snap the hero
+	# to the collision radius. At340px/s, a60Hz step is5.667px, so a safe28px
+	# clearance can be blocked by the next step despite the native23px radius.
+	var contact_step: Vector2 = Vector2.DOWN * float(world.player.movement_speed) / 60.0
+	var radius: float = world.PLAYER_RADIUS
+	var stable_block: bool = not bool(world.player._actual_moving)
+	for sample in movement_samples.slice(movement_samples.size() - 4):
+		stable_block = stable_block and not bool(sample.moving) and String(sample.position) == str(world.player.position)
+	var current_walkable: bool = world._position_walkable(world.player.position)
+	var next_walkable: bool = world._position_walkable(world.player.position + contact_step)
+	var resolver_rejects_step: bool = world._resolve_motion(world.player.position, contact_step).is_equal_approx(world.player.position)
+	if not stable_block or not current_walkable or next_walkable or not resolver_rejects_step or clearance < radius or clearance > radius + contact_step.length() + 0.05:
+		_reject("The real controller did not safely block the next north-wall step"); return
 	if not _set_max_light_fixture(): return
-	if not await _capture_case("contact-strong", [WALL], {"wall":_cell_review_rect(WALL)}, {"clearance":clearance, "max_light_lab_fixture":true}): return
+	if not await _capture_case("contact-strong", [WALL], {"wall":_cell_review_rect(WALL)}, {"clearance":clearance, "radius":radius, "intended_step_pixels":contact_step.length(), "upper_tolerance":0.05, "stable_block_ticks":4, "current_walkable":current_walkable, "next_step_walkable":next_walkable, "resolver_rejects_step":resolver_rejects_step, "max_light_lab_fixture":true}): return
 	if world._nearest_resource_index() >= 0 or world._nearest_diggable_wall() != WALL:
 		_reject("Actual held mining would select a different target"); return
 	var before_damage: int = int(world.dig_damage.get(WALL, 0))
