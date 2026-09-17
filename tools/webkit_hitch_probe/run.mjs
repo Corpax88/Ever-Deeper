@@ -40,6 +40,15 @@ function findText(rows,needle) {
   if(match.length>1)throw Error('Ambiguous UI label '+needle);
   return match[0]||null;
 }
+function findDevToggle(rows) {
+  const exact=rows.filter(x=>normal(x.text)==='DEVTOOLS');
+  if(exact.length>1)throw Error('Ambiguous exact DEV toggle');
+  const row=exact[0];if(!row||row.confidence<.5)return null;
+  const x=row.x*848,y=row.y*390;
+  // _apply_layout follows PremiumHud below its menu row; retained CSS button69..148/75..110.
+  if(x<88||x>130||y<82||y>104)return null;
+  return row;
+}
 function findDeepTarget(rows) {
   // Exact existing label, independently seen in two retained originals at0.5.
   // Keep the generic0.6 guards; this target also requires a second settled image.
@@ -200,13 +209,21 @@ try {
   await clickLabel(newGame,'start_new_game');
   await pause(5000);
   rows=await scan('00-surface');
-  if(rows.some(x=>x.confidence>=.6&&['NEWGAME','NOEXPEDITIONFOUND','THEDEPTHSARECALLING','BEGINAFRESHDESCENT'].includes(normal(x.text)))||!findText(rows,'DEVTOOLS'))throw Error('Start menu did not visibly close after NEW GAME');
+  const startModalVisible=items=>items.some(x=>x.confidence>=.6&&['NEWGAME','NOEXPEDITIONFOUND','THEDEPTHSARECALLING','BEGINAFRESHDESCENT'].includes(normal(x.text)));
+  if(startModalVisible(rows))throw Error('Start modal labels remain after NEW GAME');
+  let toggle=findDevToggle(rows);
+  if(!toggle)throw Error('Exact DEV toggle is not established in the surface button bounds');
+  await pause(350);
+  const surfaceConfirmed=await scan('00-surface-confirm');
+  const toggleConfirmed=findDevToggle(surfaceConfirmed);
+  if(startModalVisible(surfaceConfirmed)||!toggleConfirmed||Math.abs(toggleConfirmed.x-toggle.x)*848>2||Math.abs(toggleConfirmed.y-toggle.y)*390>2)throw Error('Surface/DEV toggle not stable in second settled original');
+  await write('dev-toggle-target.json',{first_image:'00-surface.png',second_image:'00-surface-confirm.png',first:toggle,second:toggleConfirmed,center_css_inset:{left:88,right:130,top:82,bottom:104},maximum_center_delta_css:2,generic_confidence_unchanged:.6,...stamp()});
+  toggle=toggleConfirmed;
   const surface=await saveReceipt('save-surface');
   if(surface.document.state.location.scene!=='surface'||surface.document.state.endless_descent.active)throw Error('Ordinary surface save not established');
   const surfaceReady=await page.evaluate(()=>window.__webkitMovingStudy.ready());
   if(surfaceReady.calls<=startReady.calls||surfaceReady.hidden)throw Error('Visible engine loop did not advance during NEW GAME navigation');
   await write('surface-entry.json',{modal_labels_absent:true,dev_toggle_visible:true,scene:surface.document.state.location.scene,start_ready:startReady,surface_ready:surfaceReady,timing_started:false,...stamp()});
-  const toggle=findText(rows,'DEVTOOLS');if(!toggle)throw Error('DEV TOOLS label not found');
   await clickLabel(toggle,'open_dev');
   let target=null;
   for(let i=0;i<8;i++) {

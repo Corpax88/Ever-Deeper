@@ -29,10 +29,10 @@ and retains the callback reference as required by
 
 `observer.js` is byte-identical to the successful unchanged test:
 `35db05eed667a6b95ec235d2b0673ea2ddf48cf7ccfa84ef193ed04ba0bf4424`.
-The exact source-verified UI route, OCR guards, trusted taps/held Down+Space,
+The source-verified UI route, trusted taps/held Down+Space,
 explicitly untrusted untimed GUI touch drags, actual draw census outside timing,
 save/mechanics checks, visibility/error gates and browser exit/marker remain.
-The source guard hashes the unchanged GUI sections and compares the two whole
+The source guard hashes the reviewed GUI sections and compares the two whole
 modified owner files against exact transformations of the pinned originals.
 Any other runtime/asset change fails. This does not assert determinism between
 two fresh random game seeds.
@@ -77,6 +77,32 @@ correction does not change the recorder, observer, wrappers or exported inputs.
 First build artifact10492855609/SHA256
 `981b0b16c801fb239f69ace31bfd03d017cf26f26a140c4dfaaa7e6650426a2e`
 and its original error are preserved. The skipped Mac job supplied no samples.
+
+The corrected build's Mac run35211444182 stopped before timing at the surface.
+The retained trusted NEW GAME tap did close the modal. `00-surface.png` shows the
+ordinary game, but exact unique `DEV TOOLS` had Vision confidence0.5. The old
+generic0.6 check misleadingly called this a menu-close failure. Browser exit0,
+no runtime/GL errors,633 advancing callbacks, inactive phase buffer/count0 and
+no raw timed samples are preserved (Mac artifact10491948105, SHA256
+`c60f642af07cc5434bcec7293b7264f508fa4f8282b00b16a2494b18c7b074db`).
+Its PCK is exactly the prior candidate's
+`82b8127c7551757c7e8b11e9ec994abeac3a2795543225540e5fa16b22e14b81`.
+
+The navigation correction is limited to unique exact `DEVTOOLS`>=0.5 inside
+CSS center inset88..130/82..104, corroborated350ms later at the same center
+(<=2CSS px). The full retained button bounds are69..148/75..110 at the checked
+848x390/DPR2 viewport. `_build_toggle` supplies the exact text, and `_apply_layout`
+places it below PremiumHud's menu row. Start-modal absence, persisted surface,
+visible loop advance and actual drawer/title remain required. Generic0.6 is
+unchanged. Review of every remaining target against the successful original
+OCRs found NEW GAME/NO EXPEDITION FOUND/CLOSE DEV/DEVELOPER TOOLS all1.0;
+Layer12 already uses the exact two-image0.5 gate, and THE DEEP entry already
+accepts its observed0.5 text with persisted scene proof. No speculative global
+OCR relaxation is made. The drawer/depth/draw/timing/save route after DEV opens
+is byte-identical to the successful baseline; the raw observer stays exact.
+All nine diagnostic package files are now pinned to the verified run35211444182
+candidate (the prior two exports already match exactly). A navigation-only
+correction must reproduce every byte/hash before Mac can run.
 
 The existing full-project invariant check flags `project.godot` for the extra
 diagnostic autoload and the already known baseline `player_visual.gd` mismatch;

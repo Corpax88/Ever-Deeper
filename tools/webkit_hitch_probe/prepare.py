@@ -68,16 +68,17 @@ def verify():
     assert sha((here/'observer.js').read_bytes()) == OBSERVER
     run = (here/'run.mjs').read_text()
     for first, last, digest in [
-        ('async function scan(label)', 'async function phaseClocks(label)', 'dc7423e58dbd8fbaedc628237ff7632f5b201b3a6702b4bd4865563a87c28892'),
-        ('  context=await browser.newContext', "  actions.push({stage:'begin_real_keys'", 'ee0e3db55eaf62bb6b43d85add36cbb5edab6cdc7c8c2103e5d49cd4338c6bcd'),
+        ('async function scan(label)', 'async function phaseClocks(label)', '8a1e27dea73b5743539f8f2b3ffcce7190f02eba8dd8355519b0ad0098f337b6'),
+        ('  context=await browser.newContext', "  actions.push({stage:'begin_real_keys'", '6866e879c2442a831141fedc26a646ddd6cc0afa51388bd73cb345b5e1273e25'),
+        ("  await clickLabel(toggle,'open_dev');", "  actions.push({stage:'begin_real_keys'", '5da776d5a8b79c1b97a8dc1b2be9080ce7fb29a7133d1edc059ae4e9b7a915cc'),
     ]:
         section = run[run.index(first):run.index(last)]
-        assert sha(section.encode()) == digest, ('Original GUI/draw/save route changed', first)
+        assert sha(section.encode()) == digest, ('Reviewed GUI/draw/save route changed', first)
     assert "const raw=await bounded(page.evaluate(()=>window.__webkitMovingStudy.begin()),75000,'60-second engine loop');" in run
     first = "  await page.keyboard.up('Space');await page.keyboard.up('ArrowDown');actions.push({stage:'release_real_keys'"
     start = run.index(first)
     assert sha(run[start:run.index('}catch(e) {', start)].encode()) == '66730720baf1a6f070b7fa341b3a29a894983e55f063e9349aae798b614d078c', 'Original downstream functional gates changed'
-    return {'diagnostic_only': True, 'production_base': BASE, 'source': git('rev-parse', 'HEAD').decode().strip(), 'allowed_runtime_changes': sorted(changed), 'generated_import_metadata': generated_metadata, 'original_function_bodies_byte_equal': True, 'original_navigation_byte_equal': True, 'observer_byte_equal': True, 'source_hashes': {p: sha((ROOT/p).read_bytes()) for p in sorted(allowed) if (ROOT/p).exists()}, 'observer_sha256': OBSERVER}
+    return {'diagnostic_only': True, 'production_base': BASE, 'source': git('rev-parse', 'HEAD').decode().strip(), 'allowed_runtime_changes': sorted(changed), 'generated_import_metadata': generated_metadata, 'original_function_bodies_byte_equal': True, 'original_navigation_byte_equal': False, 'navigation_delta': 'Only source-proven exact bounded DEV toggle OCR target at confidence>=0.5, corroborated in a second settled original; generic0.6 unchanged', 'original_route_after_dev_open_byte_equal': True, 'observer_byte_equal': True, 'source_hashes': {p: sha((ROOT/p).read_bytes()) for p in sorted(allowed) if (ROOT/p).exists()}, 'observer_sha256': OBSERVER}
 
 def recorder_check(binary, output):
     with tempfile.TemporaryDirectory(prefix='hitch-recorder-') as folder:
@@ -112,6 +113,8 @@ def main():
         assert source == os.environ['GITHUB_SHA'] and git('rev-parse', 'HEAD^').decode().strip() == request['preparation_sha']
         assert request['source'] == BASE and request['sessions'] == 1 and request['diagnostic_only'] is True
         dev_files = {p: {'size': (candidate/p).stat().st_size, 'sha256': sha((candidate/p).read_bytes())} for p in FILES}
+        pins = json.loads((ROOT/'tools/webkit_hitch_probe/diagnostic-package-pins.json').read_text())
+        assert dev_files == pins['files'], 'Navigation correction changed diagnostic package bytes'
         identity = {'schema': 1, 'diagnostic_only': True, 'sourceSha': source, 'productionBase': BASE, 'preparationSha': request['preparation_sha'], 'devFiles': dev_files, 'sourceReceipt': receipt, 'exportPreset': 'Web DEV', 'godot': '4.7.2.stable', 'baselinePckSha256': '5b77b3a219011cb676895e41830c8dab32bec2346db93102c7894a3c084414e9'}
         write(candidate/'artifact-identity.json', identity)
         digest = sha((candidate/'artifact-identity.json').read_bytes())
