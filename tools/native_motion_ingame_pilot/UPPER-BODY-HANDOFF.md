@@ -1,3 +1,15 @@
+# Continuation: geometry blocker and static diagnostic, 17 September 2026
+
+The previously prepared54df118 full-scene probe has now run successfully as a measurement. Its final report SHA256 is e060fa13e963229bea90cd9bc3e1131c9b5bc9b55fa2f77ab6aa9f1641162277. All135 dense rig constraints pass, but the independent critic rejects the unchanged candidate: at recovery .8125 the right hand is0/85 visible pixels, the left6/82 and the tool/hand mask has94/17/3 disconnected pixels. No images, bank or runtime adoption are approved.
+
+`probe_recovery_elbow.py` is a newly prepared, parser-checked static discriminator, not yet run. It repeats the unchanged control, then rotates only the right elbow +/-25 degrees around the fixed shoulder-wrist at .8125. Both hands, all other bones, torso/head/feet/root/tool, real grip attachment and cap path remain protected; actual and analytic limb lengths must match. It uses the original629 meshes for both hand/tool masks. This is not a continuous animation and cannot establish five-phase/native-image readability. The original pose is restored before a closed atomic receipt is written.
+
+No original pose owner, art, camera, material, input or production source is changed. Run once only after independent fixture review, with a clean immutable source, a fresh isolated output, the original asset bindings and a200MB geometry budget retaining1.5GB free. The3424134400-byte image-start guard is unchanged. Preserve both failures and passes. Current root handoff is authoritative for DEV13 publication; older project release docs on this study branch remain history.
+
+The earlier handoff below is preserved for its exact input paths and source history; its "never run"/paused statements are superseded above.
+
+---
+
 # Native Worn/up study — paused for a new chat, 17 September 2026
 
 No Blender, BVH, Godot or graphical process is running. The user requested a new
