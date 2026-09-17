@@ -1,0 +1,48 @@
+{
+  "date": "2026-09-17",
+  "reviewer": "independent performance_critic agent",
+  "decision": "rejected",
+  "scope": "Deep14 Moss smoke only",
+  "source_revision": "fea876848ea03123d9e1d7cc63328ad077b4cb0f",
+  "source_tree": "3e62acc2221fbce583ba38c7c3857aa6a8745805",
+  "rendered_original_pngs_inspected": [
+    "generated-arrival-A.png",
+    "generated-arrival-B.png",
+    "generated-convex-A.png",
+    "generated-convex-B.png"
+  ],
+  "mechanical_report": "corner-compact.json",
+  "mechanical_controls_pass": true,
+  "visual_blocker": {
+    "kind": "opaque silhouette clipping",
+    "image": "generated-convex-B.png",
+    "compare": "generated-convex-A.png",
+    "native_pixel_regions_xyxy": [
+      [
+        833,
+        277,
+        907,
+        372
+      ],
+      [
+        884,
+        365,
+        981,
+        445
+      ]
+    ],
+    "finding": "Compact join removes long arms but introduces visibly straight cuts and chopped rectangular stone columns, degrading continuity and the approved material silhouette.",
+    "likely_owner": "CaveEdgeAssetDrawer._draw_corner compact_destination clips the wider Moss authored elbow when the Deep mineable caller enables compact_join."
+  },
+  "wider_matrix_run": false,
+  "performance_evidence": false,
+  "production_adoption": false,
+  "png_sha256": {
+    "generated-arrival-A.png": "a44addf9c78669fcbd30da7ce634ca84fb9265ff8e2ab4f56d2cefb71e166b7a",
+    "generated-arrival-A2.png": "a44addf9c78669fcbd30da7ce634ca84fb9265ff8e2ab4f56d2cefb71e166b7a",
+    "generated-arrival-B.png": "f67e60d32b91502d77377b7a961226d0e4baad418f26e9b1c80422f190462f25",
+    "generated-convex-A.png": "4fbb873b63d1c59efa4f689224ab7af398e6c78f25ffd598e1f62267f33a9cdd",
+    "generated-convex-A2.png": "4fbb873b63d1c59efa4f689224ab7af398e6c78f25ffd598e1f62267f33a9cdd",
+    "generated-convex-B.png": "a45ee0a280c239b7f845bf1d1367d23ae1368afb3ca4953d05a3769fccec2567"
+  }
+}

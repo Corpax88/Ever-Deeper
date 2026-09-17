@@ -1,5 +1,26 @@
 # Isolated compact corner integration study
 
+**2026-09-17 Moss smoke: visually rejected.** Import, parser and both rendered
+A/B/A2 controls completed without errors, but B visibly chops the opaque stone
+silhouette into straight cuts and short rectangular corner columns. Do not
+adopt this candidate or extend the matrix as if the smoke were accepted.
+Original evidence is retained under
+`/workspace/scratch/d5437d917805/evidence/corner-compact-smoke-moss/`.
+Inspect `generated-convex-B.png` against `generated-convex-A.png`, especially
+`x833–907/y277–372` and `x884–981/y365–445`; the arrival pair shows the same cuts.
+The long projecting arms shrink, but continuity and complete stone silhouettes
+degrade. `corner-compact.json` is the mechanical report; `visual-review.json`
+records this rejection independently of the green harness.
+
+The runtime used Godot4.7.2, native1696×780, unchanged logical content1280×720
+and actual viewport1422.727×654.5454. Source remote `fea876848ea03123d9e1d7cc63328ad077b4cb0f`
+and local `12ed79ad22a876bef04ed2b1a95c62dcc3e3b5d0` share tree
+`3e62acc2221fbce583ba38c7c3857aa6a8745805`. Arrival B changes201,518RGBA pixels
+(max233); convex B changes185,280(max222). Both restored A2 controls have
+zero changed RGBA pixels and PNG SHA256 equal to A. Terrain repaint counts,
+camera and culling checks pass in all modes. No wider matrix or timing trial
+was run, and the renderer was released after this bounded smoke.
+
 Prepared from `fec3185e7aa78b644bfa1c1ddc2ebd5cd10b5cd3` on
 `codex/dev10-corner-compact-study-20260917`. This is an opt-in source-project
 experiment. No production script, asset, scene, material, shader, project or
