@@ -151,3 +151,13 @@ Ever-Deeper-DEV11-WebKit-OCR-navigation-failure-20260917.tar.gz,21631398 bytes,
 SHA256 54c03353dc144e001d15e78be623596774be919c905a3048768bf109796f881e,
 Library libfile_c1b90a47597c8191b38f4cf0be32e330. The package remains unchanged and
 none of the four navigation failures establishes a browser performance bottleneck.
+
+Root subsequently authorized the concrete target-only correction and one corrected
+Mac run. Generic findText remains0.6. A dedicated lookup requires unique exact
+ENDLESSLAYER12 with confidence at least0.5, center insideCSS x100–264/y210–350 (inset
+from the actual scroll/left-button bounds), then the same target in a second settled
+original with center difference at most2 CSS pixels and the drawer still verified.
+Both OCR records and original image names are retained in deep-target.json before
+the ordinary trusted tap. Persisted endless/depth12/scene, actual draws, real60-second
+input, mechanics, restoration and process-exit gates remain unchanged. No outcome
+is assumed from this navigation correction.

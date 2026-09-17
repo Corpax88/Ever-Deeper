@@ -7,6 +7,10 @@ save and open DEV drawer. Root authorized one smaller, non-coasting scroll corre
 after originals showed the Layer12 row skipped by the prior inertial swipe. The new
 scrolling route exposed the correct button in two originals, but Vision assigned0.5
 confidence and the unchanged generic0.6 gate rejected it. No timing result exists.
+Root authorized one corrected target lookup: the exact unique ENDLESSLAYER12 label
+may have confidence at least0.5, but must sit inside the verified scroll/left-column
+inset and be corroborated in a second settled original within2 CSS pixels. Generic
+label thresholds stay0.6; the actual trusted tap and every downstream gate remain.
 The native Mac bounded ANGLE pool finding does not establish a WebKit bottleneck;
 see PLAN.md and source-bindings.json for exact ownership evidence.
 

@@ -39,6 +39,18 @@ function findText(rows,needle) {
   if(match.length>1)throw Error('Ambiguous UI label '+needle);
   return match[0]||null;
 }
+function findDeepTarget(rows) {
+  // Exact existing label, independently seen in two retained originals at0.5.
+  // Keep the generic0.6 guards; this target also requires a second settled image.
+  const exact=rows.filter(x=>normal(x.text)==='ENDLESSLAYER12');
+  if(exact.length>1)throw Error('Ambiguous exact Layer12 target');
+  const row=exact[0];if(!row||row.confidence<.5)return null;
+  const x=row.x*848,y=row.y*390;
+  // Retained actual scroll area:CSS x83–485/y190–371, left button column83–281.
+  // The inset keeps the whole approximately38px-tall button safely visible.
+  if(x<100||x>264||y<210||y>350)return null;
+  return row;
+}
 async function clickLabel(row,label) {
   const point={x:Math.round(row.x*848),y:Math.round(row.y*390)};
   const geometry=await page.evaluate(({x,y})=>{
@@ -237,8 +249,16 @@ try {
   for(let i=0;i<8;i++) {
     rows=await scan('01-menu-'+i);
     if(!rows.some(x=>normal(x.text).includes('DEVELOPERTOOLS')&&x.confidence>=.6)||!findText(rows,'CLOSEDEV'))throw Error('DEV drawer/title not visually established; navigation stopped');
-    target=findText(rows,'ENDLESSLAYER12');
-    if(target)break;
+    target=findDeepTarget(rows);
+    if(target) {
+      await pause(350);
+      const confirmedRows=await scan('01-menu-'+i+'-confirm');
+      if(!confirmedRows.some(x=>normal(x.text).includes('DEVELOPERTOOLS')&&x.confidence>=.6)||!findText(confirmedRows,'CLOSEDEV'))throw Error('DEV drawer changed during target confirmation');
+      const confirmed=findDeepTarget(confirmedRows);
+      if(!confirmed||Math.abs(confirmed.x-target.x)*848>2||Math.abs(confirmed.y-target.y)*390>2)throw Error('Exact Layer12 target not stable in second settled original');
+      await write('deep-target.json',{first_image:'01-menu-'+i+'.png',second_image:'01-menu-'+i+'-confirm.png',first:target,second:confirmed,scroll_css_bounds:{left:83,right:485,top:190,bottom:371},target_css_inset:{left:100,right:264,top:210,bottom:350},maximum_center_delta_css:2,generic_confidence_unchanged:.6,...stamp()});
+      target=confirmed;break;
+    }
     if(i===7)break;
     await swipeDrawer();
   }
