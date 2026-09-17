@@ -7,6 +7,7 @@ const APPEAR_SECONDS: = 0.18
 const HOLD_SECONDS: = 2.75
 const FADE_SECONDS: = 0.75
 const TEXT_FONT_SIZE: = 28
+const FeedbackPlacementScript = preload("res://scripts/ui/feedback_placement.gd")
 
 const RESOURCE_NAMES: = {
 	"stone": "STONE",
@@ -57,11 +58,17 @@ const RESOURCE_COLORS: = {
 }
 
 var entries: Array[Dictionary] = []
+var _placement = FeedbackPlacementScript.new()
+var _screen_offset: = Vector2.ZERO
+var _screen_safe_rect: = Rect2()
+var _needs_current_constraints: = true
 
 
 func _ready() -> void :
 	z_as_relative = false
-	z_index = 90
+	# Above Deep's depth-sorted actors, within the same world canvas. The HUD's
+	# higher CanvasLayer remains above these camera-projected text labels.
+	z_index = RenderingServer.CANVAS_ITEM_Z_MAX
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	set_process(false)
 
@@ -70,6 +77,9 @@ func show_pickup(kind: String, amount: int) -> void :
 	var resource_key: = "gold" if kind == "coin" else kind
 	if amount <= 0 or resource_key.is_empty():
 		return
+	if entries.is_empty():
+		_placement.reset()
+		_needs_current_constraints = true
 	set_process(true)
 	for index in entries.size():
 		var existing: Dictionary = entries[index]
@@ -107,6 +117,46 @@ func _text_size(label: Label) -> Vector2:
 	return label.get_theme_font("font").get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, label.get_theme_font_size("font_size"))
 
 
+func set_screen_constraints(safe_rect: Rect2, exclusions: Array[Rect2]) -> void:
+	if entries.is_empty():
+		return
+	if _needs_current_constraints:
+		_placement.reset()
+		_needs_current_constraints = false
+	_screen_safe_rect = safe_rect
+	var footprint: = _placement_footprint()
+	if not footprint.has_area():
+		return
+	var chosen: Vector2 = _placement.place(footprint.position, footprint.size, safe_rect, exclusions)
+	_screen_offset = chosen - footprint.position
+	_apply_screen_offset()
+
+
+func _placement_footprint() -> Rect2:
+	var parent_canvas: Transform2D = get_global_transform_with_canvas() * transform.affine_inverse()
+	var base_canvas: = get_global_transform_with_canvas()
+	base_canvas.origin -= parent_canvas.basis_xform(position)
+	var union: = Rect2()
+	for index in entries.size():
+		var entry: Dictionary = entries[index]
+		var label: Label = entry.label as Label
+		var text_size: Vector2 = entry.text_size
+		var ink: = Rect2((label.size - text_size) * 0.5, text_size).grow(float(label.get_theme_constant("outline_size")))
+		# Reserve the existing maximum 6% pulse and 12px rise, so the stack's
+		# normal animation does not change its chosen side of the hero.
+		var local: Rect2 = Transform2D.IDENTITY.scaled(Vector2.ONE * 1.06) * (label.get_transform() * ink)
+		local.position += Vector2(0.0, -106.0 - 44.0 * float(entries.size() - 1 - index) - 12.0)
+		local.size.y += 12.0
+		var projected: Rect2 = base_canvas * local
+		union = union.merge(projected) if union.has_area() else projected
+	return union
+
+
+func _apply_screen_offset() -> void:
+	var parent_canvas: Transform2D = get_global_transform_with_canvas() * transform.affine_inverse()
+	position = parent_canvas.affine_inverse().basis_xform(_screen_offset)
+
+
 func _process(delta: float) -> void :
 	for index in range(entries.size() - 1, -1, -1):
 		var entry: Dictionary = entries[index]
@@ -133,6 +183,8 @@ func _process(delta: float) -> void :
 			alpha = 1.0 - smoothstep(HOLD_SECONDS, HOLD_SECONDS + FADE_SECONDS, age)
 		root.modulate = Color(1.0, 1.0, 1.0, alpha)
 		entries[index] = entry
+	if not entries.is_empty():
+		_apply_screen_offset()
 
 
 func _make_entry(kind: String, amount: int) -> Dictionary:
@@ -179,6 +231,9 @@ func _remove_entry(index: int) -> void :
 		root.queue_free()
 	entries.remove_at(index)
 	if entries.is_empty():
+		_screen_offset = Vector2.ZERO
+		position = Vector2.ZERO
+		_placement.reset()
 		set_process(false)
 
 
@@ -193,6 +248,10 @@ func debug_snapshot() -> Dictionary:
 		})
 	return {
 		"transparent": true,
+		"screen_offset": _screen_offset,
+		"safe_rect": _screen_safe_rect,
+		"last_reflow": _placement.last_reflow,
+		"world_z": z_index,
 		"has_panel": false,
 		"has_icon": false,
 		"presentation": "color_coded_text",

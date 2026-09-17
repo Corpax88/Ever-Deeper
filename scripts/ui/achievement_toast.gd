@@ -17,9 +17,7 @@ const FADE_SECONDS: = 0.55
 const SPIN_TURNS: = 2.0
 const GOLD: = Color("ffe3a0")
 const OUTLINE: = Color(0.01, 0.018, 0.013, 0.96)
-const FEEDBACK_CLEARANCE: = 18.0
-const MAX_PLACEMENT_CANDIDATES: = 80
-const CROWDED_RETRY_MSEC: = 200
+const FeedbackPlacementScript = preload("res://scripts/ui/feedback_placement.gd")
 
 enum Phase{
 	IDLE,
@@ -36,10 +34,8 @@ var _screen_anchor: = Vector2(0.5, 0.24)
 var _anchor_is_normalized: = true
 var _last_safe_rect: = Rect2()
 var _screen_exclusions: Array[Rect2] = []
-var _placement_offset: = Vector2.ZERO
-var _placement_valid: = false
-var _last_placement_clear: = true
-var _last_placement_search_msec: = 0
+var _placement = FeedbackPlacementScript.new()
+var _needs_current_anchor: = false
 
 var _toast: Control
 var _activation_target: Button
@@ -73,6 +69,11 @@ func show_achievement(definition: Dictionary) -> void :
 
 
 func set_screen_anchor(screen_anchor: Vector2, exclusions: Array[Rect2] = []) -> void :
+	# _start_next may lay out a queued icon before the owner supplies this
+	# notification's current hero/camera position. Do not retain that old offset.
+	if _needs_current_anchor:
+		_placement.reset()
+		_needs_current_anchor = false
 	_screen_anchor = screen_anchor
 	_screen_exclusions = exclusions
 	_anchor_is_normalized = (
@@ -96,7 +97,8 @@ func clear() -> void :
 	_active_definition.clear()
 	_phase = Phase.IDLE
 	_phase_elapsed = 0.0
-	_placement_valid = false
+	_placement.reset()
+	_needs_current_anchor = false
 	if _toast != null:
 		_toast.visible = false
 		_toast.modulate = Color.WHITE
@@ -128,7 +130,8 @@ func debug_snapshot() -> Dictionary:
 		"anchor_mode": "normalized" if _anchor_is_normalized else "logical_pixels",
 		"safe_rect": _last_safe_rect,
 		"screen_exclusions": _screen_exclusions,
-		"placement_clear": _placement_is_clear(Rect2() if _toast == null else Rect2(_toast.position, _toast.size)),
+		"last_reflow": _placement.last_reflow,
+		"placement_clear": _placement.is_clear(Rect2() if _toast == null else Rect2(_toast.position, _toast.size), _screen_exclusions),
 		"toast_rect": Rect2() if _toast == null else Rect2(_toast.position, _toast.size),
 		"touch_target": touch_size,
 		"minimum_touch_target": TOUCH_TARGET_MIN,
@@ -237,7 +240,8 @@ func _start_next() -> void :
 		return
 	_build_interface()
 	_active_definition = _queue.pop_front()
-	_placement_valid = false
+	_placement.reset()
+	_needs_current_anchor = true
 	_phase = Phase.SPIN
 	_phase_elapsed = 0.0
 	_title.text = String(_active_definition.get("title", "ACHIEVEMENT")).to_upper()
@@ -332,7 +336,7 @@ func _apply_layout(viewport_size: Vector2, native_insets: Vector4) -> void :
 	if _anchor_is_normalized:
 		desired_center = viewport_size * _screen_anchor
 	var desired_position: = desired_center - toast_size * 0.5
-	desired_position = _feedback_position(desired_position, toast_size)
+	desired_position = _placement.place(desired_position, toast_size, _last_safe_rect, _screen_exclusions)
 	_place(_toast, Rect2(desired_position, toast_size))
 	_place(_activation_target, Rect2(Vector2.ZERO, toast_size))
 	_activation_target.custom_minimum_size = toast_size
@@ -347,67 +351,9 @@ func _apply_layout(viewport_size: Vector2, native_insets: Vector4) -> void :
 		_reset_icon_transform()
 
 
-func _feedback_position(preferred: Vector2, toast_size: Vector2) -> Vector2:
-	var maximum: = _last_safe_rect.end - toast_size
-	var now: = Time.get_ticks_msec()
-	# Keep a chosen side of the hero for this notification. When a pickup fades,
-	# the same achievement should not jump back through the hero to its old spot.
-	if _placement_valid:
-		var retained: = (preferred + _placement_offset).clamp(_last_safe_rect.position, maximum)
-		if _placement_is_clear(Rect2(retained, toast_size)):
-			_last_placement_clear = true
-			return retained
-		# A crowded viewport may have no solution at this fixed touch size. Do
-		# not repeat a search every animation frame while that remains the case.
-		if not _last_placement_clear and now - _last_placement_search_msec < CROWDED_RETRY_MSEC:
-			return retained
-	var best: = preferred.clamp(_last_safe_rect.position, maximum)
-	var candidates: Array[Vector2] = [best]
-	var seen: Dictionary = {best.snapped(Vector2.ONE * 0.01): true}
-	var best_score: = INF
-	var best_overlap: = INF
-	var index: = 0
-	while index < candidates.size() and index < MAX_PLACEMENT_CANDIDATES:
-		var candidate: Vector2 = candidates[index]
-		index += 1
-		var rect: = Rect2(candidate, toast_size)
-		var overlap: = 0.0
-		var blocking: = Rect2()
-		for obstacle in _screen_exclusions:
-			if not obstacle.has_area():
-				continue
-			var expanded: = obstacle.grow(FEEDBACK_CLEARANCE)
-			var area: = rect.intersection(expanded).get_area()
-			overlap += area
-			if area > 0.0 and not blocking.has_area():
-				blocking = expanded
-		var score: = overlap * 1000000.0 + candidate.distance_squared_to(preferred)
-		if score < best_score:
-			best = candidate
-			best_score = score
-			best_overlap = overlap
-		if not blocking.has_area():
-			continue
-		# Each branch leaves one actual obstruction. This bounded search also
-		# finds positions requiring both horizontal and vertical displacement.
-		for next in [Vector2(blocking.position.x - toast_size.x, candidate.y), Vector2(blocking.end.x, candidate.y), Vector2(candidate.x, blocking.position.y - toast_size.y), Vector2(candidate.x, blocking.end.y)]:
-			var position: Vector2 = Vector2(next).clamp(_last_safe_rect.position, maximum)
-			var key: = position.snapped(Vector2.ONE * 0.01)
-			if not seen.has(key) and candidates.size() < MAX_PLACEMENT_CANDIDATES:
-				seen[key] = true
-				candidates.append(position)
-	_placement_offset = best - preferred
-	_placement_valid = true
-	_last_placement_clear = best_overlap <= 0.0
-	_last_placement_search_msec = now
-	return best
-
-
-func _placement_is_clear(rect: Rect2) -> bool:
-	for obstacle in _screen_exclusions:
-		if obstacle.has_area() and rect.intersects(obstacle.grow(FEEDBACK_CLEARANCE)):
-			return false
-	return true
+func safe_screen_rect() -> Rect2:
+	var viewport_rect: = get_viewport().get_visible_rect()
+	return _safe_rect_for_viewport(viewport_rect.size, _native_safe_insets(viewport_rect))
 
 
 func _safe_rect_for_viewport(viewport_size: Vector2, native_insets: Vector4) -> Rect2:

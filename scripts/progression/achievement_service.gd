@@ -141,11 +141,6 @@ func _condition_met(id: String, metrics: Dictionary) -> bool:
 		"vein_veteran": return vein_total >= 10
 		"quick_step": return int(RunState.movement_speed_level) >= 1
 		"roadrunner": return int(RunState.movement_speed_level) >= 10
-		"more_storage": return int(endless.get("built_workshop_count", 0)) >= 1
-		"mobile_base": return (
-			int(endless.get("total_workshops", 0)) >= 5
-			and int(endless.get("built_workshop_count", 0)) >= int(endless.get("total_workshops", 0))
-		)
 		"mineral_crown": return _all_mined(Array(RunState.RESOURCE_IDS))
 		"ever_deeper": return bool(RunState.victory)
 	return false
@@ -223,14 +218,6 @@ func _completed_all_veins(counts: Dictionary) -> bool:
 		if int(amount) <= 0:
 			return false
 	return counts.size() >= 3
-
-
-func _has_mobile_base_module() -> bool:
-	for value in RunState.all_base_modules():
-		var module: = Dictionary(value)
-		if not bool(module.get("packed", true)) and String(module.get("scene", "surface")) in MINE_IDS:
-			return true
-	return false
 
 
 func _load_records() -> void :

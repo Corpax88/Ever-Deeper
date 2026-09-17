@@ -3521,30 +3521,27 @@ func _refresh_context_button() -> void :
 			label = "TUNNEL HOME"
 		enabled = enabled and not tunnel_home_in_progress
 	elif phase == "hub":
-		if hub_context.begins_with("module:"):
-			label = "USE"
-		else:
-			if hub_context == "deepElevator":
-				var elevator_status: = Dictionary(RunState.deep_elevator_status())
-				if bool(RunState.victory):
-					label = "DESCEND"
-				else:
-					label = "DESCEND" if bool(elevator_status.get("powered", false)) else "POWER" if bool(elevator_status.get("repaired", false)) else "DELIVER"
-			elif hub_context == "deepHoard":
-				label = "INSPECT"
-			elif hub_context == "relicPedestal":
-				label = "PLACE"
-			elif hub_context.begins_with("workshop:"):
-				var workshop_id: = hub_context.trim_prefix("workshop:")
-				var workshop: = Dictionary(RunState.workshop_status(workshop_id))
-				if bool(workshop.get("built", false)):
-					label = {"tool_forge":"TOOL FORGE", "light_lab":"LIGHT LAB", "wardrobe":"WARDROBE", "treasure_chamber":"RELICS", "lift_workshop":"TUNNELS"}.get(workshop_id, "WORKSHOP")
-				elif bool(workshop.get("ready_to_build", false)):
-					label = "BUILD"
-				elif bool(workshop.get("blueprint_unlocked", false)):
-					label = "DELIVER"
+		if hub_context == "deepElevator":
+			var elevator_status: = Dictionary(RunState.deep_elevator_status())
+			if bool(RunState.victory):
+				label = "DESCEND"
 			else:
-				label = {"hubExit": "ASCEND"}.get(hub_context, "")
+				label = "DESCEND" if bool(elevator_status.get("powered", false)) else "POWER" if bool(elevator_status.get("repaired", false)) else "DELIVER"
+		elif hub_context == "deepHoard":
+			label = "INSPECT"
+		elif hub_context == "relicPedestal":
+			label = "PLACE"
+		elif hub_context.begins_with("workshop:"):
+			var workshop_id: = hub_context.trim_prefix("workshop:")
+			var workshop: = Dictionary(RunState.workshop_status(workshop_id))
+			if bool(workshop.get("built", false)):
+				label = {"tool_forge":"TOOL FORGE", "light_lab":"LIGHT LAB", "wardrobe":"WARDROBE", "treasure_chamber":"RELICS", "lift_workshop":"TUNNELS"}.get(workshop_id, "WORKSHOP")
+			elif bool(workshop.get("ready_to_build", false)):
+				label = "BUILD"
+			elif bool(workshop.get("blueprint_unlocked", false)):
+				label = "DELIVER"
+		else:
+			label = {"hubExit": "ASCEND"}.get(hub_context, "")
 	elif phase == "depth":
 		label = {"depthExit": "ASCEND", "depthSell": "SELL", "drillForge": "FORGE", "depthWayfarer":"BOOTS"}.get(depth_context, "")
 	elif phase == "mine" and mine_depth_context:
@@ -3827,16 +3824,16 @@ func _on_achievement_unlocked(definition: Dictionary) -> void :
 
 
 func _update_achievement_toast_anchor() -> void :
-	if achievement_toast == null or not achievement_toast.is_presenting():
-		return
 	var active_player: Node2D = _active_player_node()
 	if active_player == null or not is_instance_valid(active_player):
 		return
+	var feedback: ResourcePickupBurst = active_player.get_node_or_null("ResourcePickupBurst") as ResourcePickupBurst
+	var pickup_active: bool = feedback != null and not feedback.entries.is_empty()
+	var toast_active: bool = achievement_toast != null and achievement_toast.is_presenting()
+	if not pickup_active and not toast_active:
+		return
 	var player_screen_position: Vector2 = active_player.get_global_transform_with_canvas().origin
 	var exclusions: Array[Rect2] = []
-	var feedback: ResourcePickupBurst = active_player.get_node_or_null("ResourcePickupBurst") as ResourcePickupBurst
-	if feedback != null:
-		exclusions.append_array(feedback.screen_rects())
 	var visual: Node = active_player.get_node_or_null("Visual")
 	if visual != null:
 		for child in visual.get_children():
@@ -3861,7 +3858,14 @@ func _update_achievement_toast_anchor() -> void :
 	for control in hud_controls:
 		if is_instance_valid(control) and control.is_visible_in_tree() and control.modulate.a > 0.01:
 			exclusions.append(control.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, control.size))
-	achievement_toast.set_screen_anchor(player_screen_position + Vector2(0.0, -112.0), exclusions)
+	if pickup_active:
+		var safe_rect: Rect2 = achievement_toast.safe_screen_rect() if achievement_toast != null else get_viewport().get_visible_rect().grow(-18.0)
+		feedback.set_screen_constraints(safe_rect, exclusions)
+	if toast_active:
+		exclusions = exclusions.duplicate()
+		if pickup_active:
+			exclusions.append_array(feedback.screen_rects())
+		achievement_toast.set_screen_anchor(player_screen_position + Vector2(0.0, -112.0), exclusions)
 
 
 func _active_player_node() -> Node2D:

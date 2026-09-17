@@ -5,6 +5,8 @@ const DEFINITION := {"id": "rune_ready", "title": "Rune Ready", "asset": "assets
 const FIRST_SIZE := Vector2i(1696, 780)
 var output := ""
 var pack_source := ""
+var only_case := ""
+var entrance_control := false
 var main: Node
 var world: Node
 var player: Node2D
@@ -17,6 +19,7 @@ var captures: Array[Dictionary] = []
 var activations: Array[String] = []
 var layout_costs: Array[Dictionary] = []
 var motion_samples: Array[Dictionary] = []
+var motion_displacement: Dictionary = {}
 
 
 func _initialize() -> void:
@@ -34,6 +37,8 @@ func _run() -> void:
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--output="): output = arg.trim_prefix("--output=")
 		elif arg.begins_with("--pack-source="): pack_source = arg.trim_prefix("--pack-source=")
+		elif arg.begins_with("--case="): only_case = arg.trim_prefix("--case=")
+		elif arg == "--entrance-control": entrance_control = true
 	if not output.is_absolute_path() or DisplayServer.get_name() == "headless":
 		print("FEEDBACK_OVERLAP_USAGE requires a rendered display and absolute --output")
 		quit(2)
@@ -50,23 +55,26 @@ func _run() -> void:
 	state.reset_run(false)
 	state.world_seed = 4608
 	seed(4608)
-	_check(main._dev_jump_endless(1), "Enter the actual generated Deep")
+	_check(main._dev_jump_endless(1 if entrance_control else 2), "Enter the actual generated Deep")
 	world = main.endless_world
 	player = world.player
 	feedback = player.get_node("ResourcePickupBurst")
 	toast = main.achievement_toast
 	main.quick_tutorial.dismiss()
 	main._refresh_hud()
-	# Freeze only the scene beneath the feedback. The real feedback nodes and
-	# GUI retain their normal process/input paths and animation clocks.
+	# Freeze gameplay beneath the feedback while keeping the world's camera
+	# redraw callback. Feedback and GUI retain their normal animation clocks.
 	world.set_process(false)
-	world.set_physics_process(false)
 	player.set_physics_process(false)
 	player.set_external_movement(Vector2.ZERO)
-	player.camera.enabled = false
-	camera = Camera2D.new()
+	# Use the real camera that world culling observes; only suspend its follow
+	# script so controlled edge/movement setups share the normal draw bounds.
+	camera = player.camera
+	camera.set_process(false)
+	camera.set_physics_process(false)
+	camera.process_callback = Camera2D.CAMERA2D_PROCESS_IDLE
 	camera.position_smoothing_enabled = false
-	world.add_child(camera)
+	camera.offset = Vector2.ZERO
 	camera.make_current()
 	toast.activated.connect(func(id: String): activations.append(id))
 	for frame in 5: await process_frame
@@ -79,7 +87,10 @@ func _run() -> void:
 		{"id": "04_right_edge", "size": Vector2i(1688, 780), "zoom": 1.15, "hero": Vector2(0.88, 0.42)},
 	]
 	for spec in cases:
-		await _run_case(spec)
+		if only_case.is_empty() or String(spec.id) == only_case:
+			await _run_case(spec)
+			if String(spec.id) == "02_zoomed":
+				await _run_pickups_without_achievement()
 	_measure_crowded_cost()
 	_finish()
 
@@ -96,8 +107,17 @@ func _run_case(spec: Dictionary) -> void:
 	for frame in 3: await process_frame
 	var viewport_size: Vector2 = root.get_visible_rect().size
 	camera.zoom = Vector2.ONE * float(spec.zoom)
+	if not entrance_control:
+		# Keep the camera over generated terrain for visual judgment. Restore
+		# each edge setup to real walkable ground around the interior band.
+		var desired_world_position: Vector2 = Vector2(world.WORLD_SIZE) * 0.5 + (viewport_size * Vector2(spec.hero) - viewport_size * 0.5) / float(spec.zoom)
+		world.restore_position(desired_world_position)
+		_check(not world.collision_at(player.global_position), String(spec.id) + ": hero stands on actual walkable interior terrain")
 	camera.global_position = player.global_position - (viewport_size * Vector2(spec.hero) - viewport_size * 0.5) / float(spec.zoom)
 	camera.force_update_scroll()
+	if not entrance_control:
+		var shown_world: = Rect2(camera.global_position - viewport_size / camera.zoom * 0.5, viewport_size / camera.zoom)
+		_check(Rect2(Vector2.ZERO, world.WORLD_SIZE).encloses(shown_world), String(spec.id) + ": camera stays within generated terrain")
 	for frame in 3: await process_frame
 	main._on_resource_collected("waystone", 3)
 	main._on_resource_collected("memory_silk", 3)
@@ -132,6 +152,7 @@ func _run_case(spec: Dictionary) -> void:
 		_check(not toast_rect.intersects(pickup_rects[index]), String(spec.id) + ": achievement stays clear of pickup " + str(index + 1))
 	var hero_sprite: Sprite2D = player.get_node("Visual").get_child(0) as Sprite2D
 	var hero_rect: Rect2 = hero_sprite.get_global_transform_with_canvas() * hero_sprite.get_rect()
+	_assert_pickup_layout(String(spec.id), pickup_rects, Rect2(snapshot.safe_rect), hero_rect)
 	_check(not toast_rect.intersects(hero_rect), String(spec.id) + ": hero remains unobscured")
 	_check(Rect2(snapshot.safe_rect).encloses(toast_rect), String(spec.id) + ": complete activation target stays in mobile safe bounds")
 	_check(button.size.x >= 96.0 and button.size.y >= 96.0, String(spec.id) + ": touch target is retained")
@@ -174,15 +195,35 @@ func _run_case(spec: Dictionary) -> void:
 
 func _move_camera(button: Button) -> void:
 	var from: Vector2 = camera.global_position
+	var previous_camera: Vector2 = from
+	var previous_toast: Vector2 = (button.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, button.size)).position
+	var previous_pickup: Vector2 = _actual_pickup_rects()[0].position
+	var maximum_step: float = 0.0
+	var maximum_reflow: float = 0.0
+	var maximum_pickup_reflow: float = 0.0
 	var tween: Tween = create_tween()
 	tween.tween_property(camera, "global_position", from + Vector2(150.0, -32.0) / camera.zoom, 0.85).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	var pickup_contacts: int = 0
 	var hero_contacts: int = 0
 	var unsafe_samples: int = 0
+	var pickup_hud_contacts: int = 0
+	var pickup_unsafe_samples: int = 0
+	var pickup_hero_contacts: int = 0
 	while tween.is_running():
 		await process_frame
 		await RenderingServer.frame_post_draw
 		var rect: Rect2 = button.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, button.size)
+		var step: Vector2 = rect.position - previous_toast
+		var camera_step: Vector2 = (camera.global_position - previous_camera) * camera.zoom
+		var reflow: float = (step + camera_step).length()
+		var current_pickups: Array[Rect2] = _actual_pickup_rects()
+		var pickup_reflow: float = (current_pickups[0].position - previous_pickup + camera_step).length()
+		previous_pickup = current_pickups[0].position
+		maximum_pickup_reflow = maxf(maximum_pickup_reflow, pickup_reflow)
+		maximum_step = maxf(maximum_step, step.length())
+		maximum_reflow = maxf(maximum_reflow, reflow)
+		previous_toast = rect.position
+		previous_camera = camera.global_position
 		var contacts: int = 0
 		for entry in feedback.entries:
 			var label: Label = entry.label as Label
@@ -191,16 +232,77 @@ func _move_camera(button: Button) -> void:
 			if rect.intersects(label.get_global_transform_with_canvas() * ink_rect): contacts += 1
 		pickup_contacts += contacts
 		var sprite: Sprite2D = player.get_node("Visual").get_child(0) as Sprite2D
-		var hero_contact: bool = rect.intersects(sprite.get_global_transform_with_canvas() * sprite.get_rect())
+		var hero_rect: Rect2 = sprite.get_global_transform_with_canvas() * sprite.get_rect()
+		var hero_contact: bool = rect.intersects(hero_rect)
 		if hero_contact: hero_contacts += 1
 		if not Rect2(toast.debug_snapshot().safe_rect).encloses(rect): unsafe_samples += 1
-		motion_samples.append({"time_msec": Time.get_ticks_msec(), "camera": camera.global_position, "toast": rect, "pickup_count": feedback.entries.size(), "pickup_contacts": contacts, "hero_contact": hero_contact})
+		for pickup in current_pickups:
+			if pickup.intersects(hero_rect): pickup_hero_contacts += 1
+			if not Rect2(toast.debug_snapshot().safe_rect).encloses(pickup): pickup_unsafe_samples += 1
+			for hud_rect in _hud_rects().values():
+				if pickup.intersects(Rect2(hud_rect)): pickup_hud_contacts += 1
+		motion_samples.append({"time_msec": Time.get_ticks_msec(), "camera": camera.global_position, "toast": rect, "toast_step_pixels": step.length(), "camera_relative_reflow_pixels": reflow, "pickup_camera_relative_reflow_pixels": pickup_reflow, "placement_reflow": toast.debug_snapshot().get("last_reflow", {}), "pickup_reflow": feedback.debug_snapshot().get("last_reflow", {}), "pickup_count": feedback.entries.size(), "pickup_contacts": contacts, "hero_contact": hero_contact})
 	_check(camera.global_position.distance_to(from) >= 149.0, "Actual camera moves while three pickups and achievement are active")
 	_check(motion_samples.size() >= 3, "Moving camera is checked across rendered frames")
 	_check(pickup_contacts == 0, "Achievement remains clear of pickup flow throughout sampled camera movement")
 	_check(hero_contacts == 0 and unsafe_samples == 0, "Moving feedback keeps the hero and mobile safe bounds clear")
 	_check(feedback.entries.size() == 3 and toast.is_presenting(), "Camera movement preserves all concurrent feedback")
-	await _capture("07_camera_moved", {"samples": motion_samples.size(), "camera": camera.global_position, "pickup_contacts": pickup_contacts, "hero_contacts": hero_contacts})
+	_check(maximum_reflow <= 32.0, "Camera tracking does not cause a large placement jump")
+	_check(maximum_pickup_reflow <= 32.0, "Camera tracking does not make the pickup group jump")
+	_check(pickup_hud_contacts == 0 and pickup_unsafe_samples == 0 and pickup_hero_contacts == 0, "Moving pickup group preserves HUD, hero and safe bounds")
+	motion_displacement = {"maximum_toast_step_pixels": maximum_step, "maximum_camera_relative_reflow_pixels": maximum_reflow, "maximum_pickup_camera_relative_reflow_pixels": maximum_pickup_reflow, "allowed_camera_relative_reflow_pixels": 32.0}
+	await _capture("07_camera_moved", {"samples": motion_samples.size(), "camera": camera.global_position, "pickup_contacts": pickup_contacts, "hero_contacts": hero_contacts, "displacement": motion_displacement})
+
+
+func _actual_pickup_rects() -> Array[Rect2]:
+	var rects: Array[Rect2] = []
+	for entry in feedback.entries:
+		var label: Label = entry.label as Label
+		var ink_size: Vector2 = label.get_minimum_size()
+		var ink: = Rect2((label.size - ink_size) * 0.5, ink_size).grow(float(label.get_theme_constant("outline_size")))
+		rects.append(label.get_global_transform_with_canvas() * ink)
+	return rects
+
+
+func _hud_rects() -> Dictionary:
+	var rects: Dictionary = {}
+	var hud: Control = main.premium_hud
+	var controls: Array[Control] = [hud.menu_button, hud.guide_button, hud.gold_cluster, hud.bag_button, hud.context_button, hud.progression_goal_panel, hud.objective_chip, hud.status_panel, main.mine_button]
+	var companion: Node = main.get_node("CompanionInterface")
+	controls.append(companion.button)
+	if not companion.activity.text.is_empty(): controls.append(companion.activity)
+	if main.developer_menu != null: controls.append(main.developer_menu.get("toggle_button") as Control)
+	for control in controls:
+		if control != null and control.is_visible_in_tree() and control.modulate.a > 0.01:
+			rects[String(control.name)] = control.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, control.size)
+	if main.minimap_overlay.is_visible_in_tree():
+		rects["Minimap"] = main.minimap_overlay.get_global_transform_with_canvas() * hud.minimap_layout_rect()
+	return rects
+
+
+func _assert_pickup_layout(id: String, rects: Array[Rect2], safe: Rect2, hero: Rect2) -> void:
+	var hud_regions: Dictionary = _hud_rects()
+	for index in rects.size():
+		_check(safe.encloses(rects[index]), id + ": pickup " + str(index + 1) + " remains inside mobile safe bounds")
+		_check(not rects[index].intersects(hero), id + ": pickup " + str(index + 1) + " leaves the hero clear")
+		for name in hud_regions:
+			_check(not rects[index].intersects(Rect2(hud_regions[name])), id + ": pickup " + str(index + 1) + " leaves HUD " + String(name) + " clear")
+
+
+func _run_pickups_without_achievement() -> void:
+	_check(not toast.is_presenting(), "Pickup-only case starts without an achievement")
+	main._on_resource_collected("waystone", 5)
+	main._on_resource_collected("memory_silk", 3)
+	main._on_resource_collected("deep_alloy", 3)
+	await create_timer(0.5).timeout
+	var rects: Array[Rect2] = _actual_pickup_rects()
+	_check(rects.size() == 3 and not toast.is_presenting(), "All three pickups coordinate without an achievement")
+	var sprite: Sprite2D = player.get_node("Visual").get_child(0) as Sprite2D
+	_assert_pickup_layout("08_pickups_without_achievement", rects, Rect2(toast.debug_snapshot().safe_rect), sprite.get_global_transform_with_canvas() * sprite.get_rect())
+	await _capture("08_pickups_without_achievement", {"pickups": rects, "hud": _hud_rects(), "achievement_active": toast.is_presenting()})
+	var deadline: int = Time.get_ticks_msec() + 15000
+	while not feedback.entries.is_empty() and Time.get_ticks_msec() < deadline: await process_frame
+	_check(feedback.entries.is_empty() and not feedback.is_processing(), "Pickup-only group expires and releases its frame callback")
 
 
 func _measure_crowded_cost() -> void:
@@ -257,7 +359,7 @@ func _capture(id: String, observation: Dictionary) -> void:
 
 
 func _finish() -> void:
-	var report: Dictionary = {"passed": failures.is_empty(), "checks": checks, "failures": failures, "captures": captures, "activations": activations, "layout_costs": layout_costs, "motion_samples": motion_samples, "pack_sha256": FileAccess.get_sha256(pack_source) if not pack_source.is_empty() else "", "rendered": true, "physical_iphone": false, "fps_claim": false, "manual_feedback_ticks": false}
+	var report: Dictionary = {"passed": failures.is_empty(), "checks": checks, "failures": failures, "captures": captures, "activations": activations, "layout_costs": layout_costs, "motion_samples": motion_samples, "motion_displacement": motion_displacement, "entrance_control": entrance_control, "pack_sha256": FileAccess.get_sha256(pack_source) if not pack_source.is_empty() else "", "rendered": true, "physical_iphone": false, "fps_claim": false, "manual_feedback_ticks": false}
 	var file := FileAccess.open(output.path_join("feedback-overlap.json"), FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "\t"))
 	file.close()
