@@ -1,7 +1,6 @@
-CURRENT UNPUBLISHED CANDIDATE: [DEV10 menu-physics fix](docs/premium-polish/dev10-20260917/HANDOFF.md).
-Last published baseline: [DEV9 published quota checkpoint](docs/premium-polish/dev9-20260916/HANDOFF.md).
-Mats requested stopping new experiments and publishing the playable work. DEV9 is verified live.
-Read that handoff first; the following recovery mandate and chronology are historical.
+CURRENT: [DEV10 published and verified](docs/premium-polish/dev10-20260917/PUBLISHED.md).
+Mats reset the quota and authorized continued premium polish, code uploads and gated DEV publication.
+Full premium polish and stable50FPS remain open. Read the current link first; older recovery chronology follows.
 
 # Ever-Deeper — continue premium polish
 

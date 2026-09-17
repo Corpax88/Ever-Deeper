@@ -1,0 +1,81 @@
+{
+  "source_commit": "23076019b53819c6c7f213b7e55d24a2f6194f83",
+  "qa_run_id": 35181119505,
+  "artifact_id": 10480148197,
+  "pck_sha256": "8b83ed55d62841eac8e891ad6c224b101665d98f5ead63a022e66589d6266c3b",
+  "passed": true,
+  "checks": 47,
+  "maximum_paused_drift_px": 0.0,
+  "captures": [
+    {
+      "id": "01_telegraph_start",
+      "size": [
+        1696,
+        780
+      ],
+      "sha256": "1bc721cc611e273a049c7edaa06c6c8fcf9f1ccf1af8970e8b9a66488002cd99"
+    },
+    {
+      "id": "02_telegraph_progress",
+      "size": [
+        1696,
+        780
+      ],
+      "sha256": "a7190dc205bf2b3f9168a05d37e037e9259ba7139214ec0009c87182505033d3"
+    },
+    {
+      "id": "03_pulse_journal_open",
+      "size": [
+        1696,
+        780
+      ],
+      "sha256": "966db94fac8ae977e64be99671aadca86fa6116064f9f14c293c933b312085a5"
+    },
+    {
+      "id": "04_journal_after_pause",
+      "size": [
+        1696,
+        780
+      ],
+      "sha256": "b2a437f31581a3556667947697d33ea969e5c77f46f4fe9fa3a4aa165f52faa8"
+    },
+    {
+      "id": "05_push_resumed",
+      "size": [
+        1696,
+        780
+      ],
+      "sha256": "5454ebb0b7682778919b0376d7147699f1c4e1523ccf23c8fe5727bdc13261b9"
+    },
+    {
+      "id": "06_fresh_hit_recovered",
+      "size": [
+        1696,
+        780
+      ],
+      "sha256": "5df861acb6701f5be6350c720a08ffc7abb242e0448c344623bf731d990f3b23"
+    },
+    {
+      "id": "07_hub_return",
+      "size": [
+        1696,
+        780
+      ],
+      "sha256": "327a5387ced9c7dc8b4ebb78330b1e380d799c68383e6bec40171b986b9552c0"
+    },
+    {
+      "id": "08_deep_reentry_idle",
+      "size": [
+        1696,
+        780
+      ],
+      "sha256": "3d2b49d9b9a707a9c5166c85db69f0ec4f7299248599fa8684bd9ba97ae21784"
+    }
+  ],
+  "reviewer": "release_critic and root",
+  "reviewed_at": "2026-09-17T04:30:18.194393+00:00",
+  "status": "approved_for_dev_playtest",
+  "scope": "Actual hazard telegraph and held mining, journal pause, resumed push, fresh mining recovery, Tunnel Home and Deep re-entry. Fifteen current CI images inspected across these states, commerce reopening, beam previews and browser gameplay.",
+  "blocking_defects": [],
+  "physical_iphone": false
+}

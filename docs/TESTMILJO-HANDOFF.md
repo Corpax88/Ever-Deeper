@@ -1,3 +1,6 @@
+CURRENT VERIFIED MILESTONE: [Published DEV10](premium-polish/dev10-20260917/PUBLISHED.md).
+Exact browser/native QA35181119505, Mac WebKit35181878479 and publication35182372885 pass. Linux WebKit framebuffer failure remains retained; Mac uses Actions step timeouts, since GNUtimeout is absent. Virtual-Mac sustained performance still fails50FPS. Existing root Godot/Xvfb route remains valid; never run heavy renderers concurrently.
+
 Current unpublished candidate: [DEV10](premium-polish/dev10-20260917/HANDOFF.md).
 
 ## Runtime verified 17 September 2026

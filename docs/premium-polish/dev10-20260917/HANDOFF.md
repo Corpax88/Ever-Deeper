@@ -1,3 +1,5 @@
+CURRENT: [Verified published DEV10](PUBLISHED.md). The following is the earlier local-candidate record, retained as history.
+
 # DEV10 candidate — menu physics, 17 September 2026
 
 This is a tested local candidate, **not a publication or completed premium polish**.
