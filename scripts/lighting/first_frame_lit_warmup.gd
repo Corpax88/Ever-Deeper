@@ -7,6 +7,24 @@ static var _started: bool = false
 var _viewport: SubViewport
 
 
+class WarmupTriangles:
+	extends Node2D
+
+	func _draw() -> void:
+		# Direct canvas triangles avoid Polygon2D's mesh index-update path.
+		# Empty indices and default count=-1 retain nonindexed submission.
+		var color := Color(0.2, 0.2, 0.2, 1.0)
+		RenderingServer.canvas_item_add_triangle_array(
+			get_canvas_item(), PackedInt32Array(),
+			PackedVector2Array([
+				Vector2(2, 2), Vector2(14, 2), Vector2(14, 14),
+				Vector2(2, 2), Vector2(14, 14), Vector2(2, 14),
+			]),
+			PackedColorArray([color, color, color, color, color, color]),
+			PackedVector2Array()
+		)
+
+
 func _ready() -> void:
 	name = "FirstFrameLitWarmup"
 	if _started or DisplayServer.get_name() == "headless":
@@ -24,12 +42,8 @@ func _ready() -> void:
 	_viewport.use_hdr_2d = get_viewport().use_hdr_2d
 	_viewport.msaa_2d = get_viewport().msaa_2d
 	_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
-	var polygon := Polygon2D.new()
+	var polygon := WarmupTriangles.new()
 	polygon.name = "LitWarmupPolygon"
-	polygon.polygon = PackedVector2Array([
-		Vector2(2, 2), Vector2(14, 2), Vector2(14, 14), Vector2(2, 14),
-	])
-	polygon.color = Color(0.2, 0.2, 0.2, 1.0)
 	polygon.material = DrawSections.VISIBLE_PIXELS_MATERIAL
 	polygon.light_mask = 1
 	_viewport.add_child(polygon)

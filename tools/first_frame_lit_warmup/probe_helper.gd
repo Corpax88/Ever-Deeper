@@ -151,7 +151,7 @@ func _install_helper() -> void:
 func _observe_armed() -> void:
 	var helper: Node = helper_weak.get_ref()
 	var viewport: SubViewport = helper.get("_viewport")
-	var polygon: Polygon2D = viewport.get_node("LitWarmupPolygon")
+	var polygon: Node2D = viewport.get_node("LitWarmupPolygon")
 	var light: PointLight2D = viewport.get_node("LitWarmupLight")
 	if variant == "no_light": light.enabled = false
 	viewport_weak = weakref(viewport)

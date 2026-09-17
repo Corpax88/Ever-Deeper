@@ -21,3 +21,27 @@ Run from an empty project with the original PCKSHA5016e16791f51790f7a10dfabe0719
 The real rebuilt candidate must exercise its exact Main hook and preserve original relative startup/input/autoload behavior, fresh/valid-save semantics, splash/menu/game pixels and normal/early held/released input. Observe original material/shader IDs and the actual full WebGL GLSL pair across cleanup and real mining; ensure no later same-pair compile. Existing target hashes are aecaa8e92eb4a09192a1cb4733e3a7d0edc9fc1af266c1a41147073fc107967f and8b9380594232f57892a2833bcb3295135416357c1c0bc2fde73fa32bc0092b7a from the original MacWebKit study1a85baf. Revalidate recorder/export bindings; do not blindly reuse old request approvals or DEV11 pins.
 
 Only after mechanism, exact specialization, cleanup and game/pixel/input gates pass should a controlled timing comparison include startup-to-ready/first-frame cost and the same real route. No50FPS, physical-iPhone or unrelated-hitch conclusion follows from moving one compilation. Full premium polish remains open. The existing production DEV13 game is unchanged.
+
+## Nonindexed avoidance candidate after actual WebGL rejection
+
+Full Polygon2D candidate5e48e4e failed seven touch suites in35248670186 with the
+WebGL element-buffer rebind and following bufferSubData errors; pause's nine
+logical checks passed. All original artifacts are retained in the rejected archive.
+The exact two-package trace35252779454/requestf84d196b reproduced a clean original
+DEV13 and one conflicting bind on rejected5e: original object38, ELEMENT_ARRAY_BUFFER
+34963 to ARRAY_BUFFER34962, followed by the same raw error pair. Its stack contains
+unsymbolicated WASM function IDs; it does not identify a C++ function or scene node.
+
+The matching Godot4.7.2 source defect is Polygon2D's internal mesh index-region
+update. This avoidance candidate changes only the hidden helper's draw component:
+a Node2D _draw submits two nonindexed canvas triangles using empty indices, six
+vertices/colors, empty UVs and the default count=-1. There is no Polygon2D/internal
+mesh or index buffer in that command path. The original shared production material,
+light,16x16 separate World2D, UPDATE_ONCE, ordinary post-draw cleanup and synchronous
+Main call are preserved. No visible production art or shader is changed.
+
+The mechanism observer changes only its component annotation Polygon2D to Node2D;
+all existing lit/no_light pixel, identity, cleanup and scalar-state checks remain.
+Re-run the two actual native controls, then a fresh full export and original WebGL
+error gates. The older native pass does not approve this new draw component. Full
+GLSL identity, normal startup/input/save parity and timing remain separate gates.
