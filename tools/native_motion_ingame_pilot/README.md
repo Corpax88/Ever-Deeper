@@ -134,6 +134,25 @@ before the pair can be treated as a visual comparison. This is controlled
 fixed-step in-game input, not manual pose playback or unrestricted live play.
 It measures no sustained FPS.
 
+The first right candidate at `9af3604cc8587340fd4a99dbc1f3ca2dde78dbaa`
+passed 576 checks and saved 77 original frames. Its baseline stopped before
+capture because Godot Dictionary equality distinguishes native integer fields
+from JSON-decoded floats. Both actual route objects and that failed attempt
+are retained. The correction normalizes both complete route dictionaries
+through full-precision JSON; it does not omit fields, cast to integers or
+allow coordinate tolerance. `check_route_comparison.gd` tests the actual
+retained route, numeric round-trip acceptance and changed route fields.
+
+The corrected fixture can replay that exact earlier candidate only when its
+whole report hash is
+`ac38eb42f11063accf3b071e99f21ed1d3c9c999086aa58749818cdac786d5cc`,
+its source and original fixture hashes match the pinned constants, and its
+DEV11 runtime, unchanged consumer and all five packed asset hashes still
+match. The baseline report records its current fixture source and the earlier
+candidate source separately. This exception preserves the already captured
+native motion across a fixture-only comparison correction; every input,
+route, per-frame position, clock, target and HP comparison remains mandatory.
+
 ## Still outside acceptance
 
 Graphical review is pending. A passing route/parser gate does not approve the

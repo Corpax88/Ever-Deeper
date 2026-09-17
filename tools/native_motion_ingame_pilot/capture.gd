@@ -1,6 +1,10 @@
 extends SceneTree
 ## Opt-in native-motion study. Normal input, collision and mining own the world.
 const BASE_SOURCE := "8f5680defb9083bbe1e044d39a10612f2186e7f3"
+# Existing candidate retained across this fixture-only comparison correction.
+const PRIOR_REPLAY_SOURCE := "9af3604cc8587340fd4a99dbc1f3ca2dde78dbaa"
+const PRIOR_REPLAY_SHA256 := "ac38eb42f11063accf3b071e99f21ed1d3c9c999086aa58749818cdac786d5cc"
+const PRIOR_REPLAY_FIXTURE := "153dc4c98e36f38769318e304f366b93499405c8ddaee8f69672c04be0728d3b"
 const ASSETS := "res://tools/native_motion_ingame_pilot/assets/worn/"
 const ASSET_HASHES := {
 	"manifest.json": "9a7dd27227512941adbe61a87bd70c4ef6666b9de56606dff7b5f9e97bac4376",
@@ -75,7 +79,10 @@ func _run() -> void:
 			_finish()
 			return
 		replay = JSON.parse_string(FileAccess.get_file_as_string(replay_path))
-		if not _check(bool(replay.get("passed", false)) and replay.get("mode", "") == "candidate" and replay.get("direction", "") == direction_name and int(replay.get("depth", -1)) == depth and replay.get("source_sha", "") == source_sha, "Candidate replay identity matches this case"):
+		var same_source: bool = replay.get("source_sha", "") == source_sha
+		var retained_candidate: bool = replay.get("source_sha", "") == PRIOR_REPLAY_SOURCE and replay.get("fixture_sha256", "") == PRIOR_REPLAY_FIXTURE and FileAccess.get_sha256(replay_path) == PRIOR_REPLAY_SHA256
+		var same_runtime: bool = replay.get("production_runtime_source", "") == BASE_SOURCE and replay.get("consumer_sha256", "") == FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/pilot_visual.gd") and replay.get("asset_hashes", {}) == ASSET_HASHES
+		if not _check(bool(replay.get("passed", false)) and replay.get("mode", "") == "candidate" and replay.get("direction", "") == direction_name and replay.get("depth", -1) == depth and same_runtime and (same_source or retained_candidate), "Candidate replay identity matches this case", {"same_source": same_source, "pinned_retained_candidate": retained_candidate, "same_runtime_consumer_assets": same_runtime, "candidate_source": replay.get("source_sha", ""), "current_fixture_source": source_sha}):
 			_finish()
 			return
 	if mode != "geometry": root.size = Vector2i(1696, 780)
@@ -134,7 +141,7 @@ func _run() -> void:
 	if mode == "geometry":
 		await _geometry_sequence()
 	else:
-		if mode == "baseline" and not _check(route == replay.route, "Replay uses identical natural target and path"):
+		if mode == "baseline" and not _check(routes_equal(route, replay.route), "Replay uses identical natural target and path"):
 			_finish()
 			return
 		if not await _settle_feedback():
@@ -150,6 +157,13 @@ func _run() -> void:
 		if mode == "candidate": await _candidate_sequence()
 		else: await _baseline_sequence()
 	_finish()
+
+
+static func routes_equal(actual: Dictionary, recorded: Dictionary) -> bool:
+	# JSON decodes every number as float; Dictionary equality also compares their
+	# Variant types. Normalize both complete route objects without casts, omitted
+	# fields or coordinate tolerances. Full precision retains real differences.
+	return JSON.parse_string(JSON.stringify(actual, "", true, true)) == JSON.parse_string(JSON.stringify(recorded, "", true, true))
 
 
 func _settle_feedback() -> bool:
@@ -478,6 +492,6 @@ func _finish() -> void:
 		if mode == "candidate" and is_instance_valid(player): player.visual.disarm()
 		main._set_mine_held(false)
 		main._on_joystick_movement(Vector2.ZERO)
-	_write_json("native-ingame.json", {"schema": 1, "passed": failures.is_empty(), "mode": mode, "source_sha": source_sha, "production_runtime_source": BASE_SOURCE, "fixture_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/capture.gd"), "consumer_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/pilot_visual.gd"), "consumer_installed": mode != "baseline", "consumer_armed": mode == "candidate", "asset_hashes": ASSET_HASHES, "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "rendered": not captures.is_empty(), "viewport": [root.size.x, root.size.y], "content_scale_size": [root.content_scale_size.x, root.content_scale_size.y], "direction": direction_name, "seed": WORLD_SEED, "depth": depth, "route": route, "route_search": route_search, "startup_feedback": startup_feedback, "checks": checks, "failures": failures, "events": events, "samples": samples, "captures": captures, "transitions": player.visual.transitions if mode == "candidate" and is_instance_valid(player) else [], "replay_sha256": FileAccess.get_sha256(replay_path) if not replay_path.is_empty() else "", "elapsed_wall_ms": Time.get_ticks_msec() - started_wall_ms, "manual_world_ticks": false, "manual_pose_playback": false, "visual_acceptance": false, "limits": "Headless geometry loads the consumer unarmed and is not visual evidence. Rendered cases, when present, are controlled fixed-step in-game input, not unrestricted live input, production adoption, all-direction/tool coverage or FPS evidence. Canonical endpoint quantization remains visible; retained offset release and arbitrary interruptions are not covered."})
+	_write_json("native-ingame.json", {"schema": 1, "passed": failures.is_empty(), "mode": mode, "source_sha": source_sha, "production_runtime_source": BASE_SOURCE, "fixture_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/capture.gd"), "consumer_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/pilot_visual.gd"), "consumer_installed": mode != "baseline", "consumer_armed": mode == "candidate", "asset_hashes": ASSET_HASHES, "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "rendered": not captures.is_empty(), "viewport": [root.size.x, root.size.y], "content_scale_size": [root.content_scale_size.x, root.content_scale_size.y], "direction": direction_name, "seed": WORLD_SEED, "depth": depth, "route": route, "route_search": route_search, "startup_feedback": startup_feedback, "checks": checks, "failures": failures, "events": events, "samples": samples, "captures": captures, "transitions": player.visual.transitions if mode == "candidate" and is_instance_valid(player) else [], "replay_source_sha": replay.get("source_sha", ""), "replay_binding_reason": "Exact retained report across fixture-only JSON comparison correction" if mode == "baseline" and replay.get("source_sha", "") != source_sha else "Same source checkpoint", "replay_sha256": FileAccess.get_sha256(replay_path) if not replay_path.is_empty() else "", "elapsed_wall_ms": Time.get_ticks_msec() - started_wall_ms, "manual_world_ticks": false, "manual_pose_playback": false, "visual_acceptance": false, "limits": "Headless geometry loads the consumer unarmed and is not visual evidence. Rendered cases, when present, are controlled fixed-step in-game input, not unrestricted live input, production adoption, all-direction/tool coverage or FPS evidence. Canonical endpoint quantization remains visible; retained offset release and arbitrary interruptions are not covered."})
 	print("NATIVE_INGAME_COMPLETE mode=", mode, " direction=", direction_name, " checks=", checks.size(), " failures=", failures.size())
 	quit(0 if failures.is_empty() else 1)
