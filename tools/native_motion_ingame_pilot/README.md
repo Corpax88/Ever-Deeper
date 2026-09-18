@@ -189,8 +189,18 @@ remain attached to the same rigid tool and both arms are solved from their
 unchanged shoulders. Start, .55 contact/hold and existing recovery are exact
 controls; camera, art, torso/head, roots, feet and clocks are unchanged.
 
-The probe checks the real rig densely and renders only seven original stills
-if geometry passes. Its ore projection uses one frozen actual hit draw and is
-explicitly counterfactual. The proposal has not yet been run or approved. Its
-changed windup would require new entry/cancellation/restart evidence before
-integration; old bank proofs cannot approve those changed trajectories.
+The probe completed on `657df8d`: 136 actual rig poses and seven original
+stills, exit 0. Protected matrix error is zero and maximum arm reach is .691345,
+but root and independent critic visually rejected the loaded .40 pose: the
+head hides behind the helmet and the grip separation projects to only 2.895
+pixels at160. Its ore projection uses one frozen actual hit draw and remains
+explicitly counterfactual. No new bank is adopted. Changed windup would require
+new entry/cancellation/restart evidence; old bank proofs cannot approve it.
+
+`probe_shoulder_visibility.py` next observes only that unchanged, already
+rejected .40 pose. It retains native200 geometric masks/depths and original
+evaluated vertices for selected head/tool/hand groups. It selects view-layer
+MESH geometry by `hide_render`, not a separately verified equivalent of the
+renderer. Head-group coverage needs inventory review; partial depth maps and
+the five cached groups cannot approve later moved tools, changed arms, packed160
+filtering or a future whole scene. No new load angle or height is selected.
