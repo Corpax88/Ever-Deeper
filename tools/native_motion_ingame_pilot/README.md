@@ -59,6 +59,22 @@ It does not establish arbitrary input coverage. Missing clips and interruptions
 still stop the study with an explicit failure instead of guessing a bridge.
 The second early-idle bridge exists but one route cannot exercise both choices.
 
+`--cancel-cycle` selects `assets/worn-cancel`: all170 rest-bank cells plus24
+cells for mine `.392857` → idle and idle `.033333` → mine. It releases MINE
+before the first hit, resumes on the first actually displayed idle endpoint,
+allows exactly one real hit, then returns to idle. This route has five bridges
+and one136px approach, with no walking exit. It does not interrupt an active
+bridge. It is mutually exclusive with `--rest-cycle`.
+
+`probe_windup_cancel.py` first measured this exact stop against the retained
+V3 draw44 ore transform and rendered four original poses. The continuation of
+the source mine timeline does reach contact during the120ms blend; the blended
+cap samples remained outside the frozen ore alpha. That result is limited to
+the captured transform and sampled cap, so actual cancellation frames still
+need contact inspection alongside HP/impact checks. `extend_return_idle_bank.py
+--pre-hit-cancel-proof <closed-report>` binds that diagnostic before adding only
+the two clips; it preserves all170 original color and cloth bytes.
+
 The startup toast queue must settle naturally. It took72.6 simulated seconds
 in the closed V3/V4 trials. A rest trial reached only71.85s before its180s host
 watchdog expired, before arming or capturing. Its failure is preserved. The
