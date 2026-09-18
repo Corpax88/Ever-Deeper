@@ -3,17 +3,18 @@
 Current work: hero animation; FPS work remains paused. This is a bounded Worn/up study,
 not a production adoption, full-animation acceptance or new DEV/LIVE publication.
 
-## Exact source and saving limit
+## Exact source and confirmed upload
 
 - Local tested source: `e1e0193115935765a07c2f260c2c4da8653d45cb`, tree `9acb66f80e2fb760a9befd7eb7ffbfce84a57410`.
-- Checkout: `/workspace/scratch/b465f3665b0c/ever-deeper-hero-animation`.
+- Source/atlas checkpoint on GitHub: [`16bda4413cf9c5c9f98232f1df96e17e3346944e`](https://github.com/Corpax88/Ever-Deeper/commit/16bda4413cf9c5c9f98232f1df96e17e3346944e), tree `2f1f4aec8d99e0e984c83cd970cd8c95a718c69c`.
+  The tree exactly matches local documentation checkpoint `620eed69cc5883b8f94d12349e38d3221ebab1d8` and includes all ten reviewed files.
 - Branch: `codex/hero-animation-dev13-20260918`; DEV13 base `5ca6f0f77a1f87eaead777613062208159325068`.
-- Last confirmed remote head: `b4b8f3e2779fdc52d6ba3a36a60ebe387098cd5f`, tree `eef8f5af7068af9ff3dccd727fe0b6702023b135`.
-  This contains the new native builder but not the packed bank, selector, comparison helper or this documentation.
-- Automatic approval review rejected public GitHub upload twice. The second rejection retained
-  the block after exact repository/admin/push permission and a seven-file diff were verified:
-  an explicit user yes in the active chat is required. Do not bypass this with connector writes.
-  Complete local work is retained; do not claim that the pending source is uploaded.
+  Documentation-only successors on this branch do not change the tested animation or publish a game build.
+- Original checkout: `/workspace/scratch/b465f3665b0c/ever-deeper-hero-animation`.
+  That temporary checkout was unavailable after the chat interruption; restore the verified branch from GitHub in a fresh workspace.
+- The earlier automatic approval rejections are historical. Mats explicitly replied `Godkjenner`
+  to uploading these ten files to the public repository. The upload is complete and its commit/tree were read back and verified.
+  Private Blender originals and user/authentication data were excluded. No DEV/LIVE deployment was performed.
 
 ## Closed native and actual-game evidence
 
@@ -75,8 +76,7 @@ all four original game captures and the independent assessments.
 `Ever-Deeper-helteanimasjon-testfilm-20260918.mp4` shows all401 frames in original order/timing,
 with a fixed310x230 physical crop and24px labels; no interpolation or repetition.
 
-Next: after explicit user consent, upload the pending source/atlases/documentation to the
-existing branch without publishing DEV/LIVE. Then address hidden rest axe/grips, contact
+Next: continue from the verified GitHub checkpoint and address hidden rest axe/grips, contact
 readability, fast final downstroke and late pre-hit pose hold. Broader directions/tools/targets,
 arbitrary input, the prior rest-cycle layout issue and physical-mobile acceptance remain open.
 Do not rerun15-core solely for an unchanged fixture/bank; prior world QA remains documented.
