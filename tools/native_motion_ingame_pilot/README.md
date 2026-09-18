@@ -244,3 +244,19 @@ Protected matrix difference is zero. The original packer produced two
 160-pixel atlas pages without edge clipping. This does not establish motion
 or gameplay acceptance. `--cross-shoulder-load` selects this explicit bank
 for an otherwise unchanged fixture route, including active restart.
+
+Both cross-shoulder gameplay captures closed on `97131ba`: 119 loop frames
+and 89 active-restart frames, with damage at 50/90 and 65 respectively.
+Their mechanical input/world traces match the earlier controls. The new
+restart has no sampled cap-alpha overlap on draws 44–64 and contact on 65.
+The tool head is briefly hidden during restart, and loop draws 48/49 reuse
+one pre-hit cell; neither observation is a general animation acceptance.
+
+`probe_late_windup_cancel.py` diagnoses the unchanged transition from the
+actual last pre-hit loop draw 49 (native phase .5238095238). It keeps three
+times distinct: 2.2667 ms until the nominal damage threshold, the next actual
+damage tick at 16.6667 ms, and 13.6 ms of represented native pose time until
+contact. Its 75 native samples and four isolated renders use frozen draw49
+ore projection. This does not exercise actual late-cancel input, change the
+motion, add a runtime bank, or approve publication. Partial diagnostic rows
+and the current stage/time are retained separately if setup or sampling fails.
