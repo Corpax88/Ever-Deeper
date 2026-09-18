@@ -14,6 +14,7 @@ for name in ('native-tools','pivot','output'):
     p.add_argument('--'+name,type=Path,required=True)
 p.add_argument('--side-waypoint-only',action='store_true')
 p.add_argument('--side-cycle',action='store_true')
+p.add_argument('--overhead-load',action='store_true')
 a=p.parse_args(sys.argv[sys.argv.index('--')+1:])
 assert not a.output.exists()
 a.output.mkdir(parents=True)
@@ -38,7 +39,7 @@ if a.side_waypoint_only or a.side_cycle:
     from side_return_motion import SideReturnMotion
     motion=SideReturnMotion(json.loads((HERE/'working-surface-selection.json').read_text()),
                       json.loads((HERE/'upper-body-hinge-selection.json').read_text()),
-                      json.loads(a.pivot.read_text()))
+                      json.loads(a.pivot.read_text()),a.overhead_load)
     report['source_hashes']['tools/native_motion_ingame_pilot/side_return_motion.py']=sha(HERE/'side_return_motion.py')
     report['scope']='One native side-waypoint still only; not a full cycle or temporal approval'
     if a.side_cycle:

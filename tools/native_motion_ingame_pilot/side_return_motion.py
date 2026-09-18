@@ -12,8 +12,9 @@ from loop_flow_motion import LoopFlowMotion,game_progress,hermite,log_rotation,e
 
 
 class SideReturnMotion(LoopFlowMotion):
-    def __init__(self,surface,hinge,pivot_report):
-        super().__init__(surface,hinge,pivot_report,.70,.30,True)
+    def __init__(self,surface,hinge,pivot_report,overhead_load=False):
+        super().__init__(surface,hinge,pivot_report,.70,.30,not overhead_load)
+        self.overhead_load=overhead_load
         # Native200 target [142,108], beyond the observed wrap silhouette.
         # Depth minimizes the greater wrist distance to the turned shoulders.
         self.side_midpoint=Vector((-.4748423993587494,.2857058644294739,.7973606586456299))
@@ -65,7 +66,7 @@ class SideReturnMotion(LoopFlowMotion):
 
     def selection(self):
         out=super().selection()
-        out.update(proposal='one-visible-side-return',side_midpoint=list(self.side_midpoint),
+        out.update(proposal='one-visible-side-return',overhead_load=self.overhead_load,side_midpoint=list(self.side_midpoint),
                    side_axis=list(self.side_axis),side_normal=list(self.side_normal),
                    side_rear_velocity=list(self.side_rear_rate),
                    body_turn_degrees=-40,body_turn_joint=list(self.body_joint),

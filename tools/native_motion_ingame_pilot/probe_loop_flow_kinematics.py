@@ -22,6 +22,7 @@ p.add_argument('--round-start', type=float, default=.85)
 p.add_argument('--round-end', type=float, default=.15)
 p.add_argument('--outward-load', action='store_true')
 p.add_argument('--side-return', action='store_true')
+p.add_argument('--overhead-load', action='store_true')
 a = p.parse_args(sys.argv[sys.argv.index('--')+1:])
 assert not a.output.exists()
 sha = lambda path: hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -33,7 +34,7 @@ motions = {'baseline': CompleteReturnMotion(surface, hinge, pivot),
            'candidate': LoopFlowMotion(surface, hinge, pivot, a.round_start, a.round_end,a.outward_load)}
 if a.side_return:
     from side_return_motion import SideReturnMotion
-    motions['candidate']=SideReturnMotion(surface,hinge,pivot)
+    motions['candidate']=SideReturnMotion(surface,hinge,pivot,a.overhead_load)
 report = {'complete':False, 'rendered':False, 'visual_accepted':False,
           'scope':'Worn/up kinematics only; no actual mesh, collision or temporal visual acceptance',
           'selection':motions['candidate'].selection(), 'inputs':{str(a.pivot):sha(a.pivot),str(a.recorded):sha(a.recorded)},

@@ -132,6 +132,16 @@ intermediate hand/pack intersections remain explicit visual risks.
 This native prototype is not an actual game test. No bridge, whole-scene
 contact, other direction/tool or production approval follows from it.
 
+Trial04 native video received3/10 in fresh Gemini Pro context. Its claim of
+almost no body rotation is inaccurate for the full40-degree return, but weak
+stroke readability is independently corroborated by actual poses and math.
+The outward load projects the cap only5.38px from contact versus28.69px for
+the original overhead load. The local critic inspected8 new native frames
+plus the original load, and supports restoring that overhead load while
+retaining the visible side return. Trial05 rebuilds the end conditions from
+that source, not a pasted image splice;401 IK/feet/joint checks pass before
+the next bounded50-frame native video. No full-bank work yet.
+
 No visual acceptance, 9/10 claim, full-input coverage or game publication is
 recorded here. Trial01 local test commit0b1706c and remote commitbdcad8b have
 the identical treefd839378e0b8e6e7bd477e7497ef53a493ccca22; the connector supplied
