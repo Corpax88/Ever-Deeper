@@ -184,7 +184,10 @@ func _settle_feedback() -> bool:
 	var quiet := 0.0
 	var started := Time.get_ticks_msec()
 	var observations: Array = []
-	while elapsed < 110.0 and Time.get_ticks_msec() - started < 180000:
+	# The complete natural toast queue takes72.6 simulated seconds. The
+	# software-rendered rest trial reached only71.85s at the old wall watchdog;
+	# retain the simulation/quiet criteria and allow the host time to reach them.
+	while elapsed < 110.0 and Time.get_ticks_msec() - started < 300000:
 		await RenderingServer.frame_post_draw
 		var delta := root.get_process_delta_time()
 		elapsed += delta
