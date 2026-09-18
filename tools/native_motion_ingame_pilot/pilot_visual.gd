@@ -35,6 +35,7 @@ var _state := "idle"
 var _bridge: Dictionary = {}
 var _offset := Vector2.ZERO
 var _incoming_offset := Vector2.ZERO
+var _offset_release: Dictionary = {}
 var _distance := 0.0
 var _walk_origin_distance := 0.0
 var _walk_origin_phase := 0.0
@@ -78,6 +79,7 @@ func arm() -> bool:
 	_state = "idle"
 	_distance = 0.0
 	_offset = Vector2.ZERO
+	_offset_release = {}
 	_last_selected = {}
 	_last_presented = {}
 	return true
@@ -141,6 +143,8 @@ func _process(_delta: float) -> void:
 			_offset = _incoming_offset + Vector2(float(destination[0]), float(destination[1]))
 			crossing = {"event": "canonical_handoff", "name": _bridge.name, "duration": _bridge.duration, "actual_elapsed": elapsed, "nominal_destination_phase": _bridge.destination_phase, "requested_phase": phase, "offset": _array(_offset)}
 			_bridge = {}
+	if _state == "walk" and _bridge.is_empty():
+		_release_offset_in_flight()
 	var presenting_impact := _impact_pending and mining
 	if presenting_impact:
 		if not _bridge.is_empty():
@@ -174,7 +178,12 @@ func _start_bridge(wanted: String) -> bool:
 	_bridge = info.duplicate(true)
 	_bridge["name"] = name
 	_state = wanted
-	_incoming_offset = _offset
+	# A subsequent bridge inherits the last actual draw, including any partial
+	# airborne release. Never recompute a future offset for its source pose.
+	var shown_offset: Array = _last_presented.retained_offset
+	_incoming_offset = Vector2(float(shown_offset[0]), float(shown_offset[1]))
+	_offset = _incoming_offset
+	_offset_release = {}
 	_bridge_origin_distance = float(_last_presented.total_distance)
 	if wanted == "walk":
 		_walk_origin_distance = _bridge_origin_distance
@@ -184,11 +193,53 @@ func _start_bridge(wanted: String) -> bool:
 
 
 func _canonical_phase() -> float:
-	if _state == "walk": return fposmod(_walk_origin_phase + (_distance - _walk_origin_distance) / STRIDE, 1.0)
+	if _state == "walk": return fposmod(_unwrapped_walk_phase(), 1.0)
 	if _state == "mine":
 		if mining_progress <= HIT_PROGRESS: return mining_progress / HIT_PROGRESS * 0.55
 		return 0.55 + (mining_progress - HIT_PROGRESS) / (1.0 - HIT_PROGRESS) * 0.45
 	return 0.0
+
+
+func _unwrapped_walk_phase() -> float:
+	return _walk_origin_phase + (_distance - _walk_origin_distance) / STRIDE
+
+
+func _release_offset_in_flight() -> void:
+	if _offset.is_zero_approx() and _offset_release.is_empty(): return
+	var phase := _unwrapped_walk_phase()
+	if _offset_release.is_empty():
+		var phases: Array = _manifest.states.walk.phases
+		var support: Dictionary = _manifest.motion.support_phase_windows
+		var windows: Array[Vector2] = []
+		# End before nearest-frame selection can display the next planted
+		# cell. The actual toe-off and the displayed plant are different clocks.
+		for next_side in ["L", "R"]:
+			var prior_side := "R" if next_side == "L" else "L"
+			var toe_off := float(support[prior_side][1])
+			var plant := float(support[next_side][0])
+			var index := phases.find(plant)
+			if index < 0:
+				_fail("Missing exact planted phase for airborne offset release")
+				return
+			var prior := float(phases[posmod(index - 1, phases.size())])
+			if plant < toe_off: plant += 1.0
+			windows.append(Vector2(toe_off, (prior + plant) * 0.5))
+		for cycle in [floori(phase), floori(phase) + 1]:
+			for window in windows:
+				var start := float(cycle) + window.x
+				if start <= phase: continue # Skip a partially elapsed flight.
+				_offset_release = {"start": start, "end": float(cycle) + window.y, "origin": _array(_offset)}
+				transitions.append({"event": "offset_release_scheduled", "phase": phase, "release": _offset_release.duplicate(true)})
+				break
+			if not _offset_release.is_empty(): break
+	var t := clampf((phase - float(_offset_release.start)) / (float(_offset_release.end) - float(_offset_release.start)), 0.0, 1.0)
+	var weight := t * t * t * (t * (t * 6.0 - 15.0) + 10.0)
+	var origin: Array = _offset_release.origin
+	_offset = Vector2(float(origin[0]), float(origin[1])) * (1.0 - weight)
+	if t >= 1.0:
+		_offset = Vector2.ZERO
+		transitions.append({"event": "offset_release_completed", "phase": phase, "release": _offset_release.duplicate(true)})
+		_offset_release = {}
 
 
 func _draw_sample(state: String, phase: float, elapsed: float, impact: bool) -> void:
@@ -223,6 +274,8 @@ func _draw_sample(state: String, phase: float, elapsed: float, impact: bool) -> 
 	else: redraw_request_count += 1
 	_last_frame = index
 	_last_selected = {"state": state, "logical_state": _state, "direction": selected_direction, "requested_phase": phase, "sample_phase": float(info.phases[local]), "local_frame": local, "atlas_frame": index, "page": int(info.page), "region": [_sprite.region_rect.position.x, _sprite.region_rect.position.y, cell.x, cell.y], "is_bridge": not _bridge.is_empty(), "bridge_elapsed": elapsed, "retained_offset": _array(placement), "sprite_position": _array(_sprite.position), "ground_anchor": anchor, "total_distance": _distance, "actual_speed": _last_motion_speed, "motion_physics_frame": _last_motion_tick, "mining_progress": mining_progress, "impact_serial": _impact_serial, "presenting_impact": impact, "coalesced_request_count": _pending_requests, "last_request_process_frame": _last_request_process_frame, "selection_process_frame": Engine.get_process_frames(), "selection_physics_frame": Engine.get_physics_frames(), "actually_presented": false}
+	_last_selected["offset_release"] = _offset_release.duplicate(true)
+	_last_selected["unwrapped_walk_phase"] = _unwrapped_walk_phase()
 
 
 func _load_page(page: int) -> bool:
