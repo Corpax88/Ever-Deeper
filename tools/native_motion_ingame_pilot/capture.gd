@@ -428,13 +428,16 @@ func _capture_frame(label: String) -> bool:
 		if samples.size() > 1 and int(sample.impact_serial) > int(samples[-2].impact_serial):
 			if not _check(bool(shown.presenting_impact) and is_equal_approx(float(shown.sample_phase), 0.55) and int(sample.target_hp) < int(samples[-2].target_hp), "Real HP change, impact serial and presented .55 share this frame"): return false
 	if verify_contact_frames and samples.size() > 1:
+		# Godot may increment its drawn-frame counter after post_draw returns.
+		# Compare the observed images/phases and the two producer markers;
+		# never assume this callback already contains the incremented counter.
 		var before: Dictionary = samples[-2]
 		var now: Dictionary = sample.resource_hit_presentation
 		var prior: Dictionary = before.resource_hit_presentation
 		if int(sample.target_hp) < int(before.target_hp):
-			if not _check(now.phase == "contact" and now.scale == prior.scale and int(now.current_drawn_frame) > int(now.phase_after_draw), "The real impact draw retains the ore shape from before damage", {"before": prior, "impact": now}): return false
+			if not _check(now.phase == "contact" and now.scale == prior.scale, "The real impact draw retains the ore shape from before damage", {"before": prior, "impact": now}): return false
 		elif prior.phase == "contact":
-			if not _check(now.phase == "squash" and is_equal_approx(float(now.scale[0]), 0.91) and is_equal_approx(float(now.scale[1]), 0.91) and int(now.phase_after_draw) == int(prior.current_drawn_frame), "The next actual draw presents compression after the contact draw", {"contact": prior, "compression": now}): return false
+			if not _check(now.phase == "squash" and is_equal_approx(float(now.scale[0]), 0.91) and is_equal_approx(float(now.scale[1]), 0.91) and int(now.phase_after_draw) > int(prior.phase_after_draw), "The next actual draw presents compression after the contact draw", {"contact": prior, "compression": now}): return false
 		elif prior.phase == "squash":
 			if not _check(now.phase == "pulse", "Normal pulse recovery resumes after the compression draw", now): return false
 	return true
