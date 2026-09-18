@@ -1,4 +1,4 @@
-"""Render one closed +25 degree Worn/up experiment, never a production bank.
+"""Render one guarded Worn/up experiment, never a production bank.
 
 Preflight all reference poses and bridges on the original rig. Re-render changed
 cells presented by the actual route; reuse exact unchanged poses. Every other
@@ -27,7 +27,9 @@ for name in ('native-tools', 'pivot', 'reference', 'pose-report', 'recorded', 'o
 p.add_argument('--round-start',type=float,default=.85)
 p.add_argument('--round-end',type=float,default=.15)
 p.add_argument('--angle-degrees',type=int,choices=(0,25),default=25)
+p.add_argument('--body-weight',action='store_true',help='Trial07: original camera, contact turn and compression')
 a = p.parse_args(sys.argv[sys.argv.index('--')+1:])
+assert not a.body_weight or a.angle_degrees == 0
 assert not a.output.exists(), 'Use a fresh output directory'
 a.output.mkdir(parents=True)
 out = a.output/'worn'
@@ -61,10 +63,22 @@ def measure(pose,matrices):
     grip = max((((matrices['hand.'+s] @ rig.data.bones['hand.'+s].matrix_local.inverted())
                   @ env['rest']['grips'][s])-pose['grips'][s]).length for s in native.SIDES)
     length = max(abs((rig.pose.bones[n].tail-rig.pose.bones[n].head).length-rig.data.bones[n].length)
-                 for n in ('upper.R','lower.R','upper.L','lower.L'))
+                 for n in ('upper.R','lower.R','upper.L','lower.L','thigh.R','shin.R','thigh.L','shin.L'))
     reach = max((c-b).length for b,elbow,c in pose['arms'].values())
-    assert grip < 1e-5 and length < 1e-5 and reach < .70999, (grip,length,reach)
-    return {'grip_error':grip,'arm_length_error':length,'maximum_arm_reach':reach}
+    leg_reach = max((c-b).length for b,knee,c in pose['legs'].values())
+    assert grip < 1e-5 and length < 1e-5 and reach < .70999 and leg_reach < .36399, (grip,length,reach,leg_reach)
+    return {'grip_error':grip,'limb_length_error':length,'maximum_arm_reach':reach,'maximum_leg_reach':leg_reach}
+
+
+def body_contract(pose,reference_pose):
+    """Body07 may change body/limbs, but exactly retains05 tool and world soles."""
+    tool = max((pose[n]-reference_pose[n]).length for n in ('rear','axis','tool_normal'))
+    tool = max(tool,max((pose['grips'][s]-reference_pose['grips'][s]).length for s in native.SIDES))
+    sole = max((pose['legs'][s][2]-reference_pose['legs'][s][2]).length for s in native.SIDES)
+    rotation = max(abs(pose['foot_rotations'][s][i][j]-reference_pose['foot_rotations'][s][i][j])
+                   for s in native.SIDES for i in range(3) for j in range(3))
+    assert tool < 1e-6 and sole < 1e-6 and rotation < 1e-6,(tool,sole,rotation)
+    return {'trial05_tool_error':tool,'trial05_sole_position_error':sole,'trial05_sole_rotation_error':rotation}
 
 
 def clips_for(provider):
@@ -102,6 +116,9 @@ try:
     sources = dict(saved['source_hashes'])
     for path in (Path(__file__),HERE/'loop_flow_motion.py'):
         sources[str(path.relative_to(ROOT))] = sha(path)
+    if a.body_weight:
+        for path in (HERE/'side_return_motion.py',HERE/'body_weight_motion.py'):
+            sources[str(path.relative_to(ROOT))] = sha(path)
     for path,digest in sources.items(): assert sha(ROOT/path) == digest, path
     report.update(source_sha=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
                   source_hashes=sources,inputs={str(v):sha(v) for v in (a.reference,a.pose_report,a.pivot,a.recorded)},
@@ -122,6 +139,13 @@ try:
     hinge = json.loads((HERE/'upper-body-hinge-selection.json').read_text())
     pivot = json.loads(a.pivot.read_text())
     old, motion = CompleteReturnMotion(surface,hinge,pivot),LoopFlowMotion(surface,hinge,pivot,a.round_start,a.round_end)
+    if a.body_weight:
+        from body_weight_motion import BodyWeightMotion
+        from side_return_motion import SideReturnMotion
+        motion = BodyWeightMotion(surface,hinge,pivot,contact_turn=True)
+        tool_reference = SideReturnMotion(surface,hinge,pivot,overhead_load=True)
+        reference_tool_clips = clips_for(tool_reference)
+        report['body_contract'] = 'Trial07: changed body/head/thigh/shin; unchanged root, unused hips, world soles,05tool and grips'
     report['selection'] = motion.selection()
     env['view']('up',(6,6))
     scene,rig,camera = env['s'],env['r'],env['c']
@@ -133,6 +157,8 @@ try:
     assert max(abs(x-y) for x,y in zip([anchor.x*200,(1-anchor.y)*200],reference['directions']['up']['ground_anchor'])) < 1e-5
     old_clips,clips = clips_for(old),clips_for(motion)
     protected = ('root','hips','body','head','thigh.R','shin.R','foot.R','thigh.L','shin.L','foot.L')
+    if a.body_weight:protected = ('root','hips','foot.R','foot.L')
+    report['protected_bones'] = protected
     stage = 'transition-preflight'
     for name,clip in clips.items():
         assert clip.metadata() == old_clips[name].metadata(), name
@@ -143,6 +169,7 @@ try:
             pose = clip.sample(elapsed)
             after = apply(pose)
             row = {'elapsed':elapsed,**measure(pose,after),'protected_error':difference(before,after,protected)}
+            if a.body_weight:row.update(body_contract(pose,reference_tool_clips[name].sample(elapsed)))
             assert row['protected_error'] < 1e-5, (name,row)
             if k in (0,72):
                 expected = clip.source if k == 0 else pm.translate_pose(motion.sample(clip.target_state,clip.metadata()['destination_phase']),clip.destination_offset)
@@ -163,6 +190,9 @@ try:
         row = {'state':state,'phase':q,'index':index,**measure(pose,after),
                'protected_error':difference(before,after,protected),'all_bone_difference':difference(before,after),
                'candidate_matrices':{n:[list(r) for r in m] for n,m in after.items()}}
+        if a.body_weight:
+            ref_pose = reference_tool_clips[state].sample(q*reference_tool_clips[state].duration) if state in clips else tool_reference.sample(state,q)
+            row.update(body_contract(pose,ref_pose))
         assert row['protected_error'] < 1e-5, row
         poses[(state,index)] = pose
         report['frame_checks'].append(row)

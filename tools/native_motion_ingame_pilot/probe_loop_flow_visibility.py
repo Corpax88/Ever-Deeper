@@ -17,8 +17,10 @@ p.add_argument('--side-cycle',action='store_true')
 p.add_argument('--overhead-load',action='store_true')
 p.add_argument('--body-weight',action='store_true')
 p.add_argument('--contact-turn',action='store_true')
+p.add_argument('--weight-shift',action='store_true')
 a=p.parse_args(sys.argv[sys.argv.index('--')+1:])
 assert not a.contact_turn or a.body_weight
+assert not a.weight_shift or a.contact_turn
 assert not a.output.exists()
 a.output.mkdir(parents=True)
 sha=lambda path:hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -55,11 +57,11 @@ if a.body_weight:
     from body_weight_motion import BodyWeightMotion
     motion=BodyWeightMotion(json.loads((HERE/'working-surface-selection.json').read_text()),
                       json.loads((HERE/'upper-body-hinge-selection.json').read_text()),
-                      json.loads(a.pivot.read_text()),a.contact_turn)
+                      json.loads(a.pivot.read_text()),a.contact_turn,a.weight_shift)
     report['source_hashes']['tools/native_motion_ingame_pilot/side_return_motion.py']=sha(HERE/'side_return_motion.py')
     report['source_hashes']['tools/native_motion_ingame_pilot/body_weight_motion.py']=sha(HERE/'body_weight_motion.py')
     if not a.side_cycle:report['scope']='Three native load/contact/compression stills; not a full cycle or gameplay approval'
-    if a.contact_turn and not a.side_cycle:report['scope']='One native contact-turn still; not a full cycle or gameplay approval'
+    if a.contact_turn and not a.side_cycle and not a.weight_shift:report['scope']='One native contact-turn still; not a full cycle or gameplay approval'
 report['selection']=motion.selection()
 env['view']('up',(6,6))
 scene,rig=env['s'],env['r']
@@ -67,7 +69,7 @@ try:
     phases=((0,0.),) if a.side_waypoint_only else ((49,.953448275862069),(0,0.),(400,.40),(523,.5238095238095238))
     if a.side_cycle: phases=tuple((i,native_phase(i/50)) for i in range(50))
     elif a.body_weight:phases=((380,.38),(550,.55),(590,.59))
-    if a.contact_turn and not a.side_cycle:phases=((550,.55),)
+    if a.contact_turn and not a.side_cycle and not a.weight_shift:phases=((550,.55),)
     for index,q in phases:
         pose=motion.waypoint_pose() if a.side_waypoint_only else motion.sample('mine',q)
         for modifier in env['skin']: modifier.show_viewport=False

@@ -176,6 +176,38 @@ The independent critic supports one07 native cycle film; hands/shaft still
 sit close to the face. Visible driving of the strike and smooth continuation
 through the side return must be assessed in motion. No full bank yet.
 
+Trial07 completed50 real-rig frames with maximum grip error5.83e-7 and limb
+length error2.82e-7. The initial Gemini3/10 again described frozen body/pack,
+contradicting actual posed images. A simpler calibration showed one enlarged
+cycle,50 poses held four frames each in a conventional25fps/8s video. Gemini
+then recognized moving torso, shoulders, backpack and head. No cause of the
+earlier reading failure is established. A160px single-figure normal-speed
+video of six.68s cycles, nearest existing poses at60fps, received5/10: clear
+two-hand grip, arc and torso turn, but weak perceived weight, acceleration
+and stiff return. It still called the lower body frozen, although it moves
+measurably. This is a perception report, not proof of static rig coordinates.
+
+Trial08 followed an independent still critic's narrow hypothesis: keep07's
+vertical compression and torso turn, remove its extra forward pitch, shift
+pelvis/body toward the original right sole by.035/.045/.025 at.55/.59/.68.
+Both soles and05tool/grips remain fixed.401 checks pass (arm.696633,leg.330045).
+The critic rejected three actual poses.38/.55/.59 for a50-frame movie: coat
+and short legs still hide the knee action; measured knee drop is only.9px.
+The proposed weight transfer does not read. No08full bank or movie was made.
+A separate larger-drop-only analytic diagnosis had already failed armreach
+.711398 at.438690 before any render; it was not adopted.
+
+The high contact point matters: quiet planted legs may suit this forward,
+high strike. Stop pursuing more squat solely because the video reviewer says
+the legs look still. Next evaluate07 against real ore/impact feedback in the
+existing guarded actual-game route. The bank builder's --body-weight selects
+07, not08, at camera0 only. It still reconstructs all218 old rig poses, checks
+all12 bridges at73 times each and renders only changed cells of the exact76
+shown cells. Body/head/thigh/shin matrices may now change intentionally;
+root/unusedhips/feet stay protected, with explicit05tool/grips/worldsole and
+arm/leg-length/reach contracts. Other cells remain forbidden. No acceptance
+or production bank follows from this planned actual-game experiment.
+
 No visual acceptance, 9/10 claim, full-input coverage or game publication is
 recorded here. Trial01 local test commit0b1706c and remote commitbdcad8b have
 the identical treefd839378e0b8e6e7bd477e7497ef53a493ccca22; the connector supplied
