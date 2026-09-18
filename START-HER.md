@@ -1,3 +1,5 @@
+CURRENT ANGLE STUDY: [Original hero at+25degrees in an actual game loop](docs/premium-polish/hero-view-angle-20260918.md). Mats explicitly permits angle changes. Modest visibility improvement; keep as a candidate only. Both hits and119 captures match the prior mechanics; cramped grip/contact and movement alignment remain open. The partial study bank is not deployable. FPS paused.
+
 CURRENT STUDY: [Bounded stock-animation trial](docs/premium-polish/hero-retarget-20260918/ATTEMPTS.md). The actual UAL2 one-handed chopping transfer was rejected after two revised plans and independent image review. Original hero/gameplay preserved; no new atlas or publication. Next source must be qualified as two-handed before mapping. FPS remains paused.
 
 CURRENT SAVED SOURCE CHECKPOINT: [Complete hero return, four actual-game cases](docs/premium-polish/hero-return-20260918.md).

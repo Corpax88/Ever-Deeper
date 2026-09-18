@@ -1,3 +1,5 @@
+LATEST RENDERED ANGLE CHECK: [Closed camera-angle trial](premium-polish/hero-view-angle-20260918.md). Blender4.5.3 and Godot4.7.2/X11/Mesa25.2.8 llvmpipe succeeded;119 actual frames, unchanged inputs/world/hits50/90, and only76 newly rendered cells presented. Xvfb restored at `/tmp/ever-deeper-runtime-20260918/angle-xvfb/root/usr/bin/Xvfb`. No production or physical-device acceptance.
+
 LATEST OFFLINE STUDY: [Stock-motion compatibility](premium-polish/hero-retarget-20260918/ATTEMPTS.md). Blender4.5.3 loaded the actual native models and rendered16 diagnostic images; no new Godot graphical test was needed or claimed for this rejected source study. Native originals were re-extracted to `/tmp/ever-deeper-retarget-20260918/native` after a workspace copy was observed truncated. Restore from the saved originals if paths are missing; cause of truncation is unestablished.
 
 CURRENT VERIFIED ANIMATION CHECKPOINT: [Four-case complete-return review](premium-polish/hero-return-20260918.md).
