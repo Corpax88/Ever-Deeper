@@ -69,6 +69,7 @@ var samples: Array[Dictionary] = []
 var route_search: Dictionary = {}
 var initial_world: Dictionary = {}
 var started_wall_ms := 0
+var startup_wall_seconds := 300
 var captures: Array[Dictionary] = []
 var capture_origin_tick := 0
 var capture_origin_process := 0
@@ -106,6 +107,7 @@ func _run() -> void:
 		elif arg.begins_with("--mode="): mode = arg.trim_prefix("--mode=")
 		elif arg.begins_with("--direction="): direction_name = arg.trim_prefix("--direction=")
 		elif arg.begins_with("--depth="): depth = int(arg.trim_prefix("--depth="))
+		elif arg.begins_with("--startup-wall-seconds="): startup_wall_seconds = int(arg.trim_prefix("--startup-wall-seconds="))
 		elif arg.begins_with("--replay="): replay_path = arg.trim_prefix("--replay=")
 		elif arg == "--rest-cycle": rest_cycle = true
 		elif arg == "--cancel-cycle": cancel_cycle = true
@@ -116,7 +118,7 @@ func _run() -> void:
 			late_cancel_cycle = true
 			cancel_cycle = true
 		elif arg == "--continue-framing-diagnostics": continue_framing_diagnostics = true
-	if not output.is_absolute_path() or not DIRECTIONS.has(direction_name) or source_sha.length() != 40 or mode not in ["geometry", "candidate", "baseline"] or (mode != "geometry" and DisplayServer.get_name() == "headless") or (int(rest_cycle) + int(cancel_cycle) + int(bridge_restart_cycle) > 1):
+	if startup_wall_seconds < 1 or startup_wall_seconds > 900 or not output.is_absolute_path() or not DIRECTIONS.has(direction_name) or source_sha.length() != 40 or mode not in ["geometry", "candidate", "baseline"] or (mode != "geometry" and DisplayServer.get_name() == "headless") or (int(rest_cycle) + int(cancel_cycle) + int(bridge_restart_cycle) > 1):
 		print("NATIVE_INGAME_USAGE --mode=geometry|candidate|baseline --direction=right|up --source-sha=<40hex> --output=<absolute> [--depth=1] [--replay=<candidate report>]; visual modes require a rendered display")
 		quit(2)
 		return
@@ -243,10 +245,11 @@ func _settle_feedback() -> bool:
 	var quiet := 0.0
 	var started := Time.get_ticks_msec()
 	var observations: Array = []
-	# The complete natural toast queue takes72.6 simulated seconds. The
-	# software-rendered rest trial reached only71.85s at the old wall watchdog;
-	# retain the simulation/quiet criteria and allow the host time to reach them.
-	while elapsed < 110.0 and Time.get_ticks_msec() - started < 300000:
+	# The natural queue takes 72.6 simulated seconds. A slower test host
+	# reached only 48.4 seconds before the 300s wall watchdog; every observed
+	# queue row matched the closed control. Only host patience is configurable.
+	# Simulation, quiet time, feedback and game clocks retain their criteria.
+	while elapsed < 110.0 and Time.get_ticks_msec() - started < startup_wall_seconds * 1000:
 		await RenderingServer.frame_post_draw
 		var delta := root.get_process_delta_time()
 		elapsed += delta
@@ -257,7 +260,7 @@ func _settle_feedback() -> bool:
 		if observations.is_empty() or elapsed - float(observations.back().elapsed) > 1.0:
 			observations.append({"elapsed": elapsed, "busy": busy, "quiet": quiet, "queue": toast.queue_size})
 		if quiet >= 0.5: break
-	startup_feedback = {"naturally_settled": quiet >= 0.5, "simulation_seconds": elapsed, "wall_ms": Time.get_ticks_msec() - started, "forced_clear": false, "manual_clock_steps": false, "observations": observations}
+	startup_feedback = {"wall_budget_seconds": startup_wall_seconds, "naturally_settled": quiet >= 0.5, "simulation_seconds": elapsed, "wall_ms": Time.get_ticks_msec() - started, "forced_clear": false, "manual_clock_steps": false, "observations": observations}
 	return _check(quiet >= 0.5, "Startup feedback naturally settles before capture", startup_feedback)
 
 

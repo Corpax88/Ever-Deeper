@@ -288,3 +288,12 @@ this bank and releases normal mining after the actually shown .523810 pose
 at 17/60 mining seconds, then uses the existing idle restart sequence. This
 selects the last pre-hit draw, not the earlier repeated cell. No gameplay
 clock, consumer, resource or existing early-cancel route is changed.
+
+The first late-cancel game launch on `c83eb74` stopped before capture: the
+300-second host watchdog reached only 48.4 simulated startup seconds. All
+48 queue observations exactly match the closed control's prefix, whose
+natural feedback ends at 72.6 seconds. This failed launch remains retained.
+`--startup-wall-seconds` now records an explicit host allowance (default 300);
+the same 110-second simulation bound, 0.5-second quiet requirement, feedback
+queue and game clocks remain unchanged. The next isolated launch allows 600
+host seconds, without clearing feedback or advancing clocks manually.
