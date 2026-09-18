@@ -197,8 +197,9 @@ func _draw_sample(state: String, phase: float, elapsed: float, impact: bool) -> 
 	var best := INF
 	for index in int(info.count):
 		# Nearest-frame rounding must not present contact before gameplay hits.
-		# The real impact packet owns the .55 contact frame and its draw latch.
-		if state == "mine" and not impact and mining_progress < HIT_PROGRESS and is_equal_approx(float(info.phases[index]), 0.55):
+		# Contact is held throughout .55--.625; excluding only .55 would
+		# select the next hold cell early. Pre-hit selection stays in windup.
+		if state == "mine" and not impact and mining_progress < HIT_PROGRESS and float(info.phases[index]) >= 0.55:
 			continue
 		var difference := absf(float(info.phases[index]) - phase)
 		if state in ["walk", "mine"]: difference = minf(difference, 1.0 - difference)

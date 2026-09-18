@@ -275,8 +275,8 @@ func _capture_frame(label: String) -> bool:
 	if mode == "candidate":
 		var shown: Dictionary = sample.visual
 		if not _check(not shown.is_empty() and bool(shown.actually_presented) and int(shown.drawn_frame) == Engine.get_frames_drawn(), "Native source observation belongs to the actual captured draw"): return false
-		if bool(world.mining_active) and float(player.mining_visual_progress) < float(world.MINING_HIT_PROGRESS) and shown.state == "mine":
-			if not _check(not is_equal_approx(float(shown.sample_phase), 0.55), "Native contact is never rounded into pre-hit windup"): return false
+		if bool(world.mining_active) and float(player.mining_visual_progress) < float(world.MINING_HIT_PROGRESS) and shown.state == "mine" and not bool(shown.presenting_impact):
+			if not _check(float(shown.sample_phase) < 0.55, "All native contact and post-hit cells are excluded from pre-hit windup"): return false
 		if samples.size() > 1 and int(sample.impact_serial) > int(samples[-2].impact_serial):
 			if not _check(bool(shown.presenting_impact) and is_equal_approx(float(shown.sample_phase), 0.55) and int(sample.target_hp) < int(samples[-2].target_hp), "Real HP change, impact serial and presented .55 share this frame"): return false
 	return true
