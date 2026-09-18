@@ -24,12 +24,24 @@ ROOT = HERE.parents[1]
 parser = argparse.ArgumentParser()
 for name in ('native-tools', 'pivot-report', 'reference-manifest', 'output'):
     parser.add_argument('--' + name, type=Path, required=True)
+parser.add_argument('--pre-hit-cancel-proof', type=Path)
 args = parser.parse_args(sys.argv[sys.argv.index('--') + 1:])
 sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
 assert not args.output.exists(), 'Use a fresh output directory'
 reference = json.loads(args.reference_manifest.read_text())
-assert sha(args.reference_manifest) == '98aef75d77e95a03d5cd13b2493f8c7f37dc83681ea2df8182de20871b6bcc91'
-assert reference['rendered'] and len(reference['frames']) == 92
+cancel = args.pre_hit_cancel_proof is not None
+reference_sha = ('71ed1f00913f21b134fe353511357a25dd48e84de27951aaafb803994c85c138' if cancel else
+                 '98aef75d77e95a03d5cd13b2493f8c7f37dc83681ea2df8182de20871b6bcc91')
+reference_count = 170 if cancel else 92
+assert sha(args.reference_manifest) == reference_sha
+assert reference['rendered'] and len(reference['frames']) == reference_count
+if cancel:
+    assert sha(args.pre_hit_cancel_proof) == '3da98249b71b0d05053ef0f30e4def8b6007b0650cd7aaf2078b89a592233f2e'
+    proof = json.loads(args.pre_hit_cancel_proof.read_text())
+    assert proof['complete'] and proof['projected_clear_at_sampled_points']
+    assert proof['reference_sha256'] == reference_sha
+    for relative, digest in proof['source_hashes'].items():
+        assert sha(ROOT / relative) == digest, relative
 assert sha(args.pivot_report) == reference['render_provenance']['pivot_report_sha256']
 for relative, digest in reference['render_provenance']['source_hashes'].items():
     assert sha(ROOT / relative) == digest, relative
@@ -62,21 +74,29 @@ m['rendered'] = False
 m['frames'] = []
 observer_hash = sha(Path(__file__))
 m['render_fingerprint'] = hashlib.sha256((sha(args.reference_manifest) + observer_hash).encode()).hexdigest()
-m['idle_extension'] = {'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+extension_key = 'pre_hit_cancel_extension' if cancel else 'idle_extension'
+extension = {'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
     'observer_sha256': observer_hash, 'reference_sha256': sha(args.reference_manifest),
     'reused_frames': [], 'new_frames': [], 'endpoint_matrix_errors': {},
-    'scope': 'Bounded Worn/up stop, rest, restart and walk-stop; not arbitrary input coverage'}
+    'scope': ('One pre-hit Worn/up stop and idle .033333 restart; not active-bridge interruption or arbitrary input coverage' if cancel else
+              'Bounded Worn/up stop, rest, restart and walk-stop; not arbitrary input coverage')}
+m[extension_key] = extension
+if cancel:
+    extension['pre_hit_cancel_proof_sha256'] = sha(args.pre_hit_cancel_proof)
 clips = {}
-for source, phase, target in [('mine', .625, 'idle'), ('walk', .625, 'idle'),
+specs = ([('mine', proof['transition']['source_phase'], 'idle'), ('idle', .12 / 3.6, 'mine')] if cancel else
+         [('mine', .625, 'idle'), ('walk', .625, 'idle'),
                               ('idle', 0., 'mine'), ('idle', .12 / 3.6, 'walk'),
-                              ('idle', .2 / 3.6, 'walk')]:
+                              ('idle', .2 / 3.6, 'walk')])
+for source, phase, target in specs:
     name = f'{source}_to_{target}-{round(phase * 1000000):06}'
     clips[name] = motion.transition(source, phase, target)
 phases = {name: list(info['phases']) for name, info in m['states'].items()}
 idle_times = json.loads((ROOT / 'assets/hero/dad/worn/manifest.json').read_text())['states']['idle']['times']
-phases['idle'] = sorted({t / 3.6 for t in idle_times} |
+phases['idle'] = sorted(set(phases['idle']) | {t / 3.6 for t in idle_times} |
                        {clip.metadata()['destination_phase'] for clip in clips.values() if clip.target_state == 'idle'})
-phases['mine'] = sorted(set(phases['mine']) | {clips['idle_to_mine-000000'].metadata()['destination_phase']})
+phases['mine'] = sorted(set(phases['mine']) |
+                       {clip.metadata()['destination_phase'] for clip in clips.values() if clip.target_state == 'mine'})
 for name, clip in clips.items():
     phases[name] = sorted({0., .25, .5, .75, 1.} |
                          {(k / 60) / clip.duration for k in range(1, math.ceil(clip.duration * 60))
@@ -94,6 +114,8 @@ for name, samples in phases.items():
         info['duration_source'] = 'directions.<direction>.transitions.<state>.duration'
     offset += len(samples)
 assert offset < 200
+if cancel:
+    assert offset == 194, 'Only the two declared twelve-cell clips may be added'
 m['motion'].update({'frames_per_direction': offset, 'idle_timeline': 'original 24 times plus exact native stop endpoints',
                     'idle_cycle_seconds': 3.6, 'full_input_coverage': False, 'production_approved': False})
 
@@ -117,7 +139,7 @@ for name, clip in clips.items():
         error = max(abs(actual[n][i][j] - expected[n][i][j]) for n in actual for i in range(4) for j in range(4))
         errors.append(error)
         assert error < 1e-5, (name, elapsed, error)
-    m['idle_extension']['endpoint_matrix_errors'][name] = errors
+    extension['endpoint_matrix_errors'][name] = errors
 
 for state, samples in phases.items():
     for index, phase in enumerate(samples):
@@ -131,7 +153,7 @@ for state, samples in phases.items():
                 assert sha(source) == frame[checksum]
                 shutil.copyfile(source, out / source.name)
             m['frames'].append(frame)
-            m['idle_extension']['reused_frames'].append({'state': state, 'phase': phase, 'path': frame['path'], 'sha256': frame['png_sha256']})
+            extension['reused_frames'].append({'state': state, 'phase': phase, 'path': frame['path'], 'sha256': frame['png_sha256']})
             continue
         pose = clips[state].sample(phase * clips[state].duration) if state in clips else motion.sample(state, phase)
         matrices = apply(pose)
@@ -159,10 +181,10 @@ for state, samples in phases.items():
             'native': native.frame_metadata(pose, motion.ground), 'contacts': pose['contacts'],
             'ground_root_pixels': pose.get('transition_metadata', {}).get('target_root_pixels', 0.)}
         m['frames'].append(frame)
-        m['idle_extension']['new_frames'].append({'state': state, 'phase': phase, 'path': png.name, 'grip_error': error})
+        extension['new_frames'].append({'state': state, 'phase': phase, 'path': png.name, 'grip_error': error})
         (out / 'render-progress.json').write_text(json.dumps(m, indent=2) + '\n')
         print('RETURN_IDLE_FRAME', state, index, phase, flush=True)
-assert len(m['idle_extension']['reused_frames']) == 92
+assert len(extension['reused_frames']) == reference_count
 assert len(m['frames']) == offset
 for relative, digest in reference['render_provenance']['source_hashes'].items():
     assert sha(ROOT / relative) == digest
@@ -178,4 +200,4 @@ with (out / 'pilot-manifest.json').open('w') as file:
     file.write(json.dumps(m, indent=2) + '\n')
     file.flush()
     os.fsync(file.fileno())
-print('RETURN_IDLE_COMPLETE', offset, len(m['idle_extension']['new_frames']), sha(out / 'pilot-manifest.json'), flush=True)
+print('RETURN_CANCEL_COMPLETE' if cancel else 'RETURN_IDLE_COMPLETE', offset, len(extension['new_frames']), sha(out / 'pilot-manifest.json'), flush=True)
