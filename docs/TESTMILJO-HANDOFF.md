@@ -1,3 +1,5 @@
+LATEST OFFLINE STUDY: [Stock-motion compatibility](premium-polish/hero-retarget-20260918/ATTEMPTS.md). Blender4.5.3 loaded the actual native models and rendered16 diagnostic images; no new Godot graphical test was needed or claimed for this rejected source study. Native originals were re-extracted to `/tmp/ever-deeper-retarget-20260918/native` after a workspace copy was observed truncated. Restore from the saved originals if paths are missing; cause of truncation is unestablished.
+
 CURRENT VERIFIED ANIMATION CHECKPOINT: [Four-case complete-return review](premium-polish/hero-return-20260918.md).
 Godot4.7.2/X11 llvmpipe and Blender4.5.3 were exercised on18September; all runs are closed. Mats approved the public-source upload; all ten reviewed files are verified on GitHub at `16bda4413cf9c5c9f98232f1df96e17e3346944e`. Scratch/runtime paths below are historical locations and must be checked or restored before a new run.
 

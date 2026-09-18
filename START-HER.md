@@ -1,3 +1,5 @@
+CURRENT STUDY: [Bounded stock-animation trial](docs/premium-polish/hero-retarget-20260918/ATTEMPTS.md). The actual UAL2 one-handed chopping transfer was rejected after two revised plans and independent image review. Original hero/gameplay preserved; no new atlas or publication. Next source must be qualified as two-handed before mapping. FPS remains paused.
+
 CURRENT SAVED SOURCE CHECKPOINT: [Complete hero return, four actual-game cases](docs/premium-polish/hero-return-20260918.md).
 Hero animation remains the priority; FPS paused. Mats explicitly approved the ten reviewed files; source/atlases were uploaded and verified at `16bda4413cf9c5c9f98232f1df96e17e3346944e` on `codex/hero-animation-dev13-20260918`. Read the linked checkpoint before older published/historical entries.
 
