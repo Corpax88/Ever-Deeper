@@ -46,6 +46,8 @@ var capture_seconds := 0.0
 var initial_serial := 0
 var startup_feedback: Dictionary = {}
 var rest_cycle := false
+var continue_framing_diagnostics := false
+var consumer_armed := false
 var asset_root := ASSETS
 var asset_hashes := ASSET_HASHES
 
@@ -71,6 +73,7 @@ func _run() -> void:
 		elif arg.begins_with("--depth="): depth = int(arg.trim_prefix("--depth="))
 		elif arg.begins_with("--replay="): replay_path = arg.trim_prefix("--replay=")
 		elif arg == "--rest-cycle": rest_cycle = true
+		elif arg == "--continue-framing-diagnostics": continue_framing_diagnostics = true
 	if not output.is_absolute_path() or not DIRECTIONS.has(direction_name) or source_sha.length() != 40 or mode not in ["geometry", "candidate", "baseline"] or (mode != "geometry" and DisplayServer.get_name() == "headless"):
 		print("NATIVE_INGAME_USAGE --mode=geometry|candidate|baseline --direction=right|up --source-sha=<40hex> --output=<absolute> [--depth=1] [--replay=<candidate report>]; visual modes require a rendered display")
 		quit(2)
@@ -159,9 +162,11 @@ func _run() -> void:
 		if not await _settle_feedback():
 			_finish()
 			return
-		if mode == "candidate" and not _check(player.visual.arm(), "Native consumer arms from real supported idle"):
-			_finish()
-			return
+		if mode == "candidate":
+			consumer_armed = player.visual.arm()
+			if not _check(consumer_armed, "Native consumer arms from real supported idle"):
+				_finish()
+				return
 		await RenderingServer.frame_post_draw
 		capture_origin_tick = Engine.get_physics_frames()
 		capture_origin_process = Engine.get_process_frames()
@@ -326,9 +331,11 @@ func _capture_frame(label: String) -> bool:
 	if not _check(image.save_png(output.path_join(name)) == OK, "Original frame saved: " + name): return false
 	captures.append({"path": name, "sample": samples.size() - 1, "sha256": FileAccess.get_sha256(output.path_join(name)), "drawn_frame": Engine.get_frames_drawn(), "stage": label})
 	_append_jsonline("frames.jsonl", {"sample": sample, "capture": captures.back()})
-	# Save the actual failing frame before stopping on a layout gate.
+	# Preserve every layout failure. Diagnostic continuation only records what
+	# follows; it cannot turn a failed capture into a pass or a baseline source.
 	if mode == "candidate" and not _check(String(player.visual.fatal_error).is_empty(), "Consumer accepts actual normal state packet", player.visual.fatal_error): return false
-	if not _check(bool(framing.passed), "Actual hero/tool and resource bounds clear viewport and visible HUD", framing): return false
+	var framing_passed := _check(bool(framing.passed), "Actual hero/tool and resource bounds clear viewport and visible HUD", framing)
+	if not framing_passed and not continue_framing_diagnostics: return false
 	if mode == "candidate":
 		var shown: Dictionary = sample.visual
 		if not _check(not shown.is_empty() and bool(shown.actually_presented) and int(shown.drawn_frame) == Engine.get_frames_drawn(), "Native source observation belongs to the actual captured draw"): return false
@@ -555,6 +562,6 @@ func _finish() -> void:
 		if mode == "candidate" and is_instance_valid(player): player.visual.disarm()
 		main._set_mine_held(false)
 		main._on_joystick_movement(Vector2.ZERO)
-	_write_json("native-ingame.json", {"schema": 1, "passed": failures.is_empty(), "mode": mode, "source_sha": source_sha, "production_runtime_source": BASE_SOURCE, "fixture_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/capture.gd"), "consumer_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/pilot_visual.gd"), "consumer_installed": mode != "baseline", "consumer_armed": mode == "candidate", "asset_hashes": asset_hashes, "asset_root": asset_root, "rest_cycle": rest_cycle, "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "rendered": not captures.is_empty(), "viewport": [root.size.x, root.size.y], "content_scale_size": [root.content_scale_size.x, root.content_scale_size.y], "direction": direction_name, "seed": WORLD_SEED, "depth": depth, "route": route, "route_search": route_search, "startup_feedback": startup_feedback, "checks": checks, "failures": failures, "events": events, "samples": samples, "captures": captures, "transitions": player.visual.transitions if mode == "candidate" and is_instance_valid(player) else [], "replay_source_sha": replay.get("source_sha", ""), "replay_binding_reason": "Same actual DEV13-based source, consumer and bank checkpoint", "replay_sha256": FileAccess.get_sha256(replay_path) if not replay_path.is_empty() else "", "elapsed_wall_ms": Time.get_ticks_msec() - started_wall_ms, "manual_world_ticks": false, "manual_pose_playback": false, "visual_acceptance": false, "limits": "Headless geometry loads the consumer unarmed and is not visual evidence. Rendered cases, when present, are controlled fixed-step in-game input, not unrestricted live input, production adoption, all-direction/tool coverage or FPS evidence. Canonical endpoint quantization remains visible. Offset release is covered only in the rendered route; arbitrary interruptions are not covered."})
+	_write_json("native-ingame.json", {"schema": 1, "passed": failures.is_empty(), "mode": mode, "source_sha": source_sha, "production_runtime_source": BASE_SOURCE, "fixture_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/capture.gd"), "consumer_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/pilot_visual.gd"), "consumer_installed": mode != "baseline", "consumer_armed": consumer_armed, "continue_framing_diagnostics": continue_framing_diagnostics, "asset_hashes": asset_hashes, "asset_root": asset_root, "rest_cycle": rest_cycle, "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "rendered": not captures.is_empty(), "viewport": [root.size.x, root.size.y], "content_scale_size": [root.content_scale_size.x, root.content_scale_size.y], "direction": direction_name, "seed": WORLD_SEED, "depth": depth, "route": route, "route_search": route_search, "startup_feedback": startup_feedback, "checks": checks, "failures": failures, "events": events, "samples": samples, "captures": captures, "transitions": player.visual.transitions if mode == "candidate" and is_instance_valid(player) else [], "replay_source_sha": replay.get("source_sha", ""), "replay_binding_reason": "Same actual DEV13-based source, consumer and bank checkpoint", "replay_sha256": FileAccess.get_sha256(replay_path) if not replay_path.is_empty() else "", "elapsed_wall_ms": Time.get_ticks_msec() - started_wall_ms, "manual_world_ticks": false, "manual_pose_playback": false, "visual_acceptance": false, "limits": "Headless geometry loads the consumer unarmed and is not visual evidence. Rendered cases, when present, are controlled fixed-step in-game input, not unrestricted live input, production adoption, all-direction/tool coverage or FPS evidence. Canonical endpoint quantization remains visible. Offset release is covered only in the rendered route; arbitrary interruptions are not covered."})
 	print("NATIVE_INGAME_COMPLETE mode=", mode, " direction=", direction_name, " checks=", checks.size(), " failures=", failures.size())
 	quit(0 if failures.is_empty() else 1)
