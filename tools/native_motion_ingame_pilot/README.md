@@ -260,3 +260,16 @@ contact. Its 75 native samples and four isolated renders use frozen draw49
 ore projection. This does not exercise actual late-cancel input, change the
 motion, add a runtime bank, or approve publication. Partial diagnostic rows
 and the current stage/time are retained separately if setup or sampling fails.
+
+That diagnostic closed on `3ec3554`: 75 rig samples and four originals, exit 0.
+Geometry and endpoints pass, but the continuing source carries the cap into
+the frozen ore silhouette at 23 sampled times (3.333–38.333 ms), including
+270/270 points at the next nominal draw. The unchanged late stop is rejected
+for adoption; this is not an actual late-cancel gameplay capture.
+
+`shown_pose_cancel_transition.py` and `probe_shown_pose_cancel.py` define one
+separate comparison only for that displayed .5238095238 mine-to-idle source.
+They hold its complete pose while the original idle clock and 120 ms blend
+advance. This is explicitly C0: incoming source velocity stops on release.
+The full blend, original endpoints and actual rig must be checked. Existing
+early cancellation, restart, canonical mining and runtime assets are unchanged.
