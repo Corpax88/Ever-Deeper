@@ -201,6 +201,15 @@ for label, t in [('restart', 0.), ('old-stop-end', .07), ('new-mine-end', .12)]:
     continuity.append(row)
 report['rig_continuity'] = continuity
 report['continuity_limit'] = 'Finite-difference matrix observations at two steps; no new visual pass threshold or rendered smoothness claim.'
+old_endpoint = matrices_at(previous.sample(previous.duration))
+idle_endpoint = matrices_at(pm.translate_pose(
+    motion.sample('idle', previous.phase_at('idle', previous.target_phase, previous.duration)),
+    previous.destination_offset))
+report['old_source_branch_endpoint'] = {
+    'old_bridge_rig': old_endpoint, 'continued_idle_rig': idle_endpoint,
+    'max_matrix_component_difference': max(abs(old_endpoint[n][i][j] - idle_endpoint[n][i][j])
+        for n in old_endpoint for i in range(4) for j in range(4)),
+    'note': 'Direct independent branch expressions; the internal full-blend left[0]/right[0] observation above is the same expression.'}
 report['max_sole_displacement'] = max((Vector(r['native']['feet'][side]['sole_point']) - Vector(rows[0]['native']['feet'][side]['sole_point'])).length for r in rows for side in native.SIDES)
 assert report['max_sole_displacement'] < 1e-5
 for label, t in [('source', 0.), ('middle', .05), ('old-stop-end', .07), ('mine-end', clip.duration)]:
