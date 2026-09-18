@@ -163,5 +163,34 @@ occur immediately. No pulse amplitude, art, rig pose, input or save data changes
 
 `--contact-frame-order` observes the current ore scale and draw counter on each
 captured frame, requiring that exact order. Reports also bind the actual world
-script hash. This change still needs its new rendered captures, independent
-review and current source gates; it is not a release or full animation approval.
+script hash. The corrected observer at `b365313` completed both actual routes:
+94 cancellation frames and 89 active-restart frames, both exit 0. All mechanical
+samples, selected native poses, hero bounds, input events and setup/final world
+match their older closed routes. Actual contact retained the preceding ore
+scale, with .91 compression on the following draw in both 30 Hz parities.
+Recovery was released a draw later; the pulse owner lerped on its normal cadence.
+The same world bytes passed all 15 core QA suites. The existing protected
+`player_visual.gd` invariant mismatch remains recorded.
+
+Independent review confirms this narrow synchronization result, not production
+acceptance. Actual cap-alpha samples now overlap the hit silhouette (270/270
+and 243/270), while early restart overlap remains (216/270 and 270/270 on the
+two affected new pre-hit draws). These are point-sampled 2D observations, not
+unoccluded contact or collision proof. No animation bank or build is adopted.
+
+### Single shoulder-load proposal
+
+`shoulder_load_motion.py` and `probe_shoulder_load.py` define one new study,
+not a replacement bank. The closed motion rotates about 38.54 degrees in 3D
+from preparation to contact but only 3.95 degrees in the captured view. The
+proposal pulls the .40 grip midpoint back one original .145 grip span, raises
+it half a span, and leans the shaft 45 degrees away from the target. Both hands
+remain attached to the same rigid tool and both arms are solved from their
+unchanged shoulders. Start, .55 contact/hold and existing recovery are exact
+controls; camera, art, torso/head, roots, feet and clocks are unchanged.
+
+The probe checks the real rig densely and renders only seven original stills
+if geometry passes. Its ore projection uses one frozen actual hit draw and is
+explicitly counterfactual. The proposal has not yet been run or approved. Its
+changed windup would require new entry/cancellation/restart evidence before
+integration; old bank proofs cannot approve those changed trajectories.
