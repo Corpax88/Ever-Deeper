@@ -128,9 +128,6 @@ func _process(delta: float) -> void:
 		return
 	var wanted := "mine" if mining else "walk" if moving else "idle"
 	if wanted != _state:
-		if not _bridge.is_empty():
-			_fail("Input interrupted an active bridge; no authored coverage")
-			return
 		if not _start_bridge(wanted): return
 	_state_elapsed += delta
 	var state := _state
@@ -165,8 +162,8 @@ func _process(delta: float) -> void:
 
 
 func _start_bridge(wanted: String) -> bool:
-	if _last_presented.is_empty() or bool(_last_presented.is_bridge):
-		_fail("Bridge source was not a presented canonical native sample")
+	if _last_presented.is_empty() or not bool(_last_presented.get("actually_presented", false)):
+		_fail("Bridge source was not an actually presented native sample")
 		return false
 	var source_state: String = _last_presented.state
 	var source_phase: float = float(_last_presented.sample_phase)
@@ -176,8 +173,17 @@ func _start_bridge(wanted: String) -> bool:
 		_fail("No exact authored bridge for displayed source: " + name)
 		return false
 	var info: Dictionary = bank[name]
-	if source_state != _state or not is_equal_approx(float(info.source_phase), source_phase):
+	var interrupted := bool(_last_presented.is_bridge)
+	if bool(info.get("source_is_bridge", false)) != interrupted or String(info.target_state) != wanted or String(info.source_state) != source_state or not is_equal_approx(float(info.source_phase), source_phase):
 		_fail("Exact source state/phase mismatch")
+		return false
+	if interrupted:
+		if _bridge.is_empty() or String(_bridge.name) != source_state or String(info.get("source_logical_state", "")) != _state or String(_last_presented.logical_state) != _state or not is_equal_approx(float(info.get("source_bridge_duration", -1.0)), float(_bridge.duration)) or not is_equal_approx(float(info.get("source_elapsed", -1.0)), source_phase * float(_bridge.duration)):
+			_fail("No exact authored continuation for the active displayed bridge")
+			return false
+		transitions.append({"event": "bridge_interrupted", "name": _bridge.name, "replacement": name, "source": _last_presented.duplicate(true)})
+	elif source_state != _state or not _bridge.is_empty():
+		_fail("Canonical bridge source does not match the current native state")
 		return false
 	_bridge = info.duplicate(true)
 	_bridge["name"] = name

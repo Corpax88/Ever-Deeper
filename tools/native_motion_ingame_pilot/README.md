@@ -118,3 +118,28 @@ endpoint/grip checks do not approve appearance. Encoded60fps and fixed60Hz
 simulation are not measured game FPS. Full direction/tool/target/cooldown and
 rapid-interruption coverage, hand/tool readability, final mobile package review
 and DEV release approval remain open. Keep rejected runs and independent reviews.
+### Restart while a stop bridge is still active
+
+`--bridge-restart-cycle` is a separate diagnostic route using `worn-bridge-restart`.
+It resumes ordinary mining input immediately after the actually presented
+`mine_to_idle-392857` cell at 50 ms, before canonical idle. Only that exact
+bridge source is authored; other unsupported sources still fail explicitly.
+The native source continues its old stop, then its advancing idle, while the
+target follows the new mechanical mining clock. The last shown offset is
+inherited once. Five starts must produce four canonical handoffs and one
+explicit interruption; the cancelled windup must cause no damage.
+
+`probe_bridge_restart.py` actually completed on `6fc9b2f`, with four native
+originals and 73 geometry samples. `extend_return_idle_bank.py` then completed
+on `0298578`: 194 existing cells retained byte for byte, 12 new cells, two pages;
+the original beauty/cloth page is unchanged. Endpoint matrix errors are below
+4.5e-7 and measured sole drift is 1.5e-8. Finite-difference velocity observations
+do not establish numerical convergence or visual smoothness.
+
+The frozen ore projection remains a recorded failure: alpha overlap starts at
+83.333 ms and reaches all 270 sampled cap points at 98.333–120 ms. At 120 ms the
+source weight is zero and the pose is unchanged canonical mine .231092. This
+does not isolate an interruption defect or prove physical contact. The bank
+preserves `projected_clear_at_sampled_points=false` and `contact_approved=false`.
+No contact, unrestricted input, FPS, production, or release approval follows
+from this diagnostic route.
