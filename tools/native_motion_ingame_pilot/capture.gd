@@ -92,6 +92,7 @@ var cross_shoulder_load := false
 var late_cancel_cycle := false
 var complete_return := false
 var view_angle_probe := false
+var loop_flow_probe := false
 var view_angle_cells: Array = []
 var continue_framing_diagnostics := false
 var consumer_armed := false
@@ -127,6 +128,7 @@ func _run() -> void:
 		elif arg == "--cross-shoulder-load": cross_shoulder_load = true
 		elif arg == "--complete-return": complete_return = true
 		elif arg == "--view-angle-probe": view_angle_probe = true
+		elif arg == "--loop-flow-probe": loop_flow_probe = true
 		elif arg == "--late-cancel-cycle":
 			late_cancel_cycle = true
 			cancel_cycle = true
@@ -163,6 +165,17 @@ func _run() -> void:
 		asset_root = "res://tools/native_motion_ingame_pilot/assets/worn-angle-25/"
 		var identity: Variant = JSON.parse_string(FileAccess.get_file_as_string(asset_root + "identity.json"))
 		if not _check(identity is Dictionary and int(identity.get("angle_degrees", 0)) == 25 and identity.get("rendered_cells", []).size() == 76, "Angle probe identity has the exact 76 rendered cells"):
+			_finish()
+			return
+		asset_hashes = identity.asset_hashes
+		view_angle_cells = identity.rendered_cells
+	if loop_flow_probe:
+		if not _check(complete_return and not view_angle_probe and mode == "candidate" and direction_name == "up" and not rest_cycle and not cancel_cycle and not bridge_restart_cycle, "Loop flow probe is restricted to the closed up/loop route"):
+			_finish()
+			return
+		asset_root = "res://tools/native_motion_ingame_pilot/assets/worn-loop-flow/"
+		var identity: Variant = JSON.parse_string(FileAccess.get_file_as_string(asset_root + "identity.json"))
+		if not _check(identity is Dictionary and identity.get("loop_flow_study", false) and int(identity.get("angle_degrees", -1)) == 0 and identity.get("rendered_cells", []).size() == 76, "Loop flow identity has the exact 76 original-view cells"):
 			_finish()
 			return
 		asset_hashes = identity.asset_hashes
@@ -483,7 +496,7 @@ func _capture_frame(label: String) -> bool:
 	if mode == "candidate":
 		var shown: Dictionary = sample.visual
 		if not _check(not shown.is_empty() and bool(shown.actually_presented) and int(shown.drawn_frame) == Engine.get_frames_drawn(), "Native source observation belongs to the actual captured draw"): return false
-		if view_angle_probe and not _check(view_angle_cells.has("%s:%d" % [shown.state, int(shown.local_frame)]), "Angle probe presents a newly rendered cell", shown): return false
+		if (view_angle_probe or loop_flow_probe) and not _check(view_angle_cells.has("%s:%d" % [shown.state, int(shown.local_frame)]), "Closed probe presents an authorized rendered cell", shown): return false
 		if bool(world.mining_active) and float(player.mining_visual_progress) < float(world.MINING_HIT_PROGRESS) and shown.state == "mine" and not bool(shown.presenting_impact):
 			if not _check(float(shown.sample_phase) < 0.55, "All native contact and post-hit cells are excluded from pre-hit windup"): return false
 		if samples.size() > 1 and int(sample.impact_serial) > int(samples[-2].impact_serial):

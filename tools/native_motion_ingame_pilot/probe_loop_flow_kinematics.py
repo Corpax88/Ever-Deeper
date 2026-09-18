@@ -18,6 +18,8 @@ p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--pivot', type=Path, required=True)
 p.add_argument('--recorded', type=Path, required=True)
 p.add_argument('--output', type=Path, required=True)
+p.add_argument('--round-start', type=float, default=.85)
+p.add_argument('--round-end', type=float, default=.15)
 a = p.parse_args(sys.argv[sys.argv.index('--')+1:])
 assert not a.output.exists()
 sha = lambda path: hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -25,7 +27,8 @@ assert sha(a.pivot) == 'cd5f57f327395a2ee4cfc81716a5e2fe8ef8fe93ec45ec13203c94cc
 surface = json.loads((HERE/'working-surface-selection.json').read_text())
 hinge = json.loads((HERE/'upper-body-hinge-selection.json').read_text())
 pivot = json.loads(a.pivot.read_text())
-motions = {'baseline': CompleteReturnMotion(surface, hinge, pivot), 'candidate': LoopFlowMotion(surface, hinge, pivot)}
+motions = {'baseline': CompleteReturnMotion(surface, hinge, pivot),
+           'candidate': LoopFlowMotion(surface, hinge, pivot, a.round_start, a.round_end)}
 report = {'complete':False, 'rendered':False, 'visual_accepted':False,
           'scope':'Worn/up kinematics only; no actual mesh, collision or temporal visual acceptance',
           'selection':motions['candidate'].selection(), 'inputs':{str(a.pivot):sha(a.pivot),str(a.recorded):sha(a.recorded)},
@@ -58,7 +61,7 @@ def compare(q):
     reach = max((wrist-shoulder).length for shoulder,elbow,wrist in poses['candidate']['arms'].values())
     grip_span = (poses['candidate']['grips']['R']-poses['candidate']['grips']['L']).length
     assert protected < 1e-6 and reach < .70999 and abs(grip_span-.145)<1e-6
-    if .15 <= q%1. <= .85:
+    if a.round_end <= q%1. <= a.round_start:
         assert max((points['baseline'][k]-points['candidate'][k]).length for k in points['baseline']) == 0.
     return {'phase':q,'maximum_reach':reach,'protected_error':protected,
             'points':{k:{n:list(v) for n,v in values.items()} for k,values in points.items()},

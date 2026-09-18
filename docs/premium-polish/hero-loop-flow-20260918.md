@@ -59,5 +59,39 @@ both sides but described walking down/away, while the actual trace travels up.
 Treat that score and its motion-cause guesses cautiously; direction readability
 and dense temporal observation are not established by its answer.
 
-Candidate actual gameplay and paired video criticism are still pending. No visual
-acceptance, 9/10 claim, full-input coverage or publication is recorded here.
+## Trial 01 result and revised plan
+
+Actual gameplay passed: 119 captures, 76 authorized cells, identical input,
+mechanics and setup/final world; hits at frames50/90; contact precedes squash.
+Native and game evidence is saved as
+`libfile_b1133fdc8be481918b9f7167677fb1fa` (270535471-byte ZIP).
+Normal video: `libfile_70deacf7203c8191be90097aa221cbc1`; identical-frame 24x video:
+`libfile_4b7c0a6a5ad88191afa374a4511c3b58`.
+
+Gemini Pro received both new MP4s with neutral A/B labels and no statement of
+which should improve. It reported no visible difference and scored both 5/10.
+Its claim that every pose is identical is factually too strong: changed native
+images and actual selected cells are proven. The useful result is that it did
+not perceive a benefit. The subpixel change was too small for this review route.
+The critic again described a stop near26–30s in the slowed sequence. Its suggested
+independent tool overshoot was not applied because both hands must stay attached.
+
+The source/math critic also identified a separate camera regression: retaining
+the original ground vector under the +25-degree camera projects walking to
+[+.73445,-.90631] instead of [0,-1], about39.02 degrees off the actual up direction.
+That candidate camera is therefore rejected for adoption. Use the original view
+for both sides of the next comparison, preserving valid feet and contact framing.
+
+Trial02 changes only the rounded return window to native [.70→1→.30], still
+outside the protected .40→.625 load/contact/hold interval. Cheap preflight passed
+401 samples with unchanged body/legs and maximum reach .703621. It produces
+11.129px maximum cap-path change in the original160px view, versus the first
+trial's subpixel change. Require visible continuity at normal speed without a
+new hitch, floating tool, grip error or contact regression before further work.
+The dedicated --loop-flow-probe guard permits only the same closed original-view
+route and records the exact bank identity. No production runtime has changed.
+
+No visual acceptance, 9/10 claim, full-input coverage or game publication is
+recorded here. Trial01 local test commit0b1706c and remote commitbdcad8b have
+the identical treefd839378e0b8e6e7bd477e7497ef53a493ccca22; the connector supplied
+the remote commit because the shell has read access but no push credentials.

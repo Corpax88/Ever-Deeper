@@ -24,6 +24,9 @@ HERE = Path(__file__).resolve().parent
 p = argparse.ArgumentParser(description=__doc__)
 for name in ('native-tools', 'pivot', 'reference', 'pose-report', 'recorded', 'output'):
     p.add_argument('--'+name, type=Path, required=True)
+p.add_argument('--round-start',type=float,default=.85)
+p.add_argument('--round-end',type=float,default=.15)
+p.add_argument('--angle-degrees',type=int,choices=(0,25),default=25)
 a = p.parse_args(sys.argv[sys.argv.index('--')+1:])
 assert not a.output.exists(), 'Use a fresh output directory'
 a.output.mkdir(parents=True)
@@ -32,7 +35,7 @@ out.mkdir()
 sha = lambda path: hashlib.sha256(Path(path).read_bytes()).hexdigest()
 stage = 'binding'
 report = {'complete':False, 'passed_geometry':False, 'rendered':False,
-          'visual_accepted':False, 'production_accepted':False, 'angle_degrees':25,
+          'visual_accepted':False, 'production_accepted':False, 'angle_degrees':a.angle_degrees,
           'frame_checks':[], 'transitions':{}, 'rendered_cells':[],
           'changed_rendered_cells':[], 'reused_cells':[], 'retained_unusable_cells':[]}
 
@@ -82,11 +85,18 @@ try:
     reference = json.loads(a.reference.read_text())
     saved = json.loads(a.pose_report.read_text())
     recorded = json.loads(a.recorded.read_text())
-    assert reference['view_angle_study']['complete'] and reference['view_angle_study']['angle_degrees'] == 25
-    assert recorded['passed'] and recorded['view_angle_probe'] and recorded['complete_return']
+    if a.angle_degrees == 25:
+        assert reference['view_angle_study']['complete'] and reference['view_angle_study']['angle_degrees'] == 25
+        assert recorded['view_angle_probe']
+    else:
+        assert sha(a.reference) == 'b7f75d7a7f67d5f8338b70dc055e271b75ae3af59fa17b54b9ee4fb4141c7e46'
+        assert reference['complete_return_rebuild']['result_sha256'] == sha(a.pose_report)
+        assert not recorded.get('view_angle_probe',False)
+    assert recorded['passed'] and recorded['complete_return']
     selected = {(r['visual']['state'],r['visual']['local_frame']) for r in recorded['samples']}
     assert len(selected) == 76
-    assert selected == {tuple((s.rsplit(':',1)[0],int(s.rsplit(':',1)[1]))) for s in reference['view_angle_study']['rendered_cells']}
+    if a.angle_degrees == 25:
+        assert selected == {tuple((s.rsplit(':',1)[0],int(s.rsplit(':',1)[1]))) for s in reference['view_angle_study']['rendered_cells']}
     assert sha(bpy.data.filepath) == saved['model_sha256']
     assert sha(a.native_tools/'worn/hero.blend') == saved['gear_sha256']
     sources = dict(saved['source_hashes'])
@@ -111,12 +121,12 @@ try:
     surface = json.loads((HERE/'working-surface-selection.json').read_text())
     hinge = json.loads((HERE/'upper-body-hinge-selection.json').read_text())
     pivot = json.loads(a.pivot.read_text())
-    old, motion = CompleteReturnMotion(surface,hinge,pivot),LoopFlowMotion(surface,hinge,pivot)
+    old, motion = CompleteReturnMotion(surface,hinge,pivot),LoopFlowMotion(surface,hinge,pivot,a.round_start,a.round_end)
     report['selection'] = motion.selection()
     env['view']('up',(6,6))
     scene,rig,camera = env['s'],env['r'],env['c']
     target = Vector((0.,-.10,.98))
-    camera.location = target+Matrix.Rotation(math.radians(25),3,'Z')@(camera.location-target)
+    camera.location = target+Matrix.Rotation(math.radians(a.angle_degrees),3,'Z')@(camera.location-target)
     camera.rotation_euler = (target-camera.location).to_track_quat('-Z','Y').to_euler()
     bpy.context.view_layer.update()
     anchor = world_to_camera_view(scene,camera,Vector())
@@ -199,8 +209,10 @@ try:
     manifest['historical_render_fingerprint'] = manifest['render_fingerprint']
     manifest['render_fingerprint'] = sha(a.output/'report.json')
     manifest['loop_flow_study'] = {'report_sha256':sha(a.output/'report.json'),'selection':motion.selection(),
+                                  'angle_degrees':a.angle_degrees,'rendered_cells':report['rendered_cells'],
                                   'visual_accepted':False,'production_accepted':False}
-    manifest['view_angle_study']['rendered_cells'] = report['rendered_cells']
+    if a.angle_degrees == 25:
+        manifest['view_angle_study']['rendered_cells'] = report['rendered_cells']
     manifest['render_provenance'] = report['source_hashes']
     manifest['motion']['full_input_coverage'] = False
     (out/'pilot-manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')

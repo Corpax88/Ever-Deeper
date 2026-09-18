@@ -48,16 +48,18 @@ def hermite(a, b, va, vb, u, duration):
 
 
 class LoopFlowMotion(CompleteReturnMotion):
-    def __init__(self, surface, hinge, pivot_report):
+    def __init__(self, surface, hinge, pivot_report, round_start=ROUND_START, round_end=ROUND_END):
         super().__init__(surface, hinge, pivot_report)
-        self.round_start_progress = game_progress(ROUND_START)
-        self.round_end_progress = game_progress(ROUND_END)
+        assert .625 < round_start < 1. and 0. < round_end < .40
+        self.round_start, self.round_end = round_start, round_end
+        self.round_start_progress = game_progress(round_start)
+        self.round_end_progress = game_progress(round_end)
         self.round_duration = (1. - self.round_start_progress + self.round_end_progress) * CYCLE_SECONDS
         self.chart = self.rest_rotation.copy()
         self.round_rears, self.round_logs = [], []
         self.round_rear_rates, self.round_log_rates = [], []
         h = .0001
-        for phase in (ROUND_START, ROUND_END):
+        for phase in (round_start, round_end):
             progress = game_progress(phase)
             values = [self._chart_sample(native_phase(progress + seconds/CYCLE_SECONDS))
                       for seconds in (-h, 0., h)]
@@ -74,7 +76,7 @@ class LoopFlowMotion(CompleteReturnMotion):
     def sample(self, state, phase, speed=340.):
         original = super().sample(state, phase, speed)
         q = phase % 1.
-        if state != 'mine' or ROUND_END <= q <= ROUND_START:
+        if state != 'mine' or self.round_end <= q <= self.round_start:
             return original
         elapsed = ((game_progress(q) - self.round_start_progress) % 1.) * CYCLE_SECONDS
         u = max(0., min(1., elapsed/self.round_duration))
@@ -85,10 +87,11 @@ class LoopFlowMotion(CompleteReturnMotion):
 
     def selection(self):
         out = super().selection()
-        out.update(proposal='one-local-rest-corner-rounding', round_native_phases=[ROUND_START, ROUND_END],
+        out.update(proposal='one-local-rest-corner-rounding', round_native_phases=[self.round_start, self.round_end],
                    round_duration_seconds=self.round_duration,
                    round_rule='Cubic Hermite in game seconds; fixed quaternion-log chart',
                    rest_rule='Loop bypasses exact idle rest; entry and stop bridges require fresh checks',
-                   changed_ranges='(.85,1) and [0,.15)', unchanged_range='[.15,.85]',
+                   changed_ranges=f'({self.round_start},1) and [0,{self.round_end})',
+                   unchanged_range=f'[{self.round_end},{self.round_start}]',
                    visual_accepted=False, production_accepted=False)
         return out
