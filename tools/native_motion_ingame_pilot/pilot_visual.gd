@@ -11,6 +11,7 @@ const MINE_SECONDS := 0.68
 const HIT_PROGRESS := 0.42
 const OUTFIT_COLORS := {"miner": Color("254833"), "expedition": Color("226d8a"), "archivist": Color("676653"), "starweave": Color("67458a"), "deepheart": Color("8f3435")}
 var selected_direction := "up"
+var bank_root := ROOT
 var direction_name := ""
 var moving := false
 var mining := false
@@ -32,6 +33,7 @@ var _page_key := ""
 var _released := false
 var _armed := false
 var _state := "idle"
+var _state_elapsed := 0.0
 var _bridge: Dictionary = {}
 var _offset := Vector2.ZERO
 var _incoming_offset := Vector2.ZERO
@@ -54,7 +56,7 @@ var _last_request_process_frame := 0
 func _ready() -> void:
 	# World/controller state packets settle before one presentation decision.
 	process_priority = 1000
-	_manifest = JSON.parse_string(FileAccess.get_file_as_string(ROOT + "manifest.json"))
+	_manifest = JSON.parse_string(FileAccess.get_file_as_string(bank_root + "manifest.json"))
 	_sprite = Sprite2D.new()
 	_sprite.centered = false
 	_sprite.region_enabled = true
@@ -77,6 +79,7 @@ func arm() -> bool:
 		return false
 	_armed = true
 	_state = "idle"
+	_state_elapsed = 0.0
 	_distance = 0.0
 	_offset = Vector2.ZERO
 	_offset_release = {}
@@ -109,7 +112,7 @@ func set_state(direction: String, _frame: int, walking: bool, active: bool = fal
 	strike_phase = hit_phase
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if not _armed or _released or not fatal_error.is_empty() or not is_visible_in_tree(): return
 	if direction_name != selected_direction:
 		_fail("Direction outside this one-view case: " + direction_name)
@@ -129,12 +132,13 @@ func _process(_delta: float) -> void:
 			_fail("Input interrupted an active bridge; no authored coverage")
 			return
 		if not _start_bridge(wanted): return
+	_state_elapsed += delta
 	var state := _state
 	var phase := _canonical_phase()
 	var elapsed := 0.0
 	var crossing: Dictionary = {}
 	if not _bridge.is_empty():
-		elapsed = mining_progress * MINE_SECONDS if _state == "mine" else (_distance - _bridge_origin_distance) / SPEED
+		elapsed = mining_progress * MINE_SECONDS if _state == "mine" else (_distance - _bridge_origin_distance) / SPEED if _state == "walk" else _state_elapsed
 		if elapsed < float(_bridge.duration):
 			state = String(_bridge.name)
 			phase = clampf(elapsed / float(_bridge.duration), 0.0, 1.0)
@@ -178,6 +182,7 @@ func _start_bridge(wanted: String) -> bool:
 	_bridge = info.duplicate(true)
 	_bridge["name"] = name
 	_state = wanted
+	_state_elapsed = 0.0
 	# A subsequent bridge inherits the last actual draw, including any partial
 	# airborne release. Never recompute a future offset for its source pose.
 	var shown_offset: Array = _last_presented.retained_offset
@@ -197,6 +202,8 @@ func _canonical_phase() -> float:
 	if _state == "mine":
 		if mining_progress <= HIT_PROGRESS: return mining_progress / HIT_PROGRESS * 0.55
 		return 0.55 + (mining_progress - HIT_PROGRESS) / (1.0 - HIT_PROGRESS) * 0.45
+	if _state == "idle" and int(_manifest.states.idle.count) > 1:
+		return fposmod(_state_elapsed / float(_manifest.states.idle.duration), 1.0)
 	return 0.0
 
 
@@ -253,7 +260,7 @@ func _draw_sample(state: String, phase: float, elapsed: float, impact: bool) -> 
 		if state == "mine" and not impact and mining_progress < HIT_PROGRESS and float(info.phases[index]) >= 0.55:
 			continue
 		var difference := absf(float(info.phases[index]) - phase)
-		if state in ["walk", "mine"]: difference = minf(difference, 1.0 - difference)
+		if state in ["idle", "walk", "mine"]: difference = minf(difference, 1.0 - difference)
 		if difference < best:
 			best = difference
 			local = index
@@ -276,6 +283,7 @@ func _draw_sample(state: String, phase: float, elapsed: float, impact: bool) -> 
 	_last_selected = {"state": state, "logical_state": _state, "direction": selected_direction, "requested_phase": phase, "sample_phase": float(info.phases[local]), "local_frame": local, "atlas_frame": index, "page": int(info.page), "region": [_sprite.region_rect.position.x, _sprite.region_rect.position.y, cell.x, cell.y], "is_bridge": not _bridge.is_empty(), "bridge_elapsed": elapsed, "retained_offset": _array(placement), "sprite_position": _array(_sprite.position), "ground_anchor": anchor, "total_distance": _distance, "actual_speed": _last_motion_speed, "motion_physics_frame": _last_motion_tick, "mining_progress": mining_progress, "impact_serial": _impact_serial, "presenting_impact": impact, "coalesced_request_count": _pending_requests, "last_request_process_frame": _last_request_process_frame, "selection_process_frame": Engine.get_process_frames(), "selection_physics_frame": Engine.get_physics_frames(), "actually_presented": false}
 	_last_selected["offset_release"] = _offset_release.duplicate(true)
 	_last_selected["unwrapped_walk_phase"] = _unwrapped_walk_phase()
+	_last_selected["state_elapsed"] = _state_elapsed
 
 
 func _load_page(page: int) -> bool:
@@ -287,8 +295,8 @@ func _load_page(page: int) -> bool:
 		_fail("Unknown native atlas page")
 		return false
 	var spec: Dictionary = pages[page]
-	var beauty := load(ROOT + String(spec.texture)) as Texture2D
-	var cloth := load(ROOT + String(spec.cloth)) as Texture2D
+	var beauty := load(bank_root + String(spec.texture)) as Texture2D
+	var cloth := load(bank_root + String(spec.cloth)) as Texture2D
 	if beauty == null or cloth == null:
 		_fail("Native beauty/cloth page failed to load")
 		return false
