@@ -93,6 +93,7 @@ var late_cancel_cycle := false
 var complete_return := false
 var view_angle_probe := false
 var loop_flow_probe := false
+var grounded_entry_probe := false
 var view_angle_cells: Array = []
 var continue_framing_diagnostics := false
 var consumer_armed := false
@@ -129,11 +130,12 @@ func _run() -> void:
 		elif arg == "--complete-return": complete_return = true
 		elif arg == "--view-angle-probe": view_angle_probe = true
 		elif arg == "--loop-flow-probe": loop_flow_probe = true
+		elif arg == "--grounded-entry-probe": grounded_entry_probe = true
 		elif arg == "--late-cancel-cycle":
 			late_cancel_cycle = true
 			cancel_cycle = true
 		elif arg == "--continue-framing-diagnostics": continue_framing_diagnostics = true
-	if startup_wall_seconds < 1 or startup_wall_seconds > 900 or not output.is_absolute_path() or not DIRECTIONS.has(direction_name) or source_sha.length() != 40 or mode not in ["geometry", "candidate", "baseline"] or (mode != "geometry" and DisplayServer.get_name() == "headless") or (int(rest_cycle) + int(cancel_cycle) + int(bridge_restart_cycle) > 1):
+	if (grounded_entry_probe and not loop_flow_probe) or startup_wall_seconds < 1 or startup_wall_seconds > 900 or not output.is_absolute_path() or not DIRECTIONS.has(direction_name) or source_sha.length() != 40 or mode not in ["geometry", "candidate", "baseline"] or (mode != "geometry" and DisplayServer.get_name() == "headless") or (int(rest_cycle) + int(cancel_cycle) + int(bridge_restart_cycle) > 1):
 		print("NATIVE_INGAME_USAGE --mode=geometry|candidate|baseline --direction=up --source-sha=<40hex> --output=<absolute> [--depth=1] [--replay=<candidate report>]; visual modes require a rendered display")
 		quit(2)
 		return
@@ -175,9 +177,14 @@ func _run() -> void:
 			return
 		asset_root = "res://tools/native_motion_ingame_pilot/assets/worn-loop-flow/"
 		var identity: Variant = JSON.parse_string(FileAccess.get_file_as_string(asset_root + "identity.json"))
-		if not _check(identity is Dictionary and identity.get("loop_flow_study", false) and int(identity.get("angle_degrees", -1)) == 0 and identity.get("rendered_cells", []).size() == 76, "Loop flow identity has the exact 76 original-view cells"):
+		var expected_cells := 83 if grounded_entry_probe else 76
+		if not _check(identity is Dictionary and identity.get("loop_flow_study", false) and int(identity.get("angle_degrees", -1)) == 0 and identity.get("rendered_cells", []).size() == expected_cells and bool(identity.get("grounded_entry_study", false)) == grounded_entry_probe, "Loop flow identity has the exact original-view route cells", {"expected": expected_cells, "grounded_entry": grounded_entry_probe}):
 			_finish()
 			return
+		if grounded_entry_probe:
+			if not _check(identity.get("source_sha", "") == source_sha and identity.get("reference_report_sha256", "") == "65528376612e44c37311775b1df1833e900c5a5a4b3aa1d84fda6f807f733ad0" and identity.get("replaced_clip", "") == "walk_to_mine-625000" and is_equal_approx(float(identity.get("entry_duration", 0.0)), 0.20770909090909093), "Grounded entry is bound to the recorded119-frame route and original hit clock"):
+				_finish()
+				return
 		asset_hashes = identity.asset_hashes
 		view_angle_cells = identity.rendered_cells
 	if mode == "baseline":
@@ -734,6 +741,6 @@ func _finish() -> void:
 		if mode == "candidate" and is_instance_valid(player): player.visual.disarm()
 		main._set_mine_held(false)
 		main._on_joystick_movement(Vector2.ZERO)
-	_write_json("native-ingame.json", {"schema": 1, "passed": failures.is_empty(), "mode": mode, "source_sha": source_sha, "production_runtime_source": BASE_SOURCE, "fixture_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/capture.gd"), "consumer_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/pilot_visual.gd"), "consumer_installed": mode != "baseline", "consumer_armed": consumer_armed, "continue_framing_diagnostics": continue_framing_diagnostics, "asset_hashes": asset_hashes, "asset_root": asset_root, "rest_cycle": rest_cycle, "cancel_cycle": cancel_cycle, "bridge_restart_cycle": bridge_restart_cycle, "verify_contact_frames": verify_contact_frames, "cross_shoulder_load": cross_shoulder_load, "late_cancel_cycle": late_cancel_cycle, "complete_return": complete_return, "view_angle_probe": view_angle_probe, "loop_flow_probe": loop_flow_probe, "loop_flow_identity_sha256": FileAccess.get_sha256(asset_root + "identity.json") if loop_flow_probe else "", "view_angle_identity_sha256": FileAccess.get_sha256(asset_root + "identity.json") if view_angle_probe else "", "runtime_world_sha256": FileAccess.get_sha256("res://scripts/world/endless_descent_world.gd"), "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "rendered": not captures.is_empty(), "viewport": [root.size.x, root.size.y], "content_scale_size": [root.content_scale_size.x, root.content_scale_size.y], "direction": direction_name, "seed": WORLD_SEED, "depth": depth, "route": route, "route_search": route_search, "startup_feedback": startup_feedback, "checks": checks, "failures": failures, "events": events, "samples": samples, "captures": captures, "transitions": player.visual.transitions if mode == "candidate" and is_instance_valid(player) else [], "replay_source_sha": replay.get("source_sha", ""), "replay_binding_reason": "Same actual DEV13-based source, consumer and bank checkpoint", "replay_sha256": FileAccess.get_sha256(replay_path) if not replay_path.is_empty() else "", "elapsed_wall_ms": Time.get_ticks_msec() - started_wall_ms, "manual_world_ticks": false, "manual_pose_playback": false, "visual_acceptance": false, "limits": "Headless geometry loads the consumer unarmed and is not visual evidence. Rendered cases, when present, are controlled fixed-step in-game input, not unrestricted live input, production adoption, all-direction/tool coverage or FPS evidence. Canonical endpoint quantization remains visible. Offset release is covered only in the rendered route; arbitrary interruptions are not covered."})
+	_write_json("native-ingame.json", {"schema": 1, "passed": failures.is_empty(), "mode": mode, "source_sha": source_sha, "production_runtime_source": BASE_SOURCE, "fixture_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/capture.gd"), "consumer_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/pilot_visual.gd"), "consumer_installed": mode != "baseline", "consumer_armed": consumer_armed, "continue_framing_diagnostics": continue_framing_diagnostics, "asset_hashes": asset_hashes, "asset_root": asset_root, "rest_cycle": rest_cycle, "cancel_cycle": cancel_cycle, "bridge_restart_cycle": bridge_restart_cycle, "verify_contact_frames": verify_contact_frames, "cross_shoulder_load": cross_shoulder_load, "late_cancel_cycle": late_cancel_cycle, "complete_return": complete_return, "view_angle_probe": view_angle_probe, "loop_flow_probe": loop_flow_probe, "grounded_entry_probe": grounded_entry_probe, "loop_flow_identity_sha256": FileAccess.get_sha256(asset_root + "identity.json") if loop_flow_probe else "", "view_angle_identity_sha256": FileAccess.get_sha256(asset_root + "identity.json") if view_angle_probe else "", "runtime_world_sha256": FileAccess.get_sha256("res://scripts/world/endless_descent_world.gd"), "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "rendered": not captures.is_empty(), "viewport": [root.size.x, root.size.y], "content_scale_size": [root.content_scale_size.x, root.content_scale_size.y], "direction": direction_name, "seed": WORLD_SEED, "depth": depth, "route": route, "route_search": route_search, "startup_feedback": startup_feedback, "checks": checks, "failures": failures, "events": events, "samples": samples, "captures": captures, "transitions": player.visual.transitions if mode == "candidate" and is_instance_valid(player) else [], "replay_source_sha": replay.get("source_sha", ""), "replay_binding_reason": "Same actual DEV13-based source, consumer and bank checkpoint", "replay_sha256": FileAccess.get_sha256(replay_path) if not replay_path.is_empty() else "", "elapsed_wall_ms": Time.get_ticks_msec() - started_wall_ms, "manual_world_ticks": false, "manual_pose_playback": false, "visual_acceptance": false, "limits": "Headless geometry loads the consumer unarmed and is not visual evidence. Rendered cases, when present, are controlled fixed-step in-game input, not unrestricted live input, production adoption, all-direction/tool coverage or FPS evidence. Canonical endpoint quantization remains visible. Offset release is covered only in the rendered route; arbitrary interruptions are not covered."})
 	print("NATIVE_INGAME_COMPLETE mode=", mode, " direction=", direction_name, " checks=", checks.size(), " failures=", failures.size())
 	quit(0 if failures.is_empty() else 1)

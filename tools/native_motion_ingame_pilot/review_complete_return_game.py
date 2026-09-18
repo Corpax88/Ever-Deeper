@@ -35,6 +35,8 @@ def main():
     p.add_argument('--old', type=Path, required=True)
     p.add_argument('--new', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--entry-report', type=Path)
+    p.add_argument('--new-manifest', type=Path)
     a = p.parse_args()
     assert not a.output.exists(), 'Preserve prior results; choose a new path.'
     old = json.loads((a.old / 'native-ingame.json').read_text())
@@ -44,6 +46,19 @@ def main():
     assert old['mode'] == new['mode'] == 'candidate'
     assert new['complete_return'] and new['asset_hashes']['manifest.json'] == a.manifest_sha
     assert sha(a.old / 'native-ingame.json') == a.old_report_sha
+    entry = None
+    if a.entry_report:
+        entry = json.loads(a.entry_report.read_text())
+        assert entry['complete'] and entry['source_sha'] == a.source_sha
+        assert entry['reference_report_sha256'] == a.old_report_sha
+        assert new['grounded_entry_probe'] and old['consumer_sha256'] == new['consumer_sha256']
+        assert a.new_manifest and sha(a.new_manifest) == a.manifest_sha
+        manifest = json.loads(a.new_manifest.read_text())
+        assert manifest['loop_flow_study']['report_sha256'] == sha(a.entry_report)
+        assert len(entry['planned_draws']) == len(new['samples']) == 119
+        projection = entry['projection']
+        def projected(point):
+            return [projection['origin'][j] + sum(projection['basis'][k][j]*point[k] for k in range(3)) for j in range(2)]
     phase_changes = []
     selection_changes = []
     common = tuple(k for k in POSE if all(k in x['visual'] for x in old['samples'] + new['samples']))
@@ -51,12 +66,38 @@ def main():
     assert len(old['samples']) == len(new['samples']) == len(new['captures'])
     for sample_index, (left, right) in enumerate(zip(old['samples'], new['samples'])):
         assert project(left, MECHANICS) == project(right, MECHANICS)
-        assert project(left['visual'], stable) == project(right['visual'], stable)
+        if entry is None:
+            assert project(left['visual'], stable) == project(right['visual'], stable)
+        else:
+            plan = entry['planned_draws'][sample_index]
+            shown = right['visual']
+            assert plan['sample'] == sample_index and shown['state'] == plan['state'] and shown['local_frame'] == plan['local_frame']
+            for key in ('sample_phase', 'requested_phase'):
+                assert abs(shown[key]-plan[key]) < 1e-7, (sample_index, key)
+            for key in ('sprite_position', 'retained_offset'):
+                assert max(abs(v-w) for v,w in zip(shown[key],plan[key])) < .00002, (sample_index,key)
+            assert shown['is_bridge'] == (shown['state'] in manifest['directions']['up']['transitions'])
+            assert shown['presenting_impact'] == left['visual']['presenting_impact']
+            frame = manifest['sample_metadata']['up'][shown['state']][shown['local_frame']]
+            for point in plan['projected_lower_body_points']:
+                xy = projected(frame['native']['feet'][point['side']][point['point']])
+                xy = [v+w for v,w in zip(xy,shown['sprite_position'])]
+                assert max(abs(v-w) for v,w in zip(xy,point['before'])) < .0003, (sample_index,point['side'],point['point'])
         changes = {k: [left['visual'][k], right['visual'][k]] for k in common if left['visual'][k] != right['visual'][k]}
         if changes: selection_changes.append({'sample': sample_index, 'changes': changes})
         if left['visual']['sample_phase'] != right['visual']['sample_phase']:
             phase_changes.append({'sample': sample_index, 'tick': right['relative_physics_tick'], 'old': left['visual']['sample_phase'], 'new': right['visual']['sample_phase']})
-        assert left['framing']['subjects']['hero_and_tool'] == right['framing']['subjects']['hero_and_tool']
+        if entry is None:
+            assert left['framing']['subjects']['hero_and_tool'] == right['framing']['subjects']['hero_and_tool']
+        else:
+            # During the longer entry the retained plant is baked into its
+            # native images, then moves to sprite placement at the handoff.
+            # Compare effective feet above, and account for that exact rect shift.
+            old_rect = left['framing']['subjects']['hero_and_tool']
+            new_rect = right['framing']['subjects']['hero_and_tool']
+            delta = [v-w for v,w in zip(right['visual']['sprite_position'],left['visual']['sprite_position'])]
+            expected = [old_rect[0]+delta[0],old_rect[1]+delta[1],*old_rect[2:]]
+            assert max(abs(v-w) for v,w in zip(expected,new_rect)) < .001, (sample_index,'entry rectangle')
     assert [project(x, INPUT) for x in old['events']] == [project(x, INPUT) for x in new['events']]
     world = {}
     for filename in ('setup-world.json', 'final-world.json'):
@@ -98,7 +139,7 @@ def main():
               'old_capture_path': str(a.old), 'new_capture_path': str(a.new),
               'frame_count': len(new['captures']), 'mechanics_equal': True,
               'mechanical_keys': MECHANICS, 'input_equal': True, 'input_keys': INPUT,
-              'native_pose_equal': False, 'hero_bounds_equal': True, 'selection_keys_compared': stable,
+              'native_pose_equal': False, 'hero_bounds_equal': entry is None, 'selection_keys_compared': stable,
               'selected_phase_changes': phase_changes, 'selected_state_and_clock_changes': selection_changes, 'changed_pose_bank': True,
               'selection_keys_absent_from_prior_schema': [k for k in POSE if k not in common],
               'world': world, 'jsonl_and_all_new_png_hashes_and_decodes_verified': True,
@@ -107,6 +148,11 @@ def main():
                        'recovery is released; the unchanged 30 Hz owner may lerp on a later draw. '
                        'No proof of physical or unoccluded contact, readability, arbitrary inputs or production acceptance.',
               'visual_approved': False, 'production_approved': False}
+    if entry:
+        result.update(entry_report_sha256=sha(a.entry_report),exact_planned119_selections_verified=True,
+                      actual_packed_ankle_and_sole_projections_match_prior=True,
+                      hero_rectangles_follow_exact_retained_offset_placement=True,
+                      entry_duration=entry['entry_duration'])
     with a.output.open('w') as f:
         json.dump(result, f, indent=2); f.write('\n'); f.flush(); os.fsync(f.fileno())
     print(json.dumps({'output': str(a.output), 'sha256': sha(a.output),

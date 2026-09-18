@@ -208,6 +208,45 @@ root/unusedhips/feet stay protected, with explicit05tool/grips/worldsole and
 arm/leg-length/reach contracts. Other cells remain forbidden. No acceptance
 or production bank follows from this planned actual-game experiment.
 
+Trial07 actual game completed on7bd2b5f1819a3909ded9355a9c32242dff8408c1.
+All119PNG/JSONL records, mechanics/input/world and exact76-cell identity pass;
+contact occurs at50/90 before squash. ReportSHA65528376612e44c37311775b1df1833e900c5a5a4b3aa1d84fda6f807f733ad0.
+The bank checked1094 poses and rendered53 changed cells. Standard single-view
+normal/6x-detail actual videos were sent to Gemini. It gave3/10 but claimed
+the surviving ore was destroyed, then invented its reappearance on follow-up.
+Its claim of almost no torso turn contradicts the actual image sequence.
+The numeric rating is not a reliable stand-alone diagnosis. No acceptance.
+
+Independent actual-frame review corroborated a concrete entry flaw: only
+three shown walk-to-mine poses33–35 in51.356ms expose the hidden tool while
+turning toward the loop's-40degree side return. The exit has five bridge draws
+over83.81ms. Load46 and return70 are clearer than02; contact hands remain
+close to the face and the tool head merges with the ore contour. The repeated
+precontact cell at48/49 is a separate later presentation question.
+
+Trial09 addresses only the actual walk.625 entry. GroundedEntryTransition
+preserves the old51.356ms lower-body stop and retained left support, then
+uses canonical lower-body motion. Upper-body rotation and one rigid tool go
+directly to the07load at native.40/207.709ms, bypassing the side-return detour.
+The body joint stays anchored to the lower pose. Fixed quaternion-log Hermite
+curves match original endpoint velocities; head follows its existing pivot.
+401 analytic poses pass (maxarm.673552); a three-point endpoint velocity check
+has maximum component difference.00669/s at1ms, below the.01/s numeric bound.
+19 actual native poses through the285.6ms contact pass lower-body/grip/limb
+checks. Independent review finds a gradual tool reveal, no obvious new anatomy
+fault, and coherent12→13 handoff. It supports one actual-game trial. Whether
+the initial~100ms of partial tool hiding feels responsive remains for video.
+
+The entry extension reuses13 exact09 native images and renders only the new
+endpoint, retaining every other07image. It predicts the original119draw route
+with83 permitted cells. The retained4.2938566px plant offset stays baked into
+the extended bridge until its later handoff; sprite placement therefore
+differs at36–44 while effective foot positions stay fixed. Verification must
+check actual packed ankle/sole projections plus actual placement, the exact
+planned selections and the explained rectangle shift, not simply skip the
+old unchanged-placement assertion. Mechanics, world and hit order remain
+mandatory. New capture flag --grounded-entry-probe requires this exact case.
+
 No visual acceptance, 9/10 claim, full-input coverage or game publication is
 recorded here. Trial01 local test commit0b1706c and remote commitbdcad8b have
 the identical treefd839378e0b8e6e7bd477e7497ef53a493ccca22; the connector supplied
