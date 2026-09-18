@@ -204,3 +204,23 @@ MESH geometry by `hide_render`, not a separately verified equivalent of the
 renderer. Head-group coverage needs inventory review; partial depth maps and
 the five cached groups cannot approve later moved tools, changed arms, packed160
 filtering or a future whole scene. No new load angle or height is selected.
+
+### Contour-derived cross-shoulder study
+
+The unchanged-load visibility observation closed on `e906e05`: 111 of 126
+native200 tool-head pixels were hidden by the head group. One anatomical
+reorientation alone still hid 128 of 140 pixels in the calibrated head-only
+projection. Neither result is accepted.
+
+`cross_shoulder_load_motion.py` adds one separate candidate without editing
+those rejected sources. It uses the original .40 shoulder line to orient the
+shaft across the shoulders and carries the old load normal by the shortest
+rigid rotation. The midpoint is then raised by .3448145009913601 native units,
+the exact projected-hull separation plus two native200 pixels. No angle or
+height sweep is performed. Selection and input proofs are bound by SHA256.
+
+`probe_cross_shoulder_load.py` preserves the earlier 136-pose/seven-original
+comparison and strict original .70999 arm reach limit. The left arm is close
+to that limit; the whole rig and original beauty must decide, not the analytic
+clearance. Original start, .55 contact and recovery must remain exact. There
+is no new game bank, arm-comfort, packed160, transition or contact approval.
