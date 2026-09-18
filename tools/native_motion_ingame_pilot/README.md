@@ -224,3 +224,16 @@ comparison and strict original .70999 arm reach limit. The left arm is close
 to that limit; the whole rig and original beauty must decide, not the analytic
 clearance. Original start, .55 contact and recovery must remain exact. There
 is no new game bank, arm-comfort, packed160, transition or contact approval.
+
+The fixed load trial closed on `f2192d4`: 136 actual rig poses and seven
+original stills, exit 0. Maximum arm reach is .703624, maximum grip error
+6.47e-7, and protected matrices remain identical. The tool head is visible
+above the helmet in the new load still. This is not temporal or packed160
+acceptance; initial and late pre-hit frozen ore overlap remains recorded.
+
+`rebuild_cross_shoulder_bank.py` next reconstructs the same 206 trial cells,
+including all eleven declared transitions. It checks 73 samples per bridge,
+unchanged timing/root metadata and protected bones before rendering. PNG
+bytes are reused only for exact equality of all old/new bone matrices; every
+changed pose is rendered from the original scene. Previous approvals are
+retained as historical references, not transferred to the new trial bank.
