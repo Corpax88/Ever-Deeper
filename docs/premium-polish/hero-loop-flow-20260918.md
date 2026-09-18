@@ -164,6 +164,18 @@ original model has no hips-weighted meshes. No rig adapter/common rig edit
 was made. Torso/head and leg hip endpoints move together; original root and
 sole placements remain. No acceptance follows from the geometry pass.
 
+Independent still review rejected06 for another50-frame video: anatomy is
+plausible, but compression stays subtle and the forward lean keeps the head
+high in projection. One contact-pose experiment07 then rephased torso turning
+into the strike. Total extra local turns are0:-40,.30:0,.55:-30,.70:-35,1:-40,
+with quintic joins. The original40-degree side-return knot remains reachable.
+The06 compression and exact05 tool/sole paths remain.401 actual IK samples
+pass (arm.688990, leg.330045). A single native contact image shows more face
+profile and lateral backpack movement without an obvious waist/shoulder gap.
+The independent critic supports one07 native cycle film; hands/shaft still
+sit close to the face. Visible driving of the strike and smooth continuation
+through the side return must be assessed in motion. No full bank yet.
+
 No visual acceptance, 9/10 claim, full-input coverage or game publication is
 recorded here. Trial01 local test commit0b1706c and remote commitbdcad8b have
 the identical treefd839378e0b8e6e7bd477e7497ef53a493ccca22; the connector supplied

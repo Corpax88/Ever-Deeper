@@ -8,11 +8,12 @@ from body_weight_motion import BodyWeightMotion
 from loop_flow_motion import native_phase
 p=argparse.ArgumentParser(description=__doc__)
 for n in ('pivot','output'):p.add_argument('--'+n,type=Path,required=True)
+p.add_argument('--contact-turn',action='store_true')
 a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);assert not a.output.exists()
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 assert sha(a.pivot)=='cd5f57f327395a2ee4cfc81716a5e2fe8ef8fe93ec45ec13203c94cc76e16f86'
 args=[json.loads((HERE/'working-surface-selection.json').read_text()),json.loads((HERE/'upper-body-hinge-selection.json').read_text()),json.loads(a.pivot.read_text())]
-before,after=SideReturnMotion(*args,True),BodyWeightMotion(*args)
+before,after=SideReturnMotion(*args,True),BodyWeightMotion(*args,a.contact_turn)
 r={'complete':False,'passed':False,'selection':after.selection(),'samples':[],
    'source_hashes':{str(p.relative_to(ROOT)):sha(p) for p in (Path(__file__),HERE/'body_weight_motion.py',HERE/'side_return_motion.py',HERE/'loop_flow_motion.py')},
    'scope':'401 analytic whole-body samples; no mesh/collision or visual approval'}

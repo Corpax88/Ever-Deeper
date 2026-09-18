@@ -3,6 +3,7 @@ import math
 from mathutils import Matrix,Vector
 import premium_motion as pm
 from side_return_motion import SideReturnMotion
+from complete_return_motion import smoother
 
 KEYS=((.20,0.,0.),
       (.38,.020,0.),
@@ -13,13 +14,22 @@ KEYS=((.20,0.,0.),
 
 
 class BodyWeightMotion(SideReturnMotion):
-    def __init__(self,surface,hinge,pivot_report):
+    def __init__(self,surface,hinge,pivot_report,contact_turn=False):
         super().__init__(surface,hinge,pivot_report,True)
+        self.contact_turn=contact_turn
+
+    @staticmethod
+    def power_turn(q):
+        keys=((0.,-40.),(.30,0.),(.55,-30.),(.70,-35.),(1.,-40.))
+        for a,b in zip(keys,keys[1:]):
+            if a[0]<=q<=b[0]:return a[1]+(b[1]-a[1])*smoother((q-a[0])/(b[0]-a[0]))
 
     def sample(self,state,phase,speed=340.):
         original=super().sample(state,phase,speed)
         q=phase%1.
-        if state!='mine' or q<=KEYS[0][0] or q>=KEYS[-1][0]:return original
+        if state!='mine':return original
+        if not self.contact_turn and (q<=KEYS[0][0] or q>=KEYS[-1][0]):return original
+        dz=lean=0.
         for a,b in zip(KEYS,KEYS[1:]):
             if a[0]<=q<=b[0]:
                 t=pm.smooth((q-a[0])/(b[0]-a[0]))
@@ -27,10 +37,12 @@ class BodyWeightMotion(SideReturnMotion):
                 break
         shift=Vector((0.,0.,dz))
         joint=self.body_joint
-        bend=(Matrix.Translation(joint)@Matrix.Rotation(math.radians(lean),4,'X')
+        twist=Matrix.Rotation(math.radians(self.power_turn(q)),4,'Z') if self.contact_turn else Matrix.Identity(4)
+        body_source=self.original.sample(state,phase,speed) if self.contact_turn else original
+        bend=(Matrix.Translation(joint)@twist@Matrix.Rotation(math.radians(lean),4,'X')
               @Matrix.Translation(-joint))
-        torso=Matrix.Translation(shift)@original['torso']@bend
-        head=(torso@original['torso'].inverted())@original['head']
+        torso=Matrix.Translation(shift)@body_source['torso']@bend
+        head=(torso@body_source['torso'].inverted())@body_source['head']
         solved=pm._assemble('worn',torso,head,original['rear'],original['axis'],original['tool_normal'],
                             {s:v[0]+shift for s,v in original['legs'].items()},
                             {s:v[2] for s,v in original['legs'].items()},
@@ -47,4 +59,8 @@ class BodyWeightMotion(SideReturnMotion):
                    protected='Original05 rigid tool/grips/clock, fixed world soles, same limb lengths',
                    body_changed_ranges='Return turn plus coordinated loading/compression .20-.86',
                    visual_accepted=False,production_accepted=False)
+        if self.contact_turn:
+            out.update(proposal='one-powered-contact-turn',contact_turn=True,
+                       turn_keys=[[0.,-40.],[.30,0.],[.55,-30.],[.70,-35.],[1.,-40.]],
+                       body_changed_ranges='Whole mining cycle; original40-degree side-carry knot retained')
         return out
