@@ -142,6 +142,28 @@ retaining the visible side return. Trial05 rebuilds the end conditions from
 that source, not a pasted image splice;401 IK/feet/joint checks pass before
 the next bounded50-frame native video. No full-bank work yet.
 
+Trial05 also received3/10 from fresh Gemini Pro video review. It recognizes
+clearer phases/loop continuity but again claims almost no torso rotation.
+That statement is not accurate for the40-degree return; lack of convincing
+weight through the strike remains a concrete visual question, not a reliable
+overall numeric certification. Trial05 native source36ec9757 and locald4ddbbb
+have identical treea761af48c38052e42f62f9bebc3dbc6eb8e19810.
+
+Trial06 tests body loading/compression with the05 tool and soles fixed.
+An initial extra translation/twist/backbend version failed reach.7125 at
+native.324107 and stopped before rendering. Independent projection analysis
+showed forward translation would cancel most visible vertical compression.
+The revised candidate therefore changes only vertical shift+.020 at.38,
+-.030 at.55, -.045 at.59 and forwardbend0/8/12degrees. Body compression peaks
+about35ms after contact and returns to zero by.86. Actual401 IK samples pass:
+maximum arm.689104, leg.330045; exact original tool/grips/soles and limb lengths.
+Three native rig stills at.38/.55/.59 precede any further cycle video.
+
+An inspected source hypothesis about a fixed hips bone was rejected: the
+original model has no hips-weighted meshes. No rig adapter/common rig edit
+was made. Torso/head and leg hip endpoints move together; original root and
+sole placements remain. No acceptance follows from the geometry pass.
+
 No visual acceptance, 9/10 claim, full-input coverage or game publication is
 recorded here. Trial01 local test commit0b1706c and remote commitbdcad8b have
 the identical treefd839378e0b8e6e7bd477e7497ef53a493ccca22; the connector supplied

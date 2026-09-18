@@ -15,6 +15,7 @@ for name in ('native-tools','pivot','output'):
 p.add_argument('--side-waypoint-only',action='store_true')
 p.add_argument('--side-cycle',action='store_true')
 p.add_argument('--overhead-load',action='store_true')
+p.add_argument('--body-weight',action='store_true')
 a=p.parse_args(sys.argv[sys.argv.index('--')+1:])
 assert not a.output.exists()
 a.output.mkdir(parents=True)
@@ -47,12 +48,22 @@ if a.side_waypoint_only or a.side_cycle:
         report['cycle_seconds']=.68
         report['frame_rate']=[1250,17]
         from loop_flow_motion import native_phase
+if a.body_weight:
+    assert not a.side_waypoint_only
+    from body_weight_motion import BodyWeightMotion
+    motion=BodyWeightMotion(json.loads((HERE/'working-surface-selection.json').read_text()),
+                      json.loads((HERE/'upper-body-hinge-selection.json').read_text()),
+                      json.loads(a.pivot.read_text()))
+    report['source_hashes']['tools/native_motion_ingame_pilot/side_return_motion.py']=sha(HERE/'side_return_motion.py')
+    report['source_hashes']['tools/native_motion_ingame_pilot/body_weight_motion.py']=sha(HERE/'body_weight_motion.py')
+    if not a.side_cycle:report['scope']='Three native load/contact/compression stills; not a full cycle or gameplay approval'
 report['selection']=motion.selection()
 env['view']('up',(6,6))
 scene,rig=env['s'],env['r']
 try:
     phases=((0,0.),) if a.side_waypoint_only else ((49,.953448275862069),(0,0.),(400,.40),(523,.5238095238095238))
     if a.side_cycle: phases=tuple((i,native_phase(i/50)) for i in range(50))
+    elif a.body_weight:phases=((380,.38),(550,.55),(590,.59))
     for index,q in phases:
         pose=motion.waypoint_pose() if a.side_waypoint_only else motion.sample('mine',q)
         for modifier in env['skin']: modifier.show_viewport=False
@@ -62,7 +73,7 @@ try:
         grip=max((((rig.pose.bones['hand.'+s].matrix @ rig.data.bones['hand.'+s].matrix_local.inverted())
                    @ env['rest']['grips'][s])-pose['grips'][s]).length for s in ('R','L'))
         length=max(abs((rig.pose.bones[n].tail-rig.pose.bones[n].head).length-rig.data.bones[n].length)
-                   for n in ('upper.R','lower.R','upper.L','lower.L'))
+                   for n in ('upper.R','lower.R','upper.L','lower.L','thigh.R','shin.R','thigh.L','shin.L'))
         reach=max((w-s).length for s,e,w in pose['arms'].values())
         assert grip<1e-5 and length<1e-5 and reach<.70999,(grip,length,reach)
         env['blink'](0.)
