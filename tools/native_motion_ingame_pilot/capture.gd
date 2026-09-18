@@ -62,6 +62,7 @@ var startup_feedback: Dictionary = {}
 var rest_cycle := false
 var cancel_cycle := false
 var bridge_restart_cycle := false
+var verify_contact_frames := false
 var continue_framing_diagnostics := false
 var consumer_armed := false
 var asset_root := ASSETS
@@ -91,6 +92,7 @@ func _run() -> void:
 		elif arg == "--rest-cycle": rest_cycle = true
 		elif arg == "--cancel-cycle": cancel_cycle = true
 		elif arg == "--bridge-restart-cycle": bridge_restart_cycle = true
+		elif arg == "--contact-frame-order": verify_contact_frames = true
 		elif arg == "--continue-framing-diagnostics": continue_framing_diagnostics = true
 	if not output.is_absolute_path() or not DIRECTIONS.has(direction_name) or source_sha.length() != 40 or mode not in ["geometry", "candidate", "baseline"] or (mode != "geometry" and DisplayServer.get_name() == "headless") or (int(rest_cycle) + int(cancel_cycle) + int(bridge_restart_cycle) > 1):
 		print("NATIVE_INGAME_USAGE --mode=geometry|candidate|baseline --direction=right|up --source-sha=<40hex> --output=<absolute> [--depth=1] [--replay=<candidate report>]; visual modes require a rendered display")
@@ -115,7 +117,7 @@ func _run() -> void:
 			return
 		replay = JSON.parse_string(FileAccess.get_file_as_string(replay_path))
 		var same_source: bool = replay.get("source_sha", "") == source_sha
-		var same_runtime: bool = replay.get("production_runtime_source", "") == BASE_SOURCE and replay.get("consumer_sha256", "") == FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/pilot_visual.gd") and replay.get("asset_hashes", {}) == asset_hashes
+		var same_runtime: bool = replay.get("production_runtime_source", "") == BASE_SOURCE and replay.get("consumer_sha256", "") == FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/pilot_visual.gd") and replay.get("asset_hashes", {}) == asset_hashes and replay.get("runtime_world_sha256", "") == FileAccess.get_sha256("res://scripts/world/endless_descent_world.gd")
 		if not _check(bool(replay.get("passed", false)) and replay.get("mode", "") == "candidate" and replay.get("direction", "") == direction_name and replay.get("depth", -1) == depth and same_runtime and same_source, "Candidate replay identity matches this case", {"same_source": same_source, "same_runtime_consumer_assets": same_runtime, "candidate_source": replay.get("source_sha", ""), "current_fixture_source": source_sha}):
 			_finish()
 			return
@@ -425,6 +427,16 @@ func _capture_frame(label: String) -> bool:
 			if not _check(float(shown.sample_phase) < 0.55, "All native contact and post-hit cells are excluded from pre-hit windup"): return false
 		if samples.size() > 1 and int(sample.impact_serial) > int(samples[-2].impact_serial):
 			if not _check(bool(shown.presenting_impact) and is_equal_approx(float(shown.sample_phase), 0.55) and int(sample.target_hp) < int(samples[-2].target_hp), "Real HP change, impact serial and presented .55 share this frame"): return false
+	if verify_contact_frames and samples.size() > 1:
+		var before: Dictionary = samples[-2]
+		var now: Dictionary = sample.resource_hit_presentation
+		var prior: Dictionary = before.resource_hit_presentation
+		if int(sample.target_hp) < int(before.target_hp):
+			if not _check(now.phase == "contact" and now.scale == prior.scale and int(now.current_drawn_frame) > int(now.phase_after_draw), "The real impact draw retains the ore shape from before damage", {"before": prior, "impact": now}): return false
+		elif prior.phase == "contact":
+			if not _check(now.phase == "squash" and is_equal_approx(float(now.scale[0]), 0.91) and is_equal_approx(float(now.scale[1]), 0.91) and int(now.phase_after_draw) == int(prior.current_drawn_frame), "The next actual draw presents compression after the contact draw", {"contact": prior, "compression": now}): return false
+		elif prior.phase == "squash":
+			if not _check(now.phase == "pulse", "Normal pulse recovery resumes after the compression draw", now): return false
 	return true
 
 
@@ -601,6 +613,7 @@ func _input(label: String, movement: Vector2, mine: bool) -> void:
 
 func _record(label: String) -> void:
 	samples.append({"label": label, "process_frame": Engine.get_process_frames(), "physics_frame": Engine.get_physics_frames(), "relative_physics_tick": Engine.get_physics_frames() - capture_origin_tick, "simulation_seconds": capture_seconds, "engine_delta": root.get_process_delta_time(), "wall_ms": Time.get_ticks_msec(), "position": _array(player.global_position), "direction": player.direction_name, "mining_active": world.mining_active, "mining_elapsed": world.mining_elapsed, "mining_progress": player.mining_visual_progress, "swing_duration": world._swing_duration, "hit_progress": world.MINING_HIT_PROGRESS, "impact_serial": player._mining_impact_serial, "relative_impact_serial": int(player._mining_impact_serial) - initial_serial, "target": world.mining_target_id, "target_hp": int(world.resources[int(route.resource_index)].hp), "visual": player.visual.presented_snapshot() if mode == "candidate" else player.visual.tool_visual_snapshot()})
+	samples.back()["resource_hit_presentation"] = world.resource_hit_presentation_snapshot(String(route.resource_id))
 
 
 func _world_geometry() -> Dictionary:
@@ -644,6 +657,6 @@ func _finish() -> void:
 		if mode == "candidate" and is_instance_valid(player): player.visual.disarm()
 		main._set_mine_held(false)
 		main._on_joystick_movement(Vector2.ZERO)
-	_write_json("native-ingame.json", {"schema": 1, "passed": failures.is_empty(), "mode": mode, "source_sha": source_sha, "production_runtime_source": BASE_SOURCE, "fixture_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/capture.gd"), "consumer_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/pilot_visual.gd"), "consumer_installed": mode != "baseline", "consumer_armed": consumer_armed, "continue_framing_diagnostics": continue_framing_diagnostics, "asset_hashes": asset_hashes, "asset_root": asset_root, "rest_cycle": rest_cycle, "cancel_cycle": cancel_cycle, "bridge_restart_cycle": bridge_restart_cycle, "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "rendered": not captures.is_empty(), "viewport": [root.size.x, root.size.y], "content_scale_size": [root.content_scale_size.x, root.content_scale_size.y], "direction": direction_name, "seed": WORLD_SEED, "depth": depth, "route": route, "route_search": route_search, "startup_feedback": startup_feedback, "checks": checks, "failures": failures, "events": events, "samples": samples, "captures": captures, "transitions": player.visual.transitions if mode == "candidate" and is_instance_valid(player) else [], "replay_source_sha": replay.get("source_sha", ""), "replay_binding_reason": "Same actual DEV13-based source, consumer and bank checkpoint", "replay_sha256": FileAccess.get_sha256(replay_path) if not replay_path.is_empty() else "", "elapsed_wall_ms": Time.get_ticks_msec() - started_wall_ms, "manual_world_ticks": false, "manual_pose_playback": false, "visual_acceptance": false, "limits": "Headless geometry loads the consumer unarmed and is not visual evidence. Rendered cases, when present, are controlled fixed-step in-game input, not unrestricted live input, production adoption, all-direction/tool coverage or FPS evidence. Canonical endpoint quantization remains visible. Offset release is covered only in the rendered route; arbitrary interruptions are not covered."})
+	_write_json("native-ingame.json", {"schema": 1, "passed": failures.is_empty(), "mode": mode, "source_sha": source_sha, "production_runtime_source": BASE_SOURCE, "fixture_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/capture.gd"), "consumer_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/pilot_visual.gd"), "consumer_installed": mode != "baseline", "consumer_armed": consumer_armed, "continue_framing_diagnostics": continue_framing_diagnostics, "asset_hashes": asset_hashes, "asset_root": asset_root, "rest_cycle": rest_cycle, "cancel_cycle": cancel_cycle, "bridge_restart_cycle": bridge_restart_cycle, "verify_contact_frames": verify_contact_frames, "runtime_world_sha256": FileAccess.get_sha256("res://scripts/world/endless_descent_world.gd"), "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "rendered": not captures.is_empty(), "viewport": [root.size.x, root.size.y], "content_scale_size": [root.content_scale_size.x, root.content_scale_size.y], "direction": direction_name, "seed": WORLD_SEED, "depth": depth, "route": route, "route_search": route_search, "startup_feedback": startup_feedback, "checks": checks, "failures": failures, "events": events, "samples": samples, "captures": captures, "transitions": player.visual.transitions if mode == "candidate" and is_instance_valid(player) else [], "replay_source_sha": replay.get("source_sha", ""), "replay_binding_reason": "Same actual DEV13-based source, consumer and bank checkpoint", "replay_sha256": FileAccess.get_sha256(replay_path) if not replay_path.is_empty() else "", "elapsed_wall_ms": Time.get_ticks_msec() - started_wall_ms, "manual_world_ticks": false, "manual_pose_playback": false, "visual_acceptance": false, "limits": "Headless geometry loads the consumer unarmed and is not visual evidence. Rendered cases, when present, are controlled fixed-step in-game input, not unrestricted live input, production adoption, all-direction/tool coverage or FPS evidence. Canonical endpoint quantization remains visible. Offset release is covered only in the rendered route; arbitrary interruptions are not covered."})
 	print("NATIVE_INGAME_COMPLETE mode=", mode, " direction=", direction_name, " checks=", checks.size(), " failures=", failures.size())
 	quit(0 if failures.is_empty() else 1)

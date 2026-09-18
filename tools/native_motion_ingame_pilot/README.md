@@ -143,3 +143,25 @@ does not isolate an interruption defect or prove physical contact. The bank
 preserves `projected_clear_at_sampled_points=false` and `contact_approved=false`.
 No contact, unrestricted input, FPS, production, or release approval follows
 from this diagnostic route.
+
+### Contact before resource compression
+
+The closed cancellation and active-bridge trials exposed a separate world
+presentation race: damage immediately shrinks ore to .91, then the 30 Hz pulse
+may partially undo that shrink in the same draw. Their actual .55 contact
+projections therefore differed (0/270 versus 195/270 cap points over alpha .5).
+Neither result establishes physical contact or resolves the earlier windup
+overlap and weak hand/tool readability.
+
+The experimental world change queues only the visual compression. The current
+ore shape survives the real damage/contact draw; the existing .91 compression
+then survives a subsequent draw before normal pulse recovery resumes. Transforms
+change in the next active process, never in a post-draw callback. Deactivation,
+regeneration, resource deletion and replaced visual instances clear stale work.
+Repeated requests for one resource coalesce visually; damage and sound still
+occur immediately. No pulse amplitude, art, rig pose, input or save data changes.
+
+`--contact-frame-order` observes the current ore scale and draw counter on each
+captured frame, requiring that exact order. Reports also bind the actual world
+script hash. This change still needs its new rendered captures, independent
+review and current source gates; it is not a release or full animation approval.

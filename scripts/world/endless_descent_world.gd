@@ -206,6 +206,7 @@ var up_shaft_position: = Vector2.ZERO
 var down_shaft_position: = Vector2.ZERO
 var resources: Array[Dictionary] = []
 var resource_visuals: Dictionary = {}
+var _pending_resource_squashes: Dictionary = {}
 var discovery_sites: Array[Dictionary] = []
 var discovery_visuals: Dictionary = {}
 var resonance_hazards: Array[Dictionary] = []
@@ -319,6 +320,7 @@ func set_active(enabled: bool, entering: bool = false) -> void :
 		_update_context(player.global_position)
 		message_changed.emit(_depth_arrival_message())
 	else:
+		_pending_resource_squashes.clear()
 		player.camera.offset = Vector2.ZERO
 		player.release_visual_cache()
 		_set_context("")
@@ -533,6 +535,7 @@ func import_runtime_state(state: Dictionary) -> void :
 func _process(delta: float) -> void :
 	if not active:
 		return
+	_advance_resource_squashes()
 	_update_mining(delta)
 	_update_discoveries()
 	_update_site_activity(delta)
@@ -1023,6 +1026,7 @@ func _calculate_generation_signature() -> String:
 
 
 func _clear_generated_visuals() -> void :
+	_pending_resource_squashes.clear()
 	for visual_value in resource_visuals.values():
 		var visual: = visual_value as Node
 		if is_instance_valid(visual):
@@ -2023,6 +2027,7 @@ func _strike_resource(index: int, attack_power: int = -1, trigger_wave: bool = t
 	resource.hp = maxi(0, int(resource.hp) - maxi(1, int(tool.get("power", 1)) if attack_power < 0 else attack_power))
 	var finished: = int(resource.hp) <= 0
 	if finished:
+		_pending_resource_squashes.erase(String(resource.id))
 		var collected_amount: int = int(resource.amount) * maxi(1, int(tool.get("yield_multiplier", 1)))
 		var claim: Dictionary = RunState.claim_endless_resource_node(int(resource.get("depth", current_depth)), int(resource.get("node_index", index)), String(resource.kind), collected_amount)
 		if not bool(claim.get("ok", false)):
@@ -2047,7 +2052,9 @@ func _strike_resource(index: int, attack_power: int = -1, trigger_wave: bool = t
 	else:
 		var visual: = resource_visuals.get(String(resource.id)) as Node2D
 		if is_instance_valid(visual):
-			visual.scale = Vector2.ONE * 0.91
+			# Damage/audio stay on this hit. Preserve the current ore silhouette
+			# until its contact draw, then show the existing squash on a later draw.
+			_pending_resource_squashes[String(resource.id)] = {"visual_id": visual.get_instance_id(), "phase": "contact", "drawn_frame": Engine.get_frames_drawn()}
 	resources[index] = resource
 	if trigger_wave:
 		AudioDirector.play_mining(String(resource.kind), finished, false)
@@ -2089,6 +2096,34 @@ func _cancel_mining() -> void :
 		player.set_mining_visual(false)
 
 
+func _advance_resource_squashes() -> void:
+	# Mutate before drawing, never from frame_post_draw: observers must see the
+	# same transforms as the pixels they capture. A process tick is not a draw.
+	var drawn_frame := Engine.get_frames_drawn()
+	for resource_id in _pending_resource_squashes.keys():
+		var pending: Dictionary = _pending_resource_squashes[resource_id]
+		var visual := resource_visuals.get(resource_id) as Node2D
+		if not is_instance_valid(visual) or visual.is_queued_for_deletion() or visual.get_instance_id() != int(pending.visual_id):
+			_pending_resource_squashes.erase(resource_id)
+			continue
+		if drawn_frame <= int(pending.drawn_frame):
+			continue
+		if String(pending.phase) == "contact":
+			visual.scale = Vector2.ONE * 0.91
+			pending["phase"] = "squash"
+			pending["drawn_frame"] = drawn_frame
+		else:
+			_pending_resource_squashes.erase(resource_id)
+
+
+func resource_hit_presentation_snapshot(resource_id: String) -> Dictionary:
+	var visual := resource_visuals.get(resource_id) as Node2D
+	if not is_instance_valid(visual):
+		return {}
+	var pending: Dictionary = _pending_resource_squashes.get(resource_id, {})
+	return {"scale": [visual.scale.x, visual.scale.y], "phase": pending.get("phase", "pulse"), "phase_after_draw": pending.get("drawn_frame", -1), "current_drawn_frame": Engine.get_frames_drawn()}
+
+
 func _update_resource_pulses() -> void :
 	var time: = Time.get_ticks_msec() * 0.001
 	var visible_area: Rect2 = _visual_visible_rect(Vector2.ONE * 256.0)
@@ -2102,6 +2137,10 @@ func _update_resource_pulses() -> void :
 		if not is_instance_valid(visual):
 			continue
 		if not visible_area.has_point(Vector2(resource.position)):
+			continue
+		# Both contact and compression must survive one real draw each. The
+		# normal 30 Hz pulse must not replace either in the same process tick.
+		if _pending_resource_squashes.has(String(resource.id)):
 			continue
 		var pulse: = 1.0 + sin(time * 2.1 + float(resource.phase)) * 0.035
 		if visual.scale.x < 0.96:
