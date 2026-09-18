@@ -1,0 +1,164 @@
+{
+  "status": "One real working-surface arc selected for independent geometry review before five native originals",
+  "visually_accepted": false,
+  "runtime_changed": false,
+  "source_base": "bbf18271b6fdb760f3567bf60c960188d5e0f1a6",
+  "model_sha256": "94304c12a042b168c0d655dc0ceacffe2efb08997039a7a26c1ed0cc1770bc91",
+  "gear_sha256": "0f90a49329acfd6db5b62cfbe6361efce1c79bea4a9d57a93fab130d46ac5b2b",
+  "phases": [
+    0.125,
+    0.375,
+    0.55,
+    0.625,
+    0.8125
+  ],
+  "unchanged_ground": [
+    -0.02208799682557583,
+    -0.022456128150224686,
+    0.0
+  ],
+  "target_ground": [
+    -2.594033718109131,
+    -0.9830527901649475,
+    0.0
+  ],
+  "contact": {
+    "rear": [
+      -0.3456038236618042,
+      -0.037064433097839355,
+      1.246133804321289
+    ],
+    "tool_frame": [
+      [
+        -0.8098239898681641,
+        -0.35437336564064026,
+        -0.4675520062446594
+      ],
+      [
+        -0.3068963885307312,
+        0.9351040124893188,
+        -0.17718669772148132
+      ],
+      [
+        0.5,
+        -1.4901157641133977e-08,
+        -0.8660255670547485
+      ]
+    ]
+  },
+  "pose_source_sha256": "0020e280c5cd8238da8ab7a01707ccad25a46bdbe69813f3863d2e33f19fdf36",
+  "working_surface": {
+    "head_object": "original relief head worn",
+    "source_triangle_indices": [
+      7270,
+      7271,
+      7794,
+      7795,
+      8310,
+      8311,
+      8818,
+      8819,
+      9318,
+      9319,
+      9810,
+      9811,
+      10294,
+      10295,
+      10770,
+      10771,
+      11242,
+      11243
+    ],
+    "source_vertex_indices": [
+      3762,
+      3763,
+      3765,
+      3767,
+      4024,
+      4027,
+      4280,
+      4283,
+      4532,
+      4535,
+      4780,
+      4783,
+      5024,
+      5027,
+      5264,
+      5267,
+      5500,
+      5503,
+      5732,
+      5735
+    ],
+    "area": 0.0010425376479207278,
+    "surface_center_tool_local": [
+      0.617314338684082,
+      -1.2241617497465995e-08,
+      0.22967073321342468
+    ],
+    "surface_normal_tool_local": [
+      -6.252899765968323e-06,
+      5.181451001590176e-08,
+      1.0000003576278687
+    ]
+  },
+  "closed_evidence": [
+    {
+      "path": "/workspace/scratch/d5437d917805/evidence/native-up-contact-arc/head-topology-04/topology.json",
+      "bytes": 10526,
+      "sha256": "f003e6d63e593255d57a1ae478a84d3956f2dcc6a9ac3f5ca7f7e0fdfb80a329"
+    },
+    {
+      "path": "/workspace/scratch/d5437d917805/evidence/native-up-contact-arc/working-surface-arc-02/working-surface-arc.json",
+      "bytes": 179399,
+      "sha256": "e1ebc75aa4c3f9cf210d06fea9729faef684cf0af4122f223913631c372d2e0b"
+    },
+    {
+      "path": "/workspace/scratch/d5437d917805/evidence/native-up-contact-arc/working-surface-arc-02/evaluated-surface-binding.json",
+      "bytes": 1484,
+      "sha256": "04866e91b63edc7e2cc4f6146bc85b8c5834e5510cd4398bc3a7c71edafa83af"
+    },
+    {
+      "path": "/workspace/scratch/d5437d917805/evidence/native-up-contact-arc/working-surface-arc-01/blender.log",
+      "bytes": 1896,
+      "sha256": "914ba428a743525b899aa42e9ad6f593f8800903dfe6460796a7a21c58787601"
+    }
+  ],
+  "constraints": {
+    "dense_evaluated_poses": 135,
+    "max_grip_error": 5.74045356654467e-07,
+    "max_reach": 0.5871727547061759,
+    "max_segment_error": 9.780127468994593e-08,
+    "max_evaluated_foot_matrix_difference": 0.0,
+    "max_surface_transport_error": 5.840038639982171e-07,
+    "contact_approach": {
+      "native_velocity": [
+        -2.0512053966522217,
+        -1.089308261871338,
+        -8.624934196472168
+      ],
+      "geometric_outward_surface_normal": [
+        -0.46754714846611023,
+        -0.1771847903728485,
+        -0.8660289645195007
+      ],
+      "outward_surface_normal_dot_incoming_velocity": 8.6214869171381,
+      "native_pixel_velocity": [
+        48.1912727355957,
+        398.53302001953125
+      ],
+      "cap_alpha_at_contact": 0.9843137860298157
+    },
+    "first_new_cap_alpha_phase": 0.54
+  },
+  "projected_first_contact_lead_seconds": 0.005192727272727277,
+  "limits": [
+    "Only five native stills are proposed; no full bank or live controller.",
+    "The real lower end-cap approaches the selected ore alpha rim; 3D ore contact is not measured.",
+    "First sampled cap projection enters at .540, about 5.19ms before .55. Actual displayed-frame/HP timing remains for a later ordinary-world pair.",
+    "Geometric head visibility is not rendered recognizability; previous up trials remain rejected.",
+    "New upper-body heading follows the frozen target; original root/feet/map movement and target ownership are unchanged.",
+    "Recovery motion, arbitrary targets/turns/interrupts, mine48 cadence and browser cost are unaccepted."
+  ]
+}

@@ -18,6 +18,7 @@ ap.add_argument('--review',action='store_true')
 ap.add_argument('--premium-pilot',action='store_true')
 ap.add_argument('--gait-pilot',action='store_true')
 ap.add_argument('--native-motion-pilot',action='store_true')
+ap.add_argument('--native-up-working-plane',action='store_true',help='Unapproved Worn/up native arm working-plane study; other views/gears unchanged')
 ap.add_argument('--native-speed',type=float,default=340.)
 ap.add_argument('--gameplay-mine-cycle',type=float,default=.68)
 ap.add_argument('--gameplay-hit-phase',type=float,default=.42)
@@ -31,11 +32,12 @@ ap.add_argument('--threads',type=int,default=2)
 a=ap.parse_args(sys.argv[sys.argv.index('--')+1:])
 assert sum((a.premium_pilot,a.gait_pilot,a.native_motion_pilot)) <= 1
 assert not (a.review and a.native_motion_pilot), 'Native motion pilot uses genuine 200px frames'
+assert not a.native_up_working_plane or a.native_motion_pilot, 'Working-plane study requires the isolated native pilot'
 assert a.native_speed>0 and a.transition_fps>0
 s=bpy.context.scene;r=bpy.data.objects['EverDeeper_Hero_Rig'];kind=a.gear;family=motion_v3.PROFILES[kind]['family']
 out=a.output/kind;out.mkdir(parents=True,exist_ok=True)
 template=ROOT.parent.parent/'assets/hero/dad'/kind/'manifest.json'
-fingerprint=hashlib.sha256(b''.join(p.read_bytes() for p in sorted(ROOT.glob('*.py')))+Path(bpy.data.filepath).read_bytes()+(ROOT/'gear_profiles.json').read_bytes()+(a.native_tools/kind/'hero.blend').read_bytes()+template.read_bytes()+str((a.review,a.premium_pilot,a.gait_pilot,a.native_motion_pilot,a.native_speed,a.native_states,a.native_loop_counts,a.transition_phases,a.transition_fps,a.direction,a.gameplay_mine_cycle,a.gameplay_hit_phase)).encode()).hexdigest()
+fingerprint=hashlib.sha256(b''.join(p.read_bytes() for p in sorted(ROOT.glob('*.py')))+Path(bpy.data.filepath).read_bytes()+(ROOT/'gear_profiles.json').read_bytes()+(a.native_tools/kind/'hero.blend').read_bytes()+template.read_bytes()+str((a.review,a.premium_pilot,a.gait_pilot,a.native_motion_pilot,a.native_speed,a.native_states,a.native_loop_counts,a.transition_phases,a.transition_fps,a.direction,a.gameplay_mine_cycle,a.gameplay_hit_phase,a.native_up_working_plane)).encode()).hexdigest()
 stamp=out/'render-config.sha256'
 if stamp.exists():assert stamp.read_text()==fingerprint,'Output belongs to a different render configuration'
 else:stamp.write_text(fingerprint)
@@ -119,7 +121,7 @@ def ground_vector(direction):
 def pose(t,mode,direction):
  if a.native_motion_pilot:
   if mode in ('idle','walk','mine'):
-   p=native_motion.sample(kind,mode,t,ground_vector(direction),a.native_speed)
+   p=native_motion.sample(kind,mode,t,ground_vector(direction),a.native_speed,direction=direction,up_working_plane=a.native_up_working_plane)
   else:
    clip=native_clips[direction][mode]
    p=clip.sample(t*clip.duration)
@@ -182,6 +184,12 @@ if a.native_motion_pilot:
               'interrupted_transition_coverage':False,
               'gameplay_mining_timing':{'cycle_seconds':a.gameplay_mine_cycle,'hit_phase':a.gameplay_hit_phase},
               'support_phase_windows':{'R':[0.,16./88.],'L':[.5,.5+16./88.]}}
+ if a.native_up_working_plane:
+  m['motion']['working_plane_study']={'id':'worn-up-lateral-v1','gear':'worn','direction':'up',
+    'local_native_offset':list(native_motion.UP_WORKING_PLANE_OFFSET),
+    'changed':'native mining rear/grip/arm targets and bridges containing mining',
+    'preserved':'map heading, rigid tool orientation, torso, head, legs, foot rotations, contact flags, timing, scale, materials',
+    'contact_position_unchanged':False,'visually_accepted':False}
  prior_states=m['states'];m['states']={};m['directions']={}
  selected=set(a.native_states.split(','))
  counts={item.split('=')[0]:int(item.split('=')[1]) for item in a.native_loop_counts.split(',') if item}
@@ -208,7 +216,7 @@ if a.native_motion_pilot:
   for phase in ([0.] if source=='idle' else phases):
    name=route+'-'+str(round(phase*1000000)).zfill(6)
    for direction in grounds:
-    clip=native_motion.Transition(kind,source,phase,target,tuple(grounds[direction]),a.native_speed,a.gameplay_mine_cycle,a.gameplay_hit_phase)
+    clip=native_motion.Transition(kind,source,phase,target,tuple(grounds[direction]),a.native_speed,a.gameplay_mine_cycle,a.gameplay_hit_phase,direction=direction,up_working_plane=a.native_up_working_plane)
     native_clips[direction][name]=clip
     meta=clip.metadata()
     view(direction,dict(views)[direction])

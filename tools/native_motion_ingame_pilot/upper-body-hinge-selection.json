@@ -1,0 +1,25 @@
+{
+  "scope": "One study-only Worn/up anatomical hinge; no production or visual acceptance",
+  "source_base": "894869b05335f48378036be5020cda8bafcaa437",
+  "side_lean_degrees": 10,
+  "local_twist_degrees": -12,
+  "body_joint_local": [0.0, 0.0, 0.5849999785423279],
+  "weight_knots": [[0, 0], [0.125, 1], [0.625, 1], [0.82, 0], [1, 0]],
+  "critical_phases": [0.125, 0.375, 0.55, 0.625, 0.8125],
+  "unchanged_fixed_cap_yaw_degrees": 15,
+  "unchanged_fixed_cap_pitch_degrees": 45,
+  "joint_report_sha256": "ae2619519c40cd1fbe14754bd67020e55294841d5f0681453b5a4e41a0f0c608",
+  "hinge_math_report_sha256": "9a81e02942ccd6f652873f4c9bc118d15df4b9094ff2902675f04ce03ac05073",
+  "closed_head_report_sha256": "2d1cc98df5c19a44c4d53df09ec122fb0b6b67f6fd76e8b59fb5a49571eee443",
+  "complete_head_footprint_report_sha256": "aea61aa25c152c75ebcf1fb0f71389a9edd3290e2a41609fc309b21450e26105",
+  "working_surface_topology_sha256": "f003e6d63e593255d57a1ae478a84d3956f2dcc6a9ac3f5ca7f7e0fdfb80a329",
+  "pose_helper_sha256": "d180c285396c91c86e39d317eb7d4a8252d071ac62039b7dd12c8dac297142a8",
+  "fixed_cap_pose_helper_sha256": "0b34390531af4a8b37da7050673595e265b4d3ba5a16b86b7b46afe23280e481",
+  "rationale": "All unchanged shaft pixel centers at windup/contact lie at least two native pixels outside the complete conservative head cover, with centerline margins 5.52/5.85 px and original maximum analytic reach 0.6711. Smaller lean has less margin; greater lean or no twist approaches full arm extension.",
+  "open_limits": [
+    "Head-only conservative projection is not full-scene visibility or anatomy/readability approval.",
+    "Recovery phase 0.8125 still intersects the conservative head cover by about one native pixel.",
+    "Actual 135-pose rig and all five full-scene shaft/hand continuity measurements remain mandatory.",
+    "No native images, full bank, runtime adoption, arbitrary-input coverage or FPS claim."
+  ]
+}
