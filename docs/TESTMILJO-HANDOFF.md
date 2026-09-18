@@ -1,3 +1,6 @@
+CURRENT VERIFIED LOCAL ANIMATION CHECKPOINT: [Four-case complete-return review](premium-polish/hero-return-20260918.md).
+Godot4.7.2/X11 llvmpipe and Blender4.5.3 were exercised on18September; all runs are closed. The public-source upload is blocked by automatic approval review, not by the test environment.
+
 CURRENT VERIFIED MILESTONE: [Published DEV10](premium-polish/dev10-20260917/PUBLISHED.md).
 Exact browser/native QA35181119505, Mac WebKit35181878479 and publication35182372885 pass. Linux WebKit framebuffer failure remains retained; Mac uses Actions step timeouts, since GNUtimeout is absent. Virtual-Mac sustained performance still fails50FPS. Existing root Godot/Xvfb route remains valid; never run heavy renderers concurrently.
 

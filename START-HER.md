@@ -1,3 +1,6 @@
+CURRENT LOCAL CHECKPOINT: [Complete hero return, four actual-game cases](docs/premium-polish/hero-return-20260918.md).
+Hero animation remains the priority; FPS paused. Source/atlas upload is pending explicit consent required by automatic approval review. Read the linked checkpoint before older published/historical entries.
+
 CURRENT WORK: [Continue premium polish after DEV12](docs/premium-polish/dev12-north-edge-20260917/HANDOFF.md).
 PUBLISHED: [DEV12 verified](docs/premium-polish/dev12-north-edge-20260917/PUBLISHED.md) — [play DEV12](https://corpax88.github.io/Ever-Deeper/dev/?build=580a2e0).
 Mats authorized continued work, independent critics, code uploads and gated DEV publication. Do not ask for the same authorization again.
