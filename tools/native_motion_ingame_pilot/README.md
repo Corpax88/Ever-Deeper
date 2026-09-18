@@ -280,3 +280,11 @@ the prior diagnosis. Four original poses show a held first post-release pose
 followed by the idle return. This supports one limited game trial, not general
 cancellation or temporal approval. `extend_shown_cancel_bank.py` appends only
 its twelve cells to the unchanged 206-cell bank and retains explicit C0 metadata.
+
+The extension closed on `da125fb`, exit 0: 206 originals preserved and twelve
+new cells rendered, then packed by the original packer to two 160px pages.
+Both first-page images remain byte-identical. `--late-cancel-cycle` selects
+this bank and releases normal mining after the actually shown .523810 pose
+at 17/60 mining seconds, then uses the existing idle restart sequence. This
+selects the last pre-hit draw, not the earlier repeated cell. No gameplay
+clock, consumer, resource or existing early-cancel route is changed.

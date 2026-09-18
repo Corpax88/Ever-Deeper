@@ -35,6 +35,14 @@ const CROSS_SHOULDER_ASSET_HASHES := {
 	"up-p001.png": "0b90a16740b384942ed2570643d88428c066c2b42f63fe218b03db83bcb59838",
 	"up.png": "4b1d03b7e4211b39e70eef34f33a8cc5a6d2a598c0ba90f008c6b2d868a07a08"
 }
+const SHOWN_CANCEL_ASSETS := "res://tools/native_motion_ingame_pilot/assets/worn-shown-cancel/"
+const SHOWN_CANCEL_ASSET_HASHES := {
+	"manifest.json": "1c9ea6f3b2ec409dc59c6d3e6f0233016780046863e6511d62eac6f436e80e98",
+	"up-cloth.png": "f9f7064448fad7d36bc6cb86669dbecb5cc72c211fb91c5dec00c43ba03303ee",
+	"up-p001-cloth.png": "fab098b7603c8af9495a34d87e794bf8d2ca8366c2f6feaa5f57b3a1a9333d68",
+	"up-p001.png": "c3dd8e15614a898b4d696841e071b53bdba6c049c7d78e876bdfaf3bbec34beb",
+	"up.png": "4b1d03b7e4211b39e70eef34f33a8cc5a6d2a598c0ba90f008c6b2d868a07a08"
+}
 const ROUTE_FILE := "res://tools/native_motion_ingame_pilot/frozen-route.json"
 const SPEED := 340.0
 const APPROACH := 136.0
@@ -72,6 +80,7 @@ var cancel_cycle := false
 var bridge_restart_cycle := false
 var verify_contact_frames := false
 var cross_shoulder_load := false
+var late_cancel_cycle := false
 var continue_framing_diagnostics := false
 var consumer_armed := false
 var asset_root := ASSETS
@@ -103,6 +112,9 @@ func _run() -> void:
 		elif arg == "--bridge-restart-cycle": bridge_restart_cycle = true
 		elif arg == "--contact-frame-order": verify_contact_frames = true
 		elif arg == "--cross-shoulder-load": cross_shoulder_load = true
+		elif arg == "--late-cancel-cycle":
+			late_cancel_cycle = true
+			cancel_cycle = true
 		elif arg == "--continue-framing-diagnostics": continue_framing_diagnostics = true
 	if not output.is_absolute_path() or not DIRECTIONS.has(direction_name) or source_sha.length() != 40 or mode not in ["geometry", "candidate", "baseline"] or (mode != "geometry" and DisplayServer.get_name() == "headless") or (int(rest_cycle) + int(cancel_cycle) + int(bridge_restart_cycle) > 1):
 		print("NATIVE_INGAME_USAGE --mode=geometry|candidate|baseline --direction=right|up --source-sha=<40hex> --output=<absolute> [--depth=1] [--replay=<candidate report>]; visual modes require a rendered display")
@@ -123,6 +135,9 @@ func _run() -> void:
 	if cross_shoulder_load:
 		asset_root = CROSS_SHOULDER_ASSETS
 		asset_hashes = CROSS_SHOULDER_ASSET_HASHES
+	if late_cancel_cycle:
+		asset_root = SHOWN_CANCEL_ASSETS
+		asset_hashes = SHOWN_CANCEL_ASSET_HASHES
 	if mode == "baseline":
 		if not replay_path.is_absolute_path() or not FileAccess.file_exists(replay_path):
 			_check(false, "Baseline requires an actual candidate input trace")
@@ -317,6 +332,7 @@ func _candidate_sequence() -> void:
 
 
 func _cancel_and_restart() -> void:
+	var cancel_source_phase := 0.5238095238095238 if late_cancel_cycle else 0.392857142857143
 	var stopped_at: Vector2 = player.global_position
 	var hp := int(world.resources[int(route.resource_index)].hp)
 	var ready := false
@@ -324,10 +340,11 @@ func _cancel_and_restart() -> void:
 		if not await _capture_frame("pre_hit_windup"): return
 		if not _check(int(player._mining_impact_serial) == initial_serial and int(world.resources[int(route.resource_index)].hp) == hp, "Initial windup has no real hit before cancellation"): return
 		var shown: Dictionary = player.visual.presented_snapshot()
-		if shown.state == "mine" and not bool(shown.is_bridge) and is_equal_approx(float(shown.sample_phase), 0.392857142857143):
+		var last_pre_hit_tick := not late_cancel_cycle or is_equal_approx(float(samples.back().mining_elapsed), 17.0 / 60.0)
+		if shown.state == "mine" and not bool(shown.is_bridge) and is_equal_approx(float(shown.sample_phase), cancel_source_phase) and last_pre_hit_tick:
 			ready = true
 			break
-	if not _check(ready, "Pre-hit cancel starts from the actual measured .392857 native draw"): return
+	if not _check(ready, "Late cancel starts from the last actual .523810 draw at 17/60 mining seconds" if late_cancel_cycle else "Pre-hit cancel starts from the actual measured .392857 native draw"): return
 	_input("cancel_before_hit", Vector2.ZERO, false)
 	ready = false
 	for frame in 15:
@@ -673,6 +690,6 @@ func _finish() -> void:
 		if mode == "candidate" and is_instance_valid(player): player.visual.disarm()
 		main._set_mine_held(false)
 		main._on_joystick_movement(Vector2.ZERO)
-	_write_json("native-ingame.json", {"schema": 1, "passed": failures.is_empty(), "mode": mode, "source_sha": source_sha, "production_runtime_source": BASE_SOURCE, "fixture_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/capture.gd"), "consumer_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/pilot_visual.gd"), "consumer_installed": mode != "baseline", "consumer_armed": consumer_armed, "continue_framing_diagnostics": continue_framing_diagnostics, "asset_hashes": asset_hashes, "asset_root": asset_root, "rest_cycle": rest_cycle, "cancel_cycle": cancel_cycle, "bridge_restart_cycle": bridge_restart_cycle, "verify_contact_frames": verify_contact_frames, "cross_shoulder_load": cross_shoulder_load, "runtime_world_sha256": FileAccess.get_sha256("res://scripts/world/endless_descent_world.gd"), "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "rendered": not captures.is_empty(), "viewport": [root.size.x, root.size.y], "content_scale_size": [root.content_scale_size.x, root.content_scale_size.y], "direction": direction_name, "seed": WORLD_SEED, "depth": depth, "route": route, "route_search": route_search, "startup_feedback": startup_feedback, "checks": checks, "failures": failures, "events": events, "samples": samples, "captures": captures, "transitions": player.visual.transitions if mode == "candidate" and is_instance_valid(player) else [], "replay_source_sha": replay.get("source_sha", ""), "replay_binding_reason": "Same actual DEV13-based source, consumer and bank checkpoint", "replay_sha256": FileAccess.get_sha256(replay_path) if not replay_path.is_empty() else "", "elapsed_wall_ms": Time.get_ticks_msec() - started_wall_ms, "manual_world_ticks": false, "manual_pose_playback": false, "visual_acceptance": false, "limits": "Headless geometry loads the consumer unarmed and is not visual evidence. Rendered cases, when present, are controlled fixed-step in-game input, not unrestricted live input, production adoption, all-direction/tool coverage or FPS evidence. Canonical endpoint quantization remains visible. Offset release is covered only in the rendered route; arbitrary interruptions are not covered."})
+	_write_json("native-ingame.json", {"schema": 1, "passed": failures.is_empty(), "mode": mode, "source_sha": source_sha, "production_runtime_source": BASE_SOURCE, "fixture_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/capture.gd"), "consumer_sha256": FileAccess.get_sha256("res://tools/native_motion_ingame_pilot/pilot_visual.gd"), "consumer_installed": mode != "baseline", "consumer_armed": consumer_armed, "continue_framing_diagnostics": continue_framing_diagnostics, "asset_hashes": asset_hashes, "asset_root": asset_root, "rest_cycle": rest_cycle, "cancel_cycle": cancel_cycle, "bridge_restart_cycle": bridge_restart_cycle, "verify_contact_frames": verify_contact_frames, "cross_shoulder_load": cross_shoulder_load, "late_cancel_cycle": late_cancel_cycle, "runtime_world_sha256": FileAccess.get_sha256("res://scripts/world/endless_descent_world.gd"), "engine": Engine.get_version_info().string, "display": DisplayServer.get_name(), "rendered": not captures.is_empty(), "viewport": [root.size.x, root.size.y], "content_scale_size": [root.content_scale_size.x, root.content_scale_size.y], "direction": direction_name, "seed": WORLD_SEED, "depth": depth, "route": route, "route_search": route_search, "startup_feedback": startup_feedback, "checks": checks, "failures": failures, "events": events, "samples": samples, "captures": captures, "transitions": player.visual.transitions if mode == "candidate" and is_instance_valid(player) else [], "replay_source_sha": replay.get("source_sha", ""), "replay_binding_reason": "Same actual DEV13-based source, consumer and bank checkpoint", "replay_sha256": FileAccess.get_sha256(replay_path) if not replay_path.is_empty() else "", "elapsed_wall_ms": Time.get_ticks_msec() - started_wall_ms, "manual_world_ticks": false, "manual_pose_playback": false, "visual_acceptance": false, "limits": "Headless geometry loads the consumer unarmed and is not visual evidence. Rendered cases, when present, are controlled fixed-step in-game input, not unrestricted live input, production adoption, all-direction/tool coverage or FPS evidence. Canonical endpoint quantization remains visible. Offset release is covered only in the rendered route; arbitrary interruptions are not covered."})
 	print("NATIVE_INGAME_COMPLETE mode=", mode, " direction=", direction_name, " checks=", checks.size(), " failures=", failures.size())
 	quit(0 if failures.is_empty() else 1)
