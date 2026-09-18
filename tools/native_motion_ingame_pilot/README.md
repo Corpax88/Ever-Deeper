@@ -273,3 +273,10 @@ They hold its complete pose while the original idle clock and 120 ms blend
 advance. This is explicitly C0: incoming source velocity stops on release.
 The full blend, original endpoints and actual rig must be checked. Existing
 early cancellation, restart, canonical mining and runtime assets are unchanged.
+
+The C0 comparison closed on `ae2e645`, exit 0: all 75 sampled cap projections
+are clear, the positive control still overlaps, and both endpoints are exactly
+the prior diagnosis. Four original poses show a held first post-release pose
+followed by the idle return. This supports one limited game trial, not general
+cancellation or temporal approval. `extend_shown_cancel_bank.py` appends only
+its twelve cells to the unchanged 206-cell bank and retains explicit C0 metadata.
