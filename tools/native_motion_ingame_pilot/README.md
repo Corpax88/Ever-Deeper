@@ -237,3 +237,10 @@ unchanged timing/root metadata and protected bones before rendering. PNG
 bytes are reused only for exact equality of all old/new bone matrices; every
 changed pose is rendered from the original scene. Previous approvals are
 retained as historical references, not transferred to the new trial bank.
+
+The rebuild actually closed on `f5b5e84`, exit 0: 803 transition samples,
+206 frame checks, 136 byteidentical reused cells and 70 new native renders.
+Protected matrix difference is zero. The original packer produced two
+160-pixel atlas pages without edge clipping. This does not establish motion
+or gameplay acceptance. `--cross-shoulder-load` selects this explicit bank
+for an otherwise unchanged fixture route, including active restart.
