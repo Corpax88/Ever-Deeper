@@ -20,6 +20,8 @@ p.add_argument('--recorded', type=Path, required=True)
 p.add_argument('--output', type=Path, required=True)
 p.add_argument('--round-start', type=float, default=.85)
 p.add_argument('--round-end', type=float, default=.15)
+p.add_argument('--outward-load', action='store_true')
+p.add_argument('--side-return', action='store_true')
 a = p.parse_args(sys.argv[sys.argv.index('--')+1:])
 assert not a.output.exists()
 sha = lambda path: hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -28,13 +30,18 @@ surface = json.loads((HERE/'working-surface-selection.json').read_text())
 hinge = json.loads((HERE/'upper-body-hinge-selection.json').read_text())
 pivot = json.loads(a.pivot.read_text())
 motions = {'baseline': CompleteReturnMotion(surface, hinge, pivot),
-           'candidate': LoopFlowMotion(surface, hinge, pivot, a.round_start, a.round_end)}
+           'candidate': LoopFlowMotion(surface, hinge, pivot, a.round_start, a.round_end,a.outward_load)}
+if a.side_return:
+    from side_return_motion import SideReturnMotion
+    motions['candidate']=SideReturnMotion(surface,hinge,pivot)
 report = {'complete':False, 'rendered':False, 'visual_accepted':False,
           'scope':'Worn/up kinematics only; no actual mesh, collision or temporal visual acceptance',
           'selection':motions['candidate'].selection(), 'inputs':{str(a.pivot):sha(a.pivot),str(a.recorded):sha(a.recorded)},
           'source_hashes':{str(path.relative_to(ROOT)):sha(path) for path in
                            (Path(__file__), HERE/'loop_flow_motion.py', HERE/'complete_return_motion.py')},
           'frames':[], 'dense':[], 'seams':[]}
+if a.side_return:
+    report['source_hashes']['tools/native_motion_ingame_pilot/side_return_motion.py']=sha(HERE/'side_return_motion.py')
 
 
 def features(pose):
@@ -54,16 +61,20 @@ def project(point, angle):
 def compare(q):
     poses = {k:m.sample('mine',q) for k,m in motions.items()}
     points = {k:features(v) for k,v in poses.items()}
-    protected = max(abs(poses['baseline'][n][i][j]-poses['candidate'][n][i][j])
+    body_error = max(abs(poses['baseline'][n][i][j]-poses['candidate'][n][i][j])
                     for n in ('torso','head') for i in range(4) for j in range(4))
-    protected = max(protected,max((poses['baseline']['legs'][s][i]-poses['candidate']['legs'][s][i]).length
-                                  for s in ('R','L') for i in range(3)))
+    protected = max((poses['baseline']['legs'][s][i]-poses['candidate']['legs'][s][i]).length
+                                  for s in ('R','L') for i in range(3))
+    if not a.side_return or .30<=q%1.<=.70: assert body_error<1e-6
+    if a.side_return:
+        joint=motions['candidate'].body_joint
+        assert ((poses['baseline']['torso']@joint)-(poses['candidate']['torso']@joint)).length<1e-6
     reach = max((wrist-shoulder).length for shoulder,elbow,wrist in poses['candidate']['arms'].values())
     grip_span = (poses['candidate']['grips']['R']-poses['candidate']['grips']['L']).length
     assert protected < 1e-6 and reach < .70999 and abs(grip_span-.145)<1e-6
-    if a.round_end <= q%1. <= a.round_start:
+    if (.55 if a.outward_load or a.side_return else a.round_end) <= q%1. <= a.round_start:
         assert max((points['baseline'][k]-points['candidate'][k]).length for k in points['baseline']) == 0.
-    return {'phase':q,'maximum_reach':reach,'protected_error':protected,
+    return {'phase':q,'maximum_reach':reach,'protected_error':protected,'intentional_body_matrix_difference':body_error,
             'points':{k:{n:list(v) for n,v in values.items()} for k,values in points.items()},
             'projected':{str(angle):{k:{n:list(project(v,angle)) for n,v in values.items()}
                                      for k,values in points.items()} for angle in (0,25)}}

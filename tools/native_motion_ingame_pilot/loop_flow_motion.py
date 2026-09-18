@@ -48,8 +48,22 @@ def hermite(a, b, va, vb, u, duration):
 
 
 class LoopFlowMotion(CompleteReturnMotion):
-    def __init__(self, surface, hinge, pivot_report, round_start=ROUND_START, round_end=ROUND_END):
+    def __init__(self, surface, hinge, pivot_report, round_start=ROUND_START, round_end=ROUND_END,
+                 outward_load=False):
         super().__init__(surface, hinge, pivot_report)
+        self.outward_load = outward_load
+        if outward_load:
+            old_load = self.original.sample('mine', .40)
+            right = (old_load['arms']['R'][0]-old_load['arms']['L'][0]).normalized()
+            axis = (Vector((0.,0.,1.)) + right*.35).normalized()
+            self.load_normal = (self.load_axis.rotation_difference(axis) @ self.load_normal).normalized()
+            self.load_axis = axis
+            # Wrist offsets rotate with the rigid shaft. The tool-only reach
+            # diagnosis requires dz <= -.204822 for a .68 arm-reach budget.
+            # Round down to 5 mm; retain the original .71 solver unchanged.
+            self.load_midpoint += Vector((0.,0.,-.21))
+            self.load_rear = self.load_midpoint-axis*(.145*.5)
+            self.load_rotation = pm.tool_frame(axis,self.load_normal).to_quaternion()
         assert .625 < round_start < 1. and 0. < round_end < .40
         self.round_start, self.round_end = round_start, round_end
         self.round_start_progress = game_progress(round_start)
@@ -94,4 +108,11 @@ class LoopFlowMotion(CompleteReturnMotion):
                    changed_ranges=f'({self.round_start},1) and [0,{self.round_end})',
                    unchanged_range=f'[{self.round_end},{self.round_start}]',
                    visual_accepted=False, production_accepted=False)
+        if self.outward_load:
+            out.update(proposal='one-outward-load-plane-trial',outward_load=True,
+                       axis_rule='normalize(world_up + .35 * normalized_shoulder_right)',
+                       load_midpoint_adjustment=[0.,0.,-.21],
+                       total_world_z_lift=out['total_world_z_lift']-.21,
+                       unchanged_range=f'[.55,{self.round_start}]',
+                       changed_ranges=f'outside [.55,{self.round_start}]')
         return out

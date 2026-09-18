@@ -91,6 +91,47 @@ new hitch, floating tool, grip error or contact regression before further work.
 The dedicated --loop-flow-probe guard permits only the same closed original-view
 route and records the exact bank identity. No production runtime has changed.
 
+## Trial02 result and Trial03 visibility preflight
+
+Trial02 passed the actual119-frame game replay against original0 control.
+Input, mechanics, world and hits50/90 match. Gemini Pro again scored A5/B5
+and alleged identical poses, despite31 verified new native cells. The helmet
+and backpack still hide most of the mathematical11px cap-path difference.
+Its negative perception is useful; its frozen-pose diagnosis is not established.
+
+A fresh Gemini context correctly distinguished a frozen control from the119
+actual moving frames and counted two hits/upward walking. It incorrectly
+described ore destruction although HP remained. This calibrates gross event
+recognition, not exact temporal/contact grading. No paid API was introduced.
+
+Trial03 changes the load shaft to normalize(up+.35*shoulder_right), carrying
+the normal by the shortest rigid rotation. Initial dz=-.04 failed reach at
+construction; tool-only analysis found maximum reach.800 and dz<=-.204822
+for a.68 budget. Selected dz=-.21 preserves the original.71 IK solver and
+passes401 samples. Four real-rig visibility stills at .953448,0,.40,.523810
+are assessed before any full bank or game capture. Frozen contact stays intact.
+
+The independent critic rejected those four stills for full-bank rendering:
+the wrap still hides the tool and hands. Only the load pose improves locally.
+Next diagnosis tested a side-carry point at native200[142,108]. Without body
+rotation it needs.936 left-arm reach, so translating the hands alone cannot
+meet the silhouette and anatomical constraints simultaneously.
+
+Trial04 gives the original torso/head one extra-40-degree local-Z turn about
+the measured body joint during the return window, smoothly zero at.70/.30.
+At the side point, analytic depth selection minimizes the worse of the two
+wrist distances: both.65805. Original bones/arm lengths remain untouched.
+Two Hermite segments pass through this point with shared nonzero velocity;
+the original clock, hips/legs/feet and contact.55-.70 remain fixed.
+401 actual IK samples pass (max.676537). The first real-rig waypoint image
+makes shaft/tool and hand gesture readable, without an obvious waist gap.
+The independent critic supports one cheap50-pose native cycle video at the
+actual.68-second timing before any full bank. Large fast torso unturn and
+intermediate hand/pack intersections remain explicit visual risks.
+
+This native prototype is not an actual game test. No bridge, whole-scene
+contact, other direction/tool or production approval follows from it.
+
 No visual acceptance, 9/10 claim, full-input coverage or game publication is
 recorded here. Trial01 local test commit0b1706c and remote commitbdcad8b have
 the identical treefd839378e0b8e6e7bd477e7497ef53a493ccca22; the connector supplied
