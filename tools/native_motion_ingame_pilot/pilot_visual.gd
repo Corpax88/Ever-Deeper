@@ -136,15 +136,23 @@ func _process(delta: float) -> void:
 	var crossing: Dictionary = {}
 	if not _bridge.is_empty():
 		elapsed = mining_progress * MINE_SECONDS if _state == "mine" else (_distance - _bridge_origin_distance) / SPEED if _state == "walk" else _state_elapsed
+		if _state == "walk" and bool(_bridge.get("upper_exit_study", false)) and not bool(_bridge.get("lower_handoff_done", false)) and elapsed >= float(_bridge.lower_body_duration):
+			# The legs retain their original walking/offset-release clock while
+			# the separately authored upper-body return is still visible.
+			var lower_destination: Array = _bridge.destination_offset_pixels
+			_offset = _incoming_offset + Vector2(float(lower_destination[0]), float(lower_destination[1]))
+			_bridge["lower_handoff_done"] = true
+			transitions.append({"event": "lower_body_handoff", "name": _bridge.name, "actual_elapsed": elapsed, "duration": _bridge.lower_body_duration})
 		if elapsed < float(_bridge.duration):
 			state = String(_bridge.name)
 			phase = clampf(elapsed / float(_bridge.duration), 0.0, 1.0)
 		else:
 			var destination: Array = _bridge.destination_offset_pixels
-			_offset = _incoming_offset + Vector2(float(destination[0]), float(destination[1]))
+			if not bool(_bridge.get("lower_handoff_done", false)):
+				_offset = _incoming_offset + Vector2(float(destination[0]), float(destination[1]))
 			crossing = {"event": "canonical_handoff", "name": _bridge.name, "duration": _bridge.duration, "actual_elapsed": elapsed, "nominal_destination_phase": _bridge.destination_phase, "requested_phase": phase, "offset": _array(_offset)}
 			_bridge = {}
-	if _state == "walk" and _bridge.is_empty():
+	if _state == "walk" and (_bridge.is_empty() or bool(_bridge.get("lower_handoff_done", false))):
 		_release_offset_in_flight()
 	var presenting_impact := _impact_pending and mining
 	if presenting_impact:
@@ -173,6 +181,11 @@ func _start_bridge(wanted: String) -> bool:
 		_fail("No exact authored bridge for displayed source: " + name)
 		return false
 	var info: Dictionary = bank[name]
+	if bool(info.get("upper_exit_study", false)):
+		var exit_offset: Array = info.destination_offset_pixels
+		if not Vector2(float(exit_offset[0]), float(exit_offset[1])).is_zero_approx():
+			_fail("Upper exit study requires the bound zero destination offset")
+			return false
 	var interrupted := bool(_last_presented.is_bridge)
 	if bool(info.get("source_is_bridge", false)) != interrupted or String(info.target_state) != wanted or String(info.source_state) != source_state or not is_equal_approx(float(info.source_phase), source_phase):
 		_fail("Exact source state/phase mismatch")
@@ -281,7 +294,7 @@ func _draw_sample(state: String, phase: float, elapsed: float, impact: bool) -> 
 	_sprite.region_rect = Rect2(Vector2(index % columns, floori(float(index) / columns)) * cell, cell)
 	var anchor: Array = _manifest.directions[selected_direction].ground_anchor
 	_sprite.scale = Vector2.ONE
-	var placement := _incoming_offset if not _bridge.is_empty() else _offset
+	var placement := _incoming_offset if not _bridge.is_empty() and not bool(_bridge.get("lower_handoff_done", false)) else _offset
 	_sprite.position = Vector2(0.0, GROUND_Y) - Vector2(float(anchor[0]), float(anchor[1])) + placement
 	if _last_frame == index: state_skip_count += 1
 	else: redraw_request_count += 1
