@@ -1,4 +1,7 @@
-Latest hero checkpoint: [20 held-mining flow](docs/premium-polish/hero-flow-20-20260919.md).
+Current work: [21 exact transition seams](tools/native_motion_ingame_pilot/studies/transitions_21/README.md).
+Mats approved study20's visible flow, then said Go. Preserve the loop; finish interrupted walking and entry.
+
+Latest completed hero checkpoint: [20 held-mining flow](docs/premium-polish/hero-flow-20-20260919.md).
 Recovered the newer study20 source after the19C handoff; new150-frame actual capture and independent review pass.
 Show the verified normal-speed MP4. General direction/tool/transition coverage remains open; FPS paused.
 

@@ -1,6 +1,9 @@
-Latest hero checkpoint: [20 held-mining flow](docs/premium-polish/hero-flow-20-20260919.md).
+Current work: [21 exact transition seams](tools/native_motion_ingame_pilot/studies/transitions_21/README.md).
+Mats has approved the visible study20 flow. Preserve it while extending transitions; do not redesign the swing.
+
+Latest completed hero checkpoint: [20 held-mining flow](docs/premium-polish/hero-flow-20-20260919.md).
 Long authored holds reduced; fresh gameplay and independent sequence review pass for this narrow preview.
-Normal-speed user acceptance and wider coverage remain open. FPS paused; no DEV/LIVE adoption.
+Mats accepted its visible flow. Wider coverage remains open. FPS paused; no DEV/LIVE adoption.
 
 Previous hero checkpoint: [19C transitions](docs/premium-polish/hero-transitions-19-20260919.md).
 Bounded stationary/rapid-restart/exact walk-exit image pass; no9/10 or production adoption. FPS paused.
