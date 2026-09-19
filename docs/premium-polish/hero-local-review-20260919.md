@@ -1,5 +1,6 @@
-Latest completed round: [16H–16J decisions and saved evidence](hero-return-16h-16j-20260919.md).
-All new candidates remain rejected; no engine/agent is left running by this checkpoint.
+Latest checkpoint: [simple swing17 actual preview and remaining gates](hero-simple-swing-17-20260919.md).
+17C improves visible contact and tool readability. Withdrawal clearance and final
+visual acceptance remain open; production and LIVE are unchanged.
 
 # Hero animation: local independent review
 
