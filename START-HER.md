@@ -1,3 +1,7 @@
+Latest hero checkpoint: [overhead18B actual gameplay preview](docs/premium-polish/hero-overhead-swing-18-20260919.md).
+Rearward load, contact and withdrawal receive an internal ordered-frame preview pass.
+Entry/exit, other headings and final motion acceptance remain open; FPS stays paused.
+
 Latest animation checkpoint: [local16H–16J attempt and rejection analysis](docs/premium-polish/hero-return-16h-16j-20260919.md).
 No9/10 result; no new bank. Internal critic works without external sign-in.
 

@@ -1,3 +1,7 @@
+Latest checkpoint: [overhead18B actual gameplay preview](hero-overhead-swing-18-20260919.md).
+Internal critic: clearer rearward load/body strike; all four impacts meet the ore;
+withdrawal returns to ready. Preview pass only; continuous motion/production remain open.
+
 Latest checkpoint: [simple swing17 actual preview and remaining gates](hero-simple-swing-17-20260919.md).
 17C improves visible contact and tool readability. Withdrawal clearance and final
 visual acceptance remain open; production and LIVE are unchanged.

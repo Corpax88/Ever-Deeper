@@ -1,3 +1,8 @@
+Latest verified run: [overhead18B](premium-polish/hero-overhead-swing-18-20260919.md).
+Blender4.5.3:50native loop frames; Godot4.7.2/X11:150actual1696×780frames,
+four real hits/16damage. Internal image-sequence preview pass, no physical-device
+or continuous-video claim. Runtime paths remain those restored under/tmp/ever-deeper-runtime-20260918/.
+
 CURRENT ANIMATION REVIEW: [Local independent critic workflow](premium-polish/hero-local-review-20260919.md). Use the existing actual16G119-frame capture and internal critic without waiting for optional Gemini sign-in. Mechanical and pixel-binding checks pass; actual ore-pulse clearance fails1.63px versus2px. Local sequence/timing diagnosis is not continuous-video viewing, production approval or physical-iPhone evidence.
 
 LATEST RENDERED ANGLE CHECK: [Closed camera-angle trial](premium-polish/hero-view-angle-20260918.md). Blender4.5.3 and Godot4.7.2/X11/Mesa25.2.8 llvmpipe succeeded;119 actual frames, unchanged inputs/world/hits50/90, and only76 newly rendered cells presented. Xvfb restored at `/tmp/ever-deeper-runtime-20260918/angle-xvfb/root/usr/bin/Xvfb`. No production or physical-device acceptance.
