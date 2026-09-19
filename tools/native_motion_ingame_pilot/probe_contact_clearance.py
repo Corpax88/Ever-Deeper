@@ -50,17 +50,24 @@ try:
             return {b.name:b.matrix.copy() for b in rig.pose.bones}
         for q in (.50,.55,.625):
             expected=apply(old.sample('mine',q));pose=new.sample('mine',q);actual=apply(pose)
-            protected=[n for n in expected if n not in ('upper.R','lower.R','hand.R','upper.L','lower.L','hand.L')]
+            # The tool and its optional child bit intentionally rotate rigidly.
+            protected=[n for n in expected if n not in ('upper.R','lower.R','hand.R','upper.L','lower.L','hand.L','tool','bit')]
             error=max(abs(actual[n][i][j]-expected[n][i][j]) for n in protected for i in range(4) for j in range(4))
             grip=max((((actual['hand.'+s]@rig.data.bones['hand.'+s].matrix_local.inverted())@env['rest']['grips'][s])-pose['grips'][s]).length for s in ('R','L'))
             length=max(abs((rig.pose.bones[n].tail-rig.pose.bones[n].head).length-rig.data.bones[n].length) for n in ('upper.R','lower.R','upper.L','lower.L'))
-            assert max(error,grip,length)<1e-5,(q,error,grip,length)
+            actual_frame=(actual['tool'].to_3x3()@rig.data.bones['tool'].matrix_local.to_3x3().inverted()
+                          @pm.tool_frame(env['rest']['axis'],env['rest']['tool_normal']))
+            actual_cap=actual['tool'].translation+actual_frame@new.local_cap
+            before=old.sample('mine',q)
+            old_cap=before['rear']+pm.tool_frame(before['axis'],before['tool_normal'])@new.local_cap
+            actual_cap_error=(actual_cap-old_cap).length
+            assert max(error,grip,length,actual_cap_error)<1e-5,(q,error,grip,length,actual_cap_error)
             env['blink'](0.)
             for mod in env['skin']:mod.show_viewport=True
             bpy.context.view_layer.update();name=f'contact-{round(q*1000):03d}';png=a.output/(name+'.png')
             scene.render.filepath=str(png);env['mask'].base_path=str(a.output);env['mask'].file_slots[0].path='mask-'+name+'-';scene.frame_current=1
             bpy.ops.render.render(write_still=True)
-            r['renders'].append({'phase':q,'path':png.name,'sha256':sha(png),'protected_rig_error':error,'grip_error':grip,'length_error':length});save()
+            r['renders'].append({'phase':q,'path':png.name,'sha256':sha(png),'protected_rig_error':error,'grip_error':grip,'length_error':length,'actual_tool_cap_error':actual_cap_error});save()
     for p,h in r['source_hashes'].items():assert sha(ROOT/p)==h,p
     r['complete']=True;save();print('CONTACT_CLEARANCE_COMPLETE',len(r['samples']),len(r['renders']),flush=True)
 except Exception as e:
