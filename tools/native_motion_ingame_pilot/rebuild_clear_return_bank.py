@@ -16,7 +16,7 @@ import sys
 
 import bpy
 from bpy_extras.object_utils import world_to_camera_view
-from mathutils import Quaternion, Vector
+from mathutils import Matrix, Quaternion, Vector
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
@@ -24,12 +24,14 @@ sys.path[:0] = [str(HERE), str(ROOT/'tools/hero_v28')]
 from clear_return_motion import ClearReturnMotion
 from pivot_return_motion import PivotReturnMotion
 from coordinated_body_motion import CoordinatedBodyMotion
-from forearm_frame_pose import align_right_forearm
+from transported_forearm_frame_pose import align_right_forearm
 import native_motion as native
 
 parser = argparse.ArgumentParser(description=__doc__)
 for name in ('native-tools', 'pivot', 'reference', 'parent-report', 'recorded', 'proof', 'output'):
     parser.add_argument('--'+name, type=Path, required=True)
+parser.add_argument('--audit', type=Path)
+parser.add_argument('--visual', type=Path)
 parser.add_argument('--motion', choices=('translation', 'pivot'), default='translation')
 args = parser.parse_args(sys.argv[sys.argv.index('--')+1:])
 sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
@@ -48,14 +50,32 @@ recorded = json.loads(args.recorded.read_text())
 proof = json.loads(args.proof.read_text())
 assert parent['complete'] and parent['passed_geometry']
 assert recorded['passed'] and len(recorded['samples']) == 119
-assert proof['complete'] and proof['passed_geometry'] and len(proof['renders']) == 3
+assert proof['complete']
+if args.motion == 'pivot':
+    assert args.audit and args.visual
+    audit = json.loads(args.audit.read_text())
+    visual = json.loads(args.visual.read_text())
+    assert audit['passed_geometry'] and audit['candidate_sha256'] == sha(motion_source)
+    assert audit['frame_helper_sha256'] == sha(HERE/'transported_forearm_frame_pose.py')
+    assert visual['complete'] and visual['passed_visual'] and visual['candidate_sha256'] == sha(motion_source)
+    assert visual['frame_helper_sha256'] == sha(HERE/'transported_forearm_frame_pose.py')
+    assert visual['preview_report_sha256'] == sha(args.proof)
+    assert len(proof['renders']) == 5
+    assert [(x['phase'], x['sha256']) for x in proof['renders']] == [(x['phase'], x['sha256']) for x in visual['rows']]
+else:
+    assert proof['passed_geometry'] and len(proof['renders']) == 3
 assert proof['motion_kind'] == args.motion and proof['candidate_sha256'] == sha(motion_source)
 for frame in proof['renders']:
     assert sha(args.proof.parent/frame['path']) == frame['sha256']
 sources = dict(reference['render_provenance'])
-sources.update(proof['source_hashes'])
+for path, value in proof['source_hashes'].items():
+    assert sha(ROOT/path) == value, path
+    if not Path(path).is_absolute():
+        sources[path] = value
 for path, value in sources.items():
     assert sha(ROOT/path) == value, path
+for path in (motion_source, HERE/'transported_forearm_frame_pose.py'):
+    sources[str(path.relative_to(ROOT))] = sha(path)
 sources[str(Path(__file__).relative_to(ROOT))] = sha(__file__)
 allowed = set(reference['loop_flow_study']['rendered_cells'])
 actual_cells = {f"{s['visual']['state']}:{s['visual']['local_frame']}" for s in recorded['samples']}
@@ -78,6 +98,9 @@ report = dict(complete=False, passed_geometry=False, visual_accepted=False,
               reference_manifest_sha256=sha(args.reference), parent_report_sha256=sha(args.parent_report),
               reference_report_sha256=sha(args.recorded), proof_sha256=sha(args.proof),
               candidate_sha256=sha(motion_source), motion_kind=args.motion,
+              independent_audit_sha256=sha(args.audit) if args.audit else None,
+              independent_visual_sha256=sha(args.visual) if args.visual else None,
+              verified_preview_source_hashes=proof['source_hashes'],
               authorized_cells=sorted(allowed), changed_cells=sorted(selected),
               scope='Only authorized mine cells change; all transitions and forbidden cells inherit exact study15 bytes',
               frame_checks=[], rendered_cells=[], inherited_cells=[], planned_draws=[])
@@ -124,13 +147,21 @@ try:
         pose = motion.sample('mine', frame['phase'])
         before, actual = apply(prior), apply(pose)
         protected = [name for name in actual if not name.startswith(('upper.', 'lower.', 'hand.'))
-                     and name not in ('tool', 'bit')]
+                     and name not in (('tool', 'bit', 'body', 'head') if args.motion == 'pivot' else ('tool', 'bit'))]
         error = max(matrix_error(before[name], actual[name]) for name in protected)
-        turn = (Quaternion(motion.pivot_axis, -math.radians(motion.ANGLE_DEGREES)*motion.clearance_weight(frame['phase']))
+        turn = (Quaternion(motion.pivot_axis, motion.turn_angle(frame['phase']))
                 if args.motion == 'pivot' else Quaternion())
         orientation = max((pose[k]-turn@prior[k]).length for k in ('axis', 'tool_normal'))
+        body_error = body_joint_error = 0.
         if args.motion == 'pivot':
             assert (pose['rear']-prior['rear']).length < 1e-8
+            joint = prior['torso'] @ motion.body_joint
+            body_turn = (Matrix.Translation(joint)
+                         @ Matrix.Rotation(motion.body_yaw(frame['phase']), 4, 'Z')
+                         @ Matrix.Translation(-joint))
+            body_error = max(matrix_error(body_turn @ before[n], actual[n]) for n in ('body', 'head'))
+            body_joint_error = (pose['torso'] @ motion.body_joint-joint).length
+            assert max(body_error, body_joint_error) < 1e-5
         grip = max((((actual['hand.'+s] @ rig.data.bones['hand.'+s].matrix_local.inverted())
                      @ env['rest']['grips'][s])-pose['grips'][s]).length for s in ('R', 'L'))
         reach = max((v[2]-v[0]).length for v in pose['arms'].values())
@@ -139,7 +170,8 @@ try:
         frame['contacts'] = pose['contacts']
         manifest['max_grip_error'] = max(manifest['max_grip_error'], grip)
         report['frame_checks'].append(dict(cell=cell, protected_matrix_error=error,
-                                          orientation_error=orientation, grip_error=grip, reach=reach))
+                                          orientation_error=orientation, grip_error=grip, reach=reach,
+                                          body_error=body_error, body_joint_error=body_joint_error))
         poses[cell] = pose
     original = {(f['state'], f['index']): f for f in reference['frames']}
     updated = {(f['state'], f['index']): f for f in manifest['frames']}

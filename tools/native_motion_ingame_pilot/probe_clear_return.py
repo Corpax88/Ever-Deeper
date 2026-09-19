@@ -1,4 +1,4 @@
-"""Render three return poses only after the independent geometry gate passes."""
+"""Render diagnosed return poses only after the independent geometry gate passes."""
 import argparse
 import hashlib
 import json
@@ -9,7 +9,7 @@ import subprocess
 import sys
 
 import bpy
-from mathutils import Quaternion
+from mathutils import Matrix, Quaternion
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
@@ -17,7 +17,7 @@ sys.path[:0] = [str(HERE), str(ROOT/'tools/hero_v28')]
 from clear_return_motion import ClearReturnMotion
 from pivot_return_motion import PivotReturnMotion
 from coordinated_body_motion import CoordinatedBodyMotion
-from forearm_frame_pose import align_right_forearm
+from transported_forearm_frame_pose import align_right_forearm
 
 parser = argparse.ArgumentParser(description=__doc__)
 for name in ('native-tools', 'pivot', 'reference', 'audit', 'output'):
@@ -39,7 +39,7 @@ reference = json.loads(args.reference.read_text())
 sources = dict(reference['render_provenance'])
 for name, value in sources.items():
     assert sha(ROOT/name) == value, name
-for path in (Path(__file__), motion_source):
+for path in (Path(__file__), motion_source, HERE/'transported_forearm_frame_pose.py'):
     sources[str(path.relative_to(ROOT))] = sha(path)
 inputs = [json.loads((HERE/name).read_text()) for name in
           ('working-surface-selection.json', 'upper-body-hinge-selection.json')]
@@ -51,7 +51,7 @@ report = dict(complete=False, passed_geometry=True, visual_accepted=False,
               source_sha=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
               independent_audit_sha256=sha(args.audit), selection=motion.selection(),
               candidate_sha256=sha(motion_source), motion_kind=args.motion,
-              scope='Three native poses; no playback, temporal score or production approval', renders=[])
+              scope='Native diagnostic poses; no playback, temporal score or production approval', renders=[])
 
 
 def save():
@@ -81,19 +81,27 @@ def apply(pose):
 
 
 try:
-    phases = (.76, .00, .216) if args.motion == 'pivot' else (.76, .00, .18)
+    phases = (.736206896551724, .00, .10, .157142857142857, .238) if args.motion == 'pivot' else (.76, .00, .18)
     for phase in phases:
         pose, prior = motion.sample('mine', phase), old.sample('mine', phase)
         before, _ = apply(prior)
         actual, forearm = apply(pose)
         protected = [name for name in actual if not name.startswith(('upper.', 'lower.', 'hand.'))
-                     and name not in ('tool', 'bit')]
+                     and name not in (('tool', 'bit', 'body', 'head') if args.motion == 'pivot' else ('tool', 'bit'))]
         error = max(matrix_error(before[name], actual[name]) for name in protected)
-        turn = (Quaternion(motion.pivot_axis, -math.radians(motion.ANGLE_DEGREES)*motion.clearance_weight(phase))
+        turn = (Quaternion(motion.pivot_axis, motion.turn_angle(phase))
                 if args.motion == 'pivot' else Quaternion())
         orientation = max((pose[k]-turn@prior[k]).length for k in ('axis', 'tool_normal'))
+        planned_body_error = body_joint_error = 0.
         if args.motion == 'pivot':
             assert (pose['rear']-prior['rear']).length < 1e-8
+            joint = prior['torso'] @ motion.body_joint
+            body_turn = (Matrix.Translation(joint)
+                         @ Matrix.Rotation(motion.body_yaw(phase), 4, 'Z')
+                         @ Matrix.Translation(-joint))
+            planned_body_error = max(matrix_error(body_turn @ before[n], actual[n]) for n in ('body', 'head'))
+            body_joint_error = (pose['torso'] @ motion.body_joint-joint).length
+            assert max(planned_body_error, body_joint_error) < 1e-5
         grip = max((((actual['hand.'+s] @ rig.data.bones['hand.'+s].matrix_local.inverted())
                      @ env['rest']['grips'][s])-pose['grips'][s]).length for s in ('R', 'L'))
         reach = max((v[2]-v[0]).length for v in pose['arms'].values())
@@ -110,7 +118,8 @@ try:
         scene.frame_current = 1
         bpy.ops.render.render(write_still=True)
         report['renders'].append(dict(phase=phase, path=png.name, sha256=sha(png),
-                                      protected_matrix_error=error, grip_error=grip,
+                                      protected_matrix_error=error, planned_body_matrix_error=planned_body_error,
+                                      body_joint_error=body_joint_error, grip_error=grip,
                                       orientation_error=orientation, reach=reach, forearm=forearm))
         save()
     for path, value in sources.items():

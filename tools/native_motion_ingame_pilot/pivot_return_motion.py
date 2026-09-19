@@ -1,36 +1,68 @@
-"""Study 16C: clear the ore by turning the rigid pick around its rear grip.
+"""Study16G: outward return, coordinated torso and transported forearm frame.
 
-The amplitude is derived from the evaluated study15 head mesh and the actual
-ore's conservative filtered-alpha support planes in the original up view.
-Body, feet, rear grip, .30-.625 strike path and game clock are unchanged.
-The left elbow follows the closest exact limb-circle point to its old pose,
-avoiding the hand-derived pole's rapid turn during the return.
-This remains a study until native rig, actual game and video review pass.
+16E failed because its hand-radial projection was nearly parallel to the
+forearm. Both elbows now use the torso-carried original elbow reference.
+The corrected original right-forearm full frame follows the torso and is
+minimally aligned to its new axis. The left upper arm likewise transports
+its original full frame, avoiding the absolute rest-axis antipode.
+Contact/entry/exit keep the original
+pose and frame method. This candidate requires actual mesh/cuff review.
 """
 import math
-from mathutils import Quaternion, Vector
+from mathutils import Matrix, Quaternion, Vector
 import premium_motion as pm
-from complete_return_motion import smoother
+from bisect import bisect_right
+from loop_flow_motion import game_progress, CYCLE_SECONDS
 from coordinated_body_motion import CoordinatedBodyMotion
 
 
 class PivotReturnMotion(CoordinatedBodyMotion):
-    ANGLE_DEGREES = 72.01487926079041
+    BODY_COEFFICIENTS = (0.0, 0.0, 0.0, -0.02971134972666569, -0.09106065131911657, -0.1828757421581289, -0.25790941348179064, -0.30367886921547665, -0.33124804243588896, -0.35099648789030685, -0.39381663567381475, -0.4049635225210093, -0.48265527926002305, -0.23943873392641016, -0.2344521375871191, -0.3756847191373195, -0.279508085383339, -0.14950213206886326, 0.0, 0.0, 0.0)
+    BODY_FIT_SHA256 = '23b1180f41516807755ac6f035d69ac67011806bb706ce6b4ce7f721f519bfb6'
+    ANGLE_DEGREES = 180.
+    END_PHASE = 0.392857142857143
+    START_SECONDS = 0.35133333333333333
+    END_SECONDS = 0.8840000000000001
+    DEGREE = 5
+    KNOTS = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.06257822277847307, 0.12515644555694613, 0.1877346683354192, 0.25031289111389227, 0.31289111389236535, 0.3754693366708384, 0.4380475594493115, 0.5006257822277845, 0.5632040050062577, 0.6257822277847307, 0.6883604505632037, 0.7509386733416769, 0.8135168961201499, 0.876095118898623, 0.938673341677096, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
+    COEFFICIENTS = (0.0, 0.0, 0.0, 0.5854594729596596, 1.2061127578448432, 1.7251463342038895, 1.5328200987152176, 1.538417001402122, 1.383379782891682, 1.306962430578355, 1.2301779649491769, 1.2044597638957928, 1.2887037134783685, 1.43543138958376, 1.910641434453602, 1.665114099704516, 0.9444917352673533, 0.5640542509038114, 0.0, 0.0, 0.0)
+    FIT_SHA256 = '388a82adc3376af8848c8cce90ea49353a7a0fb1ad9d82b1d7525e8d6fcf2a6e'
 
     def __init__(self, *args):
         super().__init__(*args)
         self.pivot_axis = (Vector((0., -.10, .98))-Vector((6., 6., 7.))).normalized()
 
-    @staticmethod
-    def clearance_weight(phase):
+    @classmethod
+    def _angle(cls, phase, coefficients):
         q = phase % 1.
-        if q <= .08 or q >= .86:
-            return 1.
-        if q < .30:
-            return 1.-smoother((q-.08)/.22)
-        if q > .625:
-            return smoother((q-.625)/.235)
-        return 0.
+        if cls.END_PHASE <= q <= .625:
+            return 0.
+        seconds = game_progress(q)*CYCLE_SECONDS
+        if q < cls.END_PHASE:
+            seconds += CYCLE_SECONDS
+        x = (seconds-cls.START_SECONDS)/(cls.END_SECONDS-cls.START_SECONDS)
+        if x <= 0. or x >= 1.:
+            return 0.
+        k = min(len(coefficients)-1, bisect_right(cls.KNOTS, x)-1)
+        d = [coefficients[k-cls.DEGREE+j] for j in range(cls.DEGREE+1)]
+        for level in range(1, cls.DEGREE+1):
+            for j in range(cls.DEGREE, level-1, -1):
+                i = k-cls.DEGREE+j
+                alpha = (x-cls.KNOTS[i])/(cls.KNOTS[i+cls.DEGREE-level+1]-cls.KNOTS[i])
+                d[j] = (1.-alpha)*d[j-1]+alpha*d[j]
+        return d[cls.DEGREE]
+
+    @classmethod
+    def turn_angle(cls, phase):
+        return cls._angle(phase, cls.COEFFICIENTS)
+
+    @classmethod
+    def body_yaw(cls, phase):
+        return cls._angle(phase, cls.BODY_COEFFICIENTS)
+
+    @classmethod
+    def clearance_weight(cls, phase):
+        return cls.turn_angle(phase)/math.pi
 
     def sample(self, state, phase, speed=340.):
         original = super().sample(state, phase, speed)
@@ -38,29 +70,66 @@ class PivotReturnMotion(CoordinatedBodyMotion):
         if not weight:
             return original
         frame = pm.tool_frame(original['axis'], original['tool_normal']).to_quaternion()
-        turn = Quaternion(self.pivot_axis, -math.radians(self.ANGLE_DEGREES)*weight)
-        result = self._with_tool(original, original['rear'], turn@frame)
-        shoulder, _, wrist = result['arms']['L']
-        reference = original['arms']['L'][1]
-        axis = (wrist-shoulder).normalized()
-        pole = reference-shoulder
-        projection = (pole-axis*pole.dot(axis)).length
-        assert projection > .05, ('Unstable left elbow reference', projection)
-        elbow = pm.solve(shoulder, wrist, reference, .36, .35)
-        result['arms']['L'] = (shoulder, elbow, wrist)
+        turn = Quaternion(self.pivot_axis, self.turn_angle(phase))
+        joint = original['torso'] @ self.body_joint
+        body_turn = (Matrix.Translation(joint)
+                     @ Matrix.Rotation(self.body_yaw(phase), 4, 'Z')
+                     @ Matrix.Translation(-joint))
+        turned = dict(original)
+        turned['torso'] = body_turn @ original['torso']
+        turned['head'] = body_turn @ original['head']
+        result = self._with_tool(turned, original['rear'], turn@frame)
+        for side in ('R', 'L'):
+            shoulder, _, wrist = result['arms'][side]
+            reference = body_turn @ original['arms'][side][1]
+            axis = (wrist-shoulder).normalized()
+            pole = reference-shoulder
+            projection = (pole-axis*pole.dot(axis)).length
+            assert projection > .05, ('Unstable elbow reference', side, projection)
+            elbow = pm.solve(shoulder, wrist, reference, .36, .35)
+            result['arms'][side] = (shoulder, elbow, wrist)
+        old_axis = (original['arms']['R'][2]-original['arms']['R'][1]).normalized()
+        radial = original['radials']['R']
+        old_radial = radial-old_axis*radial.dot(old_axis)
+        assert old_radial.length > .05, ('Unstable original forearm frame', old_radial.length)
+        basis = Matrix((old_axis, old_radial.normalized(),
+                        old_axis.cross(old_radial.normalized()))).transposed()
+        body_rotation = body_turn.to_3x3()
+        reference_axis = body_rotation @ old_axis
+        new_axis = (result['arms']['R'][2]-result['arms']['R'][1]).normalized()
+        denominator = 1.+reference_axis.dot(new_axis)
+        assert denominator > .05, ('Antipodal forearm transport', denominator)
+        alignment = reference_axis.rotation_difference(new_axis).to_matrix()
+        result['right_forearm_basis'] = alignment @ body_rotation @ basis
+        result['right_forearm_reference_denominator'] = denominator
+        result['right_forearm_original_radial_projection'] = old_radial.length
+        old_left_axis = (original['arms']['L'][1]-original['arms']['L'][0]).normalized()
+        new_left_axis = (result['arms']['L'][1]-result['arms']['L'][0]).normalized()
+        reference_left_axis = body_rotation @ old_left_axis
+        left_denominator = 1.+reference_left_axis.dot(new_left_axis)
+        assert left_denominator > .05, ('Antipodal left upper-arm transport', left_denominator)
+        result['left_upper_original_axis'] = old_left_axis
+        result['left_upper_transport'] = reference_left_axis.rotation_difference(new_left_axis).to_matrix() @ body_rotation
+        result['left_upper_reference_denominator'] = left_denominator
         return result
 
     def selection(self):
         result = super().selection()
         result.update(
             pivot_return_study=True, pivot='Original rear/right grip',
-            rotation_axis=list(self.pivot_axis), angle_degrees=-self.ANGLE_DEGREES,
-            weight_knots=[.625, .86, 1.08, 1.30],
-            unchanged_range='[.30,.625] complete mining pose',
-            changed_ranges='(.625,1) and [0,.30)',
-            unchanged='Body, feet, right grip and game clock',
-            left_elbow_reference='Closest point to study15 left elbow on the exact new two-link circle',
-            protected='Body, feet, right grip, .30-.625 complete tool pose and unchanged game clock',
-            changed='Rigid tool rotation during return and early preparation; both wrists and elbows re-solved',
+            rotation_axis=list(self.pivot_axis), angle_degrees=self.ANGLE_DEGREES,
+            weight_rule="Positive degree-five B-spline divided by pi",
+            curve_fit_sha256=self.FIT_SHA256, curve_knots=list(self.KNOTS),
+            curve_coefficients=list(self.COEFFICIENTS), curve_game_seconds=[self.START_SECONDS,self.END_SECONDS],
+            unchanged_range='[.392857142857143,.625] complete mining pose',
+            changed_ranges='(.625,1) and [0,.392857142857143)',
+            unchanged='Hips, legs, feet, body joint, right grip and game clock',
+            torso_turn_study=True, torso_world_axis=[0,0,1],
+            torso_coefficients=list(self.BODY_COEFFICIENTS), torso_fit_sha256=self.BODY_FIT_SHA256,
+            both_elbows_reference='Closest point to torso-rotated study15 elbow on the exact new two-link circle',
+            protected='Hips, legs, feet, body joint, right grip, .392857142857143-.625 complete pose and game clock',
+            changed='Rigid tool rotation and a derived torso yaw during return; head follows torso; both arms re-solved',
+            forearm_frame='Original corrected full frame follows torso, then shortest alignment to new forearm axis',
+            left_upper_frame='Original native full frame follows torso, then shortest alignment to the new upper-arm axis',
             visual_accepted=False, production_accepted=False)
         return result
