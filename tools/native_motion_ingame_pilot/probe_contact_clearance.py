@@ -12,7 +12,9 @@ p=argparse.ArgumentParser(description=__doc__)
 for n in ('native-tools','pivot','output'):p.add_argument('--'+n,type=Path,required=True)
 p.add_argument('--render',action='store_true')
 p.add_argument('--lower-contact',action='store_true')
+p.add_argument('--contact-roll',action='store_true')
 a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);assert not a.output.exists();a.output.mkdir(parents=True)
+assert not a.contact_roll or a.lower_contact, 'Roll proposal retains lower-contact translation'
 sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
 assert sha(bpy.data.filepath)=='94304c12a042b168c0d655dc0ceacffe2efb08997039a7a26c1ed0cc1770bc91'
 assert sha(a.native_tools/'worn/hero.blend')=='0f90a49329acfd6db5b62cfbe6361efce1c79bea4a9d57a93fab130d46ac5b2b'
@@ -22,8 +24,12 @@ old=BodyWeightMotion(*args,contact_turn=True);new=ContactClearanceMotion(*args)
 if a.lower_contact:
     from lower_contact_motion import LowerContactMotion
     new=LowerContactMotion(*args)
+if a.contact_roll:
+    from contact_roll_motion import ContactRollMotion
+    new=ContactRollMotion(*args)
 paths=[Path(__file__),HERE/'contact_clearance_motion.py',HERE/'body_weight_motion.py',HERE/'side_return_motion.py',HERE/'loop_flow_motion.py',ROOT/'tools/hero_v28/export_hero.py',ROOT/'tools/hero_v28/native_pose.py',ROOT/'tools/hero_v28/native_motion.py',ROOT/'tools/hero_v28/premium_motion.py']
 if a.lower_contact:paths.append(HERE/'lower_contact_motion.py')
+if a.contact_roll:paths.append(HERE/'contact_roll_motion.py')
 r={'complete':False,'passed_geometry':False,'visual_accepted':False,'production_accepted':False,
    'source_sha':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
    'source_hashes':{str(p.relative_to(ROOT)):sha(p) for p in paths},
@@ -37,8 +43,9 @@ try:
         cap=lambda pose:pose['rear']+pm.tool_frame(pose['axis'],pose['tool_normal'])@new.local_cap
         expected_shift=new.contact_offset(q) if a.lower_contact else cap(before)*0.
         cap_error=(cap(before)+expected_shift-cap(after)).length
-        if a.lower_contact:
+        if a.lower_contact and not a.contact_roll:
             assert max((before[n]-after[n]).length for n in ('axis','tool_normal'))<2e-6
+        if a.contact_roll:assert (before['axis']-after['axis']).length<2e-6
         body_error=max(abs(before[n][i][j]-after[n][i][j]) for n in ('torso','head') for i in range(4) for j in range(4))
         legs_error=max((v-w).length for side in ('R','L') for v,w in zip(before['legs'][side],after['legs'][side]))
         feet_error=max(abs(before['foot_rotations'][s][i][j]-after['foot_rotations'][s][i][j]) for s in ('R','L') for i in range(3) for j in range(3))
