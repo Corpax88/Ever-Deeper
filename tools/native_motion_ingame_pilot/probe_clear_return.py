@@ -81,7 +81,8 @@ def apply(pose):
 
 
 try:
-    for phase in (.76, .00, .18):
+    phases = (.76, .00, .216) if args.motion == 'pivot' else (.76, .00, .18)
+    for phase in phases:
         pose, prior = motion.sample('mine', phase), old.sample('mine', phase)
         before, _ = apply(prior)
         actual, forearm = apply(pose)
