@@ -23,6 +23,7 @@ parser.add_argument('--native-tools',type=Path,required=True)
 parser.add_argument('--output',type=Path,required=True)
 parser.add_argument('--loop',action='store_true')
 parser.add_argument('--check-only',action='store_true')
+parser.add_argument('--continuous-return',action='store_true')
 parser.add_argument('--azimuth',type=float,default=90.)
 args=parser.parse_args(sys.argv[sys.argv.index('--')+1:])
 args.output.mkdir(parents=True,exist_ok=False)
@@ -30,8 +31,14 @@ sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
 assert sha(bpy.data.filepath)=='94304c12a042b168c0d655dc0ceacffe2efb08997039a7a26c1ed0cc1770bc91'
 assert sha(args.native_tools/'worn/hero.blend')=='0f90a49329acfd6db5b62cfbe6361efce1c79bea4a9d57a93fab130d46ac5b2b'
 motion=SimpleSwing(json.loads((HERE/'anchors.json').read_text()))
+if args.continuous_return:
+    flow_source=HERE.parent/'return_flow_20/flow_swing.py'
+    motion=runpy.run_path(str(flow_source))['FlowSwing'](json.loads((HERE/'anchors.json').read_text()))
 report=dict(complete=False,production_accepted=False,continuous_video_review=False,
             source={p.name:sha(p) for p in HERE.glob('*') if p.is_file()},renders=[],geometry=[])
+if args.continuous_return:
+    report['source']['return_flow_20/flow_swing.py']=sha(flow_source)
+    report['timing_profile']=motion.selection()
 def save():
     (args.output/'report.json').write_text(json.dumps(report,indent=2)+'\n')
 

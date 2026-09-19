@@ -24,6 +24,7 @@ atlas.save(args.native/'atlas.png')
 metadata = dict(count=50, columns=10, cell=160, cycle=.68, hit=.42,
                 anchor=report['ground_anchor_160'],
                 atlas_sha256=hashlib.sha256((args.native/'atlas.png').read_bytes()).hexdigest())
+metadata['ready_progress']=float(report.get('timing_profile',{}).get('ready_progress',.88))
 (args.native/'atlas.json').write_text(json.dumps(metadata,indent=2)+'\n')
 if args.video:
     args.video.parent.mkdir(parents=True,exist_ok=True)

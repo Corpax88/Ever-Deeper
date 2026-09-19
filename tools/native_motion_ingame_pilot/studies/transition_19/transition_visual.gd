@@ -11,6 +11,13 @@ var _walk_elapsed := 0.0
 var _walk_active := false
 var _walk_cell := -1
 var _unsupported: Array = []
+var _ready_progress := .88
+
+func configure(directory: String) -> void:
+	super.configure(directory)
+	var info: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(directory.path_join("atlas.json")))
+	_ready_progress = float(info.get("ready_progress",.88))
+	assert(_ready_progress >= .88 and _ready_progress <= 1.0)
 
 func configure_walk(directory: String) -> void:
 	var info: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(directory.path_join("atlas.json")))
@@ -76,10 +83,10 @@ func _draw_frame(delta: float) -> void:
 				# Finish withdrawal before easing into preparation. Blending an
 				# unwrapped phase crossed the flat ready region at full speed,
 				# causing an observed cell49→5 body step on a rapid restart.
-				var return_seconds := clampf((.88-_restart_source)*.68*.7,.05,.12)
+				var return_seconds := clampf((_ready_progress-_restart_source)*.68*.7,.05,.12)
 				var end_seconds := minf(return_seconds+.09,.21)
 				if _restart_clock < return_seconds:
-					requested = lerpf(_restart_source,.88,smoothstep(0.0,return_seconds,_restart_clock))
+					requested = lerpf(_restart_source,_ready_progress,smoothstep(0.0,return_seconds,_restart_clock))
 				else:
 					requested *= smoothstep(return_seconds,end_seconds,_restart_clock)
 				if _restart_clock >= end_seconds: _restart_source = -1.0
@@ -96,7 +103,7 @@ func _draw_frame(delta: float) -> void:
 		_restart_source = -1.0
 	if _mode == "return":
 		_shown_progress += _return_direction * delta / .68
-		if _shown_progress <= 0.0 or _shown_progress >= .88:
+		if _shown_progress <= 0.0 or _shown_progress >= _ready_progress:
 			_shown_progress = 0.0
 			_mode = "idle"
 	if _mode == "legacy" or _mode == "idle":

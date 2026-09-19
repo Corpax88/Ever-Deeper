@@ -26,10 +26,12 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--native-tools', required=True, type=Path)
 parser.add_argument('--output', required=True, type=Path)
 parser.add_argument('--check-only', action='store_true')
+parser.add_argument('--continuous-return', action='store_true')
 args = parser.parse_args(sys.argv[sys.argv.index('--')+1:])
 args.output.mkdir(parents=True, exist_ok=False)
 sys.argv = ['blender', '--', '--native-tools', str(args.native_tools),
             '--output', str(args.output/'base-check'), '--check-only']
+if args.continuous_return: sys.argv.append('--continuous-return')
 base = runpy.run_path(str(S18/'render_preview.py'))
 env, motion, rig, scene = [base[k] for k in ('env', 'motion', 'rig', 'scene')]
 camera_rotation = scene.camera.matrix_world.to_3x3().copy()
