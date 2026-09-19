@@ -1,3 +1,6 @@
+Latest hero checkpoint: [19C transitions](docs/premium-polish/hero-transitions-19-20260919.md).
+Bounded stationary/rapid-restart/exact walk-exit image pass; no9/10 or production adoption. FPS paused.
+
 Current animation review: [Local independent critic workflow](docs/premium-polish/hero-local-review-20260919.md).
 Optional external sign-in must not block authorized local investigation and correction. Preserve the existing visual/gameplay release gates and clearly label frame-sequence review limitations.
 

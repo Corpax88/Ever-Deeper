@@ -1,0 +1,454 @@
+{
+  "baseline_commit": "7ad27afb9d1ebff6c93c7bbcd427bb40a6a04aed",
+  "sources": {
+    "tools/native_motion_ingame_pilot/studies/transition_19/capture_scope.gd": "664b572d2814b1769cd33cb38f22d5e1bb4f583994b73cb49d558c069005480e",
+    "tools/native_motion_ingame_pilot/studies/transition_19/review_capture.py": "1549d69e065573dd35f2f89201b2f9ffc1863163f130067f9df9b67656289880",
+    "tools/native_motion_ingame_pilot/studies/transition_19/README.md": "47b79f641793837556f1ff676ea68109e8b6d4380f98d86349cb9937b15eb35b",
+    "tools/native_motion_ingame_pilot/studies/transition_19/transition_visual.gd": "93490bf48948988e7e78844688177546023398eb141238d9aa0232f0135c2541",
+    "tools/native_motion_ingame_pilot/studies/transition_19/render_walk_bridge.py": "e49320a82b0235aa3674bd9eb66dd2ecc65580e5aefb3d44b174b4743faaebe1",
+    "tools/native_motion_ingame_pilot/studies/transition_19/REVIEW.md": "6c3e90b9e38337b1f107befad42979ff5adeef5ce7ed5ad24b7eee7ec718e0c9",
+    "tools/native_motion_ingame_pilot/studies/transition_19/package_preview.py": "7d205fd5d65386dc167103a092cd574cf0598533fa760e56c78dc4d665363f4c",
+    "tools/native_motion_ingame_pilot/studies/transition_19/capture.gd": "b3b45ba577cf9097b941961e2bc62501c776178c52ea9e1a78cfed0420ca2d71",
+    "tools/native_motion_ingame_pilot/studies/transition_19/versions/transition_visual_19a.gd": "e6d3171f239d5355586096472e47c8e6bea09943568b2dcf931edb648e41a362",
+    "tools/native_motion_ingame_pilot/studies/transition_19/versions/transition_visual_19b.gd": "7e1e067bafab499928cbd56dbf6380230299f6ab0bfaba1a39437870f08a2ec6"
+  },
+  "captures": {
+    "swing19-baseline": {
+      "report.json": "4ae0abcddc303869319866176c2b330e6c643dac478ea1667636f6e7fcd5c84a",
+      "verification.json": "32dcdda9bc9e753e0777a65d25d3355a1fe922f79b7e017eb56ce9976aa6ee03",
+      "full-frame-sha256.json": "6343053954835072f119414d398702c4cbe54a1be48467242bfaba78c7620dfd"
+    },
+    "swing19-stationary": {
+      "report.json": "a08464adbb96bc57ecbde2d22be95f6d00d826ca764854b59165a8abd045fcb6",
+      "verification.json": "94792f0d292dbc1cd23743746f14011a548536660e87ed2005eda8a0cfdb1dbf",
+      "full-frame-sha256.json": "322c17d679bcbb0a9a3478c20ff386bb02c2c3efef9b61e5f5fa14a134806691"
+    },
+    "swing19-walk-game": {
+      "report.json": "b0ed4d07e0e5203f6ad96f13a62243b766d9cf64ed65a6271a75552780d0c860",
+      "verification.json": "94792f0d292dbc1cd23743746f14011a548536660e87ed2005eda8a0cfdb1dbf",
+      "full-frame-sha256.json": "46120bc90c5c5f329697bd65fe9bd72f0a569d66af54ea20ec305f3edc201b19"
+    },
+    "swing19-rapid-game": {
+      "report.json": "56e0e6602ac7b8ceaab8e76584a3a130324dc818a3e4a6f24351a710ce5d94a8",
+      "verification.json": "44d3c0eae4acf964f8537f2bd891f6a3d6e7503ca1e437944bd5698088106fda",
+      "full-frame-sha256.json": "b3a88ef6637c0d3a61fe305277313fb24c20e8dd101d6c5449aea9d7f6e9a03f"
+    },
+    "swing19-final-game": {
+      "report.json": "4c97354f19943d3a962d88561516d8be3b672a23cbb709b04ec6ac5573a2cd9d",
+      "verification.json": "2c832eff4b8c501c53bb21405cae93e5205326f740c3b4b86818bb961f5ab8a3",
+      "full-frame-sha256.json": "97e0090b63569810291e4bc8b497f929a762bb9e946257e194d40d20cbdb83a7"
+    },
+    "swing19-scope": {
+      "report.json": "5d3ad2d0988fdb4ebd404ee7a23af98d774b5ab2a290e4bdbec47e3e212650ef"
+    },
+    "native": {
+      "complete": true,
+      "duration": 0.2,
+      "source_cell": 31,
+      "source_progress": 0.62,
+      "destination_direction": "down",
+      "walk_phase_start": 0.0,
+      "walk_stride": 144.0,
+      "anchor": [
+        80.00004768371582,
+        127.43760108947754
+      ],
+      "geometry": [
+        {
+          "seconds": 0.0,
+          "reach": 0.3869957509814847,
+          "grip": 3.919883500923486e-07
+        },
+        {
+          "seconds": 0.0033333333333333335,
+          "reach": 0.3867307225213972,
+          "grip": 3.1150199413846245e-07
+        },
+        {
+          "seconds": 0.006666666666666667,
+          "reach": 0.3859510574536784,
+          "grip": 5.817181258184653e-07
+        },
+        {
+          "seconds": 0.010000000000000002,
+          "reach": 0.38468405117844845,
+          "grip": 3.182017282256875e-07
+        },
+        {
+          "seconds": 0.013333333333333334,
+          "reach": 0.3829628183381366,
+          "grip": 5.503352079576071e-07
+        },
+        {
+          "seconds": 0.016666666666666666,
+          "reach": 0.38082513257905903,
+          "grip": 2.7637536810325694e-07
+        },
+        {
+          "seconds": 0.020000000000000004,
+          "reach": 0.37831258506199267,
+          "grip": 2.79967400849699e-07
+        },
+        {
+          "seconds": 0.023333333333333334,
+          "reach": 0.37547047694375024,
+          "grip": 4.182955279236495e-07
+        },
+        {
+          "seconds": 0.02666666666666667,
+          "reach": 0.3723463288716931,
+          "grip": 4.308471767545033e-07
+        },
+        {
+          "seconds": 0.030000000000000002,
+          "reach": 0.3689895795802997,
+          "grip": 4.311047834601829e-07
+        },
+        {
+          "seconds": 0.03333333333333333,
+          "reach": 0.3654509035763484,
+          "grip": 5.424104548454671e-07
+        },
+        {
+          "seconds": 0.03666666666666667,
+          "reach": 0.361781373754008,
+          "grip": 5.204751848153168e-07
+        },
+        {
+          "seconds": 0.04000000000000001,
+          "reach": 0.35803198139690817,
+          "grip": 4.235705853567092e-07
+        },
+        {
+          "seconds": 0.043333333333333335,
+          "reach": 0.3542523897307056,
+          "grip": 4.6932744228910274e-07
+        },
+        {
+          "seconds": 0.04666666666666667,
+          "reach": 0.35049144592514514,
+          "grip": 2.7476383618393204e-07
+        },
+        {
+          "seconds": 0.05,
+          "reach": 0.3467952250315505,
+          "grip": 2.9950963321688443e-07
+        },
+        {
+          "seconds": 0.05333333333333334,
+          "reach": 0.34320770504024095,
+          "grip": 3.6983709472390583e-07
+        },
+        {
+          "seconds": 0.05666666666666667,
+          "reach": 0.339769416527093,
+          "grip": 3.816559456248789e-07
+        },
+        {
+          "seconds": 0.060000000000000005,
+          "reach": 0.3365177022929869,
+          "grip": 5.855227322694212e-07
+        },
+        {
+          "seconds": 0.06333333333333334,
+          "reach": 0.33348591136848604,
+          "grip": 4.470348358154297e-07
+        },
+        {
+          "seconds": 0.06666666666666667,
+          "reach": 0.33070383123381386,
+          "grip": 4.086967751950764e-07
+        },
+        {
+          "seconds": 0.07,
+          "reach": 0.3281970629276808,
+          "grip": 5.209549101118249e-07
+        },
+        {
+          "seconds": 0.07333333333333333,
+          "reach": 0.32598755203631097,
+          "grip": 4.7510232444611566e-07
+        },
+        {
+          "seconds": 0.07666666666666667,
+          "reach": 0.3240936787425043,
+          "grip": 3.143403397460131e-07
+        },
+        {
+          "seconds": 0.08000000000000002,
+          "reach": 0.32253020995673204,
+          "grip": 3.2098083538618706e-07
+        },
+        {
+          "seconds": 0.08333333333333333,
+          "reach": 0.3213091107754394,
+          "grip": 4.995779578161303e-07
+        },
+        {
+          "seconds": 0.08666666666666667,
+          "reach": 0.320439832553343,
+          "grip": 3.1911764961449637e-07
+        },
+        {
+          "seconds": 0.09000000000000001,
+          "reach": 0.31992946341822226,
+          "grip": 5.339525004377638e-07
+        },
+        {
+          "seconds": 0.09333333333333334,
+          "reach": 0.31978361913101566,
+          "grip": 2.7957056521316944e-07
+        },
+        {
+          "seconds": 0.09666666666666668,
+          "reach": 0.32000642311075544,
+          "grip": 5.527507362065139e-07
+        },
+        {
+          "seconds": 0.1,
+          "reach": 0.3206008127492019,
+          "grip": 4.0157177979385453e-07
+        },
+        {
+          "seconds": 0.10333333333333333,
+          "reach": 0.321569004469774,
+          "grip": 5.59934801699398e-07
+        },
+        {
+          "seconds": 0.10666666666666667,
+          "reach": 0.32291189112964697,
+          "grip": 3.674277068954096e-07
+        },
+        {
+          "seconds": 0.11000000000000001,
+          "reach": 0.3246297773084779,
+          "grip": 6.96539634020343e-07
+        },
+        {
+          "seconds": 0.11333333333333334,
+          "reach": 0.3267214066198115,
+          "grip": 3.793216365980463e-07
+        },
+        {
+          "seconds": 0.11666666666666667,
+          "reach": 0.3291837634880732,
+          "grip": 4.267693606501724e-07
+        },
+        {
+          "seconds": 0.12000000000000001,
+          "reach": 0.33201184566680964,
+          "grip": 6.367522662646024e-07
+        },
+        {
+          "seconds": 0.12333333333333334,
+          "reach": 0.3351978869406546,
+          "grip": 5.213277245919675e-07
+        },
+        {
+          "seconds": 0.12666666666666668,
+          "reach": 0.3387309248416991,
+          "grip": 3.425849551435189e-07
+        },
+        {
+          "seconds": 0.13,
+          "reach": 0.34259627728015885,
+          "grip": 4.482748793509997e-07
+        },
+        {
+          "seconds": 0.13333333333333333,
+          "reach": 0.34677433817234266,
+          "grip": 3.6385999462231337e-07
+        },
+        {
+          "seconds": 0.1366666666666667,
+          "reach": 0.35124156131059414,
+          "grip": 2.575186913631307e-07
+        },
+        {
+          "seconds": 0.14,
+          "reach": 0.3559689657149366,
+          "grip": 7.288252233093378e-07
+        },
+        {
+          "seconds": 0.14333333333333334,
+          "reach": 0.3609221187839934,
+          "grip": 3.150073844734839e-07
+        },
+        {
+          "seconds": 0.14666666666666667,
+          "reach": 0.3660617486335588,
+          "grip": 4.5063695919414884e-07
+        },
+        {
+          "seconds": 0.15,
+          "reach": 0.37967498108223496,
+          "grip": 5.333283593706274e-07
+        },
+        {
+          "seconds": 0.15333333333333335,
+          "reach": 0.3976850704905246,
+          "grip": 7.602604714225673e-07
+        },
+        {
+          "seconds": 0.15666666666666668,
+          "reach": 0.41532719948201235,
+          "grip": 5.44975721362922e-07
+        },
+        {
+          "seconds": 0.16000000000000003,
+          "reach": 0.43245748674956674,
+          "grip": 4.848927205959525e-07
+        },
+        {
+          "seconds": 0.16333333333333336,
+          "reach": 0.44893475733127347,
+          "grip": 6.295740604400635e-07
+        },
+        {
+          "seconds": 0.16666666666666666,
+          "reach": 0.46462078381839356,
+          "grip": 5.243139314237193e-07
+        },
+        {
+          "seconds": 0.17,
+          "reach": 0.4793800289337164,
+          "grip": 1.838648718484203e-07
+        },
+        {
+          "seconds": 0.17333333333333334,
+          "reach": 0.4930798870219952,
+          "grip": 5.960464477539062e-07
+        },
+        {
+          "seconds": 0.1766666666666667,
+          "reach": 0.5055910089675407,
+          "grip": 6.48157691089259e-07
+        },
+        {
+          "seconds": 0.18000000000000002,
+          "reach": 0.5167882124161017,
+          "grip": 7.981515968347835e-07
+        },
+        {
+          "seconds": 0.18333333333333332,
+          "reach": 0.5265507987408979,
+          "grip": 9.411354467057066e-07
+        },
+        {
+          "seconds": 0.18666666666666668,
+          "reach": 0.5347634624447446,
+          "grip": 8.6027592562801e-07
+        },
+        {
+          "seconds": 0.19,
+          "reach": 0.5413166560348667,
+          "grip": 8.135815676879107e-07
+        },
+        {
+          "seconds": 0.19333333333333336,
+          "reach": 0.5461085529379955,
+          "grip": 7.275674114068569e-07
+        },
+        {
+          "seconds": 0.19666666666666668,
+          "reach": 0.5490448469893299,
+          "grip": 8.308650171429306e-07
+        },
+        {
+          "seconds": 0.2,
+          "reach": 0.550040735458453,
+          "grip": 9.16633397294861e-07
+        }
+      ],
+      "renders": [
+        {
+          "file": "frame-0000.png",
+          "seconds": 0.0,
+          "reach": 0.3869957509814847,
+          "grip": 3.919883500923486e-07
+        },
+        {
+          "file": "frame-0001.png",
+          "seconds": 0.016666666666666666,
+          "reach": 0.38082513257905903,
+          "grip": 2.7637536810325694e-07
+        },
+        {
+          "file": "frame-0002.png",
+          "seconds": 0.03333333333333333,
+          "reach": 0.3654509035763484,
+          "grip": 5.424104548454671e-07
+        },
+        {
+          "file": "frame-0003.png",
+          "seconds": 0.05,
+          "reach": 0.3467952250315505,
+          "grip": 2.9950963321688443e-07
+        },
+        {
+          "file": "frame-0004.png",
+          "seconds": 0.06666666666666667,
+          "reach": 0.33070383123381386,
+          "grip": 4.086967751950764e-07
+        },
+        {
+          "file": "frame-0005.png",
+          "seconds": 0.08333333333333333,
+          "reach": 0.3213091107754394,
+          "grip": 4.995779578161303e-07
+        },
+        {
+          "file": "frame-0006.png",
+          "seconds": 0.1,
+          "reach": 0.3206008127492019,
+          "grip": 4.0157177979385453e-07
+        },
+        {
+          "file": "frame-0007.png",
+          "seconds": 0.11666666666666667,
+          "reach": 0.3291837634880732,
+          "grip": 4.267693606501724e-07
+        },
+        {
+          "file": "frame-0008.png",
+          "seconds": 0.13333333333333333,
+          "reach": 0.34677433817234266,
+          "grip": 3.6385999462231337e-07
+        },
+        {
+          "file": "frame-0009.png",
+          "seconds": 0.15,
+          "reach": 0.37967498108223496,
+          "grip": 5.333283593706274e-07
+        },
+        {
+          "file": "frame-0010.png",
+          "seconds": 0.16666666666666666,
+          "reach": 0.46462078381839356,
+          "grip": 5.243139314237193e-07
+        },
+        {
+          "file": "frame-0011.png",
+          "seconds": 0.18333333333333332,
+          "reach": 0.5265507987408979,
+          "grip": 9.411354467057066e-07
+        },
+        {
+          "file": "frame-0012.png",
+          "seconds": 0.2,
+          "reach": 0.550040735458453,
+          "grip": 9.16633397294861e-07
+        }
+      ],
+      "source_sha256": "e49320a82b0235aa3674bd9eb66dd2ecc65580e5aefb3d44b174b4743faaebe1",
+      "production_accepted": false
+    }
+  },
+  "loop_atlas_sha256": "067a0c1dee9a4b1c4bc837b54559846ccba244b5e5300797619979d853c31169",
+  "walk_atlas_sha256": "aa9d1080e1b175fcf59878b56361f52050e10ca7bb26bce231bdafb60a9b957a",
+  "independent_critic": "/root/valheim_motion_critic",
+  "verdict": "bounded ordered-frame pass; no further indicated correction for inspected sequences",
+  "production_accepted": false,
+  "continuous_video_review": false,
+  "video_score": null
+}

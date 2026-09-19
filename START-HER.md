@@ -1,3 +1,7 @@
+Latest hero checkpoint: [19C connected transitions](docs/premium-polish/hero-transitions-19-20260919.md).
+18B loop reused;13new native walking frames, final110-frame actual gameplay pass.
+General transition/view/gear coverage and continuous-motion acceptance remain open. FPS paused.
+
 Latest hero checkpoint: [overhead18B actual gameplay preview](docs/premium-polish/hero-overhead-swing-18-20260919.md).
 Rearward load, contact and withdrawal receive an internal ordered-frame preview pass.
 Entry/exit, other headings and final motion acceptance remain open; FPS stays paused.

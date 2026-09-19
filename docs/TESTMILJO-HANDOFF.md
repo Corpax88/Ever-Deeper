@@ -1,3 +1,10 @@
+Latest verified run: [19C transition test](premium-polish/hero-transitions-19-20260919.md).
+Blender4.5.3:13native bridge images. Godot4.7.2/X11: final110actual1696×780frames,
+runner0, hits47/76,8damage, source hashes verified. Five rendered scope checks pass.
+The earlier180-frame walk capture had a missing completion log; retain that failure.
+Final output was /tmp/ever-deeper-transition19-final, copied after closure to
+/workspace/scratch/eb19e34b942d/swing19-final-game. No physical-device/FPS claim.
+
 Latest verified run: [overhead18B](premium-polish/hero-overhead-swing-18-20260919.md).
 Blender4.5.3:50native loop frames; Godot4.7.2/X11:150actual1696×780frames,
 four real hits/16damage. Internal image-sequence preview pass, no physical-device

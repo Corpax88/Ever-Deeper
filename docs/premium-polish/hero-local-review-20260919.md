@@ -1,3 +1,8 @@
+Latest checkpoint: [19C transitions](hero-transitions-19-20260919.md).
+Internal critic passes inspected stationary handoffs, exact down-walk exit and
+corrected rapid restart. Ordered-frame review only; general coverage and
+continuous playback acceptance remain open.
+
 Latest checkpoint: [overhead18B actual gameplay preview](hero-overhead-swing-18-20260919.md).
 Internal critic: clearer rearward load/body strike; all four impacts meet the ore;
 withdrawal returns to ready. Preview pass only; continuous motion/production remain open.
