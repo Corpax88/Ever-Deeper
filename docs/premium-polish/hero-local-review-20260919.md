@@ -68,6 +68,23 @@ ore contour transformed about its resource root at both scale endpoints,
 0.91 and1.035. Preserve the sprite offset (0,-3). This contains all permitted
 pulse/recovery sizes and avoids dependence on one recording's wall-clock phase.
 Keep original impacts as separate positive controls and retain the 2px margin.
-Combine this known correction with the independent local motion findings before
-one new candidate. Do not sweep amplitudes or spend another full render merely
-to retry the same unmodified hypothesis.
+The first local review verified all 119 source frames and inspected 24 ordered,
+timestamped crops plus original frame 80. It found that frames 79-82 (simulation
+seconds 1.333333-1.383333, phases 0.209524-0.288095) project all 20 evaluated working
+surface points into the visible ore contour. The old return guard ended at
+phase 0.20 and missed this part of the lift. This is screen-space overlap, not
+proof of a 3D collision or an extra gameplay hit. The next correction must cover
+the entire return/lift until the real next downswing, not only the old sampled
+guard interval or its 1.63px limiting point.
+
+The same review found weak head readability at frames 58/65/73 and a repeated
+mine cell at frames 48/49 before the first contact at 50. Treat those as separate
+visibility and presentation-cadence investigations. The second contact does not
+have the same repeat. These are image observations and computed timing, not
+claims of having watched playback.
+
+Frozen local review SHA256:
+`0f4124ba6309cfd01296aa0562b26606ba306849910513672af062099a787744`.
+Address the whole-return clearance first, then compare the same actual route
+with the independent critic. Do not sweep amplitudes or spend another full
+render merely to retry the same unmodified hypothesis.
