@@ -1,3 +1,6 @@
+Current animation review: [Local independent critic workflow](docs/premium-polish/hero-local-review-20260919.md).
+Optional external sign-in must not block authorized local investigation and correction. Preserve the existing visual/gameplay release gates and clearly label frame-sequence review limitations.
+
 Current saved work: [premium-polish continuation](START-HER.md).
 
 Current work: [premium-polish recovery](docs/premium-polish/HANDOFF.md).
