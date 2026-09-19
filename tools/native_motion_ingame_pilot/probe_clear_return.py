@@ -2,25 +2,31 @@
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 import runpy
 import subprocess
 import sys
 
 import bpy
+from mathutils import Quaternion
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 sys.path[:0] = [str(HERE), str(ROOT/'tools/hero_v28')]
 from clear_return_motion import ClearReturnMotion
+from pivot_return_motion import PivotReturnMotion
 from coordinated_body_motion import CoordinatedBodyMotion
 from forearm_frame_pose import align_right_forearm
 
 parser = argparse.ArgumentParser(description=__doc__)
 for name in ('native-tools', 'pivot', 'reference', 'audit', 'output'):
     parser.add_argument('--'+name, type=Path, required=True)
+parser.add_argument('--motion', choices=('translation', 'pivot'), default='translation')
 args = parser.parse_args(sys.argv[sys.argv.index('--')+1:])
 sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+motion_class = PivotReturnMotion if args.motion == 'pivot' else ClearReturnMotion
+motion_source = HERE/('pivot_return_motion.py' if args.motion == 'pivot' else 'clear_return_motion.py')
 assert not args.output.exists()
 assert sha(bpy.data.filepath) == '94304c12a042b168c0d655dc0ceacffe2efb08997039a7a26c1ed0cc1770bc91'
 assert sha(args.native_tools/'worn/hero.blend') == '0f90a49329acfd6db5b62cfbe6361efce1c79bea4a9d57a93fab130d46ac5b2b'
@@ -28,21 +34,23 @@ assert sha(args.reference) == '01deebd09118b07c8d1917b85ca167700c0f2de04ade7c131
 assert sha(args.pivot) == 'cd5f57f327395a2ee4cfc81716a5e2fe8ef8fe93ec45ec13203c94cc76e16f86'
 audit = json.loads(args.audit.read_text())
 assert audit['passed_geometry'], 'Independent rig/clearance audit has not passed'
+assert audit['candidate_sha256'] == sha(motion_source), 'Audit belongs to a different candidate'
 reference = json.loads(args.reference.read_text())
 sources = dict(reference['render_provenance'])
 for name, value in sources.items():
     assert sha(ROOT/name) == value, name
-for path in (Path(__file__), HERE/'clear_return_motion.py'):
+for path in (Path(__file__), motion_source):
     sources[str(path.relative_to(ROOT))] = sha(path)
 inputs = [json.loads((HERE/name).read_text()) for name in
           ('working-surface-selection.json', 'upper-body-hinge-selection.json')]
 inputs.append(json.loads(args.pivot.read_text()))
-old, motion = CoordinatedBodyMotion(*inputs), ClearReturnMotion(*inputs)
+old, motion = CoordinatedBodyMotion(*inputs), motion_class(*inputs)
 args.output.mkdir(parents=True)
 report = dict(complete=False, passed_geometry=True, visual_accepted=False,
               production_accepted=False, source_hashes=sources,
               source_sha=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
               independent_audit_sha256=sha(args.audit), selection=motion.selection(),
+              candidate_sha256=sha(motion_source), motion_kind=args.motion,
               scope='Three native poses; no playback, temporal score or production approval', renders=[])
 
 
@@ -80,7 +88,11 @@ try:
         protected = [name for name in actual if not name.startswith(('upper.', 'lower.', 'hand.'))
                      and name not in ('tool', 'bit')]
         error = max(matrix_error(before[name], actual[name]) for name in protected)
-        orientation = max((pose[k]-prior[k]).length for k in ('axis', 'tool_normal'))
+        turn = (Quaternion(motion.pivot_axis, -math.radians(motion.ANGLE_DEGREES)*motion.clearance_weight(phase))
+                if args.motion == 'pivot' else Quaternion())
+        orientation = max((pose[k]-turn@prior[k]).length for k in ('axis', 'tool_normal'))
+        if args.motion == 'pivot':
+            assert (pose['rear']-prior['rear']).length < 1e-8
         grip = max((((actual['hand.'+s] @ rig.data.bones['hand.'+s].matrix_local.inverted())
                      @ env['rest']['grips'][s])-pose['grips'][s]).length for s in ('R', 'L'))
         reach = max((v[2]-v[0]).length for v in pose['arms'].values())

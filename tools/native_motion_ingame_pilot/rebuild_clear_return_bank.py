@@ -7,6 +7,7 @@ import argparse
 import copy
 import hashlib
 import json
+import math
 from pathlib import Path
 import runpy
 import shutil
@@ -15,12 +16,13 @@ import sys
 
 import bpy
 from bpy_extras.object_utils import world_to_camera_view
-from mathutils import Vector
+from mathutils import Quaternion, Vector
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 sys.path[:0] = [str(HERE), str(ROOT/'tools/hero_v28')]
 from clear_return_motion import ClearReturnMotion
+from pivot_return_motion import PivotReturnMotion
 from coordinated_body_motion import CoordinatedBodyMotion
 from forearm_frame_pose import align_right_forearm
 import native_motion as native
@@ -28,8 +30,11 @@ import native_motion as native
 parser = argparse.ArgumentParser(description=__doc__)
 for name in ('native-tools', 'pivot', 'reference', 'parent-report', 'recorded', 'proof', 'output'):
     parser.add_argument('--'+name, type=Path, required=True)
+parser.add_argument('--motion', choices=('translation', 'pivot'), default='translation')
 args = parser.parse_args(sys.argv[sys.argv.index('--')+1:])
 sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+motion_class = PivotReturnMotion if args.motion == 'pivot' else ClearReturnMotion
+motion_source = HERE/('pivot_return_motion.py' if args.motion == 'pivot' else 'clear_return_motion.py')
 assert not args.output.exists()
 assert sha(args.reference) == '01deebd09118b07c8d1917b85ca167700c0f2de04ade7c1313dd9f79d0087a2e'
 assert sha(args.parent_report) == '522429610cd1487569eae76de58cfc697288d198e8ec713095e0c5f994265985'
@@ -44,6 +49,7 @@ proof = json.loads(args.proof.read_text())
 assert parent['complete'] and parent['passed_geometry']
 assert recorded['passed'] and len(recorded['samples']) == 119
 assert proof['complete'] and proof['passed_geometry'] and len(proof['renders']) == 3
+assert proof['motion_kind'] == args.motion and proof['candidate_sha256'] == sha(motion_source)
 for frame in proof['renders']:
     assert sha(args.proof.parent/frame['path']) == frame['sha256']
 sources = dict(reference['render_provenance'])
@@ -58,7 +64,7 @@ manifest = copy.deepcopy(reference)
 inputs = [json.loads((HERE/name).read_text()) for name in
           ('working-surface-selection.json', 'upper-body-hinge-selection.json')]
 inputs.append(json.loads(args.pivot.read_text()))
-old, motion = CoordinatedBodyMotion(*inputs), ClearReturnMotion(*inputs)
+old, motion = CoordinatedBodyMotion(*inputs), motion_class(*inputs)
 selected = {f"{f['state']}:{f['index']}" for f in manifest['frames']
             if f"{f['state']}:{f['index']}" in allowed and f['state'] == 'mine'
             and motion.clearance_weight(f['phase']) > 0.}
@@ -71,6 +77,7 @@ report = dict(complete=False, passed_geometry=False, visual_accepted=False,
               source_sha=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
               reference_manifest_sha256=sha(args.reference), parent_report_sha256=sha(args.parent_report),
               reference_report_sha256=sha(args.recorded), proof_sha256=sha(args.proof),
+              candidate_sha256=sha(motion_source), motion_kind=args.motion,
               authorized_cells=sorted(allowed), changed_cells=sorted(selected),
               scope='Only authorized mine cells change; all transitions and forbidden cells inherit exact study15 bytes',
               frame_checks=[], rendered_cells=[], inherited_cells=[], planned_draws=[])
@@ -119,7 +126,11 @@ try:
         protected = [name for name in actual if not name.startswith(('upper.', 'lower.', 'hand.'))
                      and name not in ('tool', 'bit')]
         error = max(matrix_error(before[name], actual[name]) for name in protected)
-        orientation = max((pose[k]-prior[k]).length for k in ('axis', 'tool_normal'))
+        turn = (Quaternion(motion.pivot_axis, -math.radians(motion.ANGLE_DEGREES)*motion.clearance_weight(frame['phase']))
+                if args.motion == 'pivot' else Quaternion())
+        orientation = max((pose[k]-turn@prior[k]).length for k in ('axis', 'tool_normal'))
+        if args.motion == 'pivot':
+            assert (pose['rear']-prior['rear']).length < 1e-8
         grip = max((((actual['hand.'+s] @ rig.data.bones['hand.'+s].matrix_local.inverted())
                      @ env['rest']['grips'][s])-pose['grips'][s]).length for s in ('R', 'L'))
         reach = max((v[2]-v[0]).length for v in pose['arms'].values())
