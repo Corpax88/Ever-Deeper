@@ -1,0 +1,111 @@
+"""Render three return poses only after the independent geometry gate passes."""
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import runpy
+import subprocess
+import sys
+
+import bpy
+
+ROOT = Path(__file__).resolve().parents[2]
+HERE = Path(__file__).resolve().parent
+sys.path[:0] = [str(HERE), str(ROOT/'tools/hero_v28')]
+from clear_return_motion import ClearReturnMotion
+from coordinated_body_motion import CoordinatedBodyMotion
+from forearm_frame_pose import align_right_forearm
+
+parser = argparse.ArgumentParser(description=__doc__)
+for name in ('native-tools', 'pivot', 'reference', 'audit', 'output'):
+    parser.add_argument('--'+name, type=Path, required=True)
+args = parser.parse_args(sys.argv[sys.argv.index('--')+1:])
+sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+assert not args.output.exists()
+assert sha(bpy.data.filepath) == '94304c12a042b168c0d655dc0ceacffe2efb08997039a7a26c1ed0cc1770bc91'
+assert sha(args.native_tools/'worn/hero.blend') == '0f90a49329acfd6db5b62cfbe6361efce1c79bea4a9d57a93fab130d46ac5b2b'
+assert sha(args.reference) == '01deebd09118b07c8d1917b85ca167700c0f2de04ade7c1313dd9f79d0087a2e'
+assert sha(args.pivot) == 'cd5f57f327395a2ee4cfc81716a5e2fe8ef8fe93ec45ec13203c94cc76e16f86'
+audit = json.loads(args.audit.read_text())
+assert audit['passed_geometry'], 'Independent rig/clearance audit has not passed'
+reference = json.loads(args.reference.read_text())
+sources = dict(reference['render_provenance'])
+for name, value in sources.items():
+    assert sha(ROOT/name) == value, name
+for path in (Path(__file__), HERE/'clear_return_motion.py'):
+    sources[str(path.relative_to(ROOT))] = sha(path)
+inputs = [json.loads((HERE/name).read_text()) for name in
+          ('working-surface-selection.json', 'upper-body-hinge-selection.json')]
+inputs.append(json.loads(args.pivot.read_text()))
+old, motion = CoordinatedBodyMotion(*inputs), ClearReturnMotion(*inputs)
+args.output.mkdir(parents=True)
+report = dict(complete=False, passed_geometry=True, visual_accepted=False,
+              production_accepted=False, source_hashes=sources,
+              source_sha=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+              independent_audit_sha256=sha(args.audit), selection=motion.selection(),
+              scope='Three native poses; no playback, temporal score or production approval', renders=[])
+
+
+def save():
+    (args.output/'report.json').write_text(json.dumps(report, indent=2)+'\n')
+
+
+def matrix_error(a, b):
+    return max(abs(a[i][j]-b[i][j]) for i in range(4) for j in range(4))
+
+
+sys.argv = ['blender', '--', '--native-tools', str(args.native_tools), '--output', str(args.output/'setup'),
+            '--gear', 'worn', '--direction', 'up', '--native-motion-pilot', '--native-states', 'idle',
+            '--native-loop-counts', 'idle=1', '--validate-only', '--threads', '2']
+env = runpy.run_path(str(ROOT/'tools/hero_v28/export_hero.py'))
+env['view']('up', (6, 6))
+scene, rig = env['s'], env['r']
+
+
+def apply(pose):
+    for modifier in env['skin']:
+        modifier.show_viewport = False
+    supplied = dict(pose)
+    supplied['head'] = supplied['head'] @ env['head_offset']
+    env['apply'](supplied)
+    checks = align_right_forearm(rig, env['rest'], pose)
+    return {bone.name: bone.matrix.copy() for bone in rig.pose.bones}, checks
+
+
+try:
+    for phase in (.76, .00, .18):
+        pose, prior = motion.sample('mine', phase), old.sample('mine', phase)
+        before, _ = apply(prior)
+        actual, forearm = apply(pose)
+        protected = [name for name in actual if not name.startswith(('upper.', 'lower.', 'hand.'))
+                     and name not in ('tool', 'bit')]
+        error = max(matrix_error(before[name], actual[name]) for name in protected)
+        orientation = max((pose[k]-prior[k]).length for k in ('axis', 'tool_normal'))
+        grip = max((((actual['hand.'+s] @ rig.data.bones['hand.'+s].matrix_local.inverted())
+                     @ env['rest']['grips'][s])-pose['grips'][s]).length for s in ('R', 'L'))
+        reach = max((v[2]-v[0]).length for v in pose['arms'].values())
+        assert max(error, grip, orientation) < 1e-5 and reach < .70
+        env['blink'](0.)
+        for modifier in env['skin']:
+            modifier.show_viewport = True
+        bpy.context.view_layer.update()
+        name = f'mine-{round(phase*1000):03d}'
+        png = args.output/(name+'.png')
+        scene.render.filepath = str(png)
+        env['mask'].base_path = str(args.output)
+        env['mask'].file_slots[0].path = 'mask-'+name+'-'
+        scene.frame_current = 1
+        bpy.ops.render.render(write_still=True)
+        report['renders'].append(dict(phase=phase, path=png.name, sha256=sha(png),
+                                      protected_matrix_error=error, grip_error=grip,
+                                      orientation_error=orientation, reach=reach, forearm=forearm))
+        save()
+    for path, value in sources.items():
+        assert sha(ROOT/path) == value, path
+    report['complete'] = True
+    save()
+    print('CLEAR_RETURN_POSES_COMPLETE', len(report['renders']), flush=True)
+except Exception as error:
+    report.update(rejected=True, error=str(error))
+    save()
+    raise
