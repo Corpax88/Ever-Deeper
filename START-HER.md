@@ -1,4 +1,8 @@
-Latest hero checkpoint: [19C connected transitions](docs/premium-polish/hero-transitions-19-20260919.md).
+Latest hero checkpoint: [20 held-mining flow](docs/premium-polish/hero-flow-20-20260919.md).
+Recovered the newer study20 source after the19C handoff; new150-frame actual capture and independent review pass.
+Show the verified normal-speed MP4. General direction/tool/transition coverage remains open; FPS paused.
+
+Previous hero checkpoint: [19C connected transitions](docs/premium-polish/hero-transitions-19-20260919.md).
 18B loop reused;13new native walking frames, final110-frame actual gameplay pass.
 General transition/view/gear coverage and continuous-motion acceptance remain open. FPS paused.
 

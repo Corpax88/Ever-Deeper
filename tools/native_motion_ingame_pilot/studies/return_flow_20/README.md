@@ -1,5 +1,17 @@
 # Study20 — reported lag / continuous-return timing
 
+Completed bounded review: [REVIEW.md](REVIEW.md) and
+[current checkpoint](../../../../docs/premium-polish/hero-flow-20-20260919.md).
+The resumed150-frame capture passes with identical gameplay. Do not rerender
+the63native loop/bridge images solely to resume; recover the saved evidence.
+Deliver ordinary held mining separately from the intentionally interrupted test.
+
+`review_flow.py --game GAME --baseline BASELINE --native LOOP --old-native OLD`
+checks gameplay parity and creates exact crops plus two timestamped sheets.
+The existing19 packager now accepts `--first-frame 41 --frame-count 82 --repeat 4`
+for the normal60Hz MP4.
+For the looping GIF, use the same82frames once and `--gif-fps 50`.
+
 Mats reports that19looks like it lags. Investigate delivery and animation
 separately. No FPS work or device-performance claim is authorized by a capture.
 

@@ -1,4 +1,8 @@
-Latest hero checkpoint: [19C transitions](docs/premium-polish/hero-transitions-19-20260919.md).
+Latest hero checkpoint: [20 held-mining flow](docs/premium-polish/hero-flow-20-20260919.md).
+Long authored holds reduced; fresh gameplay and independent sequence review pass for this narrow preview.
+Normal-speed user acceptance and wider coverage remain open. FPS paused; no DEV/LIVE adoption.
+
+Previous hero checkpoint: [19C transitions](docs/premium-polish/hero-transitions-19-20260919.md).
 Bounded stationary/rapid-restart/exact walk-exit image pass; no9/10 or production adoption. FPS paused.
 
 Current animation review: [Local independent critic workflow](docs/premium-polish/hero-local-review-20260919.md).

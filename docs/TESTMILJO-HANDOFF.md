@@ -1,4 +1,11 @@
-Latest verified run: [19C transition test](premium-polish/hero-transitions-19-20260919.md).
+Latest verified run: [20 held-mining flow](premium-polish/hero-flow-20-20260919.md).
+Godot4.7.2/X11/Mesa: fresh150-frame1696x780 capture, runner0, completion marker, four hits/16damage.
+Verified preserved20 rapid110-frame capture, original native63-frame bank and unchanged gameplay.
+Evidence: /tmp/ever-deeper20-resumed-continuous; original runtime/native paths still work.
+MP4/GIF are encoded to closed temporary files, completely decoded, then atomically installed.
+No physical-device/FPS claim. Input QA passes; the known player_visual.gd invariant mismatch remains.
+
+Previous verified run: [19C transition test](premium-polish/hero-transitions-19-20260919.md).
 Blender4.5.3:13native bridge images. Godot4.7.2/X11: final110actual1696×780frames,
 runner0, hits47/76,8damage, source hashes verified. Five rendered scope checks pass.
 The earlier180-frame walk capture had a missing completion log; retain that failure.
