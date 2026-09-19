@@ -1,0 +1,103 @@
+{
+  "native_source_commit": "8be8ce64635bced52bb3ca32f2118e58dba2b588",
+  "baseline_commit": "f9ff3d7e4f1d85ddc04b931700ceacbc04c39fd8",
+  "approved_loop_changed": false,
+  "native_frames": 24,
+  "scope": [
+    "walk19 cell6 to down idle cell0,14/60seconds",
+    "legacy up-walk cell15 to approved20 cell10,8/60seconds"
+  ],
+  "native_report_sha256": "3ccd2367d6f21b5736fb664c5673e506ed76edd43b079e2dd2e42469cb4ab37f",
+  "native_atlas_sha256": "c4ed4cf312364e6ccc63f0dda1f2ebe438163f6f82195cf23273ffe0ea37f18c",
+  "approved_flow_atlas_sha256": "6a869dc427d9d0e66c2582f02be9c6719842e8878dc88af7426d4dc1da70fca1",
+  "approved_walk_atlas_sha256": "e3769f649875482dd02d85307e1a62848bed0b7cd3d018919caa3342c8a2eb62",
+  "captures": {
+    "interrupt": {
+      "frames": 126,
+      "hits": 2,
+      "damage": 8,
+      "report_sha256": "fa7b872f32b794b92de7e61caa091701892ff7915c0852b760dc53e9f4125e34",
+      "hit_frames": [
+        47,
+        76
+      ],
+      "mechanics_identical": true
+    },
+    "walk-entry": {
+      "frames": 106,
+      "hits": 2,
+      "damage": 8,
+      "report_sha256": "9c0c17b7be006090a73b5a67a10e2f172cbc66247cf0d03e59ebd08fe09798ea",
+      "hit_frames": [
+        25,
+        65
+      ],
+      "mechanics_identical": true
+    }
+  },
+  "native_endpoint_silhouettes_within_1px": true,
+  "endpoints_rgba_identical": false,
+  "independent_ordered_frame_review": "narrow pass",
+  "critic_report_sha256": "fdf2e2e63a8581d946c62a74beaf578b14ccb913b09bfbf73ec7ead986790329",
+  "continuous_video_review": false,
+  "all_directions_and_tools_covered": false,
+  "production_accepted": false,
+  "input_qa": {
+    "passed": true,
+    "cases": [
+      {
+        "case": "input",
+        "passed": true,
+        "exit_code": 0,
+        "reason": "",
+        "seconds": 2.91,
+        "marker": "EVER_DEEPER_INPUT_RELEASE_OK",
+        "completion": [
+          "EVER_DEEPER_INPUT_RELEASE_OK hide=true matching_touch=true canceled_touch=true unrelated_touch_ignored=true mouse=true worlds=5 focus_pause=true"
+        ],
+        "log": "/tmp/ever-deeper21-input-qa/input.log"
+      }
+    ]
+  },
+  "invariants": {
+    "invariants_exit": 1,
+    "existing_failure": "scripts/player/player_visual.gd",
+    "player_visual_unchanged_since_baseline": true,
+    "player_visual_sha256": "caaa2e411f9b83a3bbf5ac82bfe8801ec033f52f14734478725897bce02e8061",
+    "protected_runtime_and_assets_diff": ""
+  },
+  "preview": {
+    "sources": [
+      {
+        "directory": "/tmp/ever-deeper21-candidate-walk-entry",
+        "report_sha256": "9c0c17b7be006090a73b5a67a10e2f172cbc66247cf0d03e59ebd08fe09798ea",
+        "frames": 106,
+        "label": "Gange til hakking"
+      },
+      {
+        "directory": "/tmp/ever-deeper21-candidate-interrupt",
+        "report_sha256": "fa7b872f32b794b92de7e61caa091701892ff7915c0852b760dc53e9f4125e34",
+        "frames": 126,
+        "label": "Avbrudd og stopp"
+      }
+    ],
+    "artifacts": [
+      {
+        "file": "Ever-Deeper-overganger-21.mp4",
+        "bytes": 1281072,
+        "sha256": "cbe3f3e2aab5e3cf5614b297610d401ec28e2b7c7631414f9d7f1706543898d3"
+      },
+      {
+        "file": "Ever-Deeper-overganger-21.gif",
+        "bytes": 21780846,
+        "sha256": "6eea6b30536e7a074066f26623012f48c84825daa13c6eed67f33a4494d3ae06"
+      }
+    ],
+    "source_frames": 232,
+    "duration_seconds": 3.8666666666666667,
+    "normal_speed": true,
+    "interpolated_frames": false,
+    "video_fps": 60,
+    "gif_fps": 50
+  }
+}

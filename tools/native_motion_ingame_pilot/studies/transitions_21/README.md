@@ -48,8 +48,12 @@ Actual native endpoints and same-input gameplay remain required afterward.
 
 CheckG completes both paths: largest60Hz bone changes are29.17degrees for
 the brake and39.78degrees for entry, with no half-turn substep flips. Entry
-arm reach remains0.3818–0.5501m. The next bounded render is24 actual native
-frames (15brake,9entry), followed by actual-game endpoint/sequence review.
+arm reach remains0.3818–0.5501m. The completed render contains24 actual native
+frames (15brake,9entry). Both same-input gameplay captures and independent
+ordered-frame review pass for these exact seams. See
+[the checkpoint](../../../../docs/premium-polish/hero-transitions-21-20260919.md)
+and `evidence.json`. Entry still contains a substantial0.133s facing turn;
+normal-speed user acceptance and wider coverage are not established by this pass.
 
 ## Reproduction
 
@@ -66,6 +70,10 @@ Native originals are `/tmp/ever-deeper-retarget-20260918/native`.
 3. Run `package.py NATIVE --flow LOOP --walk WALK`. Capture the same cases
    with `--candidate21 --bank=NATIVE`, then `review_capture.py GAME --baseline
    BASELINE`. Inspect the resulting original crops and seam sheets.
+4. Run `review_endpoints.py NATIVE --flow LOOP --walk WALK --legacy
+   assets/hero/dad/worn`. `encode_preview.py --entry ENTRY_GAME --interrupt
+   BRAKE_GAME --output OUTPUT` encodes verified source frames at their
+   original60Hz; its GIF is sampled at50Hz with no interpolated images.
 
 Production atlases, gameplay, camera, gear and saves are not changed by this
 isolated diagnostic. Full phase/direction/tool/outfit coverage is still open.

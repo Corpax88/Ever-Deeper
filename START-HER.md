@@ -1,5 +1,7 @@
-Current work: [21 exact transition seams](tools/native_motion_ingame_pilot/studies/transitions_21/README.md).
-Mats approved study20's visible flow, then said Go. Preserve the loop; finish interrupted walking and entry.
+Latest completed preview: [21 exact transition seams](docs/premium-polish/hero-transitions-21-20260919.md).
+24new native frames connect the exact tested walking entry and interrupted bridge. Both actual-game
+captures pass independent ordered-frame review with unchanged mechanics. Study20 remains user-approved;
+broader phases/directions/tools and normal-speed acceptance of21 remain open. FPS paused; no publication.
 
 Latest completed hero checkpoint: [20 held-mining flow](docs/premium-polish/hero-flow-20-20260919.md).
 Recovered the newer study20 source after the19C handoff; new150-frame actual capture and independent review pass.

@@ -1,4 +1,13 @@
-Latest verified run: [20 held-mining flow](premium-polish/hero-flow-20-20260919.md).
+Latest verified run: [21 exact entry/brake](premium-polish/hero-transitions-21-20260919.md).
+Source restored to /workspace/scratch/c58aae856e15/ever-deeper on codex/hero-loop-flow-20260918.
+Original native/runtime paths under/tmp survived and were SHA/version/graphical checked.
+Blender4.5.3 rendered24native frames after bounded geometry/temporal review.
+Godot4.7.2/X11/Mesa:126+106actual1696x780frames, both runner0 with completion markers;
+all232mechanical rows match baseline,2hits/8damage per case. Input QA passes.
+Evidence /tmp/ever-deeper21-native-g and /tmp/ever-deeper21-candidate-{interrupt,walk-entry}.
+No physical-device/FPS claim. Protected runtime/assets are unchanged; known player_visual invariant persists.
+
+Previous verified run: [20 held-mining flow](premium-polish/hero-flow-20-20260919.md).
 Godot4.7.2/X11/Mesa: fresh150-frame1696x780 capture, runner0, completion marker, four hits/16damage.
 Verified preserved20 rapid110-frame capture, original native63-frame bank and unchanged gameplay.
 Evidence: /tmp/ever-deeper20-resumed-continuous; original runtime/native paths still work.

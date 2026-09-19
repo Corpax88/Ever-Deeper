@@ -1,5 +1,6 @@
-Current work: [21 exact transition seams](tools/native_motion_ingame_pilot/studies/transitions_21/README.md).
-Mats has approved the visible study20 flow. Preserve it while extending transitions; do not redesign the swing.
+Latest completed preview: [21 exact transition seams](docs/premium-polish/hero-transitions-21-20260919.md).
+Two narrow transitions pass actual-game ordered-frame review; all232 mechanics rows match baseline.
+Mats approved the study20 loop. Preserve it; broader phases/directions/tools remain open. No DEV/LIVE adoption.
 
 Latest completed hero checkpoint: [20 held-mining flow](docs/premium-polish/hero-flow-20-20260919.md).
 Long authored holds reduced; fresh gameplay and independent sequence review pass for this narrow preview.
