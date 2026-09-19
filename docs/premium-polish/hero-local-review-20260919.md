@@ -1,3 +1,6 @@
+Latest completed round: [16H–16J decisions and saved evidence](hero-return-16h-16j-20260919.md).
+All new candidates remain rejected; no engine/agent is left running by this checkpoint.
+
 # Hero animation: local independent review
 
 Mats's direction on 19 September 2026: progress must not repeatedly stop for

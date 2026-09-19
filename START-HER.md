@@ -1,3 +1,6 @@
+Latest animation checkpoint: [local16H–16J attempt and rejection analysis](docs/premium-polish/hero-return-16h-16j-20260919.md).
+No9/10 result; no new bank. Internal critic works without external sign-in.
+
 CURRENT REVIEW WORKFLOW: [Internal critic without an external sign-in dependency](docs/premium-polish/hero-local-review-20260919.md). Study16G has an actual119-frame game capture; its live ore-pulse clearance fails1.63px versus2px. Continue reasoned local corrections with an independent critic. A frame-sequence review is not an actual-video score;9/10 and production acceptance remain open. FPS paused.
 
 CURRENT ANGLE STUDY: [Original hero at+25degrees in an actual game loop](docs/premium-polish/hero-view-angle-20260918.md). Mats explicitly permits angle changes. Modest visibility improvement; keep as a candidate only. Both hits and119 captures match the prior mechanics; cramped grip/contact and movement alignment remain open. The partial study bank is not deployable. FPS paused.
