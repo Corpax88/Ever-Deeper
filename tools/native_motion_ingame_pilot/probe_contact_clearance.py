@@ -13,8 +13,10 @@ for n in ('native-tools','pivot','output'):p.add_argument('--'+n,type=Path,requi
 p.add_argument('--render',action='store_true')
 p.add_argument('--lower-contact',action='store_true')
 p.add_argument('--contact-roll',action='store_true')
+p.add_argument('--forearm-frame',action='store_true')
 a=p.parse_args(sys.argv[sys.argv.index('--')+1:]);assert not a.output.exists();a.output.mkdir(parents=True)
 assert not a.contact_roll or a.lower_contact, 'Roll proposal retains lower-contact translation'
+assert not a.forearm_frame or a.contact_roll, 'Forearm study compares against12'
 sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
 assert sha(bpy.data.filepath)=='94304c12a042b168c0d655dc0ceacffe2efb08997039a7a26c1ed0cc1770bc91'
 assert sha(a.native_tools/'worn/hero.blend')=='0f90a49329acfd6db5b62cfbe6361efce1c79bea4a9d57a93fab130d46ac5b2b'
@@ -30,12 +32,16 @@ if a.contact_roll:
 paths=[Path(__file__),HERE/'contact_clearance_motion.py',HERE/'body_weight_motion.py',HERE/'side_return_motion.py',HERE/'loop_flow_motion.py',ROOT/'tools/hero_v28/export_hero.py',ROOT/'tools/hero_v28/native_pose.py',ROOT/'tools/hero_v28/native_motion.py',ROOT/'tools/hero_v28/premium_motion.py']
 if a.lower_contact:paths.append(HERE/'lower_contact_motion.py')
 if a.contact_roll:paths.append(HERE/'contact_roll_motion.py')
+if a.forearm_frame:paths.append(HERE/'forearm_frame_pose.py')
 r={'complete':False,'passed_geometry':False,'visual_accepted':False,'production_accepted':False,
    'source_sha':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
    'source_hashes':{str(p.relative_to(ROOT)):sha(p) for p in paths},
    'selection':new.selection(),'scope':'One contact-local trial;401clock samples plus exact knots; at most3native stills. Not a game bank or temporal approval.',
    'samples':[],'renders':[]}
 r['cap_rule']='Exact prescribed lower-contact translation' if a.lower_contact else 'Original cap centroid fixed'
+if a.forearm_frame:
+    r['forearm_frame_study']={'trial':13,'scope':'Three contact poses only; preserve12 hand/tool/joint positions',
+                              'limits':'Exit pronation and mixed-weight elbow/cuff deformation require separate review; no route promotion'}
 def save():(a.output/'report.json').write_text(json.dumps(r,indent=2)+'\n')
 try:
     for q in sorted({native_phase(i/400) for i in range(401)}|{.40,.50,.55,.625,.70,.86}):
@@ -60,12 +66,16 @@ try:
     if a.render:
         sys.argv=['blender','--','--native-tools',str(a.native_tools),'--output',str(a.output/'setup'),'--gear','worn','--direction','up','--native-motion-pilot','--native-states','idle','--native-loop-counts','idle=1','--validate-only','--threads','2']
         env=runpy.run_path(str(ROOT/'tools/hero_v28/export_hero.py'));env['view']('up',(6,6));scene,rig=env['s'],env['r']
-        def apply(pose):
+        forearm_checks=[]
+        def apply(pose,correct=False):
             for mod in env['skin']:mod.show_viewport=False
             posed=dict(pose);posed['head']=posed['head']@env['head_offset'];env['apply'](posed)
+            if correct:
+                from forearm_frame_pose import align_right_forearm
+                forearm_checks.append(align_right_forearm(rig,env['rest'],pose))
             return {b.name:b.matrix.copy() for b in rig.pose.bones}
         for q in (.50,.55,.625):
-            expected=apply(old.sample('mine',q));pose=new.sample('mine',q);actual=apply(pose)
+            expected=apply(old.sample('mine',q));pose=new.sample('mine',q);actual=apply(pose,a.forearm_frame)
             # The tool and its optional child bit intentionally rotate rigidly.
             protected=[n for n in expected if n not in ('upper.R','lower.R','hand.R','upper.L','lower.L','hand.L','tool','bit')]
             error=max(abs(actual[n][i][j]-expected[n][i][j]) for n in protected for i in range(4) for j in range(4))
@@ -85,6 +95,7 @@ try:
             scene.render.filepath=str(png);env['mask'].base_path=str(a.output);env['mask'].file_slots[0].path='mask-'+name+'-';scene.frame_current=1
             bpy.ops.render.render(write_still=True)
             r['renders'].append({'phase':q,'path':png.name,'sha256':sha(png),'protected_rig_error':error,'grip_error':grip,'length_error':length,'actual_tool_cap_error':actual_cap_error});save()
+        if a.forearm_frame:r['forearm_frame_checks']=forearm_checks
     for p,h in r['source_hashes'].items():assert sha(ROOT/p)==h,p
     r['complete']=True;save();print('CONTACT_CLEARANCE_COMPLETE',len(r['samples']),len(r['renders']),flush=True)
 except Exception as e:
