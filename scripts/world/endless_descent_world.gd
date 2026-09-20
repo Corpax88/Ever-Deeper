@@ -248,6 +248,7 @@ var _swing_resource_index: = -1
 var _swing_wall: = Vector2i(-1, -1)
 var _swing_duration: = 0.68
 var _swing_facing: = Vector2.ZERO
+var _swing_presentation_target: Vector2 = Vector2.ZERO
 var _swing_input_direction: = Vector2.ZERO
 var _swing_origin: = Vector2.ZERO
 var dig_damage: Dictionary = {}
@@ -1940,6 +1941,7 @@ func _update_mining(delta: float) -> void :
 		_cancel_mining()
 		return
 	player.set_facing(_swing_facing)
+	player.set_animation_bearing(_swing_presentation_target-player.global_position)
 	mining_elapsed += maxf(0.0, delta)
 	var progress: = clampf(mining_elapsed / _swing_duration, 0.0, 1.0)
 	player.set_mining_visual(true, progress, 0.0, MINING_HIT_PROGRESS)
@@ -1954,6 +1956,7 @@ func _update_mining(delta: float) -> void :
 		var overflow: = fposmod(maxf(0.0, mining_elapsed - _swing_duration), _swing_duration)
 		if _begin_mining_swing():
 			mining_elapsed = minf(overflow, _swing_duration * MINING_HIT_PROGRESS * 0.5)
+			player.set_mining_presentation_elapsed(mining_elapsed)
 		else:
 			_cancel_mining()
 
@@ -1967,12 +1970,14 @@ func _begin_mining_swing() -> bool:
 	if _swing_resource_index >= 0:
 		var target: Dictionary = resources[_swing_resource_index]
 		mining_target_id = String(target.id)
+		_swing_presentation_target = Vector2(target.position)
 		player.set_facing((Vector2(target.position) - player.global_position).normalized())
 	else:
 		_swing_wall = _nearest_diggable_wall()
 		if _swing_wall.x < 0:
 			return false
 		mining_target_id = "wall:" + _cell_key(_swing_wall)
+		_swing_presentation_target = _cell_center(_swing_wall)
 		player.set_facing((_cell_center(_swing_wall) - player.global_position).normalized())
 	mining_active = true
 	mining_elapsed = 0.0
@@ -1980,6 +1985,7 @@ func _begin_mining_swing() -> bool:
 	_swing_duration = _mining_cycle_duration()
 	_swing_facing = player.facing_vector
 	_swing_origin = player.global_position
+	player.begin_mining_presentation(_swing_presentation_target, mining_target_id, _swing_duration, MINING_HIT_PROGRESS)
 	return true
 
 

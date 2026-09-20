@@ -46,6 +46,23 @@ var motion_resolver_call_count: = 0
 var motion_resolver_idle_skip_count: = 0
 var visual_state_update_count: = 0
 var visual_state_skip_count: = 0
+# Presentation-only inputs. Cardinal facing and authoritative game timing stay
+# with their existing owners; a renderer must never infer a new hit from these.
+var animation_bearing: Vector2 = Vector2.DOWN
+var animation_target_position: Vector2 = Vector2.ZERO
+var animation_target_id: String = ""
+var animation_target_valid: bool = false
+var animation_swing_serial: int = 0
+var animation_cycle_duration: float = 0.0
+var animation_actual_motion: Vector2 = Vector2.ZERO
+var animation_travelled_distance: float = 0.0
+var animation_active: bool = false
+var animation_progress: float = 0.0
+var animation_hit_phase: float = -1.0
+var animation_impact_swing_serial: int = 0
+var animation_impact_target: Vector2 = Vector2.ZERO
+var animation_impact_bearing: Vector2 = Vector2.DOWN
+var animation_impact_target_valid: bool = false
 
 
 func _ready() -> void :
@@ -86,6 +103,8 @@ func _physics_process(delta: float) -> void :
 		move_and_slide()
 		global_position = global_position.clamp(Vector2(24, 24), world_size - Vector2(24, 24))
 	var actual_motion: = global_position - before
+	animation_actual_motion = actual_motion
+	animation_travelled_distance += actual_motion.length()
 	_actual_moving = actual_motion.length_squared() > 0.001
 	visual.advance_motion(actual_motion.length(), delta)
 	if motion_resolver.is_valid():
@@ -110,6 +129,7 @@ func _update_walk_direction(motion: Vector2) -> void :
 
 
 func _update_aim(intent: Vector2, from_input: bool = false) -> void :
+	set_animation_bearing(intent)
 	if absf(intent.x) > absf(intent.y) * 1.15:
 		direction_name = "right" if intent.x > 0.0 else "left"
 	elif absf(intent.y) > absf(intent.x) * 1.15:
@@ -188,9 +208,17 @@ func _update_visual(is_moving: bool) -> void :
 func set_mining_visual(active: bool, progress: float = 0.0, recoil: float = 0.0, strike_phase: float = -1.0) -> void :
 	if recoil > 0.0:
 		_mining_impact_serial += 1
+		animation_impact_swing_serial = animation_swing_serial
+		animation_impact_target = animation_target_position
+		animation_impact_bearing = animation_bearing
+		animation_impact_target_valid = animation_target_valid
 		_visual_state_initialized = false
 	mining_strike_phase = strike_phase
 	mining_visual_active = active
+	animation_active = active
+	animation_progress = clampf(progress, 0.0, 1.0)
+	animation_hit_phase = strike_phase
+	if not active: animation_target_valid = false
 	mining_visual_progress = progress
 	mining_visual_recoil = maxf(mining_visual_recoil, recoil)
 	_update_visual(_actual_moving)
@@ -201,6 +229,47 @@ func set_facing(direction: Vector2) -> void :
 		return
 	_update_aim(direction)
 	_update_visual(false)
+
+
+func set_animation_bearing(direction: Vector2) -> void:
+	if direction.is_finite() and direction.length_squared() > .001:
+		animation_bearing = direction.normalized()
+
+
+func begin_mining_presentation(target: Vector2, target_id: String, cycle: float, hit_phase: float) -> void:
+	assert(target.is_finite() and is_finite(cycle) and cycle > 0.0)
+	assert(hit_phase > 0.0 and hit_phase < 1.0)
+	animation_swing_serial += 1
+	animation_target_position = target
+	animation_target_id = target_id
+	animation_target_valid = true
+	animation_cycle_duration = cycle
+	animation_active = true
+	animation_progress = 0.0
+	animation_hit_phase = hit_phase
+	set_animation_bearing(target-global_position)
+
+
+func set_mining_presentation_elapsed(elapsed: float) -> void:
+	assert(animation_target_valid and animation_cycle_duration > 0.0)
+	animation_progress = clampf(elapsed/animation_cycle_duration, 0.0, 1.0)
+
+
+func animation_packet() -> Dictionary:
+	# Called by opt-in presentation consumers only. A new serial identifies an
+	# interrupted/restarted swing even if no intermediate idle frame was drawn.
+	return {"physics_tick": physics_tick_count, "world_position": global_position, "actual_motion": animation_actual_motion,
+		"travelled_distance": animation_travelled_distance,
+		"moving": _actual_moving, "bearing": animation_bearing,
+		"mining": animation_active, "progress": animation_progress,
+		"hit_phase": animation_hit_phase, "impact_serial": _mining_impact_serial,
+		"impact_swing_serial": animation_impact_swing_serial,
+		"impact_target_position": animation_impact_target, "impact_bearing": animation_impact_bearing,
+		"impact_target_valid": animation_impact_target_valid,
+		"swing_serial": animation_swing_serial, "cycle_duration": animation_cycle_duration,
+		"mining_timing_valid": animation_target_valid and animation_active,
+		"target_valid": animation_target_valid, "target_position": animation_target_position,
+		"target_id": animation_target_id}
 
 
 func set_external_movement(direction: Vector2) -> void :
