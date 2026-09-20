@@ -516,7 +516,7 @@ def bake_probe(args):
     if projection_strategy == "matched_components":
         if args.scope != "full": raise ValueError("Component matching requires full native scope")
         sys.path.insert(0, str(Path(__file__).resolve().parent))
-        import component_projection as projection_module
+        import component_batches as projection_module
     elif projection_strategy != "assembled":
         raise ValueError("Unknown projection strategy")
     strategy_module = None
@@ -604,59 +604,59 @@ def bake_probe(args):
         scene.render.threads_mode = "FIXED"
         scene.render.threads = args.threads
         scene.render.use_persistent_data = bool(getattr(args, "persistent_data", False))
-        if projection_module:
-            report["component_projection"] = projection_stack.enter_context(
-                projection_module.isolated_components(scene, target, sources, args.channel))
         merge_context = strategy_module.merged_donors if strategy_module else merged_donors
-        context = merge_context(scene, group) if args.mode == "merged" else unchanged_donors(group)
-        build_start = time.perf_counter()
-        with context as (helper, stats), ExitStack() as restorers:
-            report["donor_build_seconds"] = time.perf_counter() - build_start
-            report["merge"] = stats
-            donors = other_selected + ([helper] if helper is not None else group)
-            report["bake_source_count"] = len(donors)
-            for obj in bpy.context.selected_objects:
-                obj.select_set(False)
-            for obj in donors:
-                obj.select_set(True)
-            target.select_set(True)
-            bpy.context.view_layer.objects.active = target
-            if args.channel in ("albedo", "roughness", "metallic", "cloth"):
-                sys.path.insert(0, str(Path(__file__).resolve().parent))
-                from export_runtime import source_material_override
-                for source_material in sorted({slot.material for obj in sources + donors for slot in obj.material_slots
-                                               if slot.material is not None}, key=lambda item: item.name):
-                    restorers.callback(source_material_override(source_material, args.channel))
-            report["status"] = "baking"
-            write_json(report_path, report)
-            print("CONSTANT_DONOR_PROBE_START", args.mode, args.channel, len(donors), flush=True)
-            bake_start = time.perf_counter()
-            bpy.ops.object.bake(
-                type="NORMAL" if args.channel == "normal" else "AO" if args.channel == "ao" else "EMIT",
-                use_selected_to_active=True, use_clear=True, use_cage=False,
-                cage_extrusion=.018, max_ray_distance=.040, margin=8,
-                normal_space="TANGENT", normal_r="POS_X", normal_g="POS_Y", normal_b="POS_Z",
-                target="IMAGE_TEXTURES", save_mode="INTERNAL", uv_layer=working_mesh.uv_layers.active.name,
-            )
-            report["bake_seconds"] = time.perf_counter() - bake_start
-            rgba = np.empty(args.size * args.size * 4, dtype=np.float32)
-            image.pixels.foreach_get(rgba)
-            rgba = rgba.reshape((args.size, args.size, 4))
-            if not np.isfinite(rgba).all():
-                raise ValueError("Nonfinite baked RGBA values")
-            report["alpha_covered_pixels"] = int(np.count_nonzero(rgba[:, :, 3] > 0))
-            if not report["alpha_covered_pixels"]:
-                raise ValueError("Empty bake cannot establish parity")
-            np.savez_compressed(output / "rgba.npz", rgba=rgba)
-            # Preserve the legacy serialization as failure/diagnostic evidence.
-            # It must never be confused with the corrected opaque data map.
-            image.filepath_raw = str(output / (args.channel + "-raw-rgba.png"))
-            image.file_format = "PNG"
-            image.save()
-            report["legacy_rgba_png"] = args.channel + "-raw-rgba.png"
-            report["rgb_output"] = write_opaque_rgb_png(output / (args.channel + ".png"),
-                                                       rgba, args.channel)
-        projection_stack.close()
+        if projection_module and args.channel != "ao":
+            rgba = projection_module.bake_components(scene, target, sources, group,
+                merge_context, args, image, report, report_path)
+        else:
+            context = merge_context(scene, group) if args.mode == "merged" else unchanged_donors(group)
+            build_start = time.perf_counter()
+            with context as (helper, stats), ExitStack() as restorers:
+                report["donor_build_seconds"] = time.perf_counter() - build_start
+                report["merge"] = stats
+                donors = other_selected + ([helper] if helper is not None else group)
+                report["bake_source_count"] = len(donors)
+                for obj in bpy.context.selected_objects:
+                    obj.select_set(False)
+                for obj in donors:
+                    obj.select_set(True)
+                target.select_set(True)
+                bpy.context.view_layer.objects.active = target
+                if args.channel in ("albedo", "roughness", "metallic", "cloth"):
+                    sys.path.insert(0, str(Path(__file__).resolve().parent))
+                    from export_runtime import source_material_override
+                    for source_material in sorted({slot.material for obj in sources + donors for slot in obj.material_slots
+                                                   if slot.material is not None}, key=lambda item: item.name):
+                        restorers.callback(source_material_override(source_material, args.channel))
+                report["status"] = "baking"
+                write_json(report_path, report)
+                print("CONSTANT_DONOR_PROBE_START", args.mode, args.channel, len(donors), flush=True)
+                bake_start = time.perf_counter()
+                bpy.ops.object.bake(
+                    type="NORMAL" if args.channel == "normal" else "AO" if args.channel == "ao" else "EMIT",
+                    use_selected_to_active=True, use_clear=True, use_cage=False,
+                    cage_extrusion=.018, max_ray_distance=.040, margin=8,
+                    normal_space="TANGENT", normal_r="POS_X", normal_g="POS_Y", normal_b="POS_Z",
+                    target="IMAGE_TEXTURES", save_mode="INTERNAL", uv_layer=working_mesh.uv_layers.active.name,
+                )
+                report["bake_seconds"] = time.perf_counter() - bake_start
+                rgba = np.empty(args.size * args.size * 4, dtype=np.float32)
+                image.pixels.foreach_get(rgba)
+                rgba = rgba.reshape((args.size, args.size, 4))
+        if not np.isfinite(rgba).all():
+            raise ValueError("Nonfinite baked RGBA values")
+        report["alpha_covered_pixels"] = int(np.count_nonzero(rgba[:, :, 3] > 0))
+        if not report["alpha_covered_pixels"]:
+            raise ValueError("Empty bake cannot establish parity")
+        np.savez_compressed(output / "rgba.npz", rgba=rgba)
+        # Preserve the legacy serialization as failure/diagnostic evidence.
+        # It must never be confused with the corrected opaque data map.
+        image.filepath_raw = str(output / (args.channel + "-raw-rgba.png"))
+        image.file_format = "PNG"
+        image.save()
+        report["legacy_rgba_png"] = args.channel + "-raw-rgba.png"
+        report["rgb_output"] = write_opaque_rgb_png(output / (args.channel + ".png"),
+                                                   rgba, args.channel)
         report["status"] = "complete"
     except Exception as error:
         report["status"] = "failed"

@@ -41,7 +41,7 @@ def main():
                'mode': 'merged', 'scope': 'full', 'contract': probe.RGB_OUTPUT_CONTRACT}
     binding['donor_strategy'] = args.donor_strategy
     binding['projection_strategy'] = args.projection_strategy
-    binding['projection_script_sha256'] = (probe.digest(HERE/'component_projection.py')
+    binding['projection_script_sha256'] = (probe.digest(HERE/'component_batches.py')
         if args.projection_strategy == 'matched_components' else None)
     binding['explicitly_unmerged_sources'] = sorted(set(args.unmerged_donor))
     binding['strategy_sha256'] = (probe.digest(HERE/'object_coordinate_donors.py')
@@ -71,7 +71,9 @@ def main():
         assert sig['projection_strategy'] == binding['projection_strategy']
         assert sig['projection_script_sha256'] == binding['projection_script_sha256']
         if args.projection_strategy == 'matched_components' and channel != 'ao':
-            assert report['component_projection']['restored_original_transforms']
+            assert all(report['component_projection'][key] for key in (
+                'restored_original_transforms', 'restored_original_uv',
+                'geometry_normals_topology_unchanged', 'covered_texels_unchanged'))
         assert sig['strategy_sha256'] == binding['strategy_sha256']
         assert sig['explicitly_unmerged_sources'] == binding['explicitly_unmerged_sources']
         assert report['opacity_audit']['all_sources_opaque']
