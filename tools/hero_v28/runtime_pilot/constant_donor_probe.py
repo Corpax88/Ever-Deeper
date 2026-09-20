@@ -412,7 +412,14 @@ def create_merged_donor(scene, sources, material_checker=constant_material_audit
         actual_normals = get_array(mesh.corner_normals, "vector", 3, np.float32)
         normal_error = float(np.max(np.abs(actual_normals - normals)))
         if normal_error > NORMAL_TOLERANCE:
-            raise ValueError(f"Corner-normal preservation error {normal_error:.8g}")
+            offset, failures = 0, []
+            for piece in pieces:
+                stop = offset + len(piece["normals"])
+                error = float(np.max(np.abs(actual_normals[offset:stop] - normals[offset:stop])))
+                if error > NORMAL_TOLERANCE:
+                    failures.append({"source": piece["record"]["source"], "max_error": error})
+                offset = stop
+            raise ValueError(f"Corner-normal preservation error {normal_error:.8g}: {failures}")
         if not np.array_equal(get_array(mesh.vertices, "co", 3, np.float32), positions):
             raise ValueError("Merged positions changed")
         for collection, name, width, dtype, expected in (
@@ -514,7 +521,11 @@ def bake_probe(args):
     else:
         raise ValueError("Unknown donor strategy: " + strategy)
     eligible_by_name = {obj.name: obj for obj in eligible}
+    unmerged = sorted(set(getattr(args, "unmerged_donor", None) or []))
+    if unmerged and (args.scope != "full" or not set(unmerged).issubset(eligible_by_name)):
+        raise ValueError("Explicitly unmerged donors must be eligible full-scope sources")
     names = sorted(eligible_by_name) if args.scope == "full" else list(args.donor or SAMPLE_NAMES)
+    names = [name for name in names if name not in unmerged]
     if len(names) != len(set(names)) or len(names) < 2:
         raise ValueError("Choose at least two distinct constant-material donors")
     missing = [name for name in names if name not in eligible_by_name]
@@ -538,6 +549,7 @@ def bake_probe(args):
         "blender_build": bpy.app.build_hash.decode("ascii"),
         "output_contract": RGB_OUTPUT_CONTRACT, "donor_strategy": strategy,
         "strategy_sha256": digest(strategy_module.__file__) if strategy_module else None,
+        "explicitly_unmerged_sources": unmerged,
     }
     report = {"approved": False, "status": "preparing", "mode": args.mode,
               "signature": signature, "eligible_sources": len(eligible),
@@ -742,6 +754,7 @@ def main():
     bake.add_argument("--samples", type=int, default=8)
     bake.add_argument("--threads", type=int, default=2)
     bake.add_argument("--donor-strategy", choices=("constant", "object_coordinates"), default="constant")
+    bake.add_argument("--unmerged-donor", action="append", help="Keep this eligible donor unchanged in full scope")
     compare = subparsers.add_parser("compare")
     compare.add_argument("separate", type=Path)
     compare.add_argument("merged", type=Path)

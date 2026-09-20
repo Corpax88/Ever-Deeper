@@ -25,6 +25,7 @@ def main():
     p.add_argument('--channel', choices=exporter.CHANNELS)
     p.add_argument('--assemble-only', action='store_true')
     p.add_argument('--donor-strategy', choices=('constant', 'object_coordinates'), default='constant')
+    p.add_argument('--unmerged-donor', action='append', default=[])
     args = p.parse_args(sys.argv[sys.argv.index('--')+1:])
     output = args.output.resolve()
     assert Path(bpy.data.filepath).resolve() == output/'prepared.blend'
@@ -38,6 +39,7 @@ def main():
                'size': prep['texture_size'], 'samples': 8, 'threads': args.threads,
                'mode': 'merged', 'scope': 'full', 'contract': probe.RGB_OUTPUT_CONTRACT}
     binding['donor_strategy'] = args.donor_strategy
+    binding['explicitly_unmerged_sources'] = sorted(set(args.unmerged_donor))
     binding['strategy_sha256'] = (probe.digest(HERE/'object_coordinate_donors.py')
         if args.donor_strategy == 'object_coordinates' else None)
     channels = [args.channel] if args.channel else exporter.CHANNELS
@@ -51,7 +53,8 @@ def main():
             else: binding_path.write_text(json.dumps(channel_binding,indent=2)+'\n')
             probe.bake_probe(SimpleNamespace(output=directory, scope='full', mode='merged',
                 donor=None, channel=channel, size=prep['texture_size'], samples=8,
-                threads=args.threads, donor_strategy=args.donor_strategy))
+                threads=args.threads, donor_strategy=args.donor_strategy,
+                unmerged_donor=args.unmerged_donor))
         assert json.loads(binding_path.read_text()) == channel_binding
         report = json.loads((directory/'report.json').read_text())
         assert report['status'] == 'complete'
@@ -61,6 +64,7 @@ def main():
         assert sig['script_sha256'] == probe.digest(HERE/'constant_donor_probe.py')
         assert sig['donor_strategy'] == binding['donor_strategy']
         assert sig['strategy_sha256'] == binding['strategy_sha256']
+        assert sig['explicitly_unmerged_sources'] == binding['explicitly_unmerged_sources']
         assert report['opacity_audit']['all_sources_opaque']
         assert report['original_target_data_restored']
         assert report['rgb_output']['contract'] == probe.RGB_OUTPUT_CONTRACT
