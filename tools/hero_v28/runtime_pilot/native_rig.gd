@@ -48,6 +48,7 @@ var import_flags: int = 0
 var surface_formats: Array[int] = []
 var raster_size: int = 200
 var shadow_diagnostic: bool = false
+var lighting_profile: String = "legacy"
 
 
 func configure(candidate: String, pose_only: bool = false) -> bool:
@@ -55,6 +56,7 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	if clip_range.x <= 0.0 or clip_range.y <= clip_range.x: return false
 	if import_flags not in [0, 8, 64, 72]: return false
 	if raster_size not in [200, 400]: return false
+	if lighting_profile not in ["legacy", "native_soft", "native_area"]: return false
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(candidate.path_join("motion.json")))
 	if not parsed is Dictionary: return false
 	data = parsed
@@ -109,6 +111,7 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	material.ao_enabled = true
 	material.ao_texture = orm
 	material.ao_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_RED
+	material.ao_light_affect = .35 if lighting_profile != "legacy" else 0.0
 	material.roughness_texture = orm
 	material.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_GREEN
 	material.metallic_texture = orm
@@ -152,6 +155,20 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	environment.environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	environment.environment.ambient_light_color = Color(.42, .45, .51)
 	environment.environment.ambient_light_energy = .35
+	if lighting_profile != "legacy":
+		# Original v28 world background is scene-linear RGB(.13,.15,.20), .23.
+		environment.environment.ambient_light_color = Color(.13, .15, .20).linear_to_srgb()
+		environment.environment.ambient_light_energy = .23
+		environment.environment.adjustment_enabled = true
+		environment.environment.adjustment_contrast = 1.15
+	if lighting_profile == "native_area":
+		# Bounded Compatibility diagnostic: real area highlights plus dynamic
+		# cavity shading. Area shadows are unsupported in this renderer.
+		environment.environment.ssao_enabled = true
+		environment.environment.ssao_radius = .22
+		environment.environment.ssao_intensity = 1.0
+		environment.environment.ssao_light_affect = .5
+		environment.environment.ssao_ao_channel_affect = .25
 	environment.environment.tonemap_mode = Environment.TONE_MAPPER_AGX
 	viewport.add_child(environment)
 	# Native area-light positions/colors. Shadowless omni approximation is an
@@ -180,6 +197,22 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 
 
 func _light(native_position: Vector3, color: Color, energy: float, label: String) -> void:
+	if lighting_profile == "native_area":
+		var area: AreaLight3D = AreaLight3D.new()
+		area.name = label
+		var diameter: float = 2.0 if label == "warm large key" else 3.0 if label == "soft cool fill" else 1.7
+		# Equal-area rectangle for the native disk. This is an approximation,
+		# not a claim of matching the native disk's complete BRDF integration.
+		area.area_size = Vector2.ONE * diameter * sqrt(PI) * .5
+		area.area_normalize_energy = true
+		area.area_range = 20.0
+		area.area_attenuation = 2.0
+		area.light_color = color.linear_to_srgb()
+		area.light_energy = energy * 32.0
+		viewport.add_child(area)
+		area.position = AXIS * native_position
+		area.look_at(AXIS * Vector3(0, 0, 1.0))
+		return
 	var light: OmniLight3D = OmniLight3D.new()
 	light.name = label
 	light.light_color = color
@@ -187,6 +220,19 @@ func _light(native_position: Vector3, color: Color, energy: float, label: String
 	light.omni_range = 20.0
 	light.omni_attenuation = 0.0
 	light.shadow_enabled = shadow_diagnostic and label == "warm large key"
+	if lighting_profile == "native_soft":
+		# Native disks:2.0m key,3.0m fill,1.7m rim. Positional light_size
+		# broadens specular highlights; Compatibility uses filtered map shadows.
+		var diameter: float = 2.0 if label == "warm large key" else 3.0 if label == "soft cool fill" else 1.7
+		light.light_color = color.linear_to_srgb()
+		light.light_size = diameter * .5
+		light.light_energy = energy * 32.0
+		light.omni_attenuation = 2.0
+		light.shadow_enabled = label == "warm large key"
+		light.omni_shadow_mode = OmniLight3D.SHADOW_CUBE
+		light.shadow_bias = .02
+		light.shadow_normal_bias = .03
+		light.shadow_blur = 2.0
 	viewport.add_child(light)
 	light.position = AXIS * native_position
 
@@ -209,7 +255,7 @@ func _find_skeleton(node: Node) -> Skeleton3D:
 func _set_material(node: Node, material: Material) -> void:
 	if node is MeshInstance3D:
 		node.material_override = material
-		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if shadow_diagnostic else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if shadow_diagnostic or lighting_profile == "native_soft" else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		for index in node.mesh.get_surface_count():
 			surface_formats.append(node.mesh.surface_get_format(index))
 	for child in node.get_children(): _set_material(child, material)

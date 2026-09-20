@@ -2,6 +2,32 @@
 
 ## Current recovered work
 
+### Matched component transfer completed; lighting fidelity remains open
+
+Supersedes the failed transfer status below. Source through f921ea1f19400f00448ebefd667a38cfc19857bb
+implements42 spatially disjoint donor groups without moving vertices or changing
+normals. Explicit white donor-hit masks measure1,500,565 covered texels, zero
+inter-group overlaps. Geometry, normals, UVs and donor transforms restore exactly.
+No claim about unmeasured within-group subpixel UV collisions is made.
+
+All six maps, native GLB and50 actual study20 poses completed. Prepared model
+SHA3740809e9b5632170b143ae3390cd75dacf7b5d427e826698e1e81ac6fb5b06a;
+GLB SHAa39203a578a0437e9c4781d90680fdc16994324908149729a156ff67022c82fb.
+Independent unmerged original right forearm/cuff/sleeve comparisons show exact
+RGB8 agreement over13,843/10,121/41,327 eroded texels respectively. This is bounded
+material-transfer evidence, not whole-model visual acceptance.
+
+Five actual Godot poses still fail native lighting fidelity in independent review:
+coat, backpack and boots remain too flat/light. An optional native_soft lighting
+diagnostic completed; its large spherical specular highlights are excessive.
+A native_area diagnostic is being prepared with equal-area rectangles, native
+linear colors, inverse-square falloff and screen-space cavity shading. This is
+an explicit approximation: native disk shape and full indirect illumination are
+not reproduced. Defaults and production remain unchanged. Reference-only guard
+still prevents the old two-hand solver from altering approved support-hand release.
+No new DEV/LIVE is published. Motion integration and complete release gates remain.
+
+
 ### Latest component transfer failed before baking
 
 Implementation source is90ae405a38e3fd7a21b8b679fc73200f41c87407,
