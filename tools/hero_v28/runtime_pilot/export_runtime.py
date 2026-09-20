@@ -25,6 +25,7 @@ import motion_v3
 
 LOD_NAME = "Native_Runtime_Worn_LOD"
 SOURCE_TAG = "native_runtime_source"
+SOURCE_INDEX = "native_runtime_source_index"
 CHANNELS = ("albedo", "roughness", "metallic", "cloth", "normal", "ao")
 
 
@@ -225,6 +226,7 @@ def prepare(args):
     ratio = args.triangle_budget / total
     derived, inventory = [], []
     for index, original in enumerate(sources):
+        original[SOURCE_INDEX] = index
         count = evaluated_counts[original.name]
         lod = original.copy()
         lod.data = original.data.copy()
@@ -251,9 +253,12 @@ def prepare(args):
             reduce.use_collapse_triangulate = True
             bpy.ops.object.modifier_apply(modifier=reduce.name)
         actual = triangles(lod.data)
+        # Face ownership survives joining and is independent of shared materials.
+        owner = lod.data.attributes.new(SOURCE_INDEX, "INT", "FACE")
+        owner.data.foreach_set("value", array("i", [index]) * len(lod.data.polygons))
         if geometry_policy == "native_components" and count > budget:
             print("NATIVE_DENSE_COPY_COMPLETE", original.name, actual, weld, flush=True)
-        inventory.append(dict(source=original.name, raw_triangles=triangles(original.data), source_triangles=count,
+        inventory.append(dict(source=original.name, source_index=index, raw_triangles=triangles(original.data), source_triangles=count,
                               budget=budget, actual_triangles=actual, raw_vertices=len(original.data.vertices),
                               geometry_policy=geometry_policy, weld=weld,
                               source_uv_layers=list(original.data.uv_layers.keys())))
@@ -273,7 +278,7 @@ def prepare(args):
     target.data.uv_layers.new(name="NativeRuntimeAtlas")
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.mesh.select_all(action="SELECT")
-    bpy.ops.uv.smart_project(angle_limit=math.radians(66), island_margin=.0025, area_weight=.2,
+    bpy.ops.uv.smart_project(angle_limit=math.radians(66), island_margin=args.atlas_island_margin, area_weight=.2,
                              correct_aspect=True, scale_to_bounds=True)
     bpy.ops.object.mode_set(mode="OBJECT")
     preparation = dict(source=str(source), source_sha256=digest(source), original_tool_sha256=digest(args.native_tools/"worn"/"hero.blend"),
@@ -282,6 +287,7 @@ def prepare(args):
                        source_objects=len(sources), derived_objects=1, texture_size=args.texture_size,
                        requested_triangle_budget=args.triangle_budget, parts=inventory, rendered=False, approved=False,
                        geometry_policy=geometry_policy,
+                       source_index_attribute=SOURCE_INDEX, atlas_island_margin=args.atlas_island_margin,
                        limits="Native-derived geometry and numeric inventory. No visual, runtime or performance acceptance.")
     (args.output/"preparation.json").write_text(json.dumps(preparation, indent=2)+"\n")
     bpy.context.scene["native_runtime_preparation"] = str(args.output/"preparation.json")
@@ -425,9 +431,11 @@ def main():
     parser.add_argument("--bake-only", action="store_true")
     parser.add_argument("--triangle-budget", type=int, default=120000)
     parser.add_argument("--texture-size", type=int, default=1024)
+    parser.add_argument("--atlas-island-margin", type=float, default=.0025)
     parser.add_argument("--threads", type=int, default=2)
     args = parser.parse_args(sys.argv[sys.argv.index("--")+1:])
     assert args.prepare_only != args.bake_only
+    assert 0 <= args.atlas_island_margin <= .01
     assert args.output.is_absolute() and not str(args.output).startswith(str(HERO.parent.parent/"assets"))
     args.output.mkdir(parents=True, exist_ok=True)
     prepare(args) if args.prepare_only else bake(args)

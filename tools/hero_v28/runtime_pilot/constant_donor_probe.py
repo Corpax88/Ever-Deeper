@@ -511,6 +511,14 @@ def bake_probe(args):
     # Validate the original live shaders before any EMIT bake override.
     opacity_audit = opaque_sources_audit(sources)
     strategy = getattr(args, "donor_strategy", "constant")
+    projection_strategy = getattr(args, "projection_strategy", "assembled")
+    projection_module = None
+    if projection_strategy == "matched_components":
+        if args.scope != "full": raise ValueError("Component matching requires full native scope")
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import component_projection as projection_module
+    elif projection_strategy != "assembled":
+        raise ValueError("Unknown projection strategy")
     strategy_module = None
     if strategy == "object_coordinates":
         sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -548,6 +556,8 @@ def bake_probe(args):
         "float_image_buffer": True, "persistent_data": bool(getattr(args, "persistent_data", False)), "device": "CPU",
         "blender_build": bpy.app.build_hash.decode("ascii"),
         "output_contract": RGB_OUTPUT_CONTRACT, "donor_strategy": strategy,
+        "projection_strategy": projection_strategy,
+        "projection_script_sha256": digest(projection_module.__file__) if projection_module else None,
         "strategy_sha256": digest(strategy_module.__file__) if strategy_module else None,
         "explicitly_unmerged_sources": unmerged,
     }
@@ -567,6 +577,7 @@ def bake_probe(args):
     material = bpy.data.materials.new("REVIEW_probe_target")
     material.use_nodes = True
     image = None
+    projection_stack = ExitStack()
     try:
         target.data = working_mesh
         working_mesh.materials.clear()
@@ -593,6 +604,9 @@ def bake_probe(args):
         scene.render.threads_mode = "FIXED"
         scene.render.threads = args.threads
         scene.render.use_persistent_data = bool(getattr(args, "persistent_data", False))
+        if projection_module:
+            report["component_projection"] = projection_stack.enter_context(
+                projection_module.isolated_components(scene, target, sources, args.channel))
         merge_context = strategy_module.merged_donors if strategy_module else merged_donors
         context = merge_context(scene, group) if args.mode == "merged" else unchanged_donors(group)
         build_start = time.perf_counter()
@@ -642,24 +656,28 @@ def bake_probe(args):
             report["legacy_rgba_png"] = args.channel + "-raw-rgba.png"
             report["rgb_output"] = write_opaque_rgb_png(output / (args.channel + ".png"),
                                                        rgba, args.channel)
+        projection_stack.close()
         report["status"] = "complete"
     except Exception as error:
         report["status"] = "failed"
         report["error"] = str(error)
         raise
     finally:
-        target.data = original_mesh
-        target.active_material_index = original_active_material
-        bpy.data.meshes.remove(working_mesh)
-        bpy.data.materials.remove(material)
-        if image is not None:
-            bpy.data.images.remove(image)
-        for obj, selected_before in original_selection:
-            obj.select_set(selected_before)
-        bpy.context.view_layer.objects.active = original_active
-        report["total_seconds"] = time.perf_counter() - started
-        report["original_target_data_restored"] = target.data == original_mesh
-        write_json(report_path, report)
+        try:
+            projection_stack.close()
+        finally:
+            target.data = original_mesh
+            target.active_material_index = original_active_material
+            bpy.data.meshes.remove(working_mesh)
+            bpy.data.materials.remove(material)
+            if image is not None:
+                bpy.data.images.remove(image)
+            for obj, selected_before in original_selection:
+                obj.select_set(selected_before)
+            bpy.context.view_layer.objects.active = original_active
+            report["total_seconds"] = time.perf_counter() - started
+            report["original_target_data_restored"] = target.data == original_mesh
+            write_json(report_path, report)
     print("CONSTANT_DONOR_PROBE_COMPLETE", json.dumps({key: report[key] for key in
           ("mode", "bake_source_count", "donor_build_seconds", "bake_seconds", "total_seconds")}), flush=True)
 
@@ -754,6 +772,7 @@ def main():
     bake.add_argument("--samples", type=int, default=8)
     bake.add_argument("--threads", type=int, default=2)
     bake.add_argument("--donor-strategy", choices=("constant", "object_coordinates"), default="constant")
+    bake.add_argument("--projection-strategy", choices=("assembled", "matched_components"), default="assembled")
     bake.add_argument("--unmerged-donor", action="append", help="Keep this eligible donor unchanged in full scope")
     compare = subparsers.add_parser("compare")
     compare.add_argument("separate", type=Path)
