@@ -1,3 +1,7 @@
+Current recovery: [20 September continuity and retained source](docs/premium-polish/continuity-20260920.md).
+Workspace pruning removed the latest uncommitted tests and fixes; do not count them as saved.
+Approved study20 and21 are retained. Ordinary Flow20 gameplay remains disabled. Published baseline is DEV13.
+
 Latest completed preview: [21 exact transition seams](docs/premium-polish/hero-transitions-21-20260919.md).
 Two narrow transitions pass actual-game ordered-frame review; all232 mechanics rows match baseline.
 Mats approved the study20 loop. Preserve it; broader phases/directions/tools remain open. No DEV/LIVE adoption.

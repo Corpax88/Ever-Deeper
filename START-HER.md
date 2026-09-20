@@ -1,3 +1,7 @@
+Current recovery: [20 September continuity and retained source](docs/premium-polish/continuity-20260920.md).
+Workspace pruning removed the latest uncommitted tests and fixes; do not count them as saved.
+Approved study20 and21 are retained. Ordinary Flow20 gameplay remains disabled. Published baseline is DEV13.
+
 Latest completed preview: [21 exact transition seams](docs/premium-polish/hero-transitions-21-20260919.md).
 24new native frames connect the exact tested walking entry and interrupted bridge. Both actual-game
 captures pass independent ordered-frame review with unchanged mechanics. Study20 remains user-approved;
