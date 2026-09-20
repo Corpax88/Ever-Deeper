@@ -165,10 +165,11 @@ def weld_identical_deformation(mesh):
                     protected += 1
                     continue
                 weights = tuple(sorted(vertex[deform].items())) if deform is not None else ()
+                material_index = vertex.link_faces[0].material_index
                 # Quantization only proposes candidates; the distance is still
                 # checked. Missing a boundary-cell pair conservatively retains it.
                 cell = tuple(round(float(value) / 1e-6) for value in vertex.co)
-                candidates = cells.setdefault((weights, cell), [])
+                candidates = cells.setdefault((weights, material_index, cell), [])
                 match = next((other for other in candidates
                               if (vertex.co-other.co).length_squared <= 1e-12), None)
                 if match is None:
