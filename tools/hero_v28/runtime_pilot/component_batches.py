@@ -3,7 +3,7 @@
 Only mutually unreachable original components share a bake. Inactive receiver
 UVs are outside the atlas. AO deliberately uses the existing assembled path.
 """
-from contextlib import ExitStack
+from contextlib import ExitStack, contextmanager
 import hashlib
 import time
 
@@ -121,6 +121,25 @@ def read_image(image, size):
     return rgba.reshape((size, size, 4))
 
 
+@contextmanager
+def white_surfaces(materials):
+    """An explicit emitted-white donor hit probe, independent of bake alpha."""
+    with ExitStack() as restorers:
+        for material in materials:
+            nodes, links = material.node_tree.nodes, material.node_tree.links
+            output = next(n for n in nodes if n.type == 'OUTPUT_MATERIAL' and n.is_active_output)
+            old_links = [(link.from_socket, link.to_socket) for link in output.inputs['Surface'].links]
+            emission = nodes.new('ShaderNodeEmission')
+            emission.inputs['Color'].default_value = (1, 1, 1, 1)
+            links.new(emission.outputs[0], output.inputs['Surface'])
+            def restore(nodes=nodes, links=links, node=emission, old=old_links):
+                nodes.remove(node)
+                for a, b in old:
+                    links.new(a, b)
+            restorers.callback(restore)
+        yield
+
+
 def pad_uncovered(rgba, coverage, radius=8):
     """Copy the nearest covered texel in a bounded Euclidean disk, outside only."""
     output = rgba.copy()
@@ -149,7 +168,17 @@ def bake_components(scene, target, sources, mergeable, merge_context, args, imag
     report['bake_source_count'] = 0
     report['merge'] = {'strategy': 'per_disjoint_batch'}
     mergeable = set(mergeable)
-    previous = None
+    accumulated = np.zeros((args.size, args.size, 4), dtype=np.float32)
+    covered = np.zeros((args.size, args.size), dtype=bool)
+    coverage_image = bpy.data.images.new('REVIEW_native_hit_coverage', width=args.size,
+        height=args.size, alpha=True, float_buffer=True)
+    coverage_image.colorspace_settings.name = 'Non-Color'
+    target_material = target.data.materials[0]
+    texture = target_material.node_tree.nodes.active
+    bake_options = dict(use_selected_to_active=True, use_clear=True, use_cage=False,
+        cage_extrusion=.018, max_ray_distance=.040, margin=0,
+        normal_space='TANGENT', normal_r='POS_X', normal_g='POS_Y', normal_b='POS_Z',
+        target='IMAGE_TEXTURES', save_mode='INTERNAL', uv_layer=batches.uv.name)
     try:
         for number, group in enumerate(batches.groups):
             batches.activate(group)
@@ -162,44 +191,57 @@ def bake_components(scene, target, sources, mergeable, merge_context, args, imag
                 report['donor_build_seconds'] += time.perf_counter() - started
                 donors = separate + ([helper] if helper is not None else joined)
                 report['bake_source_count'] = max(report['bake_source_count'], len(donors))
+                # Nonselected native parts cannot contribute to EMIT/NORMAL.
+                # Hide them only for this batch to avoid rebuilding their BVHs.
+                for source in sources:
+                    if source not in donors and not source.hide_render:
+                        restorers.callback(setattr, source, 'hide_render', False)
+                        source.hide_render = True
                 for obj in bpy.context.selected_objects:
                     obj.select_set(False)
                 for obj in donors:
                     obj.select_set(True)
                 target.select_set(True)
                 bpy.context.view_layer.objects.active = target
-                if args.channel in ('albedo', 'roughness', 'metallic', 'cloth'):
-                    for material in {s.material for o in donors for s in o.material_slots}:
-                        restorers.callback(source_material_override(material, args.channel))
+                donor_materials = {s.material for o in donors for s in o.material_slots}
                 report['status'] = 'baking'
                 probe.write_json(report_path, report)
                 started = time.perf_counter()
                 print('NATIVE_COMPONENT_BATCH', args.channel, number+1, len(batches.groups), len(originals), flush=True)
+                texture.image = coverage_image
+                with white_surfaces(donor_materials):
+                    bpy.ops.object.bake(type='EMIT', **bake_options)
+                hit = read_image(coverage_image, args.size)[:, :, 0] > .5
+                texture.image = image
+                if args.channel in ('albedo', 'roughness', 'metallic', 'cloth'):
+                    for material in donor_materials:
+                        restorers.callback(source_material_override(material, args.channel))
                 bpy.ops.object.bake(type='NORMAL' if args.channel == 'normal' else 'EMIT',
-                    use_selected_to_active=True, use_clear=number == 0, use_cage=False,
-                    cage_extrusion=.018, max_ray_distance=.040, margin=0,
-                    normal_space='TANGENT', normal_r='POS_X', normal_g='POS_Y', normal_b='POS_Z',
-                    target='IMAGE_TEXTURES', save_mode='INTERNAL', uv_layer=batches.uv.name)
+                    **bake_options)
                 elapsed = time.perf_counter()-started
                 report['bake_seconds'] += elapsed
                 current = read_image(image, args.size)
-                if previous is not None:
-                    prior_covered = previous[:, :, 3] > 0
-                    if not np.array_equal(current[prior_covered], previous[prior_covered]):
-                        raise ValueError('A later component group overwrote earlier covered texels')
-                previous = current
+                overlap = hit & covered
+                conflict = float(np.abs(current[overlap, :3]-accumulated[overlap, :3]).max()) if overlap.any() else 0.0
+                new = hit & ~covered
+                # Raster collisions between subpixel UV islands are recorded;
+                # earlier measured texels are never overwritten or repainted.
+                accumulated[new] = current[new]
+                covered |= hit
+                np.savez_compressed(args.output/('batch-%02d-hit.npz' % number), hit=hit)
                 batches.report['batches'].append({'index': number, 'source_count': len(originals),
-                    'donor_count': len(donors), 'seconds': elapsed, 'merge': stats})
+                    'donor_count': len(donors), 'seconds': elapsed, 'merge': stats,
+                    'donor_hit_texels': int(hit.sum()), 'earlier_texel_collisions': int(overlap.sum()),
+                    'collision_max_linear_rgb_difference': conflict})
     finally:
         batches.restore()
-    np.savez_compressed(args.output/'unpadded-rgba.npz', rgba=previous)
-    # The projection alpha is kept as measured hit coverage, not inferred from
-    # albedo brightness: valid opaque black texels must not be filled over.
-    coverage = previous[:, :, 3] > 0
-    padded, count = pad_uncovered(previous, coverage)
+        texture.image = image
+        bpy.data.images.remove(coverage_image)
+    np.savez_compressed(args.output/'unpadded-rgba.npz', rgba=accumulated, coverage=covered)
+    padded, count = pad_uncovered(accumulated, covered)
     batches.report.update(padding_radius=8, padding_pixels=count,
-        covered_texels_unchanged=bool(np.array_equal(padded[coverage], previous[coverage])),
-        coverage_contract='measured_projection_alpha_positive',
-        coverage_limit='Alpha is retained bake coverage; no independent donor-hit acceptance claimed.')
+        covered_texels_unchanged=bool(np.array_equal(padded[covered], accumulated[covered])),
+        coverage_contract='explicit_emitted_white_donor_hits_v1',
+        coverage_limit='Subpixel atlas collisions are recorded separately; no visual acceptance claimed.')
     image.pixels.foreach_set(padded.ravel())
     return padded
