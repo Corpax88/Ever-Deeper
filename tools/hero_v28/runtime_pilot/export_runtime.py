@@ -145,9 +145,10 @@ def weld_identical_deformation(mesh):
         deform = bm.verts.layers.deform.active
         pending = set(bm.verts)
         components = protected = 0
+        targetmap = {}
         while pending:
             stack = [pending.pop()]
-            groups = {}
+            cells = {}
             components += 1
             while stack:
                 vertex = stack.pop()
@@ -164,9 +165,20 @@ def weld_identical_deformation(mesh):
                     protected += 1
                     continue
                 weights = tuple(sorted(vertex[deform].items())) if deform is not None else ()
-                groups.setdefault(weights, []).append(vertex)
-            for vertices in groups.values():
-                bmesh.ops.remove_doubles(bm, verts=vertices, dist=1e-6)
+                # Quantization only proposes candidates; the distance is still
+                # checked. Missing a boundary-cell pair conservatively retains it.
+                cell = tuple(round(float(value) / 1e-6) for value in vertex.co)
+                candidates = cells.setdefault((weights, cell), [])
+                match = next((other for other in candidates
+                              if (vertex.co-other.co).length_squared <= 1e-12), None)
+                if match is None:
+                    candidates.append(vertex)
+                else:
+                    targetmap[vertex] = match
+        # One mesh mutation avoids repeating whole-mesh operator bookkeeping
+        # separately for thousands of disconnected native groom strands.
+        if targetmap:
+            bmesh.ops.weld_verts(bm, targetmap=targetmap)
         bm.to_mesh(mesh)
     finally:
         bm.free()
@@ -231,12 +243,15 @@ def prepare(args):
         weld = None
         if count > budget:
             if geometry_policy == "native_components":
+                print("NATIVE_DENSE_COPY_START", original.name, count, flush=True)
                 weld = weld_identical_deformation(lod.data)
             reduce = lod.modifiers.new("Native derived review LOD", "DECIMATE")
             reduce.ratio = max(.001, budget/count)
             reduce.use_collapse_triangulate = True
             bpy.ops.object.modifier_apply(modifier=reduce.name)
         actual = triangles(lod.data)
+        if geometry_policy == "native_components" and count > budget:
+            print("NATIVE_DENSE_COPY_COMPLETE", original.name, actual, weld, flush=True)
         inventory.append(dict(source=original.name, raw_triangles=triangles(original.data), source_triangles=count,
                               budget=budget, actual_triangles=actual, raw_vertices=len(original.data.vertices),
                               geometry_policy=geometry_policy, weld=weld,
