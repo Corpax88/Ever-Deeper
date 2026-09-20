@@ -2,6 +2,29 @@
 
 ## Current recovered work
 
+### Corrected model rendered; atlas allocation failure isolated
+
+The 1,017,722-triangle model completed all six maps and five actual Godot poses.
+The independent visual gate still fails: the dome is repaired, but brown
+speckling, angular dark sleeve patches and weak material definition remain.
+Texture-free Godot clay also retains fragmented fine detail around the trim,
+face and backpack; this is a separate unresolved runtime-rendering issue.
+
+An actual UV audit found only 0.00192785 summed triangle UV area: about 0.193%
+of the atlas. The main cloth had about 423 texels at 1024 squared. The former
+smart-project padding consumed virtually all space across the many tiny native
+groom islands. No light or geometry change can recover missing texture samples.
+
+Source44b468c47daf3c2fcfe5c185149b3e5a354d45e7 adds a guarded UV-only repack.
+It preserves exact geometry, corner normals, material assignments and weights;
+before/after fingerprint26cb0c98af9ee0423369baa526ed6cdb0ae0db13cf7c6f208083cb8c7f67d101.
+Actual summed UV area is now0.360700386 with a2048-pixel atlas. The isolated
+six-map bake runs in `/tmp/ever-deeper-native-runtime-uv-20260920`. This numerical
+repair is not visual acceptance. Inspect the new five rendered poses, and
+diagnose the separate texture-free artifact before considering motion work.
+The optional isolated camera-clip diagnostic keeps the default unchanged.
+No new DEV/LIVE publication; ordinary Flow20 remains disabled and FPS paused.
+
 ### Actual renderer result and corrected geometry
 
 The first six-map/GLB candidate completed, but the independent five-pose image

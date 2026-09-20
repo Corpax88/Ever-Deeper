@@ -43,10 +43,12 @@ var maximum_air_retarget: float = 0.0
 var reach_detail: Dictionary = {}
 var transitions: int = 0
 var material_view: String = "baked"
+var clip_range: Vector2 = Vector2(.01, 100.0)
 
 
 func configure(candidate: String, pose_only: bool = false) -> bool:
 	if material_view not in ["baked", "clay"]: return false
+	if clip_range.x <= 0.0 or clip_range.y <= clip_range.x: return false
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(candidate.path_join("motion.json")))
 	if not parsed is Dictionary: return false
 	data = parsed
@@ -130,8 +132,8 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	camera = Camera3D.new()
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 	camera.size = float(data.camera.ortho_size)
-	camera.near = 0.01
-	camera.far = 100.0
+	camera.near = clip_range.x
+	camera.far = clip_range.y
 	viewport.add_child(camera)
 	camera.global_transform = AXIS * _matrix(data.camera.world_matrix)
 	camera.make_current()
