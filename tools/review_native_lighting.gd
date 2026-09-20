@@ -15,6 +15,11 @@ func _reference_poses() -> void:
 		{"id": "half_exposure", "exposure": .5, "contrast": 1.5, "fill_specular": 1.0},
 		{"id": "two_thirds_exposure", "exposure": .6666667, "contrast": 1.5, "fill_specular": 1.0},
 	]
+	if lighting_profile == "native_soft":
+		cases = [
+			{"id": "balanced_key_shadow", "exposure": .6666667, "contrast": 1.5, "fill_specular": 1.0},
+			{"id": "balanced_key_shadow_low_fill_specular", "exposure": .6666667, "contrast": 1.5, "fill_specular": .15},
+		]
 	for calibration in cases:
 		world_environment.tonemap_exposure = float(calibration.exposure)
 		world_environment.tonemap_agx_contrast = float(calibration.contrast)
