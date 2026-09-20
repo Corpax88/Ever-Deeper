@@ -24,7 +24,7 @@ import object_coordinate_donors as donors
 
 
 @contextmanager
-def packed_surfaces(materials):
+def packed_surfaces(materials, response=False):
     with ExitStack() as restorers:
         for material in materials:
             nodes, links = material.node_tree.nodes, material.node_tree.links
@@ -33,14 +33,24 @@ def packed_surfaces(materials):
             old = [(link.from_socket, link.to_socket) for link in output.inputs['Surface'].links]
             combine = nodes.new('ShaderNodeCombineXYZ')
             emission = nodes.new('ShaderNodeEmission')
-            for index, name in enumerate(('Roughness', 'Metallic')):
+            names = ('Specular IOR Level', 'Coat Weight', 'Coat Roughness') if response else ('Roughness', 'Metallic')
+            for index, name in enumerate(names):
                 source = principled.inputs[name]
+                if response and index == 0:
+                    # Blender's IOR-level scales Fresnel F0 by twice its value.
+                    # Godot SPECULAR scales dielectric F0 by0.08.
+                    ior = principled.inputs['IOR']
+                    assert not source.is_linked and not ior.is_linked, material.name
+                    eta = float(ior.default_value)
+                    combine.inputs[index].default_value = 2.0*float(source.default_value)*((eta-1.0)/(eta+1.0))**2/.08
+                    continue
                 if source.is_linked:
                     links.new(source.links[0].from_socket, combine.inputs[index])
                 else:
                     combine.inputs[index].default_value = float(source.default_value)
             source_name = material.get('native_donor_source_material', material.name)
-            combine.inputs[2].default_value = float(source_name in ('v19 woven forest workwear', 'v19 soft olive sleeve lining'))
+            if not response:
+                combine.inputs[2].default_value = float(source_name in ('v19 woven forest workwear', 'v19 soft olive sleeve lining'))
             links.new(combine.outputs[0], emission.inputs['Color'])
             links.new(emission.outputs[0], output.inputs['Surface'])
             def restore(nodes=nodes, links=links, a=combine, b=emission, old=old):
@@ -56,6 +66,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--threads', type=int, default=8)
+    p.add_argument('--response', action='store_true', help='Only native specular F0, coat weight and coat roughness; preserve all existing maps/GLB')
     args = p.parse_args(sys.argv[sys.argv.index('--')+1:])
     output = args.output.resolve()
     assert Path(bpy.data.filepath).resolve() == output/'prepared.blend'
@@ -73,10 +84,10 @@ def main():
     assert all(albedo['component_projection'][k] for k in ('restored_original_transforms',
         'restored_original_uv', 'geometry_normals_topology_unchanged', 'covered_texels_unchanged'))
     assert probe.digest(output/'albedo.png') == albedo['rgb_output']['png_sha256']
-    evidence = output/'component-companions'
+    evidence = output/('component-response' if args.response else 'component-companions')
     evidence.mkdir(exist_ok=False)
     report = {'status': 'preparing', 'approved': False, 'albedo_report_sha256': probe.digest(albedo_path),
-        'source_sha256': probe.digest(__file__), 'binding': signature, 'batches': [],
+        'source_sha256': probe.digest(__file__), 'binding': signature, 'batches': [], 'response': args.response,
         'limits': 'Offline native map transfer; no game, motion or performance acceptance.'}
     report_path = evidence/'report.json'
     probe.write_json(report_path, report)
@@ -116,7 +127,7 @@ def main():
     assert plan.report['groups'] == albedo['component_projection']['groups']
     assert plan.geometry_sha == albedo['component_projection']['geometry_normals_topology_sha256_before']
     report['component_projection'] = plan.report
-    accumulated = {name: np.zeros((size, size, 4), dtype=np.float32) for name in ('packed', 'normal')}
+    accumulated = {name: np.zeros((size, size, 4), dtype=np.float32) for name in (('packed',) if args.response else ('packed', 'normal'))}
     covered = np.zeros((size, size), dtype=bool)
     original_selection = [(o, o.select_get()) for o in scene.objects]
     original_active = bpy.context.view_layer.objects.active
@@ -153,11 +164,12 @@ def main():
                 materials = {s.material for o in actual for s in o.material_slots}
                 print('NATIVE_COMPANION_BATCH', index+1, len(plan.groups), flush=True)
                 new = mask & ~covered
-                with packed_surfaces(materials):
+                with packed_surfaces(materials, response=args.response):
                     bpy.ops.object.bake(type='EMIT', **options)
                 accumulated['packed'][new] = components.read_image(image, size)[new]
-                bpy.ops.object.bake(type='NORMAL', **options)
-                accumulated['normal'][new] = components.read_image(image, size)[new]
+                if not args.response:
+                    bpy.ops.object.bake(type='NORMAL', **options)
+                    accumulated['normal'][new] = components.read_image(image, size)[new]
                 covered |= mask
                 report['batches'].append({'index': index, 'hit_mask_sha256': probe.digest(mask_path),
                     'seconds': time.perf_counter()-started, 'merge': stats})
@@ -167,12 +179,17 @@ def main():
         for name, rgba in accumulated.items():
             np.savez_compressed(evidence/(name+'-unpadded.npz'), rgba=rgba, coverage=covered)
             accumulated[name], _ = components.pad_uncovered(rgba, covered)
-        report['outputs'] = {'normal': probe.write_opaque_rgb_png(output/'normal.png', accumulated['normal'], 'normal')}
-        for index, name in enumerate(('roughness', 'metallic', 'cloth')):
-            value = accumulated['packed'][:, :, index]
-            rgba = np.ones((size, size, 4), dtype=np.float32)
-            rgba[:, :, :3] = value[:, :, None]
-            report['outputs'][name] = probe.write_opaque_rgb_png(output/(name+'.png'), rgba, name)
+        if args.response:
+            # Reuse the audited linear-data codec; no color-space conversion.
+            report['outputs'] = {'response': probe.write_opaque_rgb_png(evidence/'response.png', accumulated['packed'], 'roughness')}
+            report['response_channels'] = ['native dielectric F0 /0.08', 'Coat Weight', 'Coat Roughness']
+        else:
+            report['outputs'] = {'normal': probe.write_opaque_rgb_png(output/'normal.png', accumulated['normal'], 'normal')}
+            for index, name in enumerate(('roughness', 'metallic', 'cloth')):
+                value = accumulated['packed'][:, :, index]
+                rgba = np.ones((size, size, 4), dtype=np.float32)
+                rgba[:, :, :3] = value[:, :, None]
+                report['outputs'][name] = probe.write_opaque_rgb_png(output/(name+'.png'), rgba, name)
         report['status'] = 'complete'
     except Exception as error:
         report.update(status='failed', error=str(error))
@@ -190,6 +207,10 @@ def main():
             bpy.context.view_layer.objects.active = original_active
             report['original_target_data_restored'] = target.data == original
             probe.write_json(report_path, report)
+    if args.response:
+        assert probe.digest(output/'albedo.png') == albedo['rgb_output']['png_sha256']
+        print('NATIVE_COMPONENT_RESPONSE_COMPLETE', flush=True)
+        return
     # Full assembled AO preserves actual native inter-component occlusion.
     probe.bake_probe(SimpleNamespace(output=output/'transfer-ao', scope='full', mode='merged',
         donor=None, channel='ao', size=size, samples=signature['samples'], threads=args.threads,
