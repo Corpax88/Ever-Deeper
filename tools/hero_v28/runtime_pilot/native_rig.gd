@@ -221,16 +221,18 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 
 func _light(native_position: Vector3, color: Color, energy: float, label: String) -> void:
 	if lighting_profile == "native_key_shadow" and label == "warm large key":
-		# Finite-angle distant-light diagnostic supplies the key's moving shadow.
+		# Shadowed distant-light diagnostic supplies the key's moving shadow.
 		# AreaLight3D does not support shadows in the Compatibility renderer.
 		var key: DirectionalLight3D = DirectionalLight3D.new()
 		key.name = label
 		key.light_color = color.linear_to_srgb()
 		key.light_energy = 1.5
-		key.light_angular_distance = rad_to_deg(2.0*atan(1.0/native_position.distance_to(Vector3(0,0,1))))
+		# No spherical-source specular expansion: the earlier finite angle
+		# produced a hard artificial disk in the native thin coat layer.
+		key.light_angular_distance = 0.0
 		key.shadow_enabled = true
 		key.shadow_bias = .02
-		key.shadow_normal_bias = .03
+		key.shadow_normal_bias = 1.0
 		key.shadow_blur = 4.0
 		key.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
 		key.directional_shadow_max_distance = 14.0
