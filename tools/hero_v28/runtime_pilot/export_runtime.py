@@ -107,9 +107,9 @@ def export_motion(namespace, output):
     (output/"motion.json").write_text(json.dumps(data, separators=(",", ":"))+"\n")
 
 
-def object_budget(name, count, ratio):
+def object_budget(name, count, ratio, geometry_policy="legacy_budget"):
     lower = name.lower()
-    if any(token in lower for token in ("iris", "pupil", "eye light", "eye white", "mouth crease")):
+    if geometry_policy == "legacy_budget" and any(token in lower for token in ("iris", "pupil", "eye light", "eye white", "mouth crease")):
         return min(count, max(500, round(count*.35)))
     floor = 24 if count < 1000 else 160
     if "unified expressive face" in lower:
@@ -122,11 +122,65 @@ def object_budget(name, count, ratio):
         return min(count, 7000)
     if "five digit hand" in lower:
         return min(count, 4500)
+    if geometry_policy == "native_components":
+        return count
     return min(count, max(floor, round(count*ratio)))
+
+
+def weld_identical_deformation(mesh):
+    """Close coincident seams only within identical skinning assignments.
+
+    Native donors are never touched. This runs only on dense derived copies,
+    before reduction; material/corner data are retained by BMesh.
+    """
+    import bmesh
+
+    before = len(mesh.vertices)
+    if mesh.has_custom_normals:
+        return {"before": before, "after": before,
+                "skipped": "Authored custom split normals remain unchanged"}
+    bm = bmesh.new()
+    try:
+        bm.from_mesh(mesh)
+        deform = bm.verts.layers.deform.active
+        pending = set(bm.verts)
+        components = protected = 0
+        while pending:
+            stack = [pending.pop()]
+            groups = {}
+            components += 1
+            while stack:
+                vertex = stack.pop()
+                for edge in vertex.link_edges:
+                    other = edge.other_vert(vertex)
+                    if other in pending:
+                        pending.remove(other)
+                        stack.append(other)
+                # Keep separate shells/strands, open boundaries, hard normals,
+                # UV seams and material boundaries exactly as authored.
+                if (any(not edge.smooth or edge.seam or edge.is_boundary for edge in vertex.link_edges)
+                        or any(not face.smooth for face in vertex.link_faces)
+                        or len({face.material_index for face in vertex.link_faces}) != 1):
+                    protected += 1
+                    continue
+                weights = tuple(sorted(vertex[deform].items())) if deform is not None else ()
+                groups.setdefault(weights, []).append(vertex)
+            for vertices in groups.values():
+                bmesh.ops.remove_doubles(bm, verts=vertices, dist=1e-6)
+        bm.to_mesh(mesh)
+    finally:
+        bm.free()
+    mesh.update()
+    return {"before": before, "after": len(mesh.vertices), "distance": 1e-6,
+            "components": components, "protected_vertices": protected,
+            "deformation_contract": "identical_weights_within_one_component_only",
+            "seam_contract": "open_boundary_hard_normal_uv_and_material_seams_untouched"}
 
 
 def prepare(args):
     source = Path(bpy.data.filepath)
+    geometry_policy = getattr(args, "geometry_policy", "legacy_budget")
+    assert geometry_policy in ("legacy_budget", "native_components")
     assert source.name != "prepared.blend", "Preparation requires the original native source"
     assert args.native_tools is not None
     namespace_args = ["export_hero.py", "--", "--native-tools", str(args.native_tools),
@@ -173,8 +227,11 @@ def prepare(args):
                     bpy.ops.object.modifier_apply(modifier=modifier.name)
                 else:
                     lod.modifiers.remove(modifier)
-        budget = object_budget(original.name, count, ratio)
+        budget = object_budget(original.name, count, ratio, geometry_policy)
+        weld = None
         if count > budget:
+            if geometry_policy == "native_components":
+                weld = weld_identical_deformation(lod.data)
             reduce = lod.modifiers.new("Native derived review LOD", "DECIMATE")
             reduce.ratio = max(.001, budget/count)
             reduce.use_collapse_triangulate = True
@@ -182,6 +239,7 @@ def prepare(args):
         actual = triangles(lod.data)
         inventory.append(dict(source=original.name, raw_triangles=triangles(original.data), source_triangles=count,
                               budget=budget, actual_triangles=actual, raw_vertices=len(original.data.vertices),
+                              geometry_policy=geometry_policy, weld=weld,
                               source_uv_layers=list(original.data.uv_layers.keys())))
         derived.append(lod)
         if index % 50 == 0:
@@ -207,6 +265,7 @@ def prepare(args):
                        source_triangles=total, derived_triangles=triangles(target.data), source_materials=sorted(m.name for m in original_materials),
                        source_objects=len(sources), derived_objects=1, texture_size=args.texture_size,
                        requested_triangle_budget=args.triangle_budget, parts=inventory, rendered=False, approved=False,
+                       geometry_policy=geometry_policy,
                        limits="Native-derived geometry and numeric inventory. No visual, runtime or performance acceptance.")
     (args.output/"preparation.json").write_text(json.dumps(preparation, indent=2)+"\n")
     bpy.context.scene["native_runtime_preparation"] = str(args.output/"preparation.json")
@@ -344,6 +403,7 @@ def bake(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--geometry-policy", choices=("legacy_budget", "native_components"), default="legacy_budget")
     parser.add_argument("--native-tools", type=Path)
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--bake-only", action="store_true")
