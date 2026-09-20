@@ -506,6 +506,7 @@ def bake_probe(args):
     strategy = getattr(args, "donor_strategy", "constant")
     strategy_module = None
     if strategy == "object_coordinates":
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
         import object_coordinate_donors as strategy_module
         eligible, rejected, material_audit = classify_sources(sources, strategy_module.material_audit)
     elif strategy == "constant":
