@@ -2,6 +2,58 @@
 
 ## Current recovered work
 
+### Latest component transfer failed before baking
+
+Implementation source is90ae405a38e3fd7a21b8b679fc73200f41c87407,
+tree1599d679cf69c6905af154de058f909ca8141604, on the same work branch.
+The new explicit native component IDs and optional matched-component translation
+probe are saved. The first albedo attempt **failed before baking** after3.05s:
+`Translated target corner normals exceeded unchanged3e-4 bound`.
+The bound was not relaxed; the report confirms original target data restoration.
+The numeric error was not retained before context entry failed, so do not infer it.
+No corrected material, GLB or new runtime image approval exists for this attempt.
+
+The regenerated component-tagged preparation contains1,017,723 triangles, one
+more in the reduced face than the previous1,017,722 preparation. Ordinary native
+parts remain unreduced. Do not claim byte-identical geometry across regenerations.
+Prepared SHA256:3740809e9b5632170b143ae3390cd75dacf7b5d427e826698e1e81ac6fb5b06a.
+The complete preparation, exact failed helper/input/report and logs are saved in
+`libfile_42660ba486648191bc8cbaa0e1242500`,
+`Ever-Deeper-native-komponentkontroll-20260920.zip`,76,011,869bytes,
+SHA2566fe6cfc22709136fd17cdccc7fd8431fe1b86c8077a3bef79910c4e0bbe7ad2d.
+All eight members and the closed archive CRC were verified before upload.
+
+The earlier2048 UV candidate completed all six maps, GLB and50 native study20
+poses. Its five actual Godot images still **fail fidelity**. The complete candidate
+and220 evidence members are saved in`libfile_9ecc451985948191b3b33a92a874e3ef`,
+`Ever-Deeper-native-UV-kontroll-20260920.zip`,285,171,148bytes,
+SHA25632070506bf2fd9d945fb0ceabf53c8f1c33fa2dce3dc9ee3e12df88de886ae17.
+
+Actual diagnostics: a clean Blender GLB clay roundtrip preserves geometry;
+uncompressed imports and tangent generation changed zero image pixels; a narrower
+camera range changed only four. Native pose readback error is at most5.31e-7.
+Rendering400px then documented Lanczos reduction to200px removes much fine-detail
+speckling, but clay sleeve crescents and flatter lighting remain. Raw400px images
+are retained. Neither that diagnostic nor the shadow variant has art acceptance.
+
+A separate three-donor right-arm experiment establishes competing donor projection:
+1,085/38,316 eroded sleeve texels and178/13,444 forearm texels differ by more than
+16 RGB levels; cuff0/10,125. Geometry-matched masks cover98–99% of original triangles,
+with quantization and boundary limitations documented. This identifies a cause;
+it does not establish a corrected complete material atlas.
+
+A spatially disjoint donor/receiver batching alternative, retaining untouched
+vertex positions and normals, was considered. Its file replacement was rejected
+in full as a duplicate patch operation. **It is not implemented or tested.**
+`component_projection.py` still contains the failed translation route. Preserve
+the unchanged normal bound and assembled AO; require bounded transfer evidence
+before another full bake, then five actual images and independent visual review.
+
+No heavy engine is running at this checkpoint. No new DEV/LIVE is published;
+ordinary Flow20 remains disabled, FPS paused, original v28 and the approved study20
+support-hand release preserved. This is a recovery checkpoint, not a finished game.
+Older statements about running bakes below are historical.
+
 ### Corrected model rendered; atlas allocation failure isolated
 
 The 1,017,722-triangle model completed all six maps and five actual Godot poses.
