@@ -33,7 +33,7 @@ unreachable limbs. This numeric result is NOT visual acceptance. Moving/large
 turn transitions use a short airborne transfer; its visible quality is unreviewed.
 
 Next: capture_motion.gd exercises real controls, seed4608 endless world, two
-explicit existing-ore fixtures at +/-64px and the true0.425s Forge5/relic clock.
+explicit existing-ore fixtures at +/-64px and the true0.425s Forge5/placed-relic clock.
 Inspect actual frames and obtain independent sequence review, then compare the
 same inputs against baseline. No new DEV/LIVE; ordinary Flow20 remains disabled.
 

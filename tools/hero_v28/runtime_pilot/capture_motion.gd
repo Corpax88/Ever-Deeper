@@ -43,11 +43,14 @@ func _run() -> void:
 	state.starforge_variant = ""
 	state.endless_tool_style = "original"
 	state.endless_outfit = "miner"
-	state.discover_endless_relic("forge_heart",1)
-	state.collect_endless_relic("forge_heart",1)
-	state.attach_carried_relic("forge_heart")
+	# The actual Forge owner requires the relic placed in the hub. Merely
+	# attaching the carried relic does not activate workshop effects.
+	state.endless_relics["forge_heart"]["placed"] = true
 	state.endless_workshops["tool_forge"] = {"built":true,"level":5}
-	assert(is_equal_approx(world._mining_cycle_duration(),.425))
+	if not is_equal_approx(world._mining_cycle_duration(),.425):
+		push_error("Fixture did not activate the actual0.425s Forge5 clock")
+		quit(3)
+		return
 	player.prepare_visual_cache()
 	main._set_mine_held(false)
 	main._on_joystick_movement(Vector2.ZERO)
@@ -107,7 +110,7 @@ func _run() -> void:
 		hashes[path] = FileAccess.get_sha256("res://"+path)
 	var report := {"complete":not failed,"samples":samples,"baseline":baseline,"cycle":world._mining_cycle_duration(),
 		"source_sha256":hashes,"engine":Engine.get_version_info().string,"visual_accepted":false,"production_accepted":false,
-		"fixtures":"Real seed4608 world; two existing ore positions moved to +/-64px and HP500; Forge5 with attached relic",
+		"fixtures":"Real seed4608 world; two existing ore positions moved to +/-64px and HP500; Forge5 with placed relic",
 		"native_source":FileAccess.get_sha256(candidate.path_join("motion.json")),"tasks_sha256":FileAccess.get_sha256(tasks)}
 	FileAccess.open(output.path_join("report.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"\t"))
 	print("NATIVE_TASK_GAME_COMPLETE ",not failed," frames ",samples.size())
