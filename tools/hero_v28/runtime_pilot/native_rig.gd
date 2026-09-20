@@ -46,12 +46,15 @@ var material_view: String = "baked"
 var clip_range: Vector2 = Vector2(.01, 100.0)
 var import_flags: int = 0
 var surface_formats: Array[int] = []
+var raster_size: int = 200
+var shadow_diagnostic: bool = false
 
 
 func configure(candidate: String, pose_only: bool = false) -> bool:
 	if material_view not in ["baked", "clay"]: return false
 	if clip_range.x <= 0.0 or clip_range.y <= clip_range.x: return false
 	if import_flags not in [0, 8, 64, 72]: return false
+	if raster_size not in [200, 400]: return false
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(candidate.path_join("motion.json")))
 	if not parsed is Dictionary: return false
 	data = parsed
@@ -82,7 +85,7 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 			return false
 	viewport = SubViewport.new()
 	viewport.name = "NativeRig200px"
-	viewport.size = Vector2i(200, 200)
+	viewport.size = Vector2i(raster_size, raster_size)
 	viewport.transparent_bg = true
 	viewport.own_world_3d = true
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
@@ -166,10 +169,10 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	sprite.centered = false
 	sprite.texture = viewport.get_texture()
 	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
-	sprite.scale = Vector2(.8, .8)
+	sprite.scale = Vector2.ONE * (.8 * 200.0 / float(raster_size))
 	add_child(sprite)
 	var anchor: Vector2 = camera.unproject_position(Vector3.ZERO)
-	sprite.position = Vector2(0, 2.8125) - anchor * .8
+	sprite.position = Vector2(0, 2.8125) - anchor * sprite.scale
 	set_reference_pose("idle", 0.0)
 	return true
 
@@ -181,7 +184,7 @@ func _light(native_position: Vector3, color: Color, energy: float, label: String
 	light.light_energy = energy
 	light.omni_range = 20.0
 	light.omni_attenuation = 0.0
-	light.shadow_enabled = false
+	light.shadow_enabled = shadow_diagnostic and label == "warm large key"
 	viewport.add_child(light)
 	light.position = AXIS * native_position
 
@@ -204,7 +207,7 @@ func _find_skeleton(node: Node) -> Skeleton3D:
 func _set_material(node: Node, material: Material) -> void:
 	if node is MeshInstance3D:
 		node.material_override = material
-		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if shadow_diagnostic else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		for index in node.mesh.get_surface_count():
 			surface_formats.append(node.mesh.surface_get_format(index))
 	for child in node.get_children(): _set_material(child, material)

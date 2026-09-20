@@ -7,6 +7,8 @@ var mode: String = "poses"
 var material_view: String = "baked"
 var clip_range: Vector2 = Vector2(.01, 100.0)
 var import_flags: int = 0
+var raster_size: int = 200
+var shadow_diagnostic: bool = false
 var main: Node
 var world: Node
 var player: Node
@@ -33,6 +35,8 @@ func _run() -> void:
 		elif arg.begins_with("--mode="): mode = arg.trim_prefix("--mode=")
 		elif arg.begins_with("--material-view="): material_view = arg.trim_prefix("--material-view=")
 		elif arg.begins_with("--import-flags="): import_flags = int(arg.trim_prefix("--import-flags="))
+		elif arg.begins_with("--raster-size="): raster_size = int(arg.trim_prefix("--raster-size="))
+		elif arg == "--shadow-diagnostic": shadow_diagnostic = true
 		elif arg.begins_with("--clip-range="):
 			var values: PackedStringArray = arg.trim_prefix("--clip-range=").split(",")
 			if values.size() != 2:
@@ -58,13 +62,15 @@ func _run() -> void:
 		quit(3)
 		return
 	rig = NativeRig.new()
-	if (material_view != "baked" or clip_range != Vector2(.01, 100.0) or import_flags != 0) and mode != "poses":
+	if (material_view != "baked" or clip_range != Vector2(.01, 100.0) or import_flags != 0 or raster_size != 200 or shadow_diagnostic) and mode != "poses":
 		push_error("Material diagnostics require isolated poses")
 		quit(3)
 		return
 	rig.material_view = material_view
 	rig.clip_range = clip_range
 	rig.import_flags = import_flags
+	rig.raster_size = raster_size
+	rig.shadow_diagnostic = shadow_diagnostic
 	if mode == "poses": root.add_child(rig)
 	else: player.visual.add_child(rig)
 	if not rig.configure(candidate):
@@ -131,6 +137,9 @@ func _reference_poses() -> void:
 		for frame in 3: await process_frame
 		await RenderingServer.frame_post_draw
 		var picture: Image = rig.viewport.get_texture().get_image()
+		if raster_size != 200:
+			picture.save_png(output.path_join(id + "-raw.png"))
+			picture.resize(200, 200, Image.INTERPOLATE_LANCZOS)
 		picture.save_png(output.path_join(id + ".png"))
 		var pose_error: float = rig.reference_pose_error()
 		if pose_error > .00001: failures.append("Imported skeleton differs from native pose: " + id)
@@ -138,6 +147,8 @@ func _reference_poses() -> void:
 			"size": [picture.get_width(), picture.get_height()],
 			"clip_range": [clip_range.x, clip_range.y], "material_view": material_view,
 			"import_flags": import_flags, "surface_formats": rig.surface_formats,
+			"raw_raster_size": raster_size, "shadow_diagnostic": shadow_diagnostic,
+			"resampling": "none" if raster_size == 200 else "400px raw retained; Lanczos to 200px for comparison",
 			"native_pose_error": pose_error,
 			"source": "exact native pose; derived geometry; " + material_view + " material"})
 		print("NATIVE_RIG_REFERENCE ", id)
