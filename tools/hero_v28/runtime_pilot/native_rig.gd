@@ -84,7 +84,8 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	if not receipt is Dictionary or not receipt.get("files") is Dictionary: return false
 	for file_name in ["worn-native-runtime.glb", "motion.json", "albedo.png", "normal.png", "orm.png", "cloth.png"]:
 		var expected_hash: String = String(receipt.files.get(file_name, ""))
-		if expected_hash.length() != 64 or not FileAccess.file_exists(candidate.path_join(file_name)) or FileAccess.get_sha256(candidate.path_join(file_name)) != expected_hash:
+		var raw_path := _raw_path(candidate.path_join(file_name))
+		if expected_hash.length() != 64 or not FileAccess.file_exists(raw_path) or FileAccess.get_sha256(raw_path) != expected_hash:
 			push_error("Native candidate file identity mismatch: " + file_name)
 			return false
 	viewport = SubViewport.new()
@@ -97,7 +98,7 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	add_child(viewport)
 	var document: GLTFDocument = GLTFDocument.new()
 	var gltf: GLTFState = GLTFState.new()
-	if document.append_from_file(candidate.path_join("worn-native-runtime.glb"), gltf, import_flags) != OK: return false
+	if document.append_from_buffer(FileAccess.get_file_as_bytes(_raw_path(candidate.path_join("worn-native-runtime.glb"))), candidate, gltf, import_flags) != OK: return false
 	var actor: Node3D = document.generate_scene(gltf) as Node3D
 	if actor == null: return false
 	viewport.add_child(actor)
@@ -135,11 +136,11 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 		var response_path: String = candidate.path_join("component-response/response.png")
 		var response_receipt = JSON.parse_string(FileAccess.get_file_as_string(candidate.path_join("component-response/report.json")))
 		if not response_receipt is Dictionary or response_receipt.get("status") != "complete": return false
-		response_sha256 = FileAccess.get_sha256(response_path)
+		response_sha256 = FileAccess.get_sha256(_raw_path(response_path))
 		if response_sha256 != String(response_receipt.outputs.response.png_sha256): return false
 		if String(response_receipt.albedo_report_sha256) != FileAccess.get_sha256(candidate.path_join("transfer-albedo/report.json")): return false
 		var surface: ShaderMaterial = ShaderMaterial.new()
-		surface.shader = load("res://tools/hero_v28/runtime_pilot/native_surface.gdshader")
+		surface.shader = load(get_script().resource_path.get_base_dir().path_join("native_surface.gdshader"))
 		surface.set_shader_parameter("albedo_map", material.albedo_texture)
 		surface.set_shader_parameter("normal_map", material.normal_texture)
 		surface.set_shader_parameter("orm_map", orm)
@@ -281,9 +282,13 @@ func _light(native_position: Vector3, color: Color, energy: float, label: String
 	light.position = AXIS * native_position
 
 
+func _raw_path(path: String) -> String:
+	# Export the original, hash-bound bytes, avoiding importer remapping.
+	return path if FileAccess.file_exists(path) else path + ".raw"
+
 func _texture(path: String) -> Texture2D:
-	var picture: Image = Image.load_from_file(path)
-	if picture == null or picture.is_empty(): return null
+	var picture := Image.new()
+	if picture.load_png_from_buffer(FileAccess.get_file_as_bytes(_raw_path(path))) != OK: return null
 	picture.generate_mipmaps()
 	return ImageTexture.create_from_image(picture)
 

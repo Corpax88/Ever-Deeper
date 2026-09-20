@@ -167,7 +167,7 @@ func rotate_pose(pose: Dictionary,angle: float,translation: Vector3 = Vector3.ZE
 	for name in result.bones: result.bones[name] = transform*result.bones[name]
 	return result
 
-func plan_contact(screen_target: Vector2, surfaces: Array = []) -> bool:
+func plan_contact(screen_target: Vector2, surfaces: Array = [], record_failure: bool = true) -> bool:
 	# Search a bounded family of genuine tool pitches/heights. The ray's screen
 	# location stays exact; candidate scoring does not move the gameplay root.
 	var contact: Dictionary = bank.mine[21]
@@ -216,7 +216,7 @@ func plan_contact(screen_target: Vector2, surfaces: Array = []) -> bool:
 						best_yaw = angle
 						contact_screen = surface
 	if not is_finite(best):
-		errors.append("No reachable native contact for " + str(screen_target))
+		if record_failure: errors.append("No reachable native contact for " + str(screen_target))
 		return false
 	contact_tool = best_tool
 	contact_yaw = best_yaw
