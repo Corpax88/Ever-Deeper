@@ -103,11 +103,27 @@ def segment_frame(chain,j):
     x = y.cross(z).normalized()
     return Matrix((x,y,z)).transposed()
 
-def mix(a, b, w, u):
+def mix(a, b, w, u, step_crouch=0., airborne=False):
     if w <= 0: return a
     if w >= 1: return b
     q = dict(a)
     for k in ('torso', 'head'): q[k] = blend_matrix(a[k], b[k], w)
+    # Optional shallow knee bend for wider canonical stance transitions.
+    # The exact reviewed21 paths keep the default zero displacement.
+    dip = step_crouch*math.sin(math.pi*u)**2
+    if step_crouch:
+        # Keep the pelvis over the planted sole while the opposite foot
+        # steps. One common body displacement preserves anatomical offsets.
+        for s in SIDES:
+            step = u if airborne else min(1.,max(0.,u*2 if s=='L' else (u-.5)*2))
+            foot = a['legs'][s][2].lerp(b['legs'][s][2],pm.smooth(step))
+            foot += Vector((0,0,(.065 if airborne else .035)*math.sin(math.pi*step)))
+            hip = a['legs'][s][0].lerp(b['legs'][s][0],w)
+            horizontal = (hip.x-foot.x)**2+(hip.y-foot.y)**2
+            assert horizontal < .362**2, ('stance too wide',s,u,horizontal)
+            dip = max(dip,hip.z-foot.z-math.sqrt(.362**2-horizontal))
+    if dip:
+        for k in ('torso', 'head'): q[k].translation.z -= dip
     qa = pm.tool_frame(a['axis'], a['tool_normal']).to_quaternion()
     qb = pm.tool_frame(b['axis'], b['tool_normal']).to_quaternion()
     tool = qa.slerp(qb, w).to_matrix()
@@ -117,6 +133,7 @@ def mix(a, b, w, u):
         ta,tb = ar.transposed()@qa.to_matrix(),br.transposed()@qb.to_matrix()
         tool = body@ta.to_quaternion().slerp(tb.to_quaternion(),w).to_matrix()
     q['rear'] = a['rear'].lerp(b['rear'], w)
+    if dip: q['rear'].z -= dip
     q['axis'], q['tool_normal'] = tool.col[0], tool.col[2]
     for k in ('grips', 'hand_axes', 'radials', 'arms', 'legs', 'foot_rotations'): q[k] = {}
     for s, sign in [('R',-1),('L',1)]:
@@ -166,11 +183,12 @@ def mix(a, b, w, u):
         # Brake/turn with alternating planted feet. The first direct blend
         # slid both ankles by about9px while the gameplay root was stationary.
         # Left steps first; right stays fixed until left has landed.
-        step = min(1.,max(0.,u*2 if s=='L' else (u-.5)*2))
+        step = u if airborne else min(1.,max(0.,u*2 if s=='L' else (u-.5)*2))
         foot_w = pm.smooth(step)
         hip = a['legs'][s][0].lerp(b['legs'][s][0],w)
+        if dip: hip.z -= dip
         foot = a['legs'][s][2].lerp(b['legs'][s][2],foot_w)
-        foot += Vector((0,0,.035*math.sin(math.pi*step)))
+        foot += Vector((0,0,(.065 if airborne else .035)*math.sin(math.pi*step)))
         pole = plane_pole(a['legs'][s],b['legs'][s],hip,foot,w)
         q['legs'][s] = (hip,pm.solve(hip,foot,pole,.180,.184),foot)
         q['foot_rotations'][s] = a['foot_rotations'][s].to_quaternion().slerp(b['foot_rotations'][s].to_quaternion(),foot_w).to_matrix()

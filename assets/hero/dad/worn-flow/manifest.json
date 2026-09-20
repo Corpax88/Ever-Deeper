@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "cell": [
+    160,
+    160
+  ],
+  "columns": 10,
+  "anchor": [
+    80.00004768371582,
+    127.43760108947754
+  ],
+  "flow_count": 50,
+  "contact_cell": 21,
+  "contact_progress": 0.42,
+  "edges": {
+    "idle": {
+      "source_state": "idle",
+      "source_cell": 0,
+      "source_direction": "up",
+      "target_state": "flow",
+      "target_cell": 0,
+      "steps": 18,
+      "duration": 0.3,
+      "offset": 0
+    },
+    "walk0": {
+      "source_state": "walk",
+      "source_cell": 0,
+      "source_direction": "up",
+      "target_state": "flow",
+      "target_cell": 0,
+      "steps": 18,
+      "duration": 0.3,
+      "offset": 19
+    },
+    "walk24": {
+      "source_state": "walk",
+      "source_cell": 24,
+      "source_direction": "up",
+      "target_state": "flow",
+      "target_cell": 0,
+      "steps": 18,
+      "duration": 0.3,
+      "offset": 38
+    }
+  },
+  "native_source_sha256": "a1f71f8658c3235a0d60427b39d4a9e2c59c5c16fd680c298e2e919c31012866",
+  "approved_loop_unchanged": true,
+  "accepted_for_production": false,
+  "hashes": {
+    "flow.png": "6a869dc427d9d0e66c2582f02be9c6719842e8878dc88af7426d4dc1da70fca1",
+    "flow-cloth.png": "3673553c1509ca6d5091c37d789cbb008a552dbb91ad044a6daad5cfe66cd638",
+    "edges.png": "50fef1eb436dea8e841f2b20ba625ed38dea98106f49afcb5abd3606538155a2",
+    "edges-cloth.png": "5cc7df6494ca5c5a1f683dc66f82470fd14784f160fec9f24f1230c7eaff9940"
+  }
+}

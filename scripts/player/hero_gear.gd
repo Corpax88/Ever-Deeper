@@ -2,6 +2,7 @@ extends RefCounted
 ## Matches existing Ever-Deeper item IDs, including legacy Starforge names.
 const TOOLS: Array[String] = ["worn", "iron", "runed", "moonglass", "ember", "crusher", "comet", "crown", "burrower", "pulse", "deepcore"]
 const DIRECTIONS: Array[String] = ["down", "left", "up", "right"]
+const FLOW_ROOT: String = "res://assets/hero/dad/worn-flow/"
 
 static func resolve_tool(pickaxe_level: int, drill_level: int, starforge: String, cosmetic: String = "original") -> String:
 	# Workshop appearances select their authored model, independent of tool power.
@@ -27,6 +28,8 @@ static var textures: Dictionary = {}
 static var manifest: Dictionary = {}
 static var pending: Array[String] = []
 static var load_error: String = ""
+static var flow_manifest: Dictionary = {}
+static var expected_textures: int = 8
 
 static func shutdown() -> void:
 	# Finish owned loader requests before the scene tree and renderer disappear.
@@ -37,6 +40,7 @@ static func shutdown() -> void:
 	pending.clear()
 	textures.clear()
 	manifest.clear()
+	flow_manifest.clear()
 	current_gear = ""
 	wanted_gear = ""
 	loading_gear = ""
@@ -50,17 +54,29 @@ static func request(gear: String) -> void:
 static func _begin_load() -> void:
 	loading_gear = wanted_gear
 	load_error = ""
+	var paths: Array[String] = []
 	for direction in DIRECTIONS:
 		for suffix in ["", "-cloth"]:
 			var path: String = "res://assets/hero/dad/" + loading_gear + "/" + direction + suffix + ".png"
-			if not ResourceLoader.exists(path):
-				load_error = "Missing hero atlas: " + path
-				return
-			pending.append(path)
-			ResourceLoader.load_threaded_request(path, "Texture2D")
+			paths.append(path)
+	if loading_gear == "worn":
+		for name in ["flow", "flow-cloth", "edges", "edges-cloth"]:
+			paths.append(FLOW_ROOT + name + ".png")
+		var extra: Variant = JSON.parse_string(FileAccess.get_file_as_string(FLOW_ROOT + "manifest.json"))
+		if extra is Dictionary:
+			for path in Array(extra.get("exit_textures", [])):
+				paths.append(FLOW_ROOT + String(path))
+	for path in paths:
+		if not ResourceLoader.exists(path):
+			load_error = "Missing hero atlas: " + path
+			return
+	expected_textures = paths.size()
+	for path in paths:
+		pending.append(path)
+		ResourceLoader.load_threaded_request(path, "Texture2D")
 
 static func poll() -> void:
-	if pending.size() != 8: return
+	if pending.size() != expected_textures: return
 	for path in pending:
 		var state: = ResourceLoader.load_threaded_get_status(path)
 		if state == ResourceLoader.THREAD_LOAD_FAILED:
@@ -84,5 +100,10 @@ static func poll() -> void:
 		return
 	textures = loaded
 	manifest = data
+	flow_manifest = {}
+	if loading_gear == "worn":
+		var flow_data: Variant = JSON.parse_string(FileAccess.get_file_as_string(FLOW_ROOT + "manifest.json"))
+		if flow_data is Dictionary:
+			flow_manifest = flow_data
 	current_gear = loading_gear
 	if wanted_gear != current_gear: _begin_load()

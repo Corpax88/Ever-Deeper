@@ -2,6 +2,7 @@ extends Node2D
 ## Native, complete-body animation: both hands and tool are in the same frame.
 const Gear = preload("res://scripts/player/hero_gear.gd")
 const ClothShader = preload("res://scripts/player/dad_cloth.gdshader")
+const FlowGraph = preload("res://scripts/player/hero_flow_graph.gd")
 const ROOT: = "res://assets/hero/dad/"
 const GROUND_Y: = 2.8125
 const WALK_STRIDE: = 144.0
@@ -45,8 +46,14 @@ var _impact_pending: bool = false
 var redraw_request_count: = 0
 var state_update_count: = 0
 var state_skip_count: = 0
+var flow_graph_enabled: bool = false
+var _flow_graph: RefCounted = FlowGraph.new()
+var _flow_manifest: Dictionary = {}
+var _flow_visible: bool = false
+var _flow_distance: float = 0.0
 
 func _ready() -> void:
+	process_priority = 1000
 	_sprite = Sprite2D.new()
 	_sprite.centered = false
 	_sprite.region_enabled = true
@@ -59,12 +66,14 @@ func _ready() -> void:
 	prepare_visual_cache()
 
 func advance_motion(distance: float, _delta: float) -> void:
+	_flow_distance += distance
 	if distance > 0.001:
 		var stride: float = float(Dictionary(_manifest.get("motion", {})).get("stride_pixels", WALK_STRIDE))
 		_walk_phase = fposmod(_walk_phase + distance / maxf(1.0, stride), 1.0)
 
 func set_state(direction: String, _frame: int, walking: bool, active: bool = false, progress: float = 0.0, _recoil: float = 0.0, hit_phase: float = -1.0, impact_serial: int = 0) -> void:
 	state_update_count += 1
+	_flow_graph.note_state(active)
 	if impact_serial != _impact_serial:
 		_impact_serial = impact_serial
 		_impact_presented_frame = Engine.get_frames_drawn()
@@ -117,6 +126,10 @@ func _poll_equipment() -> void:
 		return
 	_atlases = Gear.textures
 	_manifest = Gear.manifest
+	_flow_manifest = Gear.flow_manifest
+	_flow_graph.reset()
+	_flow_graph.configure(_flow_manifest)
+	_flow_visible = false
 	active_gear = _wanted_gear
 	_last_frame = -1
 	_last_direction = ""
@@ -127,6 +140,7 @@ func _process(delta: float) -> void:
 	_idle_clock = fposmod(_idle_clock + delta, 3.6)
 	_drill_clock += delta
 	_draw_frame(delta)
+	_flow_distance = 0.0
 
 func _native_phase(progress: float) -> float:
 	# The authored contact is phase .55. Gameplay remains authoritative.
@@ -142,6 +156,8 @@ func _draw_frame(delta: float) -> void:
 		_impact_pending = false
 	var presenting_impact: bool = _impact_pending and String(_manifest.family) != "drill"
 	var displayed_direction: String = _impact_direction if presenting_impact else direction_name
+	if _draw_flow(delta, presenting_impact, displayed_direction):
+		return
 	if presenting_impact:
 		# Damage and its authored contact share one actually presented frame,
 		# even when a slow frame advances beyond the contact sample.
@@ -199,6 +215,69 @@ func _draw_frame(delta: float) -> void:
 	redraw_request_count += 1
 
 
+func _draw_flow(delta: float, impact: bool, direction: String) -> bool:
+	if not flow_graph_enabled or active_gear != "worn" or direction != "up" or _flow_manifest.is_empty():
+		if _flow_visible:
+			_last_frame = -1
+			_last_direction = ""
+		_flow_visible = false
+		_flow_graph.reset()
+		return false
+	# State packets can arrive several times before one draw. Keep the actual
+	# shown source until the single ordered animation update chooses its edge.
+	if delta <= 0.0:
+		return true
+	var selected: Dictionary = _flow_graph.step(delta, mining, moving, mining_progress, strike_phase,
+		impact, _walk_phase, _last_state, _last_local_frame, _flow_distance)
+	if selected.is_empty():
+		_flow_visible = false
+		return false
+	var bank: String = selected.bank
+	var index: int = int(selected.cell)
+	var columns: int = int(_flow_manifest.columns)
+	var anchor: Array = _flow_manifest.anchor
+	var cell := Vector2(float(_flow_manifest.cell[0]), float(_flow_manifest.cell[1]))
+	if bank == "exits":
+		var profile: Dictionary = _flow_manifest.exit_profile
+		index += int(_flow_manifest.exits[selected.edge].offset)
+		var page := int(index / int(profile.page_capacity))
+		index = index % int(profile.page_capacity)
+		columns = int(profile.columns)
+		cell = Vector2(float(profile.cell[0]), float(profile.cell[1]))
+		anchor = profile.anchor
+		var base: String = Gear.FLOW_ROOT + "exits-%02d" % page
+		_sprite.texture = _atlases[base + ".png"]
+		_cloth.set_shader_parameter("cloth_mask", _atlases[base + "-cloth.png"])
+	elif bank == "legacy_walk":
+		index += int(_manifest.states.walk.offset)
+		columns = int(_manifest.columns)
+		anchor = _manifest.directions.up.ground_anchor
+		_sprite.texture = _atlases[ROOT + "worn/up.png"]
+		_cloth.set_shader_parameter("cloth_mask", _atlases[ROOT + "worn/up-cloth.png"])
+	else:
+		if bank == "edges": index += int(_flow_manifest.edges[selected.edge].offset)
+		_sprite.texture = _atlases[Gear.FLOW_ROOT + bank + ".png"]
+		_cloth.set_shader_parameter("cloth_mask", _atlases[Gear.FLOW_ROOT + bank + "-cloth.png"])
+	_sprite.material = _cloth
+	_sprite.region_rect = Rect2(Vector2(index % columns, index / columns) * cell, cell)
+	_sprite.position = Vector2(0, GROUND_Y) - Vector2(float(anchor[0]), float(anchor[1]))
+	_sprite.scale = Vector2.ONE
+	if delta > 0.0 and selected.has("resume_walk_phase"):
+		_walk_phase = float(selected.resume_walk_phase)
+	_walk_settle = false
+	_recover_phase = -1.0
+	_flow_visible = true
+	_last_frame = -1
+	_last_direction = ""
+	_last_state = "mine" if mining else "walk" if moving else "idle"
+	_last_local_frame = int(selected.cell)
+	if selected.has("resume_walk_phase"):
+		_last_state = "walk"
+		_last_local_frame = roundi(float(selected.resume_walk_phase) * 48.0)
+	redraw_request_count += 1
+	return true
+
+
 func _sample_phase(info: Dictionary, index: int) -> float:
 	if info.has("phases"):
 		return float(info.phases[index])
@@ -233,6 +312,9 @@ func release_visual_cache() -> void:
 	_impact_pending = false
 	_atlases = {}
 	_manifest = {}
+	_flow_manifest = {}
+	_flow_graph.reset()
+	_flow_visible = false
 	active_gear = ""
 	_wanted_gear = ""
 	if _sprite != null: _sprite.texture = null
