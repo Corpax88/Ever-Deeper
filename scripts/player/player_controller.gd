@@ -53,6 +53,7 @@ var animation_target_position: Vector2 = Vector2.ZERO
 var animation_target_id: String = ""
 var animation_target_valid: bool = false
 var animation_swing_serial: int = 0
+var animation_swing_continuation: bool = false
 var animation_cycle_duration: float = 0.0
 var animation_actual_motion: Vector2 = Vector2.ZERO
 var animation_travelled_distance: float = 0.0
@@ -236,10 +237,11 @@ func set_animation_bearing(direction: Vector2) -> void:
 		animation_bearing = direction.normalized()
 
 
-func begin_mining_presentation(target: Vector2, target_id: String, cycle: float, hit_phase: float) -> void:
+func begin_mining_presentation(target: Vector2, target_id: String, cycle: float, hit_phase: float, continuation: bool = false) -> void:
 	assert(target.is_finite() and is_finite(cycle) and cycle > 0.0)
 	assert(hit_phase > 0.0 and hit_phase < 1.0)
 	animation_swing_serial += 1
+	animation_swing_continuation = continuation and animation_target_valid and target_id == animation_target_id and target.is_equal_approx(animation_target_position)
 	animation_target_position = target
 	animation_target_id = target_id
 	animation_target_valid = true
@@ -266,7 +268,7 @@ func animation_packet() -> Dictionary:
 		"impact_swing_serial": animation_impact_swing_serial,
 		"impact_target_position": animation_impact_target, "impact_bearing": animation_impact_bearing,
 		"impact_target_valid": animation_impact_target_valid,
-		"swing_serial": animation_swing_serial, "cycle_duration": animation_cycle_duration,
+		"swing_serial": animation_swing_serial, "swing_continuation": animation_swing_continuation, "cycle_duration": animation_cycle_duration,
 		"mining_timing_valid": animation_target_valid and animation_active,
 		"target_valid": animation_target_valid, "target_position": animation_target_position,
 		"target_id": animation_target_id}

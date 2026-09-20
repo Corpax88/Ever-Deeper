@@ -2,6 +2,41 @@
 
 ## Current recovered work
 
+### Native renderer pilot cleared; continuous motion integration under test
+
+Supersedes the lighting-failure status below. Native dielectric/coat transfer
+is complete; response-map SHA518cbe0cb5a4b5c2ede05869e39195272367a54cc46445d70194062bb04c2bfa.
+The custom shader's StandardMaterial control produces zero pixel differences
+over all five400px poses. No manual backface normal flip is used.
+The independent image critic accepts directional key energy1.5, angular size0,
+normal bias1.0, native area fill/rim and two-thirds exposure for a bounded
+in-game pilot. Harder skin/sleeve shading and brighter boot welts remain renderer
+differences; this is NOT final art, mobile performance or publication acceptance.
+Stop further light tuning absent a new concrete rendered defect.
+
+All50 original Flow20 bone matrices export with exact zero difference in the
+new task metadata. The actual game now publishes continuous target bearing,
+committed swing identity/clock, retained impact target identity, physics tick,
+cumulative resolved travel and explicit same-target natural continuation.
+The real-world22-check packet contract passes. Ordinary visuals/game mechanics
+remain unchanged. The previous19-check contract received independent source
+acceptance; the three new continuation checks distinguish rollover from restart.
+
+A separate isolated task-space solver preserves released support hands and
+transports chain-relative bone roll. It has a fixed entry deadline, rigid-tool
+reach projection and an explicit rejection before displaying disconnected limbs.
+The old native_rig.advance reference-only guard remains intact. Actual ore alpha
+interior points are checked at both0.91/1.035 pulse extremes with2px margins.
+Eight64px target bearings are reachable; a145-step synthetic fastest-clock
+sequence with held cycles, walking and opposite-bearing interruptions has zero
+unreachable limbs. This numeric result is NOT visual acceptance. Moving/large
+turn transitions use a short airborne transfer; its visible quality is unreviewed.
+
+Next: capture_motion.gd exercises real controls, seed4608 endless world, two
+explicit existing-ore fixtures at +/-64px and the true0.425s Forge5/relic clock.
+Inspect actual frames and obtain independent sequence review, then compare the
+same inputs against baseline. No new DEV/LIVE; ordinary Flow20 remains disabled.
+
 ### Matched component transfer completed; lighting fidelity remains open
 
 Supersedes the failed transfer status below. Source through f921ea1f19400f00448ebefd667a38cfc19857bb

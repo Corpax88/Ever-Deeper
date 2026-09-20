@@ -1954,14 +1954,14 @@ func _update_mining(delta: float) -> void :
 			_strike_wall(_swing_wall, progress)
 	if progress >= 1.0:
 		var overflow: = fposmod(maxf(0.0, mining_elapsed - _swing_duration), _swing_duration)
-		if _begin_mining_swing():
+		if _begin_mining_swing(true):
 			mining_elapsed = minf(overflow, _swing_duration * MINING_HIT_PROGRESS * 0.5)
 			player.set_mining_presentation_elapsed(mining_elapsed)
 		else:
 			_cancel_mining()
 
 
-func _begin_mining_swing() -> bool:
+func _begin_mining_swing(continuation: bool = false) -> bool:
 	# A struck/deleted target remains committed through the entire recovery.
 	# Resource and terrain hits share the same clock and reacquisition boundary.
 	_swing_input_direction = _mining_input_direction()
@@ -1985,7 +1985,7 @@ func _begin_mining_swing() -> bool:
 	_swing_duration = _mining_cycle_duration()
 	_swing_facing = player.facing_vector
 	_swing_origin = player.global_position
-	player.begin_mining_presentation(_swing_presentation_target, mining_target_id, _swing_duration, MINING_HIT_PROGRESS)
+	player.begin_mining_presentation(_swing_presentation_target, mining_target_id, _swing_duration, MINING_HIT_PROGRESS, continuation)
 	return true
 
 
