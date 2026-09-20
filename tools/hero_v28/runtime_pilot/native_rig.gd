@@ -44,11 +44,14 @@ var reach_detail: Dictionary = {}
 var transitions: int = 0
 var material_view: String = "baked"
 var clip_range: Vector2 = Vector2(.01, 100.0)
+var import_flags: int = 0
+var surface_formats: Array[int] = []
 
 
 func configure(candidate: String, pose_only: bool = false) -> bool:
 	if material_view not in ["baked", "clay"]: return false
 	if clip_range.x <= 0.0 or clip_range.y <= clip_range.x: return false
+	if import_flags not in [0, 8, 64, 72]: return false
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(candidate.path_join("motion.json")))
 	if not parsed is Dictionary: return false
 	data = parsed
@@ -87,7 +90,7 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	add_child(viewport)
 	var document: GLTFDocument = GLTFDocument.new()
 	var gltf: GLTFState = GLTFState.new()
-	if document.append_from_file(candidate.path_join("worn-native-runtime.glb"), gltf) != OK: return false
+	if document.append_from_file(candidate.path_join("worn-native-runtime.glb"), gltf, import_flags) != OK: return false
 	var actor: Node3D = document.generate_scene(gltf) as Node3D
 	if actor == null: return false
 	viewport.add_child(actor)
@@ -202,7 +205,20 @@ func _set_material(node: Node, material: Material) -> void:
 	if node is MeshInstance3D:
 		node.material_override = material
 		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		for index in node.mesh.get_surface_count():
+			surface_formats.append(node.mesh.surface_get_format(index))
 	for child in node.get_children(): _set_material(child, material)
+
+
+func reference_pose_error() -> float:
+	var maximum: float = 0.0
+	for name in shown:
+		var expected: Transform3D = mapping * Transform3D(shown[name]) * Transform3D(rest[name]).affine_inverse() * mapping_inverse * Transform3D(imported_rest[name])
+		var actual: Transform3D = skeleton.get_bone_global_pose(int(indices[name]))
+		maximum = maxf(maximum, expected.origin.distance_to(actual.origin))
+		for column in 3:
+			maximum = maxf(maximum, expected.basis[column].distance_to(actual.basis[column]))
+	return maximum
 
 
 func _matrix(rows: Array) -> Transform3D:
