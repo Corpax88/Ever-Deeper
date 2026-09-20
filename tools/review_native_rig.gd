@@ -152,6 +152,7 @@ func _reference_poses() -> void:
 			"import_flags": import_flags, "surface_formats": rig.surface_formats,
 			"raw_raster_size": raster_size, "shadow_diagnostic": shadow_diagnostic,
 			"lighting_profile": lighting_profile,
+			"response_sha256": rig.response_sha256,
 			"resampling": "none" if raster_size == 200 else "400px raw retained; Lanczos to 200px for comparison",
 			"native_pose_error": pose_error,
 			"source": "exact native pose; derived geometry; " + material_view + " material"})
@@ -248,7 +249,7 @@ func _cost_cases() -> void:
 
 func _finish() -> void:
 	var source: Dictionary = {}
-	for path in ["tools/review_native_rig.gd", "tools/hero_v28/runtime_pilot/native_rig.gd", "scripts/player/player_controller.gd", "scripts/world/hub_world.gd"]:
+	for path in ["tools/review_native_rig.gd", "tools/hero_v28/runtime_pilot/native_rig.gd", "tools/hero_v28/runtime_pilot/native_surface.gdshader", "scripts/player/player_controller.gd", "scripts/world/hub_world.gd"]:
 		source[path] = FileAccess.get_sha256("res://" + path)
 	FileAccess.open(output.path_join("native-rig-review.json"), FileAccess.WRITE).store_string(JSON.stringify({
 		"mode": mode, "passed": failures.is_empty(), "failures": failures, "stages": stages, "samples": samples,

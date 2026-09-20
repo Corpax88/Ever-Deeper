@@ -49,14 +49,15 @@ var surface_formats: Array[int] = []
 var raster_size: int = 200
 var shadow_diagnostic: bool = false
 var lighting_profile: String = "legacy"
+var response_sha256: String = ""
 
 
 func configure(candidate: String, pose_only: bool = false) -> bool:
-	if material_view not in ["baked", "clay", "baked_no_normal", "albedo"]: return false
+	if material_view not in ["baked", "clay", "baked_no_normal", "albedo", "baked_response", "baked_shader_control"]: return false
 	if clip_range.x <= 0.0 or clip_range.y <= clip_range.x: return false
 	if import_flags not in [0, 8, 64, 72]: return false
 	if raster_size not in [200, 400]: return false
-	if lighting_profile not in ["legacy", "native_soft", "native_area"]: return false
+	if lighting_profile not in ["legacy", "native_soft", "native_area", "native_balanced"]: return false
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(candidate.path_join("motion.json")))
 	if not parsed is Dictionary: return false
 	data = parsed
@@ -129,7 +130,24 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 		material.albedo_color = Color(.5, .5, .5)
 		material.roughness = .8
 		material.metallic = 0.0
-	_set_material(actor, material)
+	if material_view in ["baked_response", "baked_shader_control"]:
+		var response_path: String = candidate.path_join("component-response/response.png")
+		var response_receipt = JSON.parse_string(FileAccess.get_file_as_string(candidate.path_join("component-response/report.json")))
+		if not response_receipt is Dictionary or response_receipt.get("status") != "complete": return false
+		response_sha256 = FileAccess.get_sha256(response_path)
+		if response_sha256 != String(response_receipt.outputs.response.png_sha256): return false
+		if String(response_receipt.albedo_report_sha256) != FileAccess.get_sha256(candidate.path_join("transfer-albedo/report.json")): return false
+		var surface: ShaderMaterial = ShaderMaterial.new()
+		surface.shader = load("res://tools/hero_v28/runtime_pilot/native_surface.gdshader")
+		surface.set_shader_parameter("albedo_map", material.albedo_texture)
+		surface.set_shader_parameter("normal_map", material.normal_texture)
+		surface.set_shader_parameter("orm_map", orm)
+		surface.set_shader_parameter("response_map", _texture(response_path))
+		surface.set_shader_parameter("native_response", material_view == "baked_response")
+		surface.set_shader_parameter("ao_direct", material.ao_light_affect)
+		_set_material(actor, surface)
+	else:
+		_set_material(actor, material)
 	mapping = skeleton.global_transform.affine_inverse() * AXIS
 	mapping_inverse = mapping.affine_inverse()
 	for index in skeleton.get_bone_count():
@@ -161,7 +179,7 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 		environment.environment.ambient_light_energy = .23
 		environment.environment.adjustment_enabled = true
 		environment.environment.adjustment_contrast = 1.15
-	if lighting_profile == "native_area":
+	if lighting_profile in ["native_area", "native_balanced"]:
 		# Bounded Compatibility diagnostic: real area highlights plus dynamic
 		# cavity shading. Area shadows are unsupported in this renderer.
 		environment.environment.ssao_enabled = true
@@ -169,6 +187,10 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 		environment.environment.ssao_intensity = 1.0
 		environment.environment.ssao_light_affect = .5
 		environment.environment.ssao_ao_channel_affect = .25
+	if lighting_profile == "native_balanced":
+		environment.environment.adjustment_enabled = false
+		environment.environment.tonemap_exposure = .5
+		environment.environment.tonemap_agx_contrast = 1.5
 	environment.environment.tonemap_mode = Environment.TONE_MAPPER_AGX
 	viewport.add_child(environment)
 	# Native area-light positions/colors. Shadowless omni approximation is an
@@ -197,7 +219,7 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 
 
 func _light(native_position: Vector3, color: Color, energy: float, label: String) -> void:
-	if lighting_profile == "native_area":
+	if lighting_profile in ["native_area", "native_balanced"]:
 		var area: AreaLight3D = AreaLight3D.new()
 		area.name = label
 		var diameter: float = 2.0 if label == "warm large key" else 3.0 if label == "soft cool fill" else 1.7
