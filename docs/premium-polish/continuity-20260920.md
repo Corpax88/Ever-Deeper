@@ -1,12 +1,54 @@
 # Continuity after workspace pruning, 20 September 2026
 
+## Current recovered work
+
+Source is saved through `aba858c9ca7a505191050fe7351811a3faaccf49` on the same
+work branch. The recovery chronology below describes the earlier state.
+The complete regenerated preparation is saved as
+`libfile_46678bf9aadc8191a562ac44d3ddb2a5`, archive SHA256
+`1673042e9218f752e3b8c58331dff48318865571e0e8ad4f03e64dfba7251b92`.
+Its three source members and archive CRC were verified after Blender exited.
+
+The bounded five-pose renderer tools and identity guards are now saved; see the
+[independent source review](native-reference-review-20260920.md).
+No rendered native-runtime fidelity, gameplay integration or DEV approval exists.
+
+The original 261-donor full albedo attempt was explicitly interrupted before it
+produced a map. Persistent scene data produced identical sample bytes but no
+useful speedup (34.21 versus33.36 seconds), so it was not adopted.
+
+The opt-in Object-coordinate donor route stores each evaluated donor's signed
+local vertex coordinates on unchanged, disconnected geometry. Cloned shaders
+read that field; Generated, artwork UV and authored attributes stay separate.
+The independent critic found no source blocker. Four representative original
+donors produced identical RGB8 albedo, bump-normal and cloth maps. Raw albedo
+and normal floats differ by at most1.79e-7 and1.41e-6 respectively; do not call
+those raw buffers bit-identical. This is sample transfer evidence, not art acceptance.
+
+Full merging exceeded the unchanged3e-4 corner-normal bound for `boot upper`,
+`boot folded top`, `boot folded top.001`, and `helmet band rivet.001`.
+These four are explicitly kept unmerged. The bound was not relaxed. The full
+route has13 donors:617 merged originals plus12 unchanged originals. Input
+receipts bind the exact helper, strategy and four exclusions. Its first complete
+albedo map took109.68 seconds; the remaining maps and first GLB comparison are
+still in progress. Full conversion does not establish fidelity or mobile cost.
+
+Probe evidence is saved in `libfile_d94b1a60253c8191bc38b19f4d22a847`,
+`Ever-Deeper-materialoverforing-20260920.zip`, SHA256
+`a76a9435aac1d0085b31a0788a46d6171122f3cff5922321dcbc6adb39c1078a`.
+The continuation file is version88. Flow20 remains disabled in ordinary gameplay;
+DEV13 and LIVE remain unchanged. The next gate is exactly five actual Godot
+poses against retained native cells0/12/17/21/35, then independent image review.
+
+## Recovery chronology
+
 The environment reported automated workspace pruning when Mats asked for status.
 The local checkout, /tmp native models, all new captures, prepared native runtime
 mesh and the unfinished upload cell disappeared. Mats did not delete them.
 
 ## Verified retained source
 
-The work branch codex/hero-loop-flow-20260918 still points to
+At recovery, the work branch codex/hero-loop-flow-20260918 pointed to
 497e936a95d804e9360640ad1b2fbc5db37f48af, tree899ce5b2b2590687365098cb738dc0c8365182ca.
 It has been cloned again. The later staged tree
 dea768b6df5c0a742ccf78f73b1a566c331ce3d6 was NOT created remotely (404).
