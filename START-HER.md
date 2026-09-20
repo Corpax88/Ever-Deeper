@@ -1,3 +1,7 @@
+Latest user-requested continuation: [Worn j after repeated chat interruption](docs/TESTMILJO-HANDOFF.md).
+Three captures retained; reset/touch unfinished. 24 of43 delta parts confirmed; no publication.
+Read the latest handoff and avoid routing large binary payloads through conversation tool output.
+
 Latest user-requested continuation: [corrected Worn candidate j](docs/TESTMILJO-HANDOFF.md).
 Runtime source e32a03e620913a76f3bee9083b2e9b1d66eef972 fixes fractional limb lengths.
 Exact export j is retained; held mining passes, final controls/visual review remain incomplete. No publication.
