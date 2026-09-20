@@ -53,6 +53,10 @@ func _run() -> void:
 		push_error("Cannot load native-derived runtime candidate")
 		quit(3)
 		return
+	if bool(rig.data.get("reference_only", false)) and mode != "poses":
+		push_error("Reference-only Flow20 payload cannot exercise the legacy motion solver")
+		quit(3)
+		return
 	if mode == "poses":
 		await _reference_poses()
 	else:
@@ -210,11 +214,13 @@ func _finish() -> void:
 	FileAccess.open(output.path_join("native-rig-review.json"), FileAccess.WRITE).store_string(JSON.stringify({
 		"mode": mode, "passed": failures.is_empty(), "failures": failures, "stages": stages, "samples": samples,
 		"rendered": true, "production_changed": false, "physical_iphone": false,
+		"direction": String(rig.data.direction), "action": String(rig.data.get("action", "legacy_native")),
+		"reference_only": bool(rig.data.get("reference_only", false)), "candidate_files_verified": true,
 		"source_sha256": source, "candidate_sha256": FileAccess.get_sha256(candidate.path_join("candidate.json")),
 		"renderer": RenderingServer.get_video_adapter_name(), "rendering_method": RenderingServer.get_current_rendering_method(),
 		"runtime": Engine.get_version_info(), "viewport": [root.size.x, root.size.y], "actor_target": [200, 200],
 		"gameplay_damage_tested": false, "complete_game_performance_gate": false,
-		"limits": "Worn/right native-derived feasibility only. Mining pose timing is an explicit hub fixture, with no gameplay damage. Movie cadence does not measure FPS; cost mode is an isolated A/B/A overhead measurement. Visual fidelity is a separate critic judgment."
+		"limits": "Worn native-derived feasibility only; see direction/action/reference_only. Pose mode renders exact native samples outside gameplay. Motion mode uses an explicit hub fixture with no gameplay damage. Movie cadence does not measure FPS; cost mode is isolated A/B/A overhead. Visual fidelity remains a separate critic judgment."
 	}, "\t"))
 	print("NATIVE_RIG_REVIEW_COMPLETE mode=", mode, " failures=", failures.size())
 	quit(0 if failures.is_empty() else 1)

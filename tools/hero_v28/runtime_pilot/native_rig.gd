@@ -66,6 +66,13 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	if pose_only:
 		set_reference_pose("idle", 0.0)
 		return true
+	var receipt = JSON.parse_string(FileAccess.get_file_as_string(candidate.path_join("candidate.json")))
+	if not receipt is Dictionary or not receipt.get("files") is Dictionary: return false
+	for file_name in ["worn-native-runtime.glb", "motion.json", "albedo.png", "normal.png", "orm.png", "cloth.png"]:
+		var expected_hash: String = String(receipt.files.get(file_name, ""))
+		if expected_hash.length() != 64 or not FileAccess.file_exists(candidate.path_join(file_name)) or FileAccess.get_sha256(candidate.path_join(file_name)) != expected_hash:
+			push_error("Native candidate file identity mismatch: " + file_name)
+			return false
 	viewport = SubViewport.new()
 	viewport.name = "NativeRig200px"
 	viewport.size = Vector2i(200, 200)
@@ -126,9 +133,17 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	viewport.add_child(environment)
 	# Native area-light positions/colors. Shadowless omni approximation is an
 	# explicit fidelity risk assessed against the genuine Cycles PNG references.
-	_light(Vector3(-4.8826499, 2.5317445, 4.7), Color(1, .89, .75), 2.8, "Native warm key")
-	_light(Vector3(-2.1371870, -4.2086143, 3.0), Color(.72, .82, 1), .75, "Native cool fill")
-	_light(Vector3(2.4824247, -.9041944, 3.8), Color(1, .8, .58), 1.65, "Native brass rim")
+	if data.has("lights"):
+		var strongest: float = 0.0
+		for row in Array(data.lights): strongest = maxf(strongest, float(row.energy))
+		for row in Array(data.lights):
+			var rgb: Array = row.color
+			_light(_vector(row.position), Color(float(rgb[0]), float(rgb[1]), float(rgb[2])),
+				2.8 * float(row.energy) / maxf(strongest, 0.001), String(row.name))
+	else:
+		_light(Vector3(-4.8826499, 2.5317445, 4.7), Color(1, .89, .75), 2.8, "Native warm key")
+		_light(Vector3(-2.1371870, -4.2086143, 3.0), Color(.72, .82, 1), .75, "Native cool fill")
+		_light(Vector3(2.4824247, -.9041944, 3.8), Color(1, .8, .58), 1.65, "Native brass rim")
 	sprite = Sprite2D.new()
 	sprite.centered = false
 	sprite.texture = viewport.get_texture()
@@ -244,6 +259,9 @@ func _apply(pose: Dictionary) -> void:
 
 
 func advance(delta: float, world_position: Vector2, next_state: String, mining_progress: float = 0.0, cycle: float = .68, hit: float = .42) -> void:
+	if bool(data.get("reference_only", false)):
+		push_error("Flow20 reference payload has no approved runtime transition solver")
+		return
 	if not position_ready: reset_motion(world_position)
 	var displacement: Vector2 = world_position - prior_position
 	prior_position = world_position

@@ -31,14 +31,24 @@ def main():
     assert prep['source_sha256'] == '94304c12a042b168c0d655dc0ceacffe2efb08997039a7a26c1ed0cc1770bc91'
     prepared_sha = probe.digest(output/'prepared.blend')
     reports = {}
+    binding = {'prepared_sha256': prepared_sha,
+               'probe_sha256': probe.digest(HERE/'constant_donor_probe.py'),
+               'exporter_sha256': probe.digest(HERE/'export_runtime.py'),
+               'size': prep['texture_size'], 'samples': 8, 'threads': args.threads,
+               'mode': 'merged', 'scope': 'full', 'contract': probe.RGB_OUTPUT_CONTRACT}
     channels = [args.channel] if args.channel else exporter.CHANNELS
     for channel in channels:
         directory = output/('transfer-'+channel)
+        binding_path = output/('transfer-'+channel+'-input.json')
+        channel_binding = dict(binding, channel=channel)
         if not directory.exists():
             assert not args.assemble_only, ('missing channel', channel)
+            if binding_path.exists(): assert json.loads(binding_path.read_text()) == channel_binding
+            else: binding_path.write_text(json.dumps(channel_binding,indent=2)+'\n')
             probe.bake_probe(SimpleNamespace(output=directory, scope='full', mode='merged',
                 donor=None, channel=channel, size=prep['texture_size'], samples=8,
                 threads=args.threads))
+        assert json.loads(binding_path.read_text()) == channel_binding
         report = json.loads((directory/'report.json').read_text())
         assert report['status'] == 'complete'
         sig = report['signature']
