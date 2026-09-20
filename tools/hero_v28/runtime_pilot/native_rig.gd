@@ -51,7 +51,7 @@ var shadow_diagnostic: bool = false
 
 
 func configure(candidate: String, pose_only: bool = false) -> bool:
-	if material_view not in ["baked", "clay"]: return false
+	if material_view not in ["baked", "clay", "baked_no_normal", "albedo"]: return false
 	if clip_range.x <= 0.0 or clip_range.y <= clip_range.x: return false
 	if import_flags not in [0, 8, 64, 72]: return false
 	if raster_size not in [200, 400]: return false
@@ -103,7 +103,7 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	# Preserve the exported native material's authored double-sided state.
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.albedo_texture = _texture(candidate.path_join("albedo.png"))
-	material.normal_enabled = true
+	material.normal_enabled = material_view not in ["baked_no_normal", "albedo"]
 	material.normal_texture = _texture(candidate.path_join("normal.png"))
 	var orm: Texture2D = _texture(candidate.path_join("orm.png"))
 	material.ao_enabled = true
@@ -115,6 +115,8 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	material.metallic_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_BLUE
 	material.metallic = 1.0
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	if material_view == "albedo":
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	if material_view == "clay":
 		material.albedo_texture = null
 		material.normal_enabled = false
