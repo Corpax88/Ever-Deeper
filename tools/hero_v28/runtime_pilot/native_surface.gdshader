@@ -9,9 +9,6 @@ uniform bool native_response = false;
 uniform float ao_direct = 0.35;
 
 void fragment() {
-	if (!FRONT_FACING) {
-		NORMAL = -NORMAL;
-	}
 	ALBEDO = texture(albedo_map, UV).rgb;
 	NORMAL_MAP = texture(normal_map, UV).rgb;
 	vec3 orm = texture(orm_map, UV).rgb;
@@ -24,6 +21,6 @@ void fragment() {
 		vec3 response = texture(response_map, UV).rgb;
 		SPECULAR = response.r;
 		CLEARCOAT = response.g;
-		CLEARCOAT_GLOSS = 1.0 - response.b;
+		CLEARCOAT_ROUGHNESS = response.b;
 	}
 }
