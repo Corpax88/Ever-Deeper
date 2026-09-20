@@ -2,6 +2,42 @@
 
 ## Current recovered work
 
+### Actual renderer result and corrected geometry
+
+The first six-map/GLB candidate completed, but the independent five-pose image
+gate **failed**. The helmet dome was missing and surfaces fragmented. Retaining
+the GLB's double-sided material property did not repair it. Valid equal-clay
+comparisons traced the fault to preparation: the original4352-triangle dome
+became a collapsed triangle after the legacy reduction (392reportedtriangles).
+This rejected candidate and its actual images are retained in
+`libfile_c23c8806954c819189c749305207a13c`, archive SHA256
+`4d782c968934479eed6a7e08f19304988c6fd201907baafd19201c41074f38bf`.
+The Library continuation is version89 at this checkpoint.
+
+Saved source71358835cfe39b3d002732807efa26d8477c325b adds an explicit
+`native_components` policy. Ordinary structural components keep all native
+triangles. Only the existing dense face/groom/jaw/hair/hand copies are reduced.
+Coincident welding is restricted to one connected component, identical weights
+and material; custom normals and open/hard/UV/material boundaries are protected.
+A first per-strand implementation was explicitly interrupted before saving a
+model; the corrected implementation performs one checked weld per mesh.
+
+The corrected preparation has1017722triangles. Prepared SHA256:
+`10fe8fa003bf5a84b949a010465e7e787988db9d4f0909d7f4dbfb6dcb9d2b1e`.
+It was produced at113e1325 before the added material bucket key. The subsequent
+audit proves every reduced original component has one material, so that key
+cannot alter the prepared weld groups. All unreduced component triangle counts
+match their originals. Original donors and approved action remain unchanged.
+
+Two actual equal-clay comparisons, cells0and21, pass the independent narrow
+geometry review: helmet, body, boots, backpack, hands and tool retain the native
+silhouette. Bone matrices are applied atomically using the native parent-aware
+conversion; maximum error is4.77e-7. This is NOT material, motion, mobile-cost or
+production acceptance. New six-map transfer is running on this corrected model;
+the next gate remains five actual Godot images against the approved native PNGs.
+
+### Earlier recovered checkpoints
+
 Source is saved through `aba858c9ca7a505191050fe7351811a3faaccf49` on the same
 work branch. The recovery chronology below describes the earlier state.
 The complete regenerated preparation is saved as
