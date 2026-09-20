@@ -1,4 +1,4 @@
-extends SceneTree
+extends Node
 ## Actual controls and world clock, isolated native Worn visual, fixed-step capture.
 var output := ""
 var candidate := ""
@@ -27,12 +27,16 @@ var frame_id := -1
 var event := ""
 var contacts: Array = []
 var last_impact := 0
+var root: Window:
+	get: return get_tree().root
 class PoseDriver extends Node:
 	var callback: Callable
 	func _process(delta: float) -> void: callback.call(delta)
-func _initialize() -> void: _run.call_deferred()
+func _ready() -> void: _run.call_deferred()
+func quit(code: int = 0) -> void: get_tree().quit(code)
 
 func _run() -> void:
+	interactive = bool(ProjectSettings.get_setting("native_worn_trial/interactive",false))
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--output="): output = arg.trim_prefix("--output=")
 		if arg.begins_with("--candidate="): candidate = arg.trim_prefix("--candidate=")
@@ -51,8 +55,8 @@ func _run() -> void:
 	main = load("res://scenes/main/main.tscn").instantiate()
 	if interactive: main.get_node("EndlessDescentWorld").set_script(load(get_script().resource_path.get_base_dir().path_join("trial_world.gd")))
 	root.add_child(main)
-	current_scene = main
-	for i in 5: await process_frame
+	get_tree().current_scene = main
+	for i in 5: await get_tree().process_frame
 	state.reset_run(false)
 	state.world_seed = 4608
 	seed(4608)
@@ -155,7 +159,7 @@ func _run() -> void:
 			rig.root_native = contact.root_native
 			rig.shown = contact.bones
 			rig._apply(contact.bones)
-			for settle in 3: await process_frame
+			for settle in 3: await get_tree().process_frame
 			await RenderingServer.frame_post_draw
 			rig.viewport.get_texture().get_image().save_png(output.path_join("contact-reference-%04d.png" % int(contact.frame)))
 			reference_frames.append(contact.frame)
@@ -177,25 +181,29 @@ func _surface(target: Vector2,position: Vector2) -> Array:
 
 func _pose_frame(delta: float) -> void:
 	if (not recording and not playing) or failed: return
+	if playing and trial_frames == 0: print("NATIVE_TRIAL_FIRST_POSE web=",OS.has_feature("web"))
 	var packet: Dictionary = player.animation_packet()
 	packet.contact_surfaces = _surface(packet.target_position,packet.world_position)
 	packet.impact_surfaces = _surface(packet.impact_target_position,packet.world_position)
 	if not baseline and not motion.advance(delta if playing else 1.0/60.0,packet): failed = true
+	if playing and trial_frames == 0: print("NATIVE_TRIAL_FIRST_POSE_COMPLETE failed=",failed)
 	if playing:
 		trial_panel.visible = not main.orientation_guard_active
 		if failed:
 			main._set_mine_held(false)
 			trial_hint.text = "Bevegelsen stoppet. Trykk Start på nytt."
 		trial_frames += 1
-		if OS.has_feature("web") and (trial_frames % 15 == 0 or failed):
+		if OS.has_feature("web") and (trial_frames == 1 or trial_frames % 5 == 0 or failed):
 			var report := {"ready":true,"failed":failed,"frames":trial_frames,"resets":trial_resets,
+				"save_path":root.get_node("RunState").persistence_path(),"user_dir":OS.get_user_data_dir(),
 				"position":[player.global_position.x,player.global_position.y],"mining":world.mining_active,
 				"hp17":world.resources[17].hp,"hp18":world.resources[18].hp,"impact_serial":packet.impact_serial,
 				"hint":trial_hint.text,"errors":motion.errors,"viewport":[root.get_visible_rect().size.x,root.get_visible_rect().size.y],
 				"mine_button":[main.mine_button.get_global_rect().get_center().x,main.mine_button.get_global_rect().get_center().y],
 				"reset_button":[trial_reset_button.get_global_rect().get_center().x,trial_reset_button.get_global_rect().get_center().y],
 				"pad":[main.movement_pad.get_global_rect().get_center().x,main.movement_pad.get_global_rect().get_center().y]}
-			JavaScriptBridge.eval("window.EVER_DEEPER_TRIAL="+JSON.stringify(report),true)
+			JavaScriptBridge.get_interface("window").EVER_DEEPER_TRIAL_JSON = JSON.stringify(report)
+			if trial_frames == 1: print("NATIVE_TRIAL_STATE ",JSON.stringify(report))
 		return
 	if not baseline and int(packet.impact_serial) != last_impact:
 		contacts.append({"frame":frame_id,"root_native":rig.root_native,"bones":rig.shown.duplicate(true)})
@@ -219,6 +227,8 @@ func _start_trial() -> void:
 	main.achievement_toast.clear()
 	main.achievement_toast.hide()
 	main.premium_hud.hide()
+	if main.developer_menu != null: main.developer_menu.hide()
+	main.get_node("CompanionInterface").hide()
 	main.guide_overlay.hide()
 	main.quick_tutorial.dismiss()
 	main.set_process_unhandled_input(false)
@@ -254,7 +264,7 @@ func _start_trial() -> void:
 	exit_button.custom_minimum_size = Vector2(130,64)
 	exit_button.pressed.connect(func(): OS.shell_open("https://corpax88.github.io/Ever-Deeper/dev/"))
 	row.add_child(exit_button)
-	print("NATIVE_FLOW_TRIAL_READY cycle=",world._mining_cycle_duration())
+	print("NATIVE_FLOW_TRIAL_READY cycle=",world._mining_cycle_duration()," web=",OS.has_feature("web"))
 
 func _trial_contact(resource: Dictionary) -> bool:
 	if not playing or motion == null: return false

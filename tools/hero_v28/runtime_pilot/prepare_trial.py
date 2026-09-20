@@ -39,8 +39,23 @@ def stage(repo, candidate, tasks, target):
     project = (target / "project.godot").read_text()
     project = project.replace('config/name="Ever Deeper"', 'config/name="Ever Deeper — Worn-hakketest"')
     project = project.replace('config/version="1.0.0-rc.1"', 'config/version="1.0.0-dev.13-worn-trial.1"')
+    project = project.replace('run/main_scene="res://scenes/main/main.tscn"', 'run/main_scene="res://scripts/dev/native_trial/entry.tscn"')
+    project += '\n[native_worn_trial]\n\ninteractive=true\n'
     project = project.replace('Ever Deeper- Godot Production Port', 'Ever Deeper- Native Worn Trial').replace('Ever Deeper- Godot Development Port', 'Ever Deeper- Native Worn Trial')
     (target / "project.godot").write_text(project)
+    (modules / "entry.tscn").write_text('[gd_scene load_steps=2 format=3]\n\n[ext_resource type="Script" path="res://scripts/dev/native_trial/capture_motion.gd" id="1"]\n\n[node name="WornTrial" type="Node"]\nscript = ExtResource("1")\n')
+    # Main initializes persistence again in its _ready. Redirect that first
+    # load as well, including Web where the custom desktop user-dir is ignored.
+    main_path = target / "scripts/main.gd"
+    main_source = main_path.read_text()
+    old_path = '"user://ever_deeper_dev_run_v3.sav"'
+    assert main_source.count(old_path) == 1
+    main_path.write_text(main_source.replace(old_path, '"user://native-flow-trial/isolated-save.json"'))
+    for relative in ("scripts/progression/achievement_service.gd", "scripts/audio/audio_director.gd", "scripts/state/run_state.gd"):
+        isolated = target / relative
+        isolated.write_text(isolated.read_text().replace('"user://ever_deeper_', '"user://native_worn_trial_'))
+    tutorial = target / "scripts/ui/quick_tutorial.gd"
+    tutorial.write_text(tutorial.read_text().replace('"user://quick_tutorial', '"user://native_worn_trial_tutorial'))
     presets = (target / "export_presets.cfg").read_text()
     presets = presets.replace('include_filter="assets/hero/dad/*/manifest.json"', 'include_filter="assets/hero/dad/*/manifest.json,assets/native-flow-trial/*,assets/native-flow-trial/component-response/*,assets/native-flow-trial/transfer-albedo/*"')
     (target / "export_presets.cfg").write_text(presets)

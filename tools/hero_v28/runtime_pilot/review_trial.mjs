@@ -19,18 +19,26 @@ const browser = await chromium.launch({headless:true, executablePath:chrome,
   args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 const context = await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:2,hasTouch:true});
 const page = await context.newPage();
+await page.addInitScript(()=>Object.defineProperty(window,'EVER_DEEPER_TRIAL',{get:()=>window.EVER_DEEPER_TRIAL_JSON?JSON.parse(window.EVER_DEEPER_TRIAL_JSON):undefined}));
 page.setDefaultTimeout(120000);
 const messages=[],checks=[];
 const timer=setInterval(()=>page.screenshot({path:path.join(output,'latest.png')}).catch(()=>{}),20000);
 page.on('console', m=>{messages.push(m.type()+': '+m.text());fs.writeFileSync(path.join(output,'console.log'),messages.join('\n'));});
-page.on('pageerror', e=>messages.push('PAGEERROR: '+e.message));
+page.on('pageerror', e=>{
+  messages.push('PAGEERROR: '+e.message);
+  fs.writeFileSync(path.join(output,'console.log'),messages.join('\n'));
+  page.evaluate(message=>window.__TRIAL_ERROR=message,e.message).catch(()=>{});
+});
 const state = ()=>page.evaluate(()=>window.EVER_DEEPER_TRIAL);
 async function capture(name){await page.screenshot({path:path.join(output,name+'.png')});const s=await state();checks.push({name,state:s});console.log(name,JSON.stringify(s));if(s?.failed)throw new Error('Native pose rejected');}
 try {
   await page.goto('http://127.0.0.1:'+server.address().port,{timeout:120000,waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>window.EVER_DEEPER_TRIAL?.ready,{},{timeout:240000});
+  await page.waitForFunction(()=>window.EVER_DEEPER_TRIAL?.ready || window.__TRIAL_ERROR,{},{timeout:240000});
+  const startupError=await page.evaluate(()=>window.__TRIAL_ERROR);
+  if(startupError)throw new Error(startupError);
   await capture('01-ready');
   let before=await state();
+  if(before.save_path!=="user://native-flow-trial/isolated-save.json")throw new Error('Trial save is not isolated');
   await page.keyboard.down('Space');
   await page.waitForFunction(h=>window.EVER_DEEPER_TRIAL?.failed || window.EVER_DEEPER_TRIAL?.hp17<h-20,before.hp17);
   await capture('02-held-mining');
@@ -63,9 +71,10 @@ try {
   await capture('06-touch-walk');
   const errors=messages.filter(m=>/SCRIPT ERROR|Parse Error|PAGEERROR:|Assertion failed|^error: (?!Failed to load resource.*favicon)/.test(m));
   if(errors.length)throw new Error(errors.join('\n'));
-  fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:true,browser:browser.version(),viewport:[844,390],dpr:2,pck_sha256:createHash('sha256').update(fs.readFileSync(path.join(web,'index.pck'))).digest('hex'),checks,physical_device:false},null,2));
+  const files=Object.fromEntries(fs.readdirSync(web).filter(n=>n.startsWith('index.')).map(n=>{const bytes=fs.readFileSync(path.join(web,n));return [n,{size:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')}];}));
+  fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:true,browser:browser.version(),viewport:[844,390],dpr:2,pck_sha256:files['index.pck'].sha256,files,checks,physical_device:false},null,2));
 } catch(e) {
   await page.screenshot({path:path.join(output,'failure.png')}).catch(()=>{});
-  fs.writeFileSync(path.join(output,'failure.json'),JSON.stringify({error:String(e),state:await state().catch(()=>null),checks},null,2));
+  fs.writeFileSync(path.join(output,'failure.json'),JSON.stringify({error:String(e),state:await state().catch(()=>null),checks,messages},null,2));
   throw e;
 } finally {clearInterval(timer);await browser.close();server.close();}
