@@ -105,6 +105,9 @@ func _solve_chain(b: Dictionary,a: Dictionary,c: Dictionary,w: float,family: Str
 	var axis := (current[2]-current[0]).normalized()
 	var frame := Basis(_frame(ca).get_rotation_quaternion().slerp(_frame(cb).get_rotation_quaternion(),w))
 	var radial := Basis(Quaternion(frame.x,axis)) * frame.y
+	# Quaternion transport can leave a small axial component at fractional
+	# poses. The rigid two-link construction requires a unit perpendicular.
+	radial = (radial-axis*radial.dot(axis)).normalized()
 	var safe := clampf(distance,absf(lengths.x-lengths.y)+.000001,lengths.x+lengths.y-.000001)
 	var along := (safe*safe+lengths.x*lengths.x-lengths.y*lengths.y)/(2*safe)
 	current[1] = current[0]+axis*along+radial*sqrt(maxf(0,lengths.x*lengths.x-along*along))
