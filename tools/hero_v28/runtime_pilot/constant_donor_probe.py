@@ -3,7 +3,7 @@
 Run ``bake`` inside Blender with prepared.blend loaded. Run ``compare`` with
 ordinary Python + NumPy. See CONSTANT-DONOR-PROBE.md for isolated commands.
 """
-from contextlib import contextmanager
+from contextlib import contextmanager, ExitStack
 import argparse
 import hashlib
 import json
@@ -206,10 +206,10 @@ def constant_material_audit(material):
             "unused_nodes": [other.name for other in tree.nodes if other not in (node, output)]}
 
 
-def classify_sources(sources):
+def classify_sources(sources, material_checker=constant_material_audit):
     materials = {slot.material for source in sources for slot in source.material_slots
                  if slot.material is not None}
-    audits = {material: constant_material_audit(material) for material in materials}
+    audits = {material: material_checker(material) for material in materials}
     accepted, rejected = [], []
     for source in sources:
         slots = list(source.material_slots)
@@ -225,7 +225,8 @@ def get_array(collection, property_name, width, dtype):
     return data.reshape((-1, width)) if width > 1 else data
 
 
-def evaluated_piece(source, depsgraph, material_map, materials):
+def evaluated_piece(source, depsgraph, material_map, materials,
+                    material_checker=constant_material_audit, object_coordinates=False):
     """Copy evaluated polygons/loops unchanged, then transform their geometry.
 
     Building triangle polygons here changes Blender's smooth-normal fans. Even
@@ -279,7 +280,7 @@ def evaluated_piece(source, depsgraph, material_map, materials):
             # Do not link evaluated/COW material IDs into a new main-database mesh.
             if material is not None:
                 material = material.original
-            if material is None or not constant_material_audit(material)["eligible"]:
+            if material is None or not material_checker(material)["eligible"]:
                 raise ValueError("Evaluated material no longer qualifies: " + source.name)
             key = material.as_pointer()
             if key not in material_map:
@@ -292,6 +293,7 @@ def evaluated_piece(source, depsgraph, material_map, materials):
         material_indices = np.asarray(slot_mapping, dtype=np.int32)[material_indices]
         smooth = get_array(mesh.polygons, "use_smooth", 1, np.bool_)
         return {
+            "object_coordinates": local.astype(np.float32) if object_coordinates else None,
             "positions": positions32, "loops": loops, "loop_edges": loop_edges,
             "edges": edges, "edge_sharp": edge_sharp,
             "loop_starts": loop_starts, "loop_counts": loop_counts,
@@ -317,7 +319,8 @@ def canonical_tessellation(triangles, polygons):
     return rows[np.lexsort((rows[:, 3], rows[:, 2], rows[:, 1], rows[:, 0]))]
 
 
-def create_merged_donor(scene, sources):
+def create_merged_donor(scene, sources, material_checker=constant_material_audit,
+                        object_coordinate_attribute=None):
     """Create an unparented static helper; do not modify or weld native meshes."""
     import bpy
     from mathutils import Matrix
@@ -348,7 +351,8 @@ def create_merged_donor(scene, sources):
     depsgraph = bpy.context.evaluated_depsgraph_get()
     material_map, materials, pieces = {}, [], []
     for source in sources:
-        pieces.append(evaluated_piece(source, depsgraph, material_map, materials))
+        pieces.append(evaluated_piece(source, depsgraph, material_map, materials,
+                                     material_checker, object_coordinate_attribute is not None))
     vertex_offset = edge_offset = loop_offset = polygon_offset = 0
     for piece in pieces:
         piece["loops"] += vertex_offset
@@ -397,6 +401,14 @@ def create_merged_donor(scene, sources):
             raise ValueError("Merged evaluated surface required mesh repair; refusing bake")
         mesh.normals_split_custom_set(normals)
         mesh.update()
+        if object_coordinate_attribute is not None:
+            coordinates = np.concatenate([piece["object_coordinates"] for piece in pieces])
+            if not np.isfinite(coordinates).all():
+                raise ValueError("Nonfinite original object coordinates")
+            attribute = mesh.attributes.new(object_coordinate_attribute, "FLOAT_VECTOR", "POINT")
+            attribute.data.foreach_set("vector", coordinates.ravel())
+            if not np.array_equal(get_array(attribute.data, "vector", 3, np.float32), coordinates):
+                raise ValueError("Original object coordinate attribute changed")
         actual_normals = get_array(mesh.corner_normals, "vector", 3, np.float32)
         normal_error = float(np.max(np.abs(actual_normals - normals)))
         if normal_error > NORMAL_TOLERANCE:
@@ -491,7 +503,15 @@ def bake_probe(args):
                       and bool(obj.get(SOURCE_TAG, False))), key=lambda obj: obj.name)
     # Validate the original live shaders before any EMIT bake override.
     opacity_audit = opaque_sources_audit(sources)
-    eligible, rejected, material_audit = classify_sources(sources)
+    strategy = getattr(args, "donor_strategy", "constant")
+    strategy_module = None
+    if strategy == "object_coordinates":
+        import object_coordinate_donors as strategy_module
+        eligible, rejected, material_audit = classify_sources(sources, strategy_module.material_audit)
+    elif strategy == "constant":
+        eligible, rejected, material_audit = classify_sources(sources)
+    else:
+        raise ValueError("Unknown donor strategy: " + strategy)
     eligible_by_name = {obj.name: obj for obj in eligible}
     names = sorted(eligible_by_name) if args.scope == "full" else list(args.donor or SAMPLE_NAMES)
     if len(names) != len(set(names)) or len(names) < 2:
@@ -513,9 +533,10 @@ def bake_probe(args):
         "size": args.size, "samples": args.samples, "threads": args.threads,
         "seed": 0, "cage_extrusion": .018, "max_ray_distance": .040,
         "margin": 8, "blender": bpy.app.version_string,
-        "float_image_buffer": True, "persistent_data": False, "device": "CPU",
+        "float_image_buffer": True, "persistent_data": bool(getattr(args, "persistent_data", False)), "device": "CPU",
         "blender_build": bpy.app.build_hash.decode("ascii"),
-        "output_contract": RGB_OUTPUT_CONTRACT,
+        "output_contract": RGB_OUTPUT_CONTRACT, "donor_strategy": strategy,
+        "strategy_sha256": digest(strategy_module.__file__) if strategy_module else None,
     }
     report = {"approved": False, "status": "preparing", "mode": args.mode,
               "signature": signature, "eligible_sources": len(eligible),
@@ -533,7 +554,6 @@ def bake_probe(args):
     material = bpy.data.materials.new("REVIEW_probe_target")
     material.use_nodes = True
     image = None
-    restorers = []
     try:
         target.data = working_mesh
         working_mesh.materials.clear()
@@ -559,10 +579,11 @@ def bake_probe(args):
         scene.cycles.use_animated_seed = False
         scene.render.threads_mode = "FIXED"
         scene.render.threads = args.threads
-        scene.render.use_persistent_data = False
-        context = merged_donors(scene, group) if args.mode == "merged" else unchanged_donors(group)
+        scene.render.use_persistent_data = bool(getattr(args, "persistent_data", False))
+        merge_context = strategy_module.merged_donors if strategy_module else merged_donors
+        context = merge_context(scene, group) if args.mode == "merged" else unchanged_donors(group)
         build_start = time.perf_counter()
-        with context as (helper, stats):
+        with context as (helper, stats), ExitStack() as restorers:
             report["donor_build_seconds"] = time.perf_counter() - build_start
             report["merge"] = stats
             donors = other_selected + ([helper] if helper is not None else group)
@@ -576,9 +597,9 @@ def bake_probe(args):
             if args.channel in ("albedo", "roughness", "metallic", "cloth"):
                 sys.path.insert(0, str(Path(__file__).resolve().parent))
                 from export_runtime import source_material_override
-                for source_material in sorted({slot.material for obj in sources for slot in obj.material_slots
+                for source_material in sorted({slot.material for obj in sources + donors for slot in obj.material_slots
                                                if slot.material is not None}, key=lambda item: item.name):
-                    restorers.append(source_material_override(source_material, args.channel))
+                    restorers.callback(source_material_override(source_material, args.channel))
             report["status"] = "baking"
             write_json(report_path, report)
             print("CONSTANT_DONOR_PROBE_START", args.mode, args.channel, len(donors), flush=True)
@@ -614,8 +635,6 @@ def bake_probe(args):
         report["error"] = str(error)
         raise
     finally:
-        for restore in reversed(restorers):
-            restore()
         target.data = original_mesh
         target.active_material_index = original_active_material
         bpy.data.meshes.remove(working_mesh)
@@ -721,6 +740,7 @@ def main():
     bake.add_argument("--size", type=int, default=256)
     bake.add_argument("--samples", type=int, default=8)
     bake.add_argument("--threads", type=int, default=2)
+    bake.add_argument("--donor-strategy", choices=("constant", "object_coordinates"), default="constant")
     compare = subparsers.add_parser("compare")
     compare.add_argument("separate", type=Path)
     compare.add_argument("merged", type=Path)

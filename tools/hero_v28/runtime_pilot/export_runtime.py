@@ -222,7 +222,8 @@ def source_material_override(material, channel):
     principled = next(n for n in nodes if n.type == "BSDF_PRINCIPLED")
     emission = nodes.new("ShaderNodeEmission")
     if channel == "cloth":
-        value = 1. if material.name in ("v19 woven forest workwear", "v19 soft olive sleeve lining") else 0.
+        source_name = material.get("native_donor_source_material", material.name)
+        value = 1. if source_name in ("v19 woven forest workwear", "v19 soft olive sleeve lining") else 0.
         emission.inputs["Color"].default_value = (value, value, value, 1.)
     else:
         source = principled.inputs[{"albedo":"Base Color", "roughness":"Roughness", "metallic":"Metallic"}[channel]]
