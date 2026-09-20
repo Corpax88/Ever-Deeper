@@ -1,3 +1,7 @@
+Latest handoff requested by Mats: [20 September Worn browser candidate](docs/TESTMILJO-HANDOFF.md).
+Exact exported candidate and actual browser evidence are saved; eight impacts worked, but the browser suite timed out. Not published.
+Read this newest handoff before the historical recovery entries below. Preserve v28/study20 and the remaining visual/control gates.
+
 Current recovery: [20 September continuity and retained source](docs/premium-polish/continuity-20260920.md).
 Workspace pruning removed the latest uncommitted tests and fixes; do not count them as saved.
 Approved study20 and21 are retained. Ordinary Flow20 gameplay remains disabled. Published baseline is DEV13.

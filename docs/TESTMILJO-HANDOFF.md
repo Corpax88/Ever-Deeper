@@ -1,3 +1,67 @@
+# Current handoff — 20 September 2026, user requested a new chat
+
+Mats explicitly requested a new chat. Stop at this saved checkpoint; do not publish merely to complete the handoff. On continuation the task remains a controlled playable Worn trial, not full game/LIVE adoption.
+
+## Exact source and retained bytes
+
+Runtime/test/publisher source is aa4362aaeff03be9013a1da3f090634f7f0b35fc, tree e378452ac5e0bb888c5ea927ec0ca1ab629b54b8, branch codex/hero-loop-flow-20260918.
+This handoff commit changes documentation only.
+Saved private file Ever-Deeper-Fortsett-her.md version96 contains full recovery instructions and prior decisions.
+Saved exact candidate/evidence: Ever-Deeper-Worn-nettleser-kontrollpunkt-20260920.zip, 308813023 bytes, SHA256 110aa9f714145a6e6e457c122464bbed3ea98952dfc654721ee13031f34f47bd.
+All16 archive members were CRC-checked and data-member hashes rechecked after closure.
+web-g/ contains all9 actual exported web files. index.pck is327093776 bytes, SHA256 1bce497a6858ecda944152bfa9ba9d98fbd135429a5aa12266ee1ff2666f91dc.
+candidate-g.xdelta is33126284 bytes, SHA256 7fc4f8808c8b342f322cd0e7c37f0c71ae27a21440ea28e4d40a659496164111.
+Round-trip reconstruction against pinned DEV13 PCK 5016e16791f51790f7a10dfabe0719b308de82a80627aca8d740b0e355e6cdc3 was executed and yielded the exact g PCK hash.
+
+## Actual final browser result: incomplete, not passing
+
+Chromium151.0.7922.34, Linux/headless ANGLE SwiftShader, Godot4.7.2, CSS844x390/DPR2.
+01-ready.png is an actual1688x780 game screenshot. Native loading, isolated save path and Space mining worked.
+The last captured state has65frames,8impacts, ore17 HP500->468, failed=false and errors=[].
+The harness nonetheless ended with page.waitForFunction Timeout120000ms during held mining.
+failure.json, telemetry.json, console and run logs are retained unedited. Only01-ready is a completed checkpoint; no passed report.json.
+Walking, release, reset, touch mining and touch joystick are not yet fully verified.
+The final HP was already below the awaited480 threshold. rAF polling starvation / periodic screenshot stalls are hypotheses, not proven root cause.
+Remove periodic screenshots, prefer bounded time-based polling/JSON telemetry and rerun the exact g candidate, preserving actual input/assertions.
+Do not repeatedly restart heavy renderers because software rendering looks stalled. One heavy engine at a time.
+This is not physical-device, sustained50FPS, normal-speed motion or9/10 evidence.
+
+## Already solved; do not reopen blindly
+
+Release web uses a real entry.tscn/Node, not ignored --script or an empty main scene.
+Release-stripped side-effect asserts were removed. Exact native GLB/PNG are raw-loaded and hash checked; no original Blender is published.
+Direct window.EVER_DEEPER_TRIAL_JSON telemetry works. g hides DEV and companion HUD.
+Staged main, state, achievements, audio and quick-tutorial save paths are isolated; ordinary game is unchanged.
+Native capture c at175915ed53b0486fa12c056fa991bed995b5dbb8 passed120actual game+hero frames, all12mechanical fields matched baseline, and contacts22/55/92 were pixel-identical to settled references.
+Independent critic accepted only a bounded Worn interactive trial. Exact v28/study20, support-hand release and ordinary flow_graph_enabled=false remain protected.
+Full c evidence is saved in Ever-Deeper-native-spilltest-20260920.zip; native material and motion archives are identified in Ever-Deeper-Fortsett-her.md.
+
+## Restore and continue
+
+Workspace pruning removed the local checkout, uncommitted payload/bundle and diagnostic harness edits, not committed aa436 source.
+The new exact web/delta/evidence archive preserves the costly candidate. Rebuild metadata/43 delta parts from those bytes when needed.
+Some unreferenced payload Git blobs were uploaded; no complete payload commit or review.json exists. Do not assume upload completion.
+No new DEV/LIVE has been published. Existing DEV13/LIVE remain the baseline.
+.github/native-flow-trial/publish.py and its workflow are saved in aa436, with save-isolation and all9served-file evidence binding fixed.
+Before publication: complete all6control checkpoints, inspect final g images with an independent critic, bind exact review/bundle/evidence and preserve all18existing files; verify27files afterward.
+Planned additive destination dev/worn is not currently claimed live.
+
+Recover branch and npm ci. Chromium151 executable previously:
+/tmp/ever-deeper-runtime-20260920/chrome151/chrome-headless-shell-linux64/chrome-headless-shell
+Official download:
+https://storage.googleapis.com/chrome-for-testing-public/151.0.7922.34/linux64/chrome-headless-shell-linux64.zip
+Chromium134 crashed with this Godot WASM; do not repeat that route.
+Run one corrected harness with:
+node tools/hero_v28/runtime_pilot/review_trial.mjs /absolute/web-g /absolute/fresh-review /absolute/chrome-headless-shell
+Godot4.7.2 ed1daf0bf and matching webtemplates were used; Blender4.5.3 only for necessary native regeneration.
+Local /tmp paths survived this pruning but are not durable identities. Old sessions62396/279 are gone; the browser test closed with timeout.
+Use the established Mac graphical route from game-test-environment if needed, without inventing credentials or hardware.
+Short Norwegian updates, maximum5lines. FPS stays paused.
+
+---
+
+Historical environment records follow.
+
 Latest verified run: [21 exact entry/brake](premium-polish/hero-transitions-21-20260919.md).
 Source restored to /workspace/scratch/c58aae856e15/ever-deeper on codex/hero-loop-flow-20260918.
 Original native/runtime paths under/tmp survived and were SHA/version/graphical checked.
