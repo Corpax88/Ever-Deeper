@@ -1,3 +1,6 @@
+Current Work checkpoint: [complete Worn j payload and active Mac QA](docs/TESTMILJO-HANDOFF.md).
+All43 exact payload parts are committed. Inspect run35543977206 before repeating any export or upload.
+
 Latest user-requested continuation: [Worn j after repeated chat interruption](docs/TESTMILJO-HANDOFF.md).
 Three captures retained; reset/touch unfinished. 24 of43 delta parts confirmed; no publication.
 Read the latest handoff and avoid routing large binary payloads through conversation tool output.
