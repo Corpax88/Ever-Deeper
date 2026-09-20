@@ -4,9 +4,11 @@ extends "res://tools/review_native_rig.gd"
 func _reference_poses() -> void:
 	var world_environment: Environment
 	var fill: Light3D
+	var key: Light3D
 	for child in rig.viewport.get_children():
 		if child is WorldEnvironment: world_environment = child.environment
 		if child is Light3D and child.name == "soft cool fill": fill = child
+		if child is Light3D and child.name == "warm large key": key = child
 	assert(world_environment != null and fill != null)
 	var cases: Array[Dictionary] = [
 		{"id": "original_settings", "exposure": 1.0, "contrast": 1.25, "fill_specular": 1.0},
@@ -20,11 +22,18 @@ func _reference_poses() -> void:
 			{"id": "balanced_key_shadow", "exposure": .6666667, "contrast": 1.5, "fill_specular": 1.0},
 			{"id": "balanced_key_shadow_low_fill_specular", "exposure": .6666667, "contrast": 1.5, "fill_specular": .15},
 		]
+	elif lighting_profile == "native_key_shadow":
+		cases = [
+			{"id": "key_075", "exposure": .6666667, "contrast": 1.5, "fill_specular": 1.0, "key_energy": .75},
+			{"id": "key_150", "exposure": .6666667, "contrast": 1.5, "fill_specular": 1.0, "key_energy": 1.5},
+			{"id": "key_300", "exposure": .6666667, "contrast": 1.5, "fill_specular": 1.0, "key_energy": 3.0},
+		]
 	for calibration in cases:
 		world_environment.tonemap_exposure = float(calibration.exposure)
 		world_environment.tonemap_agx_contrast = float(calibration.contrast)
 		world_environment.adjustment_enabled = calibration.id in ["original_settings", "fill_diffuse_only"]
 		fill.light_specular = float(calibration.fill_specular)
+		if calibration.has("key_energy"): key.light_energy = float(calibration.key_energy)
 		for cell in [0, 12]:
 			var id: String = "%s_cell_%02d" % [calibration.id, cell]
 			rig.set_reference_pose("mine", float(cell)/50.0)

@@ -57,7 +57,7 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	if clip_range.x <= 0.0 or clip_range.y <= clip_range.x: return false
 	if import_flags not in [0, 8, 64, 72]: return false
 	if raster_size not in [200, 400]: return false
-	if lighting_profile not in ["legacy", "native_soft", "native_area", "native_balanced"]: return false
+	if lighting_profile not in ["legacy", "native_soft", "native_area", "native_balanced", "native_key_shadow"]: return false
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(candidate.path_join("motion.json")))
 	if not parsed is Dictionary: return false
 	data = parsed
@@ -179,7 +179,7 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 		environment.environment.ambient_light_energy = .23
 		environment.environment.adjustment_enabled = true
 		environment.environment.adjustment_contrast = 1.15
-	if lighting_profile in ["native_area", "native_balanced"]:
+	if lighting_profile in ["native_area", "native_balanced", "native_key_shadow"]:
 		# Bounded Compatibility diagnostic: real area highlights plus dynamic
 		# cavity shading. Area shadows are unsupported in this renderer.
 		environment.environment.ssao_enabled = true
@@ -187,10 +187,11 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 		environment.environment.ssao_intensity = 1.0
 		environment.environment.ssao_light_affect = .5
 		environment.environment.ssao_ao_channel_affect = .25
-	if lighting_profile == "native_balanced":
+	if lighting_profile in ["native_balanced", "native_key_shadow"]:
 		environment.environment.adjustment_enabled = false
 		environment.environment.tonemap_exposure = .5
 		environment.environment.tonemap_agx_contrast = 1.5
+		if lighting_profile == "native_key_shadow": environment.environment.tonemap_exposure = 2.0/3.0
 	environment.environment.tonemap_mode = Environment.TONE_MAPPER_AGX
 	viewport.add_child(environment)
 	# Native area-light positions/colors. Shadowless omni approximation is an
@@ -219,7 +220,25 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 
 
 func _light(native_position: Vector3, color: Color, energy: float, label: String) -> void:
-	if lighting_profile in ["native_area", "native_balanced"]:
+	if lighting_profile == "native_key_shadow" and label == "warm large key":
+		# Finite-angle distant-light diagnostic supplies the key's moving shadow.
+		# AreaLight3D does not support shadows in the Compatibility renderer.
+		var key: DirectionalLight3D = DirectionalLight3D.new()
+		key.name = label
+		key.light_color = color.linear_to_srgb()
+		key.light_energy = 1.5
+		key.light_angular_distance = rad_to_deg(2.0*atan(1.0/native_position.distance_to(Vector3(0,0,1))))
+		key.shadow_enabled = true
+		key.shadow_bias = .02
+		key.shadow_normal_bias = .03
+		key.shadow_blur = 4.0
+		key.directional_shadow_mode = DirectionalLight3D.SHADOW_ORTHOGONAL
+		key.directional_shadow_max_distance = 14.0
+		viewport.add_child(key)
+		key.position = AXIS * native_position
+		key.look_at(AXIS * Vector3(0,0,1))
+		return
+	if lighting_profile in ["native_area", "native_balanced", "native_key_shadow"]:
 		var area: AreaLight3D = AreaLight3D.new()
 		area.name = label
 		var diameter: float = 2.0 if label == "warm large key" else 3.0 if label == "soft cool fill" else 1.7
@@ -277,7 +296,7 @@ func _find_skeleton(node: Node) -> Skeleton3D:
 func _set_material(node: Node, material: Material) -> void:
 	if node is MeshInstance3D:
 		node.material_override = material
-		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if shadow_diagnostic or lighting_profile == "native_soft" else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if shadow_diagnostic or lighting_profile in ["native_soft", "native_key_shadow"] else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		for index in node.mesh.get_surface_count():
 			surface_formats.append(node.mesh.surface_get_format(index))
 	for child in node.get_children(): _set_material(child, material)
