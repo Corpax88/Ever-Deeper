@@ -1,0 +1,36 @@
+name: Verify exact native Worn trial on Mac
+on:
+  push:
+    branches: [codex/hero-loop-flow-20260918]
+    paths: ['.github/native-flow-trial/bundle.json', '.github/workflows/verify-native-worn-trial.yml']
+permissions:
+  contents: read
+concurrency:
+  group: native-worn-qa-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  browser:
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Restore exact candidate and graphical browser
+        run: |
+          brew install xdelta
+          python3 .github/native-flow-trial/assemble_candidate.py "$RUNNER_TEMP/native-worn"
+          npm ci --ignore-scripts
+          npx playwright install chromium
+      - name: Verify actual rendered controls
+        run: node tools/hero_v28/runtime_pilot/review_trial.mjs "$RUNNER_TEMP/native-worn/web" "$RUNNER_TEMP/worn-review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-worn-mac-browser
+          path: ${{ runner.temp }}/worn-review
+          retention-days: 30
+          if-no-files-found: error
