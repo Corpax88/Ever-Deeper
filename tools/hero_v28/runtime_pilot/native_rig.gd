@@ -42,9 +42,11 @@ var maximum_unreachable: float = 0.0
 var maximum_air_retarget: float = 0.0
 var reach_detail: Dictionary = {}
 var transitions: int = 0
+var material_view: String = "baked"
 
 
 func configure(candidate: String, pose_only: bool = false) -> bool:
+	if material_view not in ["baked", "clay"]: return false
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(candidate.path_join("motion.json")))
 	if not parsed is Dictionary: return false
 	data = parsed
@@ -90,6 +92,8 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	skeleton = _find_skeleton(actor)
 	if skeleton == null: return false
 	var material: StandardMaterial3D = StandardMaterial3D.new()
+	# Preserve the exported native material's authored double-sided state.
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.albedo_texture = _texture(candidate.path_join("albedo.png"))
 	material.normal_enabled = true
 	material.normal_texture = _texture(candidate.path_join("normal.png"))
@@ -103,6 +107,15 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	material.metallic_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_BLUE
 	material.metallic = 1.0
 	material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	if material_view == "clay":
+		material.albedo_texture = null
+		material.normal_enabled = false
+		material.ao_enabled = false
+		material.roughness_texture = null
+		material.metallic_texture = null
+		material.albedo_color = Color(.5, .5, .5)
+		material.roughness = .8
+		material.metallic = 0.0
 	_set_material(actor, material)
 	mapping = skeleton.global_transform.affine_inverse() * AXIS
 	mapping_inverse = mapping.affine_inverse()

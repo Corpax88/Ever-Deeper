@@ -4,6 +4,7 @@ const NativeRig = preload("res://tools/hero_v28/runtime_pilot/native_rig.gd")
 var candidate: String
 var output: String
 var mode: String = "poses"
+var material_view: String = "baked"
 var main: Node
 var world: Node
 var player: Node
@@ -28,6 +29,7 @@ func _run() -> void:
 		if arg.begins_with("--candidate="): candidate = arg.trim_prefix("--candidate=")
 		elif arg.begins_with("--output="): output = arg.trim_prefix("--output=")
 		elif arg.begins_with("--mode="): mode = arg.trim_prefix("--mode=")
+		elif arg.begins_with("--material-view="): material_view = arg.trim_prefix("--material-view=")
 		elif arg.begins_with("--cost-seconds="): cost_seconds = maxf(5.0, float(arg.trim_prefix("--cost-seconds=")))
 	if not candidate.is_absolute_path() or not output.is_absolute_path() or mode not in ["poses", "motion", "cost"]:
 		push_error("Require absolute native --candidate/--output and poses|motion|cost --mode")
@@ -47,6 +49,11 @@ func _run() -> void:
 		quit(3)
 		return
 	rig = NativeRig.new()
+	if material_view != "baked" and mode != "poses":
+		push_error("Material diagnostics require isolated poses")
+		quit(3)
+		return
+	rig.material_view = material_view
 	if mode == "poses": root.add_child(rig)
 	else: player.visual.add_child(rig)
 	if not rig.configure(candidate):
@@ -213,6 +220,7 @@ func _finish() -> void:
 		source[path] = FileAccess.get_sha256("res://" + path)
 	FileAccess.open(output.path_join("native-rig-review.json"), FileAccess.WRITE).store_string(JSON.stringify({
 		"mode": mode, "passed": failures.is_empty(), "failures": failures, "stages": stages, "samples": samples,
+		"material_view": material_view, "material_diagnostic": material_view != "baked",
 		"rendered": true, "production_changed": false, "physical_iphone": false,
 		"direction": String(rig.data.direction), "action": String(rig.data.get("action", "legacy_native")),
 		"reference_only": bool(rig.data.get("reference_only", false)), "candidate_files_verified": true,
