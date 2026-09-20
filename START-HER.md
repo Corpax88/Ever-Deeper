@@ -1,3 +1,8 @@
+Latest user-requested continuation: [corrected Worn candidate j](docs/TESTMILJO-HANDOFF.md).
+Runtime source e32a03e620913a76f3bee9083b2e9b1d66eef972 fixes fractional limb lengths.
+Exact export j is retained; held mining passes, final controls/visual review remain incomplete. No publication.
+Read this short current handoff before the older history below.
+
 Latest handoff requested by Mats: [20 September Worn browser candidate](docs/TESTMILJO-HANDOFF.md).
 Exact exported candidate and actual browser evidence are saved; eight impacts worked, but the browser suite timed out. Not published.
 Read this newest handoff before the historical recovery entries below. Preserve v28/study20 and the remaining visual/control gates.

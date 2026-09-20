@@ -1,200 +1,53 @@
-# Current handoff — 20 September 2026, user requested a new chat
+# Ever-Deeper — fortsett fra korrigert Worn-test j
 
-Mats explicitly requested a new chat. Stop at this saved checkpoint; do not publish merely to complete the handoff. On continuation the task remains a controlled playable Worn trial, not full game/LIVE adoption.
+Mats ba uttrykkelig om ny chat etter feilen «Denne samtalen er for lang til å fortsette».
+Dette er et trygt kontrollpunkt, ikke en publisering. Ved fortsettelse gjelder fortsatt:
+**Få den avgrensede Worn-testen spilleklar og lever en verifisert lenke.**
+Les denne korte oppdateringen først. Eldre detaljhistorikk finnes i versjon96 av denne filen og i Git-dokumentasjonen.
 
-## Exact source and retained bytes
+## Kilde og retting som er lagret
+- Repo: `Corpax88/Ever-Deeper`; gren `codex/hero-loop-flow-20260918`.
+- Korrigert runtime/harness: `e32a03e620913a76f3bee9083b2e9b1d66eef972`; tre `f1712d0e299b98030d4ad898c97b837d19235cc4`. Remote-grenen er kontrollert. Senere dokumentasjonscommits er ikke en ny spillkandidat.
+- Gammel g-kandidat feilet i run i ved sjette treff/frame52: `Rejected disconnected armR segment 0 error 0.0001066327095`. Den skal ikke publiseres.
+- `_solve_chain` manglet re-projisering/normalisering av radialvektoren etter quaternion-transport. Én linje Gram–Schmidt retter dette; grensen0.0001 er beholdt.
+- Samme35 007 stillinger før/etter: største lengdeavvik0.0001285672 →0.0000001788; alle50 forfatterlagde matriser er uendret, avvik0. Testen avviser også ikke-finite verdier. Dette reproduserer feilklassen, ikke bevis for en bestemt antiparallell årsak.
+- Godkjent v28, studie20, støttehåndslipp, modell og materialer beholdes. Ordinær `flow_graph_enabled=false`; FPS-arbeid er fortsatt pauset.
 
-Runtime/test/publisher source is aa4362aaeff03be9013a1da3f090634f7f0b35fc, tree e378452ac5e0bb888c5ea927ec0ca1ab629b54b8, branch codex/hero-loop-flow-20260918.
-This handoff commit changes documentation only.
-Saved private file Ever-Deeper-Fortsett-her.md version96 contains full recovery instructions and prior decisions.
-Saved exact candidate/evidence: Ever-Deeper-Worn-nettleser-kontrollpunkt-20260920.zip, 308813023 bytes, SHA256 110aa9f714145a6e6e457c122464bbed3ea98952dfc654721ee13031f34f47bd.
-All16 archive members were CRC-checked and data-member hashes rechecked after closure.
-web-g/ contains all9 actual exported web files. index.pck is327093776 bytes, SHA256 1bce497a6858ecda944152bfa9ba9d98fbd135429a5aa12266ee1ff2666f91dc.
-candidate-g.xdelta is33126284 bytes, SHA256 7fc4f8808c8b342f322cd0e7c37f0c71ae27a21440ea28e4d40a659496164111.
-Round-trip reconstruction against pinned DEV13 PCK 5016e16791f51790f7a10dfabe0719b308de82a80627aca8d740b0e355e6cdc3 was executed and yielded the exact g PCK hash.
+## Eksakt ny webkandidat j — ferdig eksportert, ikke ferdig godkjent
+- Nytt arkiv: `Ever-Deeper-Worn-rettet-kontrollpunkt-20260920.zip`.
+- Arkiv308443351 byte; SHA256 `1b467af733067bf27f25a5eb0d348739eabd606b8922a5015a6187936d9fea12`.
+- `web-j/index.pck`:327093712 byte; SHA256 `74db0719dc5d151e0ad9491e9c5e90769c6f85ff8f8db07fe55c4b825277da05`.
+- `candidate-j.xdelta`:33174356 byte; SHA256 `4d77f3bc9aa63a3aceffa1e8123872a261d172e27fdb07055bee920a333fea77`.
+- DEV13 base-PCK SHA256 `5016e16791f51790f7a10dfabe0719b308de82a80627aca8d740b0e355e6cdc3`,221020724 byte. Xdelta-rundtur er utført og gir eksakt j-hash.
+- Alle20 arkivmedlemmer er CRC-kontrollert; alle datamedlemmer er SHA-kontrollert etter lukking. Arkivet inneholder9 webfiler, delta, browser-j-evidens, logg, bundle, delopplastingskvittering og faktisk i-feilbilde. Ingen privat Blender-original.
+- Syv øvrige runtimefiler er byte-identiske med DEV13. PCK og HTML er nye. Ingen ny eksport trengs for videre testing av j.
 
-## Actual final browser result: incomplete, not passing
+## Siste observerte kontroll — ufullstendig, ingen bestått sluttrapport
+Chromium151.0.7922.34/Linux/ANGLE SwiftShader, Godot4.7.2, CSS844×390, ønsket DPR2.
+CDP-bildene er faktisk844×390; ikke kall dem1688×780. Tilstand før/etter bildet er registrert, men er ikke nøyaktig samme frame.
+- `01-ready` og `02-held-mining` er fullførte bildekontrollpunkter. Sistnevnte: frame65, åtte faktiske treff, HP500→468, ingen native feil.
+- Siste JSON: frame90, ni treff, HP464, x1514.66796875/y1648, `mining=false`, `failed=false`, ingen feil. Tastaturgange er observert.
+- Kjøringen var ved `keyboard-movement-release-stable`; ingen03-gange-capture, reset- eller touch-capture, og ingen `report.json`. Ikke kall hele suite eller slippkontroll bestått.
+- Etter brukerens ny-chat-forespørsel finnes ingen aktiv administrert session53759. Ikke vent på den. Kontrollpunktet er markert ufullstendig.
+- Uavhengig kritiker støtter den numeriske rettingen; endelig j-UI/pose/kontroller er IKKE visuelt godkjent ennå. Ingen9/10, fysisk iPhone-, normalhastighets- eller50FPS-påstand.
 
-Chromium151.0.7922.34, Linux/headless ANGLE SwiftShader, Godot4.7.2, CSS844x390/DPR2.
-01-ready.png is an actual1688x780 game screenshot. Native loading, isolated save path and Space mining worked.
-The last captured state has65frames,8impacts, ore17 HP500->468, failed=false and errors=[].
-The harness nonetheless ended with page.waitForFunction Timeout120000ms during held mining.
-failure.json, telemetry.json, console and run logs are retained unedited. Only01-ready is a completed checkpoint; no passed report.json.
-Walking, release, reset, touch mining and touch joystick are not yet fully verified.
-The final HP was already below the awaited480 threshold. rAF polling starvation / periodic screenshot stalls are hypotheses, not proven root cause.
-Remove periodic screenshots, prefer bounded time-based polling/JSON telemetry and rerun the exact g candidate, preserving actual input/assertions.
-Do not repeatedly restart heavy renderers because software rendering looks stalled. One heavy engine at a time.
-This is not physical-device, sustained50FPS, normal-speed motion or9/10 evidence.
+## Testmiljø og neste konkrete arbeid
+1. Hent gjeldende Git-gren. Les `AGENTS.md`, toppen av `START-HER.md`, `docs/TESTMILJO-HANDOFF.md`, kodekart/kontrollguide og `docs/premium-polish/worn-trial-20260920/` med avgrensede lesninger. Ikke dump hele historikken eller store verktøyregistre i chatten.
+2. Finn nytt arkiv med nøyaktig navn og verifiser manifestet. Gjenbruk `web-j/`. Lokal kopi var `/workspace/scratch/e9847b04c09b/deliverables/`; web og rapporter under `/tmp/ever-deeper-worn-trial-web-j` og `/tmp/ever-deeper-worn-review-j`.
+3. `npm ci --ignore-scripts`. Chrome151: `/tmp/ever-deeper-runtime-20260920/chrome151/chrome-headless-shell-linux64/chrome-headless-shell`; offisiell kilde `https://storage.googleapis.com/chrome-for-testing-public/151.0.7922.34/linux64/chrome-headless-shell-linux64.zip`.
+4. Kjør én motor: `node tools/hero_v28/runtime_pilot/review_trial.mjs /absolute/web-j /absolute/fresh-review /absolute/chrome-headless-shell`. Harness har tidsbasert polling uten periodiske skjermbilder, CDP-capture, faktisk PNG-størrelse, joystickstart(.22,.72), reell reset og stoppkontroller. Linux-rendering bruker flere sekunder per frame; ikke start mange motorer.
+5. Et etablert Mac-alternativ er forberedt som **inaktivt utkast** `docs/premium-polish/worn-trial-20260920/verify-native-worn-trial.draft.yml`. Ingen Mac-jobb ble startet. `.github/native-flow-trial/assemble_candidate.py` er lagret i e32 og rekonstruerer kun QA-bytes; den publiserer ikke. Harness støtter standard Chromium på Mac uten å tvinge SwiftShader. Kjør først når eksakt payload er komplett.
+6. Når alle seks reelle kontrollpunkter består, få en uavhengig kritiker på de faktiske bildene og rapporten. Bevar test-i-feilen som historikk. Ikke erstatt visuelt bevis med numerikk.
 
-## Already solved; do not reopen blindly
+Verifisert Godot4.7.2 (`ed1daf0bf`): `/tmp/ever-deeper-runtime-20260920/godot/Godot_v4.7.2-stable_linux.x86_64`; matchende webtemplates finnes. Den gamle1.7MB-ZIP-en under `/workspace/scratch` er korrupt; ikke bruk den. Ny offisiell74.2MiB-ZIP ble hentet fra godotengine/godot-builds4.7.2-stable og validert.
+Xdelta: `/tmp/ever-deeper-runtime-20260920/xdelta3/usr/bin/xdelta3`.
+Ved nødvendig ny eksport: originale materialdata `/tmp/ever-deeper-native-runtime-matched-20260920`, motion `/tmp/ever-deeper-native-motion-tasks-20260920/tasks.json`; bevarte arkiver heter `Ever-Deeper-native-materialer-20260920.zip` og `Ever-Deeper-bevegelseskobling-20260920.zip`.
 
-Release web uses a real entry.tscn/Node, not ignored --script or an empty main scene.
-Release-stripped side-effect asserts were removed. Exact native GLB/PNG are raw-loaded and hash checked; no original Blender is published.
-Direct window.EVER_DEEPER_TRIAL_JSON telemetry works. g hides DEV and companion HUD.
-Staged main, state, achievements, audio and quick-tutorial save paths are isolated; ordinary game is unchanged.
-Native capture c at175915ed53b0486fa12c056fa991bed995b5dbb8 passed120actual game+hero frames, all12mechanical fields matched baseline, and contacts22/55/92 were pixel-identical to settled references.
-Independent critic accepted only a bounded Worn interactive trial. Exact v28/study20, support-hand release and ordinary flow_graph_enabled=false remain protected.
-Full c evidence is saved in Ever-Deeper-native-spilltest-20260920.zip; native material and motion archives are identified in Ever-Deeper-Fortsett-her.md.
-
-## Restore and continue
-
-Workspace pruning removed the local checkout, uncommitted payload/bundle and diagnostic harness edits, not committed aa436 source.
-The new exact web/delta/evidence archive preserves the costly candidate. Rebuild metadata/43 delta parts from those bytes when needed.
-Some unreferenced payload Git blobs were uploaded; no complete payload commit or review.json exists. Do not assume upload completion.
-No new DEV/LIVE has been published. Existing DEV13/LIVE remain the baseline.
-.github/native-flow-trial/publish.py and its workflow are saved in aa436, with save-isolation and all9served-file evidence binding fixed.
-Before publication: complete all6control checkpoints, inspect final g images with an independent critic, bind exact review/bundle/evidence and preserve all18existing files; verify27files afterward.
-Planned additive destination dev/worn is not currently claimed live.
-
-Recover branch and npm ci. Chromium151 executable previously:
-/tmp/ever-deeper-runtime-20260920/chrome151/chrome-headless-shell-linux64/chrome-headless-shell
-Official download:
-https://storage.googleapis.com/chrome-for-testing-public/151.0.7922.34/linux64/chrome-headless-shell-linux64.zip
-Chromium134 crashed with this Godot WASM; do not repeat that route.
-Run one corrected harness with:
-node tools/hero_v28/runtime_pilot/review_trial.mjs /absolute/web-g /absolute/fresh-review /absolute/chrome-headless-shell
-Godot4.7.2 ed1daf0bf and matching webtemplates were used; Blender4.5.3 only for necessary native regeneration.
-Local /tmp paths survived this pruning but are not durable identities. Old sessions62396/279 are gone; the browser test closed with timeout.
-Use the established Mac graphical route from game-test-environment if needed, without inventing credentials or hardware.
-Short Norwegian updates, maximum5lines. FPS stays paused.
-
----
-
-Historical environment records follow.
-
-Latest verified run: [21 exact entry/brake](premium-polish/hero-transitions-21-20260919.md).
-Source restored to /workspace/scratch/c58aae856e15/ever-deeper on codex/hero-loop-flow-20260918.
-Original native/runtime paths under/tmp survived and were SHA/version/graphical checked.
-Blender4.5.3 rendered24native frames after bounded geometry/temporal review.
-Godot4.7.2/X11/Mesa:126+106actual1696x780frames, both runner0 with completion markers;
-all232mechanical rows match baseline,2hits/8damage per case. Input QA passes.
-Evidence /tmp/ever-deeper21-native-g and /tmp/ever-deeper21-candidate-{interrupt,walk-entry}.
-No physical-device/FPS claim. Protected runtime/assets are unchanged; known player_visual invariant persists.
-
-Previous verified run: [20 held-mining flow](premium-polish/hero-flow-20-20260919.md).
-Godot4.7.2/X11/Mesa: fresh150-frame1696x780 capture, runner0, completion marker, four hits/16damage.
-Verified preserved20 rapid110-frame capture, original native63-frame bank and unchanged gameplay.
-Evidence: /tmp/ever-deeper20-resumed-continuous; original runtime/native paths still work.
-MP4/GIF are encoded to closed temporary files, completely decoded, then atomically installed.
-No physical-device/FPS claim. Input QA passes; the known player_visual.gd invariant mismatch remains.
-
-Previous verified run: [19C transition test](premium-polish/hero-transitions-19-20260919.md).
-Blender4.5.3:13native bridge images. Godot4.7.2/X11: final110actual1696×780frames,
-runner0, hits47/76,8damage, source hashes verified. Five rendered scope checks pass.
-The earlier180-frame walk capture had a missing completion log; retain that failure.
-Final output was /tmp/ever-deeper-transition19-final, copied after closure to
-/workspace/scratch/eb19e34b942d/swing19-final-game. No physical-device/FPS claim.
-
-Latest verified run: [overhead18B](premium-polish/hero-overhead-swing-18-20260919.md).
-Blender4.5.3:50native loop frames; Godot4.7.2/X11:150actual1696×780frames,
-four real hits/16damage. Internal image-sequence preview pass, no physical-device
-or continuous-video claim. Runtime paths remain those restored under/tmp/ever-deeper-runtime-20260918/.
-
-CURRENT ANIMATION REVIEW: [Local independent critic workflow](premium-polish/hero-local-review-20260919.md). Use the existing actual16G119-frame capture and internal critic without waiting for optional Gemini sign-in. Mechanical and pixel-binding checks pass; actual ore-pulse clearance fails1.63px versus2px. Local sequence/timing diagnosis is not continuous-video viewing, production approval or physical-iPhone evidence.
-
-LATEST RENDERED ANGLE CHECK: [Closed camera-angle trial](premium-polish/hero-view-angle-20260918.md). Blender4.5.3 and Godot4.7.2/X11/Mesa25.2.8 llvmpipe succeeded;119 actual frames, unchanged inputs/world/hits50/90, and only76 newly rendered cells presented. Xvfb restored at `/tmp/ever-deeper-runtime-20260918/angle-xvfb/root/usr/bin/Xvfb`. No production or physical-device acceptance.
-
-LATEST OFFLINE STUDY: [Stock-motion compatibility](premium-polish/hero-retarget-20260918/ATTEMPTS.md). Blender4.5.3 loaded the actual native models and rendered16 diagnostic images; no new Godot graphical test was needed or claimed for this rejected source study. Native originals were re-extracted to `/tmp/ever-deeper-retarget-20260918/native` after a workspace copy was observed truncated. Restore from the saved originals if paths are missing; cause of truncation is unestablished.
-
-CURRENT VERIFIED ANIMATION CHECKPOINT: [Four-case complete-return review](premium-polish/hero-return-20260918.md).
-Godot4.7.2/X11 llvmpipe and Blender4.5.3 were exercised on18September; all runs are closed. Mats approved the public-source upload; all ten reviewed files are verified on GitHub at `16bda4413cf9c5c9f98232f1df96e17e3346944e`. Scratch/runtime paths below are historical locations and must be checked or restored before a new run.
-
-CURRENT VERIFIED MILESTONE: [Published DEV10](premium-polish/dev10-20260917/PUBLISHED.md).
-Exact browser/native QA35181119505, Mac WebKit35181878479 and publication35182372885 pass. Linux WebKit framebuffer failure remains retained; Mac uses Actions step timeouts, since GNUtimeout is absent. Virtual-Mac sustained performance still fails50FPS. Existing root Godot/Xvfb route remains valid; never run heavy renderers concurrently.
-
-Current unpublished candidate: [DEV10](premium-polish/dev10-20260917/HANDOFF.md).
-
-## Runtime verified 17 September 2026
-
-Godot `/tmp/ever-deeper-runtime-20260917/Godot_v4.7.2-stable_linux.x86_64`
-returns `4.7.2.stable.official.ed1daf0bf`; the matching web templates are installed.
-Xvfb is `/workspace/scratch/d5437d917805/runtime/xvfb/usr/bin/Xvfb`.
-Use the authenticated `tools/run_rendered_isolated.py` route and an empty project
-directory for exact-PCK tests. The actual 1696×780 hazard/menu/return route passes
-47 checks on the exported DEV10 candidate; the 15 current package suites also pass.
-Local execution is Linux Mesa llvmpipe, not Apple or physical iPhone evidence.
-The browser service denied the loopback preview; existing Mac/browser CI remains
-the next route. The candidate has not been published or run in that CI yet.
-
-Historical continuation: [CURRENT-POLISH.md](premium-polish/CURRENT-POLISH.md).
-
-## Runtime restored 15 September, continuation
-
-Verified Godot: `/tmp/ever-deeper-runtime-20260915/Godot_v4.7.2-stable_linux.x86_64`. Extract the validated ZIP under `/tmp`, then run `--version`; a workspace extraction later appeared truncated/mode 644 despite an earlier successful version call. Do not execute incomplete bytes or solve this by changing access controls.
-Verified Xvfb: `/workspace/scratch/02374ae65f32/runtime/xvfb/usr/bin/Xvfb`; extracted ordinary Ubuntu packages plus xkbcomp.
-Verified Blender: `/tmp/ever-deeper-runtime-20260915/blender-4.5.3-linux-x64/blender` (`67807e1800cc`).
-Current source checkout: `/workspace/scratch/02374ae65f32/Ever-Deeper`, work branch from START-HER.
-Evidence: `/workspace/scratch/02374ae65f32/evidence/`; all paths are disposable, remote reports/source are authoritative.
-Native models remain at the existing saved identities from START-HER; task-local copies are outside the git tree.
-
-# Test environment — premium-polish source recovery
-
-Canonical source is the complete root project in `Corpax88/Ever-Deeper`.
-This recovery is based on `d4619e5429326b880c4da2d466a2bf5351f0f46c`.
-Read `premium-polish/HANDOFF.md`, `AGENTS.md` and `verification.md` first.
-
-## Verified local route
-
-- Official Godot 4.7.2 Linux binary, version `4.7.2.stable.official.ed1daf0bf`.
-- Xvfb 21.1.12, libXfont2 and libxkbfile downloaded as Ubuntu packages and
-  extracted without changing access controls. `/usr/bin/xkbcomp` is required.
-- `tools/run_rendered_isolated.py` starts authenticated Xvfb and Godot together,
-  isolates saves, supplies extracted libraries and captures complete logs.
-- `tools/capture_recovery.gd` captures actual source states using the existing
-  game fixtures. Example, with verified executable paths supplied locally:
-
-```sh
-python3 tools/run_rendered_isolated.py --godot /path/to/Godot \
-  --xvfb /path/to/xvfb/usr/bin/Xvfb --output /absolute/review \
-  --resolution 1696x780 --timeout 300 -- \
-  --script tools/capture_recovery.gd -- --output=/absolute/review
-python3 tools/qa.py --godot /path/to/Godot
-python3 tools/check_invariants.py
-```
-
-31 source captures were inspected. Software rendering is useful visual evidence,
-not Apple-device performance evidence. The source gate has 14 current cases;
-do not count the lost candidate's additional premium suite as present.
-
-## Restore rather than assume
-
-Probe execution and actual files on each continuation. Old scratch locations
-and process IDs can disappear. Verify executable versions after downloading.
-Do not use the older truncated Godot ZIP as a runtime. Blender 4.5.3 LTS is the
-native hero exporter; keep approved v28/v9 binary originals outside the public
-source payload. Never rebuild the model from reference imagery or memory.
-
-The established Apple route uses GitHub Actions macOS runners and the repository's
-review workflows. It is not a reserved Mac mini. Read current workflow files
-before use, keep source changes on the game's own work branch, and preserve
-contents-read permissions and isolated saves. Mac WebKit, Safari in an iPhone
-Simulator, and physical iPhone performance are different evidence categories.
-
-The full premium-polish workflow was part of the lost source and must be restored
-and reviewed before relying on it. No exported package, browser performance,
-Safari Simulator or physical iPhone result is asserted by this checkpoint.
-
-## Preservation checkpoint, 15 September 2026
-
-[START-HER.md](../START-HER.md) is the continuation entry. Current game source
-was verified remotely as 39f21724deb78c4c6d6103fedb1fba04a2135c32, tree
-67e69417d18ad29d4862968564a3d60333b99426. Documentation/evidence additions
-do not change the game source. The invariant check was rerun and passed.
-
-Working local executables at preservation time were:
-- /workspace/scratch/3f78a50e0974/runtime/Godot_v4.7.2-stable_linux.x86_64
-- /workspace/scratch/3f78a50e0974/runtime/xvfb/usr/bin/Xvfb
-- /tmp/ever-deeper-blender-runtime/blender-4.5.3-linux-x64/blender
-
-Godot --version returned 4.7.2.stable.official.ed1daf0bf; Blender --version
-returned 4.5.3 LTS, build 67807e1800cc. Paths are disposable; recover the
-verified versions if absent. Historical Mac/Safari instructions are in the
-game-test-environment skill's tested-routes.md. Restore the game-specific
-workflow before relying on that route.
-
-The current source QA reports, logs, 31-image report and four inspected contact
-sheets are saved in premium-polish/checkpoint-evidence. The original report
-has a layout failure; the separate corrected-layout result passes. Full-size
-PNGs can be regenerated by tools/capture_recovery.gd. Historical motion evidence
-and partial patches in premium-polish/recovery belong to the lost candidate.
-No exact-package or device performance approval is implied by this save.
+## Publisering og delvis opplasting
+Ingen ny DEV/LIVE er publisert. DEV13 og LIVE0.46.9 står fortsatt urørt.
+Mats har godkjent kodeopplasting og gated additiv DEV-test på `dev/worn/`; ingen ordinær spill-/LIVE-adopsjon.
+Publisher og reviewkrav er `.github/native-flow-trial/publish.py` og `.github/workflows/publish-native-worn-trial.yml`: eksakte9 filer, seks kontroller, uavhengig visuell godkjenning, hashbundet review/bundle/baseline/kilde, bevaring av18 gamle filer, kontroll av27 etter deploy.
+`candidate-j-bundle.json` og `upload-j-receipt.json` i dokumentasjonsmappen/arkivet bevarer j-metadata. Bundle SHA256 `26209f2eeeefa1688d8fd954b701dd02e4a00dbba74274271b4f3aa5d55765dd`.
+43 delta-deler à786432 byte (siste kortere). Bare j-del000–002 har bekreftet opplastingskvittering; de er urefererte Git-blobs. Andre avbrutte kall kan ha laget flere, men er ikke bekreftet. Ingen komplett payloadcommit eller `review.json` finnes. Rekonstruer fra eksakt delta og hashkontroller; ikke bruk den gamle g-delopplastingen.
+Direkte Git clone/fetch fungerer. Direkte push feiler uten credentials; de autoriserte GitHub-verktøyene create_blob/tree/commit/update_ref fungerer. Ikke hent eller finn på tokens. Store binærkall gjorde denne chatten tung; unngå å skrive binærdata/verktøyregistre/historikk tilbake til modellen og lagre kvittering etter hvert fullførte kall.
+Svar på norsk, maks5korte linjer. Fortsett fra j og lever kontrollert spillenke når portene består.
