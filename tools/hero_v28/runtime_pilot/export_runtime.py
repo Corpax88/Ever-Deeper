@@ -275,6 +275,7 @@ def bake(args):
         path = args.output/(channel+".png")
         if path.exists():
             images[channel] = bpy.data.images.load(str(path), check_existing=False)
+            images[channel].colorspace_settings.name = "sRGB" if channel == "albedo" else "Non-Color"
             continue
         image = bpy.data.images.new("Native baked "+channel, width=prep["texture_size"], height=prep["texture_size"], alpha=True)
         image.colorspace_settings.name = "sRGB" if channel == "albedo" else "Non-Color"

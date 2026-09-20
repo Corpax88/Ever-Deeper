@@ -48,7 +48,8 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(candidate.path_join("motion.json")))
 	if not parsed is Dictionary: return false
 	data = parsed
-	if String(data.gear) != "worn" or String(data.direction) != "right": return false
+	if String(data.gear) != "worn": return false
+	if String(data.direction) != "right" and String(data.get("action", "")) != "approved_flow20_reference": return false
 	for name in Dictionary(data.rest): rest[name] = _matrix(data.rest[name])
 	for side in SIDES: hand_local[side] = _matrix(data.hand_local[side])
 	heading = _matrix(data.heading).basis
