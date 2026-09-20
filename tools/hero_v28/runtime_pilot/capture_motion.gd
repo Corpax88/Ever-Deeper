@@ -16,6 +16,11 @@ var recording := false
 var start_tick := 0
 var frame_id := -1
 var event := ""
+var contacts: Array = []
+var last_impact := 0
+class PoseDriver extends Node:
+	var callback: Callable
+	func _process(_delta: float) -> void: callback.call()
 func _initialize() -> void: _run.call_deferred()
 
 func _run() -> void:
@@ -85,7 +90,12 @@ func _run() -> void:
 		assert(motion.configure(rig,tasks,candidate.path_join("motion.json")))
 		player.visual._sprite.hide()
 		player.visual.set_process(false)
-	RenderingServer.frame_pre_draw.connect(_pose_frame)
+	# Run after the world's authoritative mining update, before Skeleton3D's
+	# deferred skin upload. frame_pre_draw is already too late for that upload.
+	var driver := PoseDriver.new()
+	driver.process_priority = 1000
+	driver.callback = _pose_frame
+	root.add_child(driver)
 	start_tick = Engine.get_physics_frames()
 	recording = true
 	var events := {12:"start_up",45:"reverse_down",72:"walk_left",78:"idle",82:"start_up",110:"release"}
@@ -105,11 +115,21 @@ func _run() -> void:
 		if failed: break
 	recording = false
 	main._set_mine_held(false)
+	var reference_frames: Array = []
+	if not baseline:
+		for contact in contacts:
+			rig.root_native = contact.root_native
+			rig.shown = contact.bones
+			rig._apply(contact.bones)
+			for settle in 3: await process_frame
+			await RenderingServer.frame_post_draw
+			rig.viewport.get_texture().get_image().save_png(output.path_join("contact-reference-%04d.png" % int(contact.frame)))
+			reference_frames.append(contact.frame)
 	var hashes: Dictionary = {}
 	for path in ["tools/hero_v28/runtime_pilot/task_motion.gd","tools/hero_v28/runtime_pilot/capture_motion.gd","tools/hero_v28/runtime_pilot/contact_surface.gd","scripts/player/player_controller.gd","scripts/world/endless_descent_world.gd"]:
 		hashes[path] = FileAccess.get_sha256("res://"+path)
 	var report := {"complete":not failed,"samples":samples,"baseline":baseline,"cycle":world._mining_cycle_duration(),
-		"source_sha256":hashes,"engine":Engine.get_version_info().string,"visual_accepted":false,"production_accepted":false,
+		"source_sha256":hashes,"engine":Engine.get_version_info().string,"visual_accepted":false,"production_accepted":false,"contact_reference_frames":reference_frames,
 		"fixtures":"Real seed4608 world; two existing ore positions moved to +/-64px and HP500; Forge5 with placed relic",
 		"native_source":FileAccess.get_sha256(candidate.path_join("motion.json")),"tasks_sha256":FileAccess.get_sha256(tasks)}
 	FileAccess.open(output.path_join("report.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"\t"))
@@ -127,6 +147,9 @@ func _pose_frame() -> void:
 	packet.contact_surfaces = _surface(packet.target_position,packet.world_position)
 	packet.impact_surfaces = _surface(packet.impact_target_position,packet.world_position)
 	if not baseline and not motion.advance(1.0/60.0,packet): failed = true
+	if not baseline and int(packet.impact_serial) != last_impact:
+		contacts.append({"frame":frame_id,"root_native":rig.root_native,"bones":rig.shown.duplicate(true)})
+	last_impact = int(packet.impact_serial)
 	var bones: Dictionary = {}
 	if not baseline:
 		for name in rig.shown:
@@ -137,4 +160,5 @@ func _pose_frame() -> void:
 		"target":world.mining_target_id,"hp17":int(world.resources[17].hp),"hp18":int(world.resources[18].hp),
 		"impact_serial":packet.impact_serial,"swing_serial":packet.swing_serial,"progress":packet.progress,"active":packet.mining,
 		"screen_position":[player.get_global_transform_with_canvas().origin.x,player.get_global_transform_with_canvas().origin.y],
+		"screen_transform":[root.get_final_transform().x.x,root.get_final_transform().y.y,root.get_final_transform().origin.x,root.get_final_transform().origin.y],
 		"detail":{} if baseline else motion.snapshot(),"bones":bones})

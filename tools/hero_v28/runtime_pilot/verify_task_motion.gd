@@ -107,6 +107,16 @@ func _run() -> void:
 	report.sequence = sequence
 	report.sequence_valid = sequence.all(func(row): return row.valid)
 	report.max_reach_error = motion.max_reach_error
+	var prior_display: Dictionary = rig.shown.duplicate(true)
+	packet.mining = true
+	packet.mining_timing_valid = true
+	packet.moving = false
+	packet.swing_serial += 1
+	packet.swing_continuation = false
+	packet.target_position = Vector2(10000,10000)
+	packet.contact_surfaces = []
+	var rejected: bool = not motion.advance(1./60.,packet)
+	report.unreachable_contact_rejected_before_display = rejected and rig.shown == prior_display
 	DirAccess.make_dir_recursive_absolute(output)
 	FileAccess.open(output.path_join("report.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"\t"))
 	print("NATIVE_TASK_MOTION_CHECK_COMPLETE ",worst," ",motion.max_reach_error)

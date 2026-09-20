@@ -5,6 +5,7 @@ extends Node2D
 const AXIS: Transform3D = Transform3D(Basis(Vector3.RIGHT, Vector3(0, 0, -1), Vector3.UP), Vector3.ZERO)
 const SIDES: Array[String] = ["R", "L"]
 const BLEND_SECONDS: float = 0.075
+const GROUND_Y: float = 2.8125
 var viewport: SubViewport
 var sprite: Sprite2D
 var skeleton: Skeleton3D
@@ -214,7 +215,7 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	sprite.scale = Vector2.ONE * (.8 * 200.0 / float(raster_size))
 	add_child(sprite)
 	var anchor: Vector2 = camera.unproject_position(Vector3.ZERO)
-	sprite.position = Vector2(0, 2.8125) - anchor * sprite.scale
+	sprite.position = Vector2(0, GROUND_Y) - anchor * sprite.scale
 	set_reference_pose("idle", 0.0)
 	return true
 

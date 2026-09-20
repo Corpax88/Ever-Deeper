@@ -68,7 +68,7 @@ func ground(displacement: Vector2) -> Vector3:
 func project(point: Vector3) -> Vector2:
 	var camera_native: Transform3D = rig._matrix(rig.data.camera.world_matrix)
 	var p: Vector3 = camera_native.basis.transposed()*point
-	return Vector2(p.x,-p.y)*(160.0/float(rig.data.camera.ortho_size))
+	return Vector2(p.x,-p.y)*(160.0/float(rig.data.camera.ortho_size))+Vector2(0,rig.GROUND_Y)
 
 func _transform(a: Transform3D,b: Transform3D,w: float) -> Transform3D:
 	return Transform3D(Basis(a.basis.get_rotation_quaternion().slerp(b.basis.get_rotation_quaternion(),w)),a.origin.lerp(b.origin,w))
@@ -274,6 +274,7 @@ func advance(delta: float,packet: Dictionary) -> bool:
 	var new_swing: bool = next == "mine" and int(packet.swing_serial) != serial
 	if new_swing:
 		aim_ready = plan_contact(packet.target_position-position,packet.get("contact_surfaces",[]))
+		if not aim_ready: return false
 		serial = int(packet.swing_serial)
 		next_yaw = contact_yaw
 	var continued: bool = new_swing and next == mode and bool(packet.get("swing_continuation",false))
@@ -320,10 +321,10 @@ func advance(delta: float,packet: Dictionary) -> bool:
 		var saved_tool := contact_tool
 		var saved_yaw := contact_yaw
 		var saved_screen := contact_screen
-		if plan_contact(packet.impact_target_position-position,packet.get("impact_surfaces",[])):
-			displayed = _world(aimed(.42))
-			var actual := project(displayed.bones.tool*cap_local-root_position)
-			max_contact_pixels = maxf(max_contact_pixels,actual.distance_to(contact_screen))
+		if not plan_contact(packet.impact_target_position-position,packet.get("impact_surfaces",[])): return false
+		displayed = _world(aimed(.42))
+		var actual := project(displayed.bones.tool*cap_local-root_position)
+		max_contact_pixels = maxf(max_contact_pixels,actual.distance_to(contact_screen))
 		contact_tool = saved_tool
 		contact_yaw = saved_yaw
 		contact_screen = saved_screen
@@ -344,6 +345,10 @@ func advance(delta: float,packet: Dictionary) -> bool:
 	previous_delta = delta
 	# An infeasible pose is evidence of a failed pilot, never a displayed rig
 	# with disconnected bones. Keep the last valid render until the harness exits.
+	for transform in shown.bones.values():
+		if not Transform3D(transform).is_finite():
+			errors.append("Rejected non-finite native transform")
+			return false
 	for side in SIDES:
 		for family in ["arm","leg"]:
 			var chain := _chain(shown.bones,family,side)
