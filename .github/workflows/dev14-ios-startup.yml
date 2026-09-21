@@ -29,6 +29,7 @@ jobs:
       - name: Prepare documented native Safari test route
         working-directory: .github/dev14-ios
         run: |
+          npm init --yes
           npm install --no-audit --no-fund --save-exact appium@3.7.0
           npx --no-install appium driver install xcuitest@12.12.3
           npx --no-install appium driver doctor xcuitest
