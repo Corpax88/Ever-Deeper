@@ -1,62 +1,40 @@
-# Ever-Deeper — vanlig DEV14 publisert og verifisert
+# Ever-Deeper — DEV14.1 publisert
+Oppdatert 21. september 2026. Dette er gjeldende status; eldre «pågår»-/«ikke publisert»-notater er historikk.
 
-Mats har godkjent å oppdatere vanlig DEV på https://corpax88.github.io/Ever-Deeper/dev/. Worn er integrert i vanlig spill; samme hovedscene og DEV-lagring beholdes. Ingen ny arena er nødvendig for å bruke DEV14.
+Vanlig DEV: https://corpax88.github.io/Ever-Deeper/dev/ — menyversjon **1.0.0-dev.14.1**.
+Publisering er fullført og godkjent av brukeren. Samme DEV-adresse og lagringsnavnerom er beholdt; alle ni LIVE-filer er uendret.
+Ingen ny arena, figur eller animasjon ble laget for denne rettingen.
 
-Spillkilde: 9989805a329373af6c19dc5cde21e23205d87ea5 på codex/hero-loop-flow-20260918. Supplerende testkode: 8e5b66ef0d81626567275d110bdd09b087e2d6b2.
-Bygg/kjernekontroller: 35596622855 besto bygg, input, 1261 spillkontroller, 125 touchkontroller og DEV-lagringsområde. Kandidat-ID 10636728068; PCK SHA256 c7274af20224f4651ed486ba24c5fbcf9801cbca4fc9b346781794415be92781.
-Mac-kontroll av samme pakke er ferdig: 35597706023 besto. Første Mac-rapport er beholdt som feilet på feil Surface-statusobservasjon; supplementet lukket bare gjenopptakelsesporten med faktisk bevegelse. Alle ni spillfiler er identiske. Uavhengig bilde-/kodegjennomgang er godkjent. 22 originale bilder er sett; Deepheart-kommandoens bilde viser Hub, ikke en separat Deepheart-hule.
+## Endring og begrensning
+Mats viste en fysisk iPhone-video der DEV14 krasjer etter New Game og bekreftelse. Stor runtime-utpakking av figurens GLTF var en påvist oppstartsbelastning; årsaken til selve iPhone-krasjet er ikke bevist.
+DEV14.1 laster samme figur som en ferdig forberedt, komprimert PackedScene. Geometri (1 033 415 vertices), skjelett, bindinger, transformasjoner og bevegelse er bevart. Bare innebygde materialer som alltid ble overstyrt, fjernes under forberedelsen; spillets materialer er beholdt.
+**Krasjet er ikke bekreftet løst på fysisk iPhone.** Simulatorforsøket ga ikke gyldig spillbevis. Ingen FPS-, samlet minne- eller fysisk iPhone-godkjenning.
+Mac WebContent RSS gikk ned, men GPU-prosessens RSS økte. Ikke beskriv dette som 33 % lavere samlet minnebruk.
 
-Publiseringscommit på main: ad35768a2e291b61a30725942b5ee763adacd230.
-Publisering bestått: https://github.com/Corpax88/Ever-Deeper/actions/runs/35598684249
-Package, deploy og verify er ferdige og bestått. Kvitteringen er lastet ned og sammenlignet mot alle 27 offentlige filer: 9 DEV14-filer matcher testpakken, 9 LIVE-filer og 9 tidligere trial-filer er uendret. DEV13 er beholdt som rollback-artefakt 10638185982.
-Kvittering: .github/dev14/evidence/publication-receipt.json; SHA256 fcf5d173d8a91e688002a0d52b5f5fb0cd364e1bf60b35ab8c4b51f04b7601db. Kvitteringsartefakt 10638260798; ZIP SHA256 b86deca4404f4a5ec3f00099fc01d275a953327995696a01d896ff6a60770411.
-Bruk vanlig /dev/. Last siden på nytt; menyen skal vise 1.0.0-dev.14. Gjeldende spillkilde er på arbeidsgrenen; main inneholder den eksakte publiseringspakken og bevisene, ikke en sammenslåing av all historisk spillutvikling.
+## Kilde og publisering
+Repo: Corpax88/Ever-Deeper. Spillkilden finnes på arbeidsgrenen `codex/hero-loop-flow-20260918`; main inneholder publisering og bevis og er ikke denne spillkildens eksportgrunnlag.
+Eksakt publisert spillkilde: `6d6e1b8d98ecae6661b514fff92e28447715dd33`.
+Senere arbeidsgren-endringer frem til `f5311101d7d8ec10d675901e3e5034546ccbe6c3` gjelder bare det uavklarte simulatoroppsettet.
+Publiseringscommit: `b55ea12202f299d1aac4605c98c1ba9dcab5bbe6`; Actions-run **35610110028**: package, deploy og verify besto.
+Alle **27 offentlige filer** er kontrollert mot eksakte hasher: ni nye DEV-filer, ni bevarte LIVE-filer og ni bevarte historiske prøvefiler.
+Kvittering: `.github/dev14/evidence/publication-receipt.json` på main; SHA256 `3753b642b3b9769e784fda985635bd3ef267f0ee0c046841f3ae5c4e47e75f2a`.
+Kvitteringsartefakt **10644245478**, ZIP SHA256 `c43dffaecd067dac633f08f3b810258ae61cf08653015f438c76dda56dc5404f`.
+Eksakt kandidat **10640952568** fra test-run **35604667053**, ZIP SHA256 `0bb49acd6f7991f583624cdf952ae980dfdc67d1469bfbaeae7f4f4ddcc37092`.
+Publisert PCK: 255 901 708 byte, SHA256 `510dc3c8768b37ddbc06f0ade5c34b64d927b51a77d958a7366d303d395b9707`.
+Rollback før DEV14.1: artefakt **10644200271** fra publiseringsrun, ZIP SHA256 `2ebc6a78870a33ece3a4f1f13389b5199d51f6b43fc5b456d9e03db8444ed447`.
 
-Manifest, hashbundet godkjenning, original feilrapport og avsluttende rapport ligger på main i .github/dev14/. Se docs/premium-polish/dev14-native-worn/HANDOFF.md. Endelig Mac-artefakt: 10637616148, ZIP SHA256 ee688c594dbe2c18d1b1b4da7a04e8bc5d23709c28f303dd4e665a6b573464ca. Ikke eksporter, generer modeller, last opp binærdata eller gjenta beståtte tester for uendret kandidat.
+## Hva som er kontrollert
+Test-run **35604667053** besto: input-release, 1259 overhaul-kontroller, 125 touch-kontroller og DEV/save-flavor.
+Mac Chromium/Apple Metal: 20 originale spillbilder gjennomgått, verktøy/utstyr, Moss/Endless mining, verdensbytte, touch, pause og faktisk bevegelse etter resume.
+Normal Mac WebKit 26.5, 844 × 390 DPR 3: New Game → Surface; pause, omlasting av ekte lagring og New Game med erstatningsbekreftelse → Surface. Seks originale bilder gjennomgått; ingen registrert runtime-feil eller nettleserkrasj.
+Siste uavklarte iPhone Simulator-run: **35608051678**, artefakt **10642408701**. Safari Start Page ble filmet; intet gyldig New Game-forsøk. Dette er en testoppsettbegrensning, ikke spillgodkjenning eller påvist spillfeil.
+Uavhengig sluttgjennomgang er godkjent for denne avgrensede DEV-endringen. `.github/dev14/evidence/startup-review.json` SHA256 `faf1f7557d4373a39ead0607001af7e660b2111e24f51b4a0736317b0e8c1cb5`.
+Kjente invariant-avvik for project.godot, hero_gear.gd, player_controller.gd og player_visual.gd er dokumentert; ikke kall invariantkontrollen feilfri.
 
-Beskyttede invariantavvik er ærlig beholdt: prosjektkonfig og player_controller/player_visual er tilsiktet integrasjon; hero_gear er et eksisterende avvik. Ingen påstand om full invariant-pass, fysisk iPhone, FPS eller generell animasjonsscore.
-Norsk, maks fem korte linjer per svar. Bare nødvendig fremdrift; ingen kommandologger eller binær/base64 gjennom verktøyargumenter/resultater, heller ikke skjult i code-mode. Bruk eksisterende Git-objekter og CI-artefakter.
-
----
-Historikk for den tidligere separate Worn-testen følger. Dens tidligere sluttmål er erstattet av oppdraget ovenfor.
-
-# Ever-Deeper — Worn publisert; klar for iPhone-test
-
-## Hold chatten lett
-Ingen binærarkiver eller base64 gjennom verktøyargumenter/resultater, heller ikke skjult i code-mode. De 43 payload-delene er allerede commit-et. Bruk eksisterende git-objekter og CI-artefakter. Ikke eksporter, last opp eller kjør Mac-suiten om igjen for denne uendrede kandidaten.
-
-## Nå
-- Repo: Corpax88/Ever-Deeper. Arbeidsgren: codex/hero-loop-flow-20260918.
-- Runtime-kandidat: e32a03e620913a76f3bee9083b2e9b1d66eef972.
-- Testet Mac-revisjon: fd95be111fde7b2599bfbae5239f66c2bc6a3cbb.
-- Uavhengig gjennomgang og review lagret på grenen i 80fd100cbf994f457932830ab79a1640fc179d5d.
-- Publiseringscommit på main: 133aa31ed2a72be21558f041ed7f94891f205638. Bare trial-underkatalogen og dens eksisterende workflow er lagt til; spillkilden er ikke slått sammen.
-- Publisering bestått: https://github.com/Corpax88/Ever-Deeper/actions/runs/35591010824
-- Alle 27 offentlige filer er verifisert mot forventet størrelse og SHA256: 18 eksisterende DEV13/LIVE-filer uendret, 9 testfiler lagt til.
-
-## Ferdig kontroll
-Mac-kjøring 35553114935 besto klar, held mining, walk exit, reset, touch mining og touch walk. Chromium 151.0.7922.34, macOS arm64, ANGLE Metal Apple Paravirtual device. CSS/PNG 844×390, DPR 2, drawingbuffer 1688×780.
-Alle seks originale PNG-er er nå sett av uavhengig kritiker. Avgrenset testversjon er godkjent. Rapportens ni filidentiteter samsvarer nøyaktig med bundle.json. HP 500→476, reset=1; tastatur/touch stopper etter slipp.
-Liten kjent tekstforskjell: hjelpen sier HUGG, knappen heter MINE. Ingen ombygging er nødvendig for denne testen.
-Kritikk, originale kontrollrapport-bytes og hashbundet review er lagret i .github/native-flow-trial/evidence/ og review.json. Eksisterende publisher check-review besto.
-
-## Identitet og bevis
-- PCK SHA256: 74db0719dc5d151e0ad9491e9c5e90769c6f85ff8f8db07fe55c4b825277da05.
-- bundle.json SHA256: 26209f2eeeefa1688d8fd954b701dd02e4a00dbba74274271b4f3aa5d55765dd.
-- Browserrapport SHA256: b4dc1a5312bd71a6334ad3d6a83c6ec9f9c4ebfb1f44bed05d11b6f8ab92993a. Bevar bytes uten ekstra linjeskift.
-- Review SHA256: 7d18c921bdd0223de5ad436ee386f669259cbf1dd23e0da168d07a634fc3fd31.
-- Mac-artefakt native-worn-mac-browser: ID 10619416142, ZIP 3165723 byte, SHA256 77bc3b7075c37cb1cff8e0189481373b5327b2d9809fb87e9c2b05d11d82e755, beholdes til 21. oktober 2026.
-- Hent eksisterende artefakt med GitHub download_workflow_artifact og materialiser filreferansen med prepare_materialize. Ikke returner URL eller binærinnhold til modellen.
-- Primær grafisk rute: .github/workflows/verify-native-worn-trial.yml. Gjenbruk beviset for uendret kandidat.
-
-## Publiseringsbevis
-Kjøring 35591010824 besto package, deploy og verify på commit 133aa31ed2a72be21558f041ed7f94891f205638. Kvitteringen er lastet ned og sammenlignet med baseline.json og bundle.json; alle 27 filidentiteter samsvarer.
-Kvittering: .github/native-flow-trial/evidence/publication-receipt.json. SHA256 b63a5061dd768cc4c341f4c1599fba523431d780e66c34d3d90532a40e586138. Artefakt-ID 10634023429; ZIP SHA256 f6d721959cd149bb1d295807ea5c3ba7badc9006c075b0a3f7c5169a0c278edb. Rollback-artefakt med gamle bytes er beholdt av workflowen.
-
-## Neste steg
-Spillbar testlenke: https://corpax88.github.io/Ever-Deeper/dev/worn/
-Mats tester i Safari i liggende visning: hold MINE ved malmen, slipp, gå og start igjen. Be om konkret tilbakemelding på flyten før neste animasjonsendring. Ikke start bred testing eller nye eksportforsøk uten en konkret feil.
-Normal animasjonsflyt ved normal hastighet, fysisk iPhone og FPS er fortsatt ikke bevist. Ingen generell animasjonsscore eller 1.0-godkjenning.
-Godkjent v28/studie20, støttehåndslipp og modell/materialer beholdes. Ordinær Flow20 er deaktivert; FPS-arbeid pauset. Kodeopplasting, Mac-QA og gated additiv DEV-test er allerede godkjent. Norsk, maks fem korte linjer.
-
-Siste dokumentasjonscommit: 48bdf168cf46a02ab82520e0050cb2a111d77d84
+## Fortsett uten å gjenta arbeidet
+Ingen bygg-, opplastings-, Mac-test- eller publiseringsjobb står igjen for denne kandidaten. Senere dokumentasjonscommits endrer ikke publiserte spillbytes.
+Neste meningsfulle kontroll er faktisk iPhone-bruk av **1.0.0-dev.14.1**. Ved ny feil: ta utgangspunkt i denne versjonen og konkret video/logg; ikke redesign helteanimasjonen.
+Ikke start simulatorforsøkene på nytt automatisk. De er avsluttet som uavklarte, og dokumentasjon av begrensningen er lagret.
+Gjenbruk eksisterende artefakter. Aldri før binærdata/base64 gjennom verktøyargumenter eller -resultater, heller ikke inni code mode; bruk filreferanse og materialisering.
+Les AGENTS.md, README.md, docs/code-map.md og gjeldende handoff før nye endringer. Bevar godkjente visuelle elementer og eksisterende publiseringskontroller.
+Mats ønsker korte norske svar, normalt høyst fem linjer. Ikke påstå at fysisk iPhone-krasj eller alle animasjons-/FPS-mål er ferdig løst.
