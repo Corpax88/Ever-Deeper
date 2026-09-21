@@ -1,4 +1,4 @@
-# Ever-Deeper — ordinary DEV14 publication checkpoint
+# Ever-Deeper — ordinary DEV14 published and verified
 
 Mats explicitly authorized ordinary DEV14 at https://corpax88.github.io/Ever-Deeper/dev/. A separate arena does not fulfill this request. The normal DEV main scene, DEV save path/user directory and established equipment switching are retained. Worn adopts the exact approved native model/motion/material data; higher equipment uses its existing visuals.
 
@@ -9,7 +9,11 @@ Build/core passed: input, 1261 gameplay checks, 125 touch checks and DEV save/fl
 
 Original Mac observer incorrectly required Surface's nonexistent universal active property after resume. Its complete failed report and 20 original images are retained. Successful supplement run `35597706023` reused all nine identical candidate files and required actual post-resume movement [600,650]→[600,689.666809] followed by release. It did not re-export or repeat the completed suite. Final evidence artifact `10637616148`, ZIP SHA256 `ee688c594dbe2c18d1b1b4da7a04e8bc5d23709c28f303dd4e665a6b573464ca`.
 
-Publication is pending verified receipt at this checkpoint. Publisher on main: `.github/dev14/publish.py`; workflow `.github/workflows/publish-dev14.yml`. It binds both successful verification and successful original build job, exact manifest and immutable artifact, preserves LIVE and retained trial bytes, and stores DEV13 rollback before deployment. Require all 27 public file identities to match before reporting published.
+Publication completed on main commit `ad35768a2e291b61a30725942b5ee763adacd230`; run `35598684249` passed package, deploy and verify. The downloaded public receipt matches all 27 expected size/SHA256 identities: nine DEV14 files match the exact tested candidate; nine LIVE and nine retained-trial files are unchanged. Existing DEV13 rollback artifact: `10638185982`.
+
+Receipt: `.github/dev14/evidence/publication-receipt.json`, SHA256 `fcf5d173d8a91e688002a0d52b5f5fb0cd364e1bf60b35ab8c4b51f04b7601db`. Receipt artifact `10638260798`, ZIP SHA256 `b86deca4404f4a5ec3f00099fc01d275a953327995696a01d896ff6a60770411`. Main contains the immutable publisher/evidence; the complete game source remains on the named development branch. Do not rebuild from an unrelated main source tree.
+
+Use the existing DEV URL and reload; ordinary menu reads `1.0.0-dev.14`. No re-export, payload transfer, model regeneration or repeat of completed checks is needed for this candidate.
 
 No physical iPhone, FPS, continuous-motion score or full 1.0 acceptance claim. Protected invariant differences remain honestly recorded: project.godot and player controller/visual are intentional integration; hero_gear is a pre-existing difference. Do not waive/remove invariant checks or report a clean invariant pass.
 
