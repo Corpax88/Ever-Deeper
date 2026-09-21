@@ -1,0 +1,44 @@
+name: Check DEV14.1 New Game in iPhone Safari
+on:
+  push:
+    branches: [codex/hero-loop-flow-20260918]
+    paths: ['.github/dev14-ios/**', '.github/workflows/dev14-ios-startup.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  safari:
+    runs-on: macos-15
+    timeout-minutes: 20
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+      CANDIDATE_SOURCE: 6d6e1b8d98ecae6661b514fff92e28447715dd33
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: dev14-candidate
+          run-id: 35604667053
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare documented native Safari test route
+        working-directory: .github/dev14-ios
+        run: |
+          npm install --no-audit --no-fund --save-exact appium@3.7.0
+          npx --no-install appium driver install xcuitest@12.12.3
+          npx --no-install appium driver doctor xcuitest
+      - name: Exercise normal New Game and saved-run replacement
+        working-directory: .github/dev14-ios
+        run: node safari.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/safari-startup"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dev14-iphone-safari-startup
+          path: ${{ runner.temp }}/safari-startup
+          retention-days: 30
+          if-no-files-found: error
