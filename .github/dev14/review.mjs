@@ -101,12 +101,12 @@ try{
  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await wait('touch release',v=>!v?.mining,10000);
  await capture('surface-touch-release');
  await command('pause');await wait('ordinary pause menu',s=>s?.menu===true);await capture('dev14-pause');
- await command('resume');const resumed=await wait('ordinary resume',s=>s?.menu===false&&s.native?.active);await nativeReady();await page.keyboard.down('ArrowDown');await delay(400);await page.keyboard.up('ArrowDown');await wait('resumed input',s=>s?.position[1]>resumed.position[1]+2&&!s.mining);await capture('dev14-resumed');
+ await command('resume');const resumed=await wait('ordinary resume',s=>s?.menu===false&&s.native?.active);await nativeReady();await page.keyboard.down('ArrowDown');await delay(400);await page.keyboard.up('ArrowDown');const moved=await wait('resumed input',s=>s?.position[1]>resumed.position[1]+2&&!s.mining);checks.push({name:'resume-real-input',before:resumed,after:moved});await capture('dev14-resumed');
  const errors=messages.filter(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|ERROR:/.test(m));if(errors.length)throw Error('Runtime errors: '+errors.slice(0,4).join('\n'));
  console.log('DEV14_RENDERED_GAMEPLAY_PASSED');
 }catch(e){failed=String(e.stack||e);console.error(failed);try{await capture('failure');}catch{}}
 finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,version:'1.0.0-dev.14.1',files:manifest,runtime,checks,bootstrap_fixture:'HTML injects only explicit QA launch args. Named non-persistent fixture uses ordinary DEV jumps/equipment, clears queued achievement toasts and exercises real input/menu paths. Main scene and game package bytes unchanged.',physical_iphone_verified:false,continuous_motion_or_fps_certified:false},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,version:'1.0.0-dev.14.1',files:manifest,runtime,checks,bootstrap_fixture:'HTML injects only explicit QA launch args. Named non-persistent fixture uses ordinary DEV jumps/equipment, clears queued achievement toasts and exercises real input/menu paths. Main scene and game package bytes unchanged.',physical_iphone_verified:false,continuous_motion_or_fps_certified:false},null,2));
  await browser.close();await new Promise(r=>server.close(r));
 }
 if(failed)process.exitCode=1;
