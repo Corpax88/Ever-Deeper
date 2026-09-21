@@ -9,9 +9,10 @@ permissions:
 jobs:
   safari:
     runs-on: macos-15
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+      WDA_APP: ${{ runner.temp }}/wda/WebDriverAgentRunner-Runner.app
       CANDIDATE_SOURCE: 6d6e1b8d98ecae6661b514fff92e28447715dd33
     steps:
       - uses: actions/checkout@v4
@@ -33,6 +34,7 @@ jobs:
           npm install --no-audit --no-fund --save-exact appium@3.7.0
           npx --no-install appium driver install xcuitest@12.12.3
           npx --no-install appium driver doctor xcuitest
+          npx --no-install appium driver run xcuitest download-wda -- --outdir="$RUNNER_TEMP/wda" --kind=sim --platform=ios
       - name: Exercise normal New Game and saved-run replacement
         working-directory: .github/dev14-ios
         run: node safari.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/safari-startup"
