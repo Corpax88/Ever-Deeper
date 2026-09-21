@@ -1,0 +1,44 @@
+name: Finish DEV14 review of retained candidate
+on:
+  push:
+    branches: [codex/hero-loop-flow-20260918]
+    paths: ['.github/dev14-resume/**', '.github/workflows/dev14-resume-review.yml']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: dev14-worn-qa
+  cancel-in-progress: false
+jobs:
+  browser:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: dev14-candidate
+          run-id: 35596622855
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/download-artifact@v4
+        with:
+          name: dev14-browser-review
+          run-id: 35596622855
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/prior
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts && npx playwright install chromium
+      - name: Verify remaining resume gate using exact retained bytes
+        run: node .github/dev14-resume/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/prior" "$RUNNER_TEMP/final-review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dev14-browser-final
+          path: ${{ runner.temp }}/final-review
+          if-no-files-found: error
+          retention-days: 30
