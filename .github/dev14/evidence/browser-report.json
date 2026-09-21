@@ -1,20 +1,20 @@
 {
   "passed": true,
   "error": null,
-  "version": "1.0.0-dev.14",
-  "source_commit": "9989805a329373af6c19dc5cde21e23205d87ea5",
+  "source_commit": "6d6e1b8d98ecae6661b514fff92e28447715dd33",
+  "version": "1.0.0-dev.14.1",
   "files": {
     "index.html": {
       "size": 7855,
-      "sha256": "e51c3895807ebd1a0152135c538cfb6a33135218d836e375640c174cf2bc1c36"
+      "sha256": "b2ac33750719a17c260d746038846c77da2f8352ed6583ee430771a22d0559c2"
     },
     "index.js": {
       "size": 279815,
       "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
     },
     "index.pck": {
-      "size": 327096664,
-      "sha256": "c7274af20224f4651ed486ba24c5fbcf9801cbca4fc9b346781794415be92781"
+      "size": 255901708,
+      "sha256": "510dc3c8768b37ddbc06f0ade5c34b64d927b51a77d958a7366d303d395b9707"
     },
     "index.wasm": {
       "size": 39514754,
@@ -54,9 +54,7 @@
   },
   "checks": [
     {
-      "name": "00-normal-dev14-menu",
-      "evidence_run": 35596622855,
-      "image": "prior/00-normal-dev14-menu.png"
+      "name": "00-normal-dev14-menu"
     },
     {
       "name": "moss-up",
@@ -84,7 +82,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.5484,
+            "age": 0.3815,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -92,7 +90,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.675847800925926,
+            "phase": 0.554049479166667,
             "support_release": 1,
             "swing_serial": 1,
             "transitions": 1,
@@ -100,7 +98,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 25
+          "updates": 36
         },
         "persistence_active": false,
         "phase": "mine",
@@ -109,10 +107,10 @@
           504,
           424
         ],
-        "progress": 0.642314814814815,
+        "progress": 0.507916666666667,
         "swing": 1,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -143,7 +141,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 1.05566666666667,
+            "age": 0.709866666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -151,15 +149,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.40466049382716,
-            "support_release": 1,
-            "swing_serial": 2,
+            "phase": 0.967358217592593,
+            "support_release": 0,
+            "swing_serial": 1,
             "transitions": 1,
             "yaw": 1.29740076498861
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 41
+          "updates": 55
         },
         "persistence_active": false,
         "phase": "mine",
@@ -168,18 +166,16 @@
           504,
           424
         ],
-        "progress": 0.346851851851852,
-        "swing": 2,
+        "progress": 0.963981481481481,
+        "swing": 1,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/moss-up.png"
+      }
     },
     {
       "name": "moss-up-damage",
@@ -207,7 +203,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 1.63743333333333,
+            "age": 1.72506666666667,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -215,7 +211,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.177064814814815,
+            "phase": 0.201407407407407,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -223,7 +219,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 8
+          "updates": 15
         },
         "persistence_active": false,
         "phase": "mine",
@@ -235,7 +231,7 @@
         "progress": 0,
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -266,7 +262,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.437,
+            "age": 0.3815,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -274,7 +270,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.535630787037037,
+            "phase": 0.554049479166667,
             "support_release": 1,
             "swing_serial": 1,
             "transitions": 1,
@@ -282,7 +278,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 22
+          "updates": 36
         },
         "persistence_active": false,
         "phase": "mine",
@@ -291,18 +287,16 @@
           504,
           424
         ],
-        "progress": 0.487592592592593,
+        "progress": 0.507916666666667,
         "swing": 1,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": null
+      }
     },
     {
       "name": "moss-right",
@@ -330,7 +324,7 @@
           "failure": "",
           "generations": 2,
           "motion": {
-            "age": 0.410883333333333,
+            "age": 0.319044444444444,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -338,7 +332,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.575069444444445,
+            "phase": 0.474347029320988,
             "support_release": 1,
             "swing_serial": 3,
             "transitions": 2,
@@ -346,7 +340,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 106
+          "updates": 169
         },
         "persistence_active": false,
         "phase": "mine",
@@ -355,10 +349,10 @@
           824,
           408
         ],
-        "progress": 0.531111111111111,
+        "progress": 0.419969135802469,
         "swing": 3,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -389,7 +383,7 @@
           "failure": "",
           "generations": 2,
           "motion": {
-            "age": 0.76165,
+            "age": 0.688166666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -397,15 +391,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.0213348765432099,
+            "phase": 0.938953993055556,
             "support_release": 0,
-            "swing_serial": 4,
+            "swing_serial": 3,
             "transitions": 2,
             "yaw": -0.273395459725419
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 124
+          "updates": 188
         },
         "persistence_active": false,
         "phase": "mine",
@@ -414,18 +408,16 @@
           824,
           408
         ],
-        "progress": 0.018287037037037,
-        "swing": 4,
+        "progress": 0.932638888888889,
+        "swing": 3,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/moss-right.png"
+      }
     },
     {
       "name": "moss-right-damage",
@@ -453,7 +445,7 @@
           "failure": "",
           "generations": 2,
           "motion": {
-            "age": 0.8625,
+            "age": 0.798733333333333,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -461,7 +453,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.239583333333333,
+            "phase": 0.22187037037037,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -469,7 +461,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 85
+          "updates": 145
         },
         "persistence_active": false,
         "phase": "mine",
@@ -481,7 +473,7 @@
         "progress": 0,
         "swing": 2,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -512,7 +504,7 @@
           "failure": "",
           "generations": 2,
           "motion": {
-            "age": 0.410883333333333,
+            "age": 0.319044444444444,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -520,7 +512,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.575069444444445,
+            "phase": 0.474347029320988,
             "support_release": 1,
             "swing_serial": 3,
             "transitions": 2,
@@ -528,7 +520,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 106
+          "updates": 169
         },
         "persistence_active": false,
         "phase": "mine",
@@ -537,18 +529,16 @@
           824,
           408
         ],
-        "progress": 0.531111111111111,
+        "progress": 0.419969135802469,
         "swing": 3,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": null
+      }
     },
     {
       "name": "moss-down",
@@ -576,7 +566,7 @@
           "failure": "",
           "generations": 3,
           "motion": {
-            "age": 0.345755555555556,
+            "age": 0.390066666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -584,7 +574,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.508932773919753,
+            "phase": 0.563741319444444,
             "support_release": 1,
             "swing_serial": 5,
             "transitions": 2,
@@ -592,7 +582,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 209
+          "updates": 295
         },
         "persistence_active": false,
         "phase": "mine",
@@ -601,10 +591,10 @@
           72,
           680
         ],
-        "progress": 0.458132716049383,
+        "progress": 0.518611111111111,
         "swing": 5,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -635,7 +625,7 @@
           "failure": "",
           "generations": 3,
           "motion": {
-            "age": 0.8157,
+            "age": 0.740533333333333,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -643,15 +633,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.129305555555555,
-            "support_release": 0.658385171698779,
+            "phase": 0.00626543209876546,
+            "support_release": 0,
             "swing_serial": 6,
             "transitions": 2,
             "yaw": 4.4389934185784
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 227
+          "updates": 311
         },
         "persistence_active": false,
         "phase": "mine",
@@ -660,18 +650,16 @@
           72,
           680
         ],
-        "progress": 0.110833333333333,
+        "progress": 0.0053703703703704,
         "swing": 6,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/moss-down.png"
+      }
     },
     {
       "name": "moss-down-damage",
@@ -699,7 +687,7 @@
           "failure": "",
           "generations": 3,
           "motion": {
-            "age": 0.873666666666667,
+            "age": 0.857700000000001,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -707,7 +695,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.242685185185185,
+            "phase": 0.23825,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -715,7 +703,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 188
+          "updates": 271
         },
         "persistence_active": false,
         "phase": "mine",
@@ -727,7 +715,7 @@
         "progress": 0,
         "swing": 4,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -758,7 +746,7 @@
           "failure": "",
           "generations": 3,
           "motion": {
-            "age": 0.345755555555556,
+            "age": 0.390066666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -766,7 +754,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.508932773919753,
+            "phase": 0.563741319444444,
             "support_release": 1,
             "swing_serial": 5,
             "transitions": 2,
@@ -774,7 +762,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 209
+          "updates": 295
         },
         "persistence_active": false,
         "phase": "mine",
@@ -783,18 +771,16 @@
           72,
           680
         ],
-        "progress": 0.458132716049383,
+        "progress": 0.518611111111111,
         "swing": 5,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": null
+      }
     },
     {
       "name": "moss-left",
@@ -822,7 +808,7 @@
           "failure": "",
           "generations": 4,
           "motion": {
-            "age": 0.355522222222223,
+            "age": 0.1919,
             "aim_ready": true,
             "duration": 0.109512,
             "errors": [],
@@ -830,15 +816,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.747231125356127,
-            "support_release": 0.993910977738355,
+            "phase": 0.433077368233618,
+            "support_release": 1,
             "swing_serial": 7,
             "transitions": 2,
             "yaw": 2.86819719386437
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 308
+          "updates": 390
         },
         "persistence_active": false,
         "phase": "mine",
@@ -847,10 +833,10 @@
           520,
           408
         ],
-        "progress": 0.721082621082622,
+        "progress": 0.374430199430199,
         "swing": 7,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -864,10 +850,10 @@
         "error": "",
         "fixture": "moss",
         "gear": "worn",
-        "health": 27680,
+        "health": 27684,
         "hit_phase": 0.36,
         "id": 5,
-        "impact": 8,
+        "impact": 7,
         "impact_target_valid": true,
         "menu": false,
         "mine_button": [
@@ -881,7 +867,7 @@
           "failure": "",
           "generations": 4,
           "motion": {
-            "age": 0.795088888888889,
+            "age": 0.508866666666667,
             "aim_ready": true,
             "duration": 0.109512,
             "errors": [],
@@ -889,15 +875,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.692171919515669,
-            "support_release": 1,
+            "phase": 0.0603276353276356,
+            "support_release": 0.0187798175963873,
             "swing_serial": 8,
             "transitions": 2,
             "yaw": 2.86819719386437
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 325
+          "updates": 402
         },
         "persistence_active": false,
         "phase": "mine",
@@ -906,18 +892,16 @@
           520,
           408
         ],
-        "progress": 0.660327635327635,
+        "progress": 0.0517094017094019,
         "swing": 8,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/moss-left.png"
+      }
     },
     {
       "name": "moss-left-damage",
@@ -945,7 +929,7 @@
           "failure": "",
           "generations": 4,
           "motion": {
-            "age": 0.867366666666667,
+            "age": 0.560966666666667,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -953,7 +937,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.240935185185185,
+            "phase": 0.155824074074074,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -961,7 +945,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 285
+          "updates": 371
         },
         "persistence_active": false,
         "phase": "mine",
@@ -973,7 +957,7 @@
         "progress": 0,
         "swing": 6,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1004,7 +988,7 @@
           "failure": "",
           "generations": 4,
           "motion": {
-            "age": 0.355522222222223,
+            "age": 0.1919,
             "aim_ready": true,
             "duration": 0.109512,
             "errors": [],
@@ -1012,15 +996,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.747231125356127,
-            "support_release": 0.993910977738355,
+            "phase": 0.433077368233618,
+            "support_release": 1,
             "swing_serial": 7,
             "transitions": 2,
             "yaw": 2.86819719386437
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 308
+          "updates": 390
         },
         "persistence_active": false,
         "phase": "mine",
@@ -1029,18 +1013,16 @@
           520,
           408
         ],
-        "progress": 0.721082621082622,
+        "progress": 0.374430199430199,
         "swing": 7,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": null
+      }
     },
     {
       "name": "moss-held-rush",
@@ -1051,10 +1033,10 @@
         "error": "",
         "fixture": "moss",
         "gear": "worn",
-        "health": 27676,
+        "health": 27680,
         "hit_phase": 0.36,
         "id": 6,
-        "impact": 9,
+        "impact": 8,
         "impact_target_valid": true,
         "menu": false,
         "mine_button": [
@@ -1068,7 +1050,7 @@
           "failure": "",
           "generations": 5,
           "motion": {
-            "age": 0.834533333333334,
+            "age": 0.809344444444445,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -1076,7 +1058,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.231814814814815,
+            "phase": 0.224817901234568,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -1084,7 +1066,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 385
+          "updates": 454
         },
         "persistence_active": false,
         "phase": "mine",
@@ -1094,9 +1076,9 @@
           408
         ],
         "progress": 0,
-        "swing": 9,
+        "swing": 8,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1110,10 +1092,10 @@
         "error": "",
         "fixture": "moss",
         "gear": "worn",
-        "health": 27668,
+        "health": 27672,
         "hit_phase": 0.36,
         "id": 6,
-        "impact": 11,
+        "impact": 10,
         "impact_target_valid": true,
         "menu": false,
         "mine_button": [
@@ -1127,7 +1109,7 @@
           "failure": "",
           "generations": 5,
           "motion": {
-            "age": 0.8627,
+            "age": 0.871200000000001,
             "aim_ready": true,
             "duration": 0.109512,
             "errors": [],
@@ -1135,15 +1117,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.812940705128205,
-            "support_release": 0.522750283019965,
-            "swing_serial": 11,
+            "phase": 0.831487416904083,
+            "support_release": 0.317978824616668,
+            "swing_serial": 10,
             "transitions": 2,
             "yaw": -0.273395459725419
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 427
+          "updates": 507
         },
         "persistence_active": false,
         "phase": "mine",
@@ -1152,18 +1134,16 @@
           872,
           408
         ],
-        "progress": 0.793589743589744,
-        "swing": 11,
+        "progress": 0.814055080721747,
+        "swing": 10,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": null
+      }
     },
     {
       "name": "moss-walk-exit",
@@ -1174,10 +1154,10 @@
         "error": "",
         "fixture": "moss",
         "gear": "worn",
-        "health": 27668,
+        "health": 27672,
         "hit_phase": 0.36,
         "id": 6,
-        "impact": 11,
+        "impact": 10,
         "impact_target_valid": true,
         "menu": false,
         "mine_button": [
@@ -1191,7 +1171,7 @@
           "failure": "",
           "generations": 5,
           "motion": {
-            "age": 0.451266666666667,
+            "age": 0.484311111111111,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1199,15 +1179,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.114120548433049,
+            "phase": 0.0978032110636275,
             "support_release": 0,
-            "swing_serial": 11,
+            "swing_serial": 10,
             "transitions": 3,
             "yaw": 3.14159263173215
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 443
+          "updates": 537
         },
         "persistence_active": false,
         "phase": "mine",
@@ -1217,9 +1197,9 @@
           408
         ],
         "progress": 0,
-        "swing": 11,
+        "swing": 10,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1233,10 +1213,10 @@
         "error": "",
         "fixture": "moss",
         "gear": "worn",
-        "health": 27668,
+        "health": 27672,
         "hit_phase": 0.36,
         "id": 6,
-        "impact": 11,
+        "impact": 10,
         "impact_target_valid": true,
         "menu": false,
         "mine_button": [
@@ -1250,7 +1230,7 @@
           "failure": "",
           "generations": 5,
           "motion": {
-            "age": 0.7397,
+            "age": 0.680111111111111,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1258,15 +1238,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.194240918803419,
+            "phase": 0.152192099952516,
             "support_release": 0,
-            "swing_serial": 11,
+            "swing_serial": 10,
             "transitions": 3,
             "yaw": 3.14159263173215
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 457
+          "updates": 549
         },
         "persistence_active": false,
         "phase": "mine",
@@ -1276,17 +1256,15 @@
           408
         ],
         "progress": 0,
-        "swing": 11,
+        "swing": 10,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/moss-walk-exit.png"
+      }
     },
     {
       "name": "endless-up",
@@ -1314,7 +1292,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.4085,
+            "age": 0.399455555555556,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1322,7 +1300,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.600735294117647,
+            "phase": 0.587434640522876,
             "support_release": 1,
             "swing_serial": 1,
             "transitions": 1,
@@ -1339,10 +1317,10 @@
           1863.21313476562,
           1171.23059082031
         ],
-        "progress": 0.600735294117647,
+        "progress": 0.587434640522876,
         "swing": 1,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1373,7 +1351,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.652777777777778,
+            "age": 0.792255555555555,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1381,15 +1359,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.959967320261438,
-            "support_release": 0,
-            "swing_serial": 1,
+            "phase": 0.165081699346405,
+            "support_release": 0.952467863188363,
+            "swing_serial": 2,
             "transitions": 1,
             "yaw": 2.91002376213933
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 70
+          "updates": 76
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1398,18 +1376,16 @@
           1863.21313476562,
           1171.23059082031
         ],
-        "progress": 0.959967320261438,
-        "swing": 1,
+        "progress": 0.165081699346405,
+        "swing": 2,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/endless-up.png"
+      }
     },
     {
       "name": "endless-up-damage",
@@ -1437,7 +1413,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 1.7148,
+            "age": 1.82163333333333,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -1445,7 +1421,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.198555555555556,
+            "phase": 0.228231481481482,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -1453,7 +1429,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 26
+          "updates": 32
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1465,7 +1441,7 @@
         "progress": 0,
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1496,7 +1472,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.4085,
+            "age": 0.399455555555556,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1504,7 +1480,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.600735294117647,
+            "phase": 0.587434640522876,
             "support_release": 1,
             "swing_serial": 1,
             "transitions": 1,
@@ -1521,18 +1497,16 @@
           1863.21313476562,
           1171.23059082031
         ],
-        "progress": 0.600735294117647,
+        "progress": 0.587434640522876,
         "swing": 1,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": null
+      }
     },
     {
       "name": "endless-right",
@@ -1560,7 +1534,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.399066666666667,
+            "age": 0.4346,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1568,7 +1542,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.586862745098039,
+            "phase": 0.639117647058823,
             "support_release": 1,
             "swing_serial": 3,
             "transitions": 4,
@@ -1576,7 +1550,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 143
+          "updates": 150
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1585,10 +1559,10 @@
           810,
           416
         ],
-        "progress": 0.586862745098039,
+        "progress": 0.639117647058823,
         "swing": 3,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1619,7 +1593,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.599066666666667,
+            "age": 0.601266666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1627,7 +1601,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.880980392156863,
+            "phase": 0.88421568627451,
             "support_release": 0,
             "swing_serial": 3,
             "transitions": 4,
@@ -1635,7 +1609,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 155
+          "updates": 160
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1644,18 +1618,16 @@
           810,
           416
         ],
-        "progress": 0.880980392156863,
+        "progress": 0.88421568627451,
         "swing": 3,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/endless-right.png"
+      }
     },
     {
       "name": "endless-right-damage",
@@ -1683,7 +1655,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.799333333333334,
+            "age": 0.697466666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1691,7 +1663,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.502275599128541,
+            "phase": 0.638725490196079,
             "support_release": 0,
             "swing_serial": 2,
             "transitions": 3,
@@ -1711,7 +1683,7 @@
         "progress": 0,
         "swing": 2,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1742,7 +1714,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.399066666666667,
+            "age": 0.317933333333333,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1750,7 +1722,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.586862745098039,
+            "phase": 0.467549019607843,
             "support_release": 1,
             "swing_serial": 3,
             "transitions": 4,
@@ -1767,18 +1739,16 @@
           810,
           416
         ],
-        "progress": 0.586862745098039,
+        "progress": 0.467549019607843,
         "swing": 3,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": null
+      }
     },
     {
       "name": "endless-down",
@@ -1806,15 +1776,15 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.347662499972247,
+            "age": 0.383366666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
             "max_contact_pixels": 0.000041961669921875,
             "max_reach_error": 0,
-            "max_tool_retarget": 0.0246124491095543,
+            "max_tool_retarget": 0.0228681061416864,
             "mode": "mine",
-            "phase": 0.511268382312127,
+            "phase": 0.563774509803922,
             "support_release": 1,
             "swing_serial": 5,
             "transitions": 7,
@@ -1822,7 +1792,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 235
+          "updates": 242
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1831,10 +1801,10 @@
           864,
           362
         ],
-        "progress": 0.511268382312127,
+        "progress": 0.563774509803922,
         "swing": 5,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1865,23 +1835,23 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.597662499972247,
+            "age": 0.5667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
             "max_contact_pixels": 0.000041961669921875,
             "max_reach_error": 0,
-            "max_tool_retarget": 0.0246124491095543,
+            "max_tool_retarget": 0.0228681061416864,
             "mode": "mine",
-            "phase": 0.878915441135657,
-            "support_release": 0.00345558127009599,
+            "phase": 0.833382352941177,
+            "support_release": 0.297451069640419,
             "swing_serial": 5,
             "transitions": 7,
             "yaw": 4.43899338844704
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 250
+          "updates": 253
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1890,18 +1860,16 @@
           864,
           362
         ],
-        "progress": 0.878915441135657,
+        "progress": 0.833382352941177,
         "swing": 5,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/endless-down.png"
+      }
     },
     {
       "name": "endless-down-damage",
@@ -1929,7 +1897,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.796404166694421,
+            "age": 0.815666666666668,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1937,7 +1905,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.413367170487013,
+            "phase": 0.38818191721133,
             "support_release": 0,
             "swing_serial": 4,
             "transitions": 6,
@@ -1945,7 +1913,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 209
+          "updates": 215
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1957,7 +1925,7 @@
         "progress": 0,
         "swing": 4,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1988,15 +1956,15 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.347662499972247,
+            "age": 0.383366666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
             "max_contact_pixels": 0.000041961669921875,
             "max_reach_error": 0,
-            "max_tool_retarget": 0.0246124491095543,
+            "max_tool_retarget": 0.0228681061416864,
             "mode": "mine",
-            "phase": 0.511268382312127,
+            "phase": 0.563774509803922,
             "support_release": 1,
             "swing_serial": 5,
             "transitions": 7,
@@ -2004,7 +1972,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 235
+          "updates": 242
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2013,18 +1981,16 @@
           864,
           362
         ],
-        "progress": 0.511268382312127,
+        "progress": 0.563774509803922,
         "swing": 5,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": null
+      }
     },
     {
       "name": "endless-left",
@@ -2052,15 +2018,15 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.466022222222222,
+            "age": 0.368055555555556,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
             "max_contact_pixels": 0.000041961669921875,
             "max_reach_error": 0,
-            "max_tool_retarget": 0.0246124491095543,
+            "max_tool_retarget": 0.0228681061416864,
             "mode": "mine",
-            "phase": 0.685326797385621,
+            "phase": 0.54125816993464,
             "support_release": 1,
             "swing_serial": 7,
             "transitions": 10,
@@ -2068,7 +2034,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 336
+          "updates": 333
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2077,10 +2043,10 @@
           918,
           416
         ],
-        "progress": 0.685326797385621,
+        "progress": 0.54125816993464,
         "swing": 7,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2111,16 +2077,16 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.544566666666667,
+            "age": 0.484722222222222,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
             "max_contact_pixels": 0.000041961669921875,
             "max_reach_error": 0,
-            "max_tool_retarget": 0.0246124491095543,
+            "max_tool_retarget": 0.0228681061416864,
             "mode": "mine",
-            "phase": 0.800833333333333,
-            "support_release": 0.660521923835535,
+            "phase": 0.712826797385621,
+            "support_release": 1,
             "swing_serial": 7,
             "transitions": 10,
             "yaw": 3.28895811394142
@@ -2136,18 +2102,16 @@
           918,
           416
         ],
-        "progress": 0.800833333333333,
+        "progress": 0.712826797385621,
         "swing": 7,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/endless-left.png"
+      }
     },
     {
       "name": "endless-left-damage",
@@ -2175,15 +2139,15 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.798766666666668,
+            "age": 0.809533333333334,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
             "max_contact_pixels": 0.000041961669921875,
             "max_reach_error": 0,
-            "max_tool_retarget": 0.0246124491095543,
+            "max_tool_retarget": 0.0228681061416864,
             "mode": "idle",
-            "phase": 0.421341367061584,
+            "phase": 0.407918300653595,
             "support_release": 0,
             "swing_serial": 6,
             "transitions": 9,
@@ -2191,7 +2155,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 303
+          "updates": 308
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2203,7 +2167,7 @@
         "progress": 0,
         "swing": 6,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2234,15 +2198,15 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.349355555555556,
+            "age": 0.368055555555556,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
             "max_contact_pixels": 0.000041961669921875,
             "max_reach_error": 0,
-            "max_tool_retarget": 0.0246124491095543,
+            "max_tool_retarget": 0.0228681061416864,
             "mode": "mine",
-            "phase": 0.51375816993464,
+            "phase": 0.54125816993464,
             "support_release": 1,
             "swing_serial": 7,
             "transitions": 10,
@@ -2250,7 +2214,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 329
+          "updates": 333
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2259,18 +2223,16 @@
           918,
           416
         ],
-        "progress": 0.51375816993464,
+        "progress": 0.54125816993464,
         "swing": 7,
         "target_valid": true,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": null
+      }
     },
     {
       "name": "iron-restored",
@@ -2300,7 +2262,7 @@
           "motion": {},
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 359
+          "updates": 358
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2310,9 +2272,9 @@
           416
         ],
         "progress": 0,
-        "swing": 8,
+        "swing": 7,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2345,7 +2307,7 @@
           "motion": {},
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 359
+          "updates": 358
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2355,17 +2317,15 @@
           416
         ],
         "progress": 0,
-        "swing": 8,
+        "swing": 7,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/iron-restored.png"
+      }
     },
     {
       "name": "drill-restored",
@@ -2395,7 +2355,7 @@
           "motion": {},
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 359
+          "updates": 358
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2405,9 +2365,9 @@
           416
         ],
         "progress": 0,
-        "swing": 8,
+        "swing": 7,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2440,7 +2400,7 @@
           "motion": {},
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 359
+          "updates": 358
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2450,17 +2410,15 @@
           416
         ],
         "progress": 0,
-        "swing": 8,
+        "swing": 7,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/drill-restored.png"
+      }
     },
     {
       "name": "worn-outfit-reentry",
@@ -2488,7 +2446,7 @@
           "failure": "",
           "generations": 2,
           "motion": {
-            "age": 0.834566666666667,
+            "age": 0.680866666666667,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2496,7 +2454,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.231824074074074,
+            "phase": 0.189129629629629,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -2504,7 +2462,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 394
+          "updates": 383
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2514,9 +2472,9 @@
           416
         ],
         "progress": 0,
-        "swing": 8,
+        "swing": 7,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2547,7 +2505,7 @@
           "failure": "",
           "generations": 2,
           "motion": {
-            "age": 1.11813333333333,
+            "age": 0.930866666666668,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2555,7 +2513,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.310592592592593,
+            "phase": 0.258574074074074,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -2563,7 +2521,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 411
+          "updates": 398
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2573,17 +2531,15 @@
           416
         ],
         "progress": 0,
-        "swing": 8,
+        "swing": 7,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/worn-outfit-reentry.png"
+      }
     },
     {
       "name": "surface-ordinary",
@@ -2611,7 +2567,7 @@
           "failure": "",
           "generations": 2,
           "motion": {
-            "age": 1.71503333333333,
+            "age": 1.82183333333333,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2619,7 +2575,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.19862037037037,
+            "phase": 0.228287037037037,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -2627,7 +2583,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 44
+          "updates": 40
         },
         "persistence_active": false,
         "phase": "surface",
@@ -2639,7 +2595,7 @@
         "progress": 0,
         "swing": 2,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2670,7 +2626,7 @@
           "failure": "",
           "generations": 2,
           "motion": {
-            "age": 1.94836666666666,
+            "age": 1.92183333333333,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2678,7 +2634,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.263435185185185,
+            "phase": 0.256064814814815,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -2686,7 +2642,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 58
+          "updates": 46
         },
         "persistence_active": false,
         "phase": "surface",
@@ -2698,15 +2654,13 @@
         "progress": 0,
         "swing": 2,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": false
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/surface-ordinary.png"
+      }
     },
     {
       "name": "depth-ordinary",
@@ -2734,7 +2688,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.7,
+            "age": 0.484133333333334,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2742,7 +2696,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.194444444444444,
+            "phase": 0.134481481481482,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -2750,7 +2704,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 21
+          "updates": 5
         },
         "persistence_active": false,
         "phase": "depth",
@@ -2762,7 +2716,7 @@
         "progress": 0,
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2793,7 +2747,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.952766666666667,
+            "age": 0.644833333333334,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2801,7 +2755,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.264657407407407,
+            "phase": 0.17912037037037,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -2809,7 +2763,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 36
+          "updates": 15
         },
         "persistence_active": false,
         "phase": "depth",
@@ -2821,15 +2775,13 @@
         "progress": 0,
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/depth-ordinary.png"
+      }
     },
     {
       "name": "hub-ordinary",
@@ -2857,7 +2809,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.832366666666668,
+            "age": 0.818433333333334,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2865,7 +2817,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.231212962962963,
+            "phase": 0.227342592592592,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -2885,7 +2837,7 @@
         "progress": 0,
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2916,7 +2868,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 1.08857777777778,
+            "age": 0.985100000000001,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2924,7 +2876,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.302382716049383,
+            "phase": 0.273638888888889,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -2932,7 +2884,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 55
+          "updates": 50
         },
         "persistence_active": false,
         "phase": "hub",
@@ -2944,15 +2896,13 @@
         "progress": 0,
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/hub-ordinary.png"
+      }
     },
     {
       "name": "deepheart-ordinary",
@@ -2980,7 +2930,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 1.87433333333333,
+            "age": 1.7736,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2988,7 +2938,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.520648148148149,
+            "phase": 0.492666666666667,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -2996,7 +2946,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 94
+          "updates": 89
         },
         "persistence_active": false,
         "phase": "hub",
@@ -3008,7 +2958,7 @@
         "progress": 0,
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -3039,7 +2989,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 2.07433333333333,
+            "age": 1.99026666666667,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -3047,7 +2997,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.576203703703704,
+            "phase": 0.552851851851852,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -3055,7 +3005,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 106
+          "updates": 102
         },
         "persistence_active": false,
         "phase": "hub",
@@ -3067,15 +3017,13 @@
         "progress": 0,
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": true
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/deepheart-ordinary.png"
+      }
     },
     {
       "name": "surface-touch-release",
@@ -3103,7 +3051,7 @@
           "failure": "",
           "generations": 3,
           "motion": {
-            "age": 0.375366666666667,
+            "age": 0.0502,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -3111,7 +3059,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.0925488040123464,
+            "phase": 0.00144155092592668,
             "support_release": 0,
             "swing_serial": 3,
             "transitions": 2,
@@ -3119,7 +3067,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 167
+          "updates": 144
         },
         "persistence_active": false,
         "phase": "surface",
@@ -3131,7 +3079,7 @@
         "progress": 0,
         "swing": 3,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -3145,7 +3093,7 @@
         "error": "",
         "fixture": "surface",
         "gear": "worn",
-        "health": 358,
+        "health": 357,
         "hit_phase": 0.36,
         "id": 18,
         "impact": 2,
@@ -3162,7 +3110,7 @@
           "failure": "",
           "generations": 3,
           "motion": {
-            "age": 0.630481481481482,
+            "age": 0.267066666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -3170,7 +3118,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.163414030349795,
+            "phase": 0.0616822916666674,
             "support_release": 0,
             "swing_serial": 3,
             "transitions": 2,
@@ -3178,7 +3126,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 181
+          "updates": 157
         },
         "persistence_active": false,
         "phase": "surface",
@@ -3190,15 +3138,13 @@
         "progress": 0,
         "swing": 3,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": false
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/surface-touch-release.png"
+      }
     },
     {
       "name": "dev14-pause",
@@ -3228,7 +3174,7 @@
           "motion": {},
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 182
+          "updates": 158
         },
         "persistence_active": false,
         "phase": "surface",
@@ -3240,7 +3186,7 @@
         "progress": 0,
         "swing": 3,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -3273,7 +3219,7 @@
           "motion": {},
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 182
+          "updates": 158
         },
         "persistence_active": false,
         "phase": "surface",
@@ -3285,248 +3231,28 @@
         "progress": 0,
         "swing": 3,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": false
-      },
-      "evidence_run": 35596622855,
-      "image": "prior/dev14-pause.png"
-    },
-    {
-      "name": "dev14-pause-confirmed",
-      "before": {
-        "active_rigs": 0,
-        "cycle": 0,
-        "drill_level": 0,
-        "error": "",
-        "fixture": "pause",
-        "gear": "",
-        "health": 360,
-        "hit_phase": -1,
-        "id": 2,
-        "impact": 0,
-        "impact_target_valid": false,
-        "menu": true,
-        "mine_button": [
-          1223.36364746094,
-          535.54541015625
-        ],
-        "mining": false,
-        "native": {
-          "active": false,
-          "failed": false,
-          "failure": "",
-          "generations": 1,
-          "motion": {},
-          "surface_cache": 0,
-          "unreachable_contacts": 0,
-          "updates": 14
-        },
-        "persistence_active": false,
-        "phase": "surface",
-        "pickaxe_level": 1,
-        "position": [
-          600,
-          650
-        ],
-        "progress": 0,
-        "swing": 0,
-        "target_valid": false,
-        "version": "1.0.0-dev.14",
-        "viewport": [
-          1416.36364746094,
-          654.54541015625
-        ],
-        "world_active": false
-      },
-      "after": {
-        "active_rigs": 0,
-        "cycle": 0,
-        "drill_level": 0,
-        "error": "",
-        "fixture": "pause",
-        "gear": "",
-        "health": 360,
-        "hit_phase": -1,
-        "id": 2,
-        "impact": 0,
-        "impact_target_valid": false,
-        "menu": true,
-        "mine_button": [
-          1223.36364746094,
-          535.54541015625
-        ],
-        "mining": false,
-        "native": {
-          "active": false,
-          "failed": false,
-          "failure": "",
-          "generations": 1,
-          "motion": {},
-          "surface_cache": 0,
-          "unreachable_contacts": 0,
-          "updates": 14
-        },
-        "persistence_active": false,
-        "phase": "surface",
-        "pickaxe_level": 1,
-        "position": [
-          600,
-          650
-        ],
-        "progress": 0,
-        "swing": 0,
-        "target_valid": false,
-        "version": "1.0.0-dev.14",
-        "viewport": [
-          1416.36364746094,
-          654.54541015625
-        ],
-        "world_active": false
-      },
-      "image": "dev14-pause-confirmed.png",
-      "evidence_run": "35597706023"
-    },
-    {
-      "name": "dev14-resumed",
-      "before": {
-        "active_rigs": 1,
-        "cycle": 0,
-        "drill_level": 0,
-        "error": "",
-        "fixture": "resume",
-        "gear": "worn",
-        "health": 360,
-        "hit_phase": -1,
-        "id": 3,
-        "impact": 0,
-        "impact_target_valid": false,
-        "menu": false,
-        "mine_button": [
-          1223.36364746094,
-          535.54541015625
-        ],
-        "mining": false,
-        "native": {
-          "active": true,
-          "failed": false,
-          "failure": "",
-          "generations": 2,
-          "motion": {
-            "age": 0.6081,
-            "aim_ready": false,
-            "duration": 0.12,
-            "errors": [],
-            "max_contact_pixels": 0,
-            "max_reach_error": 0,
-            "max_tool_retarget": 0,
-            "mode": "idle",
-            "phase": 0.695907082419672,
-            "support_release": 0,
-            "swing_serial": -1,
-            "transitions": 2,
-            "yaw": 3.14159263173215
-          },
-          "surface_cache": 0,
-          "unreachable_contacts": 0,
-          "updates": 87
-        },
-        "persistence_active": false,
-        "phase": "surface",
-        "pickaxe_level": 1,
-        "position": [
-          600,
-          689.666809082031
-        ],
-        "progress": 0,
-        "swing": 0,
-        "target_valid": false,
-        "version": "1.0.0-dev.14",
-        "viewport": [
-          1416.36364746094,
-          654.54541015625
-        ],
-        "world_active": false
-      },
-      "after": {
-        "active_rigs": 1,
-        "cycle": 0,
-        "drill_level": 0,
-        "error": "",
-        "fixture": "resume",
-        "gear": "worn",
-        "health": 360,
-        "hit_phase": -1,
-        "id": 3,
-        "impact": 0,
-        "impact_target_valid": false,
-        "menu": false,
-        "mine_button": [
-          1223.36364746094,
-          535.54541015625
-        ],
-        "mining": false,
-        "native": {
-          "active": true,
-          "failed": false,
-          "failure": "",
-          "generations": 2,
-          "motion": {
-            "age": 0.808100000000001,
-            "aim_ready": false,
-            "duration": 0.12,
-            "errors": [],
-            "max_contact_pixels": 0,
-            "max_reach_error": 0,
-            "max_tool_retarget": 0,
-            "mode": "idle",
-            "phase": 0.751462637975227,
-            "support_release": 0,
-            "swing_serial": -1,
-            "transitions": 2,
-            "yaw": 3.14159263173215
-          },
-          "surface_cache": 0,
-          "unreachable_contacts": 0,
-          "updates": 99
-        },
-        "persistence_active": false,
-        "phase": "surface",
-        "pickaxe_level": 1,
-        "position": [
-          600,
-          689.666809082031
-        ],
-        "progress": 0,
-        "swing": 0,
-        "target_valid": false,
-        "version": "1.0.0-dev.14",
-        "viewport": [
-          1416.36364746094,
-          654.54541015625
-        ],
-        "world_active": false
-      },
-      "image": "dev14-resumed.png",
-      "evidence_run": "35597706023"
+      }
     },
     {
       "name": "resume-real-input",
       "before": {
         "active_rigs": 1,
-        "cycle": 0,
+        "cycle": 0.72,
         "drill_level": 0,
         "error": "",
         "fixture": "resume",
         "gear": "worn",
         "health": 360,
-        "hit_phase": -1,
-        "id": 3,
-        "impact": 0,
-        "impact_target_valid": false,
+        "hit_phase": 0.36,
+        "id": 20,
+        "impact": 2,
+        "impact_target_valid": true,
         "menu": false,
         "mine_button": [
           1223.36364746094,
@@ -3537,9 +3263,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 2,
+          "generations": 4,
           "motion": {
-            "age": 1.6922,
+            "age": 1.81676666666667,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -3547,7 +3273,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.192277777777778,
+            "phase": 0.22687962962963,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -3555,7 +3281,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 40
+          "updates": 192
         },
         "persistence_active": false,
         "phase": "surface",
@@ -3565,9 +3291,9 @@
           650
         ],
         "progress": 0,
-        "swing": 0,
+        "swing": 3,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -3576,16 +3302,16 @@
       },
       "after": {
         "active_rigs": 1,
-        "cycle": 0,
+        "cycle": 0.72,
         "drill_level": 0,
         "error": "",
         "fixture": "resume",
         "gear": "worn",
         "health": 360,
-        "hit_phase": -1,
-        "id": 3,
-        "impact": 0,
-        "impact_target_valid": false,
+        "hit_phase": 0.36,
+        "id": 20,
+        "impact": 2,
+        "impact_target_valid": true,
         "menu": false,
         "mine_button": [
           1223.36364746094,
@@ -3596,9 +3322,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 2,
+          "generations": 4,
           "motion": {
-            "age": 0.258566666666667,
+            "age": 0.183333333333333,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -3606,7 +3332,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.598814489827079,
+            "phase": 0.57791634167893,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 2,
@@ -3614,7 +3340,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 66
+          "updates": 211
         },
         "persistence_active": false,
         "phase": "surface",
@@ -3624,22 +3350,138 @@
           689.666809082031
         ],
         "progress": 0,
-        "swing": 0,
+        "swing": 3,
         "target_valid": false,
-        "version": "1.0.0-dev.14",
+        "version": "1.0.0-dev.14.1",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": false
+      }
+    },
+    {
+      "name": "dev14-resumed",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "resume",
+        "gear": "worn",
+        "health": 360,
+        "hit_phase": 0.36,
+        "id": 20,
+        "impact": 2,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 4,
+          "motion": {
+            "age": 0.183333333333333,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.57791634167893,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 2,
+            "yaw": 3.14159263173215
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 211
+        },
+        "persistence_active": false,
+        "phase": "surface",
+        "pickaxe_level": 1,
+        "position": [
+          600,
+          689.666809082031
+        ],
+        "progress": 0,
+        "swing": 3,
+        "target_valid": false,
+        "version": "1.0.0-dev.14.1",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": false
       },
-      "evidence_run": "35597706023"
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "resume",
+        "gear": "worn",
+        "health": 360,
+        "hit_phase": 0.36,
+        "id": 20,
+        "impact": 2,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 4,
+          "motion": {
+            "age": 0.433333333333333,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.647360786123375,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 2,
+            "yaw": 3.14159263173215
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 226
+        },
+        "persistence_active": false,
+        "phase": "surface",
+        "pickaxe_level": 1,
+        "position": [
+          600,
+          689.666809082031
+        ],
+        "progress": 0,
+        "swing": 3,
+        "target_valid": false,
+        "version": "1.0.0-dev.14.1",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": false
+      }
     }
   ],
-  "preceding_run": 35596622855,
-  "preceding_report_sha256": "6a0b6015753353c0e0f27538802389754e51a35ca82bb74e88e8b22bbc723b16",
-  "preceding_observer_failure": "Surface has no active property; prior failure and all original evidence retained in prior/",
-  "supplement": "Only remaining resume gate rerun; actual keyboard movement required; no re-export",
   "bootstrap_fixture": "HTML injects only explicit QA launch args. Named non-persistent fixture uses ordinary DEV jumps/equipment, clears queued achievement toasts and exercises real input/menu paths. Main scene and game package bytes unchanged.",
   "physical_iphone_verified": false,
   "continuous_motion_or_fps_certified": false

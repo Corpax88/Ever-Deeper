@@ -1,0 +1,17 @@
+{
+  "status": "inconclusive_automation_attempt",
+  "candidate_source": "6d6e1b8d98ecae6661b514fff92e28447715dd33",
+  "run_id": 35608051678,
+  "test_commit": "f5311101d7d8ec10d675901e3e5034546ccbe6c3",
+  "artifact_id": 10642408701,
+  "artifact_digest": "sha256:294f29227077486ed2cc332864fb8317725c6f18ee2615610f2c0fb67e69669a",
+  "report_sha256": "c0fe73a2cb8dcad0fcab56782062a30833737b6b3de5885828f7eaaa1530da90",
+  "video_sha256": "e03f9e327a3f2248558ca391ae7ecc2509095f5d91bdca8ef1072d5632445bcf",
+  "observed": [
+    "Native Safari session and initial document request occurred. The automation then clicked a generic Close control.",
+    "The actual recorded early and late frames show Safari Start Page, not the game or the user's repeated-problem screen.",
+    "No heartbeat, game-button tap or completed game capture was recorded. The driver subsequently expired its 60-second idle timeout.",
+    "This does not establish either success or failure of the candidate's iPhone gameplay. No Simulator or physical-device repair is certified."
+  ],
+  "decision_basis": "The additional Simulator attempt is inconclusive. Publication is scoped to the reviewed ordinary DEV optimization backed by the successful exact-package Mac Chromium/WebKit captures and gameplay checks."
+}

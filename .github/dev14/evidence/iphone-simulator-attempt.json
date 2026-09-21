@@ -1,12 +1,5 @@
 {
   "version": "1.0.0-dev.14.1",
-  "source_commit": "6d6e1b8d98ecae6661b514fff92e28447715dd33",
-  "main_scene": "res://scenes/main/main.tscn",
-  "save_path": "user://ever_deeper_dev_run_v3.sav",
-  "native_input_pck": {
-    "size": 327093712,
-    "sha256": "74db0719dc5d151e0ad9491e9c5e90769c6f85ff8f8db07fe55c4b825277da05"
-  },
   "files": {
     "index.html": {
       "size": 7855,
@@ -45,5 +38,28 @@
       "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
     }
   },
-  "physical_iphone_verified": false
+  "source_commit": "6d6e1b8d98ecae6661b514fff92e28447715dd33",
+  "physical_iphone": false,
+  "fixture_args": [],
+  "scope": "Safari app in iOS Simulator, XCTest native touches. HTML-only read-only heartbeat observes viewport/version/RAF. No game-state injection.",
+  "captures": [],
+  "taps": [],
+  "documents": [
+    {
+      "url": "/",
+      "at": 1789998941348
+    }
+  ],
+  "heartbeats": [],
+  "environment": {
+    "xcode": "Xcode 26.2\nBuild version 17C52\n",
+    "node": "v22.23.2"
+  },
+  "device": {
+    "name": "iPhone 17 Pro",
+    "udid": "E952A9B0-CC78-435C-BF08-06AD47FE1076",
+    "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2"
+  },
+  "context": "NATIVE_APP",
+  "failure": "Error: Ordinary Safari game did not become ready\n    at ready (file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/dev14-ios/safari.mjs:29:243)\n    at async file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/dev14-ios/safari.mjs:53:2"
 }

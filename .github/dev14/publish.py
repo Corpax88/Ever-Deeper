@@ -15,25 +15,52 @@ def identity(path):
     return {'size':path.stat().st_size,'sha256':h.hexdigest()}
 def reviewed():
     review=read(HERE/'review.json'); manifest=read(HERE/'manifest.json')
-    baseline=read(HERE.parent/'native-flow-trial/baseline.json')
+    baseline=read(HERE/'baseline.json')
     worn=read(HERE.parent/'native-flow-trial/bundle.json')
-    require(review['destination']=='dev' and review['version']=='1.0.0-dev.14','Wrong release destination')
+    version='1.0.0-dev.14.1'
+    require(review['destination']=='dev' and review['version']==version,'Wrong release destination')
     require(review['live_authorized'] is False,'LIVE is not authorized')
     require(all(review.get(k) is True for k in ['ordinary_game_adopted','independent_visual_accepted','exported_gameplay_passed','publisher_reviewed']),'Incomplete release review')
-    require(set(manifest)==FILES,'Incomplete DEV14 file set')
-    require(identity(HERE/'manifest.json')['sha256']==review['manifest_sha256'],'Manifest changed after review')
-    require(identity(HERE.parent/'native-flow-trial/baseline.json')['sha256']==review['baseline_sha256'],'DEV13/LIVE baseline changed')
+    require(set(manifest)==FILES,'Incomplete DEV file set')
+    for filename,key in {
+        'manifest.json':'manifest_sha256','baseline.json':'baseline_sha256',
+        'evidence/browser-report.json':'browser_report_sha256',
+        'evidence/core-results.json':'core_results_sha256',
+        'evidence/build.json':'build_report_sha256',
+        'evidence/native-preparation.json':'native_preparation_sha256',
+        'evidence/webkit-startup.json':'webkit_startup_sha256',
+        'evidence/iphone-simulator-attempt.json':'iphone_attempt_sha256',
+        'evidence/iphone-simulator-assessment.json':'iphone_assessment_sha256',
+        'evidence/startup-review.json':'independent_review_sha256',
+        'publish.py':'publisher_sha256',
+    }.items():
+        require(identity(HERE/filename)['sha256']==review[key],'Reviewed file changed: '+filename)
+    require(identity(HERE.parent/'workflows/publish-dev14.yml')['sha256']==review['publisher_workflow_sha256'],'Publisher workflow changed')
     require(identity(HERE.parent/'native-flow-trial/bundle.json')['sha256']==review['retained_trial_manifest_sha256'],'Retained trial changed')
+    require(baseline['displayed_dev_version']=='1.0.0-dev.14' and set(baseline['files'])=={'live','dev'},'Wrong previous DEV baseline')
     proof=read(HERE/'evidence/browser-report.json')
-    require(identity(HERE/'evidence/browser-report.json')['sha256']==review['browser_report_sha256'],'Browser evidence changed')
-    require(proof['passed'] is True and proof['version']=='1.0.0-dev.14' and proof['files']==manifest,'Browser tested different package')
-    require(proof['source_commit']==review['source_commit'] and proof['preceding_run']==review['artifact_run_id'],'Browser provenance differs')
-    prior=HERE/'evidence/preceding-browser-report.json'
-    require(identity(prior)['sha256']==proof['preceding_report_sha256'],'Preceding evidence changed')
-    preceding=read(prior)
-    require(preceding['files']==manifest and preceding['passed'] is False and 'ordinary resume timeout:' in preceding['error'],'Unexpected preceding observer result')
+    build=read(HERE/'evidence/build.json')
+    for item in [proof,build]:
+        require(item['version']==version and item['files']==manifest and item['source_commit']==review['source_commit'],'Tested package provenance differs')
+    require(proof['passed'] is True,'Ordinary graphical gameplay failed')
     names={c['name'] for c in proof['checks']}
     require({'00-normal-dev14-menu','moss-up','moss-right','moss-down','moss-left','endless-up','endless-right','endless-down','endless-left','iron-restored','drill-restored','worn-outfit-reentry','surface-ordinary','depth-ordinary','hub-ordinary','deepheart-ordinary','surface-touch-release','dev14-pause','dev14-resumed','resume-real-input'}<=names,'Incomplete ordinary gameplay evidence')
+    core=read(HERE/'evidence/core-results.json')
+    require(core['passed'] and all(c['passed'] for c in core['cases']) and {c['case'] for c in core['cases']}=={'input','overhaul','touch','build-flavor'},'Core gameplay gate failed')
+    native=read(HERE/'evidence/native-preparation.json')
+    require(native['status']=='complete' and native['geometry_and_bindings_identical'] and native['source_fingerprint']==native['prepared_fingerprint'] and native['prepared_fingerprint']['vertices']==1033415,'Native geometry/bindings changed')
+    webkit=read(HERE/'evidence/webkit-startup.json')
+    for item in [webkit]:
+        require(item.get('completed_observation') is True and not item.get('failure') and not item.get('crashed'),'Startup observer failed')
+        require(item['files']==manifest and item['version']==version and item['source_commit']==review['source_commit'] and item['fixture_args']==[],'Startup checked a different or fixture package')
+    require(len([e for e in webkit['events'] if e['event']=='navigation'])==2 and '06-confirmed-new-game.png' in webkit['images'],'Incomplete normal WebKit startup evidence')
+    attempt=read(HERE/'evidence/iphone-simulator-attempt.json')
+    assessment=read(HERE/'evidence/iphone-simulator-assessment.json')
+    require(review['iphone_simulator_verified'] is False and review['physical_iphone_verified'] is False,'Unverified iPhone claim')
+    require(assessment['status']=='inconclusive_automation_attempt' and assessment['report_sha256']==review['iphone_attempt_sha256'],'Simulator limitation must remain explicit')
+    require(attempt['files']==manifest and attempt['source_commit']==review['source_commit'] and attempt.get('failure') and attempt['taps']==[],'Unexpected Simulator evidence; review actual game interactions separately')
+    critic=read(HERE/'evidence/startup-review.json')
+    require(critic['accepted'] is True and critic['source_commit']==review['source_commit'] and critic['files']==manifest,'Independent review has not accepted this package')
     return review,manifest,baseline,worn
 
 def fetch(relative,target,expected):
@@ -50,17 +77,14 @@ def prepare(work,candidate):
     review,manifest,baseline,worn=reviewed()
     require(not work.exists(),'Use fresh publication workspace')
     work.mkdir(parents=True)
-    # Build provenance and final acceptance are separate runs of the SAME bytes.
-    # The original observer failure stays recorded; only its remaining gate was repeated.
+    # Publish the exact candidate accepted by Mac graphical/core and normal WebKit checks.
     def api(path):
         request=urllib.request.Request('https://api.github.com/repos/Corpax88/Ever-Deeper/actions/'+path,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
         with urllib.request.urlopen(request,timeout=30) as response: return json.load(response)
     run=api('runs/'+str(review['run_id']))
-    require(run['conclusion']=='success' and run['head_sha']==review['verification_commit'],'Wrong or failing final verification run')
-    source=api('runs/'+str(review['artifact_run_id']))
-    require(source['head_sha']==review['source_commit'],'Wrong candidate source run')
-    jobs=api('runs/'+str(review['artifact_run_id'])+'/jobs?filter=latest')['jobs']
-    require(any(j['name']=='build' and j['conclusion']=='success' for j in jobs),'Candidate build/core gate did not pass')
+    require(run['conclusion']=='success' and run['head_sha']==review['source_commit'] and review['run_id']==review['artifact_run_id'],'Wrong or failing candidate run')
+    jobs=api('runs/'+str(review['run_id'])+'/jobs?filter=latest')['jobs']
+    require(all(any(j['name']==name and j['conclusion']=='success' for j in jobs) for name in ['build','browser']),'Candidate build/browser gates did not pass')
     artifact=api('artifacts/'+str(review['candidate_artifact_id']))
     require(artifact['name']=='dev14-candidate' and artifact['workflow_run']['id']==review['artifact_run_id'] and artifact['digest']==review['candidate_artifact_digest'],'Candidate artifact provenance changed')
     require(read(candidate/'manifest.json')==manifest,'Downloaded artifact manifest differs')
@@ -82,7 +106,7 @@ def prepare(work,candidate):
     for name,want in worn['files'].items(): require(identity(site/'dev/worn'/name)==want,'Retained trial changed during staging')
     size=sum(p.stat().st_size for p in site.rglob('*') if p.is_file())
     require(size<1024**3,'Pages package exceeds supported site limit')
-    (work/'staging.json').write_text(json.dumps({'version':'1.0.0-dev.14','source_commit':review['source_commit'],'preserved_files':18,'dev_files':9,'site_bytes':size},indent=2))
+    (work/'staging.json').write_text(json.dumps({'version':'1.0.0-dev.14.1','source_commit':review['source_commit'],'preserved_files':18,'dev_files':9,'site_bytes':size},indent=2))
     print('DEV14_STAGED reviewed_files=9 preserved_live_and_trial=18')
 
 def verify(output):
@@ -97,7 +121,7 @@ def verify(output):
         with ThreadPoolExecutor(max_workers=3) as pool: results=list(pool.map(check,pending))
         pending=[n for n,ok in zip(pending,results) if not ok]
         if not pending:
-            (output/'publication-receipt.json').write_text(json.dumps({'passed':True,'version':'1.0.0-dev.14','destination':PUBLIC+'dev/','source_commit':review['source_commit'],'run_id':review['run_id'],'manifest_sha256':review['manifest_sha256'],'files':expected,'live_files_unchanged':9,'physical_iphone_verified':False},indent=2))
+            (output/'publication-receipt.json').write_text(json.dumps({'passed':True,'version':'1.0.0-dev.14.1','destination':PUBLIC+'dev/','source_commit':review['source_commit'],'run_id':review['run_id'],'manifest_sha256':review['manifest_sha256'],'files':expected,'live_files_unchanged':9,'physical_iphone_verified':False,'iphone_simulator_verified':False,'verification_scope':'Mac Chromium gameplay and normal Mac WebKit startup; native Simulator attempt inconclusive'},indent=2))
             print('DEV14_PUBLIC_VERIFY_OK live_unchanged=9 files=27');return
         if attempt<9: time.sleep(10)
     raise RuntimeError('Public verification failed: '+str(pending))

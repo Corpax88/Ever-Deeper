@@ -1,0 +1,49 @@
+{
+  "scope": "Mac Apple WebKit WebContent RSS only; not physical iPhone memory or all-process peak; initial menu values fluctuate with reclamation. Before and after normal first New Game, no QA fixture args. After also repeats saved-run confirmation.",
+  "measurements": {
+    "before": {
+      "menu": {
+        "rss_kib_min": 1262320,
+        "rss_kib_max": 1262320,
+        "samples": 1,
+        "gpu_rss_kib_min": 475200,
+        "gpu_rss_kib_max": 475200
+      },
+      "first-new-game": {
+        "rss_kib_min": 1604656,
+        "rss_kib_max": 1626592,
+        "samples": 30,
+        "gpu_rss_kib_min": 345408,
+        "gpu_rss_kib_max": 365136
+      }
+    },
+    "after": {
+      "menu": {
+        "rss_kib_min": 1353024,
+        "rss_kib_max": 1353024,
+        "samples": 1,
+        "gpu_rss_kib_min": 484960,
+        "gpu_rss_kib_max": 484960
+      },
+      "first-new-game": {
+        "rss_kib_min": 1086752,
+        "rss_kib_max": 1090896,
+        "samples": 30,
+        "gpu_rss_kib_min": 678960,
+        "gpu_rss_kib_max": 699072
+      },
+      "confirmed-new-game": {
+        "rss_kib_min": 1163184,
+        "rss_kib_max": 1166240,
+        "samples": 20,
+        "gpu_rss_kib_min": 683344,
+        "gpu_rss_kib_max": 693616
+      }
+    }
+  },
+  "reports": {
+    "before": "ec1bf547b8ec5a54525a15af2164bf639da5ae3c5fad778a4e3f11700e09081a",
+    "after": "5c6fd1be6b8e4eb5182a9603bc5ac3f71c7f195a1cbc1c25a9fc9c1488c42f28"
+  },
+  "limits": "GPU RSS increases in the fixed sample. Do not describe the WebContent-only reduction as total browser or physical-device memory savings; RSS can include shared pages."
+}

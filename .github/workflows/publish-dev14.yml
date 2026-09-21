@@ -1,4 +1,4 @@
-name: Publish reviewed ordinary DEV14
+name: Publish reviewed ordinary DEV14.1
 on:
   push:
     branches: [main]
@@ -41,7 +41,7 @@ jobs:
         run: python3 .github/dev14/publish.py prepare "$RUNNER_TEMP/dev14-publication" --candidate "$RUNNER_TEMP/candidate"
       - uses: actions/upload-artifact@v4
         with:
-          name: ever-deeper-dev13-before-dev14-rollback
+          name: ever-deeper-dev14-before-dev14-1-rollback
           path: ${{ runner.temp }}/dev14-publication/previous/dev
           retention-days: 30
           if-no-files-found: error
