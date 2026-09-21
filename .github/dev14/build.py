@@ -28,7 +28,10 @@ def build(godot, work):
     assert identity(pck) == bundle['files']['index.pck'], 'Approved native source changed'
     assets = ROOT/'assets/native-worn'
     run([godot,'--headless','--path',str(ROOT),'--script',str(ROOT/'.github/dev14/extract-native.gd'),'--',str(pck),str(assets)],work/'extract.log')
-    run([godot,'--headless','--path',str(ROOT),'--script',str(ROOT/'.github/dev14/prepare-native.gd')],work/'prepare-native.log')
+    preparation_project = work/'prepare-project'; preparation_project.mkdir()
+    (preparation_project/'project.godot').write_text('config_version=5\n[rendering]\nrenderer/rendering_method="gl_compatibility"\n')
+    (preparation_project/'assets').symlink_to(ROOT/'assets',target_is_directory=True)
+    run([godot,'--headless','--path',str(preparation_project),'--script',str(ROOT/'.github/dev14/prepare-native.gd')],work/'prepare-native.log')
     preparation = json.loads((assets/'runtime-scene.json').read_text())
     assert preparation['geometry_and_bindings_identical'] and preparation['source_fingerprint'] == preparation['prepared_fingerprint']
     (work/'native-preparation.json').write_text(json.dumps(preparation,indent=2)+'\n')
