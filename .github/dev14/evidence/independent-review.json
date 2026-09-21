@@ -1,0 +1,397 @@
+{
+  "reviewer": "independent worn_visual_critic",
+  "scope": "Ordinary DEV14 native Worn adoption evidence: reviewed integration source, 20 original candidate stills plus two same-package supplement stills, associated state, and narrow publisher source provenance.",
+  "decision": "accepted_for_ordinary_DEV14_adoption_evidence",
+  "independent_visual_accepted": true,
+  "resume_movement_gate_passed": true,
+  "publisher_source_accepted": true,
+  "confirmed_blockers": 0,
+  "publication_performed_by_reviewer": false,
+  "identity": {
+    "source_commit": "9989805a329373af6c19dc5cde21e23205d87ea5",
+    "candidate_build_run": 35596622855,
+    "final_verification_run": 35597706023,
+    "verification_commit": "8e5b66ef0d81626567275d110bdd09b087e2d6b2",
+    "candidate_artifact_id": 10636728068,
+    "candidate_artifact_digest": "sha256:db33b959d965141eab11784a4b6277a804ef1661a2b5d67c888ca75394f8b593",
+    "candidate_pck_sha256": "c7274af20224f4651ed486ba24c5fbcf9801cbca4fc9b346781794415be92781",
+    "manifest_sha256": "3465b568a0954680ec4c3006dc753ec5f5a5cd7f5048ba8add34784fb36ea7ff",
+    "report_sha256": "1976b407400b9611565c2129ef7ccbc28af6c42091cb9d8e0554daeffd146572",
+    "final_zip_sha256": "ee688c594dbe2c18d1b1b4da7a04e8bc5d23709c28f303dd4e665a6b573464ca",
+    "preceding_report_sha256": "6a0b6015753353c0e0f27538802389754e51a35ca82bb74e88e8b22bbc723b16",
+    "preceding_visual_review_sha256": "b8a4e9477a16f4172423ab9c5247f0e20432d01036b0e72c3eb0bf5634159ad3",
+    "package_files_from_report": {
+      "index.html": {
+        "size": 7855,
+        "sha256": "e51c3895807ebd1a0152135c538cfb6a33135218d836e375640c174cf2bc1c36"
+      },
+      "index.js": {
+        "size": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      },
+      "index.pck": {
+        "size": 327096664,
+        "sha256": "c7274af20224f4651ed486ba24c5fbcf9801cbca4fc9b346781794415be92781"
+      },
+      "index.wasm": {
+        "size": 39514754,
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      },
+      "index.png": {
+        "size": 1981427,
+        "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+      },
+      "index.icon.png": {
+        "size": 470687,
+        "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+      },
+      "index.apple-touch-icon.png": {
+        "size": 66421,
+        "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+      },
+      "index.audio.worklet.js": {
+        "size": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "index.audio.position.worklet.js": {
+        "size": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      }
+    },
+    "publisher_sha256": "47c8ecf1c73b7f8b9eaad1b2caeb6514f96b996b386bd82ca3b9320926fe5e0c",
+    "publisher_workflow_sha256": "91abe7082d8fce2a277be5caba7f0e72ccc01ffa4ba64955057db2cd59b64688"
+  },
+  "integrity": {
+    "all_9_package_identities_match_browser5": true,
+    "all_23_retained_files_byte_identical": true,
+    "prior_report_remains_failed": true,
+    "original_successful_check_payloads_unchanged": true,
+    "original_failure_png_retained": true,
+    "final_report_passed": true
+  },
+  "observations": [
+    "The two new 1688x780 originals were inspected directly. Pause shows the ordinary DEV14 RETURN TO MINE menu without the hero; state has zero active rigs.",
+    "dev14-resumed.png shows the complete Worn character facing forward near raster x580-648,y468-575, lower on the Surface path than its start. No visible viewport cut, duplicate body, missing limb or material regression.",
+    "The resume-real-input state moves from [600,650] to [600,689.666809082031], a 39.6668-unit displacement. Subsequent captured samples retain that position, mining=false, menu=false, gear=worn, pickaxe=1, drill=0 and one native rig; updates increase 87 to 99. This closes the previously open post-resume input gate.",
+    "Prior unobscured captures establish the approved Worn appearance, eight directional mining cases, held/rush release, iron/Burrower fallback, red outfit reentry, Surface/Rootwound/Hub visibility and pause release. Hub pixels and state corroborate the cache fix.",
+    "Final and prior consoles contain no runtime error lines. Damage and input conclusions use the recorded state and observer checks, not still-derived motion inference."
+  ],
+  "findings": [
+    {
+      "id": "V1",
+      "severity": "coverage_caveat",
+      "finding": "The Deepheart command captures its restored Hub destination, not the separate Deepheart cavern.",
+      "pixel_evidence": "prior/deepheart-ordinary.png visibly shows BASE HUB and the restored-Deepheart destination message.",
+      "state_evidence": "fixture=deepheart, phase=hub, gear=worn, active_rigs=1.",
+      "uncertainty": "No claim is made about a separately rendered Deepheart cavern.",
+      "smallest_next_step": "Preserve this coverage wording in the release receipt; the prepared review.json already does."
+    }
+  ],
+  "limits": [
+    "No continuous-motion, smoothness, FPS, desired score or physical-iPhone certification. Still capture bracketing does not identify an exact contact frame.",
+    "Save persistence is disabled for these fixtures; separate source/core evidence handles save preservation. This visual review does not certify save-file bytes.",
+    "The same-package supplement replaces only the faulty Surface active-property observation. The original failed report and all evidence remain unchanged under prior/.",
+    "Actions run/source/artifact IDs come from the supplied provenance and prepared receipt. Publisher source enforces them through GitHub API checks at publication. This critic did not rerun Actions, export, deploy or fetch public game binaries.",
+    "Public exact-byte verification remains a publication step; acceptance here does not assert a completed deployment."
+  ],
+  "images": [
+    {
+      "file": "dev14-pause-confirmed.png",
+      "sha256": "dbf065701322e695f14d69fb0965888b9d0e457171ca1d544c09eb3be759417a",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in this supplement"
+    },
+    {
+      "file": "dev14-resumed.png",
+      "sha256": "97823a0763b1f1f452318752235a77c26261e576a49df9172a720f0d0752405c",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in this supplement"
+    },
+    {
+      "file": "prior/00-normal-dev14-menu.png",
+      "sha256": "c37c9808be58f90c1104f01ec06cff5e18e51f698e5ebcf3b4d0b94dfd7152d3",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/deepheart-ordinary.png",
+      "sha256": "e6ae70c8ab217d757f93248af92dbab7e60489a5d73c7b06918178f0e8a131bf",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/depth-ordinary.png",
+      "sha256": "4fb22366f5337c7f5dde7375bbb85323e0d4d4ac1d84e5c2f6ba3610eb8fbc4a",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/dev14-pause.png",
+      "sha256": "c694f2777d8e376f9869225d0cd0bd8776f59bfc3b5a423ad7911c44937566a2",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/drill-restored.png",
+      "sha256": "eb98db9d6b0673c682b30c9028b8bf54911c10f40d00fd06e2d6e4d0eede14aa",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/endless-down.png",
+      "sha256": "bd0f89d6d5435e819c05136e6e3f3c9ec13ae64859eba4f59bf1e20e48b3853a",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/endless-left.png",
+      "sha256": "742771b96eabc0569282c3fd58377b143bfb509d6836306214beefa4229e182e",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/endless-right.png",
+      "sha256": "fb69c09969f4971f96f16bedbf34c0dba3c3f5a94bc23ca35a0fe001e0b941b4",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/endless-up.png",
+      "sha256": "95bf6275fa4b031067b1112c9c1587b251034dba0d3afbdbc5a3b4edede913b1",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/failure.png",
+      "sha256": "20ba96dceee524fabc029ab1f77c9f1ac53f3c3bc22a652ed678496d10f191db",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/hub-ordinary.png",
+      "sha256": "57979ed66db07c403fa74a8b1e8f6fd4997998e749ba125d85c81eed9409c01c",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/iron-restored.png",
+      "sha256": "c68a642cfbe0e83b4f3969dad70d66a74a8a3f67b253ac2776fcdd2a366dbf6d",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/moss-down.png",
+      "sha256": "6c4f729634a57aada104253a01f54c695cc1ab83049ba90e28bd9859d577195c",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/moss-left.png",
+      "sha256": "3ba66a404441c4ca3073fa520c9c48d1207aea653e45518f706b315e4cd30bf7",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/moss-right.png",
+      "sha256": "14c41b6724c017019b10ddd420cd5967f0bc062e68928ffe052259f8219e73bf",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/moss-up.png",
+      "sha256": "672f03523883cbe39ecda9b88edb7713fd44146f30f0eb7660acb252ef8842e0",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/moss-walk-exit.png",
+      "sha256": "bcdf24fb0af9f4814f686d1d93547e4706364b2a565c462615b318315e6b738a",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/surface-ordinary.png",
+      "sha256": "b5f32c3c868e91e0c7a9af2d044955cb521bf1c568833f0946b6bc6777a0e083",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/surface-touch-release.png",
+      "sha256": "6a89bec172c556efccde4fdfc7de89e8373c31f8be789b2c5c6f3c234a301b38",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    },
+    {
+      "file": "prior/worn-outfit-reentry.png",
+      "sha256": "dcc9aa7590d0f1172b9d0ad7cc1d5c2c885a9e1b324533e7ba2141ec62ab69fd",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true,
+      "inspection": "view_image in browser5 review; identical retained bytes verified"
+    }
+  ],
+  "retained_files": [
+    {
+      "file": "prior/00-normal-dev14-menu.png",
+      "sha256": "c37c9808be58f90c1104f01ec06cff5e18e51f698e5ebcf3b4d0b94dfd7152d3",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/checks.json",
+      "sha256": "e5519e1730c7f2ae0f06e8bee3ed13844c16f571347b56d0c2990b7bb91e7f00",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/console.log",
+      "sha256": "4b2442fc3881f17a5b1c001f36c121dad95ad80e7d2389d36f58ff9c1d658f04",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/deepheart-ordinary.png",
+      "sha256": "e6ae70c8ab217d757f93248af92dbab7e60489a5d73c7b06918178f0e8a131bf",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/depth-ordinary.png",
+      "sha256": "4fb22366f5337c7f5dde7375bbb85323e0d4d4ac1d84e5c2f6ba3610eb8fbc4a",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/dev14-pause.png",
+      "sha256": "c694f2777d8e376f9869225d0cd0bd8776f59bfc3b5a423ad7911c44937566a2",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/drill-restored.png",
+      "sha256": "eb98db9d6b0673c682b30c9028b8bf54911c10f40d00fd06e2d6e4d0eede14aa",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/endless-down.png",
+      "sha256": "bd0f89d6d5435e819c05136e6e3f3c9ec13ae64859eba4f59bf1e20e48b3853a",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/endless-left.png",
+      "sha256": "742771b96eabc0569282c3fd58377b143bfb509d6836306214beefa4229e182e",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/endless-right.png",
+      "sha256": "fb69c09969f4971f96f16bedbf34c0dba3c3f5a94bc23ca35a0fe001e0b941b4",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/endless-up.png",
+      "sha256": "95bf6275fa4b031067b1112c9c1587b251034dba0d3afbdbc5a3b4edede913b1",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/failure.png",
+      "sha256": "20ba96dceee524fabc029ab1f77c9f1ac53f3c3bc22a652ed678496d10f191db",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/hub-ordinary.png",
+      "sha256": "57979ed66db07c403fa74a8b1e8f6fd4997998e749ba125d85c81eed9409c01c",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/iron-restored.png",
+      "sha256": "c68a642cfbe0e83b4f3969dad70d66a74a8a3f67b253ac2776fcdd2a366dbf6d",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/moss-down.png",
+      "sha256": "6c4f729634a57aada104253a01f54c695cc1ab83049ba90e28bd9859d577195c",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/moss-left.png",
+      "sha256": "3ba66a404441c4ca3073fa520c9c48d1207aea653e45518f706b315e4cd30bf7",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/moss-right.png",
+      "sha256": "14c41b6724c017019b10ddd420cd5967f0bc062e68928ffe052259f8219e73bf",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/moss-up.png",
+      "sha256": "672f03523883cbe39ecda9b88edb7713fd44146f30f0eb7660acb252ef8842e0",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/moss-walk-exit.png",
+      "sha256": "bcdf24fb0af9f4814f686d1d93547e4706364b2a565c462615b318315e6b738a",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/report.json",
+      "sha256": "6a0b6015753353c0e0f27538802389754e51a35ca82bb74e88e8b22bbc723b16",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/surface-ordinary.png",
+      "sha256": "b5f32c3c868e91e0c7a9af2d044955cb521bf1c568833f0946b6bc6777a0e083",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/surface-touch-release.png",
+      "sha256": "6a89bec172c556efccde4fdfc7de89e8373c31f8be789b2c5c6f3c234a301b38",
+      "matches_browser5_original": true
+    },
+    {
+      "file": "prior/worn-outfit-reentry.png",
+      "sha256": "dcc9aa7590d0f1172b9d0ad7cc1d5c2c885a9e1b324533e7ba2141ec62ab69fd",
+      "matches_browser5_original": true
+    }
+  ],
+  "reference_identity": {
+    "original_approved_worn_source": "e32a03e620913a76f3bee9083b2e9b1d66eef972",
+    "original_trial_pck_sha256": "74db0719dc5d151e0ad9491e9c5e90769c6f85ff8f8db07fe55c4b825277da05",
+    "original_review_sha256": "7d1ec154ec8d230a2766e55924d53741bd3ebc017c5104ceb7c87782428365c0"
+  }
+}

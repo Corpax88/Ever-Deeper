@@ -1,0 +1,268 @@
+{
+  "reviewer": "independent worn_visual_critic",
+  "scope": "Ordinary DEV14 native Worn still fidelity, clipping, gear and visibility; narrow source/observer interpretation.",
+  "decision": "accepted_for_inspected_still_fidelity_gear_and_visibility; full_adoption_pending_resume_movement_supplement",
+  "all_gates_pass": false,
+  "confirmed_native_visual_blockers": 0,
+  "identity": {
+    "candidate_source_supplied_by_parent": "9989805a329373af6c19dc5cde21e23205d87ea5",
+    "candidate_actions_run_supplied_by_parent": "35596622855",
+    "version": "1.0.0-dev.14",
+    "report_sha256": "6a0b6015753353c0e0f27538802389754e51a35ca82bb74e88e8b22bbc723b16",
+    "report_passed": false,
+    "package_files_from_report": {
+      "index.html": {
+        "size": 7855,
+        "sha256": "e51c3895807ebd1a0152135c538cfb6a33135218d836e375640c174cf2bc1c36"
+      },
+      "index.js": {
+        "size": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      },
+      "index.pck": {
+        "size": 327096664,
+        "sha256": "c7274af20224f4651ed486ba24c5fbcf9801cbca4fc9b346781794415be92781"
+      },
+      "index.wasm": {
+        "size": 39514754,
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      },
+      "index.png": {
+        "size": 1981427,
+        "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+      },
+      "index.icon.png": {
+        "size": 470687,
+        "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+      },
+      "index.apple-touch-icon.png": {
+        "size": 66421,
+        "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+      },
+      "index.audio.worklet.js": {
+        "size": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "index.audio.position.worklet.js": {
+        "size": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      }
+    },
+    "original_trial_source": "e32a03e620913a76f3bee9083b2e9b1d66eef972",
+    "original_trial_pck_sha256": "74db0719dc5d151e0ad9491e9c5e90769c6f85ff8f8db07fe55c4b825277da05",
+    "prior_candidate_review_sha256": "cb4bd4ee6929e3f05481fcecef4890e7a1308c109f30aa41dfde706e4e3db125"
+  },
+  "findings": [
+    {
+      "id": "V1",
+      "severity": "remaining_evidence_gate",
+      "finding": "Post-resume input movement remains unverified in this report.",
+      "pixel_evidence": "dev14-pause.png shows RETURN TO MINE / SURFACE EXPEDITION; failure.png shows the returned Surface scene with the native character. The still cannot establish control response.",
+      "state_evidence": "Pause reports menu=true and active_rigs=0. Resume reports menu=false, worn, pickaxe_level=1, drill_level=0, active_rigs=1, native active with updates 5431 to 5443 and no motion errors, but times out on world_active=false. Surface set_active uses visible/process_mode/player.control_enabled and has no active property. Moss walk-exit position is unchanged at [872,408] across its recorded samples.",
+      "uncertainty": "The incorrect world_active observer is consistent with the timeout. Visible rendering and increasing updates alone do not prove resumed keyboard control.",
+      "smallest_next_step": "Review the already-planned keyboard movement supplement on the exact same PCK, requiring actual position change and release."
+    },
+    {
+      "id": "V2",
+      "severity": "coverage_label",
+      "finding": "The Deepheart command captures its Hub destination.",
+      "pixel_evidence": "deepheart-ordinary.png displays BASE HUB and the text The Deepheart is restored; the player holds the Worn pickaxe.",
+      "state_evidence": "fixture=deepheart, phase=hub, gear=worn, active_rigs=1.",
+      "uncertainty": "This establishes the command destination, not rendering of the separate Deepheart cavern.",
+      "smallest_next_step": "Describe this evidence as the Deepheart command returning to Hub; do not claim a Deepheart cavern capture."
+    }
+  ],
+  "observed_pixels": [
+    "All 20 original 1688x780 PNGs inspected through view_image; no image edits. DPR 2 gives the same 844x390 CSS view as the retained approved Worn evidence.",
+    "The native character retains the approved glossy black/gold helmet, green cloth, tan pack, brown boots and approximately 60 CSS-pixel scale. No confirmed viewport cut, detached limb or duplicate native body in these sampled poses.",
+    "Moss left exposes the overhead pick head above the helmet; Moss down remains inside the left frame. Endless poses expose the arms and raised pick without the previous achievement titles; ore still naturally overlaps portions of the lower silhouette, so hidden pixels are not certified.",
+    "Iron and Burrower each show a single legacy character with different tools; Worn outfit reentry clearly returns the native character with red cloth. Reported native rig counts are zero for iron/drill and one for Worn.",
+    "hub-ordinary.png visibly holds the Worn pickaxe near raster x480-585,y510-630, where the previous f898 capture held Deepcore. The state now agrees: Worn, pickaxe 1, drill 0, one active native rig. This corroborates the controller cache invalidation.",
+    "Surface and Rootwound retain complete visible native bodies in ordinary terrain. Rootwound stands near the right boundary, with its visible tool still inside the image. These are idle captures.",
+    "Pause renders the ordinary DEV14 menu with RETURN TO MINE and no gameplay character visible; native rig count is zero. The post-resume screenshot renders Surface again, but input verification remains pending."
+  ],
+  "reported_state": [
+    "Four-point health decreases with earned-impact increments in all four Moss and all four Endless direction checks; held rush health 27676 to 27668 with cycle 0.468. These are telemetry observations, not still-derived hit claims.",
+    "Surface touch-release reports mining=false, impact=2 and health 357 to 358 as passive regeneration continues. The observer script awaited an earned impact and health decrease before touchEnd.",
+    "Console contains no runtime error lines. Fixture reports persistence_active=false; this visual review does not certify saved-file byte preservation."
+  ],
+  "resolved_prior_findings": [
+    "f898 Hub stale Deepcore gear is corrected in pixels and state.",
+    "Achievement title occlusion from f898 is removed in these captures."
+  ],
+  "uncertainty": [
+    "Still bracketing spans progressing swing phases and may cross a cycle boundary; no exact contact-frame assertion.",
+    "No continuous-motion, smoothness, FPS, performance score or physical-iPhone claim.",
+    "Source/run attribution is supplied by parent; this review hashes the local original evidence and recorded package manifest. No package re-export, test rerun or publication performed."
+  ],
+  "runtime": {
+    "viewport": [
+      844,
+      390
+    ],
+    "dpr": 2,
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+    "lost": false,
+    "browser": "151.0.7922.34",
+    "platform": "darwin"
+  },
+  "images": [
+    {
+      "file": "00-normal-dev14-menu.png",
+      "sha256": "c37c9808be58f90c1104f01ec06cff5e18e51f698e5ebcf3b4d0b94dfd7152d3",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "deepheart-ordinary.png",
+      "sha256": "e6ae70c8ab217d757f93248af92dbab7e60489a5d73c7b06918178f0e8a131bf",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "depth-ordinary.png",
+      "sha256": "4fb22366f5337c7f5dde7375bbb85323e0d4d4ac1d84e5c2f6ba3610eb8fbc4a",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "dev14-pause.png",
+      "sha256": "c694f2777d8e376f9869225d0cd0bd8776f59bfc3b5a423ad7911c44937566a2",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "drill-restored.png",
+      "sha256": "eb98db9d6b0673c682b30c9028b8bf54911c10f40d00fd06e2d6e4d0eede14aa",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "endless-down.png",
+      "sha256": "bd0f89d6d5435e819c05136e6e3f3c9ec13ae64859eba4f59bf1e20e48b3853a",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "endless-left.png",
+      "sha256": "742771b96eabc0569282c3fd58377b143bfb509d6836306214beefa4229e182e",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "endless-right.png",
+      "sha256": "fb69c09969f4971f96f16bedbf34c0dba3c3f5a94bc23ca35a0fe001e0b941b4",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "endless-up.png",
+      "sha256": "95bf6275fa4b031067b1112c9c1587b251034dba0d3afbdbc5a3b4edede913b1",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "failure.png",
+      "sha256": "20ba96dceee524fabc029ab1f77c9f1ac53f3c3bc22a652ed678496d10f191db",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "hub-ordinary.png",
+      "sha256": "57979ed66db07c403fa74a8b1e8f6fd4997998e749ba125d85c81eed9409c01c",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "iron-restored.png",
+      "sha256": "c68a642cfbe0e83b4f3969dad70d66a74a8a3f67b253ac2776fcdd2a366dbf6d",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "moss-down.png",
+      "sha256": "6c4f729634a57aada104253a01f54c695cc1ab83049ba90e28bd9859d577195c",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "moss-left.png",
+      "sha256": "3ba66a404441c4ca3073fa520c9c48d1207aea653e45518f706b315e4cd30bf7",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "moss-right.png",
+      "sha256": "14c41b6724c017019b10ddd420cd5967f0bc062e68928ffe052259f8219e73bf",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "moss-up.png",
+      "sha256": "672f03523883cbe39ecda9b88edb7713fd44146f30f0eb7660acb252ef8842e0",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "moss-walk-exit.png",
+      "sha256": "bcdf24fb0af9f4814f686d1d93547e4706364b2a565c462615b318315e6b738a",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "surface-ordinary.png",
+      "sha256": "b5f32c3c868e91e0c7a9af2d044955cb521bf1c568833f0946b6bc6777a0e083",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "surface-touch-release.png",
+      "sha256": "6a89bec172c556efccde4fdfc7de89e8373c31f8be789b2c5c6f3c234a301b38",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    },
+    {
+      "file": "worn-outfit-reentry.png",
+      "sha256": "dcc9aa7590d0f1172b9d0ad7cc1d5c2c885a9e1b324533e7ba2141ec62ab69fd",
+      "width": 1688,
+      "height": 780,
+      "inspected_original": true
+    }
+  ],
+  "approved_reference_images": [
+    {
+      "file": "evidence/mac/01-ready.png",
+      "sha256": "7b87ba0bced0479bbadf7f6bbfacaf095e6b6e13e7f761ead3e64936527110d9",
+      "inspected_original_in_prior_review": true
+    },
+    {
+      "file": "evidence/mac/02-held-mining.png",
+      "sha256": "272d0ed83a5b26cacf00875f19524d46a8343bd70a7e86c4a6ea3d6cba3aa94c",
+      "inspected_original_in_prior_review": true
+    },
+    {
+      "file": "evidence/mac/03-walk-exit.png",
+      "sha256": "a7515530ad627f3115a3713089eeb2b94d0fbdbc1bf996f54663cfda4f87ffd7",
+      "inspected_original_in_prior_review": true
+    }
+  ]
+}

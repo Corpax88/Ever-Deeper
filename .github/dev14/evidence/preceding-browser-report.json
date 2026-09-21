@@ -1,0 +1,3366 @@
+{
+  "passed": false,
+  "error": "Error: ordinary resume timeout: {\"active_rigs\":1,\"cycle\":0.72,\"drill_level\":0,\"error\":\"\",\"fixture\":\"resume\",\"gear\":\"worn\",\"health\":360,\"hit_phase\":0.36,\"id\":20,\"impact\":2,\"impact_target_valid\":true,\"menu\":false,\"mine_button\":[1223.36364746094,535.54541015625],\"mining\":false,\"native\":{\"active\":true,\"failed\":false,\"failure\":\"\",\"generations\":4,\"motion\":{\"age\":91.5981746666639,\"aim_ready\":false,\"duration\":0.12,\"errors\":[],\"max_contact_pixels\":0,\"max_reach_error\":0,\"max_tool_retarget\":0,\"mode\":\"idle\",\"phase\":0.166159629629693,\"support_release\":0,\"swing_serial\":-1,\"transitions\":0,\"yaw\":-2.18576456934017e-8},\"surface_cache\":0,\"unreachable_contacts\":0,\"updates\":5418},\"persistence_active\":false,\"phase\":\"surface\",\"pickaxe_level\":1,\"position\":[600,650],\"progress\":0,\"swing\":3,\"target_valid\":false,\"version\":\"1.0.0-dev.14\",\"viewport\":[1416.36364746094,654.54541015625],\"world_active\":false}\n    at wait (file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/dev14/review.mjs:45:8)\n    at async file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/dev14/review.mjs:104:26",
+  "version": "1.0.0-dev.14",
+  "files": {
+    "index.html": {
+      "size": 7855,
+      "sha256": "e51c3895807ebd1a0152135c538cfb6a33135218d836e375640c174cf2bc1c36"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 327096664,
+      "sha256": "c7274af20224f4651ed486ba24c5fbcf9801cbca4fc9b346781794415be92781"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "runtime": {
+    "viewport": [
+      844,
+      390
+    ],
+    "dpr": 2,
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+    "lost": false,
+    "browser": "151.0.7922.34",
+    "platform": "darwin"
+  },
+  "checks": [
+    {
+      "name": "00-normal-dev14-menu"
+    },
+    {
+      "name": "moss-up",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27708,
+        "hit_phase": 0.36,
+        "id": 2,
+        "impact": 1,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.5484,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 1.81898940354586e-12,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.675847800925926,
+            "support_release": 1,
+            "swing_serial": 1,
+            "transitions": 1,
+            "yaw": 1.29740076498861
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 25
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          504,
+          424
+        ],
+        "progress": 0.642314814814815,
+        "swing": 1,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27708,
+        "hit_phase": 0.36,
+        "id": 2,
+        "impact": 1,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 1.05566666666667,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 1.81898940354586e-12,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.40466049382716,
+            "support_release": 1,
+            "swing_serial": 2,
+            "transitions": 1,
+            "yaw": 1.29740076498861
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 41
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          504,
+          424
+        ],
+        "progress": 0.346851851851852,
+        "swing": 2,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "moss-up-damage",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27712,
+        "hit_phase": -1,
+        "id": 2,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 1.63743333333333,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.177064814814815,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 0,
+            "yaw": -2.18576456934017e-8
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 8
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          504,
+          424
+        ],
+        "progress": 0,
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "hit": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27708,
+        "hit_phase": 0.36,
+        "id": 2,
+        "impact": 1,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.437,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 1.81898940354586e-12,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.535630787037037,
+            "support_release": 1,
+            "swing_serial": 1,
+            "transitions": 1,
+            "yaw": 1.29740076498861
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 22
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          504,
+          424
+        ],
+        "progress": 0.487592592592593,
+        "swing": 1,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "moss-right",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27700,
+        "hit_phase": 0.36,
+        "id": 3,
+        "impact": 3,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 2,
+          "motion": {
+            "age": 0.410883333333333,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000003814697265625,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.575069444444445,
+            "support_release": 1,
+            "swing_serial": 3,
+            "transitions": 2,
+            "yaw": -0.273395459725419
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 106
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          824,
+          408
+        ],
+        "progress": 0.531111111111111,
+        "swing": 3,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27700,
+        "hit_phase": 0.36,
+        "id": 3,
+        "impact": 3,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 2,
+          "motion": {
+            "age": 0.76165,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000003814697265625,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.0213348765432099,
+            "support_release": 0,
+            "swing_serial": 4,
+            "transitions": 2,
+            "yaw": -0.273395459725419
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 124
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          824,
+          408
+        ],
+        "progress": 0.018287037037037,
+        "swing": 4,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "moss-right-damage",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27704,
+        "hit_phase": 0.36,
+        "id": 3,
+        "impact": 2,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 2,
+          "motion": {
+            "age": 0.8625,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.239583333333333,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 85
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          824,
+          408
+        ],
+        "progress": 0,
+        "swing": 2,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "hit": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27700,
+        "hit_phase": 0.36,
+        "id": 3,
+        "impact": 3,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 2,
+          "motion": {
+            "age": 0.410883333333333,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000003814697265625,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.575069444444445,
+            "support_release": 1,
+            "swing_serial": 3,
+            "transitions": 2,
+            "yaw": -0.273395459725419
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 106
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          824,
+          408
+        ],
+        "progress": 0.531111111111111,
+        "swing": 3,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "moss-down",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27692,
+        "hit_phase": 0.36,
+        "id": 4,
+        "impact": 5,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 3,
+          "motion": {
+            "age": 0.345755555555556,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.00000595360552324564,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.508932773919753,
+            "support_release": 1,
+            "swing_serial": 5,
+            "transitions": 2,
+            "yaw": 4.4389934185784
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 209
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          72,
+          680
+        ],
+        "progress": 0.458132716049383,
+        "swing": 5,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27692,
+        "hit_phase": 0.36,
+        "id": 4,
+        "impact": 5,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 3,
+          "motion": {
+            "age": 0.8157,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.00000595360552324564,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.129305555555555,
+            "support_release": 0.658385171698779,
+            "swing_serial": 6,
+            "transitions": 2,
+            "yaw": 4.4389934185784
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 227
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          72,
+          680
+        ],
+        "progress": 0.110833333333333,
+        "swing": 6,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "moss-down-damage",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27696,
+        "hit_phase": 0.36,
+        "id": 4,
+        "impact": 4,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 3,
+          "motion": {
+            "age": 0.873666666666667,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.242685185185185,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": 3.14159263173215
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 188
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          72,
+          680
+        ],
+        "progress": 0,
+        "swing": 4,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "hit": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27692,
+        "hit_phase": 0.36,
+        "id": 4,
+        "impact": 5,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 3,
+          "motion": {
+            "age": 0.345755555555556,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.00000595360552324564,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.508932773919753,
+            "support_release": 1,
+            "swing_serial": 5,
+            "transitions": 2,
+            "yaw": 4.4389934185784
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 209
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          72,
+          680
+        ],
+        "progress": 0.458132716049383,
+        "swing": 5,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "moss-left",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.468,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27684,
+        "hit_phase": 0.36,
+        "id": 5,
+        "impact": 7,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 4,
+          "motion": {
+            "age": 0.355522222222223,
+            "aim_ready": true,
+            "duration": 0.109512,
+            "errors": [],
+            "max_contact_pixels": 0.00000852992252475815,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.747231125356127,
+            "support_release": 0.993910977738355,
+            "swing_serial": 7,
+            "transitions": 2,
+            "yaw": 2.86819719386437
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 308
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          520,
+          408
+        ],
+        "progress": 0.721082621082622,
+        "swing": 7,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.468,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27680,
+        "hit_phase": 0.36,
+        "id": 5,
+        "impact": 8,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 4,
+          "motion": {
+            "age": 0.795088888888889,
+            "aim_ready": true,
+            "duration": 0.109512,
+            "errors": [],
+            "max_contact_pixels": 0.00000852992252475815,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.692171919515669,
+            "support_release": 1,
+            "swing_serial": 8,
+            "transitions": 2,
+            "yaw": 2.86819719386437
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 325
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          520,
+          408
+        ],
+        "progress": 0.660327635327635,
+        "swing": 8,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "moss-left-damage",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27688,
+        "hit_phase": 0.36,
+        "id": 5,
+        "impact": 6,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 4,
+          "motion": {
+            "age": 0.867366666666667,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.240935185185185,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": 1.57079640701812
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 285
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          520,
+          408
+        ],
+        "progress": 0,
+        "swing": 6,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "hit": {
+        "active_rigs": 1,
+        "cycle": 0.468,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27684,
+        "hit_phase": 0.36,
+        "id": 5,
+        "impact": 7,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 4,
+          "motion": {
+            "age": 0.355522222222223,
+            "aim_ready": true,
+            "duration": 0.109512,
+            "errors": [],
+            "max_contact_pixels": 0.00000852992252475815,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.747231125356127,
+            "support_release": 0.993910977738355,
+            "swing_serial": 7,
+            "transitions": 2,
+            "yaw": 2.86819719386437
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 308
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          520,
+          408
+        ],
+        "progress": 0.721082621082622,
+        "swing": 7,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "moss-held-rush",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.468,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27676,
+        "hit_phase": 0.36,
+        "id": 6,
+        "impact": 9,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 5,
+          "motion": {
+            "age": 0.834533333333334,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.231814814814815,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 385
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          872,
+          408
+        ],
+        "progress": 0,
+        "swing": 9,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.468,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27668,
+        "hit_phase": 0.36,
+        "id": 6,
+        "impact": 11,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 5,
+          "motion": {
+            "age": 0.8627,
+            "aim_ready": true,
+            "duration": 0.109512,
+            "errors": [],
+            "max_contact_pixels": 0.000003814697265625,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.812940705128205,
+            "support_release": 0.522750283019965,
+            "swing_serial": 11,
+            "transitions": 2,
+            "yaw": -0.273395459725419
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 427
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          872,
+          408
+        ],
+        "progress": 0.793589743589744,
+        "swing": 11,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "moss-walk-exit",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.468,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27668,
+        "hit_phase": 0.36,
+        "id": 6,
+        "impact": 11,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 5,
+          "motion": {
+            "age": 0.451266666666667,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000003814697265625,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.114120548433049,
+            "support_release": 0,
+            "swing_serial": 11,
+            "transitions": 3,
+            "yaw": 3.14159263173215
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 443
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          872,
+          408
+        ],
+        "progress": 0,
+        "swing": 11,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.468,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27668,
+        "hit_phase": 0.36,
+        "id": 6,
+        "impact": 11,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 5,
+          "motion": {
+            "age": 0.7397,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000003814697265625,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.194240918803419,
+            "support_release": 0,
+            "swing_serial": 11,
+            "transitions": 3,
+            "yaw": 3.14159263173215
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 457
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          872,
+          408
+        ],
+        "progress": 0,
+        "swing": 11,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "endless-up",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32570,
+        "hit_phase": 0.42,
+        "id": 7,
+        "impact": 1,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.4085,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.0000107895930341328,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.600735294117647,
+            "support_release": 1,
+            "swing_serial": 1,
+            "transitions": 1,
+            "yaw": 2.91002376213933
+          },
+          "surface_cache": 1,
+          "unreachable_contacts": 0,
+          "updates": 56
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          1863.21313476562,
+          1171.23059082031
+        ],
+        "progress": 0.600735294117647,
+        "swing": 1,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32570,
+        "hit_phase": 0.42,
+        "id": 7,
+        "impact": 1,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.652777777777778,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.0000107895930341328,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.959967320261438,
+            "support_release": 0,
+            "swing_serial": 1,
+            "transitions": 1,
+            "yaw": 2.91002376213933
+          },
+          "surface_cache": 1,
+          "unreachable_contacts": 0,
+          "updates": 70
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          1863.21313476562,
+          1171.23059082031
+        ],
+        "progress": 0.959967320261438,
+        "swing": 1,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "endless-up-damage",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32574,
+        "hit_phase": -1,
+        "id": 7,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 1.7148,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.198555555555556,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 0,
+            "yaw": -2.18576456934017e-8
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 26
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          1863.21313476562,
+          1171.23059082031
+        ],
+        "progress": 0,
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "hit": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32570,
+        "hit_phase": 0.42,
+        "id": 7,
+        "impact": 1,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.4085,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.0000107895930341328,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.600735294117647,
+            "support_release": 1,
+            "swing_serial": 1,
+            "transitions": 1,
+            "yaw": 2.91002376213933
+          },
+          "surface_cache": 1,
+          "unreachable_contacts": 0,
+          "updates": 56
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          1863.21313476562,
+          1171.23059082031
+        ],
+        "progress": 0.600735294117647,
+        "swing": 1,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "endless-right",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32566,
+        "hit_phase": 0.42,
+        "id": 8,
+        "impact": 2,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.399066666666667,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000041961669921875,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.586862745098039,
+            "support_release": 1,
+            "swing_serial": 3,
+            "transitions": 4,
+            "yaw": 5.58902885960579
+          },
+          "surface_cache": 1,
+          "unreachable_contacts": 0,
+          "updates": 143
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          810,
+          416
+        ],
+        "progress": 0.586862745098039,
+        "swing": 3,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32566,
+        "hit_phase": 0.42,
+        "id": 8,
+        "impact": 2,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.599066666666667,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000041961669921875,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.880980392156863,
+            "support_release": 0,
+            "swing_serial": 3,
+            "transitions": 4,
+            "yaw": 5.58902885960579
+          },
+          "surface_cache": 1,
+          "unreachable_contacts": 0,
+          "updates": 155
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          810,
+          416
+        ],
+        "progress": 0.880980392156863,
+        "swing": 3,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "endless-right-damage",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32570,
+        "hit_phase": 0.42,
+        "id": 8,
+        "impact": 1,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.799333333333334,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.0000107895930341328,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.502275599128541,
+            "support_release": 0,
+            "swing_serial": 2,
+            "transitions": 3,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 1,
+          "unreachable_contacts": 0,
+          "updates": 118
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          810,
+          416
+        ],
+        "progress": 0,
+        "swing": 2,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "hit": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32566,
+        "hit_phase": 0.42,
+        "id": 8,
+        "impact": 2,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.399066666666667,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000041961669921875,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "mine",
+            "phase": 0.586862745098039,
+            "support_release": 1,
+            "swing_serial": 3,
+            "transitions": 4,
+            "yaw": 5.58902885960579
+          },
+          "surface_cache": 1,
+          "unreachable_contacts": 0,
+          "updates": 143
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          810,
+          416
+        ],
+        "progress": 0.586862745098039,
+        "swing": 3,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "endless-down",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32562,
+        "hit_phase": 0.42,
+        "id": 9,
+        "impact": 3,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.347662499972247,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000041961669921875,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0.0246124491095543,
+            "mode": "mine",
+            "phase": 0.511268382312127,
+            "support_release": 1,
+            "swing_serial": 5,
+            "transitions": 7,
+            "yaw": 4.43899338844704
+          },
+          "surface_cache": 1,
+          "unreachable_contacts": 0,
+          "updates": 235
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          864,
+          362
+        ],
+        "progress": 0.511268382312127,
+        "swing": 5,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32562,
+        "hit_phase": 0.42,
+        "id": 9,
+        "impact": 3,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.597662499972247,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000041961669921875,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0.0246124491095543,
+            "mode": "mine",
+            "phase": 0.878915441135657,
+            "support_release": 0.00345558127009599,
+            "swing_serial": 5,
+            "transitions": 7,
+            "yaw": 4.43899338844704
+          },
+          "surface_cache": 1,
+          "unreachable_contacts": 0,
+          "updates": 250
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          864,
+          362
+        ],
+        "progress": 0.878915441135657,
+        "swing": 5,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "endless-down-damage",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32566,
+        "hit_phase": 0.42,
+        "id": 9,
+        "impact": 2,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.796404166694421,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000041961669921875,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.413367170487013,
+            "support_release": 0,
+            "swing_serial": 4,
+            "transitions": 6,
+            "yaw": 3.14159263173215
+          },
+          "surface_cache": 1,
+          "unreachable_contacts": 0,
+          "updates": 209
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          864,
+          362
+        ],
+        "progress": 0,
+        "swing": 4,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "hit": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32562,
+        "hit_phase": 0.42,
+        "id": 9,
+        "impact": 3,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.347662499972247,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000041961669921875,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0.0246124491095543,
+            "mode": "mine",
+            "phase": 0.511268382312127,
+            "support_release": 1,
+            "swing_serial": 5,
+            "transitions": 7,
+            "yaw": 4.43899338844704
+          },
+          "surface_cache": 1,
+          "unreachable_contacts": 0,
+          "updates": 235
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          864,
+          362
+        ],
+        "progress": 0.511268382312127,
+        "swing": 5,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "endless-left",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32558,
+        "hit_phase": 0.42,
+        "id": 10,
+        "impact": 4,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.466022222222222,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000041961669921875,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0.0246124491095543,
+            "mode": "mine",
+            "phase": 0.685326797385621,
+            "support_release": 1,
+            "swing_serial": 7,
+            "transitions": 10,
+            "yaw": 3.28895811394142
+          },
+          "surface_cache": 1,
+          "unreachable_contacts": 0,
+          "updates": 336
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          918,
+          416
+        ],
+        "progress": 0.685326797385621,
+        "swing": 7,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32558,
+        "hit_phase": 0.42,
+        "id": 10,
+        "impact": 4,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.544566666666667,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000041961669921875,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0.0246124491095543,
+            "mode": "mine",
+            "phase": 0.800833333333333,
+            "support_release": 0.660521923835535,
+            "swing_serial": 7,
+            "transitions": 10,
+            "yaw": 3.28895811394142
+          },
+          "surface_cache": 1,
+          "unreachable_contacts": 0,
+          "updates": 340
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          918,
+          416
+        ],
+        "progress": 0.800833333333333,
+        "swing": 7,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "endless-left-damage",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32562,
+        "hit_phase": 0.42,
+        "id": 10,
+        "impact": 3,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.798766666666668,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000041961669921875,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0.0246124491095543,
+            "mode": "idle",
+            "phase": 0.421341367061584,
+            "support_release": 0,
+            "swing_serial": 6,
+            "transitions": 9,
+            "yaw": 1.57079640701812
+          },
+          "surface_cache": 1,
+          "unreachable_contacts": 0,
+          "updates": 303
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          918,
+          416
+        ],
+        "progress": 0,
+        "swing": 6,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "hit": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "endless",
+        "gear": "worn",
+        "health": 32558,
+        "hit_phase": 0.42,
+        "id": 10,
+        "impact": 4,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": true,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.349355555555556,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000041961669921875,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0.0246124491095543,
+            "mode": "mine",
+            "phase": 0.51375816993464,
+            "support_release": 1,
+            "swing_serial": 7,
+            "transitions": 10,
+            "yaw": 3.28895811394142
+          },
+          "surface_cache": 1,
+          "unreachable_contacts": 0,
+          "updates": 329
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          918,
+          416
+        ],
+        "progress": 0.51375816993464,
+        "swing": 7,
+        "target_valid": true,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "iron-restored",
+      "before": {
+        "active_rigs": 0,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "gear",
+        "gear": "iron",
+        "health": 32558,
+        "hit_phase": 0.42,
+        "id": 11,
+        "impact": 4,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 359
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 2,
+        "position": [
+          918,
+          416
+        ],
+        "progress": 0,
+        "swing": 8,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 0,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "gear",
+        "gear": "iron",
+        "health": 32558,
+        "hit_phase": 0.42,
+        "id": 11,
+        "impact": 4,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 359
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 2,
+        "position": [
+          918,
+          416
+        ],
+        "progress": 0,
+        "swing": 8,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "drill-restored",
+      "before": {
+        "active_rigs": 0,
+        "cycle": 0.68,
+        "drill_level": 1,
+        "error": "",
+        "fixture": "gear",
+        "gear": "burrower",
+        "health": 32558,
+        "hit_phase": 0.42,
+        "id": 12,
+        "impact": 4,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 359
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          918,
+          416
+        ],
+        "progress": 0,
+        "swing": 8,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 0,
+        "cycle": 0.68,
+        "drill_level": 1,
+        "error": "",
+        "fixture": "gear",
+        "gear": "burrower",
+        "health": 32558,
+        "hit_phase": 0.42,
+        "id": 12,
+        "impact": 4,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 359
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          918,
+          416
+        ],
+        "progress": 0,
+        "swing": 8,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "worn-outfit-reentry",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "gear",
+        "gear": "worn",
+        "health": 32558,
+        "hit_phase": 0.42,
+        "id": 13,
+        "impact": 4,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 2,
+          "motion": {
+            "age": 0.834566666666667,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.231824074074074,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": 1.57079640701812
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 394
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          918,
+          416
+        ],
+        "progress": 0,
+        "swing": 8,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.68,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "gear",
+        "gear": "worn",
+        "health": 32558,
+        "hit_phase": 0.42,
+        "id": 13,
+        "impact": 4,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 2,
+          "motion": {
+            "age": 1.11813333333333,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.310592592592593,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": 1.57079640701812
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 411
+        },
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 1,
+        "position": [
+          918,
+          416
+        ],
+        "progress": 0,
+        "swing": 8,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "surface-ordinary",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "surface",
+        "gear": "worn",
+        "health": 360,
+        "hit_phase": 0.36,
+        "id": 14,
+        "impact": 1,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 2,
+          "motion": {
+            "age": 1.71503333333333,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.19862037037037,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 0,
+            "yaw": -2.18576456934017e-8
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 44
+        },
+        "persistence_active": false,
+        "phase": "surface",
+        "pickaxe_level": 1,
+        "position": [
+          600,
+          650
+        ],
+        "progress": 0,
+        "swing": 2,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": false
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "surface",
+        "gear": "worn",
+        "health": 360,
+        "hit_phase": 0.36,
+        "id": 14,
+        "impact": 1,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 2,
+          "motion": {
+            "age": 1.94836666666666,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.263435185185185,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 0,
+            "yaw": -2.18576456934017e-8
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 58
+        },
+        "persistence_active": false,
+        "phase": "surface",
+        "pickaxe_level": 1,
+        "position": [
+          600,
+          650
+        ],
+        "progress": 0,
+        "swing": 2,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": false
+      }
+    },
+    {
+      "name": "depth-ordinary",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "depth",
+        "gear": "worn",
+        "health": 0,
+        "hit_phase": -1,
+        "id": 15,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.7,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.194444444444444,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 21
+        },
+        "persistence_active": false,
+        "phase": "depth",
+        "pickaxe_level": 1,
+        "position": [
+          1844,
+          2916
+        ],
+        "progress": 0,
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "depth",
+        "gear": "worn",
+        "health": 0,
+        "hit_phase": -1,
+        "id": 15,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.952766666666667,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.264657407407407,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 36
+        },
+        "persistence_active": false,
+        "phase": "depth",
+        "pickaxe_level": 1,
+        "position": [
+          1844,
+          2916
+        ],
+        "progress": 0,
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "hub-ordinary",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "hub",
+        "gear": "worn",
+        "health": 0,
+        "hit_phase": -1,
+        "id": 16,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.832366666666668,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.231212962962963,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 40
+        },
+        "persistence_active": false,
+        "phase": "hub",
+        "pickaxe_level": 1,
+        "position": [
+          430,
+          820
+        ],
+        "progress": 0,
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "hub",
+        "gear": "worn",
+        "health": 0,
+        "hit_phase": -1,
+        "id": 16,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 1.08857777777778,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.302382716049383,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 55
+        },
+        "persistence_active": false,
+        "phase": "hub",
+        "pickaxe_level": 1,
+        "position": [
+          430,
+          820
+        ],
+        "progress": 0,
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "deepheart-ordinary",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "deepheart",
+        "gear": "worn",
+        "health": 0,
+        "hit_phase": -1,
+        "id": 17,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 1.87433333333333,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.520648148148149,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 94
+        },
+        "persistence_active": false,
+        "phase": "hub",
+        "pickaxe_level": 1,
+        "position": [
+          430,
+          820
+        ],
+        "progress": 0,
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "deepheart",
+        "gear": "worn",
+        "health": 0,
+        "hit_phase": -1,
+        "id": 17,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 2.07433333333333,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.576203703703704,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 106
+        },
+        "persistence_active": false,
+        "phase": "hub",
+        "pickaxe_level": 1,
+        "position": [
+          430,
+          820
+        ],
+        "progress": 0,
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
+    },
+    {
+      "name": "surface-touch-release",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "surface",
+        "gear": "worn",
+        "health": 357,
+        "hit_phase": 0.36,
+        "id": 18,
+        "impact": 2,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 3,
+          "motion": {
+            "age": 0.375366666666667,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.00000667572021484375,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.0925488040123464,
+            "support_release": 0,
+            "swing_serial": 3,
+            "transitions": 2,
+            "yaw": -2.18576456934017e-8
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 167
+        },
+        "persistence_active": false,
+        "phase": "surface",
+        "pickaxe_level": 1,
+        "position": [
+          600,
+          650
+        ],
+        "progress": 0,
+        "swing": 3,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": false
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "surface",
+        "gear": "worn",
+        "health": 358,
+        "hit_phase": 0.36,
+        "id": 18,
+        "impact": 2,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 3,
+          "motion": {
+            "age": 0.630481481481482,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.00000667572021484375,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.163414030349795,
+            "support_release": 0,
+            "swing_serial": 3,
+            "transitions": 2,
+            "yaw": -2.18576456934017e-8
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 181
+        },
+        "persistence_active": false,
+        "phase": "surface",
+        "pickaxe_level": 1,
+        "position": [
+          600,
+          650
+        ],
+        "progress": 0,
+        "swing": 3,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": false
+      }
+    },
+    {
+      "name": "dev14-pause",
+      "before": {
+        "active_rigs": 0,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "pause",
+        "gear": "",
+        "health": 358,
+        "hit_phase": 0.36,
+        "id": 19,
+        "impact": 2,
+        "impact_target_valid": true,
+        "menu": true,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "generations": 3,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 182
+        },
+        "persistence_active": false,
+        "phase": "surface",
+        "pickaxe_level": 1,
+        "position": [
+          600,
+          650
+        ],
+        "progress": 0,
+        "swing": 3,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": false
+      },
+      "after": {
+        "active_rigs": 0,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "pause",
+        "gear": "",
+        "health": 358,
+        "hit_phase": 0.36,
+        "id": 19,
+        "impact": 2,
+        "impact_target_valid": true,
+        "menu": true,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "generations": 3,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 182
+        },
+        "persistence_active": false,
+        "phase": "surface",
+        "pickaxe_level": 1,
+        "position": [
+          600,
+          650
+        ],
+        "progress": 0,
+        "swing": 3,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": false
+      }
+    },
+    {
+      "name": "failure",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "resume",
+        "gear": "worn",
+        "health": 360,
+        "hit_phase": 0.36,
+        "id": 20,
+        "impact": 2,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 4,
+          "motion": {
+            "age": 91.8148413333306,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.226344814814878,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 0,
+            "yaw": -2.18576456934017e-8
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 5431
+        },
+        "persistence_active": false,
+        "phase": "surface",
+        "pickaxe_level": 1,
+        "position": [
+          600,
+          650
+        ],
+        "progress": 0,
+        "swing": 3,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": false
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.72,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "resume",
+        "gear": "worn",
+        "health": 360,
+        "hit_phase": 0.36,
+        "id": 20,
+        "impact": 2,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 4,
+          "motion": {
+            "age": 92.0148413333306,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.281900370370434,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 0,
+            "yaw": -2.18576456934017e-8
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 5443
+        },
+        "persistence_active": false,
+        "phase": "surface",
+        "pickaxe_level": 1,
+        "position": [
+          600,
+          650
+        ],
+        "progress": 0,
+        "swing": 3,
+        "target_valid": false,
+        "version": "1.0.0-dev.14",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": false
+      }
+    }
+  ],
+  "bootstrap_fixture": "HTML injects only explicit QA launch args. Named non-persistent fixture uses ordinary DEV jumps/equipment, clears queued achievement toasts and exercises real input/menu paths. Main scene and game package bytes unchanged.",
+  "physical_iphone_verified": false,
+  "continuous_motion_or_fps_certified": false
+}
