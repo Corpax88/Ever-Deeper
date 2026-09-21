@@ -2,7 +2,7 @@ name: Verify exact native Worn trial on Mac
 on:
   push:
     branches: [codex/hero-loop-flow-20260918]
-    paths: ['.github/native-flow-trial/bundle.json', '.github/workflows/verify-native-worn-trial.yml']
+    paths: ['.github/native-flow-trial/bundle.json', '.github/workflows/verify-native-worn-trial.yml', 'tools/hero_v28/runtime_pilot/review_trial.mjs']
 permissions:
   contents: read
 concurrency:
