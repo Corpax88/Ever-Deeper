@@ -1,0 +1,331 @@
+{
+  "schema": 1,
+  "review_type": "independent original-image and narrow publisher review",
+  "reviewed_on": "2026-09-21",
+  "decision": "accepted",
+  "scope": "Additive dev/worn trial test readiness only",
+  "independent_visual_accepted": true,
+  "exported_controls_passed": true,
+  "publisher_reviewed": true,
+  "dev_trial_only": true,
+  "ordinary_game_adopted": false,
+  "live_authorized": false,
+  "production_animation_accepted": false,
+  "physical_iphone_verified": false,
+  "fps_verified": false,
+  "animation_score": null,
+  "identity": {
+    "source_commit": "e32a03e620913a76f3bee9083b2e9b1d66eef972",
+    "tested_revision": "fd95be111fde7b2599bfbae5239f66c2bc6a3cbb",
+    "mac_run_id": 35553114935,
+    "mac_run_url": "https://github.com/Corpax88/Ever-Deeper/actions/runs/35553114935",
+    "run_revision_provenance": "Supplied project handoff and parent task; these identifiers are not fields inside report.json.",
+    "artifact_id": 10619416142,
+    "artifact_zip_sha256_from_handoff": "77bc3b7075c37cb1cff8e0189481373b5327b2d9809fb87e9c2b05d11d82e755",
+    "report_sha256": "b4dc1a5312bd71a6334ad3d6a83c6ec9f9c4ebfb1f44bed05d11b6f8ab92993a",
+    "bundle_sha256": "26209f2eeeefa1688d8fd954b701dd02e4a00dbba74274271b4f3aa5d55765dd",
+    "baseline_sha256": "eed30911a77a31727d09333330f43599d0db479af2ccf4de7166ffcd8c966212",
+    "publisher_sha256": "4e3a831721da26edf61948013166ec55f37f2e5978fe424a390517e627ca9959",
+    "workflow_sha256": "e3ecb4e42ff87d342e9de4672c0faf9d18988e94338b14af6d6463bf4e5e3855",
+    "pck": {
+      "size": 327093712,
+      "sha256": "74db0719dc5d151e0ad9491e9c5e90769c6f85ff8f8db07fe55c4b825277da05"
+    },
+    "report_manifest_equals_bundle": true,
+    "report_pck_equals_bundle": true,
+    "inspected_package_manifest_entries": 9
+  },
+  "runtime": {
+    "viewport": [
+      844,
+      390
+    ],
+    "dpr": 2,
+    "webgl": {
+      "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+      "renderer": "WebKit WebGL",
+      "unmaskedRenderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+      "drawingBuffer": [
+        1688,
+        780
+      ],
+      "lost": false
+    },
+    "browser": "151.0.7922.34",
+    "os": "darwin",
+    "arch": "arm64",
+    "headless": true
+  },
+  "capture_method": "CDP Page.captureScreenshot; state before and after, not frame-synchronized",
+  "inspected_images": [
+    {
+      "file": "01-ready.png",
+      "sha256": "7b87ba0bced0479bbadf7f6bbfacaf095e6b6e13e7f761ead3e64936527110d9",
+      "size_bytes": 527499,
+      "dimensions": [
+        844,
+        390
+      ],
+      "inspected_original": true,
+      "state_frames_before_after": [
+        1,
+        10
+      ],
+      "capture_duration_ms": 160,
+      "pre_capture_telemetry": {
+        "label": "startup",
+        "elapsed_ms": 21507,
+        "clock": "elapsed within this labeled wait, not a global capture timestamp"
+      },
+      "state_evidence": {
+        "hp17": 500,
+        "hp18": 500,
+        "impact_serial": 0,
+        "mining": false,
+        "position": [
+          1696,
+          1648
+        ],
+        "resets": 0,
+        "ready": true,
+        "failed": false,
+        "errors": []
+      },
+      "observed_pixels": "Hero and companion are visible beside ore; textured terrain and the complete trial HUD render."
+    },
+    {
+      "file": "02-held-mining.png",
+      "sha256": "272d0ed83a5b26cacf00875f19524d46a8343bd70a7e86c4a6ea3d6cba3aa94c",
+      "size_bytes": 527335,
+      "dimensions": [
+        844,
+        390
+      ],
+      "inspected_original": true,
+      "state_frames_before_after": [
+        245,
+        255
+      ],
+      "capture_duration_ms": 164,
+      "pre_capture_telemetry": {
+        "label": "held-mining",
+        "elapsed_ms": 4056,
+        "clock": "elapsed within this labeled wait, not a global capture timestamp"
+      },
+      "state_evidence": {
+        "hp17": 476,
+        "hp18": 500,
+        "impact_serial": 6,
+        "mining": true,
+        "position": [
+          1696,
+          1648
+        ],
+        "resets": 0,
+        "ready": true,
+        "failed": false,
+        "errors": []
+      },
+      "observed_pixels": "Hero pose changes beside the same ore while the scene and controls remain visible; this still does not establish a contact frame."
+    },
+    {
+      "file": "03-walk-exit.png",
+      "sha256": "a7515530ad627f3115a3713089eeb2b94d0fbdbc1bf996f54663cfda4f87ffd7",
+      "size_bytes": 530166,
+      "dimensions": [
+        844,
+        390
+      ],
+      "inspected_original": true,
+      "state_frames_before_after": [
+        490,
+        500
+      ],
+      "capture_duration_ms": 121,
+      "pre_capture_telemetry": {
+        "label": "keyboard-movement-release-stable",
+        "elapsed_ms": 1015,
+        "clock": "elapsed within this labeled wait, not a global capture timestamp"
+      },
+      "state_evidence": {
+        "hp17": 476,
+        "hp18": 500,
+        "impact_serial": 6,
+        "mining": false,
+        "position": [
+          1339.00256347656,
+          1648
+        ],
+        "resets": 0,
+        "ready": true,
+        "failed": false,
+        "errors": []
+      },
+      "observed_pixels": "Hero faces left in a visibly shifted world view, with companion and ore still rendered."
+    },
+    {
+      "file": "04-reset.png",
+      "sha256": "0c5fd9b5478168db53f62bf69a05d35a2e303d523471336a593a4cb6378db4d1",
+      "size_bytes": 527136,
+      "dimensions": [
+        844,
+        390
+      ],
+      "inspected_original": true,
+      "state_frames_before_after": [
+        505,
+        515
+      ],
+      "capture_duration_ms": 171,
+      "pre_capture_telemetry": {
+        "label": "reset",
+        "elapsed_ms": 94,
+        "clock": "elapsed within this labeled wait, not a global capture timestamp"
+      },
+      "state_evidence": {
+        "hp17": 500,
+        "hp18": 500,
+        "impact_serial": 6,
+        "mining": false,
+        "position": [
+          1696,
+          1648
+        ],
+        "resets": 1,
+        "ready": true,
+        "failed": false,
+        "errors": []
+      },
+      "observed_pixels": "Hero returns to the ore-side setup; the reset button is highlighted. Companion/camera placement differs from the first capture."
+    },
+    {
+      "file": "05-touch-mining.png",
+      "sha256": "eff66cddc5a86bc22dc3872a0863034448ea11feb98539c60ead7e8e4c7031fe",
+      "size_bytes": 526487,
+      "dimensions": [
+        844,
+        390
+      ],
+      "inspected_original": true,
+      "state_frames_before_after": [
+        645,
+        655
+      ],
+      "capture_duration_ms": 117,
+      "pre_capture_telemetry": {
+        "label": "touch-release",
+        "elapsed_ms": 1017,
+        "clock": "elapsed within this labeled wait, not a global capture timestamp"
+      },
+      "state_evidence": {
+        "hp17": 492,
+        "hp18": 500,
+        "impact_serial": 8,
+        "mining": false,
+        "position": [
+          1696,
+          1648
+        ],
+        "resets": 1,
+        "ready": true,
+        "failed": false,
+        "errors": []
+      },
+      "observed_pixels": "Hero is back in a ready-looking pose beside ore after touch release; the screenshot itself does not show active mining."
+    },
+    {
+      "file": "06-touch-walk.png",
+      "sha256": "26a15628e25dc5eb9ba67d876bf8b2c8d41197b29ed105e29f779683515009ba",
+      "size_bytes": 521195,
+      "dimensions": [
+        844,
+        390
+      ],
+      "inspected_original": true,
+      "state_frames_before_after": [
+        840,
+        850
+      ],
+      "capture_duration_ms": 114,
+      "pre_capture_telemetry": {
+        "label": "touch-movement-release-stable",
+        "elapsed_ms": 1017,
+        "clock": "elapsed within this labeled wait, not a global capture timestamp"
+      },
+      "state_evidence": {
+        "hp17": 492,
+        "hp18": 500,
+        "impact_serial": 8,
+        "mining": false,
+        "position": [
+          1894.33190917969,
+          1648
+        ],
+        "resets": 1,
+        "ready": true,
+        "failed": false,
+        "errors": []
+      },
+      "observed_pixels": "Hero faces right beside a terrain corner in a shifted world view; HUD and companion remain visible."
+    }
+  ],
+  "findings": [
+    {
+      "priority": 1,
+      "classification": "supported trial readiness",
+      "blocking": false,
+      "finding": "No blocking static rendering or report-state inconsistency was observed across the six required control checkpoints.",
+      "pixel_evidence": "All six originals show the hero, companion, ore, textured terrain and trial HUD. Individual observations and original state windows are listed per image.",
+      "state_evidence": "HP17 is 500 initially, 476 after six held-mining impacts; reset restores 500 and resets=1; touch mining leaves 492 and impact_serial=8. Keyboard release position is identical at frames 430/490; touch release position is identical at 780/840, with mining=false.",
+      "likely_cause": "The existing candidate renders the trial fixture and responds to the exercised controls; no defect cause is inferred.",
+      "uncertainty": "A static appearance cannot independently prove HP changes, input timing or all animation phases; those conclusions use the recorded state report. No approved-target fidelity comparison or broader production coverage was performed.",
+      "smallest_next_step": "Bind these reviewed bytes in the existing small review gate and proceed only with the already authorized additive trial workflow and its 27-file public verification."
+    },
+    {
+      "priority": 2,
+      "classification": "evidence boundary",
+      "blocking": false,
+      "finding": "These are six asynchronous control checkpoints, not a motion-quality sequence.",
+      "pixel_evidence": "The touch-mining image is a post-release pose; report mining=false at both frames 645 and 655. No image is assigned an exact impact frame.",
+      "state_evidence": "CDP captures take 114–171 ms and are bracketed by state counters 9 or 10 frames apart. Telemetry elapsed_ms is local to labeled waits; no global synchronized capture timestamp is supplied.",
+      "likely_cause": "The harness captures control checkpoints through CDP while the game continues running.",
+      "uncertainty": "Continuous playback, return clearance throughout a cycle, timing smoothness, physical iPhone behavior, sustained FPS and a numeric animation score remain unverified.",
+      "smallest_next_step": "Keep production acceptance open; use the additive trial for the intended iPhone user check. Do not rerun the unchanged Mac suite to turn these stills into motion evidence."
+    },
+    {
+      "priority": 3,
+      "classification": "minor UI wording mismatch",
+      "blocking": false,
+      "finding": "The upper-left instruction says HUGG while the visible lower-right action control is labeled MINE.",
+      "pixel_evidence": "Visible in all six 844×390 originals: instruction near x12,y38 and button label near x729,y354.",
+      "state_evidence": "Touch interaction nevertheless produces two recorded impacts before release.",
+      "likely_cause": "Likely mixed wording between the trial hint and existing action control; this is an inference from the pixels, not a source diagnosis.",
+      "uncertainty": "Possible first-use hesitation was not measured and does not block the narrow supervised trial.",
+      "smallest_next_step": "If the user reports confusion, align the hint/control wording in a separate minimal revision; do not rebuild this passing package for the review."
+    }
+  ],
+  "publisher_review": {
+    "basis": "Source inspection only; publisher and public-byte verification were not executed by this critic.",
+    "existing_files_preserved": 18,
+    "additive_files": 9,
+    "public_files_verified_by_workflow": 27,
+    "checks": [
+      "reviewed() pins DEV13 source, both baseline file sets, dev/worn destination, review flags, exact bundle/baseline/report SHA256s, source identity, passing six-check report and exact nine-file tested manifest.",
+      "Base PCK equals pinned DEV13 PCK. The seven files other than index.html/index.pck are required to equal DEV13.",
+      "prepare() fetches and verifies size/SHA256 for all 18 existing LIVE/DEV13 files before creating a staging tree; it retains rollback bytes.",
+      "Each ordered delta part, the assembled delta and all nine reconstructed candidate files are verified against pinned identities.",
+      "The staging file set is exactly 9 LIVE, 9 DEV13, 9 dev/worn files and .nojekyll; the 18 baseline files are rechecked after copying.",
+      "Workflow serializes Pages work, makes deployment depend on gated packaging and runs verify afterward. verify() checks exact size/SHA256 of all 27 public game files before recording success."
+    ],
+    "remaining_uncertainty": "No staging/deployment/public receipt is asserted here. Post-deployment verification is required; the workflow retains rollback files but does not automatically roll back a failed public verification."
+  },
+  "byte_exactness_note": "Current bundle matches the canonical handoff SHA256. Original report.json intentionally has no trailing newline and its hash matches the handoff; preserve those exact bytes. No source was edited.",
+  "smallest_next_step": "Parent commits these reports, creates the hash-bound review.json, validates the existing gate, and completes only the authorized additive publication plus 27-file public receipt.",
+  "actions_not_performed": [
+    "Game suite rerun",
+    "Payload download or re-export",
+    "Binary-as-text transport",
+    "Source edits",
+    "Publication"
+  ]
+}
