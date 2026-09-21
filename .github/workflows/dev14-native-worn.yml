@@ -33,6 +33,7 @@ jobs:
       - name: Check input, gameplay, touch and exported DEV flavor
         run: python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/dev14/candidate/index.pck" --cases input overhaul touch build-flavor --output "$RUNNER_TEMP/dev14/core"
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: dev14-candidate
           path: ${{ runner.temp }}/dev14/candidate

@@ -339,4 +339,4 @@ func tool_visual_snapshot() -> Dictionary:
 	return {"gear": active_gear, "pickaxe_level": int(RunState.pickaxe_level), "endless_outfit_style": active_endless_outfit_style, "endless_tool_style": active_endless_tool_style, "native_two_handed": true, "direction": direction_name, "frame": _last_frame, "state": _last_state, "local_frame": _last_local_frame, "native_phase": _last_native_phase, "hit_phase": strike_phase, "textures_loaded": _atlases.size()}
 
 func mobile_render_budget_snapshot() -> Dictionary:
-	return {"redraw_requests": redraw_request_count, "state_updates": state_update_count, "state_skips": state_skip_count, "tool_signature": active_gear, "walk_fps": 60.0, "state_change_driven": true, "textures_loaded": _atlases.size(), "runtime_3d": false}
+	return {"redraw_requests": redraw_request_count, "state_updates": state_update_count, "state_skips": state_skip_count, "tool_signature": active_gear, "walk_fps": 60.0, "state_change_driven": true, "textures_loaded": _atlases.size(), "runtime_3d": bool(native_worn_snapshot().active)}
