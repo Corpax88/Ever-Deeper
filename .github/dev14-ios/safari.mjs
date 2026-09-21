@@ -40,13 +40,16 @@ try{
  report.environment={xcode:execFileSync('xcodebuild',['-version'],{encoding:'utf8'}),node:process.version};
  const list=JSON.parse(execFileSync('xcrun',['simctl','list','devices','available','-j'],{encoding:'utf8'}));
  device=Object.entries(list.devices).filter(([r])=>r.endsWith('iOS-26-2')).flatMap(([runtime,ds])=>ds.filter(d=>d.isAvailable&&d.name.startsWith('iPhone')).map(d=>({...d,runtime})))[0];assert.ok(device,'Installed iPhone runtime');report.device={name:device.name,udid:device.udid,runtime:device.runtime};
- if(device.state!=='Booted')execFileSync('xcrun',['simctl','boot',device.udid],{timeout:120000});execFileSync('xcrun',['simctl','bootstatus',device.udid,'-b'],{timeout:240000});execFileSync('open',['-a','Simulator','--args','-CurrentDeviceUDID',device.udid]);
  driver=spawn(process.execPath,[resolve('node_modules/appium/index.js'),'--address','127.0.0.1','--port','4723','--log',out+'/appium.log','--log-no-colors'],{detached:true});driver.stdout.on('data',b=>driverLog+=b);driver.stderr.on('data',b=>driverLog+=b);
- let available=false;for(const until=Date.now()+90000;Date.now()<until;){try{available=!!(await wd('GET','/status',undefined,5000)).ready;if(available)break;}catch{}await pause(750);}assert.ok(available,'Appium ready');
+ console.log('SAFARI_BOOT '+new Date().toISOString());
+ if(device.state!=='Booted')execFileSync('xcrun',['simctl','boot',device.udid],{timeout:120000});execFileSync('xcrun',['simctl','bootstatus',device.udid,'-b'],{timeout:240000});execFileSync('open',['-a','Simulator','--args','-CurrentDeviceUDID',device.udid]);
+ let available=false;for(const until=Date.now()+240000;Date.now()<until;){try{available=!!(await wd('GET','/status',undefined,5000)).ready;if(available)break;}catch{}await pause(750);}assert.ok(available,'Appium ready');
+ console.log('SAFARI_SESSION '+new Date().toISOString());
  const created=await wd('POST','/session',{capabilities:{alwaysMatch:{platformName:'iOS','appium:automationName':'XCUITest','appium:bundleId':'com.apple.mobilesafari','appium:udid':device.udid,'appium:platformVersion':'26.2','appium:noReset':true,'appium:autoWebview':false,'appium:orientation':'LANDSCAPE','appium:waitForIdleTimeout':0,'appium:wdaLaunchTimeout':180000,'appium:showXcodeLog':true}}});session=created.sessionId;report.context=await command('GET','/context');assert.equal(report.context,'NATIVE_APP');
  await command('POST','/orientation',{orientation:'LANDSCAPE'});await mobile('deepLink',{url:origin,bundleId:'com.apple.mobilesafari'});await pause(2500);
  const tips=await command('POST','/elements',{using:'-ios predicate string',value:'visible == 1 AND type == "XCUIElementTypeButton" AND label == "Close" AND name != "CloseTabBarItemButton"'});if(tips.length)await command('POST','/element/'+tips[0]['element-6066-11e4-a52e-4f735466cecf']+'/click',{});
  video=spawn('xcrun',['simctl','io',device.udid,'recordVideo','--codec=h264',out+'/safari-new-game.mp4']);video.stderr.on('data',()=>{});
+ console.log('SAFARI_GAME_LOADING '+new Date().toISOString());
  await ready();await pause(1000);await capture('01-ordinary-menu');await touch('new-game');await observe('02-new-game',15);
  const old=latest.id;await mobile('deepLink',{url:origin+'/?saved-run=1',bundleId:'com.apple.mobilesafari'});await ready(old);await pause(1000);await capture('03-saved-run-menu');
  await touch('new-game');await pause(800);await capture('04-replace-confirmation');await touch('confirm');await observe('05-confirmed-new-game',15);
