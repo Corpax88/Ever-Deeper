@@ -2435,6 +2435,7 @@ func _mine_moonglass_resource_once() -> void :
 	if int(node.hp) <= 0:
 		return
 	moon_bloom_hit_count += 1
+	player.record_mining_presentation_impact()
 	_spawn_moonglass_effect(false, Vector2(node.position))
 	_spawn_surface_material_spray(MOON_BLOOM_ID, Vector2(node.position))
 	var tool: = _mountain_tool()
@@ -2855,6 +2856,7 @@ func _mine_timed_surface_resource_once(vein_id: String) -> void :
 	else:
 		node.hp = maxi(0, int(node.hp) - power)
 	runtime.hit_count = int(runtime.hit_count) + 1
+	player.record_mining_presentation_impact()
 	nodes[target_index] = node
 	runtime.nodes = nodes
 	runtime.target_index = target_index

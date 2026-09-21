@@ -1,0 +1,75 @@
+name: Verify ordinary DEV14 Worn integration
+on:
+  push:
+    branches: [codex/hero-loop-flow-20260918]
+    paths: ['.github/dev14/**', '.github/workflows/dev14-native-worn.yml', 'scripts/player/native_worn/**', 'scripts/player/native_worn_visual.gd', 'scripts/player/player_visual.gd', 'scripts/qa/suites/dev14_review.gd', 'scripts/qa/qa_launcher.gd', 'scripts/player/player_controller.gd', 'scripts/player/legacy_mining_context.gd', 'scripts/world/surface_world.gd', 'scripts/ui/premium_menu.gd', 'project.godot', 'export_presets.cfg']
+permissions:
+  contents: read
+concurrency:
+  group: dev14-worn-qa
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install matching Godot and templates
+        run: |
+          curl -L --fail --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+          curl -L --fail --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz -o "$RUNNER_TEMP/templates.tpz"
+          unzip -q "$RUNNER_TEMP/templates.tpz" 'templates/web*.zip' 'templates/version.txt' -d "$RUNNER_TEMP/templates"
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          cp "$RUNNER_TEMP/templates/templates/"* "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+      - name: Export ordinary game with reviewed native assets
+        run: python3 .github/dev14/build.py Godot_v4.7.2-stable_linux.x86_64 "$RUNNER_TEMP/dev14"
+      - name: Record protected-file comparison
+        continue-on-error: true
+        run: python3 tools/check_invariants.py > "$RUNNER_TEMP/dev14/invariants.log" 2>&1
+      - name: Check input, gameplay, touch and exported DEV flavor
+        run: python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/dev14/candidate/index.pck" --cases input overhaul touch build-flavor --output "$RUNNER_TEMP/dev14/core"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dev14-candidate
+          path: ${{ runner.temp }}/dev14/candidate
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dev14-build-review
+          path: |
+            ${{ runner.temp }}/dev14/*.json
+            ${{ runner.temp }}/dev14/*.log
+            ${{ runner.temp }}/dev14/core
+          if-no-files-found: error
+          retention-days: 30
+  browser:
+    needs: build
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: dev14-candidate
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts && npx playwright install chromium
+      - name: Review ordinary menu, Worn motion and controls
+        run: node .github/dev14/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/dev14-browser"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dev14-browser-review
+          path: ${{ runner.temp }}/dev14-browser
+          if-no-files-found: error
+          retention-days: 30

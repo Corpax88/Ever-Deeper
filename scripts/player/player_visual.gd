@@ -3,6 +3,7 @@ extends Node2D
 const Gear = preload("res://scripts/player/hero_gear.gd")
 const ClothShader = preload("res://scripts/player/dad_cloth.gdshader")
 const FlowGraph = preload("res://scripts/player/hero_flow_graph.gd")
+const NativeWorn = preload("res://scripts/player/native_worn_visual.gd")
 const ROOT: = "res://assets/hero/dad/"
 const GROUND_Y: = 2.8125
 const WALK_STRIDE: = 144.0
@@ -51,6 +52,7 @@ var _flow_graph: RefCounted = FlowGraph.new()
 var _flow_manifest: Dictionary = {}
 var _flow_visible: bool = false
 var _flow_distance: float = 0.0
+var _native_worn: Node
 
 func _ready() -> void:
 	process_priority = 1000
@@ -63,6 +65,10 @@ func _ready() -> void:
 	_cloth.shader = ClothShader
 	_sprite.material = _cloth
 	add_child(_sprite)
+	if OS.has_feature("ever_deeper_dev") and DisplayServer.get_name() != "headless" and bool(ProjectSettings.get_setting("native_worn/enabled", false)):
+		_native_worn = NativeWorn.new()
+		_native_worn.setup(self)
+		add_child(_native_worn)
 	prepare_visual_cache()
 
 func advance_motion(distance: float, _delta: float) -> void:
@@ -140,6 +146,8 @@ func _process(delta: float) -> void:
 	_idle_clock = fposmod(_idle_clock + delta, 3.6)
 	_drill_clock += delta
 	_draw_frame(delta)
+	if _native_worn != null:
+		_sprite.visible = not _native_worn.advance(delta)
 	_flow_distance = 0.0
 
 func _native_phase(progress: float) -> float:
@@ -308,6 +316,7 @@ func prepare_visual_cache() -> void:
 	_refresh_equipment()
 
 func release_visual_cache() -> void:
+	if _native_worn != null: _native_worn.suspend()
 	_released = true
 	_impact_pending = false
 	_atlases = {}
@@ -322,6 +331,9 @@ func release_visual_cache() -> void:
 
 func grounding_snapshot() -> Dictionary:
 	return {"walk": GROUND_Y, "side_mining": GROUND_Y, "up_mining": GROUND_Y, "drill_walk": GROUND_Y, "drill_mining": GROUND_Y}
+
+func native_worn_snapshot() -> Dictionary:
+	return _native_worn.snapshot() if _native_worn != null else {"active":false,"failed":false}
 
 func tool_visual_snapshot() -> Dictionary:
 	return {"gear": active_gear, "pickaxe_level": int(RunState.pickaxe_level), "endless_outfit_style": active_endless_outfit_style, "endless_tool_style": active_endless_tool_style, "native_two_handed": true, "direction": direction_name, "frame": _last_frame, "state": _last_state, "local_frame": _last_local_frame, "native_phase": _last_native_phase, "hit_phase": strike_phase, "textures_loaded": _atlases.size()}

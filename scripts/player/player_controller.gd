@@ -3,6 +3,8 @@ extends CharacterBody2D
 signal moved(world_position: Vector2)
 signal facing_changed(direction: Vector2)
 
+const LegacyMiningContext = preload("res://scripts/player/legacy_mining_context.gd")
+
 const CELL_SIZE: = 256.0
 const FRAME_COUNT: = 6
 const FRAME_DISTANCE: = 24.0
@@ -64,6 +66,9 @@ var animation_impact_swing_serial: int = 0
 var animation_impact_target: Vector2 = Vector2.ZERO
 var animation_impact_bearing: Vector2 = Vector2.DOWN
 var animation_impact_target_valid: bool = false
+var _legacy_elapsed: float = -1.0
+var _legacy_context_active: bool = false
+var _legacy_owner: String = ""
 
 
 func _ready() -> void :
@@ -207,22 +212,45 @@ func _update_visual(is_moving: bool) -> void :
 
 
 func set_mining_visual(active: bool, progress: float = 0.0, recoil: float = 0.0, strike_phase: float = -1.0) -> void :
+	var presentation_active: bool = active
+	if OS.has_feature("ever_deeper_dev"):
+		presentation_active = _update_legacy_mining_context(active)
 	if recoil > 0.0:
-		_mining_impact_serial += 1
-		animation_impact_swing_serial = animation_swing_serial
-		animation_impact_target = animation_target_position
-		animation_impact_bearing = animation_bearing
-		animation_impact_target_valid = animation_target_valid
-		_visual_state_initialized = false
+		_record_mining_presentation_impact()
 	mining_strike_phase = strike_phase
 	mining_visual_active = active
-	animation_active = active
+	animation_active = presentation_active
 	animation_progress = clampf(progress, 0.0, 1.0)
-	animation_hit_phase = strike_phase
-	if not active: animation_target_valid = false
+	if strike_phase > 0.0: animation_hit_phase = strike_phase
+	if not presentation_active: animation_target_valid = false
 	mining_visual_progress = progress
 	mining_visual_recoil = maxf(mining_visual_recoil, recoil)
 	_update_visual(_actual_moving)
+
+
+func _update_legacy_mining_context(active: bool) -> bool:
+	var context: Dictionary = LegacyMiningContext.read(get_parent())
+	# Nearby inactive Surface owners also publish false. The committed owner wins.
+	if bool(context.get("locked",false)): active = bool(context.active)
+	if not active:
+		_legacy_context_active = false
+		_legacy_elapsed = -1.0
+		return false
+	if context.is_empty(): return active # Endless already publishes its committed swing.
+	if not context.has("target"):
+		if context.has("elapsed"): _legacy_elapsed = float(context.elapsed)
+		return active
+	var owner: String = String(context.get("owner",get_parent().name))
+	var next_elapsed: float = context.elapsed
+	var same_target: bool = String(context.id) == animation_target_id and Vector2(context.target).is_equal_approx(animation_target_position)
+	var wrapped: bool = next_elapsed + 0.000001 < _legacy_elapsed
+	if not _legacy_context_active or not animation_target_valid or owner != _legacy_owner or wrapped:
+		begin_mining_presentation(context.target, context.id, context.duration, context.hit, _legacy_context_active and owner == _legacy_owner and wrapped and same_target)
+	animation_hit_phase = context.hit
+	_legacy_owner = owner
+	_legacy_elapsed = next_elapsed
+	_legacy_context_active = true
+	return active
 
 
 func set_facing(direction: Vector2) -> void :
@@ -323,3 +351,23 @@ func _register_action(action: StringName, keys: Array[int]) -> void :
 		var event: = InputEventKey.new()
 		event.physical_keycode = keycode
 		InputMap.action_add_event(action, event)
+
+
+func record_mining_presentation_impact() -> void:
+	if OS.has_feature("ever_deeper_dev"): _record_mining_presentation_impact()
+
+
+func _record_mining_presentation_impact() -> void:
+	_mining_impact_serial += 1
+	animation_impact_swing_serial = animation_swing_serial
+	animation_impact_target = animation_target_position
+	animation_impact_bearing = animation_bearing
+	animation_impact_target_valid = animation_target_valid
+	# A mine may legally retarget before impact. The damage owner is authoritative.
+	if OS.has_feature("ever_deeper_dev"):
+		var hit_context: Dictionary = LegacyMiningContext.read(get_parent())
+		if hit_context.has("target"):
+			animation_impact_target = Vector2(hit_context.target)
+			animation_impact_bearing = (animation_impact_target-global_position).normalized()
+			animation_impact_target_valid = true
+	_visual_state_initialized = false
