@@ -1,10 +1,10 @@
 {
   "passed": true,
-  "version": "1.0.0-dev.14.1",
+  "version": "1.0.0-dev.14.2",
   "destination": "https://corpax88.github.io/Ever-Deeper/dev/",
-  "source_commit": "6d6e1b8d98ecae6661b514fff92e28447715dd33",
-  "run_id": 35604667053,
-  "manifest_sha256": "1e8894b83ddd4c0074c6775ad6945a319ed08f0a6d99775b681908de3ec4d38a",
+  "source_commit": "bee888fe36d6b8285e1198384d40694d3154956a",
+  "run_id": 35616856586,
+  "manifest_sha256": "e8d8b3097714d87906e2b164151cb056cf0aaf208ec920ae494f392a8e2a277f",
   "files": {
     "index.apple-touch-icon.png": {
       "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5",
@@ -44,15 +44,15 @@
     },
     "dev/index.html": {
       "size": 7855,
-      "sha256": "b2ac33750719a17c260d746038846c77da2f8352ed6583ee430771a22d0559c2"
+      "sha256": "6d1639620955365c4322c4107e4b975958c3c2baef6e406a3a9fc08ef602f3dd"
     },
     "dev/index.js": {
       "size": 279815,
       "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
     },
     "dev/index.pck": {
-      "size": 255901708,
-      "sha256": "510dc3c8768b37ddbc06f0ade5c34b64d927b51a77d958a7366d303d395b9707"
+      "size": 236963468,
+      "sha256": "c0f0a04cb94193dd4806de41c18ac238a171b94ba4e7f99b5bec2f9f59d38a7f"
     },
     "dev/index.wasm": {
       "size": 39514754,
@@ -118,5 +118,5 @@
   "live_files_unchanged": 9,
   "physical_iphone_verified": false,
   "iphone_simulator_verified": false,
-  "verification_scope": "Mac Chromium gameplay and normal Mac WebKit startup; native Simulator attempt inconclusive"
+  "verification_scope": "Mac Chromium DPR3 gameplay, steering regression and 120-second rendering; normal Mac WebKit startup. Physical iPhone remains unverified"
 }
