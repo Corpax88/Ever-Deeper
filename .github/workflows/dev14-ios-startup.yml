@@ -12,7 +12,6 @@ jobs:
     timeout-minutes: 30
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
-      WDA_APP: ${{ runner.temp }}/wda/WebDriverAgentRunner-Runner.app
       CANDIDATE_SOURCE: 6d6e1b8d98ecae6661b514fff92e28447715dd33
     steps:
       - uses: actions/checkout@v4
@@ -37,7 +36,7 @@ jobs:
           npx --no-install appium driver run xcuitest download-wda -- --outdir="$RUNNER_TEMP/wda" --kind=sim --platform=ios
       - name: Exercise normal New Game and saved-run replacement
         working-directory: .github/dev14-ios
-        run: node safari.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/safari-startup"
+        run: WDA_APP="$RUNNER_TEMP/wda/WebDriverAgentRunner-Runner.app" node safari.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/safari-startup"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
