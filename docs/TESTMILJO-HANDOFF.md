@@ -1,3 +1,25 @@
+# Ever-Deeper — vanlig DEV14 publisert og verifisert
+
+Mats har godkjent å oppdatere vanlig DEV på https://corpax88.github.io/Ever-Deeper/dev/. Worn er integrert i vanlig spill; samme hovedscene og DEV-lagring beholdes. Ingen ny arena er nødvendig for å bruke DEV14.
+
+Spillkilde: 9989805a329373af6c19dc5cde21e23205d87ea5 på codex/hero-loop-flow-20260918. Supplerende testkode: 8e5b66ef0d81626567275d110bdd09b087e2d6b2.
+Bygg/kjernekontroller: 35596622855 besto bygg, input, 1261 spillkontroller, 125 touchkontroller og DEV-lagringsområde. Kandidat-ID 10636728068; PCK SHA256 c7274af20224f4651ed486ba24c5fbcf9801cbca4fc9b346781794415be92781.
+Mac-kontroll av samme pakke er ferdig: 35597706023 besto. Første Mac-rapport er beholdt som feilet på feil Surface-statusobservasjon; supplementet lukket bare gjenopptakelsesporten med faktisk bevegelse. Alle ni spillfiler er identiske. Uavhengig bilde-/kodegjennomgang er godkjent. 22 originale bilder er sett; Deepheart-kommandoens bilde viser Hub, ikke en separat Deepheart-hule.
+
+Publiseringscommit på main: ad35768a2e291b61a30725942b5ee763adacd230.
+Publisering bestått: https://github.com/Corpax88/Ever-Deeper/actions/runs/35598684249
+Package, deploy og verify er ferdige og bestått. Kvitteringen er lastet ned og sammenlignet mot alle 27 offentlige filer: 9 DEV14-filer matcher testpakken, 9 LIVE-filer og 9 tidligere trial-filer er uendret. DEV13 er beholdt som rollback-artefakt 10638185982.
+Kvittering: .github/dev14/evidence/publication-receipt.json; SHA256 fcf5d173d8a91e688002a0d52b5f5fb0cd364e1bf60b35ab8c4b51f04b7601db. Kvitteringsartefakt 10638260798; ZIP SHA256 b86deca4404f4a5ec3f00099fc01d275a953327995696a01d896ff6a60770411.
+Bruk vanlig /dev/. Last siden på nytt; menyen skal vise 1.0.0-dev.14. Gjeldende spillkilde er på arbeidsgrenen; main inneholder den eksakte publiseringspakken og bevisene, ikke en sammenslåing av all historisk spillutvikling.
+
+Manifest, hashbundet godkjenning, original feilrapport og avsluttende rapport ligger på main i .github/dev14/. Se docs/premium-polish/dev14-native-worn/HANDOFF.md. Endelig Mac-artefakt: 10637616148, ZIP SHA256 ee688c594dbe2c18d1b1b4da7a04e8bc5d23709c28f303dd4e665a6b573464ca. Ikke eksporter, generer modeller, last opp binærdata eller gjenta beståtte tester for uendret kandidat.
+
+Beskyttede invariantavvik er ærlig beholdt: prosjektkonfig og player_controller/player_visual er tilsiktet integrasjon; hero_gear er et eksisterende avvik. Ingen påstand om full invariant-pass, fysisk iPhone, FPS eller generell animasjonsscore.
+Norsk, maks fem korte linjer per svar. Bare nødvendig fremdrift; ingen kommandologger eller binær/base64 gjennom verktøyargumenter/resultater, heller ikke skjult i code-mode. Bruk eksisterende Git-objekter og CI-artefakter.
+
+---
+Historikk for den tidligere separate Worn-testen følger. Dens tidligere sluttmål er erstattet av oppdraget ovenfor.
+
 # Ever-Deeper — Worn publisert; klar for iPhone-test
 
 ## Hold chatten lett
@@ -36,3 +58,5 @@ Spillbar testlenke: https://corpax88.github.io/Ever-Deeper/dev/worn/
 Mats tester i Safari i liggende visning: hold MINE ved malmen, slipp, gå og start igjen. Be om konkret tilbakemelding på flyten før neste animasjonsendring. Ikke start bred testing eller nye eksportforsøk uten en konkret feil.
 Normal animasjonsflyt ved normal hastighet, fysisk iPhone og FPS er fortsatt ikke bevist. Ingen generell animasjonsscore eller 1.0-godkjenning.
 Godkjent v28/studie20, støttehåndslipp og modell/materialer beholdes. Ordinær Flow20 er deaktivert; FPS-arbeid pauset. Kodeopplasting, Mac-QA og gated additiv DEV-test er allerede godkjent. Norsk, maks fem korte linjer.
+
+Siste dokumentasjonscommit: 48bdf168cf46a02ab82520e0050cb2a111d77d84
