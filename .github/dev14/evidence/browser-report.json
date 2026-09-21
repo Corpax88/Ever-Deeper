@@ -1,20 +1,20 @@
 {
   "passed": true,
   "error": null,
-  "source_commit": "6d6e1b8d98ecae6661b514fff92e28447715dd33",
-  "version": "1.0.0-dev.14.1",
+  "source_commit": "bee888fe36d6b8285e1198384d40694d3154956a",
+  "version": "1.0.0-dev.14.2",
   "files": {
     "index.html": {
       "size": 7855,
-      "sha256": "b2ac33750719a17c260d746038846c77da2f8352ed6583ee430771a22d0559c2"
+      "sha256": "6d1639620955365c4322c4107e4b975958c3c2baef6e406a3a9fc08ef602f3dd"
     },
     "index.js": {
       "size": 279815,
       "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
     },
     "index.pck": {
-      "size": 255901708,
-      "sha256": "510dc3c8768b37ddbc06f0ade5c34b64d927b51a77d958a7366d303d395b9707"
+      "size": 236963468,
+      "sha256": "c0f0a04cb94193dd4806de41c18ac238a171b94ba4e7f99b5bec2f9f59d38a7f"
     },
     "index.wasm": {
       "size": 39514754,
@@ -46,7 +46,7 @@
       844,
       390
     ],
-    "dpr": 2,
+    "dpr": 3,
     "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
     "lost": false,
     "browser": "151.0.7922.34",
@@ -55,6 +55,147 @@
   "checks": [
     {
       "name": "00-normal-dev14-menu"
+    },
+    {
+      "name": "moss-continuous-steering",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "steering",
+        "gear": "worn",
+        "health": 27712,
+        "hit_phase": -1,
+        "id": 1,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.0951,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "walk",
+            "phase": 0.313666833450564,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 14,
+            "yaw": -1.4665425566955
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 91
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          309.190490722656,
+          642.71826171875
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 240,
+          "primitives": 176376
+        },
+        "steering": {
+          "clipped": 0,
+          "done": true,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.14.2",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "steering",
+        "gear": "worn",
+        "health": 27712,
+        "hit_phase": -1,
+        "id": 1,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 1,
+          "motion": {
+            "age": 0.301511111111111,
+            "aim_ready": false,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.401281087084451,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 15,
+            "yaw": 4.60813536103354
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 111
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          309.190490722656,
+          642.71826171875
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 240,
+          "primitives": 176376
+        },
+        "steering": {
+          "clipped": 0,
+          "done": true,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.14.2",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      }
     },
     {
       "name": "moss-up",
@@ -67,7 +208,7 @@
         "gear": "worn",
         "health": 27708,
         "hit_phase": 0.36,
-        "id": 2,
+        "id": 3,
         "impact": 1,
         "impact_target_valid": true,
         "menu": false,
@@ -80,9 +221,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 1,
+          "generations": 2,
           "motion": {
-            "age": 0.3815,
+            "age": 0.413566666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -90,7 +231,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.554049479166667,
+            "phase": 0.5933203125,
             "support_release": 1,
             "swing_serial": 1,
             "transitions": 1,
@@ -98,7 +239,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 36
+          "updates": 179
         },
         "persistence_active": false,
         "phase": "mine",
@@ -107,10 +248,20 @@
           504,
           424
         ],
-        "progress": 0.507916666666667,
+        "progress": 0.55125,
+        "render": {
+          "draw_calls": 217,
+          "primitives": 176838
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 1,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -126,7 +277,7 @@
         "gear": "worn",
         "health": 27708,
         "hit_phase": 0.36,
-        "id": 2,
+        "id": 3,
         "impact": 1,
         "impact_target_valid": true,
         "menu": false,
@@ -139,9 +290,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 1,
+          "generations": 2,
           "motion": {
-            "age": 0.709866666666667,
+            "age": 0.688066666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -149,7 +300,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.967358217592593,
+            "phase": 0.938828125,
             "support_release": 0,
             "swing_serial": 1,
             "transitions": 1,
@@ -157,7 +308,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 55
+          "updates": 194
         },
         "persistence_active": false,
         "phase": "mine",
@@ -166,10 +317,20 @@
           504,
           424
         ],
-        "progress": 0.963981481481481,
+        "progress": 0.9325,
+        "render": {
+          "draw_calls": 217,
+          "primitives": 176838
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 1,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -188,7 +349,7 @@
         "gear": "worn",
         "health": 27712,
         "hit_phase": -1,
-        "id": 2,
+        "id": 3,
         "impact": 0,
         "impact_target_valid": false,
         "menu": false,
@@ -201,9 +362,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 1,
+          "generations": 2,
           "motion": {
-            "age": 1.72506666666667,
+            "age": 1.81083333333333,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -211,7 +372,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.201407407407407,
+            "phase": 0.225231481481481,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -219,7 +380,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 15
+          "updates": 147
         },
         "persistence_active": false,
         "phase": "mine",
@@ -229,9 +390,19 @@
           424
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 214,
+          "primitives": 176834
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -247,7 +418,7 @@
         "gear": "worn",
         "health": 27708,
         "hit_phase": 0.36,
-        "id": 2,
+        "id": 3,
         "impact": 1,
         "impact_target_valid": true,
         "menu": false,
@@ -260,9 +431,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 1,
+          "generations": 2,
           "motion": {
-            "age": 0.3815,
+            "age": 0.413566666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -270,7 +441,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.554049479166667,
+            "phase": 0.5933203125,
             "support_release": 1,
             "swing_serial": 1,
             "transitions": 1,
@@ -278,7 +449,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 36
+          "updates": 179
         },
         "persistence_active": false,
         "phase": "mine",
@@ -287,10 +458,20 @@
           504,
           424
         ],
-        "progress": 0.507916666666667,
+        "progress": 0.55125,
+        "render": {
+          "draw_calls": 217,
+          "primitives": 176838
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 1,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -309,7 +490,7 @@
         "gear": "worn",
         "health": 27700,
         "hit_phase": 0.36,
-        "id": 3,
+        "id": 4,
         "impact": 3,
         "impact_target_valid": true,
         "menu": false,
@@ -322,9 +503,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 2,
+          "generations": 3,
           "motion": {
-            "age": 0.319044444444444,
+            "age": 0.459155555555555,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -332,7 +513,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.474347029320988,
+            "phase": 0.648953993055556,
             "support_release": 1,
             "swing_serial": 3,
             "transitions": 2,
@@ -340,7 +521,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 169
+          "updates": 297
         },
         "persistence_active": false,
         "phase": "mine",
@@ -349,10 +530,20 @@
           824,
           408
         ],
-        "progress": 0.419969135802469,
+        "progress": 0.612638888888889,
+        "render": {
+          "draw_calls": 208,
+          "primitives": 176994
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 3,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -368,7 +559,7 @@
         "gear": "worn",
         "health": 27700,
         "hit_phase": 0.36,
-        "id": 3,
+        "id": 4,
         "impact": 3,
         "impact_target_valid": true,
         "menu": false,
@@ -381,9 +572,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 2,
+          "generations": 3,
           "motion": {
-            "age": 0.688166666666667,
+            "age": 0.798544444444445,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -391,15 +582,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.938953993055556,
-            "support_release": 0,
-            "swing_serial": 3,
+            "phase": 0.0980144032921814,
+            "support_release": 0.310654633797307,
+            "swing_serial": 4,
             "transitions": 2,
             "yaw": -0.273395459725419
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 188
+          "updates": 313
         },
         "persistence_active": false,
         "phase": "mine",
@@ -408,10 +599,20 @@
           824,
           408
         ],
-        "progress": 0.932638888888889,
-        "swing": 3,
+        "progress": 0.0840123456790127,
+        "render": {
+          "draw_calls": 208,
+          "primitives": 176994
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 4,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -430,7 +631,7 @@
         "gear": "worn",
         "health": 27704,
         "hit_phase": 0.36,
-        "id": 3,
+        "id": 4,
         "impact": 2,
         "impact_target_valid": true,
         "menu": false,
@@ -443,9 +644,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 2,
+          "generations": 3,
           "motion": {
-            "age": 0.798733333333333,
+            "age": 0.827419047619048,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -453,7 +654,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.22187037037037,
+            "phase": 0.229838624338624,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -461,7 +662,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 145
+          "updates": 266
         },
         "persistence_active": false,
         "phase": "mine",
@@ -471,9 +672,19 @@
           408
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 205,
+          "primitives": 176990
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 2,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -489,7 +700,7 @@
         "gear": "worn",
         "health": 27700,
         "hit_phase": 0.36,
-        "id": 3,
+        "id": 4,
         "impact": 3,
         "impact_target_valid": true,
         "menu": false,
@@ -502,9 +713,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 2,
+          "generations": 3,
           "motion": {
-            "age": 0.319044444444444,
+            "age": 0.350222222222222,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -512,7 +723,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.474347029320988,
+            "phase": 0.511841724537037,
             "support_release": 1,
             "swing_serial": 3,
             "transitions": 2,
@@ -520,7 +731,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 169
+          "updates": 291
         },
         "persistence_active": false,
         "phase": "mine",
@@ -529,10 +740,20 @@
           824,
           408
         ],
-        "progress": 0.419969135802469,
+        "progress": 0.461342592592592,
+        "render": {
+          "draw_calls": 208,
+          "primitives": 176994
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 3,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -551,7 +772,7 @@
         "gear": "worn",
         "health": 27692,
         "hit_phase": 0.36,
-        "id": 4,
+        "id": 5,
         "impact": 5,
         "impact_target_valid": true,
         "menu": false,
@@ -564,9 +785,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 3,
+          "generations": 4,
           "motion": {
-            "age": 0.390066666666667,
+            "age": 0.459833333333333,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -574,7 +795,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.563741319444444,
+            "phase": 0.649793113425926,
             "support_release": 1,
             "swing_serial": 5,
             "transitions": 2,
@@ -582,7 +803,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 295
+          "updates": 400
         },
         "persistence_active": false,
         "phase": "mine",
@@ -591,10 +812,20 @@
           72,
           680
         ],
-        "progress": 0.518611111111111,
+        "progress": 0.613564814814815,
+        "render": {
+          "draw_calls": 234,
+          "primitives": 176722
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 5,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -610,7 +841,7 @@
         "gear": "worn",
         "health": 27692,
         "hit_phase": 0.36,
-        "id": 4,
+        "id": 5,
         "impact": 5,
         "impact_target_valid": true,
         "menu": false,
@@ -623,9 +854,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 3,
+          "generations": 4,
           "motion": {
-            "age": 0.740533333333333,
+            "age": 0.7514,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -633,7 +864,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.00626543209876546,
+            "phase": 0.0216049382716056,
             "support_release": 0,
             "swing_serial": 6,
             "transitions": 2,
@@ -641,7 +872,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 311
+          "updates": 417
         },
         "persistence_active": false,
         "phase": "mine",
@@ -650,10 +881,20 @@
           72,
           680
         ],
-        "progress": 0.0053703703703704,
+        "progress": 0.0185185185185191,
+        "render": {
+          "draw_calls": 233,
+          "primitives": 176720
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 6,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -672,7 +913,7 @@
         "gear": "worn",
         "health": 27696,
         "hit_phase": 0.36,
-        "id": 4,
+        "id": 5,
         "impact": 4,
         "impact_target_valid": true,
         "menu": false,
@@ -685,9 +926,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 3,
+          "generations": 4,
           "motion": {
-            "age": 0.857700000000001,
+            "age": 0.767622222222222,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -695,7 +936,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.23825,
+            "phase": 0.213228395061728,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -703,7 +944,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 271
+          "updates": 372
         },
         "persistence_active": false,
         "phase": "mine",
@@ -713,9 +954,19 @@
           680
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 231,
+          "primitives": 176718
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 4,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -731,7 +982,7 @@
         "gear": "worn",
         "health": 27692,
         "hit_phase": 0.36,
-        "id": 4,
+        "id": 5,
         "impact": 5,
         "impact_target_valid": true,
         "menu": false,
@@ -744,9 +995,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 3,
+          "generations": 4,
           "motion": {
-            "age": 0.390066666666667,
+            "age": 0.459833333333333,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -754,7 +1005,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.563741319444444,
+            "phase": 0.649793113425926,
             "support_release": 1,
             "swing_serial": 5,
             "transitions": 2,
@@ -762,7 +1013,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 295
+          "updates": 400
         },
         "persistence_active": false,
         "phase": "mine",
@@ -771,10 +1022,20 @@
           72,
           680
         ],
-        "progress": 0.518611111111111,
+        "progress": 0.613564814814815,
+        "render": {
+          "draw_calls": 234,
+          "primitives": 176722
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 5,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -793,7 +1054,7 @@
         "gear": "worn",
         "health": 27684,
         "hit_phase": 0.36,
-        "id": 5,
+        "id": 6,
         "impact": 7,
         "impact_target_valid": true,
         "menu": false,
@@ -806,9 +1067,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 4,
+          "generations": 5,
           "motion": {
-            "age": 0.1919,
+            "age": 0.416666666666667,
             "aim_ready": true,
             "duration": 0.109512,
             "errors": [],
@@ -816,15 +1077,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.433077368233618,
-            "support_release": 1,
+            "phase": 0.868322649572649,
+            "support_release": 0.0372059412796779,
             "swing_serial": 7,
             "transitions": 2,
             "yaw": 2.86819719386437
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 390
+          "updates": 506
         },
         "persistence_active": false,
         "phase": "mine",
@@ -833,10 +1094,20 @@
           520,
           408
         ],
-        "progress": 0.374430199430199,
+        "progress": 0.854700854700855,
+        "render": {
+          "draw_calls": 238,
+          "primitives": 176786
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 7,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -850,10 +1121,10 @@
         "error": "",
         "fixture": "moss",
         "gear": "worn",
-        "health": 27684,
+        "health": 27680,
         "hit_phase": 0.36,
-        "id": 5,
-        "impact": 7,
+        "id": 6,
+        "impact": 8,
         "impact_target_valid": true,
         "menu": false,
         "mine_button": [
@@ -865,9 +1136,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 4,
+          "generations": 5,
           "motion": {
-            "age": 0.508866666666667,
+            "age": 0.839733333333334,
             "aim_ready": true,
             "duration": 0.109512,
             "errors": [],
@@ -875,15 +1146,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.0603276353276356,
-            "support_release": 0.0187798175963873,
+            "phase": 0.781312321937323,
+            "support_release": 0.852032913309641,
             "swing_serial": 8,
             "transitions": 2,
             "yaw": 2.86819719386437
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 402
+          "updates": 522
         },
         "persistence_active": false,
         "phase": "mine",
@@ -892,10 +1163,20 @@
           520,
           408
         ],
-        "progress": 0.0517094017094019,
+        "progress": 0.75868945868946,
+        "render": {
+          "draw_calls": 239,
+          "primitives": 176792
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 8,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -914,7 +1195,7 @@
         "gear": "worn",
         "health": 27688,
         "hit_phase": 0.36,
-        "id": 5,
+        "id": 6,
         "impact": 6,
         "impact_target_valid": true,
         "menu": false,
@@ -927,9 +1208,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 4,
+          "generations": 5,
           "motion": {
-            "age": 0.560966666666667,
+            "age": 0.847199663299664,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -937,7 +1218,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.155824074074074,
+            "phase": 0.235333239805462,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -945,7 +1226,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 371
+          "updates": 485
         },
         "persistence_active": false,
         "phase": "mine",
@@ -955,9 +1236,19 @@
           408
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 236,
+          "primitives": 176782
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 6,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -973,7 +1264,7 @@
         "gear": "worn",
         "health": 27684,
         "hit_phase": 0.36,
-        "id": 5,
+        "id": 6,
         "impact": 7,
         "impact_target_valid": true,
         "menu": false,
@@ -986,9 +1277,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 4,
+          "generations": 5,
           "motion": {
-            "age": 0.1919,
+            "age": 0.416666666666667,
             "aim_ready": true,
             "duration": 0.109512,
             "errors": [],
@@ -996,15 +1287,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.433077368233618,
-            "support_release": 1,
+            "phase": 0.868322649572649,
+            "support_release": 0.0372059412796779,
             "swing_serial": 7,
             "transitions": 2,
             "yaw": 2.86819719386437
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 390
+          "updates": 506
         },
         "persistence_active": false,
         "phase": "mine",
@@ -1013,10 +1304,20 @@
           520,
           408
         ],
-        "progress": 0.374430199430199,
+        "progress": 0.854700854700855,
+        "render": {
+          "draw_calls": 238,
+          "primitives": 176786
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 7,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1033,10 +1334,10 @@
         "error": "",
         "fixture": "moss",
         "gear": "worn",
-        "health": 27680,
+        "health": 27676,
         "hit_phase": 0.36,
-        "id": 6,
-        "impact": 8,
+        "id": 7,
+        "impact": 9,
         "impact_target_valid": true,
         "menu": false,
         "mine_button": [
@@ -1048,9 +1349,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 5,
+          "generations": 6,
           "motion": {
-            "age": 0.809344444444445,
+            "age": 0.779955555555556,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -1058,7 +1359,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.224817901234568,
+            "phase": 0.216654320987654,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -1066,7 +1367,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 454
+          "updates": 586
         },
         "persistence_active": false,
         "phase": "mine",
@@ -1076,9 +1377,19 @@
           408
         ],
         "progress": 0,
-        "swing": 8,
+        "render": {
+          "draw_calls": 221,
+          "primitives": 176948
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 9,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1092,10 +1403,10 @@
         "error": "",
         "fixture": "moss",
         "gear": "worn",
-        "health": 27672,
+        "health": 27668,
         "hit_phase": 0.36,
-        "id": 6,
-        "impact": 10,
+        "id": 7,
+        "impact": 11,
         "impact_target_valid": true,
         "menu": false,
         "mine_button": [
@@ -1107,9 +1418,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 5,
+          "generations": 6,
           "motion": {
-            "age": 0.871200000000001,
+            "age": 0.801388888888889,
             "aim_ready": true,
             "duration": 0.109512,
             "errors": [],
@@ -1117,15 +1428,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.831487416904083,
-            "support_release": 0.317978824616668,
-            "swing_serial": 10,
+            "phase": 0.689503947056029,
+            "support_release": 1,
+            "swing_serial": 11,
             "transitions": 2,
             "yaw": -0.273395459725419
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 507
+          "updates": 637
         },
         "persistence_active": false,
         "phase": "mine",
@@ -1134,10 +1445,20 @@
           872,
           408
         ],
-        "progress": 0.814055080721747,
-        "swing": 10,
+        "progress": 0.657383665716998,
+        "render": {
+          "draw_calls": 222,
+          "primitives": 176954
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 11,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1154,10 +1475,10 @@
         "error": "",
         "fixture": "moss",
         "gear": "worn",
-        "health": 27672,
+        "health": 27668,
         "hit_phase": 0.36,
-        "id": 6,
-        "impact": 10,
+        "id": 7,
+        "impact": 11,
         "impact_target_valid": true,
         "menu": false,
         "mine_button": [
@@ -1169,9 +1490,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 5,
+          "generations": 6,
           "motion": {
-            "age": 0.484311111111111,
+            "age": 0.391,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1179,15 +1500,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.0978032110636275,
+            "phase": 0.0878912927350425,
             "support_release": 0,
-            "swing_serial": 10,
+            "swing_serial": 11,
             "transitions": 3,
             "yaw": 3.14159263173215
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 537
+          "updates": 670
         },
         "persistence_active": false,
         "phase": "mine",
@@ -1197,9 +1518,19 @@
           408
         ],
         "progress": 0,
-        "swing": 10,
+        "render": {
+          "draw_calls": 228,
+          "primitives": 176952
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 11,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1213,10 +1544,10 @@
         "error": "",
         "fixture": "moss",
         "gear": "worn",
-        "health": 27672,
+        "health": 27668,
         "hit_phase": 0.36,
-        "id": 6,
-        "impact": 10,
+        "id": 7,
+        "impact": 11,
         "impact_target_valid": true,
         "menu": false,
         "mine_button": [
@@ -1228,9 +1559,9 @@
           "active": true,
           "failed": false,
           "failure": "",
-          "generations": 5,
+          "generations": 6,
           "motion": {
-            "age": 0.680111111111111,
+            "age": 0.733266666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1238,15 +1569,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.152192099952516,
+            "phase": 0.182965366809117,
             "support_release": 0,
-            "swing_serial": 10,
+            "swing_serial": 11,
             "transitions": 3,
             "yaw": 3.14159263173215
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 549
+          "updates": 690
         },
         "persistence_active": false,
         "phase": "mine",
@@ -1256,9 +1587,19 @@
           408
         ],
         "progress": 0,
-        "swing": 10,
+        "render": {
+          "draw_calls": 226,
+          "primitives": 176838
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 11,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1277,7 +1618,7 @@
         "gear": "worn",
         "health": 32570,
         "hit_phase": 0.42,
-        "id": 7,
+        "id": 8,
         "impact": 1,
         "impact_target_valid": true,
         "menu": false,
@@ -1292,7 +1633,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.399455555555556,
+            "age": 0.4106,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1300,7 +1641,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.587434640522876,
+            "phase": 0.603823529411765,
             "support_release": 1,
             "swing_serial": 1,
             "transitions": 1,
@@ -1308,7 +1649,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 56
+          "updates": 53
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1317,10 +1658,20 @@
           1863.21313476562,
           1171.23059082031
         ],
-        "progress": 0.587434640522876,
+        "progress": 0.603823529411765,
+        "render": {
+          "draw_calls": 164,
+          "primitives": 176482
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 1,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1336,7 +1687,7 @@
         "gear": "worn",
         "health": 32570,
         "hit_phase": 0.42,
-        "id": 7,
+        "id": 8,
         "impact": 1,
         "impact_target_valid": true,
         "menu": false,
@@ -1351,7 +1702,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.792255555555555,
+            "age": 0.728888888888889,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1359,15 +1710,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.165081699346405,
-            "support_release": 0.952467863188363,
+            "phase": 0.0718954248366012,
+            "support_release": 0.0872282762293198,
             "swing_serial": 2,
             "transitions": 1,
             "yaw": 2.91002376213933
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 76
+          "updates": 70
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1376,10 +1727,20 @@
           1863.21313476562,
           1171.23059082031
         ],
-        "progress": 0.165081699346405,
+        "progress": 0.0718954248366012,
+        "render": {
+          "draw_calls": 164,
+          "primitives": 176482
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 2,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1398,7 +1759,7 @@
         "gear": "worn",
         "health": 32574,
         "hit_phase": -1,
-        "id": 7,
+        "id": 8,
         "impact": 0,
         "impact_target_valid": false,
         "menu": false,
@@ -1413,7 +1774,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 1.82163333333333,
+            "age": 1.81766666666667,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -1421,7 +1782,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.228231481481482,
+            "phase": 0.22712962962963,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -1429,7 +1790,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 32
+          "updates": 33
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1439,9 +1800,19 @@
           1171.23059082031
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 167,
+          "primitives": 176482
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1457,7 +1828,7 @@
         "gear": "worn",
         "health": 32570,
         "hit_phase": 0.42,
-        "id": 7,
+        "id": 8,
         "impact": 1,
         "impact_target_valid": true,
         "menu": false,
@@ -1472,7 +1843,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.399455555555556,
+            "age": 0.4106,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1480,7 +1851,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.587434640522876,
+            "phase": 0.603823529411765,
             "support_release": 1,
             "swing_serial": 1,
             "transitions": 1,
@@ -1488,7 +1859,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 56
+          "updates": 53
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1497,10 +1868,20 @@
           1863.21313476562,
           1171.23059082031
         ],
-        "progress": 0.587434640522876,
+        "progress": 0.603823529411765,
+        "render": {
+          "draw_calls": 164,
+          "primitives": 176482
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 1,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1519,7 +1900,7 @@
         "gear": "worn",
         "health": 32566,
         "hit_phase": 0.42,
-        "id": 8,
+        "id": 9,
         "impact": 2,
         "impact_target_valid": true,
         "menu": false,
@@ -1534,7 +1915,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.4346,
+            "age": 0.410366666666666,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1542,7 +1923,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.639117647058823,
+            "phase": 0.603480392156861,
             "support_release": 1,
             "swing_serial": 3,
             "transitions": 4,
@@ -1550,7 +1931,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 150
+          "updates": 130
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1559,10 +1940,20 @@
           810,
           416
         ],
-        "progress": 0.639117647058823,
+        "progress": 0.603480392156861,
+        "render": {
+          "draw_calls": 172,
+          "primitives": 176248
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 3,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1578,7 +1969,7 @@
         "gear": "worn",
         "health": 32566,
         "hit_phase": 0.42,
-        "id": 8,
+        "id": 9,
         "impact": 2,
         "impact_target_valid": true,
         "menu": false,
@@ -1593,7 +1984,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.601266666666667,
+            "age": 0.778266666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1601,15 +1992,15 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.88421568627451,
-            "support_release": 0,
-            "swing_serial": 3,
+            "phase": 0.144509803921569,
+            "support_release": 0.810775835140612,
+            "swing_serial": 4,
             "transitions": 4,
             "yaw": 5.58902885960579
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 160
+          "updates": 146
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1618,10 +2009,20 @@
           810,
           416
         ],
-        "progress": 0.88421568627451,
-        "swing": 3,
+        "progress": 0.144509803921569,
+        "render": {
+          "draw_calls": 172,
+          "primitives": 176248
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 4,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1640,7 +2041,7 @@
         "gear": "worn",
         "health": 32570,
         "hit_phase": 0.42,
-        "id": 8,
+        "id": 9,
         "impact": 1,
         "impact_target_valid": true,
         "menu": false,
@@ -1655,7 +2056,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.697466666666667,
+            "age": 0.726566666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1663,7 +2064,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.638725490196079,
+            "phase": 0.543210239651416,
             "support_release": 0,
             "swing_serial": 2,
             "transitions": 3,
@@ -1671,7 +2072,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 118
+          "updates": 108
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1681,9 +2082,19 @@
           416
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 172,
+          "primitives": 176248
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 2,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1699,7 +2110,7 @@
         "gear": "worn",
         "health": 32566,
         "hit_phase": 0.42,
-        "id": 8,
+        "id": 9,
         "impact": 2,
         "impact_target_valid": true,
         "menu": false,
@@ -1714,7 +2125,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.317933333333333,
+            "age": 0.410366666666666,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1722,7 +2133,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.467549019607843,
+            "phase": 0.603480392156861,
             "support_release": 1,
             "swing_serial": 3,
             "transitions": 4,
@@ -1730,7 +2141,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 143
+          "updates": 130
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1739,10 +2150,20 @@
           810,
           416
         ],
-        "progress": 0.467549019607843,
+        "progress": 0.603480392156861,
+        "render": {
+          "draw_calls": 172,
+          "primitives": 176248
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 3,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1761,7 +2182,7 @@
         "gear": "worn",
         "health": 32562,
         "hit_phase": 0.42,
-        "id": 9,
+        "id": 10,
         "impact": 3,
         "impact_target_valid": true,
         "menu": false,
@@ -1776,15 +2197,15 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.383366666666667,
+            "age": 0.35571111111111,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
             "max_contact_pixels": 0.000041961669921875,
             "max_reach_error": 0,
-            "max_tool_retarget": 0.0228681061416864,
+            "max_tool_retarget": 0.0346327573060989,
             "mode": "mine",
-            "phase": 0.563774509803922,
+            "phase": 0.523104575163397,
             "support_release": 1,
             "swing_serial": 5,
             "transitions": 7,
@@ -1792,7 +2213,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 242
+          "updates": 226
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1801,10 +2222,20 @@
           864,
           362
         ],
-        "progress": 0.563774509803922,
+        "progress": 0.523104575163397,
+        "render": {
+          "draw_calls": 178,
+          "primitives": 176248
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 5,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1820,7 +2251,7 @@
         "gear": "worn",
         "health": 32562,
         "hit_phase": 0.42,
-        "id": 9,
+        "id": 10,
         "impact": 3,
         "impact_target_valid": true,
         "menu": false,
@@ -1835,23 +2266,23 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.5667,
+            "age": 0.654611111111111,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
             "max_contact_pixels": 0.000041961669921875,
             "max_reach_error": 0,
-            "max_tool_retarget": 0.0228681061416864,
+            "max_tool_retarget": 0.0346327573060989,
             "mode": "mine",
-            "phase": 0.833382352941177,
-            "support_release": 0.297451069640419,
+            "phase": 0.96266339869281,
+            "support_release": 0,
             "swing_serial": 5,
             "transitions": 7,
             "yaw": 4.43899338844704
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 253
+          "updates": 241
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1860,10 +2291,20 @@
           864,
           362
         ],
-        "progress": 0.833382352941177,
+        "progress": 0.96266339869281,
+        "render": {
+          "draw_calls": 178,
+          "primitives": 176248
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 5,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1882,7 +2323,7 @@
         "gear": "worn",
         "health": 32566,
         "hit_phase": 0.42,
-        "id": 9,
+        "id": 10,
         "impact": 2,
         "impact_target_valid": true,
         "menu": false,
@@ -1897,7 +2338,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.815666666666668,
+            "age": 0.794422222222223,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -1905,7 +2346,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.38818191721133,
+            "phase": 0.693124909222948,
             "support_release": 0,
             "swing_serial": 4,
             "transitions": 6,
@@ -1913,7 +2354,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 215
+          "updates": 200
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1923,9 +2364,19 @@
           362
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 172,
+          "primitives": 176200
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 4,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1941,7 +2392,7 @@
         "gear": "worn",
         "health": 32562,
         "hit_phase": 0.42,
-        "id": 9,
+        "id": 10,
         "impact": 3,
         "impact_target_valid": true,
         "menu": false,
@@ -1956,15 +2407,15 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.383366666666667,
+            "age": 0.35571111111111,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
             "max_contact_pixels": 0.000041961669921875,
             "max_reach_error": 0,
-            "max_tool_retarget": 0.0228681061416864,
+            "max_tool_retarget": 0.0346327573060989,
             "mode": "mine",
-            "phase": 0.563774509803922,
+            "phase": 0.523104575163397,
             "support_release": 1,
             "swing_serial": 5,
             "transitions": 7,
@@ -1972,7 +2423,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 242
+          "updates": 226
         },
         "persistence_active": false,
         "phase": "endless",
@@ -1981,10 +2432,20 @@
           864,
           362
         ],
-        "progress": 0.563774509803922,
+        "progress": 0.523104575163397,
+        "render": {
+          "draw_calls": 178,
+          "primitives": 176248
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 5,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2003,7 +2464,7 @@
         "gear": "worn",
         "health": 32558,
         "hit_phase": 0.42,
-        "id": 10,
+        "id": 11,
         "impact": 4,
         "impact_target_valid": true,
         "menu": false,
@@ -2018,15 +2479,15 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.368055555555556,
+            "age": 0.360377777777778,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
             "max_contact_pixels": 0.000041961669921875,
             "max_reach_error": 0,
-            "max_tool_retarget": 0.0228681061416864,
+            "max_tool_retarget": 0.0346327573060989,
             "mode": "mine",
-            "phase": 0.54125816993464,
+            "phase": 0.529967320261438,
             "support_release": 1,
             "swing_serial": 7,
             "transitions": 10,
@@ -2034,7 +2495,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 333
+          "updates": 313
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2043,10 +2504,20 @@
           918,
           416
         ],
-        "progress": 0.54125816993464,
+        "progress": 0.529967320261438,
+        "render": {
+          "draw_calls": 163,
+          "primitives": 176248
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 7,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2062,7 +2533,7 @@
         "gear": "worn",
         "health": 32558,
         "hit_phase": 0.42,
-        "id": 10,
+        "id": 11,
         "impact": 4,
         "impact_target_valid": true,
         "menu": false,
@@ -2077,23 +2548,23 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.484722222222222,
+            "age": 0.673766666666667,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
             "max_contact_pixels": 0.000041961669921875,
             "max_reach_error": 0,
-            "max_tool_retarget": 0.0228681061416864,
+            "max_tool_retarget": 0.0346327573060989,
             "mode": "mine",
-            "phase": 0.712826797385621,
-            "support_release": 1,
+            "phase": 0.990833333333333,
+            "support_release": 0,
             "swing_serial": 7,
             "transitions": 10,
             "yaw": 3.28895811394142
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 340
+          "updates": 330
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2102,10 +2573,20 @@
           918,
           416
         ],
-        "progress": 0.712826797385621,
+        "progress": 0.990833333333334,
+        "render": {
+          "draw_calls": 163,
+          "primitives": 176248
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 7,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2124,7 +2605,7 @@
         "gear": "worn",
         "health": 32562,
         "hit_phase": 0.42,
-        "id": 10,
+        "id": 11,
         "impact": 3,
         "impact_target_valid": true,
         "menu": false,
@@ -2139,15 +2620,15 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.809533333333334,
+            "age": 0.827437037037036,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
             "max_contact_pixels": 0.000041961669921875,
             "max_reach_error": 0,
-            "max_tool_retarget": 0.0228681061416864,
+            "max_tool_retarget": 0.0346327573060989,
             "mode": "idle",
-            "phase": 0.407918300653595,
+            "phase": 0.482194383926409,
             "support_release": 0,
             "swing_serial": 6,
             "transitions": 9,
@@ -2155,7 +2636,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 308
+          "updates": 286
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2165,9 +2646,19 @@
           416
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 163,
+          "primitives": 176248
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 6,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2183,7 +2674,7 @@
         "gear": "worn",
         "health": 32558,
         "hit_phase": 0.42,
-        "id": 10,
+        "id": 11,
         "impact": 4,
         "impact_target_valid": true,
         "menu": false,
@@ -2198,15 +2689,15 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.368055555555556,
+            "age": 0.360377777777778,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
             "max_contact_pixels": 0.000041961669921875,
             "max_reach_error": 0,
-            "max_tool_retarget": 0.0228681061416864,
+            "max_tool_retarget": 0.0346327573060989,
             "mode": "mine",
-            "phase": 0.54125816993464,
+            "phase": 0.529967320261438,
             "support_release": 1,
             "swing_serial": 7,
             "transitions": 10,
@@ -2214,7 +2705,7 @@
           },
           "surface_cache": 1,
           "unreachable_contacts": 0,
-          "updates": 333
+          "updates": 313
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2223,10 +2714,20 @@
           918,
           416
         ],
-        "progress": 0.54125816993464,
+        "progress": 0.529967320261438,
+        "render": {
+          "draw_calls": 163,
+          "primitives": 176248
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 7,
         "target_valid": true,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2245,7 +2746,7 @@
         "gear": "iron",
         "health": 32558,
         "hit_phase": 0.42,
-        "id": 11,
+        "id": 12,
         "impact": 4,
         "impact_target_valid": true,
         "menu": false,
@@ -2262,7 +2763,7 @@
           "motion": {},
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 358
+          "updates": 347
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2272,9 +2773,19 @@
           416
         ],
         "progress": 0,
-        "swing": 7,
+        "render": {
+          "draw_calls": 161,
+          "primitives": 2942
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 8,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2290,7 +2801,7 @@
         "gear": "iron",
         "health": 32558,
         "hit_phase": 0.42,
-        "id": 11,
+        "id": 12,
         "impact": 4,
         "impact_target_valid": true,
         "menu": false,
@@ -2307,7 +2818,7 @@
           "motion": {},
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 358
+          "updates": 347
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2317,9 +2828,19 @@
           416
         ],
         "progress": 0,
-        "swing": 7,
+        "render": {
+          "draw_calls": 161,
+          "primitives": 2942
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 8,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2338,7 +2859,7 @@
         "gear": "burrower",
         "health": 32558,
         "hit_phase": 0.42,
-        "id": 12,
+        "id": 13,
         "impact": 4,
         "impact_target_valid": true,
         "menu": false,
@@ -2355,7 +2876,7 @@
           "motion": {},
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 358
+          "updates": 347
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2365,9 +2886,19 @@
           416
         ],
         "progress": 0,
-        "swing": 7,
+        "render": {
+          "draw_calls": 161,
+          "primitives": 2942
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 8,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2383,7 +2914,7 @@
         "gear": "burrower",
         "health": 32558,
         "hit_phase": 0.42,
-        "id": 12,
+        "id": 13,
         "impact": 4,
         "impact_target_valid": true,
         "menu": false,
@@ -2400,7 +2931,7 @@
           "motion": {},
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 358
+          "updates": 347
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2410,9 +2941,19 @@
           416
         ],
         "progress": 0,
-        "swing": 7,
+        "render": {
+          "draw_calls": 161,
+          "primitives": 2942
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 8,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2431,7 +2972,7 @@
         "gear": "worn",
         "health": 32558,
         "hit_phase": 0.42,
-        "id": 13,
+        "id": 14,
         "impact": 4,
         "impact_target_valid": true,
         "menu": false,
@@ -2446,7 +2987,7 @@
           "failure": "",
           "generations": 2,
           "motion": {
-            "age": 0.680866666666667,
+            "age": 0.791166666666668,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2454,7 +2995,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.189129629629629,
+            "phase": 0.219768518518519,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -2462,7 +3003,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 383
+          "updates": 381
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2472,9 +3013,19 @@
           416
         ],
         "progress": 0,
-        "swing": 7,
+        "render": {
+          "draw_calls": 161,
+          "primitives": 176176
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 8,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2490,7 +3041,7 @@
         "gear": "worn",
         "health": 32558,
         "hit_phase": 0.42,
-        "id": 13,
+        "id": 14,
         "impact": 4,
         "impact_target_valid": true,
         "menu": false,
@@ -2505,7 +3056,7 @@
           "failure": "",
           "generations": 2,
           "motion": {
-            "age": 0.930866666666668,
+            "age": 1.00783333333334,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2513,7 +3064,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.258574074074074,
+            "phase": 0.279953703703704,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -2521,7 +3072,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 398
+          "updates": 394
         },
         "persistence_active": false,
         "phase": "endless",
@@ -2531,9 +3082,19 @@
           416
         ],
         "progress": 0,
-        "swing": 7,
+        "render": {
+          "draw_calls": 161,
+          "primitives": 176176
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 8,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2552,7 +3113,7 @@
         "gear": "worn",
         "health": 360,
         "hit_phase": 0.36,
-        "id": 14,
+        "id": 15,
         "impact": 1,
         "impact_target_valid": true,
         "menu": false,
@@ -2567,7 +3128,7 @@
           "failure": "",
           "generations": 2,
           "motion": {
-            "age": 1.82183333333333,
+            "age": 1.8088,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2575,7 +3136,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.228287037037037,
+            "phase": 0.224666666666667,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -2583,7 +3144,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 40
+          "updates": 58
         },
         "persistence_active": false,
         "phase": "surface",
@@ -2593,9 +3154,19 @@
           650
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 107,
+          "primitives": 175490
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 2,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2611,7 +3182,7 @@
         "gear": "worn",
         "health": 360,
         "hit_phase": 0.36,
-        "id": 14,
+        "id": 15,
         "impact": 1,
         "impact_target_valid": true,
         "menu": false,
@@ -2626,7 +3197,7 @@
           "failure": "",
           "generations": 2,
           "motion": {
-            "age": 1.92183333333333,
+            "age": 2.00873333333333,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2634,7 +3205,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.256064814814815,
+            "phase": 0.280203703703704,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -2642,7 +3213,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 46
+          "updates": 70
         },
         "persistence_active": false,
         "phase": "surface",
@@ -2652,9 +3223,19 @@
           650
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 107,
+          "primitives": 175490
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 2,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2673,7 +3254,7 @@
         "gear": "worn",
         "health": 0,
         "hit_phase": -1,
-        "id": 15,
+        "id": 16,
         "impact": 0,
         "impact_target_valid": false,
         "menu": false,
@@ -2688,7 +3269,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.484133333333334,
+            "age": 0.7085,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2696,7 +3277,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.134481481481482,
+            "phase": 0.196805555555555,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -2704,7 +3285,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 5
+          "updates": 21
         },
         "persistence_active": false,
         "phase": "depth",
@@ -2714,9 +3295,19 @@
           2916
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 156,
+          "primitives": 176608
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2732,7 +3323,7 @@
         "gear": "worn",
         "health": 0,
         "hit_phase": -1,
-        "id": 15,
+        "id": 16,
         "impact": 0,
         "impact_target_valid": false,
         "menu": false,
@@ -2747,7 +3338,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.644833333333334,
+            "age": 1.00172222222222,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2755,7 +3346,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.17912037037037,
+            "phase": 0.278256172839506,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -2763,7 +3354,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 15
+          "updates": 37
         },
         "persistence_active": false,
         "phase": "depth",
@@ -2773,9 +3364,19 @@
           2916
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 156,
+          "primitives": 176608
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2794,7 +3395,7 @@
         "gear": "worn",
         "health": 0,
         "hit_phase": -1,
-        "id": 16,
+        "id": 17,
         "impact": 0,
         "impact_target_valid": false,
         "menu": false,
@@ -2809,7 +3410,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.818433333333334,
+            "age": 0.826566666666668,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2817,7 +3418,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.227342592592592,
+            "phase": 0.229601851851852,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -2825,7 +3426,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 40
+          "updates": 37
         },
         "persistence_active": false,
         "phase": "hub",
@@ -2835,9 +3436,19 @@
           820
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 80,
+          "primitives": 175552
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2853,7 +3464,7 @@
         "gear": "worn",
         "health": 0,
         "hit_phase": -1,
-        "id": 16,
+        "id": 17,
         "impact": 0,
         "impact_target_valid": false,
         "menu": false,
@@ -2868,7 +3479,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 0.985100000000001,
+            "age": 1.08333333333333,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2876,7 +3487,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.273638888888889,
+            "phase": 0.300925925925926,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -2884,7 +3495,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 50
+          "updates": 52
         },
         "persistence_active": false,
         "phase": "hub",
@@ -2894,9 +3505,19 @@
           820
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 80,
+          "primitives": 175552
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2915,7 +3536,7 @@
         "gear": "worn",
         "health": 0,
         "hit_phase": -1,
-        "id": 17,
+        "id": 18,
         "impact": 0,
         "impact_target_valid": false,
         "menu": false,
@@ -2930,7 +3551,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 1.7736,
+            "age": 1.85786666666667,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2938,7 +3559,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.492666666666667,
+            "phase": 0.516074074074075,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -2946,7 +3567,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 89
+          "updates": 91
         },
         "persistence_active": false,
         "phase": "hub",
@@ -2956,9 +3577,19 @@
           820
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 80,
+          "primitives": 175672
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2974,7 +3605,7 @@
         "gear": "worn",
         "health": 0,
         "hit_phase": -1,
-        "id": 17,
+        "id": 18,
         "impact": 0,
         "impact_target_valid": false,
         "menu": false,
@@ -2989,7 +3620,7 @@
           "failure": "",
           "generations": 1,
           "motion": {
-            "age": 1.99026666666667,
+            "age": 2.10776666666667,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -2997,7 +3628,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.552851851851852,
+            "phase": 0.585490740740742,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -3005,7 +3636,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 102
+          "updates": 106
         },
         "persistence_active": false,
         "phase": "hub",
@@ -3015,9 +3646,19 @@
           820
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 80,
+          "primitives": 175672
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -3036,7 +3677,7 @@
         "gear": "worn",
         "health": 357,
         "hit_phase": 0.36,
-        "id": 18,
+        "id": 19,
         "impact": 2,
         "impact_target_valid": true,
         "menu": false,
@@ -3051,7 +3692,7 @@
           "failure": "",
           "generations": 3,
           "motion": {
-            "age": 0.0502,
+            "age": 0.135944444444444,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -3059,7 +3700,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.00144155092592668,
+            "phase": 0.0322940779320993,
             "support_release": 0,
             "swing_serial": 3,
             "transitions": 2,
@@ -3067,7 +3708,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 144
+          "updates": 169
         },
         "persistence_active": false,
         "phase": "surface",
@@ -3077,9 +3718,19 @@
           650
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 107,
+          "primitives": 175490
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 3,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -3095,7 +3746,7 @@
         "gear": "worn",
         "health": 357,
         "hit_phase": 0.36,
-        "id": 18,
+        "id": 19,
         "impact": 2,
         "impact_target_valid": true,
         "menu": false,
@@ -3110,7 +3761,7 @@
           "failure": "",
           "generations": 3,
           "motion": {
-            "age": 0.267066666666667,
+            "age": 0.336211111111111,
             "aim_ready": true,
             "duration": 0.12,
             "errors": [],
@@ -3118,7 +3769,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.0616822916666674,
+            "phase": 0.0879237075617289,
             "support_release": 0,
             "swing_serial": 3,
             "transitions": 2,
@@ -3126,7 +3777,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 157
+          "updates": 181
         },
         "persistence_active": false,
         "phase": "surface",
@@ -3136,9 +3787,19 @@
           650
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 107,
+          "primitives": 175490
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 3,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -3157,7 +3818,7 @@
         "gear": "",
         "health": 358,
         "hit_phase": 0.36,
-        "id": 19,
+        "id": 20,
         "impact": 2,
         "impact_target_valid": true,
         "menu": true,
@@ -3174,7 +3835,7 @@
           "motion": {},
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 158
+          "updates": 182
         },
         "persistence_active": false,
         "phase": "surface",
@@ -3184,9 +3845,19 @@
           650
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 38,
+          "primitives": 3202
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 3,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -3202,7 +3873,7 @@
         "gear": "",
         "health": 358,
         "hit_phase": 0.36,
-        "id": 19,
+        "id": 20,
         "impact": 2,
         "impact_target_valid": true,
         "menu": true,
@@ -3219,7 +3890,7 @@
           "motion": {},
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 158
+          "updates": 182
         },
         "persistence_active": false,
         "phase": "surface",
@@ -3229,9 +3900,19 @@
           650
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 38,
+          "primitives": 3202
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 3,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -3250,7 +3931,7 @@
         "gear": "worn",
         "health": 360,
         "hit_phase": 0.36,
-        "id": 20,
+        "id": 21,
         "impact": 2,
         "impact_target_valid": true,
         "menu": false,
@@ -3265,7 +3946,7 @@
           "failure": "",
           "generations": 4,
           "motion": {
-            "age": 1.81676666666667,
+            "age": 1.46736666666667,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -3273,7 +3954,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.22687962962963,
+            "phase": 0.129824074074074,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -3281,7 +3962,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 192
+          "updates": 197
         },
         "persistence_active": false,
         "phase": "surface",
@@ -3291,9 +3972,19 @@
           650
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 107,
+          "primitives": 175490
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 3,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -3309,7 +4000,7 @@
         "gear": "worn",
         "health": 360,
         "hit_phase": 0.36,
-        "id": 20,
+        "id": 21,
         "impact": 2,
         "impact_target_valid": true,
         "menu": false,
@@ -3324,7 +4015,7 @@
           "failure": "",
           "generations": 4,
           "motion": {
-            "age": 0.183333333333333,
+            "age": 0.260119047619048,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -3332,7 +4023,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.57791634167893,
+            "phase": 0.599245706758295,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 2,
@@ -3340,7 +4031,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 211
+          "updates": 220
         },
         "persistence_active": false,
         "phase": "surface",
@@ -3350,9 +4041,19 @@
           689.666809082031
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 107,
+          "primitives": 175490
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 3,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -3371,7 +4072,7 @@
         "gear": "worn",
         "health": 360,
         "hit_phase": 0.36,
-        "id": 20,
+        "id": 21,
         "impact": 2,
         "impact_target_valid": true,
         "menu": false,
@@ -3386,7 +4087,7 @@
           "failure": "",
           "generations": 4,
           "motion": {
-            "age": 0.183333333333333,
+            "age": 0.260119047619048,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -3394,7 +4095,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.57791634167893,
+            "phase": 0.599245706758295,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 2,
@@ -3402,7 +4103,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 211
+          "updates": 220
         },
         "persistence_active": false,
         "phase": "surface",
@@ -3412,9 +4113,19 @@
           689.666809082031
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 107,
+          "primitives": 175490
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 3,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -3430,7 +4141,7 @@
         "gear": "worn",
         "health": 360,
         "hit_phase": 0.36,
-        "id": 20,
+        "id": 21,
         "impact": 2,
         "impact_target_valid": true,
         "menu": false,
@@ -3445,7 +4156,7 @@
           "failure": "",
           "generations": 4,
           "motion": {
-            "age": 0.433333333333333,
+            "age": 0.593602380952381,
             "aim_ready": false,
             "duration": 0.12,
             "errors": [],
@@ -3453,7 +4164,7 @@
             "max_reach_error": 0,
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.647360786123375,
+            "phase": 0.691879966017555,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 2,
@@ -3461,7 +4172,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 226
+          "updates": 237
         },
         "persistence_active": false,
         "phase": "surface",
@@ -3471,14 +4182,1338 @@
           689.666809082031
         ],
         "progress": 0,
+        "render": {
+          "draw_calls": 107,
+          "primitives": 175490
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
         "swing": 3,
         "target_valid": false,
-        "version": "1.0.0-dev.14.1",
+        "version": "1.0.0-dev.14.2",
         "viewport": [
           1416.36364746094,
           654.54541015625
         ],
         "world_active": false
+      }
+    },
+    {
+      "name": "sustained-render-120s",
+      "windows": [
+        {
+          "epoch": 0,
+          "seconds": 15.000500000000029,
+          "frames": 804,
+          "fps": 53.5982133928868,
+          "p95_ms": 33.39999999999418,
+          "max_ms": 200,
+          "before": {
+            "active_rigs": 1,
+            "cycle": 0.468,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27668,
+            "hit_phase": 0.36,
+            "id": 22,
+            "impact": 11,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 7,
+              "motion": {
+                "age": 1.83170404040404,
+                "aim_ready": false,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 0,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.231028900112234,
+                "support_release": 0,
+                "swing_serial": -1,
+                "transitions": 0,
+                "yaw": -2.18576456934017e-8
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 725
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              504,
+              376
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 209,
+              "primitives": 176920
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 11,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          },
+          "after": {
+            "active_rigs": 1,
+            "cycle": 0.36,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27612,
+            "hit_phase": 0.36,
+            "id": 22,
+            "impact": 25,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 7,
+              "motion": {
+                "age": 9.66840000000004,
+                "aim_ready": true,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 0.00000852992252475815,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.679533173259094,
+                "support_release": 0,
+                "swing_serial": 25,
+                "transitions": 8,
+                "yaw": -2.18576456934017e-8
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 1552
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              504,
+              376
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 212,
+              "primitives": 176664
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 25,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          }
+        },
+        {
+          "epoch": 1,
+          "seconds": 15.01700000000003,
+          "frames": 845,
+          "fps": 56.26956116401401,
+          "p95_ms": 33.19999999999709,
+          "max_ms": 51.39999999999418,
+          "before": {
+            "active_rigs": 1,
+            "cycle": 0.36,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27612,
+            "hit_phase": 0.36,
+            "id": 23,
+            "impact": 25,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 8,
+              "motion": {
+                "age": 0.837833333333333,
+                "aim_ready": false,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 0,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.232731481481481,
+                "support_release": 0,
+                "swing_serial": -1,
+                "transitions": 1,
+                "yaw": -1.57079624657167
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 1594
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              920,
+              408
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 202,
+              "primitives": 177034
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 25,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          },
+          "after": {
+            "active_rigs": 1,
+            "cycle": 0.366982260955754,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27564,
+            "hit_phase": 0.36,
+            "id": 23,
+            "impact": 37,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 8,
+              "motion": {
+                "age": 10.4684629629631,
+                "aim_ready": true,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 0.0000095367431640625,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.87849349252851,
+                "support_release": 0,
+                "swing_serial": 37,
+                "transitions": 8,
+                "yaw": 4.07114336370496
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 2463
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              920,
+              408
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 199,
+              "primitives": 176792
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 37,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          }
+        },
+        {
+          "epoch": 2,
+          "seconds": 15.004899999999994,
+          "frames": 853,
+          "fps": 56.84809628854576,
+          "p95_ms": 18.70000000001164,
+          "max_ms": 66.90000000000873,
+          "before": {
+            "active_rigs": 1,
+            "cycle": 0.366982260955754,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27564,
+            "hit_phase": 0.36,
+            "id": 24,
+            "impact": 37,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 9,
+              "motion": {
+                "age": 0.817266666666667,
+                "aim_ready": false,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 0,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.227018518518518,
+                "support_release": 0,
+                "swing_serial": -1,
+                "transitions": 1,
+                "yaw": 3.14159263173215
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 2509
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              456,
+              296
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 235,
+              "primitives": 177010
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 37,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          },
+          "after": {
+            "active_rigs": 1,
+            "cycle": 0.403953914727745,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27536,
+            "hit_phase": 0.36,
+            "id": 24,
+            "impact": 44,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 9,
+              "motion": {
+                "age": 12.1885777777779,
+                "aim_ready": true,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 0.00000768876816437114,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.346071347914701,
+                "support_release": 0,
+                "swing_serial": 44,
+                "transitions": 6,
+                "yaw": 3.14159263173215
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 3377
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              456,
+              296
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 226,
+              "primitives": 176722
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 44,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          }
+        },
+        {
+          "epoch": 3,
+          "seconds": 15.003899999999994,
+          "frames": 842,
+          "fps": 56.11874246029368,
+          "p95_ms": 18.60000000000582,
+          "max_ms": 399.8999999999942,
+          "before": {
+            "active_rigs": 1,
+            "cycle": 0.403953914727745,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27536,
+            "hit_phase": 0.36,
+            "id": 25,
+            "impact": 44,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 10,
+              "motion": {
+                "age": 0.620610333333333,
+                "aim_ready": false,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 0,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.172391759259259,
+                "support_release": 0,
+                "swing_serial": -1,
+                "transitions": 1,
+                "yaw": 1.57079640701812
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 3406
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              472,
+              264
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 226,
+              "primitives": 176960
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 44,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          },
+          "after": {
+            "active_rigs": 1,
+            "cycle": 0.36,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27480,
+            "hit_phase": 0.36,
+            "id": 25,
+            "impact": 58,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 10,
+              "motion": {
+                "age": 9.59301900000007,
+                "aim_ready": true,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 0.00000852992252475815,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.635965475488112,
+                "support_release": 0,
+                "swing_serial": 58,
+                "transitions": 9,
+                "yaw": 1.57079640701812
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 4276
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              472,
+              264
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 223,
+              "primitives": 176678
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 58,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          }
+        },
+        {
+          "epoch": 4,
+          "seconds": 15.007300000000017,
+          "frames": 893,
+          "fps": 59.50437453772491,
+          "p95_ms": 18.10000000000582,
+          "max_ms": 46.20000000001164,
+          "before": {
+            "active_rigs": 1,
+            "cycle": 0.36,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27480,
+            "hit_phase": 0.36,
+            "id": 26,
+            "impact": 58,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 11,
+              "motion": {
+                "age": 1.84643333333333,
+                "aim_ready": false,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 0,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.23512037037037,
+                "support_release": 0,
+                "swing_serial": -1,
+                "transitions": 0,
+                "yaw": -2.18576456934017e-8
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 4323
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              456,
+              280
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 230,
+              "primitives": 176938
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 58,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          },
+          "after": {
+            "active_rigs": 1,
+            "cycle": 0.454829060078254,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27472,
+            "hit_phase": 0.36,
+            "id": 26,
+            "impact": 60,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 11,
+              "motion": {
+                "age": 14.2802893333336,
+                "aim_ready": true,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 1.81898940354586e-12,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.961375783137473,
+                "support_release": 0,
+                "swing_serial": 60,
+                "transitions": 2,
+                "yaw": -2.18576456934017e-8
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 5225
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              456,
+              280
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 219,
+              "primitives": 176652
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 60,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          }
+        },
+        {
+          "epoch": 5,
+          "seconds": 15.009900000000052,
+          "frames": 897,
+          "fps": 59.76055803169887,
+          "p95_ms": 18.10000000000582,
+          "max_ms": 33.30000000001746,
+          "before": {
+            "active_rigs": 1,
+            "cycle": 0.454829060078254,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27472,
+            "hit_phase": 0.36,
+            "id": 27,
+            "impact": 60,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 12,
+              "motion": {
+                "age": 0.782100000000001,
+                "aim_ready": false,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 0,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.21725,
+                "support_release": 0,
+                "swing_serial": -1,
+                "transitions": 1,
+                "yaw": -1.57079624657167
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 5271
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              488,
+              216
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 228,
+              "primitives": 176912
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 60,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          },
+          "after": {
+            "active_rigs": 1,
+            "cycle": 0.454809611643126,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27464,
+            "hit_phase": 0.36,
+            "id": 27,
+            "impact": 62,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 12,
+              "motion": {
+                "age": 14.2926073333336,
+                "aim_ready": true,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 0.000003814697265625,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.966695725462974,
+                "support_release": 0,
+                "swing_serial": 62,
+                "transitions": 3,
+                "yaw": -1.57079624657167
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 6187
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              488,
+              216
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 219,
+              "primitives": 176644
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 62,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          }
+        },
+        {
+          "epoch": 6,
+          "seconds": 15.007299999999988,
+          "frames": 878,
+          "fps": 58.50486096766245,
+          "p95_ms": 18.10000000000582,
+          "max_ms": 108.89999999999418,
+          "before": {
+            "active_rigs": 1,
+            "cycle": 0.454809611643126,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27464,
+            "hit_phase": 0.36,
+            "id": 28,
+            "impact": 62,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 13,
+              "motion": {
+                "age": 0.566226666666667,
+                "aim_ready": false,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 0,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.157285185185185,
+                "support_release": 0,
+                "swing_serial": -1,
+                "transitions": 1,
+                "yaw": 3.14159263173215
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 6220
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              360,
+              296
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 244,
+              "primitives": 176814
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 62,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          },
+          "after": {
+            "active_rigs": 1,
+            "cycle": 0.380667925799037,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27424,
+            "hit_phase": 0.36,
+            "id": 28,
+            "impact": 72,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 13,
+              "motion": {
+                "age": 11.0313106666668,
+                "aim_ready": true,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 0.00000768876816437114,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.0361752760308269,
+                "support_release": 0,
+                "swing_serial": 72,
+                "transitions": 7,
+                "yaw": 3.14159263173215
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 7118
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              360,
+              296
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 231,
+              "primitives": 176528
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 72,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          }
+        },
+        {
+          "epoch": 7,
+          "seconds": 15.001199999999983,
+          "frames": 873,
+          "fps": 58.19534437245027,
+          "p95_ms": 18.20000000001164,
+          "max_ms": 65.80000000001746,
+          "before": {
+            "active_rigs": 1,
+            "cycle": 0.380667925799037,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27424,
+            "hit_phase": 0.36,
+            "id": 29,
+            "impact": 72,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 14,
+              "motion": {
+                "age": 0.875233333333334,
+                "aim_ready": false,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 0,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.24312037037037,
+                "support_release": 0,
+                "swing_serial": -1,
+                "transitions": 1,
+                "yaw": 1.57079640701812
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 7162
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              376,
+              216
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 233,
+              "primitives": 176902
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 72,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          },
+          "after": {
+            "active_rigs": 1,
+            "cycle": 0.395741019365051,
+            "drill_level": 0,
+            "error": "",
+            "fixture": "moss",
+            "gear": "worn",
+            "health": 27392,
+            "hit_phase": 0.36,
+            "id": 29,
+            "impact": 80,
+            "impact_target_valid": true,
+            "menu": false,
+            "mine_button": [
+              1223.36364746094,
+              535.54541015625
+            ],
+            "mining": false,
+            "native": {
+              "active": true,
+              "failed": false,
+              "failure": "",
+              "generations": 14,
+              "motion": {
+                "age": 11.9313803333335,
+                "aim_ready": true,
+                "duration": 0.12,
+                "errors": [],
+                "max_contact_pixels": 0.00000852992252475815,
+                "max_reach_error": 0,
+                "max_tool_retarget": 0,
+                "mode": "idle",
+                "phase": 0.284186673214588,
+                "support_release": 0,
+                "swing_serial": 80,
+                "transitions": 6,
+                "yaw": 1.57079640701812
+              },
+              "surface_cache": 0,
+              "unreachable_contacts": 0,
+              "updates": 8060
+            },
+            "persistence_active": false,
+            "phase": "mine",
+            "pickaxe_level": 1,
+            "position": [
+              376,
+              216
+            ],
+            "progress": 0,
+            "render": {
+              "draw_calls": 230,
+              "primitives": 176650
+            },
+            "steering": {
+              "clipped": 0,
+              "done": false,
+              "margin": 35,
+              "samples": 72
+            },
+            "swing": 80,
+            "target_valid": false,
+            "version": "1.0.0-dev.14.2",
+            "viewport": [
+              1416.36364746094,
+              654.54541015625
+            ],
+            "world_active": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "moss-after-120s",
+      "before": {
+        "active_rigs": 1,
+        "cycle": 0.395741019365051,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27392,
+        "hit_phase": 0.36,
+        "id": 29,
+        "impact": 80,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 14,
+          "motion": {
+            "age": 11.9313803333335,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.00000852992252475815,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.284186673214588,
+            "support_release": 0,
+            "swing_serial": 80,
+            "transitions": 6,
+            "yaw": 1.57079640701812
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 8060
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          376,
+          216
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 230,
+          "primitives": 176650
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 80,
+        "target_valid": false,
+        "version": "1.0.0-dev.14.2",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
+      },
+      "after": {
+        "active_rigs": 1,
+        "cycle": 0.395741019365051,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "moss",
+        "gear": "worn",
+        "health": 27392,
+        "hit_phase": 0.36,
+        "id": 29,
+        "impact": 80,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1223.36364746094,
+          535.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "generations": 14,
+          "motion": {
+            "age": 12.3730036666668,
+            "aim_ready": true,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.00000852992252475815,
+            "max_reach_error": 0,
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.406859821362736,
+            "support_release": 0,
+            "swing_serial": 80,
+            "transitions": 6,
+            "yaw": 1.57079640701812
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 8080
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          376,
+          216
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 230,
+          "primitives": 176650
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 35,
+          "samples": 72
+        },
+        "swing": 80,
+        "target_valid": false,
+        "version": "1.0.0-dev.14.2",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true
       }
     }
   ],

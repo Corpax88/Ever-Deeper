@@ -17,7 +17,7 @@ def reviewed():
     review=read(HERE/'review.json'); manifest=read(HERE/'manifest.json')
     baseline=read(HERE/'baseline.json')
     worn=read(HERE.parent/'native-flow-trial/bundle.json')
-    version='1.0.0-dev.14.1'
+    version='1.0.0-dev.14.2'
     require(review['destination']=='dev' and review['version']==version,'Wrong release destination')
     require(review['live_authorized'] is False,'LIVE is not authorized')
     require(all(review.get(k) is True for k in ['ordinary_game_adopted','independent_visual_accepted','exported_gameplay_passed','publisher_reviewed']),'Incomplete release review')
@@ -29,15 +29,16 @@ def reviewed():
         'evidence/build.json':'build_report_sha256',
         'evidence/native-preparation.json':'native_preparation_sha256',
         'evidence/webkit-startup.json':'webkit_startup_sha256',
-        'evidence/iphone-simulator-attempt.json':'iphone_attempt_sha256',
-        'evidence/iphone-simulator-assessment.json':'iphone_assessment_sha256',
-        'evidence/startup-review.json':'independent_review_sha256',
+        'evidence/native-optimization.json':'native_optimization_sha256',
+        'evidence/local-regression.json':'native_regression_sha256',
+        'evidence/sustained-render.json':'sustained_render_sha256',
+        'evidence/independent-review.json':'independent_review_sha256',
         'publish.py':'publisher_sha256',
     }.items():
         require(identity(HERE/filename)['sha256']==review[key],'Reviewed file changed: '+filename)
     require(identity(HERE.parent/'workflows/publish-dev14.yml')['sha256']==review['publisher_workflow_sha256'],'Publisher workflow changed')
     require(identity(HERE.parent/'native-flow-trial/bundle.json')['sha256']==review['retained_trial_manifest_sha256'],'Retained trial changed')
-    require(baseline['displayed_dev_version']=='1.0.0-dev.14' and set(baseline['files'])=={'live','dev'},'Wrong previous DEV baseline')
+    require(baseline['displayed_dev_version']=='1.0.0-dev.14.1' and set(baseline['files'])=={'live','dev'},'Wrong previous DEV baseline')
     proof=read(HERE/'evidence/browser-report.json')
     build=read(HERE/'evidence/build.json')
     for item in [proof,build]:
@@ -54,12 +55,26 @@ def reviewed():
         require(item.get('completed_observation') is True and not item.get('failure') and not item.get('crashed'),'Startup observer failed')
         require(item['files']==manifest and item['version']==version and item['source_commit']==review['source_commit'] and item['fixture_args']==[],'Startup checked a different or fixture package')
     require(len([e for e in webkit['events'] if e['event']=='navigation'])==2 and '06-confirmed-new-game.png' in webkit['images'],'Incomplete normal WebKit startup evidence')
-    attempt=read(HERE/'evidence/iphone-simulator-attempt.json')
-    assessment=read(HERE/'evidence/iphone-simulator-assessment.json')
+    optimized=read(HERE/'evidence/native-optimization.json')
+    reduction=optimized['optimization']
+    require(optimized['status']=='complete' and optimized['animation_and_bindings_preserved'] and not optimized['geometry_and_bindings_identical'],'Derived geometry must be declared explicitly')
+    require(optimized['original_scene_sha256']==native['scene_sha256'] and optimized['source_sha256']==native['source_sha256'],'LOD changed approved source')
+    require(reduction['method']=='godot-importer-indexed-lod' and reduction['lod']==2 and reduction['source_vertices']==1033415 and reduction['triangles']<100000 and reduction['vertex_attributes_preserved'],'Unreviewed mesh reduction')
+    regression=read(HERE/'evidence/local-regression.json')
+    require(regression['baseline_empty_frames']==24 and regression['fixed_empty_frames']==0 and regression['paired_geometry_poses']==36 and regression['fixed_minimum_viewport_margin_px']>0,'Native regression evidence incomplete')
+    require(regression['runtime_motion_sha256']==review['runtime_motion_sha256'] and regression['optimizer_sha256']==review['optimizer_sha256'],'Reviewed implementation changed')
+    require({'moss-continuous-steering','sustained-render-120s','moss-after-120s'}<=names,'Missing steering or sustained rendering evidence')
+    steering=next(c for c in proof['checks'] if c['name']=='moss-continuous-steering')['after']['steering']
+    require(steering['done'] and steering['samples']==72 and steering['clipped']==0 and steering['margin']>0,'Exported steering clipped the hero')
+    sustained=read(HERE/'evidence/sustained-render.json')
+    require(proof['runtime']['dpr']==3 and len(sustained['windows'])==8 and sum(w['seconds'] for w in sustained['windows'])>=120,'Missing sustained DPR3 measurement')
+    measured=next(c for c in proof['checks'] if c['name']=='sustained-render-120s')['windows']
+    require(sustained['windows']==measured,'Sustained measurements belong to another package')
+    require(all(w['after']['active_rigs']==1 and not w['after']['native']['failed'] for w in sustained['windows']),'Sustained renderer failed')
+    require(all(w['after']['native']['updates']>w['before']['native']['updates'] for w in measured),'Sustained native renderer stopped updating')
+    require(all(w['fps']>=50.0 for w in measured),'Mac DPR3 sustained cadence fell below 50 FPS; review before publishing')
     require(review['iphone_simulator_verified'] is False and review['physical_iphone_verified'] is False,'Unverified iPhone claim')
-    require(assessment['status']=='inconclusive_automation_attempt' and assessment['report_sha256']==review['iphone_attempt_sha256'],'Simulator limitation must remain explicit')
-    require(attempt['files']==manifest and attempt['source_commit']==review['source_commit'] and attempt.get('failure') and attempt['taps']==[],'Unexpected Simulator evidence; review actual game interactions separately')
-    critic=read(HERE/'evidence/startup-review.json')
+    critic=read(HERE/'evidence/independent-review.json')
     require(critic['accepted'] is True and critic['source_commit']==review['source_commit'] and critic['files']==manifest,'Independent review has not accepted this package')
     return review,manifest,baseline,worn
 
@@ -87,6 +102,10 @@ def prepare(work,candidate):
     require(all(any(j['name']==name and j['conclusion']=='success' for j in jobs) for name in ['build','browser']),'Candidate build/browser gates did not pass')
     artifact=api('artifacts/'+str(review['candidate_artifact_id']))
     require(artifact['name']=='dev14-candidate' and artifact['workflow_run']['id']==review['artifact_run_id'] and artifact['digest']==review['candidate_artifact_digest'],'Candidate artifact provenance changed')
+    for path,key in [('scripts/player/native_worn/task_motion.gd','runtime_motion_sha256'),('.github/dev14/optimize-native.gd','optimizer_sha256')]:
+        url='https://raw.githubusercontent.com/Corpax88/Ever-Deeper/'+review['source_commit']+'/'+path
+        with urllib.request.urlopen(url,timeout=30) as response: actual=hashlib.sha256(response.read()).hexdigest()
+        require(actual==review[key],'Regression source differs from immutable candidate: '+path)
     require(read(candidate/'manifest.json')==manifest,'Downloaded artifact manifest differs')
     require(all(identity(candidate/name)==want for name,want in manifest.items()),'Downloaded candidate differs from reviewed bytes')
     tasks=[]
@@ -106,7 +125,7 @@ def prepare(work,candidate):
     for name,want in worn['files'].items(): require(identity(site/'dev/worn'/name)==want,'Retained trial changed during staging')
     size=sum(p.stat().st_size for p in site.rglob('*') if p.is_file())
     require(size<1024**3,'Pages package exceeds supported site limit')
-    (work/'staging.json').write_text(json.dumps({'version':'1.0.0-dev.14.1','source_commit':review['source_commit'],'preserved_files':18,'dev_files':9,'site_bytes':size},indent=2))
+    (work/'staging.json').write_text(json.dumps({'version':'1.0.0-dev.14.2','source_commit':review['source_commit'],'preserved_files':18,'dev_files':9,'site_bytes':size},indent=2))
     print('DEV14_STAGED reviewed_files=9 preserved_live_and_trial=18')
 
 def verify(output):
@@ -121,7 +140,7 @@ def verify(output):
         with ThreadPoolExecutor(max_workers=3) as pool: results=list(pool.map(check,pending))
         pending=[n for n,ok in zip(pending,results) if not ok]
         if not pending:
-            (output/'publication-receipt.json').write_text(json.dumps({'passed':True,'version':'1.0.0-dev.14.1','destination':PUBLIC+'dev/','source_commit':review['source_commit'],'run_id':review['run_id'],'manifest_sha256':review['manifest_sha256'],'files':expected,'live_files_unchanged':9,'physical_iphone_verified':False,'iphone_simulator_verified':False,'verification_scope':'Mac Chromium gameplay and normal Mac WebKit startup; native Simulator attempt inconclusive'},indent=2))
+            (output/'publication-receipt.json').write_text(json.dumps({'passed':True,'version':'1.0.0-dev.14.2','destination':PUBLIC+'dev/','source_commit':review['source_commit'],'run_id':review['run_id'],'manifest_sha256':review['manifest_sha256'],'files':expected,'live_files_unchanged':9,'physical_iphone_verified':False,'iphone_simulator_verified':False,'verification_scope':'Mac Chromium DPR3 gameplay, steering regression and 120-second rendering; normal Mac WebKit startup. Physical iPhone remains unverified'},indent=2))
             print('DEV14_PUBLIC_VERIFY_OK live_unchanged=9 files=27');return
         if attempt<9: time.sleep(10)
     raise RuntimeError('Public verification failed: '+str(pending))

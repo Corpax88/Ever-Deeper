@@ -1,0 +1,19 @@
+{
+  "status": "preliminary_native_review_passed",
+  "candidate_source": "9810c4c9a4786731b2fd2300ba15d9eb7a0eb89c",
+  "baseline_pck_sha256": "510dc3c8768b37ddbc06f0ade5c34b64d927b51a77d958a7366d303d395b9707",
+  "reproduction": "72 rendered frames with alternating +/-0.06 rad steering, 170 px/s at 60 Hz; same original PCK with updated motion script for fixed run",
+  "baseline_empty_frames": 24,
+  "fixed_empty_frames": 0,
+  "fixed_minimum_viewport_margin_px": 55,
+  "paired_geometry_poses": 36,
+  "minimum_silhouette_iou": 0.9968827219159856,
+  "independent_critic": "/root/dev142_critic",
+  "critic_findings": [
+    "Clipping reproduction and fixed sequence pass; no clipping in 72 fixed samples.",
+    "Selected full-resolution pairs preserve silhouette, face, equipment and material quality.",
+    "Final exported browser review remains required. Physical iPhone FPS remains unverified."
+  ],
+  "runtime_motion_sha256": "4946e722a77231c5a47f34bf4af85536ccabbb2e3c0e4f3283b54db154e25f9a",
+  "optimizer_sha256": "a098ebcdc63790bc5a1cfad244ea0ab354fec3981a224b5f1ad344bcdb7e89de"
+}
