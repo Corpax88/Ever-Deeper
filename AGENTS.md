@@ -1,5 +1,5 @@
-Current checkpoint: [Worn Mac test PASSED; finish visual review and additive publication](docs/TESTMILJO-HANDOFF.md).
-Never route binary/base64 payloads through tool arguments or results, including nested code-mode calls. Reuse the43 committed parts and passing run35553114935. No repeat export/upload/test for the unchanged candidate.
+Current checkpoint: [Worn trial PUBLISHED; iPhone feedback is next](docs/TESTMILJO-HANDOFF.md).
+Never route binary/base64 payloads through tool arguments or results, including nested code-mode calls. Reuse the43 committed parts, passing Mac run35553114935 and verified publication35591010824. No repeat export/upload/test for the unchanged candidate.
 
 Current Work checkpoint: [complete Worn j payload and active Mac QA](docs/TESTMILJO-HANDOFF.md).
 All43 exact payload parts are committed. Inspect run35543977206 before repeating any export or upload.
