@@ -13,6 +13,8 @@ func run() -> void:
 		main.get_tree().quit(2)
 		return
 	RunState.reset_run(false)
+	# Persistence was skipped by automated startup; now exercise normal menu paths.
+	main.automated_mode = false
 	main._open_start_menu()
 	main.get_tree().process_frame.connect(_frame)
 	previous_usec = Time.get_ticks_usec()
@@ -61,7 +63,9 @@ func _command(data: Dictionary) -> void:
 			_gear("worn")
 		"gear": _gear(String(data.gear),String(data.get("outfit","miner")))
 		"pause": main._open_start_menu()
-		"resume": main._hide_start_menu()
+		"resume":
+			main._hide_start_menu()
+			main._resume_current_phase()
 	fixture = kind
 	main._refresh_hud()
 	samples.clear()
@@ -109,6 +113,8 @@ func _health() -> float:
 	return total
 
 func _frame() -> void:
+	# Fixture unlock bursts must not cover the hero during visual inspection.
+	if main.achievement_toast != null: main.achievement_toast.clear()
 	var now: int = Time.get_ticks_usec()
 	sample_clock += float(now-previous_usec)/1000000.0
 	previous_usec = now
@@ -131,7 +137,7 @@ func _frame() -> void:
 		"health":_health(),"position":[player.global_position.x,player.global_position.y],
 		"mining":packet.mining,"progress":packet.progress,"hit_phase":packet.hit_phase,"cycle":packet.cycle_duration,
 		"target_valid":packet.target_valid,"swing":packet.swing_serial,"impact":packet.impact_serial,"impact_target_valid":packet.impact_target_valid,
-		"gear":player.visual.active_gear,"native":native,"active_rigs":active_rigs,
+		"gear":player.visual.active_gear,"pickaxe_level":int(RunState.pickaxe_level),"drill_level":int(RunState.drill_level),"world_active":bool(player.get_parent().active),"native":native,"active_rigs":active_rigs,
 		"mine_button":[point.x,point.y],"viewport":[main.get_viewport().get_visible_rect().size.x,main.get_viewport().get_visible_rect().size.y]}
 	JavaScriptBridge.eval("window.DEV14_STATE="+JSON.stringify(state),true)
 

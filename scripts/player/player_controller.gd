@@ -311,6 +311,7 @@ func is_actually_moving() -> bool:
 
 
 func prepare_visual_cache() -> void :
+	_visual_state_initialized = false
 	if visual.has_method("prepare_visual_cache"):
 		visual.prepare_visual_cache()
 
