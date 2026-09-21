@@ -1,8 +1,6 @@
 name: Diagnose ordinary DEV14 startup in Apple WebKit
 on:
-  push:
-    branches: [codex/hero-loop-flow-20260918]
-    paths: ['.github/dev14-startup/**', '.github/workflows/dev14-startup.yml']
+  workflow_dispatch:
 permissions:
   contents: read
   actions: read

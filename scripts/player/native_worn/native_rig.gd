@@ -85,7 +85,7 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 		return true
 	var receipt = JSON.parse_string(FileAccess.get_file_as_string(candidate.path_join("candidate.json")))
 	if not receipt is Dictionary or not receipt.get("files") is Dictionary: return false
-	for file_name in ["worn-native-runtime.glb", "motion.json", "albedo.png", "normal.png", "orm.png", "cloth.png"]:
+	for file_name in ["motion.json", "albedo.png", "normal.png", "orm.png", "cloth.png"]:
 		var expected_hash: String = String(receipt.files.get(file_name, ""))
 		var raw_path := _raw_path(candidate.path_join(file_name))
 		if expected_hash.length() != 64 or not FileAccess.file_exists(raw_path) or FileAccess.get_sha256(raw_path) != expected_hash:
@@ -99,10 +99,15 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	viewport.msaa_3d = Viewport.MSAA_2X
 	add_child(viewport)
-	var document: GLTFDocument = GLTFDocument.new()
-	var gltf: GLTFState = GLTFState.new()
-	if document.append_from_buffer(FileAccess.get_file_as_bytes(_raw_path(candidate.path_join("worn-native-runtime.glb"))), candidate, gltf, import_flags) != OK: return false
-	var actor: Node3D = document.generate_scene(gltf) as Node3D
+	var scene_path: String = candidate.path_join("worn-runtime.scn")
+	var scene_receipt = JSON.parse_string(FileAccess.get_file_as_string(candidate.path_join("runtime-scene.json")))
+	if not scene_receipt is Dictionary or scene_receipt.get("status") != "complete": return false
+	if String(scene_receipt.source_sha256) != String(receipt.files["worn-native-runtime.glb"]): return false
+	if int(scene_receipt.import_flags) != import_flags or not bool(scene_receipt.geometry_and_bindings_identical): return false
+	if FileAccess.get_sha256(scene_path) != String(scene_receipt.scene_sha256): return false
+	var packed: PackedScene = load(scene_path) as PackedScene
+	if packed == null: return false
+	var actor: Node3D = packed.instantiate() as Node3D
 	if actor == null: return false
 	viewport.add_child(actor)
 	skeleton = _find_skeleton(actor)
