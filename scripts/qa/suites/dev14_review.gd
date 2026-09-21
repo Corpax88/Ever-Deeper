@@ -6,6 +6,10 @@ var error: String = ""
 var sample_clock: float = 0.0
 var previous_usec: int = 0
 var samples: Array = []
+var steering_frame: int = -1
+var steering_samples: int = 0
+var steering_clipped: int = 0
+var steering_margin: int = 400
 
 func run() -> void:
 	if not OS.has_feature("ever_deeper_dev") or not OS.has_feature("web"):
@@ -36,7 +40,16 @@ func _command(data: Dictionary) -> void:
 	main._on_joystick_movement(Vector2.ZERO)
 	Input.action_release("mine")
 	error = ""
+	steering_frame = -1
 	match kind:
+		"steering":
+			main._dev_jump_mine("mossMine",1)
+			_gear("worn")
+			main.mine_world.restore_position(Vector2(230,640))
+			steering_frame = 0
+			steering_samples = 0
+			steering_clipped = 0
+			steering_margin = 400
 		"surface_regressions": _surface_regressions()
 		"moss":
 			main._dev_jump_mine("mossMine", 1)
@@ -123,6 +136,21 @@ func _frame() -> void:
 		JavaScriptBridge.eval("window.DEV14_COMMAND=''",true)
 		var data: Variant = JSON.parse_string(raw)
 		if data is Dictionary: _command(data)
+	if steering_frame >= 0 and steering_frame < 92:
+		if steering_frame >= 20:
+			main._on_joystick_movement(Vector2.RIGHT.rotated(.06 if steering_frame % 2 == 0 else -.06))
+			var owner: Node = main.mine_world.player.visual._native_worn
+			if owner != null and is_instance_valid(owner.rig):
+				var rect: Rect2i = owner.rig.viewport.get_texture().get_image().get_used_rect()
+				var size: Vector2i = owner.rig.viewport.size
+				var margin: int = mini(mini(rect.position.x,rect.position.y),mini(size.x-rect.end.x,size.y-rect.end.y))
+				steering_samples += 1
+				steering_margin = mini(steering_margin,margin)
+				if rect.size == Vector2i.ZERO or margin <= 0: steering_clipped += 1
+		steering_frame += 1
+		if steering_frame == 92:
+			main._on_joystick_movement(Vector2.ZERO)
+			_require(steering_samples == 72 and steering_clipped == 0,"Continuous touch steering clipped the hero")
 	if sample_clock < 0.10: return
 	sample_clock = 0.0
 	var player: Node2D = main._active_player_node()
@@ -133,6 +161,8 @@ func _frame() -> void:
 		if bool(world.player.visual.native_worn_snapshot().active): active_rigs += 1
 	var point: Vector2 = main.mine_button.get_global_rect().get_center()
 	var state: Dictionary = {"id":command_id,"fixture":fixture,"error":error,"version":main.PremiumMenuScript.release_version(),
+		"steering":{"done":steering_frame==92,"samples":steering_samples,"clipped":steering_clipped,"margin":steering_margin},
+		"render":{"primitives":Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME),"draw_calls":Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)},
 		"phase":main.phase,"menu":main.menu_open,"persistence_active":main.persistence_active,
 		"health":_health(),"position":[player.global_position.x,player.global_position.y],
 		"mining":packet.mining,"progress":packet.progress,"hit_phase":packet.hit_phase,"cycle":packet.cycle_duration,

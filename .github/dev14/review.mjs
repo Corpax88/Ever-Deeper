@@ -19,13 +19,13 @@ const server=http.createServer((req,res)=>{
  res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream','Cache-Control':'no-store'});
  if(name==='/index.html'&&url.searchParams.has('qa')){
   const text=fs.readFileSync(file,'utf8').replace(/const GODOT_CONFIG = (\{[^\r\n]+\});/,(_,raw)=>{
-   const config=JSON.parse(raw);config.args=['--','--qa-dev14-review','--expected-version=1.0.0-dev.14.1'];return 'const GODOT_CONFIG = '+JSON.stringify(config)+';';
+   const config=JSON.parse(raw);config.args=['--','--qa-dev14-review','--expected-version=1.0.0-dev.14.2'];return 'const GODOT_CONFIG = '+JSON.stringify(config)+';';
   });res.end(text);
  }else fs.createReadStream(file).pipe(res);
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await chromium.launch({headless:true,args:['--use-gl=angle','--use-angle=metal','--enable-gpu']});
-const context=await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:2,hasTouch:true});
+const context=await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:3,hasTouch:true});
 const page=await context.newPage();page.setDefaultTimeout(120000);
 const cdp=await context.newCDPSession(page);
 const checks=[],messages=[];let runtime=null,id=0,failed=null;
@@ -67,13 +67,16 @@ async function mine(name){
 try{
  const url='http://127.0.0.1:'+server.address().port;
  await page.goto(url,{waitUntil:'domcontentloaded',timeout:120000});
- await page.waitForFunction(()=>window.everDeeperVersion==='1.0.0-dev.14.1',null,{timeout:240000});
+ await page.waitForFunction(()=>window.everDeeperVersion==='1.0.0-dev.14.2',null,{timeout:240000});
  await delay(1500);await capture('00-normal-dev14-menu');
  runtime=await page.evaluate(()=>{const c=document.querySelector('canvas'),g=c?.getContext('webgl2'),e=g?.getExtension('WEBGL_debug_renderer_info');return {viewport:[innerWidth,innerHeight],dpr:devicePixelRatio,renderer:e?g.getParameter(e.UNMASKED_RENDERER_WEBGL):null,lost:g?.isContextLost()};});
  runtime.browser=browser.version();runtime.platform=process.platform;
  if(!runtime.renderer||runtime.lost||/SwiftShader|llvmpipe|software/i.test(runtime.renderer))throw Error('Required graphical Mac renderer unavailable');
  await page.goto(url+'/?qa=1',{waitUntil:'domcontentloaded',timeout:120000});
- await wait('ordinary QA startup',s=>s?.version==='1.0.0-dev.14.1',240000);
+ await wait('ordinary QA startup',s=>s?.version==='1.0.0-dev.14.2',240000);
+ await command('steering');
+ await wait('continuous touch steering',s=>s?.steering?.done,30000);
+ await capture('moss-continuous-steering');
  await command('surface_regressions');
  for(const direction of ['up','right','down','left']){
   await command('moss',{direction,rush:direction==='left'});await mine('moss-'+direction);
@@ -102,11 +105,30 @@ try{
  await capture('surface-touch-release');
  await command('pause');await wait('ordinary pause menu',s=>s?.menu===true);await capture('dev14-pause');
  await command('resume');const resumed=await wait('ordinary resume',s=>s?.menu===false&&s.native?.active);await nativeReady();await page.keyboard.down('ArrowDown');await delay(400);await page.keyboard.up('ArrowDown');const moved=await wait('resumed input',s=>s?.position[1]>resumed.position[1]+2&&!s.mining);checks.push({name:'resume-real-input',before:resumed,after:moved});await capture('dev14-resumed');
+ const sustained=[];
+ for(let epoch=0;epoch<8;epoch++){
+  await command('moss',{direction:['up','right','down','left'][epoch%4],rush:true});
+  const before=await nativeReady();await page.keyboard.down('Space');
+  await wait('sustained mining impact',s=>s?.impact>before.impact,30000);
+  const timing=await page.evaluate(()=>new Promise(resolve=>{
+   const start=performance.now(),frames=[];let previous=start;
+   function tick(now){frames.push(now-previous);previous=now;if(now-start<15000){requestAnimationFrame(tick);return;}
+    const sorted=frames.slice().sort((a,b)=>a-b);
+    resolve({seconds:(now-start)/1000,frames:frames.length,fps:frames.length*1000/(now-start),p95_ms:sorted[Math.floor(sorted.length*.95)],max_ms:sorted.at(-1)});
+   }requestAnimationFrame(tick);
+  }));
+  const after=await state();await page.keyboard.up('Space');
+  if(after.native?.failed||after.active_rigs!==1)throw Error('Sustained renderer failed');
+  sustained.push({epoch,...timing,before,after});
+  fs.writeFileSync(path.join(output,'sustained-render.json'),JSON.stringify({scope:'Mac Chromium ANGLE Metal at DPR 3; eight 15-second mining windows, not physical iPhone certification',windows:sustained},null,2));
+ }
+ checks.push({name:'sustained-render-120s',windows:sustained});
+ await capture('moss-after-120s');
  const errors=messages.filter(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|ERROR:/.test(m));if(errors.length)throw Error('Runtime errors: '+errors.slice(0,4).join('\n'));
  console.log('DEV14_RENDERED_GAMEPLAY_PASSED');
 }catch(e){failed=String(e.stack||e);console.error(failed);try{await capture('failure');}catch{}}
 finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,version:'1.0.0-dev.14.1',files:manifest,runtime,checks,bootstrap_fixture:'HTML injects only explicit QA launch args. Named non-persistent fixture uses ordinary DEV jumps/equipment, clears queued achievement toasts and exercises real input/menu paths. Main scene and game package bytes unchanged.',physical_iphone_verified:false,continuous_motion_or_fps_certified:false},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,version:'1.0.0-dev.14.2',files:manifest,runtime,checks,bootstrap_fixture:'HTML injects only explicit QA launch args. Named non-persistent fixture uses ordinary DEV jumps/equipment, clears queued achievement toasts and exercises real input/menu paths. Main scene and game package bytes unchanged.',physical_iphone_verified:false,continuous_motion_or_fps_certified:false},null,2));
  await browser.close();await new Promise(r=>server.close(r));
 }
 if(failed)process.exitCode=1;

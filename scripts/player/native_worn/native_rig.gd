@@ -103,7 +103,13 @@ func configure(candidate: String, pose_only: bool = false) -> bool:
 	var scene_receipt = JSON.parse_string(FileAccess.get_file_as_string(candidate.path_join("runtime-scene.json")))
 	if not scene_receipt is Dictionary or scene_receipt.get("status") != "complete": return false
 	if String(scene_receipt.source_sha256) != String(receipt.files["worn-native-runtime.glb"]): return false
-	if int(scene_receipt.import_flags) != import_flags or not bool(scene_receipt.geometry_and_bindings_identical): return false
+	var optimization: Dictionary = scene_receipt.get("optimization",{})
+	var derived_lod: bool = bool(scene_receipt.get("animation_and_bindings_preserved",false)) \
+		and optimization.get("method","") == "godot-importer-indexed-lod" \
+		and int(optimization.get("lod",-1)) == 2 \
+		and int(optimization.get("source_vertices",0)) == 1033415 \
+		and bool(optimization.get("vertex_attributes_preserved",false))
+	if int(scene_receipt.import_flags) != import_flags or not (bool(scene_receipt.geometry_and_bindings_identical) or derived_lod): return false
 	if FileAccess.get_sha256(scene_path) != String(scene_receipt.scene_sha256): return false
 	var packed: PackedScene = load(scene_path) as PackedScene
 	if packed == null: return false

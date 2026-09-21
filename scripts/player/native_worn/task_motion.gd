@@ -281,7 +281,13 @@ func advance(delta: float,packet: Dictionary) -> bool:
 		serial = int(packet.swing_serial)
 		next_yaw = contact_yaw
 	var continued: bool = new_swing and next == mode and bool(packet.get("swing_continuation",false))
-	var changed := next != mode or (new_swing and not continued) or absf(angle_difference(yaw,next_yaw)) > .035
+	# Touch bearings change continuously. Restarting an unfinished turn at age
+	# zero pins the displayed world pose while the viewport follows the player,
+	# eventually clipping the entire hero. Retarget the existing turn until its
+	# original deadline; genuine action changes still own a fresh transition.
+	var action_changed := next != mode or (new_swing and not continued)
+	var turn_changed := absf(angle_difference(yaw,next_yaw)) > .035
+	var changed := action_changed or (turn_changed and age >= duration)
 	if changed: transition_airborne = next == "walk" or mode == "walk" or absf(angle_difference(yaw,next_yaw)) > .35
 	mode = next
 	yaw = next_yaw

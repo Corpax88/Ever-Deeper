@@ -69,7 +69,7 @@ jobs:
         run: node .github/dev14/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/dev14-browser"
       - name: Check ordinary Apple WebKit New Game and saved-run confirmation
         env:
-          EXPECTED_VERSION: 1.0.0-dev.14.1
+          EXPECTED_VERSION: 1.0.0-dev.14.2
           CANDIDATE_SOURCE: ${{ github.sha }}
         run: node .github/dev14-startup/inspect.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/dev14-startup"
       - uses: actions/upload-artifact@v4

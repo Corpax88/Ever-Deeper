@@ -35,6 +35,11 @@ def build(godot, work):
     preparation = json.loads((assets/'runtime-scene.json').read_text())
     assert preparation['geometry_and_bindings_identical'] and preparation['source_fingerprint'] == preparation['prepared_fingerprint']
     (work/'native-preparation.json').write_text(json.dumps(preparation,indent=2)+'\n')
+    run([godot,'--headless','--path',str(preparation_project),'--script',str(ROOT/'.github/dev14/optimize-native.gd')],work/'optimize-native.log')
+    optimized = json.loads((assets/'runtime-scene.json').read_text())
+    assert optimized['animation_and_bindings_preserved'] and optimized['optimization']['vertex_attributes_preserved']
+    assert optimized['optimization']['lod'] == 2 and optimized['optimization']['triangles'] < 100000
+    (work/'native-optimization.json').write_text(json.dumps(optimized,indent=2)+'\n')
     # This generated extraction copy is build input only. The prepared resource
     # replaces the 93 MB raw GLTF in the web package; approved source stays pinned.
     (assets/'worn-native-runtime.glb.raw').unlink()
@@ -44,7 +49,7 @@ def build(godot, work):
     subprocess.run(['python3','tools/install-render-probe-shell.py',str(candidate/'index.html')],cwd=ROOT,check=True)
     files = {name:identity(candidate/name) for name in NAMES}
     (candidate/'manifest.json').write_text(json.dumps(files,indent=2)+'\n')
-    (work/'build.json').write_text(json.dumps({'version':'1.0.0-dev.14.1','source_commit':os.environ.get('GITHUB_SHA'),'main_scene':'res://scenes/main/main.tscn','save_path':'user://ever_deeper_dev_run_v3.sav','native_input_pck':bundle['files']['index.pck'],'files':files,'physical_iphone_verified':False},indent=2)+'\n')
+    (work/'build.json').write_text(json.dumps({'version':'1.0.0-dev.14.2','source_commit':os.environ.get('GITHUB_SHA'),'main_scene':'res://scenes/main/main.tscn','save_path':'user://ever_deeper_dev_run_v3.sav','native_input_pck':bundle['files']['index.pck'],'files':files,'physical_iphone_verified':False},indent=2)+'\n')
     print('DEV14_ORDINARY_EXPORT_COMPLETE')
 
 if __name__ == '__main__':
