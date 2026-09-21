@@ -9,12 +9,12 @@ func _init() -> void:
 		quit(2)
 		return
 	for name in FILES:
-		var input := SOURCE + name
+		var input: String = SOURCE + String(name)
 		if not FileAccess.file_exists(input):
 			push_error("Missing approved native input " + name)
 			quit(2)
 			return
-		var target := args[1].path_join(name)
+		var target: String = args[1].path_join(String(name))
 		DirAccess.make_dir_recursive_absolute(target.get_base_dir())
 		var bytes := FileAccess.get_file_as_bytes(input)
 		var output := FileAccess.open(target, FileAccess.WRITE)

@@ -331,10 +331,12 @@ func advance(delta: float,packet: Dictionary) -> bool:
 		displayed = _world(aimed(.42))
 		var actual := project(displayed.bones.tool*cap_local-root_position)
 		max_contact_pixels = maxf(max_contact_pixels,actual.distance_to(contact_screen))
-		contact_tool = saved_tool
-		contact_yaw = saved_yaw
-		contact_screen = saved_screen
 		var old_contact: bool = int(packet.get("impact_swing_serial",serial)) != serial or mode != "mine"
+		if old_contact:
+			contact_tool = saved_tool
+			contact_yaw = saved_yaw
+			contact_screen = saved_screen
+		# A same-swing earned retarget owns its entire recovery, not one frame.
 		if age < duration or old_contact:
 			# The rendered contact becomes the source of the still-pending plan.
 			# Keep the original deadline, and do not resume a pre-contact source.
