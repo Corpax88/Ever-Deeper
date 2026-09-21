@@ -65,7 +65,7 @@ func _ready() -> void:
 	_cloth.shader = ClothShader
 	_sprite.material = _cloth
 	add_child(_sprite)
-	if OS.has_feature("ever_deeper_dev") and DisplayServer.get_name() != "headless" and bool(ProjectSettings.get_setting("native_worn/enabled", false)):
+	if OS.has_feature("ever_deeper_dev") and DisplayServer.get_name() != "headless" and bool(ProjectSettings.get_setting_with_override("native_worn/enabled")):
 		_native_worn = NativeWorn.new()
 		_native_worn.setup(self)
 		add_child(_native_worn)
