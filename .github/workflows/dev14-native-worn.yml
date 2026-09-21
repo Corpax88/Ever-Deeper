@@ -1,8 +1,8 @@
-name: Verify ordinary DEV14 Worn integration
+name: Verify DEV14.2 steering and render cost
 on:
   push:
     branches: [codex/hero-loop-flow-20260918]
-    paths: ['.github/dev14/**', '.github/workflows/dev14-native-worn.yml', 'scripts/player/native_worn/**', 'scripts/player/native_worn_visual.gd', 'scripts/player/player_visual.gd', 'scripts/qa/suites/dev14_review.gd', 'scripts/qa/qa_launcher.gd', 'scripts/player/player_controller.gd', 'scripts/player/legacy_mining_context.gd', 'scripts/world/surface_world.gd', 'scripts/ui/premium_menu.gd', 'project.godot', 'export_presets.cfg']
+    paths: ['.github/dev14/**', '.github/workflows/dev14-native-worn.yml', 'scripts/player/native_worn/**', 'scripts/player/native_worn_visual.gd', 'scripts/player/player_visual.gd', 'scripts/qa/suites/dev14_review.gd', 'scripts/qa/qa_launcher.gd', 'scripts/player/player_controller.gd', 'scripts/player/legacy_mining_context.gd', 'scripts/world/surface_world.gd', 'scripts/ui/premium_menu.gd', 'scripts/dev/visual_capture_driver.gd', 'project.godot', 'export_presets.cfg']
 permissions:
   contents: read
 concurrency:
