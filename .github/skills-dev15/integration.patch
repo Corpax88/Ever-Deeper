@@ -1,0 +1,305 @@
+diff --git a/AGENTS.md b/AGENTS.md
+index 4fc4ae0..7e5a40c 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -1,3 +1,5 @@
++Current authorized task: [DEV15 approved Skills menu and stamina](docs/premium-polish/skills-dev15/HANDOFF.md). Read this before older animation checkpoints.
++
+ Current authorized work: [DEV14.3 upgraded pickaxe motion](docs/premium-polish/dev14-native-worn/DEV14.3.md). Use the existing authenticated GitHub connection; no new login is needed. Mats approved public upload and publication after passing gates ("Alltid"). Original tool authoring parity is verified; the reconstructed candidate needs fresh final rendered/gameplay/independent acceptance. Do not reuse old local visual evidence as acceptance for new build bytes.
+ 
+ Current verified release: ordinary DEV14.2 is published at https://corpax88.github.io/Ever-Deeper/dev/. Publication run 35618558489 passed; all 27 public hashes are verified, including unchanged LIVE and retained trial bytes. Exact game source is bee888fe36d6b8285e1198384d40694d3154956a, passing candidate run 35616856586. Continuous steering clipping is fixed; the same hero uses an indexed LOD preserving skin, materials and motion. Mac DPR3 window averages were 53.60–59.76 rAF FPS, with stalls up to 400 ms; physical iPhone FPS and the prior phone startup crash remain unverified. Preserve the DEV save namespace. See docs/premium-polish/dev14-native-worn/DEV14.2.md. Do not repeat exports or tests for this unchanged candidate.
+diff --git a/scripts/main.gd b/scripts/main.gd
+index a008f25..729a6cd 100644
+--- a/scripts/main.gd
++++ b/scripts/main.gd
+@@ -110,6 +110,7 @@ var qa_launcher: Node
+ var dev_build_active: = false
+ var web_storage_uncertain: = false
+ var premium_menu
++var miner_skills_panel
+ var guide_overlay
+ var premium_hud
+ var workshop_panel
+@@ -174,6 +175,7 @@ func _ready() -> void :
+ 	_install_minimap()
+ 	_install_quick_tutorial()
+ 	_install_resource_inventory()
++	_install_miner_skills()
+ 	_install_achievement_toast()
+ 	_install_developer_menu()
+ 	_polish_asset_buttons()
+@@ -691,7 +693,7 @@ func _install_premium_hud() -> void :
+ 	$HUD.add_child(premium_hud)
+ 	premium_hud.bag_requested.connect(_open_inventory)
+ 	premium_hud.context_requested.connect(_perform_context)
+-	premium_hud.menu_requested.connect(_open_start_menu)
++	premium_hud.menu_requested.connect(_open_miner_skills)
+ 
+ 
+ func _install_workshop_panel() -> void :
+@@ -1109,6 +1111,10 @@ func _unhandled_input(event: InputEvent) -> void :
+ 		get_viewport().set_input_as_handled()
+ 		_close_inventory()
+ 		return
++	if miner_skills_panel != null and miner_skills_panel.visible and event.is_action_pressed("ui_cancel"):
++		get_viewport().set_input_as_handled()
++		_close_miner_skills()
++		return
+ 	if not event.is_action_pressed("ui_cancel"):
+ 		return
+ 	get_viewport().set_input_as_handled()
+@@ -1199,6 +1205,7 @@ func _continue_from_menu() -> void :
+ 
+ 
+ func _hide_start_menu() -> void :
++	if miner_skills_panel != null: miner_skills_panel.close_panel()
+ 	menu_open = false
+ 	start_menu.visible = false
+ 	start_menu.modulate.a = 1.0
+@@ -4136,3 +4143,42 @@ func _install_mining_companion() -> void:
+ 	var interface: CanvasLayer=load("res://scripts/companion/companion_interface.gd").new()
+ 	interface.name="CompanionInterface"
+ 	add_child(interface)
++
++
++func _install_miner_skills() -> void:
++	miner_skills_panel = preload("res://scripts/ui/miner_skills_panel.gd").new()
++	miner_skills_panel.name = "MinerSkills"
++	$HUD.add_child(miner_skills_panel)
++	miner_skills_panel.close_requested.connect(_close_miner_skills)
++	miner_skills_panel.inventory_requested.connect(func():
++		_close_miner_skills()
++		_open_inventory()
++	)
++	miner_skills_panel.settings_requested.connect(func():
++		miner_skills_panel.close_panel()
++		premium_menu.visible = true
++		premium_menu._show_settings()
++	)
++	miner_skills_panel.map_requested.connect(func(): miner_skills_panel.show_map(minimap_overlay))
++	var training = preload("res://scripts/progression/miner_training.gd").new()
++	training.name = "MinerTraining"
++	training.main = self
++	add_child(training)
++	var meter = preload("res://scripts/ui/stamina_meter.gd").new()
++	premium_hud.add_child(meter)
++
++
++func _open_miner_skills() -> void:
++	if not game_started:
++		_open_start_menu()
++		return
++	if menu_open or inventory_open or orientation_guard_active: return
++	_open_start_menu()
++	if not menu_open: return
++	premium_menu.visible = false
++	miner_skills_panel.open_panel()
++
++
++func _close_miner_skills() -> void:
++	miner_skills_panel.close_panel()
++	_continue_from_menu()
+diff --git a/scripts/player/player_controller.gd b/scripts/player/player_controller.gd
+index 453ee5b..ee976fd 100644
+--- a/scripts/player/player_controller.gd
++++ b/scripts/player/player_controller.gd
+@@ -99,13 +99,13 @@ func _physics_process(delta: float) -> void :
+ 	if motion_resolver.is_valid():
+ 		var has_motion_intent: = not movement.is_zero_approx()
+ 		if has_motion_intent or not _resolver_idle_synced:
+-			global_position = Vector2(motion_resolver.call(global_position, movement * movement_speed * delta))
++			global_position = Vector2(motion_resolver.call(global_position, movement * movement_speed * RunState.stamina_effort_multiplier() * delta))
+ 			motion_resolver_call_count += 1
+ 		else:
+ 			motion_resolver_idle_skip_count += 1
+ 		velocity = Vector2.ZERO
+ 	else:
+-		velocity = movement * movement_speed
++		velocity = movement * movement_speed * RunState.stamina_effort_multiplier()
+ 		move_and_slide()
+ 		global_position = global_position.clamp(Vector2(24, 24), world_size - Vector2(24, 24))
+ 	var actual_motion: = global_position - before
+diff --git a/scripts/qa/qa_launcher.gd b/scripts/qa/qa_launcher.gd
+index 7b24536..c3f6a5c 100644
+--- a/scripts/qa/qa_launcher.gd
++++ b/scripts/qa/qa_launcher.gd
+@@ -1,6 +1,7 @@
+ extends Node
+ ## One ordered source of truth for automated startup. First matching entry wins.
+ const CASES: Array[Dictionary] = [
++	{"flags": ["--qa-miner-skills"], "method": "run", "suite": "miner_skills_review", "surface": false},
+ 	{"flags": ["--qa-dev14-review"], "method": "run", "suite": "dev14_review", "surface": false},
+ 	{"flags": ["--qa-premium-core"], "method": "run", "suite": "premium_core", "surface": false},
+ 	{"flags": ["--qa-mole-autonomy"], "method": "run", "suite": "mole_autonomy", "surface": false},
+diff --git a/scripts/state/run_state.gd b/scripts/state/run_state.gd
+index 2129683..2a40080 100644
+--- a/scripts/state/run_state.gd
++++ b/scripts/state/run_state.gd
+@@ -141,6 +141,11 @@ const SURFACE_VEIN_PROFILES: = {
+ 	},
+ }
+ 
++const MinerSkills = preload("res://scripts/progression/miner_skills.gd")
++var miner_skills: Dictionary = MinerSkills.defaults()
++var _stamina_rest: float = 0.0
++var _miner_level_cache: Dictionary = {}
++
+ var overhaul_progress: Dictionary = {}
+ var gold: = 0
+ var pickaxe_level: = 1
+@@ -304,6 +309,7 @@ func add_resource(kind: String, amount: int = 1, count_as_mined: bool = true) ->
+ 		if not mined.has(kind):
+ 			mined[kind] = 0
+ 		mined[kind] = int(mined.get(kind, 0)) + amount
++		_earn_miner_xp("prospecting", float(amount))
+ 		if kind in RESOURCE_IDS:
+ 			overhaul_progress["companion_xp"] = mini(10000000, int(overhaul_progress.get("companion_xp",0)) + amount)
+ 	_state_changed()
+@@ -314,6 +320,7 @@ func record_mined(kind: String, amount: int = 1) -> bool:
+ 	if amount <= 0 or kind not in RESOURCE_IDS:
+ 		return false
+ 	mined[kind] = int(mined.get(kind, 0)) + amount
++	_earn_miner_xp("prospecting", float(amount))
+ 	# Earn through mining even when the hero reaches the drop before the mole.
+ 	overhaul_progress["companion_xp"] = mini(10000000, int(overhaul_progress.get("companion_xp",0)) + amount)
+ 	_state_changed()
+@@ -322,6 +329,7 @@ func record_mined(kind: String, amount: int = 1) -> bool:
+ 
+ func record_mining_swing(precision: bool = true) -> void :
+ 	total_swings += 1
++	_earn_miner_xp("mining", 4.0)
+ 	if precision:
+ 		precision_hits += 1
+ 
+@@ -694,7 +702,7 @@ func attune_tool_with_starforge(tool: Dictionary) -> Dictionary:
+ 
+ func apply_tool_forge_effects(tool: Dictionary, minimum_cooldown: float = 0.02) -> Dictionary:
+ 	var result: = tool.duplicate(true)
+-	var power_multiplier: = endless_tool_power_multiplier()
++	var power_multiplier: = endless_tool_power_multiplier() * stamina_effort_multiplier()
+ 	var speed_multiplier: = endless_tool_speed_multiplier()
+ 	var range_multiplier: = endless_tool_range_multiplier()
+ 	result["power"] = maxi(1, roundi(float(result.get("power", 1)) * power_multiplier))
+@@ -2515,6 +2523,7 @@ func serialize() -> Dictionary:
+ 		"saved_at_unix": int(Time.get_unix_time_from_system()),
+ 		"state": {
+ 			"overhaul": _sanitize_overhaul(overhaul_progress),
++			"miner_skills": MinerSkills.clean(miner_skills),
+ 			"gold": gold,
+ 			"pickaxe_level": pickaxe_level,
+ 			"ember_mastery": ember_mastery,
+@@ -2633,6 +2642,8 @@ func deserialize(raw: Variant) -> bool:
+ 	total_gold_earned = _nonnegative_int(source.get("total_gold_earned"), gold)
+ 	cargo = _sanitize_resource_store(source.get("cargo", {}))
+ 	mined = _sanitize_resource_store(source.get("mined", {}))
++	miner_skills = MinerSkills.clean(source.get("miner_skills", {"mining": float(total_swings) * 4.0, "prospecting": float(total_mined_resources())}))
++	_miner_level_cache.clear()
+ 
+ 	area_unlocked = _strict_bool(source.get("area_unlocked"))
+ 	emberdeep_unlocked = _strict_bool(source.get("emberdeep_unlocked"))
+@@ -2939,6 +2950,9 @@ func _flush_queued_autosave() -> void :
+ 
+ 
+ func _apply_defaults(emit_change: bool = true) -> void :
++	miner_skills = MinerSkills.defaults()
++	_stamina_rest = 0.0
++	_miner_level_cache.clear()
+ 	overhaul_progress = {}
+ 	_commerce_transactions.clear()
+ 	_commerce_transaction_order.clear()
+@@ -4627,3 +4641,60 @@ static func light_range_for_level(level: int) -> float:
+ 
+ static func light_energy_for_level(level: int) -> float:
+ 	return 1.0 + 0.06 * float(clampi(level, 0, 5))
++
++
++# Skills are an additive optional save section; older schema-3 runs remain valid.
++func miner_skill_rows() -> Array:
++	var rows: Array = []
++	for id in MinerSkills.IDS:
++		rows.append(MinerSkills.row(id, float(miner_skills.get(id, 0.0))))
++	return rows
++
++
++func miner_skill_level(id: String) -> int:
++	if not _miner_level_cache.has(id):
++		_miner_level_cache[id] = MinerSkills.level(id, miner_skills)
++	return int(_miner_level_cache[id])
++
++
++func _earn_miner_xp(id: String, amount: float) -> void:
++	if amount <= 0.0 or not is_finite(amount) or id not in MinerSkills.IDS: return
++	miner_skills[id] = minf(MinerSkills.MAX_XP, float(miner_skills.get(id, 0.0)) + amount)
++	_miner_level_cache.erase(id)
++	_queue_autosave()
++
++
++func stamina_value() -> float:
++	return float(miner_skills.get("stamina", 100.0))
++
++
++func stamina_effort_multiplier() -> float:
++	# Fatigue eases in only below 15. Even at zero, movement and mining work.
++	return lerpf(0.75, 1.0, clampf(stamina_value() / 15.0, 0.0, 1.0))
++
++
++func advance_miner_training(delta: float, distance: float, mining: bool) -> void:
++	if not is_finite(delta) or not is_finite(distance) or delta <= 0.0: return
++	# Ignore background-tab catch-up and reject teleport-sized displacement.
++	var dt: float = minf(delta, 0.1)
++	var moving: bool = distance > 0.01 and distance <= 2000.0 * delta
++	var before: float = stamina_value()
++	var cost: float = 0.0
++	if moving:
++		_earn_miner_xp("running", distance / 64.0)
++		cost += 2.0 * (1.0 - 0.003 * miner_skill_level("running"))
++		# Cargo changes through sales as well as pickup, so read the authority.
++		if cargo_count() > 0:
++			_earn_miner_xp("carrying", distance / 64.0)
++			cost += 0.75 * (1.0 - 0.005 * miner_skill_level("carrying"))
++	if mining:
++		cost += 4.0 * (1.0 - 0.003 * miner_skill_level("mining"))
++	if cost > 0.0:
++		_stamina_rest = 0.0
++		miner_skills["stamina"] = maxf(0.0, before - cost * dt)
++	else:
++		var rested: float = _stamina_rest
++		_stamina_rest += dt
++		var recovery_dt: float = maxf(0.0, _stamina_rest - 0.8) - maxf(0.0, rested - 0.8)
++		miner_skills["stamina"] = minf(100.0, before + 14.0 * recovery_dt)
++	if not is_equal_approx(before, stamina_value()): _queue_autosave()
+diff --git a/scripts/ui/premium_hud.gd b/scripts/ui/premium_hud.gd
+index f93b90b..3e56e9d 100644
+--- a/scripts/ui/premium_hud.gd
++++ b/scripts/ui/premium_hud.gd
+@@ -11,7 +11,7 @@ const ProgressionGoalPanelScript: = preload("res://scripts/ui/progression_goal_p
+ const ProgressionGuideScript: = preload("res://scripts/progression/guide_director.gd")
+ 
+ const BAG_ICON: = preload("res://assets/ui/bag-premium-v1.png")
+-const MENU_ICON: = preload("res://assets/ui/hud-menu-v1.png")
++const MENU_ICON: = preload("res://assets/ui/skills/icons/skills.svg")
+ const GUIDE_ICON: = preload("res://assets/ui/hud-guide-v1.png")
+ const INTERACT_ICON: = preload("res://assets/ui/hud-interact-v1.png")
+ const BUILD_ICON: = preload("res://assets/ui/hud-build-v1.png")
+@@ -451,7 +451,7 @@ func _on_display_orientation_changed(_orientation: int) -> void :
+ 
+ 
+ func _build_icon_chrome() -> void :
+-	menu_button = _icon_button("MenuButton", MENU_ICON, "Menu")
++	menu_button = _icon_button("MenuButton", MENU_ICON, "Skills · Map · Settings")
+ 	menu_button.offset_left = 8.0
+ 	menu_button.offset_top = 8.0
+ 	menu_button.offset_right = 56.0
+diff --git a/scripts/ui/premium_menu.gd b/scripts/ui/premium_menu.gd
+index ac2bb9c..7886ffd 100644
+--- a/scripts/ui/premium_menu.gd
++++ b/scripts/ui/premium_menu.gd
+@@ -12,7 +12,7 @@ const MINT: = Color("a8e3bc")
+ const MUTED: = Color("789384")
+ const INK: = Color("07120d")
+ const IPHONE_LANDSCAPE_ASPECT: = 1.95
+-const DEV_RELEASE_VERSION: = "1.0.0-dev.14.3"
++const DEV_RELEASE_VERSION: = "1.0.0-dev.15"
+ 
+ 
+ static func release_version() -> String:

@@ -1,0 +1,19 @@
+name: Store approved Skills production art
+on:
+  push:
+    branches: [codex/locked-skills-ui-20260922]
+    paths: ['.github/skills-dev15/art-transfer.json']
+permissions:
+  contents: write
+jobs:
+  store:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify and store only the five approved production files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/skills-dev15/store-art.py
