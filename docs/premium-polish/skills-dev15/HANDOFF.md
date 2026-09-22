@@ -1,0 +1,26 @@
+# DEV15 Skills — implementation checkpoint
+
+User approved the exact attached Skills concept on22 September and said Implementer.
+Reference LibraryID libfile_5ea15d86ad708191834a0f7186567138. The user's optional answer explicitly activated stamina now, mildly limiting running/mining. Skills0–100 was already agreed; XP curves and mild stamina effects are now documented below.
+
+Base: Corpax88/Ever-Deeper game source1632526b0cb675e5efd5709b0e55a6ab7ef970d9 (DEV14.3). Branch codex/locked-skills-ui-20260922. Main is publication/evidence, not the current game-source branch.
+
+Implemented: live Skills screen with mine backdrop, separate transparent portrait and production nine-patch copper/iron textures, EB Garamond(OFL), four live XP rows, stamina, real resource counts and current depth. HUD crossed-tools button opens it; Inventory/Map/Settings and close route to actual game systems. Gameplay hero/native animations are unchanged. Original native prepared assets reused byte-for-byte from public DEV14.3 PCK SHA25669a3b032e324a865b4ba064756ab23e3f71beb3336df7705430436e37e74df5e.
+
+Training: Mining4XP per recorded swing, Prospecting1XP per mined resource(count_as_mined=false grants excluded), Running1XP per64px actual physics movement, Carrying same while carrying cargo. Next level100+50*levelXP; levelcap100. Existing recorded swings and resources seed old-save Mining/Prospecting. Unknown historical travel stays0. Additional optional schema3 save section includes XP and stamina; existing saves stay valid.
+
+Stamina100. Running2/s, loaded running adds0.75/s, mining4/s; first three skill levels gradually reduce matching drain (30%,50%,30% at100). Restore14/s after0.8s rest. Only active gameplay advances; menus/orientation/background catch-up freeze it. Below15 stamina, movement and effective tool power taper to75%; no animation/cooldown changes and no hard mining/movement lock. Prospecting currently measures ore knowledge, without a passive yield bonus. HUD stamina strip appears below full.
+
+Current final game source: b788ca7484bc99bb210255851dacca35db501d5f. Fresh export/core run35795605519 passed all four core suites (1257 gameplay,125 touch, input release and DEV/save flavor), plus28 isolated Skills/save assertions. PCK258735428bytes, SHA25667b7507bc8df5a2b686801d71b98de205cdb352cd4a3d78cb03df32ce5c2009e. Build report binds both the core JSON and Skills log hashes to this source/fileset.
+
+The narrow critic found one final exported visual issue: yellow DEV controls covered the location plaque at667×375. Skills now hides that existing developer overlay while visible and restores it on close. The final Mac Metal Chromium mobile suite passed all28 entries, including actual touch, the corrected overlay, exhausted mining, paused damage/progression and actual resumed movement. Normal Apple WebKit startup, saved-run reload and confirmed New Game also passed, with six captures and no recorded runtime error/crash. Independent final review accepts this narrowly scoped DEV change; publication receipt is still pending. No DEV15 publication claim until public verification succeeds.
+
+Earlier f39 export was not accepted for publication. Browser harness corrections addressed the floating joystick active zone, rest after terrain collision, inherited Settings visibility, and a frozen paused animation packet. Actual pose reset is not required while paused; released input/disabled control and frozen damage/XP/stamina are required, followed by actual movement after resume. These are explicit test corrections; no animation redesign. An already committed swing may finish once after resume, matching the existing world-owner contract; the gate proves no damage/XP/stamina advance during the menu and released input followed by resumed movement, not zero post-resume impacts.
+
+Invariant QA registry now includes the new suites. The protected-file checker still reports project.godot, hero_gear.gd, player_controller.gd and player_visual.gd; those inherited/intentional source changes are not a clean invariant pass.
+
+Tools: current intact146414384-byte Godot4.7.2 at /tmp/ever-deeper-skills-tools/Godot_v4.7.2-stable_linux.x86_64; workspace extracted executable was truncated by synchronization, so recover from valid runtime/godot.zip into /tmp. Xvfb extracted to runtime/xvfb with libXfont/libxkbfile/xkbcomp; tools/run_rendered_isolated.py works. Physical iPhone FPS/crash unverified as before.
+
+Artwork archive: libfile_06d3ff7b27ac81918aedb9576867c224, Ever-Deeper-Skills-DEV15-art.zip, five exact production binary files + manifest. Direct local git push has no shell credential, but existing GitHub connector is authenticated. One-time branch-scoped CI stores only these authorized-public artwork files, with an allowlist/hash-checked transfer; renderer workflow stays contents:read and checkout credentials are not persisted. No new user login required. Do not route binary/base64 through conversation tools.
+
+Next: finish exact-package core/native+Mac browser checks, independent final capture review, then update ordinary /dev/ preserving all LIVE and historical Worn bytes. Update this handoff and Library entry with final immutable identities. No final release claim until gates pass.
