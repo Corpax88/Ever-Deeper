@@ -32,6 +32,9 @@ def reviewed():
         'evidence/native-optimization.json':'native_optimization_sha256',
         'evidence/equipment-preparation.json':'equipment_preparation_sha256',
         'evidence/equipment-source.json':'equipment_source_sha256',
+        'evidence/fast-tool-transitions.json':'fast_tool_transitions_sha256',
+        'evidence/reused-export.json':'reused_export_sha256',
+        'evidence/native-captures.json':'native_captures_sha256',
         'evidence/local-regression.json':'native_regression_sha256',
         'evidence/sustained-render.json':'sustained_render_sha256',
         'evidence/independent-review.json':'independent_review_sha256',
@@ -45,6 +48,13 @@ def reviewed():
     build=read(HERE/'evidence/build.json')
     for item in [proof,build]:
         require(item['version']==version and item['files']==manifest and item['source_commit']==review['source_commit'],'Tested package provenance differs')
+    reused=read(HERE/'evidence/reused-export.json')
+    require(reused['passed'] and reused['files']==manifest and reused['source_commit']==review['source_commit'],'Reused package provenance differs')
+    require(reused['validation_commit']==proof['validation_commit']==review['validation_commit'],'Graphical validation commit differs')
+    require(reused['export_run_id']==review['export_run_id'] and reused['game_rebuilt'] is False and reused['export_build_job_passed'],'Immutable export was rebuilt or failed')
+    require(set(reused['validation_only_changed_paths'])=={'.github/dev14/review.mjs','.github/dev14/reuse-export.py','.github/workflows/dev14-rereview.yml'},'Validation changed game source')
+    for label,name in [('candidate','dev14-candidate'),('build','dev14-build-review')]:
+        require(reused['original_artifacts'][label]==[review['export_'+label+'_artifact_id'],name,review['export_'+label+'_artifact_digest']],'Original export artifact differs')
     require(proof['passed'] is True,'Ordinary graphical gameplay failed')
     names={c['name'] for c in proof['checks']}
     require({'00-normal-dev14-menu','moss-up','moss-right','moss-down','moss-left','endless-up','endless-right','endless-down','endless-left','drill-restored','worn-outfit-reentry','surface-ordinary','depth-ordinary','hub-ordinary','deepheart-ordinary','surface-touch-release','dev14-pause','dev14-resumed','resume-real-input'}<=names,'Incomplete ordinary gameplay evidence')
@@ -58,6 +68,12 @@ def reviewed():
         for state in [capture['after'],hit['before'],hit['hit']]:
             require(state['native']['active'] and state['native']['gear']==gear and state['gear']==gear,'Upgraded tool used legacy rendering: '+name)
         require(hit['hit']['impact']>hit['before']['impact'] and hit['hit']['health']<hit['before']['health'] and hit['hit']['impact_target_valid'],'Upgraded tool did not earn contact damage: '+name)
+    native_captures={row['id']:row for row in read(HERE/'evidence/native-captures.json')}
+    for name,gear in cases+[("moss-"+d,"worn") for d in ['up','right','down','left']]:
+        require(name in native_captures,'Missing unobscured native capture: '+name)
+        row=native_captures[name];x,y,w,h=row['used_rect']
+        require(row['gear']==gear and row['native']['gear']==gear and row['native']['active'] and not row['native']['failed'],'Native capture selected another tool: '+name)
+        require(w>0 and h>0 and min(x,y,400-x-w,400-y-h)>0,'Native tool viewport clipped: '+name)
     core=read(HERE/'evidence/core-results.json')
     require(core['passed'] and all(c['passed'] for c in core['cases']) and {c['case'] for c in core['cases']}=={'input','overhaul','touch','build-flavor'},'Core gameplay gate failed')
     native=read(HERE/'evidence/native-preparation.json')
@@ -78,14 +94,18 @@ def reviewed():
     require(equipment['body']['vertex_attributes_unchanged'] and equipment['body']['removed_tool_triangles']==2256 and equipment['body']['retained_triangles']==84397,'Equipment changed hero geometry')
     require(set(equipment['tools'])==set(gears[1:]) and set(equipment_source['tools'])==set(gears),'Missing original pickaxes')
     require(all(equipment['tools'][g]['source_sha256']==equipment_source['tools'][g]['sha256'] for g in gears[1:]),'Prepared tool source differs')
+    fast=read(HERE/'evidence/fast-tool-transitions.json')
+    require(fast['passed'] and fast['cases']==1856 and fast['pck']==manifest['index.pck'] and fast['source_commit']==review['source_commit'],'Fast-tool regression tested another package')
+    require(fast['runtime_adapter_sha256']==review['runtime_adapter_sha256'],'Fast-tool runtime adapter differs')
     regression=read(HERE/'evidence/local-regression.json')
-    require(regression.get('provenance_version')=='1.0.0-dev.14.2' and regression.get('reused_unchanged_motion_and_optimizer') is True,'Inherited steering/LOD evidence must retain its original scope')
+    require(regression.get('provenance_version')=='1.0.0-dev.14.2' and regression.get('reused_unchanged_base_task_and_optimizer') is True,'Inherited steering/LOD evidence must retain its original scope')
     require(regression['baseline_empty_frames']==24 and regression['fixed_empty_frames']==0 and regression['paired_geometry_poses']==36 and regression['fixed_minimum_viewport_margin_px']>0,'Native regression evidence incomplete')
     require(regression['runtime_motion_sha256']==review['runtime_motion_sha256'] and regression['optimizer_sha256']==review['optimizer_sha256'],'Reviewed implementation changed')
     require({'moss-continuous-steering','sustained-render-120s','moss-after-120s'}<=names,'Missing steering or sustained rendering evidence')
     steering=next(c for c in proof['checks'] if c['name']=='moss-continuous-steering')['after']['steering']
     require(steering['done'] and steering['samples']==72 and steering['clipped']==0 and steering['margin']>0,'Exported steering clipped the hero')
     runtime=proof['runtime']
+    require(runtime['video_recording'] is False,'Cadence measurement includes video encoding')
     require(runtime['platform']=='darwin' and runtime['viewport']==[844,390] and runtime['lost'] is False,'Wrong graphical target for Mac mobile review')
     renderer=runtime.get('renderer','')
     require(bool(renderer) and not any(token in renderer.lower() for token in ['swiftshader','llvmpipe','software']),'Software renderer cannot establish Mac graphical cadence')
@@ -122,12 +142,22 @@ def prepare(work,candidate):
         request=urllib.request.Request('https://api.github.com/repos/Corpax88/Ever-Deeper/actions/'+path,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json'})
         with urllib.request.urlopen(request,timeout=30) as response: return json.load(response)
     run=api('runs/'+str(review['run_id']))
-    require(run['conclusion']=='success' and run['head_sha']==review['source_commit'] and review['run_id']==review['artifact_run_id'],'Wrong or failing candidate run')
+    require(run['conclusion']=='success' and run['head_sha']==review['validation_commit'] and review['run_id']==review['artifact_run_id'],'Wrong or failing validation run')
     jobs=api('runs/'+str(review['run_id'])+'/jobs?filter=latest')['jobs']
     require(all(any(j['name']==name and j['conclusion']=='success' for j in jobs) for name in ['build','browser']),'Candidate build/browser gates did not pass')
+    original=api('runs/'+str(review['export_run_id']))
+    require(original['head_sha']==review['source_commit'] and original['status']=='completed','Wrong original export source')
+    original_jobs=api('runs/'+str(review['export_run_id'])+'/jobs?filter=latest')['jobs']
+    require(any(j['name']=='build' and j['conclusion']=='success' for j in original_jobs),'Original export/core gates did not pass')
+    for label,name in [('candidate','dev14-candidate'),('build','dev14-build-review')]:
+        original_artifact=api('artifacts/'+str(review['export_'+label+'_artifact_id']))
+        require(original_artifact['name']==name and original_artifact['workflow_run']['id']==review['export_run_id'] and original_artifact['digest']==review['export_'+label+'_artifact_digest'],'Original artifact provenance changed: '+label)
     artifact=api('artifacts/'+str(review['candidate_artifact_id']))
     require(artifact['name']=='dev14-candidate' and artifact['workflow_run']['id']==review['artifact_run_id'] and artifact['digest']==review['candidate_artifact_digest'],'Candidate artifact provenance changed')
-    for path,key in [('scripts/player/native_worn/task_motion.gd','runtime_motion_sha256'),('.github/dev14/optimize-native.gd','optimizer_sha256')]:
+    for label,name in [('browser','dev14-browser-review'),('webkit','dev14-webkit-startup-fixed'),('build','dev14-build-review')]:
+        evidence=api('artifacts/'+str(review[label+'_artifact_id']))
+        require(evidence['name']==name and evidence['workflow_run']['id']==review['run_id'] and evidence['digest']==review[label+'_artifact_digest'],'Evidence artifact provenance changed: '+label)
+    for path,key in [('scripts/player/native_worn/runtime_motion.gd','runtime_adapter_sha256'),('scripts/player/native_worn/task_motion.gd','runtime_motion_sha256'),('.github/dev14/optimize-native.gd','optimizer_sha256')]:
         url='https://raw.githubusercontent.com/Corpax88/Ever-Deeper/'+review['source_commit']+'/'+path
         with urllib.request.urlopen(url,timeout=30) as response: actual=hashlib.sha256(response.read()).hexdigest()
         require(actual==review[key],'Regression source differs from immutable candidate: '+path)

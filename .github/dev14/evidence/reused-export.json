@@ -1,11 +1,19 @@
 {
-  "version": "1.0.0-dev.14.3",
+  "passed": true,
   "source_commit": "1632526b0cb675e5efd5709b0e55a6ab7ef970d9",
-  "main_scene": "res://scenes/main/main.tscn",
-  "save_path": "user://ever_deeper_dev_run_v3.sav",
-  "native_input_pck": {
-    "size": 327093712,
-    "sha256": "74db0719dc5d151e0ad9491e9c5e90769c6f85ff8f8db07fe55c4b825277da05"
+  "validation_commit": "49668d1139dd44118f333c775b4b4c02881e7722",
+  "export_run_id": 35704702742,
+  "original_artifacts": {
+    "candidate": [
+      10683499608,
+      "dev14-candidate",
+      "sha256:9962b231c3c63b8bb553daa9e207aee7e92f6589f2ea49153b979294f9a713ca"
+    ],
+    "build": [
+      10684320280,
+      "dev14-build-review",
+      "sha256:47de7516cc07dff31df2335b2797bf0628ccce66e1318326443627aaa57b2798"
+    ]
   },
   "files": {
     "index.html": {
@@ -45,5 +53,12 @@
       "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
     }
   },
-  "physical_iphone_verified": false
+  "validation_only_changed_paths": [
+    ".github/dev14/reuse-export.py",
+    ".github/dev14/review.mjs",
+    ".github/workflows/dev14-rereview.yml"
+  ],
+  "export_build_job_passed": true,
+  "game_rebuilt": false,
+  "previous_browser_scope": "All eight tools and direction/contact checks passed. Recorded Worn cadence was 44.58 FPS and failed; fresh unrecorded cadence and WebKit checks remain required."
 }
