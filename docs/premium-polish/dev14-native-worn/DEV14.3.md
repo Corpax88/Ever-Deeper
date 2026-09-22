@@ -1,4 +1,4 @@
-# DEV14.3 candidate: upgraded pickaxe motion
+# DEV14.3: upgraded pickaxe motion
 
 Mats reported that DEV14.2 fell back to old animation with upgraded equipment.
 The ordinary native gate accepted only Worn. DEV14.3 extends the same approved
@@ -29,13 +29,16 @@ This source build uses the already authenticated GitHub connection. It needs no
 new user sign-in and routes no binary/base64 through conversation tools. Generated
 assets remain in immutable build artifacts. Native source files were not redesigned.
 
-## Validation and remaining release gates
+## Reviewed candidate
 
-Local parser checks passed for equipment, integration and build preparation.
-The exact exported candidate still requires current gameplay, rendered mobile
-review, Apple WebKit startup, sustained Mac rendering and independent acceptance.
-Historical 40-pose and 32-direction local evidence covers the earlier lost scratch
-candidate only; it is not final acceptance of this reproducible rebuild.
+The exact exported candidate passed core gameplay, all eight pickaxes in four
+directions, actual contact damage, native viewport capture and steering checks,
+Apple WebKit startup, and eight15-second sustained Mac render windows.
+Independent actual-image and sampled-sequence review scored8.5/10 with no
+new tool/body/grip/material/clipping blocker. This is narrow DEV acceptance,
+not overall final visual9/10 or continuous-motion/physical-device certification.
+Historical40-pose and32-direction local evidence covers an earlier lost scratch
+candidate and was not used to approve this export.
 Physical iPhone FPS and the old reported startup crash remain unverified.
 
 ## Continuity and authorization
@@ -58,8 +61,8 @@ contact ownership, tool and hand relationships remain unchanged. It neither
 clamps individual limb endpoints nor relaxes rejection tolerances.
 
 The correction passed 1856 synthetic contact/cancel geometry cases. The final
-export runs that regression too; fresh rendered gameplay/visual review is still
-required and old failed-run captures cannot approve the corrected package.
+export passed that regression and fresh rendered gameplay/visual review;
+old failed-package captures did not approve the corrected package.
 
 The existing max_reach_error diagnostic includes rejected transition search
 probes; final displayed poses still pass the unchanged finite/segment gate.
@@ -87,4 +90,15 @@ equipment/control suite, all eight15-second >=50rAF-FPS windows and ordinary
 Apple WebKit startup. The unchanged threshold must pass before publication.
 Source and validation commits remain separate in reports and publisher checks.
 
-Publisher status: DRAFT pending fresh cadence/WebKit evidence and final independent acceptance.
+Run35706535761 passed build/browser. Mac Metal Chromium151 at844×390/DPR3,
+without recording, produced56.27–59.32rAF FPS across all eight15-second windows;
+individual stalls reached184ms. This is not a guarantee of stable frame pacing.
+The recorded44.58FPS result is retained honestly as a failed diagnostic run;
+removing video encoding was the only measurement change, but the separate Mac
+runner means it is not a controlled attribution of the whole difference.
+Normal WebKit startup, New Game, pause/reload of the save and confirmed
+replacement by another New Game passed with no fixture arguments or reported crash.
+
+Publication is prepared for the exact nine reviewed DEV files; deployment and
+27 public hash checks must complete before this release is described as published.
+See the eventual publication receipt in `.github/dev14/evidence/`.

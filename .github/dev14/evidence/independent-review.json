@@ -1,19 +1,20 @@
 {
   "accepted": true,
-  "scope": "Narrow DEV14.2 steering clipping correction and render-cost reduction; not final visual or physical iPhone acceptance",
-  "source_commit": "bee888fe36d6b8285e1198384d40694d3154956a",
+  "scope": "Narrow DEV14.3 original upgraded-pickaxe integration and Comet transition correction; actual images and sampled frame sequences, not final overall visual or physical-device certification",
+  "source_commit": "1632526b0cb675e5efd5709b0e55a6ab7ef970d9",
+  "validation_commit": "49668d1139dd44118f333c775b4b4c02881e7722",
   "files": {
     "index.html": {
       "size": 7855,
-      "sha256": "6d1639620955365c4322c4107e4b975958c3c2baef6e406a3a9fc08ef602f3dd"
+      "sha256": "877c8977a9bebab7ad0edb862da57b65517c920afb8f7cd59ece08390845f49c"
     },
     "index.js": {
       "size": 279815,
       "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
     },
     "index.pck": {
-      "size": 236963468,
-      "sha256": "c0f0a04cb94193dd4806de41c18ac238a171b94ba4e7f99b5bec2f9f59d38a7f"
+      "size": 251484324,
+      "sha256": "69a3b032e324a865b4ba064756ab23e3f71beb3336df7705430436e37e74df5e"
     },
     "index.wasm": {
       "size": 39514754,
@@ -40,18 +41,29 @@
       "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
     }
   },
-  "reviewer": "/root/dev142_critic",
-  "publisher_sha256": "83c102874850600ba802ded7a1b641ed6a8b41e72c85641d1eb66299a2d1c21d",
-  "browser_report_sha256": "af719f27ec421061ad420dc7f9bee5d68afdd08657b3328564c0b33262cc30f5",
-  "webkit_startup_sha256": "ea2bc2752bbd91dd165a33141eac9cb4895206f4cdede57425c7dc4462ee1fb9",
+  "reviewer": "/root/pickaxe_review",
+  "score": 8.5,
+  "publisher_sha256": "6dff38ab304fb3bc16044b9eb4ba943d046f0fc675845a1d4af7641cd54e37ab",
+  "browser_report_sha256": "2c4fd4cb9bb7055fae9117f855ae77fa607d0a21a061646f7671942c10d83e65",
+  "webkit_startup_sha256": "bf7fd0913b613a667ff08df907f1f221893fa8c4fe51630361a5ff4177bc38c8",
+  "visual_evidence": {
+    "recorded_run_id": 35704702742,
+    "artifact_id": 10684625796,
+    "artifact_digest": "sha256:e3dd3e233c3fb4b411000b76b84476bc47162e54c5480dd73728513eb6dfc138",
+    "recorded_run_passed": false,
+    "validated_run_id": 35706535761
+  },
   "findings": [
-    "Approved hero silhouette, detail and materials retained in inspected final captures. Exported steering72 samples:zero clipped,min35px margin. WebKit ordinary New Game,reload and replacement passed.",
-    "Eight mining/idle rendering windows averaged53.60-59.76 browser rAF FPS on Mac DPR3, with advancing native updates. Individual stalls reached400ms; stable frame pacing and physical iPhone FPS are not established.",
-    "Publisher binds sustained measurements to the exact package report, checks updating native renderer and >=50FPS window averages, verifies implementation hashes at the immutable source commit, and preserves LIVE/trial bytes."
+    "All32 actual native tool-direction views and corresponding full game captures were inspected, including Crown, Endless Iron, drills, Worn outfit re-entry and ordinary world/resume states. No new clipping, detached grip, duplicate body/tool, missing texture or wrong palette. Recorded native image margins were at least49px.",
+    "Sampled dense Comet/Crown sequences retained attached limbs/tool and returned from hits. This is sampled sequence review, not continuous smoothness certification.",
+    "Fresh exact-package provenance, all gameplay evidence and six ordinary WebKit startup images were verified.",
+    "Eight Mac Metal DPR3 windows passed at56.27\u201359.32 browser rAF FPS; worst individual stall184ms. Recorded44.58FPS failure remains disclosed.",
+    "Source163 and validation496 identities are explicit; the same exported bytes and original core/fast-tool proofs are retained. Only three test files differ. Publisher retains >=50FPS and all visual/gameplay/provenance gates. No remaining code or visual release blocker."
   ],
   "limitations": [
-    "Ordered frame review is not continuous-motion acceptance.",
-    "Physical iPhone startup crash and performance remain unverified.",
-    "Other visual issues from the original video are not declared resolved."
+    "Physical iPhone and Simulator were not verified.",
+    "The prior reported phone startup crash and physical-device performance remain unverified.",
+    "The separate recorded and unrecorded Mac runners do not prove video encoding alone caused the entire performance difference.",
+    "No claim of final overall9/10 visuals or continuous smoothness."
   ]
 }
