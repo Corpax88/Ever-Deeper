@@ -1,4 +1,4 @@
-# DEV14.3: upgraded pickaxe motion
+# DEV14.3 published: upgraded pickaxe motion
 
 Mats reported that DEV14.2 fell back to old animation with upgraded equipment.
 The ordinary native gate accepted only Worn. DEV14.3 extends the same approved
@@ -48,7 +48,7 @@ Original sources and previous visual evidence were restored; the replacement
 source build and integration are reconstructed and must receive fresh final QA.
 Mats explicitly approved public upload and publishing after gates ("Alltid").
 That permission persists. Do not ask for another login or repeat approval.
-DEV14.2 remains published until an exact DEV14.3 candidate passes the release gate.
+DEV14.3 passed the release gate and is now published at the same ordinary DEV address.
 
 ## Fast-tool transition correction
 
@@ -99,6 +99,11 @@ runner means it is not a controlled attribution of the whole difference.
 Normal WebKit startup, New Game, pause/reload of the save and confirmed
 replacement by another New Game passed with no fixture arguments or reported crash.
 
-Publication is prepared for the exact nine reviewed DEV files; deployment and
-27 public hash checks must complete before this release is described as published.
-See the eventual publication receipt in `.github/dev14/evidence/`.
+Publication run35708487161 passed package, deploy and verify from commit
+`0d8a6610c34b417c7514d87ce2fa3d11b305f800`. All27 public file hashes were
+verified: nine DEV14.3 files, nine unchanged LIVE files and nine retained trial
+files. DEV saves keep their existing namespace. The exact receipt is
+`.github/dev14/evidence/publication-receipt.json`. Receipt artifact10685422554
+has digest`sha256:7acce1881ca76eac4be2670820198e9dd75248c0e5939feb8243c6ca978ad24e`.
+The checked-in review.json records the pre-publication approval; the receipt
+is authoritative for completed publication. No new export or repeated test is needed.
