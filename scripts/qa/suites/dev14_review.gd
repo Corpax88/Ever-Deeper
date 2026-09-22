@@ -151,6 +151,10 @@ func _frame() -> void:
 		if steering_frame == 92:
 			main._on_joystick_movement(Vector2.ZERO)
 			_require(steering_samples == 72 and steering_clipped == 0,"Continuous touch steering clipped the hero")
+	var native_request: Variant = JavaScriptBridge.eval("window.DEV14_CAPTURE_NATIVE||''",true)
+	if native_request is String and not native_request.is_empty():
+		JavaScriptBridge.eval("window.DEV14_CAPTURE_NATIVE=''",true)
+		_capture_native(native_request)
 	if sample_clock < 0.10: return
 	sample_clock = 0.0
 	var player: Node2D = main._active_player_node()
@@ -225,3 +229,15 @@ func _surface_regressions() -> void:
 	player.set_mining_visual(false)
 	world.active_context = ""
 	main._dev_jump_surface()
+
+func _capture_native(request_id: String) -> void:
+	# Capture the actual final viewport after rendering, unobscured by HUD/text.
+	# Used only by this explicit nonpersistent exported-game QA suite.
+	await RenderingServer.frame_post_draw
+	var player: Node2D = main._active_player_node()
+	var owner: Node = player.visual._native_worn
+	if owner == null or not is_instance_valid(owner.rig): return
+	var image: Image = owner.rig.viewport.get_texture().get_image()
+	var used: Rect2i = image.get_used_rect()
+	var capture: Dictionary = {"id":request_id,"gear":player.visual.active_gear,"native":owner.snapshot(),"used_rect":[used.position.x,used.position.y,used.size.x,used.size.y],"png":Marshalls.raw_to_base64(image.save_png_to_buffer())}
+	JavaScriptBridge.eval("window.DEV14_NATIVE_CAPTURE="+JSON.stringify(capture),true)

@@ -28,7 +28,7 @@ const browser=await chromium.launch({headless:true,args:['--use-gl=angle','--use
 const context=await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:3,hasTouch:true,recordVideo:{dir:path.join(output,"video"),size:{width:844,height:390}}});
 const page=await context.newPage();page.setDefaultTimeout(120000);
 const cdp=await context.newCDPSession(page);
-const checks=[],messages=[];let runtime=null,id=0,failed=null;
+const checks=[],messages=[],nativeCaptures=[];let runtime=null,id=0,failed=null;
 page.on('console',m=>{messages.push(m.type()+': '+m.text());fs.writeFileSync(path.join(output,'console.log'),messages.join('\n'));});
 page.on('pageerror',e=>{messages.push('PAGEERROR: '+e.message);fs.writeFileSync(path.join(output,'console.log'),messages.join('\n'));});
 const state=()=>page.evaluate(()=>window.DEV14_STATE);
@@ -51,7 +51,16 @@ async function command(kind,extra={}){
  return state();
 }
 async function capture(name){
- const before=await state();await page.screenshot({path:path.join(output,name+'.png'),timeout:60000});
+ const before=await state();
+ if(before?.native?.active){
+  await page.evaluate(id=>{window.DEV14_NATIVE_CAPTURE=null;window.DEV14_CAPTURE_NATIVE=id;},name);
+  await page.waitForFunction(id=>window.DEV14_NATIVE_CAPTURE?.id===id,name,{timeout:30000});
+  const native=await page.evaluate(()=>window.DEV14_NATIVE_CAPTURE);
+  fs.writeFileSync(path.join(output,name+'-native.png'),Buffer.from(native.png,'base64'));
+  delete native.png;nativeCaptures.push(native);
+  fs.writeFileSync(path.join(output,'native-captures.json'),JSON.stringify(nativeCaptures,null,2));
+ }
+ await page.screenshot({path:path.join(output,name+'.png'),timeout:60000});
  const after=await state();checks.push({name,before,after});
  fs.writeFileSync(path.join(output,'checks.json'),JSON.stringify(checks,null,2));console.log('DEV14_CAPTURE',name);
 }
