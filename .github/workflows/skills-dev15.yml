@@ -2,7 +2,7 @@ name: Verify Skills DEV15
 on:
   push:
     branches: [codex/locked-skills-ui-20260922]
-    paths: ['.github/skills-dev15/**', '.github/workflows/skills-dev15.yml', 'scripts/**', 'assets/ui/skills/**', 'assets/ui/fonts/EBGaramond.ttf']
+    paths: ['.github/skills-dev15/build.py', '.github/skills-dev15/native-input.json', '.github/skills-dev15/shell-input.json', 'scripts/**', 'assets/ui/skills/**', 'assets/ui/fonts/EBGaramond.ttf']
 permissions:
   contents: read
 concurrency:

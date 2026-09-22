@@ -55,8 +55,10 @@ try{
  await tap('new_game');await ready();await shot('01-new-game');
  await command('surface');await mine('02-surface-touch');
  // Actual held virtual joystick: travel, earned XP, drain and release.
- let before=await state(),p=await point('joystick'),r=before.buttons.joystick,v=page.viewportSize();
- await touch('touchStart',p);await touch('touchMove',{x:p.x,y:p.y+r[3]/before.viewport[1]*v.height*.32});await delay(2500);await touch('touchEnd');
+ let before=await state(),v=page.viewportSize(),p={x:v.width*.23,y:v.height*.68},r=before.buttons.joystick;
+ // FloatingJoystick's full-screen Control accepts movement only inside the
+ // left 46%, below 36% height. Its Control center is outside that active zone.
+ await touch('touchStart',p);await touch('touchMove',{x:p.x,y:p.y+40});await delay(2500);await touch('touchEnd');
  const moved=await state();check('actual-joystick-trains-and-drains',moved.position[1]>before.position[1]+5&&moved.skill_xp.running>before.skill_xp.running&&moved.stamina<before.stamina,{before,after:moved});
  await delay(2000);const rested=await state();check('active-rest-recovers',rested.stamina>moved.stamina,{before:moved,after:rested});
  await tap('hud_menu');await wait('skills opens',s=>s.skills_open&&s.menu);await shot('03-earned-skills');
@@ -79,7 +81,7 @@ try{
  console.log('SKILLS_RENDERED_GAMEPLAY_PASSED');
 }catch(e){failed=String(e.stack||e);console.error(failed);try{await shot('failure');}catch{}}
 finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,version,files,runtime,checks,physical_iphone_verified:false,fixture:'Explicit named fixture; observed UI bounds drive actual browser touch. Only comparison progression and fatigue are seeded. New Game, menus, movement and mining use ordinary game paths.'},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.CANDIDATE_SOURCE||process.env.GITHUB_SHA,validation_commit:process.env.GITHUB_SHA,version,files,runtime,checks,physical_iphone_verified:false,fixture:'Explicit named fixture; observed UI bounds and the actual joystick movement zone drive browser touch. Only comparison progression and fatigue are seeded. New Game, menus, movement and mining use ordinary game paths.'},null,2));
  await context.close();await browser.close();await new Promise(r=>server.close(r));
 }
 if(failed)process.exitCode=1;
