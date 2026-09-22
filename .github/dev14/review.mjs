@@ -19,13 +19,13 @@ const server=http.createServer((req,res)=>{
  res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream','Cache-Control':'no-store'});
  if(name==='/index.html'&&url.searchParams.has('qa')){
   const text=fs.readFileSync(file,'utf8').replace(/const GODOT_CONFIG = (\{[^\r\n]+\});/,(_,raw)=>{
-   const config=JSON.parse(raw);config.args=['--','--qa-dev14-review','--expected-version=1.0.0-dev.14.2'];return 'const GODOT_CONFIG = '+JSON.stringify(config)+';';
+   const config=JSON.parse(raw);config.args=['--','--qa-dev14-review','--expected-version=1.0.0-dev.14.3'];return 'const GODOT_CONFIG = '+JSON.stringify(config)+';';
   });res.end(text);
  }else fs.createReadStream(file).pipe(res);
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await chromium.launch({headless:true,args:['--use-gl=angle','--use-angle=metal','--enable-gpu']});
-const context=await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:3,hasTouch:true});
+const context=await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:3,hasTouch:true,recordVideo:{dir:path.join(output,"video"),size:{width:844,height:390}}});
 const page=await context.newPage();page.setDefaultTimeout(120000);
 const cdp=await context.newCDPSession(page);
 const checks=[],messages=[];let runtime=null,id=0,failed=null;
@@ -55,9 +55,9 @@ async function capture(name){
  const after=await state();checks.push({name,before,after});
  fs.writeFileSync(path.join(output,'checks.json'),JSON.stringify(checks,null,2));console.log('DEV14_CAPTURE',name);
 }
-async function nativeReady(){return wait('native ready',s=>s?.native?.active&&s.gear==='worn'&&s.native.updates>3);}
-async function mine(name){
- const before=await nativeReady();await page.keyboard.down('Space');
+async function nativeReady(gear='worn'){return wait('native ready '+gear,s=>s?.native?.active&&s.gear===gear&&s.native.gear===gear&&s.native.updates>3);}
+async function mine(name,gear='worn'){
+ const before=await nativeReady(gear);await page.keyboard.down('Space');
  const hit=await wait(name+' damage',s=>s?.impact>before.impact&&s.health<before.health,30000);
  if(!hit.impact_target_valid||hit.hit_phase<=0||hit.cycle<=0)throw Error(name+' invalid committed contact');
  await capture(name);await page.keyboard.up('Space');
@@ -67,14 +67,14 @@ async function mine(name){
 try{
  const url='http://127.0.0.1:'+server.address().port;
  await page.goto(url,{waitUntil:'domcontentloaded',timeout:120000});
- await page.waitForFunction(()=>window.everDeeperVersion==='1.0.0-dev.14.2',null,{timeout:240000});
+ await page.waitForFunction(()=>window.everDeeperVersion==='1.0.0-dev.14.3',null,{timeout:240000});
  await delay(1500);await capture('00-normal-dev14-menu');
  runtime=await page.evaluate(()=>{const c=document.querySelector('canvas'),g=c?.getContext('webgl2'),e=g?.getExtension('WEBGL_debug_renderer_info');return {viewport:[innerWidth,innerHeight],dpr:devicePixelRatio,renderer:e?g.getParameter(e.UNMASKED_RENDERER_WEBGL):null,lost:g?.isContextLost()};});
  runtime.browser=browser.version();runtime.platform=process.platform;
  if(!runtime.renderer||runtime.lost||/SwiftShader|llvmpipe|software/i.test(runtime.renderer))throw Error('Required graphical Mac renderer unavailable');
  await page.goto(url+'/?qa=1',{waitUntil:'domcontentloaded',timeout:120000});
- await wait('ordinary QA startup',s=>s?.version==='1.0.0-dev.14.2',240000);
- await command('steering');
+ await wait('ordinary QA startup',s=>s?.version==='1.0.0-dev.14.3',240000);
+ await command('steering',{gear:'iron'});
  await wait('continuous touch steering',s=>s?.steering?.done,30000);
  await capture('moss-continuous-steering');
  await command('surface_regressions');
@@ -90,7 +90,12 @@ try{
  for(const direction of ['up','right','down','left']){
   await command('endless',{direction});await mine('endless-'+direction);
  }
- await command('gear',{gear:'iron'});await wait('iron visible',s=>s?.gear==='iron'&&!s.native.active);await capture('iron-restored');
+ for(const gear of ['iron','runed','moonglass','ember','crusher','comet','crown']){
+  for(const direction of ['up','right','down','left']){
+   await command('moss',{direction,gear});await mine('upgraded-'+gear+'-'+direction,gear);
+  }
+ }
+ await command('endless',{direction:'right',gear:'iron'});await mine('endless-iron-right','iron');
  await command('gear',{gear:'burrower'});await wait('drill visible',s=>s?.gear==='burrower'&&!s.native.active);await capture('drill-restored');
  await command('gear',{gear:'worn',outfit:'deepheart'});await nativeReady();await capture('worn-outfit-reentry');
  for(const world of ['surface','depth','hub','deepheart']){
@@ -107,8 +112,9 @@ try{
  await command('resume');const resumed=await wait('ordinary resume',s=>s?.menu===false&&s.native?.active);await nativeReady();await page.keyboard.down('ArrowDown');await delay(400);await page.keyboard.up('ArrowDown');const moved=await wait('resumed input',s=>s?.position[1]>resumed.position[1]+2&&!s.mining);checks.push({name:'resume-real-input',before:resumed,after:moved});await capture('dev14-resumed');
  const sustained=[];
  for(let epoch=0;epoch<8;epoch++){
-  await command('moss',{direction:['up','right','down','left'][epoch%4],rush:true});
-  const before=await nativeReady();await page.keyboard.down('Space');
+  const gear=['worn','iron','runed','moonglass','ember','crusher','comet','crown'][epoch];
+  await command('moss',{direction:['up','right','down','left'][epoch%4],rush:true,gear});
+  const before=await nativeReady(gear);await page.keyboard.down('Space');
   await wait('sustained mining impact',s=>s?.impact>before.impact,30000);
   const timing=await page.evaluate(()=>new Promise(resolve=>{
    const start=performance.now(),frames=[];let previous=start;
@@ -119,7 +125,8 @@ try{
   }));
   const after=await state();await page.keyboard.up('Space');
   if(after.native?.failed||after.active_rigs!==1)throw Error('Sustained renderer failed');
-  sustained.push({epoch,...timing,before,after});
+  if(timing.fps<50)throw Error('Sustained FPS below gate for '+gear+': '+timing.fps);
+  sustained.push({epoch,gear,...timing,before,after});
   fs.writeFileSync(path.join(output,'sustained-render.json'),JSON.stringify({scope:'Mac Chromium ANGLE Metal at DPR 3; eight 15-second mining windows, not physical iPhone certification',windows:sustained},null,2));
  }
  checks.push({name:'sustained-render-120s',windows:sustained});
@@ -128,7 +135,7 @@ try{
  console.log('DEV14_RENDERED_GAMEPLAY_PASSED');
 }catch(e){failed=String(e.stack||e);console.error(failed);try{await capture('failure');}catch{}}
 finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,version:'1.0.0-dev.14.2',files:manifest,runtime,checks,bootstrap_fixture:'HTML injects only explicit QA launch args. Named non-persistent fixture uses ordinary DEV jumps/equipment, clears queued achievement toasts and exercises real input/menu paths. Main scene and game package bytes unchanged.',physical_iphone_verified:false,continuous_motion_or_fps_certified:false},null,2));
- await browser.close();await new Promise(r=>server.close(r));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,version:'1.0.0-dev.14.3',files:manifest,runtime,checks,bootstrap_fixture:'HTML injects only explicit QA launch args. Named non-persistent fixture uses ordinary DEV jumps/equipment, clears queued achievement toasts and exercises real input/menu paths. Main scene and game package bytes unchanged.',physical_iphone_verified:false,continuous_motion_or_fps_certified:false},null,2));
+ await context.close();await browser.close();await new Promise(r=>server.close(r));
 }
 if(failed)process.exitCode=1;

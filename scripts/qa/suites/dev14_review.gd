@@ -25,9 +25,9 @@ func run() -> void:
 
 func _gear(gear: String, outfit: String = "miner") -> void:
 	RunState.begin_state_batch()
-	RunState.pickaxe_level = 2 if gear == "iron" else 1
-	RunState.set_drill_level(1 if gear == "burrower" else 0)
-	RunState.starforge_variant = ""
+	RunState.pickaxe_level = int({"worn":1,"iron":2,"runed":3,"moonglass":4,"ember":5}.get(gear,5))
+	RunState.set_drill_level(int({"burrower":1,"pulse":2,"deepcore":3}.get(gear,0)))
+	RunState.starforge_variant = String({"crusher":"crusher","comet":"swift","crown":"prospector"}.get(gear,""))
 	RunState.endless_tool_style = "original"
 	RunState.endless_outfit = outfit
 	RunState.end_state_batch()
@@ -44,7 +44,7 @@ func _command(data: Dictionary) -> void:
 	match kind:
 		"steering":
 			main._dev_jump_mine("mossMine",1)
-			_gear("worn")
+			_gear(String(data.get("gear","worn")))
 			main.mine_world.restore_position(Vector2(230,640))
 			steering_frame = 0
 			steering_samples = 0
@@ -53,12 +53,12 @@ func _command(data: Dictionary) -> void:
 		"surface_regressions": _surface_regressions()
 		"moss":
 			main._dev_jump_mine("mossMine", 1)
-			_gear("worn")
+			_gear(String(data.get("gear","worn")))
 			if bool(data.get("rush",false)): main.mine_world.mining_rush_remaining = 20.0
 			if not _place_moss(_direction(data.direction)): error = "No ordinary Moss target for " + str(data.direction)
 		"endless":
 			main._dev_jump_endless(int(data.get("depth",1)))
-			_gear("worn")
+			_gear(String(data.get("gear","worn")))
 			if not _place_endless(_direction(data.direction)): error = "No ordinary Endless target for " + str(data.direction)
 		"surface":
 			main._dev_jump_surface()

@@ -2,12 +2,15 @@ extends Node
 ## Ordinary DEV presentation. No world reset, input interception or save changes.
 const Rig = preload("res://scripts/player/native_worn/native_rig.gd")
 const Motion = preload("res://scripts/player/native_worn/runtime_motion.gd")
+const Equipment = preload("res://scripts/player/native_worn/pickaxe_equipment.gd")
 const Surface = preload("res://scripts/player/native_worn/contact_surface.gd")
 const ASSETS = "res://assets/native-worn"
 var visual: Node2D
 var player: Node2D
 var rig: Node2D
 var motion: RefCounted
+var equipment: RefCounted
+var reference_cap: Vector3
 var failed: bool = false
 var failure: String = ""
 var updates: int = 0
@@ -34,6 +37,7 @@ func suspend() -> void:
 		rig.queue_free()
 	rig = null
 	motion = null
+	equipment = null
 	surface_cache.clear()
 	last_surfaces.clear()
 	cached_surface_key = ""
@@ -49,6 +53,9 @@ func _start() -> bool:
 	motion = Motion.new()
 	if not motion.configure(rig, ASSETS.path_join("tasks.json"), ASSETS.path_join("motion.json")):
 		return _fail("Native Worn motion identity mismatch")
+	reference_cap = motion.cap_local
+	equipment = Equipment.new()
+	equipment.setup(rig)
 	generations += 1
 	return true
 
@@ -80,10 +87,16 @@ func _surfaces(target: Vector2, target_id: String) -> Array:
 	return result
 
 func advance(delta: float) -> bool:
-	if failed or visual.active_gear != "worn" or not visual.is_visible_in_tree():
+	if failed or visual.active_gear not in Equipment.GEARS or not visual.is_visible_in_tree():
 		if is_instance_valid(rig): suspend()
 		return false
 	if not is_instance_valid(rig) and not _start(): return false
+	if equipment.current != visual.active_gear:
+		if not equipment.equip(visual.active_gear): return _fail("Native pickaxe identity mismatch: " + visual.active_gear)
+		motion.cap_local = equipment.contact_cap(reference_cap)
+		motion.reference_cap = motion.bank.mine[21].bones.tool * motion.cap_local
+		motion.contact_cache.clear()
+		motion.serial = -1
 	var packet: Dictionary = player.animation_packet()
 	packet.contact_surfaces = _surfaces(packet.target_position, String(packet.target_id)) if bool(packet.target_valid) else []
 	if not packet.contact_surfaces.is_empty():
@@ -94,12 +107,13 @@ func advance(delta: float) -> bool:
 	if Vector2(packet.impact_target_position).is_equal_approx(last_target):
 		for point in last_surfaces: packet.impact_surfaces.append(Vector2(point) + last_surface_origin - player.global_position)
 	if not motion.advance(delta, packet): return _fail("Native Worn pose rejected: " + str(motion.errors))
+	equipment.apply_pose()
 	rig.set_outfit(visual.OUTFIT_COLORS.get(visual.active_endless_outfit_style, visual.OUTFIT_COLORS.miner), visual.active_endless_outfit_style != "miner")
 	updates += 1
 	return true
 
 func snapshot() -> Dictionary:
 	return {"active":is_instance_valid(rig), "failed":failed, "failure":failure,
-		"updates":updates, "generations":generations, "surface_cache":surface_cache.size(),
+		"gear":equipment.current if equipment != null else "", "updates":updates, "generations":generations, "surface_cache":surface_cache.size(),
 		"motion":motion.snapshot() if motion != null else {},
 		"unreachable_contacts":motion.unreachable_contacts if motion != null else 0}
