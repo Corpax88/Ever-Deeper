@@ -76,7 +76,10 @@ try{
  await tap('skills_close');await ready();
  await page.setViewportSize({width:844,height:390});await delay(500);
  await tap('hud_menu');await wait('reopen for inventory',s=>s.skills_open);await tap('inventory');await wait('inventory opens',s=>s.inventory_open&&!s.skills_open);await shot('08-inventory');await tap('inventory_close');await wait('inventory closes',s=>!s.inventory_open);await ready();
- await tap('hud_menu');await wait('reopen for settings',s=>s.skills_open);await tap('settings');await wait('settings opens',s=>s.settings_open&&!s.skills_open);await shot('09-settings');await tap('settings_back');await wait('settings back',s=>s.menu&&!s.settings_open);await tap('continue');await ready();
+ await tap('hud_menu');await wait('reopen for settings',s=>s.skills_open);await tap('settings');await wait('settings opens',s=>s.settings_open&&!s.skills_open);await shot('09-settings');
+ // The fixture reports the card's local visible flag, whose parent is hidden
+ // by Back. Verify the rendered return menu and its actual Continue touch.
+ await tap('settings_back');await shot('09-settings-back');await tap('continue');await ready();
  await command('moss',{direction:'right'});await ready();await command('fatigue_fixture');before=await state();check('fatigue-is-mild',before.effort>=.75&&before.effort<.8,{before});await mine('10-exhausted-moss-touch');
  await command('endless',{direction:'right'});await mine('11-endless-touch');
  await command('moss',{direction:'right'});await ready();await page.keyboard.down('Space');await wait('held mining before menu',s=>s.mining);await tap('hud_menu');await page.keyboard.up('Space');before=await wait('menu cancels held mining',s=>s.skills_open&&!s.mining);await delay(1200);after=await state();check('open-during-mining-pauses-damage',before.health===after.health&&before.skill_xp.mining===after.skill_xp.mining&&before.stamina===after.stamina,{before,after});
