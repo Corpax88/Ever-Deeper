@@ -99,13 +99,13 @@ func _physics_process(delta: float) -> void :
 	if motion_resolver.is_valid():
 		var has_motion_intent: = not movement.is_zero_approx()
 		if has_motion_intent or not _resolver_idle_synced:
-			global_position = Vector2(motion_resolver.call(global_position, movement * movement_speed * delta))
+			global_position = Vector2(motion_resolver.call(global_position, movement * movement_speed * RunState.stamina_effort_multiplier() * delta))
 			motion_resolver_call_count += 1
 		else:
 			motion_resolver_idle_skip_count += 1
 		velocity = Vector2.ZERO
 	else:
-		velocity = movement * movement_speed
+		velocity = movement * movement_speed * RunState.stamina_effort_multiplier()
 		move_and_slide()
 		global_position = global_position.clamp(Vector2(24, 24), world_size - Vector2(24, 24))
 	var actual_motion: = global_position - before

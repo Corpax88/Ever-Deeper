@@ -11,7 +11,7 @@ const ProgressionGoalPanelScript: = preload("res://scripts/ui/progression_goal_p
 const ProgressionGuideScript: = preload("res://scripts/progression/guide_director.gd")
 
 const BAG_ICON: = preload("res://assets/ui/bag-premium-v1.png")
-const MENU_ICON: = preload("res://assets/ui/hud-menu-v1.png")
+const MENU_ICON: = preload("res://assets/ui/skills/icons/skills.svg")
 const GUIDE_ICON: = preload("res://assets/ui/hud-guide-v1.png")
 const INTERACT_ICON: = preload("res://assets/ui/hud-interact-v1.png")
 const BUILD_ICON: = preload("res://assets/ui/hud-build-v1.png")
@@ -451,7 +451,7 @@ func _on_display_orientation_changed(_orientation: int) -> void :
 
 
 func _build_icon_chrome() -> void :
-	menu_button = _icon_button("MenuButton", MENU_ICON, "Menu")
+	menu_button = _icon_button("MenuButton", MENU_ICON, "Skills · Map · Settings")
 	menu_button.offset_left = 8.0
 	menu_button.offset_top = 8.0
 	menu_button.offset_right = 56.0

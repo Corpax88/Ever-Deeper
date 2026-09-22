@@ -141,6 +141,11 @@ const SURFACE_VEIN_PROFILES: = {
 	},
 }
 
+const MinerSkills = preload("res://scripts/progression/miner_skills.gd")
+var miner_skills: Dictionary = MinerSkills.defaults()
+var _stamina_rest: float = 0.0
+var _miner_level_cache: Dictionary = {}
+
 var overhaul_progress: Dictionary = {}
 var gold: = 0
 var pickaxe_level: = 1
@@ -304,6 +309,7 @@ func add_resource(kind: String, amount: int = 1, count_as_mined: bool = true) ->
 		if not mined.has(kind):
 			mined[kind] = 0
 		mined[kind] = int(mined.get(kind, 0)) + amount
+		_earn_miner_xp("prospecting", float(amount))
 		if kind in RESOURCE_IDS:
 			overhaul_progress["companion_xp"] = mini(10000000, int(overhaul_progress.get("companion_xp",0)) + amount)
 	_state_changed()
@@ -314,6 +320,7 @@ func record_mined(kind: String, amount: int = 1) -> bool:
 	if amount <= 0 or kind not in RESOURCE_IDS:
 		return false
 	mined[kind] = int(mined.get(kind, 0)) + amount
+	_earn_miner_xp("prospecting", float(amount))
 	# Earn through mining even when the hero reaches the drop before the mole.
 	overhaul_progress["companion_xp"] = mini(10000000, int(overhaul_progress.get("companion_xp",0)) + amount)
 	_state_changed()
@@ -322,6 +329,7 @@ func record_mined(kind: String, amount: int = 1) -> bool:
 
 func record_mining_swing(precision: bool = true) -> void :
 	total_swings += 1
+	_earn_miner_xp("mining", 4.0)
 	if precision:
 		precision_hits += 1
 
@@ -694,7 +702,7 @@ func attune_tool_with_starforge(tool: Dictionary) -> Dictionary:
 
 func apply_tool_forge_effects(tool: Dictionary, minimum_cooldown: float = 0.02) -> Dictionary:
 	var result: = tool.duplicate(true)
-	var power_multiplier: = endless_tool_power_multiplier()
+	var power_multiplier: = endless_tool_power_multiplier() * stamina_effort_multiplier()
 	var speed_multiplier: = endless_tool_speed_multiplier()
 	var range_multiplier: = endless_tool_range_multiplier()
 	result["power"] = maxi(1, roundi(float(result.get("power", 1)) * power_multiplier))
@@ -2515,6 +2523,7 @@ func serialize() -> Dictionary:
 		"saved_at_unix": int(Time.get_unix_time_from_system()),
 		"state": {
 			"overhaul": _sanitize_overhaul(overhaul_progress),
+			"miner_skills": MinerSkills.clean(miner_skills),
 			"gold": gold,
 			"pickaxe_level": pickaxe_level,
 			"ember_mastery": ember_mastery,
@@ -2633,6 +2642,8 @@ func deserialize(raw: Variant) -> bool:
 	total_gold_earned = _nonnegative_int(source.get("total_gold_earned"), gold)
 	cargo = _sanitize_resource_store(source.get("cargo", {}))
 	mined = _sanitize_resource_store(source.get("mined", {}))
+	miner_skills = MinerSkills.clean(source.get("miner_skills", {"mining": float(total_swings) * 4.0, "prospecting": float(total_mined_resources())}))
+	_miner_level_cache.clear()
 
 	area_unlocked = _strict_bool(source.get("area_unlocked"))
 	emberdeep_unlocked = _strict_bool(source.get("emberdeep_unlocked"))
@@ -2939,6 +2950,9 @@ func _flush_queued_autosave() -> void :
 
 
 func _apply_defaults(emit_change: bool = true) -> void :
+	miner_skills = MinerSkills.defaults()
+	_stamina_rest = 0.0
+	_miner_level_cache.clear()
 	overhaul_progress = {}
 	_commerce_transactions.clear()
 	_commerce_transaction_order.clear()
@@ -4627,3 +4641,60 @@ static func light_range_for_level(level: int) -> float:
 
 static func light_energy_for_level(level: int) -> float:
 	return 1.0 + 0.06 * float(clampi(level, 0, 5))
+
+
+# Skills are an additive optional save section; older schema-3 runs remain valid.
+func miner_skill_rows() -> Array:
+	var rows: Array = []
+	for id in MinerSkills.IDS:
+		rows.append(MinerSkills.row(id, float(miner_skills.get(id, 0.0))))
+	return rows
+
+
+func miner_skill_level(id: String) -> int:
+	if not _miner_level_cache.has(id):
+		_miner_level_cache[id] = MinerSkills.level(id, miner_skills)
+	return int(_miner_level_cache[id])
+
+
+func _earn_miner_xp(id: String, amount: float) -> void:
+	if amount <= 0.0 or not is_finite(amount) or id not in MinerSkills.IDS: return
+	miner_skills[id] = minf(MinerSkills.MAX_XP, float(miner_skills.get(id, 0.0)) + amount)
+	_miner_level_cache.erase(id)
+	_queue_autosave()
+
+
+func stamina_value() -> float:
+	return float(miner_skills.get("stamina", 100.0))
+
+
+func stamina_effort_multiplier() -> float:
+	# Fatigue eases in only below 15. Even at zero, movement and mining work.
+	return lerpf(0.75, 1.0, clampf(stamina_value() / 15.0, 0.0, 1.0))
+
+
+func advance_miner_training(delta: float, distance: float, mining: bool) -> void:
+	if not is_finite(delta) or not is_finite(distance) or delta <= 0.0: return
+	# Ignore background-tab catch-up and reject teleport-sized displacement.
+	var dt: float = minf(delta, 0.1)
+	var moving: bool = distance > 0.01 and distance <= 2000.0 * delta
+	var before: float = stamina_value()
+	var cost: float = 0.0
+	if moving:
+		_earn_miner_xp("running", distance / 64.0)
+		cost += 2.0 * (1.0 - 0.003 * miner_skill_level("running"))
+		# Cargo changes through sales as well as pickup, so read the authority.
+		if cargo_count() > 0:
+			_earn_miner_xp("carrying", distance / 64.0)
+			cost += 0.75 * (1.0 - 0.005 * miner_skill_level("carrying"))
+	if mining:
+		cost += 4.0 * (1.0 - 0.003 * miner_skill_level("mining"))
+	if cost > 0.0:
+		_stamina_rest = 0.0
+		miner_skills["stamina"] = maxf(0.0, before - cost * dt)
+	else:
+		var rested: float = _stamina_rest
+		_stamina_rest += dt
+		var recovery_dt: float = maxf(0.0, _stamina_rest - 0.8) - maxf(0.0, rested - 0.8)
+		miner_skills["stamina"] = minf(100.0, before + 14.0 * recovery_dt)
+	if not is_equal_approx(before, stamina_value()): _queue_autosave()

@@ -110,6 +110,7 @@ var qa_launcher: Node
 var dev_build_active: = false
 var web_storage_uncertain: = false
 var premium_menu
+var miner_skills_panel
 var guide_overlay
 var premium_hud
 var workshop_panel
@@ -174,6 +175,7 @@ func _ready() -> void :
 	_install_minimap()
 	_install_quick_tutorial()
 	_install_resource_inventory()
+	_install_miner_skills()
 	_install_achievement_toast()
 	_install_developer_menu()
 	_polish_asset_buttons()
@@ -691,7 +693,7 @@ func _install_premium_hud() -> void :
 	$HUD.add_child(premium_hud)
 	premium_hud.bag_requested.connect(_open_inventory)
 	premium_hud.context_requested.connect(_perform_context)
-	premium_hud.menu_requested.connect(_open_start_menu)
+	premium_hud.menu_requested.connect(_open_miner_skills)
 
 
 func _install_workshop_panel() -> void :
@@ -1109,6 +1111,10 @@ func _unhandled_input(event: InputEvent) -> void :
 		get_viewport().set_input_as_handled()
 		_close_inventory()
 		return
+	if miner_skills_panel != null and miner_skills_panel.visible and event.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()
+		_close_miner_skills()
+		return
 	if not event.is_action_pressed("ui_cancel"):
 		return
 	get_viewport().set_input_as_handled()
@@ -1199,6 +1205,7 @@ func _continue_from_menu() -> void :
 
 
 func _hide_start_menu() -> void :
+	if miner_skills_panel != null: miner_skills_panel.close_panel()
 	menu_open = false
 	start_menu.visible = false
 	start_menu.modulate.a = 1.0
@@ -4136,3 +4143,42 @@ func _install_mining_companion() -> void:
 	var interface: CanvasLayer=load("res://scripts/companion/companion_interface.gd").new()
 	interface.name="CompanionInterface"
 	add_child(interface)
+
+
+func _install_miner_skills() -> void:
+	miner_skills_panel = preload("res://scripts/ui/miner_skills_panel.gd").new()
+	miner_skills_panel.name = "MinerSkills"
+	$HUD.add_child(miner_skills_panel)
+	miner_skills_panel.close_requested.connect(_close_miner_skills)
+	miner_skills_panel.inventory_requested.connect(func():
+		_close_miner_skills()
+		_open_inventory()
+	)
+	miner_skills_panel.settings_requested.connect(func():
+		miner_skills_panel.close_panel()
+		premium_menu.visible = true
+		premium_menu._show_settings()
+	)
+	miner_skills_panel.map_requested.connect(func(): miner_skills_panel.show_map(minimap_overlay))
+	var training = preload("res://scripts/progression/miner_training.gd").new()
+	training.name = "MinerTraining"
+	training.main = self
+	add_child(training)
+	var meter = preload("res://scripts/ui/stamina_meter.gd").new()
+	premium_hud.add_child(meter)
+
+
+func _open_miner_skills() -> void:
+	if not game_started:
+		_open_start_menu()
+		return
+	if menu_open or inventory_open or orientation_guard_active: return
+	_open_start_menu()
+	if not menu_open: return
+	premium_menu.visible = false
+	miner_skills_panel.open_panel()
+
+
+func _close_miner_skills() -> void:
+	miner_skills_panel.close_panel()
+	_continue_from_menu()
