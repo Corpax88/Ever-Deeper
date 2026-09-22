@@ -55,11 +55,15 @@ try{
  await tap('new_game');await ready();await shot('01-new-game');
  await command('surface');await mine('02-surface-touch');
  // Actual held virtual joystick: travel, earned XP, drain and release.
+ await wait('rest at full before travel',s=>s.stamina>=99.9);
  let before=await state(),v=page.viewportSize(),p={x:v.width*.23,y:v.height*.68},r=before.buttons.joystick;
  // FloatingJoystick's full-screen Control accepts movement only inside the
  // left 46%, below 36% height. Its Control center is outside that active zone.
- await touch('touchStart',p);await touch('touchMove',{x:p.x,y:p.y+40});await delay(2500);await touch('touchEnd');
- const moved=await state();check('actual-joystick-trains-and-drains',moved.position[1]>before.position[1]+5&&moved.skill_xp.running>before.skill_xp.running&&moved.stamina<before.stamina,{before,after:moved});
+ await touch('touchStart',p);await touch('touchMove',{x:p.x,y:p.y+40});
+ // Sample while travelling. Reaching the nearby terrain boundary is real rest,
+ // so a later sample can correctly show stamina recovered to 100.
+ const moved=await wait('actual travel drains',s=>s.position[1]>before.position[1]+5&&s.skill_xp.running>before.skill_xp.running&&s.stamina<before.stamina);
+ await touch('touchEnd');check('actual-joystick-trains-and-drains',true,{before,after:moved});
  await delay(2000);const rested=await state();check('active-rest-recovers',rested.stamina>moved.stamina,{before:moved,after:rested});
  await tap('hud_menu');await wait('skills opens',s=>s.skills_open&&s.menu);await shot('03-earned-skills');
  await command('skills_fixture');await shot('04-approved-skills-844');
