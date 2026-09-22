@@ -49,6 +49,8 @@ func run() -> void:
  main._resume_current_phase()
  main._open_miner_skills()
  check(main.menu_open and main.miner_skills_panel.visible, "normal Skills route pauses world")
+ if is_instance_valid(main.developer_menu):
+  check(not main.developer_menu.visible, "developer overlay never covers the locked Skills layout")
  var paused: Dictionary = RunState.miner_skills.duplicate(true)
  await main.get_tree().create_timer(0.3).timeout
  check(RunState.miner_skills == paused, "menu earns no XP and restores no stamina")
@@ -70,6 +72,8 @@ func run() -> void:
  main._close_miner_skills()
  check(not main.menu_open and not main.miner_skills_panel.visible, "close resumes")
  check(main._active_player_node().control_enabled, "resume restores player control")
+ if is_instance_valid(main.developer_menu):
+  check(main.developer_menu.visible, "developer controls return after closing Skills")
  main._open_miner_skills()
  main.miner_skills_panel.inventory_requested.emit()
  check(main.inventory_open and not main.menu_open, "Inventory routes to existing inventory")

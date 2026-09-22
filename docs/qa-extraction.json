@@ -58,6 +58,22 @@
   "ordered_cases": [
     {
       "flags": [
+        "--qa-skills-browser"
+      ],
+      "method": "run",
+      "suite": "skills_browser_review",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-miner-skills"
+      ],
+      "method": "run",
+      "suite": "miner_skills_review",
+      "surface": false
+    },
+    {
+      "flags": [
         "--qa-dev14-review"
       ],
       "method": "run",

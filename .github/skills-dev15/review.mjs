@@ -66,6 +66,7 @@ try{
  await touch('touchEnd');check('actual-joystick-trains-and-drains',true,{before,after:moved});
  await delay(2000);const rested=await state();check('active-rest-recovers',rested.stamina>moved.stamina,{before:moved,after:rested});
  await tap('hud_menu');await wait('skills opens',s=>s.skills_open&&s.menu);await shot('03-earned-skills');
+ check('skills-hides-developer-overlay',!(await state()).developer_tools_visible,{});
  await command('skills_fixture');await shot('04-approved-skills-844');
  before=await state();await delay(1500);let after=await state();check('menu-freezes-stamina-and-training',JSON.stringify(before.skill_xp)===JSON.stringify(after.skill_xp),{before,after});
  await tap('map');await wait('map opens',s=>s.map_open);await shot('05-map-844');
@@ -74,6 +75,7 @@ try{
  await tap('skills');await wait('skills returns',s=>s.skills_open&&!s.map_open);await shot('07-approved-skills-667');
  after=await state();r=after.buttons.skills_close;check('small-phone-close-target',r[2]/after.viewport[0]*667>=44&&r[3]/after.viewport[1]*375>=44,{rect:r,viewport:after.viewport});
  await tap('skills_close');await ready();
+ check('closing-restores-developer-controls',(await state()).developer_tools_visible,{});
  await page.setViewportSize({width:844,height:390});await delay(500);
  await tap('hud_menu');await wait('reopen for inventory',s=>s.skills_open);await tap('inventory');await wait('inventory opens',s=>s.inventory_open&&!s.skills_open);await shot('08-inventory');await tap('inventory_close');await wait('inventory closes',s=>!s.inventory_open);await ready();
  await tap('hud_menu');await wait('reopen for settings',s=>s.skills_open);await tap('settings');await wait('settings opens',s=>s.settings_open&&!s.skills_open);await shot('09-settings');
@@ -82,8 +84,11 @@ try{
  await tap('settings_back');await shot('09-settings-back');await tap('continue');await ready();
  await command('moss',{direction:'right'});await ready();await command('fatigue_fixture');before=await state();check('fatigue-is-mild',before.effort>=.75&&before.effort<.8,{before});await mine('10-exhausted-moss-touch');
  await command('endless',{direction:'right'});await mine('11-endless-touch');
- await command('moss',{direction:'right'});await ready();await page.keyboard.down('Space');await wait('held mining before menu',s=>s.mining);await tap('hud_menu');await page.keyboard.up('Space');before=await wait('menu cancels held mining',s=>s.skills_open&&!s.mining);await delay(1200);after=await state();check('open-during-mining-pauses-damage',before.health===after.health&&before.skill_xp.mining===after.skill_xp.mining&&before.stamina===after.stamina,{before,after});
- await tap('skills_close');await ready();before=await state();await page.keyboard.down('ArrowDown');await delay(400);await page.keyboard.up('ArrowDown');after=await state();check('resume-restores-movement',after.position[1]>before.position[1]+2&&!after.mining,{before,after});await shot('12-resumed-game');
+ await command('moss',{direction:'right'});await ready();await page.keyboard.down('Space');await wait('held mining before menu',s=>s.mining);await tap('hud_menu');await page.keyboard.up('Space');
+ // The paused animation packet can retain its last mining pose. The input and
+ // controls must be released, with no damage, XP or stamina advancing in-menu.
+ before=await wait('menu releases mining input',s=>s.skills_open&&!s.mine_input_held&&!s.player_controls_enabled);await delay(1200);after=await state();check('open-during-mining-pauses-damage',before.health===after.health&&before.skill_xp.mining===after.skill_xp.mining&&before.stamina===after.stamina,{before,after});
+ await tap('skills_close');await ready();await wait('resumed mining returns to idle',s=>!s.mining);before=await state();await page.keyboard.down('ArrowDown');await delay(400);await page.keyboard.up('ArrowDown');after=await state();check('resume-restores-movement',after.position[1]>before.position[1]+2&&!after.mining,{before,after});await shot('12-resumed-game');
  const errors=messages.filter(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m));check('no-runtime-errors',errors.length===0,{errors});
  console.log('SKILLS_RENDERED_GAMEPLAY_PASSED');
 }catch(e){failed=String(e.stack||e);console.error(failed);try{await shot('failure');}catch{}}

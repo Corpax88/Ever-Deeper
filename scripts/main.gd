@@ -4149,6 +4149,9 @@ func _install_miner_skills() -> void:
 	miner_skills_panel = preload("res://scripts/ui/miner_skills_panel.gd").new()
 	miner_skills_panel.name = "MinerSkills"
 	$HUD.add_child(miner_skills_panel)
+	miner_skills_panel.visibility_changed.connect(func():
+		if is_instance_valid(developer_menu): developer_menu.visible = not miner_skills_panel.visible
+	)
 	miner_skills_panel.close_requested.connect(_close_miner_skills)
 	miner_skills_panel.inventory_requested.connect(func():
 		_close_miner_skills()

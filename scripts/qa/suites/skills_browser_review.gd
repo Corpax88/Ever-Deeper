@@ -1,5 +1,8 @@
 extends "res://scripts/qa/suites/dev14_review.gd"
 ## Explicit fixture only; browser uses actual touch against observed control bounds.
+func run() -> void:
+	super.run()
+
 func _command(data: Dictionary) -> void:
 	if String(data.kind) not in ["skills_fixture", "fatigue_fixture"]:
 		super._command(data)
@@ -31,7 +34,10 @@ func _frame() -> void:
 	var close: Control = main.resource_inventory.get_node_or_null("Card/Layout/Header/Close")
 	if close != null: bounds.inventory_close = _bounds(close)
 	var state: Dictionary = {"skills_open": panel.visible, "map_open": panel._map_active,
-		"inventory_open": main.inventory_open, "settings_open": main.premium_menu.visible and main.premium_menu.detail_card.visible,
+		"inventory_open": main.inventory_open, "settings_open": main.premium_menu.detail_view.is_visible_in_tree(),
+		"developer_tools_visible": is_instance_valid(main.developer_menu) and main.developer_menu.is_visible_in_tree(),
+		"mine_input_held": main.mine_held or Input.is_action_pressed("mine"),
+		"player_controls_enabled": main._active_player_node().control_enabled,
 		"stamina": RunState.stamina_value(), "skill_xp": RunState.miner_skills.duplicate(true),
 		"skills": RunState.miner_skill_rows(), "effort": RunState.stamina_effort_multiplier(),
 		"buttons": bounds, "skills_plate": _bounds(panel.plate)}

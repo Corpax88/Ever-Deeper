@@ -33,6 +33,7 @@ jobs:
           cd "$RUNNER_TEMP/skills-isolated"
           Godot_v4.7.2-stable_linux.x86_64 --headless --path . --main-pack "$RUNNER_TEMP/dev15/candidate/index.pck" -- --qa-miner-skills > "$RUNNER_TEMP/dev15/skills-core.log" 2>&1
           python3 -c 'import os,pathlib; s=(pathlib.Path(os.environ["RUNNER_TEMP"])/"dev15/skills-core.log").read_text(); assert "MINER_SKILLS_COMPLETE" in s and "ERROR" not in s'
+          python3 "$GITHUB_WORKSPACE/.github/skills-dev15/finalize-build.py" "$RUNNER_TEMP/dev15"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
