@@ -125,9 +125,9 @@ try{
   }));
   const after=await state();await page.keyboard.up('Space');
   if(after.native?.failed||after.active_rigs!==1)throw Error('Sustained renderer failed');
-  if(timing.fps<50)throw Error('Sustained FPS below gate for '+gear+': '+timing.fps);
   sustained.push({epoch,gear,...timing,before,after});
   fs.writeFileSync(path.join(output,'sustained-render.json'),JSON.stringify({scope:'Mac Chromium ANGLE Metal at DPR 3; eight 15-second mining windows, not physical iPhone certification',windows:sustained},null,2));
+  if(timing.fps<50)throw Error('Sustained FPS below gate for '+gear+': '+timing.fps);
  }
  checks.push({name:'sustained-render-120s',windows:sustained});
  await capture('moss-after-120s');

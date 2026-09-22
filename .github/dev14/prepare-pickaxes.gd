@@ -21,8 +21,13 @@ func _run() -> void:
 	var instance: MeshInstance3D = _find_mesh(actor)
 	if not _require(instance != null,"Missing native skinned mesh"): return
 	var bind: int = -1
+	var skeleton: Skeleton3D = instance.get_node(instance.skeleton) as Skeleton3D
+	if not _require(skeleton != null,"Missing bound skeleton"): return
 	for i in instance.skin.get_bind_count():
-		if instance.skin.get_bind_name(i) == &"tool":
+		var name: StringName = instance.skin.get_bind_name(i)
+		var index: int = instance.skin.get_bind_bone(i)
+		if name == &"" and index >= 0 and index < skeleton.get_bone_count(): name = skeleton.get_bone_name(index)
+		if name == &"tool":
 			if not _require(bind == -1,"Duplicate tool binding"): return
 			bind = i
 	if not _require(bind >= 0,"Missing tool binding"): return
