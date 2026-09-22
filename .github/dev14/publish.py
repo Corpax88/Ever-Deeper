@@ -17,7 +17,7 @@ def reviewed():
     review=read(HERE/'review.json'); manifest=read(HERE/'manifest.json')
     baseline=read(HERE/'baseline.json')
     worn=read(HERE.parent/'native-flow-trial/bundle.json')
-    version='1.0.0-dev.14.2'
+    version='1.0.0-dev.14.3'
     require(review['destination']=='dev' and review['version']==version,'Wrong release destination')
     require(review['live_authorized'] is False,'LIVE is not authorized')
     require(all(review.get(k) is True for k in ['ordinary_game_adopted','independent_visual_accepted','exported_gameplay_passed','publisher_reviewed']),'Incomplete release review')
@@ -30,6 +30,8 @@ def reviewed():
         'evidence/native-preparation.json':'native_preparation_sha256',
         'evidence/webkit-startup.json':'webkit_startup_sha256',
         'evidence/native-optimization.json':'native_optimization_sha256',
+        'evidence/equipment-preparation.json':'equipment_preparation_sha256',
+        'evidence/equipment-source.json':'equipment_source_sha256',
         'evidence/local-regression.json':'native_regression_sha256',
         'evidence/sustained-render.json':'sustained_render_sha256',
         'evidence/independent-review.json':'independent_review_sha256',
@@ -38,14 +40,24 @@ def reviewed():
         require(identity(HERE/filename)['sha256']==review[key],'Reviewed file changed: '+filename)
     require(identity(HERE.parent/'workflows/publish-dev14.yml')['sha256']==review['publisher_workflow_sha256'],'Publisher workflow changed')
     require(identity(HERE.parent/'native-flow-trial/bundle.json')['sha256']==review['retained_trial_manifest_sha256'],'Retained trial changed')
-    require(baseline['displayed_dev_version']=='1.0.0-dev.14.1' and set(baseline['files'])=={'live','dev'},'Wrong previous DEV baseline')
+    require(baseline['displayed_dev_version']=='1.0.0-dev.14.2' and set(baseline['files'])=={'live','dev'},'Wrong previous DEV baseline')
     proof=read(HERE/'evidence/browser-report.json')
     build=read(HERE/'evidence/build.json')
     for item in [proof,build]:
         require(item['version']==version and item['files']==manifest and item['source_commit']==review['source_commit'],'Tested package provenance differs')
     require(proof['passed'] is True,'Ordinary graphical gameplay failed')
     names={c['name'] for c in proof['checks']}
-    require({'00-normal-dev14-menu','moss-up','moss-right','moss-down','moss-left','endless-up','endless-right','endless-down','endless-left','iron-restored','drill-restored','worn-outfit-reentry','surface-ordinary','depth-ordinary','hub-ordinary','deepheart-ordinary','surface-touch-release','dev14-pause','dev14-resumed','resume-real-input'}<=names,'Incomplete ordinary gameplay evidence')
+    require({'00-normal-dev14-menu','moss-up','moss-right','moss-down','moss-left','endless-up','endless-right','endless-down','endless-left','drill-restored','worn-outfit-reentry','surface-ordinary','depth-ordinary','hub-ordinary','deepheart-ordinary','surface-touch-release','dev14-pause','dev14-resumed','resume-real-input'}<=names,'Incomplete ordinary gameplay evidence')
+    gears=['worn','iron','runed','moonglass','ember','crusher','comet','crown']
+    cases=[('upgraded-'+gear+'-'+direction,gear) for gear in gears[1:] for direction in ['up','right','down','left']]
+    cases.append(('endless-iron-right','iron'))
+    for name,gear in cases:
+        require(name in names and name+'-damage' in names,'Missing upgraded pickaxe coverage: '+name)
+        capture=next(c for c in proof['checks'] if c['name']==name)
+        hit=next(c for c in proof['checks'] if c['name']==name+'-damage')
+        for state in [capture['after'],hit['before'],hit['hit']]:
+            require(state['native']['active'] and state['native']['gear']==gear and state['gear']==gear,'Upgraded tool used legacy rendering: '+name)
+        require(hit['hit']['impact']>hit['before']['impact'] and hit['hit']['health']<hit['before']['health'] and hit['hit']['impact_target_valid'],'Upgraded tool did not earn contact damage: '+name)
     core=read(HERE/'evidence/core-results.json')
     require(core['passed'] and all(c['passed'] for c in core['cases']) and {c['case'] for c in core['cases']}=={'input','overhaul','touch','build-flavor'},'Core gameplay gate failed')
     native=read(HERE/'evidence/native-preparation.json')
@@ -60,16 +72,29 @@ def reviewed():
     require(optimized['status']=='complete' and optimized['animation_and_bindings_preserved'] and not optimized['geometry_and_bindings_identical'],'Derived geometry must be declared explicitly')
     require(optimized['original_scene_sha256']==native['scene_sha256'] and optimized['source_sha256']==native['source_sha256'],'LOD changed approved source')
     require(reduction['method']=='godot-importer-indexed-lod' and reduction['lod']==2 and reduction['source_vertices']==1033415 and reduction['triangles']<100000 and reduction['vertex_attributes_preserved'],'Unreviewed mesh reduction')
+    equipment=read(HERE/'evidence/equipment-preparation.json')
+    equipment_source=read(HERE/'evidence/equipment-source.json')
+    require(equipment['schema']==1 and equipment['body']['source_scene_sha256']==optimized['scene_sha256'],'Equipment used a different hero')
+    require(equipment['body']['vertex_attributes_unchanged'] and equipment['body']['removed_tool_triangles']==2256 and equipment['body']['retained_triangles']==84397,'Equipment changed hero geometry')
+    require(set(equipment['tools'])==set(gears[1:]) and set(equipment_source['tools'])==set(gears),'Missing original pickaxes')
+    require(all(equipment['tools'][g]['source_sha256']==equipment_source['tools'][g]['sha256'] for g in gears[1:]),'Prepared tool source differs')
     regression=read(HERE/'evidence/local-regression.json')
+    require(regression.get('provenance_version')=='1.0.0-dev.14.2' and regression.get('reused_unchanged_motion_and_optimizer') is True,'Inherited steering/LOD evidence must retain its original scope')
     require(regression['baseline_empty_frames']==24 and regression['fixed_empty_frames']==0 and regression['paired_geometry_poses']==36 and regression['fixed_minimum_viewport_margin_px']>0,'Native regression evidence incomplete')
     require(regression['runtime_motion_sha256']==review['runtime_motion_sha256'] and regression['optimizer_sha256']==review['optimizer_sha256'],'Reviewed implementation changed')
     require({'moss-continuous-steering','sustained-render-120s','moss-after-120s'}<=names,'Missing steering or sustained rendering evidence')
     steering=next(c for c in proof['checks'] if c['name']=='moss-continuous-steering')['after']['steering']
     require(steering['done'] and steering['samples']==72 and steering['clipped']==0 and steering['margin']>0,'Exported steering clipped the hero')
+    runtime=proof['runtime']
+    require(runtime['platform']=='darwin' and runtime['viewport']==[844,390] and runtime['lost'] is False,'Wrong graphical target for Mac mobile review')
+    renderer=runtime.get('renderer','')
+    require(bool(renderer) and not any(token in renderer.lower() for token in ['swiftshader','llvmpipe','software']),'Software renderer cannot establish Mac graphical cadence')
     sustained=read(HERE/'evidence/sustained-render.json')
     require(proof['runtime']['dpr']==3 and len(sustained['windows'])==8 and sum(w['seconds'] for w in sustained['windows'])>=120,'Missing sustained DPR3 measurement')
     measured=next(c for c in proof['checks'] if c['name']=='sustained-render-120s')['windows']
     require(sustained['windows']==measured,'Sustained measurements belong to another package')
+    require({w.get('gear') for w in measured}==set(gears),'Sustained test omitted upgraded tools')
+    require(all(w['after']['native']['gear']==w['gear'] and w['before']['native']['gear']==w['gear'] for w in measured),'Sustained tool selection differs')
     require(all(w['after']['active_rigs']==1 and not w['after']['native']['failed'] for w in sustained['windows']),'Sustained renderer failed')
     require(all(w['after']['native']['updates']>w['before']['native']['updates'] for w in measured),'Sustained native renderer stopped updating')
     require(all(w['fps']>=50.0 for w in measured),'Mac DPR3 sustained cadence fell below 50 FPS; review before publishing')
@@ -125,7 +150,7 @@ def prepare(work,candidate):
     for name,want in worn['files'].items(): require(identity(site/'dev/worn'/name)==want,'Retained trial changed during staging')
     size=sum(p.stat().st_size for p in site.rglob('*') if p.is_file())
     require(size<1024**3,'Pages package exceeds supported site limit')
-    (work/'staging.json').write_text(json.dumps({'version':'1.0.0-dev.14.2','source_commit':review['source_commit'],'preserved_files':18,'dev_files':9,'site_bytes':size},indent=2))
+    (work/'staging.json').write_text(json.dumps({'version':'1.0.0-dev.14.3','source_commit':review['source_commit'],'preserved_files':18,'dev_files':9,'site_bytes':size},indent=2))
     print('DEV14_STAGED reviewed_files=9 preserved_live_and_trial=18')
 
 def verify(output):
@@ -140,7 +165,7 @@ def verify(output):
         with ThreadPoolExecutor(max_workers=3) as pool: results=list(pool.map(check,pending))
         pending=[n for n,ok in zip(pending,results) if not ok]
         if not pending:
-            (output/'publication-receipt.json').write_text(json.dumps({'passed':True,'version':'1.0.0-dev.14.2','destination':PUBLIC+'dev/','source_commit':review['source_commit'],'run_id':review['run_id'],'manifest_sha256':review['manifest_sha256'],'files':expected,'live_files_unchanged':9,'physical_iphone_verified':False,'iphone_simulator_verified':False,'verification_scope':'Mac Chromium DPR3 gameplay, steering regression and 120-second rendering; normal Mac WebKit startup. Physical iPhone remains unverified'},indent=2))
+            (output/'publication-receipt.json').write_text(json.dumps({'passed':True,'version':'1.0.0-dev.14.3','destination':PUBLIC+'dev/','source_commit':review['source_commit'],'run_id':review['run_id'],'manifest_sha256':review['manifest_sha256'],'files':expected,'live_files_unchanged':9,'physical_iphone_verified':False,'iphone_simulator_verified':False,'verification_scope':'Mac Chromium DPR3 gameplay, steering regression and 120-second rendering; normal Mac WebKit startup. Physical iPhone remains unverified'},indent=2))
             print('DEV14_PUBLIC_VERIFY_OK live_unchanged=9 files=27');return
         if attempt<9: time.sleep(10)
     raise RuntimeError('Public verification failed: '+str(pending))
