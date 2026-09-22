@@ -64,6 +64,9 @@ def build(godot, work, blender):
     # An empty resource root ensures every observation comes from the PCK alone.
     run([godot,'--headless','--path',str(package_check),'--main-pack',str(candidate/'index.pck'),'--script',str(ROOT/'.github/dev14/check-equipment-package.gd')],work/'equipment-package.log')
     assert 'PICKAXE_PACKAGE_COMPLETE' in (work/'equipment-package.log').read_text()
+    run([godot,'--headless','--path',str(package_check),'--script',str(ROOT/'.github/dev14/check-fast-tool-transitions.gd'),'--',str(candidate/'index.pck')],work/'fast-tool-transitions.log')
+    assert 'FAST_TOOL_REPRO_COMPLETE 1856' in (work/'fast-tool-transitions.log').read_text()
+    (work/'fast-tool-transitions.json').write_text(json.dumps({'passed':True,'cases':1856,'source_commit':os.environ.get('GITHUB_SHA'),'pck':identity(candidate/'index.pck'),'runtime_adapter_sha256':identity(ROOT/'scripts/player/native_worn/runtime_motion.gd')['sha256'],'scope':'Synthetic native contact/cancel geometry across four tools, four timestep values, four directions and 29 cancel cuts; not rendered-game acceptance'},indent=2)+'\n')
     files = {name:identity(candidate/name) for name in NAMES}
     (candidate/'manifest.json').write_text(json.dumps(files,indent=2)+'\n')
     (work/'build.json').write_text(json.dumps({'version':'1.0.0-dev.14.3','source_commit':os.environ.get('GITHUB_SHA'),'main_scene':'res://scenes/main/main.tscn','save_path':'user://ever_deeper_dev_run_v3.sav','native_input_pck':bundle['files']['index.pck'],'files':files,'physical_iphone_verified':False},indent=2)+'\n')

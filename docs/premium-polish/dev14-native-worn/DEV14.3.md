@@ -46,3 +46,20 @@ source build and integration are reconstructed and must receive fresh final QA.
 Mats explicitly approved public upload and publishing after gates ("Alltid").
 That permission persists. Do not ask for another login or repeat approval.
 DEV14.2 remains published until an exact DEV14.3 candidate passes the release gate.
+
+## Fast-tool transition correction
+
+The first graphical candidate completed Worn, Iron, Runed, Moonglass, Ember,
+Crusher and initial Comet damage checks, then rejected a disconnected arm during
+Comet cancellation (~0.087-second cycle). A deterministic pose-only reproduction
+also failed with the original runtime. The runtime adapter now bounds only an
+infeasible transition's incoming velocity extrapolation, reducing extrapolation through bounded search. Authored poses, base task solver, timing,
+contact ownership, tool and hand relationships remain unchanged. It neither
+clamps individual limb endpoints nor relaxes rejection tolerances.
+
+The correction passed 1856 synthetic contact/cancel geometry cases. The final
+export runs that regression too; fresh rendered gameplay/visual review is still
+required and old failed-run captures cannot approve the corrected package.
+
+The existing max_reach_error diagnostic includes rejected transition search
+probes; final displayed poses still pass the unchanged finite/segment gate.
