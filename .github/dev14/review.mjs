@@ -25,7 +25,9 @@ const server=http.createServer((req,res)=>{
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await chromium.launch({headless:true,args:['--use-gl=angle','--use-angle=metal','--enable-gpu']});
-const context=await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:3,hasTouch:true,recordVideo:{dir:path.join(output,"video"),size:{width:844,height:390}}});
+// Native PNG/full viewport captures retain visual evidence without video-encoder load
+// during the sustained cadence windows. A recorded run of these exact bytes is retained.
+const context=await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:3,hasTouch:true});
 const page=await context.newPage();page.setDefaultTimeout(120000);
 const cdp=await context.newCDPSession(page);
 const checks=[],messages=[],nativeCaptures=[];let runtime=null,id=0,failed=null;
@@ -79,7 +81,7 @@ try{
  await page.waitForFunction(()=>window.everDeeperVersion==='1.0.0-dev.14.3',null,{timeout:240000});
  await delay(1500);await capture('00-normal-dev14-menu');
  runtime=await page.evaluate(()=>{const c=document.querySelector('canvas'),g=c?.getContext('webgl2'),e=g?.getExtension('WEBGL_debug_renderer_info');return {viewport:[innerWidth,innerHeight],dpr:devicePixelRatio,renderer:e?g.getParameter(e.UNMASKED_RENDERER_WEBGL):null,lost:g?.isContextLost()};});
- runtime.browser=browser.version();runtime.platform=process.platform;
+ runtime.browser=browser.version();runtime.platform=process.platform;runtime.video_recording=false;
  if(!runtime.renderer||runtime.lost||/SwiftShader|llvmpipe|software/i.test(runtime.renderer))throw Error('Required graphical Mac renderer unavailable');
  await page.goto(url+'/?qa=1',{waitUntil:'domcontentloaded',timeout:120000});
  await wait('ordinary QA startup',s=>s?.version==='1.0.0-dev.14.3',240000);
@@ -144,7 +146,7 @@ try{
  console.log('DEV14_RENDERED_GAMEPLAY_PASSED');
 }catch(e){failed=String(e.stack||e);console.error(failed);try{await capture('failure');}catch{}}
 finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,version:'1.0.0-dev.14.3',files:manifest,runtime,checks,bootstrap_fixture:'HTML injects only explicit QA launch args. Named non-persistent fixture uses ordinary DEV jumps/equipment, clears queued achievement toasts and exercises real input/menu paths. Main scene and game package bytes unchanged.',physical_iphone_verified:false,continuous_motion_or_fps_certified:false},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.CANDIDATE_SOURCE||process.env.GITHUB_SHA,validation_commit:process.env.GITHUB_SHA,version:'1.0.0-dev.14.3',files:manifest,runtime,checks,bootstrap_fixture:'HTML injects only explicit QA launch args. Named non-persistent fixture uses ordinary DEV jumps/equipment, clears queued achievement toasts and exercises real input/menu paths. Main scene and game package bytes unchanged.',physical_iphone_verified:false,continuous_motion_or_fps_certified:false},null,2));
  await context.close();await browser.close();await new Promise(r=>server.close(r));
 }
 if(failed)process.exitCode=1;
