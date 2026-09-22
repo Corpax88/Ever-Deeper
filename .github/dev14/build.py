@@ -59,7 +59,10 @@ def build(godot, work, blender):
     candidate = work/'candidate'; candidate.mkdir()
     run([godot,'--headless','--path',str(ROOT),'--export-release','Web DEV',str(candidate/'index.html')],work/'export.log')
     subprocess.run(['python3','tools/install-render-probe-shell.py',str(candidate/'index.html')],cwd=ROOT,check=True)
-    run([godot,'--headless','--path',str(ROOT),'--main-pack',str(candidate/'index.pck'),'--script',str(ROOT/'.github/dev14/check-equipment-package.gd')],work/'equipment-package.log')
+    package_check = work/'package-check'; package_check.mkdir()
+    # Resource paths can fall back to the source checkout if the test runs there.
+    # An empty resource root ensures every observation comes from the PCK alone.
+    run([godot,'--headless','--path',str(package_check),'--main-pack',str(candidate/'index.pck'),'--script',str(ROOT/'.github/dev14/check-equipment-package.gd')],work/'equipment-package.log')
     assert 'PICKAXE_PACKAGE_COMPLETE' in (work/'equipment-package.log').read_text()
     files = {name:identity(candidate/name) for name in NAMES}
     (candidate/'manifest.json').write_text(json.dumps(files,indent=2)+'\n')
