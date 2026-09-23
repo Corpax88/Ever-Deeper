@@ -163,8 +163,8 @@ func refresh() -> void:
 	for i in data.size():
 		var info: Dictionary = data[i]
 		rows[i].level.text = str(info.level)
-		rows[i].bar.value = float(info.ratio) * 100.0
-		rows[i].xp.text = "100 / 100" if info.maxed else "%d / %d" % [info.xp, info.next]
+		rows[i].bar.value = float(info.level)
+		rows[i].xp_bar.value = float(info.ratio) * 100.0
 	stamina_row.bar.value = RunState.stamina_value()
 	stamina_row.xp.text = "%d / 100" % ceili(RunState.stamina_value())
 	var ids: Array[String] = ["copper", "ambercore", "lunacore"]
@@ -249,24 +249,30 @@ func _make_row(parent: Control, id: String) -> Dictionary:
 	var label: Label = _label(node, id.capitalize(), 30)
 	var level: Label = _label(node, "0", 35)
 	level.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	var xp: Label = _label(node, "0 / 100", 22)
+	var xp: Label = _label(node, "0 / 100", 22) if id == "stamina" else null
+	var bar: ProgressBar = _progress_bar(node, ORANGE if id == "stamina" else Color("e5b657"), false)
+	var xp_bar: ProgressBar = _progress_bar(node, Color("d46453"), true) if id != "stamina" else null
+	return {"node": node, "icon": icon, "label": label, "level": level, "xp": xp, "bar": bar, "xp_bar": xp_bar}
+
+func _progress_bar(parent: Control, color: Color, thin: bool) -> ProgressBar:
 	var bar: ProgressBar = ProgressBar.new()
+	bar.step = 0.0
 	bar.show_percentage = false
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var track: StyleBoxFlat = StyleBoxFlat.new()
 	track.bg_color = Color("130e0c")
 	track.border_color = Color("70503c")
 	track.set_border_width_all(1)
-	track.set_corner_radius_all(5)
+	track.set_corner_radius_all(2 if thin else 5)
 	var fill: StyleBoxFlat = StyleBoxFlat.new()
-	fill.bg_color = ORANGE
-	fill.border_color = Color("ffbd79")
+	fill.bg_color = color
+	fill.border_color = color.lightened(0.25)
 	fill.set_border_width_all(1)
-	fill.set_corner_radius_all(4)
+	fill.set_corner_radius_all(2 if thin else 4)
 	bar.add_theme_stylebox_override("background", track)
 	bar.add_theme_stylebox_override("fill", fill)
-	node.add_child(bar)
-	return {"node": node, "icon": icon, "label": label, "level": level, "xp": xp, "bar": bar}
+	parent.add_child(bar)
+	return bar
 
 func _layout_row(row: Dictionary, rect: Rect2) -> void:
 	row.node.position = rect.position
@@ -284,8 +290,12 @@ func _layout_row(row: Dictionary, rect: Rect2) -> void:
 	row.level.size = Vector2(49, 42)
 	row.bar.position = Vector2(x, h * 0.46)
 	row.bar.size = Vector2(rect.size.x - x - 79, 17)
-	row.xp.position = Vector2(x, h * 0.46 + 14)
-	row.xp.size = Vector2(rect.size.x - x - 38, 26)
+	if row.xp_bar != null:
+		row.xp_bar.position = Vector2(x, h * 0.46 + 24)
+		row.xp_bar.size = Vector2(row.bar.size.x, 5)
+	if row.xp != null:
+		row.xp.position = Vector2(x, h * 0.46 + 14)
+		row.xp.size = Vector2(rect.size.x - x - 38, 26)
 
 func _select_tab(index: int) -> void:
 	for i in nav.size():

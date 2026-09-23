@@ -4,7 +4,7 @@ func run() -> void:
 	super.run()
 
 func _command(data: Dictionary) -> void:
-	if String(data.kind) not in ["skills_fixture", "fatigue_fixture"]:
+	if String(data.kind) not in ["skills_fixture", "skills_edge_fixture", "skill_level_up", "fatigue_fixture"]:
 		super._command(data)
 		return
 	command_id = int(data.id)
@@ -15,6 +15,11 @@ func _command(data: Dictionary) -> void:
 		RunState.cargo.ambercore = 317
 		RunState.cargo.lunacore = 86
 		RunState._miner_level_cache.clear()
+	elif fixture == "skills_edge_fixture":
+		RunState.miner_skills = {"mining": 0.0, "running": 99.0, "carrying": 257500.0, "prospecting": 257499.0, "stamina": 72.0}
+		RunState._miner_level_cache.clear()
+	elif fixture == "skill_level_up":
+		RunState._earn_miner_xp("running", 1.0)
 	else:
 		RunState.miner_skills.stamina = 0.0
 		RunState._stamina_rest = 0.0
@@ -24,6 +29,11 @@ func _frame() -> void:
 	super._frame()
 	if sample_clock != 0.0: return
 	var panel: Control = main.miner_skills_panel
+	var progress: Array = []
+	for row in panel.rows:
+		progress.append({"level": row.level.text, "level_value": row.bar.value,
+			"xp_value": row.xp_bar.value, "level_rect": _bounds(row.bar),
+			"xp_rect": _bounds(row.xp_bar), "numeric_xp": row.xp != null})
 	var bounds: Dictionary = {"hud_menu": _bounds(main.premium_hud.menu_button),
 		"new_game": _bounds(main.premium_menu.main_card.get_node("NewGame")),
 		"continue": _bounds(main.premium_menu.continue_button),
@@ -45,7 +55,7 @@ func _frame() -> void:
 		"mine_input_held": main.mine_held or Input.is_action_pressed("mine"),
 		"player_controls_enabled": main._active_player_node().control_enabled,
 		"stamina": RunState.stamina_value(), "skill_xp": RunState.miner_skills.duplicate(true),
-		"skills": RunState.miner_skill_rows(), "effort": RunState.stamina_effort_multiplier(),
+		"skills": RunState.miner_skill_rows(), "skill_progress": progress, "effort": RunState.stamina_effort_multiplier(),
 		"buttons": bounds, "skills_plate": _bounds(panel.plate),
 		"mole_open": main._companion_panel_is_open(), "guide_open": main.premium_hud._objective_open,
 		"tooltip_visible": panel.stat_tip.visible, "tooltip_id": panel._tip_id,
