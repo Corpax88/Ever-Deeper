@@ -2428,8 +2428,6 @@ func _perform_context() -> void :
 	if phase == "depth":
 		if depth_context == "drillForge":
 			_open_commerce(CommerceCatalogScript.depth_forge_config(current_mine_id),"depth_forge")
-		elif depth_context == "depthWayfarer":
-			_open_commerce(CommerceCatalogScript.wayfarer_config(),"depth_wayfarer")
 		else:
 			var gold_before: = int(RunState.gold)
 			var depth_result: = String(depth_world.perform_context())
@@ -2460,8 +2458,6 @@ func _perform_context() -> void :
 			_open_forge_commerce()
 		"starforge":
 			_open_starforge_commerce()
-		"speedShop":
-			_open_wayfarer_commerce()
 
 
 func _buy_wayfarer_speed() -> void :
@@ -3544,7 +3540,7 @@ func _refresh_context_button() -> void :
 		else:
 			label = {"hubExit": "ASCEND"}.get(hub_context, "")
 	elif phase == "depth":
-		label = {"depthExit": "ASCEND", "depthSell": "SELL", "drillForge": "FORGE", "depthWayfarer":"BOOTS"}.get(depth_context, "")
+		label = {"depthExit": "ASCEND", "depthSell": "SELL", "drillForge": "FORGE"}.get(depth_context, "")
 	elif phase == "mine" and mine_depth_context:
 		label = "DESCEND"
 	elif phase == "mine" and mine_exit_context:
@@ -3560,7 +3556,6 @@ func _refresh_context_button() -> void :
 			label = {
 				"sell": "SELL ORE" if automated_mode else "",
 				"forge": "FORGE",
-				"speedShop": "BROWSE",
 				"starforge": "BROWSE",
 			}.get(surface_context, "")
 			if not commerce_transaction.is_empty():
@@ -3594,10 +3589,6 @@ func _refresh_context_card() -> void :
 			title = "MOSSVEIN FORGE"
 			detail = _forge_status().trim_prefix("Forge · ")
 			hint = "OPEN FORGE · INSPECT FIRST, THEN CONFIRM"
-		elif surface_context == "speedShop":
-			title = "WAYFARER"
-			detail = "Permanent movement tuning with no level cap"
-			hint = "BROWSE · COMPARE THE NEXT SPEED LEVEL"
 		elif surface_context == "starforge":
 			title = "STARFORGE"
 			detail = "Forge or equip a mining identity that remains active on drills"

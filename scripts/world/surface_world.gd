@@ -13,7 +13,7 @@ const GATE_HALF_GAP: = 118.0
 const GATE_INTERACTION_RADIUS: = 132.0
 const MOSS_MAIN_Y: = 650.0
 const MOSS_CAMP_ANCHOR: = Vector2(240, MOSS_MAIN_Y)
-const MOSS_QUARRY_FOCUS: = Vector2(550, MOSS_MAIN_Y)
+const MOSS_QUARRY_FOCUS: = Vector2(812, 625)
 const MOSS_MINE_BRANCH_JUNCTION: = Vector2(650, 680)
 const MOSS_MINE_ENTRANCE: = Vector2(930, 900)
 const MOSS_MINE_RETURN_POSITION: = Vector2(760, 790)
@@ -125,9 +125,9 @@ const PLAYER_START: = Vector2(240, 680)
 const MOSS_CAMP_YARD_RECT: = Rect2(20, 370, 480, 330)
 const MOSS_CAMP_CONNECTOR_RECT: = Rect2(185, 510, 110, 120)
 const MOSS_WAYFARER_ACCESS_RECT: = Rect2(747, 494, 106, 178)
-const MOSS_ORE_MOUNTAIN_POSITION: = Vector2(555, 600)
+const MOSS_ORE_MOUNTAIN_POSITION: = MOSS_WAYFARER_POSITION
 const MOSS_ORE_MOUNTAIN_FOCUS: = MOSS_QUARRY_FOCUS
-const MOSS_ORE_MOUNTAIN_COLLISION_CENTER: = Vector2(555, 565)
+const MOSS_ORE_MOUNTAIN_COLLISION_CENTER: = MOSS_ORE_MOUNTAIN_POSITION + Vector2(0, -35)
 const MOSS_ORE_MOUNTAIN_COLLISION_HALF_SIZE: = Vector2(198, 51)
 const MOSS_ORE_MOUNTAIN_MINING_RANGE: = 132.0
 const MOSS_ORE_MOUNTAIN_TARGET_HYSTERESIS: = 22.0
@@ -336,7 +336,6 @@ const EMBER_FAULT: = preload("res://assets/surface/emberdeep-fault-bed.png")
 const STAR_SHARDS: = preload("res://assets/surface/starfall-shard-clusters.png")
 const STAR_LATTICE: = preload("res://assets/surface/starfall-lattice-bed.png")
 const STARFORGE_STATION: = preload("res://assets/surface/starforge-station.png")
-const WAYFARER_SHOP: = preload("res://assets/surface/wayfarer-shop.png")
 
 const GROUND_RECTS: = {
 	"mossvein": Rect2(0, 0, 1134, 1280),
@@ -461,7 +460,7 @@ var ore_mountain_swing_active: = false
 var ore_mountain_swing_elapsed: = 0.0
 var ore_mountain_swing_duration: = 0.72
 var ore_mountain_swing_hit: = false
-var ore_mountain_swing_target: = Vector2(600, 615)
+var ore_mountain_swing_target: = MOSS_ORE_MOUNTAIN_COLLISION_CENTER
 var ore_mountain_input_buffer: = 0.0
 var ore_mountain_hit_count: = 0
 var ore_drops: Array[Dictionary] = []
@@ -1701,7 +1700,6 @@ func debug_later_surface_life_snapshot() -> Dictionary:
 func _build_stations() -> void :
 
 
-	_create_station(WAYFARER_SHOP, GameData.station("speedShop"), Vector2(198.8, 182), 45.0, "WAYFARER", "speedShop")
 	_create_station(STARFORGE_STATION, GameData.station("starforge"), Vector2(189.6, 170.4), 52.108, "STARFORGE")
 
 
@@ -4261,7 +4259,6 @@ func _nearest_surface_station_context(world_position: Vector2) -> String:
 	var candidates: Array[Dictionary] = [
 		{"id": "sell", "position": station_interaction_position("sell"), "radius": SURFACE_STATION_INTERACT_RADIUS},
 		{"id": "forge", "position": station_interaction_position("forge"), "radius": SURFACE_STATION_INTERACT_RADIUS},
-		{"id": "speedShop", "position": station_interaction_position("speedShop"), "radius": float(GameData.station("speedShop").radius)},
 	]
 	if RunState.fourth_unlocked:
 		candidates.append({
@@ -4493,7 +4490,6 @@ func _build_surface_collision_footprints() -> void:
 		surface_solid_footprints.append({"center": _station_position(station) + Vector2(0, 4), "radii": SURFACE_STATION_FOOTPRINT})
 	# Grow the native stations upward/backward while retaining their current
 	# front clearance on the travel lane and their opaque artwork baselines.
-	surface_solid_footprints.append({"center": MOSS_WAYFARER_POSITION + Vector2(0, 9.52), "radii": Vector2(93.44, 56.48)})
 	surface_solid_footprints.append({"center": _station_position("starforge") + Vector2(0, 28.4), "radii": Vector2(88.8, 45.6)})
 	for boundary in BOUNDARIES:
 		var anchor: = Vector2(float(boundary.x), GATE_Y)
@@ -4983,7 +4979,7 @@ func debug_worldflow_snapshot() -> Dictionary:
 			"assay_interaction": station_interaction_position("sell"),
 			"forge_visual": _station_position("forge"),
 			"forge_interaction": station_interaction_position("forge"),
-			"wayfarer_visual": _station_position("speedShop"),
+			"removed_wayfarer_site": MOSS_WAYFARER_POSITION,
 			"interaction_radius": SURFACE_STATION_INTERACT_RADIUS,
 		},
 		"assets": {
@@ -5145,7 +5141,7 @@ func surface_route_snapshot() -> Dictionary:
 		"stations": {
 			"assay": _station_position("sell"),
 			"forge": _station_position("forge"),
-			"wayfarer": _station_position("speedShop"),
+			"removed_wayfarer_site": MOSS_WAYFARER_POSITION,
 			"camp_pocket": MOSS_CAMP_YARD_RECT,
 			"wayfarer_pocket": MOSS_WAYFARER_ACCESS_RECT,
 		},

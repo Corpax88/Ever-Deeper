@@ -144,9 +144,8 @@ var station_positions: Dictionary = {}
 var exit_context: = false
 var station_context: = ""
 var active_context: = ""
+# Preserve the camp clearing for existing saved terrain and player positions.
 var wayfarer_position: Vector2=Vector2.ZERO
-var station_animation_clock: float=0.0
-var station_redraw_clock: float=0.0
 var active: = false
 var external_mine_held: = false
 var swing_active: = false
@@ -510,12 +509,6 @@ func _process(delta: float) -> void :
 		_apply_target(_find_mine_target())
 		target_dirty = false
 	_update_mining(delta)
-	station_animation_clock+=delta
-	station_redraw_clock+=delta
-	if station_redraw_clock>=0.05 and player.global_position.distance_to(wayfarer_position)<760.0:
-		station_redraw_clock=0.0
-		if not lit_draw_sections.enabled or not lit_draw_sections.redraw_dynamic(_draw_depth_landmarks):
-			_request_redraw()
 	rock_respawn_check_elapsed += maxf(0.0, delta)
 	if rock_respawn_check_elapsed >= ROCK_RESPAWN_CHECK_INTERVAL:
 		rock_respawn_check_elapsed = fposmod(rock_respawn_check_elapsed, ROCK_RESPAWN_CHECK_INTERVAL)
@@ -951,9 +944,7 @@ func _update_context(world_position: Vector2) -> void :
 	else:
 		var sell: Dictionary = Dictionary(station_positions.sell)
 		var forge: Dictionary = Dictionary(station_positions.forge)
-		if world_position.distance_to(wayfarer_position)<=86.0:
-			next_context="depthWayfarer"
-		elif world_position.distance_to(Vector2(float(sell.x), float(sell.y))) <= float(sell.radius):
+		if world_position.distance_to(Vector2(float(sell.x), float(sell.y))) <= float(sell.radius):
 			next_context = "depthSell"
 		elif world_position.distance_to(Vector2(float(forge.x), float(forge.y))) <= float(forge.radius):
 			next_context = "drillForge"
@@ -2732,8 +2723,6 @@ func _draw_depth_landmarks() -> void :
 	var forge: = Vector2(float(station_positions.forge.x), float(station_positions.forge.y))
 	_draw_station(sell_texture, sell, "ORE EXCHANGE", active_context == "depthSell")
 	_draw_station(forge_texture, forge, "DRILL FORGE", active_context == "drillForge")
-	_draw_station(preload("res://assets/surface/wayfarer-shop.png"),wayfarer_position,"WAYFARER",active_context=="depthWayfarer")
-	_draw_landmark_texture(preload("res://assets/surface/v3/wayfarer-boots.png"),wayfarer_position+Vector2(0,-85+sin(station_animation_clock*1.8)*5.0),Vector2(69,69),0.0)
 
 
 func _draw_station(texture: Texture2D, position: Vector2, label: String, selected: bool) -> void :
