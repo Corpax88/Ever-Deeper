@@ -363,6 +363,8 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 	var progression_rect: = Rect2(viewport_size.x - right - goal_width, top if iphone else gold_rect.end.y + 10.0, goal_width, goal_height)
 	var minimap_size: = Vector2(188, 96) if iphone else Vector2(184, 106)
 	var minimap_rect: = Rect2(progression_rect.position.x - gap - minimap_size.x, progression_rect.position.y, minimap_size.x, minimap_size.y)
+	if minimap_rect.position.x < gold_rect.end.x + gap:
+		minimap_rect.position = Vector2(progression_rect.end.x - minimap_size.x, progression_rect.end.y + gap)
 	var onboarding_top: = maxf(progression_rect.end.y, minimap_rect.end.y) + 12.0
 	# The expanded guide belongs to the goal column, away from the hero and
 	# travel lane. It must not become a wide opaque banner across the world.

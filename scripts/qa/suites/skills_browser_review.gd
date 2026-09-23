@@ -32,7 +32,8 @@ func _frame() -> void:
 		"joystick": _bounds(main.movement_pad),
 		"hud_mine": _bounds(main.mine_button), "hud_bag": _bounds(main.premium_hud.bag_button),
 		"hud_guide": _bounds(main.premium_hud.guide_button),
-		"hud_mole": _bounds(main.get_node("CompanionInterface").button)}
+		"hud_mole": _bounds(main.get_node("CompanionInterface").button),
+		"mole_close": _bounds(main.get_node("CompanionInterface").journal.content.get_node("CloseJournal"))}
 	for row in panel.rows + [panel.stamina_row]:
 		bounds["stat_" + String(row.node.name).to_lower()] = _bounds(row.node)
 	for i in 4: bounds[["inventory", "skills", "map", "settings"][i]] = _bounds(panel.nav[i])
@@ -46,13 +47,14 @@ func _frame() -> void:
 		"stamina": RunState.stamina_value(), "skill_xp": RunState.miner_skills.duplicate(true),
 		"skills": RunState.miner_skill_rows(), "effort": RunState.stamina_effort_multiplier(),
 		"buttons": bounds, "skills_plate": _bounds(panel.plate),
+		"mole_open": main._companion_panel_is_open(), "guide_open": main.premium_hud._objective_open,
 		"tooltip_visible": panel.stat_tip.visible, "tooltip_id": panel._tip_id,
 		"tooltip_text": panel._tip_body.text, "tooltip_rect": _bounds(panel.stat_tip),
 		"hud_context": _bounds(main.premium_hud.context_button),
 		"hud_context_visible": main.premium_hud.context_button.is_visible_in_tree(),
 		"hud_mine_visible": main.mine_button.is_visible_in_tree(),
 		"hud_gold": _bounds(main.premium_hud.gold_cluster),
-		"hud_map": _bounds(main.minimap_overlay),
+		"hud_map": _rect_bounds(main.premium_hud.minimap_layout_rect()),
 		"hud_goal": _bounds(main.premium_hud.progression_goal_panel)}
 	if is_instance_valid(panel.map_view):
 		var rect: Rect2 = panel.map_view._map_rect
@@ -61,4 +63,7 @@ func _frame() -> void:
 
 func _bounds(control: Control) -> Array:
 	var rect: Rect2 = control.get_global_rect()
+	return [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
+
+func _rect_bounds(rect: Rect2) -> Array:
 	return [rect.position.x, rect.position.y, rect.size.x, rect.size.y]

@@ -432,7 +432,7 @@ func _show_stat_tip() -> void:
 		"prospecting":
 			_tip_body.text = "Gain XP for every resource mined.\nTracks your prospecting experience.\nNo extra loot bonus yet."
 		"stamina":
-			_tip_body.text = "Used while moving and mining.\nStand still to recover after a short rest.\nBelow 15, movement and mining power gradually fall to 75%."
+			_tip_body.text = "Used while moving and mining.\nRest without moving or mining to recover.\nBelow 15, movement and mining power gradually fall to 75%."
 	var width: float = minf(440.0, root.size.x - 40.0)
 	_tip_title.position = Vector2(24, 18)
 	_tip_title.size = Vector2(width - 48, 44)

@@ -43,7 +43,7 @@ async function hudCheck(label){
  const s=await state(),v=page.viewportSize(),keys=['hud_menu','hud_guide','hud_mole','hud_bag','hud_mine'];
  const rects=keys.map(k=>s.buttons[k]);
  check('larger-gameplay-controls-'+label,rects.every(r=>inside(r,s)&&r[2]/s.viewport[0]*v.width>=60&&r[3]/s.viewport[1]*v.height>=60)&&rects.every((r,i)=>rects.slice(i+1).every(q=>!overlap(r,q))),{buttons:s.buttons,viewport:s.viewport,css:v});
- check('hud-top-and-context-clear-'+label,!overlap(s.buttons.hud_mole,s.hud_gold)&&!overlap(s.hud_gold,s.hud_goal)&&(!s.hud_context_visible||!overlap(s.hud_context,s.buttons.hud_bag)),{state:s});
+ check('hud-top-and-context-clear-'+label,!overlap(s.buttons.hud_mole,s.hud_gold)&&!overlap(s.hud_gold,s.hud_goal)&&!overlap(s.hud_gold,s.hud_map)&&(!s.hud_context_visible||!overlap(s.hud_context,s.buttons.hud_bag)),{state:s});
  await shot('hud-'+label);
 }
 async function statTips(){
@@ -80,6 +80,12 @@ try{
  check('graphical-mac-renderer',runtime.platform==='darwin'&&runtime.renderer&&!runtime.lost&&!/SwiftShader|llvmpipe|software/i.test(runtime.renderer),{runtime});
  await tap('new_game');await ready();await shot('01-new-game');
  await command('surface');await mine('02-surface-touch');await hudCheck('844');
+ await tap('hud_guide');await wait('guide opens from enlarged button',s=>s.guide_open);await tap('hud_guide');await wait('guide closes',s=>!s.guide_open);
+ await tap('hud_bag');await wait('bag opens from enlarged button',s=>s.inventory_open);await tap('inventory_close');await ready();
+ await tap('hud_mole');await wait('mole opens from enlarged button',s=>s.mole_open);await shot('hud-mole-open');await tap('mole_close');await wait('mole closes',s=>!s.mole_open);await ready();
+ check('enlarged-hud-bindings',true,{});
+ await page.setViewportSize({width:900,height:600});await delay(700);await hudCheck('3-2');
+ await page.setViewportSize({width:844,height:390});await delay(700);
  // Actual held virtual joystick: travel, earned XP, drain and release.
  await wait('rest at full before travel',s=>s.stamina>=99.9);
  let before=await state(),v=page.viewportSize(),p={x:v.width*.23,y:v.height*.68},r=before.buttons.joystick;
