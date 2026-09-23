@@ -101,7 +101,7 @@ try{
  await command('skills_fixture');await statTips();await longPressTip('844');await tap('skills_close');await ready();
  await command('quarry');await ready();
  let q=await wait('relocated mining approach',s=>s.surface_context==='ore_mountain');
- check('relocated-quarry-and-retired-surface-store',q.quarry_position[0]===812&&q.quarry_position[1]===515&&q.quarry_solid&&q.quarry_approach_clear&&q.wayfarer_sprite_count===0&&q.retired_surface_context!=='speedShop',{state:q});
+ check('relocated-quarry-and-retired-surface-store',q.quarry_position[0]===812&&q.quarry_position[1]===600&&q.quarry_solid&&q.quarry_approach_clear&&q.wayfarer_sprite_count===0&&q.retired_surface_context!=='speedShop',{state:q});
  await shot('quarry-full-844');await mine('relocated-quarry-mining');
  for(const hp of [120,0]){await command('quarry_stage',{hp});await delay(400);await shot('quarry-stage-'+hp);}
  await command('quarry_stage',{hp:360});
