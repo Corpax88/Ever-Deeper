@@ -122,9 +122,7 @@ func _test_d2_barriers() -> void:
 			check(target>=0,"D2 gate exposed "+id)
 			if target<0: continue
 			RunState.pickaxe_level=5
-			world._update_context(world.wayfarer_position)
-		check(world.active_context != "depthWayfarer", "Removed Wayfarer has no interaction " + String(profile.tag))
-		RunState.starforge_variant="crusher"
+			RunState.starforge_variant="crusher"
 			RunState.drill_level=maxi(0,int(gate.required_drill_level)-1)
 			check(not world.call("_hit_rock",target),"D2 drill lock "+id)
 			RunState.drill_level=int(gate.required_drill_level)
@@ -210,6 +208,8 @@ func _test_depth_commerce() -> void:
 		var world: Node=driver.call("_load_d2",String(profile.mine_id))
 		world.set_process(false)
 		check(not world.call("collision_at",world.wayfarer_position),"Former Wayfarer camp remains walkable "+String(profile.tag))
+		world._update_context(world.wayfarer_position)
+		check(world.active_context != "depthWayfarer", "Removed Wayfarer has no interaction " + String(profile.tag))
 		RunState.starforge_variant="crusher"
 		RunState.drill_level=0
 		RunState.gold=100000
