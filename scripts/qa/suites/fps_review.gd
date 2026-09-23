@@ -35,6 +35,8 @@ func _command(data: Dictionary) -> void:
 			world.queue_redraw()
 			main._refresh_hud()
 		"freeze":
+			# Pause-independent UI tweens also need zero delta for identical frames.
+			Engine.time_scale = 0.0
 			main.get_tree().paused = true
 			# Minimap and guide pulse even while paused. Stop their clocks too;
 			# preserve every pixel instead of masking/tolerating animated regions.
@@ -78,6 +80,7 @@ func _command(data: Dictionary) -> void:
 			main.get_tree().paused = false
 
 func _restore_observers() -> void:
+	Engine.time_scale = 1.0
 	for node in paused_observers:
 		if is_instance_valid(node): node.set_process(true)
 	paused_observers.clear()
