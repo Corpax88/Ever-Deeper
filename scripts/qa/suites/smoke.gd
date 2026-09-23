@@ -482,15 +482,15 @@ func _run_smoke_test() -> void :
 	main.surface_world.set_active(true)
 	assert (main.surface_world._surface_collides(Vector2(300, 940)))
 	RunState.gold = 150
-	main.surface_world.restore_position(main.surface_world._station_position("speedShop"))
-	assert (main.surface_context == "speedShop")
+	main.surface_world.restore_position(main.surface_world.station_interaction_position("speedShop"))
+	assert (main.surface_context != "speedShop")
 	main._refresh_context_button()
-	assert (main.action_button.text == "BROWSE" and not main.action_button.disabled)
+	assert (main.action_button.text != "BROWSE")
 	main._perform_context()
-	assert (main.commerce_panel.is_open() and main.commerce_context == "wayfarer")
-	main._on_commerce_action_confirmed("wayfarer:speed")
-	main.station_transaction_fx.complete_immediately()
-	assert (RunState.movement_speed_level == 1 and RunState.gold == 0)
+	assert (not main.commerce_panel.is_open() and RunState.gold == 150)
+	# A previously owned upgrade remains valid after retiring the shop.
+	RunState.movement_speed_level = 1
+	main._apply_global_movement_speed()
 	var upgraded_speed= float(GameData.data.PLAYER_SPEED) * 1.07
 	for upgraded_player in [main.surface_world.player, main.mine_world.player, main.depth_world.player, main.hub_world.player]:
 		assert (is_equal_approx(upgraded_player.movement_speed, upgraded_speed), "Wayfarer speed must update every world immediately")

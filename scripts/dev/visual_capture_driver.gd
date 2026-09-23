@@ -1691,8 +1691,8 @@ func _check_surface_gameplay() -> bool:
 				return false
 	for foot in [Vector2(1028, 608), Vector2(1225, 687)]:
 		if not world.call("_surface_collides", foot): return false
-	world.restore_position(Vector2(555, 665))
-	world.call("_evaluate_context", Vector2(555, 665))
+	world.restore_position(world.MOSS_QUARRY_FOCUS)
+	world.call("_evaluate_context", world.MOSS_QUARRY_FOCUS)
 	if String(world.active_context) != "ore_mountain": return false
 	while int(world.ore_mountain_hp) > 0:
 		world.call("_mine_ore_mountain_once")
@@ -1710,7 +1710,7 @@ func _check_surface_gameplay() -> bool:
 		for target in points.slice(1):
 			position = world.call("_resolve_motion", position, Vector2(target) - position)
 			if position.distance_to(Vector2(target)) > 1.0: return false
-	for station in ["sell", "forge", "speedShop"]:
+	for station in ["sell", "forge"]:
 		var position: Vector2 = world.station_interaction_position(station)
 		if world.call("_surface_collides", position):
 			print("SURFACE_STATION_FAILURE ", station, " ", position)

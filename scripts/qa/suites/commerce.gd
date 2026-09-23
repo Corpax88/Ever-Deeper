@@ -126,15 +126,14 @@ func _run_commerce_integration_qa() -> void :
 	assert (RunState.pickaxe_level == pickaxe_before + 1 and RunState.gold == 0)
 	assert (main.gold_label.text == "0 GOLD" and main.premium_hud.gold_value.text == "0")
 
-	var wayfarer_cost= int(RunState.movement_speed_upgrade_cost())
-	RunState.gold = wayfarer_cost
+	RunState.gold = 150
+	RunState.movement_speed_level = 1
+	main._apply_global_movement_speed()
 	main.surface_world.restore_position(main.surface_world.station_interaction_position("speedShop"))
+	assert (main.surface_context != "speedShop")
 	main._perform_context()
-	assert (main.commerce_panel.is_open() and main.commerce_panel.selected_item_id() == "wayfarer:speed")
-	main._on_commerce_action_confirmed("wayfarer:speed")
-	assert (RunState.movement_speed_level == 1 and main.commerce_presented_gold == wayfarer_cost)
-	main.station_transaction_fx.complete_immediately()
-	assert (RunState.gold == 0 and main.commerce_presented_gold < 0)
+	assert (not main.commerce_panel.is_open() and RunState.gold == 150)
+	assert (RunState.movement_speed_level == 1)
 	assert (is_equal_approx(main.surface_world.player.movement_speed, float(GameData.data.PLAYER_SPEED) * 1.07))
 
 	RunState.reset_run(false)
@@ -168,7 +167,7 @@ func _run_commerce_integration_qa() -> void :
 		workshop_catalog_count += 1
 	assert (workshop_catalog_count == 5)
 
-	print("EVER_DEEPER_COMMERCE_OK assay=auto_movable_once wallet=ticked forge=deferred wayfarer=menu starforge=3 workshops=5 mobile_css=844x390-956x440 touch>=44 cap=16")
+	print("EVER_DEEPER_COMMERCE_OK assay=auto_movable_once wallet=ticked forge=deferred wayfarer=removed starforge=3 workshops=5 mobile_css=844x390-956x440 touch>=44 cap=16")
 	main.get_tree().quit(0)
 
 
