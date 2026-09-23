@@ -386,8 +386,9 @@ func _compact(value: int) -> String:
 
 func _input(event: InputEvent) -> void:
 	if not visible: return
-	if event is InputEventScreenTouch:
+	if event is InputEventScreenTouch or event is InputEventScreenDrag:
 		_last_touch_msec = Time.get_ticks_msec()
+	if event is InputEventScreenTouch:
 		if event.pressed:
 			if _tip_touch >= 0: return
 			_hide_stat_tip()

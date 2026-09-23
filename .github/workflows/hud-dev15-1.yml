@@ -7,7 +7,7 @@ permissions:
   contents: read
 concurrency:
   group: hud-dev15-1-qa
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: ubuntu-latest

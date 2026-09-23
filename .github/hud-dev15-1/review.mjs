@@ -59,7 +59,7 @@ async function longPressTip(label){
  const p=await point('stat_stamina');await touch('touchStart',p);
  const s=await wait('long press '+label,s=>s.tooltip_visible&&s.tooltip_id==='stamina');
  check('long-press-stat-'+label,inside(s.tooltip_rect,s)&&!overlap(s.tooltip_rect,s.buttons.stat_stamina),{state:s});
- await shot('tooltip-touch-'+label);await touch('touchEnd');await wait('release closes tooltip',s=>!s.tooltip_visible);
+ await shot('tooltip-touch-'+label);await delay(900);const q=await point('stat_mining');await touch('touchMove',q);await delay(600);check('held-drag-cancels-tooltip-'+label,!(await state()).tooltip_visible,{});await touch('touchEnd');await wait('release closes tooltip',s=>!s.tooltip_visible);
  await page.touchscreen.tap(p.x,p.y);await delay(700);check('short-tap-has-no-sticky-tooltip-'+label,!(await state()).tooltip_visible,{});
  await touch('touchStart',p);await touch('touchMove',{x:p.x-35,y:p.y});await delay(700);check('drag-cancels-tooltip-'+label,!(await state()).tooltip_visible,{});await touch('touchEnd');
 }
