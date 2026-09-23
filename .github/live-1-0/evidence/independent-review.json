@@ -1,0 +1,105 @@
+{
+  "accepted": true,
+  "final_build_images_inspected": true,
+  "physical_iphone_verified": false,
+  "version": "1.0.0",
+  "source_commit": "28667f9796d386472f021771ed9336223efe0a48",
+  "files": {
+    "index.html": {
+      "size": 7855,
+      "sha256": "a138adeb32282456f2c68bc642445c71a9be1f236d3a87c6d198ceb6a065fdd7"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 259818824,
+      "sha256": "e6183092bc13b3d0da79a097c533eff7c9ad504cbf08f9e0ff405320adb4818e"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "inspected_images": [
+    {
+      "path": "/tmp/live-browser/live-1-0-browser/production-start-menu.png",
+      "sha256": "77a4fe1f862b11d8b498d056a713708669e0ba83bb2077d84cff4d7f952375a9"
+    },
+    {
+      "path": "/tmp/live-browser/live-1-0-browser/production-new-game.png",
+      "sha256": "173c5bfeadf5bfbb83bd7dcaf5ec7536e765b6c109cf0bc1a38d2668d2c6ffa9"
+    },
+    {
+      "path": "/tmp/live-browser/live-1-0-browser/production-saved-menu.png",
+      "sha256": "6d8aa68d15ffb0fd3fba91aa72cc75ebcb7a2dc98f9fe54a51378fa44737bb4f"
+    },
+    {
+      "path": "/tmp/live-browser/live-1-0-browser/production-continued-game.png",
+      "sha256": "6d3e1e40bcc8b690f995c9b0673a5dd91ee36ee71d267e7a986bbe15e26e1a7a"
+    },
+    {
+      "path": "/tmp/live-browser/live-1-0-browser/quarry-full-844.png",
+      "sha256": "9858e23af9f0e13a54d980091a90833fd2931355388d7c9d9a5d01c1bb49f822"
+    },
+    {
+      "path": "/tmp/live-browser/live-1-0-browser/quarry-full-667.png",
+      "sha256": "4da2e726e82aefda8293728ad7d3d408cc6fa099d53bc67bfe831c6963a86ad4"
+    },
+    {
+      "path": "/tmp/live-browser/live-1-0-browser/relocated-quarry-mining-released.png",
+      "sha256": "79642be6ea2ff6596231030bb260d4e6f7affa800f6e024bdcc513c3a27307b6"
+    },
+    {
+      "path": "/tmp/live-browser/live-1-0-webkit/01-ordinary-menu.png",
+      "sha256": "5c2450259e4eac9ebad5e4d7035bb0bd4152160306e2a14114dcc1d1c38a39b2"
+    },
+    {
+      "path": "/tmp/live-browser/live-1-0-webkit/02-after-new-game.png",
+      "sha256": "e517705f36c5240e1ea9bbb69e457e41f1fc7a5fbc9e4556b28953fc2c003e07"
+    },
+    {
+      "path": "/tmp/live-browser/live-1-0-webkit/06-confirmed-new-game.png",
+      "sha256": "4870e294e03c58dee539684a752b42c7e2e6bd375ab1b62f097eb9b150498465"
+    }
+  ],
+  "scoped_code_quality_score": 9,
+  "scoped_visual_score": 8,
+  "blockers": [],
+  "findings": [
+    "Production menu displays1.0.0 without DEV build label; no developer button appears in inspected production Chromium or ordinary WebKit gameplay.",
+    "Native hero and accepted world/HUD assets render in production; relocated mountain remains grounded with portal and road clear at844 and667 widths.",
+    "Source promotes native hero, mining presentation and required native runtime assets together while retaining developer-menu/probe export exclusions.",
+    "Actual production save namespace and persisted seed/gold/miningXP across checkpoint, reload and Continue pass; saved menu and continued gameplay were visually inspected.",
+    "Fixture quarry captures retain a DEV status message because the explicit QA fixture invokes a diagnostic jump; ordinary startup and Continue captures have ordinary status text. This is not a developer button or production build feature.",
+    "Context desynchronization in diagnostic surface jump was corrected by publishing the already-evaluated world context.",
+    "LIVE publisher requires explicit authorization, exact source/artifact/evidence binding, sixcore cases including migration and production save gates. It preserves DEV15.5 and Worn bytes and archives previousLIVE."
+  ],
+  "limits": [
+    "Acceptance scoped to promoting accepted DEV content into production without developer UI, not a new whole-game polish certification or sustained FPS assessment.",
+    "Inspected seven Chromium and three ordinary WebKit images; physical iPhone remains unverified.",
+    "Screenshots do not independently establish animation smoothness; production mining/runtime assertions provide functional evidence.",
+    "Publication staging and public27file verification remain publisher responsibilities."
+  ]
+}

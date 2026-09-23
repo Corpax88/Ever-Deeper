@@ -1,0 +1,44 @@
+{
+  "source_commit": "28667f9796d386472f021771ed9336223efe0a48",
+  "artifact_run_id": 35858775472,
+  "artifacts": {
+    "candidate": {
+      "id": 10748721299,
+      "name": "live-1-0-candidate",
+      "digest": "sha256:649a839371c66af2ac97d2d2b8d5e40aa6f481c4ac2c3f3d07ffdcb6d2bf7722"
+    },
+    "build": {
+      "id": 10748796133,
+      "name": "live-1-0-build-review",
+      "digest": "sha256:09c56b2d42c82df0ba2aba83e4e8b7ca3d7ce648b7a2fe54c4a2f1b948bb5b42"
+    },
+    "browser": {
+      "id": 10748583429,
+      "name": "live-1-0-browser-review",
+      "digest": "sha256:e7c6328984f8cd0662390b4a20f6647fd533093d2630a79c7f54c18ed65ef020"
+    }
+  },
+  "version": "1.0.0",
+  "destination": "live",
+  "live_authorized": true,
+  "independent_visual_accepted": true,
+  "exported_gameplay_passed": true,
+  "publisher_reviewed": true,
+  "physical_iphone_verified": false,
+  "authorization": "Mats explicitly requested promotion of the current polished game to LIVE without the DEV button on23September2026. Publish only the reviewed production export; preserve DEV and Worn.",
+  "reviewed_files": {
+    "manifest.json": "ff86475ccbc8191e63a43ec3d7fbac87df5116036e5a250cb341795f21e87aa3",
+    "baseline.json": "a615a8a0a3f7359616277d3f6f52bc4045ce6e09783d3ee7183dd84a427886eb",
+    "native-input.json": "ec31a9002188f3b87fb4c040d2da494383bae13a6697981a77905dc5cf10b1b3",
+    "evidence/browser.json": "22406605280dd02d98a73afc740e35af43fef8dc5016bbc304c343792f7ac581",
+    "evidence/core.json": "6416fdd59c328909d30e5ffe3b93ab76147c7a3fdf81ac30cc1bc9fd19d2be37",
+    "evidence/build.json": "26bed635ec9b95926fed311d1468523b6a2e04be71e59e70eee7e177be025e48",
+    "evidence/skills-core.log": "f9e3fa86480ff15c7eda63ef99d3f55052607d759ef56725f91ed1a41a35f412",
+    "evidence/webkit.json": "b6cb9da9c24e0c7be6439f55eeb7e8ac57444402acac320d3fa1492edd2c1539",
+    "evidence/independent-review.json": "8322f412fb7c3031f4d7776d1e299fe55dfcd16e726128057b910e8b40bc7350",
+    "publish.py": "5cec4cc41ee26b68e6e0a340e9968af3f854a87b4600bdeb48d4aa7746588529",
+    "../workflows/publish-live-1-0.yml": "e1ac512fef18191acc28d9bd3ec758aea0d50acb28d2ebeaa306c80283abcb51",
+    "../native-flow-trial/bundle.json": "26209f2eeeefa1688d8fd954b701dd02e4a00dbba74274271b4f3aa5d55765dd",
+    "../../docs/premium-polish/live-1-0/independent-review.md": "1d3972d2e900a9d85868a79596c6b7481aad848637767e0af9ac7bfb4f86158d"
+  }
+}
