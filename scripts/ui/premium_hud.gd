@@ -11,7 +11,7 @@ const ProgressionGoalPanelScript: = preload("res://scripts/ui/progression_goal_p
 const ProgressionGuideScript: = preload("res://scripts/progression/guide_director.gd")
 
 const BAG_ICON: = preload("res://assets/ui/bag-premium-v1.png")
-const MENU_ICON: = preload("res://assets/ui/skills/icons/skills.svg")
+const MENU_ICON: = preload("res://assets/ui/skills/icons/tools-premium-v1.png")
 const GUIDE_ICON: = preload("res://assets/ui/hud-guide-v1.png")
 const INTERACT_ICON: = preload("res://assets/ui/hud-interact-v1.png")
 const BUILD_ICON: = preload("res://assets/ui/hud-build-v1.png")
