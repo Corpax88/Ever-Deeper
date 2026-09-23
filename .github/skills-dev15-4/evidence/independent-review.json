@@ -1,0 +1,80 @@
+{
+  "accepted": true,
+  "final_build_images_inspected": true,
+  "version": "1.0.0-dev.15.4",
+  "source_commit": "666cecf24214c2b144c5bc8403cfd526e625c416",
+  "files": {
+    "index.html": {
+      "size": 7855,
+      "sha256": "597d95c311904a5307569e0a34e01184867d87221cf987338d72b3d581f16255"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 259847540,
+      "sha256": "ffaff75f0f811091908baec6d76c540b9d77248593591d2dd751479acc41e8a5"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "inspected_images": [
+    {
+      "path": "/tmp/metal-headings-browser/dev15-4-browser/tooltip-mining-844.png",
+      "sha256": "c4872a1bf5c974464e9b6ea63c5f5de6b74980cc44c13d6335f696fd670c66a1"
+    },
+    {
+      "path": "/tmp/metal-headings-browser/dev15-4-browser/tooltip-running-844.png",
+      "sha256": "662590b04a2c25f81b62f353371a82feb42665cb0b8621417dbb7821835e56f4"
+    },
+    {
+      "path": "/tmp/metal-headings-browser/dev15-4-browser/tooltip-carrying-844.png",
+      "sha256": "262454c8692d368447e52e6ed0d2e81d943fea26fb19e437d2d51c6e0f3222e2"
+    },
+    {
+      "path": "/tmp/metal-headings-browser/dev15-4-browser/tooltip-prospecting-844.png",
+      "sha256": "060cce96c704469cb35cca4af944bee9aae89b8d570436ecf1edd81a288a3b83"
+    },
+    {
+      "path": "/tmp/metal-headings-browser/dev15-4-browser/tooltip-stamina-844.png",
+      "sha256": "a4afa56c4673723205e531a57dcfd75524c2627de7018788fd2b27666fa64c33"
+    }
+  ],
+  "scoped_code_quality_score": 10,
+  "scoped_visual_score": 9,
+  "blockers": [],
+  "findings": [
+    "All five actual tooltip headings render in consistent light steel/silver with readable contrast against the dark tooltip panel.",
+    "Tooltip body and right-hand skill labels remain warm cream; only tooltip heading color changed.",
+    "Typography, shadows and tooltip layout remain consistent, with no heading clipping in the five inspected captures.",
+    "Single local font_color override #cbd1d8 on _tip_title meets the authorized scope without changing gameplay, saves or skill values."
+  ],
+  "limits": [
+    "Acceptance covers tooltip heading color only, not whole-game visuals, animations or sustained FPS.",
+    "Inspected five final Chromium tooltip captures at844x390; no physical iPhone verification.",
+    "Public-byte verification remains publisher responsibility."
+  ]
+}
