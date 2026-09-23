@@ -1,0 +1,93 @@
+{
+  "accepted": true,
+  "final_build_images_inspected": true,
+  "version": "1.0.0-dev.15.3",
+  "source_commit": "30a2aff088d2e2219382c765a74bf37804f9ad73",
+  "files": {
+    "index.html": {
+      "size": 7855,
+      "sha256": "a289ede20a1f2d3ae173f51e741aa719331c87b7218fdd0484754ab6433530a0"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 259847396,
+      "sha256": "b1e92f2dc7c0c28b385430fc70e3f0ba18f899bdd6ba51267acc1591bacacf97"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "inspected_images": [
+    {
+      "path": "/tmp/skills-bars-final-browser/dev15-3-browser/skills-open-844.png",
+      "sha256": "f99a0e7ac37f7fc0261f844067114ad533a0c47436096240037abd1c157f6ebc"
+    },
+    {
+      "path": "/tmp/skills-bars-final-browser/dev15-3-browser/skills-open-667.png",
+      "sha256": "86aa179e8204197dd8a6d7aa1484a5df574dc4c9ba6d73a0c7cc246266d9ae41"
+    },
+    {
+      "path": "/tmp/skills-bars-final-browser/dev15-3-browser/skills-open-3-2.png",
+      "sha256": "3041d22e032fda28bfaa18c96c1ad9d4fe5eb1a65fcbefbf6dad8bf1b313f3a7"
+    },
+    {
+      "path": "/tmp/skills-bars-final-browser/dev15-3-browser/skills-edges-844.png",
+      "sha256": "974ed824d4084bd48c85c57ad7e2647bf8edc1f284d8285571b5ae712e0c9119"
+    },
+    {
+      "path": "/tmp/skills-bars-final-browser/dev15-3-browser/skills-rollover-844.png",
+      "sha256": "457b6e9daaa512ffa2fe00441e4b3d17812c207f4988dedf4eed8be2762ef68e"
+    },
+    {
+      "path": "/tmp/skills-bars-final-browser/dev15-3-browser/tooltip-touch-844.png",
+      "sha256": "ac2ad6dec50410ce6efd776159b82098008a4a5f64f410c47c7139cfa5f7f36e"
+    },
+    {
+      "path": "/tmp/skills-bars-final-browser/dev15-3-browser/touch-mining-after-menu-released.png",
+      "sha256": "6d4b952b6356f86bf98f93d95734a35bc58b8c311903d9c37394ea8cd6ebe196"
+    },
+    {
+      "path": "/tmp/skills-bars-final-browser/dev15-3-webkit/06-confirmed-new-game.png",
+      "sha256": "7e0b0ecd0ecd4426b00d39d0ffa400af8f58db3f810d1289bb7ec778ee3b64a6"
+    }
+  ],
+  "scoped_code_quality_score": 9,
+  "scoped_visual_score": 9,
+  "blockers": [],
+  "findings": [
+    "Gold main bars show skill level/100; thin red bars beneath show next-level XP with numeric XP removed, while skill names and level numbers remain.",
+    "Bars are aligned, visually distinct and contained within their rows at 844x390, 667x375 and 900x600. Existing icons and surrounding layout remain consistent.",
+    "Level100 is fully visible in final edge and rollover captures. Zero, near-full, cap and level-up reset are consistent with rendered state and passing assertions.",
+    "Stamina keeps its separate orange bar and numeric value. Touch tooltip remains legible and mining resumes after menu close.",
+    "Reviewed publisher preserves exact candidate/evidence binding, LIVE and Worn bytes, and public byte verification."
+  ],
+  "limits": [
+    "Acceptance is scoped to Skills progress presentation and associated UI behavior, not whole-game visual quality, animation quality or sustained FPS.",
+    "Inspected seven Chromium images and one ordinary-startup WebKit gameplay image; no physical iPhone verification.",
+    "Publication staging and public verification remain publisher execution responsibilities."
+  ]
+}
