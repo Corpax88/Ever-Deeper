@@ -7,6 +7,7 @@ var elapsed_start: int = 0
 var last_tick: int = 0
 var last_result: Dictionary = {}
 var edits: Dictionary = {}
+var paused_observers: Array[Node] = []
 
 func _command(data: Dictionary) -> void:
 	command_id = int(data.id)
@@ -14,6 +15,7 @@ func _command(data: Dictionary) -> void:
 	var world: Node2D = main.mine_world
 	match fixture:
 		"setup":
+			_restore_observers()
 			main.get_tree().paused = false
 			main._cancel_mine_hold()
 			RunState.reset_run(false)
@@ -34,6 +36,12 @@ func _command(data: Dictionary) -> void:
 			main._refresh_hud()
 		"freeze":
 			main.get_tree().paused = true
+			# Minimap and guide pulse even while paused. Stop their clocks too;
+			# preserve every pixel instead of masking/tolerating animated regions.
+			for node in main.get_tree().root.find_children("*", "", true, false):
+				if node.can_process() and node.is_processing():
+					paused_observers.append(node)
+					node.set_process(false)
 		"reference", "cached":
 			world.cache_terrain_draws = fixture == "cached"
 			world.queue_redraw()
@@ -65,7 +73,14 @@ func _command(data: Dictionary) -> void:
 		"end":
 			profiling = false
 			last_result = {"frames":frame_times.size(),"seconds":float(Time.get_ticks_usec()-elapsed_start)/1000000.0,"frame":_stats(frame_times),"cpu":_stats(cpu_times),"sections":world.lit_draw_sections.debug_snapshot()}
-		"unfreeze": main.get_tree().paused = false
+		"unfreeze":
+			_restore_observers()
+			main.get_tree().paused = false
+
+func _restore_observers() -> void:
+	for node in paused_observers:
+		if is_instance_valid(node): node.set_process(true)
+	paused_observers.clear()
 
 func _stats(values: Array[float]) -> Dictionary:
 	if values.is_empty(): return {}
