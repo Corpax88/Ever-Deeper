@@ -89,10 +89,13 @@ func _draw() -> void :
 
 
 func safe_rect_for_viewport(viewport_size: Vector2) -> Rect2:
-	var iphone: = viewport_size.x / maxf(viewport_size.y, 1.0) >= IPHONE_LANDSCAPE_ASPECT
-	if iphone:
-
-		return Rect2(Vector2(136, 152), viewport_size - Vector2(572, 326))
+	var hud: Control = get_parent().get_node_or_null("PremiumHud")
+	if hud != null:
+		var layout: Dictionary = hud.layout_snapshot(viewport_size)
+		if layout.iphone:
+			var origin: Vector2 = Vector2(layout.menu.position.x + 20.0, layout.menu.end.y + 36.0)
+			var end: Vector2 = Vector2(layout.bag.position.x - 32.0, minf(layout.mine.position.y, layout.context.position.y) - 32.0)
+			return Rect2(origin, (end - origin).max(Vector2.ONE))
 	return Rect2(Vector2(28, 66), viewport_size - Vector2(56, 256))
 
 

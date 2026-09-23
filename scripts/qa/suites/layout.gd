@@ -395,12 +395,12 @@ func _run_iphone_layout_qa() -> void :
 		var main_metrics: Dictionary = main._iphone_layout_metrics(logical_size)
 		var icons: Dictionary = Dictionary(hud.icons)
 		assert (bool(hud.iphone) and bool(menu.iphone) and bool(inventory.iphone))
-		assert (Rect2(hud.menu).size.is_equal_approx(Vector2(96, 96)))
-		assert (Rect2(hud.context).size.is_equal_approx(Vector2(206, 104)))
-		assert (int(icons.menu_cap) == 96)
-		assert (int(icons.guide_cap) == 84)
-		assert (int(icons.bag_cap) == 104)
-		assert (Vector2(icons.gold).is_equal_approx(Vector2(60, 60)))
+		assert (Rect2(hud.menu).size.is_equal_approx(Vector2(120, 120)))
+		assert (Rect2(hud.context).size.is_equal_approx(Vector2(226, 116)))
+		assert (int(icons.menu_cap) == 120)
+		assert (int(icons.guide_cap) == 112)
+		assert (int(icons.bag_cap) == 132)
+		assert (Vector2(icons.gold).is_equal_approx(Vector2(72, 72)))
 		assert (String(menu.version_label) == main.premium_menu.release_label())
 		assert (float(menu.version_font_size) * scale_to_css >= 9.0)
 		var top_icon_extents: Array[float] = []
@@ -413,9 +413,9 @@ func _run_iphone_layout_qa() -> void :
 		var bag_extent= maxf(bag_visual_size.x, bag_visual_size.y)
 		assert (bag_extent >= 48.0)
 		var context_variants= {
-			"OPEN": 108, "FORGE": 104, "DESCEND": 104, "SELL": 96,
-			"BUILD": 104, "DELIVER": 104, "PLACE": 108, "ATTACH ROPE": 108,
-			"WARDROBE": 108, "TOOL FORGE": 108, "LIGHT LAB": 108,
+			"OPEN": 120, "FORGE": 116, "DESCEND": 116, "SELL": 108,
+			"BUILD": 116, "DELIVER": 116, "PLACE": 120, "ATTACH ROPE": 120,
+			"WARDROBE": 120, "TOOL FORGE": 120, "LIGHT LAB": 120,
 		}
 		var context_captions= {"ATTACH ROPE": "ATTACH", "TOOL FORGE":"TOOL\nFORGE", "LIGHT LAB":"LIGHT\nLAB"}
 		for context_label in context_variants:
