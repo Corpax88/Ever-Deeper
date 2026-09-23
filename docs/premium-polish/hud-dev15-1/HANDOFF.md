@@ -1,6 +1,6 @@
 # DEV15.1 — større spillikoner og statforklaringer
 
-23. september 2026. Mats presiserte at større ikoner gjelder spillområdet, ikke størrelsene inne i Skills. Denne kandidaten er testet; se publiseringskvitteringen for offentlig status.
+23. september 2026. Mats presiserte at større ikoner gjelder spillområdet, ikke størrelsene inne i Skills. **DEV15.1 er publisert på https://corpax88.github.io/Ever-Deeper/dev/.** Publiseringsrun35823540837 besto package, deploy og verify. Alle27 offentlige filhasher er kontrollert. Publiseringscommit740079b34adac8ae93f10da36be1ab6de76dcd04.
 
 Mining, meny, guide, muldvarp, sekk, gull, ressurskrav og handlingsikoner er større. Trykkflatene følger ikonene. Kompakt landskap bruker samme tydelige kontrollstørrelser, og guide-markører holder seg unna kontrollene. Kartet har kollisjonsfallback for svært smale logiske visninger; den faktiske3:2-testen passet med kartet i toppraden.
 
@@ -23,3 +23,7 @@ Første iterasjon0a303016 besto52 Chromium-kontroller. Kritiker fant mulig kart/
 Fysisk iPhone og fysisk FPS er ikke verifisert. Invariantkontrollen beholder de fire arvede avvikene: project.godot, hero_gear.gd, player_controller.gd og player_visual.gd. Disse filene er uendret fra DEV15 i denne oppgaven. Ikke start ny hero-, animasjons- eller FPS-produksjon automatisk.
 
 Gjenopprett testmiljø etter game-test-environment-rutinen. Bruk eksisterende autentisert GitHub-forbindelse; vanlig git clone/fetch fungerer, men shell-push mangler legitimasjon. Ingen ny brukerinnlogging. Sourcebygg: .github/hud-dev15-1/build.py og workflows/hud-dev15-1.yml, Godot4.7.2, native carrier med21 eksakte filhasher. Nettleser: eksisterende macos-15/Node22/Playwright Metal-route. Ikke re-eksporter eller test på nytt når de aksepterte filene er uendret. Mats sin stående DEV-publiseringstillatelse gjelder fortsatt.
+
+Uavhengig gjennomgang godkjente alle30 faktiske sluttbilder. Se independent-review.md og den tilhørende JSON med30 bildehasher.
+
+Publiseringskvittering: artefakt10733424420, ZIP SHA256 5c5bfd9a9799ac1e79311948b30132180254430fba891575a97dfa797de66166. Rollback til DEV15: artefakt10733913517, SHA256 a0b70e1bbe465efea7e48bf494a8e7babc06bb33c1386409e315cb3e1989dc70. Ni LIVE-filer og ni historiske Worn-filer er bevart identisk. Ingen ny eksport, opplasting eller testing trengs for denne uendrede godkjente kandidaten.
