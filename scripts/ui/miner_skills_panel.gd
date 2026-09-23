@@ -231,13 +231,13 @@ func _make_row(parent: Control, id: String) -> Dictionary:
 	node.focus_mode = Control.FOCUS_ALL
 	node.mouse_default_cursor_shape = Control.CURSOR_HELP
 	node.mouse_entered.connect(func():
-		if Time.get_ticks_msec() - _last_touch_msec > 750: _queue_stat_tip(id, node, 0.35)
+		if _tip_touch < 0 and Time.get_ticks_msec() - _last_touch_msec > 750: _queue_stat_tip(id, node, 0.35)
 	)
 	node.mouse_exited.connect(func():
 		if _tip_touch < 0 and _tip_owner == node: _hide_stat_tip()
 	)
 	node.focus_entered.connect(func():
-		if Time.get_ticks_msec() - _last_touch_msec > 750: _queue_stat_tip(id, node, 0.0)
+		if _tip_touch < 0 and Time.get_ticks_msec() - _last_touch_msec > 750: _queue_stat_tip(id, node, 0.0)
 	)
 	node.focus_exited.connect(func():
 		if _tip_owner == node: _hide_stat_tip()
