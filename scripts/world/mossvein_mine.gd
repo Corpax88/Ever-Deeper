@@ -1867,6 +1867,7 @@ func _terrain_section_has_content(row: int, first_col: int, last_col: int, pass_
 func _draw_partitioned_mine(start: Vector2i, finish: Vector2i) -> void:
 	lit_draw_sections.begin(self)
 	var revisions: Dictionary = {}
+	var cell_signatures: Dictionary = {}
 	if cache_terrain_draws:
 		var discoveries: Array = [RunState.is_depth_entrance_discovered(mine_id)]
 		for cavern_id in cavern_by_id:
@@ -1875,7 +1876,7 @@ func _draw_partitioned_mine(start: Vector2i, finish: Vector2i) -> void:
 		for row in range(maxi(0, start.y), mini(rows - 1, finish.y) + 1):
 			for first_col in range(maxi(0, start.x), mini(cols - 1, finish.x) + 1, 6):
 				var last_col: int = mini(first_col + 5, mini(cols - 1, finish.x))
-				revisions[Vector2i(row, first_col)] = _terrain_strip_fingerprint(row, first_col, last_col, base_revision)
+				revisions[Vector2i(row, first_col)] = _terrain_strip_fingerprint(row, first_col, last_col, base_revision, cell_signatures)
 	# Keep the original four passes and row order. Bedrock still masks the
 	# overhanging mineable corners before concealed chambers are drawn.
 	for pass_index in 4:
@@ -1900,18 +1901,19 @@ func _draw_partitioned_mine(start: Vector2i, finish: Vector2i) -> void:
 	lit_draw_sections.finish()
 
 
-func _terrain_strip_fingerprint(row: int, first_col: int, last_col: int, base_revision: int) -> int:
+func _terrain_strip_fingerprint(row: int, first_col: int, last_col: int, base_revision: int, cell_signatures: Dictionary) -> int:
 	# Read actual state, including restored saves, companion edits and Crusher.
 	# One-cell halo covers exposed sides and corner joins across strip boundaries.
 	var signature: Array = [base_revision, last_col]
 	for neighbor_row in range(maxi(0, row - 1), mini(rows - 1, row + 1) + 1):
 		for col in range(maxi(0, first_col - 1), mini(cols - 1, last_col + 1) + 1):
 			var cell: Vector2i = Vector2i(col, neighbor_row)
-			var index: int = neighbor_row * cols + col
-			signature.append(blocks.get(cell, {}))
-			signature.append(mineable_edge_void_cells.has(cell))
-			signature.append(depth_entrance_cells.has(index))
-			signature.append(concealed_cavern_cells.get(index, ""))
+			# Adjacent strips share their halos. Hash each cell's state just once
+			# in this draw request, instead of walking its dictionary repeatedly.
+			if not cell_signatures.has(cell):
+				var index: int = neighbor_row * cols + col
+				cell_signatures[cell] = hash([blocks.get(cell, {}), mineable_edge_void_cells.has(cell), depth_entrance_cells.has(index), concealed_cavern_cells.get(index, "")])
+			signature.append(cell_signatures[cell])
 	return hash(signature)
 
 
@@ -2953,3 +2955,4 @@ func companion_ore_target(origin: Vector2) -> Vector2:
 			distance=point.distance_to(origin)
 			result=point
 	return result
+
