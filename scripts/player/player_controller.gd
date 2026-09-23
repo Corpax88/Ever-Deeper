@@ -213,7 +213,7 @@ func _update_visual(is_moving: bool) -> void :
 
 func set_mining_visual(active: bool, progress: float = 0.0, recoil: float = 0.0, strike_phase: float = -1.0) -> void :
 	var presentation_active: bool = active
-	if OS.has_feature("ever_deeper_dev"):
+	if bool(ProjectSettings.get_setting_with_override("native_worn/enabled")):
 		presentation_active = _update_legacy_mining_context(active)
 	if recoil > 0.0:
 		_record_mining_presentation_impact()
@@ -355,7 +355,7 @@ func _register_action(action: StringName, keys: Array[int]) -> void :
 
 
 func record_mining_presentation_impact() -> void:
-	if OS.has_feature("ever_deeper_dev"): _record_mining_presentation_impact()
+	if bool(ProjectSettings.get_setting_with_override("native_worn/enabled")): _record_mining_presentation_impact()
 
 
 func _record_mining_presentation_impact() -> void:
@@ -365,7 +365,7 @@ func _record_mining_presentation_impact() -> void:
 	animation_impact_bearing = animation_bearing
 	animation_impact_target_valid = animation_target_valid
 	# A mine may legally retarget before impact. The damage owner is authoritative.
-	if OS.has_feature("ever_deeper_dev"):
+	if bool(ProjectSettings.get_setting_with_override("native_worn/enabled")):
 		var hit_context: Dictionary = LegacyMiningContext.read(get_parent())
 		if hit_context.has("target"):
 			animation_impact_target = Vector2(hit_context.target)

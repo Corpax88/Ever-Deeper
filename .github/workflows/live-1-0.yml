@@ -1,0 +1,85 @@
+name: Verify production LIVE1.0 promotion
+on:
+  push:
+    branches: [codex/live-1-0-20260923]
+    paths: ['.github/live-1-0/build.py', '.github/live-1-0/native-input.json', '.github/live-1-0/shell-input.json', 'scripts/**', 'project.godot', 'export_presets.cfg', 'assets/ui/skills/**', 'assets/ui/fonts/EBGaramond.ttf', '.github/live-1-0/**', '.github/workflows/live-1-0.yml']
+permissions:
+  contents: read
+concurrency:
+  group: live-1-0-qa
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install matching engine
+        run: |
+          curl -L --fail --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Export exact candidate
+        run: python3 .github/live-1-0/build.py Godot_v4.7.2-stable_linux.x86_64 "$RUNNER_TEMP/live-1-0"
+      - name: Record protected-file differences
+        continue-on-error: true
+        run: python3 tools/check_invariants.py > "$RUNNER_TEMP/live-1-0/invariants.log" 2>&1
+      - name: Check actual exported gameplay, input, touch and save behavior
+        run: |
+          python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/live-1-0/candidate/index.pck" --cases input overhaul touch layout build-flavor one-point-zero-migration --output "$RUNNER_TEMP/live-1-0/core"
+          mkdir -p "$RUNNER_TEMP/skills-isolated"
+          cd "$RUNNER_TEMP/skills-isolated"
+          Godot_v4.7.2-stable_linux.x86_64 --headless --path . --main-pack "$RUNNER_TEMP/live-1-0/candidate/index.pck" -- --qa-miner-skills > "$RUNNER_TEMP/live-1-0/skills-core.log" 2>&1
+          python3 -c 'import os,pathlib; s=(pathlib.Path(os.environ["RUNNER_TEMP"])/"live-1-0/skills-core.log").read_text(); assert "MINER_SKILLS_COMPLETE" in s and "ERROR" not in s'
+          python3 "$GITHUB_WORKSPACE/.github/live-1-0/finalize-build.py" "$RUNNER_TEMP/live-1-0"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-1-0-candidate
+          path: ${{ runner.temp }}/live-1-0/candidate
+          if-no-files-found: error
+          retention-days: 90
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-1-0-build-review
+          path: |
+            ${{ runner.temp }}/live-1-0/*.json
+            ${{ runner.temp }}/live-1-0/*.log
+            ${{ runner.temp }}/live-1-0/core
+          if-no-files-found: error
+          retention-days: 90
+  browser:
+    needs: build
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: live-1-0-candidate
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts && npx playwright install chromium webkit
+      - name: Actual production touch and graphical review
+        run: node .github/live-1-0/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/live-1-0-browser"
+      - name: Ordinary Apple WebKit new and saved games
+        env:
+          EXPECTED_VERSION: 1.0.0
+          CANDIDATE_SOURCE: ${{ github.sha }}
+        run: node .github/dev14-startup/inspect.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/live-1-0-webkit"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-1-0-browser-review
+          path: |
+            ${{ runner.temp }}/live-1-0-browser
+            ${{ runner.temp }}/live-1-0-webkit
+          if-no-files-found: error
+          retention-days: 90
