@@ -1,0 +1,19 @@
+name: Store approved tools icon
+on:
+  push:
+    branches: [codex/approved-tools-icon-20260923]
+    paths: ['.github/hud-dev15-2/art-transfer.json']
+permissions:
+  contents: write
+jobs:
+  store:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Store only the approved PNG and remove the transfer configuration
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/hud-dev15-2/store-art.py
