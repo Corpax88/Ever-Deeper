@@ -20,23 +20,23 @@ const MOLE_ICON: = preload("res://assets/companion/mole-hud.png")
 const GOLD: = Color("d7b45a")
 const GOLD_BRIGHT: = Color("ffe3a0")
 const MINT: = Color("a8e3bc")
-const IPHONE_LANDSCAPE_ASPECT: = 1.95
-const IPHONE_TOUCH_TARGET: = 86.0
-const IPHONE_TOP_BUTTON_SIZE: = 96.0
-const IPHONE_MENU_ICON_MAX: = 96
-const IPHONE_TOP_ICON_MAX: = 84
-const IPHONE_MINE_SIZE: = 154.0
+const IPHONE_LANDSCAPE_ASPECT: = 1.5
+const IPHONE_TOUCH_TARGET: = 112.0
+const IPHONE_TOP_BUTTON_SIZE: = 120.0
+const IPHONE_MENU_ICON_MAX: = 120
+const IPHONE_TOP_ICON_MAX: = 112
+const IPHONE_MINE_SIZE: = 190.0
 const IPHONE_MINE_RIGHT: = 116.0
 const IPHONE_MINE_BOTTOM: = 42.0
-const IPHONE_BAG_SIZE: = 118.0
-const IPHONE_BAG_ICON_MAX: = 104
-const IPHONE_SECONDARY_ICON_MAX: = 108
-const IPHONE_CONTEXT_BUILD_ICON_MAX: = 104
-const IPHONE_CONTEXT_GUIDE_ICON_MAX: = 104
-const IPHONE_CONTEXT_GOLD_ICON_MAX: = 96
-const IPHONE_CONTEXT_SIZE: = Vector2(206.0, 104.0)
+const IPHONE_BAG_SIZE: = 142.0
+const IPHONE_BAG_ICON_MAX: = 132
+const IPHONE_SECONDARY_ICON_MAX: = 120
+const IPHONE_CONTEXT_BUILD_ICON_MAX: = 116
+const IPHONE_CONTEXT_GUIDE_ICON_MAX: = 116
+const IPHONE_CONTEXT_GOLD_ICON_MAX: = 108
+const IPHONE_CONTEXT_SIZE: = Vector2(226.0, 116.0)
 const DEFAULT_CONTEXT_SIZE: = Vector2(158.0, 64.0)
-const IPHONE_GOLD_ICON_SIZE: = 60.0
+const IPHONE_GOLD_ICON_SIZE: = 72.0
 const IPHONE_ACTION_GAP: = 18.0
 
 var progression_goal_panel: Control
@@ -297,7 +297,7 @@ func _apply_responsive_layout(viewport_size: Vector2, native_insets: Vector4) ->
 	_fit_context_contents()
 	var gold_icon_size: = IPHONE_GOLD_ICON_SIZE if bool(metrics.iphone) else 32.0
 	_place(gold_icon, Rect2(4, (touch_target - gold_icon_size) * 0.5, gold_icon_size, gold_icon_size))
-	_place(gold_value, Rect2(58 if bool(metrics.iphone) else 27, 0, 92 if bool(metrics.iphone) else 55, touch_target))
+	_place(gold_value, Rect2(72 if bool(metrics.iphone) else 27, 0, 92 if bool(metrics.iphone) else 55, touch_target))
 	gold_value.add_theme_font_size_override("font_size", 24 if bool(metrics.iphone) else 14)
 	bag_count.add_theme_font_size_override("font_size", 18 if bool(metrics.iphone) else 9)
 	objective_title.add_theme_font_size_override("font_size", 22 if bool(metrics.iphone) else 9)
@@ -313,16 +313,17 @@ func _apply_responsive_layout(viewport_size: Vector2, native_insets: Vector4) ->
 func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictionary:
 	var iphone: = viewport_size.x / maxf(viewport_size.y, 1.0) >= IPHONE_LANDSCAPE_ASPECT
 	var touch_target: = IPHONE_TOUCH_TARGET if iphone else 48.0
+	var wide: bool = viewport_size.x / maxf(viewport_size.y, 1.0) >= 1.95
 	var gap: = 12.0 if iphone else 8.0
-	var left: = maxf(native_insets.x, 116.0 if iphone else 8.0)
+	var left: = maxf(native_insets.x, 116.0 if wide else 24.0)
 	var top: = maxf(native_insets.y, 18.0 if iphone else 8.0)
-	var right: = maxf(native_insets.z, 116.0 if iphone else 8.0)
+	var right: = maxf(native_insets.z, 116.0 if wide else 24.0)
 	var bottom: = maxf(native_insets.w, 38.0 if iphone else 12.0)
 	var top_button_size: = IPHONE_TOP_BUTTON_SIZE if iphone else touch_target
 	var menu_rect: = Rect2(left, top, top_button_size, top_button_size)
 	var guide_rect: = Rect2(menu_rect.end.x + gap, top, top_button_size, top_button_size)
 	var mine_size: = IPHONE_MINE_SIZE if iphone else 112.0
-	var mine_right: = maxf(native_insets.z, IPHONE_MINE_RIGHT if iphone else 16.0)
+	var mine_right: = maxf(native_insets.z, IPHONE_MINE_RIGHT if wide else 24.0)
 	var mine_bottom: = maxf(native_insets.w, IPHONE_MINE_BOTTOM if iphone else 88.0)
 	var mine_rect: = Rect2(
 		viewport_size.x - mine_right - mine_size,
@@ -338,8 +339,8 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 		bag_size,
 		bag_size
 	)
-	var gold_width: = 150.0 if iphone else 82.0
-	var companion_rect: = Rect2(guide_rect.end.x + gap, top, 86.0 if iphone else 52.0, touch_target)
+	var gold_width: = 166.0 if iphone else 82.0
+	var companion_rect: = Rect2(guide_rect.end.x + gap, top, top_button_size, top_button_size)
 	var gold_rect: = Rect2(companion_rect.end.x + gap if iphone else viewport_size.x - right - gold_width, top, gold_width, touch_target)
 	var badge_size: = Vector2(42, 30) if iphone else Vector2(27, 20)
 	var bag_count_rect: = Rect2(bag_rect.end.x - badge_size.x + 4, bag_rect.end.y - badge_size.y + 3, badge_size.x, badge_size.y)
@@ -356,9 +357,9 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 		context_size.x,
 		context_size.y
 	)
-	var goal_width: = 400.0 if iphone else 286.0
+	var goal_width: = (400.0 if wide else 340.0) if iphone else 286.0
 	var goal_rows: int = ceili(float(_progression_row_count) / 2.0) if _progression_row_count > 1 else _progression_row_count
-	var goal_height: = maxf(76.0, 50.0 + 34.0 * goal_rows) if iphone else (62.0 + 27.0 * _progression_row_count)
+	var goal_height: = maxf(76.0, 50.0 + 42.0 * goal_rows) if iphone else (62.0 + 27.0 * _progression_row_count)
 	var progression_rect: = Rect2(viewport_size.x - right - goal_width, top if iphone else gold_rect.end.y + 10.0, goal_width, goal_height)
 	var minimap_size: = Vector2(188, 96) if iphone else Vector2(184, 106)
 	var minimap_rect: = Rect2(progression_rect.position.x - gap - minimap_size.x, progression_rect.position.y, minimap_size.x, minimap_size.y)

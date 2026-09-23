@@ -29,7 +29,12 @@ func _frame() -> void:
 		"continue": _bounds(main.premium_menu.continue_button),
 		"settings_back": _bounds(main.premium_menu.detail_card.get_node("Back")),
 		"skills_close": _bounds(panel.close_button),
-		"joystick": _bounds(main.movement_pad)}
+		"joystick": _bounds(main.movement_pad),
+		"hud_mine": _bounds(main.mine_button), "hud_bag": _bounds(main.premium_hud.bag_button),
+		"hud_guide": _bounds(main.premium_hud.guide_button),
+		"hud_mole": _bounds(main.get_node("CompanionInterface").button)}
+	for row in panel.rows + [panel.stamina_row]:
+		bounds["stat_" + String(row.node.name).to_lower()] = _bounds(row.node)
 	for i in 4: bounds[["inventory", "skills", "map", "settings"][i]] = _bounds(panel.nav[i])
 	var close: Control = main.resource_inventory.get_node_or_null("Card/Layout/Header/Close")
 	if close != null: bounds.inventory_close = _bounds(close)
@@ -40,7 +45,15 @@ func _frame() -> void:
 		"player_controls_enabled": main._active_player_node().control_enabled,
 		"stamina": RunState.stamina_value(), "skill_xp": RunState.miner_skills.duplicate(true),
 		"skills": RunState.miner_skill_rows(), "effort": RunState.stamina_effort_multiplier(),
-		"buttons": bounds, "skills_plate": _bounds(panel.plate)}
+		"buttons": bounds, "skills_plate": _bounds(panel.plate),
+		"tooltip_visible": panel.stat_tip.visible, "tooltip_id": panel._tip_id,
+		"tooltip_text": panel._tip_body.text, "tooltip_rect": _bounds(panel.stat_tip),
+		"hud_context": _bounds(main.premium_hud.context_button),
+		"hud_context_visible": main.premium_hud.context_button.is_visible_in_tree(),
+		"hud_mine_visible": main.mine_button.is_visible_in_tree(),
+		"hud_gold": _bounds(main.premium_hud.gold_cluster),
+		"hud_map": _bounds(main.minimap_overlay),
+		"hud_goal": _bounds(main.premium_hud.progression_goal_panel)}
 	if is_instance_valid(panel.map_view):
 		var rect: Rect2 = panel.map_view._map_rect
 		state.map_rect = [rect.position.x, rect.position.y, rect.size.x, rect.size.y]

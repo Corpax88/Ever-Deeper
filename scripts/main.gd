@@ -1388,23 +1388,17 @@ func _apply_responsive_ui_layout(size_override: Vector2 = Vector2.ZERO) -> void 
 
 
 func _layout_touch_actions(viewport_size: Vector2) -> void :
-	var iphone: = _is_iphone_landscape(viewport_size)
+	# The HUD and mining input share one set of bounds at every landscape ratio.
+	var metrics: Dictionary = premium_hud.layout_snapshot(viewport_size)
+	var mine_rect: Rect2 = metrics.mine
 	_place_control(touch_controls, Rect2(Vector2.ZERO, viewport_size))
-	if iphone:
-		var mine_rect: = _iphone_layout_metrics(viewport_size).mine as Rect2
-		_place_control(mine_button, mine_rect)
-		_place_control(action_button, Rect2(mine_rect.position.x - 258, mine_rect.position.y + 19, 238, 86))
-		mine_button.custom_minimum_size = mine_rect.size
-		mine_button.add_theme_constant_override("icon_max_width", 144)
-		action_button.custom_minimum_size = Vector2(238, 86)
-		action_button.add_theme_font_size_override("font_size", 20)
-	else:
-		_place_control(mine_button, Rect2(viewport_size.x - 128, viewport_size.y - 200, 112, 112))
-		_place_control(action_button, Rect2(viewport_size.x - 228, viewport_size.y - 255, 212, 58))
-		mine_button.custom_minimum_size = Vector2(112, 112)
-		mine_button.add_theme_constant_override("icon_max_width", 104)
-		action_button.custom_minimum_size = Vector2(212, 58)
-		action_button.add_theme_font_size_override("font_size", 12)
+	mine_button.custom_minimum_size = mine_rect.size
+	_place_control(mine_button, mine_rect)
+	mine_button.add_theme_constant_override("icon_max_width", int(mine_rect.size.x - 10))
+	var action_size: Vector2 = Vector2(238, 86) if metrics.iphone else Vector2(212, 58)
+	action_button.custom_minimum_size = action_size
+	_place_control(action_button, Rect2(mine_rect.position - Vector2(action_size.x + 20, -19), action_size))
+	action_button.add_theme_font_size_override("font_size", 20 if metrics.iphone else 12)
 
 
 func _layout_starforge_panel(viewport_size: Vector2) -> void :
@@ -1501,7 +1495,7 @@ func _layout_orientation_guard(viewport_size: Vector2) -> void :
 func _iphone_layout_metrics(viewport_size: Vector2) -> Dictionary:
 	var right: = 116.0
 	var bottom: = 42.0
-	var mine_size: = Vector2(154, 154)
+	var mine_size: = Vector2.ONE * PremiumHud.IPHONE_MINE_SIZE
 	return {
 		"safe_rect": Rect2(110, 18, viewport_size.x - 220, viewport_size.y - 60),
 		"mine": Rect2(viewport_size.x - right - mine_size.x, viewport_size.y - bottom - mine_size.y, mine_size.x, mine_size.y),

@@ -49,13 +49,12 @@ func _ready() -> void:
 
 func _layout() -> void:
 	var size: Vector2=get_viewport().get_visible_rect().size
-	var mobile: bool=size.x/maxf(1.0,size.y)>1.9
-	var extent: float=90.0 if mobile else 52.0
 	var layout: Dictionary = main.premium_hud.layout_snapshot(size)
+	var mobile: bool = bool(layout.iphone)
 	var portrait: Rect2 = layout.companion
-	button.position=portrait.position if mobile else Vector2(184,8)
-	button.size=portrait.size if mobile else Vector2.ONE*extent
-	activity.position=button.position+Vector2(0,extent+2) if mobile else button.position+Vector2(extent+10,12)
+	button.position = portrait.position
+	button.size = portrait.size
+	activity.position = Vector2(portrait.position.x, portrait.end.y + 2)
 	activity.size=Vector2(230 if mobile else 150,72)
 	activity.add_theme_font_size_override("font_size",16 if mobile else 12)
 

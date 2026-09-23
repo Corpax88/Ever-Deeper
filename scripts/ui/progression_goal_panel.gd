@@ -114,7 +114,7 @@ func set_mobile_layout(iphone: bool) -> void:
 		var label: Label = controls.label
 		var counter: Label = controls.counter
 		label.visible = not compact_grid
-		icon.custom_minimum_size = Vector2(34, 32) if iphone else Vector2(27, 26)
+		icon.custom_minimum_size = Vector2(44, 40) if iphone else Vector2(34, 32)
 		label.add_theme_font_size_override("font_size", 18 if iphone else 15)
 		counter.add_theme_font_size_override("font_size", 19 if iphone else 16)
 

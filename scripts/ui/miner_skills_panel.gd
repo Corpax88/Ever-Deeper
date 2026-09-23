@@ -28,6 +28,15 @@ var map_view: Control
 var _textures: Dictionary = {}
 var _elapsed: float = 0.0
 var _map_active: bool = false
+var stat_tip: Control
+var _tip_title: Label
+var _tip_body: Label
+var _tip_id: String = ""
+var _tip_owner: Control
+var _tip_delay: float = 0.0
+var _tip_touch: int = -1
+var _tip_touch_start: Vector2
+var _last_touch_msec: int = -10000
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -85,6 +94,16 @@ func _ready() -> void:
 		rows.append(_make_row(plate, id))
 	stamina_row = _make_row(plate, "stamina")
 	stamina_row.level.visible = false
+	stat_tip = _frame(root, false)
+	stat_tip.name = "StatTooltip"
+	stat_tip.z_index = 5
+	stat_tip.get_node("InsetShade").color = Color("1e1713")
+	_tip_title = _label(stat_tip, "", 34)
+	_tip_body = _label(stat_tip, "", 28)
+	_tip_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_tip_body.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
+	stat_tip.hide()
+	visibility_changed.connect(_hide_stat_tip)
 	get_viewport().size_changed.connect(_layout)
 	visible = false
 	_layout()
@@ -101,6 +120,7 @@ func close_panel() -> void:
 	visible = false
 
 func show_skills() -> void:
+	_hide_stat_tip()
 	_map_active = false
 	if is_instance_valid(map_view): map_view.queue_free()
 	map_view = null
@@ -130,6 +150,9 @@ func show_map(source: Control) -> void:
 
 func _process(delta: float) -> void:
 	if not visible: return
+	if is_instance_valid(_tip_owner) and not stat_tip.visible:
+		_tip_delay -= delta
+		if _tip_delay <= 0.0: _show_stat_tip()
 	_elapsed += delta
 	if _elapsed >= 0.2:
 		_elapsed = 0.0
@@ -159,6 +182,7 @@ func refresh() -> void:
 
 func _layout() -> void:
 	if root == null: return
+	_hide_stat_tip()
 	var viewport_size: Vector2 = get_viewport_rect().size
 	var square: bool = viewport_size.x / maxf(1.0, viewport_size.y) < 1.5
 	var design_height: float = 1254.0 if square else 720.0
@@ -203,6 +227,21 @@ func _layout() -> void:
 func _make_row(parent: Control, id: String) -> Dictionary:
 	var node: Control = _frame(parent, false)
 	node.name = id.capitalize()
+	node.mouse_filter = Control.MOUSE_FILTER_STOP
+	node.focus_mode = Control.FOCUS_ALL
+	node.mouse_default_cursor_shape = Control.CURSOR_HELP
+	node.mouse_entered.connect(func():
+		if Time.get_ticks_msec() - _last_touch_msec > 750: _queue_stat_tip(id, node, 0.35)
+	)
+	node.mouse_exited.connect(func():
+		if _tip_touch < 0 and _tip_owner == node: _hide_stat_tip()
+	)
+	node.focus_entered.connect(func():
+		if Time.get_ticks_msec() - _last_touch_msec > 750: _queue_stat_tip(id, node, 0.0)
+	)
+	node.focus_exited.connect(func():
+		if _tip_owner == node: _hide_stat_tip()
+	)
 	var icon: TextureRect = _image(node, "icons/" + ("bag" if id == "carrying" else id) + ".svg")
 	var tile: Control = _frame(node, false)
 	tile.name = "IconFrame"
@@ -344,6 +383,74 @@ func _label(parent: Control, text: String, font_size: int) -> Label:
 
 func _compact(value: int) -> String:
 	return "%.1fk" % (value / 1000.0) if value >= 10000 else str(value)
+
+func _input(event: InputEvent) -> void:
+	if not visible: return
+	if event is InputEventScreenTouch:
+		_last_touch_msec = Time.get_ticks_msec()
+		if event.pressed:
+			if _tip_touch >= 0: return
+			_hide_stat_tip()
+			if _map_active: return
+			for row in rows + [stamina_row]:
+				if row.node.get_global_rect().has_point(event.position):
+					_queue_stat_tip(String(row.node.name).to_lower(), row.node, 0.45)
+					_tip_touch = event.index
+					_tip_touch_start = event.position
+					return
+		elif event.index == _tip_touch:
+			_hide_stat_tip()
+	elif event is InputEventScreenDrag and event.index == _tip_touch:
+		if event.position.distance_to(_tip_touch_start) > 20.0 * root.scale.x:
+			_hide_stat_tip()
+
+func _queue_stat_tip(id: String, target: Control, delay: float) -> void:
+	_hide_stat_tip()
+	_tip_id = id
+	_tip_owner = target
+	_tip_delay = delay
+
+func _hide_stat_tip() -> void:
+	if is_instance_valid(stat_tip): stat_tip.hide()
+	_tip_owner = null
+	_tip_id = ""
+	_tip_touch = -1
+
+func _show_stat_tip() -> void:
+	if not is_instance_valid(_tip_owner) or not _tip_owner.is_visible_in_tree():
+		_hide_stat_tip()
+		return
+	_tip_title.text = _tip_id.capitalize()
+	var level: int = RunState.miner_skill_level(_tip_id) if _tip_id != "stamina" else 0
+	match _tip_id:
+		"mining":
+			_tip_body.text = "Train by mining rock.\nMining uses %.1f%% less stamina at your level.\nMaximum reduction: 30%%." % (level * 0.3)
+		"running":
+			_tip_body.text = "Train by walking or running.\nMovement uses %.1f%% less stamina at your level.\nMaximum reduction: 30%%." % (level * 0.3)
+		"carrying":
+			_tip_body.text = "Train by moving with items in your bag.\nThe extra stamina cost of carrying is %.1f%% lower.\nMaximum reduction: 50%%." % (level * 0.5)
+		"prospecting":
+			_tip_body.text = "Gain XP for every resource mined.\nTracks your prospecting experience.\nNo extra loot bonus yet."
+		"stamina":
+			_tip_body.text = "Used while moving and mining.\nStand still to recover after a short rest.\nBelow 15, movement and mining power gradually fall to 75%."
+	var width: float = minf(440.0, root.size.x - 40.0)
+	_tip_title.position = Vector2(24, 18)
+	_tip_title.size = Vector2(width - 48, 44)
+	_tip_body.position = Vector2(24, 66)
+	_tip_body.size = Vector2(width - 48, 0)
+	var height: float = _tip_body.get_minimum_size().y + 90.0
+	_size_frame(stat_tip, Vector2(width, height))
+	# Keep the hovered row and held finger clear. The popup stays on screen.
+	var anchor: Rect2 = Rect2(_tip_owner.global_position / root.scale, _tip_owner.size)
+	var x: float = plate.position.x - width - 18.0
+	if x < 16.0: x = root.size.x - width - 16.0
+	stat_tip.position = Vector2(clampf(x, 16.0, root.size.x - width - 16.0),
+		clampf(anchor.get_center().y - height * 0.5, 116.0, root.size.y - height - 16.0))
+	stat_tip.show()
+
+func tooltip_snapshot() -> Dictionary:
+	return {"visible": stat_tip.visible, "id": _tip_id, "text": _tip_body.text,
+		"rect": stat_tip.get_global_rect()}
 
 func debug_snapshot() -> Dictionary:
 	return {"visible": visible, "map": _map_active, "skills": RunState.miner_skill_rows(),
