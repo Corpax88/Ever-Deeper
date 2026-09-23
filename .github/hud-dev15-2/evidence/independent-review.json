@@ -1,0 +1,96 @@
+{
+  "accepted": true,
+  "final_build_images_inspected": true,
+  "version": "1.0.0-dev.15.2",
+  "source_commit": "d21215650f165c81e14ad0d56d202679eab740d5",
+  "files": {
+    "index.html": {
+      "size": 7855,
+      "sha256": "e6e95daebe5a787e425f8c9bac62b8c8bb672a762b67d0177f08b8df73d72f14"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 259846500,
+      "sha256": "ad3af0026fb3048addcc37a244f152e930f0e506c5cac5cc0aeb1a5d6841355b"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "inspected_images": [
+    {
+      "path": "/tmp/tools-icon-final-browser/dev15-2-browser/hud-844.png",
+      "sha256": "94b850fe983b718ba46636b0fbba44262cce05ce4082a2c039751a6c3bbf10c2"
+    },
+    {
+      "path": "/tmp/tools-icon-final-browser/dev15-2-browser/hud-667.png",
+      "sha256": "2ba67eccbbf8a2fd7fe2babaca06fd37e6521f92a0290ef364e3a224e4d97c3d"
+    },
+    {
+      "path": "/tmp/tools-icon-final-browser/dev15-2-browser/hud-3-2.png",
+      "sha256": "fa48f851967a367b9e1bd3db87ff4304b4b748886c072537e0b57482780e6f9f"
+    },
+    {
+      "path": "/tmp/tools-icon-final-browser/dev15-2-browser/hud-moss-844.png",
+      "sha256": "53e623a8f689e28d54ab9634db130ee6006bf47c6ec091c3a27638bb9ab7d20e"
+    },
+    {
+      "path": "/tmp/tools-icon-final-browser/dev15-2-browser/skills-open-844.png",
+      "sha256": "af3d73499a4d07cbb098b53a10bbc4aafe8456cea8db8a5027dad43c27ee233c"
+    },
+    {
+      "path": "/tmp/tools-icon-final-browser/dev15-2-browser/skills-open-667.png",
+      "sha256": "995167ae3baa74a90d23cc6d15997ee0e29270ee240bc2054d9e0a1f8015081d"
+    },
+    {
+      "path": "/tmp/tools-icon-final-browser/dev15-2-browser/skills-open-3-2.png",
+      "sha256": "c110e16ab77ed9fa594ef186edf48403efa4cd9a2198c47e06364cfb76399741"
+    },
+    {
+      "path": "/tmp/tools-icon-final-browser/dev15-2-browser/touch-mining-after-menu-released.png",
+      "sha256": "fbe89aea730c2531660280c585654809d05ac37819c38576d0c73f6c13badc9c"
+    },
+    {
+      "path": "/tmp/tools-icon-final-browser/dev15-2-webkit/06-confirmed-new-game.png",
+      "sha256": "f9c13ea48bb4d7a090812cb28eb213c5ff40ada9358e89786545872d0d09f32c"
+    }
+  ],
+  "scoped_code_quality_score": 9,
+  "scoped_visual_score": 9,
+  "blockers": [],
+  "findings": [
+    "Approved crossed tools render with steel, wood and brass material detail matching neighboring HUD icons.",
+    "Icon has clean transparent silhouette and balanced scale beside compass; no clipping or overlap in inspected Surface, Mossvein or WebKit gameplay captures.",
+    "Skills screen is shown open at all three captured layouts; browser report confirms actual icon clicks and mining after closing menu.",
+    "104 icon-width cap compensates alpha bounds while preserving 120 logical-pixel touch button. Publisher binds reviewed export and evidence and preserves LIVE/Worn bytes."
+  ],
+  "limits": [
+    "Acceptance covers this icon integration only, not overall menu layout, unrelated animations, sustained FPS or whole-game quality.",
+    "Inspected eight Chromium captures and one ordinary-startup WebKit gameplay capture; no physical iPhone verification.",
+    "Publication staging and public byte verification remain publisher execution responsibilities."
+  ]
+}
