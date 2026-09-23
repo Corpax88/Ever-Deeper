@@ -1,0 +1,11 @@
+# Ever-Deeper — DEV15.5 er publisert
+
+23. september 2026. **Alle Wayfarer-butikker er fjernet fra overflaten og de fire gruvenes dybde2. Copper Ridge er flyttet til den tidligere butikkens område.** Publisert på https://corpax88.github.io/Ever-Deeper/dev/. Fjellets x=812 følger gammel butikkplass; y=600 bevarer bakkenivået, med hakkeplass812650. Visning, kollisjon, treff og malm følger ny plass. Eksisterende fartsoppgraderinger og lagringsformat er beholdt; butikkene har ingen vanlig interaksjonsrute. Skills-barer, sølvfargede infoboksoverskrifter og godkjent verktøyikon er beholdt.
+
+Kanonisk kilde: Corpax88/Ever-Deeper, gren codex/remove-wayfarer-20260923. Eksakt eksportcommit `57ab001fe2f4d1b9d37c608c290d05c668f6848a`. Main holder publiseringsbevis. Test-run35855675070 besto fem eksporterte kjernekontroller,28Skills/save-kontroller,62 Chromium/Metal-kontroller og vanlig Mac WebKit ny/lagret oppstart. Sluttbilder av helt/skadet/kollapset fjell, gangvei og alle fire tidligere gruvebutikker er inspisert og uavhengig akseptert uten blokkere (kode9/10, avgrenset visuelt8/10). En smal fjelltopp under nedre transparente minimapkant er dokumentert som ikke-blokkerende; etiketter/markører og gullverdi er lesbare. Ikke fysisk iPhone-verifisert.
+
+Publiseringscommit `f6911e0923f281f3d5c48d804f1db0d41a7ce604`, run35856567685: package/deploy/verify besto, alle27 offentlige filhasher verifisert. LIVE9filer, historisk Worn9filer, DEV-saveidentitet og21 native figur-/utstyrsfiler er bevart. PCK259848760byte, SHA256 `c5be88950edd640885e7a2ffd13296e08f58a0092a0a5dd1fab11f9dfb8f4eae`.
+
+Artifakter: kandidat10747915502, build10747442159, browser10747297256. Publiseringskvittering10748166529; SHA256sha256:6954262ad542fab1ec1c0c190b276f8a3f52088422e135bf4c7ac7013720a129. Bevis og kvittering på main under .github/world-dev15-5/ og docs/premium-polish/world-dev15-5/.
+
+Oppgaven er ferdig. Neste brukertest: oppdater DEV til15.5 og prøv fjellet ved den gamle Wayfarer-plassen. Ikke eksporter/test/publiser denne uendrede kandidaten igjen. Ved nytt relevant arbeid brukes .github/workflows/world-dev15-5.yml. De fire historiske invariantavvikene er beholdt og ikke rapportert som pass. Stående DEV-publiseringstillatelse gjelder; ingen ny innlogging. Ikke start automatisk annet visuelt arbeid.
