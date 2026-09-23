@@ -397,7 +397,7 @@ func _run_iphone_layout_qa() -> void :
 		assert (bool(hud.iphone) and bool(menu.iphone) and bool(inventory.iphone))
 		assert (Rect2(hud.menu).size.is_equal_approx(Vector2(120, 120)))
 		assert (Rect2(hud.context).size.is_equal_approx(Vector2(226, 116)))
-		assert (int(icons.menu_cap) == 120)
+		assert (int(icons.menu_cap) == 112)
 		assert (int(icons.guide_cap) == 112)
 		assert (int(icons.bag_cap) == 132)
 		assert (Vector2(icons.gold).is_equal_approx(Vector2(72, 72)))
