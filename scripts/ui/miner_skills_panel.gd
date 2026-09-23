@@ -99,6 +99,7 @@ func _ready() -> void:
 	stat_tip.z_index = 5
 	stat_tip.get_node("InsetShade").color = Color("1e1713")
 	_tip_title = _label(stat_tip, "", 34)
+	_tip_title.add_theme_color_override("font_color", Color("cbd1d8"))
 	_tip_body = _label(stat_tip, "", 28)
 	_tip_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_tip_body.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
