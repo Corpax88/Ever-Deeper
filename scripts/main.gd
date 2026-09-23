@@ -513,6 +513,7 @@ func _dev_jump_surface() -> void :
 	_deactivate_worlds()
 	surface_world.restore_position(Vector2(RunState.last_surface_position))
 	surface_world.set_active(true)
+	_on_surface_context_changed(surface_world.active_context)
 	AudioDirector.set_environment("surface")
 	objective_label.text = _surface_objective()
 	_set_status("DEV · Surface expedition")
