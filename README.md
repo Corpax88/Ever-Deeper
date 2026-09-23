@@ -1,3 +1,5 @@
+Current verified release: [DEV15.1 larger gameplay icons and stat tooltips](docs/premium-polish/hud-dev15-1/HANDOFF.md) is published at https://corpax88.github.io/Ever-Deeper/dev/. Exact game source51e2c58ce8806d11c9fc608c6d6a9e48b74507c8 on codex/gameplay-icons-tooltips-20260923; main holds publication/evidence. Test run35822513557 and publication run35823540837 passed, all27 public hashes verified. Skills icon/layout sizes are unchanged by explicit user instruction; gameplay buttons are larger, stats explain themselves on hover/held touch. DEV saves, LIVE and retained trial preserved. No physical iPhone claim. Do not rebuild/retest/reupload this unchanged accepted candidate. Standing publication authorization persists; no new login is needed.
+
 # Ever Deeper
 
 Published milestone: [DEV12 verified, 17 September 2026](docs/premium-polish/dev12-north-edge-20260917/PUBLISHED.md).
