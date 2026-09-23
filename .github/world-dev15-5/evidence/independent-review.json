@@ -1,0 +1,99 @@
+{
+  "accepted": true,
+  "final_build_images_inspected": true,
+  "physical_iphone_verified": false,
+  "version": "1.0.0-dev.15.5",
+  "source_commit": "57ab001fe2f4d1b9d37c608c290d05c668f6848a",
+  "files": {
+    "index.html": {
+      "size": 7855,
+      "sha256": "e78a195d63319a515c25fb10635a12dca236e5f24ed869184bbec8b62a2e4bb8"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 259848760,
+      "sha256": "c5be88950edd640885e7a2ffd13296e08f58a0092a0a5dd1fab11f9dfb8f4eae"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "inspected_images": [
+    {
+      "path": "/tmp/wayfarer-browser/dev15-5-browser/quarry-full-844.png",
+      "sha256": "52075ee8296865b24c869218d0d1f96f597072e5ca4d382850f3670c16c3a87c"
+    },
+    {
+      "path": "/tmp/wayfarer-browser/dev15-5-browser/quarry-full-667.png",
+      "sha256": "69d0b7b0a4781473523cca37f1a0add5697a0cf8c815420ff0749e6fa6baceee"
+    },
+    {
+      "path": "/tmp/wayfarer-browser/dev15-5-browser/quarry-stage-120.png",
+      "sha256": "b5fd57bf9b3b43f6cb0c8a8e3e1907ea8ac7e393964c564daebabf47a7ce48c7"
+    },
+    {
+      "path": "/tmp/wayfarer-browser/dev15-5-browser/quarry-stage-0.png",
+      "sha256": "be56c299ae1c7e4c121563b64264c66dc5f8a5b6f7359204e6e27f4f791278ff"
+    },
+    {
+      "path": "/tmp/wayfarer-browser/dev15-5-browser/quarry-road-after-walking.png",
+      "sha256": "cdb37a9e317f2fb7d42798264edde36820bab3ac9b4282b00b24a0f92dc189ac"
+    },
+    {
+      "path": "/tmp/wayfarer-browser/dev15-5-browser/camp-mossMine.png",
+      "sha256": "350ba4af3f0758d10b65a69881a1ceeeb91e27d98ee9bd0899b8fa743595409c"
+    },
+    {
+      "path": "/tmp/wayfarer-browser/dev15-5-browser/camp-moonMine.png",
+      "sha256": "e513f11ef480a5c3d8d00ca10cccb7ec8d6872f725dc722b94d662eee051fe4f"
+    },
+    {
+      "path": "/tmp/wayfarer-browser/dev15-5-browser/camp-emberMine.png",
+      "sha256": "adfba2188b6e5e5c2fbfc6b1600da8d1a400a3b7c928ae6c3e8e0af71b18115f"
+    },
+    {
+      "path": "/tmp/wayfarer-browser/dev15-5-browser/camp-starMine.png",
+      "sha256": "d200378a8f47f757d146e1200216c95fc682d5f1e25ee538ea27dc146df9cbf6"
+    }
+  ],
+  "scoped_code_quality_score": 9,
+  "scoped_visual_score": 8,
+  "blockers": [],
+  "findings": [
+    "Final mountain anchor812600 restores ground contact while moving horizontally into the retired shop area; approach and road remain visually clear at844x390 and667x375.",
+    "Full, damaged and depleted mountain stages remain grounded. Portal opening stays clear; mountain sits behind its left foot without obstructing the entry.",
+    "A narrow summit tip remains beneath the transparent lower minimap edge, but does not obscure its label/markers or the gold value; nonblocking within relocation scope.",
+    "Surface and all four depth camp captures show no Wayfarer store or floating boots. Existing depth clearings and other shops remain.",
+    "Source removes normal shop interaction routes while retaining purchased-speed data and compatibility APIs; outdated smoke/commerce checks were corrected. Exact browser report passes movement/mining and removed-store assertions.",
+    "Publisher preserves exact candidate/source/evidence binding, LIVE and Worn bytes, and postdeployment public verification."
+  ],
+  "limits": [
+    "Acceptance scoped to Wayfarer removal and Copper Ridge relocation, not overall world polish, unrelated rendering, animation quality or sustained FPS.",
+    "Inspected nine final Chromium captures; no physical iPhone verification.",
+    "Publication staging and public verification remain publisher responsibilities."
+  ]
+}

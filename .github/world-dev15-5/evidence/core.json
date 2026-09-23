@@ -1,0 +1,66 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "input",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 3.01,
+      "marker": "EVER_DEEPER_INPUT_RELEASE_OK",
+      "completion": [
+        "EVER_DEEPER_INPUT_RELEASE_OK hide=true matching_touch=true canceled_touch=true unrelated_touch_ignored=true mouse=true worlds=5 focus_pause=true"
+      ],
+      "log": "/home/runner/work/_temp/dev15-5/core/input.log"
+    },
+    {
+      "case": "overhaul",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 7.12,
+      "marker": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK",
+      "completion": [
+        "EVER_DEEPER_SURFACE_GAMEPLAY_OK locked/open both-directions solid-pillars copper=24 regrowth=360 branch-both-directions shop-access",
+        "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=1265 failures=[]"
+      ],
+      "log": "/home/runner/work/_temp/dev15-5/core/overhaul.log"
+    },
+    {
+      "case": "touch",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 14.04,
+      "marker": "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK",
+      "completion": [
+        "EVER_DEEPER_OVERHAUL_GAMEPLAY_OK checks=125 failures=[]"
+      ],
+      "log": "/home/runner/work/_temp/dev15-5/core/touch.log"
+    },
+    {
+      "case": "layout",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 3.91,
+      "marker": "EVER_DEEPER_IPHONE_LAYOUT_OK",
+      "completion": [
+        "EVER_DEEPER_IPHONE_LAYOUT_OK devices=844x390,852x393,874x402,912x420,932x430,956x440 touch=44css icons=optically-normalized safe=notch/home overlays=menu,bag,museum,starforge,conclusion"
+      ],
+      "log": "/home/runner/work/_temp/dev15-5/core/layout.log"
+    },
+    {
+      "case": "build-flavor",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 2.91,
+      "marker": "EVER_DEEPER_BUILD_FLAVOR_QA_OK",
+      "completion": [
+        "EVER_DEEPER_BUILD_FLAVOR_QA_OK flavor=dev menu=true resource=true save=user://ever_deeper_dev_run_v3.sav user_dir=Ever Deeper- Godot Development Port path=/tmp/ever-deeper-qa-35lu88kq/Ever Deeper- Godot Development Port isolated=true"
+      ],
+      "log": "/home/runner/work/_temp/dev15-5/core/build-flavor.log"
+    }
+  ]
+}
