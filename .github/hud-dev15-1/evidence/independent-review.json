@@ -1,0 +1,290 @@
+{
+  "accepted": true,
+  "final_build_images_inspected": true,
+  "source_commit": "51e2c58ce8806d11c9fc608c6d6a9e48b74507c8",
+  "version": "1.0.0-dev.15.1",
+  "run_id": 35822513557,
+  "reviewer": "hud_tooltip_review",
+  "scope": "Larger gameplay HUD controls and stat hover/long-press explanations in the exact DEV15.1 build. Final Mac Chromium DPR3 captures at844x390,667x375 and900x600, plus ordinary Mac WebKit startup/save/new-game captures. Skills sizes and approved assets are retained.",
+  "files": {
+    "index.html": {
+      "size": 7855,
+      "sha256": "948ef6974e92ebba51b53a3d48f9f32cc8324e81d4deaa33d49f1a5b4bc84fa6"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 258740164,
+      "sha256": "fa6c452639e54d05df746eb9ef3743459a7b07b7c452aca95643c32861f30ee0"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "blockers": [],
+  "findings": [
+    {
+      "id": "held-drag-emulated-hover",
+      "status": "fixed",
+      "finding": "Rejected source140876a reopened Mining after holding Stamina and dragging onto Mining.",
+      "fix": "Mouse/focus entry requires no active touch owner; ScreenDrag timestamps suppress subsequent emulated hover. Unchanged delayed cross-row regression passes at both phone widths."
+    },
+    {
+      "id": "stamina-recovery-copy",
+      "status": "fixed",
+      "finding": "Standing still while mining does not regenerate stamina.",
+      "fix": "Final tooltip explicitly requires rest without moving or mining; final phone captures show complete copy."
+    },
+    {
+      "id": "responsive-controls",
+      "status": "verified",
+      "finding": "Enlarged gameplay controls must stay separated and within the viewport.",
+      "fix": "Shared mine/HUD bounds, larger mole/button assets, guide marker safe bounds and narrow-layout minimap fallback. Actual844x390,667x375 and900x600 images fit; 900x600 does not exercise fallback relocation."
+    },
+    {
+      "id": "skills-size-scope",
+      "status": "verified",
+      "finding": "User explicitly excluded size changes inside Skills.",
+      "fix": "Existing Skills row, icon and navigation dimensions are retained; tooltips are additive."
+    }
+  ],
+  "closed_findings": [
+    "Mouse/focus entry requires no active touch owner; ScreenDrag timestamps suppress subsequent emulated hover. Unchanged delayed cross-row regression passes at both phone widths.",
+    "Final tooltip explicitly requires rest without moving or mining; final phone captures show complete copy.",
+    "Shared mine/HUD bounds, larger mole/button assets, guide marker safe bounds and narrow-layout minimap fallback. Actual844x390,667x375 and900x600 images fit; 900x600 does not exercise fallback relocation.",
+    "Existing Skills row, icon and navigation dimensions are retained; tooltips are additive."
+  ],
+  "runtime": {
+    "viewport": [
+      844,
+      390
+    ],
+    "dpr": 3,
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+    "lost": false,
+    "browser": "151.0.7922.34",
+    "platform": "darwin",
+    "video_recording": false
+  },
+  "chromium_passing_entries": 59,
+  "webkit_completed_observations": 51,
+  "core_cases": [
+    "input",
+    "overhaul",
+    "touch",
+    "layout",
+    "build-flavor"
+  ],
+  "skills_core_checks": 28,
+  "inspected_image_root": "dev15-1-browser-review artifact from run35822513557",
+  "inspected_images": [
+    {
+      "artifact_path": "dev15-1-browser/01-new-game.png",
+      "size": 5232342,
+      "sha256": "08002984fa24eb9e44890ddaf24f522ff92328ccd5a725964a146bd96b02bbc9"
+    },
+    {
+      "artifact_path": "dev15-1-browser/02-surface-touch-released.png",
+      "size": 5212600,
+      "sha256": "8cd889af5f4e41780c2fb996b9a4f7fb69fd12846403f3b3a8353bf3ded83df2"
+    },
+    {
+      "artifact_path": "dev15-1-browser/03-earned-skills.png",
+      "size": 4395954,
+      "sha256": "42e2b531fceb3044d9863f0e7c06e50d4ac0b10eebe3f29cafb8eacda7444611"
+    },
+    {
+      "artifact_path": "dev15-1-browser/04-approved-skills-844.png",
+      "size": 4402818,
+      "sha256": "cae12b32e74729e75af4d79b8dd65e9b2290637ca9704d63d9d0c3773584d0f7"
+    },
+    {
+      "artifact_path": "dev15-1-browser/05-map-844.png",
+      "size": 3543580,
+      "sha256": "1a9b9170e56be1f79040971ca47d0d3fcd3ac42940f7553192bd19e0b7f51ec8"
+    },
+    {
+      "artifact_path": "dev15-1-browser/06-map-667.png",
+      "size": 2848342,
+      "sha256": "06727d02f5d8b81567d92813a9b192e4798c21799f79d827391f0b57fb17f1bc"
+    },
+    {
+      "artifact_path": "dev15-1-browser/07-approved-skills-667.png",
+      "size": 3549759,
+      "sha256": "36a8ae6a490b24140a61d9a41a52f6cad4e8769d0b3a28fcb5fc8a25108e5999"
+    },
+    {
+      "artifact_path": "dev15-1-browser/08-inventory.png",
+      "size": 205558,
+      "sha256": "349cd8b1ce0aeeffb1715f4930cc7102cdbbdb9439c622bc4430b1ece1b600d7"
+    },
+    {
+      "artifact_path": "dev15-1-browser/09-settings-back.png",
+      "size": 357856,
+      "sha256": "521c5be946b15fa02c4bf00ff05adfd68f35b73c6908b2e659c21af9e2f046a5"
+    },
+    {
+      "artifact_path": "dev15-1-browser/09-settings.png",
+      "size": 101467,
+      "sha256": "c0dd22e51e977ef5139b6d78e13788ba5d50e7ea1cc87e6befbb40dbbd4df340"
+    },
+    {
+      "artifact_path": "dev15-1-browser/10-exhausted-moss-touch-released.png",
+      "size": 3824133,
+      "sha256": "92dc6c3610e7d9bb750fe5ecede8daa931e5cc693dbbae37d457b4a00a4945e5"
+    },
+    {
+      "artifact_path": "dev15-1-browser/11-endless-touch-released.png",
+      "size": 4189656,
+      "sha256": "5d9788a81b84f41ae0a41c736d07a379e93de6956501bb6fd718070458ef40b4"
+    },
+    {
+      "artifact_path": "dev15-1-browser/12-resumed-game.png",
+      "size": 4013314,
+      "sha256": "fd4c0db0c038bbdbfccf6f6060a3df45151e50df8af3a4b80d70d2c26c605d2e"
+    },
+    {
+      "artifact_path": "dev15-1-browser/hud-3-2.png",
+      "size": 7828761,
+      "sha256": "2598bbd45730d850bb250b0c54c015d53b819a7c403da20fc56158ae3adaf4da"
+    },
+    {
+      "artifact_path": "dev15-1-browser/hud-667.png",
+      "size": 4069454,
+      "sha256": "41a628dda4f2895537b4d4b66922238174a3b90f45ec1e573e4fef0a991c2be6"
+    },
+    {
+      "artifact_path": "dev15-1-browser/hud-844.png",
+      "size": 5213085,
+      "sha256": "d3ff189245b84e8ffb0de9b70f3b233dd1ea000e84701cdefb0a21d69ad532da"
+    },
+    {
+      "artifact_path": "dev15-1-browser/hud-mole-open.png",
+      "size": 3048864,
+      "sha256": "b63663cd1c1e50a80ade1e517e258927ddd6fedd44ac76be82837d7b52d29152"
+    },
+    {
+      "artifact_path": "dev15-1-browser/tooltip-carrying-844.png",
+      "size": 4079790,
+      "sha256": "f4ad8edc7603025ec710f693566eac63ac202eb195d15de223c181ff6f4a30ea"
+    },
+    {
+      "artifact_path": "dev15-1-browser/tooltip-mining-844.png",
+      "size": 4169159,
+      "sha256": "ba202e8dcab47de9ff0c21f46ae5dcf1bb3dcf1262b0869082b605fafd92bc9a"
+    },
+    {
+      "artifact_path": "dev15-1-browser/tooltip-prospecting-844.png",
+      "size": 4203307,
+      "sha256": "5fa22e6609622641ce8ae592be1af83f03a999f79795c57e84b55e73f254b2e3"
+    },
+    {
+      "artifact_path": "dev15-1-browser/tooltip-running-844.png",
+      "size": 4156519,
+      "sha256": "0f67e8a160d0b46789e62fd79d953c7d1307d868ca840bfa98ea77c154cf6616"
+    },
+    {
+      "artifact_path": "dev15-1-browser/tooltip-stamina-844.png",
+      "size": 4098652,
+      "sha256": "d7bc430a1897373ece77349126f45fcc5bf7c77b42ce6e06725d6b1ecc4b4946"
+    },
+    {
+      "artifact_path": "dev15-1-browser/tooltip-touch-667.png",
+      "size": 3254471,
+      "sha256": "1703bf1518bd1dce4e5714963babe6f527097ad12bcc0926b71eceadc8c1aff9"
+    },
+    {
+      "artifact_path": "dev15-1-browser/tooltip-touch-844.png",
+      "size": 4097675,
+      "sha256": "f22c2e883acee079e9c9e7a3bf7ad607e7ec7a0f2ee5e9748f8e20c4c553a8b3"
+    },
+    {
+      "artifact_path": "dev15-1-webkit/01-ordinary-menu.png",
+      "size": 459377,
+      "sha256": "4d1b1b3e1884c08d9ae473dcbb145cd822b0e5b30323e2228d65a599e298b6bb"
+    },
+    {
+      "artifact_path": "dev15-1-webkit/02-after-new-game.png",
+      "size": 6440360,
+      "sha256": "d8abd02c9cf6fc6851fd183779ba3e7488c8ab041dd1b24d88266ed314fc8813"
+    },
+    {
+      "artifact_path": "dev15-1-webkit/03-after-escape.png",
+      "size": 465657,
+      "sha256": "0cee68a462691ea9630b36d064e528378463ea43a71cf56d957be0ea46166ee4"
+    },
+    {
+      "artifact_path": "dev15-1-webkit/04-saved-run-menu.png",
+      "size": 462973,
+      "sha256": "84eec91cd21132306a9900a70a39110800ff1b0600aaf8993914c73742c4f4e5"
+    },
+    {
+      "artifact_path": "dev15-1-webkit/05-new-game-confirmation.png",
+      "size": 300846,
+      "sha256": "d9ff4e1aac37c7027fa99b39240d515744cc7cc42195cc41737cd4f4cda8ba24"
+    },
+    {
+      "artifact_path": "dev15-1-webkit/06-confirmed-new-game.png",
+      "size": 6443323,
+      "sha256": "98d0e34c3cf89f00131c6e37d2ff4ff5ae96f8b26cd9b0009c79c54bcc65a8bd"
+    }
+  ],
+  "review_document": {
+    "path": "hud151-independent-review.md",
+    "size": 5461,
+    "sha256": "863bb144b6492e053610ccede9d58ab323ea5699f748155d2747e0d832a01ed2"
+  },
+  "evidence_files": {
+    "build.json": {
+      "size": 5409,
+      "sha256": "87b4674e82097b3d5a048e79a18e7401d7ab3ef4c6b38f1fe2c6194d3772d9e8"
+    },
+    "core.json": {
+      "size": 2262,
+      "sha256": "5485ec364099c8e2da0fbcd2b79ec1c6b827e9f3971dc35f3807e0bea1d81b76"
+    },
+    "skills-core.log": {
+      "size": 98,
+      "sha256": "9dd1fd6ef93621a0f9e2a76fa97b4858cf7821e47bd9ab8ee38e9ee7f9768920"
+    },
+    "browser.json": {
+      "size": 335624,
+      "sha256": "abaa6c9d907bbd2f2fb2ed5981bbccc6654e95460c9023c021b72bea3b078491"
+    },
+    "webkit.json": {
+      "size": 79016,
+      "sha256": "42d4caccf367ad291dd0c0d4748f7342da0ea78cbd103b8c02e9b83761e5bb28"
+    }
+  },
+  "limits": [
+    "Physical iPhone startup/crash resolution and FPS remain unverified.",
+    "This narrow review does not certify every biome, a full animation sequence or the whole game final quality.",
+    "Existing Inventory/Settings/pause styles and their DEV overlay are retained.",
+    "The900x600 screenshot proves its actual layout fits, not execution of the defensive minimap fallback.",
+    "The separate publication mechanism is outside this visual/source review."
+  ],
+  "physical_iphone_verified": false
+}
