@@ -1,0 +1,397 @@
+{
+  "passed": true,
+  "error": null,
+  "source_commit": "6073b9d4dc11034d60305d5eb49785c033e836ed",
+  "version": "1.0.0-dev.15.6",
+  "files": {
+    "index.html": {
+      "size": 7855,
+      "sha256": "a0640e73a2fcdafec7b53f39115a03dfeb03d82661ace45c08307b6b8d9e1b3d"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 259857348,
+      "sha256": "fe433feaedbbaf383e61f8c9d9ae825c2cd2753c50f8b8fd4db38a894133580c"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "runtime": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+    "dpr": 3,
+    "canvas": [
+      2532,
+      1170
+    ]
+  },
+  "checks": [
+    {
+      "name": "apple-gpu",
+      "passed": true,
+      "runtime": {
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+        "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+        "dpr": 3,
+        "canvas": [
+          2532,
+          1170
+        ]
+      }
+    },
+    {
+      "name": "version",
+      "passed": true
+    },
+    {
+      "name": "pixel-parity-emberMine-intact",
+      "passed": true,
+      "reference": "eb9e0d8797fb251fdf8121f6d75e163ef4a8614ca0be74152ea27d1a34c42512",
+      "candidate": "eb9e0d8797fb251fdf8121f6d75e163ef4a8614ca0be74152ea27d1a34c42512"
+    },
+    {
+      "name": "pixel-parity-emberMine-damaged",
+      "passed": true,
+      "reference": "e05b62818b029fb4ff86d688543c37ba320d09d78a084cfd97c42145409a2c8b",
+      "candidate": "e05b62818b029fb4ff86d688543c37ba320d09d78a084cfd97c42145409a2c8b"
+    },
+    {
+      "name": "pixel-parity-emberMine-broken",
+      "passed": true,
+      "reference": "a96f9eaa5c02e344e8c733f2e82c040aea7677f34ed444c9aa7b952eb3bc7138",
+      "candidate": "a96f9eaa5c02e344e8c733f2e82c040aea7677f34ed444c9aa7b952eb3bc7138"
+    },
+    {
+      "name": "pixel-parity-emberMine-restored",
+      "passed": true,
+      "reference": "eb9e0d8797fb251fdf8121f6d75e163ef4a8614ca0be74152ea27d1a34c42512",
+      "candidate": "eb9e0d8797fb251fdf8121f6d75e163ef4a8614ca0be74152ea27d1a34c42512"
+    },
+    {
+      "name": "pixel-parity-mossMine-intact",
+      "passed": true,
+      "reference": "d7288aefa14aaf72c4ec802640078576ddf1a33306883cf6af46822767c3917a",
+      "candidate": "d7288aefa14aaf72c4ec802640078576ddf1a33306883cf6af46822767c3917a"
+    },
+    {
+      "name": "pixel-parity-mossMine-damaged",
+      "passed": true,
+      "reference": "fc7ca1032b221d6b5738765fab491cfa4d72dd57f5f251539c876f66da0bcb9d",
+      "candidate": "fc7ca1032b221d6b5738765fab491cfa4d72dd57f5f251539c876f66da0bcb9d"
+    },
+    {
+      "name": "pixel-parity-mossMine-broken",
+      "passed": true,
+      "reference": "e4721d5920bb1908b3dc86933f814be15944bb5d8e359f086ebc119f5b90e031",
+      "candidate": "e4721d5920bb1908b3dc86933f814be15944bb5d8e359f086ebc119f5b90e031"
+    },
+    {
+      "name": "pixel-parity-mossMine-restored",
+      "passed": true,
+      "reference": "d7288aefa14aaf72c4ec802640078576ddf1a33306883cf6af46822767c3917a",
+      "candidate": "d7288aefa14aaf72c4ec802640078576ddf1a33306883cf6af46822767c3917a"
+    },
+    {
+      "name": "pixel-parity-moonMine-intact",
+      "passed": true,
+      "reference": "9ce763bbd12facf3c871e137f9bd8fe8d3eb6cf8411c1b568dc129523283c6b7",
+      "candidate": "9ce763bbd12facf3c871e137f9bd8fe8d3eb6cf8411c1b568dc129523283c6b7"
+    },
+    {
+      "name": "pixel-parity-moonMine-damaged",
+      "passed": true,
+      "reference": "1484e92a07f1f75a5da3969cfdfc4975bb29ba5f808a1d0be153b18c35b74883",
+      "candidate": "1484e92a07f1f75a5da3969cfdfc4975bb29ba5f808a1d0be153b18c35b74883"
+    },
+    {
+      "name": "pixel-parity-moonMine-broken",
+      "passed": true,
+      "reference": "243d56d8cfb7818083d82ad74338d4900fc4282978b324a866fba571abc8c522",
+      "candidate": "243d56d8cfb7818083d82ad74338d4900fc4282978b324a866fba571abc8c522"
+    },
+    {
+      "name": "pixel-parity-moonMine-restored",
+      "passed": true,
+      "reference": "9ce763bbd12facf3c871e137f9bd8fe8d3eb6cf8411c1b568dc129523283c6b7",
+      "candidate": "9ce763bbd12facf3c871e137f9bd8fe8d3eb6cf8411c1b568dc129523283c6b7"
+    },
+    {
+      "name": "pixel-parity-starMine-intact",
+      "passed": true,
+      "reference": "4bb960f603e4d91e18f49d59a93b5bab27d7ba7b670a693f05276931853bb859",
+      "candidate": "4bb960f603e4d91e18f49d59a93b5bab27d7ba7b670a693f05276931853bb859"
+    },
+    {
+      "name": "pixel-parity-starMine-damaged",
+      "passed": true,
+      "reference": "0f8f85db4da217350ef382a6be1707e3b857dcced2a52c1a482b916e12dcf804",
+      "candidate": "0f8f85db4da217350ef382a6be1707e3b857dcced2a52c1a482b916e12dcf804"
+    },
+    {
+      "name": "pixel-parity-starMine-broken",
+      "passed": true,
+      "reference": "b881c01bc511b1f2d653c2bf91bb61aae48390199458c1e0a75707af34ec0106",
+      "candidate": "b881c01bc511b1f2d653c2bf91bb61aae48390199458c1e0a75707af34ec0106"
+    },
+    {
+      "name": "pixel-parity-starMine-restored",
+      "passed": true,
+      "reference": "4bb960f603e4d91e18f49d59a93b5bab27d7ba7b670a693f05276931853bb859",
+      "candidate": "4bb960f603e4d91e18f49d59a93b5bab27d7ba7b670a693f05276931853bb859"
+    },
+    {
+      "name": "held-mining-reference-a",
+      "passed": true,
+      "result": {
+        "label": "reference-a",
+        "cached": false,
+        "cpu": {
+          "max_ms": 157.3,
+          "mean_ms": 36.1581460674154,
+          "over_33_ms": 410,
+          "p95_ms": 157.3
+        },
+        "frame": {
+          "max_ms": 158.5,
+          "mean_ms": 17.0256554307116,
+          "over_33_ms": 10,
+          "p95_ms": 22
+        },
+        "frames": 1068,
+        "seconds": 18.1835,
+        "sections": {
+          "cached": 0,
+          "draw_callback_usec": 2168500,
+          "draw_callbacks": 91916,
+          "dynamic": 215,
+          "recycled": 350,
+          "redraws": 0,
+          "reuses": 0,
+          "setup_usec": 1158000
+        },
+        "impacts": 88
+      }
+    },
+    {
+      "name": "held-mining-cached",
+      "passed": true,
+      "result": {
+        "label": "cached",
+        "cached": true,
+        "cpu": {
+          "max_ms": 78.6,
+          "mean_ms": 29.8847157502327,
+          "over_33_ms": 235,
+          "p95_ms": 78.6
+        },
+        "frame": {
+          "max_ms": 91.8,
+          "mean_ms": 16.97651444548,
+          "over_33_ms": 10,
+          "p95_ms": 20.6
+        },
+        "frames": 1073,
+        "seconds": 18.2159,
+        "sections": {
+          "cached": 171,
+          "draw_callback_usec": 393600,
+          "draw_callbacks": 3855,
+          "dynamic": 215,
+          "recycled": 179,
+          "redraws": 711,
+          "reuses": 82566,
+          "setup_usec": 1981500
+        },
+        "impacts": 88
+      }
+    },
+    {
+      "name": "held-mining-reference-b",
+      "passed": true,
+      "result": {
+        "label": "reference-b",
+        "cached": false,
+        "cpu": {
+          "max_ms": 67.1,
+          "mean_ms": 34.0484448633365,
+          "over_33_ms": 450,
+          "p95_ms": 64.2
+        },
+        "frame": {
+          "max_ms": 69.2,
+          "mean_ms": 17.1772855796419,
+          "over_33_ms": 13,
+          "p95_ms": 25
+        },
+        "frames": 1061,
+        "seconds": 18.2253,
+        "sections": {
+          "cached": 0,
+          "draw_callback_usec": 2157500,
+          "draw_callbacks": 84461,
+          "dynamic": 215,
+          "recycled": 350,
+          "redraws": 0,
+          "reuses": 0,
+          "setup_usec": 1140300
+        },
+        "impacts": 88
+      }
+    },
+    {
+      "name": "terrain-cpu-improves",
+      "passed": true,
+      "reference_usec_per_second": 180946.2670024636,
+      "cached_usec_per_second": 130386.09127191079,
+      "reduction": 0.27942093842623694
+    },
+    {
+      "name": "cache-reused",
+      "passed": true,
+      "sections": {
+        "cached": 171,
+        "draw_callback_usec": 393600,
+        "draw_callbacks": 3855,
+        "dynamic": 215,
+        "recycled": 179,
+        "redraws": 711,
+        "reuses": 82566,
+        "setup_usec": 1981500
+      }
+    },
+    {
+      "name": "movement-after-mining",
+      "passed": true,
+      "a": [
+        1400,
+        312
+      ],
+      "b": [
+        1400,
+        493.3330078125
+      ]
+    },
+    {
+      "name": "pixel-parity-ember-after-camera-move",
+      "passed": true,
+      "reference": "322bcf28b7289a6722e7ea3f53930e75307c77f3c94418db1a17402852acb472",
+      "candidate": "322bcf28b7289a6722e7ea3f53930e75307c77f3c94418db1a17402852acb472"
+    }
+  ],
+  "windows": [
+    {
+      "label": "reference-a",
+      "cached": false,
+      "cpu": {
+        "max_ms": 157.3,
+        "mean_ms": 36.1581460674154,
+        "over_33_ms": 410,
+        "p95_ms": 157.3
+      },
+      "frame": {
+        "max_ms": 158.5,
+        "mean_ms": 17.0256554307116,
+        "over_33_ms": 10,
+        "p95_ms": 22
+      },
+      "frames": 1068,
+      "seconds": 18.1835,
+      "sections": {
+        "cached": 0,
+        "draw_callback_usec": 2168500,
+        "draw_callbacks": 91916,
+        "dynamic": 215,
+        "recycled": 350,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 1158000
+      },
+      "impacts": 88
+    },
+    {
+      "label": "cached",
+      "cached": true,
+      "cpu": {
+        "max_ms": 78.6,
+        "mean_ms": 29.8847157502327,
+        "over_33_ms": 235,
+        "p95_ms": 78.6
+      },
+      "frame": {
+        "max_ms": 91.8,
+        "mean_ms": 16.97651444548,
+        "over_33_ms": 10,
+        "p95_ms": 20.6
+      },
+      "frames": 1073,
+      "seconds": 18.2159,
+      "sections": {
+        "cached": 171,
+        "draw_callback_usec": 393600,
+        "draw_callbacks": 3855,
+        "dynamic": 215,
+        "recycled": 179,
+        "redraws": 711,
+        "reuses": 82566,
+        "setup_usec": 1981500
+      },
+      "impacts": 88
+    },
+    {
+      "label": "reference-b",
+      "cached": false,
+      "cpu": {
+        "max_ms": 67.1,
+        "mean_ms": 34.0484448633365,
+        "over_33_ms": 450,
+        "p95_ms": 64.2
+      },
+      "frame": {
+        "max_ms": 69.2,
+        "mean_ms": 17.1772855796419,
+        "over_33_ms": 13,
+        "p95_ms": 25
+      },
+      "frames": 1061,
+      "seconds": 18.2253,
+      "sections": {
+        "cached": 0,
+        "draw_callback_usec": 2157500,
+        "draw_callbacks": 84461,
+        "dynamic": 215,
+        "recycled": 350,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 1140300
+      },
+      "impacts": 88
+    }
+  ],
+  "physical_iphone_verified": false,
+  "scope": "Depth-one terrain cache; same-package original A/B/A held mining and exact frozen full-frame parity. No claim of physical iPhone 60 FPS or proven cause of recorded 250ms stall."
+}

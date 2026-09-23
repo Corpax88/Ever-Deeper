@@ -1,0 +1,110 @@
+{
+  "accepted": true,
+  "final_build_images_inspected": true,
+  "version": "1.0.0-dev.15.6",
+  "source_commit": "6073b9d4dc11034d60305d5eb49785c033e836ed",
+  "files": {
+    "index.html": {
+      "size": 7855,
+      "sha256": "a0640e73a2fcdafec7b53f39115a03dfeb03d82661ace45c08307b6b8d9e1b3d"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 259857348,
+      "sha256": "fe433feaedbbaf383e61f8c9d9ae825c2cd2753c50f8b8fd4db38a894133580c"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "physical_iphone_verified": false,
+  "scores": {
+    "scoped_code_quality": 9,
+    "scoped_visual_quality": 8,
+    "scale": 10
+  },
+  "findings": [],
+  "limitations": [
+    "Mac Chromium/Metal section setup plus callback CPU measured; not physical iPhone FPS.",
+    "Durable held-mining target excludes break/loot workload; benchmark persistence disabled.",
+    "Occasional frame spikes remain; recorded 250 ms stall cause not established.",
+    "Existing sharp rectangular terrain/lighting boundaries remain; frozen reference parity shows no cache-induced visual change."
+  ],
+  "publisher_reviewed": true,
+  "scope": "DEV-only depth-one terrain draw caching; final candidate source, benchmark, visual parity and ordinary startup reviewed.",
+  "inspected_images": [
+    {
+      "path": "/tmp/fps-browser-final/dev15-6-browser/emberMine-intact-cached.png",
+      "sha256": "eb9e0d8797fb251fdf8121f6d75e163ef4a8614ca0be74152ea27d1a34c42512"
+    },
+    {
+      "path": "/tmp/fps-browser-final/dev15-6-browser/mossMine-broken-cached.png",
+      "sha256": "e4721d5920bb1908b3dc86933f814be15944bb5d8e359f086ebc119f5b90e031"
+    },
+    {
+      "path": "/tmp/fps-browser-final/dev15-6-browser/moonMine-damaged-cached.png",
+      "sha256": "1484e92a07f1f75a5da3969cfdfc4975bb29ba5f808a1d0be153b18c35b74883"
+    },
+    {
+      "path": "/tmp/fps-browser-final/dev15-6-browser/starMine-restored-cached.png",
+      "sha256": "4bb960f603e4d91e18f49d59a93b5bab27d7ba7b670a693f05276931853bb859"
+    },
+    {
+      "path": "/tmp/fps-browser-final/dev15-6-browser/mining-cached.png",
+      "sha256": "73f44209ea2d639f7fe3646a7ae3400697611d866348fc3f01a11bf2aa286c33"
+    },
+    {
+      "path": "/tmp/fps-browser-final/dev15-6-browser/ember-after-camera-move-cached.png",
+      "sha256": "322bcf28b7289a6722e7ea3f53930e75307c77f3c94418db1a17402852acb472"
+    },
+    {
+      "path": "/tmp/fps-browser-final/dev15-6-webkit/01-ordinary-menu.png",
+      "sha256": "2824e74b4f641241aa982adda9b19c61489e3a77906d8656cf42346bdf5a3441"
+    },
+    {
+      "path": "/tmp/fps-browser-final/dev15-6-webkit/02-after-new-game.png",
+      "sha256": "6fa50956ffedb76828a4fb180169677b1f524c78d87060f88b6de158aefb1323"
+    },
+    {
+      "path": "/tmp/fps-browser-final/dev15-6-webkit/04-saved-run-menu.png",
+      "sha256": "9fcaae658a913b43e9364826e4aec299b3898ef7d3557bfcc3b3de2d708d47e3"
+    },
+    {
+      "path": "/tmp/fps-browser-final/dev15-6-webkit/06-confirmed-new-game.png",
+      "sha256": "b3bae68ca51d51d510972dc6dd9f0fb80234656c82c974a25a70b5dfe882678b"
+    }
+  ],
+  "evidence": {
+    "browser_checks_passed": 25,
+    "exact_full_frame_pairs_passed": 17,
+    "mining_impacts_each_window": 88,
+    "reference_section_usec_per_second": 180946.2670024636,
+    "cached_section_usec_per_second": 130386.09127191079,
+    "section_cpu_reduction_percent": 27.9420916657131,
+    "webkit_ordinary_startup_passed": true
+  }
+}
