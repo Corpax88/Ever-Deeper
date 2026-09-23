@@ -32,6 +32,7 @@ func _frame() -> void:
 	var progress: Array = []
 	for row in panel.rows:
 		progress.append({"level": row.level.text, "level_value": row.bar.value,
+			"level_fits": row.level.get_theme_font("font").get_string_size(row.level.text, HORIZONTAL_ALIGNMENT_LEFT, -1, row.level.get_theme_font_size("font_size")).x <= row.level.size.x,
 			"xp_value": row.xp_bar.value, "level_rect": _bounds(row.bar),
 			"xp_rect": _bounds(row.xp_bar), "numeric_xp": row.xp != null})
 	var bounds: Dictionary = {"hud_menu": _bounds(main.premium_hud.menu_button),

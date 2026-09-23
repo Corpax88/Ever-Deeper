@@ -286,8 +286,8 @@ func _layout_row(row: Dictionary, rect: Rect2) -> void:
 	var x: float = h + 9
 	row.label.position = Vector2(x, 2)
 	row.label.size = Vector2(rect.size.x - x - 76, 40)
-	row.level.position = Vector2(rect.size.x - 69, 3)
-	row.level.size = Vector2(49, 42)
+	row.level.position = Vector2(rect.size.x - 89, 3)
+	row.level.size = Vector2(69, 42)
 	row.bar.position = Vector2(x, h * 0.46)
 	row.bar.size = Vector2(rect.size.x - x - 79, 17)
 	if row.xp_bar != null:

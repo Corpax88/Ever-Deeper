@@ -67,7 +67,7 @@ async function progressCheck(label){
  const s=await state();
  check('skill-bars-'+label,s.skill_progress.every((p,i)=>{
   const skill=s.skills[i],a=p.level_rect,b=p.xp_rect;
-  return p.level===String(skill.level)&&p.level_value===skill.level&&Math.abs(p.xp_value-skill.ratio*100)<.001&&!p.numeric_xp&&inside(a,s)&&inside(b,s)&&!overlap(a,b)&&b[1]>a[1]+a[3]&&b[3]<a[3]/2&&Math.abs(a[0]-b[0])<.01&&Math.abs(a[2]-b[2])<.01;
+  return p.level_fits&&p.level===String(skill.level)&&p.level_value===skill.level&&Math.abs(p.xp_value-skill.ratio*100)<.001&&!p.numeric_xp&&inside(a,s)&&inside(b,s)&&!overlap(a,b)&&b[1]>a[1]+a[3]&&b[3]<a[3]/2&&Math.abs(a[0]-b[0])<.01&&Math.abs(a[2]-b[2])<.01;
  }),{state:s});
 }
 async function ready(){return wait('active native game',s=>!s?.menu&&s?.native?.active&&s.native.updates>3);}
