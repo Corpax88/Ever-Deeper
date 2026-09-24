@@ -77,7 +77,7 @@ const captures=[],parity=[];let initial=null;
 async function mode(factor){
  await command('worldscale',{factor});await delay(2200);const s=await state();
  check('camera-and-framing',s.position.every((v,i)=>Math.abs(v-initial.position[i])<0.02)&&s.viewport.every((v,i)=>Math.abs(v-initial.viewport[i])<0.02));
- check('render-mode',factor===0?Object.keys(s.render_scale).length===0:s.render_scale.scale===factor&&s.render_scale.root_size[0]===2328&&s.render_scale.root_size[1]===1260);
+ check('render-mode',factor===0?Object.keys(s.render_scale).length===0:s.render_scale.scale===factor&&s.render_scale.root_size[0]===2328&&s.render_scale.root_size[1]===1260&&s.render_scale.size[0]===Math.round(2328*factor)&&s.render_scale.size[1]===Math.round(1260*factor),{factor,state:s});
  return s;
 }
 function compare(a,b,label){

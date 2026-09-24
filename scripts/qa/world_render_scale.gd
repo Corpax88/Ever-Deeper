@@ -53,7 +53,9 @@ func _before_draw() -> void:
 
 func _process(_delta: float) -> void:
 	if not is_instance_valid(sub): return
-	var size: Vector2 = root_view.get_texture().get_size()
+	# Window.size is the physical surface. ViewportTexture.get_size() on a
+	# Window multiplies by its stretch transform again in Godot 4.7.2.
+	var size: Vector2 = Vector2(root_view.get_window().size)
 	var target := Vector2i((size * scale_factor).round())
 	if sub.size != target: sub.size = target
 	var ratio := Vector2(target) / size
@@ -73,4 +75,4 @@ func restore() -> void:
 	queue_free()
 
 func snapshot() -> Dictionary:
-	return {"scale":scale_factor,"size":[sub.size.x,sub.size.y],"root_size":[root_view.get_texture().get_width(),root_view.get_texture().get_height()],"logical":[image.size.x,image.size.y]}
+	return {"scale":scale_factor,"size":[sub.size.x,sub.size.y],"root_size":[root_view.get_window().size.x,root_view.get_window().size.y],"logical":[image.size.x,image.size.y]}
