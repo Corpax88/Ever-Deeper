@@ -1,0 +1,2541 @@
+{
+  "passed": true,
+  "error": null,
+  "source_commit": "51f1ae2cba2606b0927c32a4cac6b82cfe1e3710",
+  "baseline_source": "c63aabd3e3e5120579285ce6e8b0b59a75f2727a",
+  "version": "1.0.0-dev.15.9",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "ce039a4a443c926ee2c95d90c91fa7a14836ae89cc23b81ba89a987607137e26"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 259870080,
+      "sha256": "e48dd39dad37fd5cd0fae0fc05c0b25e1e4c3f94d0b9478401ae1f6f5a6dc56c"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "browser": "webkit",
+  "repeat": "2",
+  "runtime": {
+    "renderer": "Apple GPU",
+    "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+    "dpr": 3,
+    "canvas": [
+      2328,
+      1260
+    ]
+  },
+  "checks": [
+    {
+      "name": "mac-gpu",
+      "passed": true,
+      "runtime": {
+        "renderer": "Apple GPU",
+        "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+        "dpr": 3,
+        "canvas": [
+          2328,
+          1260
+        ]
+      }
+    },
+    {
+      "name": "resolution",
+      "passed": true
+    },
+    {
+      "name": "version",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-intact-3",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-intact-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-damaged-3",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-damaged-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-broken-3",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-broken-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-restored-3",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-restored-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-intact-3",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-intact-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-damaged-3",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-damaged-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-broken-3",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-broken-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-restored-3",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-restored-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-intact-3",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-intact-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-damaged-3",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-damaged-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-broken-3",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-broken-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-restored-3",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-restored-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-intact-3",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-intact-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-damaged-3",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-damaged-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-broken-3",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-broken-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-restored-3",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-restored-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-standard-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-standard-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-standard-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-standard-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-standard-3",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-standard-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-focused-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-focused-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-focused-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-focused-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-focused-3",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-focused-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-wide-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-wide-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-wide-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-wide-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-wide-3",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-wide-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-prismatic-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-prismatic-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-prismatic-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-prismatic-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-prismatic-3",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-prismatic-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-deepheart-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-deepheart-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-deepheart-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-deepheart-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-deepheart-3",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-deepheart-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "stationary-workload-0",
+      "passed": true
+    },
+    {
+      "name": "stationary-position-0",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "stationary-workload-1",
+      "passed": true
+    },
+    {
+      "name": "stationary-position-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "stationary-workload-2",
+      "passed": true
+    },
+    {
+      "name": "stationary-position-2",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "stationary-workload-3",
+      "passed": true
+    },
+    {
+      "name": "stationary-position-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "stationary-workload-4",
+      "passed": true
+    },
+    {
+      "name": "stationary-position-4",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "stationary-workload-5",
+      "passed": true
+    },
+    {
+      "name": "stationary-position-5",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "stationary-workload-6",
+      "passed": true
+    },
+    {
+      "name": "stationary-position-6",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "stationary-workload-7",
+      "passed": true
+    },
+    {
+      "name": "stationary-position-7",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "stationary-workload-8",
+      "passed": true
+    },
+    {
+      "name": "stationary-position-8",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-0",
+      "passed": true
+    },
+    {
+      "name": "mining-position-0",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-1",
+      "passed": true
+    },
+    {
+      "name": "mining-position-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-2",
+      "passed": true
+    },
+    {
+      "name": "mining-position-2",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-3",
+      "passed": true
+    },
+    {
+      "name": "mining-position-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-4",
+      "passed": true
+    },
+    {
+      "name": "mining-position-4",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-5",
+      "passed": true
+    },
+    {
+      "name": "mining-position-5",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-6",
+      "passed": true
+    },
+    {
+      "name": "mining-position-6",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-7",
+      "passed": true
+    },
+    {
+      "name": "mining-position-7",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-8",
+      "passed": true
+    },
+    {
+      "name": "mining-position-8",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "movement-after-restoration",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-3",
+      "passed": true
+    },
+    {
+      "name": "strip-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-moved-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moved-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moved-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moved-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moved-3",
+      "passed": true
+    },
+    {
+      "name": "parity-moved-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "no-script-errors",
+      "passed": true
+    }
+  ],
+  "windows": [
+    {
+      "scenario": "stationary",
+      "index": 0,
+      "width": 1,
+      "cpu": {
+        "max_ms": 8,
+        "mean_ms": 6.83606557377049,
+        "over_33_ms": 0,
+        "p95_ms": 8
+      },
+      "draw_calls": 181,
+      "frame": {
+        "max_ms": 25,
+        "mean_ms": 16.6653005464481,
+        "over_33_ms": 0,
+        "p95_ms": 19
+      },
+      "frames": 732,
+      "seconds": 12.199,
+      "sections": {
+        "cached": 697,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 167,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "stationary",
+      "index": 1,
+      "width": 3,
+      "cpu": {
+        "max_ms": 7,
+        "mean_ms": 6.57438016528926,
+        "over_33_ms": 0,
+        "p95_ms": 7
+      },
+      "draw_calls": 158,
+      "frame": {
+        "max_ms": 31,
+        "mean_ms": 16.7617079889807,
+        "over_33_ms": 0,
+        "p95_ms": 19
+      },
+      "frames": 726,
+      "seconds": 12.169,
+      "sections": {
+        "cached": 246,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 618,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "stationary",
+      "index": 2,
+      "width": 6,
+      "cpu": {
+        "max_ms": 121,
+        "mean_ms": 15.9598337950139,
+        "over_33_ms": 59,
+        "p95_ms": 121
+      },
+      "draw_calls": 174,
+      "frame": {
+        "max_ms": 133,
+        "mean_ms": 16.8781163434903,
+        "over_33_ms": 1,
+        "p95_ms": 19
+      },
+      "frames": 722,
+      "seconds": 12.186,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 726,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "stationary",
+      "index": 3,
+      "width": 6,
+      "cpu": {
+        "max_ms": 7,
+        "mean_ms": 6.45667125171939,
+        "over_33_ms": 0,
+        "p95_ms": 7
+      },
+      "draw_calls": 174,
+      "frame": {
+        "max_ms": 32,
+        "mean_ms": 16.7812929848693,
+        "over_33_ms": 0,
+        "p95_ms": 19
+      },
+      "frames": 727,
+      "seconds": 12.2,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 726,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "stationary",
+      "index": 4,
+      "width": 1,
+      "cpu": {
+        "max_ms": 9,
+        "mean_ms": 7.40217391304348,
+        "over_33_ms": 0,
+        "p95_ms": 9
+      },
+      "draw_calls": 181,
+      "frame": {
+        "max_ms": 32,
+        "mean_ms": 16.7866847826087,
+        "over_33_ms": 0,
+        "p95_ms": 19
+      },
+      "frames": 736,
+      "seconds": 12.355,
+      "sections": {
+        "cached": 697,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 167,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "stationary",
+      "index": 5,
+      "width": 3,
+      "cpu": {
+        "max_ms": 15,
+        "mean_ms": 9.43971631205674,
+        "over_33_ms": 0,
+        "p95_ms": 15
+      },
+      "draw_calls": 158,
+      "frame": {
+        "max_ms": 40,
+        "mean_ms": 17.2879432624113,
+        "over_33_ms": 1,
+        "p95_ms": 21
+      },
+      "frames": 705,
+      "seconds": 12.188,
+      "sections": {
+        "cached": 246,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 618,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "stationary",
+      "index": 6,
+      "width": 3,
+      "cpu": {
+        "max_ms": 12,
+        "mean_ms": 7.93863319386332,
+        "over_33_ms": 0,
+        "p95_ms": 12
+      },
+      "draw_calls": 158,
+      "frame": {
+        "max_ms": 30,
+        "mean_ms": 16.8047419804742,
+        "over_33_ms": 0,
+        "p95_ms": 19
+      },
+      "frames": 717,
+      "seconds": 12.05,
+      "sections": {
+        "cached": 246,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 618,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "stationary",
+      "index": 7,
+      "width": 6,
+      "cpu": {
+        "max_ms": 135,
+        "mean_ms": 17.3272980501393,
+        "over_33_ms": 60,
+        "p95_ms": 135
+      },
+      "draw_calls": 174,
+      "frame": {
+        "max_ms": 146,
+        "mean_ms": 16.991643454039,
+        "over_33_ms": 1,
+        "p95_ms": 19
+      },
+      "frames": 718,
+      "seconds": 12.2,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 726,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "stationary",
+      "index": 8,
+      "width": 1,
+      "cpu": {
+        "max_ms": 8,
+        "mean_ms": 6.9010989010989,
+        "over_33_ms": 0,
+        "p95_ms": 8
+      },
+      "draw_calls": 181,
+      "frame": {
+        "max_ms": 31,
+        "mean_ms": 16.7335164835165,
+        "over_33_ms": 0,
+        "p95_ms": 19
+      },
+      "frames": 728,
+      "seconds": 12.182,
+      "sections": {
+        "cached": 697,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 167,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 0,
+      "width": 1,
+      "cpu": {
+        "max_ms": 27,
+        "mean_ms": 16.414673046252,
+        "over_33_ms": 0,
+        "p95_ms": 27
+      },
+      "draw_calls": 185,
+      "frame": {
+        "max_ms": 31,
+        "mean_ms": 19.4290271132376,
+        "over_33_ms": 0,
+        "p95_ms": 25
+      },
+      "frames": 627,
+      "seconds": 12.182,
+      "sections": {
+        "cached": 697,
+        "draw_callback_usec": 184000,
+        "draw_callbacks": 2382,
+        "dynamic": 7,
+        "recycled": 167,
+        "redraws": 371,
+        "reuses": 217790,
+        "setup_usec": 1963000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 1,
+      "width": 3,
+      "cpu": {
+        "max_ms": 190,
+        "mean_ms": 28.4486404833837,
+        "over_33_ms": 54,
+        "p95_ms": 190
+      },
+      "draw_calls": 162,
+      "frame": {
+        "max_ms": 201,
+        "mean_ms": 18.429003021148,
+        "over_33_ms": 2,
+        "p95_ms": 23
+      },
+      "frames": 662,
+      "seconds": 12.2,
+      "sections": {
+        "cached": 246,
+        "draw_callback_usec": 213000,
+        "draw_callbacks": 2408,
+        "dynamic": 7,
+        "recycled": 618,
+        "redraws": 318,
+        "reuses": 79632,
+        "setup_usec": 1204000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 2,
+      "width": 6,
+      "cpu": {
+        "max_ms": 13,
+        "mean_ms": 11.4300291545189,
+        "over_33_ms": 0,
+        "p95_ms": 13
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 25,
+        "mean_ms": 17.7711370262391,
+        "over_33_ms": 0,
+        "p95_ms": 21
+      },
+      "frames": 686,
+      "seconds": 12.191,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 197000,
+        "draw_callbacks": 2366,
+        "dynamic": 7,
+        "recycled": 726,
+        "redraws": 159,
+        "reuses": 47175,
+        "setup_usec": 1029000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 3,
+      "width": 6,
+      "cpu": {
+        "max_ms": 17,
+        "mean_ms": 12.1578171091445,
+        "over_33_ms": 0,
+        "p95_ms": 17
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 30,
+        "mean_ms": 18.0029498525074,
+        "over_33_ms": 0,
+        "p95_ms": 22
+      },
+      "frames": 678,
+      "seconds": 12.206,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 205000,
+        "draw_callbacks": 2316,
+        "dynamic": 7,
+        "recycled": 726,
+        "redraws": 156,
+        "reuses": 46212,
+        "setup_usec": 1013000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 4,
+      "width": 1,
+      "cpu": {
+        "max_ms": 18,
+        "mean_ms": 15.0454545454545,
+        "over_33_ms": 0,
+        "p95_ms": 18
+      },
+      "draw_calls": 185,
+      "frame": {
+        "max_ms": 37,
+        "mean_ms": 19.7938311688312,
+        "over_33_ms": 1,
+        "p95_ms": 26
+      },
+      "frames": 616,
+      "seconds": 12.193,
+      "sections": {
+        "cached": 697,
+        "draw_callback_usec": 188000,
+        "draw_callbacks": 2348,
+        "dynamic": 7,
+        "recycled": 167,
+        "redraws": 371,
+        "reuses": 214305,
+        "setup_usec": 1936000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 5,
+      "width": 3,
+      "cpu": {
+        "max_ms": 15,
+        "mean_ms": 12.4918518518519,
+        "over_33_ms": 0,
+        "p95_ms": 15
+      },
+      "draw_calls": 162,
+      "frame": {
+        "max_ms": 28,
+        "mean_ms": 18.1081481481481,
+        "over_33_ms": 0,
+        "p95_ms": 22
+      },
+      "frames": 675,
+      "seconds": 12.224,
+      "sections": {
+        "cached": 246,
+        "draw_callback_usec": 206000,
+        "draw_callbacks": 2474,
+        "dynamic": 7,
+        "recycled": 618,
+        "redraws": 318,
+        "reuses": 82092,
+        "setup_usec": 1247000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 6,
+      "width": 3,
+      "cpu": {
+        "max_ms": 16,
+        "mean_ms": 12.2544378698225,
+        "over_33_ms": 0,
+        "p95_ms": 16
+      },
+      "draw_calls": 162,
+      "frame": {
+        "max_ms": 36,
+        "mean_ms": 18.0355029585799,
+        "over_33_ms": 1,
+        "p95_ms": 22
+      },
+      "frames": 676,
+      "seconds": 12.192,
+      "sections": {
+        "cached": 246,
+        "draw_callback_usec": 205000,
+        "draw_callbacks": 2485,
+        "dynamic": 7,
+        "recycled": 618,
+        "redraws": 318,
+        "reuses": 82584,
+        "setup_usec": 1241000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 7,
+      "width": 6,
+      "cpu": {
+        "max_ms": 132,
+        "mean_ms": 21.6604316546763,
+        "over_33_ms": 58,
+        "p95_ms": 132
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 144,
+        "mean_ms": 17.5280575539568,
+        "over_33_ms": 1,
+        "p95_ms": 21
+      },
+      "frames": 695,
+      "seconds": 12.182,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 204000,
+        "draw_callbacks": 2392,
+        "dynamic": 7,
+        "recycled": 726,
+        "redraws": 159,
+        "reuses": 47727,
+        "setup_usec": 1017000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 8,
+      "width": 1,
+      "cpu": {
+        "max_ms": 18,
+        "mean_ms": 15.7269841269841,
+        "over_33_ms": 0,
+        "p95_ms": 18
+      },
+      "draw_calls": 185,
+      "frame": {
+        "max_ms": 34,
+        "mean_ms": 19.4079365079365,
+        "over_33_ms": 1,
+        "p95_ms": 25
+      },
+      "frames": 630,
+      "seconds": 12.228,
+      "sections": {
+        "cached": 697,
+        "draw_callback_usec": 195000,
+        "draw_callbacks": 2399,
+        "dynamic": 7,
+        "recycled": 167,
+        "redraws": 371,
+        "reuses": 219184,
+        "setup_usec": 1982000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "label": "emberMine-intact",
+      "width": 3,
+      "reference": "7fa4f5dbcfac4db570223322e37781cad7294f228ee76f63cb03270e8429022d",
+      "candidate": "7fa4f5dbcfac4db570223322e37781cad7294f228ee76f63cb03270e8429022d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-intact",
+      "width": 1,
+      "reference": "7fa4f5dbcfac4db570223322e37781cad7294f228ee76f63cb03270e8429022d",
+      "candidate": "7fa4f5dbcfac4db570223322e37781cad7294f228ee76f63cb03270e8429022d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-intact",
+      "width": 6,
+      "reference": "7fa4f5dbcfac4db570223322e37781cad7294f228ee76f63cb03270e8429022d",
+      "candidate": "7fa4f5dbcfac4db570223322e37781cad7294f228ee76f63cb03270e8429022d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-damaged",
+      "width": 3,
+      "reference": "9251d00a95e4ee604354d74c7efd12a93aa88f6512605dee8f574d7add7e5259",
+      "candidate": "9251d00a95e4ee604354d74c7efd12a93aa88f6512605dee8f574d7add7e5259",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-damaged",
+      "width": 1,
+      "reference": "9251d00a95e4ee604354d74c7efd12a93aa88f6512605dee8f574d7add7e5259",
+      "candidate": "9251d00a95e4ee604354d74c7efd12a93aa88f6512605dee8f574d7add7e5259",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-damaged",
+      "width": 6,
+      "reference": "9251d00a95e4ee604354d74c7efd12a93aa88f6512605dee8f574d7add7e5259",
+      "candidate": "9251d00a95e4ee604354d74c7efd12a93aa88f6512605dee8f574d7add7e5259",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-broken",
+      "width": 3,
+      "reference": "6a8bddf63ea6e6274a66839d94007b45a27afc0565a5985eff32176a95e9387c",
+      "candidate": "6a8bddf63ea6e6274a66839d94007b45a27afc0565a5985eff32176a95e9387c",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-broken",
+      "width": 1,
+      "reference": "6a8bddf63ea6e6274a66839d94007b45a27afc0565a5985eff32176a95e9387c",
+      "candidate": "6a8bddf63ea6e6274a66839d94007b45a27afc0565a5985eff32176a95e9387c",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-broken",
+      "width": 6,
+      "reference": "6a8bddf63ea6e6274a66839d94007b45a27afc0565a5985eff32176a95e9387c",
+      "candidate": "6a8bddf63ea6e6274a66839d94007b45a27afc0565a5985eff32176a95e9387c",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-restored",
+      "width": 3,
+      "reference": "7fa4f5dbcfac4db570223322e37781cad7294f228ee76f63cb03270e8429022d",
+      "candidate": "7fa4f5dbcfac4db570223322e37781cad7294f228ee76f63cb03270e8429022d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-restored",
+      "width": 1,
+      "reference": "7fa4f5dbcfac4db570223322e37781cad7294f228ee76f63cb03270e8429022d",
+      "candidate": "7fa4f5dbcfac4db570223322e37781cad7294f228ee76f63cb03270e8429022d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-restored",
+      "width": 6,
+      "reference": "7fa4f5dbcfac4db570223322e37781cad7294f228ee76f63cb03270e8429022d",
+      "candidate": "7fa4f5dbcfac4db570223322e37781cad7294f228ee76f63cb03270e8429022d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-intact",
+      "width": 3,
+      "reference": "21d2b98e63fe4fd7153f26d0a448619ef11eee0803605ecede873c8f656a7005",
+      "candidate": "21d2b98e63fe4fd7153f26d0a448619ef11eee0803605ecede873c8f656a7005",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-intact",
+      "width": 1,
+      "reference": "21d2b98e63fe4fd7153f26d0a448619ef11eee0803605ecede873c8f656a7005",
+      "candidate": "21d2b98e63fe4fd7153f26d0a448619ef11eee0803605ecede873c8f656a7005",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-intact",
+      "width": 6,
+      "reference": "21d2b98e63fe4fd7153f26d0a448619ef11eee0803605ecede873c8f656a7005",
+      "candidate": "21d2b98e63fe4fd7153f26d0a448619ef11eee0803605ecede873c8f656a7005",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-damaged",
+      "width": 3,
+      "reference": "2971952865434b54bbcd3b887f52007201ca7ccab9b4ca5f027de602d411c331",
+      "candidate": "2971952865434b54bbcd3b887f52007201ca7ccab9b4ca5f027de602d411c331",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-damaged",
+      "width": 1,
+      "reference": "2971952865434b54bbcd3b887f52007201ca7ccab9b4ca5f027de602d411c331",
+      "candidate": "2971952865434b54bbcd3b887f52007201ca7ccab9b4ca5f027de602d411c331",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-damaged",
+      "width": 6,
+      "reference": "2971952865434b54bbcd3b887f52007201ca7ccab9b4ca5f027de602d411c331",
+      "candidate": "2971952865434b54bbcd3b887f52007201ca7ccab9b4ca5f027de602d411c331",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-broken",
+      "width": 3,
+      "reference": "db9ebd5df5304db403b5a7cc552d4688edf4c3e20a0041ac670f503bbff1ce63",
+      "candidate": "db9ebd5df5304db403b5a7cc552d4688edf4c3e20a0041ac670f503bbff1ce63",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-broken",
+      "width": 1,
+      "reference": "db9ebd5df5304db403b5a7cc552d4688edf4c3e20a0041ac670f503bbff1ce63",
+      "candidate": "db9ebd5df5304db403b5a7cc552d4688edf4c3e20a0041ac670f503bbff1ce63",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-broken",
+      "width": 6,
+      "reference": "db9ebd5df5304db403b5a7cc552d4688edf4c3e20a0041ac670f503bbff1ce63",
+      "candidate": "db9ebd5df5304db403b5a7cc552d4688edf4c3e20a0041ac670f503bbff1ce63",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-restored",
+      "width": 3,
+      "reference": "21d2b98e63fe4fd7153f26d0a448619ef11eee0803605ecede873c8f656a7005",
+      "candidate": "21d2b98e63fe4fd7153f26d0a448619ef11eee0803605ecede873c8f656a7005",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-restored",
+      "width": 1,
+      "reference": "21d2b98e63fe4fd7153f26d0a448619ef11eee0803605ecede873c8f656a7005",
+      "candidate": "21d2b98e63fe4fd7153f26d0a448619ef11eee0803605ecede873c8f656a7005",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-restored",
+      "width": 6,
+      "reference": "21d2b98e63fe4fd7153f26d0a448619ef11eee0803605ecede873c8f656a7005",
+      "candidate": "21d2b98e63fe4fd7153f26d0a448619ef11eee0803605ecede873c8f656a7005",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-intact",
+      "width": 3,
+      "reference": "deb7882994999189c124e398a17a7d1fd955bbb5a7c7921486ac40b37bf327bb",
+      "candidate": "deb7882994999189c124e398a17a7d1fd955bbb5a7c7921486ac40b37bf327bb",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-intact",
+      "width": 1,
+      "reference": "deb7882994999189c124e398a17a7d1fd955bbb5a7c7921486ac40b37bf327bb",
+      "candidate": "deb7882994999189c124e398a17a7d1fd955bbb5a7c7921486ac40b37bf327bb",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-intact",
+      "width": 6,
+      "reference": "deb7882994999189c124e398a17a7d1fd955bbb5a7c7921486ac40b37bf327bb",
+      "candidate": "deb7882994999189c124e398a17a7d1fd955bbb5a7c7921486ac40b37bf327bb",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-damaged",
+      "width": 3,
+      "reference": "6fed418191b58b7bbf15dcf1a8c4c003e14fdf63c307d8c72f8fe9e855a3b26b",
+      "candidate": "6fed418191b58b7bbf15dcf1a8c4c003e14fdf63c307d8c72f8fe9e855a3b26b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-damaged",
+      "width": 1,
+      "reference": "6fed418191b58b7bbf15dcf1a8c4c003e14fdf63c307d8c72f8fe9e855a3b26b",
+      "candidate": "6fed418191b58b7bbf15dcf1a8c4c003e14fdf63c307d8c72f8fe9e855a3b26b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-damaged",
+      "width": 6,
+      "reference": "6fed418191b58b7bbf15dcf1a8c4c003e14fdf63c307d8c72f8fe9e855a3b26b",
+      "candidate": "6fed418191b58b7bbf15dcf1a8c4c003e14fdf63c307d8c72f8fe9e855a3b26b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-broken",
+      "width": 3,
+      "reference": "e0ef66642d32958b780702bf3e04e56fa20064fd9a55354e2d9f6d76125b5da8",
+      "candidate": "e0ef66642d32958b780702bf3e04e56fa20064fd9a55354e2d9f6d76125b5da8",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-broken",
+      "width": 1,
+      "reference": "e0ef66642d32958b780702bf3e04e56fa20064fd9a55354e2d9f6d76125b5da8",
+      "candidate": "e0ef66642d32958b780702bf3e04e56fa20064fd9a55354e2d9f6d76125b5da8",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-broken",
+      "width": 6,
+      "reference": "e0ef66642d32958b780702bf3e04e56fa20064fd9a55354e2d9f6d76125b5da8",
+      "candidate": "e0ef66642d32958b780702bf3e04e56fa20064fd9a55354e2d9f6d76125b5da8",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-restored",
+      "width": 3,
+      "reference": "deb7882994999189c124e398a17a7d1fd955bbb5a7c7921486ac40b37bf327bb",
+      "candidate": "deb7882994999189c124e398a17a7d1fd955bbb5a7c7921486ac40b37bf327bb",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-restored",
+      "width": 1,
+      "reference": "deb7882994999189c124e398a17a7d1fd955bbb5a7c7921486ac40b37bf327bb",
+      "candidate": "deb7882994999189c124e398a17a7d1fd955bbb5a7c7921486ac40b37bf327bb",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-restored",
+      "width": 6,
+      "reference": "deb7882994999189c124e398a17a7d1fd955bbb5a7c7921486ac40b37bf327bb",
+      "candidate": "deb7882994999189c124e398a17a7d1fd955bbb5a7c7921486ac40b37bf327bb",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-intact",
+      "width": 3,
+      "reference": "483a1395211af2f388fe70f83c7f49b3d3858c7a85175368591848ac855aeb59",
+      "candidate": "483a1395211af2f388fe70f83c7f49b3d3858c7a85175368591848ac855aeb59",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-intact",
+      "width": 1,
+      "reference": "483a1395211af2f388fe70f83c7f49b3d3858c7a85175368591848ac855aeb59",
+      "candidate": "483a1395211af2f388fe70f83c7f49b3d3858c7a85175368591848ac855aeb59",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-intact",
+      "width": 6,
+      "reference": "483a1395211af2f388fe70f83c7f49b3d3858c7a85175368591848ac855aeb59",
+      "candidate": "483a1395211af2f388fe70f83c7f49b3d3858c7a85175368591848ac855aeb59",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-damaged",
+      "width": 3,
+      "reference": "cfe2032bff1bd4d32d881916719dddc9f8bb275e8d49e70320ea9e41b94cf152",
+      "candidate": "cfe2032bff1bd4d32d881916719dddc9f8bb275e8d49e70320ea9e41b94cf152",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-damaged",
+      "width": 1,
+      "reference": "cfe2032bff1bd4d32d881916719dddc9f8bb275e8d49e70320ea9e41b94cf152",
+      "candidate": "cfe2032bff1bd4d32d881916719dddc9f8bb275e8d49e70320ea9e41b94cf152",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-damaged",
+      "width": 6,
+      "reference": "cfe2032bff1bd4d32d881916719dddc9f8bb275e8d49e70320ea9e41b94cf152",
+      "candidate": "cfe2032bff1bd4d32d881916719dddc9f8bb275e8d49e70320ea9e41b94cf152",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-broken",
+      "width": 3,
+      "reference": "0abad190a02fcb732e14bc9dbaa8f7a9377e40061eedcb50223fdd1ff1870f10",
+      "candidate": "0abad190a02fcb732e14bc9dbaa8f7a9377e40061eedcb50223fdd1ff1870f10",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-broken",
+      "width": 1,
+      "reference": "0abad190a02fcb732e14bc9dbaa8f7a9377e40061eedcb50223fdd1ff1870f10",
+      "candidate": "0abad190a02fcb732e14bc9dbaa8f7a9377e40061eedcb50223fdd1ff1870f10",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-broken",
+      "width": 6,
+      "reference": "0abad190a02fcb732e14bc9dbaa8f7a9377e40061eedcb50223fdd1ff1870f10",
+      "candidate": "0abad190a02fcb732e14bc9dbaa8f7a9377e40061eedcb50223fdd1ff1870f10",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-restored",
+      "width": 3,
+      "reference": "483a1395211af2f388fe70f83c7f49b3d3858c7a85175368591848ac855aeb59",
+      "candidate": "483a1395211af2f388fe70f83c7f49b3d3858c7a85175368591848ac855aeb59",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-restored",
+      "width": 1,
+      "reference": "483a1395211af2f388fe70f83c7f49b3d3858c7a85175368591848ac855aeb59",
+      "candidate": "483a1395211af2f388fe70f83c7f49b3d3858c7a85175368591848ac855aeb59",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-restored",
+      "width": 6,
+      "reference": "483a1395211af2f388fe70f83c7f49b3d3858c7a85175368591848ac855aeb59",
+      "candidate": "483a1395211af2f388fe70f83c7f49b3d3858c7a85175368591848ac855aeb59",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-standard",
+      "width": 3,
+      "reference": "63a2f3066086ec8900312c5355d2c826f048494ce26115fbce5d48d343d0d2d7",
+      "candidate": "63a2f3066086ec8900312c5355d2c826f048494ce26115fbce5d48d343d0d2d7",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-standard",
+      "width": 1,
+      "reference": "63a2f3066086ec8900312c5355d2c826f048494ce26115fbce5d48d343d0d2d7",
+      "candidate": "63a2f3066086ec8900312c5355d2c826f048494ce26115fbce5d48d343d0d2d7",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-standard",
+      "width": 6,
+      "reference": "63a2f3066086ec8900312c5355d2c826f048494ce26115fbce5d48d343d0d2d7",
+      "candidate": "63a2f3066086ec8900312c5355d2c826f048494ce26115fbce5d48d343d0d2d7",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-focused",
+      "width": 3,
+      "reference": "6f608140b9f1373164993a4718d3380f2a29509e454f2cb82921a01c154831c6",
+      "candidate": "6f608140b9f1373164993a4718d3380f2a29509e454f2cb82921a01c154831c6",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-focused",
+      "width": 1,
+      "reference": "6f608140b9f1373164993a4718d3380f2a29509e454f2cb82921a01c154831c6",
+      "candidate": "6f608140b9f1373164993a4718d3380f2a29509e454f2cb82921a01c154831c6",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-focused",
+      "width": 6,
+      "reference": "6f608140b9f1373164993a4718d3380f2a29509e454f2cb82921a01c154831c6",
+      "candidate": "6f608140b9f1373164993a4718d3380f2a29509e454f2cb82921a01c154831c6",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-wide",
+      "width": 3,
+      "reference": "86efcdbe9d7fedba36428f0765e2f5be65312072a57b78e81fbcb043e30e145d",
+      "candidate": "86efcdbe9d7fedba36428f0765e2f5be65312072a57b78e81fbcb043e30e145d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-wide",
+      "width": 1,
+      "reference": "86efcdbe9d7fedba36428f0765e2f5be65312072a57b78e81fbcb043e30e145d",
+      "candidate": "86efcdbe9d7fedba36428f0765e2f5be65312072a57b78e81fbcb043e30e145d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-wide",
+      "width": 6,
+      "reference": "86efcdbe9d7fedba36428f0765e2f5be65312072a57b78e81fbcb043e30e145d",
+      "candidate": "86efcdbe9d7fedba36428f0765e2f5be65312072a57b78e81fbcb043e30e145d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-prismatic",
+      "width": 3,
+      "reference": "64d396283083229bcc7f814c9565ea7a13e5e92ee2ba74423fa1458c355a503e",
+      "candidate": "64d396283083229bcc7f814c9565ea7a13e5e92ee2ba74423fa1458c355a503e",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-prismatic",
+      "width": 1,
+      "reference": "64d396283083229bcc7f814c9565ea7a13e5e92ee2ba74423fa1458c355a503e",
+      "candidate": "64d396283083229bcc7f814c9565ea7a13e5e92ee2ba74423fa1458c355a503e",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-prismatic",
+      "width": 6,
+      "reference": "64d396283083229bcc7f814c9565ea7a13e5e92ee2ba74423fa1458c355a503e",
+      "candidate": "64d396283083229bcc7f814c9565ea7a13e5e92ee2ba74423fa1458c355a503e",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-deepheart",
+      "width": 3,
+      "reference": "144f1bf43f8095022dee12b9e0a20612d02d899e75177b6f9aaee5ecbdcd9252",
+      "candidate": "144f1bf43f8095022dee12b9e0a20612d02d899e75177b6f9aaee5ecbdcd9252",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-deepheart",
+      "width": 1,
+      "reference": "144f1bf43f8095022dee12b9e0a20612d02d899e75177b6f9aaee5ecbdcd9252",
+      "candidate": "144f1bf43f8095022dee12b9e0a20612d02d899e75177b6f9aaee5ecbdcd9252",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-deepheart",
+      "width": 6,
+      "reference": "144f1bf43f8095022dee12b9e0a20612d02d899e75177b6f9aaee5ecbdcd9252",
+      "candidate": "144f1bf43f8095022dee12b9e0a20612d02d899e75177b6f9aaee5ecbdcd9252",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moved",
+      "width": 3,
+      "reference": "3b56474b3443910d8cd67447367520523796d4a215ae2698d628b6e76869f5ab",
+      "candidate": "3b56474b3443910d8cd67447367520523796d4a215ae2698d628b6e76869f5ab",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moved",
+      "width": 1,
+      "reference": "3b56474b3443910d8cd67447367520523796d4a215ae2698d628b6e76869f5ab",
+      "candidate": "3b56474b3443910d8cd67447367520523796d4a215ae2698d628b6e76869f5ab",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moved",
+      "width": 6,
+      "reference": "3b56474b3443910d8cd67447367520523796d4a215ae2698d628b6e76869f5ab",
+      "candidate": "3b56474b3443910d8cd67447367520523796d4a215ae2698d628b6e76869f5ab",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    }
+  ],
+  "captures": [
+    "emberMine-intact-0-w6",
+    "emberMine-intact-1-w3",
+    "emberMine-intact-2-w1",
+    "emberMine-intact-3-w6"
+  ],
+  "physical_iphone_verified": false,
+  "scope": "Diagnostic terrain strips6/3/1; all authored draws, lighting and native resolution retained. Browser study, no production change."
+}
