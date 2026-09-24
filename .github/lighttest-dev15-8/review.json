@@ -1,0 +1,73 @@
+{
+  "source_commit": "ab298e05d135bbdfd6bd555d03ef294d6370ace8",
+  "validation_commit": "33f639393ae5ce92a6b7a4301a86c39c9abd204f",
+  "artifact_run_id": 36030905015,
+  "export_run_id": 36030554231,
+  "export_artifact": {
+    "id": 10821630915,
+    "node_id": "MDg6QXJ0aWZhY3QxMDgyMTYzMDkxNQ==",
+    "name": "dev15-8-candidate",
+    "size_in_bytes": 268679282,
+    "url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10821630915",
+    "archive_download_url": "https://api.github.com/repos/Corpax88/Ever-Deeper/actions/artifacts/10821630915/zip",
+    "expired": false,
+    "digest": "sha256:b2c0d14ce7376b8f137cba93eda2f2c0fc7ce2c4d68f169824fc23d2d4675cd7",
+    "created_at": "2026-09-24T16:55:46Z",
+    "updated_at": "2026-09-24T16:55:46Z",
+    "expires_at": "2026-12-23T16:54:03Z",
+    "workflow_run": {
+      "id": 36030554231,
+      "repository_id": 1329194199,
+      "head_repository_id": 1329194199,
+      "head_branch": "codex/lighttest-dev15-8-20260924",
+      "head_sha": "ab298e05d135bbdfd6bd555d03ef294d6370ace8"
+    }
+  },
+  "artifacts": {
+    "browser": {
+      "id": 10823425976,
+      "name": "dev15-8-browser-review",
+      "digest": "sha256:253b86dea9483a9ab6e9ac695151401df6de8763532209f661b1f6583279a4e1"
+    },
+    "build": {
+      "id": 10822500494,
+      "name": "dev15-8-build-review",
+      "digest": "sha256:9eab514b595ffc6398fdf12f41dc8a90cd9a569f91f7b13d7c6454feec2bbcd4"
+    },
+    "candidate": {
+      "id": 10822415604,
+      "name": "dev15-8-candidate",
+      "digest": "sha256:333a1e59510b519cdd167d481f3066d8b134afe7d9059b4414598f655abe3a64"
+    }
+  },
+  "destination": "dev",
+  "version": "1.0.0-dev.15.8",
+  "live_authorized": false,
+  "independent_visual_accepted": true,
+  "exported_gameplay_passed": true,
+  "publisher_reviewed": true,
+  "physical_iphone_verified": false,
+  "reviewed_files": {
+    "manifest.json": "acff12a5f0dec96260a391be28799634a2f763ffcd5e4d83c044a77ce9fd09cc",
+    "baseline.json": "ed30fd8d5e0d132ce91b53323aeb6d4ac2dc6c5be53f93885d4f66d2157e35c0",
+    "native-input.json": "ec31a9002188f3b87fb4c040d2da494383bae13a6697981a77905dc5cf10b1b3",
+    "evidence/browser.json": "a276b0f6dea95f5d120aa9b2e26505f26f8930eade7d5c25aeffbb6949bd9a3b",
+    "evidence/report-webkit.json": "cb2a7ff62abed175595347580f9d0934b142853514cfdece69153637c2561ba4",
+    "evidence/core.json": "b08b9063993ea14fd8460b83d7bee8e4d03db4e806800c7fde76be82fc668d3e",
+    "evidence/build.json": "fa12a66865e17021933cf9ea205f41b417d9e058ad8992165899dc5f60228137",
+    "evidence/webkit.json": "36197a33788128b9016726c2ab170e75d4753178d2af8d179f9d27afe09a182a",
+    "evidence/light.json": "807cd20db8ce18198ad53407d5a65fc61f90c5f5d4f0e3a4f351ffebe676fee1",
+    "evidence/light-webkit.json": "1e2d8ef412a7bc3d5d6065b4ad9cfd849d12216eee5d81c46076857860b0567c",
+    "evidence/receiver-schema.json": "ed21b877cd309aeea81d3ff7d75dfff3c462f40fbdf6c9db344b0212303307de",
+    "evidence/independent-review.json": "251b3da2fafc55a273f0f45ccc18b076a93b318596bb2da9791874e1de2055b2",
+    "publish.py": "c549fd09dd67099004d9ef5bc6888eaa64d43a047b7f68a45a8763083dcec8fe",
+    "../workflows/publish-lighttest-dev15-8.yml": "b2b388935a1da41419847a9d21169d21f0bd2773d54e89a3c0777f175deb783e",
+    "../workflows/lighttest-exact-review.yml": "710af2dd6621e5d22fe1a2cc3bdf7bfe90798fd92afad3d56c75e68235b16795",
+    "../native-flow-trial/bundle.json": "26209f2eeeefa1688d8fd954b701dd02e4a00dbba74274271b4f3aa5d55765dd"
+  },
+  "original_images": {
+    "artifact_id": 10823171082,
+    "run_id": 36031243296,
+    "source_browser_artifact_id": 10823425976
+  }
+}

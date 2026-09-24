@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "source_commit": "ab298e05d135bbdfd6bd555d03ef294d6370ace8",
+  "labelled_reports_round_trip": [
+    "chromium",
+    "webkit"
+  ],
+  "checks": [
+    "actual receiver schema",
+    "actual receiver POST",
+    "complete payload equality",
+    "all measurement windows retained",
+    "all 15 light phase markers retained"
+  ],
+  "scope": "Actual deployed receiver source with test-only auth/database adapters and in-memory SQLite; no production data changed."
+}

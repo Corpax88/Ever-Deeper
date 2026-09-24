@@ -1,0 +1,97 @@
+{
+  "version": "1.0.0-dev.15.8",
+  "source_commit": "ab298e05d135bbdfd6bd555d03ef294d6370ace8",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "960f13d78bff28180b9bb3e75685ee995391a7aaae999163ee0b5e2ba8728106"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 259868912,
+      "sha256": "0a2130b3b6f147a17c582db67a119b3ac61e0f55055762a5d96344de5036917c"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "accepted": true,
+  "final_build_images_inspected": true,
+  "publisher_reviewed": true,
+  "physical_iphone_verified": false,
+  "scope": "Reversible opt-in DEV15.8 same-area light diagnostic and labelled private report flow; not an FPS fix or full art/animation review.",
+  "scores": {
+    "code_and_recovery_out_of_10": 9,
+    "diagnostic_visual_usability_out_of_10": 9,
+    "publication_provenance_out_of_10": 9,
+    "physical_iphone_fps": null
+  },
+  "blockers": [],
+  "findings": [
+    "Seven original final-package captures inspected: Chromium and Apple WebKit start/result panels, both report-control panels, and ordinary WebKit new-game surface.",
+    "Diagnostic text and action buttons are readable and fit within the tested landscape view. Results show all seven stages, restored state, SEND REPORT and CLOSE without clipping.",
+    "Starting and restored views retain the game environment, hero and pet. No new diagnostic visual corruption observed.",
+    "Source review confirms sample flush before light-state mutation, interval reset at stage boundaries, pending report protection, and restoration on focus, movement, menu/area or recorder interruption.",
+    "Final evidence passes ordinary recording/mining, browser reload recovery, exact labelled transfer, receipt clearing, isolation of each light category and cancellation in each off state.",
+    "Publisher review confirms immutable original export and validation provenance, evidence hashes, exact candidate bytes, LIVE/Worn preservation and post-publication byte checks."
+  ],
+  "nonblocking_notes": [
+    "send() normalizes report.reason to stopped; explicit lighttest:end:complete or lighttest:end:cancelled markers preserve diagnostic outcome.",
+    "The diagnostic overlay intentionally covers parts of the existing HUD while requiring the player to stand still."
+  ],
+  "limitations": [
+    "Mac Chromium and Apple WebKit evidence does not prove physical iPhone FPS, thermal behavior or Safari app lifecycle.",
+    "Chromium completes the production 180-second sequence; WebKit QA accelerates production transitions, so its displayed 20-second result is functional evidence only.",
+    "Browser sender/receipt assertions use a transfer fixture. Existing receiver schema roundtrip remains a separate publisher gate.",
+    "Static captures do not establish animation smoothness; no 10/10 FPS score is assigned."
+  ],
+  "images_inspected": [
+    "dev15-8-browser/report-controls.png",
+    "dev15-8-light-webkit/light-test-complete.png",
+    "dev15-8-light-webkit/light-test-start.png",
+    "dev15-8-light/light-test-complete.png",
+    "dev15-8-light/light-test-start.png",
+    "dev15-8-report-webkit/report-controls.png",
+    "dev15-8-webkit/06-confirmed-new-game.png"
+  ],
+  "image_sha256": {
+    "dev15-8-browser/report-controls.png": "ccadc8654172743d05e44d6a493c1a10f8abd68607b4ebd40c62831fa3caf8bf",
+    "dev15-8-light-webkit/light-test-complete.png": "6504e732a33c82334bd0708b7dab5fdac57ad8b12c252bd246a4574746036197",
+    "dev15-8-light-webkit/light-test-start.png": "0e007e492889ad3ecd416f3bcd1b45bd9eb2cbd665682911c7d1e13cf99f8b99",
+    "dev15-8-light/light-test-complete.png": "e429739a425c67f8cd1fdcc69ea7e2a3d67db8684855ceb586d905d81f559af7",
+    "dev15-8-light/light-test-start.png": "fda5902ed43632811bcdce15d8be523f86c5744892c1b513cfb530ea4462a291",
+    "dev15-8-report-webkit/report-controls.png": "ff8020a27e0e5dad5893a1316cd115448857d080cac2c08223ecddd0f97009f0",
+    "dev15-8-webkit/06-confirmed-new-game.png": "0898af0fbbfc8a900d4a4ee7794b4c0e9fff2dcdf5855ad08f647709ec45ce9b"
+  },
+  "validation_run_id": 36030905015,
+  "export_run_id": 36030554231,
+  "reviewed_publication_files": {
+    "/workspace/scratch/41a58a9f2ec4/light-publisher/publish.py": "c549fd09dd67099004d9ef5bc6888eaa64d43a047b7f68a45a8763083dcec8fe",
+    "/workspace/scratch/41a58a9f2ec4/light-publisher/workflow.yml": "b2b388935a1da41419847a9d21169d21f0bd2773d54e89a3c0777f175deb783e",
+    "/workspace/scratch/41a58a9f2ec4/light-publisher/exact-review.yml": "710af2dd6621e5d22fe1a2cc3bdf7bfe90798fd92afad3d56c75e68235b16795"
+  }
+}

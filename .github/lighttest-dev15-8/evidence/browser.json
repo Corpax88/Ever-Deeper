@@ -1,0 +1,157 @@
+{
+  "passed": true,
+  "error": null,
+  "source_commit": "ab298e05d135bbdfd6bd555d03ef294d6370ace8",
+  "version": "1.0.0-dev.15.8",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "960f13d78bff28180b9bb3e75685ee995391a7aaae999163ee0b5e2ba8728106"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 259868912,
+      "sha256": "0a2130b3b6f147a17c582db67a119b3ac61e0f55055762a5d96344de5036917c"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "browser": "chromium",
+  "checks": [
+    {
+      "name": "version",
+      "passed": true
+    },
+    {
+      "name": "opt-in",
+      "passed": true
+    },
+    {
+      "name": "recording-started",
+      "passed": true,
+      "ui": {
+        "buttons": {
+          "AutoFPSTest": [
+            476,
+            591
+          ],
+          "ClearReport": [
+            476,
+            519
+          ],
+          "SendReport": [
+            476,
+            447
+          ],
+          "SessionReport": [
+            476,
+            375
+          ]
+        },
+        "running": true,
+        "status": "REPORT · 0S · 0 WINDOWS · SEND AFTER PLAYING"
+      },
+      "api": {
+        "ready": true,
+        "active": true,
+        "saved": false,
+        "storage_error": false,
+        "pending": true,
+        "windows": 0,
+        "seconds": 0
+      }
+    },
+    {
+      "name": "real-windows",
+      "passed": true,
+      "windows": 2
+    },
+    {
+      "name": "real-metrics",
+      "passed": true
+    },
+    {
+      "name": "actual-mining",
+      "passed": true
+    },
+    {
+      "name": "no-network-while-playing",
+      "passed": true
+    },
+    {
+      "name": "recovered-after-reload",
+      "passed": true
+    },
+    {
+      "name": "not-auto-recording",
+      "passed": true
+    },
+    {
+      "name": "previous-report-protected",
+      "passed": true
+    },
+    {
+      "name": "exact-transfer",
+      "passed": true
+    },
+    {
+      "name": "receipt-clears-pending",
+      "passed": true
+    },
+    {
+      "name": "new-session-after-receipt",
+      "passed": true
+    },
+    {
+      "name": "stopped",
+      "passed": true
+    },
+    {
+      "name": "clear-needs-confirmation",
+      "passed": true
+    },
+    {
+      "name": "confirmed-clear",
+      "passed": true
+    },
+    {
+      "name": "no-script-errors",
+      "passed": true,
+      "tail": [
+        "log: Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+        "log: OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+        "log: Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+        "log: Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+        "log: OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+        "log: Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+      ]
+    }
+  ],
+  "physical_iphone_verified": false,
+  "transfer_fixture": true
+}
