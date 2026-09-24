@@ -13,7 +13,8 @@ for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
  const browser=await engine.launch({headless:true}),ctx=await browser.newContext({viewport:{width:844,height:390},hasTouch:true});let mode='ack';
  try {
   await ctx.route(receiver+'/**',async route=>{
-   if(mode==='redirect'&&!route.request().url().includes('/signed-in'))return route.fulfill({status:302,headers:{Location:receiver+'/signed-in#ready'}});
+   // Use a separate navigation: Playwright routes only the first request in an HTTP redirect chain.
+   if(mode==='redirect'&&!route.request().url().includes('/signed-in'))return route.fulfill({contentType:'text/html',body:`<script>location.replace(${JSON.stringify(receiver+'/signed-in#ready')})<\/script>`});
    const markup=`<html><body><h1>Receiver fixture</h1><a id="back">Return with receipt</a><script>
      function take(r){window.report=r;document.getElementById('back').href=${JSON.stringify(origin)}+'/#report-received='+r.id;window.opener?.postMessage({type:'ever-deeper-report-saved',id:r.id},${JSON.stringify(origin)});}
      const value=location.hash.startsWith('#report=')?location.hash.slice(8):'';
