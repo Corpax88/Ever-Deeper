@@ -207,6 +207,7 @@ func _ready() -> void :
 	lit_floor_chunks.restrict_to_regions = true
 	add_child(lit_floor_chunks)
 	lit_draw_sections = LitDrawSectionsScript.new()
+	lit_draw_sections.reject_transparent_pixels = false
 	add_child(lit_draw_sections)
 	player.moved.connect(_on_player_moved)
 	player.facing_changed.connect(_on_player_facing_changed)

@@ -2,6 +2,8 @@ extends Node2D
 ## Execute existing drawing functions in bounded CanvasItems, in their original order.
 ## The world retains all geometry/state ownership; this layer only narrows light culling.
 var enabled: bool = true
+# Depth-one can retain native blending instead of paying for an alpha-discard shader.
+var reject_transparent_pixels: bool = true
 const VISIBLE_PIXELS_MATERIAL := preload("res://shaders/lit_visible_pixels.tres")
 var _pool: Array[DrawSection] = []
 var _used: int = 0
@@ -94,7 +96,7 @@ func _configure(section: DrawSection, paint: Callable, draw_material: Material, 
 	section.paint = paint
 	# Keep explicit/inherited world materials intact. Standard lit artwork can
 	# reject exact-zero alpha before the renderer evaluates lights and shadows.
-	var standard_lighting: bool = draw_material == null and _world.material == null and not _world.use_parent_material
+	var standard_lighting: bool = reject_transparent_pixels and draw_material == null and _world.material == null and not _world.use_parent_material
 	section.use_parent_material = draw_material == null and not standard_lighting
 	section.material = VISIBLE_PIXELS_MATERIAL if standard_lighting else draw_material
 	section.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED if draw_material != null else CanvasItem.TEXTURE_REPEAT_PARENT_NODE

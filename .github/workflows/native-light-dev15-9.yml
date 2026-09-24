@@ -1,0 +1,72 @@
+name: Review native depth-one lighting DEV15.9
+on:
+  push:
+    branches: [codex/native-light-dev15-9-20260924]
+    paths: ['scripts/**', '.github/native-light-dev15-9/**', '.github/workflows/native-light-dev15-9.yml']
+permissions:
+  contents: read
+concurrency:
+  group: native-light-dev15-9
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - name: Install matching engine
+        run: |
+          curl -L --fail --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Build exact candidate
+        run: python3 .github/native-light-dev15-9/build.py Godot_v4.7.2-stable_linux.x86_64 "$RUNNER_TEMP/native-light"
+      - name: Protected differences
+        continue-on-error: true
+        run: python3 tools/check_invariants.py > "$RUNNER_TEMP/native-light/invariants.log" 2>&1
+      - name: Exported input touch and save flavor
+        run: python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/native-light/candidate/index.pck" --cases input touch build-flavor --output "$RUNNER_TEMP/native-light/core"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: native-light-dev15-9-candidate, path: '${{ runner.temp }}/native-light/candidate', retention-days: 90}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-light-dev15-9-build
+          path: |
+            ${{ runner.temp }}/native-light/*.json
+            ${{ runner.temp }}/native-light/*.log
+            ${{ runner.temp }}/native-light/core
+          retention-days: 90
+  browser:
+    needs: build
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/download-artifact@v4
+        with: {name: native-light-dev15-9-candidate, path: '${{ runner.temp }}/candidate'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install chromium webkit
+      - name: Frozen visual A-B-A and repeated real held mining
+        run: node .github/native-light-dev15-9/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/native-light-browser/study"
+      - name: Labelled light test and report recovery
+        env: {REPORT_BROWSER: webkit}
+        run: node .github/native-light-dev15-9/light-review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/native-light-browser/light-webkit"
+      - name: Ordinary Apple WebKit startup and save
+        env: {EXPECTED_VERSION: 1.0.0-dev.15.9, CANDIDATE_SOURCE: '${{ github.sha }}'}
+        run: node .github/dev14-startup/inspect.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/native-light-browser/webkit"
+      - name: Preserve original pairs and compact review
+        if: always()
+        run: |
+          python3 -m pip install --quiet --break-system-packages pillow
+          python3 .github/native-light-dev15-9/contacts.py "$RUNNER_TEMP/native-light-browser" "$RUNNER_TEMP/native-light-small"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: native-light-dev15-9-browser, path: '${{ runner.temp }}/native-light-browser', retention-days: 90}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: native-light-dev15-9-small, path: '${{ runner.temp }}/native-light-small', retention-days: 90}
