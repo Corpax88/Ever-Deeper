@@ -1,0 +1,36 @@
+name: Diagnose render resolution on Apple browsers
+on:
+  push:
+    branches: [codex/resolution-study-20260924]
+    paths: ['.github/resolution-study/**', '.github/workflows/resolution-study.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: resolution-study, cancel-in-progress: true}
+jobs:
+  browser:
+    strategy:
+      fail-fast: false
+      matrix: {browser: [chromium, webkit]}
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/resolution-study
+          sparse-checkout-cone-mode: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-light-dev15-9-candidate
+          run-id: 36043919958
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install ${{ matrix.browser }}
+      - name: Same scene at three framebuffer resolutions
+        env: {REVIEW_BROWSER: '${{ matrix.browser }}'}
+        run: node .github/resolution-study/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/resolution"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'resolution-${{ matrix.browser }}', path: '${{ runner.temp }}/resolution', retention-days: 90}
