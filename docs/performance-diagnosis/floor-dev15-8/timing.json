@@ -1,0 +1,476 @@
+{
+  "passed": true,
+  "error": null,
+  "source_commit": "df55593515a3bf2ddfef660dca0f97cadd771d2f",
+  "version": "1.0.0-dev.15.7",
+  "files": {
+    "index.html": {
+      "size": 13034,
+      "sha256": "3391526056464a14abfa278853e5924417ac115998d22d4a8387500cb693a770"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 259867612,
+      "sha256": "2c109f70ba587a685696b81b238774c62e33be5ffa944db5287c2b200cd29d7b"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "runtime": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+    "dpr": 3,
+    "canvas": [
+      2532,
+      1170
+    ]
+  },
+  "checks": [
+    {
+      "name": "apple-gpu",
+      "passed": true,
+      "runtime": {
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+        "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+        "dpr": 3,
+        "canvas": [
+          2532,
+          1170
+        ]
+      }
+    },
+    {
+      "name": "version",
+      "passed": true
+    },
+    {
+      "name": "held-mining-0",
+      "passed": true,
+      "result": {
+        "label": "reference-0",
+        "cached": false,
+        "cpu": {
+          "max_ms": 112.8,
+          "mean_ms": 32.0230703986426,
+          "over_33_ms": 301,
+          "p95_ms": 59.4
+        },
+        "draw_calls": 220,
+        "floor_merged": false,
+        "frame": {
+          "max_ms": 63,
+          "mean_ms": 17.1257845631892,
+          "over_33_ms": 13,
+          "p95_ms": 23.2
+        },
+        "frames": 1179,
+        "seconds": 20.1916,
+        "sections": {
+          "cached": 171,
+          "draw_callback_usec": 540400,
+          "draw_callbacks": 4476,
+          "dynamic": 7,
+          "recycled": 0,
+          "redraws": 792,
+          "reuses": 97020,
+          "setup_usec": 2675100
+        },
+        "impacts": 89
+      }
+    },
+    {
+      "name": "held-mining-1",
+      "passed": true,
+      "result": {
+        "label": "candidate-1",
+        "cached": true,
+        "cpu": {
+          "max_ms": 371.9,
+          "mean_ms": 46.9927335640139,
+          "over_33_ms": 386,
+          "p95_ms": 66.5
+        },
+        "draw_calls": 184,
+        "floor_merged": true,
+        "frame": {
+          "max_ms": 381.6,
+          "mean_ms": 17.4737889273357,
+          "over_33_ms": 12,
+          "p95_ms": 23
+        },
+        "frames": 1156,
+        "seconds": 20.1999,
+        "sections": {
+          "cached": 171,
+          "draw_callback_usec": 506500,
+          "draw_callbacks": 4095,
+          "dynamic": 7,
+          "recycled": 0,
+          "redraws": 783,
+          "reuses": 87111,
+          "setup_usec": 2458500
+        },
+        "impacts": 87
+      }
+    },
+    {
+      "name": "held-mining-2",
+      "passed": true,
+      "result": {
+        "label": "candidate-2",
+        "cached": true,
+        "cpu": {
+          "max_ms": 165,
+          "mean_ms": 42.1865100087024,
+          "over_33_ms": 556,
+          "p95_ms": 84.3
+        },
+        "draw_calls": 184,
+        "floor_merged": true,
+        "frame": {
+          "max_ms": 166.4,
+          "mean_ms": 17.5787641427328,
+          "over_33_ms": 22,
+          "p95_ms": 25.4
+        },
+        "frames": 1149,
+        "seconds": 20.1982,
+        "sections": {
+          "cached": 171,
+          "draw_callback_usec": 570700,
+          "draw_callbacks": 4131,
+          "dynamic": 7,
+          "recycled": 0,
+          "redraws": 792,
+          "reuses": 87615,
+          "setup_usec": 2904900
+        },
+        "impacts": 90
+      }
+    },
+    {
+      "name": "held-mining-3",
+      "passed": true,
+      "result": {
+        "label": "reference-3",
+        "cached": false,
+        "cpu": {
+          "max_ms": 51.5,
+          "mean_ms": 29.473469387755,
+          "over_33_ms": 352,
+          "p95_ms": 46.8
+        },
+        "draw_calls": 220,
+        "floor_merged": false,
+        "frame": {
+          "max_ms": 54.3,
+          "mean_ms": 17.1830782312925,
+          "over_33_ms": 16,
+          "p95_ms": 23.7
+        },
+        "frames": 1176,
+        "seconds": 20.2074,
+        "sections": {
+          "cached": 171,
+          "draw_callback_usec": 569400,
+          "draw_callbacks": 4389,
+          "dynamic": 7,
+          "recycled": 0,
+          "redraws": 792,
+          "reuses": 94626,
+          "setup_usec": 2991100
+        },
+        "impacts": 89
+      }
+    },
+    {
+      "name": "held-mining-4",
+      "passed": true,
+      "result": {
+        "label": "candidate-4",
+        "cached": true,
+        "cpu": {
+          "max_ms": 417.2,
+          "mean_ms": 44.5274193548384,
+          "over_33_ms": 317,
+          "p95_ms": 87.1
+        },
+        "draw_calls": 184,
+        "floor_merged": true,
+        "frame": {
+          "max_ms": 422.4,
+          "mean_ms": 17.9732078853047,
+          "over_33_ms": 20,
+          "p95_ms": 26.9
+        },
+        "frames": 1116,
+        "seconds": 20.0582,
+        "sections": {
+          "cached": 171,
+          "draw_callback_usec": 570800,
+          "draw_callbacks": 3831,
+          "dynamic": 7,
+          "recycled": 0,
+          "redraws": 774,
+          "reuses": 80451,
+          "setup_usec": 2810900
+        },
+        "impacts": 88
+      }
+    },
+    {
+      "name": "held-mining-5",
+      "passed": true,
+      "result": {
+        "label": "reference-5",
+        "cached": false,
+        "cpu": {
+          "max_ms": 62.9,
+          "mean_ms": 34.2062607204118,
+          "over_33_ms": 456,
+          "p95_ms": 56.6
+        },
+        "draw_calls": 220,
+        "floor_merged": false,
+        "frame": {
+          "max_ms": 68.5,
+          "mean_ms": 17.3363636363637,
+          "over_33_ms": 20,
+          "p95_ms": 25.7
+        },
+        "frames": 1166,
+        "seconds": 20.2143,
+        "sections": {
+          "cached": 171,
+          "draw_callback_usec": 598700,
+          "draw_callbacks": 4344,
+          "dynamic": 7,
+          "recycled": 0,
+          "redraws": 792,
+          "reuses": 93429,
+          "setup_usec": 3287400
+        },
+        "impacts": 89
+      }
+    },
+    {
+      "name": "draws-reduced",
+      "passed": true
+    }
+  ],
+  "windows": [
+    {
+      "label": "reference-0",
+      "cached": false,
+      "cpu": {
+        "max_ms": 112.8,
+        "mean_ms": 32.0230703986426,
+        "over_33_ms": 301,
+        "p95_ms": 59.4
+      },
+      "draw_calls": 220,
+      "floor_merged": false,
+      "frame": {
+        "max_ms": 63,
+        "mean_ms": 17.1257845631892,
+        "over_33_ms": 13,
+        "p95_ms": 23.2
+      },
+      "frames": 1179,
+      "seconds": 20.1916,
+      "sections": {
+        "cached": 171,
+        "draw_callback_usec": 540400,
+        "draw_callbacks": 4476,
+        "dynamic": 7,
+        "recycled": 0,
+        "redraws": 792,
+        "reuses": 97020,
+        "setup_usec": 2675100
+      },
+      "impacts": 89
+    },
+    {
+      "label": "candidate-1",
+      "cached": true,
+      "cpu": {
+        "max_ms": 371.9,
+        "mean_ms": 46.9927335640139,
+        "over_33_ms": 386,
+        "p95_ms": 66.5
+      },
+      "draw_calls": 184,
+      "floor_merged": true,
+      "frame": {
+        "max_ms": 381.6,
+        "mean_ms": 17.4737889273357,
+        "over_33_ms": 12,
+        "p95_ms": 23
+      },
+      "frames": 1156,
+      "seconds": 20.1999,
+      "sections": {
+        "cached": 171,
+        "draw_callback_usec": 506500,
+        "draw_callbacks": 4095,
+        "dynamic": 7,
+        "recycled": 0,
+        "redraws": 783,
+        "reuses": 87111,
+        "setup_usec": 2458500
+      },
+      "impacts": 87
+    },
+    {
+      "label": "candidate-2",
+      "cached": true,
+      "cpu": {
+        "max_ms": 165,
+        "mean_ms": 42.1865100087024,
+        "over_33_ms": 556,
+        "p95_ms": 84.3
+      },
+      "draw_calls": 184,
+      "floor_merged": true,
+      "frame": {
+        "max_ms": 166.4,
+        "mean_ms": 17.5787641427328,
+        "over_33_ms": 22,
+        "p95_ms": 25.4
+      },
+      "frames": 1149,
+      "seconds": 20.1982,
+      "sections": {
+        "cached": 171,
+        "draw_callback_usec": 570700,
+        "draw_callbacks": 4131,
+        "dynamic": 7,
+        "recycled": 0,
+        "redraws": 792,
+        "reuses": 87615,
+        "setup_usec": 2904900
+      },
+      "impacts": 90
+    },
+    {
+      "label": "reference-3",
+      "cached": false,
+      "cpu": {
+        "max_ms": 51.5,
+        "mean_ms": 29.473469387755,
+        "over_33_ms": 352,
+        "p95_ms": 46.8
+      },
+      "draw_calls": 220,
+      "floor_merged": false,
+      "frame": {
+        "max_ms": 54.3,
+        "mean_ms": 17.1830782312925,
+        "over_33_ms": 16,
+        "p95_ms": 23.7
+      },
+      "frames": 1176,
+      "seconds": 20.2074,
+      "sections": {
+        "cached": 171,
+        "draw_callback_usec": 569400,
+        "draw_callbacks": 4389,
+        "dynamic": 7,
+        "recycled": 0,
+        "redraws": 792,
+        "reuses": 94626,
+        "setup_usec": 2991100
+      },
+      "impacts": 89
+    },
+    {
+      "label": "candidate-4",
+      "cached": true,
+      "cpu": {
+        "max_ms": 417.2,
+        "mean_ms": 44.5274193548384,
+        "over_33_ms": 317,
+        "p95_ms": 87.1
+      },
+      "draw_calls": 184,
+      "floor_merged": true,
+      "frame": {
+        "max_ms": 422.4,
+        "mean_ms": 17.9732078853047,
+        "over_33_ms": 20,
+        "p95_ms": 26.9
+      },
+      "frames": 1116,
+      "seconds": 20.0582,
+      "sections": {
+        "cached": 171,
+        "draw_callback_usec": 570800,
+        "draw_callbacks": 3831,
+        "dynamic": 7,
+        "recycled": 0,
+        "redraws": 774,
+        "reuses": 80451,
+        "setup_usec": 2810900
+      },
+      "impacts": 88
+    },
+    {
+      "label": "reference-5",
+      "cached": false,
+      "cpu": {
+        "max_ms": 62.9,
+        "mean_ms": 34.2062607204118,
+        "over_33_ms": 456,
+        "p95_ms": 56.6
+      },
+      "draw_calls": 220,
+      "floor_merged": false,
+      "frame": {
+        "max_ms": 68.5,
+        "mean_ms": 17.3363636363637,
+        "over_33_ms": 20,
+        "p95_ms": 25.7
+      },
+      "frames": 1166,
+      "seconds": 20.2143,
+      "sections": {
+        "cached": 171,
+        "draw_callback_usec": 598700,
+        "draw_callbacks": 4344,
+        "dynamic": 7,
+        "recycled": 0,
+        "redraws": 792,
+        "reuses": 93429,
+        "setup_usec": 3287400
+      },
+      "impacts": 89
+    }
+  ],
+  "physical_iphone_verified": false,
+  "scope": "Same exported floor study, 45s warmup and continuous held mining across six 20s ABBA/BA windows; no screenshots or reset inside measurement. No physical-phone claim."
+}
