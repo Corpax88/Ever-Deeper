@@ -19,7 +19,7 @@ func _command(data: Dictionary) -> void:
 		return
 	if String(data.kind) == "light_interrupt":
 		command_id = int(data.id)
-		main.developer_menu.render_probe._notification(NOTIFICATION_APPLICATION_FOCUS_OUT)
+		main.developer_menu.render_probe._notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
 		return
 	if String(data.kind) == "report_focus":
 		command_id = int(data.id)
