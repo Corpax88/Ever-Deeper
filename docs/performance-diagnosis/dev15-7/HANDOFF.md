@@ -40,4 +40,10 @@ Receiver tests use the actual route and schema, a test-only authentication stub,
 
 Artifacts: candidate `10813466140` (SHA256 `e9cd2f6a9ac0fb9bea297eae3282a96aea5786961099a7438f2546c13aaaf0ee`), build `10812764607` (`91d931d1d9ae57970f282608423aa6d53a579d6451843f130cbe80fb7a4c6fb4`), browser `10812714996` (`4c978f2f47441a917eeccbaf0adde22a6e3aeff0230ba76eb0decdce141c50ff`), recovery `10814007034` (`de30e7b51402d2952ed7c59af5e19fc551c244ed50993606159d8bc43828c5a8`). Main holds pinned evidence and publisher under `.github/telemetry-dev15-7/`.
 
-The DEV publication receipt and independent final review are added after acceptance. LIVE promotion is not authorized for this diagnostics task. This is not a new FPS optimization. Once DEV publication is verified, stop optional testing and wait for Mats to send a real report.
+Independent final round 3 accepted the exact export: code 8/10, scoped visuals 8/10, no material blocker. Four actual game captures and two transport fallback captures were inspected. LIVE promotion is not authorized for this diagnostics task. This is not a new FPS optimization. Once DEV publication is verified, stop optional testing and wait for Mats to send a real report.
+
+## Published 24 September 2026
+
+DEV15.7 is published at https://corpax88.github.io/Ever-Deeper/dev/. Publication commit `f8b3e16e4c58cd21d015ff019491f3a962194af2`, run `36015068520`: package, deploy and verify all succeeded. All 27 public hashes were checked: 9 new DEV files, 9 unchanged LIVE1.0.0 files and 9 unchanged Worn trial files. Receipt artifact `10814790284`, ZIP SHA256 `04e335b499d487d50841918717b443c30be7b49a8770af8c075fc2ec63bc8b28`. Previous DEV15.6 is available in rollback artifact `10814147652`.
+
+This reporting task is complete. Do not re-export, retest or republish the unchanged candidate. Next action: Mats plays for 2–3 minutes after START REPORT, presses SEND REPORT, waits for the receipt, then asks to check the latest session. Read through the Sites database tools described above; do not ask him to upload a JSON file. If the private site requires sign-in and the transfer is lost during sign-in, return to DEV and press SEND REPORT again; the pending report remains on the phone. A receipt return link clears the matching pending report if Safari discarded the opener.
