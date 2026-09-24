@@ -1,0 +1,33 @@
+name: Resolve floor timing uncertainty
+on:
+  push:
+    branches: [codex/floor-lighting-dev15-8-20260924]
+    paths: ['.github/floor-dev15-8/timing.mjs']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  timing:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: floor-study-candidate
+          run-id: 36025763317
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts && npx playwright install chromium
+      - run: node .github/floor-dev15-8/timing.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/timing"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: floor-study-timing
+          path: ${{ runner.temp }}/timing
+          retention-days: 90

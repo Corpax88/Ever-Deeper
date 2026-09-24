@@ -2,7 +2,7 @@ name: Compare depth-one floor lighting candidate
 on:
   push:
     branches: [codex/floor-lighting-dev15-8-20260924]
-    paths: ['.github/floor-dev15-8/build.py', '.github/fps-dev15-6/native-input.json', '.github/fps-dev15-6/shell-input.json', 'scripts/**', 'assets/ui/skills/**', 'assets/ui/fonts/EBGaramond.ttf', '.github/floor-dev15-8/**', 'shaders/**', '.github/workflows/floor-study.yml']
+    paths: ['.github/floor-dev15-8/build.py', '.github/fps-dev15-6/native-input.json', '.github/fps-dev15-6/shell-input.json', 'scripts/**', 'assets/ui/skills/**', 'assets/ui/fonts/EBGaramond.ttf', '.github/floor-dev15-8/review.mjs', '.github/floor-dev15-8/baseline.json', 'shaders/**']
 permissions:
   contents: read
 concurrency:
