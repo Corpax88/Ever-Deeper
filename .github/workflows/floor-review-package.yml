@@ -1,0 +1,48 @@
+name: Package floor study review images
+on:
+  push:
+    branches: [codex/floor-lighting-dev15-8-20260924]
+    paths: ['.github/workflows/floor-review-package.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: floor-study-browser-review
+          run-id: 36025763317
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: input
+      - run: pip install pillow numpy
+      - name: Preserve reports and compare original full-resolution pairs
+        run: |
+          python3 - <<'PY'
+          from PIL import Image,ImageDraw
+          import pathlib,json,numpy as np,shutil
+          root=pathlib.Path('input');out=pathlib.Path('review');out.mkdir()
+          for p in root.rglob('*.json'):
+              target=out/p.relative_to(root);target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,target)
+          metrics=[]
+          for p in root.rglob('*-cached.png'):
+              ref=p.with_name(p.name.replace('-cached.png','-reference.png'))
+              if not ref.exists():continue
+              a=np.array(Image.open(ref).convert('RGB'),dtype=np.int16);b=np.array(Image.open(p).convert('RGB'),dtype=np.int16);d=np.abs(a-b)
+              metrics.append({'pair':p.stem,'max':int(d.max()),'mean':float(d.mean()),'pixels_over_3':int((d.max(2)>3).sum()),'pixels_over_16':int((d.max(2)>16).sum())})
+          (out/'pixel-metrics.json').write_text(json.dumps(metrics,indent=2))
+          for mine in ['emberMine','mossMine','moonMine','starMine']:
+              sheet=Image.new('RGB',(1688,4*414),'#202020');draw=ImageDraw.Draw(sheet)
+              for i,state in enumerate(['intact','damaged','broken','restored']):
+                  for j,mode in enumerate(['reference','cached']):
+                      p=next(root.rglob(mine+'-'+state+'-'+mode+'.png'))
+                      im=Image.open(p).convert('RGB');im.thumbnail((844,390))
+                      sheet.paste(im,(j*844,i*414+24));draw.text((j*844+8,i*414+4),mine+' '+state+' '+mode,fill='white')
+              sheet.save(out/(mine+'-comparison.png'))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: floor-study-review-small
+          path: review
+          retention-days: 90
