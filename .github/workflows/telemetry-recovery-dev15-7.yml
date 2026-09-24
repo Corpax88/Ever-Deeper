@@ -1,0 +1,30 @@
+name: Verify DEV15.7 transfer recovery without rebuilding
+on:
+  push:
+    branches: [codex/telemetry-dev15-7-20260924]
+    paths: ['.github/telemetry-recovery-dev15-7/**', '.github/workflows/telemetry-recovery-dev15-7.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  recovery:
+    runs-on: macos-15
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/download-artifact@v4
+        with:
+          name: dev15-7-candidate
+          run-id: 36012592198
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npx playwright install chromium webkit
+      - name: Verify actual exported recorder recovery in Chromium and WebKit
+        env: {CANDIDATE_SOURCE: abc42ca5db531270510802bf7dab4f3f0936d06d}
+        run: node .github/telemetry-recovery-dev15-7/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/recovery"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: dev15-7-recovery-review, path: '${{ runner.temp }}/recovery', retention-days: 90}
