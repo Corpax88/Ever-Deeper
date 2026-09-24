@@ -159,6 +159,9 @@ var frame_meter_button: Button
 var render_probe_button: Button
 var render_probe: Control
 var _probe_meter_visible := false
+var session_recorder: Node
+var report_button: Button
+var report_clear_armed := 0
 
 var _reset_armed_until_msec: int = 0
 var _last_viewport_size: = Vector2.ZERO
@@ -174,6 +177,9 @@ func _ready() -> void :
 	z_index = 190
 	_build_toggle()
 	_build_drawer()
+	session_recorder = load("res://scripts/dev/session_recorder.gd").new()
+	add_child(session_recorder)
+	session_recorder.changed.connect(_report_changed)
 	frame_meter = FrameMeter.new()
 	frame_meter.name = "FrameMeter"
 	frame_meter.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -197,6 +203,7 @@ func _ready() -> void :
 
 
 func open_menu() -> void :
+	_report_changed()
 	drawer.visible = true
 	toggle_button.text = "CLOSE DEV"
 	toggle_button.tooltip_text = "Close developer tools"
@@ -205,7 +212,7 @@ func open_menu() -> void :
 
 func close_menu() -> void :
 	drawer.visible = false
-	toggle_button.text = "DEV TOOLS"
+	toggle_button.text = "DEV · RECORDING" if session_recorder != null and session_recorder.running else "DEV TOOLS"
 	toggle_button.tooltip_text = "Open developer tools · isolated save"
 	_active_scroll_touch = -1
 	_scroll_drag_distance = 0.0
@@ -414,6 +421,21 @@ func _build_drawer() -> void :
 	action_content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	action_content.add_theme_constant_override("separation", 8)
 	scroll.add_child(action_content)
+	report_button = _action_button("START REPORT", "session_report", true)
+	report_button.remove_meta("dev_command")
+	report_button.name = "SessionReport"
+	report_button.pressed.connect(_report_pressed)
+	action_content.add_child(report_button)
+	var send_button := _action_button("SEND REPORT", "send_report", true)
+	send_button.name = "SendReport"
+	send_button.remove_meta("dev_command")
+	send_button.pressed.connect(_send_report)
+	action_content.add_child(send_button)
+	var clear_button := _action_button("CLEAR REPORT", "clear_report", true)
+	clear_button.name = "ClearReport"
+	clear_button.remove_meta("dev_command")
+	clear_button.pressed.connect(_clear_report)
+	action_content.add_child(clear_button)
 	render_probe_button = _action_button("AUTO FPS TEST · 3 MIN", "render_probe", true)
 	render_probe_button.name = "AutoFPSTest"
 	render_probe_button.remove_meta("dev_command")
@@ -621,3 +643,44 @@ func _line_style(color: Color) -> StyleBoxLine:
 	style.color = color
 	style.thickness = 1
 	return style
+
+
+func _report_changed() -> void:
+	if report_button == null or session_recorder == null: return
+	report_button.text = "STOP REPORT" if session_recorder.running else "START REPORT"
+	toggle_button.text = "CLOSE DEV" if drawer.visible else "DEV · RECORDING" if session_recorder.running else "DEV TOOLS"
+	if OS.has_feature("web"):
+		var raw: Variant = JavaScriptBridge.eval("JSON.stringify(window.everDeeperReports?.status() || {})")
+		var info: Variant = JSON.parse_string(String(raw))
+		if info is Dictionary and bool(info.get("pending", false)):
+			set_status("REPORT · %ds · %d WINDOWS · SEND AFTER PLAYING" % [int(info.get("seconds",0)), int(info.get("windows",0))])
+			if bool(info.get("storage_error",false)): set_status("REPORT IN MEMORY ONLY · SEND BEFORE CLOSING", true)
+
+func _report_pressed() -> void:
+	if session_recorder.running:
+		session_recorder.stop()
+		set_status("REPORT READY · TAP SEND REPORT")
+	elif session_recorder.start():
+		close_menu()
+		_report_changed()
+	else:
+		set_status("SEND OR CLEAR THE PREVIOUS REPORT FIRST; WAIT IF STILL LOADING", true)
+
+func _send_report() -> void:
+	if not OS.has_feature("web"): return
+	session_recorder.stop()
+	var response: Variant = JavaScriptBridge.eval("window.everDeeperReports?.send() || 'Report service unavailable'")
+	set_status(String(response))
+
+func _clear_report() -> void:
+	if session_recorder.running:
+		set_status("STOP THE REPORT FIRST", true)
+		return
+	var now := Time.get_ticks_msec()
+	if report_clear_armed < now:
+		report_clear_armed = now + 4000
+		set_status("TAP CLEAR REPORT AGAIN TO DISCARD IT", true)
+		return
+	report_clear_armed = 0
+	if OS.has_feature("web"): JavaScriptBridge.eval("window.everDeeperReports?.clear()")
+	set_status("REPORT CLEARED")

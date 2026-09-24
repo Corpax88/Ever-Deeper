@@ -140,7 +140,7 @@ func run(main_node: Node) -> void :
 
 func _verify_build_contract() -> Dictionary:
 	var dev_feature: = OS.has_feature("ever_deeper_dev")
-	var expected_version: = "1.0.0-dev.15.6" if dev_feature else "1.0.0"
+	var expected_version: = "1.0.0-dev.15.7" if dev_feature else "1.0.0"
 	var expected_flavor: = "dev" if dev_feature else "production"
 	var actual_version: = String(PremiumMenuScript.release_version())
 	var developer_menu: Variant = _main.get("developer_menu")
@@ -1932,3 +1932,4 @@ func _prepare_light_state(state: Dictionary) -> bool:
 		_main.premium_menu.modulate.a = 1.0
 		_main.premium_menu.open_menu(true, "Base Hub", true, false)
 	return true
+
