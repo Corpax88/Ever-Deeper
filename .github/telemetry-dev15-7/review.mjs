@@ -59,8 +59,8 @@ try{
  await command('moss',{gear:'ember',direction:'up'});await delay(1500);
  check('opt-in',!(await page.evaluate(()=>window.everDeeperReports.status())).pending);
  await command('report_menu');await shot('report-controls');await button('SessionReport');
- check('recording-started',(await page.evaluate(()=>window.REPORT_UI)).running);
- await page.keyboard.down('Space');await delay(11500);await page.keyboard.up('Space');await delay(400);
+ check('recording-started',(await page.evaluate(()=>window.REPORT_UI)).running,{ui:await page.evaluate(()=>window.REPORT_UI),api:await page.evaluate(()=>window.everDeeperReports.status())});
+ const mine=await state();await page.mouse.move(mine.mine_button[0]/mine.viewport[0]*844,mine.mine_button[1]/mine.viewport[1]*390);await page.mouse.down();await delay(11500);await page.mouse.up();await delay(400);
  await shot('recording-gameplay');
  const recorded=await pending();check('real-windows',recorded?.samples.length>=2,{windows:recorded?.samples.length});
  check('real-metrics',recorded.samples.every(w=>w.frames>20&&w.canvas_width===2532&&w.cpu_mean_ms>=0&&w.nodes>100));

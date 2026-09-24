@@ -2,15 +2,23 @@
 (() => {
   const receiver = 'https://ever-deeper-spillrapporter.corpax88.chatgpt.site';
   let report = null, active = false, ready = false, db = null, popup = null, saved = false, storageError = false;
+  try {
   const open = indexedDB.open('ever-deeper-reports-v1', 1);
   open.onupgradeneeded = () => open.result.createObjectStore('pending');
   open.onerror = () => { ready = true; storageError = true; };
   open.onsuccess = () => {
     db = open.result;
     const request = db.transaction('pending').objectStore('pending').get('last');
-    request.onsuccess = () => { report = request.result || null; ready = true; };
+    request.onsuccess = () => {
+      report = request.result || null; ready = true;
+      // A receiver return link also works if Safari severs window.opener during sign-in.
+      const receipt = location.hash.match(/^#report-received=([0-9a-f-]{36})$/)?.[1];
+      if (receipt && report?.id === receipt) {report=null;saved=true;persist();}
+      if (receipt) history.replaceState(null,'',location.pathname+location.search);
+    };
     request.onerror = () => { ready = true; storageError = true; };
   };
+  } catch { ready=true; storageError=true; }
   function persist() {
     if (!db) { storageError = true; return; }
     try {
@@ -52,9 +60,13 @@
       if (!popup) {
         document.getElementById('report-transfer-link')?.remove();
         const link=document.createElement('a'); link.id='report-transfer-link'; link.textContent='Send rapport';
-        link.href=receiver+'/#report='+fragment; link.target='_blank'; link.rel='noopener';
+        link.href=receiver+'/#report='+fragment; link.target='ever-deeper-report'; link.rel='opener';
         link.style.cssText='position:fixed;z-index:10000;bottom:16px;left:50%;transform:translateX(-50%);padding:16px 24px;background:#eab478;color:#101820;border-radius:10px;font:600 18px system-ui';
-        link.addEventListener('click',()=>setTimeout(()=>link.remove(),1000)); document.body.append(link);
+        link.addEventListener('click',e=>{
+          popup=window.open(link.href,'ever-deeper-report');
+          if(popup)e.preventDefault();
+          setTimeout(()=>link.remove(),1000);
+        }); document.body.append(link);
       }
       return popup ? 'Report opened - wait for receipt' : 'Tap the Send rapport link to finish';
     },

@@ -664,7 +664,7 @@ func _report_pressed() -> void:
 		close_menu()
 		_report_changed()
 	else:
-		set_status("SEND OR CLEAR THE PREVIOUS REPORT FIRST; WAIT IF STILL LOADING", true)
+		set_status(session_recorder.start_error, true)
 
 func _send_report() -> void:
 	if not OS.has_feature("web"): return

@@ -16,6 +16,7 @@ var menu_frames := 0
 var context_key := ""
 var context: Dictionary = {}
 var tracked_player: Node
+var start_error := ""
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -23,9 +24,14 @@ func _ready() -> void:
 	game = get_tree().current_scene
 
 func start() -> bool:
-	if running or not OS.has_feature("ever_deeper_dev") or not OS.has_feature("web"): return false
-	var ok: Variant = JavaScriptBridge.eval("window.everDeeperReports?.begin(" + JSON.stringify(preload("res://scripts/ui/premium_menu.gd").release_version()) + ") || false")
-	if ok != true: return false
+	start_error = ""
+	if running or not OS.has_feature("ever_deeper_dev") or not OS.has_feature("web"):
+		start_error = "Recording requires the web DEV build"
+		return false
+	var ok: Variant = JavaScriptBridge.eval("JSON.stringify(window.everDeeperReports?.begin(" + JSON.stringify(preload("res://scripts/ui/premium_menu.gd").release_version()) + ") || false)", true)
+	if String(ok) != "true":
+		start_error = "Send or clear the previous report first; wait if still loading"
+		return false
 	running = true
 	total_ms = 0.0
 	_reset_window()
@@ -122,11 +128,11 @@ func _flush() -> void:
 		if String(context.get("phase", "")) in ["mine", "depth"]:
 			var drops_value: Variant = world.get("drops")
 			if drops_value is Array: row.drops = drops_value.size()
-	var accepted: Variant = JavaScriptBridge.eval("window.everDeeperReports?.append(" + JSON.stringify(row) + ") || false")
+	var accepted: Variant = JavaScriptBridge.eval("JSON.stringify(window.everDeeperReports?.append(" + JSON.stringify(row) + ") || false)", true)
 	var last_tick := previous
 	_reset_window()
 	previous = last_tick
-	if accepted != true:
+	if String(accepted) != "true":
 		running = false
 		set_process(false)
 		changed.emit()
