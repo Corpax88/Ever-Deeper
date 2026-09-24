@@ -1,0 +1,161 @@
+{
+  "passed": true,
+  "error": null,
+  "source_commit": "c63aabd3e3e5120579285ce6e8b0b59a75f2727a",
+  "version": "1.0.0-dev.15.9",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "dfe9be9356ac3fbcdde1569b59aceab113544ab830bd04a1180d3e7cff99548c"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 259869616,
+      "sha256": "03949e6389aba536a0ff96ebd74a53c2ba73197c0b7d56ef7a9d5eff7948aeae"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "browser": "webkit",
+  "checks": [
+    {
+      "name": "version",
+      "passed": true
+    },
+    {
+      "name": "depth-one-started",
+      "passed": true
+    },
+    {
+      "name": "completed",
+      "passed": true
+    },
+    {
+      "name": "restored",
+      "passed": true
+    },
+    {
+      "name": "canvas-unchanged",
+      "passed": true
+    },
+    {
+      "name": "all-stage-markers",
+      "passed": true
+    },
+    {
+      "name": "end-marker",
+      "passed": true
+    },
+    {
+      "name": "no-network-during-test",
+      "passed": true
+    },
+    {
+      "name": "pet-lights-isolated",
+      "passed": true
+    },
+    {
+      "name": "shadows-isolated",
+      "passed": true
+    },
+    {
+      "name": "all-lights-isolated",
+      "passed": true
+    },
+    {
+      "name": "original-lights-return",
+      "passed": true
+    },
+    {
+      "name": "phase-boundaries",
+      "passed": true
+    },
+    {
+      "name": "result-fits",
+      "passed": true,
+      "panel": [
+        187.902145385742,
+        35.772705078125,
+        1040.55932617188,
+        583
+      ],
+      "viewport": [
+        1416.36364746094,
+        654.54541015625
+      ]
+    },
+    {
+      "name": "pending-report-protected",
+      "passed": true
+    },
+    {
+      "name": "exact-labelled-transfer",
+      "passed": true
+    },
+    {
+      "name": "receipt-clears-report",
+      "passed": true
+    },
+    {
+      "name": "cancel-restores-1",
+      "passed": true
+    },
+    {
+      "name": "cancel-stops-report-1",
+      "passed": true
+    },
+    {
+      "name": "cancel-restores-3",
+      "passed": true
+    },
+    {
+      "name": "cancel-stops-report-3",
+      "passed": true
+    },
+    {
+      "name": "cancel-restores-5",
+      "passed": true
+    },
+    {
+      "name": "cancel-stops-report-5",
+      "passed": true
+    },
+    {
+      "name": "no-script-errors",
+      "passed": true,
+      "tail": [
+        "log: Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+        "warning: WebGL: non-portable extension enabled: WEBGL_polygon_mode",
+        "log: OpenGL API OpenGL ES 3.0 (WebGL 2.0) - Compatibility - Using Device: WebKit - WebKit WebGL",
+        "log: Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+      ]
+    }
+  ],
+  "physical_iphone_verified": false,
+  "transfer_fixture": true
+}
