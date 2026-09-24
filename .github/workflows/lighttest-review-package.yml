@@ -1,0 +1,47 @@
+name: Package diagnostic review evidence
+on:
+  push:
+    branches: [codex/lighttest-dev15-8-20260924]
+    paths: ['.github/workflows/lighttest-review-package.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Wait for exact candidate review
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import os,time,json,urllib.request
+          url='https://api.github.com/repos/Corpax88/Ever-Deeper/actions/runs/36029780438'
+          for i in range(65):
+              req=urllib.request.Request(url,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN']})
+              with urllib.request.urlopen(req) as response:r=json.load(response)
+              if r['status']=='completed':
+                  print('Candidate conclusion:',r['conclusion']);break
+              time.sleep(20)
+          else:raise RuntimeError('Candidate still running')
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          name: dev15-8-browser-review
+          run-id: 36029780438
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: input
+      - run: |
+          python3 - <<'PY'
+          import pathlib,shutil
+          root=pathlib.Path('input');out=pathlib.Path('review')
+          for p in root.rglob('*'):
+              if p.is_file() and (p.suffix in ['.json','.log'] or (p.suffix=='.png' and ('light' in p.parent.name or p.name in ['report-controls.png','06-confirmed-new-game.png']))):
+                  q=out/p.relative_to(root);q.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(p,q)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dev15-8-small-review
+          path: review
+          retention-days: 90
