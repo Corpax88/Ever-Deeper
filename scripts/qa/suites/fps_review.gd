@@ -26,7 +26,8 @@ func _command(data: Dictionary) -> void:
 			_require(_place_moss(Vector2.RIGHT), "No accessible mining target")
 			world.player.camera.position_smoothing_enabled = false
 			world.player.camera.reset_smoothing()
-			world.cache_terrain_draws = bool(data.get("cached", true))
+			world.cache_terrain_draws = true
+			world.lit_floor_chunks.composite_underlay = bool(data.get("cached", true))
 			world.lit_draw_sections.profile_draws = true
 			if bool(data.get("durable", false)):
 				var cell: Vector2i = world._find_mine_target()
@@ -45,7 +46,7 @@ func _command(data: Dictionary) -> void:
 					paused_observers.append(node)
 					node.set_process(false)
 		"reference", "cached":
-			world.cache_terrain_draws = fixture == "cached"
+			world.lit_floor_chunks.composite_underlay = fixture == "cached"
 			world.queue_redraw()
 		"damage":
 			var cell: Vector2i = world._find_mine_target()
@@ -74,7 +75,7 @@ func _command(data: Dictionary) -> void:
 			profiling = true
 		"end":
 			profiling = false
-			last_result = {"frames":frame_times.size(),"seconds":float(Time.get_ticks_usec()-elapsed_start)/1000000.0,"frame":_stats(frame_times),"cpu":_stats(cpu_times),"sections":world.lit_draw_sections.debug_snapshot()}
+			last_result = {"frames":frame_times.size(),"seconds":float(Time.get_ticks_usec()-elapsed_start)/1000000.0,"frame":_stats(frame_times),"cpu":_stats(cpu_times),"draw_calls":int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)),"floor_merged":world.lit_floor_chunks.composite_underlay,"sections":world.lit_draw_sections.debug_snapshot()}
 		"unfreeze":
 			_restore_observers()
 			main.get_tree().paused = false

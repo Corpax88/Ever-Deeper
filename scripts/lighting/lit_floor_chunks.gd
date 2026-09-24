@@ -7,6 +7,9 @@ var chunk_size: int = 256
 var restrict_to_regions: bool = false
 var visible_regions: Array[Rect2] = []
 var composite_pass: bool = true
+# Opt-in only for opaque underlay + texture, with no wash or fixed-field override.
+var composite_underlay: bool = false
+var _underlay_material: ShaderMaterial
 var _composite_material: ShaderMaterial
 var _composite_tint := Color.TRANSPARENT
 var _composite_wash := Color.TRANSPARENT
@@ -97,6 +100,13 @@ func draw_floor(owner_canvas: CanvasItem, texture: Texture2D, bounds: Rect2, tin
 			for x in range(first.x, last.x):
 				var rect: Rect2 = Rect2(bounds.position + Vector2(x, y) * float(chunk_size), Vector2.ONE * float(chunk_size)).intersection(bounds)
 				if rect.has_area(): areas.append(rect)
+	var merge_underlay: bool = composite_underlay and not composite_pass and underlay.a == 1.0 and wash.a == 0.0 and _fixed_field_material == null
+	if merge_underlay:
+		if _underlay_material == null:
+			_underlay_material = ShaderMaterial.new()
+			_underlay_material.shader = load("res://shaders/lit_floor_underlay.gdshader")
+		_underlay_material.set_shader_parameter("floor_tint", tint)
+		_underlay_material.set_shader_parameter("floor_underlay", underlay)
 	var used: int = 0
 	for rect in areas:
 		if used == _pool.size():
@@ -106,7 +116,8 @@ func draw_floor(owner_canvas: CanvasItem, texture: Texture2D, bounds: Rect2, tin
 		var chunk: FloorChunk = _pool[used]
 		var draw_material: ShaderMaterial = _fixed_field_material if _fixed_field_material != null else _composite_material
 		var mask: int = _fixed_field_mask if composite_pass and _fixed_field_material != null else owner_canvas.light_mask
-		chunk.configure(texture, rect, Rect2((rect.position - bounds.position) * texture_density, rect.size * texture_density), tint, wash, mask, draw_material if composite_pass else null, underlay)
+		if merge_underlay: draw_material = _underlay_material
+		chunk.configure(texture, rect, Rect2((rect.position - bounds.position) * texture_density, rect.size * texture_density), tint, wash, mask, draw_material if composite_pass or merge_underlay else null, Color.TRANSPARENT if merge_underlay else underlay)
 		chunk.show()
 		used += 1
 	for index in range(used, _pool.size()): _pool[index].hide()
