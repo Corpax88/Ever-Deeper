@@ -436,10 +436,10 @@ func _build_drawer() -> void :
 	clear_button.remove_meta("dev_command")
 	clear_button.pressed.connect(_clear_report)
 	action_content.add_child(clear_button)
-	render_probe_button = _action_button("AUTO FPS TEST · 3 MIN", "render_probe", true)
+	render_probe_button = _action_button("LIGHT TEST + REPORT · 3 MIN", "render_probe", true)
 	render_probe_button.name = "AutoFPSTest"
 	render_probe_button.remove_meta("dev_command")
-	render_probe_button.tooltip_text = "Stand still in the hub or Depth 2; graphics are restored automatically"
+	render_probe_button.tooltip_text = "Stand still in a mine, hub or Depth 2; records a report and restores graphics"
 	render_probe_button.pressed.connect(start_render_probe)
 	action_content.add_child(render_probe_button)
 

@@ -136,3 +136,10 @@ func _flush() -> void:
 		running = false
 		set_process(false)
 		changed.emit()
+
+func mark_phase(kind: String) -> void:
+	if not running: return
+	# Flush the old light state before applying the new one; exclude boundary gaps.
+	_flush()
+	previous = 0
+	JavaScriptBridge.eval("window.everDeeperReports?.mark(" + JSON.stringify(kind) + ")")

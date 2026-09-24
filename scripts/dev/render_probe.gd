@@ -34,6 +34,11 @@ var status_label: Label
 var cancel_button: Button
 var result_box: VBoxContainer
 var _ui_unit := 1.0
+var recorder: Node
+var measurement_marked := false
+var origin_player: Node2D
+var origin_position := Vector2.ZERO
+var origin_depth := 0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -51,16 +56,28 @@ func start(main: Node) -> bool:
 	game = main
 	phase = String(game.get("phase"))
 	mine_id = String(game.get("current_mine_id"))
-	if phase not in ["hub", "depth"] or (phase == "depth" and int(RunState.current_depth) != 2):
-		start_error = "Start in the hub or Depth 2"; return false
-	world = game.get("hub_world" if phase == "hub" else "depth_world")
+	if phase not in ["hub", "depth", "mine"] or (phase == "depth" and int(RunState.current_depth) != 2):
+		start_error = "Start in a mine, the hub or Depth 2"; return false
+	world = game.get("hub_world" if phase == "hub" else "mine_world" if phase == "mine" else "depth_world")
 	if world == null:
 		start_error = "Wait for the area to load"; return false
+	recorder = game.developer_menu.session_recorder
 	if OS.has_feature("web"):
+		if recorder.running:
+			start_error = "Stop and send the current report first"
+			return false
 		var begin_status: Variant = JavaScriptBridge.eval("JSON.stringify(!!(window.everDeeperRenderProbe && window.everDeeperRenderProbe.begin()))")
 		if begin_status != "true":
 			start_error = "Open the latest DEV page and keep it visible"
 			return false
+		if not recorder.start():
+			JavaScriptBridge.eval("window.everDeeperRenderProbe?.cancel('Report unavailable')")
+			start_error = recorder.start_error
+			return false
+	origin_player = game._active_player_node()
+	origin_position = origin_player.position
+	origin_depth = int(RunState.current_depth)
+	game._cancel_mine_hold()
 	world.set_meta(&"fixed_light_probe_lock", true)
 	lights.clear()
 	for node in world.find_children("*", "Light2D", true, false):
@@ -94,16 +111,24 @@ func _notification(what: int) -> void:
 
 func _exit_tree() -> void:
 	if running:
+		_end_recording("cancelled")
 		_restore()
 		if is_instance_valid(world): world.remove_meta(&"fixed_light_probe_lock")
 		if OS.has_feature("web"): JavaScriptBridge.eval("window.everDeeperRenderProbe?.cancel('Diagnostic closed')")
 
 func _process(_delta: float) -> void:
 	if not running: return
-	if not is_instance_valid(world) or String(game.get("phase")) != phase or String(game.get("current_mine_id")) != mine_id or (phase == "depth" and int(RunState.current_depth) != 2) or bool(game.get("menu_open")):
+	if not is_instance_valid(world) or String(game.get("phase")) != phase or String(game.get("current_mine_id")) != mine_id or (phase == "depth" and int(RunState.current_depth) != 2) or int(RunState.current_depth) != origin_depth or bool(game.get("menu_open")):
 		cancel("Area or menu changed"); return
+	if not is_instance_valid(origin_player) or origin_player.position.distance_to(origin_position) > 3.0:
+		cancel("Movement interrupted test"); return
+	if OS.has_feature("web") and not recorder.running:
+		cancel("Report recording stopped"); return
 	var now := Time.get_ticks_usec()
 	var elapsed := float(now - stage_started) / 1000000.0
+	if elapsed >= 2.0 and not measurement_marked:
+		_mark_recording("lighttest:measure:" + String(STAGES[stage_index].id))
+		measurement_marked = true
 	if previous > 0 and elapsed >= 2.0:
 		samples.append(Vector2(float(now), float(now - previous) / 1000.0))
 		if samples.size() > 4096: samples = samples.slice(512)
@@ -124,11 +149,13 @@ func _process(_delta: float) -> void:
 		_next_stage()
 
 func _next_stage() -> void:
-	_restore_lights()
-	stage_index += 1
-	if stage_index == STAGES.size():
+	if stage_index + 1 == STAGES.size():
 		_finish(""); return
+	stage_index += 1
 	var id: String = STAGES[stage_index].id
+	_mark_recording("lighttest:settle:" + id)
+	_restore_lights()
+	measurement_marked = false
 	for entry in lights:
 		var light: Light2D = entry.node
 		if not is_instance_valid(light): continue
@@ -163,8 +190,9 @@ func settings_restored() -> bool:
 func _finish(reason: String) -> void:
 	running = false
 	set_process(false)
+	_end_recording("complete" if reason.is_empty() else "cancelled")
 	_restore()
-	result = {"revision":1, "version":preload("res://scripts/ui/premium_menu.gd").release_version(), "area":phase, "mine":game.get("current_mine_id"),
+	result = {"revision":1, "version":preload("res://scripts/ui/premium_menu.gd").release_version(), "area":phase, "mine":game.get("current_mine_id"), "depth":origin_depth,
 		"cancelled":not reason.is_empty(), "reason":reason, "duration_seconds":float(Time.get_ticks_usec() - started) / 1000000.0,
 		"baseline":baseline, "early":early, "rows":rows.duplicate(true), "web":OS.has_feature("web"), "settings_saved":false}
 	_finalize.call_deferred()
@@ -293,7 +321,7 @@ func _show_result() -> void:
 	_layout()
 	result_box.add_theme_constant_override("separation", roundi(3 * _ui_unit))
 	result_box.add_child(_label("FPS TEST · " + String(result.version), 18))
-	result_box.add_child(_label("%s · Start %.1f FPS · %ds" % ["HUB" if phase == "hub" else "DEPTH 2", float(early.get("fps", 0)), roundi(float(result.duration_seconds))], 13))
+	result_box.add_child(_label("%s · Start %.1f FPS · %ds" % ["HUB" if phase == "hub" else "DEPTH 1" if phase == "mine" else "DEPTH 2", float(early.get("fps", 0)), roundi(float(result.duration_seconds))], 13))
 	var grid := GridContainer.new()
 	grid.columns = 4
 	grid.add_theme_constant_override("h_separation", roundi(18 * _ui_unit))
@@ -305,10 +333,15 @@ func _show_result() -> void:
 		stage_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		grid.add_child(stage_label)
 		for text_value in ["%.1f" % row.fps, "%.1f" % row.raf_fps if row.raf_frames > 0 else "—", "%.0f" % row.p95_ms]: grid.add_child(_label(text_value, 14))
-	var message := "Original graphics restored · Send a screenshot"
+	var message := "Original graphics restored · Report ready"
 	if bool(result.cancelled): message = String(result.reason) + " · Graphics restored"
 	if not bool(result.graphics_restored): message = "Restoration failed · Reload the page"
 	result_box.add_child(_label(message, 13))
+	if OS.has_feature("web"):
+		var send := _button("SEND REPORT")
+		send.name = "SendLightReport"
+		send.pressed.connect(game.developer_menu._send_report)
+		result_box.add_child(send)
 	var close := _button("CLOSE")
 	close.pressed.connect(hide)
 	result_box.add_child(close)
@@ -319,3 +352,12 @@ func _recenter_result() -> void:
 	result_panel.size.y = result_panel.get_combined_minimum_size().y
 	_layout()
 
+
+func _mark_recording(kind: String) -> void:
+	if OS.has_feature("web") and is_instance_valid(recorder) and recorder.running:
+		recorder.mark_phase(kind)
+
+func _end_recording(status: String) -> void:
+	_mark_recording("lighttest:end:" + status)
+	if OS.has_feature("web") and is_instance_valid(recorder):
+		recorder.stop("lighttest_" + status)

@@ -1,0 +1,6 @@
+# DEV15.8 labelled physical-phone light test — candidate
+Starts from public DEV15.7 source342af2c8497001eb3850e74942fa8ba5e4088eec, excluding the rejected floor shader experiment.
+Same 180-second sequence, now supports mine depth1 and records private report stage boundaries: settle/measure for each of seven stages, then completion. Every boundary flushes old light-state samples before mutation and resets the interval tick. No receiver/schema migration: bounded event.kind strings use existing schema1. No network until SEND REPORT.
+Start refuses active or pending reports. Movement, area/menu change, focus loss, recorder loss, scene exit and browser interruption restore lights and stop capture. Result panel provides SEND REPORT. Save/gameplay/render resolution/assets untouched. No automatic public upload or physical-FPS guarantee.
+QA: exact exported core/normal report transport in Chromium/WebKit, full real-time Emberdeep depth1 light sequence in Chromium, accelerated production transitions on WebKit via QA-only clock access, recovery in all three off states, sample count assertions and labelled transfer equality. Pixel load stays unchanged.
+Publication pending exact-package review. Preserve all LIVE and Worn files. Source canonical branch codex/lighttest-dev15-8-20260924.

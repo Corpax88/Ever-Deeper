@@ -47,7 +47,6 @@
       report.samples.push({...row,canvas_width:c.width,canvas_height:c.height,dpr:devicePixelRatio||1});
       report.duration_s = row.seconds; persist(); return true;
     },
-    mark(kind) { if (typeof kind === 'string' && kind.length <= 80 && /^[a-zA-Z0-9_. :/-]*$/.test(kind)) event(kind); },
     finish(reason='stopped') { if (report) { report.reason=reason; active=false; persist(); } },
     send() {
       if (!report?.samples.length) return 'Record for a few seconds first';
