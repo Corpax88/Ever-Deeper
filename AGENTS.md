@@ -1,3 +1,7 @@
+Current verified release: [DEV15.8 labelled light diagnostic](docs/performance-diagnosis/lighttest-dev15-8/HANDOFF.md) is published at https://corpax88.github.io/Ever-Deeper/dev/. Exact source `ab298e05d135bbdfd6bd555d03ef294d6370ace8` on `codex/lighttest-dev15-8-20260924`. LIGHT TEST + REPORT runs 180 seconds in Emberdeep depth1, marks seven settling/measurement phases, restores lights and offers SEND REPORT. Validation36030905015 passed four exported core cases,17+17 report checks,24+24 light checks and ordinary WebKit startup; both labelled reports round-tripped through the actual receiver source. Seven final captures independently accepted; scoped code/visual/provenance9/10. Publication36033120665 verified all27 public hashes; LIVE/Worn/saves/native resources preserved. Physical iPhone result remains pending; this is diagnosis, not an FPS fix. Read events in latest_report.metadata and paginate latest_windows after Mats sends the next report. Rejected floor experiment is excluded. Do not rebuild/retest/re-publish the unchanged accepted package.
+
+Earlier release notes below are historical.
+
 Current verified release: [DEV15.7 private play-session reports](docs/performance-diagnosis/dev15-7/HANDOFF.md) is published at https://corpax88.github.io/Ever-Deeper/dev/. Canonical export `abc42ca5db531270510802bf7dab4f3f0936d06d` on `codex/telemetry-dev15-7-20260924`. Opt-in START REPORT → play → SEND REPORT; private receiver stores measurements readable directly with Sites database tools. Main QA `36012592198`, recovery `36014339986`, and publication `36015068520` passed; all 27 public hashes verified, LIVE1.0.0/Worn unchanged. Independent scoped code/visual review 8/10 accepted. Real production database is readable but the first user upload and physical iPhone transfer remain unverified. This is diagnostics, not a new FPS fix; DEV15.6 phone video still drops to 29–36 FPS. Read the linked handoff for the exact private project ID and reading instructions. Do not repeat export/testing/publication of this unchanged candidate. Next step is the user's first report.
 
 Earlier release notes below are historical.
@@ -18,57 +22,12 @@ Current verified release: [DEV15.1 larger gameplay icons and stat tooltips](docs
 
 Current verified release: [DEV15 locked Skills menu and active stamina](docs/premium-polish/skills-dev15/HANDOFF.md) is published at https://corpax88.github.io/Ever-Deeper/dev/. Exact game source b788ca7484bc99bb210255851dacca35db501d5f on codex/locked-skills-ui-20260922; main holds publication/evidence. Test run35795605519 and publication run35796692140 passed. All27 public hashes verified; DEV save identity, LIVE and historical trial retained. Physical iPhone remains unverified. Do not rebuild/reupload/retest this unchanged accepted candidate. Mats's standing publication authorization persists; no new login is needed.
 
-Current authorized work: [DEV14.3 upgraded pickaxe motion](docs/premium-polish/dev14-native-worn/DEV14.3.md). Use the existing authenticated GitHub connection; no new login is needed. Mats approved public upload and publication after passing gates ("Alltid"). Original tool authoring parity is verified; the reconstructed candidate needs fresh final rendered/gameplay/independent acceptance. Do not reuse old local visual evidence as acceptance for new build bytes.
+Current verified release: [DEV14.3 upgraded pickaxe motion](docs/premium-polish/dev14-native-worn/DEV14.3.md) is published at https://corpax88.github.io/Ever-Deeper/dev/. Publication run35708487161 passed and all27 public hashes are verified. Exact game source1632526b0cb675e5efd5709b0e55a6ab7ef970d9; passing validation49668d1139dd44118f333c775b4b4c02881e7722/run35706535761 reused the immutable export from35704702742. All eight original pickaxes use the approved native hero/motion; fast Comet transitions are corrected. Independent narrow review8.5/10; Mac DPR3 windows56.27–59.32rAF FPS, worst stall184ms. Physical iPhone/Simulator FPS and the previous phone crash remain unverified. Preserve DEV saves and LIVE/trial bytes. Use the existing authenticated GitHub connection: no new login is needed. Mats approved public upload/publication after gates ("Alltid"). Do not repeat this unchanged export or its passing tests.
 
 Current verified release: ordinary DEV14.2 is published at https://corpax88.github.io/Ever-Deeper/dev/. Publication run 35618558489 passed; all 27 public hashes are verified, including unchanged LIVE and retained trial bytes. Exact game source is bee888fe36d6b8285e1198384d40694d3154956a, passing candidate run 35616856586. Continuous steering clipping is fixed; the same hero uses an indexed LOD preserving skin, materials and motion. Mac DPR3 window averages were 53.60–59.76 rAF FPS, with stalls up to 400 ms; physical iPhone FPS and the prior phone startup crash remain unverified. Preserve the DEV save namespace. See docs/premium-polish/dev14-native-worn/DEV14.2.md. Do not repeat exports or tests for this unchanged candidate.
 
 Current verified release: ordinary [DEV14.1](docs/premium-polish/dev14-native-worn/HANDOFF.md) is published at https://corpax88.github.io/Ever-Deeper/dev/ (menu version 1.0.0-dev.14.1).
 Publication run 35610110028 passed and all 27 public file hashes are verified. Exact game source is 6d6e1b8d98ecae6661b514fff92e28447715dd33 on codex/hero-loop-flow-20260918; main holds publication and evidence. The same hero is loaded from a prepared PackedScene; animation is retained. Mac Chromium/WebKit checks passed; the physical iPhone crash is NOT confirmed fixed and the native Simulator attempt was inconclusive. Preserve the DEV save namespace and LIVE bytes. The current handoff supersedes older checkpoint and pending-publication statements below. Do not repeat exports/uploads/tests for this unchanged candidate.
-
-Current authorized task: [integrate and publish ordinary DEV14](docs/premium-polish/dev14-native-worn/HANDOFF.md).
-Mats approved normal /dev/ adoption on 21 September. Finish the new candidate's graphical and independent review, then update /dev/ in place. The separate Worn trial is no longer the requested final destination.
-
-Current checkpoint: [Worn Mac test PASSED; finish visual review and additive publication](docs/TESTMILJO-HANDOFF.md).
-Never route binary/base64 payloads through tool arguments or results, including nested code-mode calls. Reuse the43 committed parts and passing run35553114935. No repeat export/upload/test for the unchanged candidate.
-
-Current Work checkpoint: [complete Worn j payload and active Mac QA](docs/TESTMILJO-HANDOFF.md).
-All43 exact payload parts are committed. Inspect run35543977206 before repeating any export or upload.
-
-Latest user-requested continuation: [Worn j after repeated chat interruption](docs/TESTMILJO-HANDOFF.md).
-Three captures retained; reset/touch unfinished. 24 of43 delta parts confirmed; no publication.
-Read the latest handoff and avoid routing large binary payloads through conversation tool output.
-
-Latest user-requested continuation: [corrected Worn candidate j](docs/TESTMILJO-HANDOFF.md).
-Runtime source e32a03e620913a76f3bee9083b2e9b1d66eef972 fixes fractional limb lengths.
-Exact export j is retained; held mining passes, final controls/visual review remain incomplete. No publication.
-Read this short current handoff before the older history below.
-
-Latest handoff requested by Mats: [20 September Worn browser candidate](docs/TESTMILJO-HANDOFF.md).
-Exact exported candidate and actual browser evidence are saved; eight impacts worked, but the browser suite timed out. Not published.
-Read this newest handoff before the historical recovery entries below. Preserve v28/study20 and the remaining visual/control gates.
-
-Current recovery: [20 September continuity and retained source](docs/premium-polish/continuity-20260920.md).
-Workspace pruning removed the latest uncommitted tests and fixes; do not count them as saved.
-Approved study20 and21 are retained. Ordinary Flow20 gameplay remains disabled. Published baseline is DEV13.
-
-Latest completed preview: [21 exact transition seams](docs/premium-polish/hero-transitions-21-20260919.md).
-Two narrow transitions pass actual-game ordered-frame review; all232 mechanics rows match baseline.
-Mats approved the study20 loop. Preserve it; broader phases/directions/tools remain open. No DEV/LIVE adoption.
-
-Latest completed hero checkpoint: [20 held-mining flow](docs/premium-polish/hero-flow-20-20260919.md).
-Long authored holds reduced; fresh gameplay and independent sequence review pass for this narrow preview.
-Mats accepted its visible flow. Wider coverage remains open. FPS paused; no DEV/LIVE adoption.
-
-Previous hero checkpoint: [19C transitions](docs/premium-polish/hero-transitions-19-20260919.md).
-Bounded stationary/rapid-restart/exact walk-exit image pass; no9/10 or production adoption. FPS paused.
-
-Current animation review: [Local independent critic workflow](docs/premium-polish/hero-local-review-20260919.md).
-Optional external sign-in must not block authorized local investigation and correction. Preserve the existing visual/gameplay release gates and clearly label frame-sequence review limitations.
-
-Current saved work: [premium-polish continuation](START-HER.md).
-
-Current work: [premium-polish recovery](docs/premium-polish/HANDOFF.md).
-Test setup: [environment handoff](docs/TESTMILJO-HANDOFF.md).
 
 # Ever Deeper project rules
 
