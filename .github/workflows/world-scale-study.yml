@@ -1,0 +1,67 @@
+name: Compare world framebuffer with native HUD
+on:
+  push:
+    branches: [codex/world-scale-study-20260924]
+    paths: ['scripts/**', '.github/world-scale-study/**', '.github/workflows/world-scale-study.yml']
+permissions: {contents: read}
+concurrency: {group: world-scale-study, cancel-in-progress: true}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github
+            scripts
+            tools
+            assets
+            scenes
+            shaders
+            data
+      - name: Matching engine
+        run: |
+          curl -L --fail --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Export isolated prototype
+        run: python3 .github/world-scale-study/build.py Godot_v4.7.2-stable_linux.x86_64 "$RUNNER_TEMP/study"
+      - name: Exported input and touch
+        run: python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/study/candidate/index.pck" --cases input touch build-flavor --output "$RUNNER_TEMP/study/core"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: world-scale-candidate, path: '${{ runner.temp }}/study/candidate', retention-days: 90}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: world-scale-build
+          path: |
+            ${{ runner.temp }}/study/*.json
+            ${{ runner.temp }}/study/*.log
+            ${{ runner.temp }}/study/core
+          retention-days: 90
+  browser:
+    needs: build
+    runs-on: macos-15
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix: {repeat: [1, 2]}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/world-scale-study
+      - uses: actions/download-artifact@v4
+        with: {name: world-scale-candidate, path: '${{ runner.temp }}/candidate'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install webkit
+      - name: Frozen parity and balanced stationary/mining comparisons
+        env: {REVIEW_BROWSER: webkit, REPEAT: '${{ matrix.repeat }}'}
+        run: node .github/world-scale-study/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'world-scale-webkit-${{ matrix.repeat }}', path: '${{ runner.temp }}/review', retention-days: 90}

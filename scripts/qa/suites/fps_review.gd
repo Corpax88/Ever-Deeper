@@ -1,5 +1,6 @@
 extends "res://scripts/qa/suites/dev14_review.gd"
 ## Explicit nonpersistent DEV fixture. Reference uses the original draw path.
+var render_scale_probe: Node
 var profiling: bool = false
 var frame_times: Array[float] = []
 var cpu_times: Array[float] = []
@@ -15,6 +16,9 @@ func _command(data: Dictionary) -> void:
 	var world: Node2D = main.mine_world
 	match fixture:
 		"setup":
+			if is_instance_valid(render_scale_probe):
+				render_scale_probe.restore()
+				render_scale_probe = null
 			_restore_observers()
 			main.get_tree().paused = false
 			main._cancel_mine_hold()
@@ -38,6 +42,13 @@ func _command(data: Dictionary) -> void:
 			for node in world.find_children("PremiumHeadlamp", "", true, false):
 				node.preview_settings.clear()
 				node.refresh_workshop_effects()
+		"worldscale":
+			if is_instance_valid(render_scale_probe): render_scale_probe.restore()
+			render_scale_probe = null
+			if float(data.factor) > 0.0:
+				render_scale_probe = load("res://scripts/qa/world_render_scale.gd").new()
+				main.add_child(render_scale_probe)
+				render_scale_probe.configure(world, float(data.factor))
 		"freeze":
 			# Pause-independent UI tweens also need zero delta for identical frames.
 			Engine.time_scale = 0.0
@@ -125,4 +136,5 @@ func _frame() -> void:
 	var player: Node2D = main._active_player_node()
 	var packet: Dictionary = player.animation_packet()
 	var point: Vector2 = main.mine_button.get_global_rect().get_center()
-	JavaScriptBridge.eval("window.DEV14_STATE="+JSON.stringify({"id":command_id,"error":error,"fixture":fixture,"version":main.PremiumMenuScript.release_version(),"phase":main.phase,"menu":main.menu_open,"native":player.visual.native_worn_snapshot(),"impact":packet.impact_serial,"mining":packet.mining,"position":[player.position.x,player.position.y],"result":last_result,"sections":world.lit_draw_sections.debug_snapshot(),"mine_button":[point.x,point.y],"viewport":[main.get_viewport().get_visible_rect().size.x,main.get_viewport().get_visible_rect().size.y]}),true)
+	JavaScriptBridge.eval("window.DEV14_STATE="+JSON.stringify({"id":command_id,"error":error,"fixture":fixture,"version":main.PremiumMenuScript.release_version(),"phase":main.phase,"menu":main.menu_open,"native":player.visual.native_worn_snapshot(),"impact":packet.impact_serial,"mining":packet.mining,"position":[player.position.x,player.position.y],"result":last_result,"sections":world.lit_draw_sections.debug_snapshot(),"mine_button":[point.x,point.y],"render_scale":render_scale_probe.snapshot() if is_instance_valid(render_scale_probe) else {},"viewport":[main.get_viewport().get_visible_rect().size.x,main.get_viewport().get_visible_rect().size.y]}),true)
+
