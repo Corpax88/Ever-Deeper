@@ -1,0 +1,1691 @@
+{
+  "passed": true,
+  "error": null,
+  "source_commit": "c63aabd3e3e5120579285ce6e8b0b59a75f2727a",
+  "experiment_commit": "9dc75b209d58a554bd8aafe64797c1a98afa505c",
+  "version": "1.0.0-dev.15.9",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "dfe9be9356ac3fbcdde1569b59aceab113544ab830bd04a1180d3e7cff99548c"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 259869616,
+      "sha256": "03949e6389aba536a0ff96ebd74a53c2ba73197c0b7d56ef7a9d5eff7948aeae"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "browser": "webkit",
+  "browser_version": "26.5",
+  "host": "darwin",
+  "runtime": {
+    "renderer": "Apple GPU",
+    "vendor": "Apple Inc.",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15"
+  },
+  "checks": [
+    {
+      "name": "mac-renderer",
+      "passed": true,
+      "runtime": {
+        "renderer": "Apple GPU",
+        "vendor": "Apple Inc.",
+        "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15"
+      }
+    },
+    {
+      "name": "version",
+      "passed": true
+    },
+    {
+      "name": "resolution-3-2",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          2328,
+          1260
+        ],
+        "drawing_buffer": [
+          2328,
+          1260
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 3
+      }
+    },
+    {
+      "name": "same-framing-3",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "resolution-2-4",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          1552,
+          840
+        ],
+        "drawing_buffer": [
+          1552,
+          840
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 2
+      }
+    },
+    {
+      "name": "same-framing-5",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "resolution-1-6",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          776,
+          420
+        ],
+        "drawing_buffer": [
+          776,
+          420
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 1
+      }
+    },
+    {
+      "name": "same-framing-7",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "resolution-3-8",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          2328,
+          1260
+        ],
+        "drawing_buffer": [
+          2328,
+          1260
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 3
+      }
+    },
+    {
+      "name": "same-framing-9",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "resolution-3-10",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          2328,
+          1260
+        ],
+        "drawing_buffer": [
+          2328,
+          1260
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 3
+      }
+    },
+    {
+      "name": "same-framing-11",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "resolution-2-12",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          1552,
+          840
+        ],
+        "drawing_buffer": [
+          1552,
+          840
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 2
+      }
+    },
+    {
+      "name": "same-framing-13",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "resolution-1-14",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          776,
+          420
+        ],
+        "drawing_buffer": [
+          776,
+          420
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 1
+      }
+    },
+    {
+      "name": "same-framing-15",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "resolution-3-16",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          2328,
+          1260
+        ],
+        "drawing_buffer": [
+          2328,
+          1260
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 3
+      }
+    },
+    {
+      "name": "same-framing-17",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "restored-image-size",
+      "passed": true
+    },
+    {
+      "name": "resolution-3-19",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          2328,
+          1260
+        ],
+        "drawing_buffer": [
+          2328,
+          1260
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 3
+      }
+    },
+    {
+      "name": "same-framing-20",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "stationary-0",
+      "passed": true
+    },
+    {
+      "name": "resolution-held-0",
+      "passed": true
+    },
+    {
+      "name": "resolution-2-23",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          1552,
+          840
+        ],
+        "drawing_buffer": [
+          1552,
+          840
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 2
+      }
+    },
+    {
+      "name": "same-framing-24",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "stationary-1",
+      "passed": true
+    },
+    {
+      "name": "resolution-held-1",
+      "passed": true
+    },
+    {
+      "name": "resolution-1-27",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          776,
+          420
+        ],
+        "drawing_buffer": [
+          776,
+          420
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 1
+      }
+    },
+    {
+      "name": "same-framing-28",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "stationary-2",
+      "passed": true
+    },
+    {
+      "name": "resolution-held-2",
+      "passed": true
+    },
+    {
+      "name": "resolution-1-31",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          776,
+          420
+        ],
+        "drawing_buffer": [
+          776,
+          420
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 1
+      }
+    },
+    {
+      "name": "same-framing-32",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "stationary-3",
+      "passed": true
+    },
+    {
+      "name": "resolution-held-3",
+      "passed": true
+    },
+    {
+      "name": "resolution-3-35",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          2328,
+          1260
+        ],
+        "drawing_buffer": [
+          2328,
+          1260
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 3
+      }
+    },
+    {
+      "name": "same-framing-36",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "stationary-4",
+      "passed": true
+    },
+    {
+      "name": "resolution-held-4",
+      "passed": true
+    },
+    {
+      "name": "resolution-2-39",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          1552,
+          840
+        ],
+        "drawing_buffer": [
+          1552,
+          840
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 2
+      }
+    },
+    {
+      "name": "same-framing-40",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "stationary-5",
+      "passed": true
+    },
+    {
+      "name": "resolution-held-5",
+      "passed": true
+    },
+    {
+      "name": "resolution-2-43",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          1552,
+          840
+        ],
+        "drawing_buffer": [
+          1552,
+          840
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 2
+      }
+    },
+    {
+      "name": "same-framing-44",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "stationary-6",
+      "passed": true
+    },
+    {
+      "name": "resolution-held-6",
+      "passed": true
+    },
+    {
+      "name": "resolution-1-47",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          776,
+          420
+        ],
+        "drawing_buffer": [
+          776,
+          420
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 1
+      }
+    },
+    {
+      "name": "same-framing-48",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "stationary-7",
+      "passed": true
+    },
+    {
+      "name": "resolution-held-7",
+      "passed": true
+    },
+    {
+      "name": "resolution-3-51",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          2328,
+          1260
+        ],
+        "drawing_buffer": [
+          2328,
+          1260
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 3
+      }
+    },
+    {
+      "name": "same-framing-52",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "stationary-8",
+      "passed": true
+    },
+    {
+      "name": "resolution-held-8",
+      "passed": true
+    },
+    {
+      "name": "resolution-3-55",
+      "passed": true,
+      "geometry": {
+        "canvas": [
+          2328,
+          1260
+        ],
+        "drawing_buffer": [
+          2328,
+          1260
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 3
+      }
+    },
+    {
+      "name": "same-framing-56",
+      "passed": true,
+      "viewport": [
+        1209.09094238281,
+        654.54541015625
+      ],
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "name": "movement-after-restore",
+      "passed": true
+    },
+    {
+      "name": "no-script-errors",
+      "passed": true
+    }
+  ],
+  "windows": [
+    {
+      "index": 0,
+      "dpr": 3,
+      "geometry": {
+        "canvas": [
+          2328,
+          1260
+        ],
+        "drawing_buffer": [
+          2328,
+          1260
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 3
+      },
+      "cpu": {
+        "max_ms": 344,
+        "mean_ms": 36.2745098039216,
+        "over_33_ms": 25,
+        "p95_ms": 344
+      },
+      "draw_calls": 174,
+      "frame": {
+        "max_ms": 366,
+        "mean_ms": 27.0065359477124,
+        "over_33_ms": 57,
+        "p95_ms": 42
+      },
+      "frames": 459,
+      "seconds": 12.397,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 0,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "index": 1,
+      "dpr": 2,
+      "geometry": {
+        "canvas": [
+          1552,
+          840
+        ],
+        "drawing_buffer": [
+          1552,
+          840
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 2
+      },
+      "cpu": {
+        "max_ms": 23,
+        "mean_ms": 16.7619863013699,
+        "over_33_ms": 0,
+        "p95_ms": 23
+      },
+      "draw_calls": 174,
+      "frame": {
+        "max_ms": 56,
+        "mean_ms": 20.9760273972603,
+        "over_33_ms": 36,
+        "p95_ms": 36
+      },
+      "frames": 584,
+      "seconds": 12.25,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 0,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "index": 2,
+      "dpr": 1,
+      "geometry": {
+        "canvas": [
+          776,
+          420
+        ],
+        "drawing_buffer": [
+          776,
+          420
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 1
+      },
+      "cpu": {
+        "max_ms": 22,
+        "mean_ms": 13.5162721893491,
+        "over_33_ms": 0,
+        "p95_ms": 22
+      },
+      "draw_calls": 171,
+      "frame": {
+        "max_ms": 59,
+        "mean_ms": 18.0621301775148,
+        "over_33_ms": 20,
+        "p95_ms": 28
+      },
+      "frames": 676,
+      "seconds": 12.21,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 0,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "index": 3,
+      "dpr": 1,
+      "geometry": {
+        "canvas": [
+          776,
+          420
+        ],
+        "drawing_buffer": [
+          776,
+          420
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 1
+      },
+      "cpu": {
+        "max_ms": 20,
+        "mean_ms": 13.7025411061285,
+        "over_33_ms": 0,
+        "p95_ms": 20
+      },
+      "draw_calls": 171,
+      "frame": {
+        "max_ms": 74,
+        "mean_ms": 17.9820627802691,
+        "over_33_ms": 13,
+        "p95_ms": 28
+      },
+      "frames": 669,
+      "seconds": 12.03,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 0,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "index": 4,
+      "dpr": 3,
+      "geometry": {
+        "canvas": [
+          2328,
+          1260
+        ],
+        "drawing_buffer": [
+          2328,
+          1260
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 3
+      },
+      "cpu": {
+        "max_ms": 253,
+        "mean_ms": 30.0372093023256,
+        "over_33_ms": 51,
+        "p95_ms": 253
+      },
+      "draw_calls": 174,
+      "frame": {
+        "max_ms": 265,
+        "mean_ms": 18.9255813953488,
+        "over_33_ms": 12,
+        "p95_ms": 27
+      },
+      "frames": 645,
+      "seconds": 12.208,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 0,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "index": 5,
+      "dpr": 2,
+      "geometry": {
+        "canvas": [
+          1552,
+          840
+        ],
+        "drawing_buffer": [
+          1552,
+          840
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 2
+      },
+      "cpu": {
+        "max_ms": 12,
+        "mean_ms": 10.1384615384615,
+        "over_33_ms": 0,
+        "p95_ms": 12
+      },
+      "draw_calls": 174,
+      "frame": {
+        "max_ms": 71,
+        "mean_ms": 17.0363636363636,
+        "over_33_ms": 3,
+        "p95_ms": 21
+      },
+      "frames": 715,
+      "seconds": 12.181,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 0,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "index": 6,
+      "dpr": 2,
+      "geometry": {
+        "canvas": [
+          1552,
+          840
+        ],
+        "drawing_buffer": [
+          1552,
+          840
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 2
+      },
+      "cpu": {
+        "max_ms": 18,
+        "mean_ms": 12.1013888888889,
+        "over_33_ms": 0,
+        "p95_ms": 18
+      },
+      "draw_calls": 174,
+      "frame": {
+        "max_ms": 62,
+        "mean_ms": 17.1861111111111,
+        "over_33_ms": 8,
+        "p95_ms": 22
+      },
+      "frames": 720,
+      "seconds": 12.374,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 0,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "index": 7,
+      "dpr": 1,
+      "geometry": {
+        "canvas": [
+          776,
+          420
+        ],
+        "drawing_buffer": [
+          776,
+          420
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 1
+      },
+      "cpu": {
+        "max_ms": 22,
+        "mean_ms": 13.6735598227474,
+        "over_33_ms": 0,
+        "p95_ms": 22
+      },
+      "draw_calls": 171,
+      "frame": {
+        "max_ms": 96,
+        "mean_ms": 18.0457902511078,
+        "over_33_ms": 24,
+        "p95_ms": 30
+      },
+      "frames": 677,
+      "seconds": 12.217,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 0,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "index": 8,
+      "dpr": 3,
+      "geometry": {
+        "canvas": [
+          2328,
+          1260
+        ],
+        "drawing_buffer": [
+          2328,
+          1260
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 3
+      },
+      "cpu": {
+        "max_ms": 21,
+        "mean_ms": 14.2852459016393,
+        "over_33_ms": 0,
+        "p95_ms": 21
+      },
+      "draw_calls": 174,
+      "frame": {
+        "max_ms": 72,
+        "mean_ms": 20.0213114754098,
+        "over_33_ms": 19,
+        "p95_ms": 30
+      },
+      "frames": 610,
+      "seconds": 12.213,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 0,
+        "draw_callbacks": 0,
+        "dynamic": 5,
+        "recycled": 0,
+        "redraws": 0,
+        "reuses": 0,
+        "setup_usec": 0
+      },
+      "impacts": 0,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    }
+  ],
+  "order": [
+    3,
+    2,
+    1,
+    1,
+    3,
+    2,
+    2,
+    1,
+    3
+  ],
+  "captures": [
+    {
+      "name": "frozen-0-dpr3",
+      "sha": "083aaede3bef398d19e7985697deff13cb9a4fa0375875ca660ba2cb3cdb462b",
+      "geometry": {
+        "canvas": [
+          2328,
+          1260
+        ],
+        "drawing_buffer": [
+          2328,
+          1260
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 3
+      },
+      "state": {
+        "error": "",
+        "fixture": "freeze",
+        "id": 2,
+        "impact": 0,
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 1,
+          "motion": {
+            "age": 10.629,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.9525,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 519
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 69000,
+          "draw_callbacks": 577,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 552,
+          "setup_usec": 31000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      }
+    },
+    {
+      "name": "frozen-1-dpr2",
+      "sha": "32414f95c6c64af1b80b41940de10aca769af8b1bd472b959125507bb326726a",
+      "geometry": {
+        "canvas": [
+          1552,
+          840
+        ],
+        "drawing_buffer": [
+          1552,
+          840
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 2
+      },
+      "state": {
+        "error": "",
+        "fixture": "freeze",
+        "id": 2,
+        "impact": 0,
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 1,
+          "motion": {
+            "age": 10.629,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.9525,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 519
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 76000,
+          "draw_callbacks": 720,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 690,
+          "setup_usec": 36000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      }
+    },
+    {
+      "name": "frozen-2-dpr1",
+      "sha": "0100221f97c5348230edc1499d6033576fa70c98d9f15c7b9c6885eab478e7da",
+      "geometry": {
+        "canvas": [
+          776,
+          420
+        ],
+        "drawing_buffer": [
+          776,
+          420
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 1
+      },
+      "state": {
+        "error": "",
+        "fixture": "freeze",
+        "id": 2,
+        "impact": 0,
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 1,
+          "motion": {
+            "age": 10.629,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.9525,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 519
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 82000,
+          "draw_callbacks": 863,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 828,
+          "setup_usec": 39000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      }
+    },
+    {
+      "name": "frozen-3-dpr3",
+      "sha": "e75899208dc7739d64391a428dc5ecaabf4f7f210f7eb4fd3f55e0ae4bf88149",
+      "geometry": {
+        "canvas": [
+          2328,
+          1260
+        ],
+        "drawing_buffer": [
+          2328,
+          1260
+        ],
+        "css": [
+          776,
+          420
+        ],
+        "inner": [
+          776,
+          420
+        ],
+        "dpr": 3
+      },
+      "state": {
+        "error": "",
+        "fixture": "freeze",
+        "id": 2,
+        "impact": 0,
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 1,
+          "motion": {
+            "age": 10.629,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.9525,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 519
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 87000,
+          "draw_callbacks": 1006,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 966,
+          "setup_usec": 43000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      }
+    }
+  ],
+  "phases": [],
+  "restoredPixels": {
+    "max_channel_difference": 36,
+    "changed_channels": 1608
+  },
+  "baselineState": {
+    "error": "",
+    "fixture": "setup",
+    "id": 1,
+    "impact": 0,
+    "menu": false,
+    "mine_button": [
+      1090.09094238281,
+      517.54541015625
+    ],
+    "mining": false,
+    "native": {
+      "active": true,
+      "failed": false,
+      "failure": "",
+      "gear": "ember",
+      "generations": 1,
+      "motion": {
+        "age": 2.40803703703704,
+        "aim_ready": false,
+        "bounded_transition_frames": 0,
+        "duration": 0.12,
+        "errors": [],
+        "max_contact_pixels": 0,
+        "max_reach_error": 0,
+        "max_reach_error_scope": "Includes rejected transition search probes",
+        "max_tool_retarget": 0,
+        "mode": "idle",
+        "phase": 0.668899176954732,
+        "support_release": 0,
+        "swing_serial": -1,
+        "transitions": 1,
+        "yaw": -1.57079624657167
+      },
+      "surface_cache": 0,
+      "unreachable_contacts": 0,
+      "updates": 102
+    },
+    "phase": "mine",
+    "position": [
+      1400,
+      312
+    ],
+    "result": {},
+    "sections": {
+      "cached": 138,
+      "draw_callback_usec": 51000,
+      "draw_callbacks": 148,
+      "dynamic": 5,
+      "recycled": 0,
+      "redraws": 138,
+      "reuses": 138,
+      "setup_usec": 16000
+    },
+    "version": "1.0.0-dev.15.9",
+    "viewport": [
+      1209.09094238281,
+      654.54541015625
+    ]
+  },
+  "physical_iphone_verified": false,
+  "scope": "Resolution-only diagnostic on unchanged DEV15.9. Same stationary Ember scene, lights on, CSS776x420; actual framebuffer DPR3/2/1, three12s windows each after prewarming. No shader-source patch and no production change."
+}
