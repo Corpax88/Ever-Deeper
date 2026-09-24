@@ -1,0 +1,63 @@
+{
+  "destination": "dev",
+  "version": "1.0.0-dev.15.7",
+  "live_authorized": false,
+  "source_commit": "abc42ca5db531270510802bf7dab4f3f0936d06d",
+  "artifact_run_id": 36012592198,
+  "artifacts": {
+    "candidate": {
+      "id": 10813466140,
+      "name": "dev15-7-candidate",
+      "digest": "sha256:e9cd2f6a9ac0fb9bea297eae3282a96aea5786961099a7438f2546c13aaaf0ee"
+    },
+    "build": {
+      "id": 10812764607,
+      "name": "dev15-7-build-review",
+      "digest": "sha256:91d931d1d9ae57970f282608423aa6d53a579d6451843f130cbe80fb7a4c6fb4"
+    },
+    "browser": {
+      "id": 10812714996,
+      "name": "dev15-7-browser-review",
+      "digest": "sha256:4c978f2f47441a917eeccbaf0adde22a6e3aeff0230ba76eb0decdce141c50ff"
+    }
+  },
+  "recovery": {
+    "run_id": 36014339986,
+    "test_source": "a23592cfd69249bc29d6bffee193d374934d4cb9",
+    "artifact": {
+      "id": 10814007034,
+      "name": "dev15-7-recovery-review",
+      "digest": "sha256:de30e7b51402d2952ed7c59af5e19fc551c244ed50993606159d8bc43828c5a8"
+    }
+  },
+  "receiver": {
+    "project_id": "appgprj_6ab52d1e74988191a3a254543ffad797",
+    "url": "https://ever-deeper-spillrapporter.corpax88.chatgpt.site",
+    "source_commit": "f53bd5f88486bd5bc7f6295a10139bdf7ddf4946",
+    "audience": "owner-private"
+  },
+  "physical_iphone_verified": false,
+  "independent_visual_accepted": true,
+  "exported_gameplay_passed": true,
+  "publisher_reviewed": true,
+  "reviewed_files": {
+    "manifest.json": "d92080c5292bf60a02d7c54925ff18ed2fd8c1638581ab7e4b34c2a7ad68740c",
+    "baseline.json": "9d21f800b27baacdae0255ed529ef72c6bb9d4b7df1b360a5ee900d7f2d0160a",
+    "native-input.json": "6a62a2cf1e8d64bc3709b55df84db1c7a68a28e96ab9f6c6d50cd3c391b2fc5b",
+    "publish.py": "2cf5b9e6b35f9e6fd2f0482cd39bc14ba202819a1131df5e8f48148c03019b15",
+    "../workflows/publish-telemetry-dev15-7.yml": "9ddfef5f0c30b264ad9f0c42644cf75a5565b83a6d6eaa5ebaedb3e53b4db9bb",
+    "../native-flow-trial/bundle.json": "26209f2eeeefa1688d8fd954b701dd02e4a00dbba74274271b4f3aa5d55765dd",
+    "evidence/browser.json": "ed06e66b31054684621ae51ad100590861129cb29eeae019cdb9e377dd568ccf",
+    "evidence/build.json": "9205db81d427428aa94d0a1d0ee410478cf7d3d243eb41c4d726d3e55d401222",
+    "evidence/core.json": "6b7a68723d087cb2f0ee13b2c46f43fada833a96d1d0ef7060cfb6d482a20296",
+    "evidence/images.json": "2675e3e0dd8fc5af245a297b921c416b7540505d0829ea46ceeecac083ca19a6",
+    "evidence/independent-review.json": "726667f9b76c85142dbe12ab176013647bdace36f5edc1e5d2918b709baf8fe4",
+    "evidence/independent-review.md": "3a9812670e96947d2dd61e54eac2b0912006f207edb3b1aa2136a279906d320e",
+    "evidence/receiver-deployment.json": "356c2d5be03f7703715d10e61e7b2b5dd73dc0515888b31eda6e6c966fffccf3",
+    "evidence/receiver-read.json": "55833c273f20be596cb807200e6cbde39aeebfd8a28a012c6fbaeae2305fd019",
+    "evidence/receiver-tests.json": "43bc22cfd0c1916f7289d30b1d422330e573c30c2196caaed63c60354feeaedc",
+    "evidence/recovery.json": "3ee877c8dee0e78da38420a79a76e2417088c10c38c7b97dee846f073a685cb4",
+    "evidence/report-webkit.json": "7b932eee9569863da27ac8c2356a56d8ee62f48706a96c9b3c3ba77283046a84",
+    "evidence/webkit.json": "771e5b0cafa1e97a2db03844e6aedc480a38ebf7626c10719e306e64dafca034"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "checks": [
+    "authentication",
+    "origin",
+    "strict schema",
+    "window bound",
+    "byte bound",
+    "D1 insertion",
+    "idempotency",
+    "owner conflict",
+    "weighted FPS",
+    "latest rows",
+    "old retry",
+    "full 120 windows",
+    "exported Chromium report round trip",
+    "exported WebKit report round trip"
+  ],
+  "export_source": "abc42ca5db531270510802bf7dab4f3f0936d06d",
+  "storage_scope": "Actual route/schema with test-only auth stub and in-memory SQLite; production DB readability separately verified."
+}
