@@ -3,7 +3,7 @@ on:
   push:
     branches: [codex/world-scale-study-20260924]
     paths: ['scripts/**', '.github/world-scale-study/**', '.github/workflows/world-scale-study.yml']
-permissions: {contents: read}
+permissions: {contents: read, actions: read}
 concurrency: {group: world-scale-study, cancel-in-progress: true}
 jobs:
   build:
@@ -12,14 +12,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         timeout-minutes: 8
-        with: {persist-credentials: false}
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/world-scale-study
+            scripts/qa
+            tools
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-light-dev15-9-candidate
+          run-id: 36043919958
+          github-token: ${{ github.token }}
+          path: '${{ runner.temp }}/original'
       - name: Matching engine
         run: |
           curl -L --fail --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
           unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
           echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
-      - name: Export isolated prototype
-        run: python3 .github/world-scale-study/build.py Godot_v4.7.2-stable_linux.x86_64 "$RUNNER_TEMP/study"
+      - name: Preserve original resources and append QA scripts
+        run: python3 .github/world-scale-study/patch_pack.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/study"
       - name: Exported input and touch
         run: python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/study/candidate/index.pck" --cases input touch build-flavor --output "$RUNNER_TEMP/study/core"
       - uses: actions/upload-artifact@v4
