@@ -6,6 +6,8 @@ var lit_floor_chunks: Node2D
 var lit_draw_sections: Node2D
 # Reversible reference for the exact-package performance/visual comparison.
 var cache_terrain_draws: bool = true
+# Diagnostic-only variation; the production default remains unchanged.
+var terrain_strip_width: int = 6
 var terrain_draw_generation: int = 0
 var _draw_canvas: CanvasItem
 
@@ -1875,15 +1877,15 @@ func _draw_partitioned_mine(start: Vector2i, finish: Vector2i) -> void:
 			discoveries.append([cavern_id, RunState.is_cavern_discovered(String(cavern_id))])
 		var base_revision: int = hash([terrain_draw_generation, discoveries])
 		for row in range(maxi(0, start.y), mini(rows - 1, finish.y) + 1):
-			for first_col in range(maxi(0, start.x), mini(cols - 1, finish.x) + 1, 6):
-				var last_col: int = mini(first_col + 5, mini(cols - 1, finish.x))
+			for first_col in range(maxi(0, start.x), mini(cols - 1, finish.x) + 1, terrain_strip_width):
+				var last_col: int = mini(first_col + terrain_strip_width - 1, mini(cols - 1, finish.x))
 				revisions[Vector2i(row, first_col)] = _terrain_strip_fingerprint(row, first_col, last_col, base_revision, cell_signatures)
 	# Keep the original four passes and row order. Bedrock still masks the
 	# overhanging mineable corners before concealed chambers are drawn.
 	for pass_index in 4:
 		for row in range(maxi(0, start.y), mini(rows - 1, finish.y) + 1):
-			for first_col in range(maxi(0, start.x), mini(cols - 1, finish.x) + 1, 6):
-				var last_col: int = mini(first_col + 5, mini(cols - 1, finish.x))
+			for first_col in range(maxi(0, start.x), mini(cols - 1, finish.x) + 1, terrain_strip_width):
+				var last_col: int = mini(first_col + terrain_strip_width - 1, mini(cols - 1, finish.x))
 				if _terrain_section_has_content(row, first_col, last_col, pass_index):
 					var paint: Callable = _draw_terrain_section.bind(row, first_col, last_col, pass_index)
 					if cache_terrain_draws:
@@ -2956,4 +2958,5 @@ func companion_ore_target(origin: Vector2) -> Vector2:
 			distance=point.distance_to(origin)
 			result=point
 	return result
+
 
