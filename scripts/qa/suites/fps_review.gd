@@ -35,6 +35,9 @@ func _command(data: Dictionary) -> void:
 				world.blocks[cell].max_hp = 100000
 			world.queue_redraw()
 			main._refresh_hud()
+			for node in world.find_children("PremiumHeadlamp", "", true, false):
+				node.preview_settings.clear()
+				node.refresh_workshop_effects()
 		"freeze":
 			# Pause-independent UI tweens also need zero delta for identical frames.
 			Engine.time_scale = 0.0
