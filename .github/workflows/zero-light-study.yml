@@ -1,0 +1,40 @@
+name: Review zero-alpha light early-out
+on:
+  push:
+    branches: [codex/zero-light-study-20260924]
+    paths: ['.github/zero-light-study/**', '.github/workflows/zero-light-study.yml']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: zero-light-study
+  cancel-in-progress: true
+jobs:
+  browser:
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-light-dev15-9-candidate
+          run-id: 36043919958
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/candidate
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install chromium
+      - name: Pixel parity and six alternating mining windows on unchanged export
+        run: node .github/zero-light-study/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/zero-light/study"
+      - name: Preserve original images and compact review
+        if: always()
+        run: |
+          python3 -m pip install --quiet --break-system-packages pillow
+          python3 .github/zero-light-study/contacts.py "$RUNNER_TEMP/zero-light" "$RUNNER_TEMP/zero-light-small"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: zero-light-originals, path: '${{ runner.temp }}/zero-light', retention-days: 90}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: zero-light-small, path: '${{ runner.temp }}/zero-light-small', retention-days: 90}
