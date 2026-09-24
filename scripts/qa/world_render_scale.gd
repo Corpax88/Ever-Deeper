@@ -41,6 +41,15 @@ func configure(owner_world: Node2D, factor: float) -> void:
 	world.visibility_layer = 2
 	root_view.canvas_cull_mask = original_mask & ~2
 	_process(0.0)
+	RenderingServer.frame_pre_draw.connect(_before_draw)
+
+func _before_draw() -> void:
+	# Culling CanvasItems alone does not stop the root viewport's shadow passes.
+	# Keep the logical camera/input transform intact; move only its unused render
+	# canvas outside the root clip rectangle after copying it into the subview.
+	# CanvasLayers (native HUD and world composite) use their separate canvases.
+	_process(0.0)
+	RenderingServer.viewport_set_canvas_transform(root_view.get_viewport_rid(), world.get_canvas(), Transform2D(0.0, Vector2(10000000.0, 10000000.0)))
 
 func _process(_delta: float) -> void:
 	if not is_instance_valid(sub): return
@@ -53,7 +62,11 @@ func _process(_delta: float) -> void:
 	image.size = root_view.get_visible_rect().size
 
 func restore() -> void:
-	if is_instance_valid(root_view): root_view.canvas_cull_mask = original_mask
+	if RenderingServer.frame_pre_draw.is_connected(_before_draw): RenderingServer.frame_pre_draw.disconnect(_before_draw)
+	if is_instance_valid(root_view):
+		root_view.canvas_cull_mask = original_mask
+		# The getter retains the real camera transform, never the render-only cull.
+		root_view.canvas_transform = root_view.canvas_transform
 	if is_instance_valid(world): world.visibility_layer = original_layers
 	if is_instance_valid(layer): layer.hide()
 	if is_instance_valid(sub): sub.render_target_update_mode = SubViewport.UPDATE_DISABLED
