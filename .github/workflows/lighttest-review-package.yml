@@ -17,7 +17,7 @@ jobs:
         run: |
           python3 - <<'PY'
           import os,time,json,urllib.request
-          url='https://api.github.com/repos/Corpax88/Ever-Deeper/actions/runs/36029780438'
+          url='https://api.github.com/repos/Corpax88/Ever-Deeper/actions/runs/36030504817'
           for i in range(65):
               req=urllib.request.Request(url,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN']})
               with urllib.request.urlopen(req) as response:r=json.load(response)
@@ -29,7 +29,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: dev15-8-browser-review
-          run-id: 36029780438
+          run-id: 36030504817
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: input
       - run: |
