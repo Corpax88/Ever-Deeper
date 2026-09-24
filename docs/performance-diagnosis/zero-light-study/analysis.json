@@ -1,0 +1,178 @@
+{
+  "passed": true,
+  "error": null,
+  "runtime": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+    "dpr": 3,
+    "canvas": [
+      2532,
+      1170
+    ]
+  },
+  "pairs": 22,
+  "max_pixel_delta": 0,
+  "changed_channels": 0,
+  "windows": [
+    {
+      "index": 0,
+      "candidate": false,
+      "fps": 44.76954692239945,
+      "frame": {
+        "max_ms": 647.2,
+        "mean_ms": 22.3353369763206,
+        "over_33_ms": 44,
+        "p95_ms": 38.1
+      },
+      "cpu": {
+        "max_ms": 641.6,
+        "mean_ms": 98.4535519125687,
+        "over_33_ms": 524,
+        "p95_ms": 641.6
+      },
+      "draw_calls": 220,
+      "impacts": 53,
+      "gpu_available": true,
+      "gpu_disjoint": 0,
+      "gpu_samples": 187,
+      "gpu_median_ms": 4.656374,
+      "gpu_mean_ms": 4.700947363636364
+    },
+    {
+      "index": 1,
+      "candidate": true,
+      "fps": 55.36853658336815,
+      "frame": {
+        "max_ms": 75.5,
+        "mean_ms": 18.060650887574,
+        "over_33_ms": 12,
+        "p95_ms": 28.2
+      },
+      "cpu": {
+        "max_ms": 71.6,
+        "mean_ms": 41.0821005917156,
+        "over_33_ms": 293,
+        "p95_ms": 71.6
+      },
+      "draw_calls": 220,
+      "impacts": 54,
+      "gpu_available": true,
+      "gpu_disjoint": 0,
+      "gpu_samples": 229,
+      "gpu_median_ms": 5.390666,
+      "gpu_mean_ms": 4.4383452139737996
+    },
+    {
+      "index": 2,
+      "candidate": true,
+      "fps": 53.0721223934872,
+      "frame": {
+        "max_ms": 69.7,
+        "mean_ms": 18.8421296296296,
+        "over_33_ms": 19,
+        "p95_ms": 29.2
+      },
+      "cpu": {
+        "max_ms": 68.2,
+        "mean_ms": 41.7054012345682,
+        "over_33_ms": 444,
+        "p95_ms": 68.2
+      },
+      "draw_calls": 220,
+      "impacts": 54,
+      "gpu_available": true,
+      "gpu_disjoint": 0,
+      "gpu_samples": 220,
+      "gpu_median_ms": 5.323583,
+      "gpu_mean_ms": 4.559447086363637
+    },
+    {
+      "index": 3,
+      "candidate": false,
+      "fps": 57.53956869913035,
+      "frame": {
+        "max_ms": 59.8,
+        "mean_ms": 17.3792022792023,
+        "over_33_ms": 7,
+        "p95_ms": 25.1
+      },
+      "cpu": {
+        "max_ms": 58.3,
+        "mean_ms": 31.1075498575498,
+        "over_33_ms": 239,
+        "p95_ms": 55
+      },
+      "draw_calls": 220,
+      "impacts": 54,
+      "gpu_available": true,
+      "gpu_disjoint": 0,
+      "gpu_samples": 241,
+      "gpu_median_ms": 5.361916,
+      "gpu_mean_ms": 4.667810174273859
+    },
+    {
+      "index": 4,
+      "candidate": true,
+      "fps": 57.92084151659398,
+      "frame": {
+        "max_ms": 63.1,
+        "mean_ms": 17.2647988505747,
+        "over_33_ms": 11,
+        "p95_ms": 23.3
+      },
+      "cpu": {
+        "max_ms": 84.7,
+        "mean_ms": 43.1308908045978,
+        "over_33_ms": 403,
+        "p95_ms": 84.7
+      },
+      "draw_calls": 220,
+      "impacts": 53,
+      "gpu_available": true,
+      "gpu_disjoint": 0,
+      "gpu_samples": 236,
+      "gpu_median_ms": 4.443666,
+      "gpu_mean_ms": 3.9885310720338985
+    },
+    {
+      "index": 5,
+      "candidate": false,
+      "fps": 58.858730848369085,
+      "frame": {
+        "max_ms": 71.6,
+        "mean_ms": 16.9896935933148,
+        "over_33_ms": 6,
+        "p95_ms": 21.6
+      },
+      "cpu": {
+        "max_ms": 70.7,
+        "mean_ms": 34.9220055710308,
+        "over_33_ms": 280,
+        "p95_ms": 70.7
+      },
+      "draw_calls": 220,
+      "impacts": 53,
+      "gpu_available": true,
+      "gpu_disjoint": 0,
+      "gpu_samples": 242,
+      "gpu_median_ms": 5.082208,
+      "gpu_mean_ms": 4.097436504132231
+    }
+  ],
+  "groups": {
+    "reference": {
+      "fps": 53.707128400678634,
+      "gpu_samples": 670,
+      "gpu_median_ms": 5.216729,
+      "gpu_mean_ms": 4.471043347761194,
+      "slow_frames": 57
+    },
+    "candidate": {
+      "fps": 55.44074016132707,
+      "gpu_samples": 685,
+      "gpu_median_ms": 5.147791,
+      "gpu_mean_ms": 4.322266782481752,
+      "slow_frames": 42
+    }
+  }
+}
