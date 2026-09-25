@@ -1,0 +1,2065 @@
+{
+  "passed": true,
+  "error": null,
+  "source_commit": "c9c26ef1f821ab36dc5cf17d94da69ff3d3f7914",
+  "baseline_source": "c63aabd3e3e5120579285ce6e8b0b59a75f2727a",
+  "version": "1.0.0-dev.15.9",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "3b2b2be8a15fc19d70fbde736e24cffe6ca189c4c8fdfdc521bdcfd129af1813"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 260323812,
+      "sha256": "58c9d26a430713773a894a56f2806f1cfc3854abaf5905f9e759ff1fc67099fb"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "browser": "webkit",
+  "repeat": "2",
+  "runtime": {
+    "renderer": "Apple GPU",
+    "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+    "dpr": 3,
+    "canvas": [
+      2328,
+      1260
+    ]
+  },
+  "checks": [
+    {
+      "name": "mac-gpu",
+      "passed": true,
+      "runtime": {
+        "renderer": "Apple GPU",
+        "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+        "dpr": 3,
+        "canvas": [
+          2328,
+          1260
+        ]
+      }
+    },
+    {
+      "name": "resolution",
+      "passed": true
+    },
+    {
+      "name": "version",
+      "passed": true
+    },
+    {
+      "name": "gameplay-mutation-audit",
+      "passed": true,
+      "results": [
+        {
+          "after": 5685,
+          "before": 5685,
+          "label": "empty clear and absent erase",
+          "passed": true
+        },
+        {
+          "after": 5686,
+          "before": 5685,
+          "label": "insert",
+          "passed": true
+        },
+        {
+          "after": 5686,
+          "before": 5686,
+          "label": "actual damage only",
+          "passed": true
+        },
+        {
+          "after": 5687,
+          "before": 5686,
+          "label": "actual mining break",
+          "passed": true
+        },
+        {
+          "after": 5688,
+          "before": 5688,
+          "label": "crusher damage only",
+          "passed": true
+        },
+        {
+          "after": 5689,
+          "before": 5688,
+          "label": "crusher break",
+          "passed": true
+        },
+        {
+          "after": 5691,
+          "before": 5690,
+          "label": "companion dig",
+          "passed": true
+        },
+        {
+          "after": 5692,
+          "before": 5691,
+          "label": "resource respawn",
+          "passed": true
+        },
+        {
+          "after": 5692,
+          "before": 5692,
+          "label": "nine barrier hits",
+          "passed": true
+        },
+        {
+          "after": 5693,
+          "before": 5692,
+          "label": "barrier opens",
+          "passed": true
+        },
+        {
+          "after": 10291,
+          "before": 5693,
+          "label": "mine reload",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "equal-count-swap-invalidates",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-equal-count-swap-1",
+      "passed": true
+    },
+    {
+      "name": "parity-equal-count-swap-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-equal-count-swap-2",
+      "passed": true
+    },
+    {
+      "name": "parity-equal-count-swap-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-swap-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-swap-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-swap-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-swap-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "dictionary-replacement-invalidates",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-whole-replacement-1",
+      "passed": true
+    },
+    {
+      "name": "parity-whole-replacement-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-whole-replacement-2",
+      "passed": true
+    },
+    {
+      "name": "parity-whole-replacement-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "clear-invalidates",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-all-cleared-1",
+      "passed": true
+    },
+    {
+      "name": "parity-all-cleared-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-all-cleared-2",
+      "passed": true
+    },
+    {
+      "name": "parity-all-cleared-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "refill-invalidates",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-all-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-all-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-all-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-all-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-standard-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-standard-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-standard-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-standard-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-focused-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-focused-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-focused-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-focused-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-wide-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-wide-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-wide-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-wide-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-prismatic-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-prismatic-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-prismatic-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-prismatic-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-deepheart-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-deepheart-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-deepheart-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-deepheart-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-0",
+      "passed": true
+    },
+    {
+      "name": "mining-position-0",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-1",
+      "passed": true
+    },
+    {
+      "name": "mining-position-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-2",
+      "passed": true
+    },
+    {
+      "name": "mining-position-2",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-3",
+      "passed": true
+    },
+    {
+      "name": "mining-position-3",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-4",
+      "passed": true
+    },
+    {
+      "name": "mining-position-4",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-5",
+      "passed": true
+    },
+    {
+      "name": "mining-position-5",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "movement-after-restoration",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-moved-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moved-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moved-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moved-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "no-script-errors",
+      "passed": true
+    }
+  ],
+  "windows": [
+    {
+      "scenario": "mining",
+      "index": 0,
+      "variant": 1,
+      "cpu": {
+        "max_ms": 41,
+        "mean_ms": 25.83,
+        "over_33_ms": 65,
+        "p95_ms": 41
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 88,
+        "mean_ms": 30.705,
+        "over_33_ms": 131,
+        "p95_ms": 53
+      },
+      "frames": 400,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "occupancy_revision",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 400,
+        "refresh_usec": 17000
+      },
+      "seconds": 12.282,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 273000,
+        "draw_callbacks": 1872,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 36687,
+        "setup_usec": 1313000
+      },
+      "impacts": 55,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 1,
+      "variant": 0,
+      "cpu": {
+        "max_ms": 39,
+        "mean_ms": 22.5911949685535,
+        "over_33_ms": 54,
+        "p95_ms": 39
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 74,
+        "mean_ms": 25.272536687631,
+        "over_33_ms": 65,
+        "p95_ms": 41
+      },
+      "frames": 477,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 52,
+        "refresh_calls": 477,
+        "refresh_usec": 699000
+      },
+      "seconds": 12.056,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 230000,
+        "draw_callbacks": 1843,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 156,
+        "reuses": 36138,
+        "setup_usec": 1069000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 2,
+      "variant": 0,
+      "cpu": {
+        "max_ms": 23,
+        "mean_ms": 15.7864238410596,
+        "over_33_ms": 0,
+        "p95_ms": 19
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 34,
+        "mean_ms": 20.2218543046358,
+        "over_33_ms": 1,
+        "p95_ms": 27
+      },
+      "frames": 604,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 53,
+        "refresh_calls": 604,
+        "refresh_usec": 740000
+      },
+      "seconds": 12.214,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 202000,
+        "draw_callbacks": 2089,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 41241,
+        "setup_usec": 973000
+      },
+      "impacts": 53,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 3,
+      "variant": 1,
+      "cpu": {
+        "max_ms": 422,
+        "mean_ms": 42.2514792899408,
+        "over_33_ms": 48,
+        "p95_ms": 422
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 434,
+        "mean_ms": 18.5147928994083,
+        "over_33_ms": 3,
+        "p95_ms": 24
+      },
+      "frames": 676,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "occupancy_revision",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 676,
+        "refresh_usec": 19000
+      },
+      "seconds": 12.516,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 224000,
+        "draw_callbacks": 2225,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 44139,
+        "setup_usec": 1001000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 4,
+      "variant": 0,
+      "cpu": {
+        "max_ms": 28,
+        "mean_ms": 19.4476351351351,
+        "over_33_ms": 0,
+        "p95_ms": 28
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 62,
+        "mean_ms": 20.6503378378378,
+        "over_33_ms": 18,
+        "p95_ms": 30
+      },
+      "frames": 592,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 53,
+        "refresh_calls": 592,
+        "refresh_usec": 767000
+      },
+      "seconds": 12.225,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 215000,
+        "draw_callbacks": 2055,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 40551,
+        "setup_usec": 1005000
+      },
+      "impacts": 55,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 5,
+      "variant": 1,
+      "cpu": {
+        "max_ms": 27,
+        "mean_ms": 19.0290791599354,
+        "over_33_ms": 0,
+        "p95_ms": 27
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 66,
+        "mean_ms": 19.9757673667205,
+        "over_33_ms": 25,
+        "p95_ms": 31
+      },
+      "frames": 619,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "occupancy_revision",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 619,
+        "refresh_usec": 20000
+      },
+      "seconds": 12.365,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 227000,
+        "draw_callbacks": 2093,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 162,
+        "reuses": 41376,
+        "setup_usec": 1096000
+      },
+      "impacts": 55,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "label": "emberMine-intact",
+      "variant": 0,
+      "reference": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "candidate": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-intact",
+      "variant": 1,
+      "reference": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "candidate": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-damaged",
+      "variant": 0,
+      "reference": "cdeba0cacdc4c07d1ebfa1c316c7c2c05528bc468cef02c46a1b4944b05625c7",
+      "candidate": "cdeba0cacdc4c07d1ebfa1c316c7c2c05528bc468cef02c46a1b4944b05625c7",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-damaged",
+      "variant": 1,
+      "reference": "cdeba0cacdc4c07d1ebfa1c316c7c2c05528bc468cef02c46a1b4944b05625c7",
+      "candidate": "cdeba0cacdc4c07d1ebfa1c316c7c2c05528bc468cef02c46a1b4944b05625c7",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-broken",
+      "variant": 0,
+      "reference": "a60d52a1b496e3e3fb54a354c8d6e15d05ad443745c94d8fbb4dab90f7165570",
+      "candidate": "a60d52a1b496e3e3fb54a354c8d6e15d05ad443745c94d8fbb4dab90f7165570",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-broken",
+      "variant": 1,
+      "reference": "a60d52a1b496e3e3fb54a354c8d6e15d05ad443745c94d8fbb4dab90f7165570",
+      "candidate": "a60d52a1b496e3e3fb54a354c8d6e15d05ad443745c94d8fbb4dab90f7165570",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-restored",
+      "variant": 0,
+      "reference": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "candidate": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-restored",
+      "variant": 1,
+      "reference": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "candidate": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "equal-count-swap",
+      "variant": 0,
+      "reference": "d5e0199ed97b39ed97de3e79e106f93d6d84d43e984e2244165c725c0da36b18",
+      "candidate": "d5e0199ed97b39ed97de3e79e106f93d6d84d43e984e2244165c725c0da36b18",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "equal-count-swap",
+      "variant": 1,
+      "reference": "d5e0199ed97b39ed97de3e79e106f93d6d84d43e984e2244165c725c0da36b18",
+      "candidate": "d5e0199ed97b39ed97de3e79e106f93d6d84d43e984e2244165c725c0da36b18",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "swap-restored",
+      "variant": 0,
+      "reference": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "candidate": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "swap-restored",
+      "variant": 1,
+      "reference": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "candidate": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "whole-replacement",
+      "variant": 0,
+      "reference": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "candidate": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "whole-replacement",
+      "variant": 1,
+      "reference": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "candidate": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "all-cleared",
+      "variant": 0,
+      "reference": "1c89e536172ebdc868b2c7b62d8f9f85908c7a84073c5fd2e44b14a711f6f9a6",
+      "candidate": "1c89e536172ebdc868b2c7b62d8f9f85908c7a84073c5fd2e44b14a711f6f9a6",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "all-cleared",
+      "variant": 1,
+      "reference": "1c89e536172ebdc868b2c7b62d8f9f85908c7a84073c5fd2e44b14a711f6f9a6",
+      "candidate": "1c89e536172ebdc868b2c7b62d8f9f85908c7a84073c5fd2e44b14a711f6f9a6",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "all-restored",
+      "variant": 0,
+      "reference": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "candidate": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "all-restored",
+      "variant": 1,
+      "reference": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "candidate": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-intact",
+      "variant": 0,
+      "reference": "f570b0ad11136d2c502c2d072fc6e64ab77a1528282196e16e7c8b7d790352d5",
+      "candidate": "f570b0ad11136d2c502c2d072fc6e64ab77a1528282196e16e7c8b7d790352d5",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-intact",
+      "variant": 1,
+      "reference": "f570b0ad11136d2c502c2d072fc6e64ab77a1528282196e16e7c8b7d790352d5",
+      "candidate": "f570b0ad11136d2c502c2d072fc6e64ab77a1528282196e16e7c8b7d790352d5",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-damaged",
+      "variant": 0,
+      "reference": "143153b56663b86661c7e576afb55715df5f779de5f13bdd09ca346ba712815c",
+      "candidate": "143153b56663b86661c7e576afb55715df5f779de5f13bdd09ca346ba712815c",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-damaged",
+      "variant": 1,
+      "reference": "143153b56663b86661c7e576afb55715df5f779de5f13bdd09ca346ba712815c",
+      "candidate": "143153b56663b86661c7e576afb55715df5f779de5f13bdd09ca346ba712815c",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-broken",
+      "variant": 0,
+      "reference": "7424d0a155375da6c020fd5b7507471e4067eb17b7c7abe8922fae585485e122",
+      "candidate": "7424d0a155375da6c020fd5b7507471e4067eb17b7c7abe8922fae585485e122",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-broken",
+      "variant": 1,
+      "reference": "7424d0a155375da6c020fd5b7507471e4067eb17b7c7abe8922fae585485e122",
+      "candidate": "7424d0a155375da6c020fd5b7507471e4067eb17b7c7abe8922fae585485e122",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-restored",
+      "variant": 0,
+      "reference": "f570b0ad11136d2c502c2d072fc6e64ab77a1528282196e16e7c8b7d790352d5",
+      "candidate": "f570b0ad11136d2c502c2d072fc6e64ab77a1528282196e16e7c8b7d790352d5",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-restored",
+      "variant": 1,
+      "reference": "f570b0ad11136d2c502c2d072fc6e64ab77a1528282196e16e7c8b7d790352d5",
+      "candidate": "f570b0ad11136d2c502c2d072fc6e64ab77a1528282196e16e7c8b7d790352d5",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-intact",
+      "variant": 0,
+      "reference": "37a94480ba573a4233269386fba30ab424b2c3d58f324b4192b47a8e077e9107",
+      "candidate": "37a94480ba573a4233269386fba30ab424b2c3d58f324b4192b47a8e077e9107",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-intact",
+      "variant": 1,
+      "reference": "37a94480ba573a4233269386fba30ab424b2c3d58f324b4192b47a8e077e9107",
+      "candidate": "37a94480ba573a4233269386fba30ab424b2c3d58f324b4192b47a8e077e9107",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-damaged",
+      "variant": 0,
+      "reference": "f30dbb0b39d22cdaec4b110aacb1aa635fc9362260529d38d83626e97b52eef3",
+      "candidate": "f30dbb0b39d22cdaec4b110aacb1aa635fc9362260529d38d83626e97b52eef3",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-damaged",
+      "variant": 1,
+      "reference": "f30dbb0b39d22cdaec4b110aacb1aa635fc9362260529d38d83626e97b52eef3",
+      "candidate": "f30dbb0b39d22cdaec4b110aacb1aa635fc9362260529d38d83626e97b52eef3",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-broken",
+      "variant": 0,
+      "reference": "7141e99c980db78c8639ea7b827a46f04a2b8b3d2b42522a9335689890f28313",
+      "candidate": "7141e99c980db78c8639ea7b827a46f04a2b8b3d2b42522a9335689890f28313",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-broken",
+      "variant": 1,
+      "reference": "7141e99c980db78c8639ea7b827a46f04a2b8b3d2b42522a9335689890f28313",
+      "candidate": "7141e99c980db78c8639ea7b827a46f04a2b8b3d2b42522a9335689890f28313",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-restored",
+      "variant": 0,
+      "reference": "37a94480ba573a4233269386fba30ab424b2c3d58f324b4192b47a8e077e9107",
+      "candidate": "37a94480ba573a4233269386fba30ab424b2c3d58f324b4192b47a8e077e9107",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-restored",
+      "variant": 1,
+      "reference": "37a94480ba573a4233269386fba30ab424b2c3d58f324b4192b47a8e077e9107",
+      "candidate": "37a94480ba573a4233269386fba30ab424b2c3d58f324b4192b47a8e077e9107",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-intact",
+      "variant": 0,
+      "reference": "d989d3da2e9fd6cfb40dc2d6409a59d3dd4cd08065cdc379ea24fe279153b524",
+      "candidate": "d989d3da2e9fd6cfb40dc2d6409a59d3dd4cd08065cdc379ea24fe279153b524",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-intact",
+      "variant": 1,
+      "reference": "d989d3da2e9fd6cfb40dc2d6409a59d3dd4cd08065cdc379ea24fe279153b524",
+      "candidate": "d989d3da2e9fd6cfb40dc2d6409a59d3dd4cd08065cdc379ea24fe279153b524",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-damaged",
+      "variant": 0,
+      "reference": "6e048aa6b3aa50f75ec09d8496b4d1b090add8d127aac8f56b8fc65b45f3432f",
+      "candidate": "6e048aa6b3aa50f75ec09d8496b4d1b090add8d127aac8f56b8fc65b45f3432f",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-damaged",
+      "variant": 1,
+      "reference": "6e048aa6b3aa50f75ec09d8496b4d1b090add8d127aac8f56b8fc65b45f3432f",
+      "candidate": "6e048aa6b3aa50f75ec09d8496b4d1b090add8d127aac8f56b8fc65b45f3432f",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-broken",
+      "variant": 0,
+      "reference": "1c3fde9c23787c9bf1da0e86240a90f98fd71a7d361f67bca3349485eb4a1c8e",
+      "candidate": "1c3fde9c23787c9bf1da0e86240a90f98fd71a7d361f67bca3349485eb4a1c8e",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-broken",
+      "variant": 1,
+      "reference": "1c3fde9c23787c9bf1da0e86240a90f98fd71a7d361f67bca3349485eb4a1c8e",
+      "candidate": "1c3fde9c23787c9bf1da0e86240a90f98fd71a7d361f67bca3349485eb4a1c8e",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-restored",
+      "variant": 0,
+      "reference": "d989d3da2e9fd6cfb40dc2d6409a59d3dd4cd08065cdc379ea24fe279153b524",
+      "candidate": "d989d3da2e9fd6cfb40dc2d6409a59d3dd4cd08065cdc379ea24fe279153b524",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-restored",
+      "variant": 1,
+      "reference": "d989d3da2e9fd6cfb40dc2d6409a59d3dd4cd08065cdc379ea24fe279153b524",
+      "candidate": "d989d3da2e9fd6cfb40dc2d6409a59d3dd4cd08065cdc379ea24fe279153b524",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-standard",
+      "variant": 0,
+      "reference": "9dd820aac4a7264ecf8631e0ccca7a3a5681160b4f2c7dbe8a09b5ec74602899",
+      "candidate": "9dd820aac4a7264ecf8631e0ccca7a3a5681160b4f2c7dbe8a09b5ec74602899",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-standard",
+      "variant": 1,
+      "reference": "9dd820aac4a7264ecf8631e0ccca7a3a5681160b4f2c7dbe8a09b5ec74602899",
+      "candidate": "9dd820aac4a7264ecf8631e0ccca7a3a5681160b4f2c7dbe8a09b5ec74602899",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-focused",
+      "variant": 0,
+      "reference": "786658677c593f36f0e8b41c0f3667e912ec8a61a8848ae0c365385bc04ec004",
+      "candidate": "786658677c593f36f0e8b41c0f3667e912ec8a61a8848ae0c365385bc04ec004",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-focused",
+      "variant": 1,
+      "reference": "786658677c593f36f0e8b41c0f3667e912ec8a61a8848ae0c365385bc04ec004",
+      "candidate": "786658677c593f36f0e8b41c0f3667e912ec8a61a8848ae0c365385bc04ec004",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-wide",
+      "variant": 0,
+      "reference": "bf2efaaaa9b58b51a40be82f478b0e2387a41a175e80fd769c23328442a16db3",
+      "candidate": "bf2efaaaa9b58b51a40be82f478b0e2387a41a175e80fd769c23328442a16db3",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-wide",
+      "variant": 1,
+      "reference": "bf2efaaaa9b58b51a40be82f478b0e2387a41a175e80fd769c23328442a16db3",
+      "candidate": "bf2efaaaa9b58b51a40be82f478b0e2387a41a175e80fd769c23328442a16db3",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-prismatic",
+      "variant": 0,
+      "reference": "6d5b168719f8221174c899146e3647e9b3d3f89281c7f7022e2818064e3451ae",
+      "candidate": "6d5b168719f8221174c899146e3647e9b3d3f89281c7f7022e2818064e3451ae",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-prismatic",
+      "variant": 1,
+      "reference": "6d5b168719f8221174c899146e3647e9b3d3f89281c7f7022e2818064e3451ae",
+      "candidate": "6d5b168719f8221174c899146e3647e9b3d3f89281c7f7022e2818064e3451ae",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-deepheart",
+      "variant": 0,
+      "reference": "9e111a692f2aa3b12d5c5578d7f6c076146ed9599b038b29cddaa74dfd0f8344",
+      "candidate": "9e111a692f2aa3b12d5c5578d7f6c076146ed9599b038b29cddaa74dfd0f8344",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-deepheart",
+      "variant": 1,
+      "reference": "9e111a692f2aa3b12d5c5578d7f6c076146ed9599b038b29cddaa74dfd0f8344",
+      "candidate": "9e111a692f2aa3b12d5c5578d7f6c076146ed9599b038b29cddaa74dfd0f8344",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moved",
+      "variant": 0,
+      "reference": "c482d3f7a29dd92e6a7e21959d74973be8159eb3b16be32fe4190156147f0239",
+      "candidate": "c482d3f7a29dd92e6a7e21959d74973be8159eb3b16be32fe4190156147f0239",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moved",
+      "variant": 1,
+      "reference": "c482d3f7a29dd92e6a7e21959d74973be8159eb3b16be32fe4190156147f0239",
+      "candidate": "c482d3f7a29dd92e6a7e21959d74973be8159eb3b16be32fe4190156147f0239",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    }
+  ],
+  "captures": [
+    "emberMine-intact-0-w1",
+    "emberMine-intact-1-w0",
+    "emberMine-intact-2-w1",
+    "moved-0-w1",
+    "moved-1-w0",
+    "moved-2-w1"
+  ],
+  "physical_iphone_verified": false,
+  "scope": "QA world-owned shadow occupancy revision; exact original rendering, all lights and native resolution retained; no release."
+}

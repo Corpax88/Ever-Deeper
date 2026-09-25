@@ -1,0 +1,2065 @@
+{
+  "passed": true,
+  "error": null,
+  "source_commit": "c9c26ef1f821ab36dc5cf17d94da69ff3d3f7914",
+  "baseline_source": "c63aabd3e3e5120579285ce6e8b0b59a75f2727a",
+  "version": "1.0.0-dev.15.9",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "3b2b2be8a15fc19d70fbde736e24cffe6ca189c4c8fdfdc521bdcfd129af1813"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 260323812,
+      "sha256": "58c9d26a430713773a894a56f2806f1cfc3854abaf5905f9e759ff1fc67099fb"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "browser": "webkit",
+  "repeat": "1",
+  "runtime": {
+    "renderer": "Apple GPU",
+    "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+    "dpr": 3,
+    "canvas": [
+      2328,
+      1260
+    ]
+  },
+  "checks": [
+    {
+      "name": "mac-gpu",
+      "passed": true,
+      "runtime": {
+        "renderer": "Apple GPU",
+        "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+        "dpr": 3,
+        "canvas": [
+          2328,
+          1260
+        ]
+      }
+    },
+    {
+      "name": "resolution",
+      "passed": true
+    },
+    {
+      "name": "version",
+      "passed": true
+    },
+    {
+      "name": "gameplay-mutation-audit",
+      "passed": true,
+      "results": [
+        {
+          "after": 5685,
+          "before": 5685,
+          "label": "empty clear and absent erase",
+          "passed": true
+        },
+        {
+          "after": 5686,
+          "before": 5685,
+          "label": "insert",
+          "passed": true
+        },
+        {
+          "after": 5686,
+          "before": 5686,
+          "label": "actual damage only",
+          "passed": true
+        },
+        {
+          "after": 5687,
+          "before": 5686,
+          "label": "actual mining break",
+          "passed": true
+        },
+        {
+          "after": 5688,
+          "before": 5688,
+          "label": "crusher damage only",
+          "passed": true
+        },
+        {
+          "after": 5689,
+          "before": 5688,
+          "label": "crusher break",
+          "passed": true
+        },
+        {
+          "after": 5691,
+          "before": 5690,
+          "label": "companion dig",
+          "passed": true
+        },
+        {
+          "after": 5692,
+          "before": 5691,
+          "label": "resource respawn",
+          "passed": true
+        },
+        {
+          "after": 5692,
+          "before": 5692,
+          "label": "nine barrier hits",
+          "passed": true
+        },
+        {
+          "after": 5693,
+          "before": 5692,
+          "label": "barrier opens",
+          "passed": true
+        },
+        {
+          "after": 10291,
+          "before": 5693,
+          "label": "mine reload",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "equal-count-swap-invalidates",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-equal-count-swap-1",
+      "passed": true
+    },
+    {
+      "name": "parity-equal-count-swap-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-equal-count-swap-2",
+      "passed": true
+    },
+    {
+      "name": "parity-equal-count-swap-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-swap-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-swap-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-swap-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-swap-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "dictionary-replacement-invalidates",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-whole-replacement-1",
+      "passed": true
+    },
+    {
+      "name": "parity-whole-replacement-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-whole-replacement-2",
+      "passed": true
+    },
+    {
+      "name": "parity-whole-replacement-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "clear-invalidates",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-all-cleared-1",
+      "passed": true
+    },
+    {
+      "name": "parity-all-cleared-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-all-cleared-2",
+      "passed": true
+    },
+    {
+      "name": "parity-all-cleared-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "refill-invalidates",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-all-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-all-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-all-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-all-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-standard-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-standard-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-standard-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-standard-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-focused-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-focused-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-focused-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-focused-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-wide-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-wide-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-wide-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-wide-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-prismatic-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-prismatic-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-prismatic-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-prismatic-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-deepheart-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-deepheart-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-deepheart-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-deepheart-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-0",
+      "passed": true
+    },
+    {
+      "name": "mining-position-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-1",
+      "passed": true
+    },
+    {
+      "name": "mining-position-1",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-2",
+      "passed": true
+    },
+    {
+      "name": "mining-position-2",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-3",
+      "passed": true
+    },
+    {
+      "name": "mining-position-3",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-4",
+      "passed": true
+    },
+    {
+      "name": "mining-position-4",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-5",
+      "passed": true
+    },
+    {
+      "name": "mining-position-5",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "movement-after-restoration",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-moved-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moved-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moved-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moved-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "no-script-errors",
+      "passed": true
+    }
+  ],
+  "windows": [
+    {
+      "scenario": "mining",
+      "index": 0,
+      "variant": 0,
+      "cpu": {
+        "max_ms": 45,
+        "mean_ms": 25.9036458333333,
+        "over_33_ms": 8,
+        "p95_ms": 31
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 100,
+        "mean_ms": 31.8723958333333,
+        "over_33_ms": 118,
+        "p95_ms": 49
+      },
+      "frames": 384,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 53,
+        "refresh_calls": 384,
+        "refresh_usec": 620000
+      },
+      "seconds": 12.239,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 222000,
+        "draw_callbacks": 1752,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 34065,
+        "setup_usec": 1115000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 1,
+      "variant": 1,
+      "cpu": {
+        "max_ms": 35,
+        "mean_ms": 24.4937965260546,
+        "over_33_ms": 35,
+        "p95_ms": 35
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 122,
+        "mean_ms": 29.9950372208437,
+        "over_33_ms": 93,
+        "p95_ms": 49
+      },
+      "frames": 403,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "occupancy_revision",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 403,
+        "refresh_usec": 18000
+      },
+      "seconds": 12.088,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 212000,
+        "draw_callbacks": 1729,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 156,
+        "reuses": 33792,
+        "setup_usec": 1084000
+      },
+      "impacts": 53,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 2,
+      "variant": 1,
+      "cpu": {
+        "max_ms": 251,
+        "mean_ms": 39.1979166666667,
+        "over_33_ms": 41,
+        "p95_ms": 251
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 270,
+        "mean_ms": 25.4583333333333,
+        "over_33_ms": 32,
+        "p95_ms": 35
+      },
+      "frames": 480,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "occupancy_revision",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 480,
+        "refresh_usec": 17000
+      },
+      "seconds": 12.22,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 193000,
+        "draw_callbacks": 1749,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 156,
+        "reuses": 34068,
+        "setup_usec": 954000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 3,
+      "variant": 0,
+      "cpu": {
+        "max_ms": 41,
+        "mean_ms": 26.4417475728155,
+        "over_33_ms": 75,
+        "p95_ms": 37
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 109,
+        "mean_ms": 29.8106796116505,
+        "over_33_ms": 99,
+        "p95_ms": 46
+      },
+      "frames": 412,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 53,
+        "refresh_calls": 412,
+        "refresh_usec": 629000
+      },
+      "seconds": 12.283,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 218000,
+        "draw_callbacks": 1757,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 34203,
+        "setup_usec": 1028000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 4,
+      "variant": 1,
+      "cpu": {
+        "max_ms": 32,
+        "mean_ms": 24.6618705035971,
+        "over_33_ms": 0,
+        "p95_ms": 32
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 111,
+        "mean_ms": 29.294964028777,
+        "over_33_ms": 89,
+        "p95_ms": 46
+      },
+      "frames": 417,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "occupancy_revision",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 417,
+        "refresh_usec": 9000
+      },
+      "seconds": 12.216,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 234000,
+        "draw_callbacks": 1729,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 33789,
+        "setup_usec": 1031000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 5,
+      "variant": 0,
+      "cpu": {
+        "max_ms": 39,
+        "mean_ms": 25.0174129353234,
+        "over_33_ms": 10,
+        "p95_ms": 30
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 104,
+        "mean_ms": 30.5149253731343,
+        "over_33_ms": 97,
+        "p95_ms": 47
+      },
+      "frames": 402,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 53,
+        "refresh_calls": 402,
+        "refresh_usec": 652000
+      },
+      "seconds": 12.268,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 224000,
+        "draw_callbacks": 1726,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 33651,
+        "setup_usec": 1043000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "label": "emberMine-intact",
+      "variant": 0,
+      "reference": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "candidate": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-intact",
+      "variant": 1,
+      "reference": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "candidate": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-damaged",
+      "variant": 0,
+      "reference": "368792b8e5b2dbb79bfc34bcadd5f0d3e35a40f77b4c275f7526d255dfc05590",
+      "candidate": "368792b8e5b2dbb79bfc34bcadd5f0d3e35a40f77b4c275f7526d255dfc05590",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-damaged",
+      "variant": 1,
+      "reference": "368792b8e5b2dbb79bfc34bcadd5f0d3e35a40f77b4c275f7526d255dfc05590",
+      "candidate": "368792b8e5b2dbb79bfc34bcadd5f0d3e35a40f77b4c275f7526d255dfc05590",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-broken",
+      "variant": 0,
+      "reference": "45b2f329aa720c82198945cd58054c3964278d4588364aa567a81cdc37dd8098",
+      "candidate": "45b2f329aa720c82198945cd58054c3964278d4588364aa567a81cdc37dd8098",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-broken",
+      "variant": 1,
+      "reference": "45b2f329aa720c82198945cd58054c3964278d4588364aa567a81cdc37dd8098",
+      "candidate": "45b2f329aa720c82198945cd58054c3964278d4588364aa567a81cdc37dd8098",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-restored",
+      "variant": 0,
+      "reference": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "candidate": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-restored",
+      "variant": 1,
+      "reference": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "candidate": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "equal-count-swap",
+      "variant": 0,
+      "reference": "21cc32e3132f36de302380ab7d59acc4516b02a1151baa88f82210cbf8f133a5",
+      "candidate": "21cc32e3132f36de302380ab7d59acc4516b02a1151baa88f82210cbf8f133a5",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "equal-count-swap",
+      "variant": 1,
+      "reference": "21cc32e3132f36de302380ab7d59acc4516b02a1151baa88f82210cbf8f133a5",
+      "candidate": "21cc32e3132f36de302380ab7d59acc4516b02a1151baa88f82210cbf8f133a5",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "swap-restored",
+      "variant": 0,
+      "reference": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "candidate": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "swap-restored",
+      "variant": 1,
+      "reference": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "candidate": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "whole-replacement",
+      "variant": 0,
+      "reference": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "candidate": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "whole-replacement",
+      "variant": 1,
+      "reference": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "candidate": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "all-cleared",
+      "variant": 0,
+      "reference": "d6c12f88787b0fd9a4ea592f122500ab5adc8b57236ba06a26300992ae6c40e7",
+      "candidate": "d6c12f88787b0fd9a4ea592f122500ab5adc8b57236ba06a26300992ae6c40e7",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "all-cleared",
+      "variant": 1,
+      "reference": "d6c12f88787b0fd9a4ea592f122500ab5adc8b57236ba06a26300992ae6c40e7",
+      "candidate": "d6c12f88787b0fd9a4ea592f122500ab5adc8b57236ba06a26300992ae6c40e7",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "all-restored",
+      "variant": 0,
+      "reference": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "candidate": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "all-restored",
+      "variant": 1,
+      "reference": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "candidate": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-intact",
+      "variant": 0,
+      "reference": "a12b44c3cb0d374d18e007b0545472cfec9682aa3121bfdc8d5ca16b85f5226b",
+      "candidate": "a12b44c3cb0d374d18e007b0545472cfec9682aa3121bfdc8d5ca16b85f5226b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-intact",
+      "variant": 1,
+      "reference": "a12b44c3cb0d374d18e007b0545472cfec9682aa3121bfdc8d5ca16b85f5226b",
+      "candidate": "a12b44c3cb0d374d18e007b0545472cfec9682aa3121bfdc8d5ca16b85f5226b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-damaged",
+      "variant": 0,
+      "reference": "c56ef88ef69fb646e81202b7550ea0338b9371fb8b3e886edbaf850a14105a9d",
+      "candidate": "c56ef88ef69fb646e81202b7550ea0338b9371fb8b3e886edbaf850a14105a9d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-damaged",
+      "variant": 1,
+      "reference": "c56ef88ef69fb646e81202b7550ea0338b9371fb8b3e886edbaf850a14105a9d",
+      "candidate": "c56ef88ef69fb646e81202b7550ea0338b9371fb8b3e886edbaf850a14105a9d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-broken",
+      "variant": 0,
+      "reference": "874f8b1f6bf874ffc562897463c9f6412ad05addc9b0268e2fcfb0c7f8cd9a38",
+      "candidate": "874f8b1f6bf874ffc562897463c9f6412ad05addc9b0268e2fcfb0c7f8cd9a38",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-broken",
+      "variant": 1,
+      "reference": "874f8b1f6bf874ffc562897463c9f6412ad05addc9b0268e2fcfb0c7f8cd9a38",
+      "candidate": "874f8b1f6bf874ffc562897463c9f6412ad05addc9b0268e2fcfb0c7f8cd9a38",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-restored",
+      "variant": 0,
+      "reference": "a12b44c3cb0d374d18e007b0545472cfec9682aa3121bfdc8d5ca16b85f5226b",
+      "candidate": "a12b44c3cb0d374d18e007b0545472cfec9682aa3121bfdc8d5ca16b85f5226b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-restored",
+      "variant": 1,
+      "reference": "a12b44c3cb0d374d18e007b0545472cfec9682aa3121bfdc8d5ca16b85f5226b",
+      "candidate": "a12b44c3cb0d374d18e007b0545472cfec9682aa3121bfdc8d5ca16b85f5226b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-intact",
+      "variant": 0,
+      "reference": "33475f0c3d370f2993883ccf27f1e942c3df8054fccbcca594bd9c4c77d57c10",
+      "candidate": "33475f0c3d370f2993883ccf27f1e942c3df8054fccbcca594bd9c4c77d57c10",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-intact",
+      "variant": 1,
+      "reference": "33475f0c3d370f2993883ccf27f1e942c3df8054fccbcca594bd9c4c77d57c10",
+      "candidate": "33475f0c3d370f2993883ccf27f1e942c3df8054fccbcca594bd9c4c77d57c10",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-damaged",
+      "variant": 0,
+      "reference": "0579a6b1c762751acde86859fa5282174a4d0a1812a42295876e0aaf5ded93d0",
+      "candidate": "0579a6b1c762751acde86859fa5282174a4d0a1812a42295876e0aaf5ded93d0",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-damaged",
+      "variant": 1,
+      "reference": "0579a6b1c762751acde86859fa5282174a4d0a1812a42295876e0aaf5ded93d0",
+      "candidate": "0579a6b1c762751acde86859fa5282174a4d0a1812a42295876e0aaf5ded93d0",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-broken",
+      "variant": 0,
+      "reference": "c10b2eb8b1d12026b8bb5e634315969e0c93b5519aebc61ace8055b273400356",
+      "candidate": "c10b2eb8b1d12026b8bb5e634315969e0c93b5519aebc61ace8055b273400356",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-broken",
+      "variant": 1,
+      "reference": "c10b2eb8b1d12026b8bb5e634315969e0c93b5519aebc61ace8055b273400356",
+      "candidate": "c10b2eb8b1d12026b8bb5e634315969e0c93b5519aebc61ace8055b273400356",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-restored",
+      "variant": 0,
+      "reference": "33475f0c3d370f2993883ccf27f1e942c3df8054fccbcca594bd9c4c77d57c10",
+      "candidate": "33475f0c3d370f2993883ccf27f1e942c3df8054fccbcca594bd9c4c77d57c10",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-restored",
+      "variant": 1,
+      "reference": "33475f0c3d370f2993883ccf27f1e942c3df8054fccbcca594bd9c4c77d57c10",
+      "candidate": "33475f0c3d370f2993883ccf27f1e942c3df8054fccbcca594bd9c4c77d57c10",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-intact",
+      "variant": 0,
+      "reference": "8d03ff2dd90497c052c5578253707d7cd5c369cd735f31eea2b31c9bf911b0f9",
+      "candidate": "8d03ff2dd90497c052c5578253707d7cd5c369cd735f31eea2b31c9bf911b0f9",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-intact",
+      "variant": 1,
+      "reference": "8d03ff2dd90497c052c5578253707d7cd5c369cd735f31eea2b31c9bf911b0f9",
+      "candidate": "8d03ff2dd90497c052c5578253707d7cd5c369cd735f31eea2b31c9bf911b0f9",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-damaged",
+      "variant": 0,
+      "reference": "1e9cb961780f4c430c242284eb4d27ef655a621e1c50dfada47e48966965fcc9",
+      "candidate": "1e9cb961780f4c430c242284eb4d27ef655a621e1c50dfada47e48966965fcc9",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-damaged",
+      "variant": 1,
+      "reference": "1e9cb961780f4c430c242284eb4d27ef655a621e1c50dfada47e48966965fcc9",
+      "candidate": "1e9cb961780f4c430c242284eb4d27ef655a621e1c50dfada47e48966965fcc9",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-broken",
+      "variant": 0,
+      "reference": "b426ef070dd579d7b84129d487f1e590dc6b41482a98788bafc3f0ac73d1b222",
+      "candidate": "b426ef070dd579d7b84129d487f1e590dc6b41482a98788bafc3f0ac73d1b222",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-broken",
+      "variant": 1,
+      "reference": "b426ef070dd579d7b84129d487f1e590dc6b41482a98788bafc3f0ac73d1b222",
+      "candidate": "b426ef070dd579d7b84129d487f1e590dc6b41482a98788bafc3f0ac73d1b222",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-restored",
+      "variant": 0,
+      "reference": "8d03ff2dd90497c052c5578253707d7cd5c369cd735f31eea2b31c9bf911b0f9",
+      "candidate": "8d03ff2dd90497c052c5578253707d7cd5c369cd735f31eea2b31c9bf911b0f9",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-restored",
+      "variant": 1,
+      "reference": "8d03ff2dd90497c052c5578253707d7cd5c369cd735f31eea2b31c9bf911b0f9",
+      "candidate": "8d03ff2dd90497c052c5578253707d7cd5c369cd735f31eea2b31c9bf911b0f9",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-standard",
+      "variant": 0,
+      "reference": "671d4f4234ba8419ac04b742c747a08b72e1d603005528a5d376de6a2e4237ec",
+      "candidate": "671d4f4234ba8419ac04b742c747a08b72e1d603005528a5d376de6a2e4237ec",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-standard",
+      "variant": 1,
+      "reference": "671d4f4234ba8419ac04b742c747a08b72e1d603005528a5d376de6a2e4237ec",
+      "candidate": "671d4f4234ba8419ac04b742c747a08b72e1d603005528a5d376de6a2e4237ec",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-focused",
+      "variant": 0,
+      "reference": "e651b995525e16c982568d3b75a5dc3265328f4b4d062d5754462012861f87ad",
+      "candidate": "e651b995525e16c982568d3b75a5dc3265328f4b4d062d5754462012861f87ad",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-focused",
+      "variant": 1,
+      "reference": "e651b995525e16c982568d3b75a5dc3265328f4b4d062d5754462012861f87ad",
+      "candidate": "e651b995525e16c982568d3b75a5dc3265328f4b4d062d5754462012861f87ad",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-wide",
+      "variant": 0,
+      "reference": "199d92195c9beff389f70f0e7776cb7a440e066072830904e607277ec64e53c7",
+      "candidate": "199d92195c9beff389f70f0e7776cb7a440e066072830904e607277ec64e53c7",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-wide",
+      "variant": 1,
+      "reference": "199d92195c9beff389f70f0e7776cb7a440e066072830904e607277ec64e53c7",
+      "candidate": "199d92195c9beff389f70f0e7776cb7a440e066072830904e607277ec64e53c7",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-prismatic",
+      "variant": 0,
+      "reference": "dcb3efb506122510071a94a621df57bed65428796593fe19c279b97e7d8504fd",
+      "candidate": "dcb3efb506122510071a94a621df57bed65428796593fe19c279b97e7d8504fd",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-prismatic",
+      "variant": 1,
+      "reference": "dcb3efb506122510071a94a621df57bed65428796593fe19c279b97e7d8504fd",
+      "candidate": "dcb3efb506122510071a94a621df57bed65428796593fe19c279b97e7d8504fd",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-deepheart",
+      "variant": 0,
+      "reference": "8028a85b2b19d4660abb445f7097e02f90d849623c769961060abb949e7dc2c0",
+      "candidate": "8028a85b2b19d4660abb445f7097e02f90d849623c769961060abb949e7dc2c0",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-deepheart",
+      "variant": 1,
+      "reference": "8028a85b2b19d4660abb445f7097e02f90d849623c769961060abb949e7dc2c0",
+      "candidate": "8028a85b2b19d4660abb445f7097e02f90d849623c769961060abb949e7dc2c0",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moved",
+      "variant": 0,
+      "reference": "754c7339c246e6f09cf5db033d5c4491ad16898fdb93fac80ab6e436f24a8585",
+      "candidate": "754c7339c246e6f09cf5db033d5c4491ad16898fdb93fac80ab6e436f24a8585",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moved",
+      "variant": 1,
+      "reference": "754c7339c246e6f09cf5db033d5c4491ad16898fdb93fac80ab6e436f24a8585",
+      "candidate": "754c7339c246e6f09cf5db033d5c4491ad16898fdb93fac80ab6e436f24a8585",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    }
+  ],
+  "captures": [
+    "emberMine-intact-0-w1",
+    "emberMine-intact-1-w0",
+    "emberMine-intact-2-w1",
+    "moved-0-w1",
+    "moved-1-w0",
+    "moved-2-w1"
+  ],
+  "physical_iphone_verified": false,
+  "scope": "QA world-owned shadow occupancy revision; exact original rendering, all lights and native resolution retained; no release."
+}

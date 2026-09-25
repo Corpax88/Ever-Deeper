@@ -1,0 +1,47 @@
+{
+  "canonical_source": "625021df3724cd1e17f1d5193ee0edd94834bb60",
+  "canonical_scripts_audited": 117,
+  "changed_existing_scripts": {
+    "scripts/qa/overhaul_qa.gd": {
+      "original_sha256": "740b3628d6e82002b11fbb32c29476bd2ec7e0e4e4f35bbe71d33efc916434c2",
+      "candidate_sha256": "6b200c3d02954289733ddf755ccf8af1f8b31eb4c339fd8d92b759ca916e74c3"
+    },
+    "scripts/lighting/cave_light_occluders.gd": {
+      "original_sha256": "451584a5843dde1fa9365e1bc28987a05dc6039cdbf15d64e43a5462623f85db",
+      "candidate_sha256": "f57916b3799df0b5a6bac590b0986a92950c10bd806e4e98b00de106199b7df0"
+    },
+    "scripts/world/mossvein_mine.gd": {
+      "original_sha256": "0f47d4eaaaabab4f997579dc52183de3c222872ecf5b39d562f7dec20e455b4c",
+      "candidate_sha256": "0dc66f1dae68c7c7e2f0f804fdf6b554b7aa6d84f451ff311ed061eef392a0d7"
+    },
+    "scripts/dev/visual_capture_driver.gd": {
+      "original_sha256": "2552ff02450d502b95e8bc2d5fe06709abb1630a3c87e71b7d1c751b339c4060",
+      "candidate_sha256": "d8e3352dc1aa760d5f27d19382518d5afaf15ce7c4e1215d49a385e0bd25253d"
+    },
+    "scripts/qa/suites/fps_review.gd": {
+      "original_sha256": "de46ca4428da7dd32465c9cd5eb1e5421b5d12265d1282e1a47443c9f5cffa7c",
+      "candidate_sha256": "cdb5cbb6ccb12e8bd8128d4084e323122614a6cf18466267f6f0b3f28fbda9b6"
+    },
+    "scripts/qa/suites/smoke.gd": {
+      "original_sha256": "bed35214ac617a30c830dabc2ea63c8af7e5a37c4260903b3041b79a0a38c9bf",
+      "candidate_sha256": "c7db09107f9c3b8a6994f73ef745ba0c868b0bff743d01415cf1d3b739c0786f"
+    },
+    "scripts/qa/suites/crusher.gd": {
+      "original_sha256": "e6bd0e149869e953e5eaa24fd81db7ae4c409b65420c48e58bbcaaee79807894",
+      "candidate_sha256": "e6a654d17990e25f455f8c76b20165e799f2752d8c1dc326984768c9d0c235fa"
+    },
+    "scripts/qa/suites/mole_autonomy.gd": {
+      "original_sha256": "8dd51fba33892cf9df43e7a7269485811849ada20bec8dd48d1c4c649edafa28",
+      "candidate_sha256": "53107c06c9d3ad0ab89caef3d0cc92054da1cba04eec08d259e9248af67e2ee4"
+    },
+    "scripts/qa/suites/world_fixtures.gd": {
+      "original_sha256": "1ba940be276037080d0bfbe50f85abfd7fb349d4df34f95c70148e2f865a3011",
+      "candidate_sha256": "02eea7ad27f022122266a30d8646b072f736039c835d7536fcf117713570305c"
+    }
+  },
+  "companion_and_hero_scripts_changed": false,
+  "whole_replacement": "setter invalidates",
+  "external_alias_batches": "synchronous capture batches commit through setter; invalid resource validated before mutation",
+  "only_occluder_mode_changes_between_timings": true,
+  "canonical_git_blob_identities_verified": 117
+}

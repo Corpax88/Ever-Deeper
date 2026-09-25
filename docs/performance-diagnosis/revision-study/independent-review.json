@@ -1,0 +1,1400 @@
+{
+  "reviewer": "independent lighttest_review agent",
+  "source_commit": "c9c26ef1f821ab36dc5cf17d94da69ff3d3f7914",
+  "workflow_run": 36105429639,
+  "verdict": "retain isolated CPU optimization candidate; no proven repeatable full-frame improvement",
+  "accepted_for_retention": true,
+  "production_release_approved": false,
+  "physical_iphone_verified": false,
+  "actual_images_inspected": 12,
+  "exact_pairs_total": 108,
+  "mutation_checks_total": 22,
+  "all_timing_windows_retained": true,
+  "source_audit": {
+    "canonical_scripts_examined": 117,
+    "findings": "Membership mutations route through helpers or whole-dictionary setter; invalid-resource alias early-return gap fixed. New external helpers target D1 mine world. Special terrain guards preserved.",
+    "limitation": "Public dictionary still requires future callers to respect the mutation contract."
+  },
+  "visual_findings": "All 12 retained original PNGs inspected: intact and moved variants preserve native terrain, shadow boundaries, hero, companion and HUD; 108 reported exact comparisons include damage/break/restore, equal-count swap, dictionary replacement, clear/refill and stress styles.",
+  "repeat_results": [
+    {
+      "repeat": "webkit-1",
+      "passed": true,
+      "checks": 221,
+      "all_checks_passed": true,
+      "exact_pairs": 54,
+      "all_pairs_exact": true,
+      "mutation_checks": [
+        {
+          "after": 5685,
+          "before": 5685,
+          "label": "empty clear and absent erase",
+          "passed": true
+        },
+        {
+          "after": 5686,
+          "before": 5685,
+          "label": "insert",
+          "passed": true
+        },
+        {
+          "after": 5686,
+          "before": 5686,
+          "label": "actual damage only",
+          "passed": true
+        },
+        {
+          "after": 5687,
+          "before": 5686,
+          "label": "actual mining break",
+          "passed": true
+        },
+        {
+          "after": 5688,
+          "before": 5688,
+          "label": "crusher damage only",
+          "passed": true
+        },
+        {
+          "after": 5689,
+          "before": 5688,
+          "label": "crusher break",
+          "passed": true
+        },
+        {
+          "after": 5691,
+          "before": 5690,
+          "label": "companion dig",
+          "passed": true
+        },
+        {
+          "after": 5692,
+          "before": 5691,
+          "label": "resource respawn",
+          "passed": true
+        },
+        {
+          "after": 5692,
+          "before": 5692,
+          "label": "nine barrier hits",
+          "passed": true
+        },
+        {
+          "after": 5693,
+          "before": 5692,
+          "label": "barrier opens",
+          "passed": true
+        },
+        {
+          "after": 10291,
+          "before": 5693,
+          "label": "mine reload",
+          "passed": true
+        }
+      ],
+      "end_light_inventory_identical": true,
+      "expected_modes": true
+    },
+    {
+      "repeat": "webkit-2",
+      "passed": true,
+      "checks": 221,
+      "all_checks_passed": true,
+      "exact_pairs": 54,
+      "all_pairs_exact": true,
+      "mutation_checks": [
+        {
+          "after": 5685,
+          "before": 5685,
+          "label": "empty clear and absent erase",
+          "passed": true
+        },
+        {
+          "after": 5686,
+          "before": 5685,
+          "label": "insert",
+          "passed": true
+        },
+        {
+          "after": 5686,
+          "before": 5686,
+          "label": "actual damage only",
+          "passed": true
+        },
+        {
+          "after": 5687,
+          "before": 5686,
+          "label": "actual mining break",
+          "passed": true
+        },
+        {
+          "after": 5688,
+          "before": 5688,
+          "label": "crusher damage only",
+          "passed": true
+        },
+        {
+          "after": 5689,
+          "before": 5688,
+          "label": "crusher break",
+          "passed": true
+        },
+        {
+          "after": 5691,
+          "before": 5690,
+          "label": "companion dig",
+          "passed": true
+        },
+        {
+          "after": 5692,
+          "before": 5691,
+          "label": "resource respawn",
+          "passed": true
+        },
+        {
+          "after": 5692,
+          "before": 5692,
+          "label": "nine barrier hits",
+          "passed": true
+        },
+        {
+          "after": 5693,
+          "before": 5692,
+          "label": "barrier opens",
+          "passed": true
+        },
+        {
+          "after": 10291,
+          "before": 5693,
+          "label": "mine reload",
+          "passed": true
+        }
+      ],
+      "end_light_inventory_identical": true,
+      "expected_modes": true
+    }
+  ],
+  "performance_aggregates": [
+    {
+      "repeat": 1,
+      "variant": 0,
+      "windows": 3,
+      "fps": 32.563196520793696,
+      "windows_fps": [
+        31.375112345779883,
+        33.542294227794514,
+        32.76817737202478
+      ],
+      "p95": [
+        49,
+        46,
+        47
+      ],
+      "refresh_ms_per_frame": 1.5868113522537564,
+      "rebuilds": [
+        53,
+        53,
+        53
+      ],
+      "calls": [
+        384,
+        412,
+        402
+      ],
+      "impacts": [
+        54,
+        54,
+        54
+      ],
+      "draw_calls": [
+        178,
+        178,
+        178
+      ],
+      "mode_valid": true
+    },
+    {
+      "repeat": 1,
+      "variant": 1,
+      "windows": 3,
+      "fps": 35.59303471689848,
+      "windows_fps": [
+        33.33884844473859,
+        39.27986906710311,
+        34.13555992141454
+      ],
+      "p95": [
+        49,
+        35,
+        46
+      ],
+      "refresh_ms_per_frame": 0.033846153846153845,
+      "rebuilds": [
+        0,
+        0,
+        0
+      ],
+      "calls": [
+        403,
+        480,
+        417
+      ],
+      "impacts": [
+        53,
+        54,
+        54
+      ],
+      "draw_calls": [
+        178,
+        178,
+        178
+      ],
+      "mode_valid": true
+    },
+    {
+      "repeat": 2,
+      "variant": 0,
+      "windows": 3,
+      "fps": 45.84189615015756,
+      "windows_fps": [
+        39.56536164565362,
+        49.451449156705415,
+        48.425357873210636
+      ],
+      "p95": [
+        41,
+        27,
+        30
+      ],
+      "refresh_ms_per_frame": 1.3185893604303647,
+      "rebuilds": [
+        52,
+        53,
+        53
+      ],
+      "calls": [
+        477,
+        604,
+        592
+      ],
+      "impacts": [
+        54,
+        53,
+        55
+      ],
+      "draw_calls": [
+        178,
+        178,
+        178
+      ],
+      "mode_valid": true
+    },
+    {
+      "repeat": 2,
+      "variant": 1,
+      "windows": 3,
+      "fps": 45.609880795414796,
+      "windows_fps": [
+        32.56798567008631,
+        54.010866091403,
+        50.060655074807926
+      ],
+      "p95": [
+        53,
+        24,
+        31
+      ],
+      "refresh_ms_per_frame": 0.03303834808259587,
+      "rebuilds": [
+        0,
+        0,
+        0
+      ],
+      "calls": [
+        400,
+        676,
+        619
+      ],
+      "impacts": [
+        55,
+        54,
+        55
+      ],
+      "draw_calls": [
+        178,
+        178,
+        178
+      ],
+      "mode_valid": true
+    }
+  ],
+  "all_timing_windows": [
+    {
+      "repeat": "webkit-1",
+      "scenario": "mining",
+      "index": 0,
+      "variant": 0,
+      "cpu": {
+        "max_ms": 45,
+        "mean_ms": 25.9036458333333,
+        "over_33_ms": 8,
+        "p95_ms": 31
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 100,
+        "mean_ms": 31.8723958333333,
+        "over_33_ms": 118,
+        "p95_ms": 49
+      },
+      "frames": 384,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 53,
+        "refresh_calls": 384,
+        "refresh_usec": 620000
+      },
+      "seconds": 12.239,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 222000,
+        "draw_callbacks": 1752,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 34065,
+        "setup_usec": 1115000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "repeat": "webkit-1",
+      "scenario": "mining",
+      "index": 1,
+      "variant": 1,
+      "cpu": {
+        "max_ms": 35,
+        "mean_ms": 24.4937965260546,
+        "over_33_ms": 35,
+        "p95_ms": 35
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 122,
+        "mean_ms": 29.9950372208437,
+        "over_33_ms": 93,
+        "p95_ms": 49
+      },
+      "frames": 403,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "occupancy_revision",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 403,
+        "refresh_usec": 18000
+      },
+      "seconds": 12.088,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 212000,
+        "draw_callbacks": 1729,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 156,
+        "reuses": 33792,
+        "setup_usec": 1084000
+      },
+      "impacts": 53,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "repeat": "webkit-1",
+      "scenario": "mining",
+      "index": 2,
+      "variant": 1,
+      "cpu": {
+        "max_ms": 251,
+        "mean_ms": 39.1979166666667,
+        "over_33_ms": 41,
+        "p95_ms": 251
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 270,
+        "mean_ms": 25.4583333333333,
+        "over_33_ms": 32,
+        "p95_ms": 35
+      },
+      "frames": 480,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "occupancy_revision",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 480,
+        "refresh_usec": 17000
+      },
+      "seconds": 12.22,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 193000,
+        "draw_callbacks": 1749,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 156,
+        "reuses": 34068,
+        "setup_usec": 954000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "repeat": "webkit-1",
+      "scenario": "mining",
+      "index": 3,
+      "variant": 0,
+      "cpu": {
+        "max_ms": 41,
+        "mean_ms": 26.4417475728155,
+        "over_33_ms": 75,
+        "p95_ms": 37
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 109,
+        "mean_ms": 29.8106796116505,
+        "over_33_ms": 99,
+        "p95_ms": 46
+      },
+      "frames": 412,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 53,
+        "refresh_calls": 412,
+        "refresh_usec": 629000
+      },
+      "seconds": 12.283,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 218000,
+        "draw_callbacks": 1757,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 34203,
+        "setup_usec": 1028000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "repeat": "webkit-1",
+      "scenario": "mining",
+      "index": 4,
+      "variant": 1,
+      "cpu": {
+        "max_ms": 32,
+        "mean_ms": 24.6618705035971,
+        "over_33_ms": 0,
+        "p95_ms": 32
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 111,
+        "mean_ms": 29.294964028777,
+        "over_33_ms": 89,
+        "p95_ms": 46
+      },
+      "frames": 417,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "occupancy_revision",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 417,
+        "refresh_usec": 9000
+      },
+      "seconds": 12.216,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 234000,
+        "draw_callbacks": 1729,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 33789,
+        "setup_usec": 1031000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "repeat": "webkit-1",
+      "scenario": "mining",
+      "index": 5,
+      "variant": 0,
+      "cpu": {
+        "max_ms": 39,
+        "mean_ms": 25.0174129353234,
+        "over_33_ms": 10,
+        "p95_ms": 30
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 104,
+        "mean_ms": 30.5149253731343,
+        "over_33_ms": 97,
+        "p95_ms": 47
+      },
+      "frames": 402,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 53,
+        "refresh_calls": 402,
+        "refresh_usec": 652000
+      },
+      "seconds": 12.268,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 224000,
+        "draw_callbacks": 1726,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 33651,
+        "setup_usec": 1043000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "repeat": "webkit-2",
+      "scenario": "mining",
+      "index": 0,
+      "variant": 1,
+      "cpu": {
+        "max_ms": 41,
+        "mean_ms": 25.83,
+        "over_33_ms": 65,
+        "p95_ms": 41
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 88,
+        "mean_ms": 30.705,
+        "over_33_ms": 131,
+        "p95_ms": 53
+      },
+      "frames": 400,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "occupancy_revision",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 400,
+        "refresh_usec": 17000
+      },
+      "seconds": 12.282,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 273000,
+        "draw_callbacks": 1872,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 36687,
+        "setup_usec": 1313000
+      },
+      "impacts": 55,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "repeat": "webkit-2",
+      "scenario": "mining",
+      "index": 1,
+      "variant": 0,
+      "cpu": {
+        "max_ms": 39,
+        "mean_ms": 22.5911949685535,
+        "over_33_ms": 54,
+        "p95_ms": 39
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 74,
+        "mean_ms": 25.272536687631,
+        "over_33_ms": 65,
+        "p95_ms": 41
+      },
+      "frames": 477,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 52,
+        "refresh_calls": 477,
+        "refresh_usec": 699000
+      },
+      "seconds": 12.056,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 230000,
+        "draw_callbacks": 1843,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 156,
+        "reuses": 36138,
+        "setup_usec": 1069000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "repeat": "webkit-2",
+      "scenario": "mining",
+      "index": 2,
+      "variant": 0,
+      "cpu": {
+        "max_ms": 23,
+        "mean_ms": 15.7864238410596,
+        "over_33_ms": 0,
+        "p95_ms": 19
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 34,
+        "mean_ms": 20.2218543046358,
+        "over_33_ms": 1,
+        "p95_ms": 27
+      },
+      "frames": 604,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 53,
+        "refresh_calls": 604,
+        "refresh_usec": 740000
+      },
+      "seconds": 12.214,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 202000,
+        "draw_callbacks": 2089,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 41241,
+        "setup_usec": 973000
+      },
+      "impacts": 53,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "repeat": "webkit-2",
+      "scenario": "mining",
+      "index": 3,
+      "variant": 1,
+      "cpu": {
+        "max_ms": 422,
+        "mean_ms": 42.2514792899408,
+        "over_33_ms": 48,
+        "p95_ms": 422
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 434,
+        "mean_ms": 18.5147928994083,
+        "over_33_ms": 3,
+        "p95_ms": 24
+      },
+      "frames": 676,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "occupancy_revision",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 676,
+        "refresh_usec": 19000
+      },
+      "seconds": 12.516,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 224000,
+        "draw_callbacks": 2225,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 44139,
+        "setup_usec": 1001000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "repeat": "webkit-2",
+      "scenario": "mining",
+      "index": 4,
+      "variant": 0,
+      "cpu": {
+        "max_ms": 28,
+        "mean_ms": 19.4476351351351,
+        "over_33_ms": 0,
+        "p95_ms": 28
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 62,
+        "mean_ms": 20.6503378378378,
+        "over_33_ms": 18,
+        "p95_ms": 30
+      },
+      "frames": 592,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 53,
+        "refresh_calls": 592,
+        "refresh_usec": 767000
+      },
+      "seconds": 12.225,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 215000,
+        "draw_callbacks": 2055,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 40551,
+        "setup_usec": 1005000
+      },
+      "impacts": 55,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "repeat": "webkit-2",
+      "scenario": "mining",
+      "index": 5,
+      "variant": 1,
+      "cpu": {
+        "max_ms": 27,
+        "mean_ms": 19.0290791599354,
+        "over_33_ms": 0,
+        "p95_ms": 27
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 66,
+        "mean_ms": 19.9757673667205,
+        "over_33_ms": 25,
+        "p95_ms": 31
+      },
+      "frames": 619,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1818",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1820",
+            "shadow": false
+          }
+        ],
+        "mode": "occupancy_revision",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 619,
+        "refresh_usec": 20000
+      },
+      "seconds": 12.365,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 227000,
+        "draw_callbacks": 2093,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 162,
+        "reuses": 41376,
+        "setup_usec": 1096000
+      },
+      "impacts": 55,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    }
+  ],
+  "evidence_files": [
+    {
+      "path": "webkit-1/emberMine-intact-0-w1.png",
+      "sha256": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b"
+    },
+    {
+      "path": "webkit-1/emberMine-intact-1-w0.png",
+      "sha256": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b"
+    },
+    {
+      "path": "webkit-1/emberMine-intact-2-w1.png",
+      "sha256": "de9151e5e1bc36c9b0b41da6088d8ba99062a7fbc4be963d92a7edcc9a1c937b"
+    },
+    {
+      "path": "webkit-1/moved-0-w1.png",
+      "sha256": "754c7339c246e6f09cf5db033d5c4491ad16898fdb93fac80ab6e436f24a8585"
+    },
+    {
+      "path": "webkit-1/moved-1-w0.png",
+      "sha256": "754c7339c246e6f09cf5db033d5c4491ad16898fdb93fac80ab6e436f24a8585"
+    },
+    {
+      "path": "webkit-1/moved-2-w1.png",
+      "sha256": "754c7339c246e6f09cf5db033d5c4491ad16898fdb93fac80ab6e436f24a8585"
+    },
+    {
+      "path": "webkit-1/report.json",
+      "sha256": "4e0fba7b7ea3cf057625729b12f86c30c7e2e7fbf9ca435207c18e9ac05d0132"
+    },
+    {
+      "path": "webkit-2/emberMine-intact-0-w1.png",
+      "sha256": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190"
+    },
+    {
+      "path": "webkit-2/emberMine-intact-1-w0.png",
+      "sha256": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190"
+    },
+    {
+      "path": "webkit-2/emberMine-intact-2-w1.png",
+      "sha256": "9171ad3a7efc8bbb380f9549bfafca9c9031f5c420a0f4e3c50344577cb7d190"
+    },
+    {
+      "path": "webkit-2/moved-0-w1.png",
+      "sha256": "c482d3f7a29dd92e6a7e21959d74973be8159eb3b16be32fe4190156147f0239"
+    },
+    {
+      "path": "webkit-2/moved-1-w0.png",
+      "sha256": "c482d3f7a29dd92e6a7e21959d74973be8159eb3b16be32fe4190156147f0239"
+    },
+    {
+      "path": "webkit-2/moved-2-w1.png",
+      "sha256": "c482d3f7a29dd92e6a7e21959d74973be8159eb3b16be32fe4190156147f0239"
+    },
+    {
+      "path": "webkit-2/report.json",
+      "sha256": "494437ad1e1f371cfa40070e8da3154904f0f620fb14a53c4fb23626805f8f2d"
+    }
+  ],
+  "conclusions": [
+    "Refresh CPU cost falls from 1.587 to 0.03385 ms/frame in repeat 1 and 1.319 to 0.03304 in repeat 2. Damage-only rebuilds fall from 52–53 per baseline window to zero in every optimized window.",
+    "Weighted FPS changes from 32.56 to 35.59 (+9.30%) and from 45.84 to 45.61 (-0.51%). Strong helper savings do not establish consistent whole-game FPS gains.",
+    "Retain repeat-2 first optimized window at 32.57 FPS with p95 53 ms; no window excluded."
+  ],
+  "limitations": [
+    "Both variants share revision bookkeeping; timing isolates signature retrieval behavior, not end-to-end comparison with an entirely unmodified original.",
+    "Substantial temporal drift and mixed p95; no sustained phone FPS claim.",
+    "GPU timers unavailable; no GPU-cause attribution.",
+    "QA retention only; no publication endorsement.",
+    "Refill revision assertion compares with pre-clear value; independent setter/mutation and exact image checks also cover this path."
+  ],
+  "next_action": "Retain the candidate and evidence separately; no more unchanged test repetition or phone request warranted."
+}

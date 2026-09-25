@@ -1,0 +1,109 @@
+{
+  "source_commit": "c9c26ef1f821ab36dc5cf17d94da69ff3d3f7914",
+  "method": "QA-only append to immutable original PCK",
+  "original_run": 36043919958,
+  "original_files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "dfe9be9356ac3fbcdde1569b59aceab113544ab830bd04a1180d3e7cff99548c"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 259869616,
+      "sha256": "03949e6389aba536a0ff96ebd74a53c2ba73197c0b7d56ef7a9d5eff7948aeae"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "3b2b2be8a15fc19d70fbde736e24cffe6ca189c4c8fdfdc521bdcfd129af1813"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 260323812,
+      "sha256": "58c9d26a430713773a894a56f2806f1cfc3854abaf5905f9e759ff1fc67099fb"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "original_resource_count": 1402,
+  "unchanged_resource_count": 1393,
+  "replaced_remaps": [
+    "scripts/qa/suites/fps_review.gd.remap",
+    "scripts/lighting/cave_light_occluders.gd.remap",
+    "scripts/world/mossvein_mine.gd.remap",
+    "scripts/qa/overhaul_qa.gd.remap",
+    "scripts/dev/visual_capture_driver.gd.remap",
+    "scripts/qa/suites/smoke.gd.remap",
+    "scripts/qa/suites/crusher.gd.remap",
+    "scripts/qa/suites/mole_autonomy.gd.remap",
+    "scripts/qa/suites/world_fixtures.gd.remap"
+  ],
+  "original_remap": "[remap]\n\npath=\"res://scripts/qa/suites/fps_review.gdc\"\n",
+  "added_source_scripts": [
+    "scripts/qa/suites/fps_review_occupancy.gd",
+    "scripts/qa/light_cost_probe.gd",
+    "scripts/lighting/cave_light_occluders_revision_qa.gd",
+    "scripts/world/mossvein_mine_revision_qa.gd",
+    "scripts/qa/overhaul_qa_revision_qa.gd",
+    "scripts/dev/visual_capture_driver_revision_qa.gd",
+    "scripts/qa/suites/smoke_revision_qa.gd",
+    "scripts/qa/suites/crusher_revision_qa.gd",
+    "scripts/qa/suites/mole_autonomy_revision_qa.gd",
+    "scripts/qa/suites/world_fixtures_revision_qa.gd"
+  ],
+  "all_original_resource_md5_verified": true,
+  "physical_iphone_verified": false
+}
