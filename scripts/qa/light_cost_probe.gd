@@ -72,8 +72,10 @@ func snapshot() -> Dictionary:
 	var native_inventory: Array = []
 	for viewport in native_viewports:
 		native_inventory.append({"path":str(world.get_path_to(viewport)),"size":viewport.size,"canvas_items":viewport.find_children("*", "CanvasItem", true, false).size(),"update_mode":viewport.render_target_update_mode})
-	var commerce: Control = world.get_parent().commerce_panel
-	return {"parking_update_mode":parked.render_target_update_mode if is_instance_valid(parked) else -1,"ui_button":_center(ui.button),"ui_close":_center(commerce.close_button),"commerce_open":commerce.is_open(),"ui_combined":is_instance_valid(ui_group),"ui_canvas_detached":is_instance_valid(parked) and ui.custom_viewport == parked,"ui_child_count":ui_group.get_child_count() if is_instance_valid(ui_group) else ui.get_child_count(),"ui_visible":ui.visible,"empty_2d_disabled":empty_2d_disabled,"native_viewports":native_inventory,"mode":mode,"refresh_calls":calls,"refresh_usec":usec,"rebuilds":occlusion.rebuild_count-start_rebuilds,"occluders":occlusion.active_count,"lights":inventory}
+	var journal: Control = ui.journal
+	var tab_points: Array = []
+	for tab_button in journal.tabs: tab_points.append(_center(tab_button))
+	return {"journal_tab":journal.tab,"ui_tabs":tab_points,"parking_update_mode":parked.render_target_update_mode if is_instance_valid(parked) else -1,"ui_button":_center(ui.button),"ui_close":_center(journal.content.get_node("CloseJournal")),"journal_open":journal.is_open(),"ui_combined":is_instance_valid(ui_group),"ui_canvas_detached":is_instance_valid(parked) and ui.custom_viewport == parked,"ui_child_count":ui_group.get_child_count() if is_instance_valid(ui_group) else ui.get_child_count(),"ui_visible":ui.visible,"empty_2d_disabled":empty_2d_disabled,"native_viewports":native_inventory,"mode":mode,"refresh_calls":calls,"refresh_usec":usec,"rebuilds":occlusion.rebuild_count-start_rebuilds,"occluders":occlusion.active_count,"lights":inventory}
 
 func _center(control: Control) -> Array:
 	var point: Vector2 = control.get_global_rect().get_center()

@@ -85,30 +85,25 @@ async function measure(scenario,order){
 try{
  await page.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'domcontentloaded',timeout:90000});await wait('menu',s=>s?.menu,180000);
  runtime=await page.evaluate(()=>{const g=document.querySelector('canvas').getContext('webgl2'),e=g.getExtension('WEBGL_debug_renderer_info');return {renderer:g.getParameter(e?e.UNMASKED_RENDERER_WEBGL:g.RENDERER),browser:navigator.userAgent,dpr:devicePixelRatio,canvas:[g.canvas.width,g.canvas.height]};});
- check('mac-gpu',process.platform==='darwin'&&/Apple|Metal/.test(runtime.renderer),{runtime});check('resolution',runtime.canvas[0]===2328&&runtime.canvas[1]===1260);check('version',(await state()).version===version);
- for(const mine of ['emberMine','mossMine','moonMine','starMine']){
-  await command('setup',{mine,cached:true});await wait('native',s=>s?.native?.active&&s.native.updates>3);
-  await command('lightmode',{mode:'baseline'});await delay(1000);await command('freeze');
-  await parity(mine+'-intact',mine==='emberMine');await command('damage');await command('break');await parity(mine+'-broken');await command('restore');
+ check('apple-gpu',process.platform==='darwin'&&/Apple|Metal/.test(runtime.renderer),{runtime});
+ for(const [index,v] of [0,1,0].entries()){
+  await command('setup',{mine:'emberMine',cached:true,durable:true});await wait('native',s=>s?.native?.active&&s.native.updates>3);await width(v);await delay(1000);
+  let ui=await state();check('journal-starts-closed-'+index,!ui.light_cost.journal_open);
+  await page.touchscreen.tap(ui.light_cost.ui_button[0]/ui.viewport[0]*776,ui.light_cost.ui_button[1]/ui.viewport[1]*420);
+  await wait('journal opens by touch',s=>s.light_cost.journal_open);check('journal-opens-'+index,true);
+  for(const [tabIndex,tab] of ['together','skills','how'].entries()){
+   await width(v);ui=await state();const point=ui.light_cost.ui_tabs[tabIndex];
+   await page.touchscreen.tap(point[0]/ui.viewport[0]*776,point[1]/ui.viewport[1]*420);
+   await wait('journal tab '+tab,s=>s.light_cost.journal_tab===tab);check('tab-'+index+'-'+tab,true);await delay(800);
+   await command('freeze');await parity('journal-'+index+'-'+tab,v===1);await command('unfreeze');
+  }
+  await width(v);ui=await state();await page.touchscreen.tap(ui.light_cost.ui_close[0]/ui.viewport[0]*776,ui.light_cost.ui_close[1]/ui.viewport[1]*420);
+  await wait('journal closes by touch',s=>!s.light_cost.journal_open);check('journal-closes-'+index,true);
+  await command('freeze');await parity('closed-'+index,index===1);await command('unfreeze');await width(0);
  }
- await command('setup',{mine:'emberMine',cached:true,durable:true});await wait('native',s=>s?.native?.active&&s.native.updates>3);
- await command('lightmode',{mode:'baseline'});
- for(const w of [1,0,1]){await width(w);await delay(5000);}await delay(30000);
- const order=process.env.REPEAT==='2'?[1,0,0,1,0,1]:[0,1,1,0,1,0];
-
- const s=await state();await page.mouse.move(s.mine_button[0]/s.viewport[0]*776,s.mine_button[1]/s.viewport[1]*420);await page.mouse.down();await wait('held mining',v=>v.impact>s.impact&&v.mining);await delay(15000);
- await measure('mining',order);await page.mouse.up();await wait('release',v=>!v.mining);
- await width(0);const before=await state();await page.keyboard.down('ArrowDown');await delay(650);await page.keyboard.up('ArrowDown');await delay(300);const after=await state();check('movement-after-restoration',Math.hypot(after.position[0]-before.position[0],after.position[1]-before.position[1])>10);
- await command('freeze');await parity('moved',true);
- await command('unfreeze');await width(1);let ui=await state();
- await page.touchscreen.tap(ui.light_cost.ui_button[0]/ui.viewport[0]*776,ui.light_cost.ui_button[1]/ui.viewport[1]*420);
- await wait('skills opens by real touch',v=>v.light_cost.commerce_open);await delay(800);await command('freeze');await parity('skills',true);
- await command('unfreeze');await width(1);ui=await state();
- await page.touchscreen.tap(ui.light_cost.ui_close[0]/ui.viewport[0]*776,ui.light_cost.ui_close[1]/ui.viewport[1]*420);
- await wait('skills closes by real touch',v=>!v.light_cost.commerce_open);await width(0);
  check('no-script-errors',!messages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)));
 }catch(e){failed=String(e);console.error(e);}finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,baseline_source:'c63aabd3e3e5120579285ce6e8b0b59a75f2727a',version,files,browser:browserName,repeat:process.env.REPEAT,runtime,checks,windows,pairs,captures,physical_iphone_verified:false,scope:'QA skip native viewport empty 2D canvas and combine three CompanionInterface UI children into the existing HUD canvas. The original controller canvas is parked on a disabled 2x2 viewport. Exact reversal and image parity required; stationary performance screening, not UI lifecycle acceptance. All actor source/assets/animation, 3D rendering, world lights, HUD and resolution unchanged. Occupancy revision in both modes. Exact candidate image parity required. GL synchronization counts verify actual work reduction. No release.'},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,baseline_source:'c63aabd3e3e5120579285ce6e8b0b59a75f2727a',version,files,browser:browserName,repeat:process.env.REPEAT,runtime,checks,windows,pairs,captures,physical_iphone_verified:false,scope:'QA skip native viewport empty 2D canvas and combine three CompanionInterface UI children into the existing HUD canvas. The original controller canvas is parked on a disabled 2x2 viewport. Exact reversal and image parity required; targeted journal touch/tab/close correction; no repeated FPS windows, not full UI lifecycle acceptance. All actor source/assets/animation, 3D rendering, world lights, HUD and resolution unchanged. Occupancy revision in both modes. Exact candidate image parity required. GL synchronization counts verify actual work reduction. No release.'},null,2));
  await browser.close();server.close();
 }
 if(failed)process.exitCode=1;

@@ -51,9 +51,6 @@ jobs:
     needs: build
     runs-on: macos-15
     timeout-minutes: 25
-    strategy:
-      fail-fast: false
-      matrix: {repeat: [1, 2]}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -64,9 +61,9 @@ jobs:
       - uses: actions/setup-node@v4
         with: {node-version: '22'}
       - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install webkit
-      - name: Lighting ablations and repeated mining measurements
-        env: {REVIEW_BROWSER: webkit, REPEAT: '${{ matrix.repeat }}'}
+      - name: Correct journal touch and exact image checks
+        env: {REVIEW_BROWSER: webkit}
         run: node .github/ui-canvas-study/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review"
       - uses: actions/upload-artifact@v4
         if: always()
-        with: {name: 'ui-canvas-webkit-${{ matrix.repeat }}', path: '${{ runner.temp }}/review', retention-days: 90}
+        with: {name: ui-canvas-journal-webkit, path: '${{ runner.temp }}/review', retention-days: 90}
