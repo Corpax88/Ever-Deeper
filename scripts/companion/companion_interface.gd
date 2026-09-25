@@ -1,6 +1,7 @@
-extends CanvasLayer
+extends Node
 
 const Skills = preload("res://scripts/companion/mole_skills.gd")
+var ui_root: Control
 var main: Node
 var journal: CompanionJournal
 var activity: Label
@@ -15,7 +16,12 @@ var web_canceled_touches: Dictionary={}
 
 func _ready() -> void:
 	main=get_parent()
-	layer=18
+	ui_root=Control.new()
+	ui_root.name="CompanionUI"
+	ui_root.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	ui_root.z_index=4095
+	main.get_node("HUD").add_child(ui_root)
+	ui_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	button=TextureButton.new()
 	button.name="CompanionPortrait"
 	button.texture_normal=preload("res://assets/companion/mole-hud.png")
@@ -23,11 +29,11 @@ func _ready() -> void:
 	button.stretch_mode=TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	button.tooltip_text="Mining companion · automatic help and skills"
 	button.pressed.connect(open_skills)
-	add_child(button)
+	ui_root.add_child(button)
 	journal=preload("res://scripts/companion/companion_journal.gd").new()
 	journal.name="CompanionJournal"
 	journal.owner_ui=self
-	add_child(journal)
+	ui_root.add_child(journal)
 	journal.closed.connect(main._on_commerce_closed)
 	journal.command_requested.connect(_command_skill)
 	activity=Label.new()
@@ -37,7 +43,7 @@ func _ready() -> void:
 	activity.add_theme_color_override("font_color",Color("fff0c5"))
 	activity.add_theme_color_override("font_outline_color",Color("38261e"))
 	activity.add_theme_constant_override("outline_size",5)
-	add_child(activity)
+	ui_root.add_child(activity)
 	# Empty ground belongs to the movement pad; let the regular GUI reserve buttons.
 	main.movement_pad.gui_input.connect(_on_world_gui_input)
 	# Web maps touchcancel to an ordinary release. Keep the browser's cancellation.
@@ -46,6 +52,9 @@ func _ready() -> void:
 		JavaScriptBridge.get_interface("window").addEventListener("touchcancel",web_cancel_callback,true)
 	get_viewport().size_changed.connect(_layout)
 	_layout()
+
+func _exit_tree() -> void:
+	if is_instance_valid(ui_root): ui_root.queue_free()
 
 func _layout() -> void:
 	var size: Vector2=get_viewport().get_visible_rect().size

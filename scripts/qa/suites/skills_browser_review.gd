@@ -3,7 +3,48 @@ extends "res://scripts/qa/suites/dev14_review.gd"
 func run() -> void:
 	super.run()
 
+var shared_reference_layer: CanvasLayer
+
+func _reload_scene() -> void:
+	var tree: SceneTree = main.get_tree()
+	tree.process_frame.disconnect(_frame)
+	JavaScriptBridge.eval("window.DEV14_STATE=null;window.DEV14_COMMAND=''",true)
+	tree.reload_current_scene()
+
 func _command(data: Dictionary) -> void:
+	if String(data.kind).begins_with("shared_"):
+		command_id = int(data.id)
+		var controller: Node = main.get_node("CompanionInterface")
+		match String(data.kind):
+			"shared_reference":
+				if not is_instance_valid(shared_reference_layer):
+					shared_reference_layer = CanvasLayer.new()
+					shared_reference_layer.layer = 18
+					main.add_child(shared_reference_layer)
+					controller.ui_root.reparent(shared_reference_layer,false)
+					controller.ui_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			"shared_candidate":
+				if is_instance_valid(shared_reference_layer):
+					controller.ui_root.reparent(main.get_node("HUD"),false)
+					controller.ui_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+					shared_reference_layer.queue_free()
+			"shared_freeze":
+				Engine.time_scale = 0.0
+				main.get_tree().paused = true
+				for node in main.get_tree().root.find_children("*", "", true, false):
+					if node.can_process() and node.is_processing():
+						canvas_observers.append(node)
+						node.set_process(false)
+			"shared_resume":
+				Engine.time_scale = 1.0
+				for node in canvas_observers:
+					if is_instance_valid(node): node.set_process(true)
+				canvas_observers.clear()
+				main.get_tree().paused = false
+			"shared_presentation_on": main._set_deepheart_presentation(true)
+			"shared_presentation_off": main._set_deepheart_presentation(false)
+			"shared_reload": call_deferred("_reload_scene")
+		return
 	if String(data.kind) not in ["skills_fixture", "skills_edge_fixture", "skill_level_up", "fatigue_fixture"]:
 		super._command(data)
 		return
@@ -50,7 +91,14 @@ func _frame() -> void:
 	for i in 4: bounds[["inventory", "skills", "map", "settings"][i]] = _bounds(panel.nav[i])
 	var close: Control = main.resource_inventory.get_node_or_null("Card/Layout/Header/Close")
 	if close != null: bounds.inventory_close = _bounds(close)
-	var state: Dictionary = {"skills_open": panel.visible, "map_open": panel._map_active,
+	var ui: Node = main.get_node("CompanionInterface")
+	for i in ui.journal.tabs.size(): bounds["mole_tab_"+str(i)] = _bounds(ui.journal.tabs[i])
+	var saved_ui: int = 0
+	for saved in main.presentation_hud_state:
+		if saved.item == ui.ui_root: saved_ui += 1
+	var state: Dictionary = {"journal_tab":ui.journal.tab,"shared_ui_visible":ui.ui_root.visible,
+		"shared_ui_saved":saved_ui,"shared_ui_roots":main.get_node("HUD").find_children("CompanionUI","Control",true,false).size(),
+		"skills_open": panel.visible, "map_open": panel._map_active,
 		"inventory_open": main.inventory_open, "settings_open": main.premium_menu.detail_view.is_visible_in_tree(),
 		"developer_tools_visible": is_instance_valid(main.developer_menu) and main.developer_menu.is_visible_in_tree(),
 		"mine_input_held": main.mine_held or Input.is_action_pressed("mine"),

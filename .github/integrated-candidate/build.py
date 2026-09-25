@@ -47,13 +47,13 @@ def main(source, work):
     old_remap = bytes(data[base+offset:base+offset+size]).decode()
     assert '[remap]' in old_remap and '.gdc' in old_remap, old_remap
     replacements = {}
-    revised_scripts = ['scripts/qa/overhaul_qa.gd', 'scripts/lighting/cave_light_occluders.gd', 'scripts/world/mossvein_mine.gd', 'scripts/player/native_worn_visual.gd', 'scripts/dev/visual_capture_driver.gd', 'scripts/qa/suites/fps_review.gd', 'scripts/qa/suites/smoke.gd', 'scripts/qa/suites/crusher.gd', 'scripts/qa/suites/mole_autonomy.gd', 'scripts/qa/suites/world_fixtures.gd', 'scripts/qa/suites/dev14_review.gd']
+    revised_scripts = ['scripts/main.gd', 'scripts/companion/companion_interface.gd', 'scripts/qa/suites/skills_browser_review.gd', 'scripts/qa/overhaul_qa.gd', 'scripts/lighting/cave_light_occluders.gd', 'scripts/world/mossvein_mine.gd', 'scripts/player/native_worn_visual.gd', 'scripts/dev/visual_capture_driver.gd', 'scripts/qa/suites/fps_review.gd', 'scripts/qa/suites/smoke.gd', 'scripts/qa/suites/crusher.gd', 'scripts/qa/suites/mole_autonomy.gd', 'scripts/qa/suites/world_fixtures.gd', 'scripts/qa/suites/dev14_review.gd']
     replaced_remaps = []
     added_scripts = []
     for script in revised_scripts:
         old_mapping = script+".remap"
         assert old_mapping in entries, old_mapping
-        new_script = script if script in ["scripts/player/native_worn_visual.gd", "scripts/qa/suites/dev14_review.gd"] else script[:-3]+"_integrated.gd"
+        new_script = script if script in ["scripts/main.gd", "scripts/companion/companion_interface.gd", "scripts/qa/suites/skills_browser_review.gd", "scripts/player/native_worn_visual.gd", "scripts/qa/suites/dev14_review.gd"] else script[:-3]+"_integrated.gd"
         assert new_script not in entries
         replacements[old_mapping] = ('[remap]\npath="res://'+new_script+'"\n').encode()
         replacements[new_script] = (ROOT/script).read_bytes()

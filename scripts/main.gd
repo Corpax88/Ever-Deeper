@@ -3067,10 +3067,7 @@ func _set_deepheart_presentation(enabled: bool) -> void:
 			if item is CanvasItem and item != conclusion_overlay and item != orientation_guard:
 				presentation_hud_state.append({"item":item,"visible":item.visible})
 				item.hide()
-		var companion_interface: CanvasLayer = get_node_or_null("CompanionInterface")
-		if companion_interface != null:
-			presentation_hud_state.append({"item":companion_interface,"visible":companion_interface.visible})
-			companion_interface.hide()
+		# CompanionUI is already included in the HUD visibility snapshot above.
 	else:
 		for saved in presentation_hud_state:
 			if is_instance_valid(saved.item): saved.item.visible = saved.visible
@@ -4126,7 +4123,7 @@ func _install_mining_companion() -> void:
 		var companion: Node2D=script.new()
 		companion.name="MoleCompanion"
 		world.add_child(companion)
-	var interface: CanvasLayer=load("res://scripts/companion/companion_interface.gd").new()
+	var interface: Node=load("res://scripts/companion/companion_interface.gd").new()
 	interface.name="CompanionInterface"
 	add_child(interface)
 
