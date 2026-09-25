@@ -1,0 +1,1627 @@
+{
+  "reviewer": "independent lighttest_review agent",
+  "source_commit": "aa3b87ffd79130d0796aed6592d8f6a02f9a6481",
+  "workflow_run": 36110170882,
+  "verdict": "reject further productization of this unchanged candidate",
+  "accepted": false,
+  "actual_images_inspected": 12,
+  "candidate_pairs": 18,
+  "exact_restoration_pairs": 18,
+  "repeat_results": [
+    {
+      "repeat": "fixed-merge-webkit-1",
+      "passed": true,
+      "checks": 118,
+      "all_checks_passed": true,
+      "end_states_valid": true,
+      "weighted_fps": {
+        "0": 44.85812694767919,
+        "1": 44.59817888490881
+      },
+      "all_timing_windows": [
+        {
+          "scenario": "mining",
+          "index": 0,
+          "variant": 0,
+          "cpu": {
+            "max_ms": 36,
+            "mean_ms": 20.5636363636364,
+            "over_33_ms": 46,
+            "p95_ms": 36
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 67,
+            "mean_ms": 19.9322314049587,
+            "over_33_ms": 16,
+            "p95_ms": 29
+          },
+          "frames": 605,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1498",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1500",
+                "shadow": false
+              }
+            ],
+            "merge": {
+              "active": false,
+              "bake_usec": 87000,
+              "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+              "density": 2,
+              "field_enabled": false,
+              "normalization": 2,
+              "ready": true,
+              "sources": 2,
+              "texture_size": "(2108.0, 1368.0)"
+            },
+            "mode": "baseline",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 605,
+            "refresh_usec": 19000
+          },
+          "seconds": 12.059,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 254000,
+            "draw_callbacks": 2078,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 156,
+            "reuses": 40968,
+            "setup_usec": 1078000
+          },
+          "impacts": 54,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 0,
+            "values": []
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 1,
+          "variant": 1,
+          "cpu": {
+            "max_ms": 312,
+            "mean_ms": 37.588785046729,
+            "over_33_ms": 34,
+            "p95_ms": 312
+          },
+          "draw_calls": 167,
+          "frame": {
+            "max_ms": 328,
+            "mean_ms": 22.8990654205607,
+            "over_33_ms": 31,
+            "p95_ms": 34
+          },
+          "frames": 535,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1498",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1500",
+                "shadow": false
+              }
+            ],
+            "merge": {
+              "active": true,
+              "bake_usec": 87000,
+              "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+              "density": 2,
+              "field_enabled": true,
+              "normalization": 2,
+              "ready": true,
+              "sources": 2,
+              "texture_size": "(2108.0, 1368.0)"
+            },
+            "mode": "merged",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 535,
+            "refresh_usec": 31000
+          },
+          "seconds": 12.251,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 224000,
+            "draw_callbacks": 1915,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 37653,
+            "setup_usec": 1054000
+          },
+          "impacts": 53,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 0,
+            "values": []
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 2,
+          "variant": 1,
+          "cpu": {
+            "max_ms": 57,
+            "mean_ms": 24.9906542056075,
+            "over_33_ms": 50,
+            "p95_ms": 57
+          },
+          "draw_calls": 167,
+          "frame": {
+            "max_ms": 87,
+            "mean_ms": 22.5495327102804,
+            "over_33_ms": 39,
+            "p95_ms": 37
+          },
+          "frames": 535,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1498",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1500",
+                "shadow": false
+              }
+            ],
+            "merge": {
+              "active": true,
+              "bake_usec": 87000,
+              "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+              "density": 2,
+              "field_enabled": true,
+              "normalization": 2,
+              "ready": true,
+              "sources": 2,
+              "texture_size": "(2108.0, 1368.0)"
+            },
+            "mode": "merged",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 535,
+            "refresh_usec": 18000
+          },
+          "seconds": 12.064,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 235000,
+            "draw_callbacks": 1967,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 156,
+            "reuses": 38760,
+            "setup_usec": 1102000
+          },
+          "impacts": 53,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 0,
+            "values": []
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 3,
+          "variant": 0,
+          "cpu": {
+            "max_ms": 21,
+            "mean_ms": 17.5243697478992,
+            "over_33_ms": 0,
+            "p95_ms": 21
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 75,
+            "mean_ms": 20.6,
+            "over_33_ms": 16,
+            "p95_ms": 31
+          },
+          "frames": 595,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1498",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1500",
+                "shadow": false
+              }
+            ],
+            "merge": {
+              "active": false,
+              "bake_usec": 87000,
+              "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+              "density": 2,
+              "field_enabled": false,
+              "normalization": 2,
+              "ready": true,
+              "sources": 2,
+              "texture_size": "(2108.0, 1368.0)"
+            },
+            "mode": "baseline",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 595,
+            "refresh_usec": 20000
+          },
+          "seconds": 12.258,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 227000,
+            "draw_callbacks": 2067,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 40827,
+            "setup_usec": 1061000
+          },
+          "impacts": 55,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 0,
+            "values": []
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 4,
+          "variant": 1,
+          "cpu": {
+            "max_ms": 26,
+            "mean_ms": 18.729055258467,
+            "over_33_ms": 0,
+            "p95_ms": 26
+          },
+          "draw_calls": 167,
+          "frame": {
+            "max_ms": 53,
+            "mean_ms": 21.8467023172906,
+            "over_33_ms": 19,
+            "p95_ms": 32
+          },
+          "frames": 561,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1498",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1500",
+                "shadow": false
+              }
+            ],
+            "merge": {
+              "active": true,
+              "bake_usec": 87000,
+              "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+              "density": 2,
+              "field_enabled": true,
+              "normalization": 2,
+              "ready": true,
+              "sources": 2,
+              "texture_size": "(2108.0, 1368.0)"
+            },
+            "mode": "merged",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 561,
+            "refresh_usec": 20000
+          },
+          "seconds": 12.256,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 238000,
+            "draw_callbacks": 2003,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 162,
+            "reuses": 39306,
+            "setup_usec": 1090000
+          },
+          "impacts": 54,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 0,
+            "values": []
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 5,
+          "variant": 0,
+          "cpu": {
+            "max_ms": 29,
+            "mean_ms": 22.4603174603175,
+            "over_33_ms": 0,
+            "p95_ms": 29
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 82,
+            "mean_ms": 27.81179138322,
+            "over_33_ms": 71,
+            "p95_ms": 41
+          },
+          "frames": 441,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1498",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1500",
+                "shadow": false
+              }
+            ],
+            "merge": {
+              "active": false,
+              "bake_usec": 87000,
+              "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+              "density": 2,
+              "field_enabled": false,
+              "normalization": 2,
+              "ready": true,
+              "sources": 2,
+              "texture_size": "(2108.0, 1368.0)"
+            },
+            "mode": "baseline",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 441,
+            "refresh_usec": 30000
+          },
+          "seconds": 12.265,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 245000,
+            "draw_callbacks": 1763,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 34341,
+            "setup_usec": 1192000
+          },
+          "impacts": 54,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 0,
+            "values": []
+          }
+        }
+      ],
+      "all_image_pairs": [
+        {
+          "label": "emberMine-intact",
+          "variant": 1,
+          "reference": "e9261acfaaa9d773230bc515682398fc46077d061f811e1500a3425aa9245124",
+          "candidate": "51d689bc66df9d4b3979020f0a838aad0ccb286a5d4b3347c3d8e50310f61495",
+          "max_channel_difference": 1,
+          "changed_channels": 126581,
+          "mean_channel_difference": 0.010788349560901108,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "emberMine-intact",
+          "variant": 0,
+          "reference": "e9261acfaaa9d773230bc515682398fc46077d061f811e1500a3425aa9245124",
+          "candidate": "e9261acfaaa9d773230bc515682398fc46077d061f811e1500a3425aa9245124",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "emberMine-broken",
+          "variant": 1,
+          "reference": "20344433ab68f4ece8eb97e0b3f946262cbd0c467e628bf9484e6a7960d8893c",
+          "candidate": "1163e3d859cbb7a8273f0e844b9d0c853f321a7158ad5bce2d587995831d1b37",
+          "max_channel_difference": 1,
+          "changed_channels": 124245,
+          "mean_channel_difference": 0.010589255031909672,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "emberMine-broken",
+          "variant": 0,
+          "reference": "20344433ab68f4ece8eb97e0b3f946262cbd0c467e628bf9484e6a7960d8893c",
+          "candidate": "20344433ab68f4ece8eb97e0b3f946262cbd0c467e628bf9484e6a7960d8893c",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "mossMine-intact",
+          "variant": 1,
+          "reference": "241570dcb2ffe07b951c9d4fa7d46389f73377c03e72a8245d6d0c158ea8a9f1",
+          "candidate": "3172e5800661beedbcf0a8cb89457eef62ccc25f61999155f9bece4892229902",
+          "max_channel_difference": 1,
+          "changed_channels": 181362,
+          "mean_channel_difference": 0.015457269677630503,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "mossMine-intact",
+          "variant": 0,
+          "reference": "241570dcb2ffe07b951c9d4fa7d46389f73377c03e72a8245d6d0c158ea8a9f1",
+          "candidate": "241570dcb2ffe07b951c9d4fa7d46389f73377c03e72a8245d6d0c158ea8a9f1",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "mossMine-broken",
+          "variant": 1,
+          "reference": "2a017e17c0598023a52167c32d047a1f30a59f026437a6cc054f6d5d8965f949",
+          "candidate": "ca76a5fd1bbab579a48b66992e1f70542ff12811e2d16555db326b61f7e0666e",
+          "max_channel_difference": 1,
+          "changed_channels": 181696,
+          "mean_channel_difference": 0.015485736104292805,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "mossMine-broken",
+          "variant": 0,
+          "reference": "2a017e17c0598023a52167c32d047a1f30a59f026437a6cc054f6d5d8965f949",
+          "candidate": "2a017e17c0598023a52167c32d047a1f30a59f026437a6cc054f6d5d8965f949",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "moonMine-intact",
+          "variant": 1,
+          "reference": "52664e6476b9d10ee6c8fe143a481c8aba90936b1def73922f09ff891f3f82b6",
+          "candidate": "5e441542efdb9f5c644aaeef54f2114698fed4ca3941c896e035b9c6b3284b20",
+          "max_channel_difference": 1,
+          "changed_channels": 123991,
+          "mean_channel_difference": 0.010567606911034746,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "moonMine-intact",
+          "variant": 0,
+          "reference": "52664e6476b9d10ee6c8fe143a481c8aba90936b1def73922f09ff891f3f82b6",
+          "candidate": "52664e6476b9d10ee6c8fe143a481c8aba90936b1def73922f09ff891f3f82b6",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "moonMine-broken",
+          "variant": 1,
+          "reference": "b6fdf3e7dae333fa5fcb7fd4ce5da2a38e41a0bf93fad9a003418491f91f1451",
+          "candidate": "c3be684f2e3d5a80cc6d7176d02cc8e2be4c7bb8dd6fcb3cb0742bd37f15ce99",
+          "max_channel_difference": 1,
+          "changed_channels": 122797,
+          "mean_channel_difference": 0.01046584369715813,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "moonMine-broken",
+          "variant": 0,
+          "reference": "b6fdf3e7dae333fa5fcb7fd4ce5da2a38e41a0bf93fad9a003418491f91f1451",
+          "candidate": "b6fdf3e7dae333fa5fcb7fd4ce5da2a38e41a0bf93fad9a003418491f91f1451",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "starMine-intact",
+          "variant": 1,
+          "reference": "afb0e43c19859faa84aa02ba6df65ca344f29e124da9d77561c8e1bc01479eb0",
+          "candidate": "67bbeda34721e48137ad4ae849f1d2b8cf9d82e46c5ce69e6a30f4531b51c4d9",
+          "max_channel_difference": 2,
+          "changed_channels": 181060,
+          "mean_channel_difference": 0.015431615802105492,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "starMine-intact",
+          "variant": 0,
+          "reference": "afb0e43c19859faa84aa02ba6df65ca344f29e124da9d77561c8e1bc01479eb0",
+          "candidate": "afb0e43c19859faa84aa02ba6df65ca344f29e124da9d77561c8e1bc01479eb0",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "starMine-broken",
+          "variant": 1,
+          "reference": "0525d4dd5c27bf4fb752411408b1c63e47ef0d456aaf3185dc18202b1e07b146",
+          "candidate": "a1d7c0bf78b683c57a4b36d47e778ec48969e495d6f49d2b5f5c180b49acd23e",
+          "max_channel_difference": 2,
+          "changed_channels": 179618,
+          "mean_channel_difference": 0.015308715840288005,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "starMine-broken",
+          "variant": 0,
+          "reference": "0525d4dd5c27bf4fb752411408b1c63e47ef0d456aaf3185dc18202b1e07b146",
+          "candidate": "0525d4dd5c27bf4fb752411408b1c63e47ef0d456aaf3185dc18202b1e07b146",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "moved",
+          "variant": 1,
+          "reference": "dd65a5ef1d1d125ad1a28726dc87c0576888b3afd942b33ace6a9387592bede0",
+          "candidate": "a3cc3d69e11cc9d12a502dbaa74b10498067a516a9eb634e94d0d23c5820527a",
+          "max_channel_difference": 1,
+          "changed_channels": 154155,
+          "mean_channel_difference": 0.013138449108165603,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "moved",
+          "variant": 0,
+          "reference": "dd65a5ef1d1d125ad1a28726dc87c0576888b3afd942b33ace6a9387592bede0",
+          "candidate": "dd65a5ef1d1d125ad1a28726dc87c0576888b3afd942b33ace6a9387592bede0",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        }
+      ]
+    },
+    {
+      "repeat": "fixed-merge-webkit-2",
+      "passed": true,
+      "checks": 118,
+      "all_checks_passed": true,
+      "end_states_valid": true,
+      "weighted_fps": {
+        "0": 42.22931500122759,
+        "1": 42.82584884994523
+      },
+      "all_timing_windows": [
+        {
+          "scenario": "mining",
+          "index": 0,
+          "variant": 1,
+          "cpu": {
+            "max_ms": 30,
+            "mean_ms": 22.7372093023256,
+            "over_33_ms": 0,
+            "p95_ms": 30
+          },
+          "draw_calls": 167,
+          "frame": {
+            "max_ms": 60,
+            "mean_ms": 28.493023255814,
+            "over_33_ms": 94,
+            "p95_ms": 43
+          },
+          "frames": 430,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1498",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1500",
+                "shadow": false
+              }
+            ],
+            "merge": {
+              "active": true,
+              "bake_usec": 114000,
+              "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+              "density": 2,
+              "field_enabled": true,
+              "normalization": 2,
+              "ready": true,
+              "sources": 2,
+              "texture_size": "(2108.0, 1368.0)"
+            },
+            "mode": "merged",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 430,
+            "refresh_usec": 18000
+          },
+          "seconds": 12.252,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 285000,
+            "draw_callbacks": 1838,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 35997,
+            "setup_usec": 1224000
+          },
+          "impacts": 55,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 0,
+            "values": []
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 1,
+          "variant": 0,
+          "cpu": {
+            "max_ms": 755,
+            "mean_ms": 66.7434052757794,
+            "over_33_ms": 24,
+            "p95_ms": 755
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 770,
+            "mean_ms": 29.2973621103118,
+            "over_33_ms": 71,
+            "p95_ms": 43
+          },
+          "frames": 417,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1498",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1500",
+                "shadow": false
+              }
+            ],
+            "merge": {
+              "active": false,
+              "bake_usec": 114000,
+              "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+              "density": 2,
+              "field_enabled": false,
+              "normalization": 2,
+              "ready": true,
+              "sources": 2,
+              "texture_size": "(2108.0, 1368.0)"
+            },
+            "mode": "baseline",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 417,
+            "refresh_usec": 20000
+          },
+          "seconds": 12.217,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 252000,
+            "draw_callbacks": 1727,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 150,
+            "reuses": 33798,
+            "setup_usec": 1187000
+          },
+          "impacts": 51,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 0,
+            "values": []
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 2,
+          "variant": 0,
+          "cpu": {
+            "max_ms": 32,
+            "mean_ms": 23.641404805915,
+            "over_33_ms": 0,
+            "p95_ms": 32
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 56,
+            "mean_ms": 22.6284658040665,
+            "over_33_ms": 29,
+            "p95_ms": 34
+          },
+          "frames": 541,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1498",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1500",
+                "shadow": false
+              }
+            ],
+            "merge": {
+              "active": false,
+              "bake_usec": 114000,
+              "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+              "density": 2,
+              "field_enabled": false,
+              "normalization": 2,
+              "ready": true,
+              "sources": 2,
+              "texture_size": "(2108.0, 1368.0)"
+            },
+            "mode": "baseline",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 541,
+            "refresh_usec": 19000
+          },
+          "seconds": 12.242,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 241000,
+            "draw_callbacks": 1961,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 162,
+            "reuses": 38478,
+            "setup_usec": 1106000
+          },
+          "impacts": 54,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 0,
+            "values": []
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 3,
+          "variant": 1,
+          "cpu": {
+            "max_ms": 30,
+            "mean_ms": 18.5318416523236,
+            "over_33_ms": 0,
+            "p95_ms": 30
+          },
+          "draw_calls": 167,
+          "frame": {
+            "max_ms": 93,
+            "mean_ms": 21.0275387263339,
+            "over_33_ms": 36,
+            "p95_ms": 35
+          },
+          "frames": 581,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1498",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1500",
+                "shadow": false
+              }
+            ],
+            "merge": {
+              "active": true,
+              "bake_usec": 114000,
+              "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+              "density": 2,
+              "field_enabled": true,
+              "normalization": 2,
+              "ready": true,
+              "sources": 2,
+              "texture_size": "(2108.0, 1368.0)"
+            },
+            "mode": "merged",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 581,
+            "refresh_usec": 24000
+          },
+          "seconds": 12.217,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 233000,
+            "draw_callbacks": 2117,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 41793,
+            "setup_usec": 1121000
+          },
+          "impacts": 54,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 0,
+            "values": []
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 4,
+          "variant": 0,
+          "cpu": {
+            "max_ms": 29,
+            "mean_ms": 19.2661016949153,
+            "over_33_ms": 0,
+            "p95_ms": 29
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 59,
+            "mean_ms": 20.6728813559322,
+            "over_33_ms": 15,
+            "p95_ms": 30
+          },
+          "frames": 590,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1498",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1500",
+                "shadow": false
+              }
+            ],
+            "merge": {
+              "active": false,
+              "bake_usec": 114000,
+              "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+              "density": 2,
+              "field_enabled": false,
+              "normalization": 2,
+              "ready": true,
+              "sources": 2,
+              "texture_size": "(2108.0, 1368.0)"
+            },
+            "mode": "baseline",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 590,
+            "refresh_usec": 15000
+          },
+          "seconds": 12.198,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 229000,
+            "draw_callbacks": 2060,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 40551,
+            "setup_usec": 1072000
+          },
+          "impacts": 54,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 0,
+            "values": []
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 5,
+          "variant": 1,
+          "cpu": {
+            "max_ms": 23,
+            "mean_ms": 16.9783001808318,
+            "over_33_ms": 0,
+            "p95_ms": 23
+          },
+          "draw_calls": 167,
+          "frame": {
+            "max_ms": 44,
+            "mean_ms": 21.7920433996383,
+            "over_33_ms": 30,
+            "p95_ms": 34
+          },
+          "frames": 553,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1498",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1500",
+                "shadow": false
+              }
+            ],
+            "merge": {
+              "active": true,
+              "bake_usec": 114000,
+              "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+              "density": 2,
+              "field_enabled": true,
+              "normalization": 2,
+              "ready": true,
+              "sources": 2,
+              "texture_size": "(2108.0, 1368.0)"
+            },
+            "mode": "merged",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 553,
+            "refresh_usec": 19000
+          },
+          "seconds": 12.051,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 230000,
+            "draw_callbacks": 2020,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 39723,
+            "setup_usec": 997000
+          },
+          "impacts": 53,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 0,
+            "values": []
+          }
+        }
+      ],
+      "all_image_pairs": [
+        {
+          "label": "emberMine-intact",
+          "variant": 1,
+          "reference": "e860165f1eb4496c4a4cc44e705b0b65ad68658bd1e154ad71d2ecddd5ec3a0f",
+          "candidate": "4f2f2f429ac2451c4690cb60bd16a41a772dffaba80fff2add6f325fe90f6d75",
+          "max_channel_difference": 1,
+          "changed_channels": 126369,
+          "mean_channel_difference": 0.010770281050564556,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "emberMine-intact",
+          "variant": 0,
+          "reference": "e860165f1eb4496c4a4cc44e705b0b65ad68658bd1e154ad71d2ecddd5ec3a0f",
+          "candidate": "e860165f1eb4496c4a4cc44e705b0b65ad68658bd1e154ad71d2ecddd5ec3a0f",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "emberMine-broken",
+          "variant": 1,
+          "reference": "727a0f8ad84e5f0cc4686b7991ab94f3ea53555785423025d58ff5ae065935cb",
+          "candidate": "098a00bea7c44a1b42162c85873791dbd3e1631d09bf69d0ede0f8b21858c174",
+          "max_channel_difference": 1,
+          "changed_channels": 124054,
+          "mean_channel_difference": 0.010572976326842306,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "emberMine-broken",
+          "variant": 0,
+          "reference": "727a0f8ad84e5f0cc4686b7991ab94f3ea53555785423025d58ff5ae065935cb",
+          "candidate": "727a0f8ad84e5f0cc4686b7991ab94f3ea53555785423025d58ff5ae065935cb",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "mossMine-intact",
+          "variant": 1,
+          "reference": "a54aeb3255e1b393f543b4b49d1805445a22387a87e3622516937abdb96c0641",
+          "candidate": "92ceae83edde7c306c16d50a362c4ab11857a5a23df56e58414aff6dfe1b95ea",
+          "max_channel_difference": 1,
+          "changed_channels": 181297,
+          "mean_channel_difference": 0.015451729804178258,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "mossMine-intact",
+          "variant": 0,
+          "reference": "a54aeb3255e1b393f543b4b49d1805445a22387a87e3622516937abdb96c0641",
+          "candidate": "a54aeb3255e1b393f543b4b49d1805445a22387a87e3622516937abdb96c0641",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "mossMine-broken",
+          "variant": 1,
+          "reference": "ad1f533fc2d2ad7223b591e91f1ff2f33359035cbf79b33ba99e1839ebe85dce",
+          "candidate": "074fcfde5f8db0895be2f3f85e84b2b03e06050dee2f0dee0e92234a27cc6d1b",
+          "max_channel_difference": 1,
+          "changed_channels": 181637,
+          "mean_channel_difference": 0.015480707603774613,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "mossMine-broken",
+          "variant": 0,
+          "reference": "ad1f533fc2d2ad7223b591e91f1ff2f33359035cbf79b33ba99e1839ebe85dce",
+          "candidate": "ad1f533fc2d2ad7223b591e91f1ff2f33359035cbf79b33ba99e1839ebe85dce",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "moonMine-intact",
+          "variant": 1,
+          "reference": "8a6e01be1018a19cce8407223723337dd5eafee6ff26ecbeeb36e854025c70c7",
+          "candidate": "63918cd68b9120be099fa91eebc0e313ff8bb11d2311847d455449ac410d090d",
+          "max_channel_difference": 1,
+          "changed_channels": 124207,
+          "mean_channel_difference": 0.010586016336660667,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "moonMine-intact",
+          "variant": 0,
+          "reference": "8a6e01be1018a19cce8407223723337dd5eafee6ff26ecbeeb36e854025c70c7",
+          "candidate": "8a6e01be1018a19cce8407223723337dd5eafee6ff26ecbeeb36e854025c70c7",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "moonMine-broken",
+          "variant": 1,
+          "reference": "76a6980667171d86d752316dbe82639fecbe273bf90cbc97e46bf366e626c829",
+          "candidate": "550d918ec646f00e73d9bd5fcf1c88bfb205adc97dd0deb4969c576ac530a594",
+          "max_channel_difference": 1,
+          "changed_channels": 123010,
+          "mean_channel_difference": 0.010483997436317024,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "moonMine-broken",
+          "variant": 0,
+          "reference": "76a6980667171d86d752316dbe82639fecbe273bf90cbc97e46bf366e626c829",
+          "candidate": "76a6980667171d86d752316dbe82639fecbe273bf90cbc97e46bf366e626c829",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "starMine-intact",
+          "variant": 1,
+          "reference": "80c55886a32c8b9dd023fc6ffc5016ecb4881b871e185fb55985ff808400e23a",
+          "candidate": "e521c89427d545defbc58256368f5ec2031e11082ece2d3549f011065326797a",
+          "max_channel_difference": 2,
+          "changed_channels": 180781,
+          "mean_channel_difference": 0.015407836960672012,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "starMine-intact",
+          "variant": 0,
+          "reference": "80c55886a32c8b9dd023fc6ffc5016ecb4881b871e185fb55985ff808400e23a",
+          "candidate": "80c55886a32c8b9dd023fc6ffc5016ecb4881b871e185fb55985ff808400e23a",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "starMine-broken",
+          "variant": 1,
+          "reference": "34cccc7babad966c9f57c83d4d28d5116631a13a4fab8aeadf788b2a95dbbfcb",
+          "candidate": "f7d0e2f4dae8f3fa3b701a4df82dce73c00f42294a513a0c24d81681f6299034",
+          "max_channel_difference": 2,
+          "changed_channels": 179340,
+          "mean_channel_difference": 0.015285022227676867,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "starMine-broken",
+          "variant": 0,
+          "reference": "34cccc7babad966c9f57c83d4d28d5116631a13a4fab8aeadf788b2a95dbbfcb",
+          "candidate": "34cccc7babad966c9f57c83d4d28d5116631a13a4fab8aeadf788b2a95dbbfcb",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "moved",
+          "variant": 1,
+          "reference": "da02685fa7b92eaf75018f8593a56ec1aecb92f7f1493a84a41a1acc827850e7",
+          "candidate": "d06ed731709c3f5fe07c46e691bd3c04636b2e4168846d2f233b66baf34e5784",
+          "max_channel_difference": 1,
+          "changed_channels": 152611,
+          "mean_channel_difference": 0.013006855806469209,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        },
+        {
+          "label": "moved",
+          "variant": 0,
+          "reference": "da02685fa7b92eaf75018f8593a56ec1aecb92f7f1493a84a41a1acc827850e7",
+          "candidate": "da02685fa7b92eaf75018f8593a56ec1aecb92f7f1493a84a41a1acc827850e7",
+          "max_channel_difference": 0,
+          "changed_channels": 0,
+          "mean_channel_difference": 0,
+          "channels_over_2": 0,
+          "channel_count": 11733120
+        }
+      ]
+    }
+  ],
+  "evidence_files": [
+    {
+      "path": "fixed-merge-webkit-1/emberMine-intact-0-w0.png",
+      "sha256": "e9261acfaaa9d773230bc515682398fc46077d061f811e1500a3425aa9245124"
+    },
+    {
+      "path": "fixed-merge-webkit-1/emberMine-intact-1-w1.png",
+      "sha256": "51d689bc66df9d4b3979020f0a838aad0ccb286a5d4b3347c3d8e50310f61495"
+    },
+    {
+      "path": "fixed-merge-webkit-1/emberMine-intact-2-w0.png",
+      "sha256": "e9261acfaaa9d773230bc515682398fc46077d061f811e1500a3425aa9245124"
+    },
+    {
+      "path": "fixed-merge-webkit-1/moved-0-w0.png",
+      "sha256": "dd65a5ef1d1d125ad1a28726dc87c0576888b3afd942b33ace6a9387592bede0"
+    },
+    {
+      "path": "fixed-merge-webkit-1/moved-1-w1.png",
+      "sha256": "a3cc3d69e11cc9d12a502dbaa74b10498067a516a9eb634e94d0d23c5820527a"
+    },
+    {
+      "path": "fixed-merge-webkit-1/moved-2-w0.png",
+      "sha256": "dd65a5ef1d1d125ad1a28726dc87c0576888b3afd942b33ace6a9387592bede0"
+    },
+    {
+      "path": "fixed-merge-webkit-1/report.json",
+      "sha256": "12a842f69af086bb377115ac4534ed8ed1ea46a6cc4ef7c336f49766d900e418"
+    },
+    {
+      "path": "fixed-merge-webkit-2/emberMine-intact-0-w0.png",
+      "sha256": "e860165f1eb4496c4a4cc44e705b0b65ad68658bd1e154ad71d2ecddd5ec3a0f"
+    },
+    {
+      "path": "fixed-merge-webkit-2/emberMine-intact-1-w1.png",
+      "sha256": "4f2f2f429ac2451c4690cb60bd16a41a772dffaba80fff2add6f325fe90f6d75"
+    },
+    {
+      "path": "fixed-merge-webkit-2/emberMine-intact-2-w0.png",
+      "sha256": "e860165f1eb4496c4a4cc44e705b0b65ad68658bd1e154ad71d2ecddd5ec3a0f"
+    },
+    {
+      "path": "fixed-merge-webkit-2/moved-0-w0.png",
+      "sha256": "da02685fa7b92eaf75018f8593a56ec1aecb92f7f1493a84a41a1acc827850e7"
+    },
+    {
+      "path": "fixed-merge-webkit-2/moved-1-w1.png",
+      "sha256": "d06ed731709c3f5fe07c46e691bd3c04636b2e4168846d2f233b66baf34e5784"
+    },
+    {
+      "path": "fixed-merge-webkit-2/moved-2-w0.png",
+      "sha256": "da02685fa7b92eaf75018f8593a56ec1aecb92f7f1493a84a41a1acc827850e7"
+    },
+    {
+      "path": "fixed-merge-webkit-2/report.json",
+      "sha256": "b89d7d471921a43cf3714be4adbf9f73fce317fe9fe8d09a780bdc893b63dbb4"
+    }
+  ],
+  "visual_findings": [
+    "All twelve retained PNGs inspected; no obvious change to Ember intact/moved lighting, terrain, hero, companion or HUD at inspection scale.",
+    "Candidate comparisons are not pixel-exact: maximum channel differences 1–2 across all 18 candidate pairs; all 18 restoration comparisons are exact.",
+    "Only Ember intact/moved has retained actual images; other mines/broken terrain have numerical comparisons only."
+  ],
+  "performance_conclusion": "No robust FPS benefit: repeat 1 approximately 44.858 to 44.598, repeat 2 42.229 to 42.826. All twelve timing windows, including slow windows, retained.",
+  "end_state_conclusion": "Every saved window matches variant: field ready, active/enabled only in candidate, two fixed originals disabled only in candidate, four headlamps unchanged, source identities and field bounds/texture/normalization/bake time stable within each repeat.",
+  "limitations": [
+    "Bake timing 87 ms / 114 ms includes initialization/wait/readback and is excluded from steady-state FPS; not isolated readback time.",
+    "Dynamic source lifecycle remains unimplemented.",
+    "Normalization 2 and 2 texels/world unit introduce quantization/resampling.",
+    "No physical phone conclusion or proven GPU-time improvement.",
+    "Both modes retain audited occupancy-revision bookkeeping."
+  ],
+  "next_action": "Archive evidence; no publication, phone request or unchanged-candidate retest."
+}

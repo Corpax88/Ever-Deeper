@@ -1,0 +1,1390 @@
+{
+  "passed": true,
+  "error": null,
+  "source_commit": "aa3b87ffd79130d0796aed6592d8f6a02f9a6481",
+  "baseline_source": "c63aabd3e3e5120579285ce6e8b0b59a75f2727a",
+  "version": "1.0.0-dev.15.9",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "7b40f3c22a547b459fbf68bb9b499f9e4e4bc83c60e6c22bf5d855041334a201"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 260328908,
+      "sha256": "5f6691097c0c17dc7f0b3e68e876da441dc8f13da08b2f18375f3f1bd4f7c933"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "browser": "webkit",
+  "repeat": "2",
+  "runtime": {
+    "renderer": "Apple GPU",
+    "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+    "dpr": 3,
+    "canvas": [
+      2328,
+      1260
+    ]
+  },
+  "checks": [
+    {
+      "name": "mac-gpu",
+      "passed": true,
+      "runtime": {
+        "renderer": "Apple GPU",
+        "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+        "dpr": 3,
+        "canvas": [
+          2328,
+          1260
+        ]
+      }
+    },
+    {
+      "name": "resolution",
+      "passed": true
+    },
+    {
+      "name": "version",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "field-state-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "restored-emberMine-intact",
+      "passed": true,
+      "label": "emberMine-intact",
+      "variant": 0,
+      "reference": "e860165f1eb4496c4a4cc44e705b0b65ad68658bd1e154ad71d2ecddd5ec3a0f",
+      "candidate": "e860165f1eb4496c4a4cc44e705b0b65ad68658bd1e154ad71d2ecddd5ec3a0f",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "field-state-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "restored-emberMine-broken",
+      "passed": true,
+      "label": "emberMine-broken",
+      "variant": 0,
+      "reference": "727a0f8ad84e5f0cc4686b7991ab94f3ea53555785423025d58ff5ae065935cb",
+      "candidate": "727a0f8ad84e5f0cc4686b7991ab94f3ea53555785423025d58ff5ae065935cb",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "field-state-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "restored-mossMine-intact",
+      "passed": true,
+      "label": "mossMine-intact",
+      "variant": 0,
+      "reference": "a54aeb3255e1b393f543b4b49d1805445a22387a87e3622516937abdb96c0641",
+      "candidate": "a54aeb3255e1b393f543b4b49d1805445a22387a87e3622516937abdb96c0641",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "field-state-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "restored-mossMine-broken",
+      "passed": true,
+      "label": "mossMine-broken",
+      "variant": 0,
+      "reference": "ad1f533fc2d2ad7223b591e91f1ff2f33359035cbf79b33ba99e1839ebe85dce",
+      "candidate": "ad1f533fc2d2ad7223b591e91f1ff2f33359035cbf79b33ba99e1839ebe85dce",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "field-state-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "restored-moonMine-intact",
+      "passed": true,
+      "label": "moonMine-intact",
+      "variant": 0,
+      "reference": "8a6e01be1018a19cce8407223723337dd5eafee6ff26ecbeeb36e854025c70c7",
+      "candidate": "8a6e01be1018a19cce8407223723337dd5eafee6ff26ecbeeb36e854025c70c7",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "field-state-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "restored-moonMine-broken",
+      "passed": true,
+      "label": "moonMine-broken",
+      "variant": 0,
+      "reference": "76a6980667171d86d752316dbe82639fecbe273bf90cbc97e46bf366e626c829",
+      "candidate": "76a6980667171d86d752316dbe82639fecbe273bf90cbc97e46bf366e626c829",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "field-state-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "restored-starMine-intact",
+      "passed": true,
+      "label": "starMine-intact",
+      "variant": 0,
+      "reference": "80c55886a32c8b9dd023fc6ffc5016ecb4881b871e185fb55985ff808400e23a",
+      "candidate": "80c55886a32c8b9dd023fc6ffc5016ecb4881b871e185fb55985ff808400e23a",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "field-state-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "restored-starMine-broken",
+      "passed": true,
+      "label": "starMine-broken",
+      "variant": 0,
+      "reference": "34cccc7babad966c9f57c83d4d28d5116631a13a4fab8aeadf788b2a95dbbfcb",
+      "candidate": "34cccc7babad966c9f57c83d4d28d5116631a13a4fab8aeadf788b2a95dbbfcb",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "field-state-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "field-state-1",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "field-state-1",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-0",
+      "passed": true
+    },
+    {
+      "name": "mining-position-0",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-1",
+      "passed": true
+    },
+    {
+      "name": "mining-position-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-2",
+      "passed": true
+    },
+    {
+      "name": "mining-position-2",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "field-state-1",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-3",
+      "passed": true
+    },
+    {
+      "name": "mining-position-3",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-4",
+      "passed": true
+    },
+    {
+      "name": "mining-position-4",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "field-state-1",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-5",
+      "passed": true
+    },
+    {
+      "name": "mining-position-5",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "movement-after-restoration",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "field-state-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "field-state-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-moved-1",
+      "passed": true
+    },
+    {
+      "name": "image-size-moved-2",
+      "passed": true
+    },
+    {
+      "name": "restored-moved",
+      "passed": true,
+      "label": "moved",
+      "variant": 0,
+      "reference": "da02685fa7b92eaf75018f8593a56ec1aecb92f7f1493a84a41a1acc827850e7",
+      "candidate": "da02685fa7b92eaf75018f8593a56ec1aecb92f7f1493a84a41a1acc827850e7",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "no-script-errors",
+      "passed": true
+    }
+  ],
+  "windows": [
+    {
+      "scenario": "mining",
+      "index": 0,
+      "variant": 1,
+      "cpu": {
+        "max_ms": 30,
+        "mean_ms": 22.7372093023256,
+        "over_33_ms": 0,
+        "p95_ms": 30
+      },
+      "draw_calls": 167,
+      "frame": {
+        "max_ms": 60,
+        "mean_ms": 28.493023255814,
+        "over_33_ms": 94,
+        "p95_ms": 43
+      },
+      "frames": 430,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1498",
+            "shadow": false
+          },
+          {
+            "enabled": false,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1500",
+            "shadow": false
+          }
+        ],
+        "merge": {
+          "active": true,
+          "bake_usec": 114000,
+          "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+          "density": 2,
+          "field_enabled": true,
+          "normalization": 2,
+          "ready": true,
+          "sources": 2,
+          "texture_size": "(2108.0, 1368.0)"
+        },
+        "mode": "merged",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 430,
+        "refresh_usec": 18000
+      },
+      "seconds": 12.252,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 285000,
+        "draw_callbacks": 1838,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 35997,
+        "setup_usec": 1224000
+      },
+      "impacts": 55,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 1,
+      "variant": 0,
+      "cpu": {
+        "max_ms": 755,
+        "mean_ms": 66.7434052757794,
+        "over_33_ms": 24,
+        "p95_ms": 755
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 770,
+        "mean_ms": 29.2973621103118,
+        "over_33_ms": 71,
+        "p95_ms": 43
+      },
+      "frames": 417,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1498",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1500",
+            "shadow": false
+          }
+        ],
+        "merge": {
+          "active": false,
+          "bake_usec": 114000,
+          "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+          "density": 2,
+          "field_enabled": false,
+          "normalization": 2,
+          "ready": true,
+          "sources": 2,
+          "texture_size": "(2108.0, 1368.0)"
+        },
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 417,
+        "refresh_usec": 20000
+      },
+      "seconds": 12.217,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 252000,
+        "draw_callbacks": 1727,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 150,
+        "reuses": 33798,
+        "setup_usec": 1187000
+      },
+      "impacts": 51,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 2,
+      "variant": 0,
+      "cpu": {
+        "max_ms": 32,
+        "mean_ms": 23.641404805915,
+        "over_33_ms": 0,
+        "p95_ms": 32
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 56,
+        "mean_ms": 22.6284658040665,
+        "over_33_ms": 29,
+        "p95_ms": 34
+      },
+      "frames": 541,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1498",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1500",
+            "shadow": false
+          }
+        ],
+        "merge": {
+          "active": false,
+          "bake_usec": 114000,
+          "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+          "density": 2,
+          "field_enabled": false,
+          "normalization": 2,
+          "ready": true,
+          "sources": 2,
+          "texture_size": "(2108.0, 1368.0)"
+        },
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 541,
+        "refresh_usec": 19000
+      },
+      "seconds": 12.242,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 241000,
+        "draw_callbacks": 1961,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 162,
+        "reuses": 38478,
+        "setup_usec": 1106000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 3,
+      "variant": 1,
+      "cpu": {
+        "max_ms": 30,
+        "mean_ms": 18.5318416523236,
+        "over_33_ms": 0,
+        "p95_ms": 30
+      },
+      "draw_calls": 167,
+      "frame": {
+        "max_ms": 93,
+        "mean_ms": 21.0275387263339,
+        "over_33_ms": 36,
+        "p95_ms": 35
+      },
+      "frames": 581,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1498",
+            "shadow": false
+          },
+          {
+            "enabled": false,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1500",
+            "shadow": false
+          }
+        ],
+        "merge": {
+          "active": true,
+          "bake_usec": 114000,
+          "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+          "density": 2,
+          "field_enabled": true,
+          "normalization": 2,
+          "ready": true,
+          "sources": 2,
+          "texture_size": "(2108.0, 1368.0)"
+        },
+        "mode": "merged",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 581,
+        "refresh_usec": 24000
+      },
+      "seconds": 12.217,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 233000,
+        "draw_callbacks": 2117,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 41793,
+        "setup_usec": 1121000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 4,
+      "variant": 0,
+      "cpu": {
+        "max_ms": 29,
+        "mean_ms": 19.2661016949153,
+        "over_33_ms": 0,
+        "p95_ms": 29
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 59,
+        "mean_ms": 20.6728813559322,
+        "over_33_ms": 15,
+        "p95_ms": 30
+      },
+      "frames": 590,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1498",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1500",
+            "shadow": false
+          }
+        ],
+        "merge": {
+          "active": false,
+          "bake_usec": 114000,
+          "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+          "density": 2,
+          "field_enabled": false,
+          "normalization": 2,
+          "ready": true,
+          "sources": 2,
+          "texture_size": "(2108.0, 1368.0)"
+        },
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 590,
+        "refresh_usec": 15000
+      },
+      "seconds": 12.198,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 229000,
+        "draw_callbacks": 2060,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 40551,
+        "setup_usec": 1072000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    },
+    {
+      "scenario": "mining",
+      "index": 5,
+      "variant": 1,
+      "cpu": {
+        "max_ms": 23,
+        "mean_ms": 16.9783001808318,
+        "over_33_ms": 0,
+        "p95_ms": 23
+      },
+      "draw_calls": 167,
+      "frame": {
+        "max_ms": 44,
+        "mean_ms": 21.7920433996383,
+        "over_33_ms": 30,
+        "p95_ms": 34
+      },
+      "frames": 553,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@1498",
+            "shadow": false
+          },
+          {
+            "enabled": false,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@1500",
+            "shadow": false
+          }
+        ],
+        "merge": {
+          "active": true,
+          "bake_usec": 114000,
+          "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+          "density": 2,
+          "field_enabled": true,
+          "normalization": 2,
+          "ready": true,
+          "sources": 2,
+          "texture_size": "(2108.0, 1368.0)"
+        },
+        "mode": "merged",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 553,
+        "refresh_usec": 19000
+      },
+      "seconds": 12.051,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 230000,
+        "draw_callbacks": 2020,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 39723,
+        "setup_usec": 997000
+      },
+      "impacts": 53,
+      "gpu": {
+        "available": false,
+        "disjoint": 0,
+        "draws": 0,
+        "values": []
+      }
+    }
+  ],
+  "pairs": [
+    {
+      "label": "emberMine-intact",
+      "variant": 1,
+      "reference": "e860165f1eb4496c4a4cc44e705b0b65ad68658bd1e154ad71d2ecddd5ec3a0f",
+      "candidate": "4f2f2f429ac2451c4690cb60bd16a41a772dffaba80fff2add6f325fe90f6d75",
+      "max_channel_difference": 1,
+      "changed_channels": 126369,
+      "mean_channel_difference": 0.010770281050564556,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "emberMine-intact",
+      "variant": 0,
+      "reference": "e860165f1eb4496c4a4cc44e705b0b65ad68658bd1e154ad71d2ecddd5ec3a0f",
+      "candidate": "e860165f1eb4496c4a4cc44e705b0b65ad68658bd1e154ad71d2ecddd5ec3a0f",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "emberMine-broken",
+      "variant": 1,
+      "reference": "727a0f8ad84e5f0cc4686b7991ab94f3ea53555785423025d58ff5ae065935cb",
+      "candidate": "098a00bea7c44a1b42162c85873791dbd3e1631d09bf69d0ede0f8b21858c174",
+      "max_channel_difference": 1,
+      "changed_channels": 124054,
+      "mean_channel_difference": 0.010572976326842306,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "emberMine-broken",
+      "variant": 0,
+      "reference": "727a0f8ad84e5f0cc4686b7991ab94f3ea53555785423025d58ff5ae065935cb",
+      "candidate": "727a0f8ad84e5f0cc4686b7991ab94f3ea53555785423025d58ff5ae065935cb",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "mossMine-intact",
+      "variant": 1,
+      "reference": "a54aeb3255e1b393f543b4b49d1805445a22387a87e3622516937abdb96c0641",
+      "candidate": "92ceae83edde7c306c16d50a362c4ab11857a5a23df56e58414aff6dfe1b95ea",
+      "max_channel_difference": 1,
+      "changed_channels": 181297,
+      "mean_channel_difference": 0.015451729804178258,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "mossMine-intact",
+      "variant": 0,
+      "reference": "a54aeb3255e1b393f543b4b49d1805445a22387a87e3622516937abdb96c0641",
+      "candidate": "a54aeb3255e1b393f543b4b49d1805445a22387a87e3622516937abdb96c0641",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "mossMine-broken",
+      "variant": 1,
+      "reference": "ad1f533fc2d2ad7223b591e91f1ff2f33359035cbf79b33ba99e1839ebe85dce",
+      "candidate": "074fcfde5f8db0895be2f3f85e84b2b03e06050dee2f0dee0e92234a27cc6d1b",
+      "max_channel_difference": 1,
+      "changed_channels": 181637,
+      "mean_channel_difference": 0.015480707603774613,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "mossMine-broken",
+      "variant": 0,
+      "reference": "ad1f533fc2d2ad7223b591e91f1ff2f33359035cbf79b33ba99e1839ebe85dce",
+      "candidate": "ad1f533fc2d2ad7223b591e91f1ff2f33359035cbf79b33ba99e1839ebe85dce",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "moonMine-intact",
+      "variant": 1,
+      "reference": "8a6e01be1018a19cce8407223723337dd5eafee6ff26ecbeeb36e854025c70c7",
+      "candidate": "63918cd68b9120be099fa91eebc0e313ff8bb11d2311847d455449ac410d090d",
+      "max_channel_difference": 1,
+      "changed_channels": 124207,
+      "mean_channel_difference": 0.010586016336660667,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "moonMine-intact",
+      "variant": 0,
+      "reference": "8a6e01be1018a19cce8407223723337dd5eafee6ff26ecbeeb36e854025c70c7",
+      "candidate": "8a6e01be1018a19cce8407223723337dd5eafee6ff26ecbeeb36e854025c70c7",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "moonMine-broken",
+      "variant": 1,
+      "reference": "76a6980667171d86d752316dbe82639fecbe273bf90cbc97e46bf366e626c829",
+      "candidate": "550d918ec646f00e73d9bd5fcf1c88bfb205adc97dd0deb4969c576ac530a594",
+      "max_channel_difference": 1,
+      "changed_channels": 123010,
+      "mean_channel_difference": 0.010483997436317024,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "moonMine-broken",
+      "variant": 0,
+      "reference": "76a6980667171d86d752316dbe82639fecbe273bf90cbc97e46bf366e626c829",
+      "candidate": "76a6980667171d86d752316dbe82639fecbe273bf90cbc97e46bf366e626c829",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "starMine-intact",
+      "variant": 1,
+      "reference": "80c55886a32c8b9dd023fc6ffc5016ecb4881b871e185fb55985ff808400e23a",
+      "candidate": "e521c89427d545defbc58256368f5ec2031e11082ece2d3549f011065326797a",
+      "max_channel_difference": 2,
+      "changed_channels": 180781,
+      "mean_channel_difference": 0.015407836960672012,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "starMine-intact",
+      "variant": 0,
+      "reference": "80c55886a32c8b9dd023fc6ffc5016ecb4881b871e185fb55985ff808400e23a",
+      "candidate": "80c55886a32c8b9dd023fc6ffc5016ecb4881b871e185fb55985ff808400e23a",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "starMine-broken",
+      "variant": 1,
+      "reference": "34cccc7babad966c9f57c83d4d28d5116631a13a4fab8aeadf788b2a95dbbfcb",
+      "candidate": "f7d0e2f4dae8f3fa3b701a4df82dce73c00f42294a513a0c24d81681f6299034",
+      "max_channel_difference": 2,
+      "changed_channels": 179340,
+      "mean_channel_difference": 0.015285022227676867,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "starMine-broken",
+      "variant": 0,
+      "reference": "34cccc7babad966c9f57c83d4d28d5116631a13a4fab8aeadf788b2a95dbbfcb",
+      "candidate": "34cccc7babad966c9f57c83d4d28d5116631a13a4fab8aeadf788b2a95dbbfcb",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "moved",
+      "variant": 1,
+      "reference": "da02685fa7b92eaf75018f8593a56ec1aecb92f7f1493a84a41a1acc827850e7",
+      "candidate": "d06ed731709c3f5fe07c46e691bd3c04636b2e4168846d2f233b66baf34e5784",
+      "max_channel_difference": 1,
+      "changed_channels": 152611,
+      "mean_channel_difference": 0.013006855806469209,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "moved",
+      "variant": 0,
+      "reference": "da02685fa7b92eaf75018f8593a56ec1aecb92f7f1493a84a41a1acc827850e7",
+      "candidate": "da02685fa7b92eaf75018f8593a56ec1aecb92f7f1493a84a41a1acc827850e7",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    }
+  ],
+  "captures": [
+    "emberMine-intact-0-w0",
+    "emberMine-intact-1-w1",
+    "emberMine-intact-2-w0",
+    "moved-0-w0",
+    "moved-1-w1",
+    "moved-2-w0"
+  ],
+  "physical_iphone_verified": false,
+  "scope": "QA fixed-light precomposition; audited occupancy revision in both modes; native resolution. Quantization differences recorded and require visual review. No release."
+}

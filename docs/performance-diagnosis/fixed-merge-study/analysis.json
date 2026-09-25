@@ -1,0 +1,139 @@
+{
+  "source": "aa3b87ffd79130d0796aed6592d8f6a02f9a6481",
+  "run": 36110170882,
+  "decision": "Reject production integration: no repeatable total FPS gain; no phone claim.",
+  "repeats": [
+    {
+      "repeat": 1,
+      "checks": 118,
+      "end_state_validation": true,
+      "field": {
+        "bake_usec": 87000,
+        "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+        "density": 2,
+        "normalization": 2,
+        "ready": true,
+        "sources": 2,
+        "texture_size": "(2108.0, 1368.0)"
+      },
+      "modes": {
+        "0": {
+          "weighted_fps": 44.85812694767919,
+          "windows": [
+            {
+              "index": 0,
+              "fps": 50.16999751223153,
+              "p95": 29,
+              "max": 67
+            },
+            {
+              "index": 3,
+              "fps": 48.53972915646925,
+              "p95": 31,
+              "max": 75
+            },
+            {
+              "index": 5,
+              "fps": 35.95597227884223,
+              "p95": 41,
+              "max": 82
+            }
+          ]
+        },
+        "1": {
+          "weighted_fps": 44.59817888490881,
+          "windows": [
+            {
+              "index": 1,
+              "fps": 43.669904497592036,
+              "p95": 34,
+              "max": 328
+            },
+            {
+              "index": 2,
+              "fps": 44.34681697612732,
+              "p95": 37,
+              "max": 87
+            },
+            {
+              "index": 4,
+              "fps": 45.773498694516974,
+              "p95": 32,
+              "max": 53
+            }
+          ]
+        }
+      },
+      "change_percent": -0.5794893377371046,
+      "exact_restorations": 9,
+      "candidate_pairs": 9,
+      "max_candidate_channel_difference": 2
+    },
+    {
+      "repeat": 2,
+      "checks": 118,
+      "end_state_validation": true,
+      "field": {
+        "bake_usec": 114000,
+        "bounds": "[P: (678.0, 188.0), S: (1054.0, 684.0)]",
+        "density": 2,
+        "normalization": 2,
+        "ready": true,
+        "sources": 2,
+        "texture_size": "(2108.0, 1368.0)"
+      },
+      "modes": {
+        "0": {
+          "weighted_fps": 42.22931500122759,
+          "windows": [
+            {
+              "index": 1,
+              "fps": 34.13276581812229,
+              "p95": 43,
+              "max": 770
+            },
+            {
+              "index": 2,
+              "fps": 44.19212546969449,
+              "p95": 34,
+              "max": 56
+            },
+            {
+              "index": 4,
+              "fps": 48.36858501393671,
+              "p95": 30,
+              "max": 59
+            }
+          ]
+        },
+        "1": {
+          "weighted_fps": 42.82584884994523,
+          "windows": [
+            {
+              "index": 0,
+              "fps": 35.096310806398954,
+              "p95": 43,
+              "max": 60
+            },
+            {
+              "index": 3,
+              "fps": 47.5566833101416,
+              "p95": 35,
+              "max": 93
+            },
+            {
+              "index": 5,
+              "fps": 45.888308024230355,
+              "p95": 34,
+              "max": 44
+            }
+          ]
+        }
+      },
+      "change_percent": 1.4126060266435703,
+      "exact_restorations": 9,
+      "candidate_pairs": 9,
+      "max_candidate_channel_difference": 2
+    }
+  ]
+}
