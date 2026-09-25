@@ -88,6 +88,7 @@ try{
  check('apple-gpu',process.platform==='darwin'&&/Apple|Metal/.test(runtime.renderer),{runtime});
  for(const [index,v] of [0,1,0].entries()){
   await command('setup',{mine:'emberMine',cached:true,durable:true});await wait('native',s=>s?.native?.active&&s.native.updates>3);await width(v);await delay(1000);
+  await page.evaluate(()=>window.__gpuMeter.begin());await delay(1000);const gpu=await page.evaluate(()=>window.__gpuMeter.stop());const rendered=gpu.counts.checkFramebufferStatus,expected=v===1?2:4;check('actual-sync-'+index,rendered>10&&gpu.counts.fenceSync===expected*rendered&&gpu.counts.getSyncParameter===expected*rendered,{gpu});
   let ui=await state();check('journal-starts-closed-'+index,!ui.light_cost.journal_open);
   await page.touchscreen.tap(ui.light_cost.ui_button[0]/ui.viewport[0]*776,ui.light_cost.ui_button[1]/ui.viewport[1]*420);
   await wait('journal opens by touch',s=>s.light_cost.journal_open);check('journal-opens-'+index,true);
@@ -95,11 +96,11 @@ try{
    await width(v);ui=await state();const point=ui.light_cost.ui_tabs[tabIndex];
    await page.touchscreen.tap(point[0]/ui.viewport[0]*776,point[1]/ui.viewport[1]*420);
    await wait('journal tab '+tab,s=>s.light_cost.journal_tab===tab);check('tab-'+index+'-'+tab,true);await delay(800);
-   await command('freeze');await parity('journal-'+index+'-'+tab,v===1);await command('unfreeze');
+   await page.mouse.move(775,419);await delay(300);await command('freeze');await parity('journal-'+index+'-'+tab,true);await command('unfreeze');
   }
   await width(v);ui=await state();await page.touchscreen.tap(ui.light_cost.ui_close[0]/ui.viewport[0]*776,ui.light_cost.ui_close[1]/ui.viewport[1]*420);
   await wait('journal closes by touch',s=>!s.light_cost.journal_open);check('journal-closes-'+index,true);
-  await command('freeze');await parity('closed-'+index,index===1);await command('unfreeze');await width(0);
+  await command('freeze');await parity('closed-'+index,true);await command('unfreeze');await width(0);
  }
  check('no-script-errors',!messages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)));
 }catch(e){failed=String(e);console.error(e);}finally{
