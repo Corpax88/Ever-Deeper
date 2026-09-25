@@ -1,0 +1,9 @@
+# Integrated CPU/native candidate — validation in progress, not public
+
+2026-09-25. Combines the retained production occupancy-revision patch with guarded native empty2D-canvas removal. No UI consolidation. All original engine/assets/resources kept; explicit script-remap append only, original resource digest checks required. Version remainsDEV15.9 because this is an isolated validation package, not a release.
+
+First source d1a01e9c167f380edeac91a6353f5e36d98426b1/run36114467481 passed pack verification (1391 original resources untouched) but all six core cases stopped on a preload resolution error in original player_visual.gdc: native_worn_visual_integrated.gd could not resolve. No browser gate ran. Candidate10854755588; build10854440920,4105bytes verified ZIP. Direct targeted check-only of that appended native script, source2acbee61/run36114710011, emitted no parse error. Do not claim this proves the helper alone caused or solved the loading error.
+
+Bounded recovery86ae743f6e0930be33ae55e1a936cedfa16c4855 remaps only the immediate preload owner player_visual.gd to its unmodified raw source. This source was fetched from original export c63aabd3e3e5120579285ce6e8b0b59a75f2727a and compared byte-for-byte with the candidate source: identical13834characters. Existing compiled bytecode/resources remain preserved. If failure moves, follow the concrete dependency; avoid blind blanket rewriting.
+
+Native lifecycle gate observes automatic production counts before any QA flag override and requires3 synchronization pairs per rendered frame. Explicit frozen reference/candidate/restored pairs require exact images and4/3/4 pairs across eight tools and worlds. Additional in-place gear sequence verifies unchanged generation and increasing update count; drill-to-worn, pause/resume and inactive-world ownership are tested. Six core cases and ordinary WebKit startup/save are required. No physical phone acceptance or published change.

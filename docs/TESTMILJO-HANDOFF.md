@@ -1,3 +1,14 @@
+
+
+## FPS continuation checkpoint — 25 September 2026, 08:50 UTC
+
+Mats asks to continue autonomously until solved; do not end with another permission request. Public DEV15.9/c63aabd is unchanged. Empty-native-canvas trial96e3519/run36111698762: all36 full-image pairs exact, synchronization4→3; mixed FPS50.090→51.747 and59.899→59.965, no strong phone fix. Revised production lifecycle guard also rechecks/re-enables2D at gear changes.
+
+Combined UI trial07edde2/run36112848069 preserves36 frozen pairs, synchronization4→2, weightedFPS50.067→52.619 and59.730→59.815. Both raw runs failed a WRONG commerce-panel predicate; the actual companion journal is separate. Corrected journal test36449d6/run36114525488 confirms original real-touch opening but reveals a journal image difference (max177). Narrow actual-image capture25b1157/run36115000765 now running; do not call this an input regression or accepted UI implementation.
+
+Integrated occupancy+native candidate86ae743/run36114997717 now validating. First d1a01e9 failed preload resolution through compiled player_visual; direct appended-script check-only had no error. Recovery uses byte-identical player_visual source verified against original c63aabd, changing only its remap. Preserve current assets/quality, all real lifecycle gates, and all outliers. See docs/performance-diagnosis/integrated-candidate/HANDOFF.md.
+
+Final Safari attemptee2e225/run36112922230 failed native-session transport before opening the game; actual screenshot is iOS home. Zero valid phone/Simulator FPS windows. Earlier page context-loss evidence remains separate. Do not blindly repeat this environment route. Full source, raw reports, failed gates and limitations are in docs/performance-diagnosis/{empty-canvas-study,ui-canvas-study,safari-fps}.
 ## Pågående FPS-arbeid 25.09: synkroniseringsprofil og tomt tegnesteg
 
 Fastlysfelt er forkastet; se forrige checkpoint. Ny renderprofil525a55be/run36111016427 er ferdig:91kontroller,8vinduer, firefenceSync/getSyncParameter perramme også utenlys. Instrumentering koster målbart og GL-veggtid er ikke GPU-tid. Se docs/performance-diagnosis/render-profile/HANDOFF.md. Nå testes kun å hoppe over tom2D-canvas i eksisterende3D-only NativeRig200px: codex/empty-canvas-study-20260925,96e3519ef2f470310379125250959c908f750379,run36111698762. Eksaktebilder og faktisk færre synkroniseringskall kreves; ingen endring avnativefiler/figur/lys/UI/oppløsning.

@@ -1,0 +1,2513 @@
+{
+  "passed": true,
+  "error": null,
+  "attempts": [
+    {
+      "stage": "fresh",
+      "variant": 0,
+      "touchOpen": false,
+      "before": {
+        "error": "",
+        "fixture": "lightmode",
+        "id": 2,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": false,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@452",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@454",
+              "shadow": false
+            }
+          ],
+          "mode": "baseline",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@634/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": -1,
+          "rebuilds": 3,
+          "refresh_calls": 111,
+          "refresh_usec": 3000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": false,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": false,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 1,
+          "motion": {
+            "age": 2.53333333333333,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.703703703703705,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 132
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 54000,
+          "draw_callbacks": 148,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 138,
+          "setup_usec": 14000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      },
+      "afterTouch": {
+        "error": "",
+        "fixture": "lightmode",
+        "id": 2,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": false,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@452",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@454",
+              "shadow": false
+            }
+          ],
+          "mode": "baseline",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@634/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": -1,
+          "rebuilds": 3,
+          "refresh_calls": 261,
+          "refresh_usec": 10000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": false,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": false,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 1,
+          "motion": {
+            "age": 5.39999999999999,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.500000000000003,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 282
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 54000,
+          "draw_callbacks": 148,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 138,
+          "setup_usec": 14000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      },
+      "mouseOpen": false,
+      "afterMouse": {
+        "error": "",
+        "fixture": "lightmode",
+        "id": 2,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": false,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@452",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@454",
+              "shadow": false
+            }
+          ],
+          "mode": "baseline",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@634/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": -1,
+          "rebuilds": 3,
+          "refresh_calls": 409,
+          "refresh_usec": 11000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": false,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": false,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 1,
+          "motion": {
+            "age": 7.86666666666664,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.18518518518519,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 430
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 54000,
+          "draw_callbacks": 148,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 138,
+          "setup_usec": 14000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      }
+    },
+    {
+      "stage": "fresh",
+      "variant": 1,
+      "touchOpen": false,
+      "before": {
+        "error": "",
+        "fixture": "lightmode",
+        "id": 4,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": true,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@783",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@785",
+              "shadow": false
+            }
+          ],
+          "mode": "no_empty_2d",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@786/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": 0,
+          "rebuilds": 3,
+          "refresh_calls": 109,
+          "refresh_usec": 4000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": true,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": true,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 2,
+          "motion": {
+            "age": 2.25261533333333,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.625726481481482,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 587
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 58000,
+          "draw_callbacks": 291,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 276,
+          "setup_usec": 17000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      },
+      "afterTouch": {
+        "error": "",
+        "fixture": "lightmode",
+        "id": 4,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": true,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@783",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@785",
+              "shadow": false
+            }
+          ],
+          "mode": "no_empty_2d",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@786/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": 0,
+          "rebuilds": 3,
+          "refresh_calls": 230,
+          "refresh_usec": 10000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": true,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": true,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 2,
+          "motion": {
+            "age": 4.91759844444444,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.365999567901236,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 708
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 58000,
+          "draw_callbacks": 291,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 276,
+          "setup_usec": 17000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      },
+      "mouseOpen": false,
+      "afterMouse": {
+        "error": "",
+        "fixture": "lightmode",
+        "id": 4,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": true,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@783",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@785",
+              "shadow": false
+            }
+          ],
+          "mode": "no_empty_2d",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@786/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": 0,
+          "rebuilds": 3,
+          "refresh_calls": 384,
+          "refresh_usec": 15000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": true,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": true,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 2,
+          "motion": {
+            "age": 7.65254866666665,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.125707962962966,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 862
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 58000,
+          "draw_callbacks": 291,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 276,
+          "setup_usec": 17000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      }
+    },
+    {
+      "stage": "fresh",
+      "variant": 0,
+      "touchOpen": false,
+      "before": {
+        "error": "",
+        "fixture": "lightmode",
+        "id": 6,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": false,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@922",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@924",
+              "shadow": false
+            }
+          ],
+          "mode": "baseline",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@925/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": -1,
+          "rebuilds": 3,
+          "refresh_calls": 105,
+          "refresh_usec": 5000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": false,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": false,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 3,
+          "motion": {
+            "age": 2.2385,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.621805555555556,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 1019
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 61000,
+          "draw_callbacks": 434,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 414,
+          "setup_usec": 26000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      },
+      "afterTouch": {
+        "error": "",
+        "fixture": "lightmode",
+        "id": 6,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": false,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@922",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@924",
+              "shadow": false
+            }
+          ],
+          "mode": "baseline",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@925/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": -1,
+          "rebuilds": 3,
+          "refresh_calls": 235,
+          "refresh_usec": 11000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": false,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": false,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 3,
+          "motion": {
+            "age": 4.77383333333333,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.326064814814816,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 1149
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 61000,
+          "draw_callbacks": 434,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 414,
+          "setup_usec": 26000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      },
+      "mouseOpen": false,
+      "afterMouse": {
+        "error": "",
+        "fixture": "lightmode",
+        "id": 6,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": false,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@922",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@924",
+              "shadow": false
+            }
+          ],
+          "mode": "baseline",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@925/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": -1,
+          "rebuilds": 3,
+          "refresh_calls": 364,
+          "refresh_usec": 20000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": false,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": false,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 3,
+          "motion": {
+            "age": 7.50316666666666,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.0842129629629636,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 1278
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 61000,
+          "draw_callbacks": 434,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 414,
+          "setup_usec": 26000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      }
+    },
+    {
+      "stage": "after-freeze",
+      "variant": 0,
+      "touchOpen": false,
+      "before": {
+        "error": "",
+        "fixture": "unfreeze",
+        "id": 10,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": false,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@1061",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@1063",
+              "shadow": false
+            }
+          ],
+          "mode": "baseline",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@1064/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": -1,
+          "rebuilds": 3,
+          "refresh_calls": 142,
+          "refresh_usec": 9000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": false,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": false,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 4,
+          "motion": {
+            "age": 3.23930066666666,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.899805740740742,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 1469
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 66000,
+          "draw_callbacks": 577,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 552,
+          "setup_usec": 30000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      },
+      "afterTouch": {
+        "error": "",
+        "fixture": "unfreeze",
+        "id": 10,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": false,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@1061",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@1063",
+              "shadow": false
+            }
+          ],
+          "mode": "baseline",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@1064/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": -1,
+          "rebuilds": 3,
+          "refresh_calls": 266,
+          "refresh_usec": 13000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": false,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": false,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 4,
+          "motion": {
+            "age": 6.02394066666666,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.673316851851853,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 1593
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 66000,
+          "draw_callbacks": 577,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 552,
+          "setup_usec": 30000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      },
+      "mouseOpen": false,
+      "afterMouse": {
+        "error": "",
+        "fixture": "unfreeze",
+        "id": 10,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": false,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@1061",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@1063",
+              "shadow": false
+            }
+          ],
+          "mode": "baseline",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@1064/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": -1,
+          "rebuilds": 3,
+          "refresh_calls": 367,
+          "refresh_usec": 18000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": false,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": false,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 4,
+          "motion": {
+            "age": 8.54594066666666,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.373872407407409,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 1694
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 66000,
+          "draw_callbacks": 577,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 552,
+          "setup_usec": 30000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      }
+    },
+    {
+      "stage": "after-freeze",
+      "variant": 1,
+      "touchOpen": false,
+      "before": {
+        "error": "",
+        "fixture": "unfreeze",
+        "id": 14,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": true,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@1200",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@1202",
+              "shadow": false
+            }
+          ],
+          "mode": "no_empty_2d",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@1203/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": 0,
+          "rebuilds": 3,
+          "refresh_calls": 123,
+          "refresh_usec": 12000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": true,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": true,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 5,
+          "motion": {
+            "age": 3.02284920634921,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.839680335097001,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 1850
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 70000,
+          "draw_callbacks": 720,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 690,
+          "setup_usec": 36000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      },
+      "afterTouch": {
+        "error": "",
+        "fixture": "unfreeze",
+        "id": 14,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": true,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@1200",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@1202",
+              "shadow": false
+            }
+          ],
+          "mode": "no_empty_2d",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@1203/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": 0,
+          "rebuilds": 3,
+          "refresh_calls": 250,
+          "refresh_usec": 15000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": true,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": true,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 5,
+          "motion": {
+            "age": 5.75018253968253,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.597272927689595,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 1977
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 70000,
+          "draw_callbacks": 720,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 690,
+          "setup_usec": 36000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      },
+      "mouseOpen": false,
+      "afterMouse": {
+        "error": "",
+        "fixture": "unfreeze",
+        "id": 14,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": true,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@1200",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@1202",
+              "shadow": false
+            }
+          ],
+          "mode": "no_empty_2d",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@1203/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": 0,
+          "rebuilds": 3,
+          "refresh_calls": 393,
+          "refresh_usec": 23000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": true,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": true,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 5,
+          "motion": {
+            "age": 8.28151587301587,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.300421075837744,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 2120
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 70000,
+          "draw_callbacks": 720,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 690,
+          "setup_usec": 36000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      }
+    },
+    {
+      "stage": "after-freeze",
+      "variant": 0,
+      "touchOpen": false,
+      "before": {
+        "error": "",
+        "fixture": "unfreeze",
+        "id": 18,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": false,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@1339",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@1341",
+              "shadow": false
+            }
+          ],
+          "mode": "baseline",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@1342/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": -1,
+          "rebuilds": 3,
+          "refresh_calls": 108,
+          "refresh_usec": 6000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": false,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": false,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 6,
+          "motion": {
+            "age": 3.01086888888889,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.836352469135803,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 2276
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 72000,
+          "draw_callbacks": 863,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 828,
+          "setup_usec": 39000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      },
+      "afterTouch": {
+        "error": "",
+        "fixture": "unfreeze",
+        "id": 18,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": false,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@1339",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@1341",
+              "shadow": false
+            }
+          ],
+          "mode": "baseline",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@1342/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": -1,
+          "rebuilds": 3,
+          "refresh_calls": 231,
+          "refresh_usec": 11000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": false,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": false,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 6,
+          "motion": {
+            "age": 5.81654555555556,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.615707098765432,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 2399
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 72000,
+          "draw_callbacks": 863,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 828,
+          "setup_usec": 39000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      },
+      "mouseOpen": false,
+      "afterMouse": {
+        "error": "",
+        "fixture": "unfreeze",
+        "id": 18,
+        "impact": 0,
+        "light_cost": {
+          "commerce_open": false,
+          "empty_2d_disabled": false,
+          "lights": [
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@1339",
+              "shadow": false
+            },
+            {
+              "enabled": true,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@1341",
+              "shadow": false
+            }
+          ],
+          "mode": "baseline",
+          "native_viewports": [
+            {
+              "canvas_items": 0,
+              "path": "Player/Visual/@Node2D@1342/NativeRig200px",
+              "size": "(400, 400)",
+              "update_mode": 4
+            }
+          ],
+          "occluders": 8,
+          "parking_update_mode": -1,
+          "rebuilds": 3,
+          "refresh_calls": 360,
+          "refresh_usec": 25000,
+          "ui_button": [
+            348,
+            78
+          ],
+          "ui_canvas_detached": false,
+          "ui_child_count": 3,
+          "ui_close": [
+            93.7405853271484,
+            62.0139846801758
+          ],
+          "ui_combined": false,
+          "ui_visible": true
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 6,
+          "motion": {
+            "age": 8.35221222222223,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.320058950617284,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 2528
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 72000,
+          "draw_callbacks": 863,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 828,
+          "setup_usec": 39000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      }
+    }
+  ],
+  "source_commit": "d41cc09fb5c356064ec3f31b8412635ff26c9881",
+  "baseline_source": "c63aabd3e3e5120579285ce6e8b0b59a75f2727a",
+  "version": "1.0.0-dev.15.9",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "518f3d7dc9fffd5463c2d660110c29e3f19216bfd99a3375e1aecd37a5b4977e"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 260327236,
+      "sha256": "2883ddbf99f7ec53c68ee3fabab1a1cb95b9d123687dc3ef79674172a84ee219"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "browser": "webkit",
+  "runtime": {
+    "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+    "dpr": 3
+  },
+  "checks": [
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    }
+  ],
+  "windows": [],
+  "pairs": [],
+  "captures": [],
+  "physical_iphone_verified": false,
+  "scope": "Targeted UI touch diagnosis only; no performance windows. QA skip native viewport empty 2D canvas and combine three CompanionInterface UI children into the existing HUD canvas. The original controller canvas is parked on a disabled 2x2 viewport. Exact reversal and image parity required; stationary performance screening, not UI lifecycle acceptance. All actor source/assets/animation, 3D rendering, world lights, HUD and resolution unchanged. Occupancy revision in both modes. Exact candidate image parity required. GL synchronization counts verify actual work reduction. No release."
+}
