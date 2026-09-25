@@ -1,5 +1,8 @@
 extends Node2D
 
+# Explicit QA varies this; ordinary production remains six cells.
+var terrain_strip_width: int = 6
+
 const LitFloorChunksScript = preload("res://scripts/lighting/lit_floor_chunks.gd")
 const LitDrawSectionsScript = preload("res://scripts/lighting/lit_draw_sections.gd")
 var lit_floor_chunks: Node2D
@@ -1881,15 +1884,15 @@ func _draw_partitioned_mine(start: Vector2i, finish: Vector2i) -> void:
 			discoveries.append([cavern_id, RunState.is_cavern_discovered(String(cavern_id))])
 		var base_revision: int = hash([terrain_draw_generation, discoveries])
 		for row in range(maxi(0, start.y), mini(rows - 1, finish.y) + 1):
-			for first_col in range(maxi(0, start.x), mini(cols - 1, finish.x) + 1, 6):
-				var last_col: int = mini(first_col + 5, mini(cols - 1, finish.x))
+			for first_col in range(maxi(0, start.x), mini(cols - 1, finish.x) + 1, terrain_strip_width):
+				var last_col: int = mini(first_col + terrain_strip_width - 1, mini(cols - 1, finish.x))
 				revisions[Vector2i(row, first_col)] = _terrain_strip_fingerprint(row, first_col, last_col, base_revision, cell_signatures)
 	# Keep the original four passes and row order. Bedrock still masks the
 	# overhanging mineable corners before concealed chambers are drawn.
 	for pass_index in 4:
 		for row in range(maxi(0, start.y), mini(rows - 1, finish.y) + 1):
-			for first_col in range(maxi(0, start.x), mini(cols - 1, finish.x) + 1, 6):
-				var last_col: int = mini(first_col + 5, mini(cols - 1, finish.x))
+			for first_col in range(maxi(0, start.x), mini(cols - 1, finish.x) + 1, terrain_strip_width):
+				var last_col: int = mini(first_col + terrain_strip_width - 1, mini(cols - 1, finish.x))
 				if _terrain_section_has_content(row, first_col, last_col, pass_index):
 					var paint: Callable = _draw_terrain_section.bind(row, first_col, last_col, pass_index)
 					if cache_terrain_draws:
