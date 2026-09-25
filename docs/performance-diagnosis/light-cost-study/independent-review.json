@@ -1,0 +1,81 @@
+{
+  "reviewer": "independent lighttest_review agent",
+  "workflow_run": 36096144264,
+  "verdict": "accept diagnostic evidence; no production lighting change justified",
+  "accepted": true,
+  "scope": "Mac WebKit diagnostic localization only",
+  "actual_images_inspected": true,
+  "evidence": {
+    "checks_per_repeat": 127,
+    "timing_windows_total": 42,
+    "exact_image_pairs_per_repeat": 3,
+    "intended_end_light_states_verified": true,
+    "files": [
+      {
+        "path": "webkit-1/hard_shadows.png",
+        "sha256": "90713134bc2d6811ca1c58def2f7732043e6a4eeedad3f0d490b9a63e59f7dda"
+      },
+      {
+        "path": "webkit-1/lights_off.png",
+        "sha256": "6488f5470e60010a6dcd949e5e3d0ec6bfb7e907da6eacb9762fc6460c65ba16"
+      },
+      {
+        "path": "webkit-1/no_shadows.png",
+        "sha256": "961e45c5dc188e5dcae8730ee5d21298b8d616be629b09f3e3d3d6cd68372921"
+      },
+      {
+        "path": "webkit-1/original.png",
+        "sha256": "ef79a288cc307305c845c1ca4dd07a8a32368b896b26cbeef90058bba011177d"
+      },
+      {
+        "path": "webkit-1/report.json",
+        "sha256": "c6f8b3f4c8dfe15e38eebf2a70774165c03dadf1e5dfd101bbf1af76cc23888a"
+      },
+      {
+        "path": "webkit-2/hard_shadows.png",
+        "sha256": "18e502cc96bebada065fd4529afb653a3ff982be1ce7460bca7bf0ea1d12e404"
+      },
+      {
+        "path": "webkit-2/lights_off.png",
+        "sha256": "802893fb18a9dd0af08b240fa6598b531091bd670026999c5bba2d7f3b88107e"
+      },
+      {
+        "path": "webkit-2/no_shadows.png",
+        "sha256": "23445d44842e6a7ae5ea5d319ef3ed2792a1beb5589f2153649cb94a0d6824f7"
+      },
+      {
+        "path": "webkit-2/original.png",
+        "sha256": "513e5d2dddfbdca539d63f369ea095bafc49a7b47b7f5fa903bcd0af4716e415"
+      },
+      {
+        "path": "webkit-2/report.json",
+        "sha256": "26666bec8bce5d7f2186a50945de6ed569d1bfa40198aba2a29532f30c510b19"
+      }
+    ]
+  },
+  "visual_findings": [
+    "Baseline, frozen occluders and restored comparisons are pixel-exact.",
+    "Companion artwork and HUD remain intact.",
+    "Disabling shadows visibly leaks light through terrain; disabling lights removes intended illumination. Neither is a lossless candidate."
+  ],
+  "localization": [
+    "Occlusion refresh costs approximately 0.94–1.02 ms per frame in baseline, with approximately 4.5 rebuilds per second while occupancy remains unchanged.",
+    "Refresh cost persists with all lights disabled.",
+    "Combined lighting has measurable cost in several windows, but the evidence does not establish the main remaining bottleneck or reliably rank lighting components.",
+    "Hard shadows provide only small gains; PCF alone is not established as the cause."
+  ],
+  "limitations": [
+    "Substantial order and timing drift; retain repeat-2 lights-off first-window 35.70 FPS outlier.",
+    "GPU timers unavailable; no GPU attribution.",
+    "Mac WebKit results do not establish physical phone cause or performance benefit.",
+    "Frozen occluders are a diagnostic condition, not safe general gameplay behavior."
+  ],
+  "next_trial": {
+    "accepted": true,
+    "candidate": "Guarded occupancy-keys signature trial",
+    "condition": "Apply only where solidity depends solely on blocks.has(cell), preserving other terrain branches and coverage/emitter invalidation.",
+    "validation": "Verify unchanged visuals and correct invalidation for value-only damage, insertion/deletion and equal-count key replacement; measure actual benefit.",
+    "caveat": "Keys allocation and hashing remain O(n); no performance gain assumed."
+  },
+  "production_change_approved": false
+}
