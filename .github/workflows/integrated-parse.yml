@@ -1,0 +1,26 @@
+name: Resolve integrated native script parse failure
+on:
+  push:
+    branches: [codex/integrated-candidate-20260925]
+    paths: ['.github/workflows/integrated-parse.yml']
+permissions: {contents: read, actions: read}
+jobs:
+  parse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with: {name: integrated-candidate, run-id: 36114467481, github-token: '${{ github.token }}', path: '${{ runner.temp }}/candidate'}
+      - name: Matching engine
+        run: |
+          curl -L --fail --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Direct native source parse
+        run: |
+          mkdir -p "$RUNNER_TEMP/parse"
+          Godot_v4.7.2-stable_linux.x86_64 --headless --main-pack "$RUNNER_TEMP/candidate/index.pck" --script res://scripts/player/native_worn_visual_integrated.gd --check-only > "$RUNNER_TEMP/parse/direct.log" 2>&1 || true
+          cat "$RUNNER_TEMP/parse/direct.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: integrated-parse, path: '${{ runner.temp }}/parse', retention-days: 90}
