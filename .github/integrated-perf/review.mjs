@@ -61,7 +61,7 @@ try{
  }
 }catch(e){failed=String(e.stack||e);console.error(failed);}
 finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.CANDIDATE_SOURCE,original_source:'c63aabd3e3e5120579285ce6e8b0b59a75f2727a',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'Actual unchanged DEV15.9 package versus integrated occupancy/native candidate. Fresh context per block, 30s held-mining warmup then three15s windows; balanced ABBA/BAAB across Mac workers. Full resolution/lighting/assets retained. Synchronization counters have equal observation cost, not GPU time. No UI consolidation.'},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.CANDIDATE_SOURCE,original_source:'c63aabd3e3e5120579285ce6e8b0b59a75f2727a',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'Actual unchanged DEV15.9 package versus integrated occupancy/native candidate. Fresh context per block, 30s held-mining warmup then three15s windows; balanced ABBA/BAAB across Mac workers. Full resolution/lighting/assets retained. Synchronization wrappers have the same overhead per call; the candidate makes fewer calls. This is not GPU time. Windows within a block are correlated. No UI consolidation.'},null,2));
  await browser.close();server.close();
 }
 if(failed)process.exitCode=1;
