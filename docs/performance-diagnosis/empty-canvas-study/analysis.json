@@ -1,0 +1,145 @@
+{
+  "source": "96e3519ef2f470310379125250959c908f750379",
+  "run": 36111698762,
+  "decision": "Retain verified redundant-pass removal; total FPS improvement is small/drifting or refresh-capped, not a phone fix.",
+  "repeats": [
+    {
+      "repeat": 1,
+      "checks": 96,
+      "exact_pairs": 18,
+      "weighted_fps": {
+        "0": 50.08998200359928,
+        "1": 51.7467248908297
+      },
+      "gain_percent": 3.307533404806118,
+      "native_viewports": [
+        {
+          "canvas_items": 0,
+          "path": "Player/Visual/@Node2D@1481/NativeRig200px",
+          "size": "(400, 400)",
+          "update_mode": 4
+        }
+      ],
+      "end_states_valid": true,
+      "windows": [
+        {
+          "index": 0,
+          "variant": 0,
+          "fps": 38.73181892466089,
+          "p95": 41,
+          "max": 60,
+          "sync_pairs_per_raf": 4
+        },
+        {
+          "index": 1,
+          "variant": 1,
+          "fps": 46.28871047026053,
+          "p95": 31,
+          "max": 375,
+          "sync_pairs_per_raf": 3
+        },
+        {
+          "index": 2,
+          "variant": 1,
+          "fps": 56.87397708674304,
+          "p95": 23,
+          "max": 35,
+          "sync_pairs_per_raf": 3
+        },
+        {
+          "index": 3,
+          "variant": 0,
+          "fps": 56.64398721206656,
+          "p95": 23,
+          "max": 32,
+          "sync_pairs_per_raf": 4
+        },
+        {
+          "index": 4,
+          "variant": 1,
+          "fps": 52.07139348288849,
+          "p95": 28,
+          "max": 54,
+          "sync_pairs_per_raf": 3
+        },
+        {
+          "index": 5,
+          "variant": 0,
+          "fps": 54.91542044618779,
+          "p95": 24,
+          "max": 37,
+          "sync_pairs_per_raf": 4
+        }
+      ]
+    },
+    {
+      "repeat": 2,
+      "checks": 96,
+      "exact_pairs": 18,
+      "weighted_fps": {
+        "0": 59.89867073436478,
+        "1": 59.965015852191975
+      },
+      "gain_percent": 0.11076225400963313,
+      "native_viewports": [
+        {
+          "canvas_items": 0,
+          "path": "Player/Visual/@Node2D@1481/NativeRig200px",
+          "size": "(400, 400)",
+          "update_mode": 4
+        }
+      ],
+      "end_states_valid": true,
+      "windows": [
+        {
+          "index": 0,
+          "variant": 1,
+          "fps": 59.99508237029752,
+          "p95": 19,
+          "max": 21,
+          "sync_pairs_per_raf": 3
+        },
+        {
+          "index": 1,
+          "variant": 0,
+          "fps": 59.995142093757586,
+          "p95": 18,
+          "max": 19,
+          "sync_pairs_per_raf": 4
+        },
+        {
+          "index": 2,
+          "variant": 0,
+          "fps": 59.996717005909396,
+          "p95": 19,
+          "max": 23,
+          "sync_pairs_per_raf": 4
+        },
+        {
+          "index": 3,
+          "variant": 1,
+          "fps": 59.99508237029752,
+          "p95": 18,
+          "max": 20,
+          "sync_pairs_per_raf": 3
+        },
+        {
+          "index": 4,
+          "variant": 0,
+          "fps": 59.70271823930361,
+          "p95": 19,
+          "max": 32,
+          "sync_pairs_per_raf": 4
+        },
+        {
+          "index": 5,
+          "variant": 1,
+          "fps": 59.90480879698014,
+          "p95": 19,
+          "max": 32,
+          "sync_pairs_per_raf": 3
+        }
+      ]
+    }
+  ]
+}

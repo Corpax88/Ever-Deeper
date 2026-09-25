@@ -1,0 +1,15 @@
+# Empty native viewport canvas — redundant pass removed, FPS fix not established
+
+2026-09-25. Source96e3519ef2f470310379125250959c908f750379, branch codex/empty-canvas-study-20260925, run36111698762. Candidate10853785981, build10853621493, WebKit1 evidence10853382482 (27513675bytes), WebKit2 10852794921 (27481033bytes). Both downloaded ZIP sizes and integrity verified. Original DEV15.9 package/resources retained; QA changes reuse separately audited occupancy revision.
+
+The active hero's existing NativeRig200px viewport is actually400×400, UPDATE_ALWAYS, with zero CanvasItem descendants. Only its empty2D canvas pass is disabled through RenderingServer.viewport_set_disable_2d; its3D renderer, asset files, animation, lights, MSAA, texture size and visible output are preserved. No shader/light/resolution change. Both modes retain six world lights and the occupancy CPU improvement.
+
+Three exported core cases passed. Two Mac15/AppleGPU/WebKit26.5 workers at2328×1260/DPR3 passed96 checks each. All36 full-image pairs (candidate and restored across four mines/intact/broken and moved view) were exactly equal. All12 retained PNGs independently inspected. End-state audit confirms identical viewport path/size/update mode and full light path/shadow/filter/enabled inventories in every timing window. Native rig continues updating; no credit is taken for suppressing the actor.
+
+Actual behavioral result: every baseline RAF records4 fenceSync and4 getSyncParameter calls; every candidate RAF records3 of each. This corroborates the server flag's effect instead of merely trusting helper intent. No GPU elapsed-time claim. checkFramebufferStatus remains once per frame.
+
+Twelve12-second mining windows: repeat1 weightedFPS50.090→51.747 (+3.31%); repeat2 59.899→59.965 (+0.11%, both near refresh ceiling). Repeat1 has strong drift: baseline38.73/56.64/54.92; candidate46.29/56.87/52.07. Keep the candidate375ms spike. Paired p95 is mixed. Therefore retain this concrete removal of redundant work, but do not call it a stable total-FPS or phone fix. Do not repeat unchanged tests merely to accumulate passes.
+
+Production integration is not applied. QA lookup assumes this known3D-only viewport, baseline disable_2d=false and no external canvas attachments. A production integration must live at viewport construction/lifecycle and preserve the3D-only invariant. See raw reports, analysis.json and independent-review.json.
+
+Next distinct combined screen: codex/ui-canvas-study-20260925, d01246df3fa773b168516e21a3eaf2c059cb7cb4. It adds consolidation of the three CompanionInterface UI children under the existing HUD, retaining the original controller while parking its empty canvas in a disabled2×2 viewport. Combined A/B expects4→2 sync pairs, not an isolated3→2 UI-effect claim. Requires exact images, reversibility, actual Skills open/close touches and parked viewport UPDATE_DISABLED. This remains a stationary QA prototype, not general menu/transition acceptance or publication.
