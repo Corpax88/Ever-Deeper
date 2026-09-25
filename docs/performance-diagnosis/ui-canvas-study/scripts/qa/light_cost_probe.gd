@@ -4,7 +4,7 @@ var native_viewports: Array[SubViewport] = []
 var empty_2d_disabled: bool = false
 var ui: CanvasLayer
 var hud: CanvasLayer
-var ui_group: Node2D
+var ui_group: Control
 var parked: SubViewport
 var original_custom_viewport: Node
 var ui_children: Array[Node] = []
@@ -95,11 +95,13 @@ func _select_ui(value: bool) -> void:
 		assert(ui_children.size() == 3 and ui.transform == hud.transform)
 		assert(not ui.follow_viewport_enabled and not hud.follow_viewport_enabled)
 		assert(original_custom_viewport == null and hud.custom_viewport == null)
-		ui_group = Node2D.new()
+		ui_group = Control.new()
 		ui_group.name = "QASharedCompanionUI"
 		ui_group.z_index = 4095
 		ui_group.visible = ui.visible
+		ui_group.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		hud.add_child(ui_group)
+		ui_group.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		for child in ui_children: child.reparent(ui_group, false)
 		# Preserve the controller node/API while removing its now-empty canvas from the live viewport.
 		parked = SubViewport.new()

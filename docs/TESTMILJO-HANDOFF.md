@@ -1,3 +1,5 @@
+Latest follow-up: [actual original-package comparison](docs/performance-diagnosis/integrated-perf/HANDOFF.md). 676e122/run36116139795: two Mac Apple/WebKit workers passed48 checks each/24 windows total, exact original DEV15.9 versus production CPU/native candidate981dfb6. Weighted FPS45.000→47.513(+5.58%) and34.335→38.402(+11.85%); strong drift, mixed p95 and worker1 slowframes205→259/321ms candidate stall. Useful aggregate improvement, not a consistent stutter fix or physical-iPhone acceptance. Native184checks/26 exact pairs and ordinary saved-game screenshots independently reviewed on94f3302;981 changes only QA inheritance pack path, its six core and browser jobs passed. Corrected journal prototype47576 passed125checks/24 exact pairs/36 inspected PNG. Clean production shared-HUD candidate4f27644/run36116844019 is testing real input/resize/Deepheart/reload; not accepted. Public DEV15.9 unchanged. Continue authorized work; no phone retest yet. Do not repeat unchanged completed matrices.
+
 
 
 ## FPS continuation checkpoint — 25 September 2026, 08:50 UTC

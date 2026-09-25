@@ -1,0 +1,140 @@
+{
+  "passed": false,
+  "error": "Error: Runtime menu\n    at wait (file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/integrated-perf/review.mjs:44:309)\n    at async file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/integrated-perf/review.mjs:47:121",
+  "source_commit": "9dd26bf6be9a519e01a9e9733b58fa48e3657ce4",
+  "candidate_source": "94f3302051b6f8662c3606a3695697094795b5c4",
+  "original_source": "c63aabd3e3e5120579285ce6e8b0b59a75f2727a",
+  "repeat": "2",
+  "files": {
+    "original": {
+      "index.html": {
+        "size": 13155,
+        "sha256": "dfe9be9356ac3fbcdde1569b59aceab113544ab830bd04a1180d3e7cff99548c"
+      },
+      "index.js": {
+        "size": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      },
+      "index.pck": {
+        "size": 259869616,
+        "sha256": "03949e6389aba536a0ff96ebd74a53c2ba73197c0b7d56ef7a9d5eff7948aeae"
+      },
+      "index.wasm": {
+        "size": 39514754,
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      },
+      "index.png": {
+        "size": 1981427,
+        "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+      },
+      "index.icon.png": {
+        "size": 470687,
+        "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+      },
+      "index.apple-touch-icon.png": {
+        "size": 66421,
+        "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+      },
+      "index.audio.worklet.js": {
+        "size": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "index.audio.position.worklet.js": {
+        "size": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      }
+    },
+    "candidate": {
+      "index.html": {
+        "size": 13155,
+        "sha256": "d9bbd4f09ff5bfc1bd1d2afb64ea5f9d1cfde8a088a0971103fb1cc36dba954e"
+      },
+      "index.js": {
+        "size": 279815,
+        "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+      },
+      "index.pck": {
+        "size": 260335160,
+        "sha256": "13f9f9048e0cb0431653d0ae1a67064aa50ef10528903eede0ffb9ce4dc9577f"
+      },
+      "index.wasm": {
+        "size": 39514754,
+        "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+      },
+      "index.png": {
+        "size": 1981427,
+        "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+      },
+      "index.icon.png": {
+        "size": 470687,
+        "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+      },
+      "index.apple-touch-icon.png": {
+        "size": 66421,
+        "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+      },
+      "index.audio.worklet.js": {
+        "size": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "index.audio.position.worklet.js": {
+        "size": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      }
+    }
+  },
+  "order": [
+    "candidate",
+    "original",
+    "original",
+    "candidate"
+  ],
+  "runtimes": [],
+  "checks": [],
+  "windows": [],
+  "captures": [],
+  "messages": [
+    {
+      "block": 0,
+      "side": "candidate",
+      "message": "log: Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org"
+    },
+    {
+      "block": 0,
+      "side": "candidate",
+      "message": "warning: WebGL: non-portable extension enabled: WEBGL_polygon_mode"
+    },
+    {
+      "block": 0,
+      "side": "candidate",
+      "message": "log: OpenGL API OpenGL ES 3.0 (WebGL 2.0) - Compatibility - Using Device: WebKit - WebKit WebGL"
+    },
+    {
+      "block": 0,
+      "side": "candidate",
+      "message": "log: Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+    },
+    {
+      "block": 0,
+      "side": "candidate",
+      "message": "error: SCRIPT ERROR: Compile Error: Could not find class \"res://scripts/qa/suites/dev14_review.gd\" in \"res://scripts/qa/suites/dev14_review.gd\"."
+    },
+    {
+      "block": 0,
+      "side": "candidate",
+      "message": "error:    at: GDScript::reload (res://scripts/qa/suites/fps_review_integrated.gd:0)"
+    },
+    {
+      "block": 0,
+      "side": "candidate",
+      "message": "error: ERROR: Failed to load script \"res://scripts/qa/suites/fps_review.gd\" with error \"Compilation failed\"."
+    },
+    {
+      "block": 0,
+      "side": "candidate",
+      "message": "error:    at: load (modules/gdscript/gdscript_resource_format.cpp:46)"
+    }
+  ],
+  "physical_iphone_verified": false,
+  "scope": "Actual unchanged DEV15.9 package versus integrated occupancy/native candidate. Fresh context per block, 30s held-mining warmup then three15s windows; balanced ABBA/BAAB across Mac workers. Full resolution/lighting/assets retained. Synchronization counters have equal observation cost, not GPU time. No UI consolidation."
+}

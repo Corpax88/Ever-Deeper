@@ -1,0 +1,285 @@
+{
+  "source_commit": "676e122777636c3f5e5e74c9bcc8088827e2e840",
+  "run": 36116139795,
+  "candidate_source": "981dfb6dbc361c54c7e1fbc799cbc5a886d0d597",
+  "workers": [
+    {
+      "repeat": "1",
+      "order": [
+        "original",
+        "candidate",
+        "candidate",
+        "original"
+      ],
+      "passed": true,
+      "checks": 48,
+      "blocks": [
+        {
+          "block": 0,
+          "side": "original",
+          "frames": 1832,
+          "seconds": 45.736000000000004,
+          "fps": 40.055973412629,
+          "slow_frames_over33ms": 171,
+          "p95_per_window": [
+            38,
+            37,
+            37
+          ],
+          "max_ms": 252,
+          "fps_per_window": [
+            38.295365278868815,
+            40.607807178412365,
+            41.27172195892575
+          ]
+        },
+        {
+          "block": 1,
+          "side": "candidate",
+          "frames": 1796,
+          "seconds": 45.772999999999996,
+          "fps": 39.237104843466675,
+          "slow_frames_over33ms": 238,
+          "p95_per_window": [
+            45,
+            51,
+            32
+          ],
+          "max_ms": 321,
+          "fps_per_window": [
+            34.13549568401779,
+            38.01284572027789,
+            45.58891151547001
+          ]
+        },
+        {
+          "block": 2,
+          "side": "candidate",
+          "frames": 2546,
+          "seconds": 45.612,
+          "fps": 55.81864421643427,
+          "slow_frames_over33ms": 21,
+          "p95_per_window": [
+            25,
+            24,
+            25
+          ],
+          "max_ms": 187,
+          "fps_per_window": [
+            56.198999736772834,
+            56.77860287835973,
+            54.477268241331664
+          ]
+        },
+        {
+          "block": 3,
+          "side": "original",
+          "frames": 2281,
+          "seconds": 45.663,
+          "fps": 49.952915927556234,
+          "slow_frames_over33ms": 34,
+          "p95_per_window": [
+            31,
+            28,
+            23
+          ],
+          "max_ms": 174,
+          "fps_per_window": [
+            46.711779777938375,
+            48.32884628012345,
+            54.821534214158945
+          ]
+        }
+      ],
+      "sides": {
+        "original": {
+          "frames": 4113,
+          "seconds": 91.399,
+          "fps": 45.0004923467434,
+          "slow_frames_over33ms": 205,
+          "p95_per_window": [
+            38,
+            37,
+            37,
+            31,
+            28,
+            23
+          ],
+          "max_ms": 252,
+          "fps_per_window": [
+            38.295365278868815,
+            40.607807178412365,
+            41.27172195892575,
+            46.711779777938375,
+            48.32884628012345,
+            54.821534214158945
+          ]
+        },
+        "candidate": {
+          "frames": 4342,
+          "seconds": 91.385,
+          "fps": 47.51326804180117,
+          "slow_frames_over33ms": 259,
+          "p95_per_window": [
+            45,
+            51,
+            32,
+            25,
+            24,
+            25
+          ],
+          "max_ms": 321,
+          "fps_per_window": [
+            34.13549568401779,
+            38.01284572027789,
+            45.58891151547001,
+            56.198999736772834,
+            56.77860287835973,
+            54.477268241331664
+          ]
+        }
+      },
+      "percent_fps_change": 5.583884895516289
+    },
+    {
+      "repeat": "2",
+      "order": [
+        "candidate",
+        "original",
+        "original",
+        "candidate"
+      ],
+      "passed": true,
+      "checks": 48,
+      "blocks": [
+        {
+          "block": 0,
+          "side": "candidate",
+          "frames": 1839,
+          "seconds": 45.661,
+          "fps": 40.27507062920216,
+          "slow_frames_over33ms": 134,
+          "p95_per_window": [
+            33,
+            35,
+            39
+          ],
+          "max_ms": 276,
+          "fps_per_window": [
+            42.909712182941256,
+            40.1630184710445,
+            37.75443204202232
+          ]
+        },
+        {
+          "block": 1,
+          "side": "original",
+          "frames": 1629,
+          "seconds": 45.702,
+          "fps": 35.64395431272155,
+          "slow_frames_over33ms": 249,
+          "p95_per_window": [
+            40,
+            42,
+            46
+          ],
+          "max_ms": 237,
+          "fps_per_window": [
+            37.41384968821792,
+            35.613378014324205,
+            33.90608604407136
+          ]
+        },
+        {
+          "block": 2,
+          "side": "original",
+          "frames": 1515,
+          "seconds": 45.867,
+          "fps": 33.03028321015109,
+          "slow_frames_over33ms": 349,
+          "p95_per_window": [
+            51,
+            46,
+            44
+          ],
+          "max_ms": 279,
+          "fps_per_window": [
+            32.27703364913427,
+            32.56880733944954,
+            34.243889687622534
+          ]
+        },
+        {
+          "block": 3,
+          "side": "candidate",
+          "frames": 1666,
+          "seconds": 45.61,
+          "fps": 36.52707739530805,
+          "slow_frames_over33ms": 199,
+          "p95_per_window": [
+            39,
+            41,
+            45
+          ],
+          "max_ms": 223,
+          "fps_per_window": [
+            37.29464758876524,
+            37.12205679805864,
+            35.17390449990175
+          ]
+        }
+      ],
+      "sides": {
+        "original": {
+          "frames": 3144,
+          "seconds": 91.569,
+          "fps": 34.33476394849785,
+          "slow_frames_over33ms": 598,
+          "p95_per_window": [
+            40,
+            42,
+            46,
+            51,
+            46,
+            44
+          ],
+          "max_ms": 279,
+          "fps_per_window": [
+            37.41384968821792,
+            35.613378014324205,
+            33.90608604407136,
+            32.27703364913427,
+            32.56880733944954,
+            34.243889687622534
+          ]
+        },
+        "candidate": {
+          "frames": 3505,
+          "seconds": 91.271,
+          "fps": 38.40212115567924,
+          "slow_frames_over33ms": 333,
+          "p95_per_window": [
+            33,
+            35,
+            39,
+            39,
+            41,
+            45
+          ],
+          "max_ms": 276,
+          "fps_per_window": [
+            42.909712182941256,
+            40.1630184710445,
+            37.75443204202232,
+            37.29464758876524,
+            37.12205679805864,
+            35.17390449990175
+          ]
+        }
+      },
+      "percent_fps_change": 11.846177865915797
+    }
+  ],
+  "physical_iphone_verified": false,
+  "scope": "Actual whole original package versus CPU/native candidate, not UI; correlated windows, balanced blocks, Mac Apple GPU/WebKit, count observer overhead not equal total."
+}

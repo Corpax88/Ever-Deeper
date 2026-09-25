@@ -1,3 +1,11 @@
+# Latest: corrected journal prototype passed, not production UI acceptance
+
+47576e2783c94a8307f41d2505578fc0628df9f7/run36115348089:125checks,24 pixel-exact pairs,36 independently viewed PNG; artifact10854762159,139251454bytes exact-size/ZIP verified. Real journal open/all3tabs/close works original/candidate/restored; sync4/2/4 per rendered frame. Candidate parent is now full-rect Control, fixing missing shade caused by prior Node2D parent. Neutral mouse position also prevents hover mismatch. No new FPS claim from this short journal gate. Prior07edde timing is separately retained with incorrect commerce predicate provenance; never relabel its failed report as passed.
+
+Clean production UI candidate4f27644cb5952dbf31644eff78b61e3648ae056f on codex/shared-ui-candidate-20260925, run36116844019 in progress: controller becomes Node, owned full-rect Control underHUD, no parking viewport. Deepheart visibility snapshot now includes this child exactly once. Tests actual touches/Escape/three resizes/inventory/pause/Deepheart restore/actual scene reload. Based on integrated981 CPU/native candidate; not public, not accepted yet.
+
+## Earlier checkpoint (historical)
+
 # Combined empty-native/UI canvas screen — partial evidence, corrected journal gate pending
 
 2026-09-25. QA source07edde2c2b748fe6b0e999b8abfafd01dd10879e, run36112848069. Exact immutable DEV15.9 resources with occupancy revision in both modes. Combined candidate disables the native viewport's empty2D canvas and reparents three CompanionInterface children under HUD; original empty layer is parked on a disabled2x2 viewport. This is a reversible QA prototype, not a general production UI implementation.
