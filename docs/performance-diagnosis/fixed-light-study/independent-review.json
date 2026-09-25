@@ -1,0 +1,2141 @@
+{
+  "reviewer": "independent lighttest_review agent",
+  "source_commit": "ef660efba2f17932069fa7cdd85e354fa2a549aa",
+  "verdict": "accept diagnostic evidence; fixed-light optimization hypothesis warrants bounded QA prototype",
+  "accepted": true,
+  "production_release_approved": false,
+  "actual_images_inspected": 8,
+  "repeat_results": [
+    {
+      "repeat": "fixed-light-webkit-1",
+      "checks": 135,
+      "all_checks_passed": true,
+      "all_end_inventories_valid": true,
+      "baseline_restoration_parity": [
+        {
+          "label": "baseline-unchanged-image",
+          "max": 0,
+          "changed": 0
+        },
+        {
+          "label": "restored-original",
+          "max": 0,
+          "changed": 0
+        }
+      ],
+      "weighted_fps": {
+        "baseline": 42.87901990811638,
+        "fixed_off": 48.31438651509212,
+        "headlamps_off": 49.44467830197843,
+        "lights_off": 51.79295797501217
+      },
+      "balanced_blocks": [
+        {
+          "block": 1,
+          "fps": {
+            "baseline": 46.65949329942287,
+            "fixed_off": 47.581827063996094,
+            "headlamps_off": 50.811022083251906,
+            "lights_off": 51.24450951683749
+          },
+          "fixed_off_minus_baseline_fps": 0.9223337645732244
+        },
+        {
+          "block": 2,
+          "fps": {
+            "fixed_off": 48.1283422459893,
+            "lights_off": 54.54190652746609,
+            "baseline": 47.07379134860051,
+            "headlamps_off": 53.6794846769471
+          },
+          "fixed_off_minus_baseline_fps": 1.0545508973887934
+        },
+        {
+          "block": 3,
+          "fps": {
+            "headlamps_off": 43.929635682014805,
+            "baseline": 34.926829268292686,
+            "lights_off": 49.60759616316248,
+            "fixed_off": 49.226578460939784
+          },
+          "fixed_off_minus_baseline_fps": 14.299749192647099
+        }
+      ],
+      "all_timing_windows": [
+        {
+          "index": 0,
+          "mode": "baseline",
+          "cpu": {
+            "max_ms": 23,
+            "mean_ms": 19.1153039832285,
+            "over_33_ms": 0,
+            "p95_ms": 23
+          },
+          "draw_calls": 179,
+          "frame": {
+            "max_ms": 79,
+            "mean_ms": 21.4318658280922,
+            "over_33_ms": 14,
+            "p95_ms": 30
+          },
+          "frames": 477,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "baseline",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 477,
+            "refresh_usec": 20000
+          },
+          "seconds": 10.223,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 177000,
+            "draw_callbacks": 1658,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 132,
+            "reuses": 32712,
+            "setup_usec": 835000
+          },
+          "impacts": 46,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 141193,
+            "values": []
+          }
+        },
+        {
+          "index": 1,
+          "mode": "fixed_off",
+          "cpu": {
+            "max_ms": 22,
+            "mean_ms": 18.4209445585216,
+            "over_33_ms": 0,
+            "p95_ms": 22
+          },
+          "draw_calls": 183,
+          "frame": {
+            "max_ms": 54,
+            "mean_ms": 21.0164271047228,
+            "over_33_ms": 10,
+            "p95_ms": 30
+          },
+          "frames": 487,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "fixed_off",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 487,
+            "refresh_usec": 15000
+          },
+          "seconds": 10.235,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 180000,
+            "draw_callbacks": 1683,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 135,
+            "reuses": 33123,
+            "setup_usec": 855000
+          },
+          "impacts": 45,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 144000,
+            "values": []
+          }
+        },
+        {
+          "index": 2,
+          "mode": "headlamps_off",
+          "cpu": {
+            "max_ms": 23,
+            "mean_ms": 17.575,
+            "over_33_ms": 0,
+            "p95_ms": 23
+          },
+          "draw_calls": 166,
+          "frame": {
+            "max_ms": 52,
+            "mean_ms": 19.6807692307692,
+            "over_33_ms": 7,
+            "p95_ms": 27
+          },
+          "frames": 520,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "headlamps_off",
+            "occluders": 0,
+            "rebuilds": 0,
+            "refresh_calls": 520,
+            "refresh_usec": 14000
+          },
+          "seconds": 10.234,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 217000,
+            "draw_callbacks": 1783,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 135,
+            "reuses": 35193,
+            "setup_usec": 912000
+          },
+          "impacts": 45,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 89091,
+            "values": []
+          }
+        },
+        {
+          "index": 3,
+          "mode": "lights_off",
+          "cpu": {
+            "max_ms": 447,
+            "mean_ms": 50.6952380952381,
+            "over_33_ms": 39,
+            "p95_ms": 447
+          },
+          "draw_calls": 157,
+          "frame": {
+            "max_ms": 460,
+            "mean_ms": 19.5142857142857,
+            "over_33_ms": 11,
+            "p95_ms": 27
+          },
+          "frames": 525,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "lights_off",
+            "occluders": 0,
+            "rebuilds": 0,
+            "refresh_calls": 525,
+            "refresh_usec": 15000
+          },
+          "seconds": 10.245,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 185000,
+            "draw_callbacks": 1777,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 129,
+            "reuses": 35199,
+            "setup_usec": 873000
+          },
+          "impacts": 44,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 84888,
+            "values": []
+          }
+        },
+        {
+          "index": 4,
+          "mode": "fixed_off",
+          "cpu": {
+            "max_ms": 25,
+            "mean_ms": 18.6275720164609,
+            "over_33_ms": 0,
+            "p95_ms": 25
+          },
+          "draw_calls": 183,
+          "frame": {
+            "max_ms": 47,
+            "mean_ms": 20.7777777777778,
+            "over_33_ms": 8,
+            "p95_ms": 29
+          },
+          "frames": 486,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "fixed_off",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 486,
+            "refresh_usec": 22000
+          },
+          "seconds": 10.098,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 176000,
+            "draw_callbacks": 1692,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 132,
+            "reuses": 33402,
+            "setup_usec": 836000
+          },
+          "impacts": 45,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 147300,
+            "values": []
+          }
+        },
+        {
+          "index": 5,
+          "mode": "lights_off",
+          "cpu": {
+            "max_ms": 20,
+            "mean_ms": 17.7066189624329,
+            "over_33_ms": 0,
+            "p95_ms": 20
+          },
+          "draw_calls": 157,
+          "frame": {
+            "max_ms": 60,
+            "mean_ms": 18.3345259391771,
+            "over_33_ms": 8,
+            "p95_ms": 26
+          },
+          "frames": 559,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "lights_off",
+            "occluders": 0,
+            "rebuilds": 0,
+            "refresh_calls": 559,
+            "refresh_usec": 19000
+          },
+          "seconds": 10.249,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 203000,
+            "draw_callbacks": 1891,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 135,
+            "reuses": 37401,
+            "setup_usec": 932000
+          },
+          "impacts": 46,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 90558,
+            "values": []
+          }
+        },
+        {
+          "index": 6,
+          "mode": "baseline",
+          "cpu": {
+            "max_ms": 30,
+            "mean_ms": 19.9355509355509,
+            "over_33_ms": 0,
+            "p95_ms": 30
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 56,
+            "mean_ms": 21.2432432432432,
+            "over_33_ms": 12,
+            "p95_ms": 31
+          },
+          "frames": 481,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "baseline",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 481,
+            "refresh_usec": 15000
+          },
+          "seconds": 10.218,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 187000,
+            "draw_callbacks": 1627,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 132,
+            "reuses": 32022,
+            "setup_usec": 844000
+          },
+          "impacts": 46,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 142190,
+            "values": []
+          }
+        },
+        {
+          "index": 7,
+          "mode": "headlamps_off",
+          "cpu": {
+            "max_ms": 28,
+            "mean_ms": 16.1418181818182,
+            "over_33_ms": 0,
+            "p95_ms": 28
+          },
+          "draw_calls": 166,
+          "frame": {
+            "max_ms": 51,
+            "mean_ms": 18.6290909090909,
+            "over_33_ms": 4,
+            "p95_ms": 26
+          },
+          "frames": 550,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "headlamps_off",
+            "occluders": 0,
+            "rebuilds": 0,
+            "refresh_calls": 550,
+            "refresh_usec": 6000
+          },
+          "seconds": 10.246,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 220000,
+            "draw_callbacks": 1896,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 135,
+            "reuses": 37677,
+            "setup_usec": 972000
+          },
+          "impacts": 45,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 93537,
+            "values": []
+          }
+        },
+        {
+          "index": 8,
+          "mode": "headlamps_off",
+          "cpu": {
+            "max_ms": 24,
+            "mean_ms": 19.8183807439825,
+            "over_33_ms": 0,
+            "p95_ms": 24
+          },
+          "draw_calls": 166,
+          "frame": {
+            "max_ms": 65,
+            "mean_ms": 22.7614879649891,
+            "over_33_ms": 23,
+            "p95_ms": 34
+          },
+          "frames": 457,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "headlamps_off",
+            "occluders": 0,
+            "rebuilds": 0,
+            "refresh_calls": 457,
+            "refresh_usec": 9000
+          },
+          "seconds": 10.403,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 207000,
+            "draw_callbacks": 1658,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 135,
+            "reuses": 32571,
+            "setup_usec": 1019000
+          },
+          "impacts": 47,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 76779,
+            "values": []
+          }
+        },
+        {
+          "index": 9,
+          "mode": "baseline",
+          "cpu": {
+            "max_ms": 37,
+            "mean_ms": 25.7178770949721,
+            "over_33_ms": 40,
+            "p95_ms": 37
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 65,
+            "mean_ms": 28.6284916201117,
+            "over_33_ms": 94,
+            "p95_ms": 47
+          },
+          "frames": 358,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "baseline",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 358,
+            "refresh_usec": 23000
+          },
+          "seconds": 10.25,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 222000,
+            "draw_callbacks": 1583,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 135,
+            "reuses": 31053,
+            "setup_usec": 1014000
+          },
+          "impacts": 46,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 106790,
+            "values": []
+          }
+        },
+        {
+          "index": 10,
+          "mode": "lights_off",
+          "cpu": {
+            "max_ms": 26,
+            "mean_ms": 20.078125,
+            "over_33_ms": 0,
+            "p95_ms": 26
+          },
+          "draw_calls": 157,
+          "frame": {
+            "max_ms": 60,
+            "mean_ms": 20.15625,
+            "over_33_ms": 30,
+            "p95_ms": 35
+          },
+          "frames": 512,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "lights_off",
+            "occluders": 0,
+            "rebuilds": 0,
+            "refresh_calls": 512,
+            "refresh_usec": 5000
+          },
+          "seconds": 10.321,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 218000,
+            "draw_callbacks": 1761,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 135,
+            "reuses": 34779,
+            "setup_usec": 964000
+          },
+          "impacts": 45,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 83268,
+            "values": []
+          }
+        },
+        {
+          "index": 11,
+          "mode": "fixed_off",
+          "cpu": {
+            "max_ms": 322,
+            "mean_ms": 51.8478260869565,
+            "over_33_ms": 103,
+            "p95_ms": 322
+          },
+          "draw_calls": 183,
+          "frame": {
+            "max_ms": 334,
+            "mean_ms": 20.3142292490119,
+            "over_33_ms": 13,
+            "p95_ms": 30
+          },
+          "frames": 506,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "fixed_off",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 506,
+            "refresh_usec": 15000
+          },
+          "seconds": 10.279,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 184000,
+            "draw_callbacks": 1709,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 129,
+            "reuses": 33681,
+            "setup_usec": 837000
+          },
+          "impacts": 45,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 151800,
+            "values": []
+          }
+        }
+      ],
+      "source_commit": "ef660efba2f17932069fa7cdd85e354fa2a549aa"
+    },
+    {
+      "repeat": "fixed-light-webkit-2",
+      "checks": 135,
+      "all_checks_passed": true,
+      "all_end_inventories_valid": true,
+      "baseline_restoration_parity": [
+        {
+          "label": "baseline-unchanged-image",
+          "max": 0,
+          "changed": 0
+        },
+        {
+          "label": "restored-original",
+          "max": 0,
+          "changed": 0
+        }
+      ],
+      "weighted_fps": {
+        "baseline": 47.19515747904056,
+        "fixed_off": 51.78035737576627,
+        "headlamps_off": 51.18997094446802,
+        "lights_off": 55.05811871194608
+      },
+      "balanced_blocks": [
+        {
+          "block": 1,
+          "fps": {
+            "lights_off": 53.789731051344745,
+            "headlamps_off": 53.96918849965655,
+            "fixed_off": 51.56555772994129,
+            "baseline": 51.31964809384164
+          },
+          "fixed_off_minus_baseline_fps": 0.2459096360996469
+        },
+        {
+          "block": 2,
+          "fps": {
+            "headlamps_off": 57.94831636648395,
+            "baseline": 49.551720813650824,
+            "lights_off": 55.65862708719852,
+            "fixed_off": 53.60986108393661
+          },
+          "fixed_off_minus_baseline_fps": 4.058140270285783
+        },
+        {
+          "block": 3,
+          "fps": {
+            "fixed_off": 50.166242910228824,
+            "lights_off": 55.723626427247,
+            "baseline": 40.71914480077746,
+            "headlamps_off": 41.666666666666664
+          },
+          "fixed_off_minus_baseline_fps": 9.447098109451368
+        }
+      ],
+      "all_timing_windows": [
+        {
+          "index": 0,
+          "mode": "lights_off",
+          "cpu": {
+            "max_ms": 34,
+            "mean_ms": 19.8254545454545,
+            "over_33_ms": 57,
+            "p95_ms": 34
+          },
+          "draw_calls": 158,
+          "frame": {
+            "max_ms": 58,
+            "mean_ms": 18.5909090909091,
+            "over_33_ms": 9,
+            "p95_ms": 29
+          },
+          "frames": 550,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "lights_off",
+            "occluders": 0,
+            "rebuilds": 0,
+            "refresh_calls": 550,
+            "refresh_usec": 13000
+          },
+          "seconds": 10.225,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 240000,
+            "draw_callbacks": 1829,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 132,
+            "reuses": 36300,
+            "setup_usec": 923000
+          },
+          "impacts": 46,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 90140,
+            "values": []
+          }
+        },
+        {
+          "index": 1,
+          "mode": "headlamps_off",
+          "cpu": {
+            "max_ms": 30,
+            "mean_ms": 18.0127272727273,
+            "over_33_ms": 0,
+            "p95_ms": 30
+          },
+          "draw_calls": 166,
+          "frame": {
+            "max_ms": 56,
+            "mean_ms": 18.5290909090909,
+            "over_33_ms": 5,
+            "p95_ms": 27
+          },
+          "frames": 550,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "headlamps_off",
+            "occluders": 0,
+            "rebuilds": 0,
+            "refresh_calls": 550,
+            "refresh_usec": 10000
+          },
+          "seconds": 10.191,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 215000,
+            "draw_callbacks": 1805,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 135,
+            "reuses": 35607,
+            "setup_usec": 890000
+          },
+          "impacts": 45,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 92340,
+            "values": []
+          }
+        },
+        {
+          "index": 2,
+          "mode": "fixed_off",
+          "cpu": {
+            "max_ms": 26,
+            "mean_ms": 20.4686907020873,
+            "over_33_ms": 0,
+            "p95_ms": 26
+          },
+          "draw_calls": 183,
+          "frame": {
+            "max_ms": 52,
+            "mean_ms": 19.392789373814,
+            "over_33_ms": 16,
+            "p95_ms": 30
+          },
+          "frames": 527,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "fixed_off",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 527,
+            "refresh_usec": 19000
+          },
+          "seconds": 10.22,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 216000,
+            "draw_callbacks": 1770,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 135,
+            "reuses": 34917,
+            "setup_usec": 846000
+          },
+          "impacts": 46,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 158700,
+            "values": []
+          }
+        },
+        {
+          "index": 3,
+          "mode": "baseline",
+          "cpu": {
+            "max_ms": 269,
+            "mean_ms": 27.752380952381,
+            "over_33_ms": 24,
+            "p95_ms": 23
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 280,
+            "mean_ms": 19.4857142857143,
+            "over_33_ms": 7,
+            "p95_ms": 27
+          },
+          "frames": 525,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "baseline",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 525,
+            "refresh_usec": 15000
+          },
+          "seconds": 10.23,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 207000,
+            "draw_callbacks": 1784,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 132,
+            "reuses": 35334,
+            "setup_usec": 831000
+          },
+          "impacts": 45,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 154285,
+            "values": []
+          }
+        },
+        {
+          "index": 4,
+          "mode": "headlamps_off",
+          "cpu": {
+            "max_ms": 19,
+            "mean_ms": 15.0084459459459,
+            "over_33_ms": 0,
+            "p95_ms": 19
+          },
+          "draw_calls": 166,
+          "frame": {
+            "max_ms": 33,
+            "mean_ms": 17.2567567567568,
+            "over_33_ms": 0,
+            "p95_ms": 24
+          },
+          "frames": 592,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "headlamps_off",
+            "occluders": 0,
+            "rebuilds": 0,
+            "refresh_calls": 592,
+            "refresh_usec": 4000
+          },
+          "seconds": 10.216,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 231000,
+            "draw_callbacks": 1999,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 135,
+            "reuses": 39747,
+            "setup_usec": 893000
+          },
+          "impacts": 46,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 101232,
+            "values": []
+          }
+        },
+        {
+          "index": 5,
+          "mode": "baseline",
+          "cpu": {
+            "max_ms": 30,
+            "mean_ms": 19.6264591439689,
+            "over_33_ms": 0,
+            "p95_ms": 30
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 55,
+            "mean_ms": 20.1809338521401,
+            "over_33_ms": 28,
+            "p95_ms": 34
+          },
+          "frames": 514,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "baseline",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 514,
+            "refresh_usec": 12000
+          },
+          "seconds": 10.373,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 227000,
+            "draw_callbacks": 1759,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 135,
+            "reuses": 34779,
+            "setup_usec": 862000
+          },
+          "impacts": 45,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 149565,
+            "values": []
+          }
+        },
+        {
+          "index": 6,
+          "mode": "lights_off",
+          "cpu": {
+            "max_ms": 23,
+            "mean_ms": 17.4719298245614,
+            "over_33_ms": 0,
+            "p95_ms": 23
+          },
+          "draw_calls": 157,
+          "frame": {
+            "max_ms": 67,
+            "mean_ms": 17.9649122807018,
+            "over_33_ms": 10,
+            "p95_ms": 27
+          },
+          "frames": 570,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "lights_off",
+            "occluders": 0,
+            "rebuilds": 0,
+            "refresh_calls": 570,
+            "refresh_usec": 9000
+          },
+          "seconds": 10.241,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 243000,
+            "draw_callbacks": 1905,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 135,
+            "reuses": 37815,
+            "setup_usec": 929000
+          },
+          "impacts": 46,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 92340,
+            "values": []
+          }
+        },
+        {
+          "index": 7,
+          "mode": "fixed_off",
+          "cpu": {
+            "max_ms": 24,
+            "mean_ms": 18.9343065693431,
+            "over_33_ms": 0,
+            "p95_ms": 24
+          },
+          "draw_calls": 183,
+          "frame": {
+            "max_ms": 67,
+            "mean_ms": 18.6532846715328,
+            "over_33_ms": 15,
+            "p95_ms": 30
+          },
+          "frames": 548,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "fixed_off",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 548,
+            "refresh_usec": 19000
+          },
+          "seconds": 10.222,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 222000,
+            "draw_callbacks": 1858,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 132,
+            "reuses": 36990,
+            "setup_usec": 871000
+          },
+          "impacts": 45,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 167400,
+            "values": []
+          }
+        },
+        {
+          "index": 8,
+          "mode": "fixed_off",
+          "cpu": {
+            "max_ms": 31,
+            "mean_ms": 18.0877192982456,
+            "over_33_ms": 0,
+            "p95_ms": 31
+          },
+          "draw_calls": 183,
+          "frame": {
+            "max_ms": 56,
+            "mean_ms": 19.9337231968811,
+            "over_33_ms": 18,
+            "p95_ms": 31
+          },
+          "frames": 513,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "fixed_off",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 513,
+            "refresh_usec": 24000
+          },
+          "seconds": 10.226,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 202000,
+            "draw_callbacks": 1811,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 132,
+            "reuses": 35886,
+            "setup_usec": 896000
+          },
+          "impacts": 46,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 153600,
+            "values": []
+          }
+        },
+        {
+          "index": 9,
+          "mode": "lights_off",
+          "cpu": {
+            "max_ms": 25,
+            "mean_ms": 17.2101576182137,
+            "over_33_ms": 0,
+            "p95_ms": 25
+          },
+          "draw_calls": 157,
+          "frame": {
+            "max_ms": 41,
+            "mean_ms": 17.9457092819615,
+            "over_33_ms": 5,
+            "p95_ms": 26
+          },
+          "frames": 571,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": false,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "lights_off",
+            "occluders": 0,
+            "rebuilds": 0,
+            "refresh_calls": 571,
+            "refresh_usec": 13000
+          },
+          "seconds": 10.247,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 223000,
+            "draw_callbacks": 1813,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 132,
+            "reuses": 35886,
+            "setup_usec": 924000
+          },
+          "impacts": 45,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 90882,
+            "values": []
+          }
+        },
+        {
+          "index": 10,
+          "mode": "baseline",
+          "cpu": {
+            "max_ms": 38,
+            "mean_ms": 23.618138424821,
+            "over_33_ms": 49,
+            "p95_ms": 38
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 88,
+            "mean_ms": 24.5584725536993,
+            "over_33_ms": 45,
+            "p95_ms": 40
+          },
+          "frames": 419,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "baseline",
+            "occluders": 8,
+            "rebuilds": 0,
+            "refresh_calls": 419,
+            "refresh_usec": 21000
+          },
+          "seconds": 10.29,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 228000,
+            "draw_callbacks": 1609,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 135,
+            "reuses": 31605,
+            "setup_usec": 929000
+          },
+          "impacts": 45,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 123310,
+            "values": []
+          }
+        },
+        {
+          "index": 11,
+          "mode": "headlamps_off",
+          "cpu": {
+            "max_ms": 294,
+            "mean_ms": 44.9107981220657,
+            "over_33_ms": 36,
+            "p95_ms": 294
+          },
+          "draw_calls": 166,
+          "frame": {
+            "max_ms": 309,
+            "mean_ms": 23.9976525821596,
+            "over_33_ms": 42,
+            "p95_ms": 40
+          },
+          "frames": 426,
+          "light_cost": {
+            "lights": [
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": false,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@452",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@454",
+                "shadow": false
+              }
+            ],
+            "mode": "headlamps_off",
+            "occluders": 0,
+            "rebuilds": 0,
+            "refresh_calls": 426,
+            "refresh_usec": 12000
+          },
+          "seconds": 10.224,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 200000,
+            "draw_callbacks": 1572,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 129,
+            "reuses": 30921,
+            "setup_usec": 928000
+          },
+          "impacts": 44,
+          "gpu": {
+            "available": false,
+            "disjoint": 0,
+            "draws": 72846,
+            "values": []
+          }
+        }
+      ],
+      "source_commit": "ef660efba2f17932069fa7cdd85e354fa2a549aa"
+    }
+  ],
+  "evidence_files": [
+    {
+      "path": "fixed-light-webkit-1/fixed_off.png",
+      "sha256": "4c122f37780800331751aedf3d36f0ab02da33101cd0f7a47f2ecb35cea9f856"
+    },
+    {
+      "path": "fixed-light-webkit-1/headlamps_off.png",
+      "sha256": "3db9be7ba9759b751322de5717e37b18540f105f8d07769930b11a54c7abb25f"
+    },
+    {
+      "path": "fixed-light-webkit-1/lights_off.png",
+      "sha256": "ab41ab648f435bf3e0646db9cb3de6d228fc953b12dc0e665c69a094c348dc06"
+    },
+    {
+      "path": "fixed-light-webkit-1/original.png",
+      "sha256": "9f67941a1c81c5f92614f04ad7a85197b9faed75cfeab01918c9513fdd352a76"
+    },
+    {
+      "path": "fixed-light-webkit-1/report.json",
+      "sha256": "f16a46f4a56ad375c0ae0aabef1dd4f7ca7371e149229ee2f0ae90f122bde17d"
+    },
+    {
+      "path": "fixed-light-webkit-2/fixed_off.png",
+      "sha256": "4b97e6b29aaf93ace7896fce22600f6f65417d1aa8603d891908aadb30efaffd"
+    },
+    {
+      "path": "fixed-light-webkit-2/headlamps_off.png",
+      "sha256": "f36a7d589ee7288fdbf0872af69985a83da9fb9df785e5e79d8b197457598ec8"
+    },
+    {
+      "path": "fixed-light-webkit-2/lights_off.png",
+      "sha256": "903c91fe012f22513bd610761e3b6521708e62a2d611dbe419fddff730376e22"
+    },
+    {
+      "path": "fixed-light-webkit-2/original.png",
+      "sha256": "af1dd64cc00f1fcd196bdc77e415c292f7a42b9e291856b53eb9844ceef4c1fc"
+    },
+    {
+      "path": "fixed-light-webkit-2/report.json",
+      "sha256": "8009a3a578206e5cd480ac4a6a6297f71e24c98285a7c57e97b53f4bc70c13cc"
+    }
+  ],
+  "visual_findings": [
+    "All eight actual captures inspected. Disabling fixed lights visibly removes warm environmental illumination while keeping headlamps; disabling headlamps removes local actor illumination. HUD and authored hero/companion geometry remain unchanged.",
+    "Baseline and restored images are exact in both runs.",
+    "Disabled-light variants are diagnostic only and are not acceptable visual replacements."
+  ],
+  "interpretation": [
+    "Fixed-off exceeds baseline in all six balanced blocks, supporting a real cost from fixed lights in this fixture.",
+    "Magnitude is unstable: early fixed-off gains are about 0.92 and 0.25 FPS, whereas later blocks show much larger gains as baseline slows. Do not attribute the full aggregate gain to a replacement implementation.",
+    "All-off improves both aggregates, but full-frame timing alone cannot separate GPU shading, submission and other effects.",
+    "Headlamps-off also removes associated shadow/occluder work; it does not isolate fragment shading alone."
+  ],
+  "limitations": [
+    "Temporal drift remains substantial; all 24 windows are retained.",
+    "No physical phone validation or phone-cause conclusion.",
+    "Disabling two lamps is an upper-bound-style diagnostic, not evidence a merged lamp will achieve equivalent savings.",
+    "GPU attribution not established by frame timing."
+  ],
+  "next_candidate": {
+    "accepted_for_QA_only": true,
+    "scope": "Merge only fixed light sources into one colored PointLight texture while retaining floor materials, actor masks and all original world shading.",
+    "gates": [
+      "Reject visible differences; preserve original and restored comparisons.",
+      "Require consistent measured speed benefit.",
+      "Check alpha/color space, energy clipping, texture interpolation, changed light direction and larger union footprint."
+    ],
+    "production_approved": false
+  }
+}
