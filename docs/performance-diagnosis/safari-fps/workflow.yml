@@ -1,0 +1,37 @@
+name: Measure fixture in iPhone Simulator Safari
+on:
+  push:
+    branches: [codex/safari-fps-20260925]
+    paths: ['scripts/**', '.github/safari-fps/**', '.github/workflows/safari-fps.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: safari-fps, cancel-in-progress: true}
+jobs:
+  safari:
+    runs-on: macos-15
+    timeout-minutes: 25
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/safari-fps
+      - uses: actions/download-artifact@v4
+        with: {name: safari-fps-candidate, run-id: 36110103989, github-token: '${{ github.token }}', path: '${{ runner.temp }}/candidate'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Prepare native XCTest route
+        working-directory: .github/safari-fps
+        run: |
+          xcodebuild -version
+          xcrun simctl list runtimes
+          npm init --yes
+          npm install --no-audit --no-fund --save-exact appium@3.7.0
+          npx --no-install appium driver install xcuitest@12.12.3
+          npx --no-install appium driver run xcuitest download-wda -- --outdir="$RUNNER_TEMP/wda" --kind=sim --platform=ios
+      - name: Open local fixture and measure actual Safari app
+        working-directory: .github/safari-fps
+        run: WDA_APP="$RUNNER_TEMP/wda/WebDriverAgentRunner-Runner.app" node safari.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/safari-fps"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: safari-fps-evidence, path: '${{ runner.temp }}/safari-fps', retention-days: 90}

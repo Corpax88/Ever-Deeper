@@ -1,0 +1,1083 @@
+{
+  "source": "525a55be87f6650d0221cf260a51093688628fbd",
+  "candidate_source": "ef660efba2f17932069fa7cdd85e354fa2a549aa",
+  "candidate_run": 36109186370,
+  "passed": true,
+  "checks": 91,
+  "windows": [
+    {
+      "index": 0,
+      "mode": "baseline",
+      "instrumented": false,
+      "fps": 44.97560975609756,
+      "raf": 0,
+      "raf_mean_ms": null,
+      "methods_per_raf": {}
+    },
+    {
+      "index": 1,
+      "mode": "baseline",
+      "instrumented": true,
+      "fps": 40.37750535123565,
+      "raf": 409,
+      "raf_mean_ms": 11,
+      "methods_per_raf": {
+        "deleteBuffer": {
+          "calls": 19.677261613691932,
+          "native_wall_ms": 0.012224938875305624
+        },
+        "deleteVertexArray": {
+          "calls": 11.19559902200489,
+          "native_wall_ms": 0.029339853300733496
+        },
+        "createBuffer": {
+          "calls": 19.667481662591687,
+          "native_wall_ms": 0.02444987775061125
+        },
+        "createVertexArray": {
+          "calls": 11.190709046454767,
+          "native_wall_ms": 0.012224938875305624
+        },
+        "bindVertexArray": {
+          "calls": 495.38141809290954,
+          "native_wall_ms": 0.08557457212713937
+        },
+        "bindBuffer": {
+          "calls": 253.04889975550122,
+          "native_wall_ms": 0.03667481662591687
+        },
+        "enableVertexAttribArray": {
+          "calls": 1408.7555012224939,
+          "native_wall_ms": 0.22249388753056235
+        },
+        "vertexAttribPointer": {
+          "calls": 1056.7555012224939,
+          "native_wall_ms": 0.22249388753056235
+        },
+        "disableVertexAttribArray": {
+          "calls": 45.19804400977995,
+          "native_wall_ms": 0.004889975550122249
+        },
+        "bufferData": {
+          "calls": 28.667481662591687,
+          "native_wall_ms": 0.09290953545232274
+        },
+        "bindTexture": {
+          "calls": 454.0,
+          "native_wall_ms": 0.097799511002445
+        },
+        "texImage2D": {
+          "calls": 1.0,
+          "native_wall_ms": 0.014669926650366748
+        },
+        "enable": {
+          "calls": 25.0,
+          "native_wall_ms": 0.007334963325183374
+        },
+        "bindFramebuffer": {
+          "calls": 33.0,
+          "native_wall_ms": 0.014669926650366748
+        },
+        "useProgram": {
+          "calls": 189.0,
+          "native_wall_ms": 0.039119804400977995
+        },
+        "vertexAttribIPointer": {
+          "calls": 352.0,
+          "native_wall_ms": 0.06356968215158924
+        },
+        "bindBufferBase": {
+          "calls": 27.0,
+          "native_wall_ms": 0.022004889975550123
+        },
+        "activeTexture": {
+          "calls": 458.0,
+          "native_wall_ms": 0.05867970660146699
+        },
+        "beginTransformFeedback": {
+          "calls": 1.0,
+          "native_wall_ms": 0.0
+        },
+        "drawArrays": {
+          "calls": 3.0,
+          "native_wall_ms": 0.007334963325183374
+        },
+        "endTransformFeedback": {
+          "calls": 1.0,
+          "native_wall_ms": 0.0
+        },
+        "disable": {
+          "calls": 66.0,
+          "native_wall_ms": 0.019559902200488997
+        },
+        "depthMask": {
+          "calls": 17.0,
+          "native_wall_ms": 0.0024449877750611247
+        },
+        "clearDepth": {
+          "calls": 7.0,
+          "native_wall_ms": 0.0
+        },
+        "clear": {
+          "calls": 7.0,
+          "native_wall_ms": 0.022004889975550123
+        },
+        "viewport": {
+          "calls": 28.0,
+          "native_wall_ms": 0.007334963325183374
+        },
+        "cullFace": {
+          "calls": 8.0,
+          "native_wall_ms": 0.004889975550122249
+        },
+        "depthFunc": {
+          "calls": 9.0,
+          "native_wall_ms": 0.0024449877750611247
+        },
+        "stencilMask": {
+          "calls": 3.0,
+          "native_wall_ms": 0.004889975550122249
+        },
+        "stencilFunc": {
+          "calls": 3.0,
+          "native_wall_ms": 0.0024449877750611247
+        },
+        "colorMask": {
+          "calls": 4.0,
+          "native_wall_ms": 0.007334963325183374
+        },
+        "drawBuffers": {
+          "calls": 3.0,
+          "native_wall_ms": 0.007334963325183374
+        },
+        "uniformMatrix4fv": {
+          "calls": 22.0,
+          "native_wall_ms": 0.007334963325183374
+        },
+        "uniform3fv": {
+          "calls": 12.0,
+          "native_wall_ms": 0.004889975550122249
+        },
+        "uniform4fv": {
+          "calls": 6.0,
+          "native_wall_ms": 0.0024449877750611247
+        },
+        "uniform1ui": {
+          "calls": 360.0,
+          "native_wall_ms": 0.0488997555012225
+        },
+        "drawElements": {
+          "calls": 118.0,
+          "native_wall_ms": 0.03178484107579462
+        },
+        "bufferSubData": {
+          "calls": 5.0,
+          "native_wall_ms": 0.02444987775061125
+        },
+        "clearStencil": {
+          "calls": 1.0,
+          "native_wall_ms": 0.0
+        },
+        "blendEquation": {
+          "calls": 14.0,
+          "native_wall_ms": 0.007334963325183374
+        },
+        "blendFuncSeparate": {
+          "calls": 17.0,
+          "native_wall_ms": 0.007334963325183374
+        },
+        "clearBufferfv": {
+          "calls": 1.0,
+          "native_wall_ms": 0.004889975550122249
+        },
+        "texParameteri": {
+          "calls": 22.0,
+          "native_wall_ms": 0.022004889975550123
+        },
+        "uniform1uiv": {
+          "calls": 2.0,
+          "native_wall_ms": 0.0024449877750611247
+        },
+        "checkFramebufferStatus": {
+          "calls": 1.0,
+          "native_wall_ms": 0.43765281173594134
+        },
+        "readBuffer": {
+          "calls": 1.0,
+          "native_wall_ms": 0.004889975550122249
+        },
+        "blitFramebuffer": {
+          "calls": 4.0,
+          "native_wall_ms": 0.022004889975550123
+        },
+        "uniform1f": {
+          "calls": 18.0,
+          "native_wall_ms": 0.0024449877750611247
+        },
+        "uniform2f": {
+          "calls": 17.0,
+          "native_wall_ms": 0.0
+        },
+        "getSyncParameter": {
+          "calls": 4.0,
+          "native_wall_ms": 0.5990220048899756
+        },
+        "deleteSync": {
+          "calls": 4.0,
+          "native_wall_ms": 0.02444987775061125
+        },
+        "fenceSync": {
+          "calls": 4.0,
+          "native_wall_ms": 1.1271393643031784
+        },
+        "scissor": {
+          "calls": 4.0,
+          "native_wall_ms": 0.0024449877750611247
+        },
+        "clearColor": {
+          "calls": 5.0,
+          "native_wall_ms": 0.0
+        },
+        "uniform4f": {
+          "calls": 225.0,
+          "native_wall_ms": 0.06601466992665037
+        },
+        "vertexAttribDivisor": {
+          "calls": 1392.0,
+          "native_wall_ms": 0.23471882640586797
+        },
+        "drawElementsInstanced": {
+          "calls": 166.0,
+          "native_wall_ms": 0.18581907090464547
+        },
+        "drawArraysInstanced": {
+          "calls": 8.0,
+          "native_wall_ms": 0.012224938875305624
+        },
+        "vertexAttrib4f": {
+          "calls": 34.0,
+          "native_wall_ms": 0.014669926650366748
+        },
+        "blendFunc": {
+          "calls": 1.0,
+          "native_wall_ms": 0.0024449877750611247
+        },
+        "getParameter": {
+          "calls": 2.0,
+          "native_wall_ms": 0.2469437652811736
+        }
+      }
+    },
+    {
+      "index": 2,
+      "mode": "lights_off",
+      "instrumented": true,
+      "fps": 53.24410823392493,
+      "raf": 550,
+      "raf_mean_ms": 8.392727272727273,
+      "methods_per_raf": {
+        "deleteBuffer": {
+          "calls": 16.143636363636364,
+          "native_wall_ms": 0.00909090909090909
+        },
+        "deleteVertexArray": {
+          "calls": 9.141818181818183,
+          "native_wall_ms": 0.03272727272727273
+        },
+        "createBuffer": {
+          "calls": 16.150909090909092,
+          "native_wall_ms": 0.02
+        },
+        "createVertexArray": {
+          "calls": 9.145454545454545,
+          "native_wall_ms": 0.02
+        },
+        "bindVertexArray": {
+          "calls": 332.7181818181818,
+          "native_wall_ms": 0.06363636363636363
+        },
+        "bindBuffer": {
+          "calls": 224.09636363636363,
+          "native_wall_ms": 0.04181818181818182
+        },
+        "enableVertexAttribArray": {
+          "calls": 1235.7436363636364,
+          "native_wall_ms": 0.2
+        },
+        "vertexAttribPointer": {
+          "calls": 926.3072727272727,
+          "native_wall_ms": 0.17454545454545456
+        },
+        "disableVertexAttribArray": {
+          "calls": 37.74727272727273,
+          "native_wall_ms": 0.0036363636363636364
+        },
+        "bufferData": {
+          "calls": 25.134545454545453,
+          "native_wall_ms": 0.045454545454545456
+        },
+        "bindTexture": {
+          "calls": 451.1781818181818,
+          "native_wall_ms": 0.08363636363636363
+        },
+        "texImage2D": {
+          "calls": 0.9981818181818182,
+          "native_wall_ms": 0.007272727272727273
+        },
+        "enable": {
+          "calls": 16.96909090909091,
+          "native_wall_ms": 0.007272727272727273
+        },
+        "bindFramebuffer": {
+          "calls": 24.954545454545453,
+          "native_wall_ms": 0.007272727272727273
+        },
+        "useProgram": {
+          "calls": 163.70181818181817,
+          "native_wall_ms": 0.04363636363636364
+        },
+        "vertexAttribIPointer": {
+          "calls": 309.43636363636364,
+          "native_wall_ms": 0.07090909090909091
+        },
+        "bindBufferBase": {
+          "calls": 25.952727272727273,
+          "native_wall_ms": 0.02
+        },
+        "activeTexture": {
+          "calls": 455.1709090909091,
+          "native_wall_ms": 0.07636363636363637
+        },
+        "beginTransformFeedback": {
+          "calls": 0.9981818181818182,
+          "native_wall_ms": 0.0
+        },
+        "drawArrays": {
+          "calls": 2.9945454545454546,
+          "native_wall_ms": 0.007272727272727273
+        },
+        "endTransformFeedback": {
+          "calls": 0.9981818181818182,
+          "native_wall_ms": 0.0
+        },
+        "disable": {
+          "calls": 49.90909090909091,
+          "native_wall_ms": 0.02
+        },
+        "depthMask": {
+          "calls": 8.983636363636364,
+          "native_wall_ms": 0.0
+        },
+        "clearDepth": {
+          "calls": 2.9945454545454546,
+          "native_wall_ms": 0.0
+        },
+        "clear": {
+          "calls": 2.9945454545454546,
+          "native_wall_ms": 0.0
+        },
+        "viewport": {
+          "calls": 7.985454545454545,
+          "native_wall_ms": 0.005454545454545455
+        },
+        "cullFace": {
+          "calls": 3.9927272727272727,
+          "native_wall_ms": 0.0
+        },
+        "depthFunc": {
+          "calls": 4.990909090909091,
+          "native_wall_ms": 0.0018181818181818182
+        },
+        "stencilMask": {
+          "calls": 2.9945454545454546,
+          "native_wall_ms": 0.005454545454545455
+        },
+        "stencilFunc": {
+          "calls": 2.9945454545454546,
+          "native_wall_ms": 0.0018181818181818182
+        },
+        "colorMask": {
+          "calls": 3.9927272727272727,
+          "native_wall_ms": 0.0018181818181818182
+        },
+        "drawBuffers": {
+          "calls": 2.9945454545454546,
+          "native_wall_ms": 0.007272727272727273
+        },
+        "uniformMatrix4fv": {
+          "calls": 5.989090909090909,
+          "native_wall_ms": 0.005454545454545455
+        },
+        "uniform3fv": {
+          "calls": 11.978181818181818,
+          "native_wall_ms": 0.0036363636363636364
+        },
+        "uniform4fv": {
+          "calls": 5.989090909090909,
+          "native_wall_ms": 0.0036363636363636364
+        },
+        "uniform1ui": {
+          "calls": 317.4218181818182,
+          "native_wall_ms": 0.06363636363636363
+        },
+        "drawElements": {
+          "calls": 5.989090909090909,
+          "native_wall_ms": 0.0018181818181818182
+        },
+        "bufferSubData": {
+          "calls": 3.9927272727272727,
+          "native_wall_ms": 0.01818181818181818
+        },
+        "clearStencil": {
+          "calls": 0.9981818181818182,
+          "native_wall_ms": 0.0
+        },
+        "blendEquation": {
+          "calls": 13.974545454545455,
+          "native_wall_ms": 0.007272727272727273
+        },
+        "blendFuncSeparate": {
+          "calls": 16.96909090909091,
+          "native_wall_ms": 0.005454545454545455
+        },
+        "clearBufferfv": {
+          "calls": 0.9981818181818182,
+          "native_wall_ms": 0.0018181818181818182
+        },
+        "texParameteri": {
+          "calls": 21.96,
+          "native_wall_ms": 0.00909090909090909
+        },
+        "uniform1uiv": {
+          "calls": 1.9963636363636363,
+          "native_wall_ms": 0.0018181818181818182
+        },
+        "checkFramebufferStatus": {
+          "calls": 0.9981818181818182,
+          "native_wall_ms": 0.38727272727272727
+        },
+        "readBuffer": {
+          "calls": 0.9981818181818182,
+          "native_wall_ms": 0.0
+        },
+        "blitFramebuffer": {
+          "calls": 3.9927272727272727,
+          "native_wall_ms": 0.014545454545454545
+        },
+        "uniform1f": {
+          "calls": 1.9963636363636363,
+          "native_wall_ms": 0.0018181818181818182
+        },
+        "uniform2f": {
+          "calls": 0.9981818181818182,
+          "native_wall_ms": 0.0018181818181818182
+        },
+        "getSyncParameter": {
+          "calls": 3.9927272727272727,
+          "native_wall_ms": 0.18727272727272729
+        },
+        "deleteSync": {
+          "calls": 3.9927272727272727,
+          "native_wall_ms": 0.012727272727272728
+        },
+        "fenceSync": {
+          "calls": 3.9927272727272727,
+          "native_wall_ms": 0.7090909090909091
+        },
+        "clearColor": {
+          "calls": 0.9981818181818182,
+          "native_wall_ms": 0.0
+        },
+        "vertexAttribDivisor": {
+          "calls": 1221.7745454545454,
+          "native_wall_ms": 0.18363636363636363
+        },
+        "drawElementsInstanced": {
+          "calls": 144.73636363636365,
+          "native_wall_ms": 0.1
+        },
+        "drawArraysInstanced": {
+          "calls": 7.985454545454545,
+          "native_wall_ms": 0.007272727272727273
+        },
+        "vertexAttrib4f": {
+          "calls": 33.93818181818182,
+          "native_wall_ms": 0.016363636363636365
+        },
+        "blendFunc": {
+          "calls": 0.9981818181818182,
+          "native_wall_ms": 0.0
+        },
+        "uniform4f": {
+          "calls": 0.9981818181818182,
+          "native_wall_ms": 0.0018181818181818182
+        },
+        "getParameter": {
+          "calls": 1.9963636363636363,
+          "native_wall_ms": 0.2
+        }
+      }
+    },
+    {
+      "index": 3,
+      "mode": "lights_off",
+      "instrumented": false,
+      "fps": 59.50866203386512,
+      "raf": 0,
+      "raf_mean_ms": null,
+      "methods_per_raf": {}
+    },
+    {
+      "index": 4,
+      "mode": "lights_off",
+      "instrumented": false,
+      "fps": 49.4177512476759,
+      "raf": 0,
+      "raf_mean_ms": null,
+      "methods_per_raf": {}
+    },
+    {
+      "index": 5,
+      "mode": "lights_off",
+      "instrumented": true,
+      "fps": 48.88322884012539,
+      "raf": 499,
+      "raf_mean_ms": 9.496993987975952,
+      "methods_per_raf": {
+        "deleteBuffer": {
+          "calls": 17.32064128256513,
+          "native_wall_ms": 0.01603206412825651
+        },
+        "deleteVertexArray": {
+          "calls": 9.81563126252505,
+          "native_wall_ms": 0.03006012024048096
+        },
+        "createBuffer": {
+          "calls": 17.312625250501004,
+          "native_wall_ms": 0.02004008016032064
+        },
+        "createVertexArray": {
+          "calls": 9.811623246492985,
+          "native_wall_ms": 0.01002004008016032
+        },
+        "bindVertexArray": {
+          "calls": 333.9919839679359,
+          "native_wall_ms": 0.09218436873747494
+        },
+        "bindBuffer": {
+          "calls": 226.5551102204409,
+          "native_wall_ms": 0.056112224448897796
+        },
+        "enableVertexAttribArray": {
+          "calls": 1236.3987975951904,
+          "native_wall_ms": 0.18637274549098196
+        },
+        "vertexAttribPointer": {
+          "calls": 927.0200400801604,
+          "native_wall_ms": 0.17635270541082165
+        },
+        "disableVertexAttribArray": {
+          "calls": 40.19438877755511,
+          "native_wall_ms": 0.006012024048096192
+        },
+        "bufferData": {
+          "calls": 26.294589178356713,
+          "native_wall_ms": 0.04408817635270541
+        },
+        "bindTexture": {
+          "calls": 451.0941883767535,
+          "native_wall_ms": 0.1062124248496994
+        },
+        "texImage2D": {
+          "calls": 0.9979959919839679,
+          "native_wall_ms": 0.01603206412825651
+        },
+        "enable": {
+          "calls": 16.965931863727455,
+          "native_wall_ms": 0.006012024048096192
+        },
+        "bindFramebuffer": {
+          "calls": 24.949899799599198,
+          "native_wall_ms": 0.022044088176352707
+        },
+        "useProgram": {
+          "calls": 163.67134268537075,
+          "native_wall_ms": 0.02004008016032064
+        },
+        "vertexAttribIPointer": {
+          "calls": 309.3787575150301,
+          "native_wall_ms": 0.06012024048096192
+        },
+        "bindBufferBase": {
+          "calls": 25.947895791583168,
+          "native_wall_ms": 0.014028056112224449
+        },
+        "activeTexture": {
+          "calls": 455.0861723446894,
+          "native_wall_ms": 0.06613226452905811
+        },
+        "beginTransformFeedback": {
+          "calls": 0.9979959919839679,
+          "native_wall_ms": 0.006012024048096192
+        },
+        "drawArrays": {
+          "calls": 2.993987975951904,
+          "native_wall_ms": 0.012024048096192385
+        },
+        "endTransformFeedback": {
+          "calls": 0.9979959919839679,
+          "native_wall_ms": 0.0
+        },
+        "disable": {
+          "calls": 49.899799599198396,
+          "native_wall_ms": 0.01603206412825651
+        },
+        "depthMask": {
+          "calls": 8.98196392785571,
+          "native_wall_ms": 0.002004008016032064
+        },
+        "clearDepth": {
+          "calls": 2.993987975951904,
+          "native_wall_ms": 0.0
+        },
+        "clear": {
+          "calls": 2.993987975951904,
+          "native_wall_ms": 0.002004008016032064
+        },
+        "viewport": {
+          "calls": 7.9839679358717435,
+          "native_wall_ms": 0.0
+        },
+        "cullFace": {
+          "calls": 3.9919839679358717,
+          "native_wall_ms": 0.004008016032064128
+        },
+        "depthFunc": {
+          "calls": 4.98997995991984,
+          "native_wall_ms": 0.002004008016032064
+        },
+        "stencilMask": {
+          "calls": 2.993987975951904,
+          "native_wall_ms": 0.004008016032064128
+        },
+        "stencilFunc": {
+          "calls": 2.993987975951904,
+          "native_wall_ms": 0.004008016032064128
+        },
+        "colorMask": {
+          "calls": 3.9919839679358717,
+          "native_wall_ms": 0.0
+        },
+        "drawBuffers": {
+          "calls": 2.993987975951904,
+          "native_wall_ms": 0.012024048096192385
+        },
+        "uniformMatrix4fv": {
+          "calls": 5.987975951903808,
+          "native_wall_ms": 0.004008016032064128
+        },
+        "uniform3fv": {
+          "calls": 11.975951903807616,
+          "native_wall_ms": 0.002004008016032064
+        },
+        "uniform4fv": {
+          "calls": 5.987975951903808,
+          "native_wall_ms": 0.002004008016032064
+        },
+        "uniform1ui": {
+          "calls": 317.3627254509018,
+          "native_wall_ms": 0.04408817635270541
+        },
+        "drawElements": {
+          "calls": 5.987975951903808,
+          "native_wall_ms": 0.002004008016032064
+        },
+        "bufferSubData": {
+          "calls": 3.9919839679358717,
+          "native_wall_ms": 0.014028056112224449
+        },
+        "clearStencil": {
+          "calls": 0.9979959919839679,
+          "native_wall_ms": 0.0
+        },
+        "blendEquation": {
+          "calls": 13.97194388777555,
+          "native_wall_ms": 0.008016032064128256
+        },
+        "blendFuncSeparate": {
+          "calls": 16.965931863727455,
+          "native_wall_ms": 0.008016032064128256
+        },
+        "clearBufferfv": {
+          "calls": 0.9979959919839679,
+          "native_wall_ms": 0.002004008016032064
+        },
+        "texParameteri": {
+          "calls": 21.955911823647295,
+          "native_wall_ms": 0.004008016032064128
+        },
+        "uniform1uiv": {
+          "calls": 1.9959919839679359,
+          "native_wall_ms": 0.002004008016032064
+        },
+        "checkFramebufferStatus": {
+          "calls": 0.9979959919839679,
+          "native_wall_ms": 0.44889779559118237
+        },
+        "readBuffer": {
+          "calls": 0.9979959919839679,
+          "native_wall_ms": 0.004008016032064128
+        },
+        "blitFramebuffer": {
+          "calls": 3.9919839679358717,
+          "native_wall_ms": 0.02404809619238477
+        },
+        "uniform1f": {
+          "calls": 1.9959919839679359,
+          "native_wall_ms": 0.006012024048096192
+        },
+        "uniform2f": {
+          "calls": 0.9979959919839679,
+          "native_wall_ms": 0.002004008016032064
+        },
+        "getSyncParameter": {
+          "calls": 3.9919839679358717,
+          "native_wall_ms": 0.19438877755511022
+        },
+        "deleteSync": {
+          "calls": 3.9919839679358717,
+          "native_wall_ms": 0.022044088176352707
+        },
+        "fenceSync": {
+          "calls": 3.9919839679358717,
+          "native_wall_ms": 1.0040080160320641
+        },
+        "clearColor": {
+          "calls": 0.9979959919839679,
+          "native_wall_ms": 0.0
+        },
+        "vertexAttribDivisor": {
+          "calls": 1221.5470941883768,
+          "native_wall_ms": 0.18236472945891782
+        },
+        "drawElementsInstanced": {
+          "calls": 144.70941883767534,
+          "native_wall_ms": 0.15030060120240482
+        },
+        "drawArraysInstanced": {
+          "calls": 7.9839679358717435,
+          "native_wall_ms": 0.008016032064128256
+        },
+        "vertexAttrib4f": {
+          "calls": 33.93186372745491,
+          "native_wall_ms": 0.006012024048096192
+        },
+        "blendFunc": {
+          "calls": 0.9979959919839679,
+          "native_wall_ms": 0.0
+        },
+        "uniform4f": {
+          "calls": 0.9979959919839679,
+          "native_wall_ms": 0.0
+        },
+        "getParameter": {
+          "calls": 1.9959919839679359,
+          "native_wall_ms": 0.24448897795591182
+        }
+      }
+    },
+    {
+      "index": 6,
+      "mode": "baseline",
+      "instrumented": true,
+      "fps": 44.08623033598757,
+      "raf": 454,
+      "raf_mean_ms": 9.933920704845814,
+      "methods_per_raf": {
+        "deleteBuffer": {
+          "calls": 18.854625550660792,
+          "native_wall_ms": 0.024229074889867842
+        },
+        "deleteVertexArray": {
+          "calls": 10.702643171806168,
+          "native_wall_ms": 0.015418502202643172
+        },
+        "createBuffer": {
+          "calls": 18.854625550660792,
+          "native_wall_ms": 0.01762114537444934
+        },
+        "createVertexArray": {
+          "calls": 10.702643171806168,
+          "native_wall_ms": 0.011013215859030838
+        },
+        "bindVertexArray": {
+          "calls": 494.4052863436123,
+          "native_wall_ms": 0.10792951541850221
+        },
+        "bindBuffer": {
+          "calls": 251.25991189427313,
+          "native_wall_ms": 0.05947136563876652
+        },
+        "enableVertexAttribArray": {
+          "calls": 1408.0638766519824,
+          "native_wall_ms": 0.21145374449339208
+        },
+        "vertexAttribPointer": {
+          "calls": 1056.0638766519824,
+          "native_wall_ms": 0.16740088105726872
+        },
+        "disableVertexAttribArray": {
+          "calls": 43.44933920704846,
+          "native_wall_ms": 0.004405286343612335
+        },
+        "bufferData": {
+          "calls": 27.854625550660792,
+          "native_wall_ms": 0.04405286343612335
+        },
+        "bindTexture": {
+          "calls": 454.0,
+          "native_wall_ms": 0.08370044052863436
+        },
+        "texImage2D": {
+          "calls": 1.0,
+          "native_wall_ms": 0.00881057268722467
+        },
+        "enable": {
+          "calls": 25.0,
+          "native_wall_ms": 0.004405286343612335
+        },
+        "bindFramebuffer": {
+          "calls": 33.0,
+          "native_wall_ms": 0.01762114537444934
+        },
+        "useProgram": {
+          "calls": 189.0,
+          "native_wall_ms": 0.024229074889867842
+        },
+        "vertexAttribIPointer": {
+          "calls": 352.0,
+          "native_wall_ms": 0.07709251101321586
+        },
+        "bindBufferBase": {
+          "calls": 27.0,
+          "native_wall_ms": 0.01762114537444934
+        },
+        "activeTexture": {
+          "calls": 458.0,
+          "native_wall_ms": 0.08149779735682819
+        },
+        "beginTransformFeedback": {
+          "calls": 1.0,
+          "native_wall_ms": 0.0022026431718061676
+        },
+        "drawArrays": {
+          "calls": 3.0,
+          "native_wall_ms": 0.013215859030837005
+        },
+        "endTransformFeedback": {
+          "calls": 1.0,
+          "native_wall_ms": 0.0022026431718061676
+        },
+        "disable": {
+          "calls": 66.0,
+          "native_wall_ms": 0.019823788546255508
+        },
+        "depthMask": {
+          "calls": 17.0,
+          "native_wall_ms": 0.022026431718061675
+        },
+        "clearDepth": {
+          "calls": 7.0,
+          "native_wall_ms": 0.004405286343612335
+        },
+        "clear": {
+          "calls": 7.0,
+          "native_wall_ms": 0.013215859030837005
+        },
+        "viewport": {
+          "calls": 28.0,
+          "native_wall_ms": 0.011013215859030838
+        },
+        "cullFace": {
+          "calls": 8.0,
+          "native_wall_ms": 0.0
+        },
+        "depthFunc": {
+          "calls": 9.0,
+          "native_wall_ms": 0.0
+        },
+        "stencilMask": {
+          "calls": 3.0,
+          "native_wall_ms": 0.0
+        },
+        "stencilFunc": {
+          "calls": 3.0,
+          "native_wall_ms": 0.0022026431718061676
+        },
+        "colorMask": {
+          "calls": 4.0,
+          "native_wall_ms": 0.0022026431718061676
+        },
+        "drawBuffers": {
+          "calls": 3.0,
+          "native_wall_ms": 0.00881057268722467
+        },
+        "uniformMatrix4fv": {
+          "calls": 22.0,
+          "native_wall_ms": 0.015418502202643172
+        },
+        "uniform3fv": {
+          "calls": 12.0,
+          "native_wall_ms": 0.0022026431718061676
+        },
+        "uniform4fv": {
+          "calls": 6.0,
+          "native_wall_ms": 0.004405286343612335
+        },
+        "uniform1ui": {
+          "calls": 360.0,
+          "native_wall_ms": 0.05506607929515418
+        },
+        "drawElements": {
+          "calls": 118.0,
+          "native_wall_ms": 0.00881057268722467
+        },
+        "bufferSubData": {
+          "calls": 5.0,
+          "native_wall_ms": 0.013215859030837005
+        },
+        "clearStencil": {
+          "calls": 1.0,
+          "native_wall_ms": 0.0
+        },
+        "blendEquation": {
+          "calls": 14.0,
+          "native_wall_ms": 0.006607929515418502
+        },
+        "blendFuncSeparate": {
+          "calls": 17.0,
+          "native_wall_ms": 0.006607929515418502
+        },
+        "clearBufferfv": {
+          "calls": 1.0,
+          "native_wall_ms": 0.0022026431718061676
+        },
+        "texParameteri": {
+          "calls": 22.0,
+          "native_wall_ms": 0.00881057268722467
+        },
+        "uniform1uiv": {
+          "calls": 2.0,
+          "native_wall_ms": 0.0022026431718061676
+        },
+        "checkFramebufferStatus": {
+          "calls": 1.0,
+          "native_wall_ms": 0.45154185022026433
+        },
+        "readBuffer": {
+          "calls": 1.0,
+          "native_wall_ms": 0.0022026431718061676
+        },
+        "blitFramebuffer": {
+          "calls": 4.0,
+          "native_wall_ms": 0.015418502202643172
+        },
+        "uniform1f": {
+          "calls": 18.0,
+          "native_wall_ms": 0.0022026431718061676
+        },
+        "uniform2f": {
+          "calls": 17.0,
+          "native_wall_ms": 0.006607929515418502
+        },
+        "getSyncParameter": {
+          "calls": 4.0,
+          "native_wall_ms": 0.46916299559471364
+        },
+        "deleteSync": {
+          "calls": 4.0,
+          "native_wall_ms": 0.022026431718061675
+        },
+        "fenceSync": {
+          "calls": 4.0,
+          "native_wall_ms": 0.9427312775330396
+        },
+        "scissor": {
+          "calls": 4.0,
+          "native_wall_ms": 0.0022026431718061676
+        },
+        "clearColor": {
+          "calls": 5.0,
+          "native_wall_ms": 0.006607929515418502
+        },
+        "uniform4f": {
+          "calls": 225.0,
+          "native_wall_ms": 0.028634361233480177
+        },
+        "vertexAttribDivisor": {
+          "calls": 1392.0,
+          "native_wall_ms": 0.17180616740088106
+        },
+        "drawElementsInstanced": {
+          "calls": 166.0,
+          "native_wall_ms": 0.12555066079295155
+        },
+        "drawArraysInstanced": {
+          "calls": 8.0,
+          "native_wall_ms": 0.006607929515418502
+        },
+        "vertexAttrib4f": {
+          "calls": 34.0,
+          "native_wall_ms": 0.011013215859030838
+        },
+        "blendFunc": {
+          "calls": 1.0,
+          "native_wall_ms": 0.0022026431718061676
+        },
+        "getParameter": {
+          "calls": 2.0,
+          "native_wall_ms": 0.2753303964757709
+        }
+      }
+    },
+    {
+      "index": 7,
+      "mode": "baseline",
+      "instrumented": false,
+      "fps": 43.77498293848104,
+      "raf": 0,
+      "raf_mean_ms": null,
+      "methods_per_raf": {}
+    }
+  ],
+  "groups": [
+    {
+      "mode": "baseline",
+      "instrumented": false,
+      "weighted_fps": 44.37509143219389
+    },
+    {
+      "mode": "baseline",
+      "instrumented": true,
+      "weighted_fps": 42.23367029548989
+    },
+    {
+      "mode": "lights_off",
+      "instrumented": false,
+      "weighted_fps": 54.462712859659426
+    },
+    {
+      "mode": "lights_off",
+      "instrumented": true,
+      "weighted_fps": 51.074613772601005
+    }
+  ],
+  "limitations": [
+    "CPU wall time inside native GL calls includes possible synchronization waits; not GPU time.",
+    "GL and engine intervals have different boundaries. Normalize by captured rAF count, not engine frames.",
+    "Wrapper accounting outside native calls contributes to rAF; subtracting GL does not isolate game CPU.",
+    "Both 3D actor and 2D world contexts are observed.",
+    "1ms timer quantization: use aggregates and call counts; no precise per-call microseconds.",
+    "Instrumentation adds measurable overhead. No phone performance claim."
+  ]
+}

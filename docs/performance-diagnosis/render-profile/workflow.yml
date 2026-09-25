@@ -1,0 +1,31 @@
+name: Profile WebKit render submission with immutable candidate
+on:
+  push:
+    branches: [codex/render-profile-20260925]
+    paths: ['.github/render-profile/**', '.github/workflows/render-profile.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: render-profile, cancel-in-progress: true}
+jobs:
+  profile:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/render-profile
+      - uses: actions/download-artifact@v4
+        with:
+          name: fixed-light-candidate
+          run-id: 36109186370
+          github-token: ${{ github.token }}
+          path: '${{ runner.temp }}/candidate'
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install webkit
+      - name: Measure render call CPU with paired observer controls
+        env: {REVIEW_BROWSER: webkit}
+        run: node .github/render-profile/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: render-profile-webkit, path: '${{ runner.temp }}/review', retention-days: 90}

@@ -1,3 +1,9 @@
+## Pågående FPS-arbeid 25.09: synkroniseringsprofil og tomt tegnesteg
+
+Fastlysfelt er forkastet; se forrige checkpoint. Ny renderprofil525a55be/run36111016427 er ferdig:91kontroller,8vinduer, firefenceSync/getSyncParameter perramme også utenlys. Instrumentering koster målbart og GL-veggtid er ikke GPU-tid. Se docs/performance-diagnosis/render-profile/HANDOFF.md. Nå testes kun å hoppe over tom2D-canvas i eksisterende3D-only NativeRig200px: codex/empty-canvas-study-20260925,96e3519ef2f470310379125250959c908f750379,run36111698762. Eksaktebilder og faktisk færre synkroniseringskall kreves; ingen endring avnativefiler/figur/lys/UI/oppløsning.
+
+Safari7a236e/run36110103989 nådde faktisk spillside i iPhoneAir/iOS26.2 Simulator, men mistetWebGL-konteksten ved oppstart.0FPSvinduer; faktiskfeilbilde inspisert. Ikke Safari-gameplay eller fysiskmobil-verifisering. Én målrettet recovery57e766a9acd23e84964fdd8843e5f8161ac89edf/run36111409066 kjører medsammeimmutablepakke, tidligGL-/konsolltelemetri, ettbegrensetreload og systemlogger. Les docs/performance-diagnosis/safari-fps/HANDOFF.md. Fortsett begge pågåendejobber og vurder faktiske resultater; ikke stopp for et nytt kjør. Canonical/public runtime fortsattDEV15.9/c63aabd, ikke publisert pånytt.
+
 ## Pågående FPS-arbeid 25.09: lysbaking forkastet
 
 Brukeren ber om å fortsette autonomt til løst; ikke stopp etter ett forsøk. Fastlysfelt aa3b87ffd79130d0796aed6592d8f6a02f9a6481/run36110170882 er ferdig og forkastet: to Macer44,858→44,598 og42,229→42,826FPS; ingen stabil gevinst.236 kontroller,12 tidsvinduer,18 eksakte retursammenligninger,18 kandidatpar med maks1–2/255 avvik; alle12 beholdte PNGer uavhengig inspisert. Alle lys-/felt-sluttstatuser verifisert. Les docs/performance-diagnosis/fixed-merge-study/HANDOFF.md; ikke gjenkjør uendret.

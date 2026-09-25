@@ -1,0 +1,5212 @@
+{
+  "passed": true,
+  "error": null,
+  "source_commit": "525a55be87f6650d0221cf260a51093688628fbd",
+  "version": "1.0.0-dev.15.9",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "16d22e665061081ab9b7f2692f825dd0574b4816d28d6c893b9e8800ba6c2fc6"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 260323972,
+      "sha256": "d8071c96fd6710499d1f06d5e0e0d23c804fff1b1d970c8a0f3c6fa836c22a89"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "runtime": {
+    "renderer": "Apple GPU",
+    "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+    "dpr": 3,
+    "canvas": [
+      2328,
+      1260
+    ]
+  },
+  "checks": [
+    {
+      "name": "apple-gpu",
+      "passed": true,
+      "runtime": {
+        "renderer": "Apple GPU",
+        "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+        "dpr": 3,
+        "canvas": [
+          2328,
+          1260
+        ]
+      }
+    },
+    {
+      "name": "native-root-size",
+      "passed": true
+    },
+    {
+      "name": "mode-baseline",
+      "passed": true,
+      "lights": [
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_2/@PointLight2D@452",
+          "shadow": false
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_1/@PointLight2D@454",
+          "shadow": false
+        }
+      ]
+    },
+    {
+      "name": "light-groups-baseline",
+      "passed": true
+    },
+    {
+      "name": "light-states-baseline",
+      "passed": true
+    },
+    {
+      "name": "framing-baseline",
+      "passed": true
+    },
+    {
+      "name": "size-baseline-unchanged-image",
+      "passed": true
+    },
+    {
+      "name": "baseline-unchanged-image",
+      "passed": true
+    },
+    {
+      "name": "mode-lights_off",
+      "passed": true,
+      "lights": [
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 0,
+          "path": "WorkLight_route_2/@PointLight2D@452",
+          "shadow": false
+        },
+        {
+          "enabled": false,
+          "filter": 0,
+          "path": "WorkLight_route_1/@PointLight2D@454",
+          "shadow": false
+        }
+      ]
+    },
+    {
+      "name": "light-groups-lights_off",
+      "passed": true
+    },
+    {
+      "name": "light-states-lights_off",
+      "passed": true
+    },
+    {
+      "name": "framing-lights_off",
+      "passed": true
+    },
+    {
+      "name": "mode-baseline",
+      "passed": true,
+      "lights": [
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_2/@PointLight2D@452",
+          "shadow": false
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_1/@PointLight2D@454",
+          "shadow": false
+        }
+      ]
+    },
+    {
+      "name": "light-groups-baseline",
+      "passed": true
+    },
+    {
+      "name": "light-states-baseline",
+      "passed": true
+    },
+    {
+      "name": "framing-baseline",
+      "passed": true
+    },
+    {
+      "name": "size-restored-original",
+      "passed": true
+    },
+    {
+      "name": "restored-original",
+      "passed": true
+    },
+    {
+      "name": "mode-baseline",
+      "passed": true,
+      "lights": [
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_2/@PointLight2D@452",
+          "shadow": false
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_1/@PointLight2D@454",
+          "shadow": false
+        }
+      ]
+    },
+    {
+      "name": "light-groups-baseline",
+      "passed": true
+    },
+    {
+      "name": "light-states-baseline",
+      "passed": true
+    },
+    {
+      "name": "framing-baseline",
+      "passed": true
+    },
+    {
+      "name": "mode-lights_off",
+      "passed": true,
+      "lights": [
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 0,
+          "path": "WorkLight_route_2/@PointLight2D@452",
+          "shadow": false
+        },
+        {
+          "enabled": false,
+          "filter": 0,
+          "path": "WorkLight_route_1/@PointLight2D@454",
+          "shadow": false
+        }
+      ]
+    },
+    {
+      "name": "light-groups-lights_off",
+      "passed": true
+    },
+    {
+      "name": "light-states-lights_off",
+      "passed": true
+    },
+    {
+      "name": "framing-lights_off",
+      "passed": true
+    },
+    {
+      "name": "mode-baseline",
+      "passed": true,
+      "lights": [
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_2/@PointLight2D@452",
+          "shadow": false
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_1/@PointLight2D@454",
+          "shadow": false
+        }
+      ]
+    },
+    {
+      "name": "light-groups-baseline",
+      "passed": true
+    },
+    {
+      "name": "light-states-baseline",
+      "passed": true
+    },
+    {
+      "name": "framing-baseline",
+      "passed": true
+    },
+    {
+      "name": "mode-baseline",
+      "passed": true,
+      "lights": [
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_2/@PointLight2D@452",
+          "shadow": false
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_1/@PointLight2D@454",
+          "shadow": false
+        }
+      ]
+    },
+    {
+      "name": "light-groups-baseline",
+      "passed": true
+    },
+    {
+      "name": "light-states-baseline",
+      "passed": true
+    },
+    {
+      "name": "framing-baseline",
+      "passed": true
+    },
+    {
+      "name": "held-mining-0",
+      "passed": true
+    },
+    {
+      "name": "end-light-states-0",
+      "passed": true
+    },
+    {
+      "name": "refresh-ownership-0",
+      "passed": true
+    },
+    {
+      "name": "mode-baseline",
+      "passed": true,
+      "lights": [
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_2/@PointLight2D@452",
+          "shadow": false
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_1/@PointLight2D@454",
+          "shadow": false
+        }
+      ]
+    },
+    {
+      "name": "light-groups-baseline",
+      "passed": true
+    },
+    {
+      "name": "light-states-baseline",
+      "passed": true
+    },
+    {
+      "name": "framing-baseline",
+      "passed": true
+    },
+    {
+      "name": "held-mining-1",
+      "passed": true
+    },
+    {
+      "name": "end-light-states-1",
+      "passed": true
+    },
+    {
+      "name": "refresh-ownership-1",
+      "passed": true
+    },
+    {
+      "name": "mode-lights_off",
+      "passed": true,
+      "lights": [
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 0,
+          "path": "WorkLight_route_2/@PointLight2D@452",
+          "shadow": false
+        },
+        {
+          "enabled": false,
+          "filter": 0,
+          "path": "WorkLight_route_1/@PointLight2D@454",
+          "shadow": false
+        }
+      ]
+    },
+    {
+      "name": "light-groups-lights_off",
+      "passed": true
+    },
+    {
+      "name": "light-states-lights_off",
+      "passed": true
+    },
+    {
+      "name": "framing-lights_off",
+      "passed": true
+    },
+    {
+      "name": "held-mining-2",
+      "passed": true
+    },
+    {
+      "name": "end-light-states-2",
+      "passed": true
+    },
+    {
+      "name": "refresh-ownership-2",
+      "passed": true
+    },
+    {
+      "name": "mode-lights_off",
+      "passed": true,
+      "lights": [
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 0,
+          "path": "WorkLight_route_2/@PointLight2D@452",
+          "shadow": false
+        },
+        {
+          "enabled": false,
+          "filter": 0,
+          "path": "WorkLight_route_1/@PointLight2D@454",
+          "shadow": false
+        }
+      ]
+    },
+    {
+      "name": "light-groups-lights_off",
+      "passed": true
+    },
+    {
+      "name": "light-states-lights_off",
+      "passed": true
+    },
+    {
+      "name": "framing-lights_off",
+      "passed": true
+    },
+    {
+      "name": "held-mining-3",
+      "passed": true
+    },
+    {
+      "name": "end-light-states-3",
+      "passed": true
+    },
+    {
+      "name": "refresh-ownership-3",
+      "passed": true
+    },
+    {
+      "name": "mode-lights_off",
+      "passed": true,
+      "lights": [
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 0,
+          "path": "WorkLight_route_2/@PointLight2D@452",
+          "shadow": false
+        },
+        {
+          "enabled": false,
+          "filter": 0,
+          "path": "WorkLight_route_1/@PointLight2D@454",
+          "shadow": false
+        }
+      ]
+    },
+    {
+      "name": "light-groups-lights_off",
+      "passed": true
+    },
+    {
+      "name": "light-states-lights_off",
+      "passed": true
+    },
+    {
+      "name": "framing-lights_off",
+      "passed": true
+    },
+    {
+      "name": "held-mining-4",
+      "passed": true
+    },
+    {
+      "name": "end-light-states-4",
+      "passed": true
+    },
+    {
+      "name": "refresh-ownership-4",
+      "passed": true
+    },
+    {
+      "name": "mode-lights_off",
+      "passed": true,
+      "lights": [
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": false,
+          "filter": 0,
+          "path": "WorkLight_route_2/@PointLight2D@452",
+          "shadow": false
+        },
+        {
+          "enabled": false,
+          "filter": 0,
+          "path": "WorkLight_route_1/@PointLight2D@454",
+          "shadow": false
+        }
+      ]
+    },
+    {
+      "name": "light-groups-lights_off",
+      "passed": true
+    },
+    {
+      "name": "light-states-lights_off",
+      "passed": true
+    },
+    {
+      "name": "framing-lights_off",
+      "passed": true
+    },
+    {
+      "name": "held-mining-5",
+      "passed": true
+    },
+    {
+      "name": "end-light-states-5",
+      "passed": true
+    },
+    {
+      "name": "refresh-ownership-5",
+      "passed": true
+    },
+    {
+      "name": "mode-baseline",
+      "passed": true,
+      "lights": [
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_2/@PointLight2D@452",
+          "shadow": false
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_1/@PointLight2D@454",
+          "shadow": false
+        }
+      ]
+    },
+    {
+      "name": "light-groups-baseline",
+      "passed": true
+    },
+    {
+      "name": "light-states-baseline",
+      "passed": true
+    },
+    {
+      "name": "framing-baseline",
+      "passed": true
+    },
+    {
+      "name": "held-mining-6",
+      "passed": true
+    },
+    {
+      "name": "end-light-states-6",
+      "passed": true
+    },
+    {
+      "name": "refresh-ownership-6",
+      "passed": true
+    },
+    {
+      "name": "mode-baseline",
+      "passed": true,
+      "lights": [
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_2/@PointLight2D@452",
+          "shadow": false
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_1/@PointLight2D@454",
+          "shadow": false
+        }
+      ]
+    },
+    {
+      "name": "light-groups-baseline",
+      "passed": true
+    },
+    {
+      "name": "light-states-baseline",
+      "passed": true
+    },
+    {
+      "name": "framing-baseline",
+      "passed": true
+    },
+    {
+      "name": "held-mining-7",
+      "passed": true
+    },
+    {
+      "name": "end-light-states-7",
+      "passed": true
+    },
+    {
+      "name": "refresh-ownership-7",
+      "passed": true
+    },
+    {
+      "name": "mode-baseline",
+      "passed": true,
+      "lights": [
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "Player/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 1,
+          "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+          "shadow": true
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_2/@PointLight2D@452",
+          "shadow": false
+        },
+        {
+          "enabled": true,
+          "filter": 0,
+          "path": "WorkLight_route_1/@PointLight2D@454",
+          "shadow": false
+        }
+      ]
+    },
+    {
+      "name": "light-groups-baseline",
+      "passed": true
+    },
+    {
+      "name": "light-states-baseline",
+      "passed": true
+    },
+    {
+      "name": "framing-baseline",
+      "passed": true
+    },
+    {
+      "name": "no-script-errors",
+      "passed": true
+    }
+  ],
+  "windows": [
+    {
+      "index": 0,
+      "mode": "baseline",
+      "instrumented": false,
+      "cpu": {
+        "max_ms": 205,
+        "mean_ms": 37.5835140997831,
+        "over_33_ms": 77,
+        "p95_ms": 205
+      },
+      "draw_calls": 179,
+      "frame": {
+        "max_ms": 60,
+        "mean_ms": 22.234273318872,
+        "over_33_ms": 22,
+        "p95_ms": 33
+      },
+      "frames": 461,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@452",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@454",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 461,
+        "refresh_usec": 19000
+      },
+      "seconds": 10.25,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 183000,
+        "draw_callbacks": 1645,
+        "dynamic": 7,
+        "recycled": 0,
+        "redraws": 135,
+        "reuses": 32295,
+        "setup_usec": 894000
+      },
+      "impacts": 46,
+      "profile": {
+        "methods": {},
+        "raf_callback_ms": []
+      }
+    },
+    {
+      "index": 1,
+      "mode": "baseline",
+      "instrumented": true,
+      "cpu": {
+        "max_ms": 35,
+        "mean_ms": 23.0698795180723,
+        "over_33_ms": 40,
+        "p95_ms": 35
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 73,
+        "mean_ms": 24.766265060241,
+        "over_33_ms": 38,
+        "p95_ms": 37
+      },
+      "frames": 415,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@452",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@454",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 415,
+        "refresh_usec": 22000
+      },
+      "seconds": 10.278,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 200000,
+        "draw_callbacks": 1539,
+        "dynamic": 7,
+        "recycled": 0,
+        "redraws": 132,
+        "reuses": 30090,
+        "setup_usec": 897000
+      },
+      "impacts": 45,
+      "profile": {
+        "methods": {
+          "deleteBuffer": {
+            "calls": 8048,
+            "total_ms": 5,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "deleteVertexArray": {
+            "calls": 4579,
+            "total_ms": 12,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "createBuffer": {
+            "calls": 8044,
+            "total_ms": 10,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "createVertexArray": {
+            "calls": 4577,
+            "total_ms": 5,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindVertexArray": {
+            "calls": 202611,
+            "total_ms": 35,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindBuffer": {
+            "calls": 103497,
+            "total_ms": 15,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "enableVertexAttribArray": {
+            "calls": 576181,
+            "total_ms": 91,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "vertexAttribPointer": {
+            "calls": 432213,
+            "total_ms": 91,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "disableVertexAttribArray": {
+            "calls": 18486,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bufferData": {
+            "calls": 11725,
+            "total_ms": 38,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindTexture": {
+            "calls": 185686,
+            "total_ms": 40,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "texImage2D": {
+            "calls": 409,
+            "total_ms": 6,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "enable": {
+            "calls": 10225,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindFramebuffer": {
+            "calls": 13497,
+            "total_ms": 6,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "useProgram": {
+            "calls": 77301,
+            "total_ms": 16,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "vertexAttribIPointer": {
+            "calls": 143968,
+            "total_ms": 26,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindBufferBase": {
+            "calls": 11043,
+            "total_ms": 9,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "activeTexture": {
+            "calls": 187322,
+            "total_ms": 24,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "beginTransformFeedback": {
+            "calls": 409,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "drawArrays": {
+            "calls": 1227,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "endTransformFeedback": {
+            "calls": 409,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "disable": {
+            "calls": 26994,
+            "total_ms": 8,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "depthMask": {
+            "calls": 6953,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "clearDepth": {
+            "calls": 2863,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "clear": {
+            "calls": 2863,
+            "total_ms": 9,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "viewport": {
+            "calls": 11452,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "cullFace": {
+            "calls": 3272,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "depthFunc": {
+            "calls": 3681,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "stencilMask": {
+            "calls": 1227,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "stencilFunc": {
+            "calls": 1227,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "colorMask": {
+            "calls": 1636,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "drawBuffers": {
+            "calls": 1227,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniformMatrix4fv": {
+            "calls": 8998,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform3fv": {
+            "calls": 4908,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform4fv": {
+            "calls": 2454,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform1ui": {
+            "calls": 147240,
+            "total_ms": 20,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "drawElements": {
+            "calls": 48262,
+            "total_ms": 13,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bufferSubData": {
+            "calls": 2045,
+            "total_ms": 10,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "clearStencil": {
+            "calls": 409,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "blendEquation": {
+            "calls": 5726,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "blendFuncSeparate": {
+            "calls": 6953,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "clearBufferfv": {
+            "calls": 409,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "texParameteri": {
+            "calls": 8998,
+            "total_ms": 9,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform1uiv": {
+            "calls": 818,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "checkFramebufferStatus": {
+            "calls": 409,
+            "total_ms": 179,
+            "max_ms": 2,
+            "over_1ms": 1
+          },
+          "readBuffer": {
+            "calls": 409,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "blitFramebuffer": {
+            "calls": 1636,
+            "total_ms": 9,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform1f": {
+            "calls": 7362,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform2f": {
+            "calls": 6953,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "getSyncParameter": {
+            "calls": 1636,
+            "total_ms": 245,
+            "max_ms": 3,
+            "over_1ms": 9
+          },
+          "deleteSync": {
+            "calls": 1636,
+            "total_ms": 10,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "fenceSync": {
+            "calls": 1636,
+            "total_ms": 461,
+            "max_ms": 5,
+            "over_1ms": 81
+          },
+          "scissor": {
+            "calls": 1636,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "clearColor": {
+            "calls": 2045,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "uniform4f": {
+            "calls": 92025,
+            "total_ms": 27,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "vertexAttribDivisor": {
+            "calls": 569328,
+            "total_ms": 96,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "drawElementsInstanced": {
+            "calls": 67894,
+            "total_ms": 76,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "drawArraysInstanced": {
+            "calls": 3272,
+            "total_ms": 5,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "vertexAttrib4f": {
+            "calls": 13906,
+            "total_ms": 6,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "blendFunc": {
+            "calls": 409,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "getParameter": {
+            "calls": 818,
+            "total_ms": 101,
+            "max_ms": 1,
+            "over_1ms": 0
+          }
+        },
+        "raf_callback_ms": [
+          24,
+          10,
+          12,
+          9,
+          17,
+          6,
+          16,
+          9,
+          16,
+          5,
+          13,
+          11,
+          12,
+          6,
+          17,
+          4,
+          13,
+          5,
+          19,
+          9,
+          16,
+          11,
+          12,
+          10,
+          11,
+          5,
+          21,
+          8,
+          17,
+          5,
+          18,
+          7,
+          18,
+          11,
+          21,
+          7,
+          21,
+          10,
+          10,
+          5,
+          9,
+          9,
+          17,
+          9,
+          14,
+          8,
+          20,
+          10,
+          8,
+          5,
+          16,
+          5,
+          11,
+          9,
+          12,
+          11,
+          12,
+          4,
+          16,
+          11,
+          9,
+          6,
+          26,
+          9,
+          17,
+          14,
+          10,
+          13,
+          9,
+          14,
+          4,
+          13,
+          8,
+          16,
+          9,
+          14,
+          15,
+          14,
+          12,
+          11,
+          10,
+          8,
+          19,
+          12,
+          13,
+          10,
+          14,
+          9,
+          16,
+          15,
+          21,
+          5,
+          11,
+          5,
+          9,
+          9,
+          15,
+          10,
+          11,
+          8,
+          13,
+          5,
+          12,
+          5,
+          13,
+          8,
+          12,
+          9,
+          19,
+          9,
+          22,
+          5,
+          15,
+          8,
+          19,
+          11,
+          11,
+          10,
+          19,
+          11,
+          12,
+          10,
+          9,
+          8,
+          11,
+          8,
+          12,
+          7,
+          11,
+          6,
+          12,
+          8,
+          17,
+          7,
+          17,
+          12,
+          16,
+          9,
+          16,
+          9,
+          13,
+          9,
+          14,
+          9,
+          9,
+          8,
+          17,
+          6,
+          14,
+          8,
+          16,
+          8,
+          17,
+          7,
+          11,
+          11,
+          11,
+          13,
+          18,
+          6,
+          19,
+          6,
+          13,
+          5,
+          15,
+          7,
+          14,
+          10,
+          13,
+          8,
+          16,
+          11,
+          13,
+          8,
+          11,
+          5,
+          20,
+          7,
+          10,
+          4,
+          12,
+          5,
+          17,
+          4,
+          11,
+          4,
+          17,
+          11,
+          18,
+          7,
+          12,
+          13,
+          19,
+          9,
+          12,
+          9,
+          14,
+          5,
+          14,
+          24,
+          12,
+          13,
+          7,
+          10,
+          11,
+          21,
+          6,
+          14,
+          6,
+          13,
+          4,
+          8,
+          4,
+          13,
+          9,
+          14,
+          9,
+          9,
+          4,
+          15,
+          13,
+          15,
+          9,
+          12,
+          8,
+          10,
+          10,
+          14,
+          10,
+          13,
+          9,
+          12,
+          5,
+          10,
+          5,
+          11,
+          10,
+          14,
+          5,
+          11,
+          8,
+          15,
+          5,
+          22,
+          14,
+          11,
+          8,
+          15,
+          7,
+          11,
+          6,
+          12,
+          9,
+          14,
+          5,
+          9,
+          10,
+          13,
+          11,
+          11,
+          11,
+          13,
+          10,
+          15,
+          7,
+          11,
+          7,
+          20,
+          13,
+          20,
+          5,
+          17,
+          4,
+          11,
+          11,
+          11,
+          4,
+          13,
+          8,
+          10,
+          6,
+          10,
+          10,
+          15,
+          12,
+          11,
+          16,
+          9,
+          14,
+          7,
+          11,
+          6,
+          15,
+          6,
+          11,
+          9,
+          13,
+          8,
+          13,
+          5,
+          13,
+          8,
+          22,
+          7,
+          11,
+          4,
+          9,
+          5,
+          13,
+          5,
+          12,
+          9,
+          8,
+          5,
+          8,
+          6,
+          8,
+          4,
+          6,
+          13,
+          7,
+          9,
+          5,
+          8,
+          7,
+          9,
+          8,
+          11,
+          6,
+          8,
+          5,
+          10,
+          8,
+          8,
+          6,
+          11,
+          7,
+          16,
+          7,
+          21,
+          12,
+          10,
+          8,
+          19,
+          15,
+          37,
+          15,
+          10,
+          10,
+          16,
+          10,
+          9,
+          11,
+          13,
+          9,
+          12,
+          8,
+          12,
+          10,
+          19,
+          5,
+          10,
+          10,
+          15,
+          7,
+          13,
+          7,
+          25,
+          14,
+          11,
+          10,
+          7,
+          11,
+          6,
+          13,
+          9,
+          14,
+          7,
+          20,
+          8,
+          13,
+          8,
+          10,
+          7,
+          17,
+          5,
+          17,
+          6,
+          11,
+          10,
+          12,
+          7,
+          17,
+          4,
+          15,
+          5,
+          15,
+          7,
+          21,
+          9,
+          10,
+          8,
+          10,
+          9,
+          17,
+          8,
+          10,
+          8,
+          15
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "mode": "lights_off",
+      "instrumented": true,
+      "cpu": {
+        "max_ms": 22,
+        "mean_ms": 17.7850637522769,
+        "over_33_ms": 0,
+        "p95_ms": 22
+      },
+      "draw_calls": 157,
+      "frame": {
+        "max_ms": 63,
+        "mean_ms": 18.7814207650273,
+        "over_33_ms": 12,
+        "p95_ms": 27
+      },
+      "frames": 549,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@452",
+            "shadow": false
+          },
+          {
+            "enabled": false,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@454",
+            "shadow": false
+          }
+        ],
+        "mode": "lights_off",
+        "occluders": 0,
+        "rebuilds": 0,
+        "refresh_calls": 549,
+        "refresh_usec": 9000
+      },
+      "seconds": 10.311,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 211000,
+        "draw_callbacks": 1785,
+        "dynamic": 7,
+        "recycled": 0,
+        "redraws": 135,
+        "reuses": 35331,
+        "setup_usec": 958000
+      },
+      "impacts": 45,
+      "profile": {
+        "methods": {
+          "deleteBuffer": {
+            "calls": 8879,
+            "total_ms": 5,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "deleteVertexArray": {
+            "calls": 5028,
+            "total_ms": 18,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "createBuffer": {
+            "calls": 8883,
+            "total_ms": 11,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "createVertexArray": {
+            "calls": 5030,
+            "total_ms": 11,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindVertexArray": {
+            "calls": 182995,
+            "total_ms": 35,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindBuffer": {
+            "calls": 123253,
+            "total_ms": 23,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "enableVertexAttribArray": {
+            "calls": 679659,
+            "total_ms": 110,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "vertexAttribPointer": {
+            "calls": 509469,
+            "total_ms": 96,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "disableVertexAttribArray": {
+            "calls": 20761,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bufferData": {
+            "calls": 13824,
+            "total_ms": 25,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindTexture": {
+            "calls": 248148,
+            "total_ms": 46,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "texImage2D": {
+            "calls": 549,
+            "total_ms": 4,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "enable": {
+            "calls": 9333,
+            "total_ms": 4,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindFramebuffer": {
+            "calls": 13725,
+            "total_ms": 4,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "useProgram": {
+            "calls": 90036,
+            "total_ms": 24,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "vertexAttribIPointer": {
+            "calls": 170190,
+            "total_ms": 39,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindBufferBase": {
+            "calls": 14274,
+            "total_ms": 11,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "activeTexture": {
+            "calls": 250344,
+            "total_ms": 42,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "beginTransformFeedback": {
+            "calls": 549,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "drawArrays": {
+            "calls": 1647,
+            "total_ms": 4,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "endTransformFeedback": {
+            "calls": 549,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "disable": {
+            "calls": 27450,
+            "total_ms": 11,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "depthMask": {
+            "calls": 4941,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "clearDepth": {
+            "calls": 1647,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "clear": {
+            "calls": 1647,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "viewport": {
+            "calls": 4392,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "cullFace": {
+            "calls": 2196,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "depthFunc": {
+            "calls": 2745,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "stencilMask": {
+            "calls": 1647,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "stencilFunc": {
+            "calls": 1647,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "colorMask": {
+            "calls": 2196,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "drawBuffers": {
+            "calls": 1647,
+            "total_ms": 4,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniformMatrix4fv": {
+            "calls": 3294,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform3fv": {
+            "calls": 6588,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform4fv": {
+            "calls": 3294,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform1ui": {
+            "calls": 174582,
+            "total_ms": 35,
+            "max_ms": 2,
+            "over_1ms": 1
+          },
+          "drawElements": {
+            "calls": 3294,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bufferSubData": {
+            "calls": 2196,
+            "total_ms": 10,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "clearStencil": {
+            "calls": 549,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "blendEquation": {
+            "calls": 7686,
+            "total_ms": 4,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "blendFuncSeparate": {
+            "calls": 9333,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "clearBufferfv": {
+            "calls": 549,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "texParameteri": {
+            "calls": 12078,
+            "total_ms": 5,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform1uiv": {
+            "calls": 1098,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "checkFramebufferStatus": {
+            "calls": 549,
+            "total_ms": 213,
+            "max_ms": 2,
+            "over_1ms": 4
+          },
+          "readBuffer": {
+            "calls": 549,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "blitFramebuffer": {
+            "calls": 2196,
+            "total_ms": 8,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform1f": {
+            "calls": 1098,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform2f": {
+            "calls": 549,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "getSyncParameter": {
+            "calls": 2196,
+            "total_ms": 103,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "deleteSync": {
+            "calls": 2196,
+            "total_ms": 7,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "fenceSync": {
+            "calls": 2196,
+            "total_ms": 390,
+            "max_ms": 3,
+            "over_1ms": 34
+          },
+          "clearColor": {
+            "calls": 549,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "vertexAttribDivisor": {
+            "calls": 671976,
+            "total_ms": 101,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "drawElementsInstanced": {
+            "calls": 79605,
+            "total_ms": 55,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "drawArraysInstanced": {
+            "calls": 4392,
+            "total_ms": 4,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "vertexAttrib4f": {
+            "calls": 18666,
+            "total_ms": 9,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "blendFunc": {
+            "calls": 549,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "uniform4f": {
+            "calls": 549,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "getParameter": {
+            "calls": 1098,
+            "total_ms": 110,
+            "max_ms": 1,
+            "over_1ms": 0
+          }
+        },
+        "raf_callback_ms": [
+          14,
+          5,
+          11,
+          7,
+          9,
+          6,
+          8,
+          8,
+          13,
+          4,
+          11,
+          4,
+          7,
+          11,
+          7,
+          11,
+          6,
+          9,
+          4,
+          9,
+          4,
+          4,
+          8,
+          6,
+          7,
+          12,
+          6,
+          8,
+          6,
+          9,
+          5,
+          4,
+          18,
+          5,
+          11,
+          6,
+          11,
+          8,
+          15,
+          6,
+          9,
+          4,
+          10,
+          8,
+          10,
+          7,
+          18,
+          7,
+          18,
+          7,
+          12,
+          21,
+          11,
+          10,
+          16,
+          5,
+          14,
+          8,
+          18,
+          9,
+          12,
+          9,
+          13,
+          7,
+          16,
+          13,
+          14,
+          9,
+          10,
+          12,
+          10,
+          5,
+          10,
+          8,
+          13,
+          4,
+          9,
+          5,
+          5,
+          8,
+          4,
+          13,
+          4,
+          12,
+          5,
+          16,
+          10,
+          10,
+          7,
+          10,
+          7,
+          12,
+          5,
+          14,
+          10,
+          11,
+          5,
+          13,
+          4,
+          16,
+          10,
+          11,
+          10,
+          9,
+          14,
+          6,
+          12,
+          6,
+          8,
+          4,
+          4,
+          12,
+          4,
+          11,
+          7,
+          8,
+          9,
+          8,
+          4,
+          3,
+          8,
+          5,
+          6,
+          13,
+          4,
+          5,
+          10,
+          7,
+          3,
+          10,
+          3,
+          9,
+          4,
+          6,
+          13,
+          5,
+          14,
+          5,
+          9,
+          5,
+          11,
+          9,
+          10,
+          6,
+          9,
+          3,
+          10,
+          7,
+          15,
+          7,
+          14,
+          6,
+          18,
+          6,
+          19,
+          4,
+          9,
+          6,
+          15,
+          10,
+          4,
+          5,
+          9,
+          4,
+          8,
+          4,
+          10,
+          6,
+          8,
+          7,
+          8,
+          6,
+          9,
+          6,
+          10,
+          4,
+          9,
+          5,
+          8,
+          5,
+          11,
+          6,
+          9,
+          6,
+          12,
+          8,
+          16,
+          8,
+          14,
+          8,
+          15,
+          6,
+          12,
+          8,
+          14,
+          6,
+          13,
+          8,
+          17,
+          9,
+          9,
+          4,
+          9,
+          4,
+          4,
+          9,
+          5,
+          4,
+          8,
+          4,
+          10,
+          4,
+          8,
+          4,
+          4,
+          16,
+          4,
+          10,
+          4,
+          16,
+          5,
+          14,
+          6,
+          11,
+          5,
+          14,
+          5,
+          10,
+          5,
+          10,
+          4,
+          14,
+          4,
+          11,
+          6,
+          10,
+          4,
+          13,
+          5,
+          14,
+          5,
+          9,
+          4,
+          13,
+          8,
+          12,
+          4,
+          9,
+          5,
+          8,
+          4,
+          8,
+          6,
+          9,
+          4,
+          6,
+          11,
+          5,
+          10,
+          7,
+          8,
+          7,
+          8,
+          8,
+          8,
+          7,
+          7,
+          11,
+          7,
+          12,
+          4,
+          10,
+          4,
+          12,
+          5,
+          11,
+          4,
+          4,
+          8,
+          3,
+          8,
+          9,
+          8,
+          8,
+          5,
+          8,
+          10,
+          6,
+          7,
+          11,
+          4,
+          7,
+          8,
+          8,
+          9,
+          7,
+          8,
+          8,
+          9,
+          15,
+          11,
+          14,
+          5,
+          10,
+          8,
+          12,
+          8,
+          15,
+          7,
+          21,
+          7,
+          10,
+          3,
+          12,
+          4,
+          3,
+          7,
+          3,
+          4,
+          17,
+          5,
+          8,
+          4,
+          9,
+          3,
+          4,
+          13,
+          4,
+          7,
+          4,
+          4,
+          8,
+          5,
+          4,
+          23,
+          9,
+          14,
+          6,
+          18,
+          8,
+          11,
+          5,
+          13,
+          6,
+          14,
+          7,
+          11,
+          6,
+          11,
+          7,
+          9,
+          5,
+          4,
+          8,
+          3,
+          6,
+          14,
+          6,
+          15,
+          10,
+          15,
+          5,
+          20,
+          5,
+          13,
+          5,
+          11,
+          9,
+          10,
+          5,
+          18,
+          6,
+          10,
+          4,
+          20,
+          5,
+          15,
+          5,
+          10,
+          6,
+          10,
+          4,
+          4,
+          7,
+          5,
+          4,
+          15,
+          5,
+          13,
+          9,
+          13,
+          4,
+          8,
+          4,
+          11,
+          4,
+          8,
+          9,
+          5,
+          12,
+          6,
+          11,
+          7,
+          9,
+          4,
+          8,
+          6,
+          4,
+          11,
+          4,
+          4,
+          12,
+          5,
+          12,
+          6,
+          13,
+          7,
+          11,
+          4,
+          10,
+          11,
+          13,
+          10,
+          13,
+          5,
+          16,
+          5,
+          16,
+          6,
+          13,
+          7,
+          9,
+          4,
+          12,
+          8,
+          11,
+          12,
+          14,
+          8,
+          12,
+          9,
+          12,
+          5,
+          11,
+          7,
+          10,
+          10,
+          10,
+          6,
+          11,
+          6,
+          9,
+          5,
+          5,
+          10,
+          5,
+          5,
+          16,
+          7,
+          13,
+          5,
+          11,
+          6,
+          9,
+          5,
+          12,
+          6,
+          10,
+          5,
+          8,
+          6,
+          12,
+          7,
+          14,
+          6,
+          0,
+          10,
+          8,
+          12,
+          5,
+          8,
+          5,
+          8,
+          4,
+          10,
+          4,
+          4,
+          8,
+          4,
+          8,
+          5,
+          9,
+          4,
+          6,
+          10,
+          7,
+          13,
+          8,
+          12,
+          5,
+          13,
+          7,
+          18,
+          6,
+          11,
+          6,
+          8,
+          6,
+          5,
+          13,
+          5,
+          13,
+          7,
+          10,
+          4,
+          4,
+          9,
+          6,
+          3,
+          8,
+          4,
+          5,
+          8,
+          3,
+          5,
+          18,
+          5,
+          14,
+          4,
+          15,
+          7,
+          11,
+          5,
+          10,
+          7,
+          9,
+          4,
+          11,
+          5,
+          9,
+          6,
+          11,
+          4,
+          8,
+          4,
+          7,
+          4,
+          9,
+          8,
+          9
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "mode": "lights_off",
+      "instrumented": false,
+      "cpu": {
+        "max_ms": 17,
+        "mean_ms": 10.8930921052632,
+        "over_33_ms": 0,
+        "p95_ms": 17
+      },
+      "draw_calls": 157,
+      "frame": {
+        "max_ms": 56,
+        "mean_ms": 16.8042763157895,
+        "over_33_ms": 2,
+        "p95_ms": 19
+      },
+      "frames": 608,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@452",
+            "shadow": false
+          },
+          {
+            "enabled": false,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@454",
+            "shadow": false
+          }
+        ],
+        "mode": "lights_off",
+        "occluders": 0,
+        "rebuilds": 0,
+        "refresh_calls": 608,
+        "refresh_usec": 7000
+      },
+      "seconds": 10.217,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 187000,
+        "draw_callbacks": 2056,
+        "dynamic": 7,
+        "recycled": 0,
+        "redraws": 132,
+        "reuses": 40992,
+        "setup_usec": 859000
+      },
+      "impacts": 45,
+      "profile": {
+        "methods": {},
+        "raf_callback_ms": []
+      }
+    },
+    {
+      "index": 4,
+      "mode": "lights_off",
+      "instrumented": false,
+      "cpu": {
+        "max_ms": 36,
+        "mean_ms": 21.1762376237624,
+        "over_33_ms": 25,
+        "p95_ms": 27
+      },
+      "draw_calls": 157,
+      "frame": {
+        "max_ms": 54,
+        "mean_ms": 20.2356435643564,
+        "over_33_ms": 26,
+        "p95_ms": 34
+      },
+      "frames": 505,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@452",
+            "shadow": false
+          },
+          {
+            "enabled": false,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@454",
+            "shadow": false
+          }
+        ],
+        "mode": "lights_off",
+        "occluders": 0,
+        "rebuilds": 0,
+        "refresh_calls": 505,
+        "refresh_usec": 12000
+      },
+      "seconds": 10.219,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 230000,
+        "draw_callbacks": 1769,
+        "dynamic": 7,
+        "recycled": 0,
+        "redraws": 135,
+        "reuses": 34917,
+        "setup_usec": 1030000
+      },
+      "impacts": 45,
+      "profile": {
+        "methods": {},
+        "raf_callback_ms": []
+      }
+    },
+    {
+      "index": 5,
+      "mode": "lights_off",
+      "instrumented": true,
+      "cpu": {
+        "max_ms": 27,
+        "mean_ms": 20.8937875751503,
+        "over_33_ms": 0,
+        "p95_ms": 27
+      },
+      "draw_calls": 157,
+      "frame": {
+        "max_ms": 85,
+        "mean_ms": 20.4569138276553,
+        "over_33_ms": 28,
+        "p95_ms": 34
+      },
+      "frames": 499,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": false,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@452",
+            "shadow": false
+          },
+          {
+            "enabled": false,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@454",
+            "shadow": false
+          }
+        ],
+        "mode": "lights_off",
+        "occluders": 0,
+        "rebuilds": 0,
+        "refresh_calls": 499,
+        "refresh_usec": 10000
+      },
+      "seconds": 10.208,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 215000,
+        "draw_callbacks": 1727,
+        "dynamic": 7,
+        "recycled": 0,
+        "redraws": 135,
+        "reuses": 34089,
+        "setup_usec": 982000
+      },
+      "impacts": 45,
+      "profile": {
+        "methods": {
+          "deleteBuffer": {
+            "calls": 8643,
+            "total_ms": 8,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "deleteVertexArray": {
+            "calls": 4898,
+            "total_ms": 15,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "createBuffer": {
+            "calls": 8639,
+            "total_ms": 10,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "createVertexArray": {
+            "calls": 4896,
+            "total_ms": 5,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindVertexArray": {
+            "calls": 166662,
+            "total_ms": 46,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindBuffer": {
+            "calls": 113051,
+            "total_ms": 28,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "enableVertexAttribArray": {
+            "calls": 616963,
+            "total_ms": 93,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "vertexAttribPointer": {
+            "calls": 462583,
+            "total_ms": 88,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "disableVertexAttribArray": {
+            "calls": 20057,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bufferData": {
+            "calls": 13121,
+            "total_ms": 22,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindTexture": {
+            "calls": 225096,
+            "total_ms": 53,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "texImage2D": {
+            "calls": 498,
+            "total_ms": 8,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "enable": {
+            "calls": 8466,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindFramebuffer": {
+            "calls": 12450,
+            "total_ms": 11,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "useProgram": {
+            "calls": 81672,
+            "total_ms": 10,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "vertexAttribIPointer": {
+            "calls": 154380,
+            "total_ms": 30,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindBufferBase": {
+            "calls": 12948,
+            "total_ms": 7,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "activeTexture": {
+            "calls": 227088,
+            "total_ms": 33,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "beginTransformFeedback": {
+            "calls": 498,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "drawArrays": {
+            "calls": 1494,
+            "total_ms": 6,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "endTransformFeedback": {
+            "calls": 498,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "disable": {
+            "calls": 24900,
+            "total_ms": 8,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "depthMask": {
+            "calls": 4482,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "clearDepth": {
+            "calls": 1494,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "clear": {
+            "calls": 1494,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "viewport": {
+            "calls": 3984,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "cullFace": {
+            "calls": 1992,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "depthFunc": {
+            "calls": 2490,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "stencilMask": {
+            "calls": 1494,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "stencilFunc": {
+            "calls": 1494,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "colorMask": {
+            "calls": 1992,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "drawBuffers": {
+            "calls": 1494,
+            "total_ms": 6,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniformMatrix4fv": {
+            "calls": 2988,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform3fv": {
+            "calls": 5976,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform4fv": {
+            "calls": 2988,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform1ui": {
+            "calls": 158364,
+            "total_ms": 22,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "drawElements": {
+            "calls": 2988,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bufferSubData": {
+            "calls": 1992,
+            "total_ms": 7,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "clearStencil": {
+            "calls": 498,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "blendEquation": {
+            "calls": 6972,
+            "total_ms": 4,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "blendFuncSeparate": {
+            "calls": 8466,
+            "total_ms": 4,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "clearBufferfv": {
+            "calls": 498,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "texParameteri": {
+            "calls": 10956,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform1uiv": {
+            "calls": 996,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "checkFramebufferStatus": {
+            "calls": 498,
+            "total_ms": 224,
+            "max_ms": 3,
+            "over_1ms": 8
+          },
+          "readBuffer": {
+            "calls": 498,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "blitFramebuffer": {
+            "calls": 1992,
+            "total_ms": 12,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform1f": {
+            "calls": 996,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform2f": {
+            "calls": 498,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "getSyncParameter": {
+            "calls": 1992,
+            "total_ms": 97,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "deleteSync": {
+            "calls": 1992,
+            "total_ms": 11,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "fenceSync": {
+            "calls": 1992,
+            "total_ms": 501,
+            "max_ms": 9,
+            "over_1ms": 58
+          },
+          "clearColor": {
+            "calls": 498,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "vertexAttribDivisor": {
+            "calls": 609552,
+            "total_ms": 91,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "drawElementsInstanced": {
+            "calls": 72210,
+            "total_ms": 75,
+            "max_ms": 4,
+            "over_1ms": 1
+          },
+          "drawArraysInstanced": {
+            "calls": 3984,
+            "total_ms": 4,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "vertexAttrib4f": {
+            "calls": 16932,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "blendFunc": {
+            "calls": 498,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "uniform4f": {
+            "calls": 498,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "getParameter": {
+            "calls": 996,
+            "total_ms": 122,
+            "max_ms": 1,
+            "over_1ms": 0
+          }
+        },
+        "raf_callback_ms": [
+          5,
+          8,
+          4,
+          4,
+          12,
+          4,
+          8,
+          5,
+          13,
+          6,
+          16,
+          6,
+          10,
+          8,
+          13,
+          9,
+          10,
+          4,
+          9,
+          3,
+          8,
+          4,
+          5,
+          10,
+          3,
+          10,
+          13,
+          6,
+          9,
+          4,
+          10,
+          5,
+          8,
+          3,
+          4,
+          12,
+          4,
+          15,
+          6,
+          9,
+          5,
+          12,
+          7,
+          12,
+          6,
+          12,
+          7,
+          12,
+          6,
+          13,
+          8,
+          14,
+          5,
+          11,
+          7,
+          11,
+          5,
+          10,
+          5,
+          12,
+          7,
+          13,
+          8,
+          13,
+          8,
+          9,
+          4,
+          7,
+          5,
+          9,
+          4,
+          9,
+          4,
+          7,
+          9,
+          8,
+          19,
+          7,
+          11,
+          6,
+          9,
+          4,
+          8,
+          3,
+          11,
+          6,
+          10,
+          6,
+          8,
+          3,
+          10,
+          6,
+          11,
+          6,
+          10,
+          8,
+          12,
+          11,
+          19,
+          10,
+          8,
+          17,
+          18,
+          14,
+          22,
+          18,
+          18,
+          22,
+          12,
+          10,
+          15,
+          4,
+          13,
+          6,
+          8,
+          4,
+          15,
+          9,
+          18,
+          6,
+          23,
+          26,
+          18,
+          21,
+          23,
+          11,
+          20,
+          17,
+          20,
+          21,
+          6,
+          8,
+          7,
+          4,
+          9,
+          4,
+          10,
+          4,
+          10,
+          7,
+          13,
+          4,
+          8,
+          5,
+          22,
+          7,
+          16,
+          5,
+          11,
+          6,
+          11,
+          8,
+          16,
+          6,
+          15,
+          4,
+          8,
+          5,
+          4,
+          8,
+          5,
+          8,
+          14,
+          6,
+          12,
+          7,
+          10,
+          9,
+          10,
+          4,
+          9,
+          4,
+          9,
+          12,
+          7,
+          10,
+          11,
+          11,
+          7,
+          11,
+          10,
+          15,
+          10,
+          18,
+          12,
+          10,
+          13,
+          12,
+          8,
+          10,
+          5,
+          20,
+          5,
+          21,
+          11,
+          19,
+          11,
+          14,
+          5,
+          13,
+          11,
+          21,
+          11,
+          13,
+          5,
+          18,
+          5,
+          12,
+          13,
+          11,
+          5,
+          8,
+          8,
+          13,
+          8,
+          14,
+          9,
+          14,
+          7,
+          12,
+          8,
+          11,
+          3,
+          10,
+          7,
+          13,
+          7,
+          17,
+          6,
+          15,
+          7,
+          15,
+          12,
+          13,
+          7,
+          13,
+          6,
+          11,
+          9,
+          28,
+          5,
+          12,
+          3,
+          11,
+          5,
+          12,
+          7,
+          17,
+          8,
+          14,
+          7,
+          13,
+          4,
+          8,
+          4,
+          7,
+          4,
+          4,
+          18,
+          9,
+          13,
+          13,
+          16,
+          8,
+          9,
+          6,
+          8,
+          7,
+          14,
+          7,
+          13,
+          8,
+          11,
+          5,
+          9,
+          6,
+          5,
+          9,
+          3,
+          18,
+          6,
+          13,
+          6,
+          10,
+          4,
+          8,
+          4,
+          3,
+          11,
+          4,
+          9,
+          4,
+          8,
+          20,
+          9,
+          12,
+          8,
+          13,
+          4,
+          9,
+          5,
+          10,
+          7,
+          19,
+          9,
+          21,
+          9,
+          9,
+          5,
+          9,
+          6,
+          11,
+          4,
+          3,
+          8,
+          4,
+          5,
+          8,
+          8,
+          5,
+          13,
+          11,
+          9,
+          13,
+          6,
+          9,
+          4,
+          10,
+          4,
+          4,
+          10,
+          5,
+          10,
+          7,
+          9,
+          7,
+          10,
+          6,
+          10,
+          4,
+          4,
+          9,
+          8,
+          11,
+          3,
+          10,
+          6,
+          9,
+          4,
+          8,
+          6,
+          5,
+          11,
+          9,
+          18,
+          7,
+          10,
+          4,
+          13,
+          9,
+          11,
+          8,
+          11,
+          4,
+          11,
+          6,
+          10,
+          7,
+          11,
+          6,
+          12,
+          23,
+          5,
+          14,
+          8,
+          13,
+          10,
+          12,
+          8,
+          8,
+          8,
+          21,
+          9,
+          17,
+          6,
+          14,
+          13,
+          14,
+          11,
+          21,
+          9,
+          11,
+          8,
+          12,
+          7,
+          11,
+          5,
+          20,
+          9,
+          15,
+          5,
+          17,
+          10,
+          14,
+          8,
+          9,
+          4,
+          0,
+          11,
+          6,
+          12,
+          5,
+          11,
+          10,
+          13,
+          4,
+          13,
+          5,
+          9,
+          4,
+          9,
+          4,
+          12,
+          10,
+          10,
+          5,
+          12,
+          6,
+          12,
+          8,
+          9,
+          4,
+          9,
+          6,
+          8,
+          15,
+          6,
+          8,
+          7,
+          10,
+          6,
+          10,
+          6,
+          11,
+          5,
+          6,
+          13,
+          7,
+          12,
+          8,
+          12,
+          6,
+          14,
+          7,
+          12,
+          8,
+          10,
+          9,
+          11,
+          3,
+          13,
+          6,
+          13,
+          4,
+          9,
+          5,
+          11,
+          4,
+          12,
+          6,
+          12,
+          7,
+          13,
+          6,
+          16,
+          11,
+          9,
+          10,
+          7,
+          6,
+          10,
+          10,
+          13,
+          8,
+          19,
+          4,
+          14,
+          7,
+          15,
+          5,
+          14,
+          10,
+          15,
+          8,
+          11,
+          12,
+          12,
+          6,
+          11
+        ]
+      }
+    },
+    {
+      "index": 6,
+      "mode": "baseline",
+      "instrumented": true,
+      "cpu": {
+        "max_ms": 28,
+        "mean_ms": 20.6629955947137,
+        "over_33_ms": 0,
+        "p95_ms": 28
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 95,
+        "mean_ms": 22.6806167400881,
+        "over_33_ms": 25,
+        "p95_ms": 34
+      },
+      "frames": 454,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@452",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@454",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 454,
+        "refresh_usec": 14000
+      },
+      "seconds": 10.298,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 200000,
+        "draw_callbacks": 1651,
+        "dynamic": 7,
+        "recycled": 0,
+        "redraws": 132,
+        "reuses": 32574,
+        "setup_usec": 870000
+      },
+      "impacts": 47,
+      "profile": {
+        "methods": {
+          "deleteBuffer": {
+            "calls": 8560,
+            "total_ms": 11,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "deleteVertexArray": {
+            "calls": 4859,
+            "total_ms": 7,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "createBuffer": {
+            "calls": 8560,
+            "total_ms": 8,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "createVertexArray": {
+            "calls": 4859,
+            "total_ms": 5,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindVertexArray": {
+            "calls": 224460,
+            "total_ms": 49,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindBuffer": {
+            "calls": 114072,
+            "total_ms": 27,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "enableVertexAttribArray": {
+            "calls": 639261,
+            "total_ms": 96,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "vertexAttribPointer": {
+            "calls": 479453,
+            "total_ms": 76,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "disableVertexAttribArray": {
+            "calls": 19726,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bufferData": {
+            "calls": 12646,
+            "total_ms": 20,
+            "max_ms": 2,
+            "over_1ms": 1
+          },
+          "bindTexture": {
+            "calls": 206116,
+            "total_ms": 38,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "texImage2D": {
+            "calls": 454,
+            "total_ms": 4,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "enable": {
+            "calls": 11350,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindFramebuffer": {
+            "calls": 14982,
+            "total_ms": 8,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "useProgram": {
+            "calls": 85806,
+            "total_ms": 11,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "vertexAttribIPointer": {
+            "calls": 159808,
+            "total_ms": 35,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bindBufferBase": {
+            "calls": 12258,
+            "total_ms": 8,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "activeTexture": {
+            "calls": 207932,
+            "total_ms": 37,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "beginTransformFeedback": {
+            "calls": 454,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "drawArrays": {
+            "calls": 1362,
+            "total_ms": 6,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "endTransformFeedback": {
+            "calls": 454,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "disable": {
+            "calls": 29964,
+            "total_ms": 9,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "depthMask": {
+            "calls": 7718,
+            "total_ms": 10,
+            "max_ms": 5,
+            "over_1ms": 1
+          },
+          "clearDepth": {
+            "calls": 3178,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "clear": {
+            "calls": 3178,
+            "total_ms": 6,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "viewport": {
+            "calls": 12712,
+            "total_ms": 5,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "cullFace": {
+            "calls": 3632,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "depthFunc": {
+            "calls": 4086,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "stencilMask": {
+            "calls": 1362,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "stencilFunc": {
+            "calls": 1362,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "colorMask": {
+            "calls": 1816,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "drawBuffers": {
+            "calls": 1362,
+            "total_ms": 4,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniformMatrix4fv": {
+            "calls": 9988,
+            "total_ms": 7,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform3fv": {
+            "calls": 5448,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform4fv": {
+            "calls": 2724,
+            "total_ms": 2,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform1ui": {
+            "calls": 163440,
+            "total_ms": 25,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "drawElements": {
+            "calls": 53572,
+            "total_ms": 4,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "bufferSubData": {
+            "calls": 2270,
+            "total_ms": 6,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "clearStencil": {
+            "calls": 454,
+            "total_ms": 0,
+            "max_ms": 0,
+            "over_1ms": 0
+          },
+          "blendEquation": {
+            "calls": 6356,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "blendFuncSeparate": {
+            "calls": 7718,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "clearBufferfv": {
+            "calls": 454,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "texParameteri": {
+            "calls": 9988,
+            "total_ms": 4,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform1uiv": {
+            "calls": 908,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "checkFramebufferStatus": {
+            "calls": 454,
+            "total_ms": 205,
+            "max_ms": 2,
+            "over_1ms": 4
+          },
+          "readBuffer": {
+            "calls": 454,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "blitFramebuffer": {
+            "calls": 1816,
+            "total_ms": 7,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform1f": {
+            "calls": 8172,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform2f": {
+            "calls": 7718,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "getSyncParameter": {
+            "calls": 1816,
+            "total_ms": 213,
+            "max_ms": 2,
+            "over_1ms": 4
+          },
+          "deleteSync": {
+            "calls": 1816,
+            "total_ms": 10,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "fenceSync": {
+            "calls": 1816,
+            "total_ms": 428,
+            "max_ms": 5,
+            "over_1ms": 60
+          },
+          "scissor": {
+            "calls": 1816,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "clearColor": {
+            "calls": 2270,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "uniform4f": {
+            "calls": 102150,
+            "total_ms": 13,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "vertexAttribDivisor": {
+            "calls": 631968,
+            "total_ms": 78,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "drawElementsInstanced": {
+            "calls": 75364,
+            "total_ms": 57,
+            "max_ms": 2,
+            "over_1ms": 1
+          },
+          "drawArraysInstanced": {
+            "calls": 3632,
+            "total_ms": 3,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "vertexAttrib4f": {
+            "calls": 15436,
+            "total_ms": 5,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "blendFunc": {
+            "calls": 454,
+            "total_ms": 1,
+            "max_ms": 1,
+            "over_1ms": 0
+          },
+          "getParameter": {
+            "calls": 908,
+            "total_ms": 125,
+            "max_ms": 1,
+            "over_1ms": 0
+          }
+        },
+        "raf_callback_ms": [
+          14,
+          21,
+          20,
+          9,
+          13,
+          6,
+          20,
+          18,
+          16,
+          15,
+          23,
+          19,
+          17,
+          13,
+          6,
+          13,
+          6,
+          13,
+          5,
+          10,
+          12,
+          15,
+          14,
+          5,
+          11,
+          4,
+          9,
+          8,
+          16,
+          10,
+          9,
+          4,
+          13,
+          6,
+          10,
+          4,
+          9,
+          5,
+          3,
+          9,
+          4,
+          8,
+          4,
+          6,
+          14,
+          8,
+          10,
+          7,
+          12,
+          6,
+          12,
+          5,
+          9,
+          6,
+          10,
+          6,
+          9,
+          6,
+          11,
+          4,
+          9,
+          4,
+          9,
+          4,
+          11,
+          5,
+          9,
+          10,
+          9,
+          6,
+          9,
+          7,
+          9,
+          11,
+          12,
+          4,
+          10,
+          6,
+          9,
+          10,
+          10,
+          6,
+          9,
+          7,
+          9,
+          4,
+          8,
+          4,
+          9,
+          5,
+          10,
+          5,
+          9,
+          4,
+          10,
+          4,
+          11,
+          4,
+          9,
+          7,
+          9,
+          4,
+          10,
+          4,
+          10,
+          6,
+          9,
+          4,
+          5,
+          10,
+          4,
+          9,
+          4,
+          8,
+          5,
+          8,
+          6,
+          10,
+          4,
+          8,
+          4,
+          9,
+          5,
+          9,
+          5,
+          14,
+          12,
+          9,
+          17,
+          5,
+          16,
+          5,
+          11,
+          6,
+          14,
+          6,
+          11,
+          7,
+          12,
+          4,
+          10,
+          6,
+          10,
+          6,
+          10,
+          7,
+          9,
+          5,
+          11,
+          6,
+          10,
+          5,
+          10,
+          5,
+          9,
+          8,
+          12,
+          5,
+          8,
+          4,
+          10,
+          9,
+          9,
+          5,
+          10,
+          6,
+          11,
+          6,
+          11,
+          7,
+          14,
+          5,
+          10,
+          6,
+          11,
+          6,
+          12,
+          14,
+          13,
+          17,
+          5,
+          14,
+          9,
+          20,
+          9,
+          14,
+          5,
+          8,
+          4,
+          22,
+          7,
+          11,
+          5,
+          9,
+          5,
+          10,
+          9,
+          12,
+          5,
+          10,
+          7,
+          17,
+          5,
+          9,
+          7,
+          12,
+          5,
+          10,
+          9,
+          9,
+          8,
+          12,
+          4,
+          14,
+          5,
+          9,
+          8,
+          12,
+          7,
+          11,
+          6,
+          10,
+          9,
+          20,
+          12,
+          10,
+          12,
+          8,
+          13,
+          7,
+          15,
+          9,
+          14,
+          8,
+          15,
+          12,
+          19,
+          7,
+          12,
+          6,
+          15,
+          10,
+          13,
+          23,
+          12,
+          23,
+          12,
+          9,
+          19,
+          10,
+          14,
+          8,
+          10,
+          8,
+          13,
+          6,
+          11,
+          9,
+          14,
+          12,
+          13,
+          6,
+          15,
+          10,
+          22,
+          11,
+          17,
+          10,
+          9,
+          5,
+          11,
+          6,
+          11,
+          6,
+          17,
+          12,
+          9,
+          5,
+          11,
+          4,
+          9,
+          6,
+          11,
+          5,
+          12,
+          5,
+          10,
+          4,
+          12,
+          5,
+          11,
+          6,
+          10,
+          4,
+          10,
+          9,
+          17,
+          5,
+          15,
+          12,
+          11,
+          10,
+          28,
+          19,
+          11,
+          11,
+          18,
+          10,
+          13,
+          7,
+          24,
+          12,
+          10,
+          14,
+          12,
+          8,
+          14,
+          7,
+          11,
+          5,
+          10,
+          6,
+          15,
+          6,
+          12,
+          7,
+          14,
+          9,
+          12,
+          6,
+          11,
+          6,
+          12,
+          9,
+          11,
+          9,
+          12,
+          7,
+          16,
+          16,
+          20,
+          8,
+          19,
+          12,
+          14,
+          15,
+          28,
+          12,
+          6,
+          11,
+          8,
+          12,
+          6,
+          10,
+          9,
+          11,
+          8,
+          12,
+          6,
+          13,
+          6,
+          10,
+          10,
+          10,
+          8,
+          12,
+          9,
+          10,
+          7,
+          13,
+          7,
+          11,
+          12,
+          10,
+          7,
+          12,
+          9,
+          13,
+          9,
+          12,
+          7,
+          11,
+          8,
+          16,
+          9,
+          14,
+          7,
+          13,
+          5,
+          18,
+          7,
+          14,
+          8,
+          10,
+          9,
+          11,
+          14,
+          10,
+          6,
+          14,
+          9,
+          12,
+          9,
+          15,
+          5,
+          13,
+          5,
+          11,
+          9,
+          12,
+          11,
+          13,
+          7,
+          23,
+          6,
+          13,
+          8,
+          10,
+          9,
+          11,
+          10,
+          10,
+          9,
+          10,
+          9,
+          10,
+          8,
+          15,
+          9,
+          12,
+          8,
+          13,
+          4,
+          14,
+          7,
+          13,
+          10,
+          14,
+          9,
+          13,
+          12,
+          9,
+          8,
+          9,
+          19,
+          15,
+          13,
+          17,
+          4,
+          12,
+          5,
+          13,
+          14,
+          14
+        ]
+      }
+    },
+    {
+      "index": 7,
+      "mode": "baseline",
+      "instrumented": false,
+      "cpu": {
+        "max_ms": 22,
+        "mean_ms": 18.7594654788419,
+        "over_33_ms": 0,
+        "p95_ms": 22
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 103,
+        "mean_ms": 22.8440979955457,
+        "over_33_ms": 18,
+        "p95_ms": 31
+      },
+      "frames": 449,
+      "light_cost": {
+        "lights": [
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "Player/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 1,
+            "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+            "shadow": true
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_2/@PointLight2D@452",
+            "shadow": false
+          },
+          {
+            "enabled": true,
+            "filter": 0,
+            "path": "WorkLight_route_1/@PointLight2D@454",
+            "shadow": false
+          }
+        ],
+        "mode": "baseline",
+        "occluders": 8,
+        "rebuilds": 0,
+        "refresh_calls": 449,
+        "refresh_usec": 16000
+      },
+      "seconds": 10.257,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 164000,
+        "draw_callbacks": 1639,
+        "dynamic": 7,
+        "recycled": 0,
+        "redraws": 135,
+        "reuses": 32157,
+        "setup_usec": 838000
+      },
+      "impacts": 45,
+      "profile": {
+        "methods": {},
+        "raf_callback_ms": []
+      }
+    }
+  ],
+  "parity": [
+    {
+      "label": "baseline-unchanged-image",
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "restored-original",
+      "max": 0,
+      "changed": 0
+    }
+  ],
+  "captures": [
+    {
+      "name": "original",
+      "state": {
+        "error": "",
+        "fixture": "setup",
+        "id": 1,
+        "impact": 0,
+        "light_cost": {},
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 1,
+          "motion": {
+            "age": 2.34655555555555,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.651820987654321,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 110
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 35000,
+          "draw_callbacks": 148,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 138,
+          "setup_usec": 10000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      }
+    },
+    {
+      "name": "lights_off",
+      "state": {
+        "error": "",
+        "fixture": "lightmode",
+        "id": 4,
+        "impact": 0,
+        "light_cost": {
+          "lights": [
+            {
+              "enabled": false,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": false,
+              "filter": 1,
+              "path": "Player/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": false,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+              "shadow": true
+            },
+            {
+              "enabled": false,
+              "filter": 1,
+              "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+              "shadow": true
+            },
+            {
+              "enabled": false,
+              "filter": 0,
+              "path": "WorkLight_route_2/@PointLight2D@452",
+              "shadow": false
+            },
+            {
+              "enabled": false,
+              "filter": 0,
+              "path": "WorkLight_route_1/@PointLight2D@454",
+              "shadow": false
+            }
+          ],
+          "mode": "lights_off",
+          "occluders": 0,
+          "rebuilds": 4,
+          "refresh_calls": 0,
+          "refresh_usec": 0
+        },
+        "menu": false,
+        "mine_button": [
+          1090.09094238281,
+          517.54541015625
+        ],
+        "mining": false,
+        "mutation_checks": [],
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "ember",
+          "generations": 1,
+          "motion": {
+            "age": 2.54822222222222,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.70783950617284,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 120
+        },
+        "occupancy": {
+          "count": 5092,
+          "revision": 5684
+        },
+        "phase": "mine",
+        "position": [
+          1400,
+          312
+        ],
+        "result": {},
+        "sections": {
+          "cached": 138,
+          "draw_callback_usec": 35000,
+          "draw_callbacks": 148,
+          "dynamic": 5,
+          "recycled": 0,
+          "redraws": 138,
+          "reuses": 138,
+          "setup_usec": 10000
+        },
+        "version": "1.0.0-dev.15.9",
+        "viewport": [
+          1209.09094238281,
+          654.54541015625
+        ]
+      }
+    }
+  ],
+  "physical_iphone_verified": false,
+  "candidate_source": "ef660efba2f17932069fa7cdd85e354fa2a549aa",
+  "candidate_run": 36109186370,
+  "scope": "QA CPU wall-time inside WebGL calls and rAF callbacks. This is NOT GPU elapsed time. Uninstrumented windows retain original GL functions; paired windows estimate instrumentation overhead. Existing exact fixed-light candidate reused without build. Occupancy revision in both light modes; native resolution. No release."
+}
