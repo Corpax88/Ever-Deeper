@@ -52,7 +52,7 @@ try{
    for(let index=0;index<3;index++){
     const start=await state();await page.evaluate(()=>window.__meter.begin());await command('begin');await delay(15000);const end=await command('end');const gpu=await page.evaluate(()=>window.__meter.stop());
     const impacts=end.impact-start.impact;check('workload '+block+'-'+index,end.mining&&end.native.active&&end.result.frames>200&&impacts>=25);check('position '+block+'-'+index,end.position.every((p,i)=>Math.abs(p-start.position[i])<0.02));
-    const renders=gpu.counts.checkFramebufferStatus,expected=side==='original'?4:3;check('sync '+block+'-'+index,renders>200&&gpu.counts.fenceSync===expected*renders&&gpu.counts.getSyncParameter===expected*renders,{gpu});
+    const renders=gpu.counts.checkFramebufferStatus,expected=side==='original'?4:2;check('sync '+block+'-'+index,renders>200&&gpu.counts.fenceSync===expected*renders&&gpu.counts.getSyncParameter===expected*renders,{gpu});
     windows.push({block,index,side,impacts,...end.result,gpu,native:end.native,position:end.position});fs.writeFileSync(path.join(output,'windows.json'),JSON.stringify(windows,null,2));
    }
    await page.mouse.up();await wait('released',s=>!s.mining);await command('freeze');await delay(400);const name=block+'-'+side;await page.screenshot({path:path.join(output,name+'.png'),timeout:60000});captures.push(name);
@@ -61,7 +61,7 @@ try{
  }
 }catch(e){failed=String(e.stack||e);console.error(failed);}
 finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.CANDIDATE_SOURCE,original_source:'c63aabd3e3e5120579285ce6e8b0b59a75f2727a',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'Actual unchanged DEV15.9 package versus integrated occupancy/native candidate. Fresh context per block, 30s held-mining warmup then three15s windows; balanced ABBA/BAAB across Mac workers. Full resolution/lighting/assets retained. Synchronization wrappers have the same overhead per call; the candidate makes fewer calls. This is not GPU time. Windows within a block are correlated. No UI consolidation.'},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.CANDIDATE_SOURCE,original_source:'c63aabd3e3e5120579285ce6e8b0b59a75f2727a',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'Actual unchanged DEV15.9 package versus integrated occupancy/native/shared-HUD candidate. Fresh context per block, 30s held-mining warmup then three15s windows; balanced ABBA/BAAB across Mac workers. Full resolution/lighting/assets retained. Synchronization wrappers have the same overhead per call; the candidate makes fewer calls. This is not GPU time. Windows within a block are correlated. Production shared HUD included.'},null,2));
  await browser.close();server.close();
 }
 if(failed)process.exitCode=1;
