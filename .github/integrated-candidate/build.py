@@ -53,7 +53,7 @@ def main(source, work):
     for script in revised_scripts:
         old_mapping = script+".remap"
         assert old_mapping in entries, old_mapping
-        new_script = script if script == "scripts/player/native_worn_visual.gd" else script[:-3]+"_integrated.gd"
+        new_script = script if script in ["scripts/player/native_worn_visual.gd", "scripts/qa/suites/dev14_review.gd"] else script[:-3]+"_integrated.gd"
         assert new_script not in entries
         replacements[old_mapping] = ('[remap]\npath="res://'+new_script+'"\n').encode()
         replacements[new_script] = (ROOT/script).read_bytes()
