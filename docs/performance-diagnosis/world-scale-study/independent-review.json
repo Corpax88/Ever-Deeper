@@ -1,0 +1,39 @@
+{
+  "accepted_for_promotion": false,
+  "verdict": "reject",
+  "source_commit": "5325bb94a2fdac599c2f27e8c5bfa076797e27ea",
+  "run_id": 36059410093,
+  "reviewer": "independent lighttest_review",
+  "actual_captures_inspected": 10,
+  "checks_passed_per_repeat": 61,
+  "timing_windows": 24,
+  "full_scale_and_restored_pixels_exact": true,
+  "findings": [
+    "Both reports are complete and all checks pass. Full-scale composite and restoration each have zero changed channels.",
+    "All ten original PNGs inspected. The 80 percent world image slightly softens world textures, hero and world labels while HUD remains visually sharp.",
+    "Moved captures show the world and hero in the new camera framing, with HUD correctly anchored; no obvious missing layer or compositing artifact. Static captures do not establish moving-camera smoothness.",
+    "Repeat 1 improves stationary FPS 47.62 to 49.67 and mining 39.34 to 40.13; repeat 2 does not reproduce the gain: stationary 48.47 to 48.38, mining 42.66 to 41.85.",
+    "Frame-time tails vary without a consistent advantage; the implementation adds complexity and mild quality loss without repeatable material benefit."
+  ],
+  "limitations": [
+    "Mac WebKit evidence does not establish physical iPhone performance.",
+    "Rejection applies to this shared-World2D 80 percent framebuffer implementation, not all possible world-rendering architectures."
+  ],
+  "next_step": "Do not publish or request a phone test for this candidate; preserve the experiment and pursue a distinct evidence-backed hypothesis.",
+  "evidence_sha256": {
+    "webkit-1/checks.json": "a088f3afd216d6b2c8459a3da86ef63ae7d20acee74909438b526c01e4068ce1",
+    "webkit-1/frozen-0-scale0.png": "f4378d689348940ae902036c32d7278db2eb975f4f9434c06d496deb25a8ad4b",
+    "webkit-1/frozen-1-scale1.png": "f4378d689348940ae902036c32d7278db2eb975f4f9434c06d496deb25a8ad4b",
+    "webkit-1/frozen-2-scale0.8.png": "a674435d9bb7bdf2fe071fc38e997593d8f13b06e4f0152f5f63a507a6e744eb",
+    "webkit-1/frozen-3-scale0.png": "f4378d689348940ae902036c32d7278db2eb975f4f9434c06d496deb25a8ad4b",
+    "webkit-1/moved-scale08.png": "7bfaba2cfcdb9cbf124170a5ae93a02732f2dada89490be24c95f90b7a5612a3",
+    "webkit-1/report.json": "19bc462ac319399684c65598166870e9586e58e4f9aef14bd780f592acec6d51",
+    "webkit-2/checks.json": "9ff803993b80ba60217fe596f5b06e71cda1b0482ec62d657311ff73143efeff",
+    "webkit-2/frozen-0-scale0.png": "47d387282f69d04a945967dbfd371786c06746b5ad747d8c82d2ffbf1624a386",
+    "webkit-2/frozen-1-scale1.png": "47d387282f69d04a945967dbfd371786c06746b5ad747d8c82d2ffbf1624a386",
+    "webkit-2/frozen-2-scale0.8.png": "dce3e540252dbfa3290e067172fdb9dc1bfeafb3d5d3910e5f6b583928dd6b75",
+    "webkit-2/frozen-3-scale0.png": "47d387282f69d04a945967dbfd371786c06746b5ad747d8c82d2ffbf1624a386",
+    "webkit-2/moved-scale08.png": "aa03abc6c7853fa0439c2311dde3c1e6b2faf1982e94b79fdf780ac491935839",
+    "webkit-2/report.json": "c0fb00a14b46077e07c5581882b50e209ef61bbb0de014c0155fac8e4e8d16f6"
+  }
+}
