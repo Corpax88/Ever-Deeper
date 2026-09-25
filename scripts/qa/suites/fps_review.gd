@@ -1,5 +1,6 @@
 extends "res://scripts/qa/suites/dev14_review.gd"
 ## Explicit nonpersistent DEV fixture. Reference uses the original draw path.
+var light_probe: Node
 var profiling: bool = false
 var frame_times: Array[float] = []
 var cpu_times: Array[float] = []
@@ -15,6 +16,8 @@ func _command(data: Dictionary) -> void:
 	var world: Node2D = main.mine_world
 	match fixture:
 		"setup":
+			if is_instance_valid(light_probe): light_probe.release()
+			light_probe = null
 			_restore_observers()
 			main.get_tree().paused = false
 			main._cancel_mine_hold()
@@ -38,6 +41,12 @@ func _command(data: Dictionary) -> void:
 			for node in world.find_children("PremiumHeadlamp", "", true, false):
 				node.preview_settings.clear()
 				node.refresh_workshop_effects()
+		"lightmode":
+			if not is_instance_valid(light_probe):
+				light_probe = load("res://scripts/qa/light_cost_probe.gd").new()
+				main.add_child(light_probe)
+				light_probe.configure(world)
+			light_probe.select(String(data.mode))
 		"freeze":
 			# Pause-independent UI tweens also need zero delta for identical frames.
 			Engine.time_scale = 0.0
@@ -72,6 +81,7 @@ func _command(data: Dictionary) -> void:
 			world.queue_redraw()
 		"begin":
 			main.get_tree().paused = false
+			light_probe.reset()
 			frame_times.clear()
 			cpu_times.clear()
 			world.lit_draw_sections.draw_callbacks = 0
@@ -84,7 +94,7 @@ func _command(data: Dictionary) -> void:
 			profiling = true
 		"end":
 			profiling = false
-			last_result = {"frames":frame_times.size(),"seconds":float(Time.get_ticks_usec()-elapsed_start)/1000000.0,"frame":_stats(frame_times),"cpu":_stats(cpu_times),"sections":world.lit_draw_sections.debug_snapshot(),"draw_calls":Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)}
+			last_result = {"frames":frame_times.size(),"seconds":float(Time.get_ticks_usec()-elapsed_start)/1000000.0,"frame":_stats(frame_times),"cpu":_stats(cpu_times),"sections":world.lit_draw_sections.debug_snapshot(),"light_cost":light_probe.snapshot(),"draw_calls":Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)}
 		"unfreeze":
 			_restore_observers()
 			main.get_tree().paused = false
@@ -125,4 +135,5 @@ func _frame() -> void:
 	var player: Node2D = main._active_player_node()
 	var packet: Dictionary = player.animation_packet()
 	var point: Vector2 = main.mine_button.get_global_rect().get_center()
-	JavaScriptBridge.eval("window.DEV14_STATE="+JSON.stringify({"id":command_id,"error":error,"fixture":fixture,"version":main.PremiumMenuScript.release_version(),"phase":main.phase,"menu":main.menu_open,"native":player.visual.native_worn_snapshot(),"impact":packet.impact_serial,"mining":packet.mining,"position":[player.position.x,player.position.y],"result":last_result,"sections":world.lit_draw_sections.debug_snapshot(),"mine_button":[point.x,point.y],"viewport":[main.get_viewport().get_visible_rect().size.x,main.get_viewport().get_visible_rect().size.y]}),true)
+	JavaScriptBridge.eval("window.DEV14_STATE="+JSON.stringify({"id":command_id,"error":error,"fixture":fixture,"version":main.PremiumMenuScript.release_version(),"phase":main.phase,"menu":main.menu_open,"native":player.visual.native_worn_snapshot(),"impact":packet.impact_serial,"mining":packet.mining,"position":[player.position.x,player.position.y],"result":last_result,"light_cost":light_probe.snapshot() if is_instance_valid(light_probe) else {},"sections":world.lit_draw_sections.debug_snapshot(),"mine_button":[point.x,point.y],"viewport":[main.get_viewport().get_visible_rect().size.x,main.get_viewport().get_visible_rect().size.y]}),true)
+

@@ -2,6 +2,7 @@ extends Node2D
 
 # Shadow coverage follows actual light footprints, including upgraded lamps.
 # Geometry is reused until coverage, an emitter cell or terrain changes.
+var qa_use_occupancy_keys: bool = false
 var _signature: int = 0
 var _input_signature: int = 0
 var _input_valid: bool = false
@@ -44,7 +45,16 @@ func refresh() -> void:
 		coverage.append(_source_cell_bounds(world, light, tile))
 		var origin: Vector2i = Vector2i((world.to_local(light.global_position) / tile).floor())
 		if not emitters.has(origin): emitters.append(origin)
-	var terrain: int = hash(world.floor_cells) if world.has_method("_is_floor") else world._terrain_draw_fingerprint() if world.has_method("_terrain_draw_fingerprint") else hash(world.blocks)
+	var terrain: int
+	if world.has_method("_is_floor"):
+		terrain = hash(world.floor_cells)
+	elif world.has_method("_terrain_draw_fingerprint"):
+		terrain = world._terrain_draw_fingerprint()
+	elif qa_use_occupancy_keys and not world.has_method("_terrain_is_solid"):
+		# This matches _solid(): only block occupancy affects these shadows.
+		terrain = hash(world.blocks.keys())
+	else:
+		terrain = hash(world.blocks)
 	var input_signature: int = hash(coverage) ^ hash(emitters) ^ terrain
 	if _input_valid and input_signature == _input_signature: return
 	_input_valid = true
@@ -135,3 +145,4 @@ func _solid(world: Node, cell: Vector2i) -> bool:
 		return not bool(world.call("_is_floor",cell))
 	var blocks: Dictionary = world.get("blocks")
 	return blocks.has(cell)
+
