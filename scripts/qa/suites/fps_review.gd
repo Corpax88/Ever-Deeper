@@ -105,6 +105,10 @@ func _command(data: Dictionary) -> void:
 			world.queue_redraw()
 		"mutation_audit":
 			_audit_gameplay(world)
+		"hold":
+			Input.action_press("mine")
+		"release_hold":
+			Input.action_release("mine")
 		"begin":
 			main.get_tree().paused = false
 			light_probe.reset()
