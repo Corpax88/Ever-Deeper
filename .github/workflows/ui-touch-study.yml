@@ -1,0 +1,31 @@
+name: Diagnose UI touch ordering with immutable candidate
+on:
+  push:
+    branches: [codex/ui-touch-study-20260925]
+    paths: ['.github/ui-touch-study/**', '.github/workflows/ui-touch-study.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: ui-touch-study, cancel-in-progress: true}
+jobs:
+  profile:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/ui-touch-study
+      - uses: actions/download-artifact@v4
+        with:
+          name: ui-canvas-candidate
+          run-id: 36112848069
+          github-token: ${{ github.token }}
+          path: '${{ runner.temp }}/candidate'
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install webkit
+      - name: Compare baseline and candidate touch before and after freeze
+        env: {REVIEW_BROWSER: webkit}
+        run: node .github/ui-touch-study/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: ui-touch-study-webkit, path: '${{ runner.temp }}/review', retention-days: 90}
