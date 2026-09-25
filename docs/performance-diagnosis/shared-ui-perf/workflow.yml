@@ -1,0 +1,32 @@
+name: Compare original package with complete shared-HUD candidate
+on:
+  push:
+    branches: [codex/shared-ui-perf-20260925]
+    paths: ['.github/integrated-perf/**', '.github/workflows/integrated-perf.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: shared-ui-perf, cancel-in-progress: true}
+jobs:
+  compare:
+    runs-on: macos-15
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix: {repeat: [1, 2]}
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false, sparse-checkout: .github/integrated-perf}
+      - uses: actions/download-artifact@v4
+        with: {name: native-light-dev15-9-candidate, run-id: 36043919958, github-token: '${{ github.token }}', path: '${{ runner.temp }}/original'}
+      - uses: actions/download-artifact@v4
+        with: {name: integrated-candidate, run-id: 36116844019, github-token: '${{ github.token }}', path: '${{ runner.temp }}/candidate'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npx playwright install webkit
+      - name: Full original versus integrated candidate with balanced cold starts
+        env: {REPEAT: '${{ matrix.repeat }}', CANDIDATE_SOURCE: 4f27644cb5952dbf31644eff78b61e3648ae056f}
+        run: |
+          cp .github/integrated-perf/baseline.json "$RUNNER_TEMP/original/manifest.json"
+          node .github/integrated-perf/review.mjs "$RUNNER_TEMP/original" "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'integrated-perf-webkit-${{ matrix.repeat }}', path: '${{ runner.temp }}/review', retention-days: 90}

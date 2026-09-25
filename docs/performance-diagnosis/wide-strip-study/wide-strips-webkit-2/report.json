@@ -1,0 +1,2401 @@
+{
+  "passed": true,
+  "error": null,
+  "source_commit": "e212cf5cbc5bb7247f5aa8aba5d3f6c8ccc9a4f7",
+  "baseline_source": "4f27644cb5952dbf31644eff78b61e3648ae056f",
+  "version": "1.0.0-dev.15.9",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "8e449a1afbdc7d1b16c0ddc2a66b1358281c02a3a92994390afcb28a8641ed8a"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 260512268,
+      "sha256": "fee16ec97ec82298f26cb9d29cdc845609ee2a5f7d25c41742ad685ad54f3bca"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "browser": "webkit",
+  "repeat": "2",
+  "runtime": {
+    "renderer": "Apple GPU",
+    "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+    "dpr": 3,
+    "canvas": [
+      2328,
+      1260
+    ]
+  },
+  "checks": [
+    {
+      "name": "mac-gpu",
+      "passed": true,
+      "runtime": {
+        "renderer": "Apple GPU",
+        "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+        "dpr": 3,
+        "canvas": [
+          2328,
+          1260
+        ]
+      }
+    },
+    {
+      "name": "resolution",
+      "passed": true
+    },
+    {
+      "name": "version",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-intact-3",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-intact-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-damaged-3",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-damaged-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-broken-3",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-broken-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-emberMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-emberMine-restored-3",
+      "passed": true
+    },
+    {
+      "name": "parity-emberMine-restored-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-intact-3",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-intact-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-damaged-3",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-damaged-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-broken-3",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-broken-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-mossMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-mossMine-restored-3",
+      "passed": true
+    },
+    {
+      "name": "parity-mossMine-restored-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-intact-3",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-intact-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-damaged-3",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-damaged-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-broken-3",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-broken-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-moonMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moonMine-restored-3",
+      "passed": true
+    },
+    {
+      "name": "parity-moonMine-restored-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-intact-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-intact-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-intact-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-intact-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-intact-3",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-intact-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-damaged-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-damaged-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-damaged-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-damaged-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-damaged-3",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-damaged-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-broken-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-broken-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-broken-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-broken-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-broken-3",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-broken-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-starMine-restored-1",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-restored-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-restored-2",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-restored-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-starMine-restored-3",
+      "passed": true
+    },
+    {
+      "name": "parity-starMine-restored-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-standard-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-standard-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-standard-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-standard-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-standard-3",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-standard-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-focused-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-focused-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-focused-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-focused-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-focused-3",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-focused-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-wide-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-wide-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-wide-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-wide-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-wide-3",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-wide-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-prismatic-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-prismatic-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-prismatic-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-prismatic-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-prismatic-3",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-prismatic-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-stress-deepheart-1",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-deepheart-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-deepheart-2",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-deepheart-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-stress-deepheart-3",
+      "passed": true
+    },
+    {
+      "name": "parity-stress-deepheart-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-0",
+      "passed": true
+    },
+    {
+      "name": "mining-native-0",
+      "passed": true
+    },
+    {
+      "name": "mining-position-0",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-1",
+      "passed": true
+    },
+    {
+      "name": "mining-native-1",
+      "passed": true
+    },
+    {
+      "name": "mining-position-1",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-2",
+      "passed": true
+    },
+    {
+      "name": "mining-native-2",
+      "passed": true
+    },
+    {
+      "name": "mining-position-2",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-3",
+      "passed": true
+    },
+    {
+      "name": "mining-native-3",
+      "passed": true
+    },
+    {
+      "name": "mining-position-3",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-4",
+      "passed": true
+    },
+    {
+      "name": "mining-native-4",
+      "passed": true
+    },
+    {
+      "name": "mining-position-4",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-5",
+      "passed": true
+    },
+    {
+      "name": "mining-native-5",
+      "passed": true
+    },
+    {
+      "name": "mining-position-5",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-6",
+      "passed": true
+    },
+    {
+      "name": "mining-native-6",
+      "passed": true
+    },
+    {
+      "name": "mining-position-6",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-7",
+      "passed": true
+    },
+    {
+      "name": "mining-native-7",
+      "passed": true
+    },
+    {
+      "name": "mining-position-7",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "mining-workload-8",
+      "passed": true
+    },
+    {
+      "name": "mining-native-8",
+      "passed": true
+    },
+    {
+      "name": "mining-position-8",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "movement-after-restoration",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "strip-12",
+      "passed": true
+    },
+    {
+      "name": "strip-24",
+      "passed": true
+    },
+    {
+      "name": "strip-6",
+      "passed": true
+    },
+    {
+      "name": "image-size-moved-1",
+      "passed": true
+    },
+    {
+      "name": "parity-moved-1",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moved-2",
+      "passed": true
+    },
+    {
+      "name": "parity-moved-2",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "image-size-moved-3",
+      "passed": true
+    },
+    {
+      "name": "parity-moved-3",
+      "passed": true,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "name": "no-script-errors",
+      "passed": true
+    }
+  ],
+  "windows": [
+    {
+      "scenario": "mining",
+      "index": 0,
+      "width": 24,
+      "cpu": {
+        "max_ms": 28,
+        "mean_ms": 20.7686567164179,
+        "over_33_ms": 0,
+        "p95_ms": 28
+      },
+      "draw_calls": 159,
+      "frame": {
+        "max_ms": 67,
+        "mean_ms": 22.8003731343284,
+        "over_33_ms": 38,
+        "p95_ms": 35
+      },
+      "frames": 536,
+      "seconds": 12.221,
+      "sections": {
+        "cached": 58,
+        "draw_callback_usec": 295000,
+        "draw_callbacks": 2066,
+        "dynamic": 7,
+        "recycled": 242,
+        "redraws": 318,
+        "reuses": 15458,
+        "setup_usec": 954000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "scope": "No GPU timer used; draw calls from engine are not GPU time"
+      },
+      "native": {
+        "active": true,
+        "failed": false,
+        "failure": "",
+        "gear": "ember",
+        "generations": 6,
+        "motion": {
+          "age": 30.3115833333333,
+          "aim_ready": true,
+          "bounded_transition_frames": 0,
+          "duration": 0.05382,
+          "errors": [],
+          "max_contact_pixels": 0.00000762939453125,
+          "max_reach_error": 0,
+          "max_reach_error_scope": "Includes rejected transition search probes",
+          "max_tool_retarget": 0,
+          "mode": "mine",
+          "phase": 0.678215579710122,
+          "support_release": 1,
+          "swing_serial": 132,
+          "transitions": 2,
+          "yaw": -0.182676467883042
+        },
+        "surface_cache": 0,
+        "unreachable_contacts": 0,
+        "updates": 5453
+      },
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "scenario": "mining",
+      "index": 1,
+      "width": 12,
+      "cpu": {
+        "max_ms": 37,
+        "mean_ms": 26.3420523138833,
+        "over_33_ms": 47,
+        "p95_ms": 37
+      },
+      "draw_calls": 179,
+      "frame": {
+        "max_ms": 94,
+        "mean_ms": 24.5291750503018,
+        "over_33_ms": 63,
+        "p95_ms": 43
+      },
+      "frames": 497,
+      "seconds": 12.191,
+      "sections": {
+        "cached": 88,
+        "draw_callback_usec": 281000,
+        "draw_callbacks": 2058,
+        "dynamic": 7,
+        "recycled": 212,
+        "redraws": 318,
+        "reuses": 23530,
+        "setup_usec": 1091000
+      },
+      "impacts": 53,
+      "gpu": {
+        "available": false,
+        "scope": "No GPU timer used; draw calls from engine are not GPU time"
+      },
+      "native": {
+        "active": true,
+        "failed": false,
+        "failure": "",
+        "gear": "ember",
+        "generations": 6,
+        "motion": {
+          "age": 45.5675833333335,
+          "aim_ready": true,
+          "bounded_transition_frames": 0,
+          "duration": 0.05382,
+          "errors": [],
+          "max_contact_pixels": 0.00000762939453125,
+          "max_reach_error": 0,
+          "max_reach_error_scope": "Includes rejected transition search probes",
+          "max_tool_retarget": 0,
+          "mode": "mine",
+          "phase": 0.977672101449264,
+          "support_release": 0,
+          "swing_serial": 198,
+          "transitions": 2,
+          "yaw": -0.182676467883042
+        },
+        "surface_cache": 0,
+        "unreachable_contacts": 0,
+        "updates": 6090
+      },
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "scenario": "mining",
+      "index": 2,
+      "width": 6,
+      "cpu": {
+        "max_ms": 34,
+        "mean_ms": 18.8298217179903,
+        "over_33_ms": 7,
+        "p95_ms": 25
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 84,
+        "mean_ms": 19.7471636952998,
+        "over_33_ms": 18,
+        "p95_ms": 30
+      },
+      "frames": 617,
+      "seconds": 12.184,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 262000,
+        "draw_callbacks": 2138,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 42207,
+        "setup_usec": 1125000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "scope": "No GPU timer used; draw calls from engine are not GPU time"
+      },
+      "native": {
+        "active": true,
+        "failed": false,
+        "failure": "",
+        "gear": "ember",
+        "generations": 6,
+        "motion": {
+          "age": 60.8475833333334,
+          "aim_ready": true,
+          "bounded_transition_frames": 0,
+          "duration": 0.05382,
+          "errors": [],
+          "max_contact_pixels": 0.00000762939453125,
+          "max_reach_error": 0,
+          "max_reach_error_scope": "Includes rejected transition search probes",
+          "max_tool_retarget": 0,
+          "mode": "mine",
+          "phase": 0.465443840579693,
+          "support_release": 1,
+          "swing_serial": 265,
+          "transitions": 2,
+          "yaw": -0.182676467883042
+        },
+        "surface_cache": 0,
+        "unreachable_contacts": 0,
+        "updates": 6859
+      },
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "scenario": "mining",
+      "index": 3,
+      "width": 6,
+      "cpu": {
+        "max_ms": 31,
+        "mean_ms": 20.1361256544503,
+        "over_33_ms": 0,
+        "p95_ms": 31
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 72,
+        "mean_ms": 21.3769633507853,
+        "over_33_ms": 17,
+        "p95_ms": 31
+      },
+      "frames": 573,
+      "seconds": 12.249,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 226000,
+        "draw_callbacks": 2024,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 39861,
+        "setup_usec": 1097000
+      },
+      "impacts": 55,
+      "gpu": {
+        "available": false,
+        "scope": "No GPU timer used; draw calls from engine are not GPU time"
+      },
+      "native": {
+        "active": true,
+        "failed": false,
+        "failure": "",
+        "gear": "ember",
+        "generations": 6,
+        "motion": {
+          "age": 76.2667420634917,
+          "aim_ready": true,
+          "bounded_transition_frames": 0,
+          "duration": 0.05382,
+          "errors": [],
+          "max_contact_pixels": 0.00000762939453125,
+          "max_reach_error": 0,
+          "max_reach_error_scope": "Includes rejected transition search probes",
+          "max_tool_retarget": 0,
+          "mode": "mine",
+          "phase": 0.501531228433366,
+          "support_release": 1,
+          "swing_serial": 332,
+          "transitions": 2,
+          "yaw": -0.182676467883042
+        },
+        "surface_cache": 0,
+        "unreachable_contacts": 0,
+        "updates": 7577
+      },
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "scenario": "mining",
+      "index": 4,
+      "width": 24,
+      "cpu": {
+        "max_ms": 20,
+        "mean_ms": 15.8348484848485,
+        "over_33_ms": 0,
+        "p95_ms": 20
+      },
+      "draw_calls": 159,
+      "frame": {
+        "max_ms": 70,
+        "mean_ms": 18.5439393939394,
+        "over_33_ms": 3,
+        "p95_ms": 26
+      },
+      "frames": 660,
+      "seconds": 12.239,
+      "sections": {
+        "cached": 58,
+        "draw_callback_usec": 241000,
+        "draw_callbacks": 2385,
+        "dynamic": 7,
+        "recycled": 242,
+        "redraws": 324,
+        "reuses": 18236,
+        "setup_usec": 883000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "scope": "No GPU timer used; draw calls from engine are not GPU time"
+      },
+      "native": {
+        "active": true,
+        "failed": false,
+        "failure": "",
+        "gear": "ember",
+        "generations": 6,
+        "motion": {
+          "age": 91.5748257575746,
+          "aim_ready": true,
+          "bounded_transition_frames": 0,
+          "duration": 0.05382,
+          "errors": [],
+          "max_contact_pixels": 0.00000762939453125,
+          "max_reach_error": 0,
+          "max_reach_error_scope": "Includes rejected transition search probes",
+          "max_tool_retarget": 0,
+          "mode": "mine",
+          "phase": 0.00799297321033052,
+          "support_release": 0,
+          "swing_serial": 399,
+          "transitions": 2,
+          "yaw": -0.182676467883042
+        },
+        "surface_cache": 0,
+        "unreachable_contacts": 0,
+        "updates": 8401
+      },
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "scenario": "mining",
+      "index": 5,
+      "width": 12,
+      "cpu": {
+        "max_ms": 295,
+        "mean_ms": 16.1100775193798,
+        "over_33_ms": 2,
+        "p95_ms": 19
+      },
+      "draw_calls": 179,
+      "frame": {
+        "max_ms": 60,
+        "mean_ms": 18.9581395348837,
+        "over_33_ms": 5,
+        "p95_ms": 27
+      },
+      "frames": 645,
+      "seconds": 12.229,
+      "sections": {
+        "cached": 88,
+        "draw_callback_usec": 235000,
+        "draw_callbacks": 2339,
+        "dynamic": 7,
+        "recycled": 212,
+        "redraws": 318,
+        "reuses": 27314,
+        "setup_usec": 956000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "scope": "No GPU timer used; draw calls from engine are not GPU time"
+      },
+      "native": {
+        "active": true,
+        "failed": false,
+        "failure": "",
+        "gear": "ember",
+        "generations": 6,
+        "motion": {
+          "age": 106.749916666665,
+          "aim_ready": true,
+          "bounded_transition_frames": 0,
+          "duration": 0.05382,
+          "errors": [],
+          "max_contact_pixels": 0.00000762939453125,
+          "max_reach_error": 0,
+          "max_reach_error_scope": "Includes rejected transition search probes",
+          "max_tool_retarget": 0,
+          "mode": "mine",
+          "phase": 0.986865942028953,
+          "support_release": 0,
+          "swing_serial": 464,
+          "transitions": 2,
+          "yaw": -0.182676467883042
+        },
+        "surface_cache": 0,
+        "unreachable_contacts": 0,
+        "updates": 9187
+      },
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "scenario": "mining",
+      "index": 6,
+      "width": 12,
+      "cpu": {
+        "max_ms": 26,
+        "mean_ms": 19.498275862069,
+        "over_33_ms": 0,
+        "p95_ms": 26
+      },
+      "draw_calls": 179,
+      "frame": {
+        "max_ms": 62,
+        "mean_ms": 20.7844827586207,
+        "over_33_ms": 16,
+        "p95_ms": 31
+      },
+      "frames": 580,
+      "seconds": 12.055,
+      "sections": {
+        "cached": 88,
+        "draw_callback_usec": 243000,
+        "draw_callbacks": 2170,
+        "dynamic": 7,
+        "recycled": 212,
+        "redraws": 312,
+        "reuses": 25120,
+        "setup_usec": 969000
+      },
+      "impacts": 54,
+      "gpu": {
+        "available": false,
+        "scope": "No GPU timer used; draw calls from engine are not GPU time"
+      },
+      "native": {
+        "active": true,
+        "failed": false,
+        "failure": "",
+        "gear": "ember",
+        "generations": 6,
+        "motion": {
+          "age": 122.116916666665,
+          "aim_ready": true,
+          "bounded_transition_frames": 0,
+          "duration": 0.05382,
+          "errors": [],
+          "max_contact_pixels": 0.00000762939453125,
+          "max_reach_error": 0,
+          "max_reach_error_scope": "Includes rejected transition search probes",
+          "max_tool_retarget": 0,
+          "mode": "mine",
+          "phase": 0.817436594202862,
+          "support_release": 0.471590871610581,
+          "swing_serial": 531,
+          "transitions": 2,
+          "yaw": -0.182676467883042
+        },
+        "surface_cache": 0,
+        "unreachable_contacts": 0,
+        "updates": 9933
+      },
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "scenario": "mining",
+      "index": 7,
+      "width": 6,
+      "cpu": {
+        "max_ms": 27,
+        "mean_ms": 19.2968197879859,
+        "over_33_ms": 0,
+        "p95_ms": 27
+      },
+      "draw_calls": 178,
+      "frame": {
+        "max_ms": 64,
+        "mean_ms": 21.5724381625442,
+        "over_33_ms": 29,
+        "p95_ms": 34
+      },
+      "frames": 566,
+      "seconds": 12.21,
+      "sections": {
+        "cached": 138,
+        "draw_callback_usec": 226000,
+        "draw_callbacks": 1975,
+        "dynamic": 7,
+        "recycled": 162,
+        "redraws": 159,
+        "reuses": 38895,
+        "setup_usec": 1076000
+      },
+      "impacts": 53,
+      "gpu": {
+        "available": false,
+        "scope": "No GPU timer used; draw calls from engine are not GPU time"
+      },
+      "native": {
+        "active": true,
+        "failed": false,
+        "failure": "",
+        "gear": "ember",
+        "generations": 6,
+        "motion": {
+          "age": 137.287972222221,
+          "aim_ready": true,
+          "bounded_transition_frames": 0,
+          "duration": 0.05382,
+          "errors": [],
+          "max_contact_pixels": 0.00000762939453125,
+          "max_reach_error": 0,
+          "max_reach_error_scope": "Includes rejected transition search probes",
+          "max_tool_retarget": 0,
+          "mode": "mine",
+          "phase": 0.782193538647302,
+          "support_release": 0.84344937321244,
+          "swing_serial": 597,
+          "transitions": 2,
+          "yaw": -0.182676467883042
+        },
+        "surface_cache": 0,
+        "unreachable_contacts": 0,
+        "updates": 10654
+      },
+      "position": [
+        1400,
+        312
+      ]
+    },
+    {
+      "scenario": "mining",
+      "index": 8,
+      "width": 24,
+      "cpu": {
+        "max_ms": 392,
+        "mean_ms": 17.6916666666667,
+        "over_33_ms": 1,
+        "p95_ms": 24
+      },
+      "draw_calls": 159,
+      "frame": {
+        "max_ms": 411,
+        "mean_ms": 20.4266666666667,
+        "over_33_ms": 22,
+        "p95_ms": 30
+      },
+      "frames": 600,
+      "seconds": 12.256,
+      "sections": {
+        "cached": 58,
+        "draw_callback_usec": 245000,
+        "draw_callbacks": 2251,
+        "dynamic": 7,
+        "recycled": 242,
+        "redraws": 312,
+        "reuses": 17146,
+        "setup_usec": 891000
+      },
+      "impacts": 53,
+      "gpu": {
+        "available": false,
+        "scope": "No GPU timer used; draw calls from engine are not GPU time"
+      },
+      "native": {
+        "active": true,
+        "failed": false,
+        "failure": "",
+        "gear": "ember",
+        "generations": 6,
+        "motion": {
+          "age": 152.326583333333,
+          "aim_ready": true,
+          "bounded_transition_frames": 0,
+          "duration": 0.05382,
+          "errors": [],
+          "max_contact_pixels": 0.00000762939453125,
+          "max_reach_error": 0,
+          "max_reach_error_scope": "Includes rejected transition search probes",
+          "max_tool_retarget": 0,
+          "mode": "mine",
+          "phase": 0.169082125603805,
+          "support_release": 0.965213873111805,
+          "swing_serial": 663,
+          "transitions": 2,
+          "yaw": -0.182676467883042
+        },
+        "surface_cache": 0,
+        "unreachable_contacts": 0,
+        "updates": 11413
+      },
+      "position": [
+        1400,
+        312
+      ]
+    }
+  ],
+  "pairs": [
+    {
+      "label": "emberMine-intact",
+      "width": 12,
+      "reference": "067600ff9cc463e7372287a76894675f03531190b3af6955e41f90cb112a036c",
+      "candidate": "067600ff9cc463e7372287a76894675f03531190b3af6955e41f90cb112a036c",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-intact",
+      "width": 24,
+      "reference": "067600ff9cc463e7372287a76894675f03531190b3af6955e41f90cb112a036c",
+      "candidate": "067600ff9cc463e7372287a76894675f03531190b3af6955e41f90cb112a036c",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-intact",
+      "width": 6,
+      "reference": "067600ff9cc463e7372287a76894675f03531190b3af6955e41f90cb112a036c",
+      "candidate": "067600ff9cc463e7372287a76894675f03531190b3af6955e41f90cb112a036c",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-damaged",
+      "width": 12,
+      "reference": "3d8adcfbade4e218997ccf41d964cee5e284339eb8682b67abd85d7bb901960e",
+      "candidate": "3d8adcfbade4e218997ccf41d964cee5e284339eb8682b67abd85d7bb901960e",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-damaged",
+      "width": 24,
+      "reference": "3d8adcfbade4e218997ccf41d964cee5e284339eb8682b67abd85d7bb901960e",
+      "candidate": "3d8adcfbade4e218997ccf41d964cee5e284339eb8682b67abd85d7bb901960e",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-damaged",
+      "width": 6,
+      "reference": "3d8adcfbade4e218997ccf41d964cee5e284339eb8682b67abd85d7bb901960e",
+      "candidate": "3d8adcfbade4e218997ccf41d964cee5e284339eb8682b67abd85d7bb901960e",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-broken",
+      "width": 12,
+      "reference": "c3b41733dbd446b27113ceb50abee36a968816d98c2bd5c972949caff053e9f4",
+      "candidate": "c3b41733dbd446b27113ceb50abee36a968816d98c2bd5c972949caff053e9f4",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-broken",
+      "width": 24,
+      "reference": "c3b41733dbd446b27113ceb50abee36a968816d98c2bd5c972949caff053e9f4",
+      "candidate": "c3b41733dbd446b27113ceb50abee36a968816d98c2bd5c972949caff053e9f4",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-broken",
+      "width": 6,
+      "reference": "c3b41733dbd446b27113ceb50abee36a968816d98c2bd5c972949caff053e9f4",
+      "candidate": "c3b41733dbd446b27113ceb50abee36a968816d98c2bd5c972949caff053e9f4",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-restored",
+      "width": 12,
+      "reference": "067600ff9cc463e7372287a76894675f03531190b3af6955e41f90cb112a036c",
+      "candidate": "067600ff9cc463e7372287a76894675f03531190b3af6955e41f90cb112a036c",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-restored",
+      "width": 24,
+      "reference": "067600ff9cc463e7372287a76894675f03531190b3af6955e41f90cb112a036c",
+      "candidate": "067600ff9cc463e7372287a76894675f03531190b3af6955e41f90cb112a036c",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "emberMine-restored",
+      "width": 6,
+      "reference": "067600ff9cc463e7372287a76894675f03531190b3af6955e41f90cb112a036c",
+      "candidate": "067600ff9cc463e7372287a76894675f03531190b3af6955e41f90cb112a036c",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-intact",
+      "width": 12,
+      "reference": "4a86b7dab0f1e6d009b573775cf3c70f1deb885beec83406dea1867da7593084",
+      "candidate": "4a86b7dab0f1e6d009b573775cf3c70f1deb885beec83406dea1867da7593084",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-intact",
+      "width": 24,
+      "reference": "4a86b7dab0f1e6d009b573775cf3c70f1deb885beec83406dea1867da7593084",
+      "candidate": "4a86b7dab0f1e6d009b573775cf3c70f1deb885beec83406dea1867da7593084",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-intact",
+      "width": 6,
+      "reference": "4a86b7dab0f1e6d009b573775cf3c70f1deb885beec83406dea1867da7593084",
+      "candidate": "4a86b7dab0f1e6d009b573775cf3c70f1deb885beec83406dea1867da7593084",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-damaged",
+      "width": 12,
+      "reference": "294c4b491c74f9454f2d4f0f1455c22511fdb3d08671a7760f119800ecba1483",
+      "candidate": "294c4b491c74f9454f2d4f0f1455c22511fdb3d08671a7760f119800ecba1483",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-damaged",
+      "width": 24,
+      "reference": "294c4b491c74f9454f2d4f0f1455c22511fdb3d08671a7760f119800ecba1483",
+      "candidate": "294c4b491c74f9454f2d4f0f1455c22511fdb3d08671a7760f119800ecba1483",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-damaged",
+      "width": 6,
+      "reference": "294c4b491c74f9454f2d4f0f1455c22511fdb3d08671a7760f119800ecba1483",
+      "candidate": "294c4b491c74f9454f2d4f0f1455c22511fdb3d08671a7760f119800ecba1483",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-broken",
+      "width": 12,
+      "reference": "71f2afec891243b2ec4354e5272c470f258d438a20755c8721266aa12eb6f43d",
+      "candidate": "71f2afec891243b2ec4354e5272c470f258d438a20755c8721266aa12eb6f43d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-broken",
+      "width": 24,
+      "reference": "71f2afec891243b2ec4354e5272c470f258d438a20755c8721266aa12eb6f43d",
+      "candidate": "71f2afec891243b2ec4354e5272c470f258d438a20755c8721266aa12eb6f43d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-broken",
+      "width": 6,
+      "reference": "71f2afec891243b2ec4354e5272c470f258d438a20755c8721266aa12eb6f43d",
+      "candidate": "71f2afec891243b2ec4354e5272c470f258d438a20755c8721266aa12eb6f43d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-restored",
+      "width": 12,
+      "reference": "4a86b7dab0f1e6d009b573775cf3c70f1deb885beec83406dea1867da7593084",
+      "candidate": "4a86b7dab0f1e6d009b573775cf3c70f1deb885beec83406dea1867da7593084",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-restored",
+      "width": 24,
+      "reference": "4a86b7dab0f1e6d009b573775cf3c70f1deb885beec83406dea1867da7593084",
+      "candidate": "4a86b7dab0f1e6d009b573775cf3c70f1deb885beec83406dea1867da7593084",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "mossMine-restored",
+      "width": 6,
+      "reference": "4a86b7dab0f1e6d009b573775cf3c70f1deb885beec83406dea1867da7593084",
+      "candidate": "4a86b7dab0f1e6d009b573775cf3c70f1deb885beec83406dea1867da7593084",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-intact",
+      "width": 12,
+      "reference": "21a1c9918c834db47db0326b69218508fbee8f4fd3c759d1dc108998c81e8122",
+      "candidate": "21a1c9918c834db47db0326b69218508fbee8f4fd3c759d1dc108998c81e8122",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-intact",
+      "width": 24,
+      "reference": "21a1c9918c834db47db0326b69218508fbee8f4fd3c759d1dc108998c81e8122",
+      "candidate": "21a1c9918c834db47db0326b69218508fbee8f4fd3c759d1dc108998c81e8122",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-intact",
+      "width": 6,
+      "reference": "21a1c9918c834db47db0326b69218508fbee8f4fd3c759d1dc108998c81e8122",
+      "candidate": "21a1c9918c834db47db0326b69218508fbee8f4fd3c759d1dc108998c81e8122",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-damaged",
+      "width": 12,
+      "reference": "877ce36edcb196f07b617d10ff71d96bd09ed90a8c64643a8e3a66384ff0ba33",
+      "candidate": "877ce36edcb196f07b617d10ff71d96bd09ed90a8c64643a8e3a66384ff0ba33",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-damaged",
+      "width": 24,
+      "reference": "877ce36edcb196f07b617d10ff71d96bd09ed90a8c64643a8e3a66384ff0ba33",
+      "candidate": "877ce36edcb196f07b617d10ff71d96bd09ed90a8c64643a8e3a66384ff0ba33",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-damaged",
+      "width": 6,
+      "reference": "877ce36edcb196f07b617d10ff71d96bd09ed90a8c64643a8e3a66384ff0ba33",
+      "candidate": "877ce36edcb196f07b617d10ff71d96bd09ed90a8c64643a8e3a66384ff0ba33",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-broken",
+      "width": 12,
+      "reference": "9357b6cfd606528acd603c3744c2b5a205b1aba258b7e30eead41d76147e6111",
+      "candidate": "9357b6cfd606528acd603c3744c2b5a205b1aba258b7e30eead41d76147e6111",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-broken",
+      "width": 24,
+      "reference": "9357b6cfd606528acd603c3744c2b5a205b1aba258b7e30eead41d76147e6111",
+      "candidate": "9357b6cfd606528acd603c3744c2b5a205b1aba258b7e30eead41d76147e6111",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-broken",
+      "width": 6,
+      "reference": "9357b6cfd606528acd603c3744c2b5a205b1aba258b7e30eead41d76147e6111",
+      "candidate": "9357b6cfd606528acd603c3744c2b5a205b1aba258b7e30eead41d76147e6111",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-restored",
+      "width": 12,
+      "reference": "21a1c9918c834db47db0326b69218508fbee8f4fd3c759d1dc108998c81e8122",
+      "candidate": "21a1c9918c834db47db0326b69218508fbee8f4fd3c759d1dc108998c81e8122",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-restored",
+      "width": 24,
+      "reference": "21a1c9918c834db47db0326b69218508fbee8f4fd3c759d1dc108998c81e8122",
+      "candidate": "21a1c9918c834db47db0326b69218508fbee8f4fd3c759d1dc108998c81e8122",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moonMine-restored",
+      "width": 6,
+      "reference": "21a1c9918c834db47db0326b69218508fbee8f4fd3c759d1dc108998c81e8122",
+      "candidate": "21a1c9918c834db47db0326b69218508fbee8f4fd3c759d1dc108998c81e8122",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-intact",
+      "width": 12,
+      "reference": "48d363404389e4dbb9b8aa25ec3356f7a17d614c3bbf029b2599e47af5b08d37",
+      "candidate": "48d363404389e4dbb9b8aa25ec3356f7a17d614c3bbf029b2599e47af5b08d37",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-intact",
+      "width": 24,
+      "reference": "48d363404389e4dbb9b8aa25ec3356f7a17d614c3bbf029b2599e47af5b08d37",
+      "candidate": "48d363404389e4dbb9b8aa25ec3356f7a17d614c3bbf029b2599e47af5b08d37",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-intact",
+      "width": 6,
+      "reference": "48d363404389e4dbb9b8aa25ec3356f7a17d614c3bbf029b2599e47af5b08d37",
+      "candidate": "48d363404389e4dbb9b8aa25ec3356f7a17d614c3bbf029b2599e47af5b08d37",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-damaged",
+      "width": 12,
+      "reference": "ef2b6a463a2d03cb07d84dc366fa8c7c3888da5e68493a47bb9b5f5197abd519",
+      "candidate": "ef2b6a463a2d03cb07d84dc366fa8c7c3888da5e68493a47bb9b5f5197abd519",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-damaged",
+      "width": 24,
+      "reference": "ef2b6a463a2d03cb07d84dc366fa8c7c3888da5e68493a47bb9b5f5197abd519",
+      "candidate": "ef2b6a463a2d03cb07d84dc366fa8c7c3888da5e68493a47bb9b5f5197abd519",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-damaged",
+      "width": 6,
+      "reference": "ef2b6a463a2d03cb07d84dc366fa8c7c3888da5e68493a47bb9b5f5197abd519",
+      "candidate": "ef2b6a463a2d03cb07d84dc366fa8c7c3888da5e68493a47bb9b5f5197abd519",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-broken",
+      "width": 12,
+      "reference": "192d3d989290115ea89a809f574defd019dca4f402ac77856c8c8de01a42b305",
+      "candidate": "192d3d989290115ea89a809f574defd019dca4f402ac77856c8c8de01a42b305",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-broken",
+      "width": 24,
+      "reference": "192d3d989290115ea89a809f574defd019dca4f402ac77856c8c8de01a42b305",
+      "candidate": "192d3d989290115ea89a809f574defd019dca4f402ac77856c8c8de01a42b305",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-broken",
+      "width": 6,
+      "reference": "192d3d989290115ea89a809f574defd019dca4f402ac77856c8c8de01a42b305",
+      "candidate": "192d3d989290115ea89a809f574defd019dca4f402ac77856c8c8de01a42b305",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-restored",
+      "width": 12,
+      "reference": "48d363404389e4dbb9b8aa25ec3356f7a17d614c3bbf029b2599e47af5b08d37",
+      "candidate": "48d363404389e4dbb9b8aa25ec3356f7a17d614c3bbf029b2599e47af5b08d37",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-restored",
+      "width": 24,
+      "reference": "48d363404389e4dbb9b8aa25ec3356f7a17d614c3bbf029b2599e47af5b08d37",
+      "candidate": "48d363404389e4dbb9b8aa25ec3356f7a17d614c3bbf029b2599e47af5b08d37",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "starMine-restored",
+      "width": 6,
+      "reference": "48d363404389e4dbb9b8aa25ec3356f7a17d614c3bbf029b2599e47af5b08d37",
+      "candidate": "48d363404389e4dbb9b8aa25ec3356f7a17d614c3bbf029b2599e47af5b08d37",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-standard",
+      "width": 12,
+      "reference": "ecd444924dc1fe838ae63749ddd5f2653300797a33641d8272e0ef72d4883b0c",
+      "candidate": "ecd444924dc1fe838ae63749ddd5f2653300797a33641d8272e0ef72d4883b0c",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-standard",
+      "width": 24,
+      "reference": "ecd444924dc1fe838ae63749ddd5f2653300797a33641d8272e0ef72d4883b0c",
+      "candidate": "ecd444924dc1fe838ae63749ddd5f2653300797a33641d8272e0ef72d4883b0c",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-standard",
+      "width": 6,
+      "reference": "ecd444924dc1fe838ae63749ddd5f2653300797a33641d8272e0ef72d4883b0c",
+      "candidate": "ecd444924dc1fe838ae63749ddd5f2653300797a33641d8272e0ef72d4883b0c",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-focused",
+      "width": 12,
+      "reference": "5fb71066ab757375d5a3fd8eef249a025da0e9dbd4d1f130d6118c2618fc9695",
+      "candidate": "5fb71066ab757375d5a3fd8eef249a025da0e9dbd4d1f130d6118c2618fc9695",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-focused",
+      "width": 24,
+      "reference": "5fb71066ab757375d5a3fd8eef249a025da0e9dbd4d1f130d6118c2618fc9695",
+      "candidate": "5fb71066ab757375d5a3fd8eef249a025da0e9dbd4d1f130d6118c2618fc9695",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-focused",
+      "width": 6,
+      "reference": "5fb71066ab757375d5a3fd8eef249a025da0e9dbd4d1f130d6118c2618fc9695",
+      "candidate": "5fb71066ab757375d5a3fd8eef249a025da0e9dbd4d1f130d6118c2618fc9695",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-wide",
+      "width": 12,
+      "reference": "a709dcfefa68b451d3d9552b6560b3a3e3ad00efed122cb39bf94ddff45b967b",
+      "candidate": "a709dcfefa68b451d3d9552b6560b3a3e3ad00efed122cb39bf94ddff45b967b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-wide",
+      "width": 24,
+      "reference": "a709dcfefa68b451d3d9552b6560b3a3e3ad00efed122cb39bf94ddff45b967b",
+      "candidate": "a709dcfefa68b451d3d9552b6560b3a3e3ad00efed122cb39bf94ddff45b967b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-wide",
+      "width": 6,
+      "reference": "a709dcfefa68b451d3d9552b6560b3a3e3ad00efed122cb39bf94ddff45b967b",
+      "candidate": "a709dcfefa68b451d3d9552b6560b3a3e3ad00efed122cb39bf94ddff45b967b",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-prismatic",
+      "width": 12,
+      "reference": "567e2ca2a6cef13b260779fae2a6b40a31040e6c7da0e915397fb48e8d25b065",
+      "candidate": "567e2ca2a6cef13b260779fae2a6b40a31040e6c7da0e915397fb48e8d25b065",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-prismatic",
+      "width": 24,
+      "reference": "567e2ca2a6cef13b260779fae2a6b40a31040e6c7da0e915397fb48e8d25b065",
+      "candidate": "567e2ca2a6cef13b260779fae2a6b40a31040e6c7da0e915397fb48e8d25b065",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-prismatic",
+      "width": 6,
+      "reference": "567e2ca2a6cef13b260779fae2a6b40a31040e6c7da0e915397fb48e8d25b065",
+      "candidate": "567e2ca2a6cef13b260779fae2a6b40a31040e6c7da0e915397fb48e8d25b065",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-deepheart",
+      "width": 12,
+      "reference": "efa187b5ed2ded75dfe6193532a9378a6645cf9207478eaa094d852d5e18005d",
+      "candidate": "efa187b5ed2ded75dfe6193532a9378a6645cf9207478eaa094d852d5e18005d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-deepheart",
+      "width": 24,
+      "reference": "efa187b5ed2ded75dfe6193532a9378a6645cf9207478eaa094d852d5e18005d",
+      "candidate": "efa187b5ed2ded75dfe6193532a9378a6645cf9207478eaa094d852d5e18005d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "stress-deepheart",
+      "width": 6,
+      "reference": "efa187b5ed2ded75dfe6193532a9378a6645cf9207478eaa094d852d5e18005d",
+      "candidate": "efa187b5ed2ded75dfe6193532a9378a6645cf9207478eaa094d852d5e18005d",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moved",
+      "width": 12,
+      "reference": "b15c25c2b12945be9ef1bf0f82034b44de170f09065619c89cde5eee7d033107",
+      "candidate": "b15c25c2b12945be9ef1bf0f82034b44de170f09065619c89cde5eee7d033107",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moved",
+      "width": 24,
+      "reference": "b15c25c2b12945be9ef1bf0f82034b44de170f09065619c89cde5eee7d033107",
+      "candidate": "b15c25c2b12945be9ef1bf0f82034b44de170f09065619c89cde5eee7d033107",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    },
+    {
+      "label": "moved",
+      "width": 6,
+      "reference": "b15c25c2b12945be9ef1bf0f82034b44de170f09065619c89cde5eee7d033107",
+      "candidate": "b15c25c2b12945be9ef1bf0f82034b44de170f09065619c89cde5eee7d033107",
+      "max_channel_difference": 0,
+      "changed_channels": 0
+    }
+  ],
+  "captures": [
+    "emberMine-intact-0-w6",
+    "emberMine-intact-1-w12",
+    "emberMine-intact-2-w24",
+    "emberMine-intact-3-w6",
+    "moved-0-w6",
+    "moved-1-w12",
+    "moved-2-w24",
+    "moved-3-w6"
+  ],
+  "physical_iphone_verified": false,
+  "scope": "Diagnostic wider terrain strips6/12/24 on integrated CPU/native/shared-HUD candidate. Same ordered authored draws, lighting and native resolution. Two balanced mining repeats; no GPU timer, no phone result, default production width6 unchanged."
+}

@@ -1,0 +1,1116 @@
+{
+  "passed": true,
+  "error": null,
+  "source_commit": "47576e2783c94a8307f41d2505578fc0628df9f7",
+  "baseline_source": "c63aabd3e3e5120579285ce6e8b0b59a75f2727a",
+  "version": "1.0.0-dev.15.9",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "76491a325cac2995ef194640ae37abb1119e302f2827b6e73ebd99786c2a8a0a"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 260327492,
+      "sha256": "f35b7570bc87f46cfa116e460cf257ff6d2cb252c031300c5cc1a588fa7fae84"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "browser": "webkit",
+  "runtime": {
+    "renderer": "Apple GPU",
+    "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+    "dpr": 3,
+    "canvas": [
+      2328,
+      1260
+    ]
+  },
+  "checks": [
+    {
+      "name": "apple-gpu",
+      "passed": true,
+      "runtime": {
+        "renderer": "Apple GPU",
+        "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+        "dpr": 3,
+        "canvas": [
+          2328,
+          1260
+        ]
+      }
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "actual-sync-0",
+      "passed": true,
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 48,
+          "getSyncParameter": 192,
+          "fenceSync": 192
+        },
+        "raf": 48,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "name": "journal-starts-closed-0",
+      "passed": true
+    },
+    {
+      "name": "journal-opens-0",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "tab-0-together",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-journal-0-together-1",
+      "passed": true
+    },
+    {
+      "name": "candidate-journal-0-together",
+      "passed": true,
+      "label": "journal-0-together",
+      "variant": 1,
+      "reference": "e4dcd72635d2f0997f6dd08f2ec5831b07dca6e52c264781756342736ffe521b",
+      "candidate": "e4dcd72635d2f0997f6dd08f2ec5831b07dca6e52c264781756342736ffe521b",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "image-size-journal-0-together-2",
+      "passed": true
+    },
+    {
+      "name": "restored-journal-0-together",
+      "passed": true,
+      "label": "journal-0-together",
+      "variant": 0,
+      "reference": "e4dcd72635d2f0997f6dd08f2ec5831b07dca6e52c264781756342736ffe521b",
+      "candidate": "e4dcd72635d2f0997f6dd08f2ec5831b07dca6e52c264781756342736ffe521b",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "tab-0-skills",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-journal-0-skills-1",
+      "passed": true
+    },
+    {
+      "name": "candidate-journal-0-skills",
+      "passed": true,
+      "label": "journal-0-skills",
+      "variant": 1,
+      "reference": "f4abdca90cae776a416eb8a574eb0132387503ec9d1fdeb0128ceb362a054817",
+      "candidate": "f4abdca90cae776a416eb8a574eb0132387503ec9d1fdeb0128ceb362a054817",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "image-size-journal-0-skills-2",
+      "passed": true
+    },
+    {
+      "name": "restored-journal-0-skills",
+      "passed": true,
+      "label": "journal-0-skills",
+      "variant": 0,
+      "reference": "f4abdca90cae776a416eb8a574eb0132387503ec9d1fdeb0128ceb362a054817",
+      "candidate": "f4abdca90cae776a416eb8a574eb0132387503ec9d1fdeb0128ceb362a054817",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "tab-0-how",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-journal-0-how-1",
+      "passed": true
+    },
+    {
+      "name": "candidate-journal-0-how",
+      "passed": true,
+      "label": "journal-0-how",
+      "variant": 1,
+      "reference": "0e2bed0a819f21f8e5260d6b2aa4bcf5194d9309d1a6a5191e869b9810ae82fd",
+      "candidate": "0e2bed0a819f21f8e5260d6b2aa4bcf5194d9309d1a6a5191e869b9810ae82fd",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "image-size-journal-0-how-2",
+      "passed": true
+    },
+    {
+      "name": "restored-journal-0-how",
+      "passed": true,
+      "label": "journal-0-how",
+      "variant": 0,
+      "reference": "0e2bed0a819f21f8e5260d6b2aa4bcf5194d9309d1a6a5191e869b9810ae82fd",
+      "candidate": "0e2bed0a819f21f8e5260d6b2aa4bcf5194d9309d1a6a5191e869b9810ae82fd",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "journal-closes-0",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-closed-0-1",
+      "passed": true
+    },
+    {
+      "name": "candidate-closed-0",
+      "passed": true,
+      "label": "closed-0",
+      "variant": 1,
+      "reference": "044632eb8e2d792c76305effe1ddd4e17be450aa2239bffabc535b9e05cdf2e1",
+      "candidate": "044632eb8e2d792c76305effe1ddd4e17be450aa2239bffabc535b9e05cdf2e1",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "image-size-closed-0-2",
+      "passed": true
+    },
+    {
+      "name": "restored-closed-0",
+      "passed": true,
+      "label": "closed-0",
+      "variant": 0,
+      "reference": "044632eb8e2d792c76305effe1ddd4e17be450aa2239bffabc535b9e05cdf2e1",
+      "candidate": "044632eb8e2d792c76305effe1ddd4e17be450aa2239bffabc535b9e05cdf2e1",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "actual-sync-1",
+      "passed": true,
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 49,
+          "getSyncParameter": 98,
+          "fenceSync": 98
+        },
+        "raf": 49,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "name": "journal-starts-closed-1",
+      "passed": true
+    },
+    {
+      "name": "journal-opens-1",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "tab-1-together",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-journal-1-together-1",
+      "passed": true
+    },
+    {
+      "name": "candidate-journal-1-together",
+      "passed": true,
+      "label": "journal-1-together",
+      "variant": 1,
+      "reference": "a075992cc085dd14c37d8ab39c3a0b6d915f46c838d752582cf5a0e859d15992",
+      "candidate": "a075992cc085dd14c37d8ab39c3a0b6d915f46c838d752582cf5a0e859d15992",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "image-size-journal-1-together-2",
+      "passed": true
+    },
+    {
+      "name": "restored-journal-1-together",
+      "passed": true,
+      "label": "journal-1-together",
+      "variant": 0,
+      "reference": "a075992cc085dd14c37d8ab39c3a0b6d915f46c838d752582cf5a0e859d15992",
+      "candidate": "a075992cc085dd14c37d8ab39c3a0b6d915f46c838d752582cf5a0e859d15992",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "tab-1-skills",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-journal-1-skills-1",
+      "passed": true
+    },
+    {
+      "name": "candidate-journal-1-skills",
+      "passed": true,
+      "label": "journal-1-skills",
+      "variant": 1,
+      "reference": "9870303155c2e23651eee255a234846c2bc2c59eae1e80edf6954ce0d120eb31",
+      "candidate": "9870303155c2e23651eee255a234846c2bc2c59eae1e80edf6954ce0d120eb31",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "image-size-journal-1-skills-2",
+      "passed": true
+    },
+    {
+      "name": "restored-journal-1-skills",
+      "passed": true,
+      "label": "journal-1-skills",
+      "variant": 0,
+      "reference": "9870303155c2e23651eee255a234846c2bc2c59eae1e80edf6954ce0d120eb31",
+      "candidate": "9870303155c2e23651eee255a234846c2bc2c59eae1e80edf6954ce0d120eb31",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "tab-1-how",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-journal-1-how-1",
+      "passed": true
+    },
+    {
+      "name": "candidate-journal-1-how",
+      "passed": true,
+      "label": "journal-1-how",
+      "variant": 1,
+      "reference": "88d836b5542107661dba3ab8f8d20cec4ba7278b9a2ffff6d9fccbffe6bcdfcd",
+      "candidate": "88d836b5542107661dba3ab8f8d20cec4ba7278b9a2ffff6d9fccbffe6bcdfcd",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "image-size-journal-1-how-2",
+      "passed": true
+    },
+    {
+      "name": "restored-journal-1-how",
+      "passed": true,
+      "label": "journal-1-how",
+      "variant": 0,
+      "reference": "88d836b5542107661dba3ab8f8d20cec4ba7278b9a2ffff6d9fccbffe6bcdfcd",
+      "candidate": "88d836b5542107661dba3ab8f8d20cec4ba7278b9a2ffff6d9fccbffe6bcdfcd",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "journal-closes-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-closed-1-1",
+      "passed": true
+    },
+    {
+      "name": "candidate-closed-1",
+      "passed": true,
+      "label": "closed-1",
+      "variant": 1,
+      "reference": "c84aeac770353e9e2d599fa3e549ef5e2c9000989c49f4209f6559f339fce423",
+      "candidate": "c84aeac770353e9e2d599fa3e549ef5e2c9000989c49f4209f6559f339fce423",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "image-size-closed-1-2",
+      "passed": true
+    },
+    {
+      "name": "restored-closed-1",
+      "passed": true,
+      "label": "closed-1",
+      "variant": 0,
+      "reference": "c84aeac770353e9e2d599fa3e549ef5e2c9000989c49f4209f6559f339fce423",
+      "candidate": "c84aeac770353e9e2d599fa3e549ef5e2c9000989c49f4209f6559f339fce423",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "actual-sync-2",
+      "passed": true,
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 61,
+          "getSyncParameter": 244,
+          "fenceSync": 244
+        },
+        "raf": 61,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "name": "journal-starts-closed-2",
+      "passed": true
+    },
+    {
+      "name": "journal-opens-2",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "tab-2-together",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-journal-2-together-1",
+      "passed": true
+    },
+    {
+      "name": "candidate-journal-2-together",
+      "passed": true,
+      "label": "journal-2-together",
+      "variant": 1,
+      "reference": "04b4e0dc364f1e24168edcd620707ce4f3b542218e8b16fbf400320ec9ed36fa",
+      "candidate": "04b4e0dc364f1e24168edcd620707ce4f3b542218e8b16fbf400320ec9ed36fa",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "image-size-journal-2-together-2",
+      "passed": true
+    },
+    {
+      "name": "restored-journal-2-together",
+      "passed": true,
+      "label": "journal-2-together",
+      "variant": 0,
+      "reference": "04b4e0dc364f1e24168edcd620707ce4f3b542218e8b16fbf400320ec9ed36fa",
+      "candidate": "04b4e0dc364f1e24168edcd620707ce4f3b542218e8b16fbf400320ec9ed36fa",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "tab-2-skills",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-journal-2-skills-1",
+      "passed": true
+    },
+    {
+      "name": "candidate-journal-2-skills",
+      "passed": true,
+      "label": "journal-2-skills",
+      "variant": 1,
+      "reference": "da60c78081c3bd97982d66309b9876aee55f6e1e7c6aa5efaa015fb6e0f6368a",
+      "candidate": "da60c78081c3bd97982d66309b9876aee55f6e1e7c6aa5efaa015fb6e0f6368a",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "image-size-journal-2-skills-2",
+      "passed": true
+    },
+    {
+      "name": "restored-journal-2-skills",
+      "passed": true,
+      "label": "journal-2-skills",
+      "variant": 0,
+      "reference": "da60c78081c3bd97982d66309b9876aee55f6e1e7c6aa5efaa015fb6e0f6368a",
+      "candidate": "da60c78081c3bd97982d66309b9876aee55f6e1e7c6aa5efaa015fb6e0f6368a",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "tab-2-how",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-journal-2-how-1",
+      "passed": true
+    },
+    {
+      "name": "candidate-journal-2-how",
+      "passed": true,
+      "label": "journal-2-how",
+      "variant": 1,
+      "reference": "e8c07595c251ef57a242f9dd5e1fc9dace37d93659777b0568ce12ff678c2ddf",
+      "candidate": "e8c07595c251ef57a242f9dd5e1fc9dace37d93659777b0568ce12ff678c2ddf",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "image-size-journal-2-how-2",
+      "passed": true
+    },
+    {
+      "name": "restored-journal-2-how",
+      "passed": true,
+      "label": "journal-2-how",
+      "variant": 0,
+      "reference": "e8c07595c251ef57a242f9dd5e1fc9dace37d93659777b0568ce12ff678c2ddf",
+      "candidate": "e8c07595c251ef57a242f9dd5e1fc9dace37d93659777b0568ce12ff678c2ddf",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "journal-closes-2",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-closed-2-1",
+      "passed": true
+    },
+    {
+      "name": "candidate-closed-2",
+      "passed": true,
+      "label": "closed-2",
+      "variant": 1,
+      "reference": "ca6cf11dcf70b3f22a24670fa7919703f059f820ab308bba7e9beceea0be048b",
+      "candidate": "ca6cf11dcf70b3f22a24670fa7919703f059f820ab308bba7e9beceea0be048b",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "image-size-closed-2-2",
+      "passed": true
+    },
+    {
+      "name": "restored-closed-2",
+      "passed": true,
+      "label": "closed-2",
+      "variant": 0,
+      "reference": "ca6cf11dcf70b3f22a24670fa7919703f059f820ab308bba7e9beceea0be048b",
+      "candidate": "ca6cf11dcf70b3f22a24670fa7919703f059f820ab308bba7e9beceea0be048b",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "no-script-errors",
+      "passed": true
+    }
+  ],
+  "windows": [],
+  "pairs": [
+    {
+      "label": "journal-0-together",
+      "variant": 1,
+      "reference": "e4dcd72635d2f0997f6dd08f2ec5831b07dca6e52c264781756342736ffe521b",
+      "candidate": "e4dcd72635d2f0997f6dd08f2ec5831b07dca6e52c264781756342736ffe521b",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-0-together",
+      "variant": 0,
+      "reference": "e4dcd72635d2f0997f6dd08f2ec5831b07dca6e52c264781756342736ffe521b",
+      "candidate": "e4dcd72635d2f0997f6dd08f2ec5831b07dca6e52c264781756342736ffe521b",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-0-skills",
+      "variant": 1,
+      "reference": "f4abdca90cae776a416eb8a574eb0132387503ec9d1fdeb0128ceb362a054817",
+      "candidate": "f4abdca90cae776a416eb8a574eb0132387503ec9d1fdeb0128ceb362a054817",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-0-skills",
+      "variant": 0,
+      "reference": "f4abdca90cae776a416eb8a574eb0132387503ec9d1fdeb0128ceb362a054817",
+      "candidate": "f4abdca90cae776a416eb8a574eb0132387503ec9d1fdeb0128ceb362a054817",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-0-how",
+      "variant": 1,
+      "reference": "0e2bed0a819f21f8e5260d6b2aa4bcf5194d9309d1a6a5191e869b9810ae82fd",
+      "candidate": "0e2bed0a819f21f8e5260d6b2aa4bcf5194d9309d1a6a5191e869b9810ae82fd",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-0-how",
+      "variant": 0,
+      "reference": "0e2bed0a819f21f8e5260d6b2aa4bcf5194d9309d1a6a5191e869b9810ae82fd",
+      "candidate": "0e2bed0a819f21f8e5260d6b2aa4bcf5194d9309d1a6a5191e869b9810ae82fd",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "closed-0",
+      "variant": 1,
+      "reference": "044632eb8e2d792c76305effe1ddd4e17be450aa2239bffabc535b9e05cdf2e1",
+      "candidate": "044632eb8e2d792c76305effe1ddd4e17be450aa2239bffabc535b9e05cdf2e1",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "closed-0",
+      "variant": 0,
+      "reference": "044632eb8e2d792c76305effe1ddd4e17be450aa2239bffabc535b9e05cdf2e1",
+      "candidate": "044632eb8e2d792c76305effe1ddd4e17be450aa2239bffabc535b9e05cdf2e1",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-1-together",
+      "variant": 1,
+      "reference": "a075992cc085dd14c37d8ab39c3a0b6d915f46c838d752582cf5a0e859d15992",
+      "candidate": "a075992cc085dd14c37d8ab39c3a0b6d915f46c838d752582cf5a0e859d15992",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-1-together",
+      "variant": 0,
+      "reference": "a075992cc085dd14c37d8ab39c3a0b6d915f46c838d752582cf5a0e859d15992",
+      "candidate": "a075992cc085dd14c37d8ab39c3a0b6d915f46c838d752582cf5a0e859d15992",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-1-skills",
+      "variant": 1,
+      "reference": "9870303155c2e23651eee255a234846c2bc2c59eae1e80edf6954ce0d120eb31",
+      "candidate": "9870303155c2e23651eee255a234846c2bc2c59eae1e80edf6954ce0d120eb31",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-1-skills",
+      "variant": 0,
+      "reference": "9870303155c2e23651eee255a234846c2bc2c59eae1e80edf6954ce0d120eb31",
+      "candidate": "9870303155c2e23651eee255a234846c2bc2c59eae1e80edf6954ce0d120eb31",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-1-how",
+      "variant": 1,
+      "reference": "88d836b5542107661dba3ab8f8d20cec4ba7278b9a2ffff6d9fccbffe6bcdfcd",
+      "candidate": "88d836b5542107661dba3ab8f8d20cec4ba7278b9a2ffff6d9fccbffe6bcdfcd",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-1-how",
+      "variant": 0,
+      "reference": "88d836b5542107661dba3ab8f8d20cec4ba7278b9a2ffff6d9fccbffe6bcdfcd",
+      "candidate": "88d836b5542107661dba3ab8f8d20cec4ba7278b9a2ffff6d9fccbffe6bcdfcd",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "closed-1",
+      "variant": 1,
+      "reference": "c84aeac770353e9e2d599fa3e549ef5e2c9000989c49f4209f6559f339fce423",
+      "candidate": "c84aeac770353e9e2d599fa3e549ef5e2c9000989c49f4209f6559f339fce423",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "closed-1",
+      "variant": 0,
+      "reference": "c84aeac770353e9e2d599fa3e549ef5e2c9000989c49f4209f6559f339fce423",
+      "candidate": "c84aeac770353e9e2d599fa3e549ef5e2c9000989c49f4209f6559f339fce423",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-2-together",
+      "variant": 1,
+      "reference": "04b4e0dc364f1e24168edcd620707ce4f3b542218e8b16fbf400320ec9ed36fa",
+      "candidate": "04b4e0dc364f1e24168edcd620707ce4f3b542218e8b16fbf400320ec9ed36fa",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-2-together",
+      "variant": 0,
+      "reference": "04b4e0dc364f1e24168edcd620707ce4f3b542218e8b16fbf400320ec9ed36fa",
+      "candidate": "04b4e0dc364f1e24168edcd620707ce4f3b542218e8b16fbf400320ec9ed36fa",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-2-skills",
+      "variant": 1,
+      "reference": "da60c78081c3bd97982d66309b9876aee55f6e1e7c6aa5efaa015fb6e0f6368a",
+      "candidate": "da60c78081c3bd97982d66309b9876aee55f6e1e7c6aa5efaa015fb6e0f6368a",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-2-skills",
+      "variant": 0,
+      "reference": "da60c78081c3bd97982d66309b9876aee55f6e1e7c6aa5efaa015fb6e0f6368a",
+      "candidate": "da60c78081c3bd97982d66309b9876aee55f6e1e7c6aa5efaa015fb6e0f6368a",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-2-how",
+      "variant": 1,
+      "reference": "e8c07595c251ef57a242f9dd5e1fc9dace37d93659777b0568ce12ff678c2ddf",
+      "candidate": "e8c07595c251ef57a242f9dd5e1fc9dace37d93659777b0568ce12ff678c2ddf",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "journal-2-how",
+      "variant": 0,
+      "reference": "e8c07595c251ef57a242f9dd5e1fc9dace37d93659777b0568ce12ff678c2ddf",
+      "candidate": "e8c07595c251ef57a242f9dd5e1fc9dace37d93659777b0568ce12ff678c2ddf",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "closed-2",
+      "variant": 1,
+      "reference": "ca6cf11dcf70b3f22a24670fa7919703f059f820ab308bba7e9beceea0be048b",
+      "candidate": "ca6cf11dcf70b3f22a24670fa7919703f059f820ab308bba7e9beceea0be048b",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    },
+    {
+      "label": "closed-2",
+      "variant": 0,
+      "reference": "ca6cf11dcf70b3f22a24670fa7919703f059f820ab308bba7e9beceea0be048b",
+      "candidate": "ca6cf11dcf70b3f22a24670fa7919703f059f820ab308bba7e9beceea0be048b",
+      "max_channel_difference": 0,
+      "changed_channels": 0,
+      "mean_channel_difference": 0,
+      "channels_over_2": 0,
+      "channel_count": 11733120
+    }
+  ],
+  "captures": [
+    "journal-0-together-0-w0",
+    "journal-0-together-1-w1",
+    "journal-0-together-2-w0",
+    "journal-0-skills-0-w0",
+    "journal-0-skills-1-w1",
+    "journal-0-skills-2-w0",
+    "journal-0-how-0-w0",
+    "journal-0-how-1-w1",
+    "journal-0-how-2-w0",
+    "closed-0-0-w0",
+    "closed-0-1-w1",
+    "closed-0-2-w0",
+    "journal-1-together-0-w0",
+    "journal-1-together-1-w1",
+    "journal-1-together-2-w0",
+    "journal-1-skills-0-w0",
+    "journal-1-skills-1-w1",
+    "journal-1-skills-2-w0",
+    "journal-1-how-0-w0",
+    "journal-1-how-1-w1",
+    "journal-1-how-2-w0",
+    "closed-1-0-w0",
+    "closed-1-1-w1",
+    "closed-1-2-w0",
+    "journal-2-together-0-w0",
+    "journal-2-together-1-w1",
+    "journal-2-together-2-w0",
+    "journal-2-skills-0-w0",
+    "journal-2-skills-1-w1",
+    "journal-2-skills-2-w0",
+    "journal-2-how-0-w0",
+    "journal-2-how-1-w1",
+    "journal-2-how-2-w0",
+    "closed-2-0-w0",
+    "closed-2-1-w1",
+    "closed-2-2-w0"
+  ],
+  "physical_iphone_verified": false,
+  "scope": "QA skip native viewport empty 2D canvas and combine three CompanionInterface UI children into the existing HUD canvas. The original controller canvas is parked on a disabled 2x2 viewport. Exact reversal and image parity required; targeted journal touch/tab/close correction; no repeated FPS windows, not full UI lifecycle acceptance. All actor source/assets/animation, 3D rendering, world lights, HUD and resolution unchanged. Occupancy revision in both modes. Exact candidate image parity required. GL synchronization counts verify actual work reduction. No release."
+}

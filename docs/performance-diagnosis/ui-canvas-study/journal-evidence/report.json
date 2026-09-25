@@ -1,0 +1,136 @@
+{
+  "passed": false,
+  "error": "Error: candidate-journal-0-together",
+  "source_commit": "36449d641db5578eee4ea24709c0a2d6d416d0ac",
+  "baseline_source": "c63aabd3e3e5120579285ce6e8b0b59a75f2727a",
+  "version": "1.0.0-dev.15.9",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "227ece2e4a7278aa28748a9c797dd6129e5f6d39d07f934f66ac53584a94f20f"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 260327396,
+      "sha256": "36f3d2b5e246c8c0e3681fb98a9cdad8689d1e6fda917b20c7f525967cfcc033"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "browser": "webkit",
+  "runtime": {
+    "renderer": "Apple GPU",
+    "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+    "dpr": 3,
+    "canvas": [
+      2328,
+      1260
+    ]
+  },
+  "checks": [
+    {
+      "name": "apple-gpu",
+      "passed": true,
+      "runtime": {
+        "renderer": "Apple GPU",
+        "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+        "dpr": 3,
+        "canvas": [
+          2328,
+          1260
+        ]
+      }
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "journal-starts-closed-0",
+      "passed": true
+    },
+    {
+      "name": "journal-opens-0",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "tab-0-together",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "variant-1",
+      "passed": true
+    },
+    {
+      "name": "variant-0",
+      "passed": true
+    },
+    {
+      "name": "image-size-journal-0-together-1",
+      "passed": true
+    },
+    {
+      "name": "candidate-journal-0-together",
+      "passed": false,
+      "label": "journal-0-together",
+      "variant": 1,
+      "reference": "694db539785fc4ce2c3aa15e92cd909b1f64f06f69a9c61118546bc9bb85bb2e",
+      "candidate": "1874446d38322208595907726360d9ed3cd09c5a583f35b6243b6e5994d0dfc2",
+      "max_channel_difference": 177,
+      "changed_channels": 2637807,
+      "mean_channel_difference": 2.2493775739104347,
+      "channels_over_2": 1600932,
+      "channel_count": 11733120
+    }
+  ],
+  "windows": [],
+  "pairs": [
+    {
+      "label": "journal-0-together",
+      "variant": 1,
+      "reference": "694db539785fc4ce2c3aa15e92cd909b1f64f06f69a9c61118546bc9bb85bb2e",
+      "candidate": "1874446d38322208595907726360d9ed3cd09c5a583f35b6243b6e5994d0dfc2",
+      "max_channel_difference": 177,
+      "changed_channels": 2637807,
+      "mean_channel_difference": 2.2493775739104347,
+      "channels_over_2": 1600932,
+      "channel_count": 11733120
+    }
+  ],
+  "captures": [],
+  "physical_iphone_verified": false,
+  "scope": "QA skip native viewport empty 2D canvas and combine three CompanionInterface UI children into the existing HUD canvas. The original controller canvas is parked on a disabled 2x2 viewport. Exact reversal and image parity required; targeted journal touch/tab/close correction; no repeated FPS windows, not full UI lifecycle acceptance. All actor source/assets/animation, 3D rendering, world lights, HUD and resolution unchanged. Occupancy revision in both modes. Exact candidate image parity required. GL synchronization counts verify actual work reduction. No release."
+}

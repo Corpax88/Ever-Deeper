@@ -1,0 +1,252 @@
+{
+  "reviewer": "independent lighttest_review agent",
+  "source_commit": "47576e2783c94a8307f41d2505578fc0628df9f7",
+  "workflow_run": 36115348089,
+  "accepted": true,
+  "scope": "Bounded reversible UI canvas prototype only",
+  "release_approved": false,
+  "actual_images_inspected": 36,
+  "checks_passed": 125,
+  "exact_pairs": 24,
+  "max_channel_difference": 0,
+  "findings": [
+    "All 36 original PNGs inspected. Dark journal backdrop, all three tab layouts, portrait, text and closed-menu HUD match within each reference/candidate/restored triple.",
+    "Real-touch journal open, Together/Paw skills/How we help tabs and close succeed in baseline, candidate and restored states.",
+    "Synchronization counts independently checked: baseline 192/48=4 pairs per rendered frame; candidate 98/49=2; restored 244/61=4."
+  ],
+  "sync_checks": [
+    {
+      "name": "actual-sync-0",
+      "passed": true,
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 48,
+          "getSyncParameter": 192,
+          "fenceSync": 192
+        },
+        "raf": 48,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "name": "actual-sync-1",
+      "passed": true,
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 49,
+          "getSyncParameter": 98,
+          "fenceSync": 98
+        },
+        "raf": 49,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "name": "actual-sync-2",
+      "passed": true,
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 61,
+          "getSyncParameter": 244,
+          "fenceSync": 244
+        },
+        "raf": 61,
+        "scope": "Call counts only, not GPU time"
+      }
+    }
+  ],
+  "limitations": [
+    "Mac WebKit at 2328x1260 only; not physical phone validation.",
+    "Combined native empty-2D disable and UI canvas consolidation; counts are not GPU time or proof of total FPS gain.",
+    "No acceptance of production implementation or all UI lifecycle states; tested prototype uses reversible reparenting and disabled parking viewport.",
+    "Earlier commerce_open timeout used the wrong panel predicate. The subsequently observed missing backdrop was real and is resolved in these corrected captures."
+  ],
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "76491a325cac2995ef194640ae37abb1119e302f2827b6e73ebd99786c2a8a0a"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 260327492,
+      "sha256": "f35b7570bc87f46cfa116e460cf257ff6d2cb252c031300c5cc1a588fa7fae84"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "evidence_files": [
+    {
+      "path": "journal-passed/closed-0-0-w0.png",
+      "sha256": "044632eb8e2d792c76305effe1ddd4e17be450aa2239bffabc535b9e05cdf2e1"
+    },
+    {
+      "path": "journal-passed/closed-0-1-w1.png",
+      "sha256": "044632eb8e2d792c76305effe1ddd4e17be450aa2239bffabc535b9e05cdf2e1"
+    },
+    {
+      "path": "journal-passed/closed-0-2-w0.png",
+      "sha256": "044632eb8e2d792c76305effe1ddd4e17be450aa2239bffabc535b9e05cdf2e1"
+    },
+    {
+      "path": "journal-passed/closed-1-0-w0.png",
+      "sha256": "c84aeac770353e9e2d599fa3e549ef5e2c9000989c49f4209f6559f339fce423"
+    },
+    {
+      "path": "journal-passed/closed-1-1-w1.png",
+      "sha256": "c84aeac770353e9e2d599fa3e549ef5e2c9000989c49f4209f6559f339fce423"
+    },
+    {
+      "path": "journal-passed/closed-1-2-w0.png",
+      "sha256": "c84aeac770353e9e2d599fa3e549ef5e2c9000989c49f4209f6559f339fce423"
+    },
+    {
+      "path": "journal-passed/closed-2-0-w0.png",
+      "sha256": "ca6cf11dcf70b3f22a24670fa7919703f059f820ab308bba7e9beceea0be048b"
+    },
+    {
+      "path": "journal-passed/closed-2-1-w1.png",
+      "sha256": "ca6cf11dcf70b3f22a24670fa7919703f059f820ab308bba7e9beceea0be048b"
+    },
+    {
+      "path": "journal-passed/closed-2-2-w0.png",
+      "sha256": "ca6cf11dcf70b3f22a24670fa7919703f059f820ab308bba7e9beceea0be048b"
+    },
+    {
+      "path": "journal-passed/journal-0-how-0-w0.png",
+      "sha256": "0e2bed0a819f21f8e5260d6b2aa4bcf5194d9309d1a6a5191e869b9810ae82fd"
+    },
+    {
+      "path": "journal-passed/journal-0-how-1-w1.png",
+      "sha256": "0e2bed0a819f21f8e5260d6b2aa4bcf5194d9309d1a6a5191e869b9810ae82fd"
+    },
+    {
+      "path": "journal-passed/journal-0-how-2-w0.png",
+      "sha256": "0e2bed0a819f21f8e5260d6b2aa4bcf5194d9309d1a6a5191e869b9810ae82fd"
+    },
+    {
+      "path": "journal-passed/journal-0-skills-0-w0.png",
+      "sha256": "f4abdca90cae776a416eb8a574eb0132387503ec9d1fdeb0128ceb362a054817"
+    },
+    {
+      "path": "journal-passed/journal-0-skills-1-w1.png",
+      "sha256": "f4abdca90cae776a416eb8a574eb0132387503ec9d1fdeb0128ceb362a054817"
+    },
+    {
+      "path": "journal-passed/journal-0-skills-2-w0.png",
+      "sha256": "f4abdca90cae776a416eb8a574eb0132387503ec9d1fdeb0128ceb362a054817"
+    },
+    {
+      "path": "journal-passed/journal-0-together-0-w0.png",
+      "sha256": "e4dcd72635d2f0997f6dd08f2ec5831b07dca6e52c264781756342736ffe521b"
+    },
+    {
+      "path": "journal-passed/journal-0-together-1-w1.png",
+      "sha256": "e4dcd72635d2f0997f6dd08f2ec5831b07dca6e52c264781756342736ffe521b"
+    },
+    {
+      "path": "journal-passed/journal-0-together-2-w0.png",
+      "sha256": "e4dcd72635d2f0997f6dd08f2ec5831b07dca6e52c264781756342736ffe521b"
+    },
+    {
+      "path": "journal-passed/journal-1-how-0-w0.png",
+      "sha256": "88d836b5542107661dba3ab8f8d20cec4ba7278b9a2ffff6d9fccbffe6bcdfcd"
+    },
+    {
+      "path": "journal-passed/journal-1-how-1-w1.png",
+      "sha256": "88d836b5542107661dba3ab8f8d20cec4ba7278b9a2ffff6d9fccbffe6bcdfcd"
+    },
+    {
+      "path": "journal-passed/journal-1-how-2-w0.png",
+      "sha256": "88d836b5542107661dba3ab8f8d20cec4ba7278b9a2ffff6d9fccbffe6bcdfcd"
+    },
+    {
+      "path": "journal-passed/journal-1-skills-0-w0.png",
+      "sha256": "9870303155c2e23651eee255a234846c2bc2c59eae1e80edf6954ce0d120eb31"
+    },
+    {
+      "path": "journal-passed/journal-1-skills-1-w1.png",
+      "sha256": "9870303155c2e23651eee255a234846c2bc2c59eae1e80edf6954ce0d120eb31"
+    },
+    {
+      "path": "journal-passed/journal-1-skills-2-w0.png",
+      "sha256": "9870303155c2e23651eee255a234846c2bc2c59eae1e80edf6954ce0d120eb31"
+    },
+    {
+      "path": "journal-passed/journal-1-together-0-w0.png",
+      "sha256": "a075992cc085dd14c37d8ab39c3a0b6d915f46c838d752582cf5a0e859d15992"
+    },
+    {
+      "path": "journal-passed/journal-1-together-1-w1.png",
+      "sha256": "a075992cc085dd14c37d8ab39c3a0b6d915f46c838d752582cf5a0e859d15992"
+    },
+    {
+      "path": "journal-passed/journal-1-together-2-w0.png",
+      "sha256": "a075992cc085dd14c37d8ab39c3a0b6d915f46c838d752582cf5a0e859d15992"
+    },
+    {
+      "path": "journal-passed/journal-2-how-0-w0.png",
+      "sha256": "e8c07595c251ef57a242f9dd5e1fc9dace37d93659777b0568ce12ff678c2ddf"
+    },
+    {
+      "path": "journal-passed/journal-2-how-1-w1.png",
+      "sha256": "e8c07595c251ef57a242f9dd5e1fc9dace37d93659777b0568ce12ff678c2ddf"
+    },
+    {
+      "path": "journal-passed/journal-2-how-2-w0.png",
+      "sha256": "e8c07595c251ef57a242f9dd5e1fc9dace37d93659777b0568ce12ff678c2ddf"
+    },
+    {
+      "path": "journal-passed/journal-2-skills-0-w0.png",
+      "sha256": "da60c78081c3bd97982d66309b9876aee55f6e1e7c6aa5efaa015fb6e0f6368a"
+    },
+    {
+      "path": "journal-passed/journal-2-skills-1-w1.png",
+      "sha256": "da60c78081c3bd97982d66309b9876aee55f6e1e7c6aa5efaa015fb6e0f6368a"
+    },
+    {
+      "path": "journal-passed/journal-2-skills-2-w0.png",
+      "sha256": "da60c78081c3bd97982d66309b9876aee55f6e1e7c6aa5efaa015fb6e0f6368a"
+    },
+    {
+      "path": "journal-passed/journal-2-together-0-w0.png",
+      "sha256": "04b4e0dc364f1e24168edcd620707ce4f3b542218e8b16fbf400320ec9ed36fa"
+    },
+    {
+      "path": "journal-passed/journal-2-together-1-w1.png",
+      "sha256": "04b4e0dc364f1e24168edcd620707ce4f3b542218e8b16fbf400320ec9ed36fa"
+    },
+    {
+      "path": "journal-passed/journal-2-together-2-w0.png",
+      "sha256": "04b4e0dc364f1e24168edcd620707ce4f3b542218e8b16fbf400320ec9ed36fa"
+    },
+    {
+      "path": "journal-passed/report.json",
+      "sha256": "7705b7ec2fcbe4f2e57d9afaa1221ced6c81085d2bf355db8ba1e58051c63e2e"
+    }
+  ]
+}

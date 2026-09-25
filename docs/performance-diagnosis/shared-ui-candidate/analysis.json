@@ -1,0 +1,488 @@
+{
+  "source_commit": "4f27644cb5952dbf31644eff78b61e3648ae056f",
+  "run": 36116844019,
+  "passed": true,
+  "checks": 122,
+  "exact_pairs": 24,
+  "max_channel_difference": 0,
+  "images": 42,
+  "viewports": [
+    "776x420",
+    "667x375",
+    "900x600"
+  ],
+  "native_empty_canvas_disabled_in_both_modes": true,
+  "reference_scope": "New Control group moved to old CanvasLayer18, not byte-identical original controller topology",
+  "sync_counts": [
+    {
+      "label": "776x420-hud",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 44,
+          "getSyncParameter": 88,
+          "fenceSync": 88
+        },
+        "raf": 44,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "776x420-hud",
+      "mode": "shared_reference",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 44,
+          "getSyncParameter": 132,
+          "fenceSync": 132
+        },
+        "raf": 44,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "776x420-hud",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 86,
+          "fenceSync": 86
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "776x420-tab0",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 42,
+          "getSyncParameter": 84,
+          "fenceSync": 84
+        },
+        "raf": 42,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "776x420-tab0",
+      "mode": "shared_reference",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 40,
+          "getSyncParameter": 120,
+          "fenceSync": 120
+        },
+        "raf": 40,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "776x420-tab0",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 86,
+          "fenceSync": 86
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "776x420-tab1",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 86,
+          "fenceSync": 86
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "776x420-tab1",
+      "mode": "shared_reference",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 42,
+          "getSyncParameter": 126,
+          "fenceSync": 126
+        },
+        "raf": 42,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "776x420-tab1",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 42,
+          "getSyncParameter": 84,
+          "fenceSync": 84
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "776x420-tab2",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 44,
+          "getSyncParameter": 88,
+          "fenceSync": 88
+        },
+        "raf": 44,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "776x420-tab2",
+      "mode": "shared_reference",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 129,
+          "fenceSync": 129
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "776x420-tab2",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 86,
+          "fenceSync": 86
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "667x375-hud",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 86,
+          "fenceSync": 86
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "667x375-hud",
+      "mode": "shared_reference",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 129,
+          "fenceSync": 129
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "667x375-hud",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 42,
+          "getSyncParameter": 84,
+          "fenceSync": 84
+        },
+        "raf": 42,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "667x375-tab0",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 86,
+          "fenceSync": 86
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "667x375-tab0",
+      "mode": "shared_reference",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 41,
+          "getSyncParameter": 123,
+          "fenceSync": 123
+        },
+        "raf": 41,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "667x375-tab0",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 86,
+          "fenceSync": 86
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "667x375-tab1",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 86,
+          "fenceSync": 86
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "667x375-tab1",
+      "mode": "shared_reference",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 129,
+          "fenceSync": 129
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "667x375-tab1",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 86,
+          "fenceSync": 86
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "667x375-tab2",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 86,
+          "fenceSync": 86
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "667x375-tab2",
+      "mode": "shared_reference",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 129,
+          "fenceSync": 129
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "667x375-tab2",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 86,
+          "fenceSync": 86
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "900x600-hud",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 86,
+          "fenceSync": 86
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "900x600-hud",
+      "mode": "shared_reference",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 129,
+          "fenceSync": 129
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "900x600-hud",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 86,
+          "fenceSync": 86
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "900x600-tab0",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 34,
+          "getSyncParameter": 68,
+          "fenceSync": 68
+        },
+        "raf": 34,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "900x600-tab0",
+      "mode": "shared_reference",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 36,
+          "getSyncParameter": 108,
+          "fenceSync": 108
+        },
+        "raf": 36,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "900x600-tab0",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 35,
+          "getSyncParameter": 70,
+          "fenceSync": 70
+        },
+        "raf": 35,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "900x600-tab1",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 40,
+          "getSyncParameter": 80,
+          "fenceSync": 80
+        },
+        "raf": 40,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "900x600-tab1",
+      "mode": "shared_reference",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 40,
+          "getSyncParameter": 120,
+          "fenceSync": 120
+        },
+        "raf": 40,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "900x600-tab1",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 34,
+          "getSyncParameter": 68,
+          "fenceSync": 68
+        },
+        "raf": 34,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "900x600-tab2",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 42,
+          "getSyncParameter": 84,
+          "fenceSync": 84
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "900x600-tab2",
+      "mode": "shared_reference",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 42,
+          "getSyncParameter": 126,
+          "fenceSync": 126
+        },
+        "raf": 42,
+        "scope": "Call counts only, not GPU time"
+      }
+    },
+    {
+      "label": "900x600-tab2",
+      "mode": "shared_candidate",
+      "gpu": {
+        "counts": {
+          "checkFramebufferStatus": 43,
+          "getSyncParameter": 86,
+          "fenceSync": 86
+        },
+        "raf": 43,
+        "scope": "Call counts only, not GPU time"
+      }
+    }
+  ],
+  "phone_verified": false,
+  "release_approved": false
+}

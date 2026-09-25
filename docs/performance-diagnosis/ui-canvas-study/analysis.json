@@ -1,0 +1,1327 @@
+{
+  "results": [
+    {
+      "repeat": "1",
+      "run_passed": false,
+      "completed_checks": 96,
+      "exact_pairs": 18,
+      "weighted_fps": {
+        "0": 50.066846743608636,
+        "1": 52.618691334512306
+      },
+      "windows": [
+        {
+          "scenario": "mining",
+          "index": 0,
+          "variant": 0,
+          "cpu": {
+            "max_ms": 31,
+            "mean_ms": 19.7684391080617,
+            "over_33_ms": 0,
+            "p95_ms": 31
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 60,
+            "mean_ms": 20.9382504288165,
+            "over_33_ms": 32,
+            "p95_ms": 35
+          },
+          "frames": 583,
+          "light_cost": {
+            "commerce_open": false,
+            "empty_2d_disabled": false,
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1478",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1480",
+                "shadow": false
+              }
+            ],
+            "mode": "baseline",
+            "native_viewports": [
+              {
+                "canvas_items": 0,
+                "path": "Player/Visual/@Node2D@1481/NativeRig200px",
+                "size": "(400, 400)",
+                "update_mode": 4
+              }
+            ],
+            "occluders": 8,
+            "parking_update_mode": -1,
+            "rebuilds": 0,
+            "refresh_calls": 583,
+            "refresh_usec": 23000,
+            "ui_button": [
+              348,
+              78
+            ],
+            "ui_canvas_detached": false,
+            "ui_child_count": 3,
+            "ui_close": [
+              93.7405853271484,
+              62.0139846801758
+            ],
+            "ui_combined": false,
+            "ui_visible": true
+          },
+          "seconds": 12.208,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 231000,
+            "draw_callbacks": 2066,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 40689,
+            "setup_usec": 1102000
+          },
+          "impacts": 54,
+          "gpu": {
+            "counts": {
+              "checkFramebufferStatus": 596,
+              "getSyncParameter": 2384,
+              "fenceSync": 2384
+            },
+            "raf": 598,
+            "scope": "Call counts only, not GPU time"
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 1,
+          "variant": 1,
+          "cpu": {
+            "max_ms": 276,
+            "mean_ms": 41.4093097913323,
+            "over_33_ms": 57,
+            "p95_ms": 276
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 290,
+            "mean_ms": 19.8475120385233,
+            "over_33_ms": 12,
+            "p95_ms": 27
+          },
+          "frames": 623,
+          "light_cost": {
+            "commerce_open": false,
+            "empty_2d_disabled": true,
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1478",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1480",
+                "shadow": false
+              }
+            ],
+            "mode": "no_empty_2d",
+            "native_viewports": [
+              {
+                "canvas_items": 0,
+                "path": "Player/Visual/@Node2D@1481/NativeRig200px",
+                "size": "(400, 400)",
+                "update_mode": 4
+              }
+            ],
+            "occluders": 8,
+            "parking_update_mode": 0,
+            "rebuilds": 0,
+            "refresh_calls": 623,
+            "refresh_usec": 25000,
+            "ui_button": [
+              348,
+              78
+            ],
+            "ui_canvas_detached": true,
+            "ui_child_count": 3,
+            "ui_close": [
+              93.7405853271484,
+              62.0139846801758
+            ],
+            "ui_combined": true,
+            "ui_visible": true
+          },
+          "seconds": 12.366,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 243000,
+            "draw_callbacks": 2139,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 42345,
+            "setup_usec": 1148000
+          },
+          "impacts": 54,
+          "gpu": {
+            "counts": {
+              "checkFramebufferStatus": 627,
+              "getSyncParameter": 1254,
+              "fenceSync": 1254
+            },
+            "raf": 627,
+            "scope": "Call counts only, not GPU time"
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 2,
+          "variant": 1,
+          "cpu": {
+            "max_ms": 22,
+            "mean_ms": 16.2467948717949,
+            "over_33_ms": 0,
+            "p95_ms": 22
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 46,
+            "mean_ms": 19.5416666666667,
+            "over_33_ms": 9,
+            "p95_ms": 28
+          },
+          "frames": 624,
+          "light_cost": {
+            "commerce_open": false,
+            "empty_2d_disabled": true,
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1478",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1480",
+                "shadow": false
+              }
+            ],
+            "mode": "no_empty_2d",
+            "native_viewports": [
+              {
+                "canvas_items": 0,
+                "path": "Player/Visual/@Node2D@1481/NativeRig200px",
+                "size": "(400, 400)",
+                "update_mode": 4
+              }
+            ],
+            "occluders": 8,
+            "parking_update_mode": 0,
+            "rebuilds": 0,
+            "refresh_calls": 624,
+            "refresh_usec": 26000,
+            "ui_button": [
+              348,
+              78
+            ],
+            "ui_canvas_detached": true,
+            "ui_child_count": 3,
+            "ui_close": [
+              93.7405853271484,
+              62.0139846801758
+            ],
+            "ui_combined": true,
+            "ui_visible": true
+          },
+          "seconds": 12.195,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 236000,
+            "draw_callbacks": 2118,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 41793,
+            "setup_usec": 1061000
+          },
+          "impacts": 54,
+          "gpu": {
+            "counts": {
+              "checkFramebufferStatus": 637,
+              "getSyncParameter": 1274,
+              "fenceSync": 1274
+            },
+            "raf": 637,
+            "scope": "Call counts only, not GPU time"
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 3,
+          "variant": 0,
+          "cpu": {
+            "max_ms": 20,
+            "mean_ms": 14.4316109422492,
+            "over_33_ms": 0,
+            "p95_ms": 20
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 49,
+            "mean_ms": 18.5501519756839,
+            "over_33_ms": 4,
+            "p95_ms": 26
+          },
+          "frames": 658,
+          "light_cost": {
+            "commerce_open": false,
+            "empty_2d_disabled": false,
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1478",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1480",
+                "shadow": false
+              }
+            ],
+            "mode": "baseline",
+            "native_viewports": [
+              {
+                "canvas_items": 0,
+                "path": "Player/Visual/@Node2D@1481/NativeRig200px",
+                "size": "(400, 400)",
+                "update_mode": 4
+              }
+            ],
+            "occluders": 8,
+            "parking_update_mode": -1,
+            "rebuilds": 0,
+            "refresh_calls": 658,
+            "refresh_usec": 21000,
+            "ui_button": [
+              348,
+              78
+            ],
+            "ui_canvas_detached": false,
+            "ui_child_count": 3,
+            "ui_close": [
+              93.7405853271484,
+              62.0139846801758
+            ],
+            "ui_combined": false,
+            "ui_visible": true
+          },
+          "seconds": 12.206,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 227000,
+            "draw_callbacks": 2191,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 43449,
+            "setup_usec": 1028000
+          },
+          "impacts": 54,
+          "gpu": {
+            "counts": {
+              "checkFramebufferStatus": 661,
+              "getSyncParameter": 2644,
+              "fenceSync": 2644
+            },
+            "raf": 661,
+            "scope": "Call counts only, not GPU time"
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 4,
+          "variant": 1,
+          "cpu": {
+            "max_ms": 21,
+            "mean_ms": 14.3435225618632,
+            "over_33_ms": 0,
+            "p95_ms": 21
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 34,
+            "mean_ms": 17.7496360989811,
+            "over_33_ms": 1,
+            "p95_ms": 22
+          },
+          "frames": 687,
+          "light_cost": {
+            "commerce_open": false,
+            "empty_2d_disabled": true,
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1478",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1480",
+                "shadow": false
+              }
+            ],
+            "mode": "no_empty_2d",
+            "native_viewports": [
+              {
+                "canvas_items": 0,
+                "path": "Player/Visual/@Node2D@1481/NativeRig200px",
+                "size": "(400, 400)",
+                "update_mode": 4
+              }
+            ],
+            "occluders": 8,
+            "parking_update_mode": 0,
+            "rebuilds": 0,
+            "refresh_calls": 687,
+            "refresh_usec": 31000,
+            "ui_button": [
+              348,
+              78
+            ],
+            "ui_canvas_detached": true,
+            "ui_child_count": 3,
+            "ui_close": [
+              93.7405853271484,
+              62.0139846801758
+            ],
+            "ui_combined": true,
+            "ui_visible": true
+          },
+          "seconds": 12.194,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 227000,
+            "draw_callbacks": 2357,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 47037,
+            "setup_usec": 1058000
+          },
+          "impacts": 54,
+          "gpu": {
+            "counts": {
+              "checkFramebufferStatus": 700,
+              "getSyncParameter": 1400,
+              "fenceSync": 1400
+            },
+            "raf": 701,
+            "scope": "Call counts only, not GPU time"
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 5,
+          "variant": 0,
+          "cpu": {
+            "max_ms": 22,
+            "mean_ms": 16.2037037037037,
+            "over_33_ms": 0,
+            "p95_ms": 22
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 48,
+            "mean_ms": 20.5993265993266,
+            "over_33_ms": 16,
+            "p95_ms": 30
+          },
+          "frames": 594,
+          "light_cost": {
+            "commerce_open": false,
+            "empty_2d_disabled": false,
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1478",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1480",
+                "shadow": false
+              }
+            ],
+            "mode": "baseline",
+            "native_viewports": [
+              {
+                "canvas_items": 0,
+                "path": "Player/Visual/@Node2D@1481/NativeRig200px",
+                "size": "(400, 400)",
+                "update_mode": 4
+              }
+            ],
+            "occluders": 8,
+            "parking_update_mode": -1,
+            "rebuilds": 0,
+            "refresh_calls": 594,
+            "refresh_usec": 20000,
+            "ui_button": [
+              348,
+              78
+            ],
+            "ui_canvas_detached": false,
+            "ui_child_count": 3,
+            "ui_close": [
+              93.7405853271484,
+              62.0139846801758
+            ],
+            "ui_combined": false,
+            "ui_visible": true
+          },
+          "seconds": 12.237,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 243000,
+            "draw_callbacks": 2100,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 41517,
+            "setup_usec": 1051000
+          },
+          "impacts": 54,
+          "gpu": {
+            "counts": {
+              "checkFramebufferStatus": 605,
+              "getSyncParameter": 2420,
+              "fenceSync": 2420
+            },
+            "raf": 605,
+            "scope": "Call counts only, not GPU time"
+          }
+        }
+      ]
+    },
+    {
+      "repeat": "2",
+      "run_passed": false,
+      "completed_checks": 96,
+      "exact_pairs": 18,
+      "weighted_fps": {
+        "0": 59.730039892890325,
+        "1": 59.8148198727228
+      },
+      "windows": [
+        {
+          "scenario": "mining",
+          "index": 0,
+          "variant": 1,
+          "cpu": {
+            "max_ms": 12,
+            "mean_ms": 9.90697674418605,
+            "over_33_ms": 0,
+            "p95_ms": 12
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 28,
+            "mean_ms": 16.6894664842681,
+            "over_33_ms": 0,
+            "p95_ms": 19
+          },
+          "frames": 731,
+          "light_cost": {
+            "commerce_open": false,
+            "empty_2d_disabled": true,
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1478",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1480",
+                "shadow": false
+              }
+            ],
+            "mode": "no_empty_2d",
+            "native_viewports": [
+              {
+                "canvas_items": 0,
+                "path": "Player/Visual/@Node2D@1481/NativeRig200px",
+                "size": "(400, 400)",
+                "update_mode": 4
+              }
+            ],
+            "occluders": 8,
+            "parking_update_mode": 0,
+            "rebuilds": 0,
+            "refresh_calls": 731,
+            "refresh_usec": 19000,
+            "ui_button": [
+              348,
+              78
+            ],
+            "ui_canvas_detached": true,
+            "ui_child_count": 3,
+            "ui_close": [
+              93.7405853271484,
+              62.0139846801758
+            ],
+            "ui_combined": true,
+            "ui_visible": true
+          },
+          "seconds": 12.201,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 232000,
+            "draw_callbacks": 2512,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 50211,
+            "setup_usec": 1060000
+          },
+          "impacts": 53,
+          "gpu": {
+            "counts": {
+              "checkFramebufferStatus": 743,
+              "getSyncParameter": 1486,
+              "fenceSync": 1486
+            },
+            "raf": 743,
+            "scope": "Call counts only, not GPU time"
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 1,
+          "variant": 0,
+          "cpu": {
+            "max_ms": 13,
+            "mean_ms": 10.4642857142857,
+            "over_33_ms": 0,
+            "p95_ms": 13
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 33,
+            "mean_ms": 16.7568681318681,
+            "over_33_ms": 0,
+            "p95_ms": 20
+          },
+          "frames": 728,
+          "light_cost": {
+            "commerce_open": false,
+            "empty_2d_disabled": false,
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1478",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1480",
+                "shadow": false
+              }
+            ],
+            "mode": "baseline",
+            "native_viewports": [
+              {
+                "canvas_items": 0,
+                "path": "Player/Visual/@Node2D@1481/NativeRig200px",
+                "size": "(400, 400)",
+                "update_mode": 4
+              }
+            ],
+            "occluders": 8,
+            "parking_update_mode": -1,
+            "rebuilds": 0,
+            "refresh_calls": 728,
+            "refresh_usec": 24000,
+            "ui_button": [
+              348,
+              78
+            ],
+            "ui_canvas_detached": false,
+            "ui_child_count": 3,
+            "ui_close": [
+              93.7405853271484,
+              62.0139846801758
+            ],
+            "ui_combined": false,
+            "ui_visible": true
+          },
+          "seconds": 12.199,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 202000,
+            "draw_callbacks": 2311,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 45933,
+            "setup_usec": 970000
+          },
+          "impacts": 53,
+          "gpu": {
+            "counts": {
+              "checkFramebufferStatus": 742,
+              "getSyncParameter": 2968,
+              "fenceSync": 2968
+            },
+            "raf": 742,
+            "scope": "Call counts only, not GPU time"
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 2,
+          "variant": 0,
+          "cpu": {
+            "max_ms": 181,
+            "mean_ms": 12.6607142857143,
+            "over_33_ms": 11,
+            "p95_ms": 11
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 29,
+            "mean_ms": 16.7568681318681,
+            "over_33_ms": 0,
+            "p95_ms": 20
+          },
+          "frames": 728,
+          "light_cost": {
+            "commerce_open": false,
+            "empty_2d_disabled": false,
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1478",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1480",
+                "shadow": false
+              }
+            ],
+            "mode": "baseline",
+            "native_viewports": [
+              {
+                "canvas_items": 0,
+                "path": "Player/Visual/@Node2D@1481/NativeRig200px",
+                "size": "(400, 400)",
+                "update_mode": 4
+              }
+            ],
+            "occluders": 8,
+            "parking_update_mode": -1,
+            "rebuilds": 0,
+            "refresh_calls": 728,
+            "refresh_usec": 26000,
+            "ui_button": [
+              348,
+              78
+            ],
+            "ui_canvas_detached": false,
+            "ui_child_count": 3,
+            "ui_close": [
+              93.7405853271484,
+              62.0139846801758
+            ],
+            "ui_combined": false,
+            "ui_visible": true
+          },
+          "seconds": 12.199,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 221000,
+            "draw_callbacks": 2500,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 49935,
+            "setup_usec": 1060000
+          },
+          "impacts": 54,
+          "gpu": {
+            "counts": {
+              "checkFramebufferStatus": 741,
+              "getSyncParameter": 2964,
+              "fenceSync": 2964
+            },
+            "raf": 741,
+            "scope": "Call counts only, not GPU time"
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 3,
+          "variant": 1,
+          "cpu": {
+            "max_ms": 11,
+            "mean_ms": 10.2046703296703,
+            "over_33_ms": 0,
+            "p95_ms": 11
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 44,
+            "mean_ms": 16.7774725274725,
+            "over_33_ms": 2,
+            "p95_ms": 20
+          },
+          "frames": 728,
+          "light_cost": {
+            "commerce_open": false,
+            "empty_2d_disabled": true,
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1478",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1480",
+                "shadow": false
+              }
+            ],
+            "mode": "no_empty_2d",
+            "native_viewports": [
+              {
+                "canvas_items": 0,
+                "path": "Player/Visual/@Node2D@1481/NativeRig200px",
+                "size": "(400, 400)",
+                "update_mode": 4
+              }
+            ],
+            "occluders": 8,
+            "parking_update_mode": 0,
+            "rebuilds": 0,
+            "refresh_calls": 728,
+            "refresh_usec": 28000,
+            "ui_button": [
+              348,
+              78
+            ],
+            "ui_canvas_detached": true,
+            "ui_child_count": 3,
+            "ui_close": [
+              93.7405853271484,
+              62.0139846801758
+            ],
+            "ui_combined": true,
+            "ui_visible": true
+          },
+          "seconds": 12.214,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 210000,
+            "draw_callbacks": 2410,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 48003,
+            "setup_usec": 1021000
+          },
+          "impacts": 54,
+          "gpu": {
+            "counts": {
+              "checkFramebufferStatus": 741,
+              "getSyncParameter": 1482,
+              "fenceSync": 1482
+            },
+            "raf": 741,
+            "scope": "Call counts only, not GPU time"
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 4,
+          "variant": 0,
+          "cpu": {
+            "max_ms": 11,
+            "mean_ms": 9.75342465753425,
+            "over_33_ms": 0,
+            "p95_ms": 11
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 27,
+            "mean_ms": 16.7123287671233,
+            "over_33_ms": 0,
+            "p95_ms": 20
+          },
+          "frames": 730,
+          "light_cost": {
+            "commerce_open": false,
+            "empty_2d_disabled": false,
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1478",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1480",
+                "shadow": false
+              }
+            ],
+            "mode": "baseline",
+            "native_viewports": [
+              {
+                "canvas_items": 0,
+                "path": "Player/Visual/@Node2D@1481/NativeRig200px",
+                "size": "(400, 400)",
+                "update_mode": 4
+              }
+            ],
+            "occluders": 8,
+            "parking_update_mode": -1,
+            "rebuilds": 0,
+            "refresh_calls": 730,
+            "refresh_usec": 19000,
+            "ui_button": [
+              348,
+              78
+            ],
+            "ui_canvas_detached": false,
+            "ui_child_count": 3,
+            "ui_close": [
+              93.7405853271484,
+              62.0139846801758
+            ],
+            "ui_combined": false,
+            "ui_visible": true
+          },
+          "seconds": 12.2,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 234000,
+            "draw_callbacks": 2511,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 50211,
+            "setup_usec": 1071000
+          },
+          "impacts": 54,
+          "gpu": {
+            "counts": {
+              "checkFramebufferStatus": 743,
+              "getSyncParameter": 2972,
+              "fenceSync": 2972
+            },
+            "raf": 743,
+            "scope": "Call counts only, not GPU time"
+          }
+        },
+        {
+          "scenario": "mining",
+          "index": 5,
+          "variant": 1,
+          "cpu": {
+            "max_ms": 11,
+            "mean_ms": 10,
+            "over_33_ms": 0,
+            "p95_ms": 11
+          },
+          "draw_calls": 178,
+          "frame": {
+            "max_ms": 29,
+            "mean_ms": 16.6853625170999,
+            "over_33_ms": 0,
+            "p95_ms": 20
+          },
+          "frames": 731,
+          "light_cost": {
+            "commerce_open": false,
+            "empty_2d_disabled": true,
+            "lights": [
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "Player/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetCone",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 1,
+                "path": "MoleCompanion/PremiumHeadlamp/HelmetBounce",
+                "shadow": true
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_2/@PointLight2D@1478",
+                "shadow": false
+              },
+              {
+                "enabled": true,
+                "filter": 0,
+                "path": "WorkLight_route_1/@PointLight2D@1480",
+                "shadow": false
+              }
+            ],
+            "mode": "no_empty_2d",
+            "native_viewports": [
+              {
+                "canvas_items": 0,
+                "path": "Player/Visual/@Node2D@1481/NativeRig200px",
+                "size": "(400, 400)",
+                "update_mode": 4
+              }
+            ],
+            "occluders": 8,
+            "parking_update_mode": 0,
+            "rebuilds": 0,
+            "refresh_calls": 731,
+            "refresh_usec": 22000,
+            "ui_button": [
+              348,
+              78
+            ],
+            "ui_canvas_detached": true,
+            "ui_child_count": 3,
+            "ui_close": [
+              93.7405853271484,
+              62.0139846801758
+            ],
+            "ui_combined": true,
+            "ui_visible": true
+          },
+          "seconds": 12.198,
+          "sections": {
+            "cached": 138,
+            "draw_callback_usec": 219000,
+            "draw_callbacks": 2515,
+            "dynamic": 7,
+            "recycled": 162,
+            "redraws": 159,
+            "reuses": 50211,
+            "setup_usec": 1058000
+          },
+          "impacts": 54,
+          "gpu": {
+            "counts": {
+              "checkFramebufferStatus": 744,
+              "getSyncParameter": 1488,
+              "fenceSync": 1488
+            },
+            "raf": 744,
+            "scope": "Call counts only, not GPU time"
+          }
+        }
+      ]
+    }
+  ],
+  "acceptance": false,
+  "touch_timeout_cause": "Wrong commerce-panel predicate; companion journal is separate. Corrected gate pending.",
+  "physical_iphone_verified": false
+}

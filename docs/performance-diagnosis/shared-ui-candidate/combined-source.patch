@@ -1,0 +1,723 @@
+--- a/scripts/companion/companion_interface.gd
++++ b/scripts/companion/companion_interface.gd
+@@ -1,6 +1,7 @@
+-extends CanvasLayer
++extends Node
+ 
+ const Skills = preload("res://scripts/companion/mole_skills.gd")
++var ui_root: Control
+ var main: Node
+ var journal: CompanionJournal
+ var activity: Label
+@@ -15,7 +16,12 @@
+ 
+ func _ready() -> void:
+ 	main=get_parent()
+-	layer=18
++	ui_root=Control.new()
++	ui_root.name="CompanionUI"
++	ui_root.mouse_filter=Control.MOUSE_FILTER_IGNORE
++	ui_root.z_index=4095
++	main.get_node("HUD").add_child(ui_root)
++	ui_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+ 	button=TextureButton.new()
+ 	button.name="CompanionPortrait"
+ 	button.texture_normal=preload("res://assets/companion/mole-hud.png")
+@@ -23,11 +29,11 @@
+ 	button.stretch_mode=TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+ 	button.tooltip_text="Mining companion · automatic help and skills"
+ 	button.pressed.connect(open_skills)
+-	add_child(button)
++	ui_root.add_child(button)
+ 	journal=preload("res://scripts/companion/companion_journal.gd").new()
+ 	journal.name="CompanionJournal"
+ 	journal.owner_ui=self
+-	add_child(journal)
++	ui_root.add_child(journal)
+ 	journal.closed.connect(main._on_commerce_closed)
+ 	journal.command_requested.connect(_command_skill)
+ 	activity=Label.new()
+@@ -37,7 +43,7 @@
+ 	activity.add_theme_color_override("font_color",Color("fff0c5"))
+ 	activity.add_theme_color_override("font_outline_color",Color("38261e"))
+ 	activity.add_theme_constant_override("outline_size",5)
+-	add_child(activity)
++	ui_root.add_child(activity)
+ 	# Empty ground belongs to the movement pad; let the regular GUI reserve buttons.
+ 	main.movement_pad.gui_input.connect(_on_world_gui_input)
+ 	# Web maps touchcancel to an ordinary release. Keep the browser's cancellation.
+@@ -46,6 +52,9 @@
+ 		JavaScriptBridge.get_interface("window").addEventListener("touchcancel",web_cancel_callback,true)
+ 	get_viewport().size_changed.connect(_layout)
+ 	_layout()
++
++func _exit_tree() -> void:
++	if is_instance_valid(ui_root): ui_root.queue_free()
+ 
+ func _layout() -> void:
+ 	var size: Vector2=get_viewport().get_visible_rect().size
+--- a/scripts/dev/visual_capture_driver.gd
++++ b/scripts/dev/visual_capture_driver.gd
+@@ -764,6 +764,9 @@
+ 	if stage_left < 1 or stage_right >= cols - 1 or stage_top < 1 or stage_bottom >= rows - 1:
+ 		return false
+ 
++	if not GameData.data.ROCK_TYPES.has(resource_id):
++		return false
++
+ 	var blocks: = Dictionary(world.get("blocks"))
+ 	var mineable_edge_voids: = Dictionary(world.get("mineable_edge_void_cells"))
+ 	var terrain_hp: = int(GameData.data.MINE_TERRAIN_HP)
+@@ -783,8 +786,6 @@
+ 			)
+ 			mineable_edge_voids.erase(terrain_cell)
+ 
+-	if not GameData.data.ROCK_TYPES.has(resource_id):
+-		return false
+ 	var resource_data: Dictionary = Dictionary(GameData.data.ROCK_TYPES[resource_id])
+ 	var resource_block: = Dictionary(
+ 		world.call(
+@@ -1563,7 +1564,7 @@
+ 		var player: Node = world.get("player")
+ 		var origin_cell: = Vector2i(12, 13)
+ 		for x in range(7, 18):
+-			for y in range(8, 19): world.blocks.erase(Vector2i(x, y))
++			for y in range(8, 19): world._erase_block(Vector2i(x, y))
+ 		var origin: Vector2 = world.call("_cell_center", origin_cell)
+ 		world.call("restore_position", origin)
+ 		player.control_enabled = true
+@@ -1583,7 +1584,7 @@
+ 			var rock: Dictionary = world.blocks[target]
+ 			rock.hp = 1000000
+ 			rock.max_hp = 1000000
+-			world.blocks[target] = rock
++			world._set_block(target, rock)
+ 			player.set_facing(Vector2(direction))
+ 			world.target_dirty = true
+ 			world.call("_request_redraw")
+@@ -1595,7 +1596,7 @@
+ 				return
+ 			print("EVER_DEEPER_HERO_MOTION_DAMAGE gear=%s direction=%s damage=%d" % [gear, str(direction), 1000000 - int(world.blocks[target].hp)])
+ 			await get_tree().create_timer(0.25).timeout
+-			world.blocks.erase(target)
++			world._erase_block(target)
+ 			world.call("_request_redraw")
+ 	print("EVER_DEEPER_VISUAL_CAPTURE_COMPLETE count=1")
+ 	get_tree().quit(0)
+@@ -1933,3 +1934,4 @@
+ 		_main.premium_menu.open_menu(true, "Base Hub", true, false)
+ 	return true
+ 
++
+--- a/scripts/lighting/cave_light_occluders.gd
++++ b/scripts/lighting/cave_light_occluders.gd
+@@ -44,7 +44,16 @@
+ 		coverage.append(_source_cell_bounds(world, light, tile))
+ 		var origin: Vector2i = Vector2i((world.to_local(light.global_position) / tile).floor())
+ 		if not emitters.has(origin): emitters.append(origin)
+-	var terrain: int = hash(world.floor_cells) if world.has_method("_is_floor") else world._terrain_draw_fingerprint() if world.has_method("_terrain_draw_fingerprint") else hash(world.blocks)
++	var terrain: int
++	if world.has_method("_is_floor"):
++		terrain = hash(world.floor_cells)
++	elif world.has_method("_terrain_draw_fingerprint"):
++		terrain = world._terrain_draw_fingerprint()
++	elif not world.has_method("_terrain_is_solid") and world.has_method("_terrain_occupancy_revision"):
++		# This matches _solid(): only block occupancy affects these shadows.
++		terrain = world._terrain_occupancy_revision()
++	else:
++		terrain = hash(world.blocks)
+ 	var input_signature: int = hash(coverage) ^ hash(emitters) ^ terrain
+ 	if _input_valid and input_signature == _input_signature: return
+ 	_input_valid = true
+@@ -135,3 +144,4 @@
+ 		return not bool(world.call("_is_floor",cell))
+ 	var blocks: Dictionary = world.get("blocks")
+ 	return blocks.has(cell)
++
+--- a/scripts/main.gd
++++ b/scripts/main.gd
+@@ -3067,10 +3067,7 @@
+ 			if item is CanvasItem and item != conclusion_overlay and item != orientation_guard:
+ 				presentation_hud_state.append({"item":item,"visible":item.visible})
+ 				item.hide()
+-		var companion_interface: CanvasLayer = get_node_or_null("CompanionInterface")
+-		if companion_interface != null:
+-			presentation_hud_state.append({"item":companion_interface,"visible":companion_interface.visible})
+-			companion_interface.hide()
++		# CompanionUI is already included in the HUD visibility snapshot above.
+ 	else:
+ 		for saved in presentation_hud_state:
+ 			if is_instance_valid(saved.item): saved.item.visible = saved.visible
+@@ -4126,7 +4123,7 @@
+ 		var companion: Node2D=script.new()
+ 		companion.name="MoleCompanion"
+ 		world.add_child(companion)
+-	var interface: CanvasLayer=load("res://scripts/companion/companion_interface.gd").new()
++	var interface: Node=load("res://scripts/companion/companion_interface.gd").new()
+ 	interface.name="CompanionInterface"
+ 	add_child(interface)
+ 
+--- a/scripts/player/native_worn_visual.gd
++++ b/scripts/player/native_worn_visual.gd
+@@ -56,8 +56,14 @@
+ 	reference_cap = motion.cap_local
+ 	equipment = Equipment.new()
+ 	equipment.setup(rig)
++	_refresh_canvas_pass()
+ 	generations += 1
+ 	return true
++
++# Recheck at creation and gear changes; 2D is restored if a tool needs it.
++func _refresh_canvas_pass() -> void:
++	RenderingServer.viewport_set_disable_2d(rig.viewport.get_viewport_rid(),
++		rig.viewport.find_children("*", "CanvasItem", true, false).is_empty())
+ 
+ func _fail(message: String) -> bool:
+ 	failed = true
+@@ -93,6 +99,7 @@
+ 	if not is_instance_valid(rig) and not _start(): return false
+ 	if equipment.current != visual.active_gear:
+ 		if not equipment.equip(visual.active_gear): return _fail("Native pickaxe identity mismatch: " + visual.active_gear)
++		_refresh_canvas_pass()
+ 		motion.cap_local = equipment.contact_cap(reference_cap)
+ 		motion.reference_cap = motion.bank.mine[21].bones.tool * motion.cap_local
+ 		motion.contact_cache.clear()
+--- a/scripts/qa/overhaul_qa.gd
++++ b/scripts/qa/overhaul_qa.gd
+@@ -337,9 +337,9 @@
+ 	world.mine.barriers=[]
+ 	for y in range(center.y-4,center.y+5):
+ 		for x in range(center.x-6,center.x+7):
+-			world.blocks.erase(Vector2i(x,y))
++			world._erase_block(Vector2i(x,y))
+ 	for y in range(center.y-3,center.y+2):
+-		world.blocks[Vector2i(center.x,y)]=world.call("_make_block","stone",20,0,"terrain")
++		world._set_block(Vector2i(center.x,y), world.call("_make_block","stone",20,0,"terrain"))
+ 	world.call("_rebuild_role_counts")
+ 	var start: Vector2=world.call("_cell_center",center+Vector2i(-3,0))
+ 	var goal: Vector2=world.call("_cell_center",center+Vector2i(3,0))
+@@ -585,8 +585,8 @@
+ 	RunState.overhaul_progress={"skills":{"teamwork":1}}
+ 	world.mine.barriers=[]
+ 	var target: Vector2i=Vector2i(12,12)
+-	world.blocks[target]=world.call("_make_block","stone",20,0,"terrain")
+-	world.blocks.erase(target+Vector2i.LEFT)
++	world._set_block(target, world.call("_make_block","stone",20,0,"terrain"))
++	world._erase_block(target+Vector2i.LEFT)
+ 	world.player.global_position=world.call("_cell_center",target+Vector2i.LEFT)
+ 	world.player.set_facing(Vector2.RIGHT)
+ 	mole.global_position=world.player.global_position
+@@ -603,3 +603,4 @@
+ 	world.external_mine_held=false
+ 	RunState.overhaul_progress={}
+ 	check(not mole.scout("homeward"),"Unlearned command cannot bypass its skill")
++
+--- a/scripts/qa/suites/crusher.gd
++++ b/scripts/qa/suites/crusher.gd
+@@ -19,7 +19,7 @@
+ 	var center= Vector2i(20, 20)
+ 	for y_offset in range(-2, 3):
+ 		for x_offset in range(-2, 3):
+-			main.mine_world.blocks[center + Vector2i(x_offset, y_offset)] = main.mine_world._make_block("stone", 999, 0, "terrain")
++			main.mine_world._set_block(center + Vector2i(x_offset, y_offset), main.mine_world._make_block("stone", 999, 0, "terrain"))
+ 	main.mine_world._apply_crusher_shockwave(center, tool)
+ 	var affected= 0
+ 	for y_offset in range(-2, 3):
+@@ -42,7 +42,7 @@
+ 
+ 	for y_offset in range(-2, 3):
+ 		for x_offset in range(-2, 3):
+-			main.mine_world.blocks[center + Vector2i(x_offset, y_offset)] = main.mine_world._make_block("stone", 1, 0, "terrain")
++			main.mine_world._set_block(center + Vector2i(x_offset, y_offset), main.mine_world._make_block("stone", 1, 0, "terrain"))
+ 	var origin: Vector2 = main.mine_world._cell_center(center)
+ 	var child_count_before: int = main.mine_world.get_child_count()
+ 	main.mine_world._spawn_drop(center, "stone", 1, origin)
+@@ -314,3 +314,4 @@
+ 	main.get_tree().quit(7)
+ 	return false
+ 
++
+--- a/scripts/qa/suites/dev14_review.gd
++++ b/scripts/qa/suites/dev14_review.gd
+@@ -33,9 +33,30 @@
+ 	RunState.end_state_batch()
+ 	main._active_player_node()._update_visual(false)
+ 
++var canvas_observers: Array[Node] = []
++
+ func _command(data: Dictionary) -> void:
+ 	command_id = int(data.id)
+ 	var kind: String = data.kind
++	if kind in ["canvas_reference", "canvas_candidate", "canvas_resume"]:
++		var owner: Node = main._active_player_node().visual._native_worn
++		if kind == "canvas_reference":
++			Engine.time_scale = 0.0
++			main.get_tree().paused = true
++			for node in main.get_tree().root.find_children("*", "", true, false):
++				if node.can_process() and node.is_processing():
++					canvas_observers.append(node)
++					node.set_process(false)
++			RenderingServer.viewport_set_disable_2d(owner.rig.viewport.get_viewport_rid(), false)
++		elif kind == "canvas_candidate": owner._refresh_canvas_pass()
++		else:
++			Engine.time_scale = 1.0
++			for node in canvas_observers:
++				if is_instance_valid(node): node.set_process(true)
++			canvas_observers.clear()
++			main.get_tree().paused = false
++		fixture = kind
++		return
+ 	main._cancel_mine_hold()
+ 	main._on_joystick_movement(Vector2.ZERO)
+ 	Input.action_release("mine")
+@@ -160,6 +181,10 @@
+ 	var player: Node2D = main._active_player_node()
+ 	var packet: Dictionary = player.animation_packet()
+ 	var native: Dictionary = player.visual.native_worn_snapshot()
++	var native_canvas: Dictionary = {}
++	if bool(native.get("active", false)):
++		var viewport: SubViewport = player.visual._native_worn.rig.viewport
++		native_canvas = {"items":viewport.find_children("*", "CanvasItem", true, false).size(), "size":viewport.size, "update_mode":viewport.render_target_update_mode}
+ 	var active_rigs: int = 0
+ 	for world in [main.surface_world,main.mine_world,main.depth_world,main.hub_world,main.deepheart_world,main.endless_world]:
+ 		if bool(world.player.visual.native_worn_snapshot().active): active_rigs += 1
+@@ -171,7 +196,7 @@
+ 		"health":_health(),"position":[player.global_position.x,player.global_position.y],
+ 		"mining":packet.mining,"progress":packet.progress,"hit_phase":packet.hit_phase,"cycle":packet.cycle_duration,
+ 		"target_valid":packet.target_valid,"swing":packet.swing_serial,"impact":packet.impact_serial,"impact_target_valid":packet.impact_target_valid,
+-		"gear":player.visual.active_gear,"pickaxe_level":int(RunState.pickaxe_level),"drill_level":int(RunState.drill_level),"world_active":bool(player.get_parent().active),"native":native,"active_rigs":active_rigs,
++		"gear":player.visual.active_gear,"pickaxe_level":int(RunState.pickaxe_level),"drill_level":int(RunState.drill_level),"world_active":bool(player.get_parent().active),"native":native,"native_canvas":native_canvas,"active_rigs":active_rigs,
+ 		"mine_button":[point.x,point.y],"viewport":[main.get_viewport().get_visible_rect().size.x,main.get_viewport().get_visible_rect().size.y]}
+ 	JavaScriptBridge.eval("window.DEV14_STATE="+JSON.stringify(state),true)
+ 
+--- a/scripts/qa/suites/fps_review.gd
++++ b/scripts/qa/suites/fps_review.gd
+@@ -63,11 +63,11 @@
+ 			world.blocks[cell].hp = 1
+ 			world.queue_redraw()
+ 		"break":
+-			world.blocks.erase(edits.cell)
++			world._erase_block(edits.cell)
+ 			world.mineable_edge_void_cells[edits.cell] = true
+ 			world.queue_redraw()
+ 		"restore":
+-			world.blocks[edits.cell] = edits.block.duplicate(true)
++			world._set_block(edits.cell, edits.block.duplicate(true))
+ 			if not edits.void: world.mineable_edge_void_cells.erase(edits.cell)
+ 			world.queue_redraw()
+ 		"begin":
+--- a/scripts/qa/suites/mole_autonomy.gd
++++ b/scripts/qa/suites/mole_autonomy.gd
+@@ -19,9 +19,9 @@
+ 	# Isolated D1 room uses real collision, terrain authority, drops and impact.
+ 	world.mine.barriers=[]
+ 	for y in range(CENTER.y-7,CENTER.y+8):
+-		for x in range(CENTER.x-7,CENTER.x+8): world.blocks.erase(Vector2i(x,y))
++		for x in range(CENTER.x-7,CENTER.x+8): world._erase_block(Vector2i(x,y))
+ 	world.drops.clear()
+-	world.blocks[CENTER]=world._make_block("stone",20,0,"terrain")
++	world._set_block(CENTER, world._make_block("stone",20,0,"terrain"))
+ 	world._rebuild_role_counts()
+ 	world.player.global_position=world._cell_center(CENTER-direction)
+ 	world.player.set_facing(Vector2(direction))
+@@ -94,16 +94,16 @@
+ 		step(0.6)
+ 		check(not world.blocks.has(CENTER) and mole.dug_total==1,"Earthshaker works without commands "+str(direction))
+ 		check(mole.shake_cooldown>6.0,"Earthshaker really recharges "+str(direction))
+-		world.blocks[CENTER]=world._make_block("stone",20,0,"terrain")
++		world._set_block(CENTER, world._make_block("stone",20,0,"terrain"))
+ 		step(2.0)
+ 		check(world.blocks.has(CENTER),"No repeated hit before recharge "+str(direction))
+ 	fixture({"shake":1,"teamwork":1})
+ 	world.external_mine_held=true
+ 	step(1.0)
+-	world.blocks[CENTER]=world._make_block("stone",20,0,"terrain")
++	world._set_block(CENTER, world._make_block("stone",20,0,"terrain"))
+ 	step(1.0)
+ 	check(not world.blocks.has(CENTER) and mole.dug_total==2 and mole.shake_cooldown>0.0,"Teamwork fills the gap between Earthshaker uses")
+-	world.blocks[CENTER]=world._make_block("stone",20,0,"terrain")
++	world._set_block(CENTER, world._make_block("stone",20,0,"terrain"))
+ 	step(0.6)
+ 	check(world.blocks.has(CENTER),"Teamwork also respects its own recharge")
+ 	for cancellation in ["release","turn","leave"]:
+@@ -131,7 +131,7 @@
+ 	check(world.blocks.has(CENTER),"Unlearned skills never activate")
+ 	for kind in ["bedrock","gate","tool"]:
+ 		fixture({"shake":1,"teamwork":1})
+-		world.blocks[CENTER]=world._make_block("bedrock" if kind=="bedrock" else "stone",20,0,"outer_rubble" if kind=="gate" else "terrain")
++		world._set_block(CENTER, world._make_block("bedrock" if kind=="bedrock" else "stone",20,0,"outer_rubble" if kind=="gate" else "terrain"))
+ 		if kind=="tool": world.blocks[CENTER].requires_tool=RunState.pickaxe_level+1
+ 		world.external_mine_held=true
+ 		step(2.0)
+@@ -143,7 +143,7 @@
+ 	step(2.0)
+ 	check(world.blocks.has(CENTER) and mole.mode=="hold","Explicit command gets a brief uninterrupted turn")
+ 	fixture({"fetch":1,"big_paws":1,"trailrunner":1,"long_beam":1})
+-	world.blocks.erase(CENTER)
++	world._erase_block(CENTER)
+ 	var initial_ore: int=int(RunState.cargo.copper)
+ 	world._spawn_drop(CENTER+Vector2i(2,0),"copper",3)
+ 	world.drops[-1].position=world._cell_center(CENTER+Vector2i(2,0))
+@@ -159,7 +159,7 @@
+ 	step(2.0)
+ 	check(mole.mode=="follow" and int(RunState.cargo.copper)==initial_ore+3,"Fetching stays near the player")
+ 	fixture({"ore_nose":1})
+-	world.blocks[CENTER]=world._make_block("copper",20,0,"resource")
++	world._set_block(CENTER, world._make_block("copper",20,0,"resource"))
+ 	mole.global_position-=Vector2(96,0)
+ 	mole.sniff_clock=0.0
+ 	step(0.1)
+@@ -182,7 +182,7 @@
+ 	check(mole.feedback=="Your deliberate command","Manual feedback remains immediate")
+ 	fixture({})
+ 	for offset in [Vector2i.LEFT,Vector2i.RIGHT,Vector2i.UP,Vector2i.DOWN]:
+-		world.blocks[CENTER+Vector2i(4,0)+offset]=world._make_block("stone",20,0,"terrain")
++		world._set_block(CENTER+Vector2i(4,0)+offset, world._make_block("stone",20,0,"terrain"))
+ 	world.player.global_position=world._cell_center(CENTER+Vector2i(4,0))
+ 	var searches_before: int=mole.path_searches
+ 	step(3.0)
+@@ -198,3 +198,4 @@
+ 	print("MOLE_AUTONOMY_RESULT "+JSON.stringify({"checks":checks,"failures":failures}))
+ 	if failures.is_empty(): print("EVER_DEEPER_MOLE_AUTONOMY_OK checks=%d" % checks)
+ 	main.get_tree().quit(0 if failures.is_empty() else 4)
++
+--- a/scripts/qa/suites/smoke.gd
++++ b/scripts/qa/suites/smoke.gd
+@@ -222,7 +222,7 @@
+ 		assert (is_equal_approx(float(anchor_value), float(grounding.walk)))
+ 	var animation_target= Vector2i(6, 13)
+ 	var previous_animation_block: Variant = main.mine_world.blocks.get(animation_target)
+-	main.mine_world.blocks[animation_target] = main.mine_world._make_block("stone", 100, 0, "terrain")
++	main.mine_world._set_block(animation_target, main.mine_world._make_block("stone", 100, 0, "terrain"))
+ 	main.mine_world.current_target = animation_target
+ 	main.mine_world.set_mine_held(true)
+ 	main.mine_world.swing_active = false
+@@ -237,38 +237,38 @@
+ 	main.mine_world._update_mining(0.0)
+ 	assert ( not main.mine_world.player.mining_visual_active)
+ 	if previous_animation_block == null:
+-		main.mine_world.blocks.erase(animation_target)
++		main.mine_world._erase_block(animation_target)
+ 	else:
+-		main.mine_world.blocks[animation_target] = previous_animation_block
++		main.mine_world._set_block(animation_target, previous_animation_block)
+ 	for target_row in range(10, 15):
+ 		for target_col in range(7, 13):
+-			main.mine_world.blocks.erase(Vector2i(target_col, target_row))
++			main.mine_world._erase_block(Vector2i(target_col, target_row))
+ 	var bedrock_cell= Vector2i(9, 12)
+ 	var blocked_cell= Vector2i(10, 12)
+-	main.mine_world.blocks[bedrock_cell] = main.mine_world._make_block("bedrock", 1, 99, "bedrock")
+-	main.mine_world.blocks[blocked_cell] = main.mine_world._make_block("stone", 8, 0, "terrain")
++	main.mine_world._set_block(bedrock_cell, main.mine_world._make_block("bedrock", 1, 99, "bedrock"))
++	main.mine_world._set_block(blocked_cell, main.mine_world._make_block("stone", 8, 0, "terrain"))
+ 	main.mine_world.player.global_position = Vector2(400, 600)
+ 	main.mine_world.player.set_facing(Vector2.RIGHT)
+ 	assert (main.mine_world._find_mine_target() == Vector2i(-1, -1), "Bedrock must not be targetable or allow mining through it")
+-	main.mine_world.blocks[bedrock_cell] = main.mine_world._make_block("stone", 8, 0, "terrain")
++	main.mine_world._set_block(bedrock_cell, main.mine_world._make_block("stone", 8, 0, "terrain"))
+ 	assert (main.mine_world._find_mine_target() == bedrock_cell, "A mineable rock in the same position must remain targetable")
+ 	for target_row in range(10, 15):
+ 		for target_col in range(7, 13):
+-			main.mine_world.blocks.erase(Vector2i(target_col, target_row))
++			main.mine_world._erase_block(Vector2i(target_col, target_row))
+ 	var corner_front_cell= Vector2i(9, 13)
+ 	var corner_back_cell= Vector2i(9, 14)
+-	main.mine_world.blocks[corner_front_cell] = main.mine_world._make_block("stone", 8, 0, "terrain")
+-	main.mine_world.blocks[corner_back_cell] = main.mine_world._make_block("stone", 8, 0, "terrain")
++	main.mine_world._set_block(corner_front_cell, main.mine_world._make_block("stone", 8, 0, "terrain"))
++	main.mine_world._set_block(corner_back_cell, main.mine_world._make_block("stone", 8, 0, "terrain"))
+ 	main.mine_world.player.global_position = Vector2(432, 602)
+ 	main.mine_world.player.set_facing(Vector2.DOWN)
+ 	assert (main.mine_world._find_mine_target() == corner_front_cell, "Mining at a tight corner must target the adjacent block before the block behind it")
+ 	for target_row in range(10, 15):
+ 		for target_col in range(7, 13):
+-			main.mine_world.blocks.erase(Vector2i(target_col, target_row))
++			main.mine_world._erase_block(Vector2i(target_col, target_row))
+ 	var lower_left_front_cell= Vector2i(8, 13)
+ 	var lower_left_back_cell= Vector2i(8, 14)
+-	main.mine_world.blocks[lower_left_front_cell] = main.mine_world._make_block("stone", 8, 0, "terrain")
+-	main.mine_world.blocks[lower_left_back_cell] = main.mine_world._make_block("stone", 8, 0, "terrain")
++	main.mine_world._set_block(lower_left_front_cell, main.mine_world._make_block("stone", 8, 0, "terrain"))
++	main.mine_world._set_block(lower_left_back_cell, main.mine_world._make_block("stone", 8, 0, "terrain"))
+ 	main.mine_world.player.global_position = Vector2(456, 602)
+ 	main.mine_world.player.set_facing(Vector2.DOWN)
+ 	assert (main.mine_world._find_mine_target() == lower_left_front_cell, "Downward mining at a lower-left corner must select the rock beside the player's feet")
+@@ -289,7 +289,7 @@
+ 		var barrier_cell= Vector2i(26, barrier_row)
+ 		var barrier_rock: Dictionary = Dictionary(main.mine_world.blocks[barrier_cell])
+ 		barrier_rock.hp = 1
+-		main.mine_world.blocks[barrier_cell] = barrier_rock
++		main.mine_world._set_block(barrier_cell, barrier_rock)
+ 		main.mine_world.current_target = barrier_cell
+ 		main.mine_world._mine_once()
+ 	assert (RunState.is_mine_barrier_cleared("iron_seam"))
+@@ -318,7 +318,7 @@
+ 	var terrain_no_respawn_index: int = (
+ 		terrain_no_respawn_cell.y * int(main.mine_world.cols) + terrain_no_respawn_cell.x
+ 	)
+-	main.mine_world.blocks[terrain_no_respawn_cell] = main.mine_world._make_block("stone", 1, 0, "terrain")
++	main.mine_world._set_block(terrain_no_respawn_cell, main.mine_world._make_block("stone", 1, 0, "terrain"))
+ 	main.mine_world.respawns.clear()
+ 	main.mine_world.current_target = terrain_no_respawn_cell
+ 	main.mine_world._mine_once()
+@@ -345,7 +345,7 @@
+ 	var resource_block: Dictionary = Dictionary(main.mine_world.blocks[respawn_cell])
+ 	assert (String(resource_block.role) == "resource")
+ 	resource_block.hp = 1
+-	main.mine_world.blocks[respawn_cell] = resource_block
++	main.mine_world._set_block(respawn_cell, resource_block)
+ 	main.mine_world.current_target = respawn_cell
+ 	main.mine_world._mine_once()
+ 	assert ( not main.mine_world.blocks.has(respawn_cell) and main.mine_world.respawns.size() == 1)
+@@ -384,7 +384,7 @@
+ 	assert (main.mine_world.blocks.has(shaft_boundary_cell))
+ 	var shaft_boundary_block: Dictionary = Dictionary(main.mine_world.blocks[shaft_boundary_cell])
+ 	shaft_boundary_block.hp = 1
+-	main.mine_world.blocks[shaft_boundary_cell] = shaft_boundary_block
++	main.mine_world._set_block(shaft_boundary_cell, shaft_boundary_block)
+ 	main.mine_world.current_target = shaft_boundary_cell
+ 	main.mine_world._mine_once()
+ 	assert (RunState.is_depth_entrance_discovered("mossMine"))
+@@ -413,7 +413,7 @@
+ 		for x_offset in range(-2, 3):
+ 			var crusher_cell= crusher_test_center + Vector2i(x_offset, y_offset)
+ 			crusher_previous_blocks[crusher_cell] = main.mine_world.blocks.get(crusher_cell)
+-			main.mine_world.blocks[crusher_cell] = main.mine_world._make_block("stone", 999, 0, "terrain")
++			main.mine_world._set_block(crusher_cell, main.mine_world._make_block("stone", 999, 0, "terrain"))
+ 	main.mine_world._apply_crusher_shockwave(crusher_test_center, crusher_tool)
+ 	var crusher_previous_impacts: Array[Dictionary] = main.mine_world.impacts.duplicate(true)
+ 	var crusher_previous_drop_count: int = main.mine_world.drops.size()
+@@ -444,9 +444,9 @@
+ 		var crusher_cell: Vector2i = Vector2i(crusher_cell_value)
+ 		var previous_crusher_block: Variant = crusher_previous_blocks[crusher_cell]
+ 		if previous_crusher_block == null:
+-			main.mine_world.blocks.erase(crusher_cell)
++			main.mine_world._erase_block(crusher_cell)
+ 		else:
+-			main.mine_world.blocks[crusher_cell] = previous_crusher_block
++			main.mine_world._set_block(crusher_cell, previous_crusher_block)
+ 	RunState.set_starforge_variant("swift")
+ 	assert (is_equal_approx(main.mine_world._tool_strike_progress(), 0.28))
+ 	assert (float(main.mine_world._current_tool().cooldown) < float(RunState.current_pickaxe().cooldown))
+@@ -526,3 +526,4 @@
+ 	assert (InputMap.has_action("interact") and not InputMap.action_get_events("interact").is_empty(), "Keyboard interaction must remain bound for E/F")
+ 	print("EVER_DEEPER_MOSS_ROOTWOUND_LOOP_OK source=", GameData.source_label(), " moss_blocks=", snapshot.blocks, " moon_blocks=", moon_snapshot.blocks, " portal=1752,2808 depth=Rootwound drill=Burrower persistence=true explicit_transitions=true")
+ 	main.get_tree().quit(0)
++
+--- a/scripts/qa/suites/world_fixtures.gd
++++ b/scripts/qa/suites/world_fixtures.gd
+@@ -11,7 +11,7 @@
+ 	if session.has_any_arg(OS.get_cmdline_user_args(), ["--qa-camera", "--qa-performance"]):
+ 		for col in range(4, 40):
+ 			for row in range(11, 15):
+-				main.mine_world.blocks.erase(Vector2i(col, row))
++				main.mine_world._erase_block(Vector2i(col, row))
+ 		main.mine_world.player.global_position = Vector2(300, 624)
+ 		main.mine_world.player.movement_speed = 80.0
+ 		main.mine_world.player.set_facing(Vector2.RIGHT)
+@@ -387,3 +387,4 @@
+ 	RunState.set_location("deepheart", main.deepheart_world.player.global_position, 1)
+ 	DisplayServer.window_set_title("Ever Deeper · Deepheart Finale QA")
+ 	main._set_status("Four worlds are ready · awaken one resonance at a time")
++
+--- a/scripts/world/mossvein_mine.gd
++++ b/scripts/world/mossvein_mine.gd
+@@ -153,7 +153,13 @@
+ var world_size: = Vector2.ZERO
+ var cols: = 0
+ var rows: = 0
+-var blocks: Dictionary = {}
++# Membership mutations must use _set_block/_erase_block/_clear_blocks.
++# Replacing a fixture dictionary also invalidates, even if its size is unchanged.
++var _block_occupancy_revision: int = 0
++var blocks: Dictionary = {}:
++	set(value):
++		blocks = value
++		_block_occupancy_revision += 1
+ var mineable_edge_void_cells: Dictionary = {}
+ var resource_guide_cells: Array[Vector2i] = []
+ var drops: Array[Dictionary] = []
+@@ -413,7 +419,7 @@
+ 
+ 
+ func _build_original_mossvein() -> void :
+-	blocks.clear()
++	_clear_blocks()
+ 	mineable_edge_void_cells.clear()
+ 	depth_entrance_cells.clear()
+ 	depth_entrance_boundary.clear()
+@@ -424,7 +430,7 @@
+ 	var terrain_hp: = int(GameData.data.MINE_TERRAIN_HP)
+ 	for row in rows:
+ 		for col in cols:
+-			blocks[Vector2i(col, row)] = _make_block("stone", terrain_hp, 0, "terrain")
++			_set_block(Vector2i(col, row), _make_block("stone", terrain_hp, 0, "terrain"))
+ 
+ 	_clear_circle(Vector2(float(mine.entrance.x) + 54.0, float(mine.entrance.y)), 142.0)
+ 	_prepare_depth_one_discoveries()
+@@ -482,7 +488,7 @@
+ 		for index_value in RunState.dug_cells(mine_id, 1):
+ 			var index: = int(index_value)
+ 			var dug_cell: = Vector2i(index % cols, floori(float(index) / float(cols)))
+-			blocks.erase(dug_cell)
++			_erase_block(dug_cell)
+ 			mineable_edge_void_cells[dug_cell] = true
+ 			_restore_discovery_from_dug_index(index)
+ 
+@@ -528,7 +534,7 @@
+ 			if pow(offset.x / radii.x, 2.0) + pow(offset.y / radii.y, 2.0) > 1.0:
+ 				continue
+ 			var cell: = Vector2i(col, row)
+-			blocks.erase(cell)
++			_erase_block(cell)
+ 			result.append(cell)
+ 	return result
+ 
+@@ -544,7 +550,7 @@
+ 			var cell: = Vector2i(col, row)
+ 			if _cell_center(cell).distance_to(center) > radius:
+ 				continue
+-			blocks.erase(cell)
++			_erase_block(cell)
+ 			result.append(cell)
+ 	return result
+ 
+@@ -584,7 +590,7 @@
+ 	if required > 0 and role != "resource":
+ 		block["barrier_label"] = _barrier_label(role)
+ 		block["barrier_trigger"] = true
+-	blocks[cell] = block
++	_set_block(cell, block)
+ 
+ 
+ func _clear_rect_from_blocks(rect_data: Dictionary) -> void :
+@@ -596,7 +602,7 @@
+ 		for col in range(start_col, end_col + 1):
+ 			var cell: = Vector2i(col, row)
+ 			if blocks.has(cell) and String(Dictionary(blocks[cell]).get("role", "")) == "terrain":
+-				blocks.erase(cell)
++				_erase_block(cell)
+ 
+ 
+ func _restore_discovery_from_dug_index(index: int) -> void :
+@@ -618,7 +624,7 @@
+ 	for row in range(min_row, max_row + 1):
+ 		for col in range(min_col, max_col + 1):
+ 			if _cell_center(Vector2i(col, row)).distance_to(center) <= radius:
+-				blocks.erase(Vector2i(col, row))
++				_erase_block(Vector2i(col, row))
+ 
+ 
+ func _fill_rect_with_block(rect_data: Dictionary, block: Dictionary) -> void :
+@@ -628,7 +634,7 @@
+ 	var end_row: = mini(rows - 1, floori((float(rect_data.y) + float(rect_data.h) - 0.01) / TILE_SIZE))
+ 	for row in range(start_row, end_row + 1):
+ 		for col in range(start_col, end_col + 1):
+-			blocks[Vector2i(col, row)] = block.duplicate(true)
++			_set_block(Vector2i(col, row), block.duplicate(true))
+ 
+ 
+ func _barrier_label(barrier_id: String) -> String:
+@@ -975,7 +981,7 @@
+ 			block.hp = maxi(0, int(block.hp) - floori(float(overflow) / shell_multiplier))
+ 	else:
+ 		block.hp = maxi(0, int(block.hp) - power)
+-	blocks[target] = block
++	_set_block(target, block)
+ 	var broken: = int(block.shell) <= 0 and int(block.hp) <= 0
+ 	var crusher_active: = String(RunState.starforge_variant) == "crusher"
+ 	var impact: = {
+@@ -992,7 +998,7 @@
+ 	AudioDirector.play_mining(String(block.kind), broken, was_armored)
+ 	player.set_mining_visual(true, _mining_visual_progress(swing_elapsed / swing_duration), 1.0)
+ 	if broken:
+-		blocks.erase(target)
++		_erase_block(target)
+ 		var dug_index: = target.y * cols + target.x
+ 		var role: = String(block.get("role", ""))
+ 		if role != "resource":
+@@ -1083,9 +1089,9 @@
+ 			else:
+ 				block.hp = maxi(0, int(block.hp) - wave_power)
+ 			if int(block.get("shell", 0)) > 0 or int(block.hp) > 0:
+-				blocks[cell] = block
++				_set_block(cell, block)
+ 				continue
+-			blocks.erase(cell)
++			_erase_block(cell)
+ 			if role_block_counts.has("terrain"):
+ 				role_block_counts["terrain"] = maxi(0, int(role_block_counts["terrain"]) - 1)
+ 			var dug_index: = cell.y * cols + cell.x
+@@ -1458,7 +1464,7 @@
+ 			or String(record.get("kind", "")) != String(block.get("kind", ""))
+ 		):
+ 			continue
+-		blocks.erase(cell)
++		_erase_block(cell)
+ 		respawns.append({
+ 			"cell": cell,
+ 			"block": block.duplicate(true),
+@@ -1755,7 +1761,7 @@
+ 		var restored: Dictionary = Dictionary(pending.block).duplicate(true)
+ 		restored.hp = int(restored.max_hp)
+ 		restored.shell = int(restored.get("max_shell", 0))
+-		blocks[cell] = restored
++		_set_block(cell, restored)
+ 		respawns.remove_at(index)
+ 		RunState.clear_mine_resource_depletion(
+ 			mine_id, 1, String(pending.get("node_id", _resource_node_id(cell)))
+@@ -2304,7 +2310,7 @@
+ 		if String(Dictionary(blocks[cell]).get("role", "")) == role:
+ 			cells.append(cell)
+ 	for cell in cells:
+-		blocks.erase(cell)
++		_erase_block(cell)
+ 	role_block_counts[role] = 0
+ 
+ 
+@@ -2865,12 +2871,12 @@
+ 		if String(blocks[cell].get("role","")) != role: continue
+ 		var part: Dictionary = blocks[cell]
+ 		part.hp = maxi(1,ceili(float(part.max_hp)*(1.0-float(hits)/10.0)))
+-		blocks[cell] = part
++		_set_block(cell, part)
+ 		if hits == 10: removed.append(cell)
+ 	impacts.append({"position": _target_contact_point(target),"age":0.0,"life":0.42,"broken":hits==10,"style":""})
+ 	AudioDirector.play_mining(String(block.kind),hits==10,false)
+ 	for cell in removed:
+-		blocks.erase(cell)
++		_erase_block(cell)
+ 		mineable_edge_void_cells[cell] = true
+ 		RunState.mark_terrain_dug(mine_id,cell.y*cols+cell.x,1)
+ 		_handle_discovery_at(cell.y*cols+cell.x)
+@@ -2935,7 +2941,7 @@
+ 		var cell: Vector2i=start+Vector2i(offset)
+ 		if not companion_can_dig(_cell_center(cell)): continue
+ 		var block: Dictionary=blocks[cell]
+-		blocks.erase(cell)
++		_erase_block(cell)
+ 		mineable_edge_void_cells[cell]=true
+ 		RunState.mark_terrain_dug(mine_id,cell.y*cols+cell.x,1)
+ 		_handle_discovery_at(cell.y*cols+cell.x)
+@@ -2957,3 +2963,20 @@
+ 			result=point
+ 	return result
+ 
++
++
++
++func _terrain_occupancy_revision() -> int:
++	return _block_occupancy_revision
++
++func _set_block(cell: Vector2i, block: Dictionary) -> void:
++	if not blocks.has(cell): _block_occupancy_revision += 1
++	blocks[cell] = block
++
++func _erase_block(cell: Vector2i) -> void:
++	if blocks.erase(cell): _block_occupancy_revision += 1
++
++func _clear_blocks() -> void:
++	if blocks.is_empty(): return
++	blocks.clear()
++	_block_occupancy_revision += 1

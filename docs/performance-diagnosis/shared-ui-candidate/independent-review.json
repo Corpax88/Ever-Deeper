@@ -1,0 +1,922 @@
+{
+  "accepted": true,
+  "acceptance_scope": "Production shared-HUD topology correctness and ordinary startup; eligible for bounded DEV candidate consideration after separate whole-package performance review.",
+  "release_approved": false,
+  "physical_iphone_verified": false,
+  "phone_fps_fix_proven": false,
+  "source_commit": "4f27644cb5952dbf31644eff78b61e3648ae056f",
+  "workflow_run": 36116844019,
+  "version": "1.0.0-dev.15.9",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "e02a3e3770ee76fb82bc3c84ea56d3fb32877c459e77ef292f3f07295a85d849"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 260511916,
+      "sha256": "0df722856ef7d8037fafdc12f533d238077fad263a14f7a7277ebb3b7b855898"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "checks_passed": 122,
+  "exact_pairs": [
+    {
+      "label": "776x420-hud",
+      "index": 1,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "776x420-hud",
+      "index": 2,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "776x420-tab0",
+      "index": 1,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "776x420-tab0",
+      "index": 2,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "776x420-tab1",
+      "index": 1,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "776x420-tab1",
+      "index": 2,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "776x420-tab2",
+      "index": 1,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "776x420-tab2",
+      "index": 2,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "667x375-hud",
+      "index": 1,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "667x375-hud",
+      "index": 2,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "667x375-tab0",
+      "index": 1,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "667x375-tab0",
+      "index": 2,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "667x375-tab1",
+      "index": 1,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "667x375-tab1",
+      "index": 2,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "667x375-tab2",
+      "index": 1,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "667x375-tab2",
+      "index": 2,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "900x600-hud",
+      "index": 1,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "900x600-hud",
+      "index": 2,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "900x600-tab0",
+      "index": 1,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "900x600-tab0",
+      "index": 2,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "900x600-tab1",
+      "index": 1,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "900x600-tab1",
+      "index": 2,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "900x600-tab2",
+      "index": 1,
+      "max": 0,
+      "changed": 0
+    },
+    {
+      "label": "900x600-tab2",
+      "index": 2,
+      "max": 0,
+      "changed": 0
+    }
+  ],
+  "inventories_reviewed": [
+    {
+      "label": "776x420-hud",
+      "mode": "shared_candidate",
+      "render_frames": 44,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "together",
+      "journal_open": false,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "776x420-hud",
+      "mode": "shared_reference",
+      "render_frames": 44,
+      "sync_pairs_per_frame": 3,
+      "journal_tab": "together",
+      "journal_open": false,
+      "ui_roots_under_hud": 0,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "776x420-hud",
+      "mode": "shared_candidate",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "together",
+      "journal_open": false,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "776x420-tab0",
+      "mode": "shared_candidate",
+      "render_frames": 42,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "together",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "776x420-tab0",
+      "mode": "shared_reference",
+      "render_frames": 40,
+      "sync_pairs_per_frame": 3,
+      "journal_tab": "together",
+      "journal_open": true,
+      "ui_roots_under_hud": 0,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "776x420-tab0",
+      "mode": "shared_candidate",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "together",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "776x420-tab1",
+      "mode": "shared_candidate",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "skills",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "776x420-tab1",
+      "mode": "shared_reference",
+      "render_frames": 42,
+      "sync_pairs_per_frame": 3,
+      "journal_tab": "skills",
+      "journal_open": true,
+      "ui_roots_under_hud": 0,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "776x420-tab1",
+      "mode": "shared_candidate",
+      "render_frames": 42,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "skills",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "776x420-tab2",
+      "mode": "shared_candidate",
+      "render_frames": 44,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "how",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "776x420-tab2",
+      "mode": "shared_reference",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 3,
+      "journal_tab": "how",
+      "journal_open": true,
+      "ui_roots_under_hud": 0,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "776x420-tab2",
+      "mode": "shared_candidate",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "how",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "667x375-hud",
+      "mode": "shared_candidate",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "together",
+      "journal_open": false,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "667x375-hud",
+      "mode": "shared_reference",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 3,
+      "journal_tab": "together",
+      "journal_open": false,
+      "ui_roots_under_hud": 0,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "667x375-hud",
+      "mode": "shared_candidate",
+      "render_frames": 42,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "together",
+      "journal_open": false,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "667x375-tab0",
+      "mode": "shared_candidate",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "together",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "667x375-tab0",
+      "mode": "shared_reference",
+      "render_frames": 41,
+      "sync_pairs_per_frame": 3,
+      "journal_tab": "together",
+      "journal_open": true,
+      "ui_roots_under_hud": 0,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "667x375-tab0",
+      "mode": "shared_candidate",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "together",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "667x375-tab1",
+      "mode": "shared_candidate",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "skills",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "667x375-tab1",
+      "mode": "shared_reference",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 3,
+      "journal_tab": "skills",
+      "journal_open": true,
+      "ui_roots_under_hud": 0,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "667x375-tab1",
+      "mode": "shared_candidate",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "skills",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "667x375-tab2",
+      "mode": "shared_candidate",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "how",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "667x375-tab2",
+      "mode": "shared_reference",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 3,
+      "journal_tab": "how",
+      "journal_open": true,
+      "ui_roots_under_hud": 0,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "667x375-tab2",
+      "mode": "shared_candidate",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "how",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "900x600-hud",
+      "mode": "shared_candidate",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "together",
+      "journal_open": false,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "900x600-hud",
+      "mode": "shared_reference",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 3,
+      "journal_tab": "together",
+      "journal_open": false,
+      "ui_roots_under_hud": 0,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "900x600-hud",
+      "mode": "shared_candidate",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "together",
+      "journal_open": false,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "900x600-tab0",
+      "mode": "shared_candidate",
+      "render_frames": 34,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "together",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "900x600-tab0",
+      "mode": "shared_reference",
+      "render_frames": 36,
+      "sync_pairs_per_frame": 3,
+      "journal_tab": "together",
+      "journal_open": true,
+      "ui_roots_under_hud": 0,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "900x600-tab0",
+      "mode": "shared_candidate",
+      "render_frames": 35,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "together",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "900x600-tab1",
+      "mode": "shared_candidate",
+      "render_frames": 40,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "skills",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "900x600-tab1",
+      "mode": "shared_reference",
+      "render_frames": 40,
+      "sync_pairs_per_frame": 3,
+      "journal_tab": "skills",
+      "journal_open": true,
+      "ui_roots_under_hud": 0,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "900x600-tab1",
+      "mode": "shared_candidate",
+      "render_frames": 34,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "skills",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "900x600-tab2",
+      "mode": "shared_candidate",
+      "render_frames": 42,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "how",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "900x600-tab2",
+      "mode": "shared_reference",
+      "render_frames": 42,
+      "sync_pairs_per_frame": 3,
+      "journal_tab": "how",
+      "journal_open": true,
+      "ui_roots_under_hud": 0,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    },
+    {
+      "label": "900x600-tab2",
+      "mode": "shared_candidate",
+      "render_frames": 43,
+      "sync_pairs_per_frame": 2,
+      "journal_tab": "how",
+      "journal_open": true,
+      "ui_roots_under_hud": 1,
+      "native_canvas": {
+        "items": 0,
+        "size": "(400, 400)",
+        "update_mode": 4
+      }
+    }
+  ],
+  "all_actual_images_inspected": true,
+  "image_count": 48,
+  "unique_image_contents_inspected": 24,
+  "inspection_method": "18 unique WebKit contents and all 6 startup images inspected. SHA256 dedup covers all 42 WebKit captures.",
+  "image_sha256": {
+    "integrated-webkit/667x375-hud-0.png": "f5c847c1f0780d5b732c13d3f1de53757e7dde50107091a8f3f9df2ea5a2fc61",
+    "integrated-webkit/667x375-hud-1.png": "f5c847c1f0780d5b732c13d3f1de53757e7dde50107091a8f3f9df2ea5a2fc61",
+    "integrated-webkit/667x375-hud-2.png": "f5c847c1f0780d5b732c13d3f1de53757e7dde50107091a8f3f9df2ea5a2fc61",
+    "integrated-webkit/667x375-inventory.png": "3db1aae23b19500a6e3b646344ad22411aa8579bfe4610de06df338ff77081db",
+    "integrated-webkit/667x375-tab0-0.png": "ab7326e23d7b3346916f75dfbb2c2b5ae163846a0ba1bf29519ee632b600afdf",
+    "integrated-webkit/667x375-tab0-1.png": "ab7326e23d7b3346916f75dfbb2c2b5ae163846a0ba1bf29519ee632b600afdf",
+    "integrated-webkit/667x375-tab0-2.png": "ab7326e23d7b3346916f75dfbb2c2b5ae163846a0ba1bf29519ee632b600afdf",
+    "integrated-webkit/667x375-tab1-0.png": "ef5f5673337fba0ffb04d4f1400c0e5edbb67c1bbcd341c28038a19e44a03f72",
+    "integrated-webkit/667x375-tab1-1.png": "ef5f5673337fba0ffb04d4f1400c0e5edbb67c1bbcd341c28038a19e44a03f72",
+    "integrated-webkit/667x375-tab1-2.png": "ef5f5673337fba0ffb04d4f1400c0e5edbb67c1bbcd341c28038a19e44a03f72",
+    "integrated-webkit/667x375-tab2-0.png": "bbf7a59d77b7de5b46dabd1e74a8e33c3564a6467517b452fbdd14480804b6b9",
+    "integrated-webkit/667x375-tab2-1.png": "bbf7a59d77b7de5b46dabd1e74a8e33c3564a6467517b452fbdd14480804b6b9",
+    "integrated-webkit/667x375-tab2-2.png": "bbf7a59d77b7de5b46dabd1e74a8e33c3564a6467517b452fbdd14480804b6b9",
+    "integrated-webkit/776x420-hud-0.png": "b7ff327000d9f2fc329d84fa6c6bd72aa77da5ecd54761e20d5045fba66041cb",
+    "integrated-webkit/776x420-hud-1.png": "b7ff327000d9f2fc329d84fa6c6bd72aa77da5ecd54761e20d5045fba66041cb",
+    "integrated-webkit/776x420-hud-2.png": "b7ff327000d9f2fc329d84fa6c6bd72aa77da5ecd54761e20d5045fba66041cb",
+    "integrated-webkit/776x420-inventory.png": "dab8bdc4689454621afda30703dc36b33023d3a237164201ea943b7ea70a4cf0",
+    "integrated-webkit/776x420-tab0-0.png": "e60e5efe791016766160a318115f84ffd54024f9fdc5d7cc5ec7834cd47373a6",
+    "integrated-webkit/776x420-tab0-1.png": "e60e5efe791016766160a318115f84ffd54024f9fdc5d7cc5ec7834cd47373a6",
+    "integrated-webkit/776x420-tab0-2.png": "e60e5efe791016766160a318115f84ffd54024f9fdc5d7cc5ec7834cd47373a6",
+    "integrated-webkit/776x420-tab1-0.png": "23bb60e6614f284e2025e6aca1806ddda34f230c41b72e747b1cde18450a79dd",
+    "integrated-webkit/776x420-tab1-1.png": "23bb60e6614f284e2025e6aca1806ddda34f230c41b72e747b1cde18450a79dd",
+    "integrated-webkit/776x420-tab1-2.png": "23bb60e6614f284e2025e6aca1806ddda34f230c41b72e747b1cde18450a79dd",
+    "integrated-webkit/776x420-tab2-0.png": "a9373657e552c81f0bf6a1fdcf783a1a214f99b6b3d38cd13f975e45ad6eb599",
+    "integrated-webkit/776x420-tab2-1.png": "a9373657e552c81f0bf6a1fdcf783a1a214f99b6b3d38cd13f975e45ad6eb599",
+    "integrated-webkit/776x420-tab2-2.png": "a9373657e552c81f0bf6a1fdcf783a1a214f99b6b3d38cd13f975e45ad6eb599",
+    "integrated-webkit/900x600-hud-0.png": "1411e9265a01823cb7a3987df0066d1f6f8fa5379746886eab853e7ce575216a",
+    "integrated-webkit/900x600-hud-1.png": "1411e9265a01823cb7a3987df0066d1f6f8fa5379746886eab853e7ce575216a",
+    "integrated-webkit/900x600-hud-2.png": "1411e9265a01823cb7a3987df0066d1f6f8fa5379746886eab853e7ce575216a",
+    "integrated-webkit/900x600-inventory.png": "db8a0fea40e2af3bd2d8d825d10aab44f5a90f94adaa0e464b3a5413eae8d726",
+    "integrated-webkit/900x600-tab0-0.png": "4232c231e33ac1216e63d6cfc1f8e2768910e5940608244acf292ce06d507739",
+    "integrated-webkit/900x600-tab0-1.png": "4232c231e33ac1216e63d6cfc1f8e2768910e5940608244acf292ce06d507739",
+    "integrated-webkit/900x600-tab0-2.png": "4232c231e33ac1216e63d6cfc1f8e2768910e5940608244acf292ce06d507739",
+    "integrated-webkit/900x600-tab1-0.png": "3b860edca79f5c658a61534ac1e90cd4f723a1647183187a151b371de69dd94d",
+    "integrated-webkit/900x600-tab1-1.png": "3b860edca79f5c658a61534ac1e90cd4f723a1647183187a151b371de69dd94d",
+    "integrated-webkit/900x600-tab1-2.png": "3b860edca79f5c658a61534ac1e90cd4f723a1647183187a151b371de69dd94d",
+    "integrated-webkit/900x600-tab2-0.png": "e26418c76b4e94f600d8c8580e9a467c59d249d73b66ddf8061008f6fa2a36e2",
+    "integrated-webkit/900x600-tab2-1.png": "e26418c76b4e94f600d8c8580e9a467c59d249d73b66ddf8061008f6fa2a36e2",
+    "integrated-webkit/900x600-tab2-2.png": "e26418c76b4e94f600d8c8580e9a467c59d249d73b66ddf8061008f6fa2a36e2",
+    "integrated-webkit/presentation-hidden.png": "202feeb6950aa8617fe88a573afbae72fb688d19fca9f9bea3ca4147597f5353",
+    "integrated-webkit/presentation-restored-journal.png": "dfd7e8bea702b8db3308d2dcb80678afaf4865a7f6cec9a152d4912331d0a89c",
+    "integrated-webkit/scene-reloaded-journal.png": "a774acfc7eee37b2f825efa7cbd6be90c363a9a5b2f5029f7f2e48c740bde4f8",
+    "integrated-startup/01-ordinary-menu.png": "2800ed5fb6f3b413fedf4b54e1be69f2acc445cf5170a4f72ec12a50eea8ecb1",
+    "integrated-startup/02-after-new-game.png": "ae1495b91c70cbae95f128696a6894c99c25c29c8b164be1fd4f45c6e04e5133",
+    "integrated-startup/03-after-escape.png": "acc085d8292cb001873dfa0b44a6587edb75b1d7d30a3d3f7ae7234e1f37de44",
+    "integrated-startup/04-saved-run-menu.png": "19c49770bac3f6c61791eef750964c9f2a985c53fa2b660072c079e63aae6147",
+    "integrated-startup/05-new-game-confirmation.png": "6c054a1c20d0983813146f33002bd75b9fc1bd0da4441ddf258b8e08dc9f2952",
+    "integrated-startup/06-confirmed-new-game.png": "212a12ee261de8ff7bb2360285f8785a804606842a47def305e43d5b5fbb1f99"
+  },
+  "duplicate_groups": [
+    [
+      "integrated-webkit/667x375-hud-0.png",
+      "integrated-webkit/667x375-hud-1.png",
+      "integrated-webkit/667x375-hud-2.png"
+    ],
+    [
+      "integrated-webkit/667x375-inventory.png"
+    ],
+    [
+      "integrated-webkit/667x375-tab0-0.png",
+      "integrated-webkit/667x375-tab0-1.png",
+      "integrated-webkit/667x375-tab0-2.png"
+    ],
+    [
+      "integrated-webkit/667x375-tab1-0.png",
+      "integrated-webkit/667x375-tab1-1.png",
+      "integrated-webkit/667x375-tab1-2.png"
+    ],
+    [
+      "integrated-webkit/667x375-tab2-0.png",
+      "integrated-webkit/667x375-tab2-1.png",
+      "integrated-webkit/667x375-tab2-2.png"
+    ],
+    [
+      "integrated-webkit/776x420-hud-0.png",
+      "integrated-webkit/776x420-hud-1.png",
+      "integrated-webkit/776x420-hud-2.png"
+    ],
+    [
+      "integrated-webkit/776x420-inventory.png"
+    ],
+    [
+      "integrated-webkit/776x420-tab0-0.png",
+      "integrated-webkit/776x420-tab0-1.png",
+      "integrated-webkit/776x420-tab0-2.png"
+    ],
+    [
+      "integrated-webkit/776x420-tab1-0.png",
+      "integrated-webkit/776x420-tab1-1.png",
+      "integrated-webkit/776x420-tab1-2.png"
+    ],
+    [
+      "integrated-webkit/776x420-tab2-0.png",
+      "integrated-webkit/776x420-tab2-1.png",
+      "integrated-webkit/776x420-tab2-2.png"
+    ],
+    [
+      "integrated-webkit/900x600-hud-0.png",
+      "integrated-webkit/900x600-hud-1.png",
+      "integrated-webkit/900x600-hud-2.png"
+    ],
+    [
+      "integrated-webkit/900x600-inventory.png"
+    ],
+    [
+      "integrated-webkit/900x600-tab0-0.png",
+      "integrated-webkit/900x600-tab0-1.png",
+      "integrated-webkit/900x600-tab0-2.png"
+    ],
+    [
+      "integrated-webkit/900x600-tab1-0.png",
+      "integrated-webkit/900x600-tab1-1.png",
+      "integrated-webkit/900x600-tab1-2.png"
+    ],
+    [
+      "integrated-webkit/900x600-tab2-0.png",
+      "integrated-webkit/900x600-tab2-1.png",
+      "integrated-webkit/900x600-tab2-2.png"
+    ],
+    [
+      "integrated-webkit/presentation-hidden.png"
+    ],
+    [
+      "integrated-webkit/presentation-restored-journal.png"
+    ],
+    [
+      "integrated-webkit/scene-reloaded-journal.png"
+    ],
+    [
+      "integrated-startup/01-ordinary-menu.png"
+    ],
+    [
+      "integrated-startup/02-after-new-game.png"
+    ],
+    [
+      "integrated-startup/03-after-escape.png"
+    ],
+    [
+      "integrated-startup/04-saved-run-menu.png"
+    ],
+    [
+      "integrated-startup/05-new-game-confirmation.png"
+    ],
+    [
+      "integrated-startup/06-confirmed-new-game.png"
+    ]
+  ],
+  "scores": {
+    "visual_preservation": 9,
+    "tested_ui_lifecycle": 9,
+    "scoped_evidence_quality": 8
+  },
+  "blockers": [],
+  "findings": [
+    "All 24 frozen topology pairs have zero changed channels at three viewport sizes; full journal backdrop, portrait, tabs and close fit correctly.",
+    "All 36 inventories preserve the active empty 400x400 native viewport. Candidate has one UI root under HUD; reference has zero there because it moves the same root to CanvasLayer18. All windows verify 3 reference versus 2 candidate synchronization pairs per rendered frame, using framebuffer checks rather than RAF count.",
+    "Actual touch opens journal, selects all tabs, closes journal and inventory, and resumes pause at three sizes. Escape closes journal without opening pause.",
+    "Deepheart hides the complete HUD while hero and companion remain visible. Restored and scene-reloaded journal images retain full backdrop and correct layout. Successful harness waits enforce one saved UI entry hidden, zero restored and one new UI root after scene reload.",
+    "Six ordinary-startup images show expected menu, gameplay, pause, saved-run menu, replacement confirmation and new gameplay. No error/crash events or lost context in 51 samples."
+  ],
+  "startup": {
+    "normal_startup": true,
+    "fixture_args": [],
+    "completed_observation": true,
+    "samples": 51,
+    "lost_context_samples": 0,
+    "events": [
+      {
+        "event": "navigation",
+        "url": "http://127.0.0.1:49189/",
+        "at": 1790327610377
+      },
+      {
+        "event": "log",
+        "text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+        "at": 1790327612941
+      },
+      {
+        "event": "warning",
+        "text": "WebGL: non-portable extension enabled: WEBGL_polygon_mode",
+        "at": 1790327612978
+      },
+      {
+        "event": "log",
+        "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0) - Compatibility - Using Device: WebKit - WebKit WebGL",
+        "at": 1790327613167
+      },
+      {
+        "event": "navigation",
+        "url": "http://127.0.0.1:49189/",
+        "at": 1790327644244
+      },
+      {
+        "event": "log",
+        "text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+        "at": 1790327647036
+      },
+      {
+        "event": "warning",
+        "text": "WebGL: non-portable extension enabled: WEBGL_polygon_mode",
+        "at": 1790327647095
+      },
+      {
+        "event": "log",
+        "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0) - Compatibility - Using Device: WebKit - WebKit WebGL",
+        "at": 1790327647329
+      }
+    ]
+  },
+  "limitations": [
+    "Whole-package performance run 36117283336 was pending; sync counts are not GPU timings or phone FPS evidence.",
+    "Reference topology uses the new full-rect Control wrapper on CanvasLayer18, not the old direct-child hierarchy byte-for-byte.",
+    "Deepheart/reload states are enforced by completed harness waits but not saved as separate final inventories. Final post-reload close tap has no following closed-state wait; earlier three-size close waits pass.",
+    "Six core cases reported passed by parent; this record independently inspects browser evidence, not a core rerun.",
+    "Mac emulated touch is not physical iPhone validation. Bounded ordinary-startup observation is not a long-session memory guarantee."
+  ]
+}

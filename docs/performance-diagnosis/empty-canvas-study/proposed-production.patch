@@ -1,13 +1,25 @@
 --- a/scripts/player/native_worn_visual.gd
 +++ b/scripts/player/native_worn_visual.gd
-@@ -50,6 +50,10 @@
- 	rig.raster_size = 400
- 	visual.add_child(rig)
- 	if not rig.configure(ASSETS): return _fail("Native Worn assets could not be loaded")
-+	# This viewport contains only 3D. Avoid a redundant canvas pass and GPU fence.
-+	# Leave 2D enabled if future content adds a CanvasItem during configuration.
-+	if rig.viewport.find_children("*", "CanvasItem", true, false).is_empty():
-+		RenderingServer.viewport_set_disable_2d(rig.viewport.get_viewport_rid(), true)
- 	motion = Motion.new()
- 	if not motion.configure(rig, ASSETS.path_join("tasks.json"), ASSETS.path_join("motion.json")):
- 		return _fail("Native Worn motion identity mismatch")
+@@ -56,8 +56,14 @@
+ 	reference_cap = motion.cap_local
+ 	equipment = Equipment.new()
+ 	equipment.setup(rig)
++	_refresh_canvas_pass()
+ 	generations += 1
+ 	return true
++
++# Recheck at creation and gear changes; 2D is restored if a tool needs it.
++func _refresh_canvas_pass() -> void:
++	RenderingServer.viewport_set_disable_2d(rig.viewport.get_viewport_rid(),
++		rig.viewport.find_children("*", "CanvasItem", true, false).is_empty())
+ 
+ func _fail(message: String) -> bool:
+ 	failed = true
+@@ -93,6 +99,7 @@
+ 	if not is_instance_valid(rig) and not _start(): return false
+ 	if equipment.current != visual.active_gear:
+ 		if not equipment.equip(visual.active_gear): return _fail("Native pickaxe identity mismatch: " + visual.active_gear)
++		_refresh_canvas_pass()
+ 		motion.cap_local = equipment.contact_cap(reference_cap)
+ 		motion.reference_cap = motion.bank.mine[21].bones.tool * motion.cap_local
+ 		motion.contact_cache.clear()

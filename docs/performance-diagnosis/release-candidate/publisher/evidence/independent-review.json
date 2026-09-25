@@ -1,0 +1,88 @@
+{
+  "accepted": true,
+  "scope": "Final DEV15.10 candidate and publisher implementation accepted for authorized DEV-only publication, subject to populated immutable review pins and successful publisher gates/public verification. LIVE and Worn must remain byte-identical.",
+  "source_commit": "ab0c12ff579134e0a092946bd92973e4599a073c",
+  "version": "1.0.0-dev.15.10",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "f917759f0a52934b8c3dc863e2fb22fa0a6a5a2f57aaf95fa31976d1993a8c60"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 260541520,
+      "sha256": "b7749868faed160d256f7e18521cbe5c9e73a16500730895ec11577ad5ea3a8f"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "workflow_run": 36118561266,
+  "final_build_images_inspected": true,
+  "physical_iphone_verified": false,
+  "stutter_fix_proven": false,
+  "known_max_candidate_stall_ms": 546,
+  "publisher_reviewed": true,
+  "publisher_code_sha256": "e41d186aafbc82e9476de8e8a6b16444e063828eb6ddd1e314f89eae9f1bc2fb",
+  "publisher_workflow_sha256": "b06b11b85c8f3c4d93c14d15dd30a0f0f205636670d80cdc31c26329f1f23588",
+  "source_lineage_sha256": "8347a09617257227efe0b7f27d01aec55553b1322d0e97250dadaaba6d8eb848",
+  "scores": {
+    "final_visual_preservation": 9,
+    "tested_gameplay_and_ui_lifecycle": 9,
+    "bounded_performance_evidence": 8,
+    "publication_provenance_and_preservation": 9
+  },
+  "blockers": [],
+  "final_image_sha256": {
+    "01-ordinary-menu.png": "6cf753ccbcb5a16d7db07c834520dac08cb601b82d84a3ce5d69363ca0edce29",
+    "02-after-new-game.png": "aa4cf8167df09eab4fa77059e592084b902858a89a066afa3baab70eba9fcefa",
+    "03-after-escape.png": "c57ebed198dd9cb2fe925423c12b50ce2ced7e2f258d75dfee97480a64cccc4b",
+    "04-saved-run-menu.png": "1fc74e96861136b1302cdddc7ff676c488a90211aef3f3c8f006965e75f2e696",
+    "05-new-game-confirmation.png": "cd911256c73a6f1f7db6709893c83145808a8b008d152d5e3964770c83ee741d",
+    "06-confirmed-new-game.png": "7dff29af2970ada6f06252518df0e6417b13a4dbbf870216f52127be4fb5f42e"
+  },
+  "evidence_sha256": {
+    "final-startup/report.json": "0d7bf38f24a8d5345bd05f521286dee3a583005f91de38de83c221f1020751e1",
+    "final-build/build.json": "3f31528214a2d7f910f7b6a2e5725e15d529f29389263c37b5712e25289e2483",
+    "final-build/core/results.json": "6eb8db9edc7189d73af5b87a7de7fc2d5ef6fe6d602d7598b5c665a0c7b0515b"
+  },
+  "findings": [
+    "All six actual final startup images inspected. Menu footer reads 1.0.0-dev.15.10, initial Continue is disabled, new game renders native hero/companion/world/HUD, Escape pauses, browser reload offers saved Surface expedition, replacement confirmation appears and confirmed new game renders correctly.",
+    "Final report records 51 context samples without loss, no runtime error/crash events, normal startup without fixture args and completed observation.",
+    "All six exported core cases pass: input release, touch 125 checks, DEV save isolation, crusher, mole autonomy 50 checks, world 461 checks. Final build/source/manifest match browser evidence.",
+    "Version-only source lineage is consistent with the inspected four diffs. Ordinary production optimization files unchanged from accepted 4f UI/performance package; native/occupancy production file lineage explicitly retains reviewed 94f implementation. Width 6 remains unchanged.",
+    "Prior accepted full-package Mac WebKit comparisons show +11.25%/+12.72% weighted FPS, lower slow-frame totals and 4-to-2 synchronization pairs with unchanged resolution. These support a bounded DEV improvement, not physical-phone certainty.",
+    "Publisher fixes bind accepted UI review to exact source/files and image inspection, both performance reports to independent SHA256 records, native review to explicit earlier source lineage, and startup gate to real events/context samples.",
+    "Publisher requires immutable artifact run/digest/manifest identity, preserved LIVE/Worn hashes, prior DEV rollback artifact, exact staged file set and all 27 public asset hash checks. Workflow deploy follows successful package gate."
+  ],
+  "limitations": [
+    "Known candidate 546ms stall is retained. Stutter is not proven fixed; Mac order drift and instrumentation limitations remain.",
+    "Final version reuses prior native/UI/performance evidence through inspected source lineage; these matrices were not rerun on the label-only final version. Final ordinary startup and six core cases were run on the exact final package.",
+    "No physical iPhone validation, thermal guarantee or long-session memory proof.",
+    "Publisher implementation was reviewed, not executed by critic. review.json was not populated at inspection; the parent must populate exact artifact/pin records and run check-review before authorized deployment. Public verification is required to establish completed publication."
+  ]
+}

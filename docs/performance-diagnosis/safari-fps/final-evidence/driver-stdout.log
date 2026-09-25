@@ -1,0 +1,77 @@
+[Appium] Welcome to Appium v3.7.0 (REV ee2e22509db1f840e5f23c5eb35dee7ea8a8b310)
+[Appium] Non-default server args:
+[Appium] { address: '127.0.0.1', logNoColors: true }
+[Appium] The autodetected Appium home path: /Users/runner/work/Ever-Deeper/Ever-Deeper/.github/safari-fps
+[Appium] Attempting to load driver xcuitest...
+[Appium] Requiring driver at /Users/runner/work/Ever-Deeper/Ever-Deeper/.github/safari-fps/node_modules/appium-xcuitest-driver/build/lib/index.js
+[Appium] XCUITestDriver has been successfully loaded in 2.257s
+[Appium] Appium REST http interface listener started on http://127.0.0.1:4723
+[Appium] Available drivers:
+[Appium]   - xcuitest@12.12.3 (automationName 'XCUITest')
+[Appium] No plugins have been installed. Use the "appium plugin" command to install the one(s) you want to use.
+dbug Appium Creating hash file directory: /Users/runner/work/Ever-Deeper/Ever-Deeper/.github/safari-fps/node_modules/.cache/appium
+[HTTP] --> GET /status 
+[AppiumDriver@cc32] Calling AppiumDriver.getStatus() with args: []
+[AppiumDriver@cc32] Responding to client with driver.getStatus() result: {"ready":true,"message":"The server is ready to accept new connections","build":{"version":"3.7.0","git-sha":"ee2e22509db1f840e5f23c5eb35dee7ea8a8b310","built":"2026-09-25 10:26:21 +0200"}}
+[HTTP] <-- GET /status 200 747 ms - 199
+[HTTP] --> POST /session {"capabilities":{"alwaysMatch":{"platformName":"iOS","appium:automationName":"XCUITest","appium:bundleId":"com.apple.mobilesafari","appium:udid":"1CE1A334-F45C-4216-823B-EE5E6389838F","appium:platformVersion":"26.2","appium:newCommandTimeout":900,"appium:noReset":true,"appium:autoWebview":false,"appium:orientation":"LANDSCAPE","appium:waitForIdleTimeout":0,"appium:wdaLaunchTimeout":600000,"appium:usePreinstalledWDA":true,"appium:prebuiltWDAPath":"/Users/runner/work/_temp/wda/WebDriverAgentRunner-Runner.app"}}}
+[AppiumDriver@cc32] Calling AppiumDriver.createSession() with args: [{"alwaysMatch":{"platformName":"iOS","appium:automationName":"XCUITest","appium:bundleId":"com.apple.mobilesafari","appium:udid":"1CE1A334-F45C-4216-823B-EE5E6389838F","appium:platformVersion":"26.2","appium:newCommandTimeout":900,"appium:noReset":true,"appium:autoWebview":false,"appium:orientation":"LANDSCAPE","appium:waitForIdleTimeout":0,"appium:wdaLaunchTimeout":600000,"appium:usePreinstalledWDA":true,"appium:prebuiltWDAPath":"/Users/runner/work/_temp/wda/WebDriverAgentRunner-Runner.app"}},{"alwaysMatch":{"platformName":"iOS","appium:automationName":"XCUITest","appium:bundleId":"com.apple.mobilesafari","appium:udid":"1CE1A334-F45C-4216-823B-EE5E6389838F","appium:platformVersion":"26.2","appium:newCommandTimeout":900,"appium:noReset":true,"appium:autoWebview":false,"appium:orientation":"LANDSCAPE","appium:waitForIdleTimeout":0,"appium:wdaLaunchTimeout":600000,"appium:usePreinstalledWDA":true,"appium:prebuiltWDAPath":"/Users/runner/work/_temp/wda/WebDriverAgentRunner-Runner.app"}},{"alwaysMatch":{"platfor…
+[AppiumDriver@cc32] Event 'newSessionRequested' logged at 1790324996535 (08:29:56 GMT+0000 (Coordinated Universal Time))
+[Appium] Attempting to find matching driver for automationName 'XCUITest' and platformName 'iOS'
+[Appium] The 'xcuitest' driver was installed and matched caps.
+[Appium] Will require it at /Users/runner/work/Ever-Deeper/Ever-Deeper/.github/safari-fps/node_modules/appium-xcuitest-driver
+[Appium] Requiring driver at /Users/runner/work/Ever-Deeper/Ever-Deeper/.github/safari-fps/node_modules/appium-xcuitest-driver/build/lib/index.js
+[AppiumDriver@cc32] Appium v3.7.0 creating new XCUITestDriver (v12.12.3) session
+[AppiumDriver@cc32] Checking BaseDriver versions for Appium and XCUITestDriver
+[AppiumDriver@cc32] Appium's BaseDriver version is 10.8.0
+[AppiumDriver@cc32] XCUITestDriver's BaseDriver version is 10.8.0
+[XCUITestDriver@b73c] 
+[XCUITestDriver@b73c] Creating session with W3C capabilities: {
+  "alwaysMatch": {
+    "platformName": "iOS",
+    "appium:automationName": "XCUITest",
+    "appium:bundleId": "com.apple.mobilesafari",
+    "appium:udid": "1CE1A334-F45C-4216-823B-EE5E6389838F",
+    "appium:platformVersion": "26.2",
+    "appium:newCommandTimeout": 900,
+    "appium:noReset": true,
+    "appium:autoWebview": false,
+    "appium:orientation": "LANDSCAPE",
+    "appium:waitForIdleTimeout": 0,
+    "appium:wdaLaunchTimeout": 600000,
+    "appium:usePreinstalledWDA": true,
+    "appium:prebuiltWDAPath": "/Users/runner/work/_temp/wda/WebDriverAgentRunner-Runner.app"
+  },
+  "firstMatch": [
+    {}
+  ]
+}
+[1beaa6d6][XCUITestDriver@b73c] Session created with session id: 1beaa6d6-c59d-46cf-981f-1d452e79c87a
+[1beaa6d6][XCUITest] Current user: 'runner'
+[1beaa6d6][XCUITest] RemoteXPC devices listing unavailable: Tunnel registry port not found. Please run the tunnel creation script first See https://appium.github.io/appium-xcuitest-driver/latest/guides/remotexpc-tunnels-real-devices/ Falling back to appium-ios-device.
+[1beaa6d6][XCUITestDriver@b73c] Available real devices: 
+[1beaa6d6][XCUITestDriver@b73c] Constructing iOS simulator for Xcode version 26.2 with udid '1CE1A334-F45C-4216-823B-EE5E6389838F'
+[1beaa6d6][XCUITestDriver@b73c] Determining device to run tests on: udid: '1CE1A334-F45C-4216-823B-EE5E6389838F', real device: false
+[1beaa6d6][BaseDriver] Initialized new IPC object with max object size of 1048576 bytes and max topics of 1000
+[1beaa6d6][BaseDriver] Subscribing b73c68fa-e55e-479d-8d05-2c0efd3360f2 to topic 'xcuitest:sessionUdidClaimed'
+[1beaa6d6][BaseDriver] Subscribing b73c68fa-e55e-479d-8d05-2c0efd3360f2 to topic 'xcuitest:sessionUdidContended'
+[1beaa6d6][BaseDriver] Subscribing b73c68fa-e55e-479d-8d05-2c0efd3360f2 to topic 'xcuitest:sessionUdidReleased'
+[1beaa6d6][BaseDriver] b73c68fa-e55e-479d-8d05-2c0efd3360f2 is publishing a message to topic xcuitest:sessionUdidClaimed
+[1beaa6d6][BaseDriver] Unsubscribing b73c68fa-e55e-479d-8d05-2c0efd3360f2 from topic 'xcuitest:sessionUdidContended'
+[1beaa6d6][BaseDriver] Unsubscribing b73c68fa-e55e-479d-8d05-2c0efd3360f2 from topic 'xcuitest:sessionUdidReleased'
+[1beaa6d6][XCUITestDriver@b73c] Event 'xcodeDetailsRetrieved' logged at 1790325044256 (08:30:44 GMT+0000 (Coordinated Universal Time))
+[1beaa6d6][XCUITestDriver@b73c] Event 'appConfigured' logged at 1790325044271 (08:30:44 GMT+0000 (Coordinated Universal Time))
+[1beaa6d6][XCUITestDriver@b73c] Event 'resetStarted' logged at 1790325044272 (08:30:44 GMT+0000 (Coordinated Universal Time))
+[1beaa6d6][XCUITestDriver@b73c] Reset: noReset is on. Leaving simulator as is
+[1beaa6d6][XCUITestDriver@b73c] Event 'resetComplete' logged at 1790325044302 (08:30:44 GMT+0000 (Coordinated Universal Time))
+[1beaa6d6][XCUITestDriver@b73c] Using WDA path: '/Users/runner/work/Ever-Deeper/Ever-Deeper/.github/safari-fps/node_modules/appium-xcuitest-driver/node_modules/appium-webdriveragent'
+[1beaa6d6][XCUITestDriver@b73c] Using WDA agent: '/Users/runner/work/Ever-Deeper/Ever-Deeper/.github/safari-fps/node_modules/appium-xcuitest-driver/node_modules/appium-webdriveragent/WebDriverAgent.xcodeproj'
+[1beaa6d6][XCUITestDriver@b73c] Starting log capture for iOS Simulator with udid '1CE1A334-F45C-4216-823B-EE5E6389838F' via simctl using the following arguments 'log stream --style compact'
+[1beaa6d6][XCUITestDriver@b73c] Event 'logCaptureStarted' logged at 1790325055035 (08:30:55 GMT+0000 (Coordinated Universal Time))
+[1beaa6d6][XCUITestDriver@b73c] Setting up simulator
+[1beaa6d6][XCUITestDriver@b73c] Setting preferences of 1CE1A334-F45C-4216-823B-EE5E6389838F Simulator to {"SimulatorWindowOrientation":"LandscapeLeft","SimulatorWindowRotationAngle":90,"ConnectHardwareKeyboard":false}
+[1beaa6d6][XCUITestDriver@b73c] Setting common Simulator preferences to {"RotateWindowWhenSignaledByGuest":true,"StartLastDeviceOnLaunch":false,"DetachOnWindowClose":false,"AttachBootedOnStart":true,"ConnectHardwareKeyboard":false,"PasteboardAutomaticSync":false}
+[1beaa6d6][XCUITestDriver@b73c] Updated 1CE1A334-F45C-4216-823B-EE5E6389838F Simulator preferences at '/Users/runner/Library/Preferences/com.apple.iphonesimulator.plist' with {"RotateWindowWhenSignaledByGuest":true,"StartLastDeviceOnLaunch":false,"DetachOnWindowClose":false,"AttachBootedOnStart":true,"ConnectHardwareKeyboard":false,"PasteboardAutomaticSync":false,"DevicePreferences":{"1CE1A334-F45C-4216-823B-EE5E6389838F":{"SimulatorExternalDisplay":2114,"ChromeTint":"","SimulatorWindowOrientation":"LandscapeLeft","SimulatorWindowRotationAngle":90,"ConnectHardwareKeyboard":false}}}
+[1beaa6d6][XCUITestDriver@b73c] Got UI client PID: 6852
+[1beaa6d6][XCUITestDriver@b73c] Both Simulator with UDID '1CE1A334-F45C-4216-823B-EE5E6389838F' and the UI client are currently running
+[1beaa6d6][XCUITestDriver@b73c] Event 'simStarted' logged at 1790325061088 (08:31:01 GMT+0000 (Coordinated Universal Time))

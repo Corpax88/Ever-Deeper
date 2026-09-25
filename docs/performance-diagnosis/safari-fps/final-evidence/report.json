@@ -1,0 +1,70 @@
+{
+  "source_commit": "ee2e22509db1f840e5f23c5eb35dee7ea8a8b310",
+  "physical_iphone": false,
+  "candidate_source": "7a236e5147fa4f12da023fb350ca7660479c622a",
+  "candidate_run": 36110103989,
+  "scope": "Instrumented mining fixture in actual Simulator Safari app; synthetic Godot mining action, not a native touch acceptance test. Local HTTP bridge adds observation cost. No release.",
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "fb7cd4761cb7d8a0db75da9bbb20670ff44e2a450c990483ab68c758d50ac8bd"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 260324068,
+      "sha256": "b6a881ba81b6181dbc8b894027fc18630f097e04b1b4edeff297437e8f189e3b"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "checks": [],
+  "windows": [],
+  "captures": [
+    {
+      "name": "failure",
+      "state": null
+    }
+  ],
+  "documents": [],
+  "errors": [],
+  "xcode": "Xcode 26.2\nBuild version 17C52\n",
+  "device": {
+    "dataPath": "/Users/runner/Library/Developer/CoreSimulator/Devices/1CE1A334-F45C-4216-823B-EE5E6389838F/data",
+    "dataPathSize": 18337792,
+    "logPath": "/Users/runner/Library/Logs/CoreSimulator/1CE1A334-F45C-4216-823B-EE5E6389838F",
+    "udid": "1CE1A334-F45C-4216-823B-EE5E6389838F",
+    "isAvailable": true,
+    "deviceTypeIdentifier": "com.apple.CoreSimulator.SimDeviceType.iPhone-Air",
+    "state": "Shutdown",
+    "name": "iPhone Air",
+    "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2"
+  },
+  "passed": false,
+  "failure": "TypeError: fetch failed\n    at node:internal/deps/undici/undici:15157:13\n    at async wd (file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/safari-fps/safari.mjs:49:60)\n    at async file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/safari-fps/safari.mjs:60:16",
+  "latest": null
+}
