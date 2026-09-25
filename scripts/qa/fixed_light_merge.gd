@@ -36,7 +36,7 @@ func configure(world: Node2D, lights: Array[PointLight2D]) -> void:
 	viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 	add_child(viewport)
 	viewport.canvas_transform = Transform2D(0.0,Vector2.ONE*DENSITY,0.0,-bounds.position*DENSITY)
-	var background: Polygon2D = Polygon2D.new()
+	var background: FlatPolygon2D = FlatPolygon2D.new()
 	background.polygon = PackedVector2Array([bounds.position,Vector2(bounds.end.x,bounds.position.y),bounds.end,Vector2(bounds.position.x,bounds.end.y)])
 	background.color = Color.BLACK
 	viewport.add_child(background)
