@@ -337,9 +337,9 @@ func _test_path_and_touch() -> void:
 	world.mine.barriers=[]
 	for y in range(center.y-4,center.y+5):
 		for x in range(center.x-6,center.x+7):
-			world.blocks.erase(Vector2i(x,y))
+			world._erase_block(Vector2i(x,y))
 	for y in range(center.y-3,center.y+2):
-		world.blocks[Vector2i(center.x,y)]=world.call("_make_block","stone",20,0,"terrain")
+		world._set_block(Vector2i(center.x,y), world.call("_make_block","stone",20,0,"terrain"))
 	world.call("_rebuild_role_counts")
 	var start: Vector2=world.call("_cell_center",center+Vector2i(-3,0))
 	var goal: Vector2=world.call("_cell_center",center+Vector2i(3,0))
@@ -585,8 +585,8 @@ func _test_pet_revision() -> void:
 	RunState.overhaul_progress={"skills":{"teamwork":1}}
 	world.mine.barriers=[]
 	var target: Vector2i=Vector2i(12,12)
-	world.blocks[target]=world.call("_make_block","stone",20,0,"terrain")
-	world.blocks.erase(target+Vector2i.LEFT)
+	world._set_block(target, world.call("_make_block","stone",20,0,"terrain"))
+	world._erase_block(target+Vector2i.LEFT)
 	world.player.global_position=world.call("_cell_center",target+Vector2i.LEFT)
 	world.player.set_facing(Vector2.RIGHT)
 	mole.global_position=world.player.global_position
@@ -603,3 +603,4 @@ func _test_pet_revision() -> void:
 	world.external_mine_held=false
 	RunState.overhaul_progress={}
 	check(not mole.scout("homeward"),"Unlearned command cannot bypass its skill")
+

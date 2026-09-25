@@ -1,5 +1,6 @@
 extends "res://scripts/qa/suites/dev14_review.gd"
 ## Explicit nonpersistent DEV fixture. Reference uses the original draw path.
+var light_probe: Node
 var profiling: bool = false
 var frame_times: Array[float] = []
 var cpu_times: Array[float] = []
@@ -7,6 +8,9 @@ var elapsed_start: int = 0
 var last_tick: int = 0
 var last_result: Dictionary = {}
 var edits: Dictionary = {}
+var swapped_cell: Vector2i
+var saved_blocks: Dictionary = {}
+var mutation_checks: Array[Dictionary] = []
 var paused_observers: Array[Node] = []
 
 func _command(data: Dictionary) -> void:
@@ -15,6 +19,8 @@ func _command(data: Dictionary) -> void:
 	var world: Node2D = main.mine_world
 	match fixture:
 		"setup":
+			if is_instance_valid(light_probe): light_probe.release()
+			light_probe = null
 			_restore_observers()
 			main.get_tree().paused = false
 			main._cancel_mine_hold()
@@ -38,6 +44,12 @@ func _command(data: Dictionary) -> void:
 			for node in world.find_children("PremiumHeadlamp", "", true, false):
 				node.preview_settings.clear()
 				node.refresh_workshop_effects()
+		"lightmode":
+			if not is_instance_valid(light_probe):
+				light_probe = load("res://scripts/qa/light_cost_probe.gd").new()
+				main.add_child(light_probe)
+				light_probe.configure(world)
+			light_probe.select(String(data.mode))
 		"freeze":
 			# Pause-independent UI tweens also need zero delta for identical frames.
 			Engine.time_scale = 0.0
@@ -63,15 +75,39 @@ func _command(data: Dictionary) -> void:
 			world.blocks[cell].hp = 1
 			world.queue_redraw()
 		"break":
-			world.blocks.erase(edits.cell)
+			world._erase_block(edits.cell)
 			world.mineable_edge_void_cells[edits.cell] = true
 			world.queue_redraw()
 		"restore":
-			world.blocks[edits.cell] = edits.block.duplicate(true)
+			world._set_block(edits.cell, edits.block.duplicate(true))
 			if not edits.void: world.mineable_edge_void_cells.erase(edits.cell)
 			world.queue_redraw()
+		"swap":
+			var origin: Vector2i = world._world_to_cell(world.player.global_position)
+			swapped_cell = origin + Vector2i.DOWN
+			_require(not world.blocks.has(swapped_cell), "Swap destination is not empty")
+			world._erase_block(edits.cell)
+			world._set_block(swapped_cell, edits.block.duplicate(true))
+			world.queue_redraw()
+		"unswap":
+			world._erase_block(swapped_cell)
+			world._set_block(edits.cell, edits.block.duplicate(true))
+			world.queue_redraw()
+		"replace":
+			world.blocks = world.blocks.duplicate(true)
+			world.queue_redraw()
+		"clear":
+			saved_blocks = world.blocks.duplicate(true)
+			world._clear_blocks()
+			world.queue_redraw()
+		"refill":
+			world.blocks = saved_blocks
+			world.queue_redraw()
+		"mutation_audit":
+			_audit_gameplay(world)
 		"begin":
 			main.get_tree().paused = false
+			light_probe.reset()
 			frame_times.clear()
 			cpu_times.clear()
 			world.lit_draw_sections.draw_callbacks = 0
@@ -84,7 +120,7 @@ func _command(data: Dictionary) -> void:
 			profiling = true
 		"end":
 			profiling = false
-			last_result = {"frames":frame_times.size(),"seconds":float(Time.get_ticks_usec()-elapsed_start)/1000000.0,"frame":_stats(frame_times),"cpu":_stats(cpu_times),"sections":world.lit_draw_sections.debug_snapshot(),"draw_calls":Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)}
+			last_result = {"frames":frame_times.size(),"seconds":float(Time.get_ticks_usec()-elapsed_start)/1000000.0,"frame":_stats(frame_times),"cpu":_stats(cpu_times),"sections":world.lit_draw_sections.debug_snapshot(),"light_cost":light_probe.snapshot(),"draw_calls":Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)}
 		"unfreeze":
 			_restore_observers()
 			main.get_tree().paused = false
@@ -125,4 +161,67 @@ func _frame() -> void:
 	var player: Node2D = main._active_player_node()
 	var packet: Dictionary = player.animation_packet()
 	var point: Vector2 = main.mine_button.get_global_rect().get_center()
-	JavaScriptBridge.eval("window.DEV14_STATE="+JSON.stringify({"id":command_id,"error":error,"fixture":fixture,"version":main.PremiumMenuScript.release_version(),"phase":main.phase,"menu":main.menu_open,"native":player.visual.native_worn_snapshot(),"impact":packet.impact_serial,"mining":packet.mining,"position":[player.position.x,player.position.y],"result":last_result,"sections":world.lit_draw_sections.debug_snapshot(),"mine_button":[point.x,point.y],"viewport":[main.get_viewport().get_visible_rect().size.x,main.get_viewport().get_visible_rect().size.y]}),true)
+	JavaScriptBridge.eval("window.DEV14_STATE="+JSON.stringify({"occupancy":_occupancy(world),"mutation_checks":mutation_checks,"id":command_id,"error":error,"fixture":fixture,"version":main.PremiumMenuScript.release_version(),"phase":main.phase,"menu":main.menu_open,"native":player.visual.native_worn_snapshot(),"impact":packet.impact_serial,"mining":packet.mining,"position":[player.position.x,player.position.y],"result":last_result,"light_cost":light_probe.snapshot() if is_instance_valid(light_probe) else {},"sections":world.lit_draw_sections.debug_snapshot(),"mine_button":[point.x,point.y],"viewport":[main.get_viewport().get_visible_rect().size.x,main.get_viewport().get_visible_rect().size.y]}),true)
+
+
+
+func _occupancy(world: Node) -> Dictionary:
+	return {"revision":world._terrain_occupancy_revision(),"count":world.blocks.size()}
+
+func _audit_result(world: Node, before: int, changed: bool, label: String) -> void:
+	var after: int = world._terrain_occupancy_revision()
+	var passed: bool = (after > before) if changed else (after == before)
+	mutation_checks.append({"label":label,"passed":passed,"before":before,"after":after})
+	_require(passed, "Occupancy revision: " + label)
+
+func _audit_gameplay(world: Node) -> void:
+	mutation_checks.clear()
+	var cell: Vector2i = Vector2i(20,20)
+	world.blocks = {}
+	world.respawns.clear()
+	world.role_block_counts.clear()
+	var before: int = world._terrain_occupancy_revision()
+	world._clear_blocks()
+	world._erase_block(cell)
+	_audit_result(world, before, false, "empty clear and absent erase")
+	world._set_block(cell, world._make_block("stone",999,0,"terrain"))
+	_audit_result(world, before, true, "insert")
+	before = world._terrain_occupancy_revision()
+	world.current_target = cell
+	world._mine_once()
+	_require(world.blocks.has(cell) and int(world.blocks[cell].hp)<999, "Actual damage occurred")
+	_audit_result(world, before, false, "actual damage only")
+	world.blocks[cell].hp = 1
+	world._mine_once()
+	_require(not world.blocks.has(cell), "Actual mining removed terrain")
+	_audit_result(world, before, true, "actual mining break")
+	world._set_block(cell, world._make_block("stone",999,0,"terrain"))
+	before = world._terrain_occupancy_revision()
+	world._apply_crusher_shockwave(cell + Vector2i.RIGHT, {"power":100})
+	_require(world.blocks.has(cell) and int(world.blocks[cell].hp)<999, "Actual crusher damage occurred")
+	_audit_result(world, before, false, "crusher damage only")
+	world.blocks[cell].hp = 1
+	world._apply_crusher_shockwave(cell + Vector2i.RIGHT, {"power":100})
+	_require(not world.blocks.has(cell), "Actual crusher removed terrain")
+	_audit_result(world, before, true, "crusher break")
+	world._set_block(cell, world._make_block("stone",20,0,"terrain"))
+	before = world._terrain_occupancy_revision()
+	_require(world.companion_dig(world._cell_center(cell), false)==1, "Actual companion terrain API dug one block")
+	_audit_result(world, before, true, "companion dig")
+	var resource: Dictionary = world._make_block("copper",20,0,"resource")
+	world.respawns.append({"cell":cell,"block":resource,"respawn_until_unix":0.0,"remaining":0.0})
+	before = world._terrain_occupancy_revision()
+	world._update_respawns(0.0)
+	_require(world.blocks.has(cell), "Actual resource respawn inserted block")
+	_audit_result(world, before, true, "resource respawn")
+	world._set_block(cell, world._make_block("stone",20,0,"revision_qa_barrier"))
+	before = world._terrain_occupancy_revision()
+	for hit in 9: world._strike_barrier_group(cell, world.blocks[cell])
+	_audit_result(world, before, false, "nine barrier hits")
+	world._strike_barrier_group(cell, world.blocks[cell])
+	_require(not world.blocks.has(cell), "Tenth barrier hit removes block")
+	_audit_result(world, before, true, "barrier opens")
+	# Return through the actual mine rebuild lifecycle; subsequent setup resets saves.
+	before = world._terrain_occupancy_revision()
+	world.load_mine("mossMine")
+	_audit_result(world, before, true, "mine reload")

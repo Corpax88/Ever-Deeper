@@ -1,0 +1,72 @@
+name: Compare world-owned shadow occupancy revisions
+on:
+  push:
+    branches: [codex/revision-study-20260925]
+    paths: ['scripts/**', '.github/revision-study/**', '.github/workflows/revision-study.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: revision-study, cancel-in-progress: true}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        timeout-minutes: 8
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/revision-study
+            scripts
+            docs/unchanged-files.json
+            docs/qa-extraction.json
+            tools
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-light-dev15-9-candidate
+          run-id: 36043919958
+          github-token: ${{ github.token }}
+          path: '${{ runner.temp }}/original'
+      - name: Matching engine
+        run: |
+          curl -L --fail --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - name: Preserve original resources and append QA scripts
+        run: python3 .github/revision-study/patch_pack.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/study"
+      - name: Exported input and touch
+        run: python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/study/candidate/index.pck" --cases input touch build-flavor crusher mole-autonomy one-point-zero-world --output "$RUNNER_TEMP/study/core"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: revision-candidate, path: '${{ runner.temp }}/study/candidate', retention-days: 90}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: revision-build
+          path: |
+            ${{ runner.temp }}/study/*.json
+            ${{ runner.temp }}/study/*.log
+            ${{ runner.temp }}/study/core
+          retention-days: 90
+  browser:
+    needs: build
+    runs-on: macos-15
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix: {repeat: [1, 2]}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/revision-study
+      - uses: actions/download-artifact@v4
+        with: {name: revision-candidate, path: '${{ runner.temp }}/candidate'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install webkit
+      - name: Lighting ablations and repeated mining measurements
+        env: {REVIEW_BROWSER: webkit, REPEAT: '${{ matrix.repeat }}'}
+        run: node .github/revision-study/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'revision-webkit-${{ matrix.repeat }}', path: '${{ runner.temp }}/review', retention-days: 90}
