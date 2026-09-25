@@ -1,5 +1,6 @@
 extends Node
 # QA ablation only; never a production lighting mode.
+var merger: Node
 var world: Node2D
 var occlusion: Node
 var lights: Array[PointLight2D] = []
@@ -16,6 +17,9 @@ func configure(owner_world: Node2D) -> void:
 		lights.append(node)
 		original.append({"enabled":node.enabled,"shadows":node.shadow_enabled,"filter":node.shadow_filter})
 	occlusion.set_process(false)
+	merger = load("res://scripts/qa/fixed_light_merge.gd").new()
+	world.add_child(merger)
+	merger.configure(world, lights)
 func select(value: String) -> void:
 	mode = value
 	occlusion.qa_use_occupancy_revision = true
@@ -32,6 +36,7 @@ func select(value: String) -> void:
 		if mode == "fixed_off" and fixed: light.enabled = false
 		if mode == "headlamps_off" and not fixed: light.enabled = false
 		if mode == "lights_off": light.enabled = false
+	merger.select(value == "merged")
 	occlusion.refresh()
 func _process(_delta: float) -> void:
 	# Freeze command stops this node too. Return to instrumented ownership
@@ -50,11 +55,14 @@ func snapshot() -> Dictionary:
 	var inventory: Array = []
 	for light in lights:
 		inventory.append({"path":str(world.get_path_to(light)),"enabled":light.enabled,"shadow":light.shadow_enabled,"filter":light.shadow_filter})
-	return {"mode":mode,"refresh_calls":calls,"refresh_usec":usec,"rebuilds":occlusion.rebuild_count-start_rebuilds,"occluders":occlusion.active_count,"lights":inventory}
+	return {"merge":merger.snapshot(),"mode":mode,"refresh_calls":calls,"refresh_usec":usec,"rebuilds":occlusion.rebuild_count-start_rebuilds,"occluders":occlusion.active_count,"lights":inventory}
 
 func release() -> void:
 	set_process(false)
 	if is_instance_valid(occlusion):
 		select("baseline")
 		occlusion.set_process(true)
+	if is_instance_valid(merger):
+		merger.select(false)
+		merger.queue_free()
 	queue_free()
