@@ -1,3 +1,17 @@
+# DEV15.10 — published and verified
+
+Publication `36119229397` completed package, deploy and verification successfully on25September2026. All27 public file hashes match the pinned result:9 DEV files from the independently reviewed final package,9 unchanged LIVE files and9 unchanged Worn trial files. Receipt artifact10856177342 (1392bytes) downloaded, exact-size and ZIP checked, and its27-file map independently compared with the accepted manifest and preserved baselines.
+
+Play: https://corpax88.github.io/Ever-Deeper/dev/
+
+Exact runtime source remains `ab0c12ff579134e0a092946bd92973e4599a073c` on `codex/canvas-cpu-dev15-10-20260925`, validation36118561266. Publishing commit2cc6fd5a8905f714eb4ef126ec7b0155327a145d onmain carried reviewed metadata only; main's historical runtime source was not overwritten. Canonical game code is the release branch. DEV save identity is unchanged. Rollback artifact10856566595 retains previousDEV15.9.
+
+Two independent Mac Apple/WebKit runs of the exact original package versus the accepted optimization showed11.25% and12.72% higher weightedFPS, with lower slowframe counts inboth. Graphics/lights/native assets/resolution retained; all24windows including the546ms candidate stall are preserved. Final source differs from that comparison only in the version constant and QA expected-version pin. Native/UI lifecycle and pixel parity, final six core cases, ordinary saved-game flow and six actual final screenshots were independently accepted.
+
+This is a verified DEV performance improvement, not a proven physical-iPhone fix or eliminated stutter. Physical phone validation is the remaining external confirmation. No further unchanged tests, re-export or re-publication are needed. All work and known workflows in this task are complete. Width6 remainsproduction; wider/narrower groups and prior rejected GPU/quality experiments must not be silently promoted or repeated unchanged.
+
+The complete evidence and publication receipt are retained beside this file. Earlier pending-publication paragraphs below are historical and superseded.
+
 # DEV15.10 — approved final package, publication running
 
 Exact final source: `ab0c12ff579134e0a092946bd92973e4599a073c` on `codex/canvas-cpu-dev15-10-20260925`. Final validation `36118561266` passed six exported core cases and ordinary WebKit startup/save. All six final screenshots independently inspected; menu footer shows15.10. Independent scores9/9/8/9, publication accepted within the DEV scope. Publisher check-review passed locally against16 pinned files.
