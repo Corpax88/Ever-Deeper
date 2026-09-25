@@ -1,0 +1,60 @@
+{
+  "base_commit": "4f27644cb5952dbf31644eff78b61e3648ae056f",
+  "head_commit": "ab0c12ff579134e0a092946bd92973e4599a073c",
+  "only_runtime_source_change_is_version": true,
+  "qa_expected_version_updated": true,
+  "changed_files": [
+    ".github/integrated-candidate/build.py",
+    ".github/workflows/integrated-candidate.yml",
+    "scripts/dev/visual_capture_driver.gd",
+    "scripts/ui/premium_menu.gd"
+  ],
+  "commits": [
+    "415430c24671f3129ff4306f0fea3e489a8f2ead",
+    "ab0c12ff579134e0a092946bd92973e4599a073c"
+  ],
+  "diffs": [
+    {
+      "path": ".github/integrated-candidate/build.py",
+      "sha": "3e39bda97cd028810b73012620efe11c19671a85",
+      "changes": 6,
+      "patch": "@@ -47,13 +47,13 @@ def main(source, work):\n     old_remap = bytes(data[base+offset:base+offset+size]).decode()\n     assert '[remap]' in old_remap and '.gdc' in old_remap, old_remap\n     replacements = {}\n-    revised_scripts = ['scripts/main.gd', 'scripts/companion/companion_interface.gd', 'scripts/qa/suites/skills_browser_review.gd', 'scripts/qa/overhaul_qa.gd', 'scripts/lighting/cave_light_occluders.gd', 'scripts/world/mossvein_mine.gd', 'scripts/player/native_worn_visual.gd', 'scripts/dev/visual_capture_driver.gd', 'scripts/qa/suites/fps_review.gd', 'scripts/qa/suites/smoke.gd', 'scripts/qa/suites/crusher.gd', 'scripts/qa/suites/mole_autonomy.gd', 'scripts/qa/suites/world_fixtures.gd', 'scripts/qa/suites/dev14_review.gd']\n+    revised_scripts = ['scripts/ui/premium_menu.gd', 'scripts/main.gd', 'scripts/companion/companion_interface.gd', 'scripts/qa/suites/skills_browser_review.gd', 'scripts/qa/overhaul_qa.gd', 'scripts/lighting/cave_light_occluders.gd', 'scripts/world/mossvein_mine.gd', 'scripts/player/native_worn_visual.gd', 'scripts/dev/visual_capture_driver.gd', 'scripts/qa/suites/fps_review.gd', 'scripts/qa/suites/smoke.gd', 'scripts/qa/suites/crusher.gd', 'scripts/qa/suites/mole_autonomy.gd', 'scripts/qa/suites/world_fixtures.gd', 'scripts/qa/suites/dev14_review.gd']\n     replaced_remaps = []\n     added_scripts = []\n     for script in revised_scripts:\n         old_mapping = script+\".remap\"\n         assert old_mapping in entries, old_mapping\n-        new_script = script if script in [\"scripts/main.gd\", \"scripts/companion/companion_interface.gd\", \"scripts/qa/suites/skills_browser_review.gd\", \"scripts/player/native_worn_visual.gd\", \"scripts/qa/suites/dev14_review.gd\"] else script[:-3]+\"_integrated.gd\"\n+        new_script = script if script in [\"scripts/ui/premium_menu.gd\", \"scripts/main.gd\", \"scripts/companion/companion_interface.gd\", \"scripts/qa/suites/skills_browser_review.gd\", \"scripts/player/native_worn_visual.gd\", \"scripts/qa/suites/dev14_review.gd\"] else script[:-3]+\"_integrated.gd\"\n         assert new_script not in entries\n         replacements[old_mapping] = ('[remap]\\npath=\"res://'+new_script+'\"\\n').encode()\n         replacements[new_script] = (ROOT/script).read_bytes()\n@@ -81,7 +81,7 @@ def main(source, work):\n     files = {n:identity(candidate/n) for n in expected}\n     (candidate/'manifest.json').write_text(json.dumps(files,indent=2)+'\\n')\n     (work/'build.json').write_text(json.dumps({\n-        'source_commit':os.environ.get('GITHUB_SHA'),'method':'Integrated CPU occupancy and native empty canvas optimization; original resources retained',\n+        'source_commit':os.environ.get('GITHUB_SHA'),'method':'DEV15.10 CPU occupancy, native empty canvas and shared HUD; original resources retained',\n         'original_run':36043919958,'original_files':expected,'files':files,\n         'original_resource_count':len(before),'unchanged_resource_count':len(before)-len(replaced_remaps),\n         'replaced_remaps':replaced_remaps,'original_remap':old_remap,'added_source_scripts':added_scripts,"
+    },
+    {
+      "path": ".github/workflows/integrated-candidate.yml",
+      "sha": "aa1e6e6c428a99f7119ce814ea6b68bde7c1b529",
+      "changes": 14,
+      "patch": "@@ -1,10 +1,10 @@\n-name: Verify shared HUD production lifecycle\n+name: Verify final DEV15.10 candidate\n on:\n   push:\n-    branches: [codex/shared-ui-candidate-20260925]\n+    branches: [codex/canvas-cpu-dev15-10-20260925]\n     paths: ['scripts/**', '.github/integrated-candidate/**', '.github/workflows/integrated-candidate.yml']\n permissions: {contents: read, actions: read}\n-concurrency: {group: shared-ui-candidate, cancel-in-progress: true}\n+concurrency: {group: canvas-cpu-dev15-10, cancel-in-progress: true}\n jobs:\n   build:\n     runs-on: ubuntu-latest\n@@ -61,15 +61,9 @@ jobs:\n       - uses: actions/setup-node@v4\n         with: {node-version: '22'}\n       - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install webkit\n-      - name: Shared HUD real input and lifecycle\n-        env: {REVIEW_BROWSER: webkit}\n-        run: node .github/integrated-candidate/shared-ui.mjs \"$RUNNER_TEMP/candidate\" \"$RUNNER_TEMP/review\"\n       - name: Ordinary WebKit startup and save\n-        env: {EXPECTED_VERSION: 1.0.0-dev.15.9, CANDIDATE_SOURCE: '${{ github.sha }}'}\n+        env: {EXPECTED_VERSION: 1.0.0-dev.15.10, CANDIDATE_SOURCE: '${{ github.sha }}'}\n         run: node .github/integrated-candidate/startup.mjs \"$RUNNER_TEMP/candidate\" \"$RUNNER_TEMP/startup\"\n       - uses: actions/upload-artifact@v4\n         if: always()\n         with: {name: integrated-startup, path: '${{ runner.temp }}/startup', retention-days: 90}\n-      - uses: actions/upload-artifact@v4\n-        if: always()\n-        with: {name: integrated-webkit, path: '${{ runner.temp }}/review', retention-days: 90}"
+    },
+    {
+      "path": "scripts/dev/visual_capture_driver.gd",
+      "sha": "99903a631a497be6d21c881f92360d60a0a109a1",
+      "changes": 2,
+      "patch": "@@ -140,7 +140,7 @@ func run(main_node: Node) -> void :\n \n func _verify_build_contract() -> Dictionary:\n \tvar dev_feature: = OS.has_feature(\"ever_deeper_dev\")\n-\tvar expected_version: = \"1.0.0-dev.15.9\" if dev_feature else \"1.0.0\"\n+\tvar expected_version: = \"1.0.0-dev.15.10\" if dev_feature else \"1.0.0\"\n \tvar expected_flavor: = \"dev\" if dev_feature else \"production\"\n \tvar actual_version: = String(PremiumMenuScript.release_version())\n \tvar developer_menu: Variant = _main.get(\"developer_menu\")"
+    },
+    {
+      "path": "scripts/ui/premium_menu.gd",
+      "sha": "f10e3545019e278acd806a0be8faabe4b766590a",
+      "changes": 2,
+      "patch": "@@ -12,7 +12,7 @@ const MINT: = Color(\"a8e3bc\")\n const MUTED: = Color(\"789384\")\n const INK: = Color(\"07120d\")\n const IPHONE_LANDSCAPE_ASPECT: = 1.95\n-const DEV_RELEASE_VERSION: = \"1.0.0-dev.15.9\"\n+const DEV_RELEASE_VERSION: = \"1.0.0-dev.15.10\"\n \n \n static func release_version() -> String:"
+    }
+  ],
+  "scope": "Compared via GitHub API; ordinary code differs only in version constant. QA capture expected label also updated. Packaging appends that raw script; existing optimization source identical.",
+  "native_production_source_unchanged_from": "94f3302051b6f8662c3606a3695697094795b5c4",
+  "native_production_files_match": true,
+  "native_production_files": [
+    "scripts/player/native_worn_visual.gd",
+    "scripts/world/mossvein_mine.gd",
+    "scripts/lighting/cave_light_occluders.gd"
+  ],
+  "native_compare_changed_files": [
+    ".github/integrated-candidate/build.py",
+    ".github/integrated-candidate/shared-ui.mjs",
+    ".github/workflows/integrated-candidate.yml",
+    "scripts/companion/companion_interface.gd",
+    "scripts/dev/visual_capture_driver.gd",
+    "scripts/main.gd",
+    "scripts/qa/suites/skills_browser_review.gd",
+    "scripts/ui/premium_menu.gd"
+  ]
+}

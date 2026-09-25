@@ -1,0 +1,361 @@
+{
+  "reviewer": "independent lighttest_review agent",
+  "source_commit": "94f3302051b6f8662c3606a3695697094795b5c4",
+  "workflow_run": 36115344347,
+  "accepted": true,
+  "scope": "Native lifecycle and ordinary startup correctness only; no total FPS verdict",
+  "release_approved": false,
+  "native_checks": 184,
+  "native_exact_pairs": 26,
+  "native_png_files": 42,
+  "native_unique_images_inspected": 16,
+  "startup_images_inspected": 6,
+  "sha256_deduplication_groups": [
+    [
+      "integrated-native-passed/comet-0.png",
+      "integrated-native-passed/comet-1.png",
+      "integrated-native-passed/comet-2.png"
+    ],
+    [
+      "integrated-native-passed/crown-0.png",
+      "integrated-native-passed/crown-1.png",
+      "integrated-native-passed/crown-2.png"
+    ],
+    [
+      "integrated-native-passed/crusher-0.png",
+      "integrated-native-passed/crusher-1.png",
+      "integrated-native-passed/crusher-2.png"
+    ],
+    [
+      "integrated-native-passed/deepheart-0.png",
+      "integrated-native-passed/deepheart-1.png",
+      "integrated-native-passed/deepheart-2.png"
+    ],
+    [
+      "integrated-native-passed/depth-0.png",
+      "integrated-native-passed/depth-1.png",
+      "integrated-native-passed/depth-2.png"
+    ],
+    [
+      "integrated-native-passed/drill.png"
+    ],
+    [
+      "integrated-native-passed/ember-0.png",
+      "integrated-native-passed/ember-1.png",
+      "integrated-native-passed/ember-2.png"
+    ],
+    [
+      "integrated-native-passed/hub-0.png",
+      "integrated-native-passed/hub-1.png",
+      "integrated-native-passed/hub-2.png"
+    ],
+    [
+      "integrated-native-passed/iron-0.png",
+      "integrated-native-passed/iron-1.png",
+      "integrated-native-passed/iron-2.png"
+    ],
+    [
+      "integrated-native-passed/moonglass-0.png",
+      "integrated-native-passed/moonglass-1.png",
+      "integrated-native-passed/moonglass-2.png"
+    ],
+    [
+      "integrated-native-passed/pause.png"
+    ],
+    [
+      "integrated-native-passed/resumed.png"
+    ],
+    [
+      "integrated-native-passed/runed-0.png",
+      "integrated-native-passed/runed-1.png",
+      "integrated-native-passed/runed-2.png"
+    ],
+    [
+      "integrated-native-passed/surface-0.png",
+      "integrated-native-passed/surface-1.png",
+      "integrated-native-passed/surface-2.png"
+    ],
+    [
+      "integrated-native-passed/worn-0.png",
+      "integrated-native-passed/worn-1.png",
+      "integrated-native-passed/worn-2.png"
+    ],
+    [
+      "integrated-native-passed/worn-reentry-0.png",
+      "integrated-native-passed/worn-reentry-1.png",
+      "integrated-native-passed/worn-reentry-2.png"
+    ],
+    [
+      "integrated-startup-passed/01-ordinary-menu.png"
+    ],
+    [
+      "integrated-startup-passed/02-after-new-game.png"
+    ],
+    [
+      "integrated-startup-passed/03-after-escape.png"
+    ],
+    [
+      "integrated-startup-passed/04-saved-run-menu.png"
+    ],
+    [
+      "integrated-startup-passed/05-new-game-confirmation.png"
+    ],
+    [
+      "integrated-startup-passed/06-confirmed-new-game.png"
+    ]
+  ],
+  "inventories_checked": 61,
+  "findings": [
+    "Native creation automatically uses three sync pairs per rendered frame before QA toggles for all eight tools.",
+    "All eight in-place gear swaps retain generation 8 and increase update counters; automatic three-pair state persists.",
+    "Drill exit/reentry, surface/depth/hub/Deepheart, pause/resume complete; a single active empty 400x400 native viewport remains at update mode 4 in every recorded native inventory.",
+    "All 26 full-image reference/candidate/restored comparisons are exact; inspected every unique PNG content via hash deduplication. Hero, companion, terrain and HUD remain visible.",
+    "Ordinary no-fixture startup actual screenshots show initial menu, gameplay, paused menu, retained save after reload, replacement confirmation and gameplay after confirmation. completed_observation=true, two expected navigations, no recorded runtime errors/crash, all 51 context samples lost=false."
+  ],
+  "limitations": [
+    "Only reviewed 94f3302 package; later 981dfb6 QA remap adjustment requires its own successful dependent fixture run.",
+    "Ordinary startup is an observation script, not a report with a passed field; browser RAF counts are not engine FPS.",
+    "No physical phone verification, total performance gain or UI consolidation acceptance.",
+    "Native toggled parity isolates empty 2D canvas state; it does not independently compare whole occupancy candidate to original package."
+  ],
+  "files": {
+    "index.html": {
+      "size": 13155,
+      "sha256": "d9bbd4f09ff5bfc1bd1d2afb64ea5f9d1cfde8a088a0971103fb1cc36dba954e"
+    },
+    "index.js": {
+      "size": 279815,
+      "sha256": "33c94cb3175f3333b82e2a3be5e8e86f77986f0aa2042b1631f6367a4e5bb6ba"
+    },
+    "index.pck": {
+      "size": 260335160,
+      "sha256": "13f9f9048e0cb0431653d0ae1a67064aa50ef10528903eede0ffb9ce4dc9577f"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 2973,
+      "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+    }
+  },
+  "evidence_files": [
+    {
+      "path": "integrated-native-passed/comet-0.png",
+      "sha256": "ba5488868f6547e9607fc239bce3d38c63dab4d63b38ad84421268557e9659fc"
+    },
+    {
+      "path": "integrated-native-passed/comet-1.png",
+      "sha256": "ba5488868f6547e9607fc239bce3d38c63dab4d63b38ad84421268557e9659fc"
+    },
+    {
+      "path": "integrated-native-passed/comet-2.png",
+      "sha256": "ba5488868f6547e9607fc239bce3d38c63dab4d63b38ad84421268557e9659fc"
+    },
+    {
+      "path": "integrated-native-passed/crown-0.png",
+      "sha256": "8eb74d53dc5188ef1c30fd354e36f5a7a236f0277bfd797eb77321de909e1951"
+    },
+    {
+      "path": "integrated-native-passed/crown-1.png",
+      "sha256": "8eb74d53dc5188ef1c30fd354e36f5a7a236f0277bfd797eb77321de909e1951"
+    },
+    {
+      "path": "integrated-native-passed/crown-2.png",
+      "sha256": "8eb74d53dc5188ef1c30fd354e36f5a7a236f0277bfd797eb77321de909e1951"
+    },
+    {
+      "path": "integrated-native-passed/crusher-0.png",
+      "sha256": "b9a641b8dcc83231669babdbf6781d1d09d7412a2d01a87fd214d5aa50237bd2"
+    },
+    {
+      "path": "integrated-native-passed/crusher-1.png",
+      "sha256": "b9a641b8dcc83231669babdbf6781d1d09d7412a2d01a87fd214d5aa50237bd2"
+    },
+    {
+      "path": "integrated-native-passed/crusher-2.png",
+      "sha256": "b9a641b8dcc83231669babdbf6781d1d09d7412a2d01a87fd214d5aa50237bd2"
+    },
+    {
+      "path": "integrated-native-passed/deepheart-0.png",
+      "sha256": "2014dac6c84dd0e2c563b4853b7a9759731cda7e24c27eab3d1976832511d10c"
+    },
+    {
+      "path": "integrated-native-passed/deepheart-1.png",
+      "sha256": "2014dac6c84dd0e2c563b4853b7a9759731cda7e24c27eab3d1976832511d10c"
+    },
+    {
+      "path": "integrated-native-passed/deepheart-2.png",
+      "sha256": "2014dac6c84dd0e2c563b4853b7a9759731cda7e24c27eab3d1976832511d10c"
+    },
+    {
+      "path": "integrated-native-passed/depth-0.png",
+      "sha256": "85168371a296c0e068ebd3c7c2220b1f4c6172a3c57d8a29eff3379c08f5614c"
+    },
+    {
+      "path": "integrated-native-passed/depth-1.png",
+      "sha256": "85168371a296c0e068ebd3c7c2220b1f4c6172a3c57d8a29eff3379c08f5614c"
+    },
+    {
+      "path": "integrated-native-passed/depth-2.png",
+      "sha256": "85168371a296c0e068ebd3c7c2220b1f4c6172a3c57d8a29eff3379c08f5614c"
+    },
+    {
+      "path": "integrated-native-passed/drill.png",
+      "sha256": "9335ef5fef87c4ccf139613507a0d2851d306517afd78352556f9a1a60c11f64"
+    },
+    {
+      "path": "integrated-native-passed/ember-0.png",
+      "sha256": "1b32c50dceb7fe4f421c9007f759a76ca34fd8da5a069fc173f84c68f8622ef6"
+    },
+    {
+      "path": "integrated-native-passed/ember-1.png",
+      "sha256": "1b32c50dceb7fe4f421c9007f759a76ca34fd8da5a069fc173f84c68f8622ef6"
+    },
+    {
+      "path": "integrated-native-passed/ember-2.png",
+      "sha256": "1b32c50dceb7fe4f421c9007f759a76ca34fd8da5a069fc173f84c68f8622ef6"
+    },
+    {
+      "path": "integrated-native-passed/hub-0.png",
+      "sha256": "603641b1fc03faf6d26c5d149112156b6c459cd37600e8200dac832772c33ef9"
+    },
+    {
+      "path": "integrated-native-passed/hub-1.png",
+      "sha256": "603641b1fc03faf6d26c5d149112156b6c459cd37600e8200dac832772c33ef9"
+    },
+    {
+      "path": "integrated-native-passed/hub-2.png",
+      "sha256": "603641b1fc03faf6d26c5d149112156b6c459cd37600e8200dac832772c33ef9"
+    },
+    {
+      "path": "integrated-native-passed/iron-0.png",
+      "sha256": "fadca468041e6511da03c270cae04c9fd90decab56762c7c14c0e11c45ee97f3"
+    },
+    {
+      "path": "integrated-native-passed/iron-1.png",
+      "sha256": "fadca468041e6511da03c270cae04c9fd90decab56762c7c14c0e11c45ee97f3"
+    },
+    {
+      "path": "integrated-native-passed/iron-2.png",
+      "sha256": "fadca468041e6511da03c270cae04c9fd90decab56762c7c14c0e11c45ee97f3"
+    },
+    {
+      "path": "integrated-native-passed/moonglass-0.png",
+      "sha256": "95bb14f0b1dfe4518cc484330e91dd509a1288f93f0e581e4405dc743e5d121c"
+    },
+    {
+      "path": "integrated-native-passed/moonglass-1.png",
+      "sha256": "95bb14f0b1dfe4518cc484330e91dd509a1288f93f0e581e4405dc743e5d121c"
+    },
+    {
+      "path": "integrated-native-passed/moonglass-2.png",
+      "sha256": "95bb14f0b1dfe4518cc484330e91dd509a1288f93f0e581e4405dc743e5d121c"
+    },
+    {
+      "path": "integrated-native-passed/pause.png",
+      "sha256": "133754315ef3fd0506dd20822f9042d665f0e0d05f3ea9d879740a7b432adde6"
+    },
+    {
+      "path": "integrated-native-passed/resumed.png",
+      "sha256": "6cb55c288635285524172b7417c33d7df97d40106663ebaafd9149ffc6eb19f4"
+    },
+    {
+      "path": "integrated-native-passed/runed-0.png",
+      "sha256": "2a8d0ea7dc57d9f15277b01c5741f910291db1d99b3fa8222fff3ebb056a265e"
+    },
+    {
+      "path": "integrated-native-passed/runed-1.png",
+      "sha256": "2a8d0ea7dc57d9f15277b01c5741f910291db1d99b3fa8222fff3ebb056a265e"
+    },
+    {
+      "path": "integrated-native-passed/runed-2.png",
+      "sha256": "2a8d0ea7dc57d9f15277b01c5741f910291db1d99b3fa8222fff3ebb056a265e"
+    },
+    {
+      "path": "integrated-native-passed/surface-0.png",
+      "sha256": "58d9c3a74f0c278d2109b595a54e980aa15426d38149935de6302eb7e4035d5d"
+    },
+    {
+      "path": "integrated-native-passed/surface-1.png",
+      "sha256": "58d9c3a74f0c278d2109b595a54e980aa15426d38149935de6302eb7e4035d5d"
+    },
+    {
+      "path": "integrated-native-passed/surface-2.png",
+      "sha256": "58d9c3a74f0c278d2109b595a54e980aa15426d38149935de6302eb7e4035d5d"
+    },
+    {
+      "path": "integrated-native-passed/worn-0.png",
+      "sha256": "f5d375dec36f0f593be0b04bab3a8f2357cf6bd7794532ebc60b2defdce444cf"
+    },
+    {
+      "path": "integrated-native-passed/worn-1.png",
+      "sha256": "f5d375dec36f0f593be0b04bab3a8f2357cf6bd7794532ebc60b2defdce444cf"
+    },
+    {
+      "path": "integrated-native-passed/worn-2.png",
+      "sha256": "f5d375dec36f0f593be0b04bab3a8f2357cf6bd7794532ebc60b2defdce444cf"
+    },
+    {
+      "path": "integrated-native-passed/worn-reentry-0.png",
+      "sha256": "31ff903e2559e94399dd0c23866b48d87b03f9ac8e4eddd3b0c76aef0e21e684"
+    },
+    {
+      "path": "integrated-native-passed/worn-reentry-1.png",
+      "sha256": "31ff903e2559e94399dd0c23866b48d87b03f9ac8e4eddd3b0c76aef0e21e684"
+    },
+    {
+      "path": "integrated-native-passed/worn-reentry-2.png",
+      "sha256": "31ff903e2559e94399dd0c23866b48d87b03f9ac8e4eddd3b0c76aef0e21e684"
+    },
+    {
+      "path": "integrated-native-passed/report.json",
+      "sha256": "244e9c9d4ef40f49b9beb007435530f6520ab955028310dfa1b9585d1174c289"
+    },
+    {
+      "path": "integrated-startup-passed/01-ordinary-menu.png",
+      "sha256": "2800ed5fb6f3b413fedf4b54e1be69f2acc445cf5170a4f72ec12a50eea8ecb1"
+    },
+    {
+      "path": "integrated-startup-passed/02-after-new-game.png",
+      "sha256": "4df5617f9e12a86d93cdf6eb9ef8af62700126b516be8261048ac57d2062e2c8"
+    },
+    {
+      "path": "integrated-startup-passed/03-after-escape.png",
+      "sha256": "acc085d8292cb001873dfa0b44a6587edb75b1d7d30a3d3f7ae7234e1f37de44"
+    },
+    {
+      "path": "integrated-startup-passed/04-saved-run-menu.png",
+      "sha256": "19c49770bac3f6c61791eef750964c9f2a985c53fa2b660072c079e63aae6147"
+    },
+    {
+      "path": "integrated-startup-passed/05-new-game-confirmation.png",
+      "sha256": "6c054a1c20d0983813146f33002bd75b9fc1bd0da4441ddf258b8e08dc9f2952"
+    },
+    {
+      "path": "integrated-startup-passed/06-confirmed-new-game.png",
+      "sha256": "f5fa95c88a2a51722a6ab22758cf9f7938ecbe3202763caa9c847325cf8f822b"
+    },
+    {
+      "path": "integrated-startup-passed/report.json",
+      "sha256": "27f8cdff88ab01bc3a94c6975c19b89b97012da329835850c3f8a54b5a72c01a"
+    }
+  ]
+}
