@@ -33,9 +33,30 @@ func _gear(gear: String, outfit: String = "miner") -> void:
 	RunState.end_state_batch()
 	main._active_player_node()._update_visual(false)
 
+var canvas_observers: Array[Node] = []
+
 func _command(data: Dictionary) -> void:
 	command_id = int(data.id)
 	var kind: String = data.kind
+	if kind in ["canvas_reference", "canvas_candidate", "canvas_resume"]:
+		var owner: Node = main._active_player_node().visual._native_worn
+		if kind == "canvas_reference":
+			Engine.time_scale = 0.0
+			main.get_tree().paused = true
+			for node in main.get_tree().root.find_children("*", "", true, false):
+				if node.can_process() and node.is_processing():
+					canvas_observers.append(node)
+					node.set_process(false)
+			RenderingServer.viewport_set_disable_2d(owner.rig.viewport.get_viewport_rid(), false)
+		elif kind == "canvas_candidate": owner._refresh_canvas_pass()
+		else:
+			Engine.time_scale = 1.0
+			for node in canvas_observers:
+				if is_instance_valid(node): node.set_process(true)
+			canvas_observers.clear()
+			main.get_tree().paused = false
+		fixture = kind
+		return
 	main._cancel_mine_hold()
 	main._on_joystick_movement(Vector2.ZERO)
 	Input.action_release("mine")
@@ -160,6 +181,10 @@ func _frame() -> void:
 	var player: Node2D = main._active_player_node()
 	var packet: Dictionary = player.animation_packet()
 	var native: Dictionary = player.visual.native_worn_snapshot()
+	var native_canvas: Dictionary = {}
+	if bool(native.get("active", false)):
+		var viewport: SubViewport = player.visual._native_worn.rig.viewport
+		native_canvas = {"items":viewport.find_children("*", "CanvasItem", true, false).size(), "size":viewport.size, "update_mode":viewport.render_target_update_mode}
 	var active_rigs: int = 0
 	for world in [main.surface_world,main.mine_world,main.depth_world,main.hub_world,main.deepheart_world,main.endless_world]:
 		if bool(world.player.visual.native_worn_snapshot().active): active_rigs += 1
@@ -171,7 +196,7 @@ func _frame() -> void:
 		"health":_health(),"position":[player.global_position.x,player.global_position.y],
 		"mining":packet.mining,"progress":packet.progress,"hit_phase":packet.hit_phase,"cycle":packet.cycle_duration,
 		"target_valid":packet.target_valid,"swing":packet.swing_serial,"impact":packet.impact_serial,"impact_target_valid":packet.impact_target_valid,
-		"gear":player.visual.active_gear,"pickaxe_level":int(RunState.pickaxe_level),"drill_level":int(RunState.drill_level),"world_active":bool(player.get_parent().active),"native":native,"active_rigs":active_rigs,
+		"gear":player.visual.active_gear,"pickaxe_level":int(RunState.pickaxe_level),"drill_level":int(RunState.drill_level),"world_active":bool(player.get_parent().active),"native":native,"native_canvas":native_canvas,"active_rigs":active_rigs,
 		"mine_button":[point.x,point.y],"viewport":[main.get_viewport().get_visible_rect().size.x,main.get_viewport().get_visible_rect().size.y]}
 	JavaScriptBridge.eval("window.DEV14_STATE="+JSON.stringify(state),true)
 

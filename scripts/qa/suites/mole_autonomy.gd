@@ -19,9 +19,9 @@ func fixture(skills: Dictionary, direction: Vector2i = Vector2i.RIGHT) -> void:
 	# Isolated D1 room uses real collision, terrain authority, drops and impact.
 	world.mine.barriers=[]
 	for y in range(CENTER.y-7,CENTER.y+8):
-		for x in range(CENTER.x-7,CENTER.x+8): world.blocks.erase(Vector2i(x,y))
+		for x in range(CENTER.x-7,CENTER.x+8): world._erase_block(Vector2i(x,y))
 	world.drops.clear()
-	world.blocks[CENTER]=world._make_block("stone",20,0,"terrain")
+	world._set_block(CENTER, world._make_block("stone",20,0,"terrain"))
 	world._rebuild_role_counts()
 	world.player.global_position=world._cell_center(CENTER-direction)
 	world.player.set_facing(Vector2(direction))
@@ -94,16 +94,16 @@ func run() -> void:
 		step(0.6)
 		check(not world.blocks.has(CENTER) and mole.dug_total==1,"Earthshaker works without commands "+str(direction))
 		check(mole.shake_cooldown>6.0,"Earthshaker really recharges "+str(direction))
-		world.blocks[CENTER]=world._make_block("stone",20,0,"terrain")
+		world._set_block(CENTER, world._make_block("stone",20,0,"terrain"))
 		step(2.0)
 		check(world.blocks.has(CENTER),"No repeated hit before recharge "+str(direction))
 	fixture({"shake":1,"teamwork":1})
 	world.external_mine_held=true
 	step(1.0)
-	world.blocks[CENTER]=world._make_block("stone",20,0,"terrain")
+	world._set_block(CENTER, world._make_block("stone",20,0,"terrain"))
 	step(1.0)
 	check(not world.blocks.has(CENTER) and mole.dug_total==2 and mole.shake_cooldown>0.0,"Teamwork fills the gap between Earthshaker uses")
-	world.blocks[CENTER]=world._make_block("stone",20,0,"terrain")
+	world._set_block(CENTER, world._make_block("stone",20,0,"terrain"))
 	step(0.6)
 	check(world.blocks.has(CENTER),"Teamwork also respects its own recharge")
 	for cancellation in ["release","turn","leave"]:
@@ -131,7 +131,7 @@ func run() -> void:
 	check(world.blocks.has(CENTER),"Unlearned skills never activate")
 	for kind in ["bedrock","gate","tool"]:
 		fixture({"shake":1,"teamwork":1})
-		world.blocks[CENTER]=world._make_block("bedrock" if kind=="bedrock" else "stone",20,0,"outer_rubble" if kind=="gate" else "terrain")
+		world._set_block(CENTER, world._make_block("bedrock" if kind=="bedrock" else "stone",20,0,"outer_rubble" if kind=="gate" else "terrain"))
 		if kind=="tool": world.blocks[CENTER].requires_tool=RunState.pickaxe_level+1
 		world.external_mine_held=true
 		step(2.0)
@@ -143,7 +143,7 @@ func run() -> void:
 	step(2.0)
 	check(world.blocks.has(CENTER) and mole.mode=="hold","Explicit command gets a brief uninterrupted turn")
 	fixture({"fetch":1,"big_paws":1,"trailrunner":1,"long_beam":1})
-	world.blocks.erase(CENTER)
+	world._erase_block(CENTER)
 	var initial_ore: int=int(RunState.cargo.copper)
 	world._spawn_drop(CENTER+Vector2i(2,0),"copper",3)
 	world.drops[-1].position=world._cell_center(CENTER+Vector2i(2,0))
@@ -159,7 +159,7 @@ func run() -> void:
 	step(2.0)
 	check(mole.mode=="follow" and int(RunState.cargo.copper)==initial_ore+3,"Fetching stays near the player")
 	fixture({"ore_nose":1})
-	world.blocks[CENTER]=world._make_block("copper",20,0,"resource")
+	world._set_block(CENTER, world._make_block("copper",20,0,"resource"))
 	mole.global_position-=Vector2(96,0)
 	mole.sniff_clock=0.0
 	step(0.1)
@@ -182,7 +182,7 @@ func run() -> void:
 	check(mole.feedback=="Your deliberate command","Manual feedback remains immediate")
 	fixture({})
 	for offset in [Vector2i.LEFT,Vector2i.RIGHT,Vector2i.UP,Vector2i.DOWN]:
-		world.blocks[CENTER+Vector2i(4,0)+offset]=world._make_block("stone",20,0,"terrain")
+		world._set_block(CENTER+Vector2i(4,0)+offset, world._make_block("stone",20,0,"terrain"))
 	world.player.global_position=world._cell_center(CENTER+Vector2i(4,0))
 	var searches_before: int=mole.path_searches
 	step(3.0)
@@ -198,3 +198,4 @@ func run() -> void:
 	print("MOLE_AUTONOMY_RESULT "+JSON.stringify({"checks":checks,"failures":failures}))
 	if failures.is_empty(): print("EVER_DEEPER_MOLE_AUTONOMY_OK checks=%d" % checks)
 	main.get_tree().quit(0 if failures.is_empty() else 4)
+

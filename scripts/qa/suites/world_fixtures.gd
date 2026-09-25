@@ -11,7 +11,7 @@ func _start_qa_mine() -> void :
 	if session.has_any_arg(OS.get_cmdline_user_args(), ["--qa-camera", "--qa-performance"]):
 		for col in range(4, 40):
 			for row in range(11, 15):
-				main.mine_world.blocks.erase(Vector2i(col, row))
+				main.mine_world._erase_block(Vector2i(col, row))
 		main.mine_world.player.global_position = Vector2(300, 624)
 		main.mine_world.player.movement_speed = 80.0
 		main.mine_world.player.set_facing(Vector2.RIGHT)
@@ -387,3 +387,4 @@ func _start_qa_deepheart() -> void :
 	RunState.set_location("deepheart", main.deepheart_world.player.global_position, 1)
 	DisplayServer.window_set_title("Ever Deeper · Deepheart Finale QA")
 	main._set_status("Four worlds are ready · awaken one resonance at a time")
+

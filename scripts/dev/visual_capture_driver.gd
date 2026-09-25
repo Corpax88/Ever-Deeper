@@ -764,6 +764,9 @@ func _prepare_d1_resource_readability(mine_id: String, resource_id: String) -> b
 	if stage_left < 1 or stage_right >= cols - 1 or stage_top < 1 or stage_bottom >= rows - 1:
 		return false
 
+	if not GameData.data.ROCK_TYPES.has(resource_id):
+		return false
+
 	var blocks: = Dictionary(world.get("blocks"))
 	var mineable_edge_voids: = Dictionary(world.get("mineable_edge_void_cells"))
 	var terrain_hp: = int(GameData.data.MINE_TERRAIN_HP)
@@ -783,8 +786,6 @@ func _prepare_d1_resource_readability(mine_id: String, resource_id: String) -> b
 			)
 			mineable_edge_voids.erase(terrain_cell)
 
-	if not GameData.data.ROCK_TYPES.has(resource_id):
-		return false
 	var resource_data: Dictionary = Dictionary(GameData.data.ROCK_TYPES[resource_id])
 	var resource_block: = Dictionary(
 		world.call(
@@ -1563,7 +1564,7 @@ func _run_hero_motion() -> void:
 		var player: Node = world.get("player")
 		var origin_cell: = Vector2i(12, 13)
 		for x in range(7, 18):
-			for y in range(8, 19): world.blocks.erase(Vector2i(x, y))
+			for y in range(8, 19): world._erase_block(Vector2i(x, y))
 		var origin: Vector2 = world.call("_cell_center", origin_cell)
 		world.call("restore_position", origin)
 		player.control_enabled = true
@@ -1583,7 +1584,7 @@ func _run_hero_motion() -> void:
 			var rock: Dictionary = world.blocks[target]
 			rock.hp = 1000000
 			rock.max_hp = 1000000
-			world.blocks[target] = rock
+			world._set_block(target, rock)
 			player.set_facing(Vector2(direction))
 			world.target_dirty = true
 			world.call("_request_redraw")
@@ -1595,7 +1596,7 @@ func _run_hero_motion() -> void:
 				return
 			print("EVER_DEEPER_HERO_MOTION_DAMAGE gear=%s direction=%s damage=%d" % [gear, str(direction), 1000000 - int(world.blocks[target].hp)])
 			await get_tree().create_timer(0.25).timeout
-			world.blocks.erase(target)
+			world._erase_block(target)
 			world.call("_request_redraw")
 	print("EVER_DEEPER_VISUAL_CAPTURE_COMPLETE count=1")
 	get_tree().quit(0)
@@ -1932,4 +1933,5 @@ func _prepare_light_state(state: Dictionary) -> bool:
 		_main.premium_menu.modulate.a = 1.0
 		_main.premium_menu.open_menu(true, "Base Hub", true, false)
 	return true
+
 

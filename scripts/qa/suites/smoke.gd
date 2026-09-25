@@ -222,7 +222,7 @@ func _run_smoke_test() -> void :
 		assert (is_equal_approx(float(anchor_value), float(grounding.walk)))
 	var animation_target= Vector2i(6, 13)
 	var previous_animation_block: Variant = main.mine_world.blocks.get(animation_target)
-	main.mine_world.blocks[animation_target] = main.mine_world._make_block("stone", 100, 0, "terrain")
+	main.mine_world._set_block(animation_target, main.mine_world._make_block("stone", 100, 0, "terrain"))
 	main.mine_world.current_target = animation_target
 	main.mine_world.set_mine_held(true)
 	main.mine_world.swing_active = false
@@ -237,38 +237,38 @@ func _run_smoke_test() -> void :
 	main.mine_world._update_mining(0.0)
 	assert ( not main.mine_world.player.mining_visual_active)
 	if previous_animation_block == null:
-		main.mine_world.blocks.erase(animation_target)
+		main.mine_world._erase_block(animation_target)
 	else:
-		main.mine_world.blocks[animation_target] = previous_animation_block
+		main.mine_world._set_block(animation_target, previous_animation_block)
 	for target_row in range(10, 15):
 		for target_col in range(7, 13):
-			main.mine_world.blocks.erase(Vector2i(target_col, target_row))
+			main.mine_world._erase_block(Vector2i(target_col, target_row))
 	var bedrock_cell= Vector2i(9, 12)
 	var blocked_cell= Vector2i(10, 12)
-	main.mine_world.blocks[bedrock_cell] = main.mine_world._make_block("bedrock", 1, 99, "bedrock")
-	main.mine_world.blocks[blocked_cell] = main.mine_world._make_block("stone", 8, 0, "terrain")
+	main.mine_world._set_block(bedrock_cell, main.mine_world._make_block("bedrock", 1, 99, "bedrock"))
+	main.mine_world._set_block(blocked_cell, main.mine_world._make_block("stone", 8, 0, "terrain"))
 	main.mine_world.player.global_position = Vector2(400, 600)
 	main.mine_world.player.set_facing(Vector2.RIGHT)
 	assert (main.mine_world._find_mine_target() == Vector2i(-1, -1), "Bedrock must not be targetable or allow mining through it")
-	main.mine_world.blocks[bedrock_cell] = main.mine_world._make_block("stone", 8, 0, "terrain")
+	main.mine_world._set_block(bedrock_cell, main.mine_world._make_block("stone", 8, 0, "terrain"))
 	assert (main.mine_world._find_mine_target() == bedrock_cell, "A mineable rock in the same position must remain targetable")
 	for target_row in range(10, 15):
 		for target_col in range(7, 13):
-			main.mine_world.blocks.erase(Vector2i(target_col, target_row))
+			main.mine_world._erase_block(Vector2i(target_col, target_row))
 	var corner_front_cell= Vector2i(9, 13)
 	var corner_back_cell= Vector2i(9, 14)
-	main.mine_world.blocks[corner_front_cell] = main.mine_world._make_block("stone", 8, 0, "terrain")
-	main.mine_world.blocks[corner_back_cell] = main.mine_world._make_block("stone", 8, 0, "terrain")
+	main.mine_world._set_block(corner_front_cell, main.mine_world._make_block("stone", 8, 0, "terrain"))
+	main.mine_world._set_block(corner_back_cell, main.mine_world._make_block("stone", 8, 0, "terrain"))
 	main.mine_world.player.global_position = Vector2(432, 602)
 	main.mine_world.player.set_facing(Vector2.DOWN)
 	assert (main.mine_world._find_mine_target() == corner_front_cell, "Mining at a tight corner must target the adjacent block before the block behind it")
 	for target_row in range(10, 15):
 		for target_col in range(7, 13):
-			main.mine_world.blocks.erase(Vector2i(target_col, target_row))
+			main.mine_world._erase_block(Vector2i(target_col, target_row))
 	var lower_left_front_cell= Vector2i(8, 13)
 	var lower_left_back_cell= Vector2i(8, 14)
-	main.mine_world.blocks[lower_left_front_cell] = main.mine_world._make_block("stone", 8, 0, "terrain")
-	main.mine_world.blocks[lower_left_back_cell] = main.mine_world._make_block("stone", 8, 0, "terrain")
+	main.mine_world._set_block(lower_left_front_cell, main.mine_world._make_block("stone", 8, 0, "terrain"))
+	main.mine_world._set_block(lower_left_back_cell, main.mine_world._make_block("stone", 8, 0, "terrain"))
 	main.mine_world.player.global_position = Vector2(456, 602)
 	main.mine_world.player.set_facing(Vector2.DOWN)
 	assert (main.mine_world._find_mine_target() == lower_left_front_cell, "Downward mining at a lower-left corner must select the rock beside the player's feet")
@@ -289,7 +289,7 @@ func _run_smoke_test() -> void :
 		var barrier_cell= Vector2i(26, barrier_row)
 		var barrier_rock: Dictionary = Dictionary(main.mine_world.blocks[barrier_cell])
 		barrier_rock.hp = 1
-		main.mine_world.blocks[barrier_cell] = barrier_rock
+		main.mine_world._set_block(barrier_cell, barrier_rock)
 		main.mine_world.current_target = barrier_cell
 		main.mine_world._mine_once()
 	assert (RunState.is_mine_barrier_cleared("iron_seam"))
@@ -318,7 +318,7 @@ func _run_smoke_test() -> void :
 	var terrain_no_respawn_index: int = (
 		terrain_no_respawn_cell.y * int(main.mine_world.cols) + terrain_no_respawn_cell.x
 	)
-	main.mine_world.blocks[terrain_no_respawn_cell] = main.mine_world._make_block("stone", 1, 0, "terrain")
+	main.mine_world._set_block(terrain_no_respawn_cell, main.mine_world._make_block("stone", 1, 0, "terrain"))
 	main.mine_world.respawns.clear()
 	main.mine_world.current_target = terrain_no_respawn_cell
 	main.mine_world._mine_once()
@@ -345,7 +345,7 @@ func _run_smoke_test() -> void :
 	var resource_block: Dictionary = Dictionary(main.mine_world.blocks[respawn_cell])
 	assert (String(resource_block.role) == "resource")
 	resource_block.hp = 1
-	main.mine_world.blocks[respawn_cell] = resource_block
+	main.mine_world._set_block(respawn_cell, resource_block)
 	main.mine_world.current_target = respawn_cell
 	main.mine_world._mine_once()
 	assert ( not main.mine_world.blocks.has(respawn_cell) and main.mine_world.respawns.size() == 1)
@@ -384,7 +384,7 @@ func _run_smoke_test() -> void :
 	assert (main.mine_world.blocks.has(shaft_boundary_cell))
 	var shaft_boundary_block: Dictionary = Dictionary(main.mine_world.blocks[shaft_boundary_cell])
 	shaft_boundary_block.hp = 1
-	main.mine_world.blocks[shaft_boundary_cell] = shaft_boundary_block
+	main.mine_world._set_block(shaft_boundary_cell, shaft_boundary_block)
 	main.mine_world.current_target = shaft_boundary_cell
 	main.mine_world._mine_once()
 	assert (RunState.is_depth_entrance_discovered("mossMine"))
@@ -413,7 +413,7 @@ func _run_smoke_test() -> void :
 		for x_offset in range(-2, 3):
 			var crusher_cell= crusher_test_center + Vector2i(x_offset, y_offset)
 			crusher_previous_blocks[crusher_cell] = main.mine_world.blocks.get(crusher_cell)
-			main.mine_world.blocks[crusher_cell] = main.mine_world._make_block("stone", 999, 0, "terrain")
+			main.mine_world._set_block(crusher_cell, main.mine_world._make_block("stone", 999, 0, "terrain"))
 	main.mine_world._apply_crusher_shockwave(crusher_test_center, crusher_tool)
 	var crusher_previous_impacts: Array[Dictionary] = main.mine_world.impacts.duplicate(true)
 	var crusher_previous_drop_count: int = main.mine_world.drops.size()
@@ -444,9 +444,9 @@ func _run_smoke_test() -> void :
 		var crusher_cell: Vector2i = Vector2i(crusher_cell_value)
 		var previous_crusher_block: Variant = crusher_previous_blocks[crusher_cell]
 		if previous_crusher_block == null:
-			main.mine_world.blocks.erase(crusher_cell)
+			main.mine_world._erase_block(crusher_cell)
 		else:
-			main.mine_world.blocks[crusher_cell] = previous_crusher_block
+			main.mine_world._set_block(crusher_cell, previous_crusher_block)
 	RunState.set_starforge_variant("swift")
 	assert (is_equal_approx(main.mine_world._tool_strike_progress(), 0.28))
 	assert (float(main.mine_world._current_tool().cooldown) < float(RunState.current_pickaxe().cooldown))
@@ -526,3 +526,4 @@ func _run_smoke_test() -> void :
 	assert (InputMap.has_action("interact") and not InputMap.action_get_events("interact").is_empty(), "Keyboard interaction must remain bound for E/F")
 	print("EVER_DEEPER_MOSS_ROOTWOUND_LOOP_OK source=", GameData.source_label(), " moss_blocks=", snapshot.blocks, " moon_blocks=", moon_snapshot.blocks, " portal=1752,2808 depth=Rootwound drill=Burrower persistence=true explicit_transitions=true")
 	main.get_tree().quit(0)
+

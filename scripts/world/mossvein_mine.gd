@@ -153,7 +153,13 @@ var route_marker_texture: Texture2D
 var world_size: = Vector2.ZERO
 var cols: = 0
 var rows: = 0
-var blocks: Dictionary = {}
+# Membership mutations must use _set_block/_erase_block/_clear_blocks.
+# Replacing a fixture dictionary also invalidates, even if its size is unchanged.
+var _block_occupancy_revision: int = 0
+var blocks: Dictionary = {}:
+	set(value):
+		blocks = value
+		_block_occupancy_revision += 1
 var mineable_edge_void_cells: Dictionary = {}
 var resource_guide_cells: Array[Vector2i] = []
 var drops: Array[Dictionary] = []
@@ -413,7 +419,7 @@ func _process(delta: float) -> void :
 
 
 func _build_original_mossvein() -> void :
-	blocks.clear()
+	_clear_blocks()
 	mineable_edge_void_cells.clear()
 	depth_entrance_cells.clear()
 	depth_entrance_boundary.clear()
@@ -424,7 +430,7 @@ func _build_original_mossvein() -> void :
 	var terrain_hp: = int(GameData.data.MINE_TERRAIN_HP)
 	for row in rows:
 		for col in cols:
-			blocks[Vector2i(col, row)] = _make_block("stone", terrain_hp, 0, "terrain")
+			_set_block(Vector2i(col, row), _make_block("stone", terrain_hp, 0, "terrain"))
 
 	_clear_circle(Vector2(float(mine.entrance.x) + 54.0, float(mine.entrance.y)), 142.0)
 	_prepare_depth_one_discoveries()
@@ -482,7 +488,7 @@ func _build_original_mossvein() -> void :
 		for index_value in RunState.dug_cells(mine_id, 1):
 			var index: = int(index_value)
 			var dug_cell: = Vector2i(index % cols, floori(float(index) / float(cols)))
-			blocks.erase(dug_cell)
+			_erase_block(dug_cell)
 			mineable_edge_void_cells[dug_cell] = true
 			_restore_discovery_from_dug_index(index)
 
@@ -528,7 +534,7 @@ func _clear_ellipse_cells(center: Vector2, radii: Vector2) -> Array[Vector2i]:
 			if pow(offset.x / radii.x, 2.0) + pow(offset.y / radii.y, 2.0) > 1.0:
 				continue
 			var cell: = Vector2i(col, row)
-			blocks.erase(cell)
+			_erase_block(cell)
 			result.append(cell)
 	return result
 
@@ -544,7 +550,7 @@ func _clear_circle_cells(center: Vector2, radius: float) -> Array[Vector2i]:
 			var cell: = Vector2i(col, row)
 			if _cell_center(cell).distance_to(center) > radius:
 				continue
-			blocks.erase(cell)
+			_erase_block(cell)
 			result.append(cell)
 	return result
 
@@ -584,7 +590,7 @@ func _place_resource_block(
 	if required > 0 and role != "resource":
 		block["barrier_label"] = _barrier_label(role)
 		block["barrier_trigger"] = true
-	blocks[cell] = block
+	_set_block(cell, block)
 
 
 func _clear_rect_from_blocks(rect_data: Dictionary) -> void :
@@ -596,7 +602,7 @@ func _clear_rect_from_blocks(rect_data: Dictionary) -> void :
 		for col in range(start_col, end_col + 1):
 			var cell: = Vector2i(col, row)
 			if blocks.has(cell) and String(Dictionary(blocks[cell]).get("role", "")) == "terrain":
-				blocks.erase(cell)
+				_erase_block(cell)
 
 
 func _restore_discovery_from_dug_index(index: int) -> void :
@@ -618,7 +624,7 @@ func _clear_circle(center: Vector2, radius: float) -> void :
 	for row in range(min_row, max_row + 1):
 		for col in range(min_col, max_col + 1):
 			if _cell_center(Vector2i(col, row)).distance_to(center) <= radius:
-				blocks.erase(Vector2i(col, row))
+				_erase_block(Vector2i(col, row))
 
 
 func _fill_rect_with_block(rect_data: Dictionary, block: Dictionary) -> void :
@@ -628,7 +634,7 @@ func _fill_rect_with_block(rect_data: Dictionary, block: Dictionary) -> void :
 	var end_row: = mini(rows - 1, floori((float(rect_data.y) + float(rect_data.h) - 0.01) / TILE_SIZE))
 	for row in range(start_row, end_row + 1):
 		for col in range(start_col, end_col + 1):
-			blocks[Vector2i(col, row)] = block.duplicate(true)
+			_set_block(Vector2i(col, row), block.duplicate(true))
 
 
 func _barrier_label(barrier_id: String) -> String:
@@ -975,7 +981,7 @@ func _mine_once() -> void :
 			block.hp = maxi(0, int(block.hp) - floori(float(overflow) / shell_multiplier))
 	else:
 		block.hp = maxi(0, int(block.hp) - power)
-	blocks[target] = block
+	_set_block(target, block)
 	var broken: = int(block.shell) <= 0 and int(block.hp) <= 0
 	var crusher_active: = String(RunState.starforge_variant) == "crusher"
 	var impact: = {
@@ -992,7 +998,7 @@ func _mine_once() -> void :
 	AudioDirector.play_mining(String(block.kind), broken, was_armored)
 	player.set_mining_visual(true, _mining_visual_progress(swing_elapsed / swing_duration), 1.0)
 	if broken:
-		blocks.erase(target)
+		_erase_block(target)
 		var dug_index: = target.y * cols + target.x
 		var role: = String(block.get("role", ""))
 		if role != "resource":
@@ -1083,9 +1089,9 @@ func _apply_crusher_shockwave(center: Vector2i, tool: Dictionary) -> void :
 			else:
 				block.hp = maxi(0, int(block.hp) - wave_power)
 			if int(block.get("shell", 0)) > 0 or int(block.hp) > 0:
-				blocks[cell] = block
+				_set_block(cell, block)
 				continue
-			blocks.erase(cell)
+			_erase_block(cell)
 			if role_block_counts.has("terrain"):
 				role_block_counts["terrain"] = maxi(0, int(role_block_counts["terrain"]) - 1)
 			var dug_index: = cell.y * cols + cell.x
@@ -1458,7 +1464,7 @@ func _restore_persistent_resource_runtime() -> void :
 			or String(record.get("kind", "")) != String(block.get("kind", ""))
 		):
 			continue
-		blocks.erase(cell)
+		_erase_block(cell)
 		respawns.append({
 			"cell": cell,
 			"block": block.duplicate(true),
@@ -1755,7 +1761,7 @@ func _update_respawns(delta: float) -> void :
 		var restored: Dictionary = Dictionary(pending.block).duplicate(true)
 		restored.hp = int(restored.max_hp)
 		restored.shell = int(restored.get("max_shell", 0))
-		blocks[cell] = restored
+		_set_block(cell, restored)
 		respawns.remove_at(index)
 		RunState.clear_mine_resource_depletion(
 			mine_id, 1, String(pending.get("node_id", _resource_node_id(cell)))
@@ -2304,7 +2310,7 @@ func _erase_role(role: String) -> void :
 		if String(Dictionary(blocks[cell]).get("role", "")) == role:
 			cells.append(cell)
 	for cell in cells:
-		blocks.erase(cell)
+		_erase_block(cell)
 	role_block_counts[role] = 0
 
 
@@ -2865,12 +2871,12 @@ func _strike_barrier_group(target: Vector2i, block: Dictionary) -> void:
 		if String(blocks[cell].get("role","")) != role: continue
 		var part: Dictionary = blocks[cell]
 		part.hp = maxi(1,ceili(float(part.max_hp)*(1.0-float(hits)/10.0)))
-		blocks[cell] = part
+		_set_block(cell, part)
 		if hits == 10: removed.append(cell)
 	impacts.append({"position": _target_contact_point(target),"age":0.0,"life":0.42,"broken":hits==10,"style":""})
 	AudioDirector.play_mining(String(block.kind),hits==10,false)
 	for cell in removed:
-		blocks.erase(cell)
+		_erase_block(cell)
 		mineable_edge_void_cells[cell] = true
 		RunState.mark_terrain_dug(mine_id,cell.y*cols+cell.x,1)
 		_handle_discovery_at(cell.y*cols+cell.x)
@@ -2935,7 +2941,7 @@ func companion_dig(point: Vector2, square: bool) -> int:
 		var cell: Vector2i=start+Vector2i(offset)
 		if not companion_can_dig(_cell_center(cell)): continue
 		var block: Dictionary=blocks[cell]
-		blocks.erase(cell)
+		_erase_block(cell)
 		mineable_edge_void_cells[cell]=true
 		RunState.mark_terrain_dug(mine_id,cell.y*cols+cell.x,1)
 		_handle_discovery_at(cell.y*cols+cell.x)
@@ -2957,3 +2963,20 @@ func companion_ore_target(origin: Vector2) -> Vector2:
 			result=point
 	return result
 
+
+
+
+func _terrain_occupancy_revision() -> int:
+	return _block_occupancy_revision
+
+func _set_block(cell: Vector2i, block: Dictionary) -> void:
+	if not blocks.has(cell): _block_occupancy_revision += 1
+	blocks[cell] = block
+
+func _erase_block(cell: Vector2i) -> void:
+	if blocks.erase(cell): _block_occupancy_revision += 1
+
+func _clear_blocks() -> void:
+	if blocks.is_empty(): return
+	blocks.clear()
+	_block_occupancy_revision += 1

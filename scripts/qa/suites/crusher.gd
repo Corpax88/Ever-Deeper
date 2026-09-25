@@ -19,7 +19,7 @@ func _run_crusher_impact_qa() -> void :
 	var center= Vector2i(20, 20)
 	for y_offset in range(-2, 3):
 		for x_offset in range(-2, 3):
-			main.mine_world.blocks[center + Vector2i(x_offset, y_offset)] = main.mine_world._make_block("stone", 999, 0, "terrain")
+			main.mine_world._set_block(center + Vector2i(x_offset, y_offset), main.mine_world._make_block("stone", 999, 0, "terrain"))
 	main.mine_world._apply_crusher_shockwave(center, tool)
 	var affected= 0
 	for y_offset in range(-2, 3):
@@ -42,7 +42,7 @@ func _run_crusher_impact_qa() -> void :
 
 	for y_offset in range(-2, 3):
 		for x_offset in range(-2, 3):
-			main.mine_world.blocks[center + Vector2i(x_offset, y_offset)] = main.mine_world._make_block("stone", 1, 0, "terrain")
+			main.mine_world._set_block(center + Vector2i(x_offset, y_offset), main.mine_world._make_block("stone", 1, 0, "terrain"))
 	var origin: Vector2 = main.mine_world._cell_center(center)
 	var child_count_before: int = main.mine_world.get_child_count()
 	main.mine_world._spawn_drop(center, "stone", 1, origin)
@@ -313,4 +313,5 @@ func _crusher_impact_qa_require(condition: bool, step: String) -> bool:
 	push_error("EVER_DEEPER_CRUSHER_IMPACT_FAIL step=%s" % step)
 	main.get_tree().quit(7)
 	return false
+
 

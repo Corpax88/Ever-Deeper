@@ -63,11 +63,11 @@ func _command(data: Dictionary) -> void:
 			world.blocks[cell].hp = 1
 			world.queue_redraw()
 		"break":
-			world.blocks.erase(edits.cell)
+			world._erase_block(edits.cell)
 			world.mineable_edge_void_cells[edits.cell] = true
 			world.queue_redraw()
 		"restore":
-			world.blocks[edits.cell] = edits.block.duplicate(true)
+			world._set_block(edits.cell, edits.block.duplicate(true))
 			if not edits.void: world.mineable_edge_void_cells.erase(edits.cell)
 			world.queue_redraw()
 		"begin":

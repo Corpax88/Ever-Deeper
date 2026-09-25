@@ -56,8 +56,14 @@ func _start() -> bool:
 	reference_cap = motion.cap_local
 	equipment = Equipment.new()
 	equipment.setup(rig)
+	_refresh_canvas_pass()
 	generations += 1
 	return true
+
+# Recheck at creation and gear changes; 2D is restored if a tool needs it.
+func _refresh_canvas_pass() -> void:
+	RenderingServer.viewport_set_disable_2d(rig.viewport.get_viewport_rid(),
+		rig.viewport.find_children("*", "CanvasItem", true, false).is_empty())
 
 func _fail(message: String) -> bool:
 	failed = true
@@ -93,6 +99,7 @@ func advance(delta: float) -> bool:
 	if not is_instance_valid(rig) and not _start(): return false
 	if equipment.current != visual.active_gear:
 		if not equipment.equip(visual.active_gear): return _fail("Native pickaxe identity mismatch: " + visual.active_gear)
+		_refresh_canvas_pass()
 		motion.cap_local = equipment.contact_cap(reference_cap)
 		motion.reference_cap = motion.bank.mine[21].bones.tool * motion.cap_local
 		motion.contact_cache.clear()
