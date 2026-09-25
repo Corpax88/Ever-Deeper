@@ -82,30 +82,28 @@ async function measure(scenario,order){
   console.log(JSON.stringify({scenario,index,variant:w,fps:ended.result.frames/ended.result.seconds,p95:ended.result.frame.p95_ms}));
  }
 }
-const attempts=[];
 try{
  await page.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'domcontentloaded',timeout:90000});await wait('menu',s=>s?.menu,180000);
- runtime=await page.evaluate(()=>({browser:navigator.userAgent,dpr:devicePixelRatio}));
- for(const stage of ['fresh','after-freeze']){
-  for(const v of [0,1,0]){
-   await command('setup',{mine:'emberMine',cached:true,durable:true});await wait('native',s=>s?.native?.active&&s.native.updates>3);
-   await width(v);await delay(1000);
-   if(stage==='after-freeze'){await command('freeze');await delay(500);await command('unfreeze');await delay(700);}
-   let s=await state();const at=attempts.length;
-   await shot('before-'+at);
-   await page.touchscreen.tap(s.light_cost.ui_button[0]/s.viewport[0]*776,s.light_cost.ui_button[1]/s.viewport[1]*420);
-   await delay(2000);let t=await state();const touchOpen=t.light_cost.commerce_open;
-   const attempt={stage,variant:v,touchOpen,before:s,afterTouch:t};
-   if(!touchOpen){
-    await delay(1000);await page.mouse.click(s.light_cost.ui_button[0]/s.viewport[0]*776,s.light_cost.ui_button[1]/s.viewport[1]*420);await delay(1500);t=await state();attempt.mouseOpen=t.light_cost.commerce_open;attempt.afterMouse=t;
-   }
-   await shot('after-'+at);attempts.push(attempt);
-   if(t.light_cost.commerce_open){await page.touchscreen.tap(t.light_cost.ui_close[0]/t.viewport[0]*776,t.light_cost.ui_close[1]/t.viewport[1]*420);await delay(1200);attempt.closed=!(await state()).light_cost.commerce_open;}
-   if((await state()).light_cost.commerce_open)throw Error('Cannot close menu for next test');
+ runtime=await page.evaluate(()=>{const g=document.querySelector('canvas').getContext('webgl2'),e=g.getExtension('WEBGL_debug_renderer_info');return {renderer:g.getParameter(e?e.UNMASKED_RENDERER_WEBGL:g.RENDERER),browser:navigator.userAgent,dpr:devicePixelRatio,canvas:[g.canvas.width,g.canvas.height]};});
+ check('apple-gpu',process.platform==='darwin'&&/Apple|Metal/.test(runtime.renderer),{runtime});
+ for(const [index,v] of [0,1,0].entries()){
+  await command('setup',{mine:'emberMine',cached:true,durable:true});await wait('native',s=>s?.native?.active&&s.native.updates>3);await width(v);await delay(1000);
+  let ui=await state();check('journal-starts-closed-'+index,!ui.light_cost.journal_open);
+  await page.touchscreen.tap(ui.light_cost.ui_button[0]/ui.viewport[0]*776,ui.light_cost.ui_button[1]/ui.viewport[1]*420);
+  await wait('journal opens by touch',s=>s.light_cost.journal_open);check('journal-opens-'+index,true);
+  for(const [tabIndex,tab] of ['together','skills','how'].entries()){
+   await width(v);ui=await state();const point=ui.light_cost.ui_tabs[tabIndex];
+   await page.touchscreen.tap(point[0]/ui.viewport[0]*776,point[1]/ui.viewport[1]*420);
+   await wait('journal tab '+tab,s=>s.light_cost.journal_tab===tab);check('tab-'+index+'-'+tab,true);await delay(800);
+   await command('freeze');await parity('journal-'+index+'-'+tab,true);await command('unfreeze');
   }
+  await width(v);ui=await state();await page.touchscreen.tap(ui.light_cost.ui_close[0]/ui.viewport[0]*776,ui.light_cost.ui_close[1]/ui.viewport[1]*420);
+  await wait('journal closes by touch',s=>!s.light_cost.journal_open);check('journal-closes-'+index,true);
+  await command('freeze');await parity('closed-'+index,true);await command('unfreeze');await width(0);
  }
+ check('no-script-errors',!messages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)));
 }catch(e){failed=String(e);console.error(e);}finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,attempts,source_commit:process.env.GITHUB_SHA,baseline_source:'c63aabd3e3e5120579285ce6e8b0b59a75f2727a',version,files,browser:browserName,repeat:process.env.REPEAT,runtime,checks,windows,pairs,captures,physical_iphone_verified:false,scope:'Targeted UI touch diagnosis only; no performance windows. QA skip native viewport empty 2D canvas and combine three CompanionInterface UI children into the existing HUD canvas. The original controller canvas is parked on a disabled 2x2 viewport. Exact reversal and image parity required; stationary performance screening, not UI lifecycle acceptance. All actor source/assets/animation, 3D rendering, world lights, HUD and resolution unchanged. Occupancy revision in both modes. Exact candidate image parity required. GL synchronization counts verify actual work reduction. No release.'},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source_commit:"36449d641db5578eee4ea24709c0a2d6d416d0ac",baseline_source:'c63aabd3e3e5120579285ce6e8b0b59a75f2727a',version,files,browser:browserName,repeat:process.env.REPEAT,runtime,checks,windows,pairs,captures,physical_iphone_verified:false,scope:'QA skip native viewport empty 2D canvas and combine three CompanionInterface UI children into the existing HUD canvas. The original controller canvas is parked on a disabled 2x2 viewport. Exact reversal and image parity required; targeted journal touch/tab/close correction; no repeated FPS windows, not full UI lifecycle acceptance. All actor source/assets/animation, 3D rendering, world lights, HUD and resolution unchanged. Occupancy revision in both modes. Exact candidate image parity required. GL synchronization counts verify actual work reduction. No release.'},null,2));
  await browser.close();server.close();
 }
 if(failed)process.exitCode=1;
