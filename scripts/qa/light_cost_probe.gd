@@ -18,7 +18,7 @@ func configure(owner_world: Node2D) -> void:
 	occlusion.set_process(false)
 func select(value: String) -> void:
 	mode = value
-	occlusion.qa_use_occupancy_revision = value == "occupancy_revision"
+	occlusion.qa_use_occupancy_revision = true
 	for i in lights.size():
 		var light: PointLight2D = lights[i]
 		light.enabled = original[i].enabled
@@ -28,6 +28,9 @@ func select(value: String) -> void:
 		if mode == "no_shadows": light.shadow_enabled = false
 		if mode == "cones_off" and light.name == "HelmetCone": light.enabled = false
 		if mode == "bounce_off" and light.name == "HelmetBounce": light.enabled = false
+		var fixed: bool = str(light.get_parent().name).begins_with("WorkLight_")
+		if mode == "fixed_off" and fixed: light.enabled = false
+		if mode == "headlamps_off" and not fixed: light.enabled = false
 		if mode == "lights_off": light.enabled = false
 	occlusion.refresh()
 func _process(_delta: float) -> void:
