@@ -108,7 +108,9 @@ func _select_ui(value: bool) -> void:
 		world.get_parent().add_child(parked)
 		ui.custom_viewport = parked
 	else:
-		ui.custom_viewport = original_custom_viewport
+		# Godot 4.7.2 rejects a nullptr argument. A non-Viewport Node resets
+		# custom_viewport to null and reattaches the inherited viewport.
+		ui.custom_viewport = original_custom_viewport if original_custom_viewport != null else world.get_parent()
 		for i in ui_children.size():
 			ui_children[i].reparent(ui, false)
 			ui.move_child(ui_children[i], i)
