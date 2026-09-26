@@ -25,13 +25,31 @@ const server=http.createServer((req,res)=>{
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await webkit.launch({headless:true}),checks=[],windows=[],captures=[],runtimes=[],messages=[];
-const order=['original','candidate','candidate','original'];
+const order=['original','original'];
 let failed=null;
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 function check(name,passed,details={}){checks.push({name,passed:!!passed,...details});if(!passed)throw Error(name);}
 try{
  for(const [block,side] of order.entries()){
   const context=await browser.newContext({viewport:{width:776,height:420},deviceScaleFactor:3,hasTouch:true});
+  await context.addInitScript(()=>{
+   const probe=window.__stall={active:false,frame:0,stats:{},events:[],callbacks:[],current:0};
+   probe.begin=enabled=>{probe.active=enabled;probe.stats={};probe.events=[];probe.callbacks=[];};
+   probe.stop=()=>{probe.active=false;return {stats:probe.stats,events:probe.events,callbacks:probe.callbacks}};
+   const record=(label,start,extra)=>{
+    const ms=performance.now()-start;const s=probe.stats[label]||(probe.stats[label]={calls:0,ms:0,max:0});s.calls++;s.ms+=ms;s.max=Math.max(s.max,ms);
+    if(ms>=2&&probe.events.length<10000)probe.events.push({label,start,ms,frame:probe.current,...extra});
+   };
+   const proto=WebGL2RenderingContext.prototype;
+   for(const label of ['fenceSync','getSyncParameter','clientWaitSync','waitSync','checkFramebufferStatus','drawElements','drawArrays','drawElementsInstanced','drawArraysInstanced','bufferData','bufferSubData','getBufferSubData','texImage2D','texSubImage2D','compressedTexImage2D','texStorage2D','readPixels','compileShader','linkProgram','getShaderParameter','getProgramParameter','finish','flush','bindFramebuffer','clear','blitFramebuffer']){
+    const original=proto[label];if(typeof original!=='function')continue;
+    proto[label]=function(...args){if(!probe.active)return original.apply(this,args);const start=performance.now();try{return original.apply(this,args)}finally{record(label,start)}};
+   }
+   const grow=WebAssembly.Memory.prototype.grow;
+   WebAssembly.Memory.prototype.grow=function(...args){if(!probe.active)return grow.apply(this,args);const start=performance.now(),before=this.buffer.byteLength;try{return grow.apply(this,args)}finally{record('wasm_memory_grow',start,{before,after:this.buffer.byteLength,pages:args[0]})}};
+   const raf=window.requestAnimationFrame;
+   window.requestAnimationFrame=cb=>raf.call(window,t=>{if(!probe.active)return cb(t);const start=performance.now();probe.current=++probe.frame;try{return cb(t)}finally{const ms=performance.now()-start;if(ms>=25&&probe.callbacks.length<10000)probe.callbacks.push({start,ms,frame:probe.current})}});
+  });
   const page=await context.newPage();let id=0;const localMessages=[];
   page.on('console',m=>{localMessages.push(m.type()+': '+m.text());messages.push({block,side,message:m.type()+': '+m.text()})});
   page.on('pageerror',e=>localMessages.push('PAGEERROR '+e.message));
@@ -58,25 +76,25 @@ try{
     check('stable exact '+block+'-'+tag,different===0,{different,max});
     await command('stable',{enabled:side==='candidate'});await command('unfreeze');
    }
-   await parity('start');
+   // Prior run established frozen parity; this run is timing only.
    const before=await state();await page.mouse.move(before.mine_button[0]/before.viewport[0]*776,before.mine_button[1]/before.viewport[1]*420);await page.mouse.down();await command('route');
    for(let index=0;index<6;index++){
-    const start=await state();await command('begin',{instrument:true});await delay(15000);const end=await command('end');
+    const start=await state();await page.evaluate(enabled=>window.__stall.begin(enabled),block===1);await command('begin',{instrument:true});await delay(15000);const end=await command('end');const browserProfile=await page.evaluate(()=>window.__stall.stop());
     check('active native '+block+'-'+index,end.native.active&&end.result.frames>200);
-    windows.push({block,index,side,impacts:end.impact-start.impact,...end.result,native:end.native,position:end.position});fs.writeFileSync(path.join(output,'windows.json'),JSON.stringify(windows,null,2));
+    windows.push({block,index,side,impacts:end.impact-start.impact,browserProfile,...end.result,native:end.native,position:end.position});fs.writeFileSync(path.join(output,'windows.json'),JSON.stringify(windows,null,2));
    }
    await command('route_stop');await page.mouse.up();await delay(400);
    const group=windows.filter(w=>w.block===block);
    check('real movement '+block,group.reduce((a,w)=>a+w.distance,0)>200);
    check('real excavation '+block,group.reduce((a,w)=>a+w.blocks_removed,0)>=3);
    check('save success '+block,group.every(w=>w.save_error===0));
-   await parity('excavated');
+   await command('freeze');await delay(300);const name=block+'-stall.png';await page.screenshot({path:path.join(output,name)});captures.push(name);
    check('no runtime errors '+block,!localMessages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)));
   }finally{await context.close();}
  }
 }catch(e){failed=String(e.stack||e);console.error(failed);}
 finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'QA-only DEV15.10 package, measured actual movement and block destruction; shared profiling overhead, fresh contexts ABBA. Candidate only anchors width6 terrain strip keys to the fixed world grid; floor, assets, lights and resolution unchanged. CPU wrapper wall time not GPU time. Save uses isolated fixture namespace. Includes all windows/stalls. No physical phone claim.'},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'DIAGNOSTIC baseline only, first block WebGL observer off and second on; wrapper branches remain in both. Wall clock browser methods and callbacks are NOT GPU times. Memory.grow wrapper cannot see a wasm-internal memory.grow instruction. QA-only DEV15.10 package, measured actual movement and block destruction; shared profiling overhead, fresh contexts ABBA. Candidate only anchors width6 terrain strip keys to the fixed world grid; floor, assets, lights and resolution unchanged. CPU wrapper wall time not GPU time. Save uses isolated fixture namespace. Includes all windows/stalls. No physical phone claim.'},null,2));
  await browser.close();server.close();
 }
 if(failed)process.exitCode=1;

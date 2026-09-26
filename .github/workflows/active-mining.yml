@@ -1,10 +1,10 @@
-name: Profile moving excavation and stable terrain cache
+name: Locate long browser frames during actual excavation
 on:
   push:
-    branches: [codex/active-mining-20260926]
+    branches: [codex/active-stalls-20260926]
     paths: ['.github/active-mining/**', '.github/workflows/active-mining.yml']
 permissions: {contents: read, actions: read}
-concurrency: {group: active-mining-20260926, cancel-in-progress: true}
+concurrency: {group: active-stalls-20260926, cancel-in-progress: true}
 jobs:
   profile:
     runs-on: macos-15
@@ -21,4 +21,4 @@ jobs:
       - run: node .github/active-mining/review.mjs "$RUNNER_TEMP/profile" "$RUNNER_TEMP/review"
       - uses: actions/upload-artifact@v4
         if: always()
-        with: {name: active-mining-profile, path: '${{ runner.temp }}/review', retention-days: 90}
+        with: {name: active-stalls-profile, path: '${{ runner.temp }}/review', retention-days: 90}
