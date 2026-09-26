@@ -93,6 +93,8 @@ func _command(data: Dictionary) -> void:
 			if not edits.void: world.mineable_edge_void_cells.erase(edits.cell)
 			world.queue_redraw()
 		"begin":
+			last_result.clear()
+			route_last = world.player.position
 			main.get_tree().paused = false
 			frame_times.clear()
 			cpu_times.clear()
