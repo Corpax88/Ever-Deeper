@@ -1,6 +1,6 @@
 class_name MinimapOverlay
-const QAProfile = preload("res://qa_profile.gd")
 extends Control
+const QAProfile = preload("res://qa_profile.gd")
 
 const REDRAW_INTERVAL: = 0.1
 const IPHONE_LANDSCAPE_ASPECT: = 1.95

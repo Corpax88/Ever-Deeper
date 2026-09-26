@@ -1,6 +1,6 @@
 class_name MoleCompanion
-const QAProfile = preload("res://qa_profile.gd")
 extends Node2D
+const QAProfile = preload("res://qa_profile.gd")
 
 const Separation = preload("res://scripts/companion/follow_separation.gd")
 const Skills = preload("res://scripts/companion/mole_skills.gd")
