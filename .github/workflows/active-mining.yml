@@ -1,0 +1,24 @@
+name: Profile moving excavation and stable terrain cache
+on:
+  push:
+    branches: [codex/active-mining-20260926]
+    paths: ['.github/active-mining/**', '.github/workflows/active-mining.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: active-mining-20260926, cancel-in-progress: true}
+jobs:
+  profile:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false, sparse-checkout: .github/active-mining}
+      - uses: actions/download-artifact@v4
+        with: {name: integrated-candidate, run-id: 36118561266, github-token: '${{ github.token }}', path: '${{ runner.temp }}/original'}
+      - run: python3 .github/active-mining/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/profile"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install webkit
+      - run: node .github/active-mining/review.mjs "$RUNNER_TEMP/profile" "$RUNNER_TEMP/review"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: active-mining-profile, path: '${{ runner.temp }}/review', retention-days: 90}
