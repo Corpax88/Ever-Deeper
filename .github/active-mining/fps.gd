@@ -50,6 +50,25 @@ func _command(data: Dictionary) -> void:
 			for node in world.find_children("PremiumHeadlamp", "", true, false):
 				node.preview_settings.clear()
 				node.refresh_workshop_effects()
+		"audio_mode":
+			AudioDirector.qa_cached_music = bool(data.cached)
+			AudioDirector.set_muted(true)
+			AudioDirector.set_muted(false)
+		"audio_seek_end":
+			var p: AudioStreamPlayer = AudioDirector._music_players[AudioDirector._active_music_slot]
+			p.seek(maxf(0.0,p.stream.get_length()-3.2))
+		"audio_mute":
+			AudioDirector.set_muted(bool(data.enabled))
+		"audio_volume":
+			AudioDirector.set_music_volume(float(data.volume),false)
+		"audio_snapshot":
+			var tracks: Array = []
+			for i in AudioDirector._prepared_music.size():
+				var st: AudioStreamMP3 = AudioDirector._prepared_music[i]
+				tracks.append({"id":st.get_instance_id(),"registered":AudioServer.is_stream_registered_as_sample(st),"loop":st.loop,"length":st.get_length(),"same_bytes":st.data==AudioDirector.MUSIC_TRACKS[i].data})
+			last_result = {"tracks":tracks,"index":AudioDirector._music_track_index,"slot":AudioDirector._active_music_slot,"fade":AudioDirector._crossfade_progress,"muted":AudioDirector.muted,"volume":AudioDirector.music_volume,"players":[]}
+			for p in AudioDirector._music_players:
+				last_result.players.append({"playing":p.playing,"db":p.volume_db,"position":p.get_playback_position(),"same_cached":p.stream in AudioDirector._prepared_music})
 		"route":
 			route_active = true
 			route_started = Time.get_ticks_usec()
