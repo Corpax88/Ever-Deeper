@@ -1,10 +1,10 @@
-name: Locate long browser frames during actual excavation
+name: Locate engine callback stalls during real excavation
 on:
   push:
-    branches: [codex/active-stalls-20260926]
+    branches: [codex/engine-stalls-20260926]
     paths: ['.github/active-mining/**', '.github/workflows/active-mining.yml']
 permissions: {contents: read, actions: read}
-concurrency: {group: active-stalls-20260926, cancel-in-progress: true}
+concurrency: {group: engine-stalls-20260926, cancel-in-progress: true}
 jobs:
   profile:
     runs-on: macos-15
@@ -21,4 +21,4 @@ jobs:
       - run: node .github/active-mining/review.mjs "$RUNNER_TEMP/profile" "$RUNNER_TEMP/review"
       - uses: actions/upload-artifact@v4
         if: always()
-        with: {name: active-stalls-profile, path: '${{ runner.temp }}/review', retention-days: 90}
+        with: {name: engine-stalls-profile, path: '${{ runner.temp }}/review', retention-days: 90}

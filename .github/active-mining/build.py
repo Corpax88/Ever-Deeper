@@ -8,7 +8,7 @@ for n in manifest: shutil.copyfile(source/n,out/n)
 data=bytearray((out/'index.pck').read_bytes());base,entries=unpack(data);before=dict(entries)
 root=Path(__file__).parent
 replace={'qa_profile.gd':(root/'profile.gd').read_bytes()}
-for original,local in [('scripts/world/mossvein_mine.gd','world.gd'),('scripts/state/run_state.gd','state.gd'),('scripts/qa/suites/fps_review.gd','fps.gd')]:
+for original,local in [('scripts/world/mossvein_mine.gd','world.gd'),('scripts/state/run_state.gd','state.gd'),('scripts/qa/suites/fps_review.gd','fps.gd'),('scripts/main.gd', 'main.gd'),('scripts/companion/mole_companion.gd', 'mole_companion.gd'),('scripts/player/player_controller.gd', 'player_controller.gd'),('scripts/audio/audio_director.gd', 'audio_director.gd'),('scripts/ui/minimap_overlay.gd', 'minimap_overlay.gd'),('scripts/lighting/cave_light_occluders.gd', 'cave_light_occluders.gd')]:
     remap=original+'.remap';assert remap in entries
     # Canonical raw paths also support existing preloads whose remap was already resolved.
     replace[original]=(root/local).read_bytes()

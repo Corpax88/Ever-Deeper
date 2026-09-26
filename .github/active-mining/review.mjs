@@ -25,7 +25,7 @@ const server=http.createServer((req,res)=>{
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await webkit.launch({headless:true}),checks=[],windows=[],captures=[],runtimes=[],messages=[];
-const order=['original','original'];
+const order=['original'];
 let failed=null;
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 function check(name,passed,details={}){checks.push({name,passed:!!passed,...details});if(!passed)throw Error(name);}
@@ -94,7 +94,7 @@ try{
  }
 }catch(e){failed=String(e.stack||e);console.error(failed);}
 finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'DIAGNOSTIC baseline only, first block WebGL observer off and second on; wrapper branches remain in both. Wall clock browser methods and callbacks are NOT GPU times. Memory.grow wrapper cannot see a wasm-internal memory.grow instruction. QA-only DEV15.10 package, measured actual movement and block destruction; shared profiling overhead, fresh contexts ABBA. Candidate only anchors width6 terrain strip keys to the fixed world grid; floor, assets, lights and resolution unchanged. CPU wrapper wall time not GPU time. Save uses isolated fixture namespace. Includes all windows/stalls. No physical phone claim.'},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'EXPANDED GDScript scope diagnostic; one baseline route, WebGL observer off. Main/player/mole/minimap/audio/occluder callbacks profiled. DIAGNOSTIC baseline only, first block WebGL observer off and second on; wrapper branches remain in both. Wall clock browser methods and callbacks are NOT GPU times. Memory.grow wrapper cannot see a wasm-internal memory.grow instruction. QA-only DEV15.10 package, measured actual movement and block destruction; shared profiling overhead, fresh contexts ABBA. Candidate only anchors width6 terrain strip keys to the fixed world grid; floor, assets, lights and resolution unchanged. CPU wrapper wall time not GPU time. Save uses isolated fixture namespace. Includes all windows/stalls. No physical phone claim.'},null,2));
  await browser.close();server.close();
 }
 if(failed)process.exitCode=1;
