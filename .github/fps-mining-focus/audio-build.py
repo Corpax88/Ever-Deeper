@@ -32,23 +32,10 @@ p='scripts/player/native_worn_visual.gd';script(p,wrap((root/p).read_text(),'adv
 p='scripts/lighting/cave_light_occluders.gd';script(p,wrap((root/p).read_text(),'refresh','',''))
 p='scripts/player/player_visual.gd';script(p,(root/p).read_text())
 p='scripts/lighting/lit_draw_sections.gd';script(p,(root/p).read_text())
-p='scripts/companion/mole_companion.gd';text=(root/p).read_text()
-for name,args,call,ret in [('_physics_process','delta: float','delta','void'),('_think','','','void'),('_move','delta: float','delta','void'),('_path_to','point: Vector2','point','Array[Vector2]'),('_draw_pose','','','void')]: text=wrap(text,name,args,call,ret)
-text+='\nvar focus_ai_paused: bool = false\n'
-text=text.replace('func _physics_process(delta: float) -> void:\n', 'func _physics_process(delta: float) -> void:\n\tif focus_ai_paused:\n\t\tanimation_clock += delta\n\t\t_draw_pose()\n\t\treturn\n')
-script(p,text)
 p='scripts/qa/suites/fps_review.gd';text=(root/p).read_text();text+='''
 func _focus_values(v: Vector3) -> Array:
 	return [v.x,v.y,v.z]
 var focus_clock: int = 0
-func _focus_pet() -> Node:
-	return main.mine_world.get_node("MoleCompanion")
-func _focus_pet_state() -> Dictionary:
-	var m: Node = _focus_pet()
-	var lights: Array = []
-	for n in m.lamp.get_children():
-		if n is PointLight2D: lights.append({"visible":n.is_visible_in_tree(),"enabled":n.enabled,"shadow":n.shadow_enabled,"energy":n.energy})
-	return {"paused":m.focus_ai_paused,"visible":m.is_visible_in_tree(),"lights":lights,"position":[m.position.x,m.position.y],"mode":m.mode,"action":m.action,"searches":m.path_searches,"physics":_focus_values(m.focus__physics_process),"think":_focus_values(m.focus__think),"move":_focus_values(m.focus__move),"path":_focus_values(m.focus__path_to),"pose":_focus_values(m.focus__draw_pose)}
 func _focus_frame() -> void:
 	var now: int = Time.get_ticks_usec()
 	if now-focus_clock < 250000: return
@@ -58,11 +45,10 @@ func _focus_frame() -> void:
 	var n: Node = w.player.visual._native_worn
 	var o: Node = w.get_node_or_null("CaveLightOccluders")
 	if n == null or o == null: return
-	JavaScriptBridge.eval("window.FOCUS_STATE="+JSON.stringify({"pet":_focus_pet_state(),"world":_focus_values(w.focus__process),"terrain":_focus_values(w.focus__draw_partitioned_mine),"native":_focus_values(n.focus_advance),"occlusion":_focus_values(o.focus_refresh),"sections":w.lit_draw_sections.debug_snapshot()}),true)
+	JavaScriptBridge.eval("window.FOCUS_STATE="+JSON.stringify({"world":_focus_values(w.focus__process),"terrain":_focus_values(w.focus__draw_partitioned_mine),"native":_focus_values(n.focus_advance),"occlusion":_focus_values(o.focus_refresh),"sections":w.lit_draw_sections.debug_snapshot()}),true)
 '''
 text=text.replace('func _command(data: Dictionary) -> void:\n', '\n'.join(['func _command(data: Dictionary) -> void:', '\tif String(data.kind) in ["focus_reference", "focus_candidate", "focus_effects"]:', '\t\tcommand_id = int(data.id)', '\t\tvar w: Node = main.mine_world', '\t\tif String(data.kind) == "focus_effects":', '\t\t\tfor effect in w.impacts: effect.age += 0.03', '\t\t\tfor drop in w.drops: drop.age += 0.03', '\t\t\tw.lit_draw_sections.redraw_dynamic_sections()', '\t\telse:', '\t\t\tw.cache_dynamic_redraws = String(data.kind) == "focus_candidate"', '\t\t\tw.queue_redraw()', '\t\treturn', '']))
 text=text.replace('func _frame() -> void:\n' ,'func _frame() -> void:\n\t_focus_frame()\n')
-text=text.replace('func _command(data: Dictionary) -> void:\n','func _command(data: Dictionary) -> void:\n\tif String(data.kind) in ["pet_on", "pet_off"]:\n\t\tcommand_id = int(data.id)\n\t\t_focus_pet().focus_ai_paused = String(data.kind) == "pet_off"\n\t\treturn\n')
 script(p,text)
 for name,raw in replace.items():
     data+=b'\0'*(-len(data)%32);entries[name]=(len(data)-base,len(raw),hashlib.md5(raw).digest(),0);data+=raw
