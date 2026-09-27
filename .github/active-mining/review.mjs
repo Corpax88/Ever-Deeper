@@ -90,6 +90,7 @@ async function suspend(instance){
  const ownNow=processes().filter(p=>instance.pids.some(w=>w.pid===p.pid));
  check('all owned children remain '+instance.side,ownNow.length===instance.pids.length);
  signal(instance,'SIGSTOP');instance.suspended=true;
+ for(let n=0;n<50;n++){const rows=processes().filter(p=>instance.pids.some(w=>w.pid===p.pid));if(rows.length===instance.pids.length&&rows.every(p=>p.stat.includes('T')))break;await delay(20)}
  check('OS stopped '+instance.side,processes().filter(p=>instance.pids.some(w=>w.pid===p.pid)).every(p=>p.stat.includes('T')));
 }
 async function resume(instance){
@@ -97,6 +98,7 @@ async function resume(instance){
  const contexts=await instance.page.evaluate(async()=>{const contexts=[...new Set(window.__audioProbe.outputs.map(o=>o.context))];await Promise.all(contexts.map(c=>c.resume()));return contexts.map(c=>c.state)});
  check('audio resumed '+instance.side,contexts.length>0&&contexts.every(s=>s==='running'));
  await instance.command('unfreeze');
+ const state=await instance.state();await instance.page.mouse.up();await instance.page.mouse.move(state.mine_button[0]/state.viewport[0]*776,state.mine_button[1]/state.viewport[1]*420);await instance.page.mouse.down();
 }
 const base=process.env.REPEAT==='2'?['BA','AB','AB','BA','AB','BA','BA','AB']:['AB','BA','BA','AB','BA','AB','AB','BA'];
 const pairs=Array.from({length:8},()=>base).flat();
@@ -107,6 +109,7 @@ try{
  check('disjoint process ownership',originalInstance.pids.every(a=>candidateInstance.pids.every(b=>a.pid!==b.pid)));
  for(const [index,side] of order.entries()){
   const active=instances.find(i=>i.side===side),inactive=instances.find(i=>i.side!==side);
+  check('no untracked browser children '+index,processes().every(p=>instances.some(i=>i.pids.some(w=>w.pid===p.pid))));
   check('inactive renderer stopped '+index,inactive.suspended&&processes().filter(p=>inactive.pids.some(w=>w.pid===p.pid)).every(p=>p.stat.includes('T')));
   await resume(active);await delay(1500);
   const audioBefore=await active.page.evaluate(()=>window.__audioProbe.outputs[0].context.currentTime);
