@@ -21,7 +21,7 @@ const server=http.createServer((req,res)=>{
  if(!file.startsWith(root+path.sep)||!fs.existsSync(file)){res.writeHead(404).end();return;}
  const mime={'.html':'text/html','.js':'application/javascript','.wasm':'application/wasm','.png':'image/png'};
  res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream','Cache-Control':'no-store'});
- if(file.endsWith('index.html'))res.end(fs.readFileSync(file,'utf8').replace(/const GODOT_CONFIG = (\{[^\r\n]+\});/,(_,raw)=>{const c=JSON.parse(raw);c.args=['--','--qa-fps-review'];return 'const GODOT_CONFIG = '+JSON.stringify(c)+';';}));
+ if(file.endsWith('index.html'))res.end(fs.readFileSync(file,'utf8').replace(/const GODOT_CONFIG = (\{[^\r\n]+\});/,(_,raw)=>{const c=JSON.parse(raw);c.args=['--','--qa-fps-review'];return 'const GODOT_CONFIG = '+JSON.stringify(c)+';';}).replace('const engine = new Engine(GODOT_CONFIG);','const engine = new Engine(GODOT_CONFIG); window.__qaEngine = engine;'));
  else fs.createReadStream(file).pipe(res);
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
@@ -31,15 +31,12 @@ let failed=null;
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 function check(name,passed,details={}){checks.push({name,passed:!!passed,...details});if(!passed)throw Error(name)}
 function processes(){return execFileSync('ps',['-axo','pid=,stat=,comm='],{encoding:'utf8'}).split('\n').filter(v=>/ms-playwright.*(WebKit|MiniBrowser)/.test(v)).map(v=>{const m=v.trim().match(/^(\d+)\s+(\S+)\s+(.+)$/);return {pid:Number(m[1]),stat:m[2],command:m[3]}})}
-function signal(instance,kind){
- const current=new Map(processes().map(p=>[p.pid,p]));
- for(const p of instance.pids){const found=current.get(p.pid);if(!found){if(kind==='SIGCONT')continue;throw Error('Browser child exited '+p.pid)}check('owned process identity '+p.pid,found.command===p.command);process.kill(p.pid,kind)}
-}
 async function initialize(side){
  const before=new Set(processes().map(p=>p.pid)),browser=await webkit.launch({headless:true});
  const context=await browser.newContext({viewport:{width:776,height:420},deviceScaleFactor:3,hasTouch:true});
   await context.addInitScript(({reuse})=>{
    globalThis.__reuseImmutableMusicBuffers=reuse;
+   window.__contextLosses=0;document.addEventListener('webglcontextlost',()=>window.__contextLosses++,true);
    const probe=window.__audioProbe={buffers:[],starts:[],outputs:[],ids:new WeakMap(),weak:[],count:0};
    const create=BaseAudioContext.prototype.createBuffer;
    BaseAudioContext.prototype.createBuffer=function(...args){const b=create.apply(this,args),id=++probe.count;probe.ids.set(b,id);if(b.duration>10)probe.weak.push(new WeakRef(b));if(b.duration>10)probe.buffers.push({id,length:b.length,rate:b.sampleRate,channels:b.numberOfChannels,bytes:b.length*b.numberOfChannels*4});return b};
@@ -87,14 +84,13 @@ async function suspend(instance){
  await instance.command('freeze');
  const contexts=await instance.page.evaluate(async()=>{const contexts=[...new Set(window.__audioProbe.outputs.map(o=>o.context))];await Promise.all(contexts.map(c=>c.suspend()));return contexts.map(c=>c.state)});
  check('audio suspended '+instance.side,contexts.length>0&&contexts.every(s=>s==='suspended'));
- const ownNow=processes().filter(p=>instance.pids.some(w=>w.pid===p.pid));
- check('all owned children remain '+instance.side,ownNow.length===instance.pids.length);
- signal(instance,'SIGSTOP');instance.suspended=true;
- for(let n=0;n<50;n++){const rows=processes().filter(p=>instance.pids.some(w=>w.pid===p.pid));if(rows.length===instance.pids.length&&rows.every(p=>p.stat.includes('T')))break;await delay(20)}
- check('OS stopped '+instance.side,processes().filter(p=>instance.pids.some(w=>w.pid===p.pid)).every(p=>p.stat.includes('T')));
+ await instance.page.evaluate(()=>{window.__qaEngine.rtenv.pauseMainLoop();window.__qaEnginePaused=true});
+ instance.suspended=true;
+ instance.pausedFrame=(await instance.state()).engine_frame;
 }
 async function resume(instance){
- signal(instance,'SIGCONT');instance.suspended=false;
+ await instance.page.evaluate(()=>{window.__qaEngine.rtenv.resumeMainLoop();window.__qaEnginePaused=false});
+ instance.suspended=false;
  const contexts=await instance.page.evaluate(async()=>{const contexts=[...new Set(window.__audioProbe.outputs.map(o=>o.context))];await Promise.all(contexts.map(c=>c.resume()));return contexts.map(c=>c.state)});
  check('audio resumed '+instance.side,contexts.length>0&&contexts.every(s=>s==='running'));
  await instance.command('unfreeze');
@@ -110,7 +106,8 @@ try{
  for(const [index,side] of order.entries()){
   const active=instances.find(i=>i.side===side),inactive=instances.find(i=>i.side!==side);
   check('no untracked browser children '+index,processes().every(p=>instances.some(i=>i.pids.some(w=>w.pid===p.pid))));
-  check('inactive renderer stopped '+index,inactive.suspended&&processes().filter(p=>inactive.pids.some(w=>w.pid===p.pid)).every(p=>p.stat.includes('T')));
+  check('inactive engine paused '+index,inactive.suspended&&await inactive.page.evaluate(()=>window.__qaEnginePaused));
+  check('inactive frame unchanged '+index,(await inactive.state()).engine_frame===inactive.pausedFrame);
   await resume(active);await delay(1500);
   const audioBefore=await active.page.evaluate(()=>window.__audioProbe.outputs[0].context.currentTime);
   const start=await active.state();await active.command('begin',{instrument:false});await delay(4000);const end=await active.command('end');
@@ -118,22 +115,30 @@ try{
   const music=await active.command('audio_status');check('music player active '+index,music.result.players.some(p=>p.playing));
   check('audio clock advances '+index,audioAfter-audioBefore>3.5);
   check('same active workload '+index,end.native.active&&end.result.frames>60&&end.impact-start.impact>=5&&JSON.stringify(start.position)===JSON.stringify(end.position));
+  const contextState=await active.page.evaluate(()=>({lost:document.querySelector('canvas').getContext('webgl2').isContextLost(),losses:window.__contextLosses}));
+  check('render context intact '+index,!contextState.lost&&contextState.losses===0);
+  const screenshot=await active.page.screenshot(),png=PNG.sync.read(screenshot);
+  let lit=0;for(let p=0;p<png.data.length;p+=4)if(Math.max(png.data[p],png.data[p+1],png.data[p+2])>24)lit++;
+  const renderedFraction=lit/(png.width*png.height);
+  if(renderedFraction<0.2)fs.writeFileSync(path.join(output,'FAILED-'+index+'-'+side+'.png'),screenshot);
+  check('game pixels rendered '+index,renderedFraction>0.2,{renderedFraction});
+  check('inactive frame still unchanged '+index,(await inactive.state()).engine_frame===inactive.pausedFrame);
   const liveBuffers=await active.page.evaluate(()=>window.__audioProbe.live());
-  windows.push({index,pair:Math.floor(index/2),side,music:music.result,audioElapsed:audioAfter-audioBefore,liveBuffers,startupBuffers:active.startupBuffers,impacts:end.impact-start.impact,...end.result,native:end.native,position:end.position});
+  windows.push({renderedFraction,contextState,inactiveFrameUnchanged:true,index,pair:Math.floor(index/2),side,music:music.result,audioElapsed:audioAfter-audioBefore,liveBuffers,startupBuffers:active.startupBuffers,impacts:end.impact-start.impact,...end.result,native:end.native,position:end.position});
   fs.writeFileSync(path.join(output,'windows.json'),JSON.stringify(windows,null,2));
-  if(index<2||index>=order.length-2){await active.command('freeze');await delay(200);const name=index+'-'+side+'.png';await active.page.screenshot({path:path.join(output,name)});captures.push(name);await active.command('unfreeze')}
+  if(index<2||index>=order.length-2){const name=index+'-'+side+'.png';fs.writeFileSync(path.join(output,name),screenshot);captures.push(name)}
   check('no runtime errors '+index,!active.localMessages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)));
   await suspend(active);
   if(index%16===15)console.log('Completed',index+1,'of',order.length,'controlled windows');
  }
 }catch(e){failed=String(e.stack||e);console.error(failed)}
 finally{
- // Always resume our own children before closing Playwright transports.
- for(const instance of instances){if(instance.suspended){try{signal(instance,'SIGCONT');instance.suspended=false}catch(e){messages.push({cleanup:String(e)})}}}
+ // Resume paused engines before closing the browser.
+ for(const instance of instances){if(instance.suspended){try{await instance.page.evaluate(()=>window.__qaEngine.rtenv.resumeMainLoop());instance.suspended=false}catch(e){messages.push({cleanup:String(e)})}}}
  for(const instance of instances){await instance.context.close();await instance.browser.close()}
  for(let retry=0;retry<50&&processes().length;retry++)await delay(200);
  const exited=processes().length===0;checks.push({name:'all browser children exited',passed:exited});if(!exited&&!failed)failed='Browser child cleanup failed';
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',candidate_source:'ba396beeed9e587a8dc700edef7b28b79f1095d6',repeat:process.env.REPEAT,files,checks,windows,captures,runtimes,messages,order,processOwnership:instances.map(i=>({side:i.side,pids:i.pids})),physical_iphone_verified:false,scope:'Two separate browser processes resident per worker; inactive audio context suspended and all its owned browser children OS-stopped. 64 balanced adjacent pairs,4s measurement+1.5s settling, persistent exact audio paths without forced restarts. This controls launch-to-launch host variability; two-engine resident memory differs from a single game. Natural music transitions remain included. No physical phone claim.'},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',candidate_source:'ba396beeed9e587a8dc700edef7b28b79f1095d6',repeat:process.env.REPEAT,files,checks,windows,captures,runtimes,messages,order,processOwnership:instances.map(i=>({side:i.side,pids:i.pids})),physical_iphone_verified:false,scope:'Two separate browser processes resident per worker; inactive audio context suspended and Emscripten main loop paused. Browser GPU services run normally. Every window verifies zero context loss, rendered scene pixels and unchanged inactive engine frame. 64 balanced adjacent pairs,4s measurement+1.5s settling, persistent exact audio paths without forced restarts. This controls launch-to-launch host variability; two-engine resident memory differs from a single game. Natural music transitions remain included. No physical phone claim.'},null,2));
  server.close();
 }
 if(failed)process.exitCode=1;

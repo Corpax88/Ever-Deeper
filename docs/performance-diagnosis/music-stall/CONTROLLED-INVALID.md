@@ -1,0 +1,5 @@
+# Controlled benchmark rejected: rendered output was lost
+
+Run 36316407143, source af76779118e1a516cc2d8b8c99e054d9c65a6acd, is INVALID as performance evidence. Although both workflow jobs succeeded, actual original-side screenshots became black. Native frame counters continued and returned misleading values near 60 FPS. Its negative candidate comparison is not a demonstrated game regression.
+
+The runner OS-suspended WebKit GPU/WebContent children between windows. This test machinery is the suspected cause. Corrected harness uses the exported Emscripten pauseMainLoop/resumeMainLoop APIs; it never stops browser processes. Inactive audio is suspended separately. Every window must show an unchanged inactive engine frame, zero WebGL context loss, and substantial visible game pixels. Final original images remain subject to manual visual inspection. The predeclared 64 balanced pairs per worker, two workers, eight-pair blocking, and -2% noninferiority margin remain unchanged. All failed and inconclusive runs remain part of the record. No publication has occurred.
