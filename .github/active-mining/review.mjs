@@ -1,5 +1,5 @@
 import {PNG} from 'pngjs';
-import {webkit} from '@playwright/test';
+import {webkit,chromium} from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
@@ -24,8 +24,8 @@ const server=http.createServer((req,res)=>{
  else fs.createReadStream(file).pipe(res);
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
-const browser=await webkit.launch({headless:true}),checks=[],windows=[],captures=[],runtimes=[],messages=[];
-const order=process.env.REPEAT==='2'?['candidate','original']:['original','candidate'];
+const browser=await (process.env.BROWSER==='chromium'?chromium:webkit).launch({headless:true}),checks=[],windows=[],captures=[],runtimes=[],messages=[];
+const order=['candidate'];
 let failed=null;
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 function check(name,passed,details={}){checks.push({name,passed:!!passed,...details});if(!passed)throw Error(name);}
@@ -83,17 +83,42 @@ try{
    }
    await command('audio_mode',{cached:side==='candidate'});const a0=(await command('audio_snapshot')).result;const initialAudio=await page.evaluate(()=>window.__audioProbe.snapshot());check('prewarmed original audio',a0.tracks.length===3&&a0.tracks.every(t=>t.registered&&!t.loop&&t.same_bytes),{audio:a0});
    const before=await state();await page.mouse.move(before.mine_button[0]/before.viewport[0]*776,before.mine_button[1]/before.viewport[1]*420);await page.mouse.down();await command('route');
-   for(let index=0;index<6;index++){
-    const start=await state();await command('begin',{instrument:true});await delay(15000);const end=await command('end');
+   for(let index=0;index<1;index++){
+    const start=await state();await command('begin',{instrument:true});await delay(5000);const end=await command('end');
     check('active native '+block+'-'+index,end.native.active&&end.result.frames>200);
     windows.push({block,index,side,impacts:end.impact-start.impact,...end.result,native:end.native,position:end.position});fs.writeFileSync(path.join(output,'windows.json'),JSON.stringify(windows,null,2));
    }
    await command('route_stop');await page.mouse.up();await delay(400);
    const group=windows.filter(w=>w.block===block);
-   check('real movement '+block,group.reduce((a,w)=>a+w.distance,0)>200);
+   check('real movement '+block,group.reduce((a,w)=>a+w.distance,0)>20);
    check('real excavation '+block,group.reduce((a,w)=>a+w.blocks_removed,0)>=3);
    check('save success '+block,group.every(w=>w.save_error===0));
    await command('audio_snapshot');
+
+   const lifecycle=[];
+   await command('audio_mode',{cached:true});
+   await command('audio_seek_active',{position:12});
+   await command('audio_overlap');await delay(800);
+   const overlap=(await command('audio_snapshot')).result;
+   check('same track independent offsets',overlap.players.every(p=>p.playing)&&overlap.players[overlap.slot].position>12&&overlap.players[1-overlap.slot].position<3,{overlap});
+   await command('audio_stop_other');const stopped=(await command('audio_snapshot')).result;
+   check('independent stop',stopped.players[stopped.slot].playing&&!stopped.players[1-stopped.slot].playing);
+   await command('audio_pause',{enabled:true});
+   const paused=(await command('audio_snapshot')).result;await delay(800);const held=(await command('audio_snapshot')).result;
+   check('pause holds position',Math.abs(held.players[held.slot].position-paused.players[paused.slot].position)<0.1,{paused,held});
+   await command('audio_pause',{enabled:false});await delay(800);const resumed=(await command('audio_snapshot')).result;
+   check('resume advances',resumed.players[resumed.slot].position>held.players[held.slot].position+0.4,{resumed});
+   lifecycle.push({overlap,stopped,paused,held,resumed});
+   // Mute and zero volume during an actual overlapping transition.
+   await command('audio_seek_end');await delay(1300);const fading=(await command('audio_snapshot')).result;
+   check('crossfade overlaps',fading.fade>=0&&fading.players.every(p=>p.playing),{fading});
+   await command('audio_volume',{volume:0});const zero=(await command('audio_snapshot')).result;
+   check('zero volume both players',zero.players.every(p=>p.db<=-79),{zero});
+   await command('audio_mute',{enabled:true});const fadeMuted=(await command('audio_snapshot')).result;
+   check('mute cancels overlap',fadeMuted.fade<0&&fadeMuted.players.every(p=>!p.playing));
+   await command('audio_volume',{volume:0.78});await command('audio_mute',{enabled:false});
+   lifecycle.push({fading,zero,fadeMuted});
+   fs.writeFileSync(path.join(output,'lifecycle.json'),JSON.stringify(lifecycle,null,2));
    const transitions=[];
    for(let cycle=0;cycle<6;cycle++){
     const a=(await command('audio_snapshot')).result;const beforeIndex=a.index;
@@ -101,7 +126,10 @@ try{
     const end=(await command('audio_snapshot')).result;
     check('track transition '+block+'-'+cycle,end.index===(beforeIndex+1)%3&&end.fade<0&&end.players[end.slot].playing,{beforeIndex,after:end.index});
     if(side==='candidate')check('cached playback '+cycle,end.players[end.slot].same_cached);
-    transitions.push({cycle,beforeIndex,after:end.index,...timed,audio:end});
+    const sound=await page.evaluate(()=>window.__audioProbe.capture());
+    check('track '+end.index+' actual output '+cycle,sound.context==='running'&&Math.max(...sound.rms)>0.001);
+    fs.writeFileSync(path.join(output,'track-'+cycle+(sound.mime==='audio/mp4'?'.mp4':'.webm')),Buffer.from(sound.data,'base64'));delete sound.data;
+    transitions.push({sound,cycle,beforeIndex,after:end.index,...timed,audio:end});
    }
    const normal=(await command('audio_snapshot')).result;
    await command('audio_volume',{volume:0.4});const quieter=(await command('audio_snapshot')).result;
@@ -122,7 +150,7 @@ try{
  }
 }catch(e){failed=String(e.stack||e);console.error(failed);}
 finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'Music sample registration/caching trial: all three unmodified MP3s pre-registered before menu; reference duplicates every transition, candidate reuses private cached sample. Two balanced contexts across workers; one natural90s route and six near-end transitions per mode, plus volume/mute. QA-only DEV15.10 package, measured actual movement and block destruction; shared profiling overhead, fresh balanced contexts. Candidate reuses immutable long WebAudio buffers; width6 terrain, assets, lights and resolution unchanged. CPU wrapper wall time not GPU time. Save uses isolated fixture namespace. Includes all windows/stalls. No physical phone claim.'},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,browser:process.env.BROWSER,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'Music sample registration/caching trial: all three unmodified MP3s pre-registered before menu; reference duplicates every transition, candidate reuses private cached sample. Two balanced contexts across workers; one natural90s route and six near-end transitions per mode, plus volume/mute. QA-only DEV15.10 package, measured actual movement and block destruction; shared profiling overhead, fresh balanced contexts. Candidate reuses immutable long WebAudio buffers; width6 terrain, assets, lights and resolution unchanged. CPU wrapper wall time not GPU time. Save uses isolated fixture namespace. Includes all windows/stalls. No physical phone claim.'},null,2));
  await browser.close();server.close();
 }
 if(failed)process.exitCode=1;

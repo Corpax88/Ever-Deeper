@@ -54,6 +54,15 @@ func _command(data: Dictionary) -> void:
 			AudioDirector.qa_cached_music = bool(data.cached)
 			AudioDirector.set_muted(true)
 			AudioDirector.set_muted(false)
+		"audio_pause":
+			for p in AudioDirector._music_players:
+				p.stream_paused = bool(data.enabled)
+		"audio_overlap":
+			AudioDirector._start_music_track(1-AudioDirector._active_music_slot,AudioDirector._music_track_index,false)
+		"audio_stop_other":
+			AudioDirector._music_players[1-AudioDirector._active_music_slot].stop()
+		"audio_seek_active":
+			AudioDirector._music_players[AudioDirector._active_music_slot].seek(float(data.position))
 		"audio_seek_end":
 			var p: AudioStreamPlayer = AudioDirector._music_players[AudioDirector._active_music_slot]
 			p.seek(maxf(0.0,p.stream.get_length()-3.2))
