@@ -32,7 +32,8 @@ function check(name,passed,details={}){checks.push({name,passed:!!passed,...deta
 try{
  for(const [block,side] of order.entries()){
   const context=await browser.newContext({viewport:{width:776,height:420},deviceScaleFactor:3,hasTouch:true});
-  await context.addInitScript(()=>{
+  await context.addInitScript(({reuse})=>{
+   globalThis.__reuseImmutableMusicBuffers=reuse;
    const probe=window.__audioProbe={buffers:[],starts:[],outputs:[],ids:new WeakMap(),count:0};
    const create=BaseAudioContext.prototype.createBuffer;
    BaseAudioContext.prototype.createBuffer=function(...args){const b=create.apply(this,args),id=++probe.count;probe.ids.set(b,id);if(b.duration>10)probe.buffers.push({id,length:b.length,rate:b.sampleRate,channels:b.numberOfChannels,bytes:b.length*b.numberOfChannels*4});return b};
@@ -53,7 +54,7 @@ try{
     const bytes=new Uint8Array(await new Blob(chunks,{type:mime}).arrayBuffer());let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));
     return {mime,data:btoa(binary),rms,context:o.context.state};
    };
-  });
+  },{reuse:side==='candidate'});
   const page=await context.newPage();let id=0;const localMessages=[];
   page.on('console',m=>{localMessages.push(m.type()+': '+m.text());messages.push({block,side,message:m.type()+': '+m.text()})});
   page.on('pageerror',e=>localMessages.push('PAGEERROR '+e.message));
@@ -112,15 +113,16 @@ try{
    const actual=await page.evaluate(()=>window.__audioProbe.capture());
    check('actual audio signal '+block,actual.context==='running'&&Math.max(...actual.rms)>0.001,{rms:actual.rms});
    const clip=block+'-'+side+(actual.mime==='audio/mp4'?'.mp4':'.webm');fs.writeFileSync(path.join(output,clip),Buffer.from(actual.data,'base64'));delete actual.data;
-   if(side==='candidate')check('no new decoded music buffers '+block,finalAudio.buffers.length===initialAudio.buffers.length&&initialAudio.buffers.length===3,{initialAudio,finalAudio});
+   if(side==='candidate')check('all music starts reuse prepared buffers '+block,finalAudio.starts.every(v=>initialAudio.buffers.some(b=>b.id===v.id)));
    fs.writeFileSync(path.join(output,'transitions-'+block+'.json'),JSON.stringify({side,transitions,normal,quieter,muted,unmuted,initialAudio,finalAudio,actual,clip},null,2));
+   if(side==='candidate')check('no new decoded music buffers '+block,finalAudio.buffers.length===initialAudio.buffers.length&&initialAudio.buffers.length===3,{initialAudio,finalAudio});
    await command('freeze');await delay(300);const name=block+'-'+side+'.png';await page.screenshot({path:path.join(output,name)});captures.push(name);
    check('no runtime errors '+block,!localMessages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)));
   }finally{await context.close();}
  }
 }catch(e){failed=String(e.stack||e);console.error(failed);}
 finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'Music sample registration/caching trial: all three unmodified MP3s pre-registered before menu; reference duplicates every transition, candidate reuses private cached sample. Two balanced contexts across workers; one natural90s route and six near-end transitions per mode, plus volume/mute. QA-only DEV15.10 package, measured actual movement and block destruction; shared profiling overhead, fresh contexts ABBA. Candidate only anchors width6 terrain strip keys to the fixed world grid; floor, assets, lights and resolution unchanged. CPU wrapper wall time not GPU time. Save uses isolated fixture namespace. Includes all windows/stalls. No physical phone claim.'},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'Music sample registration/caching trial: all three unmodified MP3s pre-registered before menu; reference duplicates every transition, candidate reuses private cached sample. Two balanced contexts across workers; one natural90s route and six near-end transitions per mode, plus volume/mute. QA-only DEV15.10 package, measured actual movement and block destruction; shared profiling overhead, fresh balanced contexts. Candidate reuses immutable long WebAudio buffers; width6 terrain, assets, lights and resolution unchanged. CPU wrapper wall time not GPU time. Save uses isolated fixture namespace. Includes all windows/stalls. No physical phone claim.'},null,2));
  await browser.close();server.close();
 }
 if(failed)process.exitCode=1;

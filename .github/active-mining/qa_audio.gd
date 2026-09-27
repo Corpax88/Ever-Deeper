@@ -301,7 +301,7 @@ func _qa_impl_start_music_track(slot: int, track_index: int, fade_in: bool) -> v
 	var player: = _music_players[slot]
 	var mark: int = Time.get_ticks_usec()
 	var stream: AudioStream = _prepared_music[track_index] if qa_cached_music else MUSIC_TRACKS[track_index].duplicate()
-	if stream is AudioStreamMP3: stream.loop = false
+	if not qa_cached_music and stream is AudioStreamMP3: stream.loop = false
 	if QAProfile.enabled: QAProfile.record("audio.duplicate", Time.get_ticks_usec()-mark)
 	mark = Time.get_ticks_usec()
 	player.stop()

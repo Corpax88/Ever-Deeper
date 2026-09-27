@@ -26,6 +26,14 @@ _,after=unpack(data);assert all(after[n]==v for n,v in before.items() if n not i
 (out/'index.pck').write_bytes(data)
 html=(out/'index.html').read_text();m=re.search(r'const GODOT_CONFIG = (\{[^\r\n]+\});',html);c=json.loads(m[1]);c['fileSizes']['index.pck']=len(data)
 (out/'index.html').write_text(html[:m.start(1)]+json.dumps(c,separators=(',',':'))+html[m.end(1):])
+# Exact immutable export glue: keep music PCM shared across playbacks.
+# QA flag selects original copy behavior in reference contexts.
+js_path=out/'index.js'
+js=js_path.read_text()
+old='getAudioBuffer(){return this._duplicateAudioBuffer()}'
+new='getAudioBuffer(){if(globalThis.__reuseImmutableMusicBuffers===true&&this._audioBuffer&&this._audioBuffer.duration>10){return this._audioBuffer}return this._duplicateAudioBuffer()}'
+assert js.count(old)==1, 'Unexpected audio glue; refuse unverified patch'
+js_path.write_text(js.replace(old,new))
 (out/'manifest.json').write_text(json.dumps({n:identity(out/n) for n in manifest}))
 (out/'build.json').write_text(json.dumps({'source':os.environ.get('GITHUB_SHA'),'base_source':'ab0c12ff579134e0a092946bd92973e4599a073c','base_run':36118561266,'unchanged_resources':len(before)-len(set(before)&set(replace)),'replaced':list(replace),'original_files':manifest},indent=2))
 print('Preserved',len(before)-len(set(before)&set(replace)),'resources; isolated QA package ready')
