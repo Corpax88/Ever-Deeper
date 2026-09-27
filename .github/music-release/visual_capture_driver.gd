@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 18907)
-Total output lines: 1938
-
 extends Node
 
 
@@ -1041,7 +1038,124 @@ func _find_d1_wall_view(world: Node, bedrock: bool, require_corner: bool) -> Dic
 			var block: Dictionary = Dictionary(blocks[cell])
 			var matches: = String(block.get("kind", "")) == "bedrock" if bedrock else (
 				String(block.get("kind", "")) != "bedrock"
-				and String(block.get("ro…907 tokens truncated…onary = Dictionary(gates[gate_index])
+				and String(block.get("role", "")) == "terrain"
+			)
+			if not matches:
+				continue
+			var open_sides: Array[bool] = []
+			for offset in CARDINALS:
+				open_sides.append( not blocks.has(cell + Vector2i(offset)))
+			var open_side: = -1
+			if require_corner:
+				for pair_value in ADJACENT_SIDE_PAIRS:
+					var pair: Array = Array(pair_value)
+					if bool(open_sides[int(pair[0])]) and bool(open_sides[int(pair[1])]):
+						open_side = int(pair[0])
+						break
+			else:
+				for side in open_sides.size():
+					if bool(open_sides[side]):
+						open_side = side
+						break
+			if open_side < 0:
+				continue
+			var target: = Vector2(world.call("_cell_center", cell))
+			var score: = target.distance_squared_to(world_center)
+			if score >= best_score:
+				continue
+			best_score = score
+			best = {
+				"target": target,
+				"player": Vector2(world.call("_cell_center", cell + Vector2i(CARDINALS[open_side]))),
+			}
+	return best
+
+
+func _prepare_d2_edges(mine_id: String) -> bool:
+	var world: = _load_d2(mine_id)
+	if world == null:
+		return false
+	var view: = _find_d2_wall_view(world)
+	if view.is_empty():
+		return false
+	_frame_world(world, Vector2(view.player), Vector2(view.target))
+	return true
+
+
+func _prepare_d2_bedrock(mine_id: String) -> bool:
+	var world: = _load_d2(mine_id)
+	if world == null:
+		return false
+
+
+	var terrain_hp: PackedInt32Array = world.get("terrain_hp")
+	var concealed: Dictionary = Dictionary(world.get("concealed_cells"))
+	for row in range(1, 8):
+		for col in range(1, 9):
+			var cell: = Vector2i(col, row)
+			var index: = int(world.call("_cell_index", cell))
+			terrain_hp[index] = 0
+			concealed.erase(index)
+	world.set("terrain_hp", terrain_hp)
+	world.set("concealed_cells", concealed)
+	world.call("_request_redraw")
+	var player_position: = Vector2(world.call("_cell_center", Vector2i(4, 4)))
+	var target: = Vector2(world.call("_cell_center", Vector2i(0, 0)))
+	_frame_world(world, player_position, target)
+	return true
+
+
+func _find_d2_wall_view(world: Node) -> Dictionary:
+	var cols: = int(world.get("cols"))
+	var rows: = int(world.get("rows"))
+	var world_center: = Vector2(world.get("world_size")) * 0.5
+	var best: Dictionary = {}
+	var best_score: = INF
+	for row in range(1, rows - 1):
+		for col in range(1, cols - 1):
+			var cell: = Vector2i(col, row)
+			if bool(world.call("_terrain_is_bedrock", cell)) or not bool(world.call("_visual_is_solid", cell)):
+				continue
+			var open_sides: Array[bool] = []
+			for offset in CARDINALS:
+				open_sides.append( not bool(world.call("_visual_is_solid", cell + Vector2i(offset))))
+			var open_side: = -1
+			for pair_value in ADJACENT_SIDE_PAIRS:
+				var pair: Array = Array(pair_value)
+				if bool(open_sides[int(pair[0])]) and bool(open_sides[int(pair[1])]):
+					open_side = int(pair[0])
+					break
+			if open_side < 0:
+				continue
+			var target: = Vector2(world.call("_cell_center", cell))
+			var score: = target.distance_squared_to(world_center)
+			if score >= best_score:
+				continue
+			best_score = score
+			best = {
+				"target": target,
+				"player": Vector2(world.call("_cell_center", cell + Vector2i(CARDINALS[open_side]))),
+			}
+	return best
+
+
+func _prepare_d2_transition(mine_id: String) -> bool:
+	var world: = _load_d2(mine_id)
+	if world == null:
+		return false
+	var target: = Vector2(world.get("depth_entrance"))
+	_frame_world(world, target + Vector2(125.0, 0.0), target)
+	return true
+
+
+func _prepare_d2_gate(mine_id: String, gate_index: int, variant: String) -> bool:
+	var world: = _load_d2(mine_id)
+	if world == null:
+		return false
+	var gates: Array = world.call("get_drill_gates")
+	if gate_index < 0 or gate_index >= gates.size():
+		return false
+	var gate: Dictionary = Dictionary(gates[gate_index])
 	var gate_id: = String(gate.id)
 	var rocks: Array = world.get("rocks")
 	var discovered_cavern: = false
