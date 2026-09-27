@@ -1,0 +1,85 @@
+name: Publish reviewed hero stance DEV15.14
+on:
+  push:
+    branches: [main]
+    paths: ['.github/hero-stance-publication/review.json', '.github/workflows/publish-hero-stance.yml']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: pages-ever-deeper
+  cancel-in-progress: false
+jobs:
+  package:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - id: review
+        name: Resolve the reviewed immutable artifact
+        run: |
+          python3 .github/hero-stance-publication/publish.py check-review
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          review=json.loads(Path('.github/hero-stance-publication/review.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              print('artifact_run_id='+str(review['artifact_run_id']),file=out)
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          name: hero-candidate
+          run-id: ${{ steps.review.outputs.artifact_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/candidate
+      - name: Stage DEV15.14 and verify preserved LIVE bytes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .github/hero-stance-publication/publish.py prepare "$RUNNER_TEMP/hero-stance-publication" --candidate "$RUNNER_TEMP/candidate"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-dev15-13-before-dev15-14-rollback
+          path: ${{ runner.temp }}/hero-stance-publication/previous/dev
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-hero-stance-staging
+          path: ${{ runner.temp }}/hero-stance-publication/staging.json
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/hero-stance-publication/site
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: python3 .github/hero-stance-publication/publish.py verify "$RUNNER_TEMP/verified"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ever-deeper-hero-stance-publication-receipt
+          path: ${{ runner.temp }}/verified/publication-receipt.json
+          if-no-files-found: error
+
+
+
+
