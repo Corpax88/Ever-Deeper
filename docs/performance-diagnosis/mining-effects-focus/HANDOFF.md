@@ -54,3 +54,44 @@ No blanket graphics/resolution/light reduction is authorized.
 Current evidence does not justify calling this task's FPS goal complete.
 If work continues, require a distinct measured mechanism; preserve this failed
 FPS screen and reuse existing accepted package rather than a broad test matrix.
+
+
+## Follow-up exclusions (same authorized test branch)
+
+All following runs reuse the same immutable DEV15.11 export and retain the
+original terrain-redraw path throughout measurement. None is accepted for DEV
+or LIVE. These are Mac synthetic fixtures, not private phone sessions.
+
+Allocation trace: source106139a6142b3ce96fe7b846b4896a3a0d73e09f,
+run36339264655/artifact10938501877. 460 observed RAFs: repeated texImage2D
+is a 256x1 RGBA32F texture update (460 calls), not a repeated full-size render
+target allocation. Only one texture creation/deletion during observation.
+This rejects the proposed repeated large texture allocation mechanism in this
+fixture, not every possible engine leak. See allocation-report/allocations.json.
+
+Sync-elision diagnostic: source6674d0282c46329a4dde194c94f7eccaeb5dc550,
+run36339583510/artifact10937743750. ABBA FPS52.28/51.39/50.25/47.54.
+The QA shim removes exactly two real fence/query pairs per RAF, without clear
+FPS recovery. Three frozen pixel comparisons are identical, and the break image
+was inspected. Fake signaled-sync tokens are diagnostic only, NOT a proposed
+production engine patch. Do not promote or repeat unchanged for a better score.
+A prior harness syntax error was corrected before this successful run; it was
+not a game failure. See sync-report/sync-counters/sync-pixels.json.
+
+Audio position cadence: sourcec29d0b824bb83a99bd1bc96e7d8c4bd9a75e8712,
+run36340030946/artifact10939005465. Processor posts once per incoming audio
+quantum, but only with nonempty input; the idle pooled-worklet message-leak
+hypothesis is unsupported by source. QA limits reports to at most60Hz per
+processor, leaving audio sample playback untouched. Four worklets existed.
+ABBA10s message counts8027/1077/1080/7662 (~86% reduction); FPS
+59.63/60.00/60.00/60.01. Three frozen pixel comparisons are identical.
+Both modes are near the60FPS ceiling: this establishes message reduction, NOT
+sustained recovery from the observed FPS problem. No audio-position semantic
+acceptance or physical-phone verification is claimed. See audio-report,
+audio-counters and audio-pixels.json. Do not promote this QA server rewrite.
+
+Investigation remains unresolved: a specific dominant sustained FPS cause has
+not been isolated. Retain negative results; do not relabel a CPU-work saving as
+a proven FPS fix. No new release, phone retest request, or broad matrix follows
+from these inconclusive results. Any next experiment requires a distinct,
+measured mechanism or representative on-device profiling evidence.
