@@ -23,6 +23,8 @@ from3; reset from other values follows unconditional startup assignment.
 
 Publisher pins exact candidate digest and successful source run, downloads and
 hash-verifies existing LIVE9 + Worn9 + oldDEV9 files, replaces only DEV9, retains
-rollback and verifies all27 public files. Publication receipt pending.
-Next: finish publication, then user START REPORT, compare3/2/1/3 in same area,
+rollback and verifies all27 public files. Publication run36351090840 passed package, deploy and verification. Receipt
+artifact10942610938 confirms all27 public hashes; LIVE9/Worn9 unchanged.
+Published commit e390709a63f897723aa3c7b22d4840a95fb32d9d.
+Next: user START REPORT, compare3/2/1/3 in same area,
 roughly20–30s each, SEND REPORT. Do not repeat accepted Mac comparison.
