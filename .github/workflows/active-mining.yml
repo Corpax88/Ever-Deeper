@@ -1,10 +1,10 @@
-name: Compare original and music candidate in isolated browser processes
+name: Compare persistent isolated music paths with inactive process suspension
 on:
   push:
-    branches: [codex/music-isolated-20260927]
+    branches: [codex/music-controlled-20260927]
     paths: ['.github/active-mining/**', '.github/workflows/active-mining.yml']
 permissions: {contents: read, actions: read}
-concurrency: {group: music-isolated-20260927, cancel-in-progress: true}
+concurrency: {group: music-controlled-20260927, cancel-in-progress: true}
 jobs:
   profile:
     runs-on: macos-15
@@ -27,4 +27,4 @@ jobs:
         run: node .github/active-mining/review.mjs "$RUNNER_TEMP/reference" "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review"
       - uses: actions/upload-artifact@v4
         if: always()
-        with: {name: 'music-isolated-${{ matrix.repeat }}', path: '${{ runner.temp }}/review', retention-days: 90}
+        with: {name: 'music-controlled-${{ matrix.repeat }}', path: '${{ runner.temp }}/review', retention-days: 90}

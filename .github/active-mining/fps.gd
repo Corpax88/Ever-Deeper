@@ -50,6 +50,10 @@ func _command(data: Dictionary) -> void:
 			for node in world.find_children("PremiumHeadlamp", "", true, false):
 				node.preview_settings.clear()
 				node.refresh_workshop_effects()
+		"audio_status":
+			last_result = {"index":AudioDirector._music_track_index,"players":[]}
+			for p in AudioDirector._music_players:
+				last_result.players.append({"playing":p.playing,"position":p.get_playback_position()})
 		"route":
 			route_active = true
 			route_started = Time.get_ticks_usec()

@@ -25,19 +25,19 @@ const server=http.createServer((req,res)=>{
  else fs.createReadStream(file).pipe(res);
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
-let browser=null; const checks=[],windows=[],captures=[],runtimes=[],messages=[];
-const pairs=process.env.REPEAT==='2'?['BA','AB','AB','BA','AB','BA','BA','AB']:['AB','BA','BA','AB','BA','AB','AB','BA'];
-const order=pairs.join('').split('').map(v=>v==='A'?'original':'candidate');
+
+const checks=[],windows=[],captures=[],runtimes=[],messages=[],instances=[];
 let failed=null;
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
-function webkitProcesses(){return execFileSync('ps',['-axo','pid=,comm='],{encoding:'utf8'}).split('\n').filter(v=>/ms-playwright.*(WebKit|MiniBrowser)/.test(v));}
-function check(name,passed,details={}){checks.push({name,passed:!!passed,...details});if(!passed)throw Error(name);}
-try{
- for(const [block,side] of order.entries()){
-  const beforeProcesses=webkitProcesses();check('clean process start '+block,beforeProcesses.length===0,{processes:beforeProcesses});
-  browser=await webkit.launch({headless:true});
-  const launched=Date.now();
-  const context=await browser.newContext({viewport:{width:776,height:420},deviceScaleFactor:3,hasTouch:true});
+function check(name,passed,details={}){checks.push({name,passed:!!passed,...details});if(!passed)throw Error(name)}
+function processes(){return execFileSync('ps',['-axo','pid=,stat=,comm='],{encoding:'utf8'}).split('\n').filter(v=>/ms-playwright.*(WebKit|MiniBrowser)/.test(v)).map(v=>{const m=v.trim().match(/^(\d+)\s+(\S+)\s+(.+)$/);return {pid:Number(m[1]),stat:m[2],command:m[3]}})}
+function signal(instance,kind){
+ const current=new Map(processes().map(p=>[p.pid,p]));
+ for(const p of instance.pids){const found=current.get(p.pid);if(!found){if(kind==='SIGCONT')continue;throw Error('Browser child exited '+p.pid)}check('owned process identity '+p.pid,found.command===p.command);process.kill(p.pid,kind)}
+}
+async function initialize(side){
+ const before=new Set(processes().map(p=>p.pid)),browser=await webkit.launch({headless:true});
+ const context=await browser.newContext({viewport:{width:776,height:420},deviceScaleFactor:3,hasTouch:true});
   await context.addInitScript(({reuse})=>{
    globalThis.__reuseImmutableMusicBuffers=reuse;
    const probe=window.__audioProbe={buffers:[],starts:[],outputs:[],ids:new WeakMap(),weak:[],count:0};
@@ -62,54 +62,75 @@ try{
     return {mime,data:btoa(binary),rms,context:o.context.state};
    };
   },{reuse:side==='candidate'});
-  const page=await context.newPage();let id=0;const localMessages=[];
-  page.on('console',m=>{localMessages.push(m.type()+': '+m.text());messages.push({block,side,message:m.type()+': '+m.text()})});
-  page.on('pageerror',e=>localMessages.push('PAGEERROR '+e.message));
-  const state=()=>page.evaluate(()=>window.DEV14_STATE);
-  async function wait(label,predicate,timeout=90000){let s;for(let end=Date.now()+timeout;Date.now()<end;){s=await state();if(s?.error||s?.native?.failed)throw Error(label+JSON.stringify(s));if(predicate(s))return s;if(localMessages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)))throw Error('Runtime '+label);await delay(150)}throw Error(label+' timeout '+JSON.stringify(s));}
-  async function command(kind,extra={}){const wanted=++id;await page.evaluate(v=>window.DEV14_COMMAND=JSON.stringify(v),{kind,id:wanted,...extra});return wait(kind,s=>s?.id===wanted);}
-  try{
-   await page.goto('http://127.0.0.1:'+server.address().port+'/'+side+'/',{waitUntil:'domcontentloaded',timeout:90000});await wait('menu',s=>s?.menu,180000);
-   const runtime=await page.evaluate(()=>{const g=document.querySelector('canvas').getContext('webgl2'),e=g.getExtension('WEBGL_debug_renderer_info');return {renderer:g.getParameter(e?e.UNMASKED_RENDERER_WEBGL:g.RENDERER),browser:navigator.userAgent,dpr:devicePixelRatio,canvas:[g.canvas.width,g.canvas.height]}});runtimes.push({side,block,...runtime});
-   check('Apple GPU '+block,process.platform==='darwin'&&/Apple|Metal/.test(runtime.renderer));check('full resolution '+block,runtime.canvas[0]===2328&&runtime.canvas[1]===1260);
-   await command('setup',{mine:'emberMine',cached:true,durable:true,stable:false});await wait('native',s=>s?.native?.active&&s.native.updates>3);await delay(3000);
-   check('version', (await state()).version==='1.0.0-dev.15.10');
-   async function parity(tag){
-    await command('freeze');await page.mouse.move(0,0);await delay(300);
-    const buffers=[];
-    for(const enabled of [false,true,false]){
-     await command('stable',{enabled});await delay(300);
-     const name=block+'-'+tag+'-'+buffers.length+'.png';
-     buffers.push(await page.screenshot({path:path.join(output,name),timeout:60000}));captures.push(name);
-    }
-    const imgs=buffers.map(b=>PNG.sync.read(b));let different=0,max=0;
-    for(let i=0;i<imgs[0].data.length;i++){const d=Math.abs(imgs[0].data[i]-imgs[1].data[i]);if(d)different++;max=Math.max(max,d)}
-    check('restore exact '+block+'-'+tag,imgs[0].data.equals(imgs[2].data));
-    check('stable exact '+block+'-'+tag,different===0,{different,max});
-    await command('stable',{enabled:side==='candidate'});await command('unfreeze');
-   }
-   const before=await state();await page.mouse.move(before.mine_button[0]/before.viewport[0]*776,before.mine_button[1]/before.viewport[1]*420);await page.mouse.down();
-   const startupMs=Date.now()-launched;
-   const startupBuffers=await page.evaluate(()=>window.__audioProbe.live());
-   await delay(15000);
-   const start=await state();await command('begin',{instrument:false});await delay(30000);const end=await command('end');
-   check('same active mining workload '+block,end.native.active&&end.result.frames>600&&end.impact-start.impact>=30&&JSON.stringify(start.position)===JSON.stringify(end.position));
-   const liveBuffers=await page.evaluate(()=>window.__audioProbe.live());
-   windows.push({block,pair:Math.floor(block/2),side,startupMs,startupBuffers,liveBuffers,impacts:end.impact-start.impact,...end.result,native:end.native,position:end.position});
-   fs.writeFileSync(path.join(output,'windows.json'),JSON.stringify(windows,null,2));
-   await page.mouse.up();
-   await command('freeze');await delay(300);const name=block+'-'+side+'.png';if(block<2||block>=order.length-2){await page.screenshot({path:path.join(output,name)});captures.push(name);}
-   check('no runtime errors '+block,!localMessages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)));
-  }finally{
-   await context.close();await browser.close();browser=null;
-   for(let retry=0;retry<50&&webkitProcesses().length;retry++)await delay(200);
-   check('all browser children exited '+block,webkitProcesses().length===0,{processes:webkitProcesses()});
-  }
+
+ const page=await context.newPage(),localMessages=[];let id=0;
+ const instance={side,browser,context,page,pids:[],suspended:false};instances.push(instance);
+ page.on('console',m=>{localMessages.push(m.type()+': '+m.text());messages.push({side,message:m.type()+': '+m.text()})});
+ page.on('pageerror',e=>localMessages.push('PAGEERROR '+e.message));
+ const state=()=>page.evaluate(()=>window.DEV14_STATE);
+ async function wait(label,predicate,timeout=90000){let s;for(let end=Date.now()+timeout;Date.now()<end;){s=await state();if(s?.error||s?.native?.failed)throw Error(label+JSON.stringify(s));if(predicate(s))return s;if(localMessages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)))throw Error('Runtime '+label);await delay(100)}throw Error(label+' timeout '+JSON.stringify(s))}
+ async function command(kind,extra={}){const wanted=++id;await page.evaluate(v=>window.DEV14_COMMAND=JSON.stringify(v),{kind,id:wanted,...extra});return wait(kind,s=>s?.id===wanted)}
+ Object.assign(instance,{state,command,localMessages});
+ await page.goto('http://127.0.0.1:'+server.address().port+'/'+side+'/',{waitUntil:'domcontentloaded',timeout:90000});await wait('menu',s=>s?.menu,180000);
+ const runtime=await page.evaluate(()=>{const g=document.querySelector('canvas').getContext('webgl2'),e=g.getExtension('WEBGL_debug_renderer_info');return {renderer:g.getParameter(e?e.UNMASKED_RENDERER_WEBGL:g.RENDERER),browser:navigator.userAgent,dpr:devicePixelRatio,canvas:[g.canvas.width,g.canvas.height]}});runtimes.push({side,...runtime});
+ check('Apple GPU '+side,process.platform==='darwin'&&/Apple|Metal/.test(runtime.renderer));check('full resolution '+side,runtime.canvas[0]===2328&&runtime.canvas[1]===1260);
+ await command('setup',{mine:'emberMine',cached:true,durable:true,stable:false});await wait('native',s=>s?.native?.active&&s.native.updates>3);await delay(3000);
+ const s=await state();check('version '+side,s.version==='1.0.0-dev.15.10');
+ await page.mouse.move(s.mine_button[0]/s.viewport[0]*776,s.mine_button[1]/s.viewport[1]*420);await page.mouse.down();await delay(15000);
+ instance.pids=processes().filter(p=>!before.has(p.pid));
+ check('dedicated browser children '+side,instance.pids.some(p=>/WebContent/.test(p.command))&&instance.pids.some(p=>/GPU/.test(p.command)));
+ instance.startupBuffers=await page.evaluate(()=>window.__audioProbe.live());
+ await suspend(instance);
+ return instance;
+}
+async function suspend(instance){
+ await instance.command('freeze');
+ const contexts=await instance.page.evaluate(async()=>{const contexts=[...new Set(window.__audioProbe.outputs.map(o=>o.context))];await Promise.all(contexts.map(c=>c.suspend()));return contexts.map(c=>c.state)});
+ check('audio suspended '+instance.side,contexts.length>0&&contexts.every(s=>s==='suspended'));
+ const ownNow=processes().filter(p=>instance.pids.some(w=>w.pid===p.pid));
+ check('all owned children remain '+instance.side,ownNow.length===instance.pids.length);
+ signal(instance,'SIGSTOP');instance.suspended=true;
+ check('OS stopped '+instance.side,processes().filter(p=>instance.pids.some(w=>w.pid===p.pid)).every(p=>p.stat.includes('T')));
+}
+async function resume(instance){
+ signal(instance,'SIGCONT');instance.suspended=false;
+ const contexts=await instance.page.evaluate(async()=>{const contexts=[...new Set(window.__audioProbe.outputs.map(o=>o.context))];await Promise.all(contexts.map(c=>c.resume()));return contexts.map(c=>c.state)});
+ check('audio resumed '+instance.side,contexts.length>0&&contexts.every(s=>s==='running'));
+ await instance.command('unfreeze');
+}
+const base=process.env.REPEAT==='2'?['BA','AB','AB','BA','AB','BA','BA','AB']:['AB','BA','BA','AB','BA','AB','AB','BA'];
+const pairs=Array.from({length:8},()=>base).flat();
+const order=pairs.join('').split('').map(v=>v==='A'?'original':'candidate');
+try{
+ check('clean worker',processes().length===0);
+ const originalInstance=await initialize('original'),candidateInstance=await initialize('candidate');
+ check('disjoint process ownership',originalInstance.pids.every(a=>candidateInstance.pids.every(b=>a.pid!==b.pid)));
+ for(const [index,side] of order.entries()){
+  const active=instances.find(i=>i.side===side),inactive=instances.find(i=>i.side!==side);
+  check('inactive renderer stopped '+index,inactive.suspended&&processes().filter(p=>inactive.pids.some(w=>w.pid===p.pid)).every(p=>p.stat.includes('T')));
+  await resume(active);await delay(1500);
+  const audioBefore=await active.page.evaluate(()=>window.__audioProbe.outputs[0].context.currentTime);
+  const start=await active.state();await active.command('begin',{instrument:false});await delay(4000);const end=await active.command('end');
+  const audioAfter=await active.page.evaluate(()=>window.__audioProbe.outputs[0].context.currentTime);
+  const music=await active.command('audio_status');check('music player active '+index,music.result.players.some(p=>p.playing));
+  check('audio clock advances '+index,audioAfter-audioBefore>3.5);
+  check('same active workload '+index,end.native.active&&end.result.frames>60&&end.impact-start.impact>=5&&JSON.stringify(start.position)===JSON.stringify(end.position));
+  const liveBuffers=await active.page.evaluate(()=>window.__audioProbe.live());
+  windows.push({index,pair:Math.floor(index/2),side,music:music.result,audioElapsed:audioAfter-audioBefore,liveBuffers,startupBuffers:active.startupBuffers,impacts:end.impact-start.impact,...end.result,native:end.native,position:end.position});
+  fs.writeFileSync(path.join(output,'windows.json'),JSON.stringify(windows,null,2));
+  if(index<2||index>=order.length-2){await active.command('freeze');await delay(200);const name=index+'-'+side+'.png';await active.page.screenshot({path:path.join(output,name)});captures.push(name);await active.command('unfreeze')}
+  check('no runtime errors '+index,!active.localMessages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)));
+  await suspend(active);
+  if(index%16===15)console.log('Completed',index+1,'of',order.length,'controlled windows');
  }
-}catch(e){failed=String(e.stack||e);console.error(failed);}
+}catch(e){failed=String(e.stack||e);console.error(failed)}
 finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'Predeclared eight AB/BA pairs per worker, fresh browser process per observation with verified child exit. Exact original audio source versus clean cached/shared candidate; no common preparatory samples. Fixed active mining, fifteen-second warmup, thirty-second window, per-frame function profiling disabled. All outliers retained. Mac only, not physical iPhone.'},null,2));
- if(browser)await browser.close();server.close();
+ // Always resume our own children before closing Playwright transports.
+ for(const instance of instances){if(instance.suspended){try{signal(instance,'SIGCONT');instance.suspended=false}catch(e){messages.push({cleanup:String(e)})}}}
+ for(const instance of instances){await instance.context.close();await instance.browser.close()}
+ for(let retry=0;retry<50&&processes().length;retry++)await delay(200);
+ const exited=processes().length===0;checks.push({name:'all browser children exited',passed:exited});if(!exited&&!failed)failed='Browser child cleanup failed';
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',candidate_source:'ba396beeed9e587a8dc700edef7b28b79f1095d6',repeat:process.env.REPEAT,files,checks,windows,captures,runtimes,messages,order,processOwnership:instances.map(i=>({side:i.side,pids:i.pids})),physical_iphone_verified:false,scope:'Two separate browser processes resident per worker; inactive audio context suspended and all its owned browser children OS-stopped. 64 balanced adjacent pairs,4s measurement+1.5s settling, persistent exact audio paths without forced restarts. This controls launch-to-launch host variability; two-engine resident memory differs from a single game. Natural music transitions remain included. No physical phone claim.'},null,2));
+ server.close();
 }
 if(failed)process.exitCode=1;
-
