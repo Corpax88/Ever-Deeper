@@ -13,7 +13,7 @@ async function state(){return page.evaluate(()=>({game:window.DEV14_STATE,focus:
 async function wait(fn){for(let i=0;i<400;i++){const s=await state();if(s.game?.error||s.game?.native?.failed||messages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR/.test(m)))throw Error(JSON.stringify(s));if(fn(s))return s;await delay(150);}throw Error('timeout');}
 async function command(kind,more={}){const wanted=++id;await page.evaluate(d=>window.DEV14_COMMAND=JSON.stringify(d),{kind,id:wanted,...more});return wait(s=>s.game?.id===wanted);}
 try{
- await page.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'domcontentloaded',timeout:120000});await wait(s=>s.game?.version==='1.0.0-dev.15.13');await page.mouse.click(25,25);
+ await page.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'domcontentloaded',timeout:120000});await wait(s=>s.game?.version==='1.0.0-dev.15.14');await page.mouse.click(25,25);
  for(const direction of ['right','left','up','down']){
   await command('stance_setup',{direction});await delay(1200);await page.keyboard.down('Space');await delay(2500);const before=await state();await delay(1500);const after=await state();await page.keyboard.up('Space');
   if(!after.game.native.active||after.game.impact<=before.game.impact)throw Error('Actual mining '+direction);
@@ -26,6 +26,7 @@ try{
   }
   await command('unfreeze');
  }
+ fs.copyFileSync(path.join(web,'manifest.json'),path.join(out,'manifest.json'));
  runtime=await page.evaluate(()=>({dpr:devicePixelRatio,ua:navigator.userAgent}));
 
 }catch(e){error=String(e);try{await page.screenshot({path:path.join(out,'failure.png')});}catch{}}

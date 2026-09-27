@@ -9,6 +9,7 @@ func _command(data: Dictionary) -> void:
 		return
 	if String(data.kind) == "stance_pose":
 		command_id = int(data.id)
+		for layer in main.find_children("*", "CanvasLayer", true, false): layer.hide()
 		var owner: Node = main.mine_world.player.visual._native_worn
 		var m: RefCounted = owner.motion
 		m.bank.mine = m.original_mining_poses if bool(data.reference) else m.aligned_mining_poses

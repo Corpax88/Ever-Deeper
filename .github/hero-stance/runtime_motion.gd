@@ -75,7 +75,7 @@ func configure(native_rig: Node, path: String, reference_path: String) -> bool:
 		var before: Dictionary = pose.bones.duplicate(true)
 		var bones: Dictionary = pose.bones
 		var body: Transform3D = before.body
-		# The authored swing faces -Y; X lean is sideways, not wind-up/impact pitch.
+		# Remove the authored torso sway; retain pitch and vertical compression.
 		var up: Vector3 = body.basis.y.normalized()
 		var forward_up: Vector3 = Vector3(0,up.y,up.z).normalized()
 		var straighten := Basis(Quaternion(up,forward_up))

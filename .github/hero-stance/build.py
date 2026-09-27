@@ -1,5 +1,5 @@
 from pathlib import Path
-import json,sys,struct,hashlib,re,shutil
+import json,sys,struct,hashlib,re,shutil,os
 from pack_helpers import unpack,identity
 src,out=map(Path,sys.argv[1:]);out.mkdir(parents=True,exist_ok=True)
 root=Path(__file__).resolve().parents[2]
@@ -16,6 +16,7 @@ def script(path,text):
     target=re.search(r'path="res://([^\"]+)"',old)[1]
     replace[remap]=('[remap]\npath="res://'+path+'"\n').encode()
     if target.endswith('.gd'): replace[target]=text.encode()
+p='scripts/ui/premium_menu.gd';script(p,(root/'.github/graphics-settings/dev-premium_menu.gd').read_text().replace('1.0.0-dev.15.13','1.0.0-dev.15.14'))
 p='scripts/player/native_worn/runtime_motion.gd';script(p,(Path(__file__).parent/'runtime_motion.gd').read_text())
 for p in ['scripts/player/native_worn_visual.gd','scripts/player/player_visual.gd']:
  script(p,(root/p).read_text())
@@ -34,4 +35,4 @@ _,after=unpack(data);assert all(after[n]==v for n,v in before.items() if n not i
 html=(out/'index.html').read_text();m=re.search(r'const GODOT_CONFIG = (\{[^\r\n]+\});',html);c=json.loads(m[1]);c['fileSizes']['index.pck']=len(data)
 (out/'index.html').write_text(html[:m.start(1)]+json.dumps(c,separators=(',',':'))+html[m.end(1):])
 (out/'manifest.json').write_text(json.dumps({n:identity(out/n) for n in manifest}))
-(out/'focus-build.json').write_text(json.dumps({'baseline':manifest,'replaced':list(replace),'purpose':'Bounded function timing, no production candidate'},indent=2))
+(out/'focus-build.json').write_text(json.dumps({'baseline':manifest,'replaced':list(replace),'source':os.environ['GITHUB_SHA'],'purpose':'DEV15.14 native mining stance; unchanged tool and hand poses'},indent=2))
