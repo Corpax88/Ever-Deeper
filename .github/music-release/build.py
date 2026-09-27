@@ -9,7 +9,7 @@ for n in manifest: shutil.copyfile(source/n,out/n)
 data=bytearray((out/'index.pck').read_bytes());base,entries=unpack(data);before=dict(entries)
 root=Path(__file__).parent
 replace={}
-for original,local in [('scripts/audio/audio_director.gd','audio_director.gd'),('scripts/ui/premium_menu.gd','premium_menu.gd')]:
+for original,local in [('scripts/audio/audio_director.gd','audio_director.gd'),('scripts/ui/premium_menu.gd','premium_menu.gd'),('scripts/dev/visual_capture_driver.gd','visual_capture_driver.gd')]:
     remap=original+'.remap';assert remap in entries
     # Canonical raw paths also support existing preloads whose remap was already resolved.
     replace[original]=(root/local).read_bytes()
