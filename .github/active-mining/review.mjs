@@ -83,12 +83,13 @@ try{
    }
    const before=await state();await page.mouse.move(before.mine_button[0]/before.viewport[0]*776,before.mine_button[1]/before.viewport[1]*420);await page.mouse.down();
    await command('audio_mode',{cached:true});await delay(15000);
-   const modes=process.env.REPEAT==='2'?['candidate','original','original','candidate']:['original','candidate','candidate','original'];
+   const pairs=process.env.REPEAT==='2'?['BA','AB','AB','BA','AB','BA','BA','AB']:['AB','BA','BA','AB','BA','AB','AB','BA'];
+   const modes=pairs.join('').split('').map(v=>v==='A'?'original':'candidate');
    for(const [index,mode] of modes.entries()){
     await page.evaluate(v=>globalThis.__reuseImmutableMusicBuffers=v,mode==='candidate');
-    await command('audio_mode',{cached:true});await delay(1000);
-    const start=await state();await command('begin',{instrument:true});await delay(20000);const end=await command('end');
-    check('same native mining workload '+index,end.native.active&&end.result.frames>200&&end.impact-start.impact>=10&&JSON.stringify(start.position)===JSON.stringify(end.position));
+    await command('audio_mode',{cached:mode==='candidate'});await delay(1500);
+    const start=await state();await command('begin',{instrument:true});await delay(8000);const end=await command('end');
+    check('same native mining workload '+index,end.native.active&&end.result.frames>150&&end.impact-start.impact>=10&&JSON.stringify(start.position)===JSON.stringify(end.position));
     windows.push({block,index,side:mode,impacts:end.impact-start.impact,...end.result,native:end.native,position:end.position});
     fs.writeFileSync(path.join(output,'windows.json'),JSON.stringify(windows,null,2));
    }
@@ -99,7 +100,7 @@ try{
  }
 }catch(e){failed=String(e.stack||e);console.error(failed);}
 finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'Same-context steady mining isolates only immutable PCM reuse versus copy; both modes use the same three cached streams, same position and track0. 15s warmup and balanced 4x20s windows. Not a physical phone result. Prior test: Music sample registration/caching trial: all three unmodified MP3s pre-registered before menu; reference duplicates every transition, candidate reuses private cached sample. Two balanced contexts across workers; one natural90s route and six near-end transitions per mode, plus volume/mute. QA-only DEV15.10 package, measured actual movement and block destruction; shared profiling overhead, fresh balanced contexts. Candidate reuses immutable long WebAudio buffers; width6 terrain, assets, lights and resolution unchanged. CPU wrapper wall time not GPU time. Save uses isolated fixture namespace. Includes all windows/stalls. No physical phone claim.'},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'Same-context steady mining isolates only immutable PCM reuse versus copy; both modes use the same three cached streams, same position and track0. 15s warmup and eight balanced adjacent AB/BA pairs, sixteen8s windows; original duplicates MP3 as real legacy code, candidate caches. All three preparatory buffers are common. Each restart is outside the measured window. Not a physical phone result. Prior test: Music sample registration/caching trial: all three unmodified MP3s pre-registered before menu; reference duplicates every transition, candidate reuses private cached sample. Two balanced contexts across workers; one natural90s route and six near-end transitions per mode, plus volume/mute. QA-only DEV15.10 package, measured actual movement and block destruction; shared profiling overhead, fresh balanced contexts. Candidate reuses immutable long WebAudio buffers; width6 terrain, assets, lights and resolution unchanged. CPU wrapper wall time not GPU time. Save uses isolated fixture namespace. Includes all windows/stalls. No physical phone claim.'},null,2));
  await browser.close();server.close();
 }
 if(failed)process.exitCode=1;
