@@ -1,17 +1,17 @@
-name: Isolate steady playback CPU with same-context mining
+name: Diagnose long music sample registry ownership
 on:
   push:
-    branches: [codex/music-paired-20260927]
+    branches: [codex/music-registry-20260927]
     paths: ['.github/active-mining/**', '.github/workflows/active-mining.yml']
 permissions: {contents: read, actions: read}
-concurrency: {group: music-paired-20260927, cancel-in-progress: true}
+concurrency: {group: music-registry-20260927, cancel-in-progress: true}
 jobs:
   profile:
     runs-on: macos-15
     timeout-minutes: 30
     strategy:
       fail-fast: false
-      matrix: {repeat: [1, 2]}
+      matrix: {repeat: [1]}
     steps:
       - uses: actions/checkout@v4
         with: {persist-credentials: false, sparse-checkout: .github/active-mining}
@@ -25,4 +25,4 @@ jobs:
         run: node .github/active-mining/review.mjs "$RUNNER_TEMP/profile" "$RUNNER_TEMP/review"
       - uses: actions/upload-artifact@v4
         if: always()
-        with: {name: 'music-paired-${{ matrix.repeat }}', path: '${{ runner.temp }}/review', retention-days: 90}
+        with: {name: 'music-registry-${{ matrix.repeat }}', path: '${{ runner.temp }}/review', retention-days: 90}
