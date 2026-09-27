@@ -101,7 +101,7 @@ async function resume(instance){
  const state=await instance.state();await instance.page.mouse.up();await instance.page.mouse.move(state.mine_button[0]/state.viewport[0]*776,state.mine_button[1]/state.viewport[1]*420);await instance.page.mouse.down();
 }
 const base=process.env.REPEAT==='2'?['BA','AB','AB','BA','AB','BA','BA','AB']:['AB','BA','BA','AB','BA','AB','AB','BA'];
-const pairs=Array.from({length:8},()=>base).flat();
+const pairs=base.slice(0,2);
 const order=pairs.join('').split('').map(v=>v==='A'?'original':'candidate');
 try{
  check('clean worker',processes().length===0);
@@ -111,7 +111,11 @@ try{
   const active=instances.find(i=>i.side===side),inactive=instances.find(i=>i.side!==side);
   check('no untracked browser children '+index,processes().every(p=>instances.some(i=>i.pids.some(w=>w.pid===p.pid))));
   check('inactive renderer stopped '+index,inactive.suspended&&processes().filter(p=>inactive.pids.some(w=>w.pid===p.pid)).every(p=>p.stat.includes('T')));
-  await resume(active);await delay(1500);
+  await resume(active);
+  const focusBefore=await active.page.evaluate(()=>({visible:document.visibilityState,focused:document.hasFocus()}));
+  if(index>=2)await active.page.bringToFront();
+  const focusAfter=await active.page.evaluate(()=>({visible:document.visibilityState,focused:document.hasFocus()}));
+  await delay(1500);
   const audioBefore=await active.page.evaluate(()=>window.__audioProbe.outputs[0].context.currentTime);
   const start=await active.state();await active.command('begin',{instrument:false});await delay(4000);const end=await active.command('end');
   const audioAfter=await active.page.evaluate(()=>window.__audioProbe.outputs[0].context.currentTime);
@@ -119,7 +123,7 @@ try{
   check('audio clock advances '+index,audioAfter-audioBefore>3.5);
   check('same active workload '+index,end.native.active&&end.result.frames>60&&end.impact-start.impact>=5&&JSON.stringify(start.position)===JSON.stringify(end.position));
   const liveBuffers=await active.page.evaluate(()=>window.__audioProbe.live());
-  windows.push({index,pair:Math.floor(index/2),side,music:music.result,audioElapsed:audioAfter-audioBefore,liveBuffers,startupBuffers:active.startupBuffers,impacts:end.impact-start.impact,...end.result,native:end.native,position:end.position});
+  windows.push({focusBefore,focusAfter,broughtToFront:index>=2,index,pair:Math.floor(index/2),side,music:music.result,audioElapsed:audioAfter-audioBefore,liveBuffers,startupBuffers:active.startupBuffers,impacts:end.impact-start.impact,...end.result,native:end.native,position:end.position});
   fs.writeFileSync(path.join(output,'windows.json'),JSON.stringify(windows,null,2));
   if(index<2||index>=order.length-2){await active.command('freeze');await delay(200);const name=index+'-'+side+'.png';await active.page.screenshot({path:path.join(output,name)});captures.push(name);await active.command('unfreeze')}
   check('no runtime errors '+index,!active.localMessages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)));
@@ -133,7 +137,7 @@ finally{
  for(const instance of instances){await instance.context.close();await instance.browser.close()}
  for(let retry=0;retry<50&&processes().length;retry++)await delay(200);
  const exited=processes().length===0;checks.push({name:'all browser children exited',passed:exited});if(!exited&&!failed)failed='Browser child cleanup failed';
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',candidate_source:'ba396beeed9e587a8dc700edef7b28b79f1095d6',repeat:process.env.REPEAT,files,checks,windows,captures,runtimes,messages,order,processOwnership:instances.map(i=>({side:i.side,pids:i.pids})),physical_iphone_verified:false,scope:'Two separate browser processes resident per worker; inactive audio context suspended and all its owned browser children OS-stopped. 64 balanced adjacent pairs,4s measurement+1.5s settling, persistent exact audio paths without forced restarts. This controls launch-to-launch host variability; two-engine resident memory differs from a single game. Natural music transitions remain included. No physical phone claim.'},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',candidate_source:'ba396beeed9e587a8dc700edef7b28b79f1095d6',repeat:process.env.REPEAT,files,checks,windows,captures,runtimes,messages,order,processOwnership:instances.map(i=>({side:i.side,pids:i.pids})),physical_iphone_verified:false,scope:'Two separate browser processes resident per worker; inactive audio context suspended and all its owned browser children OS-stopped. Four-window focus/visibility diagnostic,4s measurement+1.5s settling, final two explicitly brought to front, persistent exact audio paths without forced restarts. This controls launch-to-launch host variability; two-engine resident memory differs from a single game. Natural music transitions remain included. No physical phone claim.'},null,2));
  server.close();
 }
 if(failed)process.exitCode=1;

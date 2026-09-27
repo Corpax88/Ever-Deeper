@@ -1,17 +1,17 @@
-name: Compare persistent isolated music paths with inactive process suspension
+name: Check focus symmetry of the controlled music benchmark
 on:
   push:
-    branches: [codex/music-controlled-20260927]
+    branches: [codex/music-focus-check-20260927]
     paths: ['.github/active-mining/**', '.github/workflows/active-mining.yml']
 permissions: {contents: read, actions: read}
-concurrency: {group: music-controlled-20260927, cancel-in-progress: true}
+concurrency: {group: music-focus-check-20260927, cancel-in-progress: true}
 jobs:
   profile:
     runs-on: macos-15
     timeout-minutes: 30
     strategy:
       fail-fast: false
-      matrix: {repeat: [1, 2]}
+      matrix: {repeat: [1]}
     steps:
       - uses: actions/checkout@v4
         with: {persist-credentials: false, sparse-checkout: .github/active-mining}
@@ -27,4 +27,4 @@ jobs:
         run: node .github/active-mining/review.mjs "$RUNNER_TEMP/reference" "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review"
       - uses: actions/upload-artifact@v4
         if: always()
-        with: {name: 'music-controlled-${{ matrix.repeat }}', path: '${{ runner.temp }}/review', retention-days: 90}
+        with: {name: 'music-focus-check-${{ matrix.repeat }}', path: '${{ runner.temp }}/review', retention-days: 90}
