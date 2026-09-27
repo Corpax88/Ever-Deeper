@@ -31,7 +31,7 @@ html=(out/'index.html').read_text();m=re.search(r'const GODOT_CONFIG = (\{[^\r\n
 js_path=out/'index.js'
 js=js_path.read_text()
 old='getAudioBuffer(){return this._duplicateAudioBuffer()}'
-new='getAudioBuffer(){if(globalThis.__reuseImmutableMusicBuffers===true&&this._audioBuffer&&this._audioBuffer.duration>10){return this._audioBuffer}return this._duplicateAudioBuffer()}'
+new='getAudioBuffer(){globalThis.__qaMusicRegistry=()=>Array.from(GodotAudio.samples.values()).filter(s=>s._audioBuffer&&s._audioBuffer.duration>10).map(s=>({id:s.id,buffer:globalThis.__audioProbe.ids.get(s._audioBuffer),bytes:s._audioBuffer.length*s._audioBuffer.numberOfChannels*4}));if(globalThis.__reuseImmutableMusicBuffers===true&&this._audioBuffer&&this._audioBuffer.duration>10){return this._audioBuffer}return this._duplicateAudioBuffer()}'
 assert js.count(old)==1, 'Unexpected audio glue; refuse unverified patch'
 js_path.write_text(js.replace(old,new))
 (out/'manifest.json').write_text(json.dumps({n:identity(out/n) for n in manifest}))
