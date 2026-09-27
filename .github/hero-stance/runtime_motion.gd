@@ -70,16 +70,21 @@ var aligned_mining_poses: Array = []
 func configure(native_rig: Node, path: String, reference_path: String) -> bool:
 	if not super.configure(native_rig, path, reference_path): return false
 	original_mining_poses = bank.mine.duplicate(true)
-	var neutral: Dictionary = bank.idle[0].bones
+	var neutral: Dictionary = bank.idle[0].bones.duplicate(true)
+	# The ready torso is rotated relative to idle. Use its stance frame,
+	# not world X/Y, for both planted feet and lateral sway removal.
+	var stance := Transform3D(bank.mine[0].bones.body.basis * neutral.body.basis.inverse(),Vector3.ZERO)
+	for name in neutral: neutral[name] = stance*neutral[name]
+	var lateral: Vector3 = stance.basis.x.normalized()
 	for pose in bank.mine:
 		var before: Dictionary = pose.bones.duplicate(true)
 		var bones: Dictionary = pose.bones
 		var body: Transform3D = before.body
 		# Remove the authored torso sway; retain pitch and vertical compression.
 		var up: Vector3 = body.basis.y.normalized()
-		var forward_up: Vector3 = Vector3(0,up.y,up.z).normalized()
+		var forward_up: Vector3 = (up-lateral*up.dot(lateral)).normalized()
 		var straighten := Basis(Quaternion(up,forward_up))
-		var centered := Vector3(0,body.origin.y,body.origin.z)
+		var centered := body.origin-lateral*body.origin.dot(lateral)
 		var correction := Transform3D(straighten,centered-straighten*body.origin)
 		bones.body = correction*body
 		bones.head = correction*before.head
@@ -89,7 +94,7 @@ func configure(native_rig: Node, path: String, reference_path: String) -> bool:
 			_solve_chain(bones,before,before,0.0,"arm",side)
 			bones["foot."+side] = neutral["foot."+side]
 			var hip: Vector3 = before["thigh."+side].origin
-			hip.x = neutral["thigh."+side].origin.x
+			hip.x = neutral["thigh."+side].origin.x+centered.x
 			hip.y = neutral["thigh."+side].origin.y+centered.y
 			bones["thigh."+side].origin = hip
 			_solve_chain(bones,neutral,neutral,0.0,"leg",side)
