@@ -26,7 +26,7 @@ const server=http.createServer((req,res)=>{
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await webkit.launch({headless:true}),checks=[],windows=[],captures=[],runtimes=[],messages=[];
-const order=['candidate'];
+const order=['original','candidate'];
 let failed=null;
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 function check(name,passed,details={}){checks.push({name,passed:!!passed,...details});if(!passed)throw Error(name);}
@@ -84,19 +84,21 @@ try{
     await command('stable',{enabled:side==='candidate'});await command('unfreeze');
    }
    const before=await state();await page.mouse.move(before.mine_button[0]/before.viewport[0]*776,before.mine_button[1]/before.viewport[1]*420);await page.mouse.down();
-   await command('audio_mode',{cached:true});await delay(15000);
-   const pairs=process.env.REPEAT==='2'?['BA','AB','AB','BA','AB','BA','BA','AB']:['AB','BA','BA','AB','BA','AB','AB','BA'];
-   const modes=pairs.join('').split('').map(v=>v==='A'?'original':'candidate');
-   for(const [index,mode] of modes.entries()){
-    await page.evaluate(v=>globalThis.__reuseImmutableMusicBuffers=v,mode==='candidate');
-    await command('audio_mode',{cached:mode==='candidate'});await delay(1500);
-    const start=await state();await command('begin',{instrument:true});await delay(8000);const end=await command('end');
-    check('same native mining workload '+index,end.native.active&&end.result.frames>150&&end.impact-start.impact>=10&&JSON.stringify(start.position)===JSON.stringify(end.position));
-    const liveBuffers=await page.evaluate(()=>window.__audioProbe.live());
-    const processes=execFileSync('ps',['-axo','pid=,rss=,comm='],{encoding:'utf8'}).split('\n').filter(v=>/WebKit|MiniBrowser/.test(v));
-    windows.push({liveBuffers,processes,block,index,side:mode,impacts:end.impact-start.impact,...end.result,native:end.native,position:end.position});
+   async function snapshot(label){
+    const sample=await page.evaluate(()=>({live:window.__audioProbe.live(),registry:globalThis.__qaMusicRegistry(),created:window.__audioProbe.buffers.length}));
+    windows.push({block,side,label,...sample});
     fs.writeFileSync(path.join(output,'windows.json'),JSON.stringify(windows,null,2));
    }
+   await snapshot('startup');
+   for(let index=0;index<6;index++){
+    await command('audio_mode',{cached:side==='candidate'});await delay(2000);
+    await snapshot('restart-'+index);
+   }
+   // Same-context carryover is inspected directly, not treated as FPS evidence.
+   await page.evaluate(()=>globalThis.__reuseImmutableMusicBuffers=true);
+   await command('audio_mode',{cached:true});await delay(2000);await snapshot('switched-to-cached');
+   await command('audio_mute',{enabled:true});await delay(15000);await snapshot('muted-15s');
+   check('registry diagnostic available '+block,windows.filter(w=>w.block===block).every(w=>Array.isArray(w.registry)));
    await page.mouse.up();
    await command('freeze');await delay(300);const name=block+'-'+side+'.png';await page.screenshot({path:path.join(output,name)});captures.push(name);
    check('no runtime errors '+block,!localMessages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)));
@@ -104,7 +106,7 @@ try{
  }
 }catch(e){failed=String(e.stack||e);console.error(failed);}
 finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'Same-context steady mining isolates only immutable PCM reuse versus copy; both modes use the same three cached streams, same position and track0. 15s warmup and eight balanced adjacent AB/BA pairs, sixteen8s windows; original duplicates MP3 as real legacy code, candidate caches. All three preparatory buffers are common. Each restart is outside the measured window. Not a physical phone result. Prior test: Music sample registration/caching trial: all three unmodified MP3s pre-registered before menu; reference duplicates every transition, candidate reuses private cached sample. Two balanced contexts across workers; one natural90s route and six near-end transitions per mode, plus volume/mute. QA-only DEV15.10 package, measured actual movement and block destruction; shared profiling overhead, fresh balanced contexts. Candidate reuses immutable long WebAudio buffers; width6 terrain, assets, lights and resolution unchanged. CPU wrapper wall time not GPU time. Save uses isolated fixture namespace. Includes all windows/stalls. No physical phone claim.'},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'Registry ownership and WeakRef lifetime diagnostic. Six restarts per fresh context, then cached playback and fifteen seconds muted. No GC forced, no PCM read, no FPS acceptance. Original context still shares three preparatory samples, so not a baseline memory comparison.'},null,2));
  await browser.close();server.close();
 }
 if(failed)process.exitCode=1;
