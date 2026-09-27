@@ -30,5 +30,7 @@ of this new saved preference, not a new60FPS claim. Do not repeat these checks.
 
 Publisher pins both manifests, candidate digest and successful test source;
 retains prior LIVE/DEV rollback, preserves Worn9 bytes, verifies all27 public
-files. Publication receipt pending. After successful publication the requested
+files. Publication36352688179 succeeded: all27 public files verified.
+Receipt10942313304; rollback10942881620. Publication commit
+c93e6d9656d24f1294b01aae71e695fbbd6a4838. After successful publication the requested
 settings task is complete; broader FPS optimization remains a separate task.
