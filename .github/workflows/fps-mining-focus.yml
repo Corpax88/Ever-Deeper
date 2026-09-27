@@ -25,7 +25,7 @@ jobs:
       - run: python3 .github/fps-mining-focus/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/focus"
       - uses: actions/setup-node@v4
         with: {node-version: '22'}
-      - run: npm ci --ignore-scripts && npx playwright install webkit
+      - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install webkit
       - run: node .github/fps-mining-focus/review.mjs "$RUNNER_TEMP/focus" "$RUNNER_TEMP/evidence"
       - uses: actions/upload-artifact@v4
         if: always()

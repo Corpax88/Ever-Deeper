@@ -31,6 +31,7 @@ script(p,text)
 p='scripts/player/native_worn_visual.gd';script(p,wrap((root/p).read_text(),'advance','delta: float','delta','bool'))
 p='scripts/lighting/cave_light_occluders.gd';script(p,wrap((root/p).read_text(),'refresh','',''))
 p='scripts/player/player_visual.gd';script(p,(root/p).read_text())
+p='scripts/lighting/lit_draw_sections.gd';script(p,(root/p).read_text())
 p='scripts/qa/suites/fps_review.gd';text=(root/p).read_text();text+='''
 func _focus_values(v: Vector3) -> Array:
 	return [v.x,v.y,v.z]
@@ -46,7 +47,8 @@ func _focus_frame() -> void:
 	if n == null or o == null: return
 	JavaScriptBridge.eval("window.FOCUS_STATE="+JSON.stringify({"world":_focus_values(w.focus__process),"terrain":_focus_values(w.focus__draw_partitioned_mine),"native":_focus_values(n.focus_advance),"occlusion":_focus_values(o.focus_refresh),"sections":w.lit_draw_sections.debug_snapshot()}),true)
 '''
-text=text.replace('func _frame() -> void:\n','func _frame() -> void:\n\t_focus_frame()\n')
+text=text.replace('func _command(data: Dictionary) -> void:\n', '\n'.join(['func _command(data: Dictionary) -> void:', '\tif String(data.kind) in ["focus_reference", "focus_candidate", "focus_effects"]:', '\t\tcommand_id = int(data.id)', '\t\tvar w: Node = main.mine_world', '\t\tif String(data.kind) == "focus_effects":', '\t\t\tfor effect in w.impacts: effect.age += 0.03', '\t\t\tfor drop in w.drops: drop.age += 0.03', '\t\t\tw.lit_draw_sections.redraw_dynamic_sections()', '\t\telse:', '\t\t\tw.cache_dynamic_redraws = String(data.kind) == "focus_candidate"', '\t\t\tw.queue_redraw()', '\t\treturn', '']))
+text=text.replace('func _frame() -> void:\n' ,'func _frame() -> void:\n\t_focus_frame()\n')
 script(p,text)
 for name,raw in replace.items():
     data+=b'\0'*(-len(data)%32);entries[name]=(len(data)-base,len(raw),hashlib.md5(raw).digest(),0);data+=raw

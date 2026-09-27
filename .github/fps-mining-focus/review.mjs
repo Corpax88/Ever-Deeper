@@ -1,3 +1,4 @@
+import {PNG} from 'pngjs';
 import {webkit} from '@playwright/test';
 import fs from 'node:fs';import path from 'node:path';import http from 'node:http';import {createHash} from 'node:crypto';
 const [web,out]=process.argv.slice(2);fs.mkdirSync(out,{recursive:true});
@@ -16,11 +17,24 @@ try{
  await command('setup',{mine:'starMine',durable:true,cached:true});await wait(s=>s.focus&&s.game?.native?.active);await delay(3000);
  runtime=await page.evaluate(()=>{const c=document.querySelector('canvas'),g=c.getContext('webgl2'),e=g.getExtension('WEBGL_debug_renderer_info');return {canvas:[c.width,c.height],dpr:devicePixelRatio,ua:navigator.userAgent,renderer:e?g.getParameter(e.UNMASKED_RENDERER_WEBGL):g.getParameter(g.RENDERER)};});
  await page.screenshot({path:path.join(out,'start.png')});
- for(const mode of ['idle','mine','mine','idle']){
-  if(mode==='mine')await page.keyboard.down('Space');else await page.keyboard.up('Space');await delay(1500);await command('begin');await delay(300);const before=await state();await delay(10000);const after=await state();await command('end');const ended=await state();
-  if(mode==='mine'&&!(after.game.impact>before.game.impact&&after.game.mining))throw Error('no active mining');
+ for(const mode of ['reference','candidate','candidate','reference']){
+  await command('focus_'+mode);
+  await page.keyboard.down('Space');await delay(1500);await command('begin');await delay(300);const before=await state();await delay(10000);const after=await state();await command('end');const ended=await state();
+  if(!(after.game.impact>before.game.impact&&after.game.mining))throw Error('no active mining');
   const metrics={};for(const key of ['world','terrain','native','occlusion']){const a=before.focus[key],b=after.focus[key];metrics[key]={calls:b[0]-a[0],total_us:b[1]-a[1],max_us:b[2]};}
   windows.push({mode,before,after,result:ended.game.result,metrics});fs.writeFileSync(path.join(out,'partial.json'),JSON.stringify(windows,null,2));
+ }
+ await command('freeze');
+ const pairs=[];
+ for(const mutation of ['focus_effects','damage','break','restore']){
+  await command('focus_candidate');await command(mutation);await delay(400);
+  const a=await page.screenshot({path:path.join(out,mutation+'-candidate.png')});
+  await command('focus_reference');await delay(400);
+  const b=await page.screenshot({path:path.join(out,mutation+'-reference.png')});
+  const x=PNG.sync.read(a),y=PNG.sync.read(b);let max=0,changed=0;
+  for(let i=0;i<x.data.length;i++){let d=Math.abs(x.data[i]-y.data[i]);max=Math.max(max,d);if(d)changed++;}
+  pairs.push({mutation,max,changed});fs.writeFileSync(path.join(out,'pairs.json'),JSON.stringify(pairs));
+  if(max!==0)throw Error('Pixel mismatch '+mutation+' '+max);
  }
  await page.keyboard.up('Space');await page.screenshot({path:path.join(out,'end.png')});
 }catch(e){error=String(e);try{await page.screenshot({path:path.join(out,'failure.png')});}catch{}}

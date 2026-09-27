@@ -122,3 +122,10 @@ func finish() -> void:
 
 func debug_snapshot() -> Dictionary:
 	return {"cached": _cached.size(), "recycled": _recycled.size(), "dynamic": _pool.size(), "redraws": cached_redraws, "reuses": cached_reuses, "draw_callbacks": draw_callbacks, "draw_callback_usec": draw_callback_usec, "setup_usec": setup_usec}
+
+
+func redraw_dynamic_sections() -> void:
+	# Reuse terrain commands and ordering; bound Dictionary arguments retain
+	# current effect state. Structural mutations still use begin/add/finish.
+	for index in _used:
+		_pool[index].queue_redraw()

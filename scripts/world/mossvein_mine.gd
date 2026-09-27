@@ -3,6 +3,7 @@ extends Node2D
 const LitFloorChunksScript = preload("res://scripts/lighting/lit_floor_chunks.gd")
 const LitDrawSectionsScript = preload("res://scripts/lighting/lit_draw_sections.gd")
 var lit_floor_chunks: Node2D
+var cache_dynamic_redraws: bool = true
 var lit_draw_sections: Node2D
 # Reversible reference for the exact-package performance/visual comparison.
 var cache_terrain_draws: bool = true
@@ -409,13 +410,16 @@ func _process(delta: float) -> void :
 	_update_drops(delta)
 	_update_impacts(delta)
 	_update_respawns(delta)
-	if not impacts.is_empty() or _drops_are_moving() or _drops_are_expiring():
-		_request_redraw()
+	var animated_effects: bool = not impacts.is_empty() or _drops_are_moving() or _drops_are_expiring()
 	redraw_elapsed += delta
-	if redraw_requested and redraw_elapsed >= REDRAW_INTERVAL:
-		redraw_requested = false
+	if (redraw_requested or animated_effects) and redraw_elapsed >= REDRAW_INTERVAL:
 		redraw_elapsed = 0.0
-		queue_redraw()
+		if redraw_requested or not cache_dynamic_redraws or not lit_draw_sections.enabled:
+			redraw_requested = false
+			queue_redraw()
+		else:
+			# Effect ages/positions changed, but terrain, camera and section order did not.
+			lit_draw_sections.redraw_dynamic_sections()
 
 
 func _build_original_mossvein() -> void :
@@ -1741,6 +1745,7 @@ func _update_impacts(delta: float) -> void :
 		impacts[index].age = float(impacts[index].age) + delta
 		if float(impacts[index].age) >= float(impacts[index].life):
 			impacts.remove_at(index)
+			if cache_dynamic_redraws: _request_redraw()
 
 
 func _update_respawns(delta: float) -> void :
