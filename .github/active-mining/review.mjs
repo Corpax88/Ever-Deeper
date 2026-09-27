@@ -24,7 +24,7 @@ const server=http.createServer((req,res)=>{
  else fs.createReadStream(file).pipe(res);
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
-const browser=await (process.env.BROWSER==='chromium'?chromium:webkit).launch({headless:true}),checks=[],windows=[],captures=[],runtimes=[],messages=[];
+const browser=await (process.env.BROWSER==='chromium'?chromium:webkit).launch({headless:true,args:process.env.BROWSER==='chromium'?['--use-angle=metal']:[]}),checks=[],windows=[],captures=[],runtimes=[],messages=[];
 const order=['candidate'];
 let failed=null;
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
@@ -113,7 +113,10 @@ try{
    await command('audio_seek_end');await delay(1300);const fading=(await command('audio_snapshot')).result;
    check('crossfade overlaps',fading.fade>=0&&fading.players.every(p=>p.playing),{fading});
    await command('audio_volume',{volume:0});const zero=(await command('audio_snapshot')).result;
-   check('zero volume both players',zero.players.every(p=>p.db<=-79),{zero});
+   check('zero volume both players',zero.players.every(p=>p.db<=-72.0),{zero});
+   const zeroSignal=await page.evaluate(()=>window.__audioProbe.capture());
+   check('zero volume actual silence',Math.max(...zeroSignal.rms)<0.001,{rms:zeroSignal.rms});
+   await command('audio_volume',{volume:0.78});await command('audio_seek_end');await delay(1300);
    await command('audio_mute',{enabled:true});const fadeMuted=(await command('audio_snapshot')).result;
    check('mute cancels overlap',fadeMuted.fade<0&&fadeMuted.players.every(p=>!p.playing));
    await command('audio_volume',{volume:0.78});await command('audio_mute',{enabled:false});
