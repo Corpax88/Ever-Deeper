@@ -22,6 +22,11 @@ const server=http.createServer((req,res)=>{
  const mime={'.html':'text/html','.js':'application/javascript','.wasm':'application/wasm','.png':'image/png'};
  res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream','Cache-Control':'no-store'});
  if(file.endsWith('index.html'))res.end(fs.readFileSync(file,'utf8').replace(/const GODOT_CONFIG = (\{[^\r\n]+\});/,(_,raw)=>{const c=JSON.parse(raw);c.args=['--','--qa-fps-review'];return 'const GODOT_CONFIG = '+JSON.stringify(c)+';';}).replace('const engine = new Engine(GODOT_CONFIG);','const engine = new Engine(GODOT_CONFIG); window.__qaEngine = engine;'));
+ else if(file.endsWith('index.js')){
+  const code=fs.readFileSync(file,'utf8'),old='Module["pauseMainLoop"]=MainLoop.pause;Module["resumeMainLoop"]=MainLoop.resume;';
+  if(code.split(old).length!==2)throw Error('Unexpected exact Emscripten pause exports');
+  res.end(code.replace(old,'Module["pauseMainLoop"]=()=>{runtimeKeepalivePush();MainLoop.pause()};Module["resumeMainLoop"]=()=>{MainLoop.resume();runtimeKeepalivePop()};'));
+ }
  else fs.createReadStream(file).pipe(res);
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
@@ -138,7 +143,7 @@ finally{
  for(const instance of instances){await instance.context.close();await instance.browser.close()}
  for(let retry=0;retry<50&&processes().length;retry++)await delay(200);
  const exited=processes().length===0;checks.push({name:'all browser children exited',passed:exited});if(!exited&&!failed)failed='Browser child cleanup failed';
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',candidate_source:'ba396beeed9e587a8dc700edef7b28b79f1095d6',repeat:process.env.REPEAT,files,checks,windows,captures,runtimes,messages,order,processOwnership:instances.map(i=>({side:i.side,pids:i.pids})),physical_iphone_verified:false,scope:'Two separate browser processes resident per worker; inactive audio context suspended and Emscripten main loop paused. Browser GPU services run normally. Every window verifies zero context loss, rendered scene pixels and unchanged inactive engine frame. 64 balanced adjacent pairs,4s measurement+1.5s settling, persistent exact audio paths without forced restarts. This controls launch-to-launch host variability; two-engine resident memory differs from a single game. Natural music transitions remain included. No physical phone claim.'},null,2));
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',candidate_source:'ba396beeed9e587a8dc700edef7b28b79f1095d6',repeat:process.env.REPEAT,files,checks,windows,captures,runtimes,messages,order,processOwnership:instances.map(i=>({side:i.side,pids:i.pids})),physical_iphone_verified:false,scope:'Two separate browser processes resident per worker; inactive audio context suspended and Emscripten main loop paused. Browser GPU services run normally. QA-only identical exported pause wrappers balance Emscripten keepalive while paused; production audio getter and all measured active-frame code are unchanged. Every window verifies zero context loss, rendered scene pixels and unchanged inactive engine frame. 64 balanced adjacent pairs,4s measurement+1.5s settling, persistent exact audio paths without forced restarts. This controls launch-to-launch host variability; two-engine resident memory differs from a single game. Natural music transitions remain included. No physical phone claim.'},null,2));
  server.close();
 }
 if(failed)process.exitCode=1;
