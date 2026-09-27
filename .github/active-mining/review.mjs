@@ -5,7 +5,7 @@ import path from 'node:path';
 import http from 'node:http';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
-const [candidate,output]=process.argv.slice(2);const original=candidate;fs.mkdirSync(output,{recursive:true});
+const [original,candidate,output]=process.argv.slice(2);fs.mkdirSync(output,{recursive:true});
 const roots={original:path.resolve(original),candidate:path.resolve(candidate)},files={};
 for(const [side,root] of Object.entries(roots)){
  files[side]=JSON.parse(fs.readFileSync(path.join(root,'manifest.json')));
@@ -25,13 +25,18 @@ const server=http.createServer((req,res)=>{
  else fs.createReadStream(file).pipe(res);
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
-const browser=await webkit.launch({headless:true}),checks=[],windows=[],captures=[],runtimes=[],messages=[];
-const order=['original','candidate'];
+let browser=null; const checks=[],windows=[],captures=[],runtimes=[],messages=[];
+const pairs=process.env.REPEAT==='2'?['BA','AB','AB','BA','AB','BA','BA','AB']:['AB','BA','BA','AB','BA','AB','AB','BA'];
+const order=pairs.join('').split('').map(v=>v==='A'?'original':'candidate');
 let failed=null;
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
+function webkitProcesses(){return execFileSync('ps',['-axo','pid=,comm='],{encoding:'utf8'}).split('\n').filter(v=>/ms-playwright.*(WebKit|MiniBrowser)/.test(v));}
 function check(name,passed,details={}){checks.push({name,passed:!!passed,...details});if(!passed)throw Error(name);}
 try{
  for(const [block,side] of order.entries()){
+  const beforeProcesses=webkitProcesses();check('clean process start '+block,beforeProcesses.length===0,{processes:beforeProcesses});
+  browser=await webkit.launch({headless:true});
+  const launched=Date.now();
   const context=await browser.newContext({viewport:{width:776,height:420},deviceScaleFactor:3,hasTouch:true});
   await context.addInitScript(({reuse})=>{
    globalThis.__reuseImmutableMusicBuffers=reuse;
@@ -84,30 +89,27 @@ try{
     await command('stable',{enabled:side==='candidate'});await command('unfreeze');
    }
    const before=await state();await page.mouse.move(before.mine_button[0]/before.viewport[0]*776,before.mine_button[1]/before.viewport[1]*420);await page.mouse.down();
-   async function snapshot(label){
-    const sample=await page.evaluate(()=>({live:window.__audioProbe.live(),registry:globalThis.__qaMusicRegistry(),created:window.__audioProbe.buffers.length}));
-    windows.push({block,side,label,...sample});
-    fs.writeFileSync(path.join(output,'windows.json'),JSON.stringify(windows,null,2));
-   }
-   await snapshot('startup');
-   for(let index=0;index<6;index++){
-    await command('audio_mode',{cached:side==='candidate'});await delay(2000);
-    await snapshot('restart-'+index);
-   }
-   // Same-context carryover is inspected directly, not treated as FPS evidence.
-   await page.evaluate(()=>globalThis.__reuseImmutableMusicBuffers=true);
-   await command('audio_mode',{cached:true});await delay(2000);await snapshot('switched-to-cached');
-   await command('audio_mute',{enabled:true});await delay(15000);await snapshot('muted-15s');
-   check('registry diagnostic available '+block,windows.filter(w=>w.block===block).every(w=>Array.isArray(w.registry)));
+   const startupMs=Date.now()-launched;
+   const startupBuffers=await page.evaluate(()=>window.__audioProbe.live());
+   await delay(15000);
+   const start=await state();await command('begin',{instrument:false});await delay(30000);const end=await command('end');
+   check('same active mining workload '+block,end.native.active&&end.result.frames>600&&end.impact-start.impact>=30&&JSON.stringify(start.position)===JSON.stringify(end.position));
+   const liveBuffers=await page.evaluate(()=>window.__audioProbe.live());
+   windows.push({block,pair:Math.floor(block/2),side,startupMs,startupBuffers,liveBuffers,impacts:end.impact-start.impact,...end.result,native:end.native,position:end.position});
+   fs.writeFileSync(path.join(output,'windows.json'),JSON.stringify(windows,null,2));
    await page.mouse.up();
-   await command('freeze');await delay(300);const name=block+'-'+side+'.png';await page.screenshot({path:path.join(output,name)});captures.push(name);
+   await command('freeze');await delay(300);const name=block+'-'+side+'.png';if(block<2||block>=order.length-2){await page.screenshot({path:path.join(output,name)});captures.push(name);}
    check('no runtime errors '+block,!localMessages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)));
-  }finally{await context.close();}
+  }finally{
+   await context.close();await browser.close();browser=null;
+   for(let retry=0;retry<50&&webkitProcesses().length;retry++)await delay(200);
+   check('all browser children exited '+block,webkitProcesses().length===0,{processes:webkitProcesses()});
+  }
  }
 }catch(e){failed=String(e.stack||e);console.error(failed);}
 finally{
- fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'Registry ownership and WeakRef lifetime diagnostic. Six restarts per fresh context, then cached playback and fifteen seconds muted. No GC forced, no PCM read, no FPS acceptance. Original context still shares three preparatory samples, so not a baseline memory comparison.'},null,2));
- await browser.close();server.close();
+ fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,error:failed,source_commit:process.env.GITHUB_SHA,candidate_source:process.env.GITHUB_SHA,original_source:'ab0c12ff579134e0a092946bd92973e4599a073c',repeat:process.env.REPEAT,files,order,runtimes,checks,windows,captures,messages,physical_iphone_verified:false,scope:'Predeclared eight AB/BA pairs per worker, fresh browser process per observation with verified child exit. Exact original audio source versus clean cached/shared candidate; no common preparatory samples. Fixed active mining, fifteen-second warmup, thirty-second window, per-frame function profiling disabled. All outliers retained. Mac only, not physical iPhone.'},null,2));
+ if(browser)await browser.close();server.close();
 }
 if(failed)process.exitCode=1;
 

@@ -1,14 +1,14 @@
 from pathlib import Path
 import hashlib,json,struct,shutil,sys,os,re
 from pack_helpers import unpack,identity
-source,out=map(Path,sys.argv[1:]);out.mkdir(parents=True,exist_ok=True)
+source,out=map(Path,sys.argv[1:3]);mode=sys.argv[3];assert mode in ('original','candidate');out.mkdir(parents=True,exist_ok=True)
 manifest=json.loads((source/'manifest.json').read_text())
 assert all(identity(source/n)==v for n,v in manifest.items())
 for n in manifest: shutil.copyfile(source/n,out/n)
 data=bytearray((out/'index.pck').read_bytes());base,entries=unpack(data);before=dict(entries)
 root=Path(__file__).parent
 replace={'qa_profile.gd':(root/'profile.gd').read_bytes()}
-for original,local in [('scripts/world/mossvein_mine.gd','world.gd'),('scripts/state/run_state.gd','state.gd'),('scripts/qa/suites/fps_review.gd','fps.gd'),('scripts/audio/audio_director.gd','qa_audio.gd')]:
+for original,local in [('scripts/world/mossvein_mine.gd','world.gd'),('scripts/state/run_state.gd','state.gd'),('scripts/qa/suites/fps_review.gd','fps.gd'),('scripts/audio/audio_director.gd',mode+'-audio.gd')]:
     remap=original+'.remap';assert remap in entries
     # Canonical raw paths also support existing preloads whose remap was already resolved.
     replace[original]=(root/local).read_bytes()
@@ -26,14 +26,14 @@ _,after=unpack(data);assert all(after[n]==v for n,v in before.items() if n not i
 (out/'index.pck').write_bytes(data)
 html=(out/'index.html').read_text();m=re.search(r'const GODOT_CONFIG = (\{[^\r\n]+\});',html);c=json.loads(m[1]);c['fileSizes']['index.pck']=len(data)
 (out/'index.html').write_text(html[:m.start(1)]+json.dumps(c,separators=(',',':'))+html[m.end(1):])
-# Exact immutable export glue: keep music PCM shared across playbacks.
-# QA flag selects original copy behavior in reference contexts.
+# Exact same production immutable-PCM patch, candidate only.
 js_path=out/'index.js'
 js=js_path.read_text()
 old='getAudioBuffer(){return this._duplicateAudioBuffer()}'
-new='getAudioBuffer(){globalThis.__qaMusicRegistry=()=>Array.from(GodotAudio.samples.values()).filter(s=>s._audioBuffer&&s._audioBuffer.duration>10).map(s=>({id:s.id,buffer:globalThis.__audioProbe.ids.get(s._audioBuffer),bytes:s._audioBuffer.length*s._audioBuffer.numberOfChannels*4}));if(globalThis.__reuseImmutableMusicBuffers===true&&this._audioBuffer&&this._audioBuffer.duration>10){return this._audioBuffer}return this._duplicateAudioBuffer()}'
-assert js.count(old)==1, 'Unexpected audio glue; refuse unverified patch'
-js_path.write_text(js.replace(old,new))
+new='getAudioBuffer(){if(this._audioBuffer&&this._audioBuffer.duration>10){return this._audioBuffer}return this._duplicateAudioBuffer()}'
+assert js.count(old)==1, 'Unexpected export audio glue'
+if mode=='candidate': js=js.replace(old,new)
+js_path.write_text(js)
 (out/'manifest.json').write_text(json.dumps({n:identity(out/n) for n in manifest}))
 (out/'build.json').write_text(json.dumps({'source':os.environ.get('GITHUB_SHA'),'base_source':'ab0c12ff579134e0a092946bd92973e4599a073c','base_run':36118561266,'unchanged_resources':len(before)-len(set(before)&set(replace)),'replaced':list(replace),'original_files':manifest},indent=2))
 print('Preserved',len(before)-len(set(before)&set(replace)),'resources; isolated QA package ready')

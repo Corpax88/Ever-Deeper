@@ -1,28 +1,30 @@
-name: Diagnose long music sample registry ownership
+name: Compare original and music candidate in isolated browser processes
 on:
   push:
-    branches: [codex/music-registry-20260927]
+    branches: [codex/music-isolated-20260927]
     paths: ['.github/active-mining/**', '.github/workflows/active-mining.yml']
 permissions: {contents: read, actions: read}
-concurrency: {group: music-registry-20260927, cancel-in-progress: true}
+concurrency: {group: music-isolated-20260927, cancel-in-progress: true}
 jobs:
   profile:
     runs-on: macos-15
     timeout-minutes: 30
     strategy:
       fail-fast: false
-      matrix: {repeat: [1]}
+      matrix: {repeat: [1, 2]}
     steps:
       - uses: actions/checkout@v4
         with: {persist-credentials: false, sparse-checkout: .github/active-mining}
       - uses: actions/download-artifact@v4
         with: {name: integrated-candidate, run-id: 36118561266, github-token: '${{ github.token }}', path: '${{ runner.temp }}/original'}
-      - run: python3 .github/active-mining/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/profile"
+      - run: |
+          python3 .github/active-mining/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/reference" original
+          python3 .github/active-mining/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/candidate" candidate
       - uses: actions/setup-node@v4
         with: {node-version: '22'}
       - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install webkit
       - env: {REPEAT: '${{ matrix.repeat }}'}
-        run: node .github/active-mining/review.mjs "$RUNNER_TEMP/profile" "$RUNNER_TEMP/review"
+        run: node .github/active-mining/review.mjs "$RUNNER_TEMP/reference" "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/review"
       - uses: actions/upload-artifact@v4
         if: always()
-        with: {name: 'music-registry-${{ matrix.repeat }}', path: '${{ runner.temp }}/review', retention-days: 90}
+        with: {name: 'music-isolated-${{ matrix.repeat }}', path: '${{ runner.temp }}/review', retention-days: 90}
