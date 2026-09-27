@@ -3,6 +3,7 @@ import {webkit} from '@playwright/test';
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
+import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 const [candidate,output]=process.argv.slice(2);const original=candidate;fs.mkdirSync(output,{recursive:true});
 const roots={original:path.resolve(original),candidate:path.resolve(candidate)},files={};
@@ -34,13 +35,14 @@ try{
   const context=await browser.newContext({viewport:{width:776,height:420},deviceScaleFactor:3,hasTouch:true});
   await context.addInitScript(({reuse})=>{
    globalThis.__reuseImmutableMusicBuffers=reuse;
-   const probe=window.__audioProbe={buffers:[],starts:[],outputs:[],ids:new WeakMap(),count:0};
+   const probe=window.__audioProbe={buffers:[],starts:[],outputs:[],ids:new WeakMap(),weak:[],count:0};
    const create=BaseAudioContext.prototype.createBuffer;
-   BaseAudioContext.prototype.createBuffer=function(...args){const b=create.apply(this,args),id=++probe.count;probe.ids.set(b,id);if(b.duration>10)probe.buffers.push({id,length:b.length,rate:b.sampleRate,channels:b.numberOfChannels,bytes:b.length*b.numberOfChannels*4});return b};
+   BaseAudioContext.prototype.createBuffer=function(...args){const b=create.apply(this,args),id=++probe.count;probe.ids.set(b,id);if(b.duration>10)probe.weak.push(new WeakRef(b));if(b.duration>10)probe.buffers.push({id,length:b.length,rate:b.sampleRate,channels:b.numberOfChannels,bytes:b.length*b.numberOfChannels*4});return b};
    const start=AudioBufferSourceNode.prototype.start;
    AudioBufferSourceNode.prototype.start=function(...args){if(this.buffer?.duration>10)probe.starts.push({id:probe.ids.get(this.buffer),at:performance.now(),args});return start.apply(this,args)};
    const connect=AudioNode.prototype.connect;
    AudioNode.prototype.connect=function(...args){const v=connect.apply(this,args);if(args[0] instanceof AudioDestinationNode&&!probe.outputs.some(o=>o.source===this))probe.outputs.push({source:this,context:this.context});return v};
+   probe.live=()=>probe.weak.reduce((a,w)=>{const b=w.deref();if(b){a.count++;a.bytes+=b.length*b.numberOfChannels*4}return a},{count:0,bytes:0});
    probe.snapshot=()=>({buffers:probe.buffers,starts:probe.starts,contexts:probe.outputs.map(o=>({state:o.context.state,rate:o.context.sampleRate})),at:performance.now()});
    probe.capture=async()=>{
     const o=probe.outputs[0];if(!o)throw Error('No actual audio output');
@@ -90,7 +92,9 @@ try{
     await command('audio_mode',{cached:mode==='candidate'});await delay(1500);
     const start=await state();await command('begin',{instrument:true});await delay(8000);const end=await command('end');
     check('same native mining workload '+index,end.native.active&&end.result.frames>150&&end.impact-start.impact>=10&&JSON.stringify(start.position)===JSON.stringify(end.position));
-    windows.push({block,index,side:mode,impacts:end.impact-start.impact,...end.result,native:end.native,position:end.position});
+    const liveBuffers=await page.evaluate(()=>window.__audioProbe.live());
+    const processes=execFileSync('ps',['-axo','pid=,rss=,comm='],{encoding:'utf8'}).split('\n').filter(v=>/WebKit|MiniBrowser/.test(v));
+    windows.push({liveBuffers,processes,block,index,side:mode,impacts:end.impact-start.impact,...end.result,native:end.native,position:end.position});
     fs.writeFileSync(path.join(output,'windows.json'),JSON.stringify(windows,null,2));
    }
    await page.mouse.up();
