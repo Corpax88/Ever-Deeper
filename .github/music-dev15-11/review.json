@@ -1,0 +1,111 @@
+{
+  "source_commit": "ba396beeed9e587a8dc700edef7b28b79f1095d6",
+  "validation_commit": "ba396beeed9e587a8dc700edef7b28b79f1095d6",
+  "artifact_run_id": 36303234754,
+  "export_run_id": 36303234754,
+  "performance_commit": "1d46c8ea9d48a10f44dd3a71aedcea661cb1a0c1",
+  "performance_run_id": 36317867786,
+  "artifacts": {
+    "build": {
+      "id": 10926347253,
+      "name": "music-build",
+      "digest": "sha256:a48d2181474e2124a70f5b69244a98592f04cd3a33720bfa06b1b389ef252af9",
+      "size_in_bytes": 6148
+    },
+    "browser": {
+      "id": 10926079486,
+      "name": "music-startup",
+      "digest": "sha256:578f039185ff0d27c1ae3f8d7ebeb8073b76a8e208e3660edf9101eab708ed09",
+      "size_in_bytes": 14510255
+    },
+    "candidate": {
+      "id": 10925867913,
+      "name": "music-candidate",
+      "digest": "sha256:521b677923e1fcfb64d84e8c9f23c8e4201e02a59c44bc0ef3a3bd7bfdbd4155",
+      "size_in_bytes": 268971672
+    }
+  },
+  "performance_artifacts": [
+    {
+      "id": 10931796298,
+      "name": "music-controlled-2",
+      "digest": "sha256:92ce5cd098d5f2334736dcbeb3ec7df174ba89e48ffd879674ce25fc42515473",
+      "size_in_bytes": 17798105
+    },
+    {
+      "id": 10931358853,
+      "name": "music-controlled-1",
+      "digest": "sha256:927ec7cd74e9ca32df5a9a140091cce0a5444609253ba8d899dc02f2eb8bf94b",
+      "size_in_bytes": 17820635
+    }
+  ],
+  "destination": "dev",
+  "version": "1.0.0-dev.15.11",
+  "live_authorized": false,
+  "accepted": true,
+  "prior_independent_visual_acceptance_retained": true,
+  "controlled_final_images_inspected": true,
+  "physical_iphone_verified": false,
+  "acceptance_scope": "Music-start hitch and retained PCM fix; predeclared controlled noninferiority gate passed. No demonstrated sustained FPS uplift, no physical iPhone approval. Previous inconclusive/invalid results remain recorded.",
+  "audio_lifecycle": {
+    "source": "1fc410178f2cfa9cb67384967106dac8bfe31f00",
+    "run_id": 36303158117,
+    "checks_per_platform": 41,
+    "platforms": [
+      "WebKit Apple GPU",
+      "Chromium Metal"
+    ],
+    "artifacts": [
+      10926531295,
+      10925604968
+    ]
+  },
+  "music_hitch": {
+    "source": "74dbb7e5364fb284a2d7244909bdae160b9fa5d2",
+    "run_id": 36302925861,
+    "original_audio_play_ms": [
+      166,
+      200,
+      299,
+      273
+    ],
+    "candidate_audio_play_ms": [
+      0,
+      1,
+      1,
+      1
+    ]
+  },
+  "previous_comparisons": [
+    {
+      "run_id": 36303672796,
+      "status": "inconclusive; same-context registry carryover"
+    },
+    {
+      "run_id": 36315042649,
+      "status": "inconclusive; fresh process launch variability",
+      "mean_percent": 4.742481163,
+      "lower95_percent": -3.872411369
+    },
+    {
+      "run_id": 36316407143,
+      "status": "invalid; original output became black while counters continued; no game regression inference"
+    },
+    {
+      "run_id": 36317657662,
+      "status": "no measured windows; QA pause ended runtime before measurement"
+    }
+  ],
+  "reviewed_files": {
+    "manifest.json": "5cfee4804b3f72692ac126a5943146286a35bfab6f64b3a88f328cdc0498cc11",
+    "baseline.json": "5a23dd8998646be3011e1a0236ca3f51d571f376e1e34d13627cb25ab4437247",
+    "worn-bundle.json": "06c44912595e73ba2de9fd79968b94ab5c011e48fc69f0f189454bdea8b269e4",
+    "evidence/core.json": "7ca55fcef669b9e3eaac84688500856379e631f0961c180bdebd360d87d059b1",
+    "evidence/webkit.json": "2c5621d329a0a055287b6e0ecc196255c922bdbda853c05b1ba2688cc0d57db4",
+    "evidence/perf1.json": "fe0b411e692c181515f0481d130f45061ee48a57949824bed099c6ab85c632c1",
+    "evidence/perf2.json": "a3029076d135620b94076c4e598acd1fdb54e6fb7612e8b7b1483304d3b9aaf4",
+    "evidence/acceptance.json": "4616795723c96d2cae6e5e0d91d8ca721c3711d9605ac43872cdead10005f146",
+    "publish.py": "9c6df74a186a1596367ebfd41682cf5c85a7db9ee0b439b8081bf6e188994ec4",
+    "../workflows/publish-music-dev15-11.yml": "28610a237471523c7c1aeb8742bcb1768d362fddc3c1877b086c21eb4de82799"
+  }
+}
