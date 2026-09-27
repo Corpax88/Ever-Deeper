@@ -747,7 +747,6 @@ func _label(text_value: String, font_size: int, color: Color, alignment: Horizon
 	return label
 
 
-
 func _set_graphics_profile(value: int) -> void:
 	if not OS.has_feature("web"): return
 	var dev: Node = get_tree().current_scene.find_child("DeveloperMenu", true, false)
