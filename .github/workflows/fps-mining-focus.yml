@@ -1,0 +1,32 @@
+name: Focus mining CPU on unchanged DEV15.11
+on:
+  push:
+    branches: [codex/fps-mining-focus-20260927]
+    paths: ['.github/fps-mining-focus/**', '.github/workflows/fps-mining-focus.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: fps-mining-focus, cancel-in-progress: true}
+jobs:
+  focus:
+    runs-on: macos-15
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            scripts
+            .github/fps-mining-focus
+      - uses: actions/download-artifact@v4
+        with:
+          name: music-candidate
+          run-id: 36303234754
+          github-token: ${{ github.token }}
+          path: '${{ runner.temp }}/original'
+      - run: python3 .github/fps-mining-focus/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/focus"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npx playwright install webkit
+      - run: node .github/fps-mining-focus/review.mjs "$RUNNER_TEMP/focus" "$RUNNER_TEMP/evidence"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: fps-mining-focus, path: '${{ runner.temp }}/evidence', retention-days: 30}
