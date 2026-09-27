@@ -1,0 +1,1221 @@
+{
+  "source": "c3a03670df135419d1d3dff648fcdf6bcfa3471d",
+  "purpose": "Mole AI on/off/on during actual held mining; visible pet pose and lights retained; Mac only",
+  "runtime": {
+    "canvas": [
+      2328,
+      1260
+    ],
+    "dpr": 3,
+    "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+    "renderer": "Apple GPU"
+  },
+  "windows": [
+    {
+      "mode": "pet_on",
+      "before": {
+        "game": {
+          "error": "",
+          "fixture": "begin",
+          "id": 4,
+          "impact": 64,
+          "menu": false,
+          "mine_button": [
+            1090.09094238281,
+            517.54541015625
+          ],
+          "mining": true,
+          "native": {
+            "active": true,
+            "failed": false,
+            "failure": "",
+            "gear": "ember",
+            "generations": 1,
+            "motion": {
+              "age": 14.7156666666668,
+              "aim_ready": true,
+              "bounded_transition_frames": 0,
+              "duration": 0.05382,
+              "errors": [],
+              "max_contact_pixels": 0.00000762939453125,
+              "max_reach_error": 0,
+              "max_reach_error_scope": "Includes rejected transition search probes",
+              "max_tool_retarget": 0,
+              "mode": "mine",
+              "phase": 0.911782910628006,
+              "support_release": 0,
+              "swing_serial": 64,
+              "transitions": 2,
+              "yaw": -0.182676467883042
+            },
+            "surface_cache": 0,
+            "unreachable_contacts": 0,
+            "updates": 1006
+          },
+          "phase": "mine",
+          "position": [
+            1784,
+            408
+          ],
+          "result": {},
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 4000,
+            "draw_callbacks": 43,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 4,
+            "reuses": 938,
+            "setup_usec": 20000
+          },
+          "version": "1.0.0-dev.15.11",
+          "viewport": [
+            1209.09094238281,
+            654.54541015625
+          ]
+        },
+        "focus": {
+          "native": [
+            1009,
+            881000,
+            617000
+          ],
+          "occlusion": [
+            1009,
+            50000,
+            4000
+          ],
+          "pet": {
+            "action": "idle",
+            "lights": [
+              {
+                "enabled": true,
+                "energy": 0.720000028610229,
+                "shadow": true,
+                "visible": true
+              },
+              {
+                "enabled": true,
+                "energy": 0.419999986886978,
+                "shadow": true,
+                "visible": true
+              }
+            ],
+            "mode": "follow",
+            "move": [
+              1089,
+              88000,
+              2000
+            ],
+            "path": [
+              0,
+              0,
+              0
+            ],
+            "paused": false,
+            "physics": [
+              1089,
+              183000,
+              6000
+            ],
+            "pose": [
+              1089,
+              36000,
+              1000
+            ],
+            "position": [
+              1729.33129882812,
+              441.276672363281
+            ],
+            "searches": 0,
+            "think": [
+              58,
+              2000,
+              1000
+            ],
+            "visible": true
+          },
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 6000,
+            "draw_callbacks": 55,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 4,
+            "reuses": 1252,
+            "setup_usec": 26000
+          },
+          "terrain": [
+            174,
+            621000,
+            8000
+          ],
+          "world": [
+            1009,
+            507000,
+            3000
+          ]
+        }
+      },
+      "after": {
+        "game": {
+          "error": "",
+          "fixture": "begin",
+          "id": 4,
+          "impact": 151,
+          "menu": false,
+          "mine_button": [
+            1090.09094238281,
+            517.54541015625
+          ],
+          "mining": true,
+          "native": {
+            "active": true,
+            "failed": false,
+            "failure": "",
+            "gear": "ember",
+            "generations": 1,
+            "motion": {
+              "age": 34.6656666666666,
+              "aim_ready": true,
+              "bounded_transition_frames": 0,
+              "duration": 0.05382,
+              "errors": [],
+              "max_contact_pixels": 0.00000762939453125,
+              "max_reach_error": 0,
+              "max_reach_error_scope": "Includes rejected transition search probes",
+              "max_tool_retarget": 0,
+              "mode": "mine",
+              "phase": 0.675369867149737,
+              "support_release": 1,
+              "swing_serial": 151,
+              "transitions": 2,
+              "yaw": -0.182676467883042
+            },
+            "surface_cache": 0,
+            "unreachable_contacts": 0,
+            "updates": 1989
+          },
+          "phase": "mine",
+          "position": [
+            1784,
+            408
+          ],
+          "result": {},
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 427000,
+            "draw_callbacks": 3604,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 352,
+            "reuses": 79090,
+            "setup_usec": 1920000
+          },
+          "version": "1.0.0-dev.15.11",
+          "viewport": [
+            1209.09094238281,
+            654.54541015625
+          ]
+        },
+        "focus": {
+          "native": [
+            1992,
+            1194000,
+            617000
+          ],
+          "occlusion": [
+            1992,
+            84000,
+            4000
+          ],
+          "pet": {
+            "action": "idle",
+            "lights": [
+              {
+                "enabled": true,
+                "energy": 0.720000028610229,
+                "shadow": true,
+                "visible": true
+              },
+              {
+                "enabled": true,
+                "energy": 0.419999986886978,
+                "shadow": true,
+                "visible": true
+              }
+            ],
+            "mode": "follow",
+            "move": [
+              2291,
+              210000,
+              2000
+            ],
+            "path": [
+              0,
+              0,
+              0
+            ],
+            "paused": false,
+            "physics": [
+              2291,
+              428000,
+              6000
+            ],
+            "pose": [
+              2291,
+              88000,
+              1000
+            ],
+            "position": [
+              1729.33129882812,
+              441.276672363281
+            ],
+            "searches": 0,
+            "think": [
+              121,
+              3000,
+              1000
+            ],
+            "visible": true
+          },
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 430000,
+            "draw_callbacks": 3622,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 352,
+            "reuses": 79561,
+            "setup_usec": 1937000
+          },
+          "terrain": [
+            675,
+            2560000,
+            11000
+          ],
+          "world": [
+            1992,
+            1018000,
+            3000
+          ]
+        }
+      },
+      "result": {
+        "cpu": {
+          "max_ms": 26,
+          "mean_ms": 18.5014955134596,
+          "over_33_ms": 0,
+          "p95_ms": 26
+        },
+        "draw_calls": 163,
+        "frame": {
+          "max_ms": 59,
+          "mean_ms": 20.369890329013,
+          "over_33_ms": 54,
+          "p95_ms": 34
+        },
+        "frames": 1003,
+        "seconds": 20.431,
+        "sections": {
+          "cached": 157,
+          "draw_callback_usec": 434000,
+          "draw_callbacks": 3640,
+          "dynamic": 7,
+          "recycled": 0,
+          "redraws": 356,
+          "reuses": 79871,
+          "setup_usec": 1946000
+        }
+      },
+      "metrics": {
+        "world": {
+          "calls": 983,
+          "total_us": 511000,
+          "max_us": 3000
+        },
+        "terrain": {
+          "calls": 501,
+          "total_us": 1939000,
+          "max_us": 11000
+        },
+        "native": {
+          "calls": 983,
+          "total_us": 313000,
+          "max_us": 617000
+        },
+        "occlusion": {
+          "calls": 983,
+          "total_us": 34000,
+          "max_us": 4000
+        }
+      },
+      "pet": {
+        "physics": {
+          "calls": 1202,
+          "total_us": 245000,
+          "lifetime_max_us": 6000
+        },
+        "think": {
+          "calls": 63,
+          "total_us": 1000,
+          "lifetime_max_us": 1000
+        },
+        "move": {
+          "calls": 1202,
+          "total_us": 122000,
+          "lifetime_max_us": 2000
+        },
+        "path": {
+          "calls": 0,
+          "total_us": 0,
+          "lifetime_max_us": 0
+        },
+        "pose": {
+          "calls": 1202,
+          "total_us": 52000,
+          "lifetime_max_us": 1000
+        }
+      }
+    },
+    {
+      "mode": "pet_off",
+      "before": {
+        "game": {
+          "error": "",
+          "fixture": "begin",
+          "id": 8,
+          "impact": 166,
+          "menu": false,
+          "mine_button": [
+            1090.09094238281,
+            517.54541015625
+          ],
+          "mining": true,
+          "native": {
+            "active": true,
+            "failed": false,
+            "failure": "",
+            "gear": "ember",
+            "generations": 1,
+            "motion": {
+              "age": 38.1823333333333,
+              "aim_ready": true,
+              "bounded_transition_frames": 0,
+              "duration": 0.05382,
+              "errors": [],
+              "max_contact_pixels": 0.00000762939453125,
+              "max_reach_error": 0,
+              "max_reach_error_scope": "Includes rejected transition search probes",
+              "max_tool_retarget": 0,
+              "mode": "mine",
+              "phase": 0.938051026570025,
+              "support_release": 0,
+              "swing_serial": 166,
+              "transitions": 2,
+              "yaw": -0.182676467883042
+            },
+            "surface_cache": 0,
+            "unreachable_contacts": 0,
+            "updates": 2154
+          },
+          "phase": "mine",
+          "position": [
+            1784,
+            408
+          ],
+          "result": {
+            "cpu": {
+              "max_ms": 26,
+              "mean_ms": 18.5014955134596,
+              "over_33_ms": 0,
+              "p95_ms": 26
+            },
+            "draw_calls": 163,
+            "frame": {
+              "max_ms": 59,
+              "mean_ms": 20.369890329013,
+              "over_33_ms": 54,
+              "p95_ms": 34
+            },
+            "frames": 1003,
+            "seconds": 20.431,
+            "sections": {
+              "cached": 157,
+              "draw_callback_usec": 434000,
+              "draw_callbacks": 3640,
+              "dynamic": 7,
+              "recycled": 0,
+              "redraws": 356,
+              "reuses": 79871,
+              "setup_usec": 1946000
+            }
+          },
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 11000,
+            "draw_callbacks": 78,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 8,
+            "reuses": 1719,
+            "setup_usec": 44000
+          },
+          "version": "1.0.0-dev.15.11",
+          "viewport": [
+            1209.09094238281,
+            654.54541015625
+          ]
+        },
+        "focus": {
+          "native": [
+            2149,
+            1253000,
+            617000
+          ],
+          "occlusion": [
+            2149,
+            89000,
+            4000
+          ],
+          "pet": {
+            "action": "idle",
+            "lights": [
+              {
+                "enabled": true,
+                "energy": 0.720000028610229,
+                "shadow": true,
+                "visible": true
+              },
+              {
+                "enabled": true,
+                "energy": 0.419999986886978,
+                "shadow": true,
+                "visible": true
+              }
+            ],
+            "mode": "follow",
+            "move": [
+              2360,
+              218000,
+              2000
+            ],
+            "path": [
+              0,
+              0,
+              0
+            ],
+            "paused": true,
+            "physics": [
+              2360,
+              441000,
+              6000
+            ],
+            "pose": [
+              2488,
+              98000,
+              1000
+            ],
+            "position": [
+              1729.33129882812,
+              441.276672363281
+            ],
+            "searches": 0,
+            "think": [
+              125,
+              3000,
+              1000
+            ],
+            "visible": true
+          },
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 9000,
+            "draw_callbacks": 65,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 8,
+            "reuses": 1405,
+            "setup_usec": 38000
+          },
+          "terrain": [
+            750,
+            2846000,
+            11000
+          ],
+          "world": [
+            2149,
+            1102000,
+            4000
+          ]
+        }
+      },
+      "after": {
+        "game": {
+          "error": "",
+          "fixture": "begin",
+          "id": 8,
+          "impact": 253,
+          "menu": false,
+          "mine_button": [
+            1090.09094238281,
+            517.54541015625
+          ],
+          "mining": true,
+          "native": {
+            "active": true,
+            "failed": false,
+            "failure": "",
+            "gear": "ember",
+            "generations": 1,
+            "motion": {
+              "age": 58.1094444444446,
+              "aim_ready": true,
+              "bounded_transition_frames": 0,
+              "duration": 0.05382,
+              "errors": [],
+              "max_contact_pixels": 0.00000762939453125,
+              "max_reach_error": 0,
+              "max_reach_error_scope": "Includes rejected transition search probes",
+              "max_tool_retarget": 0,
+              "mode": "mine",
+              "phase": 0.611450785024132,
+              "support_release": 1,
+              "swing_serial": 253,
+              "transitions": 2,
+              "yaw": -0.182676467883042
+            },
+            "surface_cache": 0,
+            "unreachable_contacts": 0,
+            "updates": 3181
+          },
+          "phase": "mine",
+          "position": [
+            1784,
+            408
+          ],
+          "result": {
+            "cpu": {
+              "max_ms": 26,
+              "mean_ms": 18.5014955134596,
+              "over_33_ms": 0,
+              "p95_ms": 26
+            },
+            "draw_calls": 163,
+            "frame": {
+              "max_ms": 59,
+              "mean_ms": 20.369890329013,
+              "over_33_ms": 54,
+              "p95_ms": 34
+            },
+            "frames": 1003,
+            "seconds": 20.431,
+            "sections": {
+              "cached": 157,
+              "draw_callback_usec": 434000,
+              "draw_callbacks": 3640,
+              "dynamic": 7,
+              "recycled": 0,
+              "redraws": 356,
+              "reuses": 79871,
+              "setup_usec": 1946000
+            }
+          },
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 397000,
+            "draw_callbacks": 3620,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 356,
+            "reuses": 79243,
+            "setup_usec": 1846000
+          },
+          "version": "1.0.0-dev.15.11",
+          "viewport": [
+            1209.09094238281,
+            654.54541015625
+          ]
+        },
+        "focus": {
+          "native": [
+            3181,
+            1547000,
+            617000
+          ],
+          "occlusion": [
+            3181,
+            128000,
+            4000
+          ],
+          "pet": {
+            "action": "idle",
+            "lights": [
+              {
+                "enabled": true,
+                "energy": 0.720000028610229,
+                "shadow": true,
+                "visible": true
+              },
+              {
+                "enabled": true,
+                "energy": 0.419999986886978,
+                "shadow": true,
+                "visible": true
+              }
+            ],
+            "mode": "follow",
+            "move": [
+              2360,
+              218000,
+              2000
+            ],
+            "path": [
+              0,
+              0,
+              0
+            ],
+            "paused": true,
+            "physics": [
+              2360,
+              441000,
+              6000
+            ],
+            "pose": [
+              3689,
+              165000,
+              1000
+            ],
+            "position": [
+              1729.33129882812,
+              441.276672363281
+            ],
+            "searches": 0,
+            "think": [
+              125,
+              3000,
+              1000
+            ],
+            "visible": true
+          },
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 397000,
+            "draw_callbacks": 3620,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 356,
+            "reuses": 79243,
+            "setup_usec": 1846000
+          },
+          "terrain": [
+            1248,
+            4674000,
+            13000
+          ],
+          "world": [
+            3181,
+            1606000,
+            4000
+          ]
+        }
+      },
+      "result": {
+        "cpu": {
+          "max_ms": 25,
+          "mean_ms": 17.3320790216369,
+          "over_33_ms": 0,
+          "p95_ms": 24
+        },
+        "draw_calls": 163,
+        "frame": {
+          "max_ms": 65,
+          "mean_ms": 19.3687676387582,
+          "over_33_ms": 24,
+          "p95_ms": 29
+        },
+        "frames": 1063,
+        "seconds": 20.589,
+        "sections": {
+          "cached": 157,
+          "draw_callback_usec": 401000,
+          "draw_callbacks": 3652,
+          "dynamic": 7,
+          "recycled": 0,
+          "redraws": 356,
+          "reuses": 80028,
+          "setup_usec": 1864000
+        }
+      },
+      "metrics": {
+        "world": {
+          "calls": 1032,
+          "total_us": 504000,
+          "max_us": 4000
+        },
+        "terrain": {
+          "calls": 498,
+          "total_us": 1828000,
+          "max_us": 13000
+        },
+        "native": {
+          "calls": 1032,
+          "total_us": 294000,
+          "max_us": 617000
+        },
+        "occlusion": {
+          "calls": 1032,
+          "total_us": 39000,
+          "max_us": 4000
+        }
+      },
+      "pet": {
+        "physics": {
+          "calls": 0,
+          "total_us": 0,
+          "lifetime_max_us": 6000
+        },
+        "think": {
+          "calls": 0,
+          "total_us": 0,
+          "lifetime_max_us": 1000
+        },
+        "move": {
+          "calls": 0,
+          "total_us": 0,
+          "lifetime_max_us": 2000
+        },
+        "path": {
+          "calls": 0,
+          "total_us": 0,
+          "lifetime_max_us": 0
+        },
+        "pose": {
+          "calls": 1201,
+          "total_us": 67000,
+          "lifetime_max_us": 1000
+        }
+      }
+    },
+    {
+      "mode": "pet_on",
+      "before": {
+        "game": {
+          "error": "",
+          "fixture": "begin",
+          "id": 12,
+          "impact": 265,
+          "menu": false,
+          "mine_button": [
+            1090.09094238281,
+            517.54541015625
+          ],
+          "mining": true,
+          "native": {
+            "active": true,
+            "failed": false,
+            "failure": "",
+            "gear": "ember",
+            "generations": 1,
+            "motion": {
+              "age": 61.0126666666669,
+              "aim_ready": true,
+              "bounded_transition_frames": 0,
+              "duration": 0.05382,
+              "errors": [],
+              "max_contact_pixels": 0.00000762939453125,
+              "max_reach_error": 0,
+              "max_reach_error_scope": "Includes rejected transition search probes",
+              "max_tool_retarget": 0,
+              "mode": "mine",
+              "phase": 0.226288244766474,
+              "support_release": 1,
+              "swing_serial": 266,
+              "transitions": 2,
+              "yaw": -0.182676467883042
+            },
+            "surface_cache": 0,
+            "unreachable_contacts": 0,
+            "updates": 3318
+          },
+          "phase": "mine",
+          "position": [
+            1784,
+            408
+          ],
+          "result": {
+            "cpu": {
+              "max_ms": 25,
+              "mean_ms": 17.3320790216369,
+              "over_33_ms": 0,
+              "p95_ms": 24
+            },
+            "draw_calls": 163,
+            "frame": {
+              "max_ms": 65,
+              "mean_ms": 19.3687676387582,
+              "over_33_ms": 24,
+              "p95_ms": 29
+            },
+            "frames": 1063,
+            "seconds": 20.589,
+            "sections": {
+              "cached": 157,
+              "draw_callback_usec": 401000,
+              "draw_callbacks": 3652,
+              "dynamic": 7,
+              "recycled": 0,
+              "redraws": 356,
+              "reuses": 80028,
+              "setup_usec": 1864000
+            }
+          },
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 4000,
+            "draw_callbacks": 48,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 4,
+            "reuses": 1095,
+            "setup_usec": 28000
+          },
+          "version": "1.0.0-dev.15.11",
+          "viewport": [
+            1209.09094238281,
+            654.54541015625
+          ]
+        },
+        "focus": {
+          "native": [
+            3320,
+            1595000,
+            617000
+          ],
+          "occlusion": [
+            3320,
+            133000,
+            4000
+          ],
+          "pet": {
+            "action": "idle",
+            "lights": [
+              {
+                "enabled": true,
+                "energy": 0.720000028610229,
+                "shadow": true,
+                "visible": true
+              },
+              {
+                "enabled": true,
+                "energy": 0.419999986886978,
+                "shadow": true,
+                "visible": true
+              }
+            ],
+            "mode": "follow",
+            "move": [
+              2476,
+              231000,
+              2000
+            ],
+            "path": [
+              0,
+              0,
+              0
+            ],
+            "paused": false,
+            "physics": [
+              2476,
+              463000,
+              6000
+            ],
+            "pose": [
+              3866,
+              177000,
+              1000
+            ],
+            "position": [
+              1729.33129882812,
+              441.276672363281
+            ],
+            "searches": 0,
+            "think": [
+              131,
+              3000,
+              1000
+            ],
+            "visible": true
+          },
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 4000,
+            "draw_callbacks": 54,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 4,
+            "reuses": 1252,
+            "setup_usec": 31000
+          },
+          "terrain": [
+            1317,
+            4933000,
+            13000
+          ],
+          "world": [
+            3320,
+            1671000,
+            4000
+          ]
+        }
+      },
+      "after": {
+        "game": {
+          "error": "",
+          "fixture": "begin",
+          "id": 12,
+          "impact": 353,
+          "menu": false,
+          "mine_button": [
+            1090.09094238281,
+            517.54541015625
+          ],
+          "mining": true,
+          "native": {
+            "active": true,
+            "failed": false,
+            "failure": "",
+            "gear": "ember",
+            "generations": 1,
+            "motion": {
+              "age": 81.0968888888878,
+              "aim_ready": true,
+              "bounded_transition_frames": 0,
+              "duration": 0.05382,
+              "errors": [],
+              "max_contact_pixels": 0.00000762939453125,
+              "max_reach_error": 0,
+              "max_reach_error_scope": "Includes rejected transition search probes",
+              "max_tool_retarget": 0,
+              "mode": "mine",
+              "phase": 0.561979166666633,
+              "support_release": 1,
+              "swing_serial": 353,
+              "transitions": 2,
+              "yaw": -0.182676467883042
+            },
+            "surface_cache": 0,
+            "unreachable_contacts": 0,
+            "updates": 4414
+          },
+          "phase": "mine",
+          "position": [
+            1784,
+            408
+          ],
+          "result": {
+            "cpu": {
+              "max_ms": 25,
+              "mean_ms": 17.3320790216369,
+              "over_33_ms": 0,
+              "p95_ms": 24
+            },
+            "draw_calls": 163,
+            "frame": {
+              "max_ms": 65,
+              "mean_ms": 19.3687676387582,
+              "over_33_ms": 24,
+              "p95_ms": 29
+            },
+            "frames": 1063,
+            "seconds": 20.589,
+            "sections": {
+              "cached": 157,
+              "draw_callback_usec": 401000,
+              "draw_callbacks": 3652,
+              "dynamic": 7,
+              "recycled": 0,
+              "redraws": 356,
+              "reuses": 80028,
+              "setup_usec": 1864000
+            }
+          },
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 403000,
+            "draw_callbacks": 3775,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 356,
+            "reuses": 83011,
+            "setup_usec": 1845000
+          },
+          "version": "1.0.0-dev.15.11",
+          "viewport": [
+            1209.09094238281,
+            654.54541015625
+          ]
+        },
+        "focus": {
+          "native": [
+            4415,
+            1872000,
+            617000
+          ],
+          "occlusion": [
+            4415,
+            167000,
+            4000
+          ],
+          "pet": {
+            "action": "idle",
+            "lights": [
+              {
+                "enabled": true,
+                "energy": 0.720000028610229,
+                "shadow": true,
+                "visible": true
+              },
+              {
+                "enabled": true,
+                "energy": 0.419999986886978,
+                "shadow": true,
+                "visible": true
+              }
+            ],
+            "mode": "follow",
+            "move": [
+              3680,
+              338000,
+              2000
+            ],
+            "path": [
+              0,
+              0,
+              0
+            ],
+            "paused": false,
+            "physics": [
+              3680,
+              674000,
+              6000
+            ],
+            "pose": [
+              5070,
+              222000,
+              1000
+            ],
+            "position": [
+              1729.33129882812,
+              441.276672363281
+            ],
+            "searches": 0,
+            "think": [
+              194,
+              7000,
+              1000
+            ],
+            "visible": true
+          },
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 403000,
+            "draw_callbacks": 3775,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 356,
+            "reuses": 83011,
+            "setup_usec": 1845000
+          },
+          "terrain": [
+            1840,
+            6763000,
+            13000
+          ],
+          "world": [
+            4415,
+            2206000,
+            4000
+          ]
+        }
+      },
+      "result": {
+        "cpu": {
+          "max_ms": 26,
+          "mean_ms": 16.2267857142857,
+          "over_33_ms": 0,
+          "p95_ms": 26
+        },
+        "draw_calls": 163,
+        "frame": {
+          "max_ms": 40,
+          "mean_ms": 18.3616071428571,
+          "over_33_ms": 10,
+          "p95_ms": 27
+        },
+        "frames": 1120,
+        "seconds": 20.565,
+        "sections": {
+          "cached": 157,
+          "draw_callback_usec": 407000,
+          "draw_callbacks": 3800,
+          "dynamic": 7,
+          "recycled": 0,
+          "redraws": 356,
+          "reuses": 83639,
+          "setup_usec": 1861000
+        }
+      },
+      "metrics": {
+        "world": {
+          "calls": 1095,
+          "total_us": 535000,
+          "max_us": 4000
+        },
+        "terrain": {
+          "calls": 523,
+          "total_us": 1830000,
+          "max_us": 13000
+        },
+        "native": {
+          "calls": 1095,
+          "total_us": 277000,
+          "max_us": 617000
+        },
+        "occlusion": {
+          "calls": 1095,
+          "total_us": 34000,
+          "max_us": 4000
+        }
+      },
+      "pet": {
+        "physics": {
+          "calls": 1204,
+          "total_us": 211000,
+          "lifetime_max_us": 6000
+        },
+        "think": {
+          "calls": 63,
+          "total_us": 4000,
+          "lifetime_max_us": 1000
+        },
+        "move": {
+          "calls": 1204,
+          "total_us": 107000,
+          "lifetime_max_us": 2000
+        },
+        "path": {
+          "calls": 0,
+          "total_us": 0,
+          "lifetime_max_us": 0
+        },
+        "pose": {
+          "calls": 1204,
+          "total_us": 45000,
+          "lifetime_max_us": 1000
+        }
+      }
+    }
+  ],
+  "error": null
+}

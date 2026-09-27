@@ -95,3 +95,9 @@ not been isolated. Retain negative results; do not relabel a CPU-work saving as
 a proven FPS fix. No new release, phone retest request, or broad matrix follows
 from these inconclusive results. Any next experiment requires a distinct,
 measured mechanism or representative on-device profiling evidence.
+
+
+Latest distinct check: [mole AI isolation](../mole-ai-focus/HANDOFF.md),
+run36350025804. AI on/off/on49.09/51.63/54.46FPS; no reversible effect.
+Both pet lights and pose retained. Stationary follow only; zero path searches,
+so this does not exclude active errands/pathfinding or physical-phone AI cost.
