@@ -14,7 +14,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-          sparse-checkout: .github/diagnostics-v2
+          sparse-checkout: |
+            .github/diagnostics-v2
+            .github/workflows
       - id: accepted
         run: |
           python3 - <<'PYCODE'
@@ -55,7 +57,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-          sparse-checkout: .github/diagnostics-v2
+          sparse-checkout: |
+            .github/diagnostics-v2
+            .github/workflows
       - run: python3 .github/diagnostics-v2/publish.py verify "$RUNNER_TEMP/verified"
       - uses: actions/upload-artifact@v4
         if: always()
