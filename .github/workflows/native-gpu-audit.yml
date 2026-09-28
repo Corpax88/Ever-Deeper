@@ -1,0 +1,38 @@
+name: Isolate native hero GPU passes
+on:
+  push:
+    branches: [codex/native-gpu-audit-20260928]
+    paths: ['.github/native-gpu-audit/**', '.github/workflows/native-gpu-audit.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: native-gpu-audit, cancel-in-progress: true}
+jobs:
+  audit:
+    strategy:
+      fail-fast: false
+      matrix: {browser: [webkit, chromium]}
+    runs-on: macos-15
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/native-gpu-audit
+            .github/surface-light-probe
+      - uses: actions/download-artifact@v4
+        with:
+          name: surface-probe-candidate
+          run-id: 36380070907
+          github-token: ${{ github.token }}
+          path: '${{ runner.temp }}/original'
+      - run: python3 .github/native-gpu-audit/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/audit"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install ${{ matrix.browser }}
+      - run: node .github/native-gpu-audit/review.mjs "$RUNNER_TEMP/audit" "$RUNNER_TEMP/evidence"
+        env: {AUDIT_BROWSER: '${{ matrix.browser }}'}
+        timeout-minutes: 7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'native-gpu-evidence-${{ matrix.browser }}', path: '${{ runner.temp }}/evidence', retention-days: 30}
+
