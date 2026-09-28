@@ -1,0 +1,31 @@
+name: Check ordinary startup of exact FPS candidate
+on:
+  push:
+    branches: [codex/fps-fixes-20260928]
+    paths: ['.github/fps-fixes-final/**', '.github/workflows/fps-fixes-final.yml']
+permissions: {contents: read, actions: read}
+jobs:
+  ordinary:
+    runs-on: macos-15
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/fps-fixes-final
+      - uses: actions/download-artifact@v4
+        with:
+          name: fps-fixes-candidate
+          run-id: 36410803352
+          github-token: ${{ github.token }}
+          path: '${{ runner.temp }}/candidate'
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npx playwright install webkit
+      - run: node .github/fps-fixes-final/startup.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence"
+        env:
+          EXPECTED_VERSION: 1.0.0-dev.15.17
+          CANDIDATE_SOURCE: 6834643708348ceb6002287325a6e01d4fe8cccd
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: fps-fixes-ordinary-startup, path: '${{ runner.temp }}/evidence', retention-days: 30}
