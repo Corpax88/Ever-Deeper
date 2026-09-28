@@ -1,0 +1,37 @@
+name: Review compact skill level notices
+on:
+  push:
+    branches: [codex/skill-level-up-20260928]
+    paths: ['.github/skill-level-up/**', '.github/workflows/skill-level-up.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: skill-level-up, cancel-in-progress: true}
+jobs:
+  focus:
+    runs-on: macos-15
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            scripts
+            .github/skill-level-up
+            .github/graphics-settings
+      - uses: actions/download-artifact@v4
+        with:
+          name: hero-candidate
+          run-id: 36355460990
+          github-token: ${{ github.token }}
+          path: '${{ runner.temp }}/original'
+      - run: python3 .github/skill-level-up/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/focus"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install webkit
+      - run: node .github/skill-level-up/review.mjs "$RUNNER_TEMP/focus" "$RUNNER_TEMP/evidence"
+        timeout-minutes: 3
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: skill-level-evidence, path: '${{ runner.temp }}/evidence', retention-days: 30}
+
+      - uses: actions/upload-artifact@v4
+        with: {name: skill-level-candidate, path: '${{ runner.temp }}/focus', retention-days: 30}
