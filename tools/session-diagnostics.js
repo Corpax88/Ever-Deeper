@@ -62,7 +62,8 @@
   function lagTick(){if(!active)return;boundedPush(windowData.lag,clock()-timerDue);timerDue=clock()+250;timer=setTimeout(lagTick,250);}
   function start(){
     stop();active=true;serial=0;first=clock();lastStart=lastEnd=0;previousFrame=null;windowData=fresh();
-    capabilities={revision:2,gpu_timer:'not_observed',webgl:0,longtask:false,long_animation_frame:false,js_heap:!!performance.memory,temperature:false,power_state:false};
+    const ua=globalThis.navigator?.userAgent||'';
+    capabilities={browser_version:(ua.match(/(?:Version|CriOS|Chrome|FxiOS|Firefox)\/([0-9.]+)/)||[])[1]||'unknown',os_version:((ua.match(/(?:CPU (?:iPhone )?OS|iPhone OS|Mac OS X) ([0-9_]+)/)||[])[1]||'unknown').replaceAll('_','.'),revision:2,gpu_timer:'not_observed',webgl:0,longtask:false,long_animation_frame:false,js_heap:!!performance.memory,temperature:false,power_state:false};
     for(const [type,key] of [['longtask','longtask'],['long-animation-frame','loaf']]){
       if(!globalThis.PerformanceObserver?.supportedEntryTypes?.includes(type))continue;
       safe(()=>{const o=new PerformanceObserver(list=>{if(active)for(const e of list.getEntries())boundedPush(windowData[key],e.duration,128);});o.observe({type,buffered:false});observer.push(o);capabilities[type==='longtask'?'longtask':'long_animation_frame']=true;});

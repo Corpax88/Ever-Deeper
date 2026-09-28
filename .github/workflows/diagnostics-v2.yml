@@ -11,7 +11,11 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-        with: {persist-credentials: false}
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/diagnostics-v2
+            tools
       - uses: actions/download-artifact@v4
         with:
           artifact-ids: 10967022774
