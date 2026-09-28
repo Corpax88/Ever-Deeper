@@ -1,0 +1,177 @@
+{
+  "passed": true,
+  "error": null,
+  "source_commit": "bf8fe58de157704bca9c5eb42f24b06f9cb35b6e",
+  "version": "1.0.0-dev.15.18",
+  "files": {
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 4571,
+      "sha256": "65bc52dba653b2c39735a621863ae7332dda9c65d3a1bd7891d356390110da7f"
+    },
+    "index.html": {
+      "size": 23145,
+      "sha256": "1518849c8377b613375d7d43c1c6e5837aa80815e873b7c4ca371e319062e8dd"
+    },
+    "index.js": {
+      "size": 282403,
+      "sha256": "1c05fc40c7e418b0234c4e5ac39dfc7df1286e98443946e84b89a7394de6c753"
+    },
+    "index.pck": {
+      "size": 262405752,
+      "sha256": "f25d708760a864017a1a903531265d27e74d2343b84b2c6978359ce76eea2400"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    }
+  },
+  "browser": "chromium",
+  "checks": [
+    {
+      "name": "version",
+      "passed": true
+    },
+    {
+      "name": "opt-in",
+      "passed": true
+    },
+    {
+      "name": "recording-started",
+      "passed": true,
+      "ui": {
+        "buttons": {
+          "AutoFPSTest": [
+            476,
+            591
+          ],
+          "ClearReport": [
+            476,
+            519
+          ],
+          "SendReport": [
+            476,
+            447
+          ],
+          "SessionReport": [
+            476,
+            375
+          ]
+        },
+        "running": true,
+        "status": "REPORT · 0S · 0 WINDOWS · SEND AFTER PLAYING"
+      },
+      "api": {
+        "ready": true,
+        "active": true,
+        "saved": false,
+        "storage_error": false,
+        "pending": true,
+        "windows": 0,
+        "seconds": 0
+      }
+    },
+    {
+      "name": "real-windows",
+      "passed": true,
+      "windows": 2
+    },
+    {
+      "name": "real-metrics",
+      "passed": true,
+      "canvas": {
+        "width": 1688,
+        "dpr": 2
+      }
+    },
+    {
+      "name": "diagnostic-coverage",
+      "passed": true
+    },
+    {
+      "name": "gl-call-census",
+      "passed": true
+    },
+    {
+      "name": "missing-data-explicit",
+      "passed": true
+    },
+    {
+      "name": "actual-mining",
+      "passed": true
+    },
+    {
+      "name": "no-network-while-playing",
+      "passed": true
+    },
+    {
+      "name": "recovered-after-reload",
+      "passed": true
+    },
+    {
+      "name": "not-auto-recording",
+      "passed": true
+    },
+    {
+      "name": "previous-report-protected",
+      "passed": true
+    },
+    {
+      "name": "exact-transfer",
+      "passed": true
+    },
+    {
+      "name": "receipt-clears-pending",
+      "passed": true
+    },
+    {
+      "name": "new-session-after-receipt",
+      "passed": true
+    },
+    {
+      "name": "hooks-restored",
+      "passed": true
+    },
+    {
+      "name": "stopped",
+      "passed": true
+    },
+    {
+      "name": "clear-needs-confirmation",
+      "passed": true
+    },
+    {
+      "name": "confirmed-clear",
+      "passed": true
+    },
+    {
+      "name": "no-script-errors",
+      "passed": true,
+      "tail": [
+        "log: Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+        "log: OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+        "log: Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support.",
+        "log: Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+        "log: OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL",
+        "log: Build configuration: Emscripten 4.0.20, single-threaded, no GDExtension support."
+      ]
+    }
+  ],
+  "physical_iphone_verified": false,
+  "transfer_fixture": true
+}

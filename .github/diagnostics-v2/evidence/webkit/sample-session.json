@@ -1,0 +1,498 @@
+{
+  "schema": 1,
+  "id": "b36c4887-c612-41f6-8095-17167fbdf1a5",
+  "version": "1.0.0-dev.15.18",
+  "started_at": "2026-09-28T16:57:26.759Z",
+  "duration_s": 10.009,
+  "reason": "stopped",
+  "device": {
+    "browser": "Safari-WebKit",
+    "platform": "macOS",
+    "css_width": 844,
+    "css_height": 390,
+    "dpr": 2
+  },
+  "samples": [
+    {
+      "cpu_max_ms": 55,
+      "cpu_mean_ms": 23.5379310344828,
+      "depth": 1,
+      "draw_calls": 227,
+      "drops": 3,
+      "fps": 57.8957875823518,
+      "frames": 290,
+      "lights": 6,
+      "max_ms": 46,
+      "menu_fraction": 0,
+      "mine": "mossMine",
+      "mining_fraction": 0.331034482758621,
+      "moving_fraction": 0,
+      "nodes": 1056,
+      "p95_ms": 23,
+      "pet_lights": 2,
+      "phase": "mine",
+      "physics_mean_ms": 3.0448275862069,
+      "seconds": 5.009,
+      "shadows": 4,
+      "slow_frames": 3,
+      "tool": "ember",
+      "video_mib": 606.248155593872,
+      "window_ms": 5009,
+      "canvas_width": 1688,
+      "canvas_height": 780,
+      "dpr": 2,
+      "diagnostics": {
+        "revision": 2,
+        "capabilities": {
+          "browser_version": "26.5",
+          "os_version": "10.15.7",
+          "revision": 2,
+          "gpu_timer": "unavailable",
+          "webgl": 2,
+          "longtask": false,
+          "long_animation_frame": false,
+          "js_heap": false,
+          "temperature": false,
+          "power_state": false
+        },
+        "callback_ms": [
+          290,
+          7.77,
+          15,
+          36
+        ],
+        "interval_ms": [
+          289,
+          17.28,
+          23,
+          47
+        ],
+        "outside_ms": [
+          289,
+          9.5,
+          12,
+          15
+        ],
+        "control_ms": [
+          281,
+          7.86,
+          15,
+          36
+        ],
+        "instrumented_ms": [
+          9,
+          5,
+          6,
+          6
+        ],
+        "gpu_ms": null,
+        "gpu_rejected": 0,
+        "gpu_skipped": 0,
+        "gl": {
+          "bindTexture": [
+            4821,
+            0
+          ],
+          "texImage2D": [
+            9,
+            0
+          ],
+          "bindFramebuffer": [
+            288,
+            0
+          ],
+          "useProgram": [
+            2147,
+            1
+          ],
+          "bindBuffer": [
+            2331,
+            1
+          ],
+          "drawArrays": [
+            27,
+            0
+          ],
+          "bufferData": [
+            102,
+            0
+          ],
+          "clear": [
+            63,
+            0
+          ],
+          "viewport": [
+            234,
+            0
+          ],
+          "drawElements": [
+            1254,
+            0
+          ],
+          "bufferSubData": [
+            36,
+            0
+          ],
+          "checkFramebufferStatus": [
+            9,
+            2
+          ],
+          "blitFramebuffer": [
+            36,
+            0
+          ],
+          "scissor": [
+            36,
+            0
+          ],
+          "getSyncParameter": [
+            18,
+            5
+          ],
+          "drawElementsInstanced": [
+            1946,
+            0
+          ],
+          "drawArraysInstanced": [
+            66,
+            0
+          ],
+          "fenceSync": [
+            18,
+            10
+          ]
+        },
+        "seconds": [
+          [
+            0,
+            60,
+            448,
+            16,
+            553,
+            12
+          ],
+          [
+            1,
+            60,
+            478,
+            12,
+            520,
+            12
+          ],
+          [
+            2,
+            60,
+            454,
+            15,
+            546,
+            13
+          ],
+          [
+            3,
+            49,
+            490,
+            36,
+            501,
+            15
+          ],
+          [
+            4,
+            61,
+            383,
+            20,
+            626,
+            13
+          ]
+        ],
+        "worst": [
+          [
+            3274,
+            47,
+            36,
+            11,
+            0,
+            0
+          ],
+          [
+            3227,
+            38,
+            27,
+            11,
+            0,
+            0
+          ],
+          [
+            3307,
+            33,
+            22,
+            11,
+            0,
+            0
+          ],
+          [
+            3116,
+            32,
+            23,
+            9,
+            0,
+            0
+          ]
+        ],
+        "timer_lag_ms": [
+          18,
+          18.94,
+          115,
+          115
+        ],
+        "longtask_ms": null,
+        "long_animation_frame_ms": null,
+        "wasm_mib": 167.56,
+        "js_heap_mib": null,
+        "audio": {
+          "state": "running",
+          "nodes": 1,
+          "buffers": 8,
+          "worklets": 3,
+          "base_latency_ms": 2.67
+        },
+        "persist_ms": [
+          1,
+          41,
+          41,
+          41
+        ],
+        "errors": 0,
+        "collector_ms": 2
+      }
+    },
+    {
+      "cpu_max_ms": 15,
+      "cpu_mean_ms": 12.244966442953,
+      "depth": 1,
+      "draw_calls": 223,
+      "drops": 3,
+      "fps": 59.6,
+      "frames": 298,
+      "lights": 6,
+      "max_ms": 31,
+      "menu_fraction": 0,
+      "mine": "mossMine",
+      "mining_fraction": 0,
+      "moving_fraction": 0,
+      "nodes": 1052,
+      "p95_ms": 20,
+      "pet_lights": 2,
+      "phase": "mine",
+      "physics_mean_ms": 1.44295302013423,
+      "seconds": 10.009,
+      "shadows": 4,
+      "slow_frames": 0,
+      "tool": "ember",
+      "video_mib": 606.248155593872,
+      "window_ms": 5000,
+      "canvas_width": 1688,
+      "canvas_height": 780,
+      "dpr": 2,
+      "diagnostics": {
+        "revision": 2,
+        "capabilities": {
+          "browser_version": "26.5",
+          "os_version": "10.15.7",
+          "revision": 2,
+          "gpu_timer": "unavailable",
+          "webgl": 2,
+          "longtask": false,
+          "long_animation_frame": false,
+          "js_heap": false,
+          "temperature": false,
+          "power_state": false
+        },
+        "callback_ms": [
+          298,
+          6.41,
+          10,
+          13
+        ],
+        "interval_ms": [
+          298,
+          16.78,
+          20,
+          32
+        ],
+        "outside_ms": [
+          298,
+          10.37,
+          13,
+          20
+        ],
+        "control_ms": [
+          288,
+          6.41,
+          10,
+          13
+        ],
+        "instrumented_ms": [
+          10,
+          6.3,
+          10,
+          10
+        ],
+        "gpu_ms": null,
+        "gpu_rejected": 0,
+        "gpu_skipped": 0,
+        "gl": {
+          "bindBuffer": [
+            2516,
+            0
+          ],
+          "bufferData": [
+            90,
+            0
+          ],
+          "bindTexture": [
+            5338,
+            0
+          ],
+          "texImage2D": [
+            10,
+            0
+          ],
+          "bindFramebuffer": [
+            320,
+            0
+          ],
+          "useProgram": [
+            2356,
+            0
+          ],
+          "drawArrays": [
+            30,
+            0
+          ],
+          "clear": [
+            70,
+            0
+          ],
+          "viewport": [
+            260,
+            0
+          ],
+          "drawElements": [
+            1500,
+            1
+          ],
+          "bufferSubData": [
+            40,
+            0
+          ],
+          "checkFramebufferStatus": [
+            10,
+            5
+          ],
+          "blitFramebuffer": [
+            40,
+            1
+          ],
+          "scissor": [
+            40,
+            0
+          ],
+          "getSyncParameter": [
+            20,
+            5
+          ],
+          "drawElementsInstanced": [
+            2136,
+            0
+          ],
+          "drawArraysInstanced": [
+            70,
+            0
+          ],
+          "fenceSync": [
+            20,
+            17
+          ]
+        },
+        "seconds": [
+          [
+            5,
+            58,
+            374,
+            13,
+            617,
+            20
+          ],
+          [
+            6,
+            60,
+            424,
+            11,
+            571,
+            13
+          ],
+          [
+            7,
+            60,
+            406,
+            13,
+            612,
+            14
+          ],
+          [
+            8,
+            60,
+            357,
+            12,
+            641,
+            14
+          ],
+          [
+            9,
+            60,
+            349,
+            10,
+            648,
+            13
+          ]
+        ],
+        "worst": [
+          [
+            5129,
+            32,
+            12,
+            20,
+            0,
+            0
+          ]
+        ],
+        "timer_lag_ms": [
+          19,
+          14.11,
+          63,
+          63
+        ],
+        "longtask_ms": null,
+        "long_animation_frame_ms": null,
+        "wasm_mib": 167.56,
+        "js_heap_mib": null,
+        "audio": {
+          "state": "running",
+          "nodes": 1,
+          "buffers": 8,
+          "worklets": 3,
+          "base_latency_ms": 2.67
+        },
+        "persist_ms": [
+          1,
+          12,
+          12,
+          12
+        ],
+        "errors": 0,
+        "collector_ms": 1
+      }
+    }
+  ],
+  "events": []
+}
