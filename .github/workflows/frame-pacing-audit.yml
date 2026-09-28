@@ -1,0 +1,37 @@
+name: Audit actual game frame pacing
+on:
+  push:
+    branches: [codex/frame-pacing-audit-20260928]
+    paths: ['.github/frame-pacing-audit/**', '.github/workflows/frame-pacing-audit.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: frame-pacing-audit, cancel-in-progress: true}
+jobs:
+  audit:
+    strategy:
+      fail-fast: false
+      matrix: {worker: [1, 2]}
+    runs-on: macos-15
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/frame-pacing-audit
+            .github/surface-light-probe
+      - uses: actions/download-artifact@v4
+        with:
+          name: surface-probe-candidate
+          run-id: 36380070907
+          github-token: ${{ github.token }}
+          path: '${{ runner.temp }}/original'
+      - run: python3 .github/frame-pacing-audit/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/audit"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install webkit
+      - run: node .github/frame-pacing-audit/review.mjs "$RUNNER_TEMP/audit" "$RUNNER_TEMP/evidence"
+        env: {AUDIT_WORKER: '${{ matrix.worker }}'}
+        timeout-minutes: 5
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'frame-pacing-evidence-${{ matrix.worker }}', path: '${{ runner.temp }}/evidence', retention-days: 30}
