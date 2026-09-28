@@ -11,7 +11,7 @@ const ProgressionGoalPanelScript: = preload("res://scripts/ui/progression_goal_p
 const ProgressionGuideScript: = preload("res://scripts/progression/guide_director.gd")
 
 const BAG_ICON: = preload("res://assets/ui/bag-premium-v1.png")
-const MENU_ICON: = preload("res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png")
+const MENU_ICON: = preload("res://assets/ui/skills/icons/tools-premium-v1.png")
 const GUIDE_ICON: = preload("res://assets/ui/hud-guide-v1.png")
 const INTERACT_ICON: = preload("res://assets/ui/hud-interact-v1.png")
 const BUILD_ICON: = preload("res://assets/ui/hud-build-v1.png")
@@ -155,8 +155,8 @@ func set_objective(title: String, detail: String) -> void :
 	if title_changed:
 		objective_title.text = title.to_upper()
 		_objective_available = not title.is_empty()
-		guide_button.visible = false # Retired compass; the progression goal remains visible.
-		guide_button.disabled = true
+		guide_button.visible = _objective_available
+		guide_button.disabled = not _objective_available
 		guide_button.tooltip_text = "Current guide · %s" % title if _objective_available else "No active guide"
 		if not _objective_available:
 			_hide_objective()
@@ -340,7 +340,7 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 		bag_size
 	)
 	var gold_width: = 166.0 if iphone else 82.0
-	var companion_rect: = Rect2(menu_rect.end.x + gap, top, top_button_size, top_button_size)
+	var companion_rect: = Rect2(guide_rect.end.x + gap, top, top_button_size, top_button_size)
 	var gold_rect: = Rect2(companion_rect.end.x + gap if iphone else viewport_size.x - right - gold_width, top, gold_width, touch_target)
 	var badge_size: = Vector2(42, 30) if iphone else Vector2(27, 20)
 	var bag_count_rect: = Rect2(bag_rect.end.x - badge_size.x + 4, bag_rect.end.y - badge_size.y + 3, badge_size.x, badge_size.y)

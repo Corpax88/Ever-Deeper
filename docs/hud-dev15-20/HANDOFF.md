@@ -1,0 +1,6 @@
+# DEV15.20 — approved Skills knot and compact HUD
+Mats approved option3 blue-gray steel interwoven knot and explicitly requested removing the unused compass. Source base df8608b898dae3ba3fa248dec90a354b8dd5fc52 / DEV15.19. Branch codex/hud-dev15-20-20260928.
+New asset: assets/ui/skills/icons/skills-knot-blue-steel-v1.png,1254x1254 RGBA, one icon without text or background. Built-in image generation extraction from approved option3; original pixels retained. Prompt: extract rightmost emblem, retain silhouette/orientation/material/blue-gray palette; transparent holes/background; no text/thumbnails/shadow.
+HUD menu uses new PNG with existing104 icon cap and120 touch target. Compass remains hidden/disabled for compatibility with existing observers; companion and mobile gold move one slot left. Live progression goal remains. No balance/FPS/hero/world/save change.
+Exact DEV15.19 immutable package10991241204/run36468821047 patched; per-resource MD5 verifies unrelated bytes. One-asset engine import creates a matching compressed texture without re-exporting game.
+Validation: input/premium-core, actual Mac GPU touch/visual checks at844x390,667x375,900x600; normal WebKit startup/save/reload. Pending; do not publish until actual images reviewed. No physical-iPhone claim.

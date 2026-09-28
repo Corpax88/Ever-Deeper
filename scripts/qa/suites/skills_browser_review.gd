@@ -109,6 +109,8 @@ func _frame() -> void:
 		"mole_open": main._companion_panel_is_open(), "guide_open": main.premium_hud._objective_open,
 		"tooltip_visible": panel.stat_tip.visible, "tooltip_id": panel._tip_id,
 		"tooltip_text": panel._tip_body.text, "tooltip_rect": _bounds(panel.stat_tip),
+		"hud_guide_visible": main.premium_hud.guide_button.is_visible_in_tree(),
+		"hud_menu_icon": main.premium_hud.menu_button.icon.resource_path,
 		"hud_context": _bounds(main.premium_hud.context_button),
 		"hud_context_visible": main.premium_hud.context_button.is_visible_in_tree(),
 		"hud_mine_visible": main.mine_button.is_visible_in_tree(),
