@@ -1,0 +1,85 @@
+name: Publish surface light diagnostic DEV15.16
+on:
+  push:
+    branches: [main]
+    paths: ['.github/surface-probe-publication/review.json', '.github/workflows/publish-surface-probe.yml']
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: pages-ever-deeper
+  cancel-in-progress: false
+jobs:
+  package:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - id: review
+        name: Resolve the reviewed immutable artifact
+        run: |
+          python3 .github/surface-probe-publication/publish.py check-review
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          review=json.loads(Path('.github/surface-probe-publication/review.json').read_text())
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              print('artifact_run_id='+str(review['artifact_run_id']),file=out)
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          name: surface-probe-candidate
+          run-id: ${{ steps.review.outputs.artifact_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/candidate
+      - name: Stage DEV15.16 and verify preserved LIVE bytes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .github/surface-probe-publication/publish.py prepare "$RUNNER_TEMP/surface-probe-publication" --candidate "$RUNNER_TEMP/candidate"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-dev15-15-before-dev15-16-rollback
+          path: ${{ runner.temp }}/surface-probe-publication/previous/dev
+          retention-days: 30
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ever-deeper-surface-probe-staging
+          path: ${{ runner.temp }}/surface-probe-publication/staging.json
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/surface-probe-publication/site
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - run: python3 .github/surface-probe-publication/publish.py verify "$RUNNER_TEMP/verified"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ever-deeper-surface-probe-publication-receipt
+          path: ${{ runner.temp }}/verified/publication-receipt.json
+          if-no-files-found: error
+
+
+
+
