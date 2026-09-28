@@ -22,7 +22,9 @@
   function persist() {
     if (!db) { storageError = true; return; }
     try {
+      const started=performance.now();
       const tx = db.transaction('pending','readwrite');
+      tx.oncomplete=()=>window.everDeeperDiagnostics?.persist(performance.now()-started);
       if (report) tx.objectStore('pending').put(report,'last'); else tx.objectStore('pending').delete('last');
       tx.onerror = () => { storageError = true; };
     } catch { storageError = true; }
@@ -38,17 +40,20 @@
       const ua = navigator.userAgent;
       report = {schema:1,id:crypto.randomUUID(),version,started_at:new Date().toISOString(),duration_s:0,reason:'recording',
         device:{browser:/CriOS|Chrome/.test(ua)?'Chromium':/Firefox|FxiOS/.test(ua)?'Firefox':'Safari-WebKit',platform:/iPhone|iPad/.test(ua)?'iOS':/Mac/.test(ua)?'macOS':'Other',css_width:innerWidth,css_height:innerHeight,dpr:devicePixelRatio||1},samples:[],events:[]};
-      active = true; saved = false; persist(); return true;
+      active = true; saved = false; window.everDeeperDiagnostics?.start(); persist(); return true;
     },
     append(row) {
       if (!active || !report) return false;
       if (report.samples.length >= 120) { api.finish('window_limit'); return false; }
       const c = document.getElementById('canvas');
-      report.samples.push({...row,canvas_width:c.width,canvas_height:c.height,dpr:devicePixelRatio||1});
+      const diagnostics=window.everDeeperDiagnostics?.snapshot();
+      const sample={...row,canvas_width:c.width,canvas_height:c.height,dpr:devicePixelRatio||1,...(diagnostics?{diagnostics}:{})};
+      if(new TextEncoder().encode(JSON.stringify(report)).length+new TextEncoder().encode(JSON.stringify(sample)).length>190000){api.finish('byte_limit');return false;}
+      report.samples.push(sample);
       report.duration_s = row.seconds; persist(); return true;
     },
     mark(kind) { if (typeof kind === 'string' && kind.length <= 80 && /^[a-zA-Z0-9_. :/-]*$/.test(kind)) event(kind); },
-    finish(reason='stopped') { if (report) { report.reason=reason; active=false; persist(); } },
+    finish(reason='stopped') { if (report) { report.reason=reason; active=false; window.everDeeperDiagnostics?.stop(); persist(); } },
     send() {
       if (!report?.samples.length) return 'Record for a few seconds first';
       api.finish();
@@ -79,9 +84,10 @@
     if (e.data?.type === 'ever-deeper-report-ready') popup.postMessage({type:'ever-deeper-report',report},receiver);
     if (e.data?.type === 'ever-deeper-report-saved' && e.data.id === report.id) { saved=true; active=false; report=null; persist(); }
   });
-  document.addEventListener('visibilitychange', () => event(document.hidden?'hidden':'visible'));
-  window.addEventListener('pagehide', () => event('pagehide'));
+  document.addEventListener('visibilitychange', () => {event(document.hidden?'hidden':'visible');if(document.hidden)api.finish('app_interrupted');});
+  window.addEventListener('pagehide', () => {event('pagehide');api.finish('app_interrupted');});
   window.addEventListener('resize', () => event('resize'));
   document.getElementById('canvas').addEventListener('webglcontextlost', () => {event('context_lost');api.finish('context_lost');});
   window.everDeeperReports=api;
 })();
+

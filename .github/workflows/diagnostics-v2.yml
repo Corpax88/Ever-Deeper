@@ -1,0 +1,37 @@
+name: Verify detailed opt-in diagnostics DEV15.18
+on:
+  push:
+    branches: [codex/diagnostics-v2-20260928]
+    paths: ['tools/session-diagnostics.js','tools/session-reports-browser.js','.github/diagnostics-v2/**','.github/workflows/diagnostics-v2.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: diagnostics-v2, cancel-in-progress: true}
+jobs:
+  diagnostics:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 10967022774
+          run-id: 36413947044
+          github-token: '${{ github.token }}'
+          path: '${{ runner.temp }}/original'
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: node .github/diagnostics-v2/check.mjs
+      - run: python3 .github/diagnostics-v2/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/candidate"
+      - run: npm ci --ignore-scripts && npx playwright install chromium webkit
+      - run: node .github/diagnostics-v2/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/chromium"
+      - run: node .github/diagnostics-v2/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/webkit"
+        env: {REPORT_BROWSER: webkit}
+      - run: node .github/diagnostics-v2/overhead.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/overhead"
+      - run: node .github/diagnostics-v2/startup.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/ordinary"
+        env: {EXPECTED_VERSION: '1.0.0-dev.15.18', CANDIDATE_SOURCE: '${{ github.sha }}'}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: diagnostics-v2-evidence, path: '${{ runner.temp }}/evidence', retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with: {name: diagnostics-v2-candidate, path: '${{ runner.temp }}/candidate', retention-days: 30}
