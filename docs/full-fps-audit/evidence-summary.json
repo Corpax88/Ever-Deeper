@@ -1,0 +1,2136 @@
+{
+  "scope": "Synthetic Mac QA only. No private phone data. All windows retained; GPU query intervals include submission gaps, not pure GPU busy time.",
+  "publication": "None; DEV15.16 and LIVE1.0.1 unchanged",
+  "cases": [
+    {
+      "name": "cap-worker1",
+      "source": "5def01e8756010627094c22c1ee78b58e7489f0a",
+      "run": 36388096341,
+      "artifact": 10955332342,
+      "report_sha256": "e1f250a5eca1aee643737df1b49400c6ecf5076f4da7560019082314d2ccdccf",
+      "error": null,
+      "runtime": {
+        "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+        "dpr": 2,
+        "canvas": [
+          1552,
+          840
+        ],
+        "renderer": "Apple GPU"
+      },
+      "pairs": [
+        60,
+        0,
+        60
+      ],
+      "windows": [
+        {
+          "scene": "surface",
+          "cap": 60,
+          "instrumented_gpu": false,
+          "engine_fps": 59.82008011031584,
+          "drawn": 911,
+          "process": 911,
+          "physics": 913,
+          "elapsed_ms": 15229,
+          "physics_hz": 59.95140849694661,
+          "frame_ms": {
+            "count": 911,
+            "p50": 17,
+            "p95": 18,
+            "p99": 19,
+            "max": 52,
+            "over33": 1
+          },
+          "callback_ms": null,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 7,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 581.336359977722,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 916
+        },
+        {
+          "scene": "surface",
+          "cap": 0,
+          "instrumented_gpu": false,
+          "engine_fps": 59.27241628840208,
+          "drawn": 901,
+          "process": 901,
+          "physics": 913,
+          "elapsed_ms": 15201,
+          "physics_hz": 60.06183803697125,
+          "frame_ms": {
+            "count": 901,
+            "p50": 17,
+            "p95": 18,
+            "p99": 26,
+            "max": 59,
+            "over33": 6
+          },
+          "callback_ms": null,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 4,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 581.336359977722,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 900
+        },
+        {
+          "scene": "surface",
+          "cap": 0,
+          "instrumented_gpu": false,
+          "engine_fps": 59.345425867507885,
+          "drawn": 903,
+          "process": 903,
+          "physics": 912,
+          "elapsed_ms": 15216,
+          "physics_hz": 59.936908517350155,
+          "frame_ms": {
+            "count": 903,
+            "p50": 17,
+            "p95": 19,
+            "p99": 27,
+            "max": 81,
+            "over33": 3
+          },
+          "callback_ms": null,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 9,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 581.336359977722,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 913
+        },
+        {
+          "scene": "surface",
+          "cap": 60,
+          "instrumented_gpu": false,
+          "engine_fps": 58.877766069546894,
+          "drawn": 894,
+          "process": 894,
+          "physics": 911,
+          "elapsed_ms": 15184,
+          "physics_hz": 59.99736564805058,
+          "frame_ms": {
+            "count": 894,
+            "p50": 17,
+            "p95": 19,
+            "p99": 31,
+            "max": 53,
+            "over33": 5
+          },
+          "callback_ms": null,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 6,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 581.336359977722,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 896
+        },
+        {
+          "scene": "hub",
+          "cap": 60,
+          "instrumented_gpu": false,
+          "engine_fps": 59.13912937446653,
+          "drawn": 485,
+          "process": 485,
+          "physics": 491,
+          "elapsed_ms": 8201,
+          "physics_hz": 59.870747469820756,
+          "frame_ms": {
+            "count": 485,
+            "p50": 17,
+            "p95": 19,
+            "p99": 30,
+            "max": 61,
+            "over33": 3
+          },
+          "callback_ms": null,
+          "draw_calls": 80,
+          "cpu_endpoint_ms": 6,
+          "physics_endpoint_ms": 1,
+          "nodes": 864,
+          "video_mib": 615.889181137085,
+          "native_gear": "worn",
+          "native_generation": 1,
+          "native_updates_delta": 488
+        },
+        {
+          "scene": "hub",
+          "cap": 0,
+          "instrumented_gpu": false,
+          "engine_fps": 59.762390495619826,
+          "drawn": 498,
+          "process": 498,
+          "physics": 499,
+          "elapsed_ms": 8333,
+          "physics_hz": 59.88239529581183,
+          "frame_ms": {
+            "count": 498,
+            "p50": 17,
+            "p95": 19,
+            "p99": 24,
+            "max": 34,
+            "over33": 1
+          },
+          "callback_ms": null,
+          "draw_calls": 80,
+          "cpu_endpoint_ms": 5,
+          "physics_endpoint_ms": 1,
+          "nodes": 864,
+          "video_mib": 615.889181137085,
+          "native_gear": "worn",
+          "native_generation": 1,
+          "native_updates_delta": 497
+        },
+        {
+          "scene": "moss",
+          "cap": 60,
+          "instrumented_gpu": false,
+          "engine_fps": 59.13461538461539,
+          "drawn": 492,
+          "process": 492,
+          "physics": 499,
+          "elapsed_ms": 8320,
+          "physics_hz": 59.97596153846154,
+          "frame_ms": {
+            "count": 492,
+            "p50": 17,
+            "p95": 19,
+            "p99": 29,
+            "max": 52,
+            "over33": 3
+          },
+          "callback_ms": null,
+          "draw_calls": 205,
+          "cpu_endpoint_ms": 12,
+          "physics_endpoint_ms": 1,
+          "nodes": 1070,
+          "video_mib": 625.068033218384,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 502
+        },
+        {
+          "scene": "moss",
+          "cap": 0,
+          "instrumented_gpu": false,
+          "engine_fps": 58.407511279112306,
+          "drawn": 479,
+          "process": 479,
+          "physics": 491,
+          "elapsed_ms": 8201,
+          "physics_hz": 59.870747469820756,
+          "frame_ms": {
+            "count": 479,
+            "p50": 17,
+            "p95": 19,
+            "p99": 33,
+            "max": 89,
+            "over33": 4
+          },
+          "callback_ms": null,
+          "draw_calls": 205,
+          "cpu_endpoint_ms": 11,
+          "physics_endpoint_ms": 1,
+          "nodes": 1070,
+          "video_mib": 625.068033218384,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 479
+        }
+      ]
+    },
+    {
+      "name": "cap-worker2",
+      "source": "5def01e8756010627094c22c1ee78b58e7489f0a",
+      "run": 36388096341,
+      "artifact": 10955510234,
+      "report_sha256": "266615680c69998ffe73ad934e130f0a784c2f1ee092ddc4908c62f53f18a2a9",
+      "error": null,
+      "runtime": {
+        "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+        "dpr": 2,
+        "canvas": [
+          1552,
+          840
+        ],
+        "renderer": "Apple GPU"
+      },
+      "pairs": [
+        60,
+        0,
+        60
+      ],
+      "windows": [
+        {
+          "scene": "surface",
+          "cap": 0,
+          "instrumented_gpu": false,
+          "engine_fps": 57.065041177614944,
+          "drawn": 880,
+          "process": 880,
+          "physics": 930,
+          "elapsed_ms": 15421,
+          "physics_hz": 60.3073730627067,
+          "frame_ms": {
+            "count": 880,
+            "p50": 17,
+            "p95": 25,
+            "p99": 41,
+            "max": 58,
+            "over33": 18
+          },
+          "callback_ms": null,
+          "draw_calls": 104,
+          "cpu_endpoint_ms": 11,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 581.336359977722,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 870
+        },
+        {
+          "scene": "surface",
+          "cap": 60,
+          "instrumented_gpu": false,
+          "engine_fps": 56.51945320715037,
+          "drawn": 860,
+          "process": 860,
+          "physics": 910,
+          "elapsed_ms": 15216,
+          "physics_hz": 59.80546792849632,
+          "frame_ms": {
+            "count": 860,
+            "p50": 17,
+            "p95": 24,
+            "p99": 54,
+            "max": 96,
+            "over33": 14
+          },
+          "callback_ms": null,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 14,
+          "physics_endpoint_ms": 4,
+          "nodes": 815,
+          "video_mib": 581.336359977722,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 864
+        },
+        {
+          "scene": "surface",
+          "cap": 60,
+          "instrumented_gpu": false,
+          "engine_fps": 56.771679116596296,
+          "drawn": 874,
+          "process": 874,
+          "physics": 922,
+          "elapsed_ms": 15395,
+          "physics_hz": 59.8895745371874,
+          "frame_ms": {
+            "count": 874,
+            "p50": 17,
+            "p95": 26,
+            "p99": 43,
+            "max": 70,
+            "over33": 19
+          },
+          "callback_ms": null,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 8,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 581.336359977722,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 873
+        },
+        {
+          "scene": "surface",
+          "cap": 0,
+          "instrumented_gpu": false,
+          "engine_fps": 58.6803499769752,
+          "drawn": 892,
+          "process": 892,
+          "physics": 923,
+          "elapsed_ms": 15201,
+          "physics_hz": 60.71968949411223,
+          "frame_ms": {
+            "count": 892,
+            "p50": 17,
+            "p95": 20,
+            "p99": 31,
+            "max": 59,
+            "over33": 6
+          },
+          "callback_ms": null,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 9,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 581.336359977722,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 890
+        },
+        {
+          "scene": "hub",
+          "cap": 0,
+          "instrumented_gpu": false,
+          "engine_fps": 58.765309909687,
+          "drawn": 475,
+          "process": 475,
+          "physics": 487,
+          "elapsed_ms": 8083,
+          "physics_hz": 60.24990721266856,
+          "frame_ms": {
+            "count": 475,
+            "p50": 17,
+            "p95": 21,
+            "p99": 35,
+            "max": 63,
+            "over33": 5
+          },
+          "callback_ms": null,
+          "draw_calls": 80,
+          "cpu_endpoint_ms": 10,
+          "physics_endpoint_ms": 2,
+          "nodes": 864,
+          "video_mib": 613.881109237671,
+          "native_gear": "worn",
+          "native_generation": 1,
+          "native_updates_delta": 485
+        },
+        {
+          "scene": "hub",
+          "cap": 60,
+          "instrumented_gpu": false,
+          "engine_fps": 57.78588807785888,
+          "drawn": 475,
+          "process": 475,
+          "physics": 493,
+          "elapsed_ms": 8220,
+          "physics_hz": 59.97566909975669,
+          "frame_ms": {
+            "count": 475,
+            "p50": 17,
+            "p95": 21,
+            "p99": 41,
+            "max": 79,
+            "over33": 10
+          },
+          "callback_ms": null,
+          "draw_calls": 78,
+          "cpu_endpoint_ms": 5,
+          "physics_endpoint_ms": 1,
+          "nodes": 864,
+          "video_mib": 613.881109237671,
+          "native_gear": "worn",
+          "native_generation": 1,
+          "native_updates_delta": 478
+        },
+        {
+          "scene": "moss",
+          "cap": 0,
+          "instrumented_gpu": false,
+          "engine_fps": 56.790720154664086,
+          "drawn": 470,
+          "process": 470,
+          "physics": 497,
+          "elapsed_ms": 8276,
+          "physics_hz": 60.053165780570325,
+          "frame_ms": {
+            "count": 470,
+            "p50": 17,
+            "p95": 22,
+            "p99": 57,
+            "max": 82,
+            "over33": 9
+          },
+          "callback_ms": null,
+          "draw_calls": 205,
+          "cpu_endpoint_ms": 10,
+          "physics_endpoint_ms": 1,
+          "nodes": 1070,
+          "video_mib": 623.05996131897,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 471
+        },
+        {
+          "scene": "moss",
+          "cap": 60,
+          "instrumented_gpu": false,
+          "engine_fps": 58.28445747800586,
+          "drawn": 477,
+          "process": 477,
+          "physics": 487,
+          "elapsed_ms": 8184,
+          "physics_hz": 59.50635386119257,
+          "frame_ms": {
+            "count": 477,
+            "p50": 17,
+            "p95": 22,
+            "p99": 31,
+            "max": 71,
+            "over33": 2
+          },
+          "callback_ms": null,
+          "draw_calls": 205,
+          "cpu_endpoint_ms": 9,
+          "physics_endpoint_ms": 1,
+          "nodes": 1070,
+          "video_mib": 623.05996131897,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 480
+        }
+      ]
+    },
+    {
+      "name": "crop-webkit",
+      "source": "f4a0570abf52219be56567f00884260af895f235",
+      "run": 36388980502,
+      "artifact": 10956010774,
+      "report_sha256": "163dfaf7ae9abee569191ea9c18ed2161a9311867367599d30a394fc0ea8677c",
+      "error": null,
+      "runtime": {
+        "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+        "dpr": 3,
+        "canvas": [
+          2328,
+          1260
+        ],
+        "gpu_timer": false,
+        "renderer": "Apple GPU"
+      },
+      "pairs": [
+        {
+          "x": 2050,
+          "candidate": {
+            "changed": 892,
+            "max": 1,
+            "mean": 0.00007602410952926417
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "x": 2250,
+          "candidate": {
+            "changed": 956,
+            "max": 1,
+            "mean": 0.00008147875415916653
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "x": 3130,
+          "candidate": {
+            "changed": 6613,
+            "max": 1,
+            "mean": 0.00056361820214913
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "x": 3290,
+          "candidate": {
+            "changed": 13090,
+            "max": 1,
+            "mean": 0.0011156452844597175
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "x": 3470,
+          "candidate": {
+            "changed": 11975,
+            "max": 1,
+            "mean": 0.0010206151475481372
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "x": 4000,
+          "candidate": {
+            "changed": 8860,
+            "max": 1,
+            "mean": 0.0007551273659521082
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        }
+      ],
+      "windows": [
+        {
+          "crop": false,
+          "instrumented_gpu": false,
+          "engine_fps": 53.455019556714475,
+          "drawn": 820,
+          "process": 820,
+          "physics": 920,
+          "elapsed_ms": 15340,
+          "physics_hz": 59.97392438070404,
+          "frame_ms": {
+            "count": 820,
+            "p50": 17,
+            "p95": 27,
+            "p99": 38,
+            "max": 54,
+            "over33": 15
+          },
+          "callback_ms": 5.386617100371748,
+          "callback_max_ms": 21,
+          "draw_calls": 104,
+          "cpu_endpoint_ms": 12,
+          "physics_endpoint_ms": 2,
+          "nodes": 815,
+          "video_mib": 599.777293205261,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 818,
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "crop": true,
+          "instrumented_gpu": false,
+          "engine_fps": 55.02610966057441,
+          "drawn": 843,
+          "process": 843,
+          "physics": 918,
+          "elapsed_ms": 15320,
+          "physics_hz": 59.92167101827676,
+          "frame_ms": {
+            "count": 843,
+            "p50": 17,
+            "p95": 25,
+            "p99": 37,
+            "max": 65,
+            "over33": 11
+          },
+          "callback_ms": 4.854041013268999,
+          "callback_max_ms": 16,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 8,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 599.777293205261,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 835,
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "crop": true,
+          "instrumented_gpu": false,
+          "engine_fps": 53.40027384755819,
+          "drawn": 819,
+          "process": 819,
+          "physics": 921,
+          "elapsed_ms": 15337,
+          "physics_hz": 60.05085740366434,
+          "frame_ms": {
+            "count": 819,
+            "p50": 17,
+            "p95": 27,
+            "p99": 45,
+            "max": 101,
+            "over33": 23
+          },
+          "callback_ms": 5.008728179551122,
+          "callback_max_ms": 41,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 8,
+          "physics_endpoint_ms": 2,
+          "nodes": 815,
+          "video_mib": 599.777293205261,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 818,
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "crop": false,
+          "instrumented_gpu": false,
+          "engine_fps": 56.827820186598814,
+          "drawn": 871,
+          "process": 871,
+          "physics": 920,
+          "elapsed_ms": 15327,
+          "physics_hz": 60.02479284922033,
+          "frame_ms": {
+            "count": 871,
+            "p50": 17,
+            "p95": 23,
+            "p99": 34,
+            "max": 70,
+            "over33": 11
+          },
+          "callback_ms": 4.609813084112149,
+          "callback_max_ms": 15,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 9,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 599.777293205261,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 874,
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "crop-chromium",
+      "source": "f4a0570abf52219be56567f00884260af895f235",
+      "run": 36388980502,
+      "artifact": 10955795817,
+      "report_sha256": "04c3220e736be547067a8a0078c94397c841589ae948dd31972260f3548c3303",
+      "error": null,
+      "runtime": {
+        "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+        "dpr": 3,
+        "canvas": [
+          2328,
+          1260
+        ],
+        "gpu_timer": true,
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)"
+      },
+      "pairs": [
+        {
+          "x": 2050,
+          "candidate": {
+            "changed": 886,
+            "max": 1,
+            "mean": 0.00007551273659521082
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "x": 2250,
+          "candidate": {
+            "changed": 954,
+            "max": 1,
+            "mean": 0.00008130829651448208
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "x": 3130,
+          "candidate": {
+            "changed": 6569,
+            "max": 1,
+            "mean": 0.0005598681339660721
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "x": 3290,
+          "candidate": {
+            "changed": 12972,
+            "max": 1,
+            "mean": 0.001105588283423335
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "x": 3470,
+          "candidate": {
+            "changed": 11804,
+            "max": 1,
+            "mean": 0.001006041018927617
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "x": 4000,
+          "candidate": {
+            "changed": 8849,
+            "max": 1,
+            "mean": 0.0007541898489063437
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        }
+      ],
+      "windows": [
+        {
+          "crop": true,
+          "instrumented_gpu": false,
+          "engine_fps": 59.99644757876179,
+          "drawn": 912,
+          "process": 912,
+          "physics": 912,
+          "elapsed_ms": 15200.9,
+          "physics_hz": 59.99644757876179,
+          "frame_ms": {
+            "count": 912,
+            "p50": 16.7,
+            "p95": 18.3,
+            "p99": 19.5,
+            "max": 20.9,
+            "over33": 0
+          },
+          "callback_ms": 9.636625971141985,
+          "callback_max_ms": 12.300000000046566,
+          "draw_calls": 104,
+          "cpu_endpoint_ms": 4.5,
+          "physics_endpoint_ms": 0.7,
+          "nodes": 815,
+          "video_mib": 599.777293205261,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 917,
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "crop": false,
+          "instrumented_gpu": false,
+          "engine_fps": 59.9977607860958,
+          "drawn": 911,
+          "process": 911,
+          "physics": 911,
+          "elapsed_ms": 15183.9,
+          "physics_hz": 59.9977607860958,
+          "frame_ms": {
+            "count": 911,
+            "p50": 16.7,
+            "p95": 18.5,
+            "p99": 19.5,
+            "max": 20.5,
+            "over33": 0
+          },
+          "callback_ms": 9.027524972253362,
+          "callback_max_ms": 19.199999999953434,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 4.8,
+          "physics_endpoint_ms": 0.9,
+          "nodes": 815,
+          "video_mib": 599.777293205261,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 914,
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "crop": false,
+          "instrumented_gpu": false,
+          "engine_fps": 60.000521743667335,
+          "drawn": 920,
+          "process": 920,
+          "physics": 920,
+          "elapsed_ms": 15333.2,
+          "physics_hz": 60.000521743667335,
+          "frame_ms": {
+            "count": 920,
+            "p50": 16.6,
+            "p95": 18.5,
+            "p99": 19.3,
+            "max": 20.4,
+            "over33": 0
+          },
+          "callback_ms": 8.283351831299901,
+          "callback_max_ms": 11,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 4,
+          "physics_endpoint_ms": 0.6,
+          "nodes": 815,
+          "video_mib": 599.777293205261,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 912,
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "crop": true,
+          "instrumented_gpu": false,
+          "engine_fps": 59.999736554394936,
+          "drawn": 911,
+          "process": 911,
+          "physics": 911,
+          "elapsed_ms": 15183.4,
+          "physics_hz": 59.999736554394936,
+          "frame_ms": {
+            "count": 911,
+            "p50": 16.7,
+            "p95": 18.5,
+            "p99": 19.6,
+            "max": 20.3,
+            "over33": 0
+          },
+          "callback_ms": 7.526970033295614,
+          "callback_max_ms": 10.199999999953434,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 3.7,
+          "physics_endpoint_ms": 0.6,
+          "nodes": 815,
+          "video_mib": 599.777293205261,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 908,
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "crop": false,
+          "instrumented_gpu": true,
+          "engine_fps": 59.97037320208344,
+          "drawn": 251,
+          "process": 251,
+          "physics": 251,
+          "elapsed_ms": 4185.4,
+          "physics_hz": 59.97037320208344,
+          "frame_ms": {
+            "count": 251,
+            "p50": 16.7,
+            "p95": 18.5,
+            "p99": 20,
+            "max": 20.8,
+            "over33": 0
+          },
+          "callback_ms": 6.959336099583903,
+          "callback_max_ms": 9.800000000046566,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 4.4,
+          "physics_endpoint_ms": 0.7,
+          "nodes": 815,
+          "video_mib": 599.777293205261,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 250,
+          "gpu_query": {
+            "samples": 241,
+            "mean_ms": 9.99509856846473,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "crop": true,
+          "instrumented_gpu": true,
+          "engine_fps": 59.99760965698578,
+          "drawn": 251,
+          "process": 251,
+          "physics": 251,
+          "elapsed_ms": 4183.5,
+          "physics_hz": 59.99760965698578,
+          "frame_ms": {
+            "count": 251,
+            "p50": 16.7,
+            "p95": 18.7,
+            "p99": 19.4,
+            "max": 19.8,
+            "over33": 0
+          },
+          "callback_ms": 6.8950207468877736,
+          "callback_max_ms": 9.299999999813735,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 5.1,
+          "physics_endpoint_ms": 0.7,
+          "nodes": 815,
+          "video_mib": 599.777293205261,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 251,
+          "gpu_query": {
+            "samples": 241,
+            "mean_ms": 9.860124493775935,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "crop": false,
+          "instrumented_gpu": true,
+          "engine_fps": 60.04419252569891,
+          "drawn": 250,
+          "process": 250,
+          "physics": 250,
+          "elapsed_ms": 4163.6,
+          "physics_hz": 60.04419252569891,
+          "frame_ms": {
+            "count": 250,
+            "p50": 16.7,
+            "p95": 18.4,
+            "p99": 19.4,
+            "max": 20.2,
+            "over33": 0
+          },
+          "callback_ms": 6.626970954361098,
+          "callback_max_ms": 9.099999999860302,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 4.9,
+          "physics_endpoint_ms": 0.9,
+          "nodes": 815,
+          "video_mib": 599.777293205261,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 250,
+          "gpu_query": {
+            "samples": 241,
+            "mean_ms": 10.08342515352697,
+            "disjoint": false,
+            "pending": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "native-webkit",
+      "source": "4c9318aa5d40623c1af8b30a72b3b6248bd17d0c",
+      "run": 36389950349,
+      "artifact": 10956500683,
+      "report_sha256": "dce8ae313f2bbe5955d187fb8aa4c197ed75bfb72325e4944657bf27904e7cf7",
+      "error": null,
+      "runtime": {
+        "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+        "dpr": 3,
+        "canvas": [
+          2328,
+          1260
+        ],
+        "gpu_timer": false,
+        "renderer": "Apple GPU"
+      },
+      "pairs": [
+        {
+          "direction": "down",
+          "candidate": {
+            "changed": 8463,
+            "max": 59,
+            "mean": 0.0032740652102765506
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "direction": "right",
+          "candidate": {
+            "changed": 7906,
+            "max": 109,
+            "mean": 0.0030499986363388427
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "direction": "up",
+          "candidate": {
+            "changed": 7023,
+            "max": 67,
+            "mean": 0.002191829624174985
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "direction": "left",
+          "candidate": {
+            "changed": 7951,
+            "max": 97,
+            "mean": 0.003074118393061692
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        }
+      ],
+      "windows": [
+        {
+          "mode": "baseline",
+          "instrumented_gpu": false,
+          "engine_fps": 59.6807204257061,
+          "drawn": 729,
+          "process": 729,
+          "physics": 733,
+          "elapsed_ms": 12215,
+          "physics_hz": 60.008186655751125,
+          "frame_ms": {
+            "count": 729,
+            "p50": 17,
+            "p95": 18,
+            "p99": 22,
+            "max": 35,
+            "over33": 1
+          },
+          "callback_ms": 3.5495118549511857,
+          "callback_max_ms": 9,
+          "draw_calls": 104,
+          "cpu_endpoint_ms": 8,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 597.769221305847,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 730,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": true,
+            "update_mode": 4,
+            "shadow_primitives": 106057,
+            "total_primitives": 214224,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "shadow_off",
+          "instrumented_gpu": false,
+          "engine_fps": 60.00164163178199,
+          "drawn": 731,
+          "process": 731,
+          "physics": 731,
+          "elapsed_ms": 12183,
+          "physics_hz": 60.00164163178199,
+          "frame_ms": {
+            "count": 731,
+            "p50": 17,
+            "p95": 18,
+            "p99": 19,
+            "max": 28,
+            "over33": 0
+          },
+          "callback_ms": 3.264909847434119,
+          "callback_max_ms": 10,
+          "draw_calls": 99,
+          "cpu_endpoint_ms": 3,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 597.769221305847,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 724,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": false,
+            "update_mode": 4,
+            "shadow_primitives": 0,
+            "total_primitives": 108129,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "baseline",
+          "instrumented_gpu": false,
+          "engine_fps": 60.00491843593737,
+          "drawn": 732,
+          "process": 732,
+          "physics": 732,
+          "elapsed_ms": 12199,
+          "physics_hz": 60.00491843593737,
+          "frame_ms": {
+            "count": 732,
+            "p50": 17,
+            "p95": 18,
+            "p99": 20,
+            "max": 30,
+            "over33": 0
+          },
+          "callback_ms": 3.1969486823855755,
+          "callback_max_ms": 7,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 3,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 597.769221305847,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 738,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": true,
+            "update_mode": 4,
+            "shadow_primitives": 106057,
+            "total_primitives": 214186,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "atlas2048",
+          "instrumented_gpu": false,
+          "engine_fps": 59.91902834008097,
+          "drawn": 740,
+          "process": 740,
+          "physics": 740,
+          "elapsed_ms": 12350,
+          "physics_hz": 59.91902834008097,
+          "frame_ms": {
+            "count": 740,
+            "p50": 17,
+            "p95": 18,
+            "p99": 20,
+            "max": 34,
+            "over33": 1
+          },
+          "callback_ms": 3.201388888888889,
+          "callback_max_ms": 5,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 5,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 597.769221305847,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 737,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 2048,
+            "shadow": true,
+            "update_mode": 4,
+            "shadow_primitives": 106057,
+            "total_primitives": 214186,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "baseline",
+          "instrumented_gpu": false,
+          "engine_fps": 59.750492449113594,
+          "drawn": 728,
+          "process": 728,
+          "physics": 731,
+          "elapsed_ms": 12184,
+          "physics_hz": 59.99671700590939,
+          "frame_ms": {
+            "count": 728,
+            "p50": 17,
+            "p95": 18,
+            "p99": 21,
+            "max": 42,
+            "over33": 1
+          },
+          "callback_ms": 3.17966573816156,
+          "callback_max_ms": 5,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 3,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 597.769221305847,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 730,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": true,
+            "update_mode": 4,
+            "shadow_primitives": 106057,
+            "total_primitives": 214186,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "render_off",
+          "instrumented_gpu": false,
+          "engine_fps": 59.09389363099147,
+          "drawn": 720,
+          "process": 720,
+          "physics": 732,
+          "elapsed_ms": 12184,
+          "physics_hz": 60.078791858174654,
+          "frame_ms": {
+            "count": 720,
+            "p50": 17,
+            "p95": 19,
+            "p99": 29,
+            "max": 75,
+            "over33": 7
+          },
+          "callback_ms": 2.9901408450704223,
+          "callback_max_ms": 11,
+          "draw_calls": 97,
+          "cpu_endpoint_ms": 3,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 597.769221305847,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 714,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": true,
+            "update_mode": 0,
+            "shadow_primitives": 106057,
+            "total_primitives": 2072,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "baseline",
+          "instrumented_gpu": false,
+          "engine_fps": 59.88709809375767,
+          "drawn": 732,
+          "process": 732,
+          "physics": 734,
+          "elapsed_ms": 12223,
+          "physics_hz": 60.05072404483351,
+          "frame_ms": {
+            "count": 732,
+            "p50": 17,
+            "p95": 18,
+            "p99": 22,
+            "max": 28,
+            "over33": 0
+          },
+          "callback_ms": 3.595833333333333,
+          "callback_max_ms": 6,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 5,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 597.769221305847,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 737,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": true,
+            "update_mode": 4,
+            "shadow_primitives": 106057,
+            "total_primitives": 214186,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "native-chromium",
+      "source": "4c9318aa5d40623c1af8b30a72b3b6248bd17d0c",
+      "run": 36389950349,
+      "artifact": 10956435565,
+      "report_sha256": "debcc22534e83d980845fcab98877d89d84bb825e93258a0f982c20cd5257e4e",
+      "error": null,
+      "runtime": {
+        "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+        "dpr": 2,
+        "canvas": [
+          1552,
+          840
+        ],
+        "gpu_timer": true,
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)"
+      },
+      "pairs": [
+        {
+          "direction": "down",
+          "candidate": {
+            "changed": 9505,
+            "max": 55,
+            "mean": 0.0033427596410843833
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "direction": "right",
+          "candidate": {
+            "changed": 8505,
+            "max": 77,
+            "mean": 0.0025915528009600175
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "direction": "up",
+          "candidate": {
+            "changed": 7677,
+            "max": 54,
+            "mean": 0.00209279373261332
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        },
+        {
+          "direction": "left",
+          "candidate": {
+            "changed": 8740,
+            "max": 89,
+            "mean": 0.0027981474663175696
+          },
+          "restored": {
+            "changed": 0,
+            "max": 0,
+            "mean": 0
+          }
+        }
+      ],
+      "windows": [
+        {
+          "mode": "baseline",
+          "instrumented_gpu": false,
+          "engine_fps": 59.75590815083666,
+          "drawn": 731,
+          "process": 731,
+          "physics": 734,
+          "elapsed_ms": 12233.1,
+          "physics_hz": 60.00114443599742,
+          "frame_ms": {
+            "count": 731,
+            "p50": 16.7,
+            "p95": 18.3,
+            "p99": 23.2,
+            "max": 37.1,
+            "over33": 3
+          },
+          "callback_ms": 9.108055555555943,
+          "callback_max_ms": 36,
+          "draw_calls": 104,
+          "cpu_endpoint_ms": 26.8,
+          "physics_endpoint_ms": 3.4,
+          "nodes": 815,
+          "video_mib": 583.344431877136,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 727,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": true,
+            "update_mode": 4,
+            "shadow_primitives": 106057,
+            "total_primitives": 214224,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "shadow_off",
+          "instrumented_gpu": false,
+          "engine_fps": 58.344961524965925,
+          "drawn": 715,
+          "process": 715,
+          "physics": 735,
+          "elapsed_ms": 12254.7,
+          "physics_hz": 59.97698842076917,
+          "frame_ms": {
+            "count": 715,
+            "p50": 16.6,
+            "p95": 21.4,
+            "p99": 38.8,
+            "max": 62.9,
+            "over33": 13
+          },
+          "callback_ms": 10.611554921542666,
+          "callback_max_ms": 56.29999999998836,
+          "draw_calls": 99,
+          "cpu_endpoint_ms": 18.3,
+          "physics_endpoint_ms": 2.1,
+          "nodes": 815,
+          "video_mib": 583.344431877136,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 713,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": false,
+            "update_mode": 4,
+            "shadow_primitives": 0,
+            "total_primitives": 108129,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "baseline",
+          "instrumented_gpu": false,
+          "engine_fps": 58.849046874616334,
+          "drawn": 719,
+          "process": 719,
+          "physics": 733,
+          "elapsed_ms": 12217.7,
+          "physics_hz": 59.99492539512347,
+          "frame_ms": {
+            "count": 719,
+            "p50": 16.6,
+            "p95": 19.3,
+            "p99": 32.6,
+            "max": 65.7,
+            "over33": 7
+          },
+          "callback_ms": 12.453323903819118,
+          "callback_max_ms": 64,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 33.7,
+          "physics_endpoint_ms": 2,
+          "nodes": 815,
+          "video_mib": 583.344431877136,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 713,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": true,
+            "update_mode": 4,
+            "shadow_primitives": 106057,
+            "total_primitives": 214186,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "atlas2048",
+          "instrumented_gpu": false,
+          "engine_fps": 59.25332635914871,
+          "drawn": 725,
+          "process": 725,
+          "physics": 733,
+          "elapsed_ms": 12235.6,
+          "physics_hz": 59.90715616724966,
+          "frame_ms": {
+            "count": 725,
+            "p50": 16.6,
+            "p95": 20.2,
+            "p99": 33.1,
+            "max": 50.6,
+            "over33": 9
+          },
+          "callback_ms": 11.880758426967159,
+          "callback_max_ms": 43.90000000002328,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 31.5,
+          "physics_endpoint_ms": 1.7,
+          "nodes": 815,
+          "video_mib": 583.344431877136,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 732,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 2048,
+            "shadow": true,
+            "update_mode": 4,
+            "shadow_primitives": 106057,
+            "total_primitives": 214186,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "baseline",
+          "instrumented_gpu": false,
+          "engine_fps": 59.26896156522451,
+          "drawn": 724,
+          "process": 724,
+          "physics": 735,
+          "elapsed_ms": 12215.5,
+          "physics_hz": 60.16945683762433,
+          "frame_ms": {
+            "count": 724,
+            "p50": 16.6,
+            "p95": 18.8,
+            "p99": 34.6,
+            "max": 52.2,
+            "over33": 8
+          },
+          "callback_ms": 10.734269662922722,
+          "callback_max_ms": 48.600000000034925,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 24,
+          "physics_endpoint_ms": 1.4,
+          "nodes": 815,
+          "video_mib": 583.344431877136,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 729,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": true,
+            "update_mode": 4,
+            "shadow_primitives": 106057,
+            "total_primitives": 214186,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "render_off",
+          "instrumented_gpu": false,
+          "engine_fps": 60.0004918073099,
+          "drawn": 732,
+          "process": 732,
+          "physics": 732,
+          "elapsed_ms": 12199.9,
+          "physics_hz": 60.0004918073099,
+          "frame_ms": {
+            "count": 732,
+            "p50": 16.7,
+            "p95": 18.6,
+            "p99": 21.1,
+            "max": 34.9,
+            "over33": 1
+          },
+          "callback_ms": 12.161997226073831,
+          "callback_max_ms": 22.899999999965075,
+          "draw_calls": 97,
+          "cpu_endpoint_ms": 14.3,
+          "physics_endpoint_ms": 1.4,
+          "nodes": 815,
+          "video_mib": 583.344431877136,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 738,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": true,
+            "update_mode": 0,
+            "shadow_primitives": 106057,
+            "total_primitives": 2072,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "baseline",
+          "instrumented_gpu": false,
+          "engine_fps": 57.61993407957192,
+          "drawn": 715,
+          "process": 715,
+          "physics": 745,
+          "elapsed_ms": 12408.9,
+          "physics_hz": 60.037553691302215,
+          "frame_ms": {
+            "count": 715,
+            "p50": 16.6,
+            "p95": 24.7,
+            "p99": 41.5,
+            "max": 70.6,
+            "over33": 21
+          },
+          "callback_ms": 10.70186781609187,
+          "callback_max_ms": 67.29999999998836,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 38.9,
+          "physics_endpoint_ms": 2.8,
+          "nodes": 815,
+          "video_mib": 583.344431877136,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 715,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": true,
+            "update_mode": 4,
+            "shadow_primitives": 106057,
+            "total_primitives": 214186,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 0,
+            "mean_ms": null,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "baseline",
+          "instrumented_gpu": true,
+          "engine_fps": 59.32839320889223,
+          "drawn": 253,
+          "process": 253,
+          "physics": 256,
+          "elapsed_ms": 4264.4,
+          "physics_hz": 60.031891942594505,
+          "frame_ms": {
+            "count": 253,
+            "p50": 16.6,
+            "p95": 19.8,
+            "p99": 37,
+            "max": 46.4,
+            "over33": 3
+          },
+          "callback_ms": 11.123012552302082,
+          "callback_max_ms": 39.100000000034925,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 11.9,
+          "physics_endpoint_ms": 3.8,
+          "nodes": 815,
+          "video_mib": 583.344431877136,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 258,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": true,
+            "update_mode": 4,
+            "shadow_primitives": 106057,
+            "total_primitives": 214186,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 239,
+            "mean_ms": 9.95912260251046,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "shadow_off",
+          "instrumented_gpu": true,
+          "engine_fps": 58.62013693297611,
+          "drawn": 256,
+          "process": 256,
+          "physics": 261,
+          "elapsed_ms": 4367.1,
+          "physics_hz": 59.7650614824483,
+          "frame_ms": {
+            "count": 256,
+            "p50": 16.6,
+            "p95": 19.4,
+            "p99": 32.8,
+            "max": 55.4,
+            "over33": 2
+          },
+          "callback_ms": 10.670762711863617,
+          "callback_max_ms": 44.70000000001164,
+          "draw_calls": 99,
+          "cpu_endpoint_ms": 12.3,
+          "physics_endpoint_ms": 2,
+          "nodes": 815,
+          "video_mib": 583.344431877136,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 257,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": false,
+            "update_mode": 4,
+            "shadow_primitives": 0,
+            "total_primitives": 108129,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 236,
+            "mean_ms": 9.8650865720339,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "atlas2048",
+          "instrumented_gpu": true,
+          "engine_fps": 58.30279377468945,
+          "drawn": 245,
+          "process": 245,
+          "physics": 252,
+          "elapsed_ms": 4202.2,
+          "physics_hz": 59.96858788253772,
+          "frame_ms": {
+            "count": 245,
+            "p50": 16.6,
+            "p95": 18.9,
+            "p99": 37.4,
+            "max": 84.5,
+            "over33": 4
+          },
+          "callback_ms": 8.342735042734844,
+          "callback_max_ms": 77.09999999997672,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 41.2,
+          "physics_endpoint_ms": 3.9,
+          "nodes": 815,
+          "video_mib": 583.344431877136,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 243,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 2048,
+            "shadow": true,
+            "update_mode": 4,
+            "shadow_primitives": 106057,
+            "total_primitives": 214186,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 234,
+            "mean_ms": 9.98164926923077,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "render_off",
+          "instrumented_gpu": true,
+          "engine_fps": 57.81589698258356,
+          "drawn": 242,
+          "process": 242,
+          "physics": 249,
+          "elapsed_ms": 4185.7,
+          "physics_hz": 59.488257639104575,
+          "frame_ms": {
+            "count": 242,
+            "p50": 16.6,
+            "p95": 22.6,
+            "p99": 41.6,
+            "max": 62.3,
+            "over33": 7
+          },
+          "callback_ms": 12.436637931037193,
+          "callback_max_ms": 58.59999999997672,
+          "draw_calls": 97,
+          "cpu_endpoint_ms": 16.2,
+          "physics_endpoint_ms": 2.6,
+          "nodes": 815,
+          "video_mib": 583.344431877136,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 243,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": true,
+            "update_mode": 0,
+            "shadow_primitives": 106057,
+            "total_primitives": 2072,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 232,
+            "mean_ms": 6.599262995689655,
+            "disjoint": false,
+            "pending": 0
+          }
+        },
+        {
+          "mode": "baseline",
+          "instrumented_gpu": true,
+          "engine_fps": 59.772863120143455,
+          "drawn": 260,
+          "process": 260,
+          "physics": 261,
+          "elapsed_ms": 4349.8,
+          "physics_hz": 60.00275874752862,
+          "frame_ms": {
+            "count": 260,
+            "p50": 16.7,
+            "p95": 18.5,
+            "p99": 25.7,
+            "max": 34.5,
+            "over33": 1
+          },
+          "callback_ms": 8.750833333334109,
+          "callback_max_ms": 34.79999999998836,
+          "draw_calls": 101,
+          "cpu_endpoint_ms": 24.6,
+          "physics_endpoint_ms": 1,
+          "nodes": 815,
+          "video_mib": 583.344431877136,
+          "native_gear": "ember",
+          "native_generation": 1,
+          "native_updates_delta": 251,
+          "native_info": {
+            "stable": true,
+            "size": [
+              400,
+              400
+            ],
+            "msaa": 1,
+            "atlas": 4096,
+            "shadow": true,
+            "update_mode": 4,
+            "shadow_primitives": 106057,
+            "total_primitives": 214186,
+            "lights2d_unchanged": true
+          },
+          "gpu_query": {
+            "samples": 240,
+            "mean_ms": 9.700702279166666,
+            "disjoint": false,
+            "pending": 0
+          }
+        }
+      ]
+    }
+  ]
+}
