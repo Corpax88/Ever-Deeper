@@ -1,0 +1,45 @@
+{
+  "destination": "dev",
+  "version": "1.0.0-dev.15.17",
+  "live_authorized": false,
+  "accepted": true,
+  "images_inspected": true,
+  "source_commit": "21e415af523d497f6ec37706e42694b7f9c5302b",
+  "validation_commit": "21e415af523d497f6ec37706e42694b7f9c5302b",
+  "artifact_run_id": 36413947044,
+  "artifact_id": 10967022774,
+  "artifact_digest": "sha256:3d344ce6e9bc24edc92257ecd8ac2ec6a731c364e24b2f50ce18fb427e4b8db4",
+  "acceptance_scope": "Four scoped overhead/allocation changes with exact tested gameplay/animation output and reviewed rendered images. Mining timing improved on both Mac workers, but total/surface FPS and motion CPU timing remain mixed. This does not establish the phone root cause or a general FPS fix.",
+  "physical_iphone_verified": false,
+  "unchanged": [
+    "approved hero stance and animation output",
+    "native assets and rig",
+    "lighting",
+    "render resolution",
+    "graphics settings",
+    "game rules",
+    "DEV save identity",
+    "LIVE",
+    "Worn trial"
+  ],
+  "excluded": [
+    "depth-prepass experiment",
+    "FBO cache",
+    "contact pitch hoist",
+    "WebGL sync candidate"
+  ],
+  "reviewed_files": {
+    "../workflows/publish-fps-fixes.yml": "2d94c24aa8e60bb063382eb51d4cf9f1892c2c21067b109181188fae4b391da8",
+    "baseline.json": "29552e465ffbf6cd1ac9e6515ba35f2e41a63c175e91d06ba39b35cd34e1685f",
+    "evidence/core.json": "5244dc5ff4cff887ceaf7f472f35196268d0383e3a358d467f8aca6e2fc15e9e",
+    "evidence/independent-review.json": "1fa497b5b524dbe7492de204ae2b131e13114af11e8187eef595c7b0f3eed31c",
+    "evidence/startup.json": "73cc136631d23d0011949f49ebfc921defc250682485740ad2642102593f7970",
+    "evidence/worker1-build.json": "960be75a7eebe185b00e15e27e94f60533cda50fe7ccccbcdcebf28ed37f84d2",
+    "evidence/worker1.json": "171f68340d6e4663f7439add7a393adbab9283c826ee9c1152c1036e383efd00",
+    "evidence/worker2-build.json": "960be75a7eebe185b00e15e27e94f60533cda50fe7ccccbcdcebf28ed37f84d2",
+    "evidence/worker2.json": "9d90fe9081ed257593cdc87525fbb07f7817837db987b8e9d8c62eca8ccc3d9f",
+    "manifest.json": "da466b98745657eca78b36b301e372ade9141b36f0d8e3a8f5b4ace7d5a71bdb",
+    "publish.py": "e3e5704dc6698291994c3d8964406dfb6d60cc39bb160d9106fda950e2ee1fbf",
+    "worn-bundle.json": "26209f2eeeefa1688d8fd954b701dd02e4a00dbba74274271b4f3aa5d55765dd"
+  }
+}

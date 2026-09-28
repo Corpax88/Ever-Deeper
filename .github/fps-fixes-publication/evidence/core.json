@@ -1,0 +1,115 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "input",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 9.36,
+      "marker": "EVER_DEEPER_INPUT_RELEASE_OK",
+      "completion": [
+        "EVER_DEEPER_INPUT_RELEASE_OK hide=true matching_touch=true canceled_touch=true unrelated_touch_ignored=true mouse=true worlds=5 focus_pause=true"
+      ],
+      "log": "/tmp/ever-deeper-fixes-v2-core/input.log"
+    },
+    {
+      "case": "premium-core",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 10.79,
+      "marker": "EVER_DEEPER_ONE_POINT_ZERO_PREMIUM_CORE_OK",
+      "completion": [
+        "EVER_DEEPER_ONE_POINT_ZERO_PREMIUM_CORE_OK checks=200"
+      ],
+      "log": "/tmp/ever-deeper-fixes-v2-core/premium-core.log"
+    },
+    {
+      "case": "mole-autonomy",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 11.07,
+      "marker": "EVER_DEEPER_MOLE_AUTONOMY_OK",
+      "completion": [
+        "EVER_DEEPER_MOLE_AUTONOMY_OK checks=50"
+      ],
+      "log": "/tmp/ever-deeper-fixes-v2-core/mole-autonomy.log"
+    },
+    {
+      "case": "crusher",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 10.86,
+      "marker": "EVER_DEEPER_CRUSHER_IMPACT_OK",
+      "completion": [
+        "EVER_DEEPER_CRUSHER_IMPACT_OK footprint=5x5 real_loot=true sectors=8 bundles_max=12 merge_window=0.15 arc=true drill_stress=600 accounting=exact depth2=true pickup=48/80/112/144 singularity=48 cleanup=0.30"
+      ],
+      "log": "/tmp/ever-deeper-fixes-v2-core/crusher.log"
+    },
+    {
+      "case": "one-point-zero-state",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 11.68,
+      "marker": "EVER_DEEPER_ONE_POINT_ZERO_STATE_OK",
+      "completion": [
+        "EVER_DEEPER_ONE_POINT_ZERO_STATE_OK checks=187"
+      ],
+      "log": "/tmp/ever-deeper-fixes-v2-core/one-point-zero-state.log"
+    },
+    {
+      "case": "one-point-zero-migration",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 11.87,
+      "marker": "EVER_DEEPER_ONE_POINT_ZERO_MIGRATION_OK",
+      "completion": [
+        "EVER_DEEPER_ONE_POINT_ZERO_MIGRATION_OK checks=341"
+      ],
+      "log": "/tmp/ever-deeper-fixes-v2-core/one-point-zero-migration.log"
+    }
+  ],
+  "files": {
+    "index.html": {
+      "size": 13849,
+      "sha256": "747230893163b8d8374a28a9dc14a262119a0b94d0d35128b9091663c2956482"
+    },
+    "index.js": {
+      "size": 282212,
+      "sha256": "7e542d2aad0665f82a680d76ba3dd11c8be35f3a89787b143a2165ea1ffe515c"
+    },
+    "index.pck": {
+      "size": 262238744,
+      "sha256": "be8aa8fc2ff2adf5726b6e8464415b7b6591f621b2c8e2e5b8ce5f69732b8f69"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 4571,
+      "sha256": "65bc52dba653b2c39735a621863ae7332dda9c65d3a1bd7891d356390110da7f"
+    }
+  }
+}

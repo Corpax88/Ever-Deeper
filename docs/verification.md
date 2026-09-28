@@ -1,3 +1,5 @@
+Current accepted candidate: [DEV15.17 CPU and audio fixes](docs/full-fps-audit/FIXES-V2-RESULTS.md), source21e415af523d497f6ec37706e42694b7f9c5302b on codex/fps-fixes-20260928. Validation36413947044 passed both Mac workers (94 gates each), exact sampled images, actual contour replay across two resource IDs, six core cases and clean ordinary startup/save flow. Four scoped reductions: fresh-pose copies, unchanged music gains, music position messages and per-search companion collision work. Mining FPS +7.75%/+10.37%, total +5.00%/−1.76%; surface and motion-helper timing remain mixed. Not a complete FPS fix or physical-phone acceptance. Depth-prepass remains parked; FBO/contact-hoist/sync experiments excluded. Preserve approved game/hero/lighting/resolution/saves, LIVE and Worn. Publish only reviewed immutable artifact10967022774; public verification pending. Main is publication carrier; do not rebuild its historical runtime or repeat completed unchanged matrices.
+
 # Verification
 
 ## Current source gate
