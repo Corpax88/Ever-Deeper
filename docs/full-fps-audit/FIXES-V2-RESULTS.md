@@ -40,3 +40,12 @@ During separate3s steady idle censuses, original pages made816/996 and906/828 Au
 The unchanged protected-invariant script still has its pre-existing QA flag documentation assertion failure; this is not a passing invariant gate. PCK byte/resource preservation is a separate passing check. No phone, battery, heat or long-session acceptance is claimed.
 
 Retain every measured window and outlier. Describe full-game FPS separately from the isolated native-motion CPU benchmark and separately from removed audio/property/collision work. Mac WebKit on Apple GPU is not physical iPhone Safari validation.
+
+
+## Release disposition
+
+Accepted as four scoped overhead/allocation reductions after the recorded correctness checks and independent inspection of60 actual images. The fresh-pose helper is not advertised as a proven CPU speedup, and the whole package is not advertised as a solved general FPS problem. The first-set FBO/contact experiments and read-only sync candidate remain excluded; the earlier depth-prepass candidate remains parked by Mats's instruction.
+
+Publication commit `fe50e75345a394a7c7979f8429d27961c4ebf86d`, workflow `36415959436`, consumes exact immutable artifact `10967022774` from validation run `36413947044`, ZIP digest `sha256:3d344ce6e9bc24edc92257ecd8ac2ec6a731c364e24b2f50ce18fb427e4b8db4`. No rebuild. The reviewed publication gate binds source, nine release hashes, both worker build manifests, all raw reports, six core cases, ordinary startup and the independent review. It verifies the current DEV15.16 rollback plus18 LIVE/Worn files before staging and all27 public files afterward. Publication succeeded; all27 public file hashes match, including unchanged LIVE and Worn bytes. Receipt artifact10967455437, ZIP SHA25699939477629d7854232215bb83b2f278f429f9a656f1cc05a05411deebdc1b75. DEV15.16 rollback artifact10967785448 retains the prior nine files and manifest.
+
+Raw final reports and build manifests: [exact publication evidence](https://github.com/Corpax88/Ever-Deeper/tree/fe50e75345a394a7c7979f8429d27961c4ebf86d/.github/fps-fixes-publication/evidence), also `.github/fps-fixes-publication/evidence/` on main. All original rAF intervals plus summaries: `fixes-v2-evidence/`. Earlier rejected-set evidence remains in `fixes-evidence/`. Independent reports: `FIXES-V2-INDEPENDENT-REVIEW.md`, `FIXES-V2-CPU-REVIEW.md`; original audio contract and deterministic fixtures: `FIXES-AUDIO.md`. No new credentials or permissions are needed to continue this already authorized DEV publication.
