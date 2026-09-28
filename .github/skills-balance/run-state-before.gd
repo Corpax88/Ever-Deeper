@@ -2526,7 +2526,6 @@ func serialize() -> Dictionary:
 		"state": {
 			"overhaul": _sanitize_overhaul(overhaul_progress),
 			"miner_skills": MinerSkills.clean(miner_skills),
-			"miner_skills_balance": MinerSkills.BALANCE_REVISION,
 			"gold": gold,
 			"pickaxe_level": pickaxe_level,
 			"ember_mastery": ember_mastery,
@@ -2645,7 +2644,7 @@ func deserialize(raw: Variant) -> bool:
 	total_gold_earned = _nonnegative_int(source.get("total_gold_earned"), gold)
 	cargo = _sanitize_resource_store(source.get("cargo", {}))
 	mined = _sanitize_resource_store(source.get("mined", {}))
-	miner_skills = MinerSkills.restore(source.get("miner_skills", {"mining": float(total_swings) * 4.0, "prospecting": float(total_mined_resources())}), source.get("miner_skills_balance", 1))
+	miner_skills = MinerSkills.clean(source.get("miner_skills", {"mining": float(total_swings) * 4.0, "prospecting": float(total_mined_resources())}))
 	_miner_level_cache.clear()
 	miner_skills_restored.emit()
 
@@ -4665,9 +4664,9 @@ func miner_skill_level(id: String) -> int:
 func _earn_miner_xp(id: String, amount: float) -> void:
 	if amount <= 0.0 or not is_finite(amount) or id not in MinerSkills.IDS: return
 	var previous_level: int = miner_skill_level(id)
-	miner_skills[id] = minf(MinerSkills.max_xp(id), float(miner_skills.get(id, 0.0)) + amount)
-	# One shared curve drives bars, cached levels and level-up notifications.
-	var next_threshold: float = MinerSkills.threshold(id, previous_level + 1)
+	miner_skills[id] = minf(MinerSkills.MAX_XP, float(miner_skills.get(id, 0.0)) + amount)
+	# Cumulative XP for level n is 25*n*(n+3). Avoid rescanning levels per movement tick.
+	var next_threshold: float = 25.0*(previous_level+1)*(previous_level+4)
 	if previous_level < MinerSkills.MAX_LEVEL and float(miner_skills[id]) >= next_threshold:
 		_miner_level_cache.erase(id)
 		miner_skill_increased.emit(id,miner_skill_level(id))
@@ -4705,6 +4704,6 @@ func advance_miner_training(delta: float, distance: float, mining: bool) -> void
 	else:
 		var rested: float = _stamina_rest
 		_stamina_rest += dt
-		var recovery_dt: float = maxf(0.0, _stamina_rest - MinerSkills.RECOVERY_DELAY) - maxf(0.0, rested - MinerSkills.RECOVERY_DELAY)
-		miner_skills["stamina"] = minf(100.0, before + MinerSkills.RECOVERY_PER_SECOND * recovery_dt)
+		var recovery_dt: float = maxf(0.0, _stamina_rest - 0.8) - maxf(0.0, rested - 0.8)
+		miner_skills["stamina"] = minf(100.0, before + 14.0 * recovery_dt)
 	if not is_equal_approx(before, stamina_value()): _queue_autosave()

@@ -1,0 +1,68 @@
+name: Verify mobile skill balance DEV15.19
+on:
+  push:
+    branches: [codex/skills-balance-dev15-19-20260928]
+    paths: ['scripts/progression/miner_skills.gd','scripts/state/run_state.gd','scripts/qa/suites/miner_skills_review.gd','.github/skills-balance/**','.github/workflows/skills-balance.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: skills-balance, cancel-in-progress: true}
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/skills-balance
+            .github/diagnostics-v2
+            scripts
+            tools
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: 10985222333
+          merge-multiple: true
+          run-id: 36454484995
+          github-token: '${{ github.token }}'
+          path: '${{ runner.temp }}/original'
+      - run: python3 .github/skills-balance/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/candidate"
+      - run: |
+          curl -L --fail --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          echo "$RUNNER_TEMP/godot" >> "$GITHUB_PATH"
+      - run: |
+          mkdir -p "$RUNNER_TEMP/evidence" "$RUNNER_TEMP/isolated"
+          cd "$RUNNER_TEMP/isolated"
+          timeout 150 Godot_v4.7.2-stable_linux.x86_64 --headless --path . --main-pack "$RUNNER_TEMP/candidate/index.pck" -- --qa-miner-skills > "$RUNNER_TEMP/evidence/skills.log" 2>&1
+          python3 -c 'import os,pathlib; s=(pathlib.Path(os.environ["RUNNER_TEMP"])/"evidence/skills.log").read_text(); assert "MINER_SKILLS_COMPLETE" in s and "ERROR" not in s, s[-8000:]'
+      - run: python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/candidate/index.pck" --cases input premium-core state migration --output "$RUNNER_TEMP/evidence/core"
+      - run: python3 tools/check_invariants.py > "$RUNNER_TEMP/evidence/invariants.log" 2>&1
+        continue-on-error: true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: skills-balance-core, path: '${{ runner.temp }}/evidence', retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with: {name: skills-balance-candidate, path: '${{ runner.temp }}/candidate', retention-days: 30}
+  browser:
+    needs: core
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/skills-balance
+            .github/diagnostics-v2
+      - uses: actions/download-artifact@v4
+        with: {name: skills-balance-candidate, path: '${{ runner.temp }}/candidate'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npx playwright install chromium webkit
+      - run: node .github/skills-balance/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/balance"
+      - run: node .github/diagnostics-v2/startup.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/ordinary"
+        env: {EXPECTED_VERSION: '1.0.0-dev.15.19', CANDIDATE_SOURCE: '${{ github.sha }}'}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: skills-balance-browser, path: '${{ runner.temp }}/evidence', retention-days: 30}
