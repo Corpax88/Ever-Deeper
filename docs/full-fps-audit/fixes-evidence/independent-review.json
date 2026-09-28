@@ -1,0 +1,178 @@
+{
+  "accepted": true,
+  "scope": "CPU output parity and sampled rendering only; not overall performance or release approval",
+  "run": 36410803352,
+  "source": "6834643708348ceb6002287325a6e01d4fe8cccd",
+  "reviewer_role": "CPU transform author performing independent evidence inspection; not an unrelated second code author",
+  "code": {
+    "output_parity_accepted": true,
+    "contact_performance_accepted": false,
+    "contact_original_candidate_ms": [
+      [
+        99,
+        105
+      ],
+      [
+        94,
+        100
+      ]
+    ],
+    "contact_recommendation": "Omit contact hoist from a performance release; prior helper gain did not repeat",
+    "pet_accepted": true,
+    "pet_original_candidate_ms": [
+      [
+        13,
+        11
+      ],
+      [
+        14,
+        11
+      ]
+    ],
+    "pet_replan_queries_original_candidate": [
+      [
+        160,
+        128
+      ],
+      [
+        254,
+        201
+      ],
+      [
+        160,
+        128
+      ]
+    ],
+    "pet_replan_exact": true,
+    "pet_ordinary_collision_fresh": true,
+    "production_changed_during_review": false,
+    "physical_iphone_verified": false
+  },
+  "visual": {
+    "sampled_fidelity_accepted": true,
+    "images_actually_inspected": 60,
+    "native_candidate_four_directions_three_mining_phases_both_workers": true,
+    "native_exact_pairs_per_worker": 21,
+    "frozen_fullscene_exact_comparisons_per_worker": 4,
+    "hero_full_frame": true,
+    "new_visual_regression_found": false,
+    "ordinary_camera_accepted": false,
+    "camera_limit": "QA removes camera limits; gray outside-world margins occur in transition/mining images",
+    "continuous_animation_accepted": false
+  },
+  "replay": [
+    {
+      "worker": 1,
+      "frames": 292,
+      "mining_frames": 265,
+      "contour_frames": 265,
+      "swings": 11,
+      "impacts": 11,
+      "retargets": 2,
+      "cancels": 2,
+      "clipped_frames": 0,
+      "exact": true
+    },
+    {
+      "worker": 2,
+      "frames": 385,
+      "mining_frames": 346,
+      "contour_frames": 346,
+      "swings": 11,
+      "impacts": 11,
+      "retargets": 2,
+      "cancels": 2,
+      "clipped_frames": 0,
+      "exact": true
+    }
+  ],
+  "issues": [
+    {
+      "kind": "performance",
+      "detail": "Contact totals measured 6.06% and 6.38% higher; no confirmed clean-production gain. Millisecond timing resolution and few samples limit precision."
+    },
+    {
+      "kind": "retarget_scope",
+      "detail": "Retarget requires new swing and changed target ID OR position. No event IDs/positions/timestamps retained; initial acquisition can count. Distinct-resource and post-command retarget attribution are unproven."
+    },
+    {
+      "kind": "untested_local_fixture",
+      "detail": "Prepared distinct-resource _fix_endless_target edit is not in tested source and is not covered by this acceptance."
+    },
+    {
+      "kind": "visual_scope",
+      "detail": "Gray margins follow QA camera override; separate ordinary clean startup review is needed. Surface companion overlap also limits whole-game hero inspection."
+    },
+    {
+      "kind": "replay_scope",
+      "detail": "Two inert motion models receive actual packets; gate is not live owner versus original model every frame. Frozen native poses are separate sample/rotate captures."
+    },
+    {
+      "kind": "remaining_review",
+      "detail": "Root owns aggregate FPS, FBO safety, audio fidelity, ordinary startup/save and release decisions; no physical-iPhone claim."
+    }
+  ],
+  "images_inspected": [
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/2-candidate-native-0.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/2-candidate-native-1.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/2-candidate-native-2.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/2-candidate-native-3.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/2-candidate-native-4.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/2-candidate-native-5.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/2-candidate-native-6.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/1-baseline-native-0.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/1-baseline-native-2.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/1-baseline-native-4.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/1-baseline-native-6.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/1-baseline-surface-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/1-baseline-mining-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/2-candidate-surface-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/2-candidate-mining-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/3-candidate-surface-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/3-candidate-mining-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/4-baseline-surface-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/4-baseline-mining-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/0-candidate-surface-reference.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/0-candidate-surface-fixed.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/0-candidate-surface-restored.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/0-candidate-mining-reference.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/0-candidate-mining-fixed.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/0-candidate-mining-restored.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/0-candidate-transition-hub.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/0-candidate-transition-depth.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/0-candidate-transition-endless.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/0-candidate-transition-deepheart.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-1/0-candidate-transition-surface.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/1-candidate-native-0.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/1-candidate-native-1.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/1-candidate-native-2.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/1-candidate-native-3.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/1-candidate-native-4.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/1-candidate-native-5.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/1-candidate-native-6.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/2-baseline-native-0.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/2-baseline-native-2.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/2-baseline-native-4.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/2-baseline-native-6.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/1-candidate-surface-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/1-candidate-mining-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/2-baseline-surface-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/2-baseline-mining-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/3-baseline-surface-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/3-baseline-mining-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/4-candidate-surface-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/4-candidate-mining-game.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/0-candidate-surface-reference.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/0-candidate-surface-fixed.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/0-candidate-surface-restored.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/0-candidate-mining-reference.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/0-candidate-mining-fixed.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/0-candidate-mining-restored.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/0-candidate-transition-hub.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/0-candidate-transition-depth.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/0-candidate-transition-endless.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/0-candidate-transition-deepheart.png",
+    "/tmp/ever-deeper-fixes-evidence/fps-fixes-2/0-candidate-transition-surface.png"
+  ],
+  "report": "/workspace/scratch/4359e2537c52/game/docs/full-fps-audit/FIXES-INDEPENDENT-REVIEW.md"
+}

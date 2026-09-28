@@ -2,7 +2,7 @@
 
 Mats requested a series of implemented optimizations while preserving the current game, after finding the previous investigation insufficient. Standing DEV publication permission remains; publication still requires actual gameplay and image acceptance. The depth-prepass experiment stays parked. Preserve DEV15.16's appearance, native hero stance/animation, lighting, resolution, gameplay and saved games. LIVE is outside this task.
 
-Four implementations are committed on `codex/fps-fixes-20260928`, initial source `6834643708348ceb6002287325a6e01d4fe8cccd`; Mac run `36410803352`. Read the eventual results below before treating any implementation as accepted. The candidate version is DEV15.17; public DEV15.16 has not changed at this checkpoint.
+Four implementations are committed on `codex/fps-fixes-20260928`, initial source `6834643708348ceb6002287325a6e01d4fe8cccd`; Mac run `36410803352`. The first set was fully tested and revised as described below. The candidate version is DEV15.17; public DEV15.16 has not changed at this checkpoint.
 
 ## Implemented candidates
 
@@ -23,4 +23,10 @@ The two Mac WebKit jobs isolate FBO/audio toggles, then compare fresh original/c
 
 ## Current checkpoint
 
-Mac results pending. No implementation is yet approved for publication; do not infer acceptance from this file or a green workflow alone. Inspect the actual JSON, captures, counters and comparative timing before deciding which changes remain. A separate ordinary-startup check can consume the exact clean candidate artifact without rebuilding it.
+Both first-set Mac jobs passed 143 checks and exact native/frozen image comparisons. Independent review opened 60 actual PNGs; see `FIXES-INDEPENDENT-REVIEW.md`. All raw first-set reports and intervals are retained under `fixes-evidence/`.
+
+First-set overall rAF FPS: worker1 43.162→44.959, worker2 48.396→47.752. Worker2 mining regressed and slow frames increased. No reliable total-package FPS improvement is established. The contact hoist cost about6% more in both actual-production helper benchmarks and is excluded. The FBO cache had real hits and exact images but no reliable isolated benefit; it is also excluded from the revised release. The companion cache retains exact paths and reduces obstruction collision queries574→457. Music message coalescing retains its measured reduction and explicit reporting-latency limitation.
+
+Revised candidate source `21e415af523d497f6ec37706e42694b7f9c5302b`, workflow `36413947044`, is now under graphical validation. It starts again from original DEV15.16 and contains private fresh-pose ownership, exact unchanged music-gain suppression, music position-message coalescing and the companion search cache. It does not contain the rejected FBO/contact changes, sync candidate or depth-prepass experiment. The sync wrapper runs only as a read-only separate census and is uninstalled before FPS measurement. See `FIXES-MOTION-V2.md` and `.github/fps-fixes-v2/SYNC.md`.
+
+The revised clean PCK passes six fresh core gameplay/save cases. V2 exact ownership/alias guards, actual-packet full-state replay with distinct mined resource IDs, ABBA motion helper timing, both music slots/crossfade directions, original-package FPS comparison and ordinary unmodified-camera startup are pending actual Mac evidence. Public DEV15.16 remains unchanged. Do not infer publication acceptance from a green workflow alone.
