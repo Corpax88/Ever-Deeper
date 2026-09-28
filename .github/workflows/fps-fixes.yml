@@ -1,0 +1,43 @@
+name: Validate lossless FPS fixes
+on:
+  push:
+    branches: [codex/fps-fixes-20260928]
+    paths: ['.github/fps-fixes/**', '.github/workflows/fps-fixes.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: fps-fixes, cancel-in-progress: true}
+jobs:
+  fixes:
+    strategy:
+      fail-fast: false
+      matrix: {worker: [1, 2]}
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/fps-fixes
+            .github/fps-round2
+            .github/surface-light-probe
+      - uses: actions/download-artifact@v4
+        with:
+          name: surface-probe-candidate
+          run-id: 36380070907
+          github-token: ${{ github.token }}
+          path: '${{ runner.temp }}/original'
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: python3 .github/fps-fixes/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/fixes"
+      - run: node .github/fps-fixes/fbo-test.mjs
+      - run: node .github/fps-fixes/audio-test.mjs "$RUNNER_TEMP/original"
+      - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install webkit
+      - run: node .github/fps-fixes/review.mjs "$RUNNER_TEMP/fixes" "$RUNNER_TEMP/evidence"
+        env: {FIXES_WORKER: '${{ matrix.worker }}'}
+        timeout-minutes: 13
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'fps-fixes-${{ matrix.worker }}', path: '${{ runner.temp }}/evidence', retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: success() && matrix.worker == 1
+        with: {name: fps-fixes-candidate, path: '${{ runner.temp }}/fixes/release', retention-days: 30}
