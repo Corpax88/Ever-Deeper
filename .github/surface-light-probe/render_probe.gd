@@ -86,7 +86,7 @@ func start(main: Node) -> bool:
 		while ancestor != world and ancestor != null:
 			if ancestor.name == "MoleCompanion": pet_light = true
 			ancestor = ancestor.get_parent()
-		lights.append({"node":node, "enabled":node.enabled, "shadow":node.shadow_enabled, "pet":pet_light})
+		lights.append({"node":node, "enabled":node.enabled, "visible":node.visible, "shadow":node.shadow_enabled, "pet":pet_light})
 	rows.clear()
 	early = {}
 	result = {}
@@ -159,8 +159,11 @@ func _next_stage() -> void:
 	for entry in lights:
 		var light: Light2D = entry.node
 		if not is_instance_valid(light): continue
-		if id == "pet_off" and bool(entry.pet): light.enabled = false
-		if id == "lights_off": light.enabled = false
+		# Animated portal code may re-enable its light. Visibility is the
+		# reversible diagnostic override; never modify the gameplay writer.
+		if id == "lights_off" or (id == "pet_off" and bool(entry.pet)):
+			light.enabled = false
+			light.hide()
 		if id == "shadows_off": light.shadow_enabled = false
 	if OS.has_feature("web"):
 		var stage_status: Variant = JavaScriptBridge.eval("JSON.stringify(window.everDeeperRenderProbe.stage())")
@@ -175,6 +178,7 @@ func _restore_lights() -> void:
 	for entry in lights:
 		if is_instance_valid(entry.node):
 			entry.node.enabled = entry.enabled
+			entry.node.visible = entry.visible
 			entry.node.shadow_enabled = entry.shadow
 
 func _restore() -> void:
@@ -184,7 +188,7 @@ func _restore() -> void:
 
 func settings_restored() -> bool:
 	for entry in lights:
-		if is_instance_valid(entry.node) and (entry.node.enabled != entry.enabled or entry.node.shadow_enabled != entry.shadow): return false
+		if is_instance_valid(entry.node) and (entry.node.enabled != entry.enabled or entry.node.visible != entry.visible or entry.node.shadow_enabled != entry.shadow): return false
 	return true
 
 func _finish(reason: String) -> void:
@@ -224,7 +228,7 @@ func _snapshot() -> Dictionary:
 	var shadows := 0
 	var pet := 0
 	for entry in lights:
-		if is_instance_valid(entry.node) and entry.node.enabled:
+		if is_instance_valid(entry.node) and entry.node.enabled and entry.node.is_visible_in_tree():
 			enabled += 1
 			if entry.node.shadow_enabled: shadows += 1
 			if entry.pet: pet += 1
