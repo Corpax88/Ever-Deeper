@@ -35,7 +35,7 @@ jobs:
           cd "$RUNNER_TEMP/isolated"
           timeout 150 Godot_v4.7.2-stable_linux.x86_64 --headless --path . --main-pack "$RUNNER_TEMP/candidate/index.pck" -- --qa-miner-skills > "$RUNNER_TEMP/evidence/skills.log" 2>&1
           python3 -c 'import os,pathlib; s=(pathlib.Path(os.environ["RUNNER_TEMP"])/"evidence/skills.log").read_text(); assert "MINER_SKILLS_COMPLETE" in s and "ERROR" not in s, s[-8000:]'
-      - run: python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/candidate/index.pck" --cases input premium-core state migration --output "$RUNNER_TEMP/evidence/core"
+      - run: python3 tools/qa.py --godot Godot_v4.7.2-stable_linux.x86_64 --pack "$RUNNER_TEMP/candidate/index.pck" --cases input premium-core one-point-zero-state one-point-zero-migration --output "$RUNNER_TEMP/evidence/core"
       - run: python3 tools/check_invariants.py > "$RUNNER_TEMP/evidence/invariants.log" 2>&1
         continue-on-error: true
       - uses: actions/upload-artifact@v4
