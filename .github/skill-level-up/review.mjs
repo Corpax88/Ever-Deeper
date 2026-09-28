@@ -21,7 +21,7 @@ try{
  const before=await state();await delay(700);const mining=await state();await page.keyboard.up('Space');
  check(mining.game.impact>before.game.impact,'Mining continues while notice visible');
  check(mining.skills.events.filter(e=>e.id==='mining').length===1,'One event per earned level');
- check(mining.skills.toast.icon_loaded&&mining.skills.toast.ignores_input,'Icon and input');
+ check(mining.skills.toast.icon_loaded&&mining.skills.toast.ignores_input&&mining.skills.toast.clear_of_hud,'Icon, input and HUD clearance');
  await page.screenshot({path:path.join(out,'mining-level-up.png')});windows.push({kind:'mining',before,after:mining});
  await wait(s=>!s.skills?.toast.visible);windows.push({kind:'auto-dismiss',state:await state()});
  await command('skill_burst');await delay(500);s=await state();

@@ -10,6 +10,8 @@ var card: Control
 var icon: TextureRect
 var title: Label
 var shown: int = 0
+var base_position := Vector2.ZERO
+var hud_rects: Array[Rect2] = []
 
 func _ready() -> void:
 	name = "SkillLevelToast"
@@ -82,6 +84,7 @@ func _next() -> void:
 func _refresh() -> void:
 	var id: String = active.id
 	title.text = "%s  ·  %d" % [id.capitalize(),int(active.level)]
+	_layout()
 	icon.texture = load("res://assets/ui/skills/icons/"+("bag" if id == "carrying" else id)+".svg")
 
 func clear() -> void:
@@ -101,12 +104,25 @@ func _process(delta: float) -> void:
 	var fade_in: float = smoothstep(0.0, 0.3, elapsed)
 	var fade_out: float = 1.0-smoothstep(2.4, DURATION, elapsed)
 	card.modulate.a = fade_in*fade_out
-	_layout()
+	card.position = base_position+Vector2(0,(1.0-fade_in)*6.0)
 	if elapsed >= DURATION: _next()
 
 func _layout() -> void:
 	var view: Vector2 = get_viewport_rect().size
-	card.position = Vector2((view.x-SIZE.x)*0.5,maxf(22.0,view.y*0.07)+(1.0-smoothstep(0.0,0.3,elapsed))*6.0)
+	base_position = Vector2((view.x-SIZE.x)*0.5,22.0)
+	hud_rects.clear()
+	var main: Node = get_tree().current_scene
+	if main != null and main.premium_hud != null:
+		var layout: Dictionary = main.premium_hud.layout_snapshot(view)
+		for key in ["menu","guide","companion","gold","minimap","progression_goal"]:
+			var rect: Rect2 = layout[key]
+			hud_rects.append(rect)
+			if rect.position.x < base_position.x+SIZE.x and rect.end.x > base_position.x:
+				base_position.y = maxf(base_position.y,rect.end.y+10.0)
+	card.position = base_position
 
 func snapshot() -> Dictionary:
-	return {"active":active.duplicate(),"queued":pending.duplicate(true),"visible":visible,"opacity":card.modulate.a,"shown":shown,"rect":[card.position.x,card.position.y,SIZE.x,SIZE.y],"icon_loaded":icon.texture!=null,"text":title.text,"ignores_input":mouse_filter==Control.MOUSE_FILTER_IGNORE}
+	var clear_of_hud: bool = true
+	for rect in hud_rects:
+		if Rect2(card.position,SIZE).intersects(rect): clear_of_hud = false
+	return {"active":active.duplicate(),"queued":pending.duplicate(true),"visible":visible,"opacity":card.modulate.a,"shown":shown,"rect":[card.position.x,card.position.y,SIZE.x,SIZE.y],"clear_of_hud":clear_of_hud,"icon_loaded":icon.texture!=null,"text":title.text,"ignores_input":mouse_filter==Control.MOUSE_FILTER_IGNORE}
