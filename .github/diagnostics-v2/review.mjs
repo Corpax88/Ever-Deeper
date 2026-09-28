@@ -62,8 +62,9 @@ try{
  check('recording-started',(await page.evaluate(()=>window.REPORT_UI)).running,{ui:await page.evaluate(()=>window.REPORT_UI),api:await page.evaluate(()=>window.everDeeperReports.status())});
  const mine=await state();await page.mouse.move(mine.mine_button[0]/mine.viewport[0]*844,mine.mine_button[1]/mine.viewport[1]*390);await page.mouse.down();await delay(11500);await page.mouse.up();await delay(400);
  await shot('recording-gameplay');
- const recorded=await pending();check('real-windows',recorded?.samples.length>=2,{windows:recorded?.samples.length});
- check('real-metrics',recorded.samples.every(w=>w.frames>20&&w.canvas_width===2532&&w.cpu_mean_ms>=0&&w.nodes>100));
+ const recorded=await pending();fs.writeFileSync(path.join(output,'recorded-session.json'),JSON.stringify(recorded,null,2));check('real-windows',recorded?.samples.length>=2,{windows:recorded?.samples.length});
+ const canvas=await page.evaluate(()=>({width:document.querySelector('canvas').width,dpr:devicePixelRatio}));
+ check('real-metrics',recorded.samples.every(w=>w.frames>20&&w.canvas_width===canvas.width&&w.dpr===canvas.dpr&&w.cpu_mean_ms>=0&&w.nodes>100),{canvas});
  check('diagnostic-coverage',recorded.samples.every(w=>w.diagnostics?.revision===2&&w.diagnostics.callback_ms?.[0]>20&&w.diagnostics.wasm_mib>0&&w.diagnostics.instrumented_ms?.[0]>0));
  check('gl-call-census',recorded.samples.some(w=>Object.keys(w.diagnostics.gl).length>5));
  check('missing-data-explicit',recorded.samples.every(w=>w.diagnostics.capabilities.temperature===false&&w.diagnostics.capabilities.power_state===false));
