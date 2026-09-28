@@ -1,0 +1,38 @@
+name: Isolate WebGL native depth prepass
+on:
+  push:
+    branches: [codex/depth-prepass-audit-20260928]
+    paths: ['.github/depth-prepass-audit/**', '.github/workflows/depth-prepass-audit.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: depth-prepass-audit, cancel-in-progress: true}
+jobs:
+  audit:
+    strategy:
+      fail-fast: false
+      matrix: {browser: [webkit, chromium]}
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/depth-prepass-audit
+            .github/native-gpu-audit
+            .github/surface-light-probe
+      - uses: actions/download-artifact@v4
+        with:
+          name: surface-probe-candidate
+          run-id: 36380070907
+          github-token: ${{ github.token }}
+          path: '${{ runner.temp }}/original'
+      - run: python3 .github/depth-prepass-audit/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/audit"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npm install --no-save --package-lock=false pngjs && npx playwright install ${{ matrix.browser }}
+      - run: node .github/depth-prepass-audit/review.mjs "$RUNNER_TEMP/audit" "$RUNNER_TEMP/evidence"
+        env: {AUDIT_BROWSER: '${{ matrix.browser }}'}
+        timeout-minutes: 9
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'depth-prepass-evidence-${{ matrix.browser }}', path: '${{ runner.temp }}/evidence', retention-days: 30}
