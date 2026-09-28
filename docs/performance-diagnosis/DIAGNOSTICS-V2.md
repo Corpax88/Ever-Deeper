@@ -57,3 +57,9 @@ Chromium151 supports elapsed GPU queries and yielded9 valid samples per window; 
 Collector-only ABBA WebKit FPS: off59.750, on59.625, on59.750, off59.618. Worst intervals26/34/27/32ms retained. No large degradation in these short Mac windows; not a physical-iPhone overhead bound and not the cost of the full persistent recorder. GPU time on the affected physical phone remains unknown.
 
 Two initial packaging attempts failed before game QA because download-artifact placed the named artifact below its root; merge-multiple corrected this. The next browser attempt stopped at a historical DPR3 assertion even though current DEV intentionally renders at DPR2; the assertion now compares actual canvas/DPR, with no quality-setting change. Production diagnostic bytes were unchanged by that test correction.
+
+## Published
+
+DEV15.18 is live at https://corpax88.github.io/Ever-Deeper/dev/. Publication5ea55ec13d35dafbe5aebe12a397c357ebe3d4e3 /36455455351 passed package,deploy,verify; all27 public hashes match,9LIVE and9Worn files preserved. Receipt10984614365, ZIPsha2568e249c517b19eee323e27127f63ff0c0ff9288f72c3ae9c4e6d65785d208df06. First publication65b45fa/36455307859 safely stopped before deployment because its sparse checkout omitted the bound workflow; the checkout was corrected without changing game bytes or removing any integrity gate. No jobs remain pending.
+
+Next: read one ordinary physical-phone DEV15.18 report through the existing private database. Verify diagnostics.revision2 and report ID/page completeness. Do not rerun unchanged Mac matrices or claim phone acceptance. WebKit clock quantization produces zero-duration individual GL calls; zero measured wall time is not proof that such calls are free.
