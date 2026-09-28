@@ -1,0 +1,962 @@
+{
+  "source": "08af3b8526b88ba2764fa36860d52d7e0eba5bbe",
+  "purpose": "Actual mining level-up, queue, pause, save-load suppression and cap",
+  "runtime": {
+    "dpr": 2,
+    "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15"
+  },
+  "windows": [
+    {
+      "kind": "mining",
+      "before": {
+        "game": {
+          "error": "",
+          "fixture": "setup",
+          "id": 1,
+          "impact": 2,
+          "menu": false,
+          "mine_button": [
+            1090.09094238281,
+            517.54541015625
+          ],
+          "mining": true,
+          "native": {
+            "active": true,
+            "failed": false,
+            "failure": "",
+            "gear": "ember",
+            "generations": 1,
+            "motion": {
+              "age": 0.389666666666667,
+              "aim_ready": true,
+              "bounded_transition_frames": 0,
+              "duration": 0.05382,
+              "errors": [],
+              "max_contact_pixels": 0.00000762939453125,
+              "max_reach_error": 0,
+              "max_reach_error_scope": "Includes rejected transition search probes",
+              "max_tool_retarget": 0,
+              "mode": "mine",
+              "phase": 0.619112318840577,
+              "support_release": 1,
+              "swing_serial": 2,
+              "transitions": 2,
+              "yaw": -0.182676467883042
+            },
+            "surface_cache": 0,
+            "unreachable_contacts": 0,
+            "updates": 22
+          },
+          "phase": "mine",
+          "position": [
+            1784,
+            408
+          ],
+          "result": {},
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 63000,
+            "draw_callbacks": 224,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 165,
+            "reuses": 1405,
+            "setup_usec": 53000
+          },
+          "version": "1.0.0-dev.15.15",
+          "viewport": [
+            1209.09094238281,
+            654.54541015625
+          ]
+        },
+        "skills": {
+          "events": [
+            {
+              "id": "mining",
+              "level": 1
+            }
+          ],
+          "toast": {
+            "active": {
+              "id": "mining",
+              "level": 1
+            },
+            "clear_of_hud": true,
+            "icon_loaded": true,
+            "ignores_input": true,
+            "opacity": 1,
+            "queued": [],
+            "rect": [
+              424.545471191406,
+              140,
+              360,
+              86
+            ],
+            "shown": 1,
+            "text": "Mining  ·  1",
+            "visible": true
+          }
+        }
+      },
+      "after": {
+        "game": {
+          "error": "",
+          "fixture": "setup",
+          "id": 1,
+          "impact": 5,
+          "menu": false,
+          "mine_button": [
+            1090.09094238281,
+            517.54541015625
+          ],
+          "mining": true,
+          "native": {
+            "active": true,
+            "failed": false,
+            "failure": "",
+            "gear": "ember",
+            "generations": 1,
+            "motion": {
+              "age": 1.21772222222222,
+              "aim_ready": true,
+              "bounded_transition_frames": 0,
+              "duration": 0.05382,
+              "errors": [],
+              "max_contact_pixels": 0.00000762939453125,
+              "max_reach_error": 0,
+              "max_reach_error_scope": "Includes rejected transition search probes",
+              "max_tool_retarget": 0,
+              "mode": "mine",
+              "phase": 0.209943639291462,
+              "support_release": 1,
+              "swing_serial": 6,
+              "transitions": 2,
+              "yaw": -0.182676467883042
+            },
+            "surface_cache": 0,
+            "unreachable_contacts": 0,
+            "updates": 68
+          },
+          "phase": "mine",
+          "position": [
+            1784,
+            408
+          ],
+          "result": {},
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 79000,
+            "draw_callbacks": 376,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 177,
+            "reuses": 4847,
+            "setup_usec": 133000
+          },
+          "version": "1.0.0-dev.15.15",
+          "viewport": [
+            1209.09094238281,
+            654.54541015625
+          ]
+        },
+        "skills": {
+          "events": [
+            {
+              "id": "mining",
+              "level": 1
+            }
+          ],
+          "toast": {
+            "active": {
+              "id": "mining",
+              "level": 1
+            },
+            "clear_of_hud": true,
+            "icon_loaded": true,
+            "ignores_input": true,
+            "opacity": 1,
+            "queued": [],
+            "rect": [
+              424.545471191406,
+              140,
+              360,
+              86
+            ],
+            "shown": 1,
+            "text": "Mining  ·  1",
+            "visible": true
+          }
+        }
+      }
+    },
+    {
+      "kind": "auto-dismiss",
+      "state": {
+        "game": {
+          "error": "",
+          "fixture": "setup",
+          "id": 1,
+          "impact": 6,
+          "menu": false,
+          "mine_button": [
+            1090.09094238281,
+            517.54541015625
+          ],
+          "mining": false,
+          "native": {
+            "active": true,
+            "failed": false,
+            "failure": "",
+            "gear": "ember",
+            "generations": 1,
+            "motion": {
+              "age": 1.84133333333333,
+              "aim_ready": true,
+              "bounded_transition_frames": 0,
+              "duration": 0.12,
+              "errors": [],
+              "max_contact_pixels": 0.00000762939453125,
+              "max_reach_error": 0,
+              "max_reach_error_scope": "Includes rejected transition search probes",
+              "max_tool_retarget": 0,
+              "mode": "idle",
+              "phase": 0.437930756843797,
+              "support_release": 0,
+              "swing_serial": 6,
+              "transitions": 3,
+              "yaw": -1.57079624657167
+            },
+            "surface_cache": 0,
+            "unreachable_contacts": 0,
+            "updates": 170
+          },
+          "phase": "mine",
+          "position": [
+            1784,
+            408
+          ],
+          "result": {},
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 85000,
+            "draw_callbacks": 418,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 181,
+            "reuses": 5785,
+            "setup_usec": 161000
+          },
+          "version": "1.0.0-dev.15.15",
+          "viewport": [
+            1209.09094238281,
+            654.54541015625
+          ]
+        },
+        "skills": {
+          "events": [
+            {
+              "id": "mining",
+              "level": 1
+            }
+          ],
+          "toast": {
+            "active": {},
+            "clear_of_hud": true,
+            "icon_loaded": true,
+            "ignores_input": true,
+            "opacity": 0,
+            "queued": [],
+            "rect": [
+              424.545471191406,
+              140,
+              360,
+              86
+            ],
+            "shown": 1,
+            "text": "Mining  ·  1",
+            "visible": false
+          }
+        }
+      }
+    },
+    {
+      "kind": "burst",
+      "state": {
+        "game": {
+          "error": "",
+          "fixture": "setup",
+          "id": 2,
+          "impact": 6,
+          "menu": false,
+          "mine_button": [
+            1090.09094238281,
+            517.54541015625
+          ],
+          "mining": false,
+          "native": {
+            "active": true,
+            "failed": false,
+            "failure": "",
+            "gear": "ember",
+            "generations": 1,
+            "motion": {
+              "age": 2.49653703703703,
+              "aim_ready": true,
+              "bounded_transition_frames": 0,
+              "duration": 0.12,
+              "errors": [],
+              "max_contact_pixels": 0.00000762939453125,
+              "max_reach_error": 0,
+              "max_reach_error_scope": "Includes rejected transition search probes",
+              "max_tool_retarget": 0,
+              "mode": "idle",
+              "phase": 0.619931785650382,
+              "support_release": 0,
+              "swing_serial": 6,
+              "transitions": 3,
+              "yaw": -1.57079624657167
+            },
+            "surface_cache": 0,
+            "unreachable_contacts": 0,
+            "updates": 205
+          },
+          "phase": "mine",
+          "position": [
+            1784,
+            408
+          ],
+          "result": {},
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 85000,
+            "draw_callbacks": 418,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 181,
+            "reuses": 5785,
+            "setup_usec": 161000
+          },
+          "version": "1.0.0-dev.15.15",
+          "viewport": [
+            1209.09094238281,
+            654.54541015625
+          ]
+        },
+        "skills": {
+          "events": [
+            {
+              "id": "mining",
+              "level": 1
+            },
+            {
+              "id": "running",
+              "level": 1
+            },
+            {
+              "id": "running",
+              "level": 2
+            },
+            {
+              "id": "carrying",
+              "level": 1
+            },
+            {
+              "id": "prospecting",
+              "level": 1
+            }
+          ],
+          "toast": {
+            "active": {
+              "id": "running",
+              "level": 2
+            },
+            "clear_of_hud": true,
+            "icon_loaded": true,
+            "ignores_input": true,
+            "opacity": 1,
+            "queued": [
+              {
+                "id": "carrying",
+                "level": 1
+              },
+              {
+                "id": "prospecting",
+                "level": 1
+              }
+            ],
+            "rect": [
+              424.545471191406,
+              140,
+              360,
+              86
+            ],
+            "shown": 2,
+            "text": "Running  ·  2",
+            "visible": true
+          }
+        }
+      }
+    },
+    {
+      "kind": "resume",
+      "state": {
+        "game": {
+          "error": "",
+          "fixture": "setup",
+          "id": 4,
+          "impact": 6,
+          "menu": false,
+          "mine_button": [
+            1090.09094238281,
+            517.54541015625
+          ],
+          "mining": false,
+          "native": {
+            "active": true,
+            "failed": false,
+            "failure": "",
+            "gear": "ember",
+            "generations": 2,
+            "motion": {
+              "age": 0.0166666666666667,
+              "aim_ready": false,
+              "bounded_transition_frames": 0,
+              "duration": 0.12,
+              "errors": [],
+              "max_contact_pixels": 0,
+              "max_reach_error": 0,
+              "max_reach_error_scope": "Includes rejected transition search probes",
+              "max_tool_retarget": 0,
+              "mode": "idle",
+              "phase": 0.00462962962962963,
+              "support_release": 0,
+              "swing_serial": -1,
+              "transitions": 1,
+              "yaw": -1.57079624657167
+            },
+            "surface_cache": 0,
+            "unreachable_contacts": 0,
+            "updates": 229
+          },
+          "phase": "mine",
+          "position": [
+            1784,
+            408
+          ],
+          "result": {},
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 89000,
+            "draw_callbacks": 585,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 181,
+            "reuses": 6099,
+            "setup_usec": 172000
+          },
+          "version": "1.0.0-dev.15.15",
+          "viewport": [
+            1209.09094238281,
+            654.54541015625
+          ]
+        },
+        "skills": {
+          "events": [
+            {
+              "id": "mining",
+              "level": 1
+            },
+            {
+              "id": "running",
+              "level": 1
+            },
+            {
+              "id": "running",
+              "level": 2
+            },
+            {
+              "id": "carrying",
+              "level": 1
+            },
+            {
+              "id": "prospecting",
+              "level": 1
+            }
+          ],
+          "toast": {
+            "active": {
+              "id": "running",
+              "level": 2
+            },
+            "clear_of_hud": true,
+            "icon_loaded": true,
+            "ignores_input": true,
+            "opacity": 1,
+            "queued": [
+              {
+                "id": "carrying",
+                "level": 1
+              },
+              {
+                "id": "prospecting",
+                "level": 1
+              }
+            ],
+            "rect": [
+              424.545471191406,
+              140,
+              360,
+              86
+            ],
+            "shown": 2,
+            "text": "Running  ·  2",
+            "visible": true
+          }
+        }
+      }
+    },
+    {
+      "kind": "carrying",
+      "state": {
+        "game": {
+          "error": "",
+          "fixture": "setup",
+          "id": 4,
+          "impact": 6,
+          "menu": false,
+          "mine_button": [
+            1090.09094238281,
+            517.54541015625
+          ],
+          "mining": false,
+          "native": {
+            "active": true,
+            "failed": false,
+            "failure": "",
+            "gear": "ember",
+            "generations": 2,
+            "motion": {
+              "age": 1.99427777777778,
+              "aim_ready": false,
+              "bounded_transition_frames": 0,
+              "duration": 0.12,
+              "errors": [],
+              "max_contact_pixels": 0,
+              "max_reach_error": 0,
+              "max_reach_error_scope": "Includes rejected transition search probes",
+              "max_tool_retarget": 0,
+              "mode": "idle",
+              "phase": 0.553966049382716,
+              "support_release": 0,
+              "swing_serial": -1,
+              "transitions": 1,
+              "yaw": -1.57079624657167
+            },
+            "surface_cache": 0,
+            "unreachable_contacts": 0,
+            "updates": 328
+          },
+          "phase": "mine",
+          "position": [
+            1784,
+            408
+          ],
+          "result": {},
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 89000,
+            "draw_callbacks": 585,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 181,
+            "reuses": 6099,
+            "setup_usec": 172000
+          },
+          "version": "1.0.0-dev.15.15",
+          "viewport": [
+            1209.09094238281,
+            654.54541015625
+          ]
+        },
+        "skills": {
+          "events": [
+            {
+              "id": "mining",
+              "level": 1
+            },
+            {
+              "id": "running",
+              "level": 1
+            },
+            {
+              "id": "running",
+              "level": 2
+            },
+            {
+              "id": "carrying",
+              "level": 1
+            },
+            {
+              "id": "prospecting",
+              "level": 1
+            }
+          ],
+          "toast": {
+            "active": {
+              "id": "carrying",
+              "level": 1
+            },
+            "clear_of_hud": true,
+            "icon_loaded": true,
+            "ignores_input": true,
+            "opacity": 1,
+            "queued": [
+              {
+                "id": "prospecting",
+                "level": 1
+              }
+            ],
+            "rect": [
+              424.545471191406,
+              140,
+              360,
+              86
+            ],
+            "shown": 3,
+            "text": "Carrying  ·  1",
+            "visible": true
+          }
+        }
+      }
+    },
+    {
+      "kind": "prospecting",
+      "state": {
+        "game": {
+          "error": "",
+          "fixture": "setup",
+          "id": 4,
+          "impact": 6,
+          "menu": false,
+          "mine_button": [
+            1090.09094238281,
+            517.54541015625
+          ],
+          "mining": false,
+          "native": {
+            "active": true,
+            "failed": false,
+            "failure": "",
+            "gear": "ember",
+            "generations": 2,
+            "motion": {
+              "age": 5.03194444444444,
+              "aim_ready": false,
+              "bounded_transition_frames": 0,
+              "duration": 0.12,
+              "errors": [],
+              "max_contact_pixels": 0,
+              "max_reach_error": 0,
+              "max_reach_error_scope": "Includes rejected transition search probes",
+              "max_tool_retarget": 0,
+              "mode": "idle",
+              "phase": 0.397762345679013,
+              "support_release": 0,
+              "swing_serial": -1,
+              "transitions": 1,
+              "yaw": -1.57079624657167
+            },
+            "surface_cache": 0,
+            "unreachable_contacts": 0,
+            "updates": 483
+          },
+          "phase": "mine",
+          "position": [
+            1784,
+            408
+          ],
+          "result": {},
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 89000,
+            "draw_callbacks": 585,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 181,
+            "reuses": 6099,
+            "setup_usec": 172000
+          },
+          "version": "1.0.0-dev.15.15",
+          "viewport": [
+            1209.09094238281,
+            654.54541015625
+          ]
+        },
+        "skills": {
+          "events": [
+            {
+              "id": "mining",
+              "level": 1
+            },
+            {
+              "id": "running",
+              "level": 1
+            },
+            {
+              "id": "running",
+              "level": 2
+            },
+            {
+              "id": "carrying",
+              "level": 1
+            },
+            {
+              "id": "prospecting",
+              "level": 1
+            }
+          ],
+          "toast": {
+            "active": {
+              "id": "prospecting",
+              "level": 1
+            },
+            "clear_of_hud": true,
+            "icon_loaded": true,
+            "ignores_input": true,
+            "opacity": 1,
+            "queued": [],
+            "rect": [
+              424.545471191406,
+              140,
+              360,
+              86
+            ],
+            "shown": 4,
+            "text": "Prospecting  ·  1",
+            "visible": true
+          }
+        }
+      }
+    },
+    {
+      "kind": "load",
+      "state": {
+        "game": {
+          "error": "",
+          "fixture": "setup",
+          "id": 5,
+          "impact": 6,
+          "menu": false,
+          "mine_button": [
+            1090.09094238281,
+            517.54541015625
+          ],
+          "mining": false,
+          "native": {
+            "active": true,
+            "failed": false,
+            "failure": "",
+            "gear": "ember",
+            "generations": 2,
+            "motion": {
+              "age": 5.97864285714285,
+              "aim_ready": false,
+              "bounded_transition_frames": 0,
+              "duration": 0.12,
+              "errors": [],
+              "max_contact_pixels": 0,
+              "max_reach_error": 0,
+              "max_reach_error_scope": "Includes rejected transition search probes",
+              "max_tool_retarget": 0,
+              "mode": "idle",
+              "phase": 0.660734126984128,
+              "support_release": 0,
+              "swing_serial": -1,
+              "transitions": 1,
+              "yaw": -1.57079624657167
+            },
+            "surface_cache": 0,
+            "unreachable_contacts": 0,
+            "updates": 523
+          },
+          "phase": "mine",
+          "position": [
+            1784,
+            408
+          ],
+          "result": {},
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 89000,
+            "draw_callbacks": 585,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 181,
+            "reuses": 6099,
+            "setup_usec": 172000
+          },
+          "version": "1.0.0-dev.15.15",
+          "viewport": [
+            1209.09094238281,
+            654.54541015625
+          ]
+        },
+        "skills": {
+          "events": [
+            {
+              "id": "mining",
+              "level": 1
+            },
+            {
+              "id": "running",
+              "level": 1
+            },
+            {
+              "id": "running",
+              "level": 2
+            },
+            {
+              "id": "carrying",
+              "level": 1
+            },
+            {
+              "id": "prospecting",
+              "level": 1
+            }
+          ],
+          "toast": {
+            "active": {},
+            "clear_of_hud": true,
+            "icon_loaded": true,
+            "ignores_input": true,
+            "opacity": 1,
+            "queued": [],
+            "rect": [
+              424.545471191406,
+              140,
+              360,
+              86
+            ],
+            "shown": 4,
+            "text": "Prospecting  ·  1",
+            "visible": false
+          }
+        }
+      }
+    },
+    {
+      "kind": "cap",
+      "state": {
+        "game": {
+          "error": "",
+          "fixture": "setup",
+          "id": 6,
+          "impact": 6,
+          "menu": false,
+          "mine_button": [
+            1090.09094238281,
+            517.54541015625
+          ],
+          "mining": false,
+          "native": {
+            "active": true,
+            "failed": false,
+            "failure": "",
+            "gear": "ember",
+            "generations": 2,
+            "motion": {
+              "age": 6.40127777777777,
+              "aim_ready": false,
+              "bounded_transition_frames": 0,
+              "duration": 0.12,
+              "errors": [],
+              "max_contact_pixels": 0,
+              "max_reach_error": 0,
+              "max_reach_error_scope": "Includes rejected transition search probes",
+              "max_tool_retarget": 0,
+              "mode": "idle",
+              "phase": 0.778132716049384,
+              "support_release": 0,
+              "swing_serial": -1,
+              "transitions": 1,
+              "yaw": -1.57079624657167
+            },
+            "surface_cache": 0,
+            "unreachable_contacts": 0,
+            "updates": 548
+          },
+          "phase": "mine",
+          "position": [
+            1784,
+            408
+          ],
+          "result": {},
+          "sections": {
+            "cached": 157,
+            "draw_callback_usec": 89000,
+            "draw_callbacks": 585,
+            "dynamic": 7,
+            "recycled": 0,
+            "redraws": 181,
+            "reuses": 6099,
+            "setup_usec": 172000
+          },
+          "version": "1.0.0-dev.15.15",
+          "viewport": [
+            1209.09094238281,
+            654.54541015625
+          ]
+        },
+        "skills": {
+          "events": [
+            {
+              "id": "mining",
+              "level": 1
+            },
+            {
+              "id": "running",
+              "level": 1
+            },
+            {
+              "id": "running",
+              "level": 2
+            },
+            {
+              "id": "carrying",
+              "level": 1
+            },
+            {
+              "id": "prospecting",
+              "level": 1
+            },
+            {
+              "id": "mining",
+              "level": 100
+            }
+          ],
+          "toast": {
+            "active": {
+              "id": "mining",
+              "level": 100
+            },
+            "clear_of_hud": true,
+            "icon_loaded": true,
+            "ignores_input": true,
+            "opacity": 1,
+            "queued": [],
+            "rect": [
+              424.545471191406,
+              140,
+              360,
+              86
+            ],
+            "shown": 5,
+            "text": "Mining  ·  100",
+            "visible": true
+          }
+        }
+      }
+    }
+  ],
+  "error": null
+}
