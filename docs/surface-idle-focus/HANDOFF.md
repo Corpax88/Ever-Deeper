@@ -28,3 +28,6 @@ Rejected first surface-probe validation: source4e7e7d47d4695da137885fe7b3087e7af
 
 ## Accepted diagnostic validation
 Source 0225855d5b243fadf75c5267898ac2cd6edb3d0b; run 36380070907; candidate artifact 10952875555, digest sha256:06e46692f2224518997516a9c14cfe32a82ef611cafa23da5f503ca585ab8c18. All seven real 180-second Mac WebKit stages passed; effective lights-off count is zero and graphics restore. Original, lights-off and result captures inspected. FPS 56.43, 58.24, 57.14, 59.90, 59.87, 59.86, 59.86 across stages does not establish a cause: restored stages also reach the ceiling. Diagnostic only, not an FPS fix or physical-iPhone verification.
+
+## Published DEV only
+Publication commit4061443170b88e37432672c9d32a90be2078ed47, run36380584402 passed. All27 public file hashes verified. LIVE1.0.1 and Worn unchanged. Receipt artifact10952850603; rollback10952850482 preserves DEV15.15. DEV15.16 is diagnostic only. Next: one actual-device surface light test and private report; do not claim root cause before reversible evidence.
