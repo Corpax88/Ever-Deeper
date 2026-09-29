@@ -64,7 +64,7 @@ try{
  await wait('first resources landed',s=>s.treasury.landings>=2);let partial=(await state()).treasury;
  check('partial-conservation',conserved(partial)&&partial.cargo.stone>0,{partial});await shot('04-partial-delivery');
  await tap('hud_menu');await wait('menu paused',s=>s.skills_open);const paused=(await state()).treasury;await delay(2000);
- check('menu-pauses-delivery',JSON.stringify((await state()).treasury.totals)===JSON.stringify(paused.totals),{});
+ check('menu-pauses-delivery',paused.inside&&(await state()).treasury.inside&&JSON.stringify((await state()).treasury.totals)===JSON.stringify(paused.totals),{});
  await tap('skills_close');await wait('menu closed',s=>!s.skills_open);
  await command('treasury_exit_approach');await tap('hud_context');await wait('left treasury',s=>!s.treasury.inside);
  const exited=(await state()).treasury;await delay(1800);

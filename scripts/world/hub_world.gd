@@ -204,7 +204,8 @@ func set_active(enabled: bool, entering: bool = false) -> void :
 	else:
 		player.release_visual_cache()
 	if not enabled:
-		if treasury.inside: treasury.leave(false)
+		# Menus and orientation pause this world without leaving the chamber.
+		if treasury.inside and get_parent().phase != "hub": treasury.leave(false)
 		_clear_workshop_presentation("inactive")
 		clear_workshop_panel_preview()
 		player.set_external_movement(Vector2.ZERO)
