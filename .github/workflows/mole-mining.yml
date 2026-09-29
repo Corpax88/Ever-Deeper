@@ -30,6 +30,8 @@ jobs:
           unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
           chmod +x "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot"
           python3 tools/qa.py --godot "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --pack "$RUNNER_TEMP/candidate/index.pck" --cases input premium-core --output "$RUNNER_TEMP/evidence/core"
+      - run: python3 tools/check_invariants.py > "$RUNNER_TEMP/evidence/core/invariants.log" 2>&1
+        continue-on-error: true
       - uses: actions/setup-node@v4
         with: {node-version: '22'}
       - run: npm ci --ignore-scripts && npx playwright install chromium webkit

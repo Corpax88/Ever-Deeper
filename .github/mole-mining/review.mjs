@@ -40,7 +40,7 @@ async function shot(name){await page.screenshot({path:path.join(output,name+'.pn
 function inside(r,s){return r[0]>=0&&r[1]>=0&&r[0]+r[2]<=s.viewport[0]+1&&r[1]+r[3]<=s.viewport[1]+1;}
 function overlap(a,b){return a[0]<b[0]+b[2]&&a[0]+a[2]>b[0]&&a[1]<b[1]+b[3]&&a[1]+a[3]>b[1];}
 
-async function ready(){return wait('active game',s=>!s?.menu&&s?.native?.active&&s.native.updates>3);}
+async function ready(){return wait('active game',s=>!s?.menu&&s?.game_started&&s.player_controls_enabled&&((s.native?.active&&s.native.updates>3)||(s.drill_level>0&&s.world_active)));}
 try{
  await page.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'domcontentloaded',timeout:180000});
  await wait('fixture ready',s=>s?.version===version&&s.buttons,180000);
