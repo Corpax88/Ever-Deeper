@@ -83,6 +83,7 @@ try{
  for(const mine_id of ['mossMine','moonMine','emberMine','starMine']){
   await command('ore_respawn_fixture',{mine_id});await ready();
   const trapped=await state();
+  check('starts-inside-respawn-'+mine_id,trapped.ore_escape.distance<1,{fixture:trapped.ore_escape});
   check('respawn-collision-'+mine_id,Object.keys(trapped.ore_escape.checks).length===8&&Object.values(trapped.ore_escape.checks).every(Boolean),{fixture:trapped.ore_escape});
   await shot('respawn-under-mole-'+mine_id);
   await command('ore_escape');await wait('walk out of respawn '+mine_id,s=>s.ore_escape.remaining<10,12000);

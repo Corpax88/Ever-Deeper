@@ -21,8 +21,8 @@ var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
 	if String(data.kind)=="ore_respawn_fixture":
+		await _ore_respawn_fixture(String(data.mine_id))
 		command_id=int(data.id)
-		_ore_respawn_fixture(String(data.mine_id))
 		return
 	if String(data.kind)=="ore_escape":
 		command_id=int(data.id)
@@ -342,6 +342,8 @@ func _ore_respawn_fixture(mine_id: String) -> void:
 	main._on_joystick_movement(Vector2.ZERO)
 	main._dev_jump_mine(mine_id,1)
 	_gear("deepcore")
+	# Let the normal world-change companion spawn finish before placing it.
+	await main.get_tree().create_timer(0.2).timeout
 	RunState.overhaul_progress["skills"]={}
 	var world: Node2D=main.mine_world
 	var mole: Node2D=world.get_node("MoleCompanion")
