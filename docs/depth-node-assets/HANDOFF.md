@@ -1,0 +1,12 @@
+# Depth 2 node assets — DEV15.27
+
+Accepted source f107dcdc082f61e8c3e9d4c8211a54743b5834b1 on codex/depth-node-assets-20260929, based on DEV15.26 e6c52fd. Main is publication carrier; never rebuild historical main.
+
+Mats reported first-seen Depth2 ore looked like walls and changed after mining/respawn. Cause: _draw_mineral_hint selected a separate *-wall.png and rotated it toward the open side, whereas exposed/respawned ore used *-node.png. Both now share _draw_resource_node, using the existing upright node PNG, dimensions, origin and tint. No asset bytes changed. Covering terrain/concealment, gate rendering/requirements, damage/yield and save state remain unchanged. Buried ore can still be darker because existing solid terrain occludes the lamp; this is not a texture-loading failure.
+
+Validation36613811052 succeeded on macos-15:22 Chromium gates including40 lifecycle assertions (10 each in allfourbiomes), input/premium-core200, ordinary WebKit startup/save/reload/New Game. All26 PNGs inspected:4 original reference first-sight +16 candidate first/excavated/respawn/rebuilt +6 ordinary. Reference and candidate use their actual authored renewable nodes; reached corridor is an explicit fixture. Actual production terrain/ore mining and respawn update run; deadline explicitly advanced, not a physical-phone timer claim. Runtime Chromium ANGLE Metal Apple Paravirtual GPU DPR2/WebKit AppleGPU. Historical invariant QA register/docs mismatch remains separate and failing; FPS stays PARKED. No physical-iPhone claim.
+
+Candidate11055001142 ZIP SHA2567c1727a4220ad396b02127370a48e40c89d22fb628a49acab77a5e61524fae36. Evidence11054413309 ZIP SHA25663f1a57db32a44e50bd6baba20956a7fc3577c74e2df5844f5b929901764dd21. PCK265163378bytes SHA25670221d09fecf9deb5ebc223a8dc60ffcbf86f35ce9051ca1677f0bbac8d02010. All unchanged PCK resources byte-verified by build.
+
+Immutable publisher .github/depth-node-assets; preserve LIVE1.0.2 loading-rotation-1/Worn and DEV saves, verify all27 public hashes. Publication pending. Prospecting and mole respawn fixes retained.
+
