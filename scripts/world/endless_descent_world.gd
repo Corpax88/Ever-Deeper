@@ -3570,3 +3570,6 @@ func companion_work_hit(task: Dictionary) -> void:
 
 func companion_work_period() -> float:
 	return maxf(1.68, 3.0 * _mining_cycle_duration())
+
+func companion_hero_period(task: Dictionary = {}) -> float:
+	return _mining_cycle_duration()

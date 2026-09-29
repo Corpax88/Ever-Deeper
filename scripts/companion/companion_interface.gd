@@ -1,6 +1,7 @@
 extends Node
 
 const Skills = preload("res://scripts/companion/mole_skills.gd")
+var worm_power_remaining: float = 0.0
 var ui_root: Control
 var main: Node
 var journal: CompanionJournal
@@ -68,6 +69,10 @@ func _layout() -> void:
 	activity.add_theme_font_size_override("font_size",16 if mobile else 12)
 
 func _process(_delta: float) -> void:
+	if not bool(main.game_started): worm_power_remaining=0.0
+	var worker: MoleCompanion=active_mole()
+	if worker!=null and is_instance_valid(worker.hero) and bool(worker.hero.get("control_enabled")) and worker.world.is_visible_in_tree():
+		worm_power_remaining=maxf(0.0,worm_power_remaining-_delta)
 	# Crossing a seam in The Deep keeps the same companion and current command.
 	var identity: String=String(main.phase)+":"+String(main.current_mine_id)
 	if identity!=last_world_identity:

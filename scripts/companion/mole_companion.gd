@@ -1,6 +1,7 @@
 class_name MoleCompanion
 extends Node2D
 
+const Worms = preload("res://scripts/companion/earthworms.gd")
 const Separation = preload("res://scripts/companion/follow_separation.gd")
 const Skills = preload("res://scripts/companion/mole_skills.gd")
 const WALK: Texture2D = preload("res://assets/companion/walk.png")
@@ -26,6 +27,11 @@ var task_point: Vector2 = Vector2.ZERO
 var work_task: Dictionary = {}
 var work_clock: float = 0.0
 var work_hits: int = 0
+var auto_work_clock: float = 1.0
+var worm_patch: Node2D
+var eating_worm: Node2D
+var resume_work: Dictionary = {}
+var autonomous_enabled: bool = true
 var loot_id: String = ""
 var action: String = "idle"
 var animation_clock: float = 0.0
@@ -60,7 +66,7 @@ var echo_clock: float = 5.0
 var last_echo_origin: Vector2 = Vector2(INF,INF)
 var path_cooldown: float = 0.0
 var path_searches: int = 0
-const HELP_RADIUS: float = 300.0
+const HELP_RADIUS: float = 600.0
 const THINK_INTERVAL: float = 0.30
 
 
@@ -105,6 +111,10 @@ func _ready() -> void:
 	bubble.add_theme_constant_override("outline_size",5)
 	bubble.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bubble)
+	if world.has_method("companion_work_target"):
+		worm_patch = Worms.new()
+		worm_patch.mole = self
+		world.add_child.call_deferred(worm_patch)
 	visible = false
 
 func _physics_process(delta: float) -> void:
@@ -152,6 +162,22 @@ func _update_companion_actions(delta: float) -> void:
 	if not bool(hero.get("control_enabled")):
 		_draw_pose()
 		return
+	auto_work_clock = maxf(0.0,auto_work_clock-delta)
+	if is_instance_valid(worm_patch): worm_patch.tick(delta)
+	if mode == "worm" and not is_instance_valid(eating_worm): recall()
+	if action == "eat":
+		action_clock += delta
+		if action_clock >= 0.65:
+			if is_instance_valid(eating_worm):
+				worm_patch.eat(eating_worm)
+				_react("Worm power! 20 seconds",2.2)
+			var previous: Dictionary = resume_work.duplicate()
+			recall()
+			if not previous.is_empty(): _command_work(previous)
+		_draw_pose()
+		return
+	if action not in ["pickup","shake"] and mode in ["follow","work"] and _try_worm():
+		pass
 	auto_feedback_cooldown = maxf(0.0,auto_feedback_cooldown-delta)
 	path_cooldown = maxf(0.0,path_cooldown-delta)
 	sniff_clock = maxf(0.0,sniff_clock-delta)
@@ -192,6 +218,9 @@ func _update_companion_actions(delta: float) -> void:
 	var stop_radius: float = 50.0 if mode=="follow" else 9.0
 	if global_position.distance_to(destination)>stop_radius:
 		_move(delta)
+	elif mode=="worm":
+		action="eat"
+		action_clock=0.0
 	elif mode=="fetch":
 		action="pickup"
 		action_clock=0.0
@@ -207,7 +236,7 @@ func _update_companion_actions(delta: float) -> void:
 			mode="hold"
 			hold_time=0.0
 			_react("Here we are!",2.0)
-	if action not in ["pickup","shake","work"]:
+	if action not in ["pickup","shake","work","eat"]:
 		action = "walk" if moving else "idle"
 	_draw_pose()
 
@@ -233,6 +262,8 @@ func _spawn_beside_hero() -> void:
 	separation.reset()
 
 func recall() -> void:
+	resume_work.clear()
+	eating_worm=null
 	work_task.clear()
 	work_clock = 0.0
 	mode="follow"
@@ -255,9 +286,10 @@ func begin_tunnel_home() -> void:
 
 func rebase_world(offset: Vector2) -> void:
 	# Every remembered destination shares the world's floating local origin.
+	if is_instance_valid(worm_patch): worm_patch.rebase(offset)
 	global_position += offset
 	destination += offset
-	if mode == "work": recall()
+	if mode in ["work","worm"]: recall()
 	task_point += offset
 	if is_finite(route_goal.x): route_goal += offset
 	if is_finite(guide_point.x): guide_point += offset
@@ -326,6 +358,7 @@ func _think() -> void:
 				destination=Vector2(drop.position)
 				mode="fetch"
 				automatic_task=true
+	if mode=="follow" and _try_auto_work(): return
 	if mode=="follow": _auto_scout()
 
 func _mining_held() -> bool:
@@ -462,7 +495,7 @@ func _draw_pose() -> void:
 	var frame: int = 0
 	sprite.texture=WALK
 	if action=="walk": frame=int(animation_clock*8.0)%4
-	elif action=="pickup":
+	elif action in ["pickup","eat"]:
 		sprite.texture=PICKUP
 		frame=mini(3,int(action_clock/0.18))
 	elif action in ["shake", "tunnel", "work"]:
@@ -665,7 +698,7 @@ func _ping(point: Vector2) -> void:
 	marker.visible=true
 
 func debug_snapshot() -> Dictionary:
-	return {"mode":mode,"action":action,"position":global_position,"destination":destination,"collected":collected_total,"dug":dug_total,"frame":sprite.frame,"light":lamp.debug_snapshot(),"shake_cooldown":shake_cooldown,"automatic_task":automatic_task,"path_searches":path_searches,"work_hits":work_hits,"work_key":work_task.get("key","")}
+	return {"mode":mode,"action":action,"position":global_position,"destination":destination,"collected":collected_total,"dug":dug_total,"frame":sprite.frame,"light":lamp.debug_snapshot(),"shake_cooldown":shake_cooldown,"automatic_task":automatic_task,"path_searches":path_searches,"work_hits":work_hits,"work_key":work_task.get("key",""),"worm":worm_patch.snapshot() if is_instance_valid(worm_patch) else {},"period":work_period() if world.has_method("companion_work_period") else 0.0}
 
 func _react(message: String, duration: float=2.0, automatic: bool=false) -> void:
 	if automatic:
@@ -678,6 +711,8 @@ func pet() -> void:
 	_react("Happy little paws!",2.5)
 
 func status_text() -> String:
+	if _worm_boost() > 0.0: return "Worm power · %ds" % ceili(_worm_boost())
+	if mode == "worm": return "Found a tasty worm!"
 	if mode == "work": return "Mining for you" if action == "work" else "Off to mine"
 	if action=="pickup": return "Scooping up ore"
 	if action=="shake": return "Helping you dig!" if assist_action else "Earthshaker!"
@@ -711,7 +746,7 @@ func _path_segment_clear(a: Vector2, b: Vector2, results: Dictionary) -> bool:
 		if _path_point_blocked(a.lerp(b,float(i)/float(steps)),results): return false
 	return true
 
-func _command_work(task: Dictionary) -> bool:
+func _command_work(task: Dictionary, automatic: bool = false) -> bool:
 	var point: Vector2 = task.point
 	if point.distance_to(hero.global_position)>HELP_RADIUS:
 		_react("A little closer?",2.2)
@@ -724,20 +759,23 @@ func _command_work(task: Dictionary) -> bool:
 			var candidate: Vector2 = point+Vector2.from_angle(float(index)*TAU/16.0)*radius
 			var score: float = global_position.distance_squared_to(candidate)
 			if score>=best or _blocked(candidate) or not _work_line_clear(candidate,point): continue
-			if not _segment_clear(global_position,candidate) and _path_to(candidate).is_empty(): continue
+			if not _segment_clear(global_position,candidate):
+				if automatic or _path_to(candidate).is_empty(): continue
 			if world.has_method("_clear_mining_line") and not world.call("_clear_mining_line",candidate,point,true): continue
 			landing=candidate
 			best=score
 	if not is_finite(landing.x):
-		_react("Need an open path",2.0)
+		if not automatic: _react("Need an open path",2.0)
 		return false
 	recall()
 	work_task=task.duplicate()
 	task_point=point
 	destination=landing
 	mode="work"
-	_ping(point)
-	_react("I'll mine this for you!",2.2)
+	automatic_task=automatic
+	if not automatic:
+		_ping(point)
+		_react("I'll mine this for you!",2.2)
 	return true
 
 func _work_valid() -> bool:
@@ -752,7 +790,7 @@ func _update_work(delta: float) -> void:
 	facing=(task_point-global_position).normalized()
 	action_clock+=delta
 	work_clock+=delta
-	if work_clock < float(world.companion_work_period()): return
+	if work_clock < work_period(): return
 	work_clock=0.0
 	world.companion_work_hit(work_task)
 	work_hits+=1
@@ -773,3 +811,47 @@ func _work_line_clear(from: Vector2, to: Vector2) -> bool:
 			if not world._is_floor(world._world_to_cell(point)): return false
 		elif world.blocks.has(world._world_to_cell(point)): return false
 	return true
+
+func _worm_boost() -> float:
+	return float(worm_patch.boost_remaining()) if is_instance_valid(worm_patch) else 0.0
+
+func work_period() -> float:
+	if _worm_boost() > 0.0: return float(world.companion_hero_period(work_task))
+	return float(world.companion_work_period())
+
+func _try_worm() -> bool:
+	if not is_instance_valid(worm_patch) or _worm_boost()>0.0: return false
+	var worm: Node2D = worm_patch.nearest(global_position)
+	if not is_instance_valid(worm): return false
+	resume_work = work_task.duplicate() if mode=="work" and not automatic_task else {}
+	eating_worm=worm
+	destination=worm.global_position
+	mode="worm"
+	action="idle"
+	automatic_task=true
+	route.clear()
+	return true
+
+func _try_auto_work() -> bool:
+	if not autonomous_enabled or auto_work_clock>0.0 or not world.has_method("companion_work_target"): return false
+	auto_work_clock=1.0
+	var points: Array[Vector2] = []
+	var tile: float = 64.0 if world.has_method("_is_floor") else 48.0
+	var origin: Vector2=global_position
+	# Bounded local scan, one per second. Prefer nearby exposed resources.
+	for radius in [48.0,96.0,144.0,216.0,288.0]:
+		for i in 12:
+			var point: Vector2=origin+Vector2.from_angle(float(i)*TAU/12.0)*radius
+			if not world.has_method("_surface_collides"): point=world._cell_center(world._world_to_cell(point))
+			points.append(point)
+	var seen: Dictionary = {}
+	var attempts: int = 0
+	for point in points:
+		if point.distance_to(hero.global_position)>HELP_RADIUS: continue
+		var task: Dictionary=world.companion_work_target(point)
+		if task.is_empty() or seen.has(task.key): continue
+		seen[task.key]=true
+		attempts+=1
+		if _command_work(task,true): return true
+		if attempts>=6: break
+	return false

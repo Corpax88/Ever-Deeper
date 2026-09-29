@@ -4523,6 +4523,16 @@ func _sanitize_overhaul(raw: Variant) -> Dictionary:
 				if id is String:
 					rows[id] = clampi(_nonnegative_int(entries[id], 0), 0, 10 if key == "barriers" else 1)
 		result[key] = rows
+	var shrine_times: Dictionary = {}
+	var incoming: Variant = source.get("shrine_respawn", {})
+	if incoming is Dictionary:
+		var now: float = Time.get_unix_time_from_system()
+		for id in incoming:
+			if shrine_times.size()>=256: break
+			if not id is String or not (incoming[id] is int or incoming[id] is float): continue
+			var until: float=float(incoming[id])
+			if is_finite(until) and until>now: shrine_times[id]=minf(until,now+120.0)
+	result["shrine_respawn"]=shrine_times
 	result["companion_xp"] = clampi(_nonnegative_int(source.get("companion_xp", 0), 0), 0, 10000000)
 	return result
 

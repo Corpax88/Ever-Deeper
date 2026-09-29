@@ -1,5 +1,7 @@
 extends Node2D
 
+const ShrineRespawn = preload("res://scripts/world/shrine_respawn.gd")
+
 const LitFloorChunksScript = preload("res://scripts/lighting/lit_floor_chunks.gd")
 const LitDrawSectionsScript = preload("res://scripts/lighting/lit_draw_sections.gd")
 var lit_floor_chunks: Node2D
@@ -187,6 +189,7 @@ var mining_visual_running: = false
 var heat_streak_elapsed: = 0.0
 var heat_streak_active: = false
 var mining_rush_remaining: = 0.0
+var shrine_waiting: Dictionary = {}
 var work_lamps: Array[Node] = []
 var work_light_anchors: Array[Dictionary] = []
 var last_light_refresh_position: = Vector2(INF, INF)
@@ -404,6 +407,10 @@ func _process(delta: float) -> void :
 			_request_redraw()
 	_update_mining(delta)
 	_update_pocket_rewards()
+	for id in shrine_waiting.keys():
+		if ShrineRespawn.remaining(String(id))<=0.0:
+			shrine_waiting.erase(id)
+			_request_redraw()
 	if mining_rush_remaining > 0.0:
 		mining_rush_remaining = maxf(0.0, mining_rush_remaining - delta)
 	_update_drops(delta)
@@ -1171,7 +1178,14 @@ func _claim_pocket_reward(cavern_id: String) -> Dictionary:
 	var kind: = String(reward.kind)
 	if kind in ["crystal", "motherlode"]:
 		return {"ok": false, "reason": "deposit_not_cleared", "reward_id": reward_id}
-	var plan: Dictionary = RunState.claim_pocket_reward(reward_id)
+	var plan: Dictionary
+	if kind=="shrine":
+		if ShrineRespawn.remaining(reward_id)>0.0: return {"ok":false,"reason":"recharging"}
+		ShrineRespawn.claim(reward_id)
+		shrine_waiting[reward_id]=true
+		plan={"ok":true,"mining_rush_seconds":MINING_RUSH_DURATION,"reward_id":reward_id,"kind":kind}
+	else:
+		plan=RunState.claim_pocket_reward(reward_id)
 	if not bool(plan.get("ok", false)):
 		return plan
 	var center: = Vector2(float(cavern.x), float(cavern.y) + 12.0)
@@ -1235,6 +1249,10 @@ func _reward_by_id(reward_id: String) -> Dictionary:
 
 
 func _pocket_reward_is_claimed(reward_id: String) -> bool:
+	if String(_reward_by_id(reward_id).get("kind",""))=="shrine":
+		var waiting: bool=ShrineRespawn.remaining(reward_id)>0.0
+		if waiting: shrine_waiting[reward_id]=true
+		return waiting
 	return RunState.is_pocket_reward_claimed(reward_id)
 
 
@@ -2997,3 +3015,9 @@ func companion_work_hit(task: Dictionary) -> void:
 
 func companion_work_period() -> float:
 	return maxf(1.68, 3.0 * float(_current_tool().get("cooldown",0.72)))
+
+func companion_hero_period(task: Dictionary = {}) -> float:
+	var period: float = float(_current_tool().get("cooldown",0.72)) / _heat_streak_speed()
+	if mining_rush_remaining>0.0: period*=MINING_RUSH_COOLDOWN_MULTIPLIER
+	if task.has("cell") and blocks.has(task.cell) and _is_barrier_role(String(blocks[task.cell].get("role",""))): return 0.60
+	return period

@@ -5939,3 +5939,6 @@ func _companion_working_mountain(key: String) -> bool:
 	if not is_visible_in_tree() or not player.control_enabled: return false
 	var mole: Node = get_node_or_null("MoleCompanion")
 	return mole != null and mole.mode == "work" and String(mole.work_task.get("key","")) == key
+
+func companion_hero_period(task: Dictionary = {}) -> float:
+	return float(_mountain_tool().get("cooldown",0.72))

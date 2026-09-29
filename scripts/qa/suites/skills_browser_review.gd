@@ -17,6 +17,34 @@ var mole_case: String = ""
 var mole_checks: Dictionary = {}
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind)=="mole_auto":
+		command_id=int(data.id)
+		var mole: Node=main.get_node("CompanionInterface").active_mole()
+		mole.recall()
+		mole.autonomous_enabled=true
+		mole.auto_work_clock=0.0
+		return
+	if String(data.kind)=="worm_fixture":
+		command_id=int(data.id)
+		var mole: Node=main.get_node("CompanionInterface").active_mole()
+		mole.autonomous_enabled=false
+		mole.recall()
+		for worm in mole.worm_patch.worms:
+			worm.queue_free()
+		mole.worm_patch.worms.clear()
+		mole.worm_patch.spawn_clock=999.0
+		var worm: Node2D=mole.worm_patch.spawn_nearby()
+		_require(worm!=null,"reachable worm")
+		return
+	if String(data.kind)=="worm_random":
+		command_id=int(data.id)
+		var mole: Node=main.get_node("CompanionInterface").active_mole()
+		mole.worm_patch.spawn_clock=0.0
+		return
+	if String(data.kind)=="shrine_test":
+		command_id=int(data.id)
+		_test_shrines()
+		return
 	if String(data.kind) == "mole_fixture":
 		command_id = int(data.id)
 		_mole_fixture(String(data.scenario))
@@ -162,7 +190,7 @@ func _frame() -> void:
 		var p: Vector2 = world.get_canvas_transform()*mole_target
 		var cancel: Vector2 = world.get_canvas_transform()*world.player.global_position
 		var current: Dictionary = world.companion_work_target(mole_target)
-		state["work"] = {"scenario":mole_case,"target":[p.x,p.y],"cancel":[cancel.x,cancel.y],"key":mole_task_key,"remaining":current.get("key","")==mole_task_key,"mole":mole.debug_snapshot(),"period":world.companion_work_period(),"power":world._mountain_tool().get("power",1) if world.has_method("_mountain_tool") else 0,"checks":mole_checks,"feedback":mole.feedback}
+		state["work"] = {"scenario":mole_case,"target":[p.x,p.y],"cancel":[cancel.x,cancel.y],"key":mole_task_key,"remaining":current.get("key","")==mole_task_key,"mole":mole.debug_snapshot(),"period":world.companion_work_period(),"power":world._mountain_tool().get("power",1) if world.has_method("_mountain_tool") else 0,"checks":mole_checks,"feedback":mole.feedback,"hero_period":world.companion_hero_period(mole.work_task)}
 	JavaScriptBridge.eval("Object.assign(window.DEV14_STATE," + JSON.stringify(state) + ")", true)
 
 func _bounds(control: Control) -> Array:
@@ -259,4 +287,37 @@ func _mole_fixture(scenario: String) -> void:
 	var mole: Node2D=world.get_node("MoleCompanion")
 	mole._spawn_beside_hero()
 	mole.work_hits=0
+	mole.autonomous_enabled=false
+	mole.auto_work_clock=0.0
+	main.get_node("CompanionInterface").worm_power_remaining=0.0
+	if is_instance_valid(mole.worm_patch): mole.worm_patch.spawn_clock=999.0
 	main._refresh_hud()
+
+func _test_shrines() -> void:
+	var timers=load("res://scripts/world/shrine_respawn.gd")
+	mole_checks={}
+	for depth in [1,2]:
+		main._dev_jump_mine("mossMine",depth)
+		var world: Node=main.mine_world if depth==1 else main.depth_world
+		var caverns: Array=world.cavern_by_id.values() if depth==1 else world.caverns
+		for index in caverns.size():
+			var cavern: Dictionary=caverns[index]
+			if String(cavern.reward.kind)!="shrine": continue
+			var id: String=String(cavern.reward.id)
+			RunState.mark_cavern_discovered(String(cavern.id))
+			RunState.claimed_pocket_rewards[id]=true
+			RunState.overhaul_progress["shrine_respawn"]={}
+			if depth==2: world.shrine_cooldowns.clear()
+			mole_checks["old-shrine-revives-"+str(depth)]=not world._pocket_reward_is_claimed(id)
+			var plan: Dictionary=world._claim_pocket_reward(String(cavern.id)) if depth==1 else world._claim_pocket_reward(index)
+			mole_checks["claim-"+str(depth)]=bool(plan.get("ok",false)) and world.mining_rush_remaining>0.0
+			mole_checks["120-seconds-"+str(depth)]=timers.remaining(id)>119.0 and timers.remaining(id)<=120.0
+			var clean: Dictionary=RunState._sanitize_overhaul(RunState.overhaul_progress)
+			mole_checks["save-timer-"+str(depth)]=Dictionary(clean.get("shrine_respawn",{})).has(id)
+			RunState.overhaul_progress["shrine_respawn"][id]=Time.get_unix_time_from_system()+0.2
+			if depth==2: world.shrine_cooldowns[id]=0.2
+			mole_checks["before-expiry-"+str(depth)]=world._pocket_reward_is_claimed(id)
+			RunState.overhaul_progress["shrine_respawn"][id]=Time.get_unix_time_from_system()-0.1
+			if depth==2: world._update_shrine_cooldowns(0.3)
+			mole_checks["after-expiry-"+str(depth)]=not world._pocket_reward_is_claimed(id)
+			break

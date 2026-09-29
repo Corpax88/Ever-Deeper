@@ -1,6 +1,8 @@
 class_name RootwoundWorld
 extends Node2D
 
+const ShrineRespawn = preload("res://scripts/world/shrine_respawn.gd")
+
 const LitFloorChunksScript = preload("res://scripts/lighting/lit_floor_chunks.gd")
 var lit_floor_chunks: Node2D
 const LitDrawSectionsScript = preload("res://scripts/lighting/lit_draw_sections.gd")
@@ -41,7 +43,7 @@ const CAMERA_REDRAW_DISTANCE: = 8.0
 const ROCK_RESPAWN_CHECK_INTERVAL: = 0.1
 const SHAFT_CONTEXT_RADIUS: = 118.0
 const MINING_RUSH_DURATION: = 30.0
-const SHRINE_RESPAWN_SECONDS: = 75.0
+const SHRINE_RESPAWN_SECONDS: = 120.0
 const MINING_RUSH_COOLDOWN_MULTIPLIER: = 0.65
 const HEAT_STREAK_BUILD_SECONDS: = 5.0
 const HEAT_STREAK_MAX_SPEED: = 1.3
@@ -1766,7 +1768,7 @@ func _claim_pocket_reward(cavern_index: int) -> Dictionary:
 	var kind: = String(reward.kind)
 	var plan: Dictionary
 	if kind == "shrine":
-		var cooldown: = float(shrine_cooldowns.get(reward_id, 0.0))
+		var cooldown: = maxf(float(shrine_cooldowns.get(reward_id, 0.0)),ShrineRespawn.remaining(reward_id))
 		if cooldown > 0.0:
 			return {"ok": false, "reason": "recharging", "remaining": cooldown}
 		plan = {
@@ -1781,6 +1783,7 @@ func _claim_pocket_reward(cavern_index: int) -> Dictionary:
 	if not bool(plan.get("ok", false)):
 		return plan
 	if kind == "shrine":
+		ShrineRespawn.claim(reward_id)
 		shrine_cooldowns[reward_id] = SHRINE_RESPAWN_SECONDS
 	else:
 		claimed_rewards[reward_id] = true
@@ -1809,7 +1812,7 @@ func _reward_by_id(reward_id: String) -> Dictionary:
 
 func _pocket_reward_is_claimed(reward_id: String) -> bool:
 	if String(_reward_by_id(reward_id).get("kind", "")) == "shrine":
-		return float(shrine_cooldowns.get(reward_id, 0.0)) > 0.0
+		return maxf(float(shrine_cooldowns.get(reward_id, 0.0)),ShrineRespawn.remaining(reward_id)) > 0.0
 	if RunState.has_method("is_pocket_reward_claimed"):
 		return RunState.is_pocket_reward_claimed(reward_id)
 	return bool(claimed_rewards.get(reward_id, false))
@@ -3342,3 +3345,9 @@ func companion_work_hit(task: Dictionary) -> void:
 
 func companion_work_period() -> float:
 	return maxf(1.68, 3.0 * float(_current_tool().get("cooldown",0.72)))
+
+func companion_hero_period(task: Dictionary = {}) -> float:
+	var period: float = float(_current_tool().get("cooldown",0.72)) / _heat_streak_speed()
+	if mining_rush_remaining>0.0: period*=MINING_RUSH_COOLDOWN_MULTIPLIER
+	if task.has("rock") and bool(rocks[int(task.rock)].drill_gated): return 0.60
+	return period
