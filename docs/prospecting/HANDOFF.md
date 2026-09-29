@@ -8,5 +8,4 @@ Validation36600046119 succeeded:213 production/math checks,20 browser gates, inp
 
 Candidate11048253003 ZIP SHA256 bc648f54357026e06bcb614cef2b93c0d1f6bd52b44215ba61a540a75adbe424. Evidence11048377795 ZIP SHA256 5f857e3cc8e2611d954fb02551027a1db8661738600f7f4115669c9c52fa72b5. PCK265159218 bytes SHA256167d28b9bfff662a0961024c38020ebc83c8263f8b0a001ff6eebcda61dabe96.
 
-Immutable publication configured in .github/prospecting and publish-prospecting.yml. Preserve LIVE1.0.1 and Worn bytes, verify all27 public files. Publication pending.
-
+Immutable publication configured in .github/prospecting and publish-prospecting.yml. Preserve LIVE1.0.2 loading-rotation-1 and Worn bytes, verify all27 public files. Published successfully by 77f370534ec061ccdd63c70f212ec45b7bdf5261 / run36600858534. All27 public hashes verified; LIVE/Worn unchanged. Receipt11048838538, rollbackDEV15.25 artifact11048663948. No pending work. Next: reload DEV normally and user feedback; do not repeat completed unchanged tests.

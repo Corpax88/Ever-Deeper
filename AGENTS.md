@@ -1,3 +1,7 @@
+# Current release — DEV15.26 Prospecting ore bonus (29 September 2026)
+
+Published and verified. +0.5 percentage points per level chance for one extra ore after tool multipliers (25% at50,50% at100). Existing levels retained; no stone bonus or pickup rerolls. Sourcee6c52fd93048300d069bfbae44ab12d28b7caf9d on codex/prospecting-20260929; never rebuild historical main. Read [current handoff](docs/prospecting/HANDOFF.md). Validation36600046119:213 production/math checks,20 browser gates, input/premium-core200 and ordinary WebKit;13 actual captures inspected. Publication36600858534 verifies27publichashes; LIVE/Worn unchanged. Mole respawn fix retained. No pending work; FPS PARKED. Historical invariant mismatch disclosed; no physical-iPhone claim.
+
 # Current release — DEV15.25 mole ore-collision fix (29 September 2026)
 
 Published and verified. Renewable depth-one resource veins no longer trap the mole; terrain, bedrock, barriers and hero collision remain intact. Sourcee231cc934ac0d97d2799036b3b10c875aa1c3397 on codex/mole-collision-20260929; never rebuild historical main. Read [current handoff](docs/mole-collision/HANDOFF.md). Validation36597423462 passed54 browser checks, input/premium-core200 and ordinary WebKit;21 actual captures inspected, allfourbiomes start inside respawn then escape. Publication36598118833 verifies27publichashes; LIVE/Worn preserved. No pending work; FPS PARKED. Historical QA invariant mismatch remains disclosed; no physical-iPhone claim.
