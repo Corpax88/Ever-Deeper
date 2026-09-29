@@ -652,7 +652,13 @@ func _deep_check(name_value: String, passed: bool) -> void:
 
 func _deep_command(kind: String) -> void:
 	var w: Node = main.endless_world
-	if kind == "deep_fixture":
+	if kind == "deep_hub":
+		main._dev_jump_hub()
+		main._dev_seed_victory_state()
+		main.hub_world._refresh_backend_state()
+		main.hub_world.restore_position(main.hub_world.DEEP_ELEVATOR+Vector2(-74,96))
+		_deep_check("hub-elevator-complete",String(main.hub_world.elevator_status.stage)=="complete")
+	elif kind == "deep_fixture":
 		main._dev_jump_endless(1)
 		_gear("deepcore")
 		await main.get_tree().process_frame

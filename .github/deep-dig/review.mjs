@@ -49,7 +49,7 @@ try{
  runtime=await page.evaluate(()=>{const g=document.querySelector('canvas').getContext('webgl2'),e=g.getExtension('WEBGL_debug_renderer_info');return {renderer:e?g.getParameter(e.UNMASKED_RENDERER_WEBGL):null,lost:g.isContextLost(),dpr:devicePixelRatio};});
  check('graphical-renderer',runtime.renderer&&!runtime.lost&&!/SwiftShader|llvmpipe|software/i.test(runtime.renderer),{runtime});
 
- await command('hub');await ready();await delay(500);await shot('hub-elevator');
+ await command('deep_hub');await ready();await delay(500);await shot('hub-elevator');
  await command('deep_fixture');await ready();await delay(500);await shot('solid-entrance');
  const stick=await point('joystick'),mine=await point('hud_mine');
  const finger=(id,p)=>({id,...p,radiusX:5,radiusY:5,force:1});
