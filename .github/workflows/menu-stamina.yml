@@ -24,6 +24,7 @@ jobs:
             .github/diagnostics-v2
             scripts
             tools
+            docs
       - uses: actions/download-artifact@v4
         with:
           artifact-ids: '${{ matrix.artifact }}'

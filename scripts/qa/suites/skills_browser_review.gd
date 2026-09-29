@@ -89,7 +89,7 @@ func _frame() -> void:
 		"dev_toggle": (_bounds(main.developer_menu.toggle_button) if is_instance_valid(main.developer_menu) else []),
 		"new_game": _bounds(main.premium_menu.main_card.get_node("NewGame")),
 		"continue": _bounds(main.premium_menu.continue_button),
-		"shop_close": _bounds(main.commerce_panel.cancel_button),
+		"shop_close": _bounds(main.commerce_panel.close_button),
 		"settings_back": _bounds(main.premium_menu.detail_card.get_node("Back")),
 		"skills_close": _bounds(panel.close_button),
 		"joystick": _bounds(main.movement_pad),
