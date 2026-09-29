@@ -1,0 +1,24 @@
+{
+  "accepted": true,
+  "images_inspected": true,
+  "source": "147e4dfe997e9166b0a086d977a9c6d1e09ab58d",
+  "run": 36569827357,
+  "artifact": 11033422171,
+  "digest": "sha256:78a32398dc72e080693ef5c3640381cf360d575aaf674c82d7f136e7564cfaae",
+  "evidence_artifact": 11033531964,
+  "reviewed_files": {
+    "build.py": "444e16241802a1fed966710381f3402dee8a444a7e9feadacf3f1074ee3094dd",
+    "review.mjs": "a69da8a83632d3c858e92f8176694ab8ab6866fed85de527b43be3229a9b7e79",
+    "publish.py": "5bbd7664f1dd4ea0eef3ede6a4708f0ea052f4144a6484601fe23cdaad15f640",
+    "manifest.json": "c17766740d8ff9d3cd27122ffedbf412e7e457a386f05e22f7ad232e7165678e",
+    "baseline.json": "25e84f6b2e4b6d01a1da0d0ba6e27aae30f29b6f9f57a79a2be3ad22b971d34c",
+    "public-before.json": "77b425ab055dbdb6fa391c4dede56d7562c803b35bef847b97abe3a05c128ddf",
+    "evidence/report.json": "beb59962882b8ee03f4f2f1265b40a78bf26042bda3e5e9011ebadbda2e1c791"
+  },
+  "review": {
+    "code": "Scoped fixed overlay, visualViewport resize/scroll and window rotation, coalesced updates, listeners removed at ready. Runtime/engine/image bytes unchanged.",
+    "visual": "All13 actual WebKit PNGs inspected, centered approved splash and visible bar in both orientations.",
+    "coverage": "25 gates; actual WebKit resize cold/reload, deterministic visual/layout viewport mismatch baseline fails and candidate passes, ordinary startup twice AppleGPU DPR2.",
+    "limitation": "No physical iPhone or actual Safari toolbar reproduction; mismatch fixture is explicitly synthetic."
+  }
+}
