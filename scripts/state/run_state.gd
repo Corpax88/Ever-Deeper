@@ -149,6 +149,10 @@ var _stamina_rest: float = 0.0
 var _miner_level_cache: Dictionary = {}
 
 var overhaul_progress: Dictionary = {}
+var treasury_totals: Dictionary = {}
+var treasury_inside: bool = false
+var deep_events: Dictionary = {}
+
 var gold: = 0
 var pickaxe_level: = 1
 var ember_mastery: = 0
@@ -2311,6 +2315,7 @@ func collect_mine_loose_loot(
 
 
 func set_location(scene: String, position: Vector2, depth: int = 1) -> bool:
+	if scene != "hub": treasury_inside = false
 	if not VALID_SCENES.has(scene) or not _valid_vector(position):
 		return false
 	if scene == "hub" and not is_hub_unlocked():
@@ -2540,6 +2545,9 @@ func serialize() -> Dictionary:
 			"overhaul": _sanitize_overhaul(overhaul_progress),
 			"miner_skills": MinerSkills.clean(miner_skills),
 			"miner_skills_balance": MinerSkills.BALANCE_REVISION,
+			"treasury": treasury_totals.duplicate(true),
+			"treasury_inside": treasury_inside,
+			"deep_events": deep_events.duplicate(true),
 			"gold": gold,
 			"pickaxe_level": pickaxe_level,
 			"ember_mastery": ember_mastery,
@@ -2621,6 +2629,9 @@ func deserialize(raw: Variant) -> bool:
 	var source: Dictionary = raw.state
 	_apply_defaults(false)
 	overhaul_progress = _sanitize_overhaul(source.get("overhaul", {}))
+	treasury_totals = preload("res://scripts/state/treasury_state.gd").clean(source.get("treasury", {}))
+	treasury_inside = source.get("treasury_inside", false) == true and String(Dictionary(source.get("location", {})).get("scene", "")) == "hub"
+	deep_events = preload("res://scripts/world/deep_events.gd").clean(source.get("deep_events", {}))
 	gold = _nonnegative_int(source.get("gold"), 0)
 	var data: = _game_data()
 	pickaxe_level = clampi(
@@ -2967,6 +2978,9 @@ func _flush_queued_autosave() -> void :
 
 
 func _apply_defaults(emit_change: bool = true) -> void :
+	treasury_totals = {}
+	treasury_inside = false
+	deep_events = {}
 	miner_skills = MinerSkills.defaults()
 	_stamina_rest = 0.0
 	_miner_level_cache.clear()

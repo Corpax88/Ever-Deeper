@@ -33,6 +33,10 @@ var ore_escape_goal: Vector2
 var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind).begins_with("treasury_"):
+		await _treasury_command(data)
+		command_id=int(data.id)
+		return
 	if String(data.kind).begins_with("deep_"):
 		await _deep_command(String(data.kind))
 		command_id=int(data.id)
@@ -185,7 +189,7 @@ func _frame() -> void:
 		"settings_back": _bounds(main.premium_menu.detail_card.get_node("Back")),
 		"skills_close": _bounds(panel.close_button),
 		"joystick": _bounds(main.movement_pad),
-		"hud_mine": _bounds(main.mine_button), "hud_bag": _bounds(main.premium_hud.bag_button),
+		"hud_context":_bounds(main.premium_hud.context_button), "hud_mine": _bounds(main.mine_button), "hud_bag": _bounds(main.premium_hud.bag_button),
 		"hud_guide": _bounds(main.premium_hud.guide_button),
 		"hud_mole": _bounds(main.get_node("CompanionInterface").button),
 		"mole_close": _bounds(main.get_node("CompanionInterface").journal.content.get_node("CloseJournal"))}
@@ -240,6 +244,10 @@ func _frame() -> void:
 	if ore_escape_active:
 		var mole: Node2D=ui.active_mole()
 		state["ore_escape"]={"distance":mole.global_position.distance_to(ore_escape_origin),"remaining":mole.global_position.distance_to(ore_escape_goal),"checks":mole_checks,"mode":mole.mode}
+	state["treasury"]=main.hub_world.treasury.snapshot()
+	state["deep_events"]=main.endless_world.deep_events.snapshot()
+	state["hub_context"]=main.hub_context
+	state["hub_player"]=[main.hub_world.player.position.x,main.hub_world.player.position.y]
 	state["deep_dig"]={"checks":deep_checks,"held":main.endless_world.external_mine_held,"movement":[main.endless_world.player.external_movement.x,main.endless_world.player.external_movement.y]}
 	state["node_assets"]=node_asset_state
 	state["prospecting"]={"checks":prospect_checks,"results":prospect_results,"level":RunState.miner_skill_level("prospecting")}
@@ -766,3 +774,53 @@ func _deep_command(kind: String) -> void:
 		_deep_check("deep-anchor-reload",w.player.global_position.distance_to(anchor)<1.0)
 		w.set_process(true)
 		w.player.set_physics_process(true)
+
+
+func _treasury_command(data: Dictionary) -> void:
+	var room: Node=main.hub_world.treasury
+	match String(data.kind):
+		"treasury_fixture":
+			main._dev_jump_hub()
+			main._dev_seed_victory_state()
+			await main.get_tree().process_frame
+			RunState.treasury_totals={}
+			RunState.cargo=RunState._empty_resource_store()
+			RunState.cargo.stone=800
+			RunState.cargo.copper=400
+			RunState.cargo.echo_crystal=180
+			RunState.gold=2000
+			main.hub_world.restore_position(main.hub_world.TREASURY_DOOR+Vector2(-30,0))
+			main.hub_world._refresh_backend_state()
+		"treasury_door":
+			main.hub_world.restore_position(main.hub_world.TREASURY_DOOR+Vector2(-30,0))
+		"treasury_zone":
+			main.hub_world.restore_position(room.ZONE+Vector2(-115,0))
+		"treasury_exit_approach":
+			main.hub_world.restore_position(room.EXIT+Vector2(70,0))
+		"treasury_save":
+			RunState.set_location("hub",main.hub_world.player.global_position)
+			_require(RunState.flush_save(),"treasury actual save")
+		"treasury_restore":
+			room.stop()
+			_require(RunState.load_game(),"treasury actual load")
+			main.hub_world.restore_position(RunState.current_position)
+			room.refresh_piles()
+		"treasury_full":
+			room.stop()
+			for kind in room.Ledger.keys(): RunState.treasury_totals[kind]=10000
+			room.refresh_piles()
+		"treasury_shop":
+			if room.inside: room.leave()
+			RunState.cargo.stone=100
+			main.hub_world.restore_position(main.hub_world.HUB_SHOP+Vector2(0,85))
+		"treasury_event":
+			main._dev_jump_endless(1)
+			_gear("deepcore")
+			await main.get_tree().process_frame
+			var w: Node=main.endless_world
+			var state: Dictionary=w.deep_events.state()
+			state.next=int(state.mined)+1
+			state.remaining=0.0
+			w.deep_events.on_rock(w._world_to_cell(w.player.global_position))
+			state.kind=String(data.get("event","ancient_core"))
+			w.deep_events._refresh_visuals()

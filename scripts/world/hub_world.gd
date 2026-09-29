@@ -21,6 +21,11 @@ signal message_changed(message: String)
 signal workshop_panel_requested(workshop_id: String)
 signal workshop_action_committed(transaction: Dictionary)
 
+const TreasuryRoom = preload("res://scripts/world/treasury_room.gd")
+const TREASURY_DOOR: Vector2 = Vector2(1285, 766)
+const HUB_SHOP: Vector2 = Vector2(1100, 742)
+var treasury: Node2D
+
 const WORLD_SIZE: = Vector2(1440, 960)
 const WALK_MIN: = Vector2(124, 124)
 const WALK_MAX: = WORLD_SIZE - Vector2(124, 124)
@@ -164,6 +169,9 @@ func _ready() -> void :
 	static_light_field = StaticLightFieldScript.new()
 	add_child(static_light_field)
 	_draw_canvas = self
+	treasury = TreasuryRoom.new()
+	add_child(treasury)
+	treasury.setup(self)
 	_configure_player(PLAYER_SPAWN)
 	player.set_facing(Vector2.RIGHT)
 	player.moved.connect(_on_player_moved)
@@ -196,6 +204,7 @@ func set_active(enabled: bool, entering: bool = false) -> void :
 	else:
 		player.release_visual_cache()
 	if not enabled:
+		if treasury.inside: treasury.leave(false)
 		_clear_workshop_presentation("inactive")
 		clear_workshop_panel_preview()
 		player.set_external_movement(Vector2.ZERO)
@@ -216,6 +225,8 @@ func entry_spawn() -> Vector2:
 
 
 func restore_position(position: Vector2) -> void :
+	if RunState.treasury_inside and not treasury.inside: treasury.enter()
+	elif not RunState.treasury_inside and treasury.inside: treasury.leave(false)
 	player.global_position = _nearest_safe_hub_position(position)
 	player.camera.reset_smoothing()
 	_on_player_moved(player.global_position)
@@ -300,6 +311,20 @@ func qa_set_hub_relic_endpoint(position: Vector2) -> bool:
 
 func perform_context() -> String:
 	match active_context:
+		"treasuryLocked":
+			message_changed.emit("TREASURY · opens after the Deepheart")
+			return "treasuryLocked"
+		"treasuryEnter":
+			treasury.enter()
+			return "treasuryEnter"
+		"treasuryExit":
+			treasury.leave()
+			return "treasuryExit"
+		"hubSell":
+			var earned: int = RunState.sell_all()
+			if earned > 0: AudioDirector.play_economy("sell")
+			message_changed.emit("ORE EXCHANGED · %d GOLD" % earned if earned > 0 else "NO SELLABLE ORE · protected materials retained")
+			return "hubSell"
 		"hubExit":
 			hub_exit_requested.emit()
 			return "hubExit"
@@ -414,6 +439,9 @@ func _process(delta: float) -> void :
 	if not active:
 		return
 
+	if treasury.inside:
+		treasury.tick(delta)
+		return
 	_update_relic_rope(delta)
 	_update_feedback(delta)
 	_update_workshop_presentation(delta)
@@ -1157,6 +1185,7 @@ func _resolve_motion(origin: Vector2, motion: Vector2) -> Vector2:
 
 
 func _hub_wall_collision(position: Vector2) -> bool:
+	if treasury != null and treasury.inside: return treasury.collision(position)
 	return position.x < WALK_MIN.x or position.y < WALK_MIN.y or position.x > WALK_MAX.x or position.y > WALK_MAX.y or _station_collision(position)
 
 
@@ -1181,6 +1210,7 @@ func _ensure_player_safe(escape_hint: Vector2 = Vector2.ZERO) -> bool:
 func _nearest_safe_hub_position(
 	preferred: Vector2, escape_hint: Vector2 = Vector2.ZERO
 ) -> Vector2:
+	if treasury != null and treasury.inside: return treasury.safe_position(preferred)
 	var minimum: = WALK_MIN
 	var maximum: = WALK_MAX
 	var origin: = preferred.clamp(minimum, maximum)
@@ -1212,6 +1242,7 @@ func _nearest_safe_hub_position(
 
 
 func _station_collision(position: Vector2) -> bool:
+	if position.distance_to(HUB_SHOP + Vector2(0,-30)) < 54: return true
 	if RunState.victory and position.distance_to(RELIC_PEDESTAL_POSITION + Vector2(0, 12)) < 48.0 + PLAYER_RADIUS:
 		return true
 	if RunState.victory and bool(_workshop_status("treasure_chamber").get("built", false)):
@@ -1246,6 +1277,15 @@ func actor_draw_depth(world_position: Vector2) -> int:
 
 
 func _update_context(world_position: Vector2) -> void :
+	if treasury != null and treasury.inside:
+		_set_context("treasuryExit" if world_position.distance_to(treasury.EXIT)<95 else "")
+		return
+	if world_position.distance_to(TREASURY_DOOR) < 90:
+		_set_context("treasuryEnter" if RunState.victory else "treasuryLocked")
+		return
+	if world_position.distance_to(HUB_SHOP) < 108:
+		_set_context("hubSell")
+		return
 	var next: = ""
 	if world_position.distance_to(SURFACE_LIFT) <= SURFACE_LIFT_RADIUS:
 		next = "hubExit"
@@ -1370,6 +1410,10 @@ func _shared_hub_light_texture() -> Texture2D:
 
 func _draw() -> void :
 	_draw_canvas = self
+	if treasury != null and treasury.inside:
+		lit_floor_chunks.hide()
+		lit_draw_sections.hide()
+		return
 	if lit_draw_sections.enabled:
 		_draw_partitioned_hub()
 		return
@@ -1614,6 +1658,8 @@ func _draw_partitioned_hub() -> void:
 			if not _workshop_unlocked(status) and not bool(status.get("built", false)): continue
 			lit_draw_sections.add(_draw_workshop_site.bind(workshop_id, status, active_context == "workshop:%s" % workshop_id), null, actor_draw_depth(_workshop_position(workshop_id) + Vector2(0, 30)))
 		lit_draw_sections.add(_draw_relic_museum.bind(active_context in ["deepHoard", "relicPedestal", "workshop:treasure_chamber"]), null, actor_draw_depth(DEEP_HOARD_POSITION + Vector2(0, 80)))
+	lit_draw_sections.add(_draw_treasury_entrance, null, actor_draw_depth(TREASURY_DOOR))
+	lit_draw_sections.add(_draw_hub_shop, null, actor_draw_depth(HUB_SHOP))
 	lit_draw_sections.add(_draw_workshop_presentation, null, 2000)
 	lit_draw_sections.add(_draw_feedback, null, 2000)
 	lit_draw_sections.add(_draw_carried_relic, null, actor_draw_depth(player.position))
@@ -1650,6 +1696,8 @@ func _draw_foundation_sconce(at: Vector2) -> void:
 
 
 func _draw_stations() -> void :
+	_draw_treasury_entrance()
+	_draw_hub_shop()
 	_draw_deep_elevator(active_context == "deepElevator")
 	_draw_lift(SURFACE_LIFT, false, active_context == "hubExit")
 	if RunState.victory:
@@ -2048,3 +2096,12 @@ func _draw_ellipse_shape(center: Vector2, radii: Vector2, color: Color) -> void 
 		var angle: = TAU * float(index) / 32.0
 		points.append(center + Vector2(cos(angle) * radii.x, sin(angle) * radii.y))
 	_draw_canvas.draw_colored_polygon(points, color)
+
+
+func _draw_treasury_entrance() -> void:
+	_draw_texture_bounded(PORTAL_TEXTURE, TREASURY_DOOR + Vector2(0,-38), Vector2(160,174))
+	_draw_canvas.draw_string(ThemeDB.fallback_font,TREASURY_DOOR+Vector2(-56,57),"TREASURY",HORIZONTAL_ALIGNMENT_LEFT,150,18,Color("f2d88c"))
+
+func _draw_hub_shop() -> void:
+	_draw_texture_bounded(_premium_texture("res://assets/stations/ore-exchange-v1.png"),HUB_SHOP+Vector2(0,-30),Vector2(182,174))
+	_draw_canvas.draw_string(ThemeDB.fallback_font,HUB_SHOP+Vector2(-25,62),"SELL",HORIZONTAL_ALIGNMENT_LEFT,100,18,Color("f2d88c"))

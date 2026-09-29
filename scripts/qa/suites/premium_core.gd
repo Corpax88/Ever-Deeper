@@ -101,6 +101,7 @@ func run() -> void:
 	_check(is_equal_approx(float(lamp.effective_range_multiplier), 1.0), "Reset or unbuilt workshop invalidates cached light effects")
 	lamp.queue_free()
 	await _check_deep_excavation()
+	await _check_deep_treasury()
 	_finish("premium_core")
 
 
@@ -180,3 +181,137 @@ func _check_deep_excavation() -> void:
 	await probe._deep_command("deep_stream_test")
 	for key in probe.deep_checks:
 		_check(bool(probe.deep_checks[key]),"Deep excavation: "+String(key))
+
+
+func _check_deep_treasury() -> void:
+	var ledger: GDScript = load("res://scripts/state/treasury_state.gd")
+	var original: Dictionary = RunState.serialize()
+	RunState.treasury_totals={}
+	RunState.cargo=RunState._empty_resource_store()
+	RunState.cargo.stone=80
+	RunState.cargo.gold=12
+	RunState.gold=200
+	_check(ledger.keys().size()==27,"Treasury has 26 resources plus a separate currency bay")
+	_check(ledger.land("stone",25)==25 and RunState.cargo.stone==55 and RunState.treasury_totals.stone==25,"Landing atomically debits cargo and credits matching pile")
+	_check(ledger.land("wallet_gold",40)==40 and RunState.gold==160 and RunState.cargo.gold==12,"Currency donation does not confuse mined gold ore")
+	_check(ledger.land("gold",4)==4 and RunState.cargo.gold==8 and RunState.gold==160,"Gold ore has its own independent bay")
+	_check(ledger.land("bad",500)==0 and ledger.land("stone",-1)==0,"Invalid and negative donations rejected")
+	var saved: Dictionary=RunState.serialize()
+	_check(RunState.deserialize(saved),"Treasury round-trip accepts additive schema")
+	_check(RunState.treasury_totals.stone==25 and RunState.gold==160 and RunState.cargo.gold==8,"Reload retains exact debit and credit")
+	var legacy: Dictionary=saved.duplicate(true)
+	legacy.state.erase("treasury")
+	legacy.state.erase("treasury_inside")
+	legacy.state.erase("deep_events")
+	_check(RunState.deserialize(legacy) and RunState.treasury_totals.is_empty(),"Old schema-3 saves migrate to empty treasury without losing cargo")
+	_check(ledger.clean({"stone":-1,"copper":"900","unknown":5,"wallet_gold":400})=={"wallet_gold":400},"Treasury sanitizer rejects corrupt and unknown counts")
+	_check(ledger.stage(0)==0 and ledger.stage(24)==1 and ledger.stage(25)==2 and ledger.stage(250)==3 and ledger.stage(2500)==4,"Bounded visual pile upgrade thresholds")
+	RunState.treasury_totals.stone=ledger.MAX_TOTAL-2
+	RunState.cargo.stone=50
+	_check(ledger.land("stone",50)==2 and RunState.cargo.stone==48 and RunState.treasury_totals.stone==ledger.MAX_TOTAL,"Overflow cannot destroy undeliverable cargo")
+	RunState.deserialize(original)
+	main._dev_jump_hub()
+	await main.get_tree().process_frame
+	var hub: Node=main.hub_world
+	var room: Node=hub.treasury
+	RunState.cargo=RunState._empty_resource_store()
+	RunState.cargo.stone=80
+	RunState.gold=200
+	RunState.treasury_totals={}
+	hub.set_process(false)
+	hub.player.set_physics_process(false)
+	room.enter()
+	room.stop()
+	for kind in ledger.keys():
+		_check(room.material(kind)!=null and room.specimen(kind)!=null,"Treasury art exists for "+kind)
+	await _treasury_capture("01-empty-room")
+	hub.player.control_enabled=true
+	hub.player.global_position=room.ZONE
+	room.start()
+	room.tick(0.5)
+	await _treasury_capture("02-airborne")
+	_check(room.particles.size()>0 and RunState.cargo.stone==80 and RunState.gold==200,"Airborne packets reserve without consuming cargo or gold")
+	room.leave()
+	_check(room.particles.is_empty() and room.batches.is_empty() and RunState.cargo.stone==80 and RunState.gold==200,"Exit cancels all undelivered packets without debit")
+	room.enter()
+	hub.player.global_position=room.ZONE
+	room.start()
+	hub.player.control_enabled=false
+	room.tick(4.0)
+	_check(room.particles.is_empty() and RunState.cargo.stone==80,"Menu pauses launch and accounting")
+	hub.player.control_enabled=true
+	for i in 30: room.tick(0.1)
+	await _treasury_capture("03-partial")
+	var banked: int=int(RunState.treasury_totals.get("stone",0))
+	_check(banked>0 and banked<80 and int(RunState.cargo.stone)+banked==80,"Long delivery has meaningful partial progress and conserves total")
+	room.leave()
+	var pending_cargo: int=RunState.cargo.stone
+	for i in 100: room.tick(0.1)
+	_check(RunState.cargo.stone==pending_cargo and int(RunState.treasury_totals.stone)==banked,"Exited room cannot land stale packets")
+	room.enter()
+	hub.player.global_position=room.ZONE
+	room.start()
+	for i in 500: room.tick(0.1)
+	_check(RunState.cargo.stone==0 and RunState.gold==0 and int(RunState.treasury_totals.stone)==80 and int(RunState.treasury_totals.wallet_gold)==200,"Reentry delivers the remainder exactly once including wallet")
+	_check(not room.delivering and room.particles.is_empty(),"Completed donation leaves no continuing particle work")
+	await _treasury_capture("04-complete")
+	for kind in ledger.keys(): RunState.treasury_totals[kind]=10000
+	room.refresh_piles()
+	await _treasury_capture("05-mature")
+	room.leave()
+	RunState.cargo=RunState._empty_resource_store()
+	RunState.cargo.stone=10
+	RunState.gold=0
+	hub.restore_position(hub.HUB_SHOP+Vector2(0,85))
+	_check(hub.current_context()=="hubSell","Permanent hub shop is reachable")
+	hub.perform_context()
+	_check(RunState.gold>0,"Hub shop converts sellable resources into currency")
+	hub.restore_position(hub.TREASURY_DOOR+Vector2(-30,0))
+	_check(hub.current_context()=="treasuryEnter","Right-hand treasure doorway is reachable")
+	await _treasury_capture("06-hub-shop-door")
+	room.leave(false)
+	RunState.deserialize(original)
+	main._dev_jump_endless(1)
+	await main.get_tree().process_frame
+	var w: Node=main.endless_world
+	w.set_process(false)
+	w.player.set_physics_process(false)
+	RunState.deep_events={}
+	var events: Node=w.deep_events
+	var event_state: Dictionary=events.state()
+	event_state.next=1
+	events.on_rock(w._world_to_cell(w.player.global_position))
+	_check(String(event_state.kind) in events.KINDS and float(event_state.remaining)==28.0,"New excavation triggers a bounded unpredictable event")
+	var event_saved: Dictionary=RunState.serialize()
+	var expected: Dictionary=event_state.duplicate(true)
+	_check(RunState.deserialize(event_saved) and RunState.deep_events==expected,"Reload preserves event identity, cooldown and remaining duration")
+	for kind in events.KINDS:
+		RunState.deep_events.kind=kind
+		RunState.deep_events.remaining=28.0
+		events._refresh_visuals()
+		await _treasury_capture("event-"+kind)
+		var enhanced: Dictionary=events.reward(w._world_to_cell(w.player.global_position),{"kind":"deepstone","amount":1})
+		_check((enhanced.kind!="deepstone" and int(enhanced.amount)>1) if kind!="unstable_seam" else events.speed()==2.0,"Event changes mining yield or speed: "+kind)
+	w.player.control_enabled=false
+	events.tick(5.0)
+	_check(float(RunState.deep_events.remaining)==28.0,"Menus pause Deep Event duration")
+	w.player.control_enabled=true
+	events.tick(29.0)
+	_check(float(RunState.deep_events.remaining)==0.0 and events.speed()==1.0,"Event expires cleanly without keeping a permanent boost")
+	RunState.deserialize(original)
+
+
+func _treasury_capture(label: String) -> void:
+	var folder: String=OS.get_environment("TREASURY_CAPTURE_DIR")
+	if folder.is_empty(): return
+	DirAccess.make_dir_recursive_absolute(folder)
+	# Let seed-only achievement and pickup popups expire before visual inspection.
+	if label=="01-empty-room": await main.get_tree().create_timer(7.0).timeout
+	main.action_button.hide() # QA-only duplicate; ordinary gameplay hides this too.
+	for frame in 4:
+		await main.get_tree().process_frame
+		main.action_button.hide()
+		main.achievement_toast.hide() # Suppress only the accelerated fixture backlog.
+	await RenderingServer.frame_post_draw
+	var err: int=main.get_viewport().get_texture().get_image().save_png(folder.path_join(label+".png"))
+	_check(err==OK,"Rendered capture: "+label)

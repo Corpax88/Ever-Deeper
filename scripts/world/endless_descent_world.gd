@@ -1,6 +1,9 @@
 class_name EndlessDescentWorld
 extends Node2D
 
+const DeepEventsScript = preload("res://scripts/world/deep_events.gd")
+var deep_events: Node2D
+
 signal context_changed(context: String)
 signal message_changed(message: String)
 signal depth_changed(depth: int)
@@ -282,6 +285,9 @@ var _wave_active: bool = false
 
 
 func _ready() -> void :
+	deep_events = DeepEventsScript.new()
+	add_child(deep_events)
+	deep_events.setup(self)
 	lit_draw_sections = LitDrawSectionsScript.new()
 	add_child(lit_draw_sections)
 	player.process_physics_priority = -10
@@ -538,6 +544,7 @@ func import_runtime_state(state: Dictionary) -> void :
 func _process(delta: float) -> void :
 	if not active:
 		return
+	deep_events.tick(delta)
 	_advance_resource_squashes()
 	_update_mining(delta)
 	_update_loose_drops(delta)
@@ -2101,7 +2108,10 @@ func _mining_cycle_duration() -> float:
 	# accelerates that real cadence, including already-fast Comet equipment.
 	var forge_speed: float = RunState.endless_tool_speed_multiplier()
 	var authored: float = float(_current_endless_tool().get("cooldown", MINING_DURATION)) * forge_speed
-	return clampf(authored * 7.0, 0.24, 0.68) / forge_speed
+	var cadence: float = clampf(authored * 7.0, 0.24, 0.68) / forge_speed
+	if int(RunState.drill_level)>0:
+		cadence = maxf(0.08, float(_current_endless_tool().get("cooldown", MINING_DURATION)))
+	return cadence / deep_events.speed()
 
 
 func _current_endless_tool() -> Dictionary:
@@ -3470,7 +3480,7 @@ func _break_diggable_cell(cell: Vector2i) -> bool:
 	if not RunState._endless_band_in_reach(depth):
 		return false
 	var index: int = _chunk_cell_index(cell)
-	var reward: Dictionary = DeepLayout.ore_for_cell(int(RunState.world_seed), depth, index)
+	var reward: Dictionary = deep_events.reward(cell, DeepLayout.ore_for_cell(int(RunState.world_seed), depth, index))
 	var amount: int = int(reward.amount) * maxi(1, int(_current_endless_tool().get("yield_multiplier", 1)))
 	var claim: Dictionary = RunState.claim_endless_rock_cell(depth, index, String(reward.kind), amount, true)
 	if not bool(claim.get("ok", false)):
@@ -3479,6 +3489,7 @@ func _break_diggable_cell(cell: Vector2i) -> bool:
 			queue_redraw()
 		return false
 	_set_floor(cell, true)
+	deep_events.on_rock(cell)
 	dig_damage.erase(cell)
 	_sync_loose_drops()
 	_emit_mined_reward(String(reward.kind), int(claim.amount), depth)

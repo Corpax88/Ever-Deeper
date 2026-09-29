@@ -257,6 +257,7 @@ func _ready() -> void :
 
 
 func _process(delta: float) -> void :
+	if hub_world.treasury != null and hub_world.treasury.inside: hub_world.treasury.apply_hud()
 	_update_station_transaction_targets()
 	_enforce_shop_player_control()
 	_maybe_start_assay_transaction()
@@ -1318,6 +1319,9 @@ func _on_quick_tutorial_closed() -> void :
 func _update_minimap() -> void :
 	if minimap_overlay == null:
 		return
+	if hub_world.treasury != null and hub_world.treasury.inside:
+		minimap_overlay.hide_map()
+		return
 	if deepheart_presentation or not game_started or menu_open or inventory_open or conclusion_overlay.visible or orientation_guard_active:
 		minimap_overlay.hide_map()
 		return
@@ -1777,6 +1781,10 @@ func _on_hub_context_changed(context: String) -> void :
 	_refresh_context_button()
 	if context == "deepElevator":
 		_set_status(_deep_elevator_status_text())
+	elif context == "treasuryEnter":
+		_set_status("TREASURY · donated resources and gold stay here permanently")
+	elif context == "hubSell":
+		_set_status("HUB SHOP · sell ore for gold, or keep it for your treasury")
 	elif context == "deepHoard":
 		_set_status(_deep_hoard_status_text())
 	elif context == "relicPedestal":
@@ -3536,7 +3544,7 @@ func _refresh_context_button() -> void :
 			elif bool(workshop.get("blueprint_unlocked", false)):
 				label = "DELIVER"
 		else:
-			label = {"hubExit": "ASCEND"}.get(hub_context, "")
+			label = {"hubExit": "ASCEND", "treasuryEnter": "TREASURY", "treasuryExit": "HUB", "treasuryLocked":"SEALED", "hubSell": "SELL"}.get(hub_context, "")
 	elif phase == "depth":
 		label = {"depthExit": "ASCEND", "depthSell": "SELL", "drillForge": "FORGE"}.get(depth_context, "")
 	elif phase == "mine" and mine_depth_context:
