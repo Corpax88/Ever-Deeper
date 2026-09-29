@@ -757,7 +757,11 @@ func _resolve_motion(origin: Vector2, motion: Vector2) -> Vector2:
 	return result.clamp(Vector2.ONE * PLAYER_RADIUS, world_size - Vector2.ONE * PLAYER_RADIUS)
 
 
-func _player_collides(position: Vector2) -> bool:
+func companion_collision_at(position: Vector2) -> bool:
+	return _player_collides(position, true)
+
+
+func _player_collides(position: Vector2, ignore_resources: bool = false) -> bool:
 	for barrier_value in mine.barriers:
 		var barrier: Dictionary = Dictionary(barrier_value)
 		if not _role_has_blocks(String(barrier.id)):
@@ -775,6 +779,9 @@ func _player_collides(position: Vector2) -> bool:
 		for col in range(min_cell.x, max_cell.x + 1):
 			var cell: = Vector2i(col, row)
 			if not blocks.has(cell):
+				continue
+			# Only renewable deposits are passable; terrain and barriers stay solid.
+			if ignore_resources and String(blocks[cell].get("role", "")) == "resource":
 				continue
 			var rect: = Rect2(Vector2(cell) * TILE_SIZE, Vector2.ONE * TILE_SIZE)
 			var nearest: = Vector2(clampf(position.x, rect.position.x, rect.end.x), clampf(position.y, rect.position.y, rect.end.y))

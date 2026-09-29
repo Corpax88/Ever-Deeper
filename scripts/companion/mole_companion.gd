@@ -516,6 +516,7 @@ func _draw_pose() -> void:
 func _blocked(point: Vector2) -> bool:
 	var bounds: Vector2=hero.get("world_size")
 	if point.x<24.0 or point.y<24.0 or point.x>bounds.x-24.0 or point.y>bounds.y-24.0: return true
+	if world.has_method("companion_collision_at"): return bool(world.call("companion_collision_at",point))
 	if world.has_method("collision_at"): return bool(world.call("collision_at",point))
 	if world.has_method("_surface_collides"): return bool(world.call("_surface_collides",point))
 	if world.has_method("_player_collides"): return bool(world.call("_player_collides",point))

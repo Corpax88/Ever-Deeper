@@ -15,8 +15,20 @@ var mole_target: Vector2 = Vector2.ZERO
 var mole_task_key: String = ""
 var mole_case: String = ""
 var mole_checks: Dictionary = {}
+var ore_escape_origin: Vector2
+var ore_escape_goal: Vector2
+var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind)=="ore_respawn_fixture":
+		command_id=int(data.id)
+		_ore_respawn_fixture(String(data.mine_id))
+		return
+	if String(data.kind)=="ore_escape":
+		command_id=int(data.id)
+		var mole: Node=main.get_node("CompanionInterface").active_mole()
+		_require(mole.command(ore_escape_goal),"escape command")
+		return
 	if String(data.kind)=="mole_auto":
 		command_id=int(data.id)
 		var mole: Node=main.get_node("CompanionInterface").active_mole()
@@ -191,6 +203,9 @@ func _frame() -> void:
 		var cancel: Vector2 = world.get_canvas_transform()*world.player.global_position
 		var current: Dictionary = world.companion_work_target(mole_target)
 		state["work"] = {"scenario":mole_case,"target":[p.x,p.y],"cancel":[cancel.x,cancel.y],"key":mole_task_key,"remaining":current.get("key","")==mole_task_key,"mole":mole.debug_snapshot(),"period":world.companion_work_period(),"power":world._mountain_tool().get("power",1) if world.has_method("_mountain_tool") else 0,"checks":mole_checks,"feedback":mole.feedback,"hero_period":world.companion_hero_period(mole.work_task)}
+	if ore_escape_active:
+		var mole: Node2D=ui.active_mole()
+		state["ore_escape"]={"distance":mole.global_position.distance_to(ore_escape_origin),"remaining":mole.global_position.distance_to(ore_escape_goal),"checks":mole_checks,"mode":mole.mode}
 	JavaScriptBridge.eval("Object.assign(window.DEV14_STATE," + JSON.stringify(state) + ")", true)
 
 func _bounds(control: Control) -> Array:
@@ -321,3 +336,50 @@ func _test_shrines() -> void:
 			if depth==2: world._update_shrine_cooldowns(0.3)
 			mole_checks["after-expiry-"+str(depth)]=not world._pocket_reward_is_claimed(id)
 			break
+
+func _ore_respawn_fixture(mine_id: String) -> void:
+	main._cancel_mine_hold()
+	main._on_joystick_movement(Vector2.ZERO)
+	main._dev_jump_mine(mine_id,1)
+	_gear("deepcore")
+	RunState.overhaul_progress["skills"]={}
+	var world: Node2D=main.mine_world
+	var mole: Node2D=world.get_node("MoleCompanion")
+	var center:=Vector2i(-1,-1)
+	# Use a genuine resource cell in this biome, clearing only fixture approaches.
+	for cell in world.blocks:
+		if String(world.blocks[cell].get("role",""))=="resource":
+			center=cell
+			break
+	_require(center.x>=0,"resource in "+mine_id)
+	var original: Dictionary=world.blocks[center].duplicate(true)
+	for y in range(-4,5):
+		for x in range(-4,5):
+			world._erase_block(center+Vector2i(x,y))
+	ore_escape_origin=world._cell_center(center)
+	ore_escape_goal=ore_escape_origin+Vector2.RIGHT*world.TILE_SIZE*3.0
+	world.player.global_position=ore_escape_origin+Vector2.LEFT*world.TILE_SIZE*3.0
+	world.player.camera.reset_smoothing()
+	mole._spawn_beside_hero()
+	mole.global_position=ore_escape_origin
+	mole.autonomous_enabled=false
+	mole.mode="hold"
+	mole.hold_time=0.0
+	mole.destination=ore_escape_origin
+	mole.worm_patch.spawn_clock=999.0
+	world.drops.clear()
+	world.respawns.clear()
+	world.respawns.append({"cell":center,"block":original,"node_id":world._resource_node_id(center),"respawn_until_unix":Time.get_unix_time_from_system()-1.0,"remaining":0.0})
+	world._update_respawns(0.0)
+	mole_checks={"actual-respawn":world.blocks.has(center),"hero-still-blocked":world._player_collides(ore_escape_origin),"mole-not-blocked":not mole._blocked(ore_escape_origin),"escape-segment":mole._segment_clear(ore_escape_origin,ore_escape_goal)}
+	var probe: Vector2i=center+Vector2i(0,3)
+	for role in ["terrain","bedrock","test_barrier"]:
+		var block: Dictionary=world._make_block("bedrock" if role=="bedrock" else "stone",5,1,role)
+		world._set_block(probe,block)
+		mole_checks[role+"-blocks-mole"]=mole._blocked(world._cell_center(probe))
+		world._erase_block(probe)
+	mole_checks["world-edge-blocked"]=mole._blocked(Vector2.ZERO)
+	world._request_redraw()
+	ore_escape_active=true
+	mole_case=""
+	main._refresh_hud()
