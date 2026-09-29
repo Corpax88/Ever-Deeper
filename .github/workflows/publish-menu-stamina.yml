@@ -1,0 +1,76 @@
+name: Publish accepted menu stamina recovery LIVE and DEV
+on:
+  push:
+    branches: [main]
+    paths: ['.github/menu-stamina/accepted.json', '.github/workflows/publish-menu-stamina.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: pages-ever-deeper, cancel-in-progress: false}
+jobs:
+  package:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/menu-stamina
+            .github/workflows
+      - id: accepted
+        run: |
+          python3 - <<'PYCODE'
+          import json,os
+          r=json.load(open('.github/menu-stamina/accepted.json'))
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              print('run='+str(r['run']),file=f)
+              print('live='+str(r['live']['artifact']),file=f)
+              print('dev='+str(r['dev']['artifact']),file=f)
+          PYCODE
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '${{ steps.accepted.outputs.live }}'
+          run-id: '${{ steps.accepted.outputs.run }}'
+          merge-multiple: true
+          github-token: '${{ github.token }}'
+          path: '${{ runner.temp }}/candidate/live'
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '${{ steps.accepted.outputs.dev }}'
+          run-id: '${{ steps.accepted.outputs.run }}'
+          merge-multiple: true
+          github-token: '${{ github.token }}'
+          path: '${{ runner.temp }}/candidate/dev'
+      - run: python3 .github/menu-stamina/publish.py prepare "$RUNNER_TEMP/publication" "$RUNNER_TEMP/candidate"
+        env: {GH_TOKEN: '${{ github.token }}'}
+      - uses: actions/upload-artifact@v4
+        with: {name: before-menu-stamina-rollback, path: '${{ runner.temp }}/publication/rollback', retention-days: 30}
+      - uses: actions/upload-pages-artifact@v3
+        with: {path: '${{ runner.temp }}/publication/site'}
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    permissions: {pages: write, id-token: write}
+    environment:
+      name: github-pages
+      url: '${{ steps.deployment.outputs.page_url }}'
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/menu-stamina
+            .github/workflows
+      - run: python3 .github/menu-stamina/publish.py verify "$RUNNER_TEMP/verified"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: menu-stamina-publication-receipt, path: '${{ runner.temp }}/verified/publication-receipt.json'}
+
+
