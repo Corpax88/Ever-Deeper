@@ -1,0 +1,80 @@
+{
+  "accepted": true,
+  "reviewer": "Codex primary visual review",
+  "source": "0507913f07c39798075a4aa072fc67ce86f2bcde",
+  "browser_artifact": 11013767712,
+  "images": [
+    {
+      "path": "hud/hud-667.png",
+      "sha256": "fd5b17c1f5a2ab5a671ba16bd3c4d1c3875457166a84a0f8483d3842ee6b2ae9"
+    },
+    {
+      "path": "hud/hud-844.png",
+      "sha256": "ccfd0cba4f9a2902248fa058f452ed82045a21d4741d4b0a2da864d157c87ce3"
+    },
+    {
+      "path": "hud/hud-900.png",
+      "sha256": "3820adcc32ab7c8fc52716b6bdfad501a156d1f9eba5a52aa15b4e99e4d8af6f"
+    },
+    {
+      "path": "hud/moss-hud.png",
+      "sha256": "49c8aa432d73b6801cd113f1926882a774bb448af43ea5027a517dd5b03388c9"
+    },
+    {
+      "path": "hud/production-continued-save.png",
+      "sha256": "796711e604cafe6656dfd11ad76341845bc98d8bb0daf98bfc71027271bfc8c7"
+    },
+    {
+      "path": "hud/production-migrated-menu.png",
+      "sha256": "bdc4224bedf190a9488da766aaaf303307e534b5c4bcddbc830a70e1c3ee74ca"
+    },
+    {
+      "path": "hud/production-reloaded-game.png",
+      "sha256": "04c4b4cc753b211ad5bcde3852313f202edc3279e881cf1fc2f84c36d9eab577"
+    },
+    {
+      "path": "hud/skills-667.png",
+      "sha256": "83dbf9ba1225b38f12ae9c2cc8090a2c708ffe8adefaf6441264dd8d32c83380"
+    },
+    {
+      "path": "hud/skills-844.png",
+      "sha256": "b5f8279e8105a6df84162acf898a449e3e071a6b18d0da667c48f2342819e236"
+    },
+    {
+      "path": "hud/skills-900.png",
+      "sha256": "5038ca05022cd38dfda429fa0a0340912ad6c7690ee767359d67d602fd07986b"
+    },
+    {
+      "path": "ordinary/01-ordinary-menu.png",
+      "sha256": "7c2a31aae2db1ceb5fe27d50320d61f4dc1ea72287e21c59f74482f77c155b74"
+    },
+    {
+      "path": "ordinary/02-after-new-game.png",
+      "sha256": "88101a7511d70c2d7ebaee09fd54694ffb1a95cfa55e7d4a996af6ab0fd88247"
+    },
+    {
+      "path": "ordinary/03-after-escape.png",
+      "sha256": "c01a096b65d8e943dd7b0574a9e6c26e22b29d58801f38581ae864436f686cf2"
+    },
+    {
+      "path": "ordinary/04-saved-run-menu.png",
+      "sha256": "0dcd529cfb7da17300b08f0ebdee6a1edaf91f407924ee4b35bf6f19888d49f8"
+    },
+    {
+      "path": "ordinary/05-new-game-confirmation.png",
+      "sha256": "077fe6c86f6f093a00b23db4063db2d4219abff38b4dee7fa39500790fb595a8"
+    },
+    {
+      "path": "ordinary/06-confirmed-new-game.png",
+      "sha256": "efc16103d8683a1fc5bc5b65b63d6bbad8ef166bd02d951b27b6e00ba553eca9"
+    }
+  ],
+  "findings": [
+    "All 16 actual captures inspected; 667 Skills and ordinary surface inspected at full size.",
+    "Approved blue-steel knot, SKILLS label and reclaimed compass slot retained at all three viewports; no developer toggle.",
+    "Skills rows, hero, mole, surface and mine lighting remain intact.",
+    "Ordinary production menus show 1.0.1; New Game, pause, saved-run menu and confirmation correct.",
+    "DEV location notices appear only in explicit named QA fixture captures; ordinary gameplay and continued saves have no DEV label."
+  ],
+  "physical_iphone_verified": false
+}
