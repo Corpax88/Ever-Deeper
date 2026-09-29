@@ -2438,7 +2438,7 @@ func _mine_moonglass_resource_once(companion: bool = false) -> void :
 	_spawn_surface_material_spray(MOON_BLOOM_ID, Vector2(node.position))
 	var tool: = _mountain_tool()
 	node.hp = maxi(0, int(node.hp) - int(tool.get("power", 1)))
-	AudioDirector.play_mining("moonglass", int(node.hp) <= 0, false)
+	AudioDirector.play_mining("moonglass", int(node.hp) <= 0, false, not companion)
 	if int(node.hp) > 0:
 		moon_bloom_nodes[moon_bloom_target_index] = node
 		return
@@ -2865,7 +2865,7 @@ func _mine_timed_surface_resource_once(vein_id: String, companion: bool = false)
 		Vector2(node.position)
 	)
 	_spawn_surface_material_spray(vein_id, Vector2(node.position), shell_cracked)
-	AudioDirector.play_mining(String(config.resource), int(node.hp) <= 0, shell_before > 0)
+	AudioDirector.play_mining(String(config.resource), int(node.hp) <= 0, shell_before > 0, not companion)
 	if int(node.hp) > 0:
 		return
 	node.respawn = float(config.respawn)
@@ -3501,7 +3501,7 @@ func _mine_ore_mountain_once(companion: bool = false) -> void :
 		visual_progress = clampf(ore_mountain_swing_elapsed / maxf(0.001, ore_mountain_swing_duration), 0.0, 1.0)
 	if not companion: player.set_mining_visual(true, visual_progress, 1.0)
 	if removed_mass > 0:
-		AudioDirector.play_mining("copper", ore_mountain_hp <= 0, false)
+		AudioDirector.play_mining("copper", ore_mountain_hp <= 0, false, not companion)
 	else:
 		AudioDirector.play_blocked()
 	if removed_mass > 0:
@@ -3549,7 +3549,7 @@ func _mine_surface_resource_mountain_once(mountain_id: String, companion: bool =
 		AudioDirector.play_blocked()
 		_update_surface_resource_mountain_visual(mountain_id)
 		return
-	AudioDirector.play_mining(String(config.primary), int(entry.hp) <= 0, false)
+	AudioDirector.play_mining(String(config.primary), int(entry.hp) <= 0, false, not companion)
 	entry.yield_buffer = float(entry.yield_buffer) + (
 		float(removed_mass) * SURFACE_RESOURCE_MOUNTAIN_FULL_YIELD / float(SURFACE_RESOURCE_MOUNTAIN_MAX_HP)
 	)

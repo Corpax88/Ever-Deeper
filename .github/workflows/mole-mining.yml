@@ -34,6 +34,8 @@ jobs:
         with: {node-version: '22'}
       - run: npm ci --ignore-scripts && npx playwright install chromium webkit
       - run: node .github/mole-mining/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/browser" dev
+      - run: node .github/mole-mining/startup.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/ordinary"
+        env: {EXPECTED_VERSION: '1.0.0-dev.15.23', CANDIDATE_SOURCE: '${{ github.sha }}'}
       - uses: actions/upload-artifact@v4
         if: always()
         with: {name: mole-mining-evidence, path: '${{ runner.temp }}/evidence', retention-days: 30}

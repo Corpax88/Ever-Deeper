@@ -58,6 +58,7 @@ var _library: Dictionary = {}
 var _last_played_ms: Dictionary = {}
 var _voices: Array[AudioStreamPlayer] = []
 var _music_players: Array[AudioStreamPlayer] = []
+var _music_gain_requests: Dictionary = {}
 var _prepared_music: Array[AudioStream] = []
 var _active_music_slot: = 0
 var _music_track_index: = 0
@@ -95,7 +96,7 @@ func _process(delta: float) -> void :
 		return
 	var active: = _music_players[_active_music_slot]
 	if _crossfade_progress < 0.0:
-		active.volume_db = _music_track_db(_music_track_index)
+		_set_music_gain(active, _music_track_db(_music_track_index))
 		if not active.playing:
 			_start_music_track(_active_music_slot, (_music_track_index + 1) % MUSIC_TRACKS.size(), false)
 			return
@@ -110,7 +111,7 @@ func _process(delta: float) -> void :
 		_active_music_slot = 1 - _active_music_slot
 		_music_track_index = _next_music_track_index
 		_crossfade_progress = -1.0
-		_music_players[_active_music_slot].volume_db = _music_track_db(_music_track_index)
+		_set_music_gain(_music_players[_active_music_slot], _music_track_db(_music_track_index))
 
 
 func set_muted(value: bool) -> void :
@@ -161,7 +162,7 @@ func unlock_from_user_gesture() -> void :
 	_start_ambience()
 
 
-func play_mining(material: String = "stone", broken: bool = false, armored: bool = false) -> void :
+func play_mining(material: String = "stone", broken: bool = false, armored: bool = false, train_hero: bool = true) -> void :
 	var group: = "mine_break" if broken else "mine_shell" if armored else "mine_hit"
 	var pitch: = 1.0
 	var volume_db: = -8.5
@@ -175,7 +176,7 @@ func play_mining(material: String = "stone", broken: bool = false, armored: bool
 	if broken:
 		volume_db += 1.0
 	_play(group, "mining", 92, volume_db, pitch, 0.035)
-	if RunState.has_method("record_mining_swing"):
+	if train_hero and RunState.has_method("record_mining_swing"):
 		RunState.record_mining_swing(true)
 	if not _headless and (OS.has_feature("mobile") or OS.has_feature("web")):
 		Input.vibrate_handheld(26 if broken else 14, 0.46 if broken else 0.24)
@@ -270,7 +271,7 @@ func _create_players() -> void :
 		var music_player: = AudioStreamPlayer.new()
 		music_player.process_mode = Node.PROCESS_MODE_ALWAYS
 		music_player.playback_type = AudioServer.PLAYBACK_TYPE_SAMPLE
-		music_player.volume_db = -80.0
+		_set_music_gain(music_player, -80.0)
 		add_child(music_player)
 		_music_players.append(music_player)
 
@@ -290,7 +291,7 @@ func _start_music_track(slot: int, track_index: int, fade_in: bool) -> void :
 	var stream: AudioStream = _prepared_music[track_index]
 	player.stop()
 	player.stream = stream
-	player.volume_db = -80.0 if fade_in else _music_track_db(track_index)
+	_set_music_gain(player, -80.0 if fade_in else _music_track_db(track_index))
 	player.play()
 	if slot == _active_music_slot:
 		_music_track_index = track_index
@@ -310,8 +311,8 @@ func _apply_music_crossfade() -> void :
 		return
 	var fade_out: = maxf(0.001, 1.0 - _crossfade_progress)
 	var fade_in: = maxf(0.001, _crossfade_progress)
-	_music_players[_active_music_slot].volume_db = _music_track_db(_music_track_index) + linear_to_db(fade_out)
-	_music_players[1 - _active_music_slot].volume_db = _music_track_db(_next_music_track_index) + linear_to_db(fade_in)
+	_set_music_gain(_music_players[_active_music_slot], _music_track_db(_music_track_index) + linear_to_db(fade_out))
+	_set_music_gain(_music_players[1 - _active_music_slot], _music_track_db(_next_music_track_index) + linear_to_db(fade_in))
 
 
 func _refresh_music_mix() -> void :
@@ -320,7 +321,7 @@ func _refresh_music_mix() -> void :
 	if _crossfade_progress >= 0.0:
 		_apply_music_crossfade()
 	elif ambience_started:
-		_music_players[_active_music_slot].volume_db = _music_track_db(_music_track_index)
+		_set_music_gain(_music_players[_active_music_slot], _music_track_db(_music_track_index))
 
 
 func _music_track_db(track_index: int) -> float:
@@ -570,3 +571,15 @@ func _noise(frame: int, seed: int) -> float:
 	var value: = sin(float(frame * 41 + seed * 131) * 12.9898) * 43758.5453
 	return fposmod(value, 2.0) - 1.0
 
+
+
+# Requests are 64-bit GDScript floats; AudioStreamPlayer stores a 32-bit float.
+# Retain both to avoid treating ordinary float rounding as a volume change.
+# Checking the live value/bus also respects any later direct external edit.
+func _set_music_gain(player: AudioStreamPlayer, requested: float) -> void:
+	if _music_gain_requests.has(player):
+		var previous: Array = _music_gain_requests[player]
+		if previous[0] == requested and previous[1] == player.volume_db and previous[2] == player.bus:
+			return
+	player.volume_db = requested
+	_music_gain_requests[player] = [requested, player.volume_db, player.bus]

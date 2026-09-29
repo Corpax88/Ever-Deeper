@@ -181,7 +181,7 @@ func _mole_fixture(scenario: String) -> void:
 		_require(_place_moss(Vector2.RIGHT),"moss placement")
 		var cell: Vector2i = world._find_mine_target()
 		mole_target=world._cell_center(cell)
-		var block: Dictionary = world._make_block("copper" if scenario=="moss_ore" else "stone",3,1,"resource" if scenario=="moss_ore" else "terrain")
+		var block: Dictionary = world._make_block("copper" if scenario=="moss_ore" else "stone",int(world._current_tool().power)*3,1,"resource" if scenario=="moss_ore" else "terrain")
 		world._set_block(cell,block)
 		world.target_dirty=true
 		mole_checks["legacy_rejected_ore"]=not world.companion_can_dig(mole_target) if scenario=="moss_ore" else true
@@ -229,7 +229,7 @@ func _mole_fixture(scenario: String) -> void:
 		world=main.surface_world
 		world.restore_position(Vector2(812,650))
 		world.player.set_facing(Vector2.UP)
-		world.ore_mountain_hp=3
+		world.ore_mountain_hp=int(world._mountain_tool().power)*3
 		mole_target=world._ore_mountain_hit_point(world.player.global_position)
 	var task: Dictionary=world.companion_work_target(mole_target)
 	_require(not task.is_empty(),"manual target accepted: "+scenario)

@@ -1075,7 +1075,7 @@ func _hit_terrain(cell: Vector2i, companion: bool = false) -> bool:
 	var index: = _cell_index(cell)
 	var tool: = _current_tool()
 	terrain_hp[index] = maxi(0, terrain_hp[index] - int(tool.get("power", 1)))
-	AudioDirector.play_mining("deepstone", terrain_hp[index] <= 0, false)
+	AudioDirector.play_mining("deepstone", terrain_hp[index] <= 0, false, not companion)
 	var impact: = {
 		"position": _target_contact_point(),
 		"age": 0.0,
@@ -1128,7 +1128,7 @@ func _hit_rock(rock_index: int, companion: bool = false) -> bool:
 		return false
 
 	if bool(rock.drill_gated):
-		return _strike_drill_gate(rock_index)
+		return _strike_drill_gate(rock_index,companion)
 	var tool: = _current_tool()
 	var power: = int(tool.get("power", 1))
 	var was_armored: = int(rock.shell) > 0
@@ -1143,7 +1143,7 @@ func _hit_rock(rock_index: int, companion: bool = false) -> bool:
 	else:
 		rock.hp = maxi(0, int(rock.hp) - power)
 	rocks[rock_index] = rock
-	AudioDirector.play_mining(String(rock.type), int(rock.shell) <= 0 and int(rock.hp) <= 0, was_armored)
+	AudioDirector.play_mining(String(rock.type), int(rock.shell) <= 0 and int(rock.hp) <= 0, was_armored, not companion)
 	var impact: = {
 		"position": Vector2(rock.position),
 		"age": 0.0,
@@ -3226,7 +3226,7 @@ func heat_streak_snapshot() -> Dictionary:
 	}
 
 
-func _strike_drill_gate(rock_index: int) -> bool:
+func _strike_drill_gate(rock_index: int, companion: bool = false) -> bool:
 	var rock: Dictionary = rocks[rock_index]
 	var gate_id: String = String(rock.deposit_id)
 	var hits: int = RunState.strike_barrier(mine_id + ":d2:" + gate_id)
@@ -3239,7 +3239,7 @@ func _strike_drill_gate(rock_index: int) -> bool:
 		if hits == 10: _break_rock(i)
 	if hits == 10: _restore_open_gate_seams(gate_id)
 	_append_impact({"position":Vector2(rock.position),"age":0.0,"life":0.42,"broken":hits==10,"style":""})
-	AudioDirector.play_mining(String(rock.type),hits==10,false)
+	AudioDirector.play_mining(String(rock.type),hits==10,false,not companion)
 	message_changed.emit("PASSAGE OPEN" if hits == 10 else "WALL · %d / 10 strikes" % hits)
 	target_dirty = true
 	_request_redraw()

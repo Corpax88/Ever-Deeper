@@ -723,7 +723,7 @@ func _command_work(task: Dictionary) -> bool:
 		for index in 16:
 			var candidate: Vector2 = point+Vector2.from_angle(float(index)*TAU/16.0)*radius
 			var score: float = global_position.distance_squared_to(candidate)
-			if score>=best or _blocked(candidate): continue
+			if score>=best or _blocked(candidate) or not _work_line_clear(candidate,point): continue
 			if not _segment_clear(global_position,candidate) and _path_to(candidate).is_empty(): continue
 			if world.has_method("_clear_mining_line") and not world.call("_clear_mining_line",candidate,point,true): continue
 			landing=candidate
@@ -759,3 +759,17 @@ func _update_work(delta: float) -> void:
 	if not _work_valid():
 		recall()
 		_react("All done!",2.0)
+
+func _work_line_clear(from: Vector2, to: Vector2) -> bool:
+	if world.has_method("_surface_collides"): return true
+	var target: Vector2i = world._world_to_cell(to)
+	var steps: int = maxi(1,ceili(from.distance_to(to)/8.0))
+	for index in range(1,steps):
+		var point: Vector2=from.lerp(to,float(index)/float(steps))
+		if world._world_to_cell(point)==target: return true
+		if world.has_method("_terrain_is_solid"):
+			if world._terrain_is_solid(world._world_to_cell(point)): return false
+		elif world.has_method("_is_floor"):
+			if not world._is_floor(world._world_to_cell(point)): return false
+		elif world.blocks.has(world._world_to_cell(point)): return false
+	return true

@@ -966,7 +966,7 @@ func _mine_once(companion: bool = false) -> void :
 		message_changed.emit("%s REQUIRED · sell ore and forge at camp" % String(required.name).to_upper())
 		return
 	if _is_barrier_role(String(block.get("role",""))):
-		_strike_barrier_group(target,block)
+		_strike_barrier_group(target,block,companion)
 		return
 	var tool: = _current_tool()
 	var power: = int(tool.get("power", 1))
@@ -995,7 +995,7 @@ func _mine_once(companion: bool = false) -> void :
 	while impacts.size() >= 6:
 		impacts.remove_at(0)
 	impacts.append(impact)
-	AudioDirector.play_mining(String(block.kind), broken, was_armored)
+	AudioDirector.play_mining(String(block.kind), broken, was_armored, not companion)
 	if not companion: player.set_mining_visual(true, _mining_visual_progress(swing_elapsed / swing_duration), 1.0)
 	if broken:
 		_erase_block(target)
@@ -2863,7 +2863,7 @@ func smoke_snapshot() -> Dictionary:
 	}
 
 
-func _strike_barrier_group(target: Vector2i, block: Dictionary) -> void:
+func _strike_barrier_group(target: Vector2i, block: Dictionary, companion: bool = false) -> void:
 	var role: String = String(block.role)
 	var hits: int = RunState.strike_barrier(mine_id + ":d1:" + role)
 	var removed: Array[Vector2i] = []
@@ -2874,7 +2874,7 @@ func _strike_barrier_group(target: Vector2i, block: Dictionary) -> void:
 		_set_block(cell, part)
 		if hits == 10: removed.append(cell)
 	impacts.append({"position": _target_contact_point(target),"age":0.0,"life":0.42,"broken":hits==10,"style":""})
-	AudioDirector.play_mining(String(block.kind),hits==10,false)
+	AudioDirector.play_mining(String(block.kind),hits==10,false,not companion)
 	for cell in removed:
 		_erase_block(cell)
 		mineable_edge_void_cells[cell] = true

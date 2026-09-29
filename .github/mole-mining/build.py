@@ -10,7 +10,7 @@ original=(src/'index.pck').read_bytes();base,entries=unpack(original)
 def raw(n):
  o,s,*_=entries[n];return original[base+o:base+o+s]
 def target(n):return re.search(r'path="res://([^\"]+)"',raw(n+'.remap').decode())[1]
-changed=['scripts/companion/mole_companion.gd','scripts/companion/mole_skills.gd','scripts/world/mossvein_mine.gd','scripts/world/depth/rootwound_world.gd','scripts/world/endless_descent_world.gd','scripts/world/surface_world.gd','scripts/qa/suites/skills_browser_review.gd']
+changed=['scripts/audio/audio_director.gd','scripts/companion/mole_companion.gd','scripts/companion/mole_skills.gd','scripts/world/mossvein_mine.gd','scripts/world/depth/rootwound_world.gd','scripts/world/endless_descent_world.gd','scripts/world/surface_world.gd','scripts/qa/suites/skills_browser_review.gd']
 replacements={}
 for n in changed:
  replacements[n]=(root/n).read_bytes();replacements[n+'.remap']=('[remap]\npath="res://'+n+'"\n').encode()

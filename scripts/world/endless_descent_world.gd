@@ -3511,7 +3511,7 @@ func _strike_wall(cell: Vector2i, progress: float, companion: bool = false) -> v
 	var damage: int = int(dig_damage.get(cell, 0)) + maxi(1, int(tool.get("power", 1)))
 	dig_damage[cell] = damage
 	var destroyed: bool = damage >= 520
-	AudioDirector.play_mining("deepstone", destroyed, false)
+	AudioDirector.play_mining("deepstone", destroyed, false, not companion)
 	if destroyed:
 		_break_diggable_cell(cell)
 	if not companion: player.set_mining_visual(true, progress, 1.0, MINING_HIT_PROGRESS)
@@ -3565,7 +3565,7 @@ func companion_work_target(point: Vector2) -> Dictionary:
 func companion_work_hit(task: Dictionary) -> void:
 	if task.has("resource"):
 		_strike_resource(int(task.resource),-1,false)
-		AudioDirector.play_mining(String(resources[int(task.resource)].kind),bool(resources[int(task.resource)].mined),false)
+		AudioDirector.play_mining(String(resources[int(task.resource)].kind),bool(resources[int(task.resource)].mined),false,false)
 	else: _strike_wall(Vector2i(task.cell),0.5,true)
 
 func companion_work_period() -> float:
