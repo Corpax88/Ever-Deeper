@@ -764,6 +764,8 @@ func _command_work(task: Dictionary, automatic: bool = false) -> bool:
 			if world.has_method("_clear_mining_line") and not world.call("_clear_mining_line",candidate,point,true): continue
 			landing=candidate
 			best=score
+			if automatic: break
+		if automatic and is_finite(landing.x): break
 	if not is_finite(landing.x):
 		if not automatic: _react("Need an open path",2.0)
 		return false

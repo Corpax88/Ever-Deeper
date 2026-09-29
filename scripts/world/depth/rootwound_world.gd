@@ -529,7 +529,7 @@ func _update_shrine_cooldowns(delta: float) -> void :
 	var changed: = false
 	for reward_id_value in shrine_cooldowns.keys():
 		var reward_id: = String(reward_id_value)
-		var remaining: = maxf(0.0, float(shrine_cooldowns[reward_id]) - maxf(0.0, delta))
+		var remaining: = ShrineRespawn.remaining(reward_id) if Dictionary(RunState.overhaul_progress.get("shrine_respawn",{})).has(reward_id) else maxf(0.0, float(shrine_cooldowns[reward_id]) - maxf(0.0, delta))
 		if remaining <= 0.0:
 			shrine_cooldowns.erase(reward_id)
 			changed = true
@@ -1768,7 +1768,7 @@ func _claim_pocket_reward(cavern_index: int) -> Dictionary:
 	var kind: = String(reward.kind)
 	var plan: Dictionary
 	if kind == "shrine":
-		var cooldown: = maxf(float(shrine_cooldowns.get(reward_id, 0.0)),ShrineRespawn.remaining(reward_id))
+		var cooldown: = _shrine_remaining(reward_id)
 		if cooldown > 0.0:
 			return {"ok": false, "reason": "recharging", "remaining": cooldown}
 		plan = {
@@ -1812,7 +1812,7 @@ func _reward_by_id(reward_id: String) -> Dictionary:
 
 func _pocket_reward_is_claimed(reward_id: String) -> bool:
 	if String(_reward_by_id(reward_id).get("kind", "")) == "shrine":
-		return maxf(float(shrine_cooldowns.get(reward_id, 0.0)),ShrineRespawn.remaining(reward_id)) > 0.0
+		return _shrine_remaining(reward_id) > 0.0
 	if RunState.has_method("is_pocket_reward_claimed"):
 		return RunState.is_pocket_reward_claimed(reward_id)
 	return bool(claimed_rewards.get(reward_id, false))
@@ -3351,3 +3351,11 @@ func companion_hero_period(task: Dictionary = {}) -> float:
 	if mining_rush_remaining>0.0: period*=MINING_RUSH_COOLDOWN_MULTIPLIER
 	if task.has("rock") and bool(rocks[int(task.rock)].drill_gated): return 0.60
 	return period
+
+
+func _shrine_remaining(reward_id: String) -> float:
+	if Dictionary(RunState.overhaul_progress.get("shrine_respawn",{})).has(reward_id):
+		var seconds: float=ShrineRespawn.remaining(reward_id)
+		if seconds>0.0: shrine_cooldowns[reward_id]=seconds
+		return seconds
+	return float(shrine_cooldowns.get(reward_id,0.0))

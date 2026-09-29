@@ -32,7 +32,7 @@ func tick(delta: float) -> void:
 	spawn_clock-=delta
 	if spawn_clock<=0.0:
 		spawn_clock=rng.randf_range(18.0,32.0)
-		if worms.size()<MAX_WORMS: spawn_nearby()
+		if worms.size()<MAX_WORMS and spawn_nearby()==null: spawn_clock=3.0
 	for i in range(worms.size()-1,-1,-1):
 		var worm: Sprite2D=worms[i]
 		if not is_instance_valid(worm):
@@ -62,6 +62,12 @@ func spawn_nearby() -> Sprite2D:
 		var p: Vector2=mole.global_position+Vector2.from_angle(rng.randf()*TAU)*rng.randf_range(65.0,155.0)
 		if mole._blocked(p) or not mole._segment_clear(mole.global_position,p): continue
 		return spawn_at(p)
+	# Narrow tunnels still need common worms: try safe short offsets too.
+	var phase: float=rng.randf()*TAU
+	for radius in [40.0,24.0]:
+		for i in 16:
+			var p: Vector2=mole.global_position+Vector2.from_angle(phase+float(i)*TAU/16.0)*radius
+			if not mole._blocked(p) and mole._segment_clear(mole.global_position,p): return spawn_at(p)
 	return null
 
 func spawn_at(point: Vector2) -> Sprite2D:
