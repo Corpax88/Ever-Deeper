@@ -3,6 +3,10 @@ extends "res://scripts/qa/suites/dev14_review.gd"
 func run() -> void:
 	super.run()
 
+var node_asset_state: Dictionary = {}
+var node_asset_index: int = -1
+var node_asset_origin: Vector2
+
 var shared_reference_layer: CanvasLayer
 var prospect_checks: Dictionary = {}
 var prospect_results: Dictionary = {}
@@ -22,6 +26,14 @@ var ore_escape_goal: Vector2
 var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind)=="node_asset_fixture":
+		await _node_asset_fixture(String(data.mine_id))
+		command_id=int(data.id)
+		return
+	if String(data.kind)=="node_asset_stage":
+		_node_asset_stage(String(data.stage))
+		command_id=int(data.id)
+		return
 	if String(data.kind)=="prospecting_tests":
 		_test_prospecting()
 		command_id=int(data.id)
@@ -217,6 +229,7 @@ func _frame() -> void:
 	if ore_escape_active:
 		var mole: Node2D=ui.active_mole()
 		state["ore_escape"]={"distance":mole.global_position.distance_to(ore_escape_origin),"remaining":mole.global_position.distance_to(ore_escape_goal),"checks":mole_checks,"mode":mole.mode}
+	state["node_assets"]=node_asset_state
 	state["prospecting"]={"checks":prospect_checks,"results":prospect_results,"level":RunState.miner_skill_level("prospecting")}
 	JavaScriptBridge.eval("Object.assign(window.DEV14_STATE," + JSON.stringify(state) + ")", true)
 
@@ -533,3 +546,88 @@ func _test_prospecting() -> void:
 	_prospect_check("existing-level-preserved",skills.level("prospecting",clean)==50 and skills.prospecting_chance(skills.level("prospecting",clean))==0.25)
 	_mole_fixture("moss_ore")
 	_set_prospect_level(50)
+
+
+func _node_asset_fixture(mine_id: String) -> void:
+	main._cancel_mine_hold()
+	main._on_joystick_movement(Vector2.ZERO)
+	_gear("deepcore")
+	_require(main._dev_jump_mine(mine_id,2),"depth node entry")
+	await main.get_tree().process_frame
+	await main.get_tree().process_frame
+	var world: Node2D=main.depth_world
+	var mole: Node=main.get_node("CompanionInterface").active_mole()
+	mole.recall()
+	mole.autonomous_enabled=false
+	mole.worm_patch.spawn_clock=999.0
+	node_asset_index=-1
+	for i in world.rocks.size():
+		var rock: Dictionary=world.rocks[i]
+		if rock.drill_gated or rock.broken or String(rock.type)=="deepstone" or not String(rock.pocket_reward_id).is_empty(): continue
+		if not world._terrain_is_solid(rock.cell): continue
+		node_asset_index=i
+		break
+	_require(node_asset_index>=0,"authored buried renewable ore")
+	var rock: Dictionary=world.rocks[node_asset_index]
+	var cell: Vector2i=rock.cell
+	# Isolated reached corridor; preserve the actual target and its covering rock.
+	for y in range(1,5):
+		for x in range(-5,6):
+			var c: Vector2i=cell+Vector2i(x,y)
+			if not world._cell_in_bounds(c) or world._terrain_is_bedrock(c): continue
+			var index: int=world._cell_index(c)
+			world.terrain_hp[index]=0
+			world.concealed_cells.erase(index)
+			RunState.mark_terrain_dug(mine_id,index,2)
+	if not String(rock.cavern_id).is_empty():
+		RunState.mark_cavern_discovered(String(rock.cavern_id))
+		for cavern in world.caverns:
+			if String(cavern.id)==String(rock.cavern_id):
+				cavern.discovered=true
+				for index in cavern.cells: world.concealed_cells.erase(int(index))
+	node_asset_origin=world._cell_center(cell+Vector2i(0,2))
+	world.restore_position(node_asset_origin)
+	world.player.set_facing(Vector2.UP)
+	world.player.camera.reset_smoothing()
+	world._request_redraw()
+	node_asset_state={"mine":mine_id,"type":String(rock.type),"state_id":String(rock.state_id),"stage":"first","checks":{},"node_asset":world.resource_textures[String(rock.type)].resource_path,"old_hint_asset":world.wall_hint_textures.get(String(rock.type),world.resource_textures[String(rock.type)]).resource_path}
+	_node_asset_check("initial-covered",world._terrain_is_solid(cell) and not world._rock_is_exposed(node_asset_index))
+	_node_asset_check("initial-intact",int(rock.hp)==int(rock.max_hp) and not bool(rock.broken))
+	_node_asset_check("ore-asset-exists",world.resource_textures[String(rock.type)]!=null)
+	_node_asset_check("bedrock-preserved",world._terrain_is_bedrock(Vector2i(0,1)) and world._terrain_is_solid(Vector2i(0,1)))
+
+func _node_asset_check(key: String, value: bool) -> void:
+	node_asset_state.checks[key]=value
+	_require(value,"node assets: "+key)
+
+func _node_asset_stage(stage: String) -> void:
+	var world: Node2D=main.depth_world
+	var rock: Dictionary=world.rocks[node_asset_index]
+	if stage=="exposed":
+		for hit in 200:
+			if not world._terrain_is_solid(rock.cell): break
+			world._hit_terrain(rock.cell,true)
+		_node_asset_check("excavation-exposes-node",world._rock_is_exposed(node_asset_index))
+		_node_asset_check("excavation-keeps-ore",not bool(rock.broken) and int(rock.hp)==int(rock.max_hp))
+	elif stage=="respawn":
+		for hit in 200:
+			if bool(world.rocks[node_asset_index].broken): break
+			world._hit_rock(node_asset_index,true)
+		_node_asset_check("mining-depletes-node",bool(world.rocks[node_asset_index].broken))
+		world.rocks[node_asset_index].respawn_until_unix=Time.get_unix_time_from_system()-1.0
+		world.restore_position(node_asset_origin+Vector2(0,240))
+		world._update_rocks()
+		world.restore_position(node_asset_origin)
+		rock=world.rocks[node_asset_index]
+		_node_asset_check("respawn-restores-node",not bool(rock.broken) and int(rock.hp)==int(rock.max_hp) and world._rock_is_exposed(node_asset_index))
+		_node_asset_check("same-node-asset",world.resource_textures[String(rock.type)].resource_path==node_asset_state.node_asset)
+	elif stage=="reenter":
+		world._build_world()
+		world.restore_position(node_asset_origin)
+		rock=world.rocks[node_asset_index]
+		_node_asset_check("reentry-keeps-node",not bool(rock.broken) and world._rock_is_exposed(node_asset_index) and String(rock.state_id)==node_asset_state.state_id)
+	world.impacts.clear()
+	world.drops.clear()
+	world.player.camera.reset_smoothing()
+	world._request_redraw()
+	node_asset_state.stage=stage

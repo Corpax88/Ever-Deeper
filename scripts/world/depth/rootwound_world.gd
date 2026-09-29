@@ -2442,19 +2442,9 @@ func _draw_mineral_hint(cell: Vector2i, open_sides: Array) -> void :
 	var side: = open_sides.find(true)
 	if side < 0:
 		return
-	var rotations: = [0.0, PI * 0.5, PI, - PI * 0.5]
-	var offsets: = [Vector2(0, -17), Vector2(17, 0), Vector2(0, 17), Vector2(-17, 0)]
-	var kind: = String(rock.type)
-	var texture: Texture2D = wall_hint_textures.get(kind, resource_textures.get(kind))
-	if texture == null:
-		return
-	var max_height: = 84.0 if bool(rock.drill_gated) or wall_hint_textures.has(kind) else 62.0
-	var source_size: = Vector2(texture.get_size())
-	var scale_factor: = max_height / maxf(1.0, source_size.y)
-	var size: = source_size * scale_factor
-	_draw_canvas.draw_set_transform(_cell_center(cell) + offsets[side], rotations[side], Vector2.ONE)
-	_draw_canvas.draw_texture_rect(texture, Rect2( - size * Vector2(0.5, 0.62), size), false, Color(1, 1, 1, 0.88))
-	_draw_canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	# First sight and respawn use the same upright node art. Terrain still
+	# conceals and blocks the deposit until the player excavates its cell.
+	_draw_resource_node(rock)
 
 
 func _draw_drill_gates() -> void :
@@ -2588,20 +2578,25 @@ func _draw_resources() -> void :
 			continue
 		if bool(rock.drill_gated):
 			continue
-		var kind: = String(rock.type)
-		var texture: Texture2D = resource_textures.get(kind)
-		if texture == null:
-			continue
-		var source_size: = Vector2(texture.get_size())
-		var max_width: = 101.0 if bool(rock.drill_gated) else 96.0
-		var scale_factor: = minf(max_width / source_size.x, 92.0 / source_size.y)
-		var hit_pulse: = _resource_hit_pulse(position)
-		scale_factor *= 1.0 + hit_pulse * 0.075
-		var size: = source_size * scale_factor
-		var type_data: Dictionary = Dictionary(GameData.data.ROCK_TYPES[kind])
-		if bool(type_data.get("rare", false)) or bool(rock.drill_gated):
-			_draw_canvas.draw_circle(position, 52.0 + hit_pulse * 5.0, Color(Color(String(type_data.edge)), 0.09 + hit_pulse * 0.09))
-		_draw_canvas.draw_texture_rect(texture, Rect2(position - size * Vector2(0.5, 0.56), size), false, Color.WHITE)
+		_draw_resource_node(rock)
+
+
+func _draw_resource_node(rock: Dictionary) -> void:
+	var position: Vector2 = Vector2(rock.position)
+	var kind: = String(rock.type)
+	var texture: Texture2D = resource_textures.get(kind)
+	if texture == null:
+		return
+	var source_size: = Vector2(texture.get_size())
+	var max_width: = 101.0 if bool(rock.drill_gated) else 96.0
+	var scale_factor: = minf(max_width / source_size.x, 92.0 / source_size.y)
+	var hit_pulse: = _resource_hit_pulse(position)
+	scale_factor *= 1.0 + hit_pulse * 0.075
+	var size: = source_size * scale_factor
+	var type_data: Dictionary = Dictionary(GameData.data.ROCK_TYPES[kind])
+	if bool(type_data.get("rare", false)) or bool(rock.drill_gated):
+		_draw_canvas.draw_circle(position, 52.0 + hit_pulse * 5.0, Color(Color(String(type_data.edge)), 0.09 + hit_pulse * 0.09))
+	_draw_canvas.draw_texture_rect(texture, Rect2(position - size * Vector2(0.5, 0.56), size), false, Color.WHITE)
 
 
 func _resource_visible_rect(margin: Vector2) -> Rect2:
