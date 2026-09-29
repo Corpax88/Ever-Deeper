@@ -296,8 +296,14 @@ func _check_deep_treasury() -> void:
 	events.tick(5.0)
 	_check(float(RunState.deep_events.remaining)==28.0,"Menus pause Deep Event duration")
 	w.player.control_enabled=true
+	var event_gap: int=int(RunState.deep_events.next)-int(RunState.deep_events.mined)
+	var event_serial: int=int(RunState.deep_events.serial)
+	for i in 750: events.on_rock(Vector2i(i+100,200))
+	_check(int(RunState.deep_events.next)-int(RunState.deep_events.mined)==event_gap,"Powerful mining during an event retains the rare-event discovery gap")
 	events.tick(29.0)
 	_check(float(RunState.deep_events.remaining)==0.0 and events.speed()==1.0,"Event expires cleanly without keeping a permanent boost")
+	events.on_rock(Vector2i(900,200))
+	_check(int(RunState.deep_events.serial)==event_serial,"Event cannot immediately repeat after a large excavation burst")
 	RunState.deserialize(original)
 
 

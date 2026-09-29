@@ -46,7 +46,11 @@ func center() -> Vector2:
 func on_rock(cell: Vector2i) -> void:
 	var s: Dictionary = state()
 	s.mined = int(s.mined)+1
-	if float(s.remaining) > 0.0 or int(s.mined)<int(s.next): return
+	# Active-event mining must not spend the gap before the next discovery.
+	if float(s.remaining) > 0.0:
+		s.next = maxi(int(s.next)+1,int(s.mined)+1)
+		return
+	if int(s.mined)<int(s.next): return
 	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	rng.seed = int(RunState.world_seed) ^ (int(s.serial)+1)*73471
 	s.kind = KINDS[rng.randi_range(0,KINDS.size()-1)]
