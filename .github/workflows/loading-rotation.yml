@@ -1,0 +1,34 @@
+name: Verify LIVE loading screen rotation
+on:
+  push:
+    branches: [codex/loading-rotation-20260929]
+    paths: ['.github/loading-rotation/**', '.github/workflows/loading-rotation.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: loading-rotation, cancel-in-progress: true}
+jobs:
+  review:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/loading-rotation
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '11020836697'
+          merge-multiple: true
+          run-id: '36541177604'
+          github-token: '${{ github.token }}'
+          path: '${{ runner.temp }}/original'
+      - run: python3 .github/loading-rotation/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/candidate"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npx playwright install webkit
+      - run: node .github/loading-rotation/review.mjs "$RUNNER_TEMP/original" "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: loading-rotation-evidence, path: '${{ runner.temp }}/evidence', retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        with: {name: loading-rotation-candidate, path: '${{ runner.temp }}/candidate', retention-days: 30}
