@@ -247,6 +247,7 @@ func _frame() -> void:
 	state["treasury"]=main.hub_world.treasury.snapshot()
 	state["deep_events"]=main.endless_world.deep_events.snapshot()
 	state["hub_context"]=main.hub_context
+	state["hud_goal_visible"]=main.premium_hud.progression_goal_panel.visible
 	state["hub_player"]=[main.hub_world.player.position.x,main.hub_world.player.position.y]
 	state["deep_dig"]={"checks":deep_checks,"held":main.endless_world.external_mine_held,"movement":[main.endless_world.player.external_movement.x,main.endless_world.player.external_movement.y]}
 	state["node_assets"]=node_asset_state

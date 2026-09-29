@@ -839,6 +839,10 @@ func _progression_goal() -> Dictionary:
 func _update_visual_guide() -> void :
 	if guide_overlay == null or menu_open or inventory_open or not game_started:
 		return
+	if hub_world.treasury != null and hub_world.treasury.inside:
+		guide_overlay.clear_target()
+		hub_world.treasury.apply_hud()
+		return
 	guide_route_update_count += 1
 	var goal: Dictionary = _progression_goal()
 	if goal.is_empty():
@@ -3714,6 +3718,8 @@ func _refresh_hud() -> void :
 			not premium_hud.context_button.disabled
 		)
 		_update_presented_gold_labels()
+		if hub_world.treasury != null and hub_world.treasury.inside:
+			hub_world.treasury.apply_hud()
 	if inventory_open and resource_inventory != null:
 		resource_inventory.refresh_contents(
 			Dictionary(RunState.cargo),
