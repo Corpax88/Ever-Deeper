@@ -1,3 +1,7 @@
+# Current release — DEV15.24 automatic mole and worm power (29 September 2026)
+
+Published and verified: automatic mining by default, optional touch steering, common crawling28px earthworms with20sec hero-speed power,120sec renewable Mining Rush shrines. Gameplay de77d609a36c9efa3393072c202b7b8dde2b7518 on codex/mole-auto-20260929; never rebuild historical main. Read docs/mole-auto/HANDOFF.md and publication-receipt.json. Validation36593885775:44 browser gates, input/premium-core200, ordinary WebKit,16 inspected captures. Publication36594852414 verified27 public hashes, LIVE/Worn unchanged. FPS PARKED; no physical-iPhone claim. Earlier release history follows.
+
 # Current release — DEV15.23 commanded mole mining (29 September 2026)
 
 Published and verified: DEV15.23. Tap accessible rock/ore to assign slower continuous companion mining; hero equipment locks apply. Gameplay source1171d1e90a507e987d9f51dfb346c5a5d547c459 on codex/mole-mining-20260929. Never rebuild historical main. See docs/mole-mining/HANDOFF.md and docs/mole-mining/publication-receipt.json. Validation36582708554; publication36583744563 attempt2;27 public hashes verified, LIVE1.0.2 loading-rotation-1 and Worn unchanged. FPS investigation remains PARKED. All previous guidance/history follows.
