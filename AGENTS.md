@@ -1,3 +1,9 @@
+# Current release — DEV15.28 solid The Deep and mining fixes (29 September 2026)
+
+Published and verified: cyan Hub overlay removed; held-direction mining corrected; persistent physical drops; solid terrain with discoveries revealed by excavation. Gameplay source a58b99b40128b7e5a8eb34e626146a551b0137ca on codex/deep-dig-20260929. Never rebuild historical main. Read docs/deep-dig/HANDOFF.md and publication-receipt.json. Validation 36617600791: native input/premium-core 231, 12 browser gates including 32 Deep checks, actual simultaneous two-finger touch, ordinary WebKit; 15 screenshots inspected. Publication 36618603249 verifies 27 public hashes; LIVE/Worn unchanged. FPS remains PARKED; no physical-iPhone claim.
+
+Mats explicitly renewed authorization for uploads, graphical QA and DEV publication in this session. Do not ask again for those authorized steps. LIVE publication remains separate. Earlier approval denials occurred before this renewed authorization. Earlier release history follows.
+
 # Current release — DEV15.27 consistent Depth 2 node assets (29 September 2026)
 
 Published and verified. First-sight mineral hints now use the same upright node PNG/draw helper as exposed/respawned ore; covering terrain and real gate mechanics remain intact. Sourcef107dcdc082f61e8c3e9d4c8211a54743b5834b1 on codex/depth-node-assets-20260929; never rebuild historical main. Read [current handoff](docs/depth-node-assets/HANDOFF.md). Validation36613811052:22 browser gates including40 lifecycle checks acrossfourbiomes, input/premium-core200 and ordinary WebKit;26 reference/candidate/ordinary images inspected. Publication36614566540 verifies27publichashes; LIVE/Worn unchanged. Prospecting/mole fixes retained. No pending work; FPS PARKED. Historical invariant mismatch disclosed; no physical-iPhone claim.

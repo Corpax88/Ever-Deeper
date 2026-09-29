@@ -1,3 +1,9 @@
+# Current release — DEV15.28 solid The Deep and mining fixes (29 September 2026)
+
+Published and verified: cyan Hub overlay removed; held-direction mining corrected; persistent physical drops; solid terrain with discoveries revealed by excavation. Gameplay source a58b99b40128b7e5a8eb34e626146a551b0137ca on codex/deep-dig-20260929. Never rebuild historical main. Read docs/deep-dig/HANDOFF.md and publication-receipt.json. Validation 36617600791: native input/premium-core 231, 12 browser gates including 32 Deep checks, actual simultaneous two-finger touch, ordinary WebKit; 15 screenshots inspected. Publication 36618603249 verifies 27 public hashes; LIVE/Worn unchanged. FPS remains PARKED; no physical-iPhone claim.
+
+Mats explicitly renewed authorization for uploads, graphical QA and DEV publication in this session. Do not ask again for those authorized steps. LIVE publication remains separate. Earlier approval denials occurred before this renewed authorization. Earlier release history follows.
+
 # Current release — DEV15.24 automatic mole and worm power (29 September 2026)
 
 Published and verified: automatic mining by default, optional touch steering, common crawling28px earthworms with20sec hero-speed power,120sec renewable Mining Rush shrines. Gameplay de77d609a36c9efa3393072c202b7b8dde2b7518 on codex/mole-auto-20260929; never rebuild historical main. Read docs/mole-auto/HANDOFF.md and publication-receipt.json. Validation36593885775:44 browser gates, input/premium-core200, ordinary WebKit,16 inspected captures. Publication36594852414 verified27 public hashes, LIVE/Worn unchanged. FPS PARKED; no physical-iPhone claim. Earlier release history follows.
