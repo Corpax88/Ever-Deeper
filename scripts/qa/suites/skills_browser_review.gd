@@ -12,6 +12,15 @@ func _reload_scene() -> void:
 	tree.reload_current_scene()
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind) == "menu_stamina_forge":
+		command_id = int(data.id)
+		main._open_forge_commerce()
+		return
+	if String(data.kind) == "menu_stamina_reset":
+		command_id = int(data.id)
+		RunState.miner_skills.stamina = 0.0
+		RunState._stamina_rest = 0.0
+		return
 	if String(data.kind).begins_with("shared_"):
 		command_id = int(data.id)
 		var controller: Node = main.get_node("CompanionInterface")
@@ -77,9 +86,10 @@ func _frame() -> void:
 			"xp_value": row.xp_bar.value, "level_rect": _bounds(row.bar),
 			"xp_rect": _bounds(row.xp_bar), "numeric_xp": row.xp != null})
 	var bounds: Dictionary = {"hud_menu": _bounds(main.premium_hud.menu_button),
-		"dev_toggle": _bounds(main.developer_menu.toggle_button),
+		"dev_toggle": (_bounds(main.developer_menu.toggle_button) if is_instance_valid(main.developer_menu) else []),
 		"new_game": _bounds(main.premium_menu.main_card.get_node("NewGame")),
 		"continue": _bounds(main.premium_menu.continue_button),
+		"shop_close": _bounds(main.commerce_panel.cancel_button),
 		"settings_back": _bounds(main.premium_menu.detail_card.get_node("Back")),
 		"skills_close": _bounds(panel.close_button),
 		"joystick": _bounds(main.movement_pad),
@@ -104,7 +114,10 @@ func _frame() -> void:
 		"developer_tools_visible": is_instance_valid(main.developer_menu) and main.developer_menu.is_visible_in_tree(),
 		"mine_input_held": main.mine_held or Input.is_action_pressed("mine"),
 		"player_controls_enabled": main._active_player_node().control_enabled,
-		"stamina": RunState.stamina_value(), "skill_xp": RunState.miner_skills.duplicate(true),
+		"stamina": RunState.stamina_value(), "stamina_bar": panel.stamina_row.bar.value,
+		"physics_frame": Engine.get_physics_frames(), "stamina_rest": RunState._stamina_rest,
+		"game_started": main.game_started, "shop_open": main._shop_panel_is_open(),
+		"modal_active": main.menu_open or main.inventory_open or main._shop_panel_is_open() or main._companion_panel_is_open(), "skill_xp": RunState.miner_skills.duplicate(true),
 		"skills": RunState.miner_skill_rows(), "skill_progress": progress, "effort": RunState.stamina_effort_multiplier(),
 		"buttons": bounds, "skills_plate": _bounds(panel.plate),
 		"mole_open": main._companion_panel_is_open(), "guide_open": main.premium_hud._objective_open,
@@ -113,7 +126,7 @@ func _frame() -> void:
 		"hud_caption": _bounds(main.premium_hud.menu_caption),
 		"hud_caption_text": main.premium_hud.menu_caption.text,
 		"hud_caption_visible": main.premium_hud.menu_caption.is_visible_in_tree(),
-		"dev_drawer_open": main.developer_menu.drawer.visible,
+		"dev_drawer_open": (main.developer_menu.drawer.visible if is_instance_valid(main.developer_menu) else false),
 		"hud_guide_visible": main.premium_hud.guide_button.is_visible_in_tree(),
 		"hud_menu_icon": main.premium_hud.menu_button.icon.resource_path,
 		"hud_context": _bounds(main.premium_hud.context_button),
