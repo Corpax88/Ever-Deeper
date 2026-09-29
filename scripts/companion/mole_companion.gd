@@ -23,6 +23,9 @@ var mode: String = "follow"
 var facing: Vector2 = Vector2.DOWN
 var destination: Vector2 = Vector2.ZERO
 var task_point: Vector2 = Vector2.ZERO
+var work_task: Dictionary = {}
+var work_clock: float = 0.0
+var work_hits: int = 0
 var loot_id: String = ""
 var action: String = "idle"
 var animation_clock: float = 0.0
@@ -168,6 +171,12 @@ func _update_companion_actions(delta: float) -> void:
 	marker_time = maxf(0.0,marker_time-delta)
 	if is_instance_valid(marker): marker.visible = marker_time>0.0
 	animation_clock += delta
+	if mode == "work" and not _work_valid():
+		recall()
+	if action == "work":
+		_update_work(delta)
+		_draw_pose()
+		return
 	if action in ["pickup","shake"]:
 		_update_action(delta)
 		_draw_pose()
@@ -188,6 +197,9 @@ func _update_companion_actions(delta: float) -> void:
 		action_clock=0.0
 	elif mode=="dig":
 		_begin_shake()
+	elif mode=="work":
+		action="work"
+		action_clock=0.0
 	elif mode in ["command","scout","homeward"]:
 		if automatic_task:
 			recall()
@@ -195,7 +207,7 @@ func _update_companion_actions(delta: float) -> void:
 			mode="hold"
 			hold_time=0.0
 			_react("Here we are!",2.0)
-	if action not in ["pickup","shake"]:
+	if action not in ["pickup","shake","work"]:
 		action = "walk" if moving else "idle"
 	_draw_pose()
 
@@ -221,6 +233,8 @@ func _spawn_beside_hero() -> void:
 	separation.reset()
 
 func recall() -> void:
+	work_task.clear()
+	work_clock = 0.0
 	mode="follow"
 	action="idle"
 	loot_id=""
@@ -243,6 +257,7 @@ func rebase_world(offset: Vector2) -> void:
 	# Every remembered destination shares the world's floating local origin.
 	global_position += offset
 	destination += offset
+	if mode == "work": recall()
 	task_point += offset
 	if is_finite(route_goal.x): route_goal += offset
 	if is_finite(guide_point.x): guide_point += offset
@@ -255,12 +270,15 @@ func rebase_world(offset: Vector2) -> void:
 	hero_before_step += offset
 
 func command(point: Vector2) -> bool:
+	if world.has_method("companion_work_target"):
+		var task: Dictionary = world.companion_work_target(point)
+		if not task.is_empty(): return _command_work(task)
 	if point.distance_to(hero.global_position)>680.0:
 		_react("A little closer?",2.2)
 		return false
 	if _blocked(point):
 		if not Skills.has_skill("shake") or shake_cooldown>0.0 or not world.has_method("companion_can_dig") or not world.call("companion_can_dig",point):
-			_react("Learning to dig!" if not Skills.has_skill("shake") else "Resting paws: %ds" % ceili(shake_cooldown) if shake_cooldown>0.0 else "Too tough for my paws",2.4)
+			_react("Learning to dig!" if not Skills.has_skill("shake") else "Resting paws: %ds" % ceili(shake_cooldown) if shake_cooldown>0.0 else "Upgrade your tool for this rock",2.4)
 			return false
 		var landing: Vector2 = _nearby_floor(point)
 		if not is_finite(landing.x):
@@ -447,9 +465,9 @@ func _draw_pose() -> void:
 	elif action=="pickup":
 		sprite.texture=PICKUP
 		frame=mini(3,int(action_clock/0.18))
-	elif action in ["shake", "tunnel"]:
+	elif action in ["shake", "tunnel", "work"]:
 		sprite.texture=SHAKE
-		frame=int(action_clock/0.21)%4 if action=="tunnel" else mini(3,int(action_clock/0.21))
+		frame=int(action_clock/0.21)%4 if action in ["tunnel","work"] else mini(3,int(action_clock/0.21))
 	sprite.frame=row*4+frame
 	# Small whole-body gestures layer over the existing authored directional frames.
 	var breath: float=sin(animation_clock*2.6)*0.016 if action=="idle" else 0.0
@@ -569,6 +587,7 @@ func _move_task(delta: float) -> void:
 
 func _path_to(point: Vector2) -> Array[Vector2]:
 	path_searches+=1
+	var collision_results: Dictionary = {}
 	var tile: float = 64.0 if world.has_method("_is_floor") else 48.0
 	var start: Vector2i = Vector2i((global_position/tile).floor())
 	var goal: Vector2i = Vector2i((point/tile).floor())
@@ -586,8 +605,8 @@ func _path_to(point: Vector2) -> Array[Vector2]:
 			var candidate: Vector2i = cell+offset
 			var center: Vector2 = (Vector2(candidate)+Vector2(0.5,0.5))*tile
 			if came.has(candidate) or candidate.x<0 or candidate.y<0: continue
-			if _blocked(center): continue
-			if not _segment_clear((Vector2(cell)+Vector2(0.5,0.5))*tile,center): continue
+			if _path_point_blocked(center,collision_results): continue
+			if not _path_segment_clear((Vector2(cell)+Vector2(0.5,0.5))*tile,center,collision_results): continue
 			came[candidate]=cell
 			frontier.append(candidate)
 	var result: Array[Vector2] = []
@@ -597,7 +616,7 @@ func _path_to(point: Vector2) -> Array[Vector2]:
 		result.push_front((Vector2(cell)+Vector2(0.5,0.5))*tile)
 		cell=Vector2i(came[cell])
 	var start_center: Vector2=(Vector2(start)+Vector2(0.5,0.5))*tile
-	if global_position.distance_to(start_center)>0.5 and _segment_clear(global_position,start_center): result.push_front(start_center)
+	if global_position.distance_to(start_center)>0.5 and _path_segment_clear(global_position,start_center,collision_results): result.push_front(start_center)
 	result.append(point)
 	return result
 
@@ -646,7 +665,7 @@ func _ping(point: Vector2) -> void:
 	marker.visible=true
 
 func debug_snapshot() -> Dictionary:
-	return {"mode":mode,"action":action,"position":global_position,"destination":destination,"collected":collected_total,"dug":dug_total,"frame":sprite.frame,"light":lamp.debug_snapshot(),"shake_cooldown":shake_cooldown,"automatic_task":automatic_task,"path_searches":path_searches}
+	return {"mode":mode,"action":action,"position":global_position,"destination":destination,"collected":collected_total,"dug":dug_total,"frame":sprite.frame,"light":lamp.debug_snapshot(),"shake_cooldown":shake_cooldown,"automatic_task":automatic_task,"path_searches":path_searches,"work_hits":work_hits,"work_key":work_task.get("key","")}
 
 func _react(message: String, duration: float=2.0, automatic: bool=false) -> void:
 	if automatic:
@@ -659,6 +678,7 @@ func pet() -> void:
 	_react("Happy little paws!",2.5)
 
 func status_text() -> String:
+	if mode == "work": return "Mining for you" if action == "work" else "Off to mine"
 	if action=="pickup": return "Scooping up ore"
 	if action=="shake": return "Helping you dig!" if assist_action else "Earthshaker!"
 	match mode:
@@ -675,3 +695,67 @@ func direction_hint() -> String:
 	var offset: Vector2=guide_point-hero.global_position
 	var arrow: String="Right" if absf(offset.x)>absf(offset.y) and offset.x>0 else "Left" if absf(offset.x)>absf(offset.y) else "Down" if offset.y>0 else "Up"
 	return ("Ore" if guide_kind=="ore_nose" else "Home" if guide_kind=="homeward" else "Passage")+" · "+arrow+" · "+str(roundi(offset.length()/48.0))+" steps"
+
+
+# These results live only in the caller's synchronous path search.
+# Movement/separation outside that search still use the original collision query.
+func _path_point_blocked(point: Vector2, results: Dictionary) -> bool:
+	if results.has(point): return bool(results[point])
+	var blocked: bool = _blocked(point)
+	results[point] = blocked
+	return blocked
+
+func _path_segment_clear(a: Vector2, b: Vector2, results: Dictionary) -> bool:
+	var steps: int = maxi(1,ceili(a.distance_to(b)/12.0))
+	for i in range(1,steps+1):
+		if _path_point_blocked(a.lerp(b,float(i)/float(steps)),results): return false
+	return true
+
+func _command_work(task: Dictionary) -> bool:
+	var point: Vector2 = task.point
+	if point.distance_to(hero.global_position)>HELP_RADIUS:
+		_react("A little closer?",2.2)
+		return false
+	var landing: Vector2 = Vector2(INF,INF)
+	var best: float = INF
+	# Select a reachable adjacent stand point, never tunnel through a blocked route.
+	for radius in [32.0,48.0,64.0,80.0]:
+		for index in 16:
+			var candidate: Vector2 = point+Vector2.from_angle(float(index)*TAU/16.0)*radius
+			var score: float = global_position.distance_squared_to(candidate)
+			if score>=best or _blocked(candidate): continue
+			if not _segment_clear(global_position,candidate) and _path_to(candidate).is_empty(): continue
+			if world.has_method("_clear_mining_line") and not world.call("_clear_mining_line",candidate,point,true): continue
+			landing=candidate
+			best=score
+	if not is_finite(landing.x):
+		_react("Need an open path",2.0)
+		return false
+	recall()
+	work_task=task.duplicate()
+	task_point=point
+	destination=landing
+	mode="work"
+	_ping(point)
+	_react("I'll mine this for you!",2.2)
+	return true
+
+func _work_valid() -> bool:
+	if work_task.is_empty() or task_point.distance_to(hero.global_position)>HELP_RADIUS: return false
+	var current: Dictionary = world.companion_work_target(task_point)
+	return current.get("key","") == work_task.get("key","")
+
+func _update_work(delta: float) -> void:
+	if not _work_valid():
+		recall()
+		return
+	facing=(task_point-global_position).normalized()
+	action_clock+=delta
+	work_clock+=delta
+	if work_clock < float(world.companion_work_period()): return
+	work_clock=0.0
+	world.companion_work_hit(work_task)
+	work_hits+=1
+	if not _work_valid():
+		recall()
+		_react("All done!",2.0)

@@ -3504,7 +3504,7 @@ func _apply_crusher_wave(center: Vector2i, tool: Dictionary) -> void:
 	queue_redraw()
 
 
-func _strike_wall(cell: Vector2i, progress: float) -> void:
+func _strike_wall(cell: Vector2i, progress: float, companion: bool = false) -> void:
 	if cell.x < 0 or _is_floor(cell) or not _cell_diggable(cell):
 		return
 	var tool: Dictionary = _current_endless_tool()
@@ -3514,8 +3514,8 @@ func _strike_wall(cell: Vector2i, progress: float) -> void:
 	AudioDirector.play_mining("deepstone", destroyed, false)
 	if destroyed:
 		_break_diggable_cell(cell)
-	player.set_mining_visual(true, progress, 1.0, MINING_HIT_PROGRESS)
-	if String(RunState.starforge_variant) == "crusher":
+	if not companion: player.set_mining_visual(true, progress, 1.0, MINING_HIT_PROGRESS)
+	if not companion and String(RunState.starforge_variant) == "crusher":
 		_apply_crusher_wave(cell, tool)
 	queue_redraw()
 
@@ -3549,3 +3549,24 @@ func companion_ore_target(origin: Vector2) -> Vector2:
 			point=resource.position
 			distance=point.distance_to(origin)
 	return point
+
+
+func companion_work_target(point: Vector2) -> Dictionary:
+	if not RunState._endless_band_in_reach(depth_at_position(point)): return {}
+	for index in resources.size():
+		var resource: Dictionary = resources[index]
+		if not bool(resource.mined) and Vector2(resource.position).distance_to(point) < TILE_SIZE * 0.48 and _is_floor(Vector2i(resource.cell)):
+			return {"key": String(resource.id), "point": Vector2(resource.position), "resource": index}
+	if companion_can_dig(point):
+		var cell: Vector2i = _world_to_cell(point)
+		return {"key": str(absolute_cell(cell)), "point": _cell_center(cell), "cell": cell}
+	return {}
+
+func companion_work_hit(task: Dictionary) -> void:
+	if task.has("resource"):
+		_strike_resource(int(task.resource),-1,false)
+		AudioDirector.play_mining(String(resources[int(task.resource)].kind),bool(resources[int(task.resource)].mined),false)
+	else: _strike_wall(Vector2i(task.cell),0.5,true)
+
+func companion_work_period() -> float:
+	return maxf(1.68, 3.0 * _mining_cycle_duration())

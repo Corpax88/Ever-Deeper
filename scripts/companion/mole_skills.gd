@@ -3,7 +3,7 @@ extends RefCounted
 
 const SKILLS: Array[Dictionary] = [
 	{"id":"lantern","name":"Little Lantern","detail":"A warm helmet beam lights the tunnel beside you.","gold":0,"bond":0,"requires":""},
-	{"id":"fetch","name":"Fetch","detail":"Automatically collects nearby loose ore into your backpack and stays close as you move. No commands needed.","gold":0,"bond":0,"requires":""},
+	{"id":"fetch","name":"Fetch","detail":"Automatically collects nearby loose ore into your backpack and stays close as you move. Tap an accessible rock to mine it for you at a slower pace. Uses your tool unlocks. Tap open ground to stop.","gold":0,"bond":0,"requires":""},
 	{"id":"trailrunner","name":"Trailrunner","detail":"Runs 60% faster while fetching and following. Faster feet bring ore back sooner.","gold":35,"bond":5,"requires":"fetch"},
 	{"id":"big_paws","name":"Big Paws","detail":"Scoops up a whole nearby cluster with more than triple the pickup reach. Works automatically.","gold":60,"bond":10,"requires":"fetch"},
 	{"id":"ore_nose","name":"Ore Nose","detail":"Sniffs for exposed ore every 10 seconds while exploring and lights a reachable vein nearby. Returns to help when you start mining.","gold":90,"bond":15,"requires":"big_paws"},
@@ -62,3 +62,4 @@ static func config(selected: String = "mole:fetch") -> Dictionary:
 			"future_unlock":"%d bond available · earned by collecting ore together" % bond(),
 		})
 	return {"panel_id":"companion","title":"Your Mining Companion","subtitle":"Skills help automatically · collect ore to earn bond","catalog_label":"Skills","selected_item_id":selected,"items":items}
+

@@ -11,7 +11,20 @@ func _reload_scene() -> void:
 	JavaScriptBridge.eval("window.DEV14_STATE=null;window.DEV14_COMMAND=''",true)
 	tree.reload_current_scene()
 
+var mole_target: Vector2 = Vector2.ZERO
+var mole_task_key: String = ""
+var mole_case: String = ""
+var mole_checks: Dictionary = {}
+
 func _command(data: Dictionary) -> void:
+	if String(data.kind) == "mole_fixture":
+		command_id = int(data.id)
+		_mole_fixture(String(data.scenario))
+		return
+	if String(data.kind) == "mole_recall":
+		command_id = int(data.id)
+		main.get_node("CompanionInterface").active_mole().recall()
+		return
 	if String(data.kind) == "menu_stamina_forge":
 		command_id = int(data.id)
 		main._open_forge_commerce()
@@ -138,6 +151,12 @@ func _frame() -> void:
 	if is_instance_valid(panel.map_view):
 		var rect: Rect2 = panel.map_view._map_rect
 		state.map_rect = [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
+	if not mole_case.is_empty():
+		var mole: Node2D = ui.active_mole()
+		var world: Node2D = mole.world
+		var p: Vector2 = world.get_canvas_transform()*mole_target
+		var current: Dictionary = world.companion_work_target(mole_target)
+		state["work"] = {"scenario":mole_case,"target":[p.x,p.y],"key":mole_task_key,"remaining":current.get("key","")==mole_task_key,"mole":mole.debug_snapshot(),"period":world.companion_work_period(),"checks":mole_checks,"feedback":mole.feedback}
 	JavaScriptBridge.eval("Object.assign(window.DEV14_STATE," + JSON.stringify(state) + ")", true)
 
 func _bounds(control: Control) -> Array:
@@ -146,3 +165,76 @@ func _bounds(control: Control) -> Array:
 
 func _rect_bounds(rect: Rect2) -> Array:
 	return [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
+
+
+func _mole_fixture(scenario: String) -> void:
+	main._cancel_mine_hold()
+	main._on_joystick_movement(Vector2.ZERO)
+	RunState.overhaul_progress["skills"] = {}
+	mole_case=scenario
+	mole_checks={}
+	var world: Node2D
+	if scenario.begins_with("moss"):
+		main._dev_jump_mine("mossMine",1)
+		_gear("worn")
+		world=main.mine_world
+		_require(_place_moss(Vector2.RIGHT),"moss placement")
+		var cell: Vector2i = world._find_mine_target()
+		mole_target=world._cell_center(cell)
+		var block: Dictionary = world._make_block("copper" if scenario=="moss_ore" else "stone",3,1,"resource" if scenario=="moss_ore" else "terrain")
+		world._set_block(cell,block)
+		world.target_dirty=true
+		mole_checks["legacy_rejected_ore"]=not world.companion_can_dig(mole_target) if scenario=="moss_ore" else true
+		block.requires_tool=99
+		world._set_block(cell,block)
+		mole_checks["tool_gate"]=world.companion_work_target(mole_target).is_empty()
+		block.requires_tool=1
+		block.kind="bedrock"
+		world._set_block(cell,block)
+		mole_checks["bedrock"]=world.companion_work_target(mole_target).is_empty()
+		block.kind="copper" if scenario=="moss_ore" else "stone"
+		world._set_block(cell,block)
+	elif scenario=="endless_ore":
+		main._dev_jump_endless(1)
+		_gear("deepcore")
+		world=main.endless_world
+		_require(_place_endless(Vector2.RIGHT),"endless placement")
+		var index: int = world._nearest_resource_index()
+		mole_target=Vector2(world.resources[index].position)
+		world.resources[index].hp=int(world._current_endless_tool().power)*3
+	elif scenario=="depth_ore":
+		main._dev_jump_mine("mossMine",2)
+		_gear("deepcore")
+		world=main.depth_world
+		var found: bool=false
+		for index in world.rocks.size():
+			if not world._rock_is_exposed(index): continue
+			var point: Vector2=world.rocks[index].position
+			if world.companion_work_target(point).is_empty(): continue
+			for direction in [Vector2.LEFT,Vector2.RIGHT,Vector2.UP,Vector2.DOWN]:
+				var position: Vector2=point+direction*64.0
+				world.restore_position(position)
+				if world.player.global_position.distance_to(position)>2.0: continue
+				world.player.set_facing(-direction)
+				mole_target=point
+				world.rocks[index].hp=int(world._current_tool().power)*3
+				world.rocks[index].shell=0
+				found=true
+				break
+			if found: break
+		_require(found,"exposed depth resource")
+	else:
+		main._dev_jump_surface()
+		_gear("worn")
+		world=main.surface_world
+		world.restore_position(Vector2(812,650))
+		world.player.set_facing(Vector2.UP)
+		world.ore_mountain_hp=3
+		mole_target=world._ore_mountain_hit_point(world.player.global_position)
+	var task: Dictionary=world.companion_work_target(mole_target)
+	_require(not task.is_empty(),"manual target accepted: "+scenario)
+	mole_task_key=String(task.get("key",""))
+	var mole: Node2D=world.get_node("MoleCompanion")
+	mole._spawn_beside_hero()
+	mole.work_hits=0
+	main._refresh_hud()

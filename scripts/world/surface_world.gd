@@ -2422,8 +2422,8 @@ func _catch_up_moonglass_resource() -> void :
 	moon_bloom_updated_unix = now
 
 
-func _mine_moonglass_resource_once() -> void :
-	if active_context != "moonglass_resource" or not bool(RunState.area_unlocked):
+func _mine_moonglass_resource_once(companion: bool = false) -> void :
+	if (not companion and active_context != "moonglass_resource") or not bool(RunState.area_unlocked):
 		return
 	if moon_bloom_target_index < 0 or moon_bloom_target_index >= moon_bloom_nodes.size():
 		moon_bloom_target_index = _nearest_moonglass_bloom_node()
@@ -2433,7 +2433,7 @@ func _mine_moonglass_resource_once() -> void :
 	if int(node.hp) <= 0:
 		return
 	moon_bloom_hit_count += 1
-	player.record_mining_presentation_impact()
+	if not companion: player.record_mining_presentation_impact()
 	_spawn_moonglass_effect(false, Vector2(node.position))
 	_spawn_surface_material_spray(MOON_BLOOM_ID, Vector2(node.position))
 	var tool: = _mountain_tool()
@@ -2821,11 +2821,11 @@ func _catch_up_timed_surface_resources() -> void :
 		timed_surface_veins[vein_id] = runtime
 
 
-func _mine_timed_surface_resource_once(vein_id: String) -> void :
+func _mine_timed_surface_resource_once(vein_id: String, companion: bool = false) -> void :
 	if not timed_surface_veins.has(vein_id) or not _timed_surface_resource_unlocked(vein_id):
 		return
 	var config: = _timed_surface_config(vein_id)
-	if active_context != String(config.context):
+	if not companion and active_context != String(config.context):
 		return
 	var runtime: Dictionary = timed_surface_veins[vein_id]
 	var target_index: = int(runtime.target_index)
@@ -2854,7 +2854,7 @@ func _mine_timed_surface_resource_once(vein_id: String) -> void :
 	else:
 		node.hp = maxi(0, int(node.hp) - power)
 	runtime.hit_count = int(runtime.hit_count) + 1
-	player.record_mining_presentation_impact()
+	if not companion: player.record_mining_presentation_impact()
 	nodes[target_index] = node
 	runtime.nodes = nodes
 	runtime.target_index = target_index
@@ -3485,8 +3485,8 @@ func _reset_timed_surface_resources() -> void :
 		_update_timed_surface_visual(vein_id)
 
 
-func _mine_ore_mountain_once() -> void :
-	if active_context != "ore_mountain":
+func _mine_ore_mountain_once(companion: bool = false) -> void :
+	if not companion and active_context != "ore_mountain":
 		return
 	var active_tool: = _mountain_tool()
 	var power: = int(active_tool.get("power", 1))
@@ -3499,7 +3499,7 @@ func _mine_ore_mountain_once() -> void :
 	var visual_progress: = 0.38
 	if ore_mountain_swing_active:
 		visual_progress = clampf(ore_mountain_swing_elapsed / maxf(0.001, ore_mountain_swing_duration), 0.0, 1.0)
-	player.set_mining_visual(true, visual_progress, 1.0)
+	if not companion: player.set_mining_visual(true, visual_progress, 1.0)
 	if removed_mass > 0:
 		AudioDirector.play_mining("copper", ore_mountain_hp <= 0, false)
 	else:
@@ -3518,9 +3518,9 @@ func _mine_ore_mountain_once() -> void :
 		message_changed.emit("Copper Ridge cracked · ore scattered across the path")
 
 
-func _mine_surface_resource_mountain_once(mountain_id: String) -> void :
+func _mine_surface_resource_mountain_once(mountain_id: String, companion: bool = false) -> void :
 	if (
-		active_context != mountain_id
+		(not companion and active_context != mountain_id)
 		or not surface_resource_mountains.has(mountain_id)
 		or not _surface_resource_mountain_unlocked(mountain_id)
 	):
@@ -3544,7 +3544,7 @@ func _mine_surface_resource_mountain_once(mountain_id: String) -> void :
 			float(entry.swing_elapsed) / maxf(0.001, float(entry.swing_duration)),
 			0.0, 1.0
 		)
-	player.set_mining_visual(true, visual_progress, 1.0)
+	if not companion: player.set_mining_visual(true, visual_progress, 1.0)
 	if removed_mass <= 0:
 		AudioDirector.play_blocked()
 		_update_surface_resource_mountain_visual(mountain_id)
@@ -5889,3 +5889,44 @@ func _build_later_backdrops() -> void:
 		material.set_shader_parameter("right_edge",float(spec[3]))
 		material.set_shader_parameter("last_biome",bool(spec[4]))
 		backdrop.material=material
+
+
+func companion_work_target(point: Vector2) -> Dictionary:
+	if ore_mountain_hp > 0 and Rect2(MOSS_ORE_MOUNTAIN_POSITION-Vector2(220,260),Vector2(440,300)).has_point(point):
+		return {"key":"ore_mountain", "point":_ore_mountain_hit_point(player.global_position), "kind":"copper"}
+	for id in surface_resource_mountains:
+		var config: Dictionary = SURFACE_RESOURCE_MOUNTAIN_CONFIGS[id]
+		var anchor: Vector2 = config.anchor
+		var size: Vector2 = config.max_size
+		if int(surface_resource_mountains[id].hp)>0 and _surface_resource_mountain_unlocked(id) and Rect2(anchor-Vector2(size.x*0.5,size.y),size+Vector2(0,35)).has_point(point):
+			return {"key":id, "point":_surface_resource_mountain_hit_point(id,player.global_position), "kind":"mountain"}
+	if bool(RunState.area_unlocked):
+		for index in moon_bloom_nodes.size():
+			var node: Dictionary = moon_bloom_nodes[index]
+			if int(node.hp)>0 and Vector2(node.position).distance_to(point)<42.0:
+				return {"key":"moon:"+str(index),"point":Vector2(node.position),"kind":"moon","index":index}
+	for id in timed_surface_veins:
+		if not _timed_surface_resource_unlocked(id): continue
+		var nodes: Array = timed_surface_veins[id].nodes
+		for index in nodes.size():
+			if int(nodes[index].hp)>0 and Vector2(nodes[index].position).distance_to(point)<42.0:
+				return {"key":String(id)+":"+str(index),"point":Vector2(nodes[index].position),"kind":"timed","vein":id,"index":index}
+	return {}
+
+func companion_work_hit(task: Dictionary) -> void:
+	match String(task.kind):
+		"copper": _mine_ore_mountain_once(true)
+		"mountain": _mine_surface_resource_mountain_once(String(task.key),true)
+		"moon":
+			var previous: int = moon_bloom_target_index
+			moon_bloom_target_index = int(task.index)
+			_mine_moonglass_resource_once(true)
+			moon_bloom_target_index = previous
+		"timed":
+			var previous: int = int(timed_surface_veins[task.vein].target_index)
+			timed_surface_veins[task.vein].target_index = int(task.index)
+			_mine_timed_surface_resource_once(String(task.vein),true)
+			timed_surface_veins[task.vein].target_index = previous
+
+func companion_work_period() -> float:
+	return maxf(1.68,3.0*float(_mountain_tool().get("cooldown",0.72)))

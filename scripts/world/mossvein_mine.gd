@@ -948,7 +948,7 @@ func _reset_heat_streak() -> void :
 	heat_streak_active = false
 
 
-func _mine_once() -> void :
+func _mine_once(companion: bool = false) -> void :
 	var target: = current_target if current_target.x >= 0 else _find_mine_target()
 	if target.x < 0 or not blocks.has(target):
 		AudioDirector.play_blocked()
@@ -983,7 +983,7 @@ func _mine_once() -> void :
 		block.hp = maxi(0, int(block.hp) - power)
 	_set_block(target, block)
 	var broken: = int(block.shell) <= 0 and int(block.hp) <= 0
-	var crusher_active: = String(RunState.starforge_variant) == "crusher"
+	var crusher_active: = not companion and String(RunState.starforge_variant) == "crusher"
 	var impact: = {
 		"position": _target_contact_point(target),
 		"age": 0.0,
@@ -996,7 +996,7 @@ func _mine_once() -> void :
 		impacts.remove_at(0)
 	impacts.append(impact)
 	AudioDirector.play_mining(String(block.kind), broken, was_armored)
-	player.set_mining_visual(true, _mining_visual_progress(swing_elapsed / swing_duration), 1.0)
+	if not companion: player.set_mining_visual(true, _mining_visual_progress(swing_elapsed / swing_duration), 1.0)
 	if broken:
 		_erase_block(target)
 		var dug_index: = target.y * cols + target.x
@@ -2980,3 +2980,20 @@ func _clear_blocks() -> void:
 	if blocks.is_empty(): return
 	blocks.clear()
 	_block_occupancy_revision += 1
+
+func companion_work_target(point: Vector2) -> Dictionary:
+	var cell: Vector2i = _world_to_cell(point)
+	if not blocks.has(cell): return {}
+	var block: Dictionary = blocks[cell]
+	if String(block.kind) == "bedrock" or int(block.get("requires_tool",0)) > RunState.pickaxe_level or not _open_block_sides(cell).has(true): return {}
+	return {"key": str(cell), "point": _cell_center(cell), "cell": cell}
+
+func companion_work_hit(task: Dictionary) -> void:
+	var previous: Vector2i = current_target
+	current_target = task.cell
+	_mine_once(true)
+	current_target = previous
+	target_dirty = true
+
+func companion_work_period() -> float:
+	return maxf(1.68, 3.0 * float(_current_tool().get("cooldown",0.72)))

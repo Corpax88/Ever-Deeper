@@ -1061,7 +1061,7 @@ func _reset_heat_streak() -> void :
 	heat_streak_active = false
 
 
-func _hit_terrain(cell: Vector2i) -> bool:
+func _hit_terrain(cell: Vector2i, companion: bool = false) -> bool:
 	if not _terrain_is_solid(cell):
 		return false
 	if _terrain_is_bedrock(cell):
@@ -1085,7 +1085,7 @@ func _hit_terrain(cell: Vector2i) -> bool:
 	}
 	_attach_crusher_debris(impact, cell)
 	_append_impact(impact)
-	player.set_mining_visual(true, _mining_visual_progress(), 1.0)
+	if not companion: player.set_mining_visual(true, _mining_visual_progress(), 1.0)
 	if terrain_hp[index] <= 0:
 		dug_indices[index] = true
 		if RunState.has_method("mark_terrain_dug"):
@@ -1098,14 +1098,14 @@ func _hit_terrain(cell: Vector2i) -> bool:
 		_discover_cavern_from_cell(index)
 		_emit_revealed_resources(cell)
 		message_changed.emit("DEEPSTONE BROKEN · tunnel opened")
-	if String(RunState.starforge_variant) == "crusher":
+	if not companion and String(RunState.starforge_variant) == "crusher":
 		_apply_depth_crusher_wave(cell, tool)
 	target_dirty = true
 	_request_redraw()
 	return true
 
 
-func _hit_rock(rock_index: int) -> bool:
+func _hit_rock(rock_index: int, companion: bool = false) -> bool:
 	if rock_index < 0 or rock_index >= rocks.size():
 		return false
 	var rock: = rocks[rock_index]
@@ -1153,13 +1153,13 @@ func _hit_rock(rock_index: int) -> bool:
 	}
 	_attach_crusher_debris(impact, _world_to_cell(Vector2(rock.position)))
 	_append_impact(impact)
-	player.set_mining_visual(true, _mining_visual_progress(), 1.0)
+	if not companion: player.set_mining_visual(true, _mining_visual_progress(), 1.0)
 	if int(rock.shell) <= 0 and int(rock.hp) <= 0:
 		var crusher_origin: Variant = (
 			Vector2(rock.position) if String(RunState.starforge_variant) == "crusher" else null
 		)
 		_break_rock(rock_index, crusher_origin)
-	if String(RunState.starforge_variant) == "crusher":
+	if not companion and String(RunState.starforge_variant) == "crusher":
 		_apply_depth_crusher_wave(_world_to_cell(Vector2(rock.position)), tool)
 	target_dirty = true
 	_request_redraw()
@@ -3321,3 +3321,24 @@ func companion_ore_target(origin: Vector2) -> Vector2:
 			distance=point.distance_to(origin)
 			result=point
 	return result
+
+
+func companion_work_target(point: Vector2) -> Dictionary:
+	var cell: Vector2i = _world_to_cell(point)
+	for index in Array(rocks_by_cell.get(cell,[])):
+		var rock: Dictionary = rocks[int(index)]
+		if not _rock_is_exposed(int(index)): continue
+		if int(rock.requires_drill_level) > RunState.drill_level or int(rock.required_pickaxe) > RunState.pickaxe_level or (bool(rock.requires_deep_tool) and not _has_deep_tool()): return {}
+		return {"key": String(rock.state_id), "point": Vector2(rock.position), "cell": cell, "rock": int(index)}
+	if not _has_deep_tool() or not _terrain_is_solid(cell) or _terrain_is_bedrock(cell): return {}
+	for offset in [Vector2i.LEFT,Vector2i.RIGHT,Vector2i.UP,Vector2i.DOWN]:
+		if not _terrain_is_solid(cell+offset):
+			return {"key": str(cell), "point": _cell_center(cell), "cell": cell}
+	return {}
+
+func companion_work_hit(task: Dictionary) -> void:
+	if task.has("rock"): _hit_rock(int(task.rock),true)
+	else: _hit_terrain(Vector2i(task.cell),true)
+
+func companion_work_period() -> float:
+	return maxf(1.68, 3.0 * float(_current_tool().get("cooldown",0.72)))
