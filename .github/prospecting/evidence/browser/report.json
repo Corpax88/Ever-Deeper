@@ -1,0 +1,5456 @@
+{
+  "passed": true,
+  "error": null,
+  "source_commit": "e6c52fd93048300d069bfbae44ab12d28b7caf9d",
+  "version": "1.0.0-dev.15.26",
+  "flavor": "dev",
+  "files": {
+    "index.html": {
+      "size": 23145,
+      "sha256": "04700d8ecc5b295a3e04ca36710da5bfe16f46ae800705377420a0ae9267e030"
+    },
+    "index.js": {
+      "size": 282403,
+      "sha256": "1c05fc40c7e418b0234c4e5ac39dfc7df1286e98443946e84b89a7394de6c753"
+    },
+    "index.pck": {
+      "size": 265159218,
+      "sha256": "167d28b9bfff662a0961024c38020ebc83c8263f8b0a001ff6eebcda61dabe96"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 4571,
+      "sha256": "65bc52dba653b2c39735a621863ae7332dda9c65d3a1bd7891d356390110da7f"
+    }
+  },
+  "runtime": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+    "lost": false,
+    "dpr": 2
+  },
+  "checks": [
+    {
+      "name": "graphical-renderer",
+      "passed": true,
+      "runtime": {
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+        "lost": false,
+        "dpr": 2
+      }
+    },
+    {
+      "name": "prospecting-production-tests",
+      "passed": true,
+      "prospecting": {
+        "checks": {
+          "below-boundary-1": true,
+          "below-boundary-100": true,
+          "below-boundary-25": true,
+          "below-boundary-50": true,
+          "boundary-0": true,
+          "boundary-1": true,
+          "boundary-100": true,
+          "boundary-25": true,
+          "boundary-50": true,
+          "chance-0": true,
+          "chance-1": true,
+          "chance-100": true,
+          "chance-25": true,
+          "chance-50": true,
+          "claim_endless_resource_node-bonus-observed": true,
+          "claim_endless_resource_node-once-0": true,
+          "claim_endless_resource_node-once-1": true,
+          "claim_endless_resource_node-once-10": true,
+          "claim_endless_resource_node-once-11": true,
+          "claim_endless_resource_node-once-12": true,
+          "claim_endless_resource_node-once-13": true,
+          "claim_endless_resource_node-once-14": true,
+          "claim_endless_resource_node-once-15": true,
+          "claim_endless_resource_node-once-2": true,
+          "claim_endless_resource_node-once-3": true,
+          "claim_endless_resource_node-once-4": true,
+          "claim_endless_resource_node-once-5": true,
+          "claim_endless_resource_node-once-6": true,
+          "claim_endless_resource_node-once-7": true,
+          "claim_endless_resource_node-once-8": true,
+          "claim_endless_resource_node-once-9": true,
+          "claim_endless_resource_node0": true,
+          "claim_endless_resource_node1": true,
+          "claim_endless_resource_node10": true,
+          "claim_endless_resource_node11": true,
+          "claim_endless_resource_node12": true,
+          "claim_endless_resource_node13": true,
+          "claim_endless_resource_node14": true,
+          "claim_endless_resource_node15": true,
+          "claim_endless_resource_node2": true,
+          "claim_endless_resource_node3": true,
+          "claim_endless_resource_node4": true,
+          "claim_endless_resource_node5": true,
+          "claim_endless_resource_node6": true,
+          "claim_endless_resource_node7": true,
+          "claim_endless_resource_node8": true,
+          "claim_endless_resource_node9": true,
+          "claim_endless_rock_cell-bonus-observed": true,
+          "claim_endless_rock_cell-once-0": true,
+          "claim_endless_rock_cell-once-1": true,
+          "claim_endless_rock_cell-once-10": true,
+          "claim_endless_rock_cell-once-11": true,
+          "claim_endless_rock_cell-once-12": true,
+          "claim_endless_rock_cell-once-13": true,
+          "claim_endless_rock_cell-once-14": true,
+          "claim_endless_rock_cell-once-15": true,
+          "claim_endless_rock_cell-once-2": true,
+          "claim_endless_rock_cell-once-3": true,
+          "claim_endless_rock_cell-once-4": true,
+          "claim_endless_rock_cell-once-5": true,
+          "claim_endless_rock_cell-once-6": true,
+          "claim_endless_rock_cell-once-7": true,
+          "claim_endless_rock_cell-once-8": true,
+          "claim_endless_rock_cell-once-9": true,
+          "claim_endless_rock_cell0": true,
+          "claim_endless_rock_cell1": true,
+          "claim_endless_rock_cell10": true,
+          "claim_endless_rock_cell11": true,
+          "claim_endless_rock_cell12": true,
+          "claim_endless_rock_cell13": true,
+          "claim_endless_rock_cell14": true,
+          "claim_endless_rock_cell15": true,
+          "claim_endless_rock_cell2": true,
+          "claim_endless_rock_cell3": true,
+          "claim_endless_rock_cell4": true,
+          "claim_endless_rock_cell5": true,
+          "claim_endless_rock_cell6": true,
+          "claim_endless_rock_cell7": true,
+          "claim_endless_rock_cell8": true,
+          "claim_endless_rock_cell9": true,
+          "clamped-levels": true,
+          "depth_oredeepcore-bonus-observed": true,
+          "depth_oredeepcore0": true,
+          "depth_oredeepcore1": true,
+          "depth_oredeepcore10": true,
+          "depth_oredeepcore11": true,
+          "depth_oredeepcore12": true,
+          "depth_oredeepcore13": true,
+          "depth_oredeepcore14": true,
+          "depth_oredeepcore15": true,
+          "depth_oredeepcore2": true,
+          "depth_oredeepcore3": true,
+          "depth_oredeepcore4": true,
+          "depth_oredeepcore5": true,
+          "depth_oredeepcore6": true,
+          "depth_oredeepcore7": true,
+          "depth_oredeepcore8": true,
+          "depth_oredeepcore9": true,
+          "distribution-0": true,
+          "distribution-1": true,
+          "distribution-100": true,
+          "distribution-25": true,
+          "distribution-50": true,
+          "ember_fault-bonus-observed": true,
+          "ember_fault0": true,
+          "ember_fault1": true,
+          "ember_fault10": true,
+          "ember_fault11": true,
+          "ember_fault12": true,
+          "ember_fault13": true,
+          "ember_fault14": true,
+          "ember_fault15": true,
+          "ember_fault2": true,
+          "ember_fault3": true,
+          "ember_fault4": true,
+          "ember_fault5": true,
+          "ember_fault6": true,
+          "ember_fault7": true,
+          "ember_fault8": true,
+          "ember_fault9": true,
+          "empty-and-limit": true,
+          "existing-level-preserved": true,
+          "grant-no-reroll": true,
+          "invalid-samples": true,
+          "moon-bonus-observed": true,
+          "moon0": true,
+          "moon1": true,
+          "moon10": true,
+          "moon11": true,
+          "moon12": true,
+          "moon13": true,
+          "moon14": true,
+          "moon15": true,
+          "moon2": true,
+          "moon3": true,
+          "moon4": true,
+          "moon5": true,
+          "moon6": true,
+          "moon7": true,
+          "moon8": true,
+          "moon9": true,
+          "moss_orecrown-bonus-observed": true,
+          "moss_orecrown0": true,
+          "moss_orecrown1": true,
+          "moss_orecrown10": true,
+          "moss_orecrown11": true,
+          "moss_orecrown12": true,
+          "moss_orecrown13": true,
+          "moss_orecrown14": true,
+          "moss_orecrown15": true,
+          "moss_orecrown2": true,
+          "moss_orecrown3": true,
+          "moss_orecrown4": true,
+          "moss_orecrown5": true,
+          "moss_orecrown6": true,
+          "moss_orecrown7": true,
+          "moss_orecrown8": true,
+          "moss_orecrown9": true,
+          "moss_oreworn-bonus-observed": true,
+          "moss_oreworn0": true,
+          "moss_oreworn1": true,
+          "moss_oreworn10": true,
+          "moss_oreworn11": true,
+          "moss_oreworn12": true,
+          "moss_oreworn13": true,
+          "moss_oreworn14": true,
+          "moss_oreworn15": true,
+          "moss_oreworn2": true,
+          "moss_oreworn3": true,
+          "moss_oreworn4": true,
+          "moss_oreworn5": true,
+          "moss_oreworn6": true,
+          "moss_oreworn7": true,
+          "moss_oreworn8": true,
+          "moss_oreworn9": true,
+          "mountain-bonus-observed": true,
+          "mountain0": true,
+          "mountain1": true,
+          "mountain10": true,
+          "mountain11": true,
+          "mountain12": true,
+          "mountain13": true,
+          "mountain14": true,
+          "mountain15": true,
+          "mountain2": true,
+          "mountain3": true,
+          "mountain4": true,
+          "mountain5": true,
+          "mountain6": true,
+          "mountain7": true,
+          "mountain8": true,
+          "mountain9": true,
+          "no-bonus-deepstone": true,
+          "no-bonus-stone": true,
+          "no-bonus-unknown": true,
+          "pickup-no-reroll": true,
+          "starfall_lattice-bonus-observed": true,
+          "starfall_lattice0": true,
+          "starfall_lattice1": true,
+          "starfall_lattice10": true,
+          "starfall_lattice11": true,
+          "starfall_lattice12": true,
+          "starfall_lattice13": true,
+          "starfall_lattice14": true,
+          "starfall_lattice15": true,
+          "starfall_lattice2": true,
+          "starfall_lattice3": true,
+          "starfall_lattice4": true,
+          "starfall_lattice5": true,
+          "starfall_lattice6": true,
+          "starfall_lattice7": true,
+          "starfall_lattice8": true,
+          "starfall_lattice9": true
+        },
+        "level": 50,
+        "results": {
+          "claim_endless_resource_node": 9,
+          "claim_endless_rock_cell": 9,
+          "depth_oredeepcore": 4,
+          "ember_fault": 4,
+          "moon": 4,
+          "moss_orecrown": 4,
+          "moss_oreworn": 4,
+          "mountain": 9,
+          "starfall_lattice": 4
+        }
+      }
+    },
+    {
+      "name": "prospecting-mining-world",
+      "passed": true,
+      "state": {
+        "active_rigs": 1,
+        "cycle": 0,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "menu",
+        "gear": "worn",
+        "health": 27708,
+        "hit_phase": -1,
+        "id": 1,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1205.36364746094,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "worn",
+          "generations": 1,
+          "motion": {
+            "age": 0.638466666666667,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.177351851851852,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 21
+        },
+        "native_canvas": {
+          "items": 0,
+          "size": "(400, 400)",
+          "update_mode": 4
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          872,
+          408
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 220,
+          "primitives": 177774
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 400,
+          "samples": 0
+        },
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.15.26",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true,
+        "buttons": {
+          "continue": [
+            708.181823730469,
+            67.272705078125,
+            526,
+            92
+          ],
+          "dev_toggle": [
+            116,
+            182,
+            132,
+            58
+          ],
+          "hud_bag": [
+            950.363647460938,
+            446.54541015625,
+            142,
+            142
+          ],
+          "hud_guide": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "hud_menu": [
+            116,
+            18,
+            120,
+            120
+          ],
+          "hud_mine": [
+            1110.36364746094,
+            422.54541015625,
+            190,
+            190
+          ],
+          "hud_mole": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "inventory": [
+            542.727294921875,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "inventory_close": [
+            118,
+            24,
+            132,
+            86
+          ],
+          "joystick": [
+            0,
+            0,
+            1416.36364746094,
+            654.54541015625
+          ],
+          "map": [
+            713.636413574219,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "mole_close": [
+            1186.95263671875,
+            54.9717903137207,
+            125.677337646484,
+            74.8079376220703
+          ],
+          "mole_tab_0": [
+            492.734954833984,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_1": [
+            736.110107421875,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_2": [
+            979.485290527344,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "new_game": [
+            708.181823730469,
+            173.272705078125,
+            526,
+            82
+          ],
+          "prospecting_row": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "settings": [
+            799.090942382812,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "settings_back": [
+            568.181823730469,
+            539.272705078125,
+            280,
+            82
+          ],
+          "shop_close": [
+            63.7363891601562,
+            22.6825180053711,
+            78.6629333496094,
+            78.6629333496094
+          ],
+          "skills": [
+            628.181823730469,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "skills_close": [
+            1325.45458984375,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "stat_carrying": [
+            775.323669433594,
+            359.090911865234,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_mining": [
+            775.323669433594,
+            200.909088134766,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_prospecting": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_running": [
+            775.323669433594,
+            280,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_stamina": [
+            775.323669433594,
+            520.909057617188,
+            551.236328125,
+            80
+          ]
+        },
+        "dev_drawer_open": false,
+        "developer_tools_visible": true,
+        "effort": 1,
+        "game_started": true,
+        "guide_open": false,
+        "hud_caption": [
+          116,
+          138,
+          120,
+          33
+        ],
+        "hud_caption_text": "SKILLS",
+        "hud_caption_visible": true,
+        "hud_context": [
+          706.363647460938,
+          459.54541015625,
+          226,
+          116
+        ],
+        "hud_context_visible": false,
+        "hud_goal": [
+          900.363647460938,
+          18,
+          400,
+          76
+        ],
+        "hud_gold": [
+          380,
+          18,
+          166,
+          112
+        ],
+        "hud_guide_visible": false,
+        "hud_map": [
+          700.363647460938,
+          18,
+          188,
+          96
+        ],
+        "hud_menu_icon": "res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png",
+        "hud_mine_visible": true,
+        "inventory_open": false,
+        "journal_tab": "together",
+        "map_open": false,
+        "mine_input_held": false,
+        "modal_active": false,
+        "mole_open": false,
+        "physics_frame": 114,
+        "player_controls_enabled": true,
+        "prospecting": {
+          "checks": {
+            "below-boundary-1": true,
+            "below-boundary-100": true,
+            "below-boundary-25": true,
+            "below-boundary-50": true,
+            "boundary-0": true,
+            "boundary-1": true,
+            "boundary-100": true,
+            "boundary-25": true,
+            "boundary-50": true,
+            "chance-0": true,
+            "chance-1": true,
+            "chance-100": true,
+            "chance-25": true,
+            "chance-50": true,
+            "claim_endless_resource_node-bonus-observed": true,
+            "claim_endless_resource_node-once-0": true,
+            "claim_endless_resource_node-once-1": true,
+            "claim_endless_resource_node-once-10": true,
+            "claim_endless_resource_node-once-11": true,
+            "claim_endless_resource_node-once-12": true,
+            "claim_endless_resource_node-once-13": true,
+            "claim_endless_resource_node-once-14": true,
+            "claim_endless_resource_node-once-15": true,
+            "claim_endless_resource_node-once-2": true,
+            "claim_endless_resource_node-once-3": true,
+            "claim_endless_resource_node-once-4": true,
+            "claim_endless_resource_node-once-5": true,
+            "claim_endless_resource_node-once-6": true,
+            "claim_endless_resource_node-once-7": true,
+            "claim_endless_resource_node-once-8": true,
+            "claim_endless_resource_node-once-9": true,
+            "claim_endless_resource_node0": true,
+            "claim_endless_resource_node1": true,
+            "claim_endless_resource_node10": true,
+            "claim_endless_resource_node11": true,
+            "claim_endless_resource_node12": true,
+            "claim_endless_resource_node13": true,
+            "claim_endless_resource_node14": true,
+            "claim_endless_resource_node15": true,
+            "claim_endless_resource_node2": true,
+            "claim_endless_resource_node3": true,
+            "claim_endless_resource_node4": true,
+            "claim_endless_resource_node5": true,
+            "claim_endless_resource_node6": true,
+            "claim_endless_resource_node7": true,
+            "claim_endless_resource_node8": true,
+            "claim_endless_resource_node9": true,
+            "claim_endless_rock_cell-bonus-observed": true,
+            "claim_endless_rock_cell-once-0": true,
+            "claim_endless_rock_cell-once-1": true,
+            "claim_endless_rock_cell-once-10": true,
+            "claim_endless_rock_cell-once-11": true,
+            "claim_endless_rock_cell-once-12": true,
+            "claim_endless_rock_cell-once-13": true,
+            "claim_endless_rock_cell-once-14": true,
+            "claim_endless_rock_cell-once-15": true,
+            "claim_endless_rock_cell-once-2": true,
+            "claim_endless_rock_cell-once-3": true,
+            "claim_endless_rock_cell-once-4": true,
+            "claim_endless_rock_cell-once-5": true,
+            "claim_endless_rock_cell-once-6": true,
+            "claim_endless_rock_cell-once-7": true,
+            "claim_endless_rock_cell-once-8": true,
+            "claim_endless_rock_cell-once-9": true,
+            "claim_endless_rock_cell0": true,
+            "claim_endless_rock_cell1": true,
+            "claim_endless_rock_cell10": true,
+            "claim_endless_rock_cell11": true,
+            "claim_endless_rock_cell12": true,
+            "claim_endless_rock_cell13": true,
+            "claim_endless_rock_cell14": true,
+            "claim_endless_rock_cell15": true,
+            "claim_endless_rock_cell2": true,
+            "claim_endless_rock_cell3": true,
+            "claim_endless_rock_cell4": true,
+            "claim_endless_rock_cell5": true,
+            "claim_endless_rock_cell6": true,
+            "claim_endless_rock_cell7": true,
+            "claim_endless_rock_cell8": true,
+            "claim_endless_rock_cell9": true,
+            "clamped-levels": true,
+            "depth_oredeepcore-bonus-observed": true,
+            "depth_oredeepcore0": true,
+            "depth_oredeepcore1": true,
+            "depth_oredeepcore10": true,
+            "depth_oredeepcore11": true,
+            "depth_oredeepcore12": true,
+            "depth_oredeepcore13": true,
+            "depth_oredeepcore14": true,
+            "depth_oredeepcore15": true,
+            "depth_oredeepcore2": true,
+            "depth_oredeepcore3": true,
+            "depth_oredeepcore4": true,
+            "depth_oredeepcore5": true,
+            "depth_oredeepcore6": true,
+            "depth_oredeepcore7": true,
+            "depth_oredeepcore8": true,
+            "depth_oredeepcore9": true,
+            "distribution-0": true,
+            "distribution-1": true,
+            "distribution-100": true,
+            "distribution-25": true,
+            "distribution-50": true,
+            "ember_fault-bonus-observed": true,
+            "ember_fault0": true,
+            "ember_fault1": true,
+            "ember_fault10": true,
+            "ember_fault11": true,
+            "ember_fault12": true,
+            "ember_fault13": true,
+            "ember_fault14": true,
+            "ember_fault15": true,
+            "ember_fault2": true,
+            "ember_fault3": true,
+            "ember_fault4": true,
+            "ember_fault5": true,
+            "ember_fault6": true,
+            "ember_fault7": true,
+            "ember_fault8": true,
+            "ember_fault9": true,
+            "empty-and-limit": true,
+            "existing-level-preserved": true,
+            "grant-no-reroll": true,
+            "invalid-samples": true,
+            "moon-bonus-observed": true,
+            "moon0": true,
+            "moon1": true,
+            "moon10": true,
+            "moon11": true,
+            "moon12": true,
+            "moon13": true,
+            "moon14": true,
+            "moon15": true,
+            "moon2": true,
+            "moon3": true,
+            "moon4": true,
+            "moon5": true,
+            "moon6": true,
+            "moon7": true,
+            "moon8": true,
+            "moon9": true,
+            "moss_orecrown-bonus-observed": true,
+            "moss_orecrown0": true,
+            "moss_orecrown1": true,
+            "moss_orecrown10": true,
+            "moss_orecrown11": true,
+            "moss_orecrown12": true,
+            "moss_orecrown13": true,
+            "moss_orecrown14": true,
+            "moss_orecrown15": true,
+            "moss_orecrown2": true,
+            "moss_orecrown3": true,
+            "moss_orecrown4": true,
+            "moss_orecrown5": true,
+            "moss_orecrown6": true,
+            "moss_orecrown7": true,
+            "moss_orecrown8": true,
+            "moss_orecrown9": true,
+            "moss_oreworn-bonus-observed": true,
+            "moss_oreworn0": true,
+            "moss_oreworn1": true,
+            "moss_oreworn10": true,
+            "moss_oreworn11": true,
+            "moss_oreworn12": true,
+            "moss_oreworn13": true,
+            "moss_oreworn14": true,
+            "moss_oreworn15": true,
+            "moss_oreworn2": true,
+            "moss_oreworn3": true,
+            "moss_oreworn4": true,
+            "moss_oreworn5": true,
+            "moss_oreworn6": true,
+            "moss_oreworn7": true,
+            "moss_oreworn8": true,
+            "moss_oreworn9": true,
+            "mountain-bonus-observed": true,
+            "mountain0": true,
+            "mountain1": true,
+            "mountain10": true,
+            "mountain11": true,
+            "mountain12": true,
+            "mountain13": true,
+            "mountain14": true,
+            "mountain15": true,
+            "mountain2": true,
+            "mountain3": true,
+            "mountain4": true,
+            "mountain5": true,
+            "mountain6": true,
+            "mountain7": true,
+            "mountain8": true,
+            "mountain9": true,
+            "no-bonus-deepstone": true,
+            "no-bonus-stone": true,
+            "no-bonus-unknown": true,
+            "pickup-no-reroll": true,
+            "starfall_lattice-bonus-observed": true,
+            "starfall_lattice0": true,
+            "starfall_lattice1": true,
+            "starfall_lattice10": true,
+            "starfall_lattice11": true,
+            "starfall_lattice12": true,
+            "starfall_lattice13": true,
+            "starfall_lattice14": true,
+            "starfall_lattice15": true,
+            "starfall_lattice2": true,
+            "starfall_lattice3": true,
+            "starfall_lattice4": true,
+            "starfall_lattice5": true,
+            "starfall_lattice6": true,
+            "starfall_lattice7": true,
+            "starfall_lattice8": true,
+            "starfall_lattice9": true
+          },
+          "level": 50,
+          "results": {
+            "claim_endless_resource_node": 9,
+            "claim_endless_rock_cell": 9,
+            "depth_oredeepcore": 4,
+            "ember_fault": 4,
+            "moon": 4,
+            "moss_orecrown": 4,
+            "moss_oreworn": 4,
+            "mountain": 9,
+            "starfall_lattice": 4
+          }
+        },
+        "settings_open": false,
+        "shared_ui_roots": 1,
+        "shared_ui_saved": 0,
+        "shared_ui_visible": true,
+        "shop_open": false,
+        "skill_progress": [
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              236.036361694336,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              257.854553222656,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              315.127258300781,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              336.945465087891,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              394.218170166016,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              416.036376953125,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              473.309051513672,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              495.127258300781,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          }
+        ],
+        "skill_xp": {
+          "carrying": 0,
+          "mining": 0,
+          "prospecting": 1725,
+          "running": 0,
+          "stamina": 100
+        },
+        "skills": [
+          {
+            "id": "mining",
+            "level": 0,
+            "maxed": false,
+            "name": "Mining",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "running",
+            "level": 0,
+            "maxed": false,
+            "name": "Running",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "carrying",
+            "level": 0,
+            "maxed": false,
+            "name": "Carrying",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "prospecting",
+            "level": 50,
+            "maxed": false,
+            "name": "Prospecting",
+            "next": 60,
+            "ratio": 0,
+            "xp": 0
+          }
+        ],
+        "skills_open": false,
+        "skills_plate": [
+          753.505493164062,
+          122.727272033691,
+          594.872680664062,
+          498.181793212891
+        ],
+        "stamina": 100,
+        "stamina_bar": 0,
+        "stamina_rest": 1.4,
+        "tooltip_id": "",
+        "tooltip_rect": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "tooltip_text": "",
+        "tooltip_visible": false,
+        "work": {
+          "cancel": [
+            764.836364746094,
+            294.545440673828
+          ],
+          "checks": {
+            "bedrock": true,
+            "legacy_rejected_ore": true,
+            "tool_gate": true
+          },
+          "feedback": "",
+          "hero_period": 0.72,
+          "key": "(19, 8)",
+          "mole": {
+            "action": "idle",
+            "automatic_task": false,
+            "collected": 0,
+            "destination": "(872.0, 408.0)",
+            "dug": 0,
+            "frame": 12,
+            "light": {
+              "beam_length": 220,
+              "border_alpha_max": 0,
+              "cone_only": false,
+              "energy": 0.720000028610229,
+              "energy_multiplier": 1,
+              "half_angle": 0.4,
+              "light_count": 2,
+              "occluded": true,
+              "origin_centered": false,
+              "range_multiplier": 1,
+              "rotation": 2.59480381011963,
+              "shadow_origin_preserved": true,
+              "source_texture_region": "[P: (128, 77), S: (127, 103)]",
+              "source_texture_size": "(256, 256)",
+              "style": "standard",
+              "texture_offset": "(109.1406, 0.859375)",
+              "texture_size": "(127, 103)",
+              "width_multiplier": 1
+            },
+            "mode": "follow",
+            "path_searches": 0,
+            "period": 2.16,
+            "position": "(817.3313, 441.2766)",
+            "shake_cooldown": 0,
+            "work_hits": 0,
+            "work_key": "",
+            "worm": {
+              "boost": 0,
+              "count": 0,
+              "eaten": 0,
+              "positions": [],
+              "spawn_clock": 998.250000000001,
+              "spawned": 0,
+              "width": 28
+            }
+          },
+          "period": 2.16,
+          "power": 0,
+          "remaining": true,
+          "scenario": "moss_ore",
+          "target": [
+            828.836364746094,
+            294.545440673828
+          ]
+        }
+      }
+    },
+    {
+      "name": "tooltip-0",
+      "passed": true,
+      "text": "Gain XP for every resource mined.\n0.0% chance for +1 ore when mining.\n+0.5% per level, up to 50%.\nBonus applies after tool multipliers."
+    },
+    {
+      "name": "tooltip-fits-0",
+      "passed": true,
+      "rect": [
+        337.141876220703,
+        343.636352539062,
+        400,
+        265.454528808594
+      ],
+      "viewport": [
+        1416.36364746094,
+        654.54541015625
+      ]
+    },
+    {
+      "name": "prospecting-level-0",
+      "passed": true,
+      "state": {
+        "active_rigs": 0,
+        "cycle": 0,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "menu",
+        "gear": "",
+        "health": 27708,
+        "hit_phase": -1,
+        "id": 2,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": true,
+        "mine_button": [
+          1205.36364746094,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "gear": "",
+          "generations": 1,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 36
+        },
+        "native_canvas": {},
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          872,
+          408
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 112,
+          "primitives": 4974
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 400,
+          "samples": 0
+        },
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.15.26",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": false,
+        "buttons": {
+          "continue": [
+            708.181823730469,
+            67.272705078125,
+            526,
+            92
+          ],
+          "dev_toggle": [
+            116,
+            182,
+            132,
+            58
+          ],
+          "hud_bag": [
+            950.363647460938,
+            446.54541015625,
+            142,
+            142
+          ],
+          "hud_guide": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "hud_menu": [
+            116,
+            18,
+            120,
+            120
+          ],
+          "hud_mine": [
+            1110.36364746094,
+            422.54541015625,
+            190,
+            190
+          ],
+          "hud_mole": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "inventory": [
+            542.727294921875,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "inventory_close": [
+            118,
+            24,
+            132,
+            86
+          ],
+          "joystick": [
+            0,
+            0,
+            1416.36364746094,
+            654.54541015625
+          ],
+          "map": [
+            713.636413574219,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "mole_close": [
+            1186.95263671875,
+            54.9717903137207,
+            125.677337646484,
+            74.8079376220703
+          ],
+          "mole_tab_0": [
+            492.734954833984,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_1": [
+            736.110107421875,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_2": [
+            979.485290527344,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "new_game": [
+            708.181823730469,
+            173.272705078125,
+            526,
+            82
+          ],
+          "prospecting_row": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "settings": [
+            799.090942382812,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "settings_back": [
+            568.181823730469,
+            539.272705078125,
+            280,
+            82
+          ],
+          "shop_close": [
+            63.7363891601562,
+            22.6825180053711,
+            78.6629333496094,
+            78.6629333496094
+          ],
+          "skills": [
+            628.181823730469,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "skills_close": [
+            1325.45458984375,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "stat_carrying": [
+            775.323669433594,
+            359.090911865234,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_mining": [
+            775.323669433594,
+            200.909088134766,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_prospecting": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_running": [
+            775.323669433594,
+            280,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_stamina": [
+            775.323669433594,
+            520.909057617188,
+            551.236328125,
+            80
+          ]
+        },
+        "dev_drawer_open": false,
+        "developer_tools_visible": false,
+        "effort": 1,
+        "game_started": true,
+        "guide_open": false,
+        "hud_caption": [
+          116,
+          138,
+          120,
+          33
+        ],
+        "hud_caption_text": "SKILLS",
+        "hud_caption_visible": true,
+        "hud_context": [
+          706.363647460938,
+          459.54541015625,
+          226,
+          116
+        ],
+        "hud_context_visible": false,
+        "hud_goal": [
+          900.363647460938,
+          18,
+          400,
+          76
+        ],
+        "hud_gold": [
+          380,
+          18,
+          166,
+          112
+        ],
+        "hud_guide_visible": false,
+        "hud_map": [
+          700.363647460938,
+          18,
+          188,
+          96
+        ],
+        "hud_menu_icon": "res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png",
+        "hud_mine_visible": true,
+        "inventory_open": false,
+        "journal_tab": "together",
+        "map_open": false,
+        "mine_input_held": false,
+        "modal_active": true,
+        "mole_open": false,
+        "physics_frame": 202,
+        "player_controls_enabled": false,
+        "prospecting": {
+          "checks": {
+            "below-boundary-1": true,
+            "below-boundary-100": true,
+            "below-boundary-25": true,
+            "below-boundary-50": true,
+            "boundary-0": true,
+            "boundary-1": true,
+            "boundary-100": true,
+            "boundary-25": true,
+            "boundary-50": true,
+            "chance-0": true,
+            "chance-1": true,
+            "chance-100": true,
+            "chance-25": true,
+            "chance-50": true,
+            "claim_endless_resource_node-bonus-observed": true,
+            "claim_endless_resource_node-once-0": true,
+            "claim_endless_resource_node-once-1": true,
+            "claim_endless_resource_node-once-10": true,
+            "claim_endless_resource_node-once-11": true,
+            "claim_endless_resource_node-once-12": true,
+            "claim_endless_resource_node-once-13": true,
+            "claim_endless_resource_node-once-14": true,
+            "claim_endless_resource_node-once-15": true,
+            "claim_endless_resource_node-once-2": true,
+            "claim_endless_resource_node-once-3": true,
+            "claim_endless_resource_node-once-4": true,
+            "claim_endless_resource_node-once-5": true,
+            "claim_endless_resource_node-once-6": true,
+            "claim_endless_resource_node-once-7": true,
+            "claim_endless_resource_node-once-8": true,
+            "claim_endless_resource_node-once-9": true,
+            "claim_endless_resource_node0": true,
+            "claim_endless_resource_node1": true,
+            "claim_endless_resource_node10": true,
+            "claim_endless_resource_node11": true,
+            "claim_endless_resource_node12": true,
+            "claim_endless_resource_node13": true,
+            "claim_endless_resource_node14": true,
+            "claim_endless_resource_node15": true,
+            "claim_endless_resource_node2": true,
+            "claim_endless_resource_node3": true,
+            "claim_endless_resource_node4": true,
+            "claim_endless_resource_node5": true,
+            "claim_endless_resource_node6": true,
+            "claim_endless_resource_node7": true,
+            "claim_endless_resource_node8": true,
+            "claim_endless_resource_node9": true,
+            "claim_endless_rock_cell-bonus-observed": true,
+            "claim_endless_rock_cell-once-0": true,
+            "claim_endless_rock_cell-once-1": true,
+            "claim_endless_rock_cell-once-10": true,
+            "claim_endless_rock_cell-once-11": true,
+            "claim_endless_rock_cell-once-12": true,
+            "claim_endless_rock_cell-once-13": true,
+            "claim_endless_rock_cell-once-14": true,
+            "claim_endless_rock_cell-once-15": true,
+            "claim_endless_rock_cell-once-2": true,
+            "claim_endless_rock_cell-once-3": true,
+            "claim_endless_rock_cell-once-4": true,
+            "claim_endless_rock_cell-once-5": true,
+            "claim_endless_rock_cell-once-6": true,
+            "claim_endless_rock_cell-once-7": true,
+            "claim_endless_rock_cell-once-8": true,
+            "claim_endless_rock_cell-once-9": true,
+            "claim_endless_rock_cell0": true,
+            "claim_endless_rock_cell1": true,
+            "claim_endless_rock_cell10": true,
+            "claim_endless_rock_cell11": true,
+            "claim_endless_rock_cell12": true,
+            "claim_endless_rock_cell13": true,
+            "claim_endless_rock_cell14": true,
+            "claim_endless_rock_cell15": true,
+            "claim_endless_rock_cell2": true,
+            "claim_endless_rock_cell3": true,
+            "claim_endless_rock_cell4": true,
+            "claim_endless_rock_cell5": true,
+            "claim_endless_rock_cell6": true,
+            "claim_endless_rock_cell7": true,
+            "claim_endless_rock_cell8": true,
+            "claim_endless_rock_cell9": true,
+            "clamped-levels": true,
+            "depth_oredeepcore-bonus-observed": true,
+            "depth_oredeepcore0": true,
+            "depth_oredeepcore1": true,
+            "depth_oredeepcore10": true,
+            "depth_oredeepcore11": true,
+            "depth_oredeepcore12": true,
+            "depth_oredeepcore13": true,
+            "depth_oredeepcore14": true,
+            "depth_oredeepcore15": true,
+            "depth_oredeepcore2": true,
+            "depth_oredeepcore3": true,
+            "depth_oredeepcore4": true,
+            "depth_oredeepcore5": true,
+            "depth_oredeepcore6": true,
+            "depth_oredeepcore7": true,
+            "depth_oredeepcore8": true,
+            "depth_oredeepcore9": true,
+            "distribution-0": true,
+            "distribution-1": true,
+            "distribution-100": true,
+            "distribution-25": true,
+            "distribution-50": true,
+            "ember_fault-bonus-observed": true,
+            "ember_fault0": true,
+            "ember_fault1": true,
+            "ember_fault10": true,
+            "ember_fault11": true,
+            "ember_fault12": true,
+            "ember_fault13": true,
+            "ember_fault14": true,
+            "ember_fault15": true,
+            "ember_fault2": true,
+            "ember_fault3": true,
+            "ember_fault4": true,
+            "ember_fault5": true,
+            "ember_fault6": true,
+            "ember_fault7": true,
+            "ember_fault8": true,
+            "ember_fault9": true,
+            "empty-and-limit": true,
+            "existing-level-preserved": true,
+            "grant-no-reroll": true,
+            "invalid-samples": true,
+            "moon-bonus-observed": true,
+            "moon0": true,
+            "moon1": true,
+            "moon10": true,
+            "moon11": true,
+            "moon12": true,
+            "moon13": true,
+            "moon14": true,
+            "moon15": true,
+            "moon2": true,
+            "moon3": true,
+            "moon4": true,
+            "moon5": true,
+            "moon6": true,
+            "moon7": true,
+            "moon8": true,
+            "moon9": true,
+            "moss_orecrown-bonus-observed": true,
+            "moss_orecrown0": true,
+            "moss_orecrown1": true,
+            "moss_orecrown10": true,
+            "moss_orecrown11": true,
+            "moss_orecrown12": true,
+            "moss_orecrown13": true,
+            "moss_orecrown14": true,
+            "moss_orecrown15": true,
+            "moss_orecrown2": true,
+            "moss_orecrown3": true,
+            "moss_orecrown4": true,
+            "moss_orecrown5": true,
+            "moss_orecrown6": true,
+            "moss_orecrown7": true,
+            "moss_orecrown8": true,
+            "moss_orecrown9": true,
+            "moss_oreworn-bonus-observed": true,
+            "moss_oreworn0": true,
+            "moss_oreworn1": true,
+            "moss_oreworn10": true,
+            "moss_oreworn11": true,
+            "moss_oreworn12": true,
+            "moss_oreworn13": true,
+            "moss_oreworn14": true,
+            "moss_oreworn15": true,
+            "moss_oreworn2": true,
+            "moss_oreworn3": true,
+            "moss_oreworn4": true,
+            "moss_oreworn5": true,
+            "moss_oreworn6": true,
+            "moss_oreworn7": true,
+            "moss_oreworn8": true,
+            "moss_oreworn9": true,
+            "mountain-bonus-observed": true,
+            "mountain0": true,
+            "mountain1": true,
+            "mountain10": true,
+            "mountain11": true,
+            "mountain12": true,
+            "mountain13": true,
+            "mountain14": true,
+            "mountain15": true,
+            "mountain2": true,
+            "mountain3": true,
+            "mountain4": true,
+            "mountain5": true,
+            "mountain6": true,
+            "mountain7": true,
+            "mountain8": true,
+            "mountain9": true,
+            "no-bonus-deepstone": true,
+            "no-bonus-stone": true,
+            "no-bonus-unknown": true,
+            "pickup-no-reroll": true,
+            "starfall_lattice-bonus-observed": true,
+            "starfall_lattice0": true,
+            "starfall_lattice1": true,
+            "starfall_lattice10": true,
+            "starfall_lattice11": true,
+            "starfall_lattice12": true,
+            "starfall_lattice13": true,
+            "starfall_lattice14": true,
+            "starfall_lattice15": true,
+            "starfall_lattice2": true,
+            "starfall_lattice3": true,
+            "starfall_lattice4": true,
+            "starfall_lattice5": true,
+            "starfall_lattice6": true,
+            "starfall_lattice7": true,
+            "starfall_lattice8": true,
+            "starfall_lattice9": true
+          },
+          "level": 0,
+          "results": {
+            "claim_endless_resource_node": 9,
+            "claim_endless_rock_cell": 9,
+            "depth_oredeepcore": 4,
+            "ember_fault": 4,
+            "moon": 4,
+            "moss_orecrown": 4,
+            "moss_oreworn": 4,
+            "mountain": 9,
+            "starfall_lattice": 4
+          }
+        },
+        "settings_open": false,
+        "shared_ui_roots": 1,
+        "shared_ui_saved": 0,
+        "shared_ui_visible": true,
+        "shop_open": false,
+        "skill_progress": [
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              236.036361694336,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              257.854553222656,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              315.127258300781,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              336.945465087891,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              394.218170166016,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              416.036376953125,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              473.309051513672,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              495.127258300781,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          }
+        ],
+        "skill_xp": {
+          "carrying": 0,
+          "mining": 0,
+          "prospecting": 0,
+          "running": 0,
+          "stamina": 100
+        },
+        "skills": [
+          {
+            "id": "mining",
+            "level": 0,
+            "maxed": false,
+            "name": "Mining",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "running",
+            "level": 0,
+            "maxed": false,
+            "name": "Running",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "carrying",
+            "level": 0,
+            "maxed": false,
+            "name": "Carrying",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "prospecting",
+            "level": 0,
+            "maxed": false,
+            "name": "Prospecting",
+            "next": 10,
+            "ratio": 0,
+            "xp": 0
+          }
+        ],
+        "skills_open": true,
+        "skills_plate": [
+          753.505493164062,
+          122.727272033691,
+          594.872680664062,
+          498.181793212891
+        ],
+        "stamina": 100,
+        "stamina_bar": 100,
+        "stamina_rest": 2.86666666666666,
+        "tooltip_id": "prospecting",
+        "tooltip_rect": [
+          337.141876220703,
+          343.636352539062,
+          400,
+          265.454528808594
+        ],
+        "tooltip_text": "Gain XP for every resource mined.\n0.0% chance for +1 ore when mining.\n+0.5% per level, up to 50%.\nBonus applies after tool multipliers.",
+        "tooltip_visible": true,
+        "work": {
+          "cancel": [
+            872,
+            408
+          ],
+          "checks": {
+            "bedrock": true,
+            "legacy_rejected_ore": true,
+            "tool_gate": true
+          },
+          "feedback": "",
+          "hero_period": 0.72,
+          "key": "(19, 8)",
+          "mole": {
+            "action": "idle",
+            "automatic_task": false,
+            "collected": 0,
+            "destination": "(872.0, 408.0)",
+            "dug": 0,
+            "frame": 12,
+            "light": {
+              "beam_length": 220,
+              "border_alpha_max": 0,
+              "cone_only": false,
+              "energy": 0.720000028610229,
+              "energy_multiplier": 1,
+              "half_angle": 0.4,
+              "light_count": 2,
+              "occluded": true,
+              "origin_centered": false,
+              "range_multiplier": 1,
+              "rotation": 2.59480381011963,
+              "shadow_origin_preserved": true,
+              "source_texture_region": "[P: (128, 77), S: (127, 103)]",
+              "source_texture_size": "(256, 256)",
+              "style": "standard",
+              "texture_offset": "(109.1406, 0.859375)",
+              "texture_size": "(127, 103)",
+              "width_multiplier": 1
+            },
+            "mode": "follow",
+            "path_searches": 0,
+            "period": 2.16,
+            "position": "(817.3313, 441.2766)",
+            "shake_cooldown": 0,
+            "work_hits": 0,
+            "work_key": "",
+            "worm": {
+              "boost": 0,
+              "count": 0,
+              "eaten": 0,
+              "positions": [],
+              "spawn_clock": 998.016666666668,
+              "spawned": 0,
+              "width": 28
+            }
+          },
+          "period": 2.16,
+          "power": 0,
+          "remaining": true,
+          "scenario": "moss_ore",
+          "target": [
+            936,
+            408
+          ]
+        }
+      }
+    },
+    {
+      "name": "tooltip-25",
+      "passed": true,
+      "text": "Gain XP for every resource mined.\n12.5% chance for +1 ore when mining.\n+0.5% per level, up to 50%.\nBonus applies after tool multipliers."
+    },
+    {
+      "name": "tooltip-fits-25",
+      "passed": true,
+      "rect": [
+        337.141876220703,
+        343.636352539062,
+        400,
+        265.454528808594
+      ],
+      "viewport": [
+        1416.36364746094,
+        654.54541015625
+      ]
+    },
+    {
+      "name": "prospecting-level-25",
+      "passed": true,
+      "state": {
+        "active_rigs": 0,
+        "cycle": 0,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "menu",
+        "gear": "",
+        "health": 27708,
+        "hit_phase": -1,
+        "id": 3,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": true,
+        "mine_button": [
+          1205.36364746094,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "gear": "",
+          "generations": 2,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 53
+        },
+        "native_canvas": {},
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          872,
+          408
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 113,
+          "primitives": 5308
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 400,
+          "samples": 0
+        },
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.15.26",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": false,
+        "buttons": {
+          "continue": [
+            708.181823730469,
+            67.272705078125,
+            526,
+            92
+          ],
+          "dev_toggle": [
+            116,
+            182,
+            132,
+            58
+          ],
+          "hud_bag": [
+            950.363647460938,
+            446.54541015625,
+            142,
+            142
+          ],
+          "hud_guide": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "hud_menu": [
+            116,
+            18,
+            120,
+            120
+          ],
+          "hud_mine": [
+            1110.36364746094,
+            422.54541015625,
+            190,
+            190
+          ],
+          "hud_mole": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "inventory": [
+            542.727294921875,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "inventory_close": [
+            118,
+            24,
+            132,
+            86
+          ],
+          "joystick": [
+            0,
+            0,
+            1416.36364746094,
+            654.54541015625
+          ],
+          "map": [
+            713.636413574219,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "mole_close": [
+            1186.95263671875,
+            54.9717903137207,
+            125.677337646484,
+            74.8079376220703
+          ],
+          "mole_tab_0": [
+            492.734954833984,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_1": [
+            736.110107421875,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_2": [
+            979.485290527344,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "new_game": [
+            708.181823730469,
+            173.272705078125,
+            526,
+            82
+          ],
+          "prospecting_row": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "settings": [
+            799.090942382812,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "settings_back": [
+            568.181823730469,
+            539.272705078125,
+            280,
+            82
+          ],
+          "shop_close": [
+            63.7363891601562,
+            22.6825180053711,
+            78.6629333496094,
+            78.6629333496094
+          ],
+          "skills": [
+            628.181823730469,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "skills_close": [
+            1325.45458984375,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "stat_carrying": [
+            775.323669433594,
+            359.090911865234,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_mining": [
+            775.323669433594,
+            200.909088134766,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_prospecting": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_running": [
+            775.323669433594,
+            280,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_stamina": [
+            775.323669433594,
+            520.909057617188,
+            551.236328125,
+            80
+          ]
+        },
+        "dev_drawer_open": false,
+        "developer_tools_visible": false,
+        "effort": 1,
+        "game_started": true,
+        "guide_open": false,
+        "hud_caption": [
+          116,
+          138,
+          120,
+          33
+        ],
+        "hud_caption_text": "SKILLS",
+        "hud_caption_visible": true,
+        "hud_context": [
+          706.363647460938,
+          459.54541015625,
+          226,
+          116
+        ],
+        "hud_context_visible": false,
+        "hud_goal": [
+          900.363647460938,
+          18,
+          400,
+          76
+        ],
+        "hud_gold": [
+          380,
+          18,
+          166,
+          112
+        ],
+        "hud_guide_visible": false,
+        "hud_map": [
+          700.363647460938,
+          18,
+          188,
+          96
+        ],
+        "hud_menu_icon": "res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png",
+        "hud_mine_visible": true,
+        "inventory_open": false,
+        "journal_tab": "together",
+        "map_open": false,
+        "mine_input_held": false,
+        "modal_active": true,
+        "mole_open": false,
+        "physics_frame": 300,
+        "player_controls_enabled": false,
+        "prospecting": {
+          "checks": {
+            "below-boundary-1": true,
+            "below-boundary-100": true,
+            "below-boundary-25": true,
+            "below-boundary-50": true,
+            "boundary-0": true,
+            "boundary-1": true,
+            "boundary-100": true,
+            "boundary-25": true,
+            "boundary-50": true,
+            "chance-0": true,
+            "chance-1": true,
+            "chance-100": true,
+            "chance-25": true,
+            "chance-50": true,
+            "claim_endless_resource_node-bonus-observed": true,
+            "claim_endless_resource_node-once-0": true,
+            "claim_endless_resource_node-once-1": true,
+            "claim_endless_resource_node-once-10": true,
+            "claim_endless_resource_node-once-11": true,
+            "claim_endless_resource_node-once-12": true,
+            "claim_endless_resource_node-once-13": true,
+            "claim_endless_resource_node-once-14": true,
+            "claim_endless_resource_node-once-15": true,
+            "claim_endless_resource_node-once-2": true,
+            "claim_endless_resource_node-once-3": true,
+            "claim_endless_resource_node-once-4": true,
+            "claim_endless_resource_node-once-5": true,
+            "claim_endless_resource_node-once-6": true,
+            "claim_endless_resource_node-once-7": true,
+            "claim_endless_resource_node-once-8": true,
+            "claim_endless_resource_node-once-9": true,
+            "claim_endless_resource_node0": true,
+            "claim_endless_resource_node1": true,
+            "claim_endless_resource_node10": true,
+            "claim_endless_resource_node11": true,
+            "claim_endless_resource_node12": true,
+            "claim_endless_resource_node13": true,
+            "claim_endless_resource_node14": true,
+            "claim_endless_resource_node15": true,
+            "claim_endless_resource_node2": true,
+            "claim_endless_resource_node3": true,
+            "claim_endless_resource_node4": true,
+            "claim_endless_resource_node5": true,
+            "claim_endless_resource_node6": true,
+            "claim_endless_resource_node7": true,
+            "claim_endless_resource_node8": true,
+            "claim_endless_resource_node9": true,
+            "claim_endless_rock_cell-bonus-observed": true,
+            "claim_endless_rock_cell-once-0": true,
+            "claim_endless_rock_cell-once-1": true,
+            "claim_endless_rock_cell-once-10": true,
+            "claim_endless_rock_cell-once-11": true,
+            "claim_endless_rock_cell-once-12": true,
+            "claim_endless_rock_cell-once-13": true,
+            "claim_endless_rock_cell-once-14": true,
+            "claim_endless_rock_cell-once-15": true,
+            "claim_endless_rock_cell-once-2": true,
+            "claim_endless_rock_cell-once-3": true,
+            "claim_endless_rock_cell-once-4": true,
+            "claim_endless_rock_cell-once-5": true,
+            "claim_endless_rock_cell-once-6": true,
+            "claim_endless_rock_cell-once-7": true,
+            "claim_endless_rock_cell-once-8": true,
+            "claim_endless_rock_cell-once-9": true,
+            "claim_endless_rock_cell0": true,
+            "claim_endless_rock_cell1": true,
+            "claim_endless_rock_cell10": true,
+            "claim_endless_rock_cell11": true,
+            "claim_endless_rock_cell12": true,
+            "claim_endless_rock_cell13": true,
+            "claim_endless_rock_cell14": true,
+            "claim_endless_rock_cell15": true,
+            "claim_endless_rock_cell2": true,
+            "claim_endless_rock_cell3": true,
+            "claim_endless_rock_cell4": true,
+            "claim_endless_rock_cell5": true,
+            "claim_endless_rock_cell6": true,
+            "claim_endless_rock_cell7": true,
+            "claim_endless_rock_cell8": true,
+            "claim_endless_rock_cell9": true,
+            "clamped-levels": true,
+            "depth_oredeepcore-bonus-observed": true,
+            "depth_oredeepcore0": true,
+            "depth_oredeepcore1": true,
+            "depth_oredeepcore10": true,
+            "depth_oredeepcore11": true,
+            "depth_oredeepcore12": true,
+            "depth_oredeepcore13": true,
+            "depth_oredeepcore14": true,
+            "depth_oredeepcore15": true,
+            "depth_oredeepcore2": true,
+            "depth_oredeepcore3": true,
+            "depth_oredeepcore4": true,
+            "depth_oredeepcore5": true,
+            "depth_oredeepcore6": true,
+            "depth_oredeepcore7": true,
+            "depth_oredeepcore8": true,
+            "depth_oredeepcore9": true,
+            "distribution-0": true,
+            "distribution-1": true,
+            "distribution-100": true,
+            "distribution-25": true,
+            "distribution-50": true,
+            "ember_fault-bonus-observed": true,
+            "ember_fault0": true,
+            "ember_fault1": true,
+            "ember_fault10": true,
+            "ember_fault11": true,
+            "ember_fault12": true,
+            "ember_fault13": true,
+            "ember_fault14": true,
+            "ember_fault15": true,
+            "ember_fault2": true,
+            "ember_fault3": true,
+            "ember_fault4": true,
+            "ember_fault5": true,
+            "ember_fault6": true,
+            "ember_fault7": true,
+            "ember_fault8": true,
+            "ember_fault9": true,
+            "empty-and-limit": true,
+            "existing-level-preserved": true,
+            "grant-no-reroll": true,
+            "invalid-samples": true,
+            "moon-bonus-observed": true,
+            "moon0": true,
+            "moon1": true,
+            "moon10": true,
+            "moon11": true,
+            "moon12": true,
+            "moon13": true,
+            "moon14": true,
+            "moon15": true,
+            "moon2": true,
+            "moon3": true,
+            "moon4": true,
+            "moon5": true,
+            "moon6": true,
+            "moon7": true,
+            "moon8": true,
+            "moon9": true,
+            "moss_orecrown-bonus-observed": true,
+            "moss_orecrown0": true,
+            "moss_orecrown1": true,
+            "moss_orecrown10": true,
+            "moss_orecrown11": true,
+            "moss_orecrown12": true,
+            "moss_orecrown13": true,
+            "moss_orecrown14": true,
+            "moss_orecrown15": true,
+            "moss_orecrown2": true,
+            "moss_orecrown3": true,
+            "moss_orecrown4": true,
+            "moss_orecrown5": true,
+            "moss_orecrown6": true,
+            "moss_orecrown7": true,
+            "moss_orecrown8": true,
+            "moss_orecrown9": true,
+            "moss_oreworn-bonus-observed": true,
+            "moss_oreworn0": true,
+            "moss_oreworn1": true,
+            "moss_oreworn10": true,
+            "moss_oreworn11": true,
+            "moss_oreworn12": true,
+            "moss_oreworn13": true,
+            "moss_oreworn14": true,
+            "moss_oreworn15": true,
+            "moss_oreworn2": true,
+            "moss_oreworn3": true,
+            "moss_oreworn4": true,
+            "moss_oreworn5": true,
+            "moss_oreworn6": true,
+            "moss_oreworn7": true,
+            "moss_oreworn8": true,
+            "moss_oreworn9": true,
+            "mountain-bonus-observed": true,
+            "mountain0": true,
+            "mountain1": true,
+            "mountain10": true,
+            "mountain11": true,
+            "mountain12": true,
+            "mountain13": true,
+            "mountain14": true,
+            "mountain15": true,
+            "mountain2": true,
+            "mountain3": true,
+            "mountain4": true,
+            "mountain5": true,
+            "mountain6": true,
+            "mountain7": true,
+            "mountain8": true,
+            "mountain9": true,
+            "no-bonus-deepstone": true,
+            "no-bonus-stone": true,
+            "no-bonus-unknown": true,
+            "pickup-no-reroll": true,
+            "starfall_lattice-bonus-observed": true,
+            "starfall_lattice0": true,
+            "starfall_lattice1": true,
+            "starfall_lattice10": true,
+            "starfall_lattice11": true,
+            "starfall_lattice12": true,
+            "starfall_lattice13": true,
+            "starfall_lattice14": true,
+            "starfall_lattice15": true,
+            "starfall_lattice2": true,
+            "starfall_lattice3": true,
+            "starfall_lattice4": true,
+            "starfall_lattice5": true,
+            "starfall_lattice6": true,
+            "starfall_lattice7": true,
+            "starfall_lattice8": true,
+            "starfall_lattice9": true
+          },
+          "level": 25,
+          "results": {
+            "claim_endless_resource_node": 9,
+            "claim_endless_rock_cell": 9,
+            "depth_oredeepcore": 4,
+            "ember_fault": 4,
+            "moon": 4,
+            "moss_orecrown": 4,
+            "moss_oreworn": 4,
+            "mountain": 9,
+            "starfall_lattice": 4
+          }
+        },
+        "settings_open": false,
+        "shared_ui_roots": 1,
+        "shared_ui_saved": 0,
+        "shared_ui_visible": true,
+        "shop_open": false,
+        "skill_progress": [
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              236.036361694336,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              257.854553222656,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              315.127258300781,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              336.945465087891,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              394.218170166016,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              416.036376953125,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "25",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              473.309051513672,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 25,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              495.127258300781,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          }
+        ],
+        "skill_xp": {
+          "carrying": 0,
+          "mining": 0,
+          "prospecting": 550,
+          "running": 0,
+          "stamina": 100
+        },
+        "skills": [
+          {
+            "id": "mining",
+            "level": 0,
+            "maxed": false,
+            "name": "Mining",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "running",
+            "level": 0,
+            "maxed": false,
+            "name": "Running",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "carrying",
+            "level": 0,
+            "maxed": false,
+            "name": "Carrying",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "prospecting",
+            "level": 25,
+            "maxed": false,
+            "name": "Prospecting",
+            "next": 35,
+            "ratio": 0,
+            "xp": 0
+          }
+        ],
+        "skills_open": true,
+        "skills_plate": [
+          753.505493164062,
+          122.727272033691,
+          594.872680664062,
+          498.181793212891
+        ],
+        "stamina": 100,
+        "stamina_bar": 100,
+        "stamina_rest": 4.49999999999999,
+        "tooltip_id": "prospecting",
+        "tooltip_rect": [
+          337.141876220703,
+          343.636352539062,
+          400,
+          265.454528808594
+        ],
+        "tooltip_text": "Gain XP for every resource mined.\n12.5% chance for +1 ore when mining.\n+0.5% per level, up to 50%.\nBonus applies after tool multipliers.",
+        "tooltip_visible": true,
+        "work": {
+          "cancel": [
+            872,
+            408
+          ],
+          "checks": {
+            "bedrock": true,
+            "legacy_rejected_ore": true,
+            "tool_gate": true
+          },
+          "feedback": "",
+          "hero_period": 0.72,
+          "key": "(19, 8)",
+          "mole": {
+            "action": "idle",
+            "automatic_task": false,
+            "collected": 0,
+            "destination": "(872.0, 408.0)",
+            "dug": 0,
+            "frame": 12,
+            "light": {
+              "beam_length": 220,
+              "border_alpha_max": 0,
+              "cone_only": false,
+              "energy": 0.720000028610229,
+              "energy_multiplier": 1,
+              "half_angle": 0.4,
+              "light_count": 2,
+              "occluded": true,
+              "origin_centered": false,
+              "range_multiplier": 1,
+              "rotation": 2.59480381011963,
+              "shadow_origin_preserved": true,
+              "source_texture_region": "[P: (128, 77), S: (127, 103)]",
+              "source_texture_size": "(256, 256)",
+              "style": "standard",
+              "texture_offset": "(109.1406, 0.859375)",
+              "texture_size": "(127, 103)",
+              "width_multiplier": 1
+            },
+            "mode": "follow",
+            "path_searches": 0,
+            "period": 2.16,
+            "position": "(817.3313, 441.2766)",
+            "shake_cooldown": 0,
+            "work_hits": 0,
+            "work_key": "",
+            "worm": {
+              "boost": 0,
+              "count": 0,
+              "eaten": 0,
+              "positions": [],
+              "spawn_clock": 997.500000000001,
+              "spawned": 0,
+              "width": 28
+            }
+          },
+          "period": 2.16,
+          "power": 0,
+          "remaining": true,
+          "scenario": "moss_ore",
+          "target": [
+            936,
+            408
+          ]
+        }
+      }
+    },
+    {
+      "name": "tooltip-50",
+      "passed": true,
+      "text": "Gain XP for every resource mined.\n25.0% chance for +1 ore when mining.\n+0.5% per level, up to 50%.\nBonus applies after tool multipliers."
+    },
+    {
+      "name": "tooltip-fits-50",
+      "passed": true,
+      "rect": [
+        337.141876220703,
+        343.636352539062,
+        400,
+        265.454528808594
+      ],
+      "viewport": [
+        1416.36364746094,
+        654.54541015625
+      ]
+    },
+    {
+      "name": "prospecting-level-50",
+      "passed": true,
+      "state": {
+        "active_rigs": 0,
+        "cycle": 0,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "menu",
+        "gear": "",
+        "health": 27708,
+        "hit_phase": -1,
+        "id": 4,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": true,
+        "mine_button": [
+          1205.36364746094,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "gear": "",
+          "generations": 3,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 71
+        },
+        "native_canvas": {},
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          872,
+          408
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 111,
+          "primitives": 5216
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 400,
+          "samples": 0
+        },
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.15.26",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": false,
+        "buttons": {
+          "continue": [
+            708.181823730469,
+            67.272705078125,
+            526,
+            92
+          ],
+          "dev_toggle": [
+            116,
+            182,
+            132,
+            58
+          ],
+          "hud_bag": [
+            950.363647460938,
+            446.54541015625,
+            142,
+            142
+          ],
+          "hud_guide": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "hud_menu": [
+            116,
+            18,
+            120,
+            120
+          ],
+          "hud_mine": [
+            1110.36364746094,
+            422.54541015625,
+            190,
+            190
+          ],
+          "hud_mole": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "inventory": [
+            542.727294921875,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "inventory_close": [
+            118,
+            24,
+            132,
+            86
+          ],
+          "joystick": [
+            0,
+            0,
+            1416.36364746094,
+            654.54541015625
+          ],
+          "map": [
+            713.636413574219,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "mole_close": [
+            1186.95263671875,
+            54.9717903137207,
+            125.677337646484,
+            74.8079376220703
+          ],
+          "mole_tab_0": [
+            492.734954833984,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_1": [
+            736.110107421875,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_2": [
+            979.485290527344,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "new_game": [
+            708.181823730469,
+            173.272705078125,
+            526,
+            82
+          ],
+          "prospecting_row": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "settings": [
+            799.090942382812,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "settings_back": [
+            568.181823730469,
+            539.272705078125,
+            280,
+            82
+          ],
+          "shop_close": [
+            63.7363891601562,
+            22.6825180053711,
+            78.6629333496094,
+            78.6629333496094
+          ],
+          "skills": [
+            628.181823730469,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "skills_close": [
+            1325.45458984375,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "stat_carrying": [
+            775.323669433594,
+            359.090911865234,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_mining": [
+            775.323669433594,
+            200.909088134766,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_prospecting": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_running": [
+            775.323669433594,
+            280,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_stamina": [
+            775.323669433594,
+            520.909057617188,
+            551.236328125,
+            80
+          ]
+        },
+        "dev_drawer_open": false,
+        "developer_tools_visible": false,
+        "effort": 1,
+        "game_started": true,
+        "guide_open": false,
+        "hud_caption": [
+          116,
+          138,
+          120,
+          33
+        ],
+        "hud_caption_text": "SKILLS",
+        "hud_caption_visible": true,
+        "hud_context": [
+          706.363647460938,
+          459.54541015625,
+          226,
+          116
+        ],
+        "hud_context_visible": false,
+        "hud_goal": [
+          900.363647460938,
+          18,
+          400,
+          76
+        ],
+        "hud_gold": [
+          380,
+          18,
+          166,
+          112
+        ],
+        "hud_guide_visible": false,
+        "hud_map": [
+          700.363647460938,
+          18,
+          188,
+          96
+        ],
+        "hud_menu_icon": "res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png",
+        "hud_mine_visible": true,
+        "inventory_open": false,
+        "journal_tab": "together",
+        "map_open": false,
+        "mine_input_held": false,
+        "modal_active": true,
+        "mole_open": false,
+        "physics_frame": 397,
+        "player_controls_enabled": false,
+        "prospecting": {
+          "checks": {
+            "below-boundary-1": true,
+            "below-boundary-100": true,
+            "below-boundary-25": true,
+            "below-boundary-50": true,
+            "boundary-0": true,
+            "boundary-1": true,
+            "boundary-100": true,
+            "boundary-25": true,
+            "boundary-50": true,
+            "chance-0": true,
+            "chance-1": true,
+            "chance-100": true,
+            "chance-25": true,
+            "chance-50": true,
+            "claim_endless_resource_node-bonus-observed": true,
+            "claim_endless_resource_node-once-0": true,
+            "claim_endless_resource_node-once-1": true,
+            "claim_endless_resource_node-once-10": true,
+            "claim_endless_resource_node-once-11": true,
+            "claim_endless_resource_node-once-12": true,
+            "claim_endless_resource_node-once-13": true,
+            "claim_endless_resource_node-once-14": true,
+            "claim_endless_resource_node-once-15": true,
+            "claim_endless_resource_node-once-2": true,
+            "claim_endless_resource_node-once-3": true,
+            "claim_endless_resource_node-once-4": true,
+            "claim_endless_resource_node-once-5": true,
+            "claim_endless_resource_node-once-6": true,
+            "claim_endless_resource_node-once-7": true,
+            "claim_endless_resource_node-once-8": true,
+            "claim_endless_resource_node-once-9": true,
+            "claim_endless_resource_node0": true,
+            "claim_endless_resource_node1": true,
+            "claim_endless_resource_node10": true,
+            "claim_endless_resource_node11": true,
+            "claim_endless_resource_node12": true,
+            "claim_endless_resource_node13": true,
+            "claim_endless_resource_node14": true,
+            "claim_endless_resource_node15": true,
+            "claim_endless_resource_node2": true,
+            "claim_endless_resource_node3": true,
+            "claim_endless_resource_node4": true,
+            "claim_endless_resource_node5": true,
+            "claim_endless_resource_node6": true,
+            "claim_endless_resource_node7": true,
+            "claim_endless_resource_node8": true,
+            "claim_endless_resource_node9": true,
+            "claim_endless_rock_cell-bonus-observed": true,
+            "claim_endless_rock_cell-once-0": true,
+            "claim_endless_rock_cell-once-1": true,
+            "claim_endless_rock_cell-once-10": true,
+            "claim_endless_rock_cell-once-11": true,
+            "claim_endless_rock_cell-once-12": true,
+            "claim_endless_rock_cell-once-13": true,
+            "claim_endless_rock_cell-once-14": true,
+            "claim_endless_rock_cell-once-15": true,
+            "claim_endless_rock_cell-once-2": true,
+            "claim_endless_rock_cell-once-3": true,
+            "claim_endless_rock_cell-once-4": true,
+            "claim_endless_rock_cell-once-5": true,
+            "claim_endless_rock_cell-once-6": true,
+            "claim_endless_rock_cell-once-7": true,
+            "claim_endless_rock_cell-once-8": true,
+            "claim_endless_rock_cell-once-9": true,
+            "claim_endless_rock_cell0": true,
+            "claim_endless_rock_cell1": true,
+            "claim_endless_rock_cell10": true,
+            "claim_endless_rock_cell11": true,
+            "claim_endless_rock_cell12": true,
+            "claim_endless_rock_cell13": true,
+            "claim_endless_rock_cell14": true,
+            "claim_endless_rock_cell15": true,
+            "claim_endless_rock_cell2": true,
+            "claim_endless_rock_cell3": true,
+            "claim_endless_rock_cell4": true,
+            "claim_endless_rock_cell5": true,
+            "claim_endless_rock_cell6": true,
+            "claim_endless_rock_cell7": true,
+            "claim_endless_rock_cell8": true,
+            "claim_endless_rock_cell9": true,
+            "clamped-levels": true,
+            "depth_oredeepcore-bonus-observed": true,
+            "depth_oredeepcore0": true,
+            "depth_oredeepcore1": true,
+            "depth_oredeepcore10": true,
+            "depth_oredeepcore11": true,
+            "depth_oredeepcore12": true,
+            "depth_oredeepcore13": true,
+            "depth_oredeepcore14": true,
+            "depth_oredeepcore15": true,
+            "depth_oredeepcore2": true,
+            "depth_oredeepcore3": true,
+            "depth_oredeepcore4": true,
+            "depth_oredeepcore5": true,
+            "depth_oredeepcore6": true,
+            "depth_oredeepcore7": true,
+            "depth_oredeepcore8": true,
+            "depth_oredeepcore9": true,
+            "distribution-0": true,
+            "distribution-1": true,
+            "distribution-100": true,
+            "distribution-25": true,
+            "distribution-50": true,
+            "ember_fault-bonus-observed": true,
+            "ember_fault0": true,
+            "ember_fault1": true,
+            "ember_fault10": true,
+            "ember_fault11": true,
+            "ember_fault12": true,
+            "ember_fault13": true,
+            "ember_fault14": true,
+            "ember_fault15": true,
+            "ember_fault2": true,
+            "ember_fault3": true,
+            "ember_fault4": true,
+            "ember_fault5": true,
+            "ember_fault6": true,
+            "ember_fault7": true,
+            "ember_fault8": true,
+            "ember_fault9": true,
+            "empty-and-limit": true,
+            "existing-level-preserved": true,
+            "grant-no-reroll": true,
+            "invalid-samples": true,
+            "moon-bonus-observed": true,
+            "moon0": true,
+            "moon1": true,
+            "moon10": true,
+            "moon11": true,
+            "moon12": true,
+            "moon13": true,
+            "moon14": true,
+            "moon15": true,
+            "moon2": true,
+            "moon3": true,
+            "moon4": true,
+            "moon5": true,
+            "moon6": true,
+            "moon7": true,
+            "moon8": true,
+            "moon9": true,
+            "moss_orecrown-bonus-observed": true,
+            "moss_orecrown0": true,
+            "moss_orecrown1": true,
+            "moss_orecrown10": true,
+            "moss_orecrown11": true,
+            "moss_orecrown12": true,
+            "moss_orecrown13": true,
+            "moss_orecrown14": true,
+            "moss_orecrown15": true,
+            "moss_orecrown2": true,
+            "moss_orecrown3": true,
+            "moss_orecrown4": true,
+            "moss_orecrown5": true,
+            "moss_orecrown6": true,
+            "moss_orecrown7": true,
+            "moss_orecrown8": true,
+            "moss_orecrown9": true,
+            "moss_oreworn-bonus-observed": true,
+            "moss_oreworn0": true,
+            "moss_oreworn1": true,
+            "moss_oreworn10": true,
+            "moss_oreworn11": true,
+            "moss_oreworn12": true,
+            "moss_oreworn13": true,
+            "moss_oreworn14": true,
+            "moss_oreworn15": true,
+            "moss_oreworn2": true,
+            "moss_oreworn3": true,
+            "moss_oreworn4": true,
+            "moss_oreworn5": true,
+            "moss_oreworn6": true,
+            "moss_oreworn7": true,
+            "moss_oreworn8": true,
+            "moss_oreworn9": true,
+            "mountain-bonus-observed": true,
+            "mountain0": true,
+            "mountain1": true,
+            "mountain10": true,
+            "mountain11": true,
+            "mountain12": true,
+            "mountain13": true,
+            "mountain14": true,
+            "mountain15": true,
+            "mountain2": true,
+            "mountain3": true,
+            "mountain4": true,
+            "mountain5": true,
+            "mountain6": true,
+            "mountain7": true,
+            "mountain8": true,
+            "mountain9": true,
+            "no-bonus-deepstone": true,
+            "no-bonus-stone": true,
+            "no-bonus-unknown": true,
+            "pickup-no-reroll": true,
+            "starfall_lattice-bonus-observed": true,
+            "starfall_lattice0": true,
+            "starfall_lattice1": true,
+            "starfall_lattice10": true,
+            "starfall_lattice11": true,
+            "starfall_lattice12": true,
+            "starfall_lattice13": true,
+            "starfall_lattice14": true,
+            "starfall_lattice15": true,
+            "starfall_lattice2": true,
+            "starfall_lattice3": true,
+            "starfall_lattice4": true,
+            "starfall_lattice5": true,
+            "starfall_lattice6": true,
+            "starfall_lattice7": true,
+            "starfall_lattice8": true,
+            "starfall_lattice9": true
+          },
+          "level": 50,
+          "results": {
+            "claim_endless_resource_node": 9,
+            "claim_endless_rock_cell": 9,
+            "depth_oredeepcore": 4,
+            "ember_fault": 4,
+            "moon": 4,
+            "moss_orecrown": 4,
+            "moss_oreworn": 4,
+            "mountain": 9,
+            "starfall_lattice": 4
+          }
+        },
+        "settings_open": false,
+        "shared_ui_roots": 1,
+        "shared_ui_saved": 0,
+        "shared_ui_visible": true,
+        "shop_open": false,
+        "skill_progress": [
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              236.036361694336,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              257.854553222656,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              315.127258300781,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              336.945465087891,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              394.218170166016,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              416.036376953125,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "50",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              473.309051513672,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 50,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              495.127258300781,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          }
+        ],
+        "skill_xp": {
+          "carrying": 0,
+          "mining": 0,
+          "prospecting": 1725,
+          "running": 0,
+          "stamina": 100
+        },
+        "skills": [
+          {
+            "id": "mining",
+            "level": 0,
+            "maxed": false,
+            "name": "Mining",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "running",
+            "level": 0,
+            "maxed": false,
+            "name": "Running",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "carrying",
+            "level": 0,
+            "maxed": false,
+            "name": "Carrying",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "prospecting",
+            "level": 50,
+            "maxed": false,
+            "name": "Prospecting",
+            "next": 60,
+            "ratio": 0,
+            "xp": 0
+          }
+        ],
+        "skills_open": true,
+        "skills_plate": [
+          753.505493164062,
+          122.727272033691,
+          594.872680664062,
+          498.181793212891
+        ],
+        "stamina": 100,
+        "stamina_bar": 100,
+        "stamina_rest": 6.11666666666665,
+        "tooltip_id": "prospecting",
+        "tooltip_rect": [
+          337.141876220703,
+          343.636352539062,
+          400,
+          265.454528808594
+        ],
+        "tooltip_text": "Gain XP for every resource mined.\n25.0% chance for +1 ore when mining.\n+0.5% per level, up to 50%.\nBonus applies after tool multipliers.",
+        "tooltip_visible": true,
+        "work": {
+          "cancel": [
+            872,
+            408
+          ],
+          "checks": {
+            "bedrock": true,
+            "legacy_rejected_ore": true,
+            "tool_gate": true
+          },
+          "feedback": "",
+          "hero_period": 0.72,
+          "key": "(19, 8)",
+          "mole": {
+            "action": "idle",
+            "automatic_task": false,
+            "collected": 0,
+            "destination": "(872.0, 408.0)",
+            "dug": 0,
+            "frame": 12,
+            "light": {
+              "beam_length": 220,
+              "border_alpha_max": 0,
+              "cone_only": false,
+              "energy": 0.720000028610229,
+              "energy_multiplier": 1,
+              "half_angle": 0.4,
+              "light_count": 2,
+              "occluded": true,
+              "origin_centered": false,
+              "range_multiplier": 1,
+              "rotation": 2.59480381011963,
+              "shadow_origin_preserved": true,
+              "source_texture_region": "[P: (128, 77), S: (127, 103)]",
+              "source_texture_size": "(256, 256)",
+              "style": "standard",
+              "texture_offset": "(109.1406, 0.859375)",
+              "texture_size": "(127, 103)",
+              "width_multiplier": 1
+            },
+            "mode": "follow",
+            "path_searches": 0,
+            "period": 2.16,
+            "position": "(817.3313, 441.2766)",
+            "shake_cooldown": 0,
+            "work_hits": 0,
+            "work_key": "",
+            "worm": {
+              "boost": 0,
+              "count": 0,
+              "eaten": 0,
+              "positions": [],
+              "spawn_clock": 996.983333333335,
+              "spawned": 0,
+              "width": 28
+            }
+          },
+          "period": 2.16,
+          "power": 0,
+          "remaining": true,
+          "scenario": "moss_ore",
+          "target": [
+            936,
+            408
+          ]
+        }
+      }
+    },
+    {
+      "name": "tooltip-100",
+      "passed": true,
+      "text": "Gain XP for every resource mined.\n50.0% chance for +1 ore when mining.\n+0.5% per level, up to 50%.\nBonus applies after tool multipliers."
+    },
+    {
+      "name": "tooltip-fits-100",
+      "passed": true,
+      "rect": [
+        337.141876220703,
+        343.636352539062,
+        400,
+        265.454528808594
+      ],
+      "viewport": [
+        1416.36364746094,
+        654.54541015625
+      ]
+    },
+    {
+      "name": "prospecting-level-100",
+      "passed": true,
+      "state": {
+        "active_rigs": 0,
+        "cycle": 0,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "menu",
+        "gear": "",
+        "health": 27708,
+        "hit_phase": -1,
+        "id": 5,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": true,
+        "mine_button": [
+          1205.36364746094,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "gear": "",
+          "generations": 4,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 88
+        },
+        "native_canvas": {},
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          872,
+          408
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 112,
+          "primitives": 5544
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 400,
+          "samples": 0
+        },
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.15.26",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": false,
+        "buttons": {
+          "continue": [
+            708.181823730469,
+            67.272705078125,
+            526,
+            92
+          ],
+          "dev_toggle": [
+            116,
+            182,
+            132,
+            58
+          ],
+          "hud_bag": [
+            950.363647460938,
+            446.54541015625,
+            142,
+            142
+          ],
+          "hud_guide": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "hud_menu": [
+            116,
+            18,
+            120,
+            120
+          ],
+          "hud_mine": [
+            1110.36364746094,
+            422.54541015625,
+            190,
+            190
+          ],
+          "hud_mole": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "inventory": [
+            542.727294921875,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "inventory_close": [
+            118,
+            24,
+            132,
+            86
+          ],
+          "joystick": [
+            0,
+            0,
+            1416.36364746094,
+            654.54541015625
+          ],
+          "map": [
+            713.636413574219,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "mole_close": [
+            1186.95263671875,
+            54.9717903137207,
+            125.677337646484,
+            74.8079376220703
+          ],
+          "mole_tab_0": [
+            492.734954833984,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_1": [
+            736.110107421875,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_2": [
+            979.485290527344,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "new_game": [
+            708.181823730469,
+            173.272705078125,
+            526,
+            82
+          ],
+          "prospecting_row": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "settings": [
+            799.090942382812,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "settings_back": [
+            568.181823730469,
+            539.272705078125,
+            280,
+            82
+          ],
+          "shop_close": [
+            63.7363891601562,
+            22.6825180053711,
+            78.6629333496094,
+            78.6629333496094
+          ],
+          "skills": [
+            628.181823730469,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "skills_close": [
+            1325.45458984375,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "stat_carrying": [
+            775.323669433594,
+            359.090911865234,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_mining": [
+            775.323669433594,
+            200.909088134766,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_prospecting": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_running": [
+            775.323669433594,
+            280,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_stamina": [
+            775.323669433594,
+            520.909057617188,
+            551.236328125,
+            80
+          ]
+        },
+        "dev_drawer_open": false,
+        "developer_tools_visible": false,
+        "effort": 1,
+        "game_started": true,
+        "guide_open": false,
+        "hud_caption": [
+          116,
+          138,
+          120,
+          33
+        ],
+        "hud_caption_text": "SKILLS",
+        "hud_caption_visible": true,
+        "hud_context": [
+          706.363647460938,
+          459.54541015625,
+          226,
+          116
+        ],
+        "hud_context_visible": false,
+        "hud_goal": [
+          900.363647460938,
+          18,
+          400,
+          76
+        ],
+        "hud_gold": [
+          380,
+          18,
+          166,
+          112
+        ],
+        "hud_guide_visible": false,
+        "hud_map": [
+          700.363647460938,
+          18,
+          188,
+          96
+        ],
+        "hud_menu_icon": "res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png",
+        "hud_mine_visible": true,
+        "inventory_open": false,
+        "journal_tab": "together",
+        "map_open": false,
+        "mine_input_held": false,
+        "modal_active": true,
+        "mole_open": false,
+        "physics_frame": 505,
+        "player_controls_enabled": false,
+        "prospecting": {
+          "checks": {
+            "below-boundary-1": true,
+            "below-boundary-100": true,
+            "below-boundary-25": true,
+            "below-boundary-50": true,
+            "boundary-0": true,
+            "boundary-1": true,
+            "boundary-100": true,
+            "boundary-25": true,
+            "boundary-50": true,
+            "chance-0": true,
+            "chance-1": true,
+            "chance-100": true,
+            "chance-25": true,
+            "chance-50": true,
+            "claim_endless_resource_node-bonus-observed": true,
+            "claim_endless_resource_node-once-0": true,
+            "claim_endless_resource_node-once-1": true,
+            "claim_endless_resource_node-once-10": true,
+            "claim_endless_resource_node-once-11": true,
+            "claim_endless_resource_node-once-12": true,
+            "claim_endless_resource_node-once-13": true,
+            "claim_endless_resource_node-once-14": true,
+            "claim_endless_resource_node-once-15": true,
+            "claim_endless_resource_node-once-2": true,
+            "claim_endless_resource_node-once-3": true,
+            "claim_endless_resource_node-once-4": true,
+            "claim_endless_resource_node-once-5": true,
+            "claim_endless_resource_node-once-6": true,
+            "claim_endless_resource_node-once-7": true,
+            "claim_endless_resource_node-once-8": true,
+            "claim_endless_resource_node-once-9": true,
+            "claim_endless_resource_node0": true,
+            "claim_endless_resource_node1": true,
+            "claim_endless_resource_node10": true,
+            "claim_endless_resource_node11": true,
+            "claim_endless_resource_node12": true,
+            "claim_endless_resource_node13": true,
+            "claim_endless_resource_node14": true,
+            "claim_endless_resource_node15": true,
+            "claim_endless_resource_node2": true,
+            "claim_endless_resource_node3": true,
+            "claim_endless_resource_node4": true,
+            "claim_endless_resource_node5": true,
+            "claim_endless_resource_node6": true,
+            "claim_endless_resource_node7": true,
+            "claim_endless_resource_node8": true,
+            "claim_endless_resource_node9": true,
+            "claim_endless_rock_cell-bonus-observed": true,
+            "claim_endless_rock_cell-once-0": true,
+            "claim_endless_rock_cell-once-1": true,
+            "claim_endless_rock_cell-once-10": true,
+            "claim_endless_rock_cell-once-11": true,
+            "claim_endless_rock_cell-once-12": true,
+            "claim_endless_rock_cell-once-13": true,
+            "claim_endless_rock_cell-once-14": true,
+            "claim_endless_rock_cell-once-15": true,
+            "claim_endless_rock_cell-once-2": true,
+            "claim_endless_rock_cell-once-3": true,
+            "claim_endless_rock_cell-once-4": true,
+            "claim_endless_rock_cell-once-5": true,
+            "claim_endless_rock_cell-once-6": true,
+            "claim_endless_rock_cell-once-7": true,
+            "claim_endless_rock_cell-once-8": true,
+            "claim_endless_rock_cell-once-9": true,
+            "claim_endless_rock_cell0": true,
+            "claim_endless_rock_cell1": true,
+            "claim_endless_rock_cell10": true,
+            "claim_endless_rock_cell11": true,
+            "claim_endless_rock_cell12": true,
+            "claim_endless_rock_cell13": true,
+            "claim_endless_rock_cell14": true,
+            "claim_endless_rock_cell15": true,
+            "claim_endless_rock_cell2": true,
+            "claim_endless_rock_cell3": true,
+            "claim_endless_rock_cell4": true,
+            "claim_endless_rock_cell5": true,
+            "claim_endless_rock_cell6": true,
+            "claim_endless_rock_cell7": true,
+            "claim_endless_rock_cell8": true,
+            "claim_endless_rock_cell9": true,
+            "clamped-levels": true,
+            "depth_oredeepcore-bonus-observed": true,
+            "depth_oredeepcore0": true,
+            "depth_oredeepcore1": true,
+            "depth_oredeepcore10": true,
+            "depth_oredeepcore11": true,
+            "depth_oredeepcore12": true,
+            "depth_oredeepcore13": true,
+            "depth_oredeepcore14": true,
+            "depth_oredeepcore15": true,
+            "depth_oredeepcore2": true,
+            "depth_oredeepcore3": true,
+            "depth_oredeepcore4": true,
+            "depth_oredeepcore5": true,
+            "depth_oredeepcore6": true,
+            "depth_oredeepcore7": true,
+            "depth_oredeepcore8": true,
+            "depth_oredeepcore9": true,
+            "distribution-0": true,
+            "distribution-1": true,
+            "distribution-100": true,
+            "distribution-25": true,
+            "distribution-50": true,
+            "ember_fault-bonus-observed": true,
+            "ember_fault0": true,
+            "ember_fault1": true,
+            "ember_fault10": true,
+            "ember_fault11": true,
+            "ember_fault12": true,
+            "ember_fault13": true,
+            "ember_fault14": true,
+            "ember_fault15": true,
+            "ember_fault2": true,
+            "ember_fault3": true,
+            "ember_fault4": true,
+            "ember_fault5": true,
+            "ember_fault6": true,
+            "ember_fault7": true,
+            "ember_fault8": true,
+            "ember_fault9": true,
+            "empty-and-limit": true,
+            "existing-level-preserved": true,
+            "grant-no-reroll": true,
+            "invalid-samples": true,
+            "moon-bonus-observed": true,
+            "moon0": true,
+            "moon1": true,
+            "moon10": true,
+            "moon11": true,
+            "moon12": true,
+            "moon13": true,
+            "moon14": true,
+            "moon15": true,
+            "moon2": true,
+            "moon3": true,
+            "moon4": true,
+            "moon5": true,
+            "moon6": true,
+            "moon7": true,
+            "moon8": true,
+            "moon9": true,
+            "moss_orecrown-bonus-observed": true,
+            "moss_orecrown0": true,
+            "moss_orecrown1": true,
+            "moss_orecrown10": true,
+            "moss_orecrown11": true,
+            "moss_orecrown12": true,
+            "moss_orecrown13": true,
+            "moss_orecrown14": true,
+            "moss_orecrown15": true,
+            "moss_orecrown2": true,
+            "moss_orecrown3": true,
+            "moss_orecrown4": true,
+            "moss_orecrown5": true,
+            "moss_orecrown6": true,
+            "moss_orecrown7": true,
+            "moss_orecrown8": true,
+            "moss_orecrown9": true,
+            "moss_oreworn-bonus-observed": true,
+            "moss_oreworn0": true,
+            "moss_oreworn1": true,
+            "moss_oreworn10": true,
+            "moss_oreworn11": true,
+            "moss_oreworn12": true,
+            "moss_oreworn13": true,
+            "moss_oreworn14": true,
+            "moss_oreworn15": true,
+            "moss_oreworn2": true,
+            "moss_oreworn3": true,
+            "moss_oreworn4": true,
+            "moss_oreworn5": true,
+            "moss_oreworn6": true,
+            "moss_oreworn7": true,
+            "moss_oreworn8": true,
+            "moss_oreworn9": true,
+            "mountain-bonus-observed": true,
+            "mountain0": true,
+            "mountain1": true,
+            "mountain10": true,
+            "mountain11": true,
+            "mountain12": true,
+            "mountain13": true,
+            "mountain14": true,
+            "mountain15": true,
+            "mountain2": true,
+            "mountain3": true,
+            "mountain4": true,
+            "mountain5": true,
+            "mountain6": true,
+            "mountain7": true,
+            "mountain8": true,
+            "mountain9": true,
+            "no-bonus-deepstone": true,
+            "no-bonus-stone": true,
+            "no-bonus-unknown": true,
+            "pickup-no-reroll": true,
+            "starfall_lattice-bonus-observed": true,
+            "starfall_lattice0": true,
+            "starfall_lattice1": true,
+            "starfall_lattice10": true,
+            "starfall_lattice11": true,
+            "starfall_lattice12": true,
+            "starfall_lattice13": true,
+            "starfall_lattice14": true,
+            "starfall_lattice15": true,
+            "starfall_lattice2": true,
+            "starfall_lattice3": true,
+            "starfall_lattice4": true,
+            "starfall_lattice5": true,
+            "starfall_lattice6": true,
+            "starfall_lattice7": true,
+            "starfall_lattice8": true,
+            "starfall_lattice9": true
+          },
+          "level": 100,
+          "results": {
+            "claim_endless_resource_node": 9,
+            "claim_endless_rock_cell": 9,
+            "depth_oredeepcore": 4,
+            "ember_fault": 4,
+            "moon": 4,
+            "moss_orecrown": 4,
+            "moss_oreworn": 4,
+            "mountain": 9,
+            "starfall_lattice": 4
+          }
+        },
+        "settings_open": false,
+        "shared_ui_roots": 1,
+        "shared_ui_saved": 0,
+        "shared_ui_visible": true,
+        "shop_open": false,
+        "skill_progress": [
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              236.036361694336,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              257.854553222656,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              315.127258300781,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              336.945465087891,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              394.218170166016,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              416.036376953125,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "100",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              473.309051513672,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 100,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              495.127258300781,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 100
+          }
+        ],
+        "skill_xp": {
+          "carrying": 0,
+          "mining": 0,
+          "prospecting": 5950,
+          "running": 0,
+          "stamina": 100
+        },
+        "skills": [
+          {
+            "id": "mining",
+            "level": 0,
+            "maxed": false,
+            "name": "Mining",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "running",
+            "level": 0,
+            "maxed": false,
+            "name": "Running",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "carrying",
+            "level": 0,
+            "maxed": false,
+            "name": "Carrying",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "prospecting",
+            "level": 100,
+            "maxed": true,
+            "name": "Prospecting",
+            "next": 110,
+            "ratio": 1,
+            "xp": 110
+          }
+        ],
+        "skills_open": true,
+        "skills_plate": [
+          753.505493164062,
+          122.727272033691,
+          594.872680664062,
+          498.181793212891
+        ],
+        "stamina": 100,
+        "stamina_bar": 100,
+        "stamina_rest": 7.91666666666664,
+        "tooltip_id": "prospecting",
+        "tooltip_rect": [
+          337.141876220703,
+          343.636352539062,
+          400,
+          265.454528808594
+        ],
+        "tooltip_text": "Gain XP for every resource mined.\n50.0% chance for +1 ore when mining.\n+0.5% per level, up to 50%.\nBonus applies after tool multipliers.",
+        "tooltip_visible": true,
+        "work": {
+          "cancel": [
+            872,
+            408
+          ],
+          "checks": {
+            "bedrock": true,
+            "legacy_rejected_ore": true,
+            "tool_gate": true
+          },
+          "feedback": "",
+          "hero_period": 0.72,
+          "key": "(19, 8)",
+          "mole": {
+            "action": "idle",
+            "automatic_task": false,
+            "collected": 0,
+            "destination": "(872.0, 408.0)",
+            "dug": 0,
+            "frame": 12,
+            "light": {
+              "beam_length": 220,
+              "border_alpha_max": 0,
+              "cone_only": false,
+              "energy": 0.720000028610229,
+              "energy_multiplier": 1,
+              "half_angle": 0.4,
+              "light_count": 2,
+              "occluded": true,
+              "origin_centered": false,
+              "range_multiplier": 1,
+              "rotation": 2.59480381011963,
+              "shadow_origin_preserved": true,
+              "source_texture_region": "[P: (128, 77), S: (127, 103)]",
+              "source_texture_size": "(256, 256)",
+              "style": "standard",
+              "texture_offset": "(109.1406, 0.859375)",
+              "texture_size": "(127, 103)",
+              "width_multiplier": 1
+            },
+            "mode": "follow",
+            "path_searches": 0,
+            "period": 2.16,
+            "position": "(817.3313, 441.2766)",
+            "shake_cooldown": 0,
+            "work_hits": 0,
+            "work_key": "",
+            "worm": {
+              "boost": 0,
+              "count": 0,
+              "eaten": 0,
+              "positions": [],
+              "spawn_clock": 996.483333333336,
+              "spawned": 0,
+              "width": 28
+            }
+          },
+          "period": 2.16,
+          "power": 0,
+          "remaining": true,
+          "scenario": "moss_ore",
+          "target": [
+            936,
+            408
+          ]
+        }
+      }
+    },
+    {
+      "name": "real-touch-mining",
+      "passed": true
+    },
+    {
+      "name": "prospecting-real-mining",
+      "passed": true,
+      "state": {
+        "active_rigs": 1,
+        "cycle": 0.663587130833576,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "menu",
+        "gear": "worn",
+        "health": 27696,
+        "hit_phase": 0.36,
+        "id": 7,
+        "impact": 3,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1205.36364746094,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "worn",
+          "generations": 6,
+          "motion": {
+            "age": 0.176366666666667,
+            "aim_ready": true,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0.000003814697265625,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.0239882868082206,
+            "support_release": 0,
+            "swing_serial": 3,
+            "transitions": 3,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 250
+        },
+        "native_canvas": {
+          "items": 0,
+          "size": "(400, 400)",
+          "update_mode": 4
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          872,
+          408
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 203,
+          "primitives": 177382
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 400,
+          "samples": 0
+        },
+        "swing": 3,
+        "target_valid": false,
+        "version": "1.0.0-dev.15.26",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true,
+        "buttons": {
+          "continue": [
+            708.181823730469,
+            67.272705078125,
+            526,
+            92
+          ],
+          "dev_toggle": [
+            116,
+            182,
+            132,
+            58
+          ],
+          "hud_bag": [
+            950.363647460938,
+            446.54541015625,
+            142,
+            142
+          ],
+          "hud_guide": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "hud_menu": [
+            116,
+            18,
+            120,
+            120
+          ],
+          "hud_mine": [
+            1110.36364746094,
+            422.54541015625,
+            190,
+            190
+          ],
+          "hud_mole": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "inventory": [
+            542.727294921875,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "inventory_close": [
+            118,
+            24,
+            132,
+            86
+          ],
+          "joystick": [
+            0,
+            0,
+            1416.36364746094,
+            654.54541015625
+          ],
+          "map": [
+            713.636413574219,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "mole_close": [
+            1186.95263671875,
+            54.9717903137207,
+            125.677337646484,
+            74.8079376220703
+          ],
+          "mole_tab_0": [
+            492.734954833984,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_1": [
+            736.110107421875,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_2": [
+            979.485290527344,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "new_game": [
+            708.181823730469,
+            173.272705078125,
+            526,
+            82
+          ],
+          "prospecting_row": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "settings": [
+            799.090942382812,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "settings_back": [
+            568.181823730469,
+            539.272705078125,
+            280,
+            82
+          ],
+          "shop_close": [
+            63.7363891601562,
+            22.6825180053711,
+            78.6629333496094,
+            78.6629333496094
+          ],
+          "skills": [
+            628.181823730469,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "skills_close": [
+            1325.45458984375,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "stat_carrying": [
+            775.323669433594,
+            359.090911865234,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_mining": [
+            775.323669433594,
+            200.909088134766,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_prospecting": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_running": [
+            775.323669433594,
+            280,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_stamina": [
+            775.323669433594,
+            520.909057617188,
+            551.236328125,
+            80
+          ]
+        },
+        "dev_drawer_open": false,
+        "developer_tools_visible": true,
+        "effort": 1,
+        "game_started": true,
+        "guide_open": false,
+        "hud_caption": [
+          116,
+          138,
+          120,
+          33
+        ],
+        "hud_caption_text": "SKILLS",
+        "hud_caption_visible": true,
+        "hud_context": [
+          706.363647460938,
+          459.54541015625,
+          226,
+          116
+        ],
+        "hud_context_visible": false,
+        "hud_goal": [
+          900.363647460938,
+          18,
+          400,
+          76
+        ],
+        "hud_gold": [
+          380,
+          18,
+          166,
+          112
+        ],
+        "hud_guide_visible": false,
+        "hud_map": [
+          700.363647460938,
+          18,
+          188,
+          96
+        ],
+        "hud_menu_icon": "res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png",
+        "hud_mine_visible": true,
+        "inventory_open": false,
+        "journal_tab": "together",
+        "map_open": false,
+        "mine_input_held": false,
+        "modal_active": false,
+        "mole_open": false,
+        "physics_frame": 703,
+        "player_controls_enabled": true,
+        "prospecting": {
+          "checks": {
+            "below-boundary-1": true,
+            "below-boundary-100": true,
+            "below-boundary-25": true,
+            "below-boundary-50": true,
+            "boundary-0": true,
+            "boundary-1": true,
+            "boundary-100": true,
+            "boundary-25": true,
+            "boundary-50": true,
+            "chance-0": true,
+            "chance-1": true,
+            "chance-100": true,
+            "chance-25": true,
+            "chance-50": true,
+            "claim_endless_resource_node-bonus-observed": true,
+            "claim_endless_resource_node-once-0": true,
+            "claim_endless_resource_node-once-1": true,
+            "claim_endless_resource_node-once-10": true,
+            "claim_endless_resource_node-once-11": true,
+            "claim_endless_resource_node-once-12": true,
+            "claim_endless_resource_node-once-13": true,
+            "claim_endless_resource_node-once-14": true,
+            "claim_endless_resource_node-once-15": true,
+            "claim_endless_resource_node-once-2": true,
+            "claim_endless_resource_node-once-3": true,
+            "claim_endless_resource_node-once-4": true,
+            "claim_endless_resource_node-once-5": true,
+            "claim_endless_resource_node-once-6": true,
+            "claim_endless_resource_node-once-7": true,
+            "claim_endless_resource_node-once-8": true,
+            "claim_endless_resource_node-once-9": true,
+            "claim_endless_resource_node0": true,
+            "claim_endless_resource_node1": true,
+            "claim_endless_resource_node10": true,
+            "claim_endless_resource_node11": true,
+            "claim_endless_resource_node12": true,
+            "claim_endless_resource_node13": true,
+            "claim_endless_resource_node14": true,
+            "claim_endless_resource_node15": true,
+            "claim_endless_resource_node2": true,
+            "claim_endless_resource_node3": true,
+            "claim_endless_resource_node4": true,
+            "claim_endless_resource_node5": true,
+            "claim_endless_resource_node6": true,
+            "claim_endless_resource_node7": true,
+            "claim_endless_resource_node8": true,
+            "claim_endless_resource_node9": true,
+            "claim_endless_rock_cell-bonus-observed": true,
+            "claim_endless_rock_cell-once-0": true,
+            "claim_endless_rock_cell-once-1": true,
+            "claim_endless_rock_cell-once-10": true,
+            "claim_endless_rock_cell-once-11": true,
+            "claim_endless_rock_cell-once-12": true,
+            "claim_endless_rock_cell-once-13": true,
+            "claim_endless_rock_cell-once-14": true,
+            "claim_endless_rock_cell-once-15": true,
+            "claim_endless_rock_cell-once-2": true,
+            "claim_endless_rock_cell-once-3": true,
+            "claim_endless_rock_cell-once-4": true,
+            "claim_endless_rock_cell-once-5": true,
+            "claim_endless_rock_cell-once-6": true,
+            "claim_endless_rock_cell-once-7": true,
+            "claim_endless_rock_cell-once-8": true,
+            "claim_endless_rock_cell-once-9": true,
+            "claim_endless_rock_cell0": true,
+            "claim_endless_rock_cell1": true,
+            "claim_endless_rock_cell10": true,
+            "claim_endless_rock_cell11": true,
+            "claim_endless_rock_cell12": true,
+            "claim_endless_rock_cell13": true,
+            "claim_endless_rock_cell14": true,
+            "claim_endless_rock_cell15": true,
+            "claim_endless_rock_cell2": true,
+            "claim_endless_rock_cell3": true,
+            "claim_endless_rock_cell4": true,
+            "claim_endless_rock_cell5": true,
+            "claim_endless_rock_cell6": true,
+            "claim_endless_rock_cell7": true,
+            "claim_endless_rock_cell8": true,
+            "claim_endless_rock_cell9": true,
+            "clamped-levels": true,
+            "depth_oredeepcore-bonus-observed": true,
+            "depth_oredeepcore0": true,
+            "depth_oredeepcore1": true,
+            "depth_oredeepcore10": true,
+            "depth_oredeepcore11": true,
+            "depth_oredeepcore12": true,
+            "depth_oredeepcore13": true,
+            "depth_oredeepcore14": true,
+            "depth_oredeepcore15": true,
+            "depth_oredeepcore2": true,
+            "depth_oredeepcore3": true,
+            "depth_oredeepcore4": true,
+            "depth_oredeepcore5": true,
+            "depth_oredeepcore6": true,
+            "depth_oredeepcore7": true,
+            "depth_oredeepcore8": true,
+            "depth_oredeepcore9": true,
+            "distribution-0": true,
+            "distribution-1": true,
+            "distribution-100": true,
+            "distribution-25": true,
+            "distribution-50": true,
+            "ember_fault-bonus-observed": true,
+            "ember_fault0": true,
+            "ember_fault1": true,
+            "ember_fault10": true,
+            "ember_fault11": true,
+            "ember_fault12": true,
+            "ember_fault13": true,
+            "ember_fault14": true,
+            "ember_fault15": true,
+            "ember_fault2": true,
+            "ember_fault3": true,
+            "ember_fault4": true,
+            "ember_fault5": true,
+            "ember_fault6": true,
+            "ember_fault7": true,
+            "ember_fault8": true,
+            "ember_fault9": true,
+            "empty-and-limit": true,
+            "existing-level-preserved": true,
+            "grant-no-reroll": true,
+            "invalid-samples": true,
+            "moon-bonus-observed": true,
+            "moon0": true,
+            "moon1": true,
+            "moon10": true,
+            "moon11": true,
+            "moon12": true,
+            "moon13": true,
+            "moon14": true,
+            "moon15": true,
+            "moon2": true,
+            "moon3": true,
+            "moon4": true,
+            "moon5": true,
+            "moon6": true,
+            "moon7": true,
+            "moon8": true,
+            "moon9": true,
+            "moss_orecrown-bonus-observed": true,
+            "moss_orecrown0": true,
+            "moss_orecrown1": true,
+            "moss_orecrown10": true,
+            "moss_orecrown11": true,
+            "moss_orecrown12": true,
+            "moss_orecrown13": true,
+            "moss_orecrown14": true,
+            "moss_orecrown15": true,
+            "moss_orecrown2": true,
+            "moss_orecrown3": true,
+            "moss_orecrown4": true,
+            "moss_orecrown5": true,
+            "moss_orecrown6": true,
+            "moss_orecrown7": true,
+            "moss_orecrown8": true,
+            "moss_orecrown9": true,
+            "moss_oreworn-bonus-observed": true,
+            "moss_oreworn0": true,
+            "moss_oreworn1": true,
+            "moss_oreworn10": true,
+            "moss_oreworn11": true,
+            "moss_oreworn12": true,
+            "moss_oreworn13": true,
+            "moss_oreworn14": true,
+            "moss_oreworn15": true,
+            "moss_oreworn2": true,
+            "moss_oreworn3": true,
+            "moss_oreworn4": true,
+            "moss_oreworn5": true,
+            "moss_oreworn6": true,
+            "moss_oreworn7": true,
+            "moss_oreworn8": true,
+            "moss_oreworn9": true,
+            "mountain-bonus-observed": true,
+            "mountain0": true,
+            "mountain1": true,
+            "mountain10": true,
+            "mountain11": true,
+            "mountain12": true,
+            "mountain13": true,
+            "mountain14": true,
+            "mountain15": true,
+            "mountain2": true,
+            "mountain3": true,
+            "mountain4": true,
+            "mountain5": true,
+            "mountain6": true,
+            "mountain7": true,
+            "mountain8": true,
+            "mountain9": true,
+            "no-bonus-deepstone": true,
+            "no-bonus-stone": true,
+            "no-bonus-unknown": true,
+            "pickup-no-reroll": true,
+            "starfall_lattice-bonus-observed": true,
+            "starfall_lattice0": true,
+            "starfall_lattice1": true,
+            "starfall_lattice10": true,
+            "starfall_lattice11": true,
+            "starfall_lattice12": true,
+            "starfall_lattice13": true,
+            "starfall_lattice14": true,
+            "starfall_lattice15": true,
+            "starfall_lattice2": true,
+            "starfall_lattice3": true,
+            "starfall_lattice4": true,
+            "starfall_lattice5": true,
+            "starfall_lattice6": true,
+            "starfall_lattice7": true,
+            "starfall_lattice8": true,
+            "starfall_lattice9": true
+          },
+          "level": 100,
+          "results": {
+            "claim_endless_resource_node": 9,
+            "claim_endless_rock_cell": 9,
+            "depth_oredeepcore": 4,
+            "ember_fault": 4,
+            "moon": 4,
+            "moss_orecrown": 4,
+            "moss_oreworn": 4,
+            "mountain": 9,
+            "starfall_lattice": 4
+          }
+        },
+        "settings_open": false,
+        "shared_ui_roots": 1,
+        "shared_ui_saved": 0,
+        "shared_ui_visible": true,
+        "shop_open": false,
+        "skill_progress": [
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              236.036361694336,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              257.854553222656,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              315.127258300781,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              336.945465087891,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              394.218170166016,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              416.036376953125,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "100",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              473.309051513672,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 100,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              495.127258300781,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 100
+          }
+        ],
+        "skill_xp": {
+          "carrying": 0,
+          "mining": 12,
+          "prospecting": 5950,
+          "running": 0,
+          "stamina": 91.7333333333338
+        },
+        "skills": [
+          {
+            "id": "mining",
+            "level": 0,
+            "maxed": false,
+            "name": "Mining",
+            "next": 80,
+            "ratio": 0.15,
+            "xp": 12
+          },
+          {
+            "id": "running",
+            "level": 0,
+            "maxed": false,
+            "name": "Running",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "carrying",
+            "level": 0,
+            "maxed": false,
+            "name": "Carrying",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "prospecting",
+            "level": 100,
+            "maxed": true,
+            "name": "Prospecting",
+            "next": 110,
+            "ratio": 1,
+            "xp": 110
+          }
+        ],
+        "skills_open": false,
+        "skills_plate": [
+          753.505493164062,
+          122.727272033691,
+          594.872680664062,
+          498.181793212891
+        ],
+        "stamina": 91.7333333333338,
+        "stamina_bar": 100,
+        "stamina_rest": 0.283333333333333,
+        "tooltip_id": "",
+        "tooltip_rect": [
+          337.141876220703,
+          343.636352539062,
+          400,
+          265.454528808594
+        ],
+        "tooltip_text": "Gain XP for every resource mined.\n50.0% chance for +1 ore when mining.\n+0.5% per level, up to 50%.\nBonus applies after tool multipliers.",
+        "tooltip_visible": false,
+        "work": {
+          "cancel": [
+            764.836364746094,
+            294.545440673828
+          ],
+          "checks": {
+            "bedrock": true,
+            "legacy_rejected_ore": true,
+            "tool_gate": true
+          },
+          "feedback": "",
+          "hero_period": 0.72,
+          "key": "(19, 8)",
+          "mole": {
+            "action": "idle",
+            "automatic_task": false,
+            "collected": 0,
+            "destination": "(872.0, 408.0)",
+            "dug": 0,
+            "frame": 12,
+            "light": {
+              "beam_length": 220,
+              "border_alpha_max": 0,
+              "cone_only": false,
+              "energy": 0.720000028610229,
+              "energy_multiplier": 1,
+              "half_angle": 0.4,
+              "light_count": 2,
+              "occluded": true,
+              "origin_centered": false,
+              "range_multiplier": 1,
+              "rotation": 2.59480381011963,
+              "shadow_origin_preserved": true,
+              "source_texture_region": "[P: (128, 77), S: (127, 103)]",
+              "source_texture_size": "(256, 256)",
+              "style": "standard",
+              "texture_offset": "(109.1406, 0.859375)",
+              "texture_size": "(127, 103)",
+              "width_multiplier": 1
+            },
+            "mode": "follow",
+            "path_searches": 0,
+            "period": 2.16,
+            "position": "(817.3313, 441.2766)",
+            "shake_cooldown": 0,
+            "work_hits": 0,
+            "work_key": "",
+            "worm": {
+              "boost": 0,
+              "count": 0,
+              "eaten": 0,
+              "positions": [],
+              "spawn_clock": 996.216666666669,
+              "spawned": 0,
+              "width": 28
+            }
+          },
+          "period": 2.16,
+          "power": 0,
+          "remaining": false,
+          "scenario": "moss_ore",
+          "target": [
+            828.836364746094,
+            294.545440673828
+          ]
+        }
+      }
+    },
+    {
+      "name": "companion-mining-retained",
+      "passed": true
+    },
+    {
+      "name": "prospecting-companion-mining",
+      "passed": true,
+      "state": {
+        "active_rigs": 1,
+        "cycle": 0.663587130833576,
+        "drill_level": 0,
+        "error": "",
+        "fixture": "menu",
+        "gear": "worn",
+        "health": 27688,
+        "hit_phase": 0.36,
+        "id": 10,
+        "impact": 3,
+        "impact_target_valid": true,
+        "menu": false,
+        "mine_button": [
+          1205.36364746094,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": true,
+          "failed": false,
+          "failure": "",
+          "gear": "worn",
+          "generations": 7,
+          "motion": {
+            "age": 7.76290666666664,
+            "aim_ready": false,
+            "bounded_transition_frames": 0,
+            "duration": 0.12,
+            "errors": [],
+            "max_contact_pixels": 0,
+            "max_reach_error": 0,
+            "max_reach_error_scope": "Includes rejected transition search probes",
+            "max_tool_retarget": 0,
+            "mode": "idle",
+            "phase": 0.156362962962969,
+            "support_release": 0,
+            "swing_serial": -1,
+            "transitions": 1,
+            "yaw": -1.57079624657167
+          },
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 704
+        },
+        "native_canvas": {
+          "items": 0,
+          "size": "(400, 400)",
+          "update_mode": 4
+        },
+        "persistence_active": false,
+        "phase": "mine",
+        "pickaxe_level": 1,
+        "position": [
+          920,
+          408
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 200,
+          "primitives": 176798
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 400,
+          "samples": 0
+        },
+        "swing": 3,
+        "target_valid": false,
+        "version": "1.0.0-dev.15.26",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true,
+        "buttons": {
+          "continue": [
+            708.181823730469,
+            67.272705078125,
+            526,
+            92
+          ],
+          "dev_toggle": [
+            116,
+            182,
+            132,
+            58
+          ],
+          "hud_bag": [
+            950.363647460938,
+            446.54541015625,
+            142,
+            142
+          ],
+          "hud_guide": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "hud_menu": [
+            116,
+            18,
+            120,
+            120
+          ],
+          "hud_mine": [
+            1110.36364746094,
+            422.54541015625,
+            190,
+            190
+          ],
+          "hud_mole": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "inventory": [
+            542.727294921875,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "inventory_close": [
+            118,
+            24,
+            132,
+            86
+          ],
+          "joystick": [
+            0,
+            0,
+            1416.36364746094,
+            654.54541015625
+          ],
+          "map": [
+            713.636413574219,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "mole_close": [
+            1186.95263671875,
+            54.9717903137207,
+            125.677337646484,
+            74.8079376220703
+          ],
+          "mole_tab_0": [
+            492.734954833984,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_1": [
+            736.110107421875,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_2": [
+            979.485290527344,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "new_game": [
+            708.181823730469,
+            173.272705078125,
+            526,
+            82
+          ],
+          "prospecting_row": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "settings": [
+            799.090942382812,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "settings_back": [
+            568.181823730469,
+            539.272705078125,
+            280,
+            82
+          ],
+          "shop_close": [
+            63.7363891601562,
+            22.6825180053711,
+            78.6629333496094,
+            78.6629333496094
+          ],
+          "skills": [
+            628.181823730469,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "skills_close": [
+            1325.45458984375,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "stat_carrying": [
+            775.323669433594,
+            359.090911865234,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_mining": [
+            775.323669433594,
+            200.909088134766,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_prospecting": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_running": [
+            775.323669433594,
+            280,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_stamina": [
+            775.323669433594,
+            520.909057617188,
+            551.236328125,
+            80
+          ]
+        },
+        "dev_drawer_open": false,
+        "developer_tools_visible": true,
+        "effort": 1,
+        "game_started": true,
+        "guide_open": false,
+        "hud_caption": [
+          116,
+          138,
+          120,
+          33
+        ],
+        "hud_caption_text": "SKILLS",
+        "hud_caption_visible": true,
+        "hud_context": [
+          706.363647460938,
+          459.54541015625,
+          226,
+          116
+        ],
+        "hud_context_visible": false,
+        "hud_goal": [
+          900.363647460938,
+          18,
+          400,
+          76
+        ],
+        "hud_gold": [
+          380,
+          18,
+          166,
+          112
+        ],
+        "hud_guide_visible": false,
+        "hud_map": [
+          700.363647460938,
+          18,
+          188,
+          96
+        ],
+        "hud_menu_icon": "res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png",
+        "hud_mine_visible": true,
+        "inventory_open": false,
+        "journal_tab": "together",
+        "map_open": false,
+        "mine_input_held": false,
+        "modal_active": false,
+        "mole_open": false,
+        "physics_frame": 1179,
+        "player_controls_enabled": true,
+        "prospecting": {
+          "checks": {
+            "below-boundary-1": true,
+            "below-boundary-100": true,
+            "below-boundary-25": true,
+            "below-boundary-50": true,
+            "boundary-0": true,
+            "boundary-1": true,
+            "boundary-100": true,
+            "boundary-25": true,
+            "boundary-50": true,
+            "chance-0": true,
+            "chance-1": true,
+            "chance-100": true,
+            "chance-25": true,
+            "chance-50": true,
+            "claim_endless_resource_node-bonus-observed": true,
+            "claim_endless_resource_node-once-0": true,
+            "claim_endless_resource_node-once-1": true,
+            "claim_endless_resource_node-once-10": true,
+            "claim_endless_resource_node-once-11": true,
+            "claim_endless_resource_node-once-12": true,
+            "claim_endless_resource_node-once-13": true,
+            "claim_endless_resource_node-once-14": true,
+            "claim_endless_resource_node-once-15": true,
+            "claim_endless_resource_node-once-2": true,
+            "claim_endless_resource_node-once-3": true,
+            "claim_endless_resource_node-once-4": true,
+            "claim_endless_resource_node-once-5": true,
+            "claim_endless_resource_node-once-6": true,
+            "claim_endless_resource_node-once-7": true,
+            "claim_endless_resource_node-once-8": true,
+            "claim_endless_resource_node-once-9": true,
+            "claim_endless_resource_node0": true,
+            "claim_endless_resource_node1": true,
+            "claim_endless_resource_node10": true,
+            "claim_endless_resource_node11": true,
+            "claim_endless_resource_node12": true,
+            "claim_endless_resource_node13": true,
+            "claim_endless_resource_node14": true,
+            "claim_endless_resource_node15": true,
+            "claim_endless_resource_node2": true,
+            "claim_endless_resource_node3": true,
+            "claim_endless_resource_node4": true,
+            "claim_endless_resource_node5": true,
+            "claim_endless_resource_node6": true,
+            "claim_endless_resource_node7": true,
+            "claim_endless_resource_node8": true,
+            "claim_endless_resource_node9": true,
+            "claim_endless_rock_cell-bonus-observed": true,
+            "claim_endless_rock_cell-once-0": true,
+            "claim_endless_rock_cell-once-1": true,
+            "claim_endless_rock_cell-once-10": true,
+            "claim_endless_rock_cell-once-11": true,
+            "claim_endless_rock_cell-once-12": true,
+            "claim_endless_rock_cell-once-13": true,
+            "claim_endless_rock_cell-once-14": true,
+            "claim_endless_rock_cell-once-15": true,
+            "claim_endless_rock_cell-once-2": true,
+            "claim_endless_rock_cell-once-3": true,
+            "claim_endless_rock_cell-once-4": true,
+            "claim_endless_rock_cell-once-5": true,
+            "claim_endless_rock_cell-once-6": true,
+            "claim_endless_rock_cell-once-7": true,
+            "claim_endless_rock_cell-once-8": true,
+            "claim_endless_rock_cell-once-9": true,
+            "claim_endless_rock_cell0": true,
+            "claim_endless_rock_cell1": true,
+            "claim_endless_rock_cell10": true,
+            "claim_endless_rock_cell11": true,
+            "claim_endless_rock_cell12": true,
+            "claim_endless_rock_cell13": true,
+            "claim_endless_rock_cell14": true,
+            "claim_endless_rock_cell15": true,
+            "claim_endless_rock_cell2": true,
+            "claim_endless_rock_cell3": true,
+            "claim_endless_rock_cell4": true,
+            "claim_endless_rock_cell5": true,
+            "claim_endless_rock_cell6": true,
+            "claim_endless_rock_cell7": true,
+            "claim_endless_rock_cell8": true,
+            "claim_endless_rock_cell9": true,
+            "clamped-levels": true,
+            "depth_oredeepcore-bonus-observed": true,
+            "depth_oredeepcore0": true,
+            "depth_oredeepcore1": true,
+            "depth_oredeepcore10": true,
+            "depth_oredeepcore11": true,
+            "depth_oredeepcore12": true,
+            "depth_oredeepcore13": true,
+            "depth_oredeepcore14": true,
+            "depth_oredeepcore15": true,
+            "depth_oredeepcore2": true,
+            "depth_oredeepcore3": true,
+            "depth_oredeepcore4": true,
+            "depth_oredeepcore5": true,
+            "depth_oredeepcore6": true,
+            "depth_oredeepcore7": true,
+            "depth_oredeepcore8": true,
+            "depth_oredeepcore9": true,
+            "distribution-0": true,
+            "distribution-1": true,
+            "distribution-100": true,
+            "distribution-25": true,
+            "distribution-50": true,
+            "ember_fault-bonus-observed": true,
+            "ember_fault0": true,
+            "ember_fault1": true,
+            "ember_fault10": true,
+            "ember_fault11": true,
+            "ember_fault12": true,
+            "ember_fault13": true,
+            "ember_fault14": true,
+            "ember_fault15": true,
+            "ember_fault2": true,
+            "ember_fault3": true,
+            "ember_fault4": true,
+            "ember_fault5": true,
+            "ember_fault6": true,
+            "ember_fault7": true,
+            "ember_fault8": true,
+            "ember_fault9": true,
+            "empty-and-limit": true,
+            "existing-level-preserved": true,
+            "grant-no-reroll": true,
+            "invalid-samples": true,
+            "moon-bonus-observed": true,
+            "moon0": true,
+            "moon1": true,
+            "moon10": true,
+            "moon11": true,
+            "moon12": true,
+            "moon13": true,
+            "moon14": true,
+            "moon15": true,
+            "moon2": true,
+            "moon3": true,
+            "moon4": true,
+            "moon5": true,
+            "moon6": true,
+            "moon7": true,
+            "moon8": true,
+            "moon9": true,
+            "moss_orecrown-bonus-observed": true,
+            "moss_orecrown0": true,
+            "moss_orecrown1": true,
+            "moss_orecrown10": true,
+            "moss_orecrown11": true,
+            "moss_orecrown12": true,
+            "moss_orecrown13": true,
+            "moss_orecrown14": true,
+            "moss_orecrown15": true,
+            "moss_orecrown2": true,
+            "moss_orecrown3": true,
+            "moss_orecrown4": true,
+            "moss_orecrown5": true,
+            "moss_orecrown6": true,
+            "moss_orecrown7": true,
+            "moss_orecrown8": true,
+            "moss_orecrown9": true,
+            "moss_oreworn-bonus-observed": true,
+            "moss_oreworn0": true,
+            "moss_oreworn1": true,
+            "moss_oreworn10": true,
+            "moss_oreworn11": true,
+            "moss_oreworn12": true,
+            "moss_oreworn13": true,
+            "moss_oreworn14": true,
+            "moss_oreworn15": true,
+            "moss_oreworn2": true,
+            "moss_oreworn3": true,
+            "moss_oreworn4": true,
+            "moss_oreworn5": true,
+            "moss_oreworn6": true,
+            "moss_oreworn7": true,
+            "moss_oreworn8": true,
+            "moss_oreworn9": true,
+            "mountain-bonus-observed": true,
+            "mountain0": true,
+            "mountain1": true,
+            "mountain10": true,
+            "mountain11": true,
+            "mountain12": true,
+            "mountain13": true,
+            "mountain14": true,
+            "mountain15": true,
+            "mountain2": true,
+            "mountain3": true,
+            "mountain4": true,
+            "mountain5": true,
+            "mountain6": true,
+            "mountain7": true,
+            "mountain8": true,
+            "mountain9": true,
+            "no-bonus-deepstone": true,
+            "no-bonus-stone": true,
+            "no-bonus-unknown": true,
+            "pickup-no-reroll": true,
+            "starfall_lattice-bonus-observed": true,
+            "starfall_lattice0": true,
+            "starfall_lattice1": true,
+            "starfall_lattice10": true,
+            "starfall_lattice11": true,
+            "starfall_lattice12": true,
+            "starfall_lattice13": true,
+            "starfall_lattice14": true,
+            "starfall_lattice15": true,
+            "starfall_lattice2": true,
+            "starfall_lattice3": true,
+            "starfall_lattice4": true,
+            "starfall_lattice5": true,
+            "starfall_lattice6": true,
+            "starfall_lattice7": true,
+            "starfall_lattice8": true,
+            "starfall_lattice9": true
+          },
+          "level": 100,
+          "results": {
+            "claim_endless_resource_node": 9,
+            "claim_endless_rock_cell": 9,
+            "depth_oredeepcore": 4,
+            "ember_fault": 4,
+            "moon": 4,
+            "moss_orecrown": 4,
+            "moss_oreworn": 4,
+            "mountain": 9,
+            "starfall_lattice": 4
+          }
+        },
+        "settings_open": false,
+        "shared_ui_roots": 1,
+        "shared_ui_saved": 0,
+        "shared_ui_visible": true,
+        "shop_open": false,
+        "skill_progress": [
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              236.036361694336,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              257.854553222656,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 15
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              315.127258300781,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              336.945465087891,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              394.218170166016,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              416.036376953125,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "100",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              473.309051513672,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 100,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              495.127258300781,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 100
+          }
+        ],
+        "skill_xp": {
+          "carrying": 0,
+          "mining": 12,
+          "prospecting": 5950,
+          "running": 0,
+          "stamina": 100
+        },
+        "skills": [
+          {
+            "id": "mining",
+            "level": 0,
+            "maxed": false,
+            "name": "Mining",
+            "next": 80,
+            "ratio": 0.15,
+            "xp": 12
+          },
+          {
+            "id": "running",
+            "level": 0,
+            "maxed": false,
+            "name": "Running",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "carrying",
+            "level": 0,
+            "maxed": false,
+            "name": "Carrying",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "prospecting",
+            "level": 100,
+            "maxed": true,
+            "name": "Prospecting",
+            "next": 110,
+            "ratio": 1,
+            "xp": 110
+          }
+        ],
+        "skills_open": false,
+        "skills_plate": [
+          753.505493164062,
+          122.727272033691,
+          594.872680664062,
+          498.181793212891
+        ],
+        "stamina": 100,
+        "stamina_bar": 97.9833333333339,
+        "stamina_rest": 8.21666666666665,
+        "tooltip_id": "",
+        "tooltip_rect": [
+          337.141876220703,
+          343.636352539062,
+          400,
+          265.454528808594
+        ],
+        "tooltip_text": "Gain XP for every resource mined.\n50.0% chance for +1 ore when mining.\n+0.5% per level, up to 50%.\nBonus applies after tool multipliers.",
+        "tooltip_visible": false,
+        "work": {
+          "cancel": [
+            760.998718261719,
+            294.545440673828
+          ],
+          "checks": {
+            "bedrock": true,
+            "legacy_rejected_ore": true,
+            "tool_gate": true
+          },
+          "feedback": "All done!",
+          "hero_period": 0.72,
+          "key": "(20, 8)",
+          "mole": {
+            "action": "work",
+            "automatic_task": true,
+            "collected": 0,
+            "destination": "(840.0, 408.0)",
+            "dug": 0,
+            "frame": 8,
+            "light": {
+              "beam_length": 220,
+              "border_alpha_max": 0,
+              "cone_only": false,
+              "energy": 0.720000028610229,
+              "energy_multiplier": 1,
+              "half_angle": 0.4,
+              "light_count": 2,
+              "occluded": true,
+              "origin_centered": false,
+              "range_multiplier": 1,
+              "rotation": -1.70880150794983,
+              "shadow_origin_preserved": true,
+              "source_texture_region": "[P: (128, 77), S: (127, 103)]",
+              "source_texture_size": "(256, 256)",
+              "style": "standard",
+              "texture_offset": "(109.1406, 0.859375)",
+              "texture_size": "(127, 103)",
+              "width_multiplier": 1
+            },
+            "mode": "work",
+            "path_searches": 0,
+            "period": 2.16,
+            "position": "(846.6666, 408.0)",
+            "shake_cooldown": 0,
+            "work_hits": 3,
+            "work_key": "(17, 7)",
+            "worm": {
+              "boost": 0,
+              "count": 0,
+              "eaten": 0,
+              "positions": [],
+              "spawn_clock": 991.116666666674,
+              "spawned": 0,
+              "width": 28
+            }
+          },
+          "period": 2.16,
+          "power": 0,
+          "remaining": true,
+          "scenario": "moss_ore",
+          "target": [
+            824.998718261719,
+            294.545440673828
+          ]
+        }
+      }
+    },
+    {
+      "name": "no-runtime-errors",
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "physical_iphone_verified": false
+}
