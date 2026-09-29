@@ -51,7 +51,8 @@ try{
 
  await command('deep_hub');await ready();await delay(500);await shot('hub-elevator');
  await command('deep_fixture');await ready();await delay(500);await shot('solid-entrance');
- const stick=await point('joystick'),mine=await point('hud_mine');
+ const observed=await state(),jr=observed.buttons.joystick,vp=page.viewportSize();
+ const stick={x:(jr[0]+jr[2]*.20)/observed.viewport[0]*vp.width,y:(jr[1]+jr[3]*.70)/observed.viewport[1]*vp.height},mine=await point('hud_mine');
  const finger=(id,p)=>({id,...p,radiusX:5,radiusY:5,force:1});
  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[finger(1,stick)]});
  const down={x:stick.x+1,y:stick.y+28};
