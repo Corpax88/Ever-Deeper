@@ -4,6 +4,8 @@ func run() -> void:
 	super.run()
 
 var shared_reference_layer: CanvasLayer
+var prospect_checks: Dictionary = {}
+var prospect_results: Dictionary = {}
 
 func _reload_scene() -> void:
 	var tree: SceneTree = main.get_tree()
@@ -20,6 +22,15 @@ var ore_escape_goal: Vector2
 var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind)=="prospecting_tests":
+		_test_prospecting()
+		command_id=int(data.id)
+		return
+	if String(data.kind)=="prospecting_level":
+		_set_prospect_level(int(data.level))
+		main.miner_skills_panel.refresh()
+		command_id=int(data.id)
+		return
 	if String(data.kind)=="ore_respawn_fixture":
 		await _ore_respawn_fixture(String(data.mine_id))
 		command_id=int(data.id)
@@ -143,7 +154,7 @@ func _frame() -> void:
 			"level_fits": row.level.get_theme_font("font").get_string_size(row.level.text, HORIZONTAL_ALIGNMENT_LEFT, -1, row.level.get_theme_font_size("font_size")).x <= row.level.size.x,
 			"xp_value": row.xp_bar.value, "level_rect": _bounds(row.bar),
 			"xp_rect": _bounds(row.xp_bar), "numeric_xp": row.xp != null})
-	var bounds: Dictionary = {"hud_menu": _bounds(main.premium_hud.menu_button),
+	var bounds: Dictionary = {"prospecting_row": _bounds(panel.rows[3].node),"hud_menu": _bounds(main.premium_hud.menu_button),
 		"dev_toggle": (_bounds(main.developer_menu.toggle_button) if is_instance_valid(main.developer_menu) else []),
 		"new_game": _bounds(main.premium_menu.main_card.get_node("NewGame")),
 		"continue": _bounds(main.premium_menu.continue_button),
@@ -206,6 +217,7 @@ func _frame() -> void:
 	if ore_escape_active:
 		var mole: Node2D=ui.active_mole()
 		state["ore_escape"]={"distance":mole.global_position.distance_to(ore_escape_origin),"remaining":mole.global_position.distance_to(ore_escape_goal),"checks":mole_checks,"mode":mole.mode}
+	state["prospecting"]={"checks":prospect_checks,"results":prospect_results,"level":RunState.miner_skill_level("prospecting")}
 	JavaScriptBridge.eval("Object.assign(window.DEV14_STATE," + JSON.stringify(state) + ")", true)
 
 func _bounds(control: Control) -> Array:
@@ -385,3 +397,139 @@ func _ore_respawn_fixture(mine_id: String) -> void:
 	ore_escape_active=true
 	mole_case=""
 	main._refresh_hud()
+
+func _set_prospect_level(level: int) -> void:
+	var skills=load("res://scripts/progression/miner_skills.gd")
+	RunState.miner_skills.prospecting=skills.threshold("prospecting",level)
+	RunState._miner_level_cache.clear()
+
+func _prospect_check(name: String, value: bool) -> void:
+	prospect_checks[name]=value
+	_require(value,"prospecting: "+name)
+
+func _test_prospecting() -> void:
+	prospect_checks={}
+	prospect_results={}
+	var skills=load("res://scripts/progression/miner_skills.gd")
+	for level in [0,1,25,50,100]:
+		var chance: float=float(level)*0.005
+		_prospect_check("chance-"+str(level),is_equal_approx(skills.prospecting_chance(level),chance))
+		_prospect_check("boundary-"+str(level),skills.prospecting_bonus(level,chance)==0)
+		if level>0: _prospect_check("below-boundary-"+str(level),skills.prospecting_bonus(level,chance-0.000001)==1)
+		var wins: int=0
+		for sample in 2000: wins+=skills.prospecting_bonus(level,(float(sample)+0.5)/2000.0)
+		_prospect_check("distribution-"+str(level),wins==level*10)
+	_prospect_check("clamped-levels",skills.prospecting_chance(-3)==0.0 and skills.prospecting_chance(300)==0.5)
+	_prospect_check("invalid-samples",skills.prospecting_bonus(100,NAN)==0 and skills.prospecting_bonus(100,-0.01)==0 and skills.prospecting_bonus(100,1.0)==0)
+	_set_prospect_level(100)
+	for kind in ["stone","deepstone","unknown"]:
+		_prospect_check("no-bonus-"+kind,RunState.prospecting_yield(kind,2)==2)
+	_prospect_check("empty-and-limit",RunState.prospecting_yield("copper",0)==0 and RunState.prospecting_yield("copper",RunState.MAX_MINE_LOOSE_DROP_AMOUNT)==RunState.MAX_MINE_LOOSE_DROP_AMOUNT)
+	var cargo_before: int=int(RunState.cargo.get("copper",0))
+	RunState.add_resource("copper",3,false)
+	_prospect_check("pickup-no-reroll",int(RunState.cargo.copper)==cargo_before+3)
+	cargo_before=int(RunState.cargo.copper)
+	RunState.add_resource("copper",3,true)
+	_prospect_check("grant-no-reroll",int(RunState.cargo.copper)==cargo_before+3)
+	# Exercise real yield owners with the same seed at level0 and level100.
+	for scenario in ["moss_ore","depth_ore"]:
+		_mole_fixture(scenario)
+		var world: Node2D=main.get_node("CompanionInterface").active_mole().world
+		var cell: Vector2i=world._world_to_cell(mole_target)
+		var template: Dictionary={}
+		var rock_index: int=-1
+		if scenario=="moss_ore": template=world.blocks[cell].duplicate(true)
+		else:
+			for index in world.rocks.size():
+				if Vector2(world.rocks[index].position).distance_to(mole_target)<1.0:
+					rock_index=index
+					template=world.rocks[index].duplicate(true)
+					break
+		var kind: String=String(template.kind if scenario=="moss_ore" else template.type)
+		for gear in (["worn","crown"] if scenario=="moss_ore" else ["deepcore"]):
+			_gear(gear)
+			var bonuses: int=0
+			for trial in 16:
+				var yields: Array[int]=[]
+				for level in [0,100]:
+					_set_prospect_level(level)
+					var before: int=int(RunState.mined.get(kind,0))
+					seed(100+trial)
+					if scenario=="moss_ore":
+						var block: Dictionary=template.duplicate(true)
+						block.hp=1
+						block.shell=0
+						world._set_block(cell,block)
+						world.companion_work_hit(world.companion_work_target(mole_target))
+					else:
+						world.rocks[rock_index]=template.duplicate(true)
+						world._break_rock(rock_index)
+					yields.append(int(RunState.mined.get(kind,0))-before)
+				_prospect_check(scenario+gear+str(trial),yields[0]>0 and yields[1]>=yields[0] and yields[1]<=yields[0]+1)
+				bonuses+=yields[1]-yields[0]
+			_prospect_check(scenario+gear+"-bonus-observed",bonuses>0)
+			prospect_results[scenario+gear]=bonuses
+	_mole_fixture("surface")
+	var surface: Node2D=main.surface_world
+	RunState.area_unlocked=true
+	RunState.emberdeep_unlocked=true
+	RunState.fourth_unlocked=true
+	for vein in ["moon","ember_fault","starfall_lattice","mountain"]:
+		var bonuses: int=0
+		for trial in 16:
+			var yields: Array[int]=[]
+			for level in [0,100]:
+				_set_prospect_level(level)
+				seed(100+trial)
+				if vein=="mountain":
+					for drop in surface.ore_drops: drop.sprite.queue_free()
+					surface.ore_drops.clear()
+					surface.ore_mountain_hp=100
+					surface.ore_mountain_copper_yield_buffer=1.0
+					var before: int=surface.ore_drops.size()
+					surface._mine_ore_mountain_once(true)
+					yields.append(surface.ore_drops.size()-before)
+				else:
+					var kind: String="moonglass" if vein=="moon" else String(surface._timed_surface_config(vein).resource)
+					var before: int=int(RunState.mined.get(kind,0))
+					if vein=="moon":
+						for index in surface.moon_bloom_nodes.size(): surface.moon_bloom_nodes[index].hp=10
+						surface.moon_bloom_nodes[0].hp=1
+						surface.moon_bloom_target_index=0
+						surface._mine_moonglass_resource_once(true)
+					else:
+						var runtime: Dictionary=surface.timed_surface_veins[vein]
+						for index in runtime.nodes.size(): runtime.nodes[index].hp=10
+						runtime.nodes[0].hp=1
+						runtime.nodes[0].shell=0
+						runtime.target_index=0
+						surface.timed_surface_veins[vein]=runtime
+						surface._mine_timed_surface_resource_once(vein,true)
+					yields.append(int(RunState.mined.get(kind,0))-before)
+			_prospect_check(vein+str(trial),yields[0]>0 and yields[1]>=yields[0] and yields[1]<=yields[0]+1)
+			bonuses+=yields[1]-yields[0]
+		_prospect_check(vein+"-bonus-observed",bonuses>0)
+		prospect_results[vein]=bonuses
+	RunState.victory=true
+	RunState.endless_descent_active=true
+	RunState.endless_current_depth=1
+	for method in ["claim_endless_resource_node","claim_endless_rock_cell"]:
+		var bonuses: int=0
+		for trial in 16:
+			RunState.endless_chunks={}
+			_set_prospect_level(100)
+			seed(100+trial)
+			var before: int=int(RunState.cargo.get("lumenstone",0))
+			var result: Dictionary=RunState.call(method,1,0,"lumenstone",2)
+			_prospect_check(method+str(trial),bool(result.ok) and int(result.amount) in [2,3] and int(RunState.cargo.lumenstone)==before+int(result.amount))
+			bonuses+=int(result.amount)-2
+			var repeated: Dictionary=RunState.call(method,1,0,"lumenstone",2)
+			_prospect_check(method+"-once-"+str(trial),not bool(repeated.ok) and int(RunState.cargo.lumenstone)==before+int(result.amount))
+		_prospect_check(method+"-bonus-observed",bonuses>0)
+		prospect_results[method]=bonuses
+	# Existing save schema stores the skill XP; restoration keeps earned level/bonus.
+	_set_prospect_level(50)
+	var clean: Dictionary=skills.restore(RunState.miner_skills,skills.BALANCE_REVISION)
+	_prospect_check("existing-level-preserved",skills.level("prospecting",clean)==50 and skills.prospecting_chance(skills.level("prospecting",clean))==0.25)
+	_mole_fixture("moss_ore")
+	_set_prospect_level(50)

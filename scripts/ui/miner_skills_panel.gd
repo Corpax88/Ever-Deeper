@@ -442,7 +442,7 @@ func _show_stat_tip() -> void:
 		"carrying":
 			_tip_body.text = "Train by moving with items in your bag.\nThe extra stamina cost of carrying is %.1f%% lower.\nMaximum reduction: 50%%." % (level * 0.5)
 		"prospecting":
-			_tip_body.text = "Gain XP for every resource mined.\nTracks your prospecting experience.\nNo extra loot bonus yet."
+			_tip_body.text = "Gain XP for every resource mined.\n%.1f%% chance for +1 ore when mining.\n+0.5%% per level, up to 50%%.\nBonus applies after tool multipliers." % (level * 0.5)
 		"stamina":
 			_tip_body.text = "Used while moving and mining.\nRest without moving or mining to recover.\nBelow 15, movement and mining power gradually fall to 75%."
 	var width: float = minf(440.0, root.size.x - 40.0)

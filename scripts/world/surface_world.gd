@@ -2450,6 +2450,7 @@ func _mine_moonglass_resource_once(companion: bool = false) -> void :
 	if randf() < clampf(float(tool.get("yield_bonus", 0.0)), 0.0, 0.92):
 		yield_amount += 1
 	yield_amount *= maxi(1, int(tool.get("yield_multiplier", 1)))
+	yield_amount = RunState.prospecting_yield("moonglass", yield_amount)
 	_spawn_moonglass_drop("moonglass", yield_amount, moon_bloom_hit_count, Vector2(node.position))
 	RunState.record_mined("moonglass", yield_amount)
 	if moon_bloom_status == "idle":
@@ -2878,6 +2879,7 @@ func _mine_timed_surface_resource_once(vein_id: String, companion: bool = false)
 	if randf() < clampf(float(tool.get("yield_bonus", 0.0)), 0.0, 0.92):
 		yield_amount += 1
 	yield_amount *= maxi(1, int(tool.get("yield_multiplier", 1)))
+	yield_amount = RunState.prospecting_yield(String(config.resource), yield_amount)
 	for piece in range(yield_amount):
 		_spawn_timed_surface_drop(
 			vein_id,
@@ -3510,12 +3512,13 @@ func _mine_ore_mountain_once(companion: bool = false) -> void :
 		ore_mountain_copper_yield_buffer += float(removed_mass) * MOSS_ORE_MOUNTAIN_FULL_COPPER_YIELD / float(MOSS_ORE_MOUNTAIN_MAX_HP)
 		var copper_count: = floori(ore_mountain_copper_yield_buffer + 1e-06)
 		ore_mountain_copper_yield_buffer -= float(copper_count)
-		for _piece in range(copper_count * yield_multiplier):
+		var amount: int = RunState.prospecting_yield("copper", copper_count * yield_multiplier)
+		for _piece in range(amount):
 			_spawn_ore_drop("copper", 1)
 	if removed_mass > 0 and ore_mountain_hp <= 0:
 		_start_mountain_collapse()
 		if ore_mountain_gold_ready:
-			_spawn_ore_drop("gold", yield_multiplier)
+			_spawn_ore_drop("gold", RunState.prospecting_yield("gold", yield_multiplier))
 			ore_mountain_gold_ready = false
 		message_changed.emit("Copper Ridge cracked · ore scattered across the path")
 
@@ -3558,7 +3561,8 @@ func _mine_surface_resource_mountain_once(mountain_id: String, companion: bool =
 	var primary_count: = floori(float(entry.yield_buffer) + 1e-06)
 	entry.yield_buffer = float(entry.yield_buffer) - float(primary_count)
 	surface_resource_mountains[mountain_id] = entry
-	for _piece in range(primary_count * yield_multiplier):
+	var amount: int = RunState.prospecting_yield(String(config.primary), primary_count * yield_multiplier)
+	for _piece in range(amount):
 		_spawn_surface_resource_mountain_drop(mountain_id, String(config.primary), 1)
 	entry = surface_resource_mountains[mountain_id]
 	if int(entry.hp) <= 0:
@@ -3569,7 +3573,7 @@ func _mine_surface_resource_mountain_once(mountain_id: String, companion: bool =
 		_spawn_surface_resource_mountain_impact(mountain_id, true, Vector2(62, -34))
 		_spawn_surface_resource_mountain_impact(mountain_id, true, Vector2(-12, 34))
 		if bool(entry.rare_ready):
-			_spawn_surface_resource_mountain_drop(mountain_id, String(config.rare), yield_multiplier)
+			_spawn_surface_resource_mountain_drop(mountain_id, String(config.rare), RunState.prospecting_yield(String(config.rare), yield_multiplier))
 			entry = surface_resource_mountains[mountain_id]
 			entry.rare_ready = false
 			surface_resource_mountains[mountain_id] = entry

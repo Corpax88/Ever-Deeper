@@ -2047,6 +2047,7 @@ func _strike_resource(index: int, attack_power: int = -1, trigger_wave: bool = t
 				resource["hp"] = 1
 			resources[index] = resource
 			return
+		collected_amount = int(claim.amount)
 		resource.mined = true
 		session_mined_nodes[String(resource.id)] = true
 		message_changed.emit("+%d %s" % [collected_amount, String(resource.kind).replace("_", " ").to_upper()])
@@ -3451,7 +3452,7 @@ func _break_diggable_cell(cell: Vector2i) -> bool:
 		return false
 	_set_floor(cell, true)
 	dig_damage.erase(cell)
-	_emit_mined_reward(String(reward.kind), amount, depth)
+	_emit_mined_reward(String(reward.kind), int(claim.amount), depth)
 	queue_redraw()
 	return true
 

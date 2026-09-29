@@ -301,6 +301,15 @@ func next_ember_mastery() -> Dictionary:
 	return Dictionary(mastery_rows[ember_mastery + 1])
 
 
+func prospecting_yield(kind: String, base_amount: int) -> int:
+	# Only physical mining calls this. Pickup, caches and grants never reroll.
+	if base_amount <= 0 or base_amount >= MAX_MINE_LOOSE_DROP_AMOUNT or kind not in RESOURCE_IDS or kind in ["stone", "deepstone"]:
+		return base_amount
+	var level: int = miner_skill_level("prospecting")
+	if level <= 0: return base_amount
+	return base_amount + MinerSkills.prospecting_bonus(level, randf())
+
+
 func add_resource(kind: String, amount: int = 1, count_as_mined: bool = true) -> void :
 	if amount <= 0:
 		return
@@ -1130,6 +1139,7 @@ func claim_endless_resource_node(depth: int, node_index: int, resource_id: Strin
 	begin_state_batch()
 	var claimed: bool = mark_endless_resource_node_mined(depth, node_index)
 	if claimed:
+		amount = prospecting_yield(resource_id, amount)
 		add_resource(resource_id, amount, true)
 	end_state_batch()
 	return {"ok": claimed, "reason": "claimed" if claimed else "already_claimed", "amount": amount if claimed else 0}
@@ -4576,6 +4586,7 @@ func claim_endless_rock_cell(depth: int, cell: int, resource_id: String, amount:
 		return {"ok": false, "reason": "already_claimed"}
 	begin_state_batch()
 	mark_endless_dug(depth, cell)
+	amount = prospecting_yield(resource_id, amount)
 	add_resource(resource_id, amount, true)
 	end_state_batch()
 	return {"ok": true, "reason": "claimed", "amount": amount}

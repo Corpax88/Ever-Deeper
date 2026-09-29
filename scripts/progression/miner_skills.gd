@@ -61,3 +61,10 @@ static func row(id: String, total: float) -> Dictionary:
 
 static func level(id: String, state: Dictionary) -> int:
 	return int(row(id, float(state.get(id, 0.0))).level)
+
+## One additional ore unit, after equipment multipliers. No recursive bonus rolls.
+static func prospecting_chance(at_level: int) -> float:
+	return float(clampi(at_level, 0, MAX_LEVEL)) * 0.005
+
+static func prospecting_bonus(at_level: int, sample: float) -> int:
+	return 1 if is_finite(sample) and sample >= 0.0 and sample < prospecting_chance(at_level) else 0

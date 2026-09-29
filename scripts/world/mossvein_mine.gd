@@ -1044,6 +1044,7 @@ func _mine_once(companion: bool = false) -> void :
 		if role != "terrain" and randf() < clampf(float(tool.get("yield_bonus", 0.0)), 0.0, 0.92):
 			yield_amount += 1
 		yield_amount *= maxi(1, int(tool.get("yield_multiplier", 1)))
+		yield_amount = RunState.prospecting_yield(String(block.kind), yield_amount)
 		RunState.record_mined(String(block.kind), yield_amount)
 		var crusher_origin: = _cell_center(target) if crusher_active else Vector2(INF, INF)
 		_spawn_drop(target, String(block.kind), yield_amount, crusher_origin)
@@ -2909,8 +2910,9 @@ func _strike_barrier_group(target: Vector2i, block: Dictionary, companion: bool 
 		role_block_counts[role] = 0
 		_erase_role(role)
 		RunState.mark_barrier_cleared(role)
-		_spawn_drop(target,String(block.kind),1)
-		RunState.record_mined(String(block.kind),1)
+		var amount: int = RunState.prospecting_yield(String(block.kind), 1)
+		_spawn_drop(target,String(block.kind),amount)
+		RunState.record_mined(String(block.kind),amount)
 	message_changed.emit("PASSAGE OPEN" if hits == 10 else "WALL · %d / 10 strikes" % hits)
 	target_dirty = true
 	_request_redraw()

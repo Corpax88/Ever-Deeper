@@ -1182,6 +1182,7 @@ func _break_rock(rock_index: int, crusher_origin: Variant = null) -> void :
 	if randf() < yield_chance:
 		yield_amount += 1
 	yield_amount *= maxi(1, int(_current_tool().get("yield_multiplier", 1)))
+	yield_amount = RunState.prospecting_yield(String(rock.type), yield_amount)
 	rocks[rock_index] = rock
 	_record_mined(String(rock.type), yield_amount)
 	_spawn_drop(Vector2(rock.position), String(rock.type), yield_amount, "", crusher_origin)
