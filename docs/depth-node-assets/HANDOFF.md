@@ -8,5 +8,4 @@ Validation36613811052 succeeded on macos-15:22 Chromium gates including40 lifecy
 
 Candidate11055001142 ZIP SHA2567c1727a4220ad396b02127370a48e40c89d22fb628a49acab77a5e61524fae36. Evidence11054413309 ZIP SHA25663f1a57db32a44e50bd6baba20956a7fc3577c74e2df5844f5b929901764dd21. PCK265163378bytes SHA25670221d09fecf9deb5ebc223a8dc60ffcbf86f35ce9051ca1677f0bbac8d02010. All unchanged PCK resources byte-verified by build.
 
-Immutable publisher .github/depth-node-assets; preserve LIVE1.0.2 loading-rotation-1/Worn and DEV saves, verify all27 public hashes. Publication pending. Prospecting and mole respawn fixes retained.
-
+Immutable publisher .github/depth-node-assets; preserve LIVE1.0.2 loading-rotation-1/Worn and DEV saves, verify all27 public hashes. Published successfully by 18ee55af50095b4fda0a61c6621b1745511c89cd / run36614566540. All27 public hashes verified; LIVE/Worn unchanged. Receipt11054229171, rollbackDEV15.26 artifact11055026669. No pending work; next normal DEV reload/user feedback. Prospecting and mole respawn fixes retained.

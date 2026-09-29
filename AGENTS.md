@@ -1,3 +1,7 @@
+# Current release — DEV15.27 consistent Depth 2 node assets (29 September 2026)
+
+Published and verified. First-sight mineral hints now use the same upright node PNG/draw helper as exposed/respawned ore; covering terrain and real gate mechanics remain intact. Sourcef107dcdc082f61e8c3e9d4c8211a54743b5834b1 on codex/depth-node-assets-20260929; never rebuild historical main. Read [current handoff](docs/depth-node-assets/HANDOFF.md). Validation36613811052:22 browser gates including40 lifecycle checks acrossfourbiomes, input/premium-core200 and ordinary WebKit;26 reference/candidate/ordinary images inspected. Publication36614566540 verifies27publichashes; LIVE/Worn unchanged. Prospecting/mole fixes retained. No pending work; FPS PARKED. Historical invariant mismatch disclosed; no physical-iPhone claim.
+
 # Current release — DEV15.26 Prospecting ore bonus (29 September 2026)
 
 Published and verified. +0.5 percentage points per level chance for one extra ore after tool multipliers (25% at50,50% at100). Existing levels retained; no stone bonus or pickup rerolls. Sourcee6c52fd93048300d069bfbae44ab12d28b7caf9d on codex/prospecting-20260929; never rebuild historical main. Read [current handoff](docs/prospecting/HANDOFF.md). Validation36600046119:213 production/math checks,20 browser gates, input/premium-core200 and ordinary WebKit;13 actual captures inspected. Publication36600858534 verifies27publichashes; LIVE/Worn unchanged. Mole respawn fix retained. No pending work; FPS PARKED. Historical invariant mismatch disclosed; no physical-iPhone claim.
