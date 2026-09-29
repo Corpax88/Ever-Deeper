@@ -55,11 +55,11 @@ try{
   check('target-on-screen-'+scenario,p.x>0&&p.y>0&&p.x<v.width&&p.y<v.height,{p});
   await page.touchscreen.tap(p.x,p.y);
   await wait('mole starts '+scenario,s=>s.work?.mole.action==='work',15000);
-  before=await state();let started=Date.now();await delay(850);
+  before=await state();const expectedHits=scenario==='surface'?Math.ceil(before.health/before.work.power):3;let started=Date.now();await delay(850);
   check('no-instant-break-'+scenario,(await state()).work.remaining&&(await state()).work.mole.work_hits===0,{});
   await wait('mole finishes '+scenario,s=>!s.work.remaining,40000);
   const after=await state();
-  check('mined-while-hero-idle-'+scenario,after.work.mole.work_hits===3&&!after.mining&&after.impact===before.impact&&after.skill_xp.mining===before.skill_xp.mining,{before,after,elapsed:Date.now()-started});
+  check('mined-while-hero-idle-'+scenario,after.work.mole.work_hits===expectedHits&&!after.mining&&after.impact===before.impact&&after.skill_xp.mining===before.skill_xp.mining,{before,after,expectedHits,elapsed:Date.now()-started});
   await shot('mole-finished-'+scenario);
  }
  await command('mole_fixture',{scenario:'moss_ore'});await ready();await delay(500);

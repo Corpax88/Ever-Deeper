@@ -162,7 +162,7 @@ func _frame() -> void:
 		var p: Vector2 = world.get_canvas_transform()*mole_target
 		var cancel: Vector2 = world.get_canvas_transform()*world.player.global_position
 		var current: Dictionary = world.companion_work_target(mole_target)
-		state["work"] = {"scenario":mole_case,"target":[p.x,p.y],"cancel":[cancel.x,cancel.y],"key":mole_task_key,"remaining":current.get("key","")==mole_task_key,"mole":mole.debug_snapshot(),"period":world.companion_work_period(),"checks":mole_checks,"feedback":mole.feedback}
+		state["work"] = {"scenario":mole_case,"target":[p.x,p.y],"cancel":[cancel.x,cancel.y],"key":mole_task_key,"remaining":current.get("key","")==mole_task_key,"mole":mole.debug_snapshot(),"period":world.companion_work_period(),"power":world._mountain_tool().get("power",1) if world.has_method("_mountain_tool") else 0,"checks":mole_checks,"feedback":mole.feedback}
 	JavaScriptBridge.eval("Object.assign(window.DEV14_STATE," + JSON.stringify(state) + ")", true)
 
 func _bounds(control: Control) -> Array:

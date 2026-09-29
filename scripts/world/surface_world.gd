@@ -2115,6 +2115,7 @@ func _update_surface_resource_mountains(delta: float, now_unix: int = -1) -> voi
 
 
 func _apply_surface_resource_mountain_regrowth(mountain_id: String, delta: float) -> void :
+	if _companion_working_mountain(mountain_id): return
 	if delta <= 0.0 or not surface_resource_mountains.has(mountain_id):
 		return
 	var entry: Dictionary = surface_resource_mountains[mountain_id]
@@ -2278,6 +2279,7 @@ func _apply_mountain_stage(sprite: Sprite2D, stages: Array[Texture2D], reserve: 
 
 
 func _apply_ore_mountain_regrowth(delta: float) -> void :
+	if _companion_working_mountain("ore_mountain"): return
 	if delta <= 0.0 or ore_mountain_hp >= MOSS_ORE_MOUNTAIN_MAX_HP:
 		if ore_mountain_hp >= MOSS_ORE_MOUNTAIN_MAX_HP:
 			ore_mountain_growth_buffer = 0.0
@@ -5930,3 +5932,10 @@ func companion_work_hit(task: Dictionary) -> void:
 
 func companion_work_period() -> float:
 	return maxf(1.68,3.0*float(_mountain_tool().get("cooldown",0.72)))
+
+func _companion_working_mountain(key: String) -> bool:
+	# A slow worker must make lasting progress; other deposits and idle regrowth
+	# retain their original cadence. Paused, hidden or cancelled jobs do not hold it.
+	if not is_visible_in_tree() or not player.control_enabled: return false
+	var mole: Node = get_node_or_null("MoleCompanion")
+	return mole != null and mole.mode == "work" and String(mole.work_task.get("key","")) == key
