@@ -21,6 +21,11 @@ func _command(data: Dictionary) -> void:
 		command_id = int(data.id)
 		_mole_fixture(String(data.scenario))
 		return
+	if String(data.kind) == "mole_shake":
+		command_id = int(data.id)
+		RunState.overhaul_progress["skills"] = {"shake":1}
+		_require(main.get_node("CompanionInterface").active_mole().shake_nearby(),"Earthshaker command")
+		return
 	if String(data.kind) == "mole_recall":
 		command_id = int(data.id)
 		main.get_node("CompanionInterface").active_mole().recall()
@@ -155,8 +160,9 @@ func _frame() -> void:
 		var mole: Node2D = ui.active_mole()
 		var world: Node2D = mole.world
 		var p: Vector2 = world.get_canvas_transform()*mole_target
+		var cancel: Vector2 = world.get_canvas_transform()*world.player.global_position
 		var current: Dictionary = world.companion_work_target(mole_target)
-		state["work"] = {"scenario":mole_case,"target":[p.x,p.y],"key":mole_task_key,"remaining":current.get("key","")==mole_task_key,"mole":mole.debug_snapshot(),"period":world.companion_work_period(),"checks":mole_checks,"feedback":mole.feedback}
+		state["work"] = {"scenario":mole_case,"target":[p.x,p.y],"cancel":[cancel.x,cancel.y],"key":mole_task_key,"remaining":current.get("key","")==mole_task_key,"mole":mole.debug_snapshot(),"period":world.companion_work_period(),"checks":mole_checks,"feedback":mole.feedback}
 	JavaScriptBridge.eval("Object.assign(window.DEV14_STATE," + JSON.stringify(state) + ")", true)
 
 func _bounds(control: Control) -> Array:
@@ -206,6 +212,22 @@ func _mole_fixture(scenario: String) -> void:
 		main._dev_jump_mine("mossMine",2)
 		_gear("deepcore")
 		world=main.depth_world
+		RunState.pickaxe_level=GameData.data.PICKAXES.size()-1
+		# Explicitly reveal a real buried deposit for this isolated QA fixture.
+		for index in world.rocks.size():
+			var rock: Dictionary=world.rocks[index]
+			if bool(rock.drill_gated) or bool(rock.broken): continue
+			var center: Vector2i=rock.cell
+			for y in range(-2,3):
+				for x in range(-2,3):
+					var cell: Vector2i=center+Vector2i(x,y)
+					if not world._cell_in_bounds(cell) or world._terrain_is_bedrock(cell): continue
+					world.terrain_hp[world._cell_index(cell)]=0
+					world.concealed_cells.erase(world._cell_index(cell))
+			for cavern in world.caverns:
+				if String(cavern.id)==String(rock.cavern_id): cavern.discovered=true
+			world._request_redraw()
+			break
 		var found: bool=false
 		for index in world.rocks.size():
 			if not world._rock_is_exposed(index): continue

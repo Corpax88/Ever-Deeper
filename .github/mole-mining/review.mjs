@@ -68,12 +68,15 @@ try{
  await wait('manual job started',s=>s.work.mole.action==='work');await shot('mole-mining');
  await tap('hud_menu');await wait('menu pauses companion',s=>s.skills_open);const paused=await state();await delay(2400);
  check('menu-pauses-job',(await state()).work.mole.work_hits===paused.work.mole.work_hits,{});
- await tap('skills_close');await ready();await command('mole_recall');const recalled=await state();await delay(2600);
- check('recall-stops-job',(await state()).work.mole.mode!=='work'&&(await state()).work.mole.work_hits===recalled.work.mole.work_hits&& (await state()).work.remaining,{});
+ await tap('skills_close');await ready();const stop=(await state()).work.cancel,sv=page.viewportSize(),ss=await state();await page.touchscreen.tap(stop[0]/ss.viewport[0]*sv.width,stop[1]/ss.viewport[1]*sv.height);await delay(300);const recalled=await state();await delay(2600);
+ check('ground-tap-stops-job',(await state()).work.mole.mode!=='work'&&(await state()).work.mole.work_hits===recalled.work.mole.work_hits&& (await state()).work.remaining,{});
  await command('mole_fixture',{scenario:'moss_ore'});await ready();await delay(400);before=await state();v=page.viewportSize();
  const mine={x:before.mine_button[0]/before.viewport[0]*v.width,y:before.mine_button[1]/before.viewport[1]*v.height},start=Date.now();
  await touch('touchStart',mine);await wait('hero finishes same ore',s=>!s.work.remaining);await touch('touchEnd');
  check('hero-faster',Date.now()-start<before.work.period*3000&& (await state()).skill_xp.mining>before.skill_xp.mining,{heroMs:Date.now()-start,moleMinimumMs:before.work.period*3000});await shot('hero-mining');
+ await command('mole_fixture',{scenario:'moss_wall'});await ready();await delay(500);
+ await command('mole_shake');await wait('Earthshaker still fires',s=>s.work.mole.shake_cooldown>0,10000);
+ check('earthshaker-preserved',(await state()).work.mole.work_hits===0,{});
  const errors=messages.filter(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m));check('no-runtime-errors',errors.length===0,{errors});
 }catch(e){failed=String(e.stack||e);console.error(failed);try{await shot('failure');}catch{}}
 finally{

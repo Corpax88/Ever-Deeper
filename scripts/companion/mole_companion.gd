@@ -269,8 +269,8 @@ func rebase_world(offset: Vector2) -> void:
 		observed_hero += offset
 	hero_before_step += offset
 
-func command(point: Vector2) -> bool:
-	if world.has_method("companion_work_target"):
+func command(point: Vector2, use_shake: bool = false) -> bool:
+	if not use_shake and world.has_method("companion_work_target"):
 		var task: Dictionary = world.companion_work_target(point)
 		if not task.is_empty(): return _command_work(task)
 	if point.distance_to(hero.global_position)>680.0:
@@ -433,7 +433,7 @@ func shake_nearby() -> bool:
 	if not is_finite(best.x):
 		_react("Tap an ordinary wall",2.4)
 		return false
-	return command(best)
+	return command(best,true)
 
 func _update_action(delta: float) -> void:
 	var previous: float = action_clock
