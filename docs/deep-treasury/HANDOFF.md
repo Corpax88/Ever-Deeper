@@ -1,3 +1,17 @@
+# Ever-Deeper — DEV15.29 published and verified
+
+29 September 2026 UTC. Treasury and Deep Events are published at https://corpax88.github.io/Ever-Deeper/dev/. Gameplay source **34b96d5990c2c17d85d4b0e26e2bba1b05fef826** on `codex/deep-treasury-20260929`. Publication commit `a7e329abab8aaa943efe4cbf7c5705e9afca87ef`, run **36644293875**; receipt verifies **27 public hashes**, including unchanged LIVE9 and Worn9. Candidate artifact11067746028, QA36643588654, evidence11067900861. Publication receipt copied to `.github/deep-treasury/publication-receipt.json` and `docs/deep-treasury/publication-receipt.json`.
+
+- Complete: 26 resource bays plus wallet-gold bay, empty initial treasury via right hub door after Deepheart, fixed protected-sell hub shop, slow curved celebratory delivery. All donations, including existing wallet gold, are consumed only when they land. Leaving stops delivery; unlanded inventory remains. Menus pause and preserve room state; returning resumes. Save/load conservation and exact totals verified.
+- Endgame drills follow authored cooldown. Ancient Core, Crystal Bloom and Unstable Seam events include a genuine mined-cell interval after each active event, even with powerful mining. Goal panel and route are hidden inside treasury.
+- QA passed: native input, 288 premium-core checks, 31 actual Chromium gates, ordinary Mac WebKit startup/pause/save/new-game checks. All 18 final screenshots inspected against approved concept. No physical-iPhone or FPS verification; FPS remains PARKED. Historical invariant mismatch disclosed in preserved history, not claimed as a passing gate.
+- Mats explicitly renewed approval for public source/PNG upload, graphical QA and DEV publication; no pending permission. LIVE publication remains separate. Never rebuild historical main. Build from canonical source and accepted baseline; preserve approved art/audio, saves and immutable evidence. Nothing remains queued for this release.
+- Player check: load DEV15.29, finish Deepheart, use right hub entrance, stand on the donation plate and watch delivery. Try opening Skills and leaving while resources fly; undelivered resources must remain available.
+
+Earlier status and full history follow; the newest header above takes precedence.
+
+---
+
 ## Final acceptance 2026-09-29
 QA run 36643588654 succeeded on source 34b96d5990c2c17d85d4b0e26e2bba1b05fef826. All 31 Chromium checks, native core/input gates, ordinary WebKit startup and all 18 inspected images accepted. Candidate artifact 11067746028; evidence 11067900861. Publication receipt is the authority for deployment status.
 
