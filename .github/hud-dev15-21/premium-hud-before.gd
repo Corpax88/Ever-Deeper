@@ -11,7 +11,6 @@ const ProgressionGoalPanelScript: = preload("res://scripts/ui/progression_goal_p
 const ProgressionGuideScript: = preload("res://scripts/progression/guide_director.gd")
 
 const BAG_ICON: = preload("res://assets/ui/bag-premium-v1.png")
-const MENU_CAPTION_FONT: = preload("res://assets/ui/fonts/EBGaramond.ttf")
 const MENU_ICON: = preload("res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png")
 const GUIDE_ICON: = preload("res://assets/ui/hud-guide-v1.png")
 const INTERACT_ICON: = preload("res://assets/ui/hud-interact-v1.png")
@@ -57,7 +56,6 @@ var gold_cluster: Control
 var bag_count: Label
 var bag_button: Button
 var menu_button: Button
-var menu_caption: Label
 var guide_button: Button
 var context_button: Button
 
@@ -277,8 +275,6 @@ func _apply_responsive_layout(viewport_size: Vector2, native_insets: Vector4) ->
 	_iphone_layout_active = bool(metrics.iphone)
 	var touch_target: float = float(metrics.touch_target)
 	_place(menu_button, Rect2(metrics.menu))
-	_place(menu_caption, Rect2(Vector2(0, Rect2(metrics.menu).size.y), Rect2(metrics.menu_caption).size))
-	menu_caption.add_theme_font_size_override("font_size", 24 if bool(metrics.iphone) else 14)
 	_place(guide_button, Rect2(metrics.guide))
 	_place(gold_cluster, Rect2(metrics.gold))
 	_place(bag_button, Rect2(metrics.bag))
@@ -382,7 +378,6 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 		"touch_target": touch_target,
 		"safe_rect": Rect2(left, top, viewport_size.x - left - right, viewport_size.y - top - bottom),
 		"menu": menu_rect,
-		"menu_caption": Rect2(menu_rect.position + Vector2(0, top_button_size), Vector2(top_button_size, 32.0 if iphone else 22.0)),
 		"guide": guide_rect,
 		"companion": companion_rect,
 		"gold": gold_rect,
@@ -466,11 +461,6 @@ func _build_icon_chrome() -> void :
 	menu_button.offset_bottom = 56.0
 	menu_button.pressed.connect( func(): menu_requested.emit())
 	add_child(menu_button)
-	menu_caption = _label("SKILLS", 24, Color("ded8c6"), HORIZONTAL_ALIGNMENT_CENTER)
-	menu_caption.name = "SkillsCaption"
-	menu_caption.add_theme_font_override("font", MENU_CAPTION_FONT)
-	_add_text_shadow(menu_caption)
-	menu_button.add_child(menu_caption)
 
 	guide_button = _icon_button("GuideButton", GUIDE_ICON, "Current guide")
 	guide_button.offset_left = 64.0

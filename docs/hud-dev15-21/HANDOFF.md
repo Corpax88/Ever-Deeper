@@ -1,0 +1,4 @@
+# DEV15.21 — Skills caption and DEV spacing
+Mats approved the icon in DEV15.20 but missed the SKILLS caption from the concept. Restore it as an actual UI label, leaving the approved text-free PNG intact. Caption is a child of the menu button so all visibility/presentation modes follow automatically. DEV toggle follows the shared caption bottom plus12logical px; no icon size/layout/gameplay changes.
+Source base ef396a3c8932c32c03afbafae2025b138a0a90dc. Immutable DEV15.20 artifact10996042147 patched; all other resources/engine/assets verified byte-identical. New version15.21.
+Targeted Mac GPU checks cover caption visibility/non-overlap, actual DEV drawer opening/closing, Skills/mole/mining and ordinary WebKit startup. Pending, do not publish before rendered screenshots reviewed. FPS investigation remains parked.

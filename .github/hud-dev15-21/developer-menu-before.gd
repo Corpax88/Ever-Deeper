@@ -578,12 +578,10 @@ func _apply_layout(viewport_size: Vector2, safe_insets: Vector4) -> void :
 	var hud: Control = get_parent().get_node_or_null("PremiumHud")
 	var main_menu: Control = get_parent().get_node_or_null("PremiumMenu")
 	if hud != null and (main_menu == null or not main_menu.visible):
-		# Follow the HUD's complete icon-and-caption bounds, including SKILLS.
-		var hud_layout: Dictionary = hud.layout_snapshot(viewport_size)
-		var menu_rect: Rect2 = hud_layout.menu
-		var caption_rect: Rect2 = hud_layout.menu_caption
+		# Follow the HUD's mobile spacing and leave its entire top button row free.
+		var menu_rect: Rect2 = hud.layout_snapshot(viewport_size).menu
 		origin.x = maxf(origin.x, menu_rect.position.x)
-		origin.y = maxf(safe_insets.y, caption_rect.end.y) + outer_gap
+		origin.y = maxf(safe_insets.y, menu_rect.position.y) + menu_rect.size.y + outer_gap
 	toggle_button.position = origin
 	toggle_button.size = toggle_size
 

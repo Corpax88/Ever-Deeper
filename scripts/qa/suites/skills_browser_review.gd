@@ -77,6 +77,7 @@ func _frame() -> void:
 			"xp_value": row.xp_bar.value, "level_rect": _bounds(row.bar),
 			"xp_rect": _bounds(row.xp_bar), "numeric_xp": row.xp != null})
 	var bounds: Dictionary = {"hud_menu": _bounds(main.premium_hud.menu_button),
+		"dev_toggle": _bounds(main.developer_menu.toggle_button),
 		"new_game": _bounds(main.premium_menu.main_card.get_node("NewGame")),
 		"continue": _bounds(main.premium_menu.continue_button),
 		"settings_back": _bounds(main.premium_menu.detail_card.get_node("Back")),
@@ -109,6 +110,10 @@ func _frame() -> void:
 		"mole_open": main._companion_panel_is_open(), "guide_open": main.premium_hud._objective_open,
 		"tooltip_visible": panel.stat_tip.visible, "tooltip_id": panel._tip_id,
 		"tooltip_text": panel._tip_body.text, "tooltip_rect": _bounds(panel.stat_tip),
+		"hud_caption": _bounds(main.premium_hud.menu_caption),
+		"hud_caption_text": main.premium_hud.menu_caption.text,
+		"hud_caption_visible": main.premium_hud.menu_caption.is_visible_in_tree(),
+		"dev_drawer_open": main.developer_menu.drawer.visible,
 		"hud_guide_visible": main.premium_hud.guide_button.is_visible_in_tree(),
 		"hud_menu_icon": main.premium_hud.menu_button.icon.resource_path,
 		"hud_context": _bounds(main.premium_hud.context_button),
