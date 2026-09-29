@@ -1133,14 +1133,17 @@ func mark_endless_resource_node_mined(depth: int, node_index: int) -> bool:
 	return true
 
 
-func claim_endless_resource_node(depth: int, node_index: int, resource_id: String, amount: int) -> Dictionary:
+func claim_endless_resource_node(depth: int, node_index: int, resource_id: String, amount: int, drop_cell: int = -1) -> Dictionary:
 	if not _endless_band_in_reach(depth) or resource_id not in ENDLESS_RESOURCE_IDS or amount <= 0 or amount > MAX_MINE_LOOSE_DROP_AMOUNT:
 		return {"ok": false, "reason": "invalid_node_claim"}
 	begin_state_batch()
 	var claimed: bool = mark_endless_resource_node_mined(depth, node_index)
 	if claimed:
 		amount = prospecting_yield(resource_id, amount)
-		add_resource(resource_id, amount, true)
+		if drop_cell >= 0:
+			_register_endless_drop(depth, "n%d" % node_index, drop_cell, resource_id, amount)
+		else:
+			add_resource(resource_id, amount, true)
 	end_state_batch()
 	return {"ok": claimed, "reason": "claimed" if claimed else "already_claimed", "amount": amount if claimed else 0}
 
@@ -4578,7 +4581,7 @@ func mark_endless_dug(depth: int, cell: int) -> void:
 	_state_changed()
 
 
-func claim_endless_rock_cell(depth: int, cell: int, resource_id: String, amount: int) -> Dictionary:
+func claim_endless_rock_cell(depth: int, cell: int, resource_id: String, amount: int, loose: bool = false) -> Dictionary:
 	if not _endless_band_in_reach(depth) or cell < 0 or cell >= EndlessTerrainStateScript.CELL_COUNT or resource_id not in ENDLESS_RESOURCE_IDS or amount <= 0 or amount > MAX_MINE_LOOSE_DROP_AMOUNT:
 		return {"ok": false, "reason": "invalid_rock_claim"}
 	var chunk: Dictionary = _endless_chunk(depth)
@@ -4587,7 +4590,10 @@ func claim_endless_rock_cell(depth: int, cell: int, resource_id: String, amount:
 	begin_state_batch()
 	mark_endless_dug(depth, cell)
 	amount = prospecting_yield(resource_id, amount)
-	add_resource(resource_id, amount, true)
+	if loose:
+		_register_endless_drop(depth, "c%d" % cell, cell, resource_id, amount)
+	else:
+		add_resource(resource_id, amount, true)
 	end_state_batch()
 	return {"ok": true, "reason": "claimed", "amount": amount}
 
@@ -4729,3 +4735,32 @@ func advance_miner_training(delta: float, distance: float, mining: bool) -> void
 		var recovery_dt: float = maxf(0.0, _stamina_rest - MinerSkills.RECOVERY_DELAY) - maxf(0.0, rested - MinerSkills.RECOVERY_DELAY)
 		miner_skills["stamina"] = minf(100.0, before + MinerSkills.RECOVERY_PER_SECOND * recovery_dt)
 	if not is_equal_approx(before, stamina_value()): _queue_autosave()
+
+
+func _register_endless_drop(depth: int, id: String, cell: int, kind: String, amount: int) -> void:
+	var chunk: Dictionary = _endless_chunk(depth)
+	var drops: Dictionary = Dictionary(chunk.get("drops", {}))
+	drops[id] = {"cell": cell, "kind": kind, "amount": amount}
+	chunk["drops"] = drops
+	endless_chunks[str(depth)] = chunk
+	_state_changed()
+
+
+func endless_loose_drops(depth: int) -> Dictionary:
+	return Dictionary(Dictionary(endless_chunks.get(str(depth), {})).get("drops", {})).duplicate(true)
+
+
+func collect_endless_drop(depth: int, id: String) -> Dictionary:
+	if not _endless_band_in_reach(depth): return {}
+	var chunk: Dictionary = _endless_chunk(depth)
+	var drops: Dictionary = Dictionary(chunk.get("drops", {}))
+	if not drops.has(id): return {}
+	var drop: Dictionary = drops[id]
+	begin_state_batch()
+	drops.erase(id)
+	chunk["drops"] = drops
+	endless_chunks[str(depth)] = chunk
+	add_resource(String(drop.kind), int(drop.amount), true)
+	_state_changed()
+	end_state_batch()
+	return drop

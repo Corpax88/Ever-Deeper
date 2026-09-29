@@ -3,6 +3,13 @@ extends "res://scripts/qa/suites/dev14_review.gd"
 func run() -> void:
 	super.run()
 
+var deep_checks: Dictionary = {}
+var deep_before: int = 0
+var deep_drop_key: String = ""
+var deep_drop_amount: int = 0
+var deep_drop_kind: String = ""
+var deep_cargo_before: int = 0
+
 var node_asset_state: Dictionary = {}
 var node_asset_index: int = -1
 var node_asset_origin: Vector2
@@ -26,6 +33,10 @@ var ore_escape_goal: Vector2
 var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind).begins_with("deep_"):
+		await _deep_command(String(data.kind))
+		command_id=int(data.id)
+		return
 	if String(data.kind)=="node_asset_fixture":
 		await _node_asset_fixture(String(data.mine_id))
 		command_id=int(data.id)
@@ -229,6 +240,7 @@ func _frame() -> void:
 	if ore_escape_active:
 		var mole: Node2D=ui.active_mole()
 		state["ore_escape"]={"distance":mole.global_position.distance_to(ore_escape_origin),"remaining":mole.global_position.distance_to(ore_escape_goal),"checks":mole_checks,"mode":mole.mode}
+	state["deep_dig"]={"checks":deep_checks,"held":main.endless_world.external_mine_held,"movement":[main.endless_world.player.external_movement.x,main.endless_world.player.external_movement.y]}
 	state["node_assets"]=node_asset_state
 	state["prospecting"]={"checks":prospect_checks,"results":prospect_results,"level":RunState.miner_skill_level("prospecting")}
 	JavaScriptBridge.eval("Object.assign(window.DEV14_STATE," + JSON.stringify(state) + ")", true)
@@ -631,3 +643,120 @@ func _node_asset_stage(stage: String) -> void:
 	world.player.camera.reset_smoothing()
 	world._request_redraw()
 	node_asset_state.stage=stage
+
+
+func _deep_check(name_value: String, passed: bool) -> void:
+	deep_checks[name_value]=passed
+	_require(passed, "deep: " + name_value)
+
+
+func _deep_command(kind: String) -> void:
+	var w: Node = main.endless_world
+	if kind == "deep_fixture":
+		main._dev_jump_endless(1)
+		_gear("deepcore")
+		await main.get_tree().process_frame
+		var mole: Node = main.get_node("CompanionInterface").active_mole()
+		mole.autonomous_enabled=false
+		mole.recall()
+		w.player.set_facing(Vector2.DOWN)
+		var layout: Dictionary = w.DeepLayout.generate(int(RunState.world_seed), 2)
+		_deep_check("new-band-solid", PackedByteArray(layout.cells).count(1)==0)
+		_deep_check("entrance-walkable",w._position_walkable(w.player.global_position))
+		_deep_check("resources-retained",w.resources.size()>0)
+		_deep_check("buried-sites-hidden",not w.discovery_visuals.values()[0].visible)
+		deep_before=RunState.endless_dug_cells(1).size()
+	elif kind == "deep_mine":
+		w.set_external_movement(Vector2(0.03,1.0))
+		w.set_mine_held(true)
+	elif kind == "deep_stop":
+		w.set_external_movement(Vector2.ZERO)
+		w.set_mine_held(false)
+		_deep_check("held-direction-excavates",RunState.endless_dug_cells(1).size()>deep_before+1)
+		_deep_check("released-hold",not w.external_mine_held)
+	elif kind == "deep_drop_test":
+		w.player.set_facing(Vector2.DOWN)
+		var cell: Vector2i=w._nearest_diggable_wall()
+		# The held sequence may end between walls. Walk up to the next one.
+		w.player.external_movement=Vector2.DOWN
+		for tick in 240:
+			if cell.x>=0: break
+			w.player._physics_process(1.0/120.0)
+			cell=w._nearest_diggable_wall()
+		w.player.external_movement=Vector2.ZERO
+		_deep_check("next-rock-reachable",cell.x>=0)
+		if cell.x<0: return
+		var depth: int=w.depth_at_position(w._cell_center(cell))
+		var index: int=w._chunk_cell_index(cell)
+		var reward: Dictionary=w.DeepLayout.ore_for_cell(int(RunState.world_seed),depth,index)
+		deep_drop_kind=String(reward.kind)
+		deep_cargo_before=int(RunState.cargo.get(deep_drop_kind,0))
+		_deep_check("rock-breaks",w._break_diggable_cell(cell))
+		deep_drop_key="%d:c%d" % [depth,index]
+		deep_drop_amount=int(RunState.endless_loose_drops(depth)["c%d" % index].amount)
+		_deep_check("drop-before-cargo",int(RunState.cargo.get(deep_drop_kind,0))==deep_cargo_before)
+		_deep_check("no-double-rock-claim",not w._break_diggable_cell(cell))
+		var clean: Dictionary=RunState.EndlessTerrainStateScript.sanitize(RunState.endless_chunks,100000)
+		_deep_check("drop-survives-save-sanitizer",clean[str(depth)].drops.has("c%d" % index))
+		w.set_process(false)
+	elif kind == "deep_reload_test":
+		var before: Dictionary=RunState.endless_loose_drops(1)
+		_deep_check("save-with-loose-drop",RunState.save_game("user://deep-dig-qa.sav"))
+		RunState.endless_chunks.clear()
+		_deep_check("reload-with-loose-drop",RunState.load_game("user://deep-dig-qa.sav"))
+		_deep_check("saved-drops-exact",RunState.endless_loose_drops(1)==before)
+		w.load_depth(1,"from_above")
+		w.set_process(false)
+		_deep_check("reloaded-drop-visible",w.loose_drops.has(deep_drop_key))
+	elif kind == "deep_collect_test":
+		if not w.loose_drops.has(deep_drop_key):
+			_deep_check("drop-available-for-pickup",false)
+			return
+		var drop: Dictionary=w.loose_drops[deep_drop_key]
+		w.player.global_position=drop.visual.position
+		w._update_loose_drops(0.6)
+		_deep_check("pickup-adds-cargo",int(RunState.cargo.get(deep_drop_kind,0))>=deep_cargo_before+deep_drop_amount)
+		_deep_check("pickup-once",RunState.collect_endless_drop(int(drop.depth),String(drop.id)).is_empty())
+		w.set_process(true)
+	elif kind == "deep_discovery_test":
+		main._dev_jump_endless(1)
+		await main.get_tree().process_frame
+		var relic: Dictionary=w._native_relics[0]
+		var visual: Node2D=w._native_relic_visuals[String(relic.id)]
+		_deep_check("relic-buried",not w._is_floor(w._world_to_cell(relic.position)))
+		_deep_check("relic-invisible",not visual.visible)
+		# Camera-only inspection fixture: no discovery or terrain override yet.
+		w.player.camera.position=Vector2(relic.position)-w.player.position
+		w.player.camera.reset_smoothing()
+	elif kind == "deep_reveal_test":
+		var relic: Dictionary=w._native_relics[0]
+		var center: Vector2i=w._world_to_cell(relic.position)
+		# Excavate through the production atomic claim, not a visual visibility flag.
+		for y in range(center.y-2,center.y+3):
+			for x in range(center.x-2,center.x+3): w._break_diggable_cell(Vector2i(x,y))
+		w.player.camera.position=Vector2.ZERO
+		w.restore_position(Vector2(relic.position)+Vector2(0,64))
+		w._update_discoveries()
+		w._update_buried_visibility()
+		_deep_check("excavation-reveals-relic",w._native_relic_visuals[String(relic.id)].visible)
+		_deep_check("relic-discovered",RunState.relic_status(String(relic.id)).get("discovered",false))
+
+	elif kind == "deep_stream_test":
+		w.set_process(false)
+		w.player.set_physics_process(false)
+		for next_depth in [2,3,4]:
+			var seam: int=(next_depth-w.window_start_depth)*w.DeepLayout.CHUNK_ROWS
+			for row in range(seam-2,seam+3):
+				for col in range(18,21): w._break_diggable_cell(Vector2i(col,row))
+			var point: Vector2=w._cell_center(Vector2i(19,seam+1))
+			w.player.global_position=point
+			w._on_player_moved(point)
+			_deep_check("stream-depth-%d" % next_depth,w.current_depth==next_depth)
+			_deep_check("stream-walkable-%d" % next_depth,w._position_walkable(w.player.global_position))
+			_deep_check("stream-bounded-%d" % next_depth,w.floor_cells.size()==2640)
+		var anchor: Vector2=w.player.global_position
+		w._store_stream_anchor()
+		w.load_depth(4,"from_above")
+		_deep_check("deep-anchor-reload",w.player.global_position.distance_to(anchor)<1.0)
+		w.set_process(true)
+		w.player.set_physics_process(true)

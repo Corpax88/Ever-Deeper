@@ -267,6 +267,8 @@ var generated_depth: = -1
 var window_start_depth: int = 1
 var origin_shift_count: int = 0
 var _window_loading: bool = false
+var loose_drops: Dictionary = {}
+
 var _native_relics: Array[Dictionary] = []
 var _native_relic_visuals: Dictionary = {}
 var _stratum_texture_cache: Array[Dictionary] = []
@@ -538,7 +540,9 @@ func _process(delta: float) -> void :
 		return
 	_advance_resource_squashes()
 	_update_mining(delta)
+	_update_loose_drops(delta)
 	_update_discoveries()
+	_update_buried_visibility()
 	_update_site_activity(delta)
 	_update_resonance_hazards(delta)
 	for index in range(_crusher_impacts.size() - 1, -1, -1):
@@ -584,6 +588,14 @@ func _generate_depth(depth: int, next_arrival: String) -> void:
 		window_start_depth = int(anchor.get("start_depth", window_start_depth))
 		_resume_position = Vector2(float(anchor.get("x", 1280.0)), float(anchor.get("y", 256.0)))
 	_generate_stream_window(window_start_depth)
+	if is_finite(_resume_position.x) and is_finite(_resume_position.y) and not _position_walkable(_resume_position):
+		var resume_cell: Vector2i = _world_to_cell(_resume_position)
+		for y in range(resume_cell.y-1, resume_cell.y+2):
+			for x in range(resume_cell.x-1, resume_cell.x+2):
+				var cell: Vector2i = Vector2i(x,y)
+				if _cell_diggable(cell):
+					_set_floor(cell,true)
+					RunState.mark_endless_dug(depth_at_position(_cell_center(cell)), _chunk_cell_index(cell))
 	_configure_player(_spawn_for_arrival(arrival_side))
 	player.set_facing(Vector2.DOWN)
 	if rope_attached and not carried_relic_id.is_empty():
@@ -605,6 +617,7 @@ func _generate_stream_window(start_depth: int) -> void:
 	var old_damage: Dictionary = {}
 	for cell in dig_damage:
 		old_damage[absolute_cell(Vector2i(cell))] = int(dig_damage[cell])
+	_clear_loose_drop_visuals()
 	_clear_generated_visuals()
 	_cancel_site_activity()
 	hazard_push_remaining = Vector2.ZERO
@@ -621,7 +634,7 @@ func _generate_stream_window(start_depth: int) -> void:
 		var data: PackedByteArray = chunk.cells
 		for index in data.size():
 			floor_cells[slot * data.size() + index] = data[index]
-			_base_floor_cells[slot * data.size() + index] = data[index]
+			_base_floor_cells[slot * data.size() + index] = chunk.placement_cells[index]
 		for index in RunState.endless_dug_cells(depth):
 			floor_cells[slot * data.size() + int(index)] = 1
 		var row_offset: Vector2i = Vector2i(0, slot * DeepLayout.CHUNK_ROWS)
@@ -684,6 +697,7 @@ func _generate_stream_window(start_depth: int) -> void:
 	discovery_sites = all_sites
 	resonance_hazards = all_hazards
 	_index_ground_props()
+	_sync_loose_drops()
 	# Runtime journals are bounded to the same three visible bands.
 	session_mined_nodes.clear()
 	session_discovered_sites.clear()
@@ -972,7 +986,7 @@ func _generate_native_relic(rng: RandomNumberGenerator) -> void :
 	var room: Dictionary = branch_rooms[branch_rooms.size() - 1]
 	var direction: = Vector2(-1.0, 0.0) if int(room.cell.x) > GRID_SIZE.x / 2 else Vector2.RIGHT
 	native_relic_position = _cell_center(Vector2i(room.cell)) + direction * rng.randf_range(28.0, 52.0)
-	native_relic_position = _nearest_walkable_position(native_relic_position, RELIC_RADIUS)
+
 	native_relic_visual = _build_relic_visual(native_relic_id, native_relic_position, false)
 
 
@@ -1069,6 +1083,7 @@ func _build_resource_visual(resource: Dictionary) -> void :
 	_fit_sprite(sprite, Vector2(96.0, 96.0))
 	root.add_child(sprite)
 	add_child(root)
+	root.visible = _is_floor(Vector2i(resource.cell))
 	resource_visuals[String(resource.id)] = root
 
 
@@ -1101,6 +1116,7 @@ func _build_site_visual(site: Dictionary) -> void :
 	if bool(site.get("resolved", false)):
 		root.modulate = Color(0.76, 0.82, 0.8, 1.0)
 	add_child(root)
+	root.visible = _is_floor(_world_to_cell(root.position))
 	discovery_visuals[String(site.id)] = root
 
 
@@ -1136,7 +1152,7 @@ func _site_rune_positions(site_position: Vector2, site_index: int) -> Array[Vect
 	var quarter_turn: = float((generation_seed + site_index * 17) & 3) * PI * 0.5
 	for rune_index in 4:
 		var direction: = Vector2.RIGHT.rotated(quarter_turn + float(rune_index) * PI * 0.5)
-		result.append(_nearest_walkable_position(site_position + direction * SITE_RUNE_DISTANCE))
+		result.append(site_position + direction * SITE_RUNE_DISTANCE)
 	return result
 
 
@@ -1161,6 +1177,7 @@ func _build_relic_visual(relic_id: String, position: Vector2, carried: bool) -> 
 		carried_light.texture = _make_radial_texture()
 		carried_light.texture_scale = 178.0 / 256.0
 		root.add_child(carried_light)
+	root.visible = carried or _is_floor(_world_to_cell(position))
 	add_child(root)
 	return root
 
@@ -1264,9 +1281,7 @@ func _generate_resonance_hazards() -> void :
 	for index in count:
 		var room: Dictionary = candidates[index]
 		var center: = _cell_center(Vector2i(room.cell))
-		var position: = _nearest_walkable_position(
-			center + Vector2(rng.randf_range(-34.0, 34.0), rng.randf_range(-28.0, 28.0))
-		)
+		var position: Vector2 = center + Vector2(rng.randf_range(-34.0, 34.0), rng.randf_range(-28.0, 28.0))
 		var hazard: = {
 			"id": "endless_d%06d_surge_%02d" % [current_depth, index],
 			"index": index,
@@ -1316,6 +1331,7 @@ func _build_hazard_visual(hazard: Dictionary) -> void :
 	telegraph.antialiased = true
 	root.add_child(telegraph)
 	add_child(root)
+	root.visible = _is_floor(_world_to_cell(root.position))
 	hazard_visuals[String(hazard.id)] = root
 
 
@@ -1324,6 +1340,9 @@ func _update_resonance_hazards(delta: float) -> void :
 	for index in resonance_hazards.size():
 		var hazard: Dictionary = resonance_hazards[index]
 		var visual: = hazard_visuals.get(String(hazard.id)) as Node2D
+		if not _is_floor(_world_to_cell(Vector2(hazard.position))):
+			if is_instance_valid(visual): visual.visible = false
+			continue
 		if bool(hazard.get("disabled", false)):
 			if is_instance_valid(visual):
 				visual.modulate = Color(0.42, 0.64, 0.62, 0.2)
@@ -1459,6 +1478,12 @@ func _configure_player(position: Vector2) -> void :
 
 
 func _resolve_motion(origin: Vector2, motion: Vector2) -> Vector2:
+	# Held mining owns the stance while a reachable target exists. Thumb drift
+	# must not cancel every wind-up; walking resumes when the target is gone.
+	var aim: Vector2 = _mining_input_direction()
+	var committed: bool = mining_active and (aim.is_zero_approx() or aim == _swing_input_direction)
+	if (external_mine_held or Input.is_action_pressed("mine")) and (committed or _nearest_resource_index() >= 0 or _nearest_diggable_wall().x >= 0):
+		return origin
 	var result: = origin
 	var next_x: = Vector2(origin.x + motion.x, origin.y)
 	if _position_walkable(next_x):
@@ -2001,7 +2026,8 @@ func _mining_input_direction() -> Vector2:
 
 
 func _nearest_resource_index() -> int:
-	var facing: = Vector2(player.facing_vector).normalized()
+	var facing: Vector2 = _mining_input_direction()
+	if facing.is_zero_approx(): facing = Vector2(player.facing_vector).normalized()
 	var mining_range: = RESOURCE_MINING_RANGE * float(_current_endless_tool().get("range_multiplier", 1.0))
 	var best_index: = -1
 	var best_score: = INF
@@ -2014,7 +2040,7 @@ func _nearest_resource_index() -> int:
 		if distance > mining_range or not _clear_mining_line(player.global_position, Vector2(resource.position)):
 			continue
 		var direction_score: = facing.dot(offset.normalized()) if distance > 0.001 else 1.0
-		if direction_score < -0.12:
+		if direction_score < 0.65:
 			continue
 		var score: = distance - direction_score * 38.0
 		if score < best_score:
@@ -2035,7 +2061,7 @@ func _strike_resource(index: int, attack_power: int = -1, trigger_wave: bool = t
 	if finished:
 		_pending_resource_squashes.erase(String(resource.id))
 		var collected_amount: int = int(resource.amount) * maxi(1, int(tool.get("yield_multiplier", 1)))
-		var claim: Dictionary = RunState.claim_endless_resource_node(int(resource.get("depth", current_depth)), int(resource.get("node_index", index)), String(resource.kind), collected_amount)
+		var claim: Dictionary = RunState.claim_endless_resource_node(int(resource.get("depth", current_depth)), int(resource.get("node_index", index)), String(resource.kind), collected_amount, _chunk_cell_index(Vector2i(resource.cell)))
 		if not bool(claim.get("ok", false)):
 			if String(claim.get("reason", "")) == "already_claimed":
 				resource["mined"] = true
@@ -2050,7 +2076,7 @@ func _strike_resource(index: int, attack_power: int = -1, trigger_wave: bool = t
 		collected_amount = int(claim.amount)
 		resource.mined = true
 		session_mined_nodes[String(resource.id)] = true
-		message_changed.emit("+%d %s" % [collected_amount, String(resource.kind).replace("_", " ").to_upper()])
+		_sync_loose_drops()
 		_emit_mined_reward(String(resource.kind), collected_amount, int(resource.get("depth", current_depth)))
 		var visual: = resource_visuals.get(String(resource.id)) as Node2D
 		if is_instance_valid(visual):
@@ -2136,7 +2162,7 @@ func _update_resource_pulses() -> void :
 	var visible_area: Rect2 = _visual_visible_rect(Vector2.ONE * 256.0)
 	for light in world_lights.get_children():
 		if light is PointLight2D:
-			light.enabled = visible_area.has_point(light.position)
+			light.enabled = visible_area.has_point(light.position) and _is_floor(_world_to_cell(light.position))
 	for resource in resources:
 		if bool(resource.mined):
 			continue
@@ -3408,8 +3434,10 @@ func _nearest_diggable_wall() -> Vector2i:
 			if not _cell_diggable(cell) or _is_floor(cell) or not _has_floor_neighbor(cell):
 				continue
 			var offset: Vector2 = _cell_center(cell) - player.global_position
-			var alignment: float = player.facing_vector.dot(offset.normalized())
-			if offset.length() > reach or alignment < 0.25 or not _clear_mining_line(player.global_position, _cell_center(cell), true):
+			var aim: Vector2 = _mining_input_direction()
+			if aim.is_zero_approx(): aim = player.facing_vector
+			var alignment: float = aim.dot(offset.normalized())
+			if offset.length() > reach or alignment < 0.65 or not _clear_mining_line(player.global_position, _cell_center(cell), true):
 				continue
 			var next: float = offset.length() - alignment * 35.0
 			if next < score:
@@ -3444,7 +3472,7 @@ func _break_diggable_cell(cell: Vector2i) -> bool:
 	var index: int = _chunk_cell_index(cell)
 	var reward: Dictionary = DeepLayout.ore_for_cell(int(RunState.world_seed), depth, index)
 	var amount: int = int(reward.amount) * maxi(1, int(_current_endless_tool().get("yield_multiplier", 1)))
-	var claim: Dictionary = RunState.claim_endless_rock_cell(depth, index, String(reward.kind), amount)
+	var claim: Dictionary = RunState.claim_endless_rock_cell(depth, index, String(reward.kind), amount, true)
 	if not bool(claim.get("ok", false)):
 		if String(claim.get("reason", "")) == "already_claimed":
 			_set_floor(cell, true)
@@ -3452,6 +3480,7 @@ func _break_diggable_cell(cell: Vector2i) -> bool:
 		return false
 	_set_floor(cell, true)
 	dig_damage.erase(cell)
+	_sync_loose_drops()
 	_emit_mined_reward(String(reward.kind), int(claim.amount), depth)
 	queue_redraw()
 	return true
@@ -3462,7 +3491,6 @@ func _emit_mined_reward(kind: String, amount: int, depth: int) -> void:
 		var key: String = "%s:%d" % [kind, depth]
 		_wave_rewards[key] = int(_wave_rewards.get(key, 0)) + amount
 		return
-	resource_collected.emit(kind, amount, depth)
 	resource_mined.emit(kind, amount)
 
 
@@ -3574,3 +3602,52 @@ func companion_work_period() -> float:
 
 func companion_hero_period(task: Dictionary = {}) -> float:
 	return _mining_cycle_duration()
+
+
+func _update_buried_visibility() -> void:
+	for collection in [resource_visuals, discovery_visuals, hazard_visuals, _native_relic_visuals]:
+		for visual in collection.values():
+			if is_instance_valid(visual): visual.visible = _is_floor(_world_to_cell(visual.position))
+
+
+func _clear_loose_drop_visuals() -> void:
+	for drop in loose_drops.values():
+		if is_instance_valid(drop.visual): drop.visual.queue_free()
+	loose_drops.clear()
+
+
+func _sync_loose_drops() -> void:
+	for depth in range(window_start_depth, window_start_depth + DeepLayout.ACTIVE_CHUNKS):
+		var stored: Dictionary = RunState.endless_loose_drops(depth)
+		for id in stored:
+			var key: String = "%d:%s" % [depth, id]
+			if loose_drops.has(key): continue
+			var data: Dictionary = stored[id]
+			var cell: Vector2i = Vector2i(int(data.cell) % DeepLayout.CHUNK_COLS, int(data.cell) / DeepLayout.CHUNK_COLS + (depth-window_start_depth)*DeepLayout.CHUNK_ROWS)
+			var sprite: Sprite2D = Sprite2D.new()
+			sprite.texture = _load_texture(String(RESOURCE_TEXTURE_PATHS.get(String(data.kind), "")))
+			_fit_sprite(sprite, Vector2(32,32))
+			sprite.position = _cell_center(cell)
+			sprite.z_index = actor_draw_depth(sprite.position) + 2
+			add_child(sprite)
+			loose_drops[key] = {"id": id, "depth": depth, "visual": sprite, "age": 0.0, "origin": sprite.position}
+
+
+func _update_loose_drops(delta: float) -> void:
+	for key in loose_drops.keys():
+		var drop: Dictionary = loose_drops[key]
+		var sprite: Sprite2D = drop.visual
+		drop.age = float(drop.age) + delta
+		if float(drop.age) < 0.55:
+			sprite.position = Vector2(drop.origin) + Vector2(0, -sin(float(drop.age)/0.55*PI)*18.0)
+			continue
+		var distance: float = sprite.position.distance_to(player.global_position)
+		if distance > 140.0 or not _clear_mining_line(sprite.position, player.global_position): continue
+		sprite.position = sprite.position.move_toward(player.global_position, 260.0*delta)
+		if sprite.position.distance_to(player.global_position) <= 18.0:
+			var collected: Dictionary = RunState.collect_endless_drop(int(drop.depth), String(drop.id))
+			if not collected.is_empty():
+				message_changed.emit("+%d %s" % [int(collected.amount), String(collected.kind).replace("_", " ").to_upper()])
+				resource_collected.emit(String(collected.kind), int(collected.amount), int(drop.depth))
+			sprite.queue_free()
+			loose_drops.erase(key)

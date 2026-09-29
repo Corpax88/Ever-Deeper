@@ -100,6 +100,7 @@ func run() -> void:
 	lamp.set_direction(Vector2.UP)
 	_check(is_equal_approx(float(lamp.effective_range_multiplier), 1.0), "Reset or unbuilt workshop invalidates cached light effects")
 	lamp.queue_free()
+	await _check_deep_excavation()
 	_finish("premium_core")
 
 
@@ -154,3 +155,28 @@ func _check_terrain_cadence(world: Node) -> void:
 	_check(not bool(world.mining_active), "Movement followed by an idle physics tick still cancels the old swing")
 	world.external_mine_held = false
 	world._cancel_mining()
+
+
+func _check_deep_excavation() -> void:
+	RunState.endless_chunks.clear()
+	RunState.endless_stream_anchor.clear()
+	RunState.endless_relics = RunState._default_endless_relics() if RunState.has_method("_default_endless_relics") else RunState.endless_relics
+	var probe: RefCounted = load("res://scripts/qa/suites/skills_browser_review.gd").new(main,session)
+	await probe._deep_command("deep_fixture")
+	var world: Node = main.endless_world
+	world.set_process(false)
+	world.player.set_physics_process(false)
+	await probe._deep_command("deep_mine")
+	for tick in 600:
+		world.player._physics_process(1.0/120.0)
+		world._update_mining(1.0/120.0)
+		world._update_loose_drops(1.0/120.0)
+	await probe._deep_command("deep_stop")
+	await probe._deep_command("deep_drop_test")
+	await probe._deep_command("deep_reload_test")
+	await probe._deep_command("deep_collect_test")
+	await probe._deep_command("deep_discovery_test")
+	await probe._deep_command("deep_reveal_test")
+	await probe._deep_command("deep_stream_test")
+	for key in probe.deep_checks:
+		_check(bool(probe.deep_checks[key]),"Deep excavation: "+String(key))

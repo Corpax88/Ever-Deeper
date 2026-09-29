@@ -58,7 +58,13 @@ static func generate(world_seed: int, depth: int) -> Dictionary:
 	if depth == 1:
 		for col in CHUNK_COLS:
 			cells[col] = 0
-	return {"cells": cells, "rooms": rooms, "branches": branches, "entrance": entrance, "exit": exit_cell}
+	# Keep deterministic content coordinates and historical node IDs, but all
+	# natural rooms/corridors are buried. Only the initial landing is open.
+	var placement_cells: PackedByteArray = cells.duplicate()
+	cells.fill(0)
+	if depth == 1:
+		_carve(cells, Vector2i(entrance.x, 2), 2)
+	return {"cells": cells, "placement_cells": placement_cells, "rooms": rooms, "branches": branches, "entrance": entrance, "exit": exit_cell}
 
 
 static func ore_for_cell(world_seed: int, depth: int, index: int) -> Dictionary:

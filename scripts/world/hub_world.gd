@@ -1942,17 +1942,6 @@ func _draw_deep_elevator(_selected: bool) -> void :
 		modulate
 	)
 	_draw_elevator_resource_sockets()
-	if stage in ["powered", "complete"]:
-		var pulse: = 0.62 + sin(float(Time.get_ticks_msec()) * 0.004) * 0.1
-		_draw_canvas.draw_arc(
-			DEEP_ELEVATOR + Vector2(0, 4),
-			52,
-			0,
-			TAU,
-			48,
-			Color(0.54, 0.98, 1.0, pulse),
-			2.2
-		)
 
 
 func _draw_elevator_resource_sockets() -> void :

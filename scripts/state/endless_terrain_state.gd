@@ -9,7 +9,7 @@ const HEX: String = "0123456789abcdef"
 
 
 static func empty_chunk() -> Dictionary:
-	return {"dug": "", "nodes": 0, "sites": 0, "seen": 0}
+	return {"dug": "", "nodes": 0, "sites": 0, "seen": 0, "drops": {}}
 
 
 static func cells(mask: String) -> Array:
@@ -63,6 +63,7 @@ static func sanitize(raw: Variant, max_depth: int) -> Dictionary:
 			"nodes": _bounded_mask(source.get("nodes", 0), 2147483647),
 			"sites": _bounded_mask(source.get("sites", 0), 255),
 			"seen": _bounded_mask(source.get("seen", 0), 15),
+			"drops": _sanitize_drops(source.get("drops", {})),
 		}
 	return result
 
@@ -71,3 +72,20 @@ static func _bounded_mask(raw: Variant, maximum: int) -> int:
 	if (raw is int or raw is float) and is_finite(float(raw)):
 		return int(clampf(float(raw), 0.0, float(maximum)))
 	return 0
+
+
+static func _sanitize_drops(raw: Variant) -> Dictionary:
+	var result: Dictionary = {}
+	if not raw is Dictionary: return result
+	for key in raw:
+		if not key is String or key.length() < 2 or key[0] not in ["c", "n"] or not key.substr(1).is_valid_int(): continue
+		var index: int = int(key.substr(1))
+		if index < 0 or index >= (CELL_COUNT if key[0] == "c" else 31): continue
+		if not raw[key] is Dictionary: continue
+		var drop: Dictionary = raw[key]
+		var kind: String = str(drop.get("kind", ""))
+		var amount: int = _bounded_mask(drop.get("amount", 0), 1000000)
+		var cell: int = _bounded_mask(drop.get("cell", -1), CELL_COUNT - 1)
+		if kind not in ["lumenstone", "deep_alloy", "memory_silk", "echo_crystal", "waystone"] or amount <= 0: continue
+		result[key] = {"kind": kind, "amount": amount, "cell": cell}
+	return result
