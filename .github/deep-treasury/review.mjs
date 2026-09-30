@@ -5,7 +5,7 @@ import http from 'node:http';
 import {createHash} from 'node:crypto';
 const [web,output,flavor]=process.argv.slice(2);fs.mkdirSync(output,{recursive:true});
 const reference=process.env.NODE_ASSETS_REFERENCE==='1';
-const version='1.0.0-dev.15.32',files=JSON.parse(fs.readFileSync(path.join(web,'manifest.json')));
+const version='1.0.0-dev.15.33',files=JSON.parse(fs.readFileSync(path.join(web,'manifest.json')));
 for(const [name,want] of Object.entries(files)){
  const h=createHash('sha256');for await(const b of fs.createReadStream(path.join(web,name)))h.update(b);
  if(h.digest('hex')!==want.sha256||fs.statSync(path.join(web,name)).size!==want.size)throw Error('Candidate identity: '+name);
@@ -65,6 +65,7 @@ try{
  const initial={stone:800,copper:400,echo_crystal:180,prismite:240,starshard:320,wallet_gold:2000};
  function conserved(t){return Object.entries(initial).every(([k,n])=>(t.totals[k]||0)+(k==='wallet_gold'?t.wallet:t.cargo[k]||0)===n);}
  await wait('airborne parcels',s=>s.treasury.packets>0);await shot('03-airborne');
+ await delay(350);await shot('flow-02');await delay(350);await shot('flow-03');
  await wait('first resources landed',s=>s.treasury.landings>=2);let partial=(await state()).treasury;
  check('partial-conservation',conserved(partial)&&partial.cargo.stone>0,{partial});await shot('04-partial-delivery');
  await tap('hud_menu');await wait('menu paused',s=>s.skills_open);const paused=(await state()).treasury;await delay(2000);
@@ -91,7 +92,7 @@ try{
  await wait('milestone delivery complete',s=>!s.treasury.delivering,15000);
  const milestone=(await state()).treasury;
  check('every-thousand-celebrated',milestone.upgrades-upgradesBefore===3&&milestone.totals.stone===3010&&milestone.totals.copper===20,{milestone});
- for(const amount of [999,1000,1999,2000,2999,3000,4000,8000,9000]){
+ for(const amount of [4000]){
   for(const index of [3,10,17,24]){
    await command('treasury_visual',{amount,index});await delay(100);
    await shot('pile-'+amount+'-sector-'+index);

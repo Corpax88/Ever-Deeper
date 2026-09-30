@@ -6,6 +6,9 @@ const ZONE: Vector2 = Vector2(940, 710)
 const EXIT: Vector2 = Vector2(70, 710)
 const ENTRY: Vector2 = Vector2(240, 710)
 const FLIGHT: float = 1.45
+const LABEL_FONT = preload("res://assets/ui/fonts/EBGaramond.ttf")
+var flight_rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var label_canvas: Node2D
 var hub: Node2D
 var inside: bool = false
 var delivering: bool = false
@@ -32,11 +35,16 @@ const UPGRADE_FLASH: float = 0.65
 
 func setup(owner_world: Node2D) -> void:
 	hub = owner_world
+	flight_rng.randomize()
 	visible = false
 	particle_canvas = Node2D.new()
 	particle_canvas.z_index = 1900
 	particle_canvas.draw.connect(_draw_particles)
 	add_child(particle_canvas)
+	label_canvas = Node2D.new()
+	label_canvas.z_index = 1901
+	label_canvas.draw.connect(_draw_labels)
+	add_child(label_canvas)
 
 func texture(path: String) -> Texture2D:
 	if textures.has(path): return textures[path]
@@ -178,14 +186,15 @@ func tick(delta: float) -> void:
 			var amount: int = mini(mini(int(batch.amount),int(batch.portion)),to_boundary)
 			var packet: Dictionary = {"kind":kind,"amount":amount,"milestone":amount==to_boundary,
 				"origin":hub.player.global_position+Vector2(0,-38),"target":bay(Ledger.keys().find(kind))+Vector2(0,-17),"age":0.0}
+			_shape_flight(packet)
 			particles.append(packet)
 			batch.amount = int(batch.amount)-amount
 			if int(batch.amount) <= 0: batches.pop_front()
-			next_launch = clock + interval
+			next_launch = clock + interval * flight_rng.randf_range(0.62,1.48)
 	var changed: bool = false
 	for i in range(particles.size()-1,-1,-1):
 		particles[i].age = float(particles[i].age) + maxf(0.0,delta)
-		if float(particles[i].age) >= FLIGHT:
+		if float(particles[i].age) >= float(particles[i].get("duration",FLIGHT)):
 			var kind: String = String(particles[i].kind)
 			var before: int = int(RunState.treasury_totals.get(kind,0))
 			var amount: int = Ledger.land(kind, int(particles[i].amount))
@@ -304,6 +313,7 @@ func refresh_piles() -> void:
 					var ratio: float = extent/maxf(tex.get_width(),tex.get_height())
 					sprite.scale=Vector2.ONE*ratio
 	queue_redraw()
+	label_canvas.queue_redraw()
 
 func _update_flash_tints() -> void:
 	for i in display_nodes.size():
@@ -314,33 +324,63 @@ func _draw() -> void:
 	if not inside: return
 	var font: Font = ThemeDB.fallback_font
 	draw_string(font,ZONE+Vector2(-160,175),"TREASURY   ·   GOLD HELD: %d" % RunState.gold,HORIZONTAL_ALIGNMENT_LEFT,400,20,Color("f5d890"))
-	for i in Ledger.keys().size():
-		var kind: String = String(Ledger.keys()[i])
-		var label: String = "GOLD" if kind == Ledger.WALLET else "GOLD ORE" if kind == "gold" else String(Dictionary(GameData.data.ROCK_TYPES.get(kind,{})).get("label",kind.replace("_"," "))).to_upper()
-		var at: Vector2 = bay(i)+Vector2(0,51)
-		var radial: Vector2 = (bay(i)-ZONE)/Vector2(735,500)
-		at=bay(i)+Vector2(-radial.x*140,-radial.y*145+12)
-		var width: float = font.get_string_size(label,HORIZONTAL_ALIGNMENT_LEFT,-1,14).x
-		draw_string(font,at-Vector2(width*0.5,0),label,HORIZONTAL_ALIGNMENT_LEFT,-1,14,Color("ead7a0"))
-		var amount: int = int(RunState.treasury_totals.get(kind,0))
-		if amount > 0:
-			var value: String = str(amount) if amount < 1000000 else String.num_scientific(float(amount))
-			draw_string(font,at+Vector2(-35,15),value,HORIZONTAL_ALIGNMENT_LEFT,110,14,Color("fff1c8"))
 	draw_string(font,ZONE+Vector2(-90,85),"DONATE CARGO + GOLD",HORIZONTAL_ALIGNMENT_LEFT,200,15,Color("efd887"))
 	draw_string(font,EXIT+Vector2(-24,48),"HUB",HORIZONTAL_ALIGNMENT_LEFT,70,16,Color("efd887"))
 
+func _steel_text(value: String, at: Vector2, size: int) -> void:
+	var width: float = LABEL_FONT.get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,size).x
+	var start: Vector2 = at-Vector2(width*0.5,0)
+	label_canvas.draw_string_outline(LABEL_FONT,start,value,HORIZONTAL_ALIGNMENT_LEFT,-1,size,3,Color("07121e"))
+	label_canvas.draw_string(LABEL_FONT,start+Vector2(0,1),value,HORIZONTAL_ALIGNMENT_LEFT,-1,size,Color("315d86"))
+	label_canvas.draw_string(LABEL_FONT,start-Vector2(0,0.7),value,HORIZONTAL_ALIGNMENT_LEFT,-1,size,Color("e0f3ff"))
+	label_canvas.draw_string(LABEL_FONT,start,value,HORIZONTAL_ALIGNMENT_LEFT,-1,size,Color("a6cce9"))
+
+func _draw_labels() -> void:
+	if not inside: return
+	for i in Ledger.keys().size():
+		var kind: String = String(Ledger.keys()[i])
+		var label: String = "GOLD" if kind == Ledger.WALLET else "GOLD ORE" if kind == "gold" else String(Dictionary(GameData.data.ROCK_TYPES.get(kind,{})).get("label",kind.replace("_"," "))).to_upper()
+		var at: Vector2 = bay(i)+Vector2(0,37)
+		_steel_text(label,at,17)
+		var amount: int = int(RunState.treasury_totals.get(kind,0))
+		if amount > 0:
+			var value: String = str(amount) if amount < 1000000 else String.num_scientific(float(amount))
+			_steel_text(value,at+Vector2(0,17),16)
+
+func _shape_flight(packet: Dictionary) -> void:
+	# Visual randomness has its own RNG and never affects rewards or mining.
+	var motes: Array[Dictionary] = []
+	var duration: float = 0.0
+	for i in 3:
+		var travel: float = flight_rng.randf_range(1.12,1.78)
+		var delay: float = flight_rng.randf_range(0.0,0.16)
+		motes.append({"travel":travel,"delay":delay,"bend":Vector2(flight_rng.randf_range(-78,78),-flight_rng.randf_range(85,205)),"offset":Vector2(flight_rng.randf_range(-13,13),flight_rng.randf_range(-8,6)),"ease":flight_rng.randf_range(0.85,1.18),"size":flight_rng.randf_range(27,36)})
+		duration = maxf(duration,travel+delay)
+	# The milestone must remain the final landing in its thousand, even when
+	# ordinary packets overtake. This preserves exact pile/flash/sound timing.
+	if bool(packet.milestone):
+		for pending in particles:
+			duration = maxf(duration,float(pending.get("duration",FLIGHT))-float(pending.age)+0.08)
+	# Make one visible mote land at the accounting boundary, not before it.
+	motes[2].travel = duration-float(motes[2].delay)
+	packet["duration"] = duration
+	packet["motes"] = motes
+
 func _draw_particles() -> void:
 	for packet in particles:
-		var t: float = clampf(float(packet.age)/FLIGHT,0.0,1.0)
 		var origin: Vector2 = packet.origin
 		var target: Vector2 = packet.target
-		var control: Vector2 = origin.lerp(target,0.5)+Vector2(0,-150)
-		var at: Vector2 = (1-t)*(1-t)*origin+2*(1-t)*t*control+t*t*target
 		var tex: Texture2D = material(String(packet.kind))
 		if tex == null: continue
-		for mote in 3:
-			var offset: Vector2 = Vector2(mote*14,-mote*8)
-			particle_canvas.draw_texture_rect(tex,Rect2(at+offset-Vector2.ONE*18,Vector2.ONE*36),false)
+		for mote in packet.motes:
+			var age: float = float(packet.age)-float(mote.delay)
+			if age < 0.0 or age >= float(mote.travel): continue
+			var t: float = pow(clampf(age/float(mote.travel),0.0,1.0),float(mote.ease))
+			var end: Vector2 = target+Vector2(mote.offset)
+			var control: Vector2 = origin.lerp(end,0.5)+Vector2(mote.bend)
+			var at: Vector2 = (1-t)*(1-t)*origin+2*(1-t)*t*control+t*t*end
+			var extent: float = float(mote.size)
+			particle_canvas.draw_texture_rect(tex,Rect2(at-Vector2.ONE*extent*0.5,Vector2.ONE*extent),false)
 
 func snapshot() -> Dictionary:
 	return {"active_kind":active_kind,"packet_kinds":particles.map(func(p: Dictionary): return p.kind),"upgrades":upgrades,"flashes":upgrade_flashes.duplicate(),"camera_zoom":[hub.player.camera.zoom.x,hub.player.camera.zoom.y],"camera_center":[hub.player.camera.get_screen_center_position().x,hub.player.camera.get_screen_center_position().y],"zone":[ZONE.x,ZONE.y],"player":[hub.player.global_position.x,hub.player.global_position.y],"circular":true,"walk_through":true,"inside":inside,"delivering":delivering,"packets":particles.size(),"remaining_batches":batches.size(),"landings":landing_count,"cancelled":cancelled_count,"totals":RunState.treasury_totals.duplicate(true),"wallet":RunState.gold,"cargo":RunState.cargo.duplicate(true),"bay_count":Ledger.keys().size()}

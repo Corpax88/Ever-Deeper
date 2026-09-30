@@ -229,6 +229,9 @@ func _check_deep_treasury() -> void:
 	hub.player.global_position=room.ZONE
 	room.start()
 	room.tick(0.5)
+	var flight: Dictionary = room.particles[0]
+	_check(flight.motes.size()==3 and flight.motes[0].bend!=flight.motes[1].bend and flight.motes[0].travel!=flight.motes[1].travel,"Donation motes have independent curves and travel times")
+	_check(float(flight.duration)>=float(flight.motes[0].travel)+float(flight.motes[0].delay) and float(flight.duration)>=float(flight.motes[1].travel)+float(flight.motes[1].delay),"Accounting waits until all visible motes have landed")
 	await _treasury_capture("02-airborne")
 	_check(room.particles.size()>0 and RunState.cargo.stone==80 and RunState.gold==200,"Airborne packets reserve without consuming cargo or gold")
 	room.leave()
