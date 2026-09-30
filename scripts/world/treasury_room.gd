@@ -1,10 +1,10 @@
 extends Node2D
 ## Visual packets are reservations only; landing is the sole accounting boundary.
 const Ledger = preload("res://scripts/state/treasury_state.gd")
-const SIZE: Vector2 = Vector2(1440, 960)
-const ZONE: Vector2 = Vector2(740, 788)
-const EXIT: Vector2 = Vector2(145, 794)
-const ENTRY: Vector2 = Vector2(285, 790)
+const SIZE: Vector2 = Vector2(1880, 1420)
+const ZONE: Vector2 = Vector2(940, 710)
+const EXIT: Vector2 = Vector2(70, 710)
+const ENTRY: Vector2 = Vector2(240, 710)
 const FLIGHT: float = 1.45
 var hub: Node2D
 var inside: bool = false
@@ -50,7 +50,9 @@ func material(kind: String) -> Texture2D:
 	return texture(RunState._resource_drop_texture_path(kind))
 
 func bay(index: int) -> Vector2:
-	return Vector2(164 + (index % 9) * 139, 218 + (index / 9) * 212)
+	# One surrounding ring with a gap for the west passage; keep material IDs stable.
+	var angle: float = PI + 0.32 + (TAU - 0.64) * float(index) / float(Ledger.keys().size()-1)
+	return ZONE + Vector2(cos(angle)*735.0, sin(angle)*500.0)
 
 func enter() -> void:
 	if inside or not RunState.victory: return
@@ -62,6 +64,7 @@ func enter() -> void:
 		hidden_hud.append({"node":item,"visible":item.visible})
 	apply_hud()
 	saved_zoom = hub.player.camera.zoom
+	hub.player.configure(ENTRY, SIZE, hub.player.movement_speed, hub._resolve_motion)
 	_refresh_camera()
 	if not initialized: _build_visuals()
 	refresh_piles()
@@ -89,9 +92,10 @@ func leave(move_player: bool = true) -> void:
 	hub.world_lights.visible = true
 	hub.lit_floor_chunks.show()
 	hub.lit_draw_sections.show()
+	hub._configure_player(hub.TREASURY_DOOR + Vector2(-130,0) if move_player else hub.player.global_position)
 	hub.player.camera.zoom = saved_zoom
 	if move_player:
-		hub.player.global_position = hub.TREASURY_DOOR + Vector2(-95, 0)
+		hub.player.global_position = hub.TREASURY_DOOR + Vector2(-130, 0)
 		hub.player.camera.reset_smoothing()
 		hub._on_player_moved(hub.player.global_position)
 		RunState.set_location("hub", hub.player.global_position)
@@ -114,16 +118,23 @@ func start() -> void:
 	if not inside or delivering: return
 	batches.clear()
 	var total: int = 0
+	var material_batches: Array[Array] = []
 	for kind in Ledger.keys():
 		var available: int = Ledger.available(kind)
 		if available <= 0: continue
 		var count: int = mini(8, available)
 		var remaining: int = available
+		var portion: Array = []
 		for i in count:
 			var amount: int = ceili(float(remaining) / float(count-i))
-			batches.append({"kind": kind, "amount": amount})
+			portion.append({"kind": kind, "amount": amount})
 			remaining -= amount
+		material_batches.append(portion)
 		total += available
+	# Alternate materials so several destinations receive visible arcs at once.
+	for round_index in 8:
+		for portion in material_batches:
+			if round_index < portion.size(): batches.append(portion[round_index])
 	if batches.is_empty(): return
 	# Long celebratory delivery scales with variety; draw cost remains bounded.
 	var duration: float = clampf(9.0 + sqrt(float(total)) * 0.04 + batches.size() * 0.06, 10.0, 26.0)
@@ -142,6 +153,9 @@ func tick(delta: float) -> void:
 		return
 	# Menus pause the celebration and prohibit landing during blocked controls.
 	if not hub.player.control_enabled: return
+	if hub.player.global_position.x < 110.0 and absf(hub.player.global_position.y-EXIT.y)<65.0:
+		leave()
+		return
 	var at_zone: bool = hub.player.global_position.distance_to(ZONE) < 85.0
 	if not at_zone: armed = true
 	if at_zone and armed and not delivering: start()
@@ -171,7 +185,8 @@ func tick(delta: float) -> void:
 	particle_canvas.queue_redraw()
 
 func collision(point: Vector2) -> bool:
-	if point.x < 112 or point.x > 1328 or point.y < 125 or point.y > 838: return true
+	if point.x >= 55 and point.x <= 280 and absf(point.y-EXIT.y)<65: return false
+	if ((point-ZONE)/Vector2(860,610)).length_squared()>1.0: return true
 	for i in Ledger.keys().size():
 		var p: Vector2 = bay(i)
 		if Rect2(p+Vector2(-57,-80),Vector2(114,115)).has_point(point): return true
@@ -194,24 +209,34 @@ func _build_visuals() -> void:
 	visual_root.z_index = -1
 	visual_root.draw.connect(func(): visual_root.draw_rect(Rect2(Vector2(-3000,-3000),Vector2(7500,7500)),Color("08090e")))
 	add_child(visual_root)
-	_sprite(texture("res://assets/hub/hub-floor-v2.png"), SIZE * 0.5, SIZE, visual_root)
+	# The authored hub floor is clipped to the round chamber, never flattened into a backdrop/mockup.
+	var floor: Polygon2D = Polygon2D.new()
+	floor.texture = texture("res://assets/hub/hub-floor-v2.png")
+	var outline: PackedVector2Array = PackedVector2Array()
+	var uv: PackedVector2Array = PackedVector2Array()
+	for i in 96:
+		var angle: float = TAU*float(i)/96.0
+		var point: Vector2 = ZONE+Vector2(cos(angle)*905,sin(angle)*655)
+		outline.append(point)
+		uv.append(point/SIZE*floor.texture.get_size())
+	floor.polygon=outline
+	floor.uv=uv
+	visual_root.add_child(floor)
+	_sprite(texture("res://assets/hub/hub-floor-v2.png"),EXIT+Vector2(75,0),Vector2(220,138),visual_root)
 	var wall: Texture2D = texture("res://assets/voidstar/wall.png")
-	for x in [180,540,900,1260]:
-		_sprite(wall,Vector2(x,25),Vector2(400,100),visual_root)
-		var bottom: Sprite2D = _sprite(wall,Vector2(x,935),Vector2(400,100),visual_root)
-		bottom.rotation = PI
-	for y in [200,500,790]:
-		var left: Sprite2D = _sprite(wall,Vector2(25,y),Vector2(340,100),visual_root)
-		left.rotation = -PI/2
-		var right: Sprite2D = _sprite(wall,Vector2(1415,y),Vector2(340,100),visual_root)
-		right.rotation = PI/2
+	for i in 64:
+		var angle: float = TAU*float(i)/64.0
+		if absf(angle-PI)<0.15: continue
+		var at: Vector2 = ZONE+Vector2(cos(angle)*905,sin(angle)*655)
+		var tangent: Vector2 = Vector2(-sin(angle)*905,cos(angle)*655)
+		var segment: Sprite2D = _sprite(wall,at,Vector2(tangent.length()*TAU/64.0+38,100),visual_root)
+		segment.rotation=tangent.angle()
 	_sprite(texture("res://assets/treasury/delivery-plate-v1.png"),ZONE,Vector2(230,176),visual_root)
-	_sprite(texture("res://assets/voidstar/depth-portal.png"),EXIT+Vector2(0,-45),Vector2(130,150),visual_root)
 	for i in Ledger.keys().size():
 		var group: Node2D = Node2D.new()
 		group.z_index = 10 + roundi(bay(i).y + 25)
 		add_child(group)
-		_sprite(texture("res://assets/treasury/alcove-v1.png"),bay(i)+Vector2(0,-42),Vector2(137,137),group)
+		_sprite(texture("res://assets/treasury/alcove-v1.png"),bay(i)+Vector2(0,-42),Vector2(125,125),group)
 		var contents: Node2D = Node2D.new()
 		group.add_child(contents)
 		display_nodes.append(contents)
@@ -245,17 +270,19 @@ func refresh_piles() -> void:
 func _draw() -> void:
 	if not inside: return
 	var font: Font = ThemeDB.fallback_font
-	draw_string(font,Vector2(400,895),"TREASURY   ·   GOLD HELD: %d" % RunState.gold,HORIZONTAL_ALIGNMENT_LEFT,800,24,Color("f5d890"))
+	draw_string(font,ZONE+Vector2(-160,175),"TREASURY   ·   GOLD HELD: %d" % RunState.gold,HORIZONTAL_ALIGNMENT_LEFT,400,20,Color("f5d890"))
 	for i in Ledger.keys().size():
 		var kind: String = String(Ledger.keys()[i])
 		var label: String = "GOLD" if kind == Ledger.WALLET else "GOLD ORE" if kind == "gold" else String(Dictionary(GameData.data.ROCK_TYPES.get(kind,{})).get("label",kind.replace("_"," "))).to_upper()
 		var at: Vector2 = bay(i)+Vector2(0,51)
-		var width: float = font.get_string_size(label,HORIZONTAL_ALIGNMENT_LEFT,-1,11).x
-		draw_string(font,at-Vector2(width*0.5,0),label,HORIZONTAL_ALIGNMENT_LEFT,-1,11,Color("ead7a0"))
+		var radial: Vector2 = (bay(i)-ZONE)/Vector2(735,500)
+		at=bay(i)+Vector2(-radial.x*140,-radial.y*145+12)
+		var width: float = font.get_string_size(label,HORIZONTAL_ALIGNMENT_LEFT,-1,14).x
+		draw_string(font,at-Vector2(width*0.5,0),label,HORIZONTAL_ALIGNMENT_LEFT,-1,14,Color("ead7a0"))
 		var amount: int = int(RunState.treasury_totals.get(kind,0))
 		if amount > 0:
 			var value: String = str(amount) if amount < 1000000 else String.num_scientific(float(amount))
-			draw_string(font,at+Vector2(-35,15),value,HORIZONTAL_ALIGNMENT_LEFT,90,12,Color("fff1c8"))
+			draw_string(font,at+Vector2(-35,15),value,HORIZONTAL_ALIGNMENT_LEFT,110,14,Color("fff1c8"))
 	draw_string(font,ZONE+Vector2(-90,85),"DONATE CARGO + GOLD",HORIZONTAL_ALIGNMENT_LEFT,200,15,Color("efd887"))
 	draw_string(font,EXIT+Vector2(-24,48),"HUB",HORIZONTAL_ALIGNMENT_LEFT,70,16,Color("efd887"))
 
@@ -273,7 +300,7 @@ func _draw_particles() -> void:
 			particle_canvas.draw_texture_rect(tex,Rect2(at+offset-Vector2.ONE*18,Vector2.ONE*36),false)
 
 func snapshot() -> Dictionary:
-	return {"inside":inside,"delivering":delivering,"packets":particles.size(),"remaining_batches":batches.size(),"landings":landing_count,"cancelled":cancelled_count,"totals":RunState.treasury_totals.duplicate(true),"wallet":RunState.gold,"cargo":RunState.cargo.duplicate(true),"bay_count":Ledger.keys().size()}
+	return {"zone":[ZONE.x,ZONE.y],"player":[hub.player.global_position.x,hub.player.global_position.y],"circular":true,"walk_through":true,"inside":inside,"delivering":delivering,"packets":particles.size(),"remaining_batches":batches.size(),"landings":landing_count,"cancelled":cancelled_count,"totals":RunState.treasury_totals.duplicate(true),"wallet":RunState.gold,"cargo":RunState.cargo.duplicate(true),"bay_count":Ledger.keys().size()}
 
 
 func specimen(kind: String) -> Texture2D:

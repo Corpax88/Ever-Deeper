@@ -22,7 +22,7 @@ signal workshop_panel_requested(workshop_id: String)
 signal workshop_action_committed(transaction: Dictionary)
 
 const TreasuryRoom = preload("res://scripts/world/treasury_room.gd")
-const TREASURY_DOOR: Vector2 = Vector2(1285, 766)
+const TREASURY_DOOR: Vector2 = Vector2(1390, 766)
 const HUB_SHOP: Vector2 = Vector2(1100, 742)
 var treasury: Node2D
 
@@ -442,6 +442,9 @@ func _process(delta: float) -> void :
 
 	if treasury.inside:
 		treasury.tick(delta)
+		return
+	if RunState.victory and player.control_enabled and player.global_position.x > TREASURY_DOOR.x and absf(player.global_position.y-TREASURY_DOOR.y)<65:
+		treasury.enter()
 		return
 	_update_relic_rope(delta)
 	_update_feedback(delta)
@@ -1182,11 +1185,12 @@ func _resolve_motion(origin: Vector2, motion: Vector2) -> Vector2:
 	var next_y: = Vector2(result.x, origin.y + motion.y)
 	if not _hub_wall_collision(next_y):
 		result.y = next_y.y
-	return result.clamp(WALK_MIN, WALK_MAX)
+	return result if treasury.inside or (RunState.victory and absf(result.y-TREASURY_DOOR.y)<65 and result.x>WALK_MAX.x-50) else result.clamp(WALK_MIN, WALK_MAX)
 
 
 func _hub_wall_collision(position: Vector2) -> bool:
 	if treasury != null and treasury.inside: return treasury.collision(position)
+	if RunState.victory and position.x>=WALK_MAX.x-50 and position.x<=WORLD_SIZE.x-24 and absf(position.y-TREASURY_DOOR.y)<65: return false
 	return position.x < WALK_MIN.x or position.y < WALK_MIN.y or position.x > WALK_MAX.x or position.y > WALK_MAX.y or _station_collision(position)
 
 
@@ -1279,10 +1283,10 @@ func actor_draw_depth(world_position: Vector2) -> int:
 
 func _update_context(world_position: Vector2) -> void :
 	if treasury != null and treasury.inside:
-		_set_context("treasuryExit" if world_position.distance_to(treasury.EXIT)<95 else "")
+		_set_context("")
 		return
 	if world_position.distance_to(TREASURY_DOOR) < 90:
-		_set_context("treasuryEnter" if RunState.victory else "treasuryLocked")
+		_set_context("" if RunState.victory else "treasuryLocked")
 		return
 	if world_position.distance_to(HUB_SHOP) < 108:
 		_set_context("hubSell")
@@ -1680,9 +1684,14 @@ func _draw_hub_wall_frame() -> void :
 		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(section.x, WORLD_SIZE.y - section.y), section.z, PI - section.w, Color(0.74, 0.7, 0.78, 1.0))
 	for section in [Vector4(238, 3, 352, -.02), Vector4(568, -8, 372, .025), Vector4(847, 9, 356, -.015)]:
 		_draw_ellipse_shape(Vector2(88 + section.y, section.x), Vector2(34,section.z*.57), Color(0,0,0,.54))
-		_draw_ellipse_shape(Vector2(WORLD_SIZE.x - 88 - section.y, section.x), Vector2(34,section.z*.57), Color(0,0,0,.54))
 		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(20 + section.y, section.x), section.z, -PI * .5 + section.w, Color(.76,.74,.8,1))
-		_draw_painted_span(HUB_WALL_TEXTURE, Vector2(WORLD_SIZE.x - 20 - section.y, section.x), section.z, PI * .5 - section.w, Color(.76,.74,.8,1))
+	# An actual opening in the east wall, aligned with the walk-through threshold.
+	for section in [Vector2(290,690),Vector2(944,170)]:
+		_draw_painted_span(HUB_WALL_TEXTURE,Vector2(WORLD_SIZE.x-20,section.x),section.y,PI*.5,Color(.76,.74,.8,1))
+	var passage: Rect2 = Rect2(Vector2(1310,696),Vector2(130,140))
+	_draw_canvas.draw_texture_rect_region(HUB_FLOOR_TEXTURE,passage,Rect2(passage.position/WORLD_SIZE*HUB_FLOOR_TEXTURE.get_size(),passage.size/WORLD_SIZE*HUB_FLOOR_TEXTURE.get_size()))
+	for y in [680,852]:
+		_draw_painted_span(HUB_WALL_TEXTURE,Vector2(1377,y),150,0,Color(.85,.80,.86,1))
 
 
 func _draw_foundation_sconces() -> void :
@@ -2100,8 +2109,8 @@ func _draw_ellipse_shape(center: Vector2, radii: Vector2, color: Color) -> void 
 
 
 func _draw_treasury_entrance() -> void:
-	_draw_texture_bounded(PORTAL_TEXTURE, TREASURY_DOOR + Vector2(0,-38), Vector2(160,174))
-	_draw_canvas.draw_string(ThemeDB.fallback_font,TREASURY_DOOR+Vector2(-56,57),"TREASURY",HORIZONTAL_ALIGNMENT_LEFT,150,18,Color("f2d88c"))
+	# The rock jambs and continuous floor are drawn with the room wall; no portal.
+	_draw_canvas.draw_string(ThemeDB.fallback_font,TREASURY_DOOR+Vector2(-120,112),"TREASURY",HORIZONTAL_ALIGNMENT_LEFT,150,18,Color("f2d88c"))
 
 func _draw_hub_shop() -> void:
 	_draw_texture_bounded(_premium_texture("res://assets/stations/ore-exchange-v1.png"),HUB_SHOP+Vector2(0,-30),Vector2(182,174))

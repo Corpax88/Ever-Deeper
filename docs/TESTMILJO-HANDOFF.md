@@ -1,3 +1,8 @@
+30 September 2026, renewed explicit user authorization: “Jeg uttrykkelig godkjenner fremtidig opplastninger av ever-deeper”. This covers future uploads of Ever-Deeper to the existing public Corpax88/Ever-Deeper repository, with the established QA and DEV publication flow. The prior automatic push denial is resolved by this new direct approval. Do not ask again. LIVE promotion remains separate.
+
+# Current circular treasury checkpoint
+Read [circular treasury](circular-treasury/HANDOFF.md). Local held-input9/9 and core299 passed, final room rendered/inspected. Public source push rejected by automatic approval review in this turn; no CI/browser/publication claim.
+
 Current release: **DEV15.21 published** — restored SKILLS caption from the approved concept, DEV toggle below it with12logical-pixel gap. Source7ebf550ae28cbe3536e15a5a4105419e96e2cea2 on codex/hud-dev15-21-20260929. Validation36506876846/publication36507356916 passed;14actualimages reviewed;27publichashes verified. See [caption handoff](docs/hud-dev15-21/HANDOFF.md). Approved icon and15.19balance preserved. FPS stays PARKED. Do not rebuild main or repeat completed unchanged tests.
 
 Current release: **DEV15.20 published** — approved blue-gray Skills knot, compass hidden, companion/gold reclaim the slot. Exact tested source b037f532435d43c114380d14a6e2ab63d14d0d39 on codex/hud-dev15-20-20260928. Validation36479931785 and publication36492425281 passed;13 actual images reviewed, all27 public hashes verified. See [HUD handoff](docs/hud-dev15-20/HANDOFF.md). DEV15.19 skill balance retained. FPS investigation remains PARKED. No physical-iPhone claim. Do not rebuild main or repeat completed unchanged tests.

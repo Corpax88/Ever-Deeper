@@ -5,7 +5,7 @@ import http from 'node:http';
 import {createHash} from 'node:crypto';
 const [web,output,flavor]=process.argv.slice(2);fs.mkdirSync(output,{recursive:true});
 const reference=process.env.NODE_ASSETS_REFERENCE==='1';
-const version='1.0.0-dev.15.29',files=JSON.parse(fs.readFileSync(path.join(web,'manifest.json')));
+const version='1.0.0-dev.15.30',files=JSON.parse(fs.readFileSync(path.join(web,'manifest.json')));
 for(const [name,want] of Object.entries(files)){
  const h=createHash('sha256');for await(const b of fs.createReadStream(path.join(web,name)))h.update(b);
  if(h.digest('hex')!==want.sha256||fs.statSync(path.join(web,name)).size!==want.size)throw Error('Candidate identity: '+name);
@@ -50,15 +50,19 @@ try{
  check('graphical-renderer',runtime.renderer&&!runtime.lost&&!/SwiftShader|llvmpipe|software/i.test(runtime.renderer),{runtime});
 
 
+ async function walk(direction,predicate,label){
+  const s=await state(),jr=s.buttons.joystick,vp=page.viewportSize();
+  const start={x:(jr[0]+jr[2]*.20)/s.viewport[0]*vp.width,y:(jr[1]+jr[3]*.70)/s.viewport[1]*vp.height};
+  await touch('touchStart',start);await touch('touchMove',{x:start.x+32*direction,y:start.y});
+  await wait(label,predicate,10000);await touch('touchEnd',start);
+ }
  await command('treasury_fixture');await ready();await shot('01-hub-shop-door');
- await tap('hud_context');await wait('entered treasury',s=>s.treasury.inside);await delay(300);await shot('02-empty-room');
+ await walk(1,s=>s.treasury.inside,'walk through east doorway');await delay(300);await shot('02-empty-room');
  check('all-resource-bays',(await state()).treasury.bay_count===27,{});
+ check('central-delivery-zone',(await state()).treasury.zone[0]===940&&(await state()).treasury.zone[1]===710,{});
  await command('treasury_zone');
- const observed=await state(),jr=observed.buttons.joystick,vp=page.viewportSize();
- const stick={x:(jr[0]+jr[2]*.20)/observed.viewport[0]*vp.width,y:(jr[1]+jr[3]*.70)/observed.viewport[1]*vp.height};
- await touch('touchStart',stick);await touch('touchMove',{x:stick.x+32,y:stick.y+1});
- await wait('walk onto delivery plate',s=>s.treasury.delivering,8000);await touch('touchEnd',stick);
- const initial={stone:800,copper:400,echo_crystal:180,wallet_gold:2000};
+ await walk(1,s=>s.treasury.delivering,'walk onto central plate');
+ const initial={stone:800,copper:400,echo_crystal:180,prismite:240,starshard:320,wallet_gold:2000};
  function conserved(t){return Object.entries(initial).every(([k,n])=>(t.totals[k]||0)+(k==='wallet_gold'?t.wallet:t.cargo[k]||0)===n);}
  await wait('airborne parcels',s=>s.treasury.packets>0);await shot('03-airborne');
  await wait('first resources landed',s=>s.treasury.landings>=2);let partial=(await state()).treasury;
@@ -66,14 +70,13 @@ try{
  await tap('hud_menu');await wait('menu paused',s=>s.skills_open);const paused=(await state()).treasury;await delay(2000);
  check('menu-pauses-delivery',paused.inside&&(await state()).treasury.inside&&JSON.stringify((await state()).treasury.totals)===JSON.stringify(paused.totals),{});
  await tap('skills_close');await wait('menu closed',s=>!s.skills_open);
- await command('treasury_exit_approach');await tap('hud_context');await wait('left treasury',s=>!s.treasury.inside);
+ await command('treasury_exit_approach');await walk(-1,s=>!s.treasury.inside,'walk back to hub');
  const exited=(await state()).treasury;await delay(1800);
  check('exit-cancels-undelivered',conserved(exited)&&exited.packets===0&&exited.remaining_batches===0&&JSON.stringify(exited.totals)===JSON.stringify((await state()).treasury.totals),{exited});await shot('05-left-with-remainder');
- await command('treasury_door');await tap('hud_context');await wait('returned',s=>s.treasury.inside);
+ await command('treasury_door');await walk(1,s=>s.treasury.inside,'walk back into treasury');
  await command('treasury_save');await command('treasury_restore');let loaded=(await state()).treasury;
  check('save-load-conservation',conserved(loaded)&&JSON.stringify(loaded.totals)===JSON.stringify(exited.totals),{loaded});await shot('06-reloaded-partial');
- await command('treasury_zone');await touch('touchStart',stick);await touch('touchMove',{x:stick.x+32,y:stick.y+1});
- await wait('resume by walking onto plate',s=>s.treasury.delivering,8000);await touch('touchEnd',stick);
+ await command('treasury_zone');await walk(1,s=>s.treasury.delivering,'resume central donation');
  await wait('all deliveries complete',s=>!s.treasury.delivering&&s.treasury.wallet===0,65000);
  let complete=(await state()).treasury;
  check('all-donations-exactly-once',conserved(complete)&&Object.keys(initial).every(k=>complete.totals[k]===initial[k]),{complete});await shot('07-complete');

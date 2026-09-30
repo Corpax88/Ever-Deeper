@@ -789,11 +789,13 @@ func _treasury_command(data: Dictionary) -> void:
 			RunState.cargo.stone=800
 			RunState.cargo.copper=400
 			RunState.cargo.echo_crystal=180
+			RunState.cargo.prismite=240
+			RunState.cargo.starshard=320
 			RunState.gold=2000
-			main.hub_world.restore_position(main.hub_world.TREASURY_DOOR+Vector2(-30,0))
+			main.hub_world.restore_position(main.hub_world.TREASURY_DOOR+Vector2(-65,0))
 			main.hub_world._refresh_backend_state()
 		"treasury_door":
-			main.hub_world.restore_position(main.hub_world.TREASURY_DOOR+Vector2(-30,0))
+			main.hub_world.restore_position(main.hub_world.TREASURY_DOOR+Vector2(-65,0))
 		"treasury_zone":
 			main.hub_world.restore_position(room.ZONE+Vector2(-115,0))
 		"treasury_exit_approach":
