@@ -1,3 +1,5 @@
+Current accepted candidate: [DEV15.31 closer treasury camera](docs/treasury-camera/HANDOFF.md). QA36675475519 succeeded;40 browser gates;7 final Mac images inspected. Publication pending. Standing upload approval applies.
+
 Current verified release: DEV15.30 circular treasury is published. Read [handoff](docs/circular-treasury/HANDOFF.md). QA36671451257 and publication36671926887 passed;18images inspected;27publichash verified. Standing explicit future upload authorization recorded30September2026; no pending approval. No physical-iPhone/FPS claim.
 
 Current: [circular treasury15.30 acceptance](docs/circular-treasury/HANDOFF.md). Mats explicitly authorized future Ever-Deeper uploads on30 September2026: “Jeg uttrykkelig godkjenner fremtidig opplastninger av ever-deeper”. Prior automatic upload denial is resolved. Public source/QA upload and established DEV publication are authorized; do not re-ask. LIVE promotion remains separate.
