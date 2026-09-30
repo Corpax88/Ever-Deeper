@@ -808,8 +808,28 @@ func _treasury_command(data: Dictionary) -> void:
 			_require(RunState.load_game(),"treasury actual load")
 			main.hub_world.restore_position(RunState.current_position)
 			room.refresh_piles()
+		"treasury_milestones":
+			room.stop()
+			RunState.treasury_totals={"stone":990}
+			RunState.cargo=RunState._empty_resource_store()
+			RunState.cargo.stone=2020
+			RunState.cargo.copper=20
+			RunState.gold=0
+			room.refresh_piles()
+			main.hub_world.restore_position(room.ZONE+Vector2(-115,0))
+			room.armed=true
+		"treasury_visual":
+			room.stop()
+			room.armed=false
+			for kind in room.Ledger.keys(): RunState.treasury_totals[kind]=int(data.amount)
+			room.refresh_piles()
+			var aim: Vector2=room.bay(int(data.get("index",0)))
+			main.hub_world.restore_position(room.ZONE+(aim-room.ZONE)*0.7)
+			main.hub_world.player.camera.reset_smoothing()
 		"treasury_full":
 			room.stop()
+			room.armed=false
+			main.hub_world.restore_position(room.ZONE)
 			for kind in room.Ledger.keys(): RunState.treasury_totals[kind]=10000
 			room.refresh_piles()
 		"treasury_shop":

@@ -5,7 +5,7 @@ import http from 'node:http';
 import {createHash} from 'node:crypto';
 const [web,output,flavor]=process.argv.slice(2);fs.mkdirSync(output,{recursive:true});
 const reference=process.env.NODE_ASSETS_REFERENCE==='1';
-const version='1.0.0-dev.15.31',files=JSON.parse(fs.readFileSync(path.join(web,'manifest.json')));
+const version='1.0.0-dev.15.32',files=JSON.parse(fs.readFileSync(path.join(web,'manifest.json')));
 for(const [name,want] of Object.entries(files)){
  const h=createHash('sha256');for await(const b of fs.createReadStream(path.join(web,name)))h.update(b);
  if(h.digest('hex')!==want.sha256||fs.statSync(path.join(web,name)).size!==want.size)throw Error('Candidate identity: '+name);
@@ -80,6 +80,23 @@ try{
  await wait('all deliveries complete',s=>!s.treasury.delivering&&s.treasury.wallet===0,65000);
  let complete=(await state()).treasury;
  check('all-donations-exactly-once',conserved(complete)&&Object.keys(initial).every(k=>complete.totals[k]===initial[k]),{complete});await shot('07-complete');
+ await command('treasury_milestones');
+ await walk(1,s=>s.treasury.delivering,'start thousand-boundary delivery');
+ const upgradesBefore=(await state()).treasury.upgrades;
+ for(const amount of [1000,2000,3000]){
+  const s=await wait('exact milestone '+amount,s=>s.treasury.totals.stone===amount&&s.treasury.flashes.stone>0,30000);
+  check('one-material-at-'+amount,new Set(s.treasury.packet_kinds).size<=1,{treasury:s.treasury});
+  await shot('milestone-'+amount);
+ }
+ await wait('milestone delivery complete',s=>!s.treasury.delivering,15000);
+ const milestone=(await state()).treasury;
+ check('every-thousand-celebrated',milestone.upgrades-upgradesBefore===3&&milestone.totals.stone===3010&&milestone.totals.copper===20,{milestone});
+ for(const amount of [999,1000,1999,2000,2999,3000,4000,8000,9000]){
+  for(const index of [3,10,17,24]){
+   await command('treasury_visual',{amount,index});await delay(100);
+   await shot('pile-'+amount+'-sector-'+index);
+  }
+ }
  await command('treasury_full');await delay(600);await shot('08-mature-all-resources');
  let cameraStart=(await state()).treasury;
  check('treasury-normal-scale',Math.abs(cameraStart.camera_zoom[0]-1)<0.01&&Math.abs(cameraStart.camera_zoom[1]-1)<0.01,{camera:cameraStart.camera_zoom});

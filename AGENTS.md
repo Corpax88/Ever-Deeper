@@ -1,3 +1,5 @@
+Current task: [Treasury growth DEV15.32](docs/treasury-growth/HANDOFF.md). Locally validated; public upload blocked by automatic approval review. Not published.
+
 30 September 2026, renewed explicit user authorization: “Jeg uttrykkelig godkjenner fremtidig opplastninger av ever-deeper”. This covers future uploads of Ever-Deeper to the existing public Corpax88/Ever-Deeper repository, with the established QA and DEV publication flow. The prior automatic push denial is resolved by this new direct approval. Do not ask again. LIVE promotion remains separate.
 
 Current task: [circular treasury correction](docs/circular-treasury/HANDOFF.md). User explicitly requests centre delivery and walk-through east opening. DEV15.29 is published; old upload blocks below are historical and superseded by renewed authorization. Canonical base34b96d5990c2c17d85d4b0e26e2bba1b05fef826.

@@ -23,10 +23,8 @@ static func available(kind: String) -> int:
 
 static func stage(amount: int) -> int:
 	if amount <= 0: return 0
-	if amount < 25: return 1
-	if amount < 250: return 2
-	if amount < 2500: return 3
-	return 4
+	@warning_ignore("integer_division")
+	return amount / 1000 + 1
 
 static func land(kind: String, requested: int) -> int:
 	if kind not in keys() or requested <= 0: return 0

@@ -205,7 +205,7 @@ func _check_deep_treasury() -> void:
 	legacy.state.erase("deep_events")
 	_check(RunState.deserialize(legacy) and RunState.treasury_totals.is_empty(),"Old schema-3 saves migrate to empty treasury without losing cargo")
 	_check(ledger.clean({"stone":-1,"copper":"900","unknown":5,"wallet_gold":400})=={"wallet_gold":400},"Treasury sanitizer rejects corrupt and unknown counts")
-	_check(ledger.stage(0)==0 and ledger.stage(24)==1 and ledger.stage(25)==2 and ledger.stage(250)==3 and ledger.stage(2500)==4,"Bounded visual pile upgrade thresholds")
+	_check(ledger.stage(0)==0 and ledger.stage(999)==1 and ledger.stage(1000)==2 and ledger.stage(1999)==2 and ledger.stage(2000)==3 and ledger.stage(1000000)==1001,"Every thousand changes the pile variant without a maximum stage")
 	RunState.treasury_totals.stone=ledger.MAX_TOTAL-2
 	RunState.cargo.stone=50
 	_check(ledger.land("stone",50)==2 and RunState.cargo.stone==48 and RunState.treasury_totals.stone==ledger.MAX_TOTAL,"Overflow cannot destroy undeliverable cargo")
@@ -240,7 +240,7 @@ func _check_deep_treasury() -> void:
 	room.tick(4.0)
 	_check(room.particles.is_empty() and RunState.cargo.stone==80,"Menu pauses launch and accounting")
 	hub.player.control_enabled=true
-	for i in 30: room.tick(0.1)
+	for i in 22: room.tick(0.1)
 	await _treasury_capture("03-partial")
 	var banked: int=int(RunState.treasury_totals.get("stone",0))
 	_check(banked>0 and banked<80 and int(RunState.cargo.stone)+banked==80,"Long delivery has meaningful partial progress and conserves total")
@@ -255,8 +255,49 @@ func _check_deep_treasury() -> void:
 	_check(RunState.cargo.stone==0 and RunState.gold==0 and int(RunState.treasury_totals.stone)==80 and int(RunState.treasury_totals.wallet_gold)==200,"Reentry delivers the remainder exactly once including wallet")
 	_check(not room.delivering and room.particles.is_empty(),"Completed donation leaves no continuing particle work")
 	await _treasury_capture("04-complete")
+	room.stop()
+	RunState.treasury_totals={"stone":990}
+	RunState.cargo=RunState._empty_resource_store()
+	RunState.cargo.stone=2020
+	RunState.cargo.copper=20
+	RunState.gold=0
+	var before_upgrades: int=room.upgrades
+	room.start()
+	var sequential: bool=true
+	var reached: Dictionary={}
+	for i in 500:
+		room.tick(0.1)
+		for packet in room.particles:
+			if packet.kind=="copper" and RunState.cargo.stone>0: sequential=false
+		for flash_kind in room.upgrade_flashes:
+			var milestone: int=int(RunState.treasury_totals.get(flash_kind,0))
+			if not reached.has(milestone):
+				reached[milestone]=true
+				await _treasury_capture("milestone-%d" % milestone)
+	_check(sequential and RunState.cargo.stone==0 and RunState.cargo.copper==0,"Each resource lands completely before the next launches")
+	_check(room.upgrades-before_upgrades==3 and reached.has(1000) and reached.has(2000) and reached.has(3000),"Large delivery visibly celebrates every thousand once")
+	_check(int(RunState.treasury_totals.stone)==3010 and int(RunState.treasury_totals.copper)==20,"Boundary splitting conserves exact totals")
+	var stable_upgrades: int=room.upgrades
+	room.refresh_piles()
+	_check(room.upgrades==stable_upgrades,"Refresh and reload do not replay historical celebrations")
+	if not OS.get_environment("TREASURY_CAPTURE_DIR").is_empty():
+		for amount in [999,1000,1999,2000,2999,3000,4000,8000,9000]:
+			for kind in ledger.keys(): RunState.treasury_totals[kind]=amount
+			room.refresh_piles()
+			for index in [3,10,17,24]:
+				hub.player.global_position=room.ZONE+(room.bay(index)-room.ZONE)*0.7
+				hub.player.camera.reset_smoothing()
+				await _treasury_capture("pile-%d-sector-%d" % [amount,index])
+		hub.player.global_position=room.ZONE
+		hub.player.camera.reset_smoothing()
 	for kind in ledger.keys(): RunState.treasury_totals[kind]=10000
 	room.refresh_piles()
+	for kind in ledger.keys():
+		for tier in [1,2,3]:
+			var tex: Texture2D=room.texture("res://assets/treasury/upgrades/%s-%d.png" % [kind,tier])
+			_check(tex!=null and tex.get_width()>0,"Authored treasury form exists: %s/%d" % [kind,tier])
+	for pile in room.display_nodes:
+		_check(pile.get_child_count()<=7,"High totals keep bounded visual objects")
 	await _treasury_capture("05-mature")
 	room.leave()
 	RunState.cargo=RunState._empty_resource_store()
