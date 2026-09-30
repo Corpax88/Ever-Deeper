@@ -1,3 +1,5 @@
+Current: [circular treasury15.30 acceptance](circular-treasury/HANDOFF.md). Mats explicitly authorized future Ever-Deeper uploads on30 September2026: “Jeg uttrykkelig godkjenner fremtidig opplastninger av ever-deeper”. Prior automatic upload denial is resolved. Public source/QA upload and established DEV publication are authorized; do not re-ask. LIVE promotion remains separate.
+
 # Ever-Deeper — DEV15.29 published and verified
 
 29 September 2026 UTC. Treasury and Deep Events are published at https://corpax88.github.io/Ever-Deeper/dev/. Gameplay source **34b96d5990c2c17d85d4b0e26e2bba1b05fef826** on `codex/deep-treasury-20260929`. Publication commit `a7e329abab8aaa943efe4cbf7c5705e9afca87ef`, run **36644293875**; receipt verifies **27 public hashes**, including unchanged LIVE9 and Worn9. Candidate artifact11067746028, QA36643588654, evidence11067900861. Publication receipt copied to `.github/deep-treasury/publication-receipt.json` and `docs/deep-treasury/publication-receipt.json`.
