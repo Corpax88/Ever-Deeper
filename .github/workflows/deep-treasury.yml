@@ -1,9 +1,9 @@
 name: Verify Deep Events and treasury
 on:
   push:
-    branches: [codex/circular-treasury-20260930]
+    branches: [codex/treasury-camera-20260930]
 permissions: {contents: read, actions: read}
-concurrency: {group: circular-treasury, cancel-in-progress: true}
+concurrency: {group: treasury-camera, cancel-in-progress: true}
 jobs:
   verify:
     runs-on: macos-15
@@ -38,7 +38,7 @@ jobs:
       - run: npm ci --ignore-scripts && npx playwright install chromium webkit
       - run: node .github/deep-treasury/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/browser" dev
       - run: node .github/deep-treasury/startup.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/ordinary"
-        env: {EXPECTED_VERSION: '1.0.0-dev.15.30', CANDIDATE_SOURCE: '${{ github.sha }}'}
+        env: {EXPECTED_VERSION: '1.0.0-dev.15.31', CANDIDATE_SOURCE: '${{ github.sha }}'}
       - uses: actions/upload-artifact@v4
         if: always()
         with: {name: deep-treasury-evidence, path: '${{ runner.temp }}/evidence', retention-days: 30}

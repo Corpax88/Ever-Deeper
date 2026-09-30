@@ -1,0 +1,4 @@
+# Treasury camera — DEV15.31 candidate
+Mats approved closer zoom and camera following instead of fitting the whole room. Standing future upload approval30September2026 applies; no further permission needed for existing public repo/QA/DEV.
+Canonical base999db0116b3e7609435f1930945e0e2354e61b33, publishedDEV15.30. Only camera framing changes: retained normal hub zoom, bounded quarter-viewport overscan keeps hero clear of corner HUD. Existing smoothed player camera follows; ordinary hub bounds/zoom restored on leaving. No assets, renderer resolution, saves or donation balance changed.
+Validate exact candidate with native rendered close view, Mac touch north/south follow, menu/save/delivery/exit and ordinary WebKit. Do not rebuild historical main. Build preserves previous source changes and retained resource bytes. No physical iPhone/FPS claim.

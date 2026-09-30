@@ -5,7 +5,7 @@ import http from 'node:http';
 import {createHash} from 'node:crypto';
 const [web,output,flavor]=process.argv.slice(2);fs.mkdirSync(output,{recursive:true});
 const reference=process.env.NODE_ASSETS_REFERENCE==='1';
-const version='1.0.0-dev.15.30',files=JSON.parse(fs.readFileSync(path.join(web,'manifest.json')));
+const version='1.0.0-dev.15.31',files=JSON.parse(fs.readFileSync(path.join(web,'manifest.json')));
 for(const [name,want] of Object.entries(files)){
  const h=createHash('sha256');for await(const b of fs.createReadStream(path.join(web,name)))h.update(b);
  if(h.digest('hex')!==want.sha256||fs.statSync(path.join(web,name)).size!==want.size)throw Error('Candidate identity: '+name);
@@ -50,10 +50,10 @@ try{
  check('graphical-renderer',runtime.renderer&&!runtime.lost&&!/SwiftShader|llvmpipe|software/i.test(runtime.renderer),{runtime});
 
 
- async function walk(direction,predicate,label){
+ async function walk(direction,predicate,label,vertical=0){
   const s=await state(),jr=s.buttons.joystick,vp=page.viewportSize();
   const start={x:(jr[0]+jr[2]*.20)/s.viewport[0]*vp.width,y:(jr[1]+jr[3]*.70)/s.viewport[1]*vp.height};
-  await touch('touchStart',start);await touch('touchMove',{x:start.x+32*direction,y:start.y});
+  await touch('touchStart',start);await touch('touchMove',{x:start.x+32*direction,y:start.y+32*vertical});
   await wait(label,predicate,10000);await touch('touchEnd',start);
  }
  await command('treasury_fixture');await ready();await shot('01-hub-shop-door');
@@ -80,9 +80,17 @@ try{
  await wait('all deliveries complete',s=>!s.treasury.delivering&&s.treasury.wallet===0,65000);
  let complete=(await state()).treasury;
  check('all-donations-exactly-once',conserved(complete)&&Object.keys(initial).every(k=>complete.totals[k]===initial[k]),{complete});await shot('07-complete');
- await command('treasury_full');await shot('08-mature-all-resources');
+ await command('treasury_full');await delay(600);await shot('08-mature-all-resources');
+ let cameraStart=(await state()).treasury;
+ check('treasury-normal-scale',Math.abs(cameraStart.camera_zoom[0]-1)<0.01&&Math.abs(cameraStart.camera_zoom[1]-1)<0.01,{camera:cameraStart.camera_zoom});
+ await walk(0,s=>s.treasury.player[1]<460,'walk north through chamber',-1);await delay(700);
+ let north=(await state()).treasury;
+ check('camera-follows-north',cameraStart.camera_center[1]-north.camera_center[1]>130,{before:cameraStart.camera_center,after:north.camera_center});await shot('camera-north');
+ await walk(0,s=>s.treasury.player[1]>960,'walk south through chamber',1);await delay(700);
+ let south=(await state()).treasury;
+ check('camera-follows-south',south.camera_center[1]-north.camera_center[1]>320,{before:north.camera_center,after:south.camera_center});await shot('camera-south');
  await command('treasury_shop');const wallet=(await state()).treasury.wallet;await tap('hud_context');await delay(400);
- check('hub-shop-earns-gold',(await state()).treasury.wallet>wallet,{});await shot('09-hub-sale');
+ check('hub-shop-earns-gold',(await state()).treasury.wallet>wallet,{});check('hub-camera-restored',Math.abs((await state()).treasury.camera_zoom[0]-1)<0.01,{});await shot('09-hub-sale');
  for(const event of ['ancient_core','crystal_bloom','unstable_seam']){
   await command('treasury_event',{event});await ready();await delay(300);await shot('event-'+event);
   const before=await state();check('event-active-'+event,before.deep_events.state.kind===event&&before.deep_events.active_here&&before.deep_events.visual_count===15,{event:before.deep_events});

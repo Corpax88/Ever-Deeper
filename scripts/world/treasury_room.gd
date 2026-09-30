@@ -110,9 +110,15 @@ func stop() -> void:
 	particle_canvas.queue_redraw()
 
 func _refresh_camera() -> void:
-	var vp: Vector2 = get_viewport_rect().size
-	var factor: float = minf(vp.x / SIZE.x, vp.y / SIZE.y)
-	hub.player.camera.zoom = Vector2.ONE * factor
+	# Match normal hub scale; the player camera follows through the larger room.
+	# A little overscan at the walls keeps the hero clear of the fixed corner HUD.
+	var camera: Camera2D = hub.player.camera
+	camera.zoom = saved_zoom
+	var margin: Vector2 = get_viewport_rect().size / camera.zoom * 0.25
+	camera.limit_left = -ceili(margin.x)
+	camera.limit_top = -ceili(margin.y)
+	camera.limit_right = ceili(SIZE.x + margin.x)
+	camera.limit_bottom = ceili(SIZE.y + margin.y)
 
 func start() -> void:
 	if not inside or delivering: return
@@ -300,7 +306,7 @@ func _draw_particles() -> void:
 			particle_canvas.draw_texture_rect(tex,Rect2(at+offset-Vector2.ONE*18,Vector2.ONE*36),false)
 
 func snapshot() -> Dictionary:
-	return {"zone":[ZONE.x,ZONE.y],"player":[hub.player.global_position.x,hub.player.global_position.y],"circular":true,"walk_through":true,"inside":inside,"delivering":delivering,"packets":particles.size(),"remaining_batches":batches.size(),"landings":landing_count,"cancelled":cancelled_count,"totals":RunState.treasury_totals.duplicate(true),"wallet":RunState.gold,"cargo":RunState.cargo.duplicate(true),"bay_count":Ledger.keys().size()}
+	return {"camera_zoom":[hub.player.camera.zoom.x,hub.player.camera.zoom.y],"camera_center":[hub.player.camera.get_screen_center_position().x,hub.player.camera.get_screen_center_position().y],"zone":[ZONE.x,ZONE.y],"player":[hub.player.global_position.x,hub.player.global_position.y],"circular":true,"walk_through":true,"inside":inside,"delivering":delivering,"packets":particles.size(),"remaining_batches":batches.size(),"landings":landing_count,"cancelled":cancelled_count,"totals":RunState.treasury_totals.duplicate(true),"wallet":RunState.gold,"cargo":RunState.cargo.duplicate(true),"bay_count":Ledger.keys().size()}
 
 
 func specimen(kind: String) -> Texture2D:
