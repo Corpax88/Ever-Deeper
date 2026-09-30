@@ -380,6 +380,11 @@ func _on_developer_command_requested(command: String) -> void :
 		"grant_gold_10000":
 			RunState.gold += 10000
 			message = "+10 000 GOLD"
+		"test_resonance":
+			if phase != "endless": ok = _dev_jump_endless(1)
+			_dev_grant_max_tools_state()
+			endless_world.resonance_drill.set_enabled(true)
+			message = "RESONANCE TEST · mine to charge · next hit blasts a tunnel"
 		"grant_max_tools":
 			_dev_grant_max_tools_state()
 			message = "MAX PICKAXE + DEEPCORE DRILL"
@@ -1264,6 +1269,7 @@ func _cancel_new_game() -> void :
 
 
 func _start_new_game() -> void :
+	endless_world.resonance_drill.set_enabled(false)
 	tunnel_home_in_progress = false
 	_settle_commerce_before_world_change()
 	AudioDirector.play_ui("confirm")

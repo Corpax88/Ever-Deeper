@@ -1,3 +1,5 @@
+Latest task: [Resonance drill](resonance-drill/HANDOFF.md). Local exact-package Godot4.7.2 and Xvfb/Mesa recovered in /workspace/scratch/c939c7fc2e13/runtime; actual held-input and rendered evidence in native-final. Mac/browser acceptance pending.
+
 Current task: [Treasury growth DEV15.32](treasury-growth/HANDOFF.md). Locally validated; public upload blocked by automatic approval review. Not published.
 
 30 September 2026, renewed explicit user authorization: “Jeg uttrykkelig godkjenner fremtidig opplastninger av ever-deeper”. This covers future uploads of Ever-Deeper to the existing public Corpax88/Ever-Deeper repository, with the established QA and DEV publication flow. The prior automatic push denial is resolved by this new direct approval. Do not ask again. LIVE promotion remains separate.

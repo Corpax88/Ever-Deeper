@@ -10,20 +10,20 @@ original=(src/'index.pck').read_bytes();base,entries=unpack(original)
 def raw(n):
  o,s,*_=entries[n];return original[base+o:base+o+s]
 def target(n):return re.search(r'path="res://([^\"]+)"',raw(n+'.remap').decode())[1]
-changed=['scripts/world/endless_descent_world.gd','scripts/world/hub_world.gd','scripts/state/run_state.gd','scripts/main.gd','scripts/qa/suites/skills_browser_review.gd','scripts/qa/suites/premium_core.gd','scripts/world/treasury_room.gd','scripts/state/treasury_state.gd','scripts/world/deep_events.gd']
+changed=['scripts/world/endless_descent_world.gd','scripts/world/hub_world.gd','scripts/state/run_state.gd','scripts/main.gd','scripts/qa/suites/skills_browser_review.gd','scripts/qa/suites/premium_core.gd','scripts/world/treasury_room.gd','scripts/state/treasury_state.gd','scripts/world/deep_events.gd','scripts/world/resonance_drill.gd','scripts/dev/developer_menu.gd']
 reference=len(sys.argv)>3 and sys.argv[3]=='reference'
 if reference: changed=['scripts/qa/suites/skills_browser_review.gd','scripts/qa/suites/premium_core.gd']
 replacements={}
 for n in changed:
  replacements[n]=(root/n).read_bytes();replacements[n+'.remap']=('[remap]\npath="res://'+n+'"\n').encode()
-for n in ['assets/treasury/alcove-v1.png','assets/treasury/delivery-plate-v1.png']:
+for n in ['assets/fx/resonance-ring-v1.png','assets/treasury/alcove-v1.png','assets/treasury/delivery-plate-v1.png']:
  replacements[n]=(root/n).read_bytes()
 assets=sorted((root/'assets/treasury/upgrades').glob('*.png'))
 assert len(assets)==81, 'All 27 materials require three authored forms'
 for asset in assets:
  replacements[str(asset.relative_to(root))]=asset.read_bytes()
 n=target('scripts/ui/premium_menu.gd');s=raw(n).decode();assert s.count('1.0.0-dev.15.28')==1
-replacements[n]=s.replace('1.0.0-dev.15.28','1.0.0-dev.15.28' if reference else '1.0.0-dev.15.33').encode()
+replacements[n]=s.replace('1.0.0-dev.15.28','1.0.0-dev.15.28' if reference else '1.0.0-dev.15.34').encode()
 data=bytearray(original[:base]);after={}
 for name in sorted(set(entries)|set(replacements)):
  payload=replacements.get(name) if name in replacements else raw(name);data+=b'\0'*(-len(data)%32)
@@ -37,5 +37,5 @@ for n,(o,s,d,f) in verified.items():assert bytes(data[nb+o:nb+o+s])==(replacemen
 html=(src/'index.html').read_text();m=re.search(r'const GODOT_CONFIG = (\{[^\r\n]+\});',html);c=json.loads(m[1]);assert not c['args'];c['fileSizes']['index.pck']=len(data)
 (out/'index.html').write_text(html[:m.start(1)]+json.dumps(c,separators=(',',':'))+html[m.end(1):])
 manifest={n:identity(out/n) for n in expected};(out/'manifest.json').write_text(json.dumps(manifest,indent=2))
-(out/'build-receipt.json').write_text(json.dumps({'source':os.environ.get('GITHUB_SHA'),'version':'1.0.0-dev.15.33','baseline':expected,'files':manifest,'changed_resources':list(replacements),'unchanged_resources':sum(n not in replacements for n in entries),'all_retained_payloads_verified':True},indent=2))
+(out/'build-receipt.json').write_text(json.dumps({'source':os.environ.get('GITHUB_SHA'),'version':'1.0.0-dev.15.34','baseline':expected,'files':manifest,'changed_resources':list(replacements),'unchanged_resources':sum(n not in replacements for n in entries),'all_retained_payloads_verified':True},indent=2))
 print('MOLE_PACKAGE_PARITY_VERIFIED')

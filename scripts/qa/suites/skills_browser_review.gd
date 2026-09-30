@@ -33,6 +33,10 @@ var ore_escape_goal: Vector2
 var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind).begins_with("resonance_"):
+		_resonance_command(data)
+		command_id=int(data.id)
+		return
 	if String(data.kind).begins_with("treasury_"):
 		await _treasury_command(data)
 		command_id=int(data.id)
@@ -244,6 +248,7 @@ func _frame() -> void:
 	if ore_escape_active:
 		var mole: Node2D=ui.active_mole()
 		state["ore_escape"]={"distance":mole.global_position.distance_to(ore_escape_origin),"remaining":mole.global_position.distance_to(ore_escape_goal),"checks":mole_checks,"mode":mole.mode}
+	state["resonance"]=main.endless_world.resonance_drill.snapshot()
 	state["treasury"]=main.hub_world.treasury.snapshot()
 	state["deep_events"]=main.endless_world.deep_events.snapshot()
 	state["hub_context"]=main.hub_context
@@ -847,3 +852,33 @@ func _treasury_command(data: Dictionary) -> void:
 			w.deep_events.on_rock(w._world_to_cell(w.player.global_position))
 			state.kind=String(data.get("event","ancient_core"))
 			w.deep_events._refresh_visuals()
+
+func _resonance_command(data: Dictionary) -> void:
+	var w: Node = main.endless_world
+	var fx: Node = w.resonance_drill
+	match String(data.kind):
+		"resonance_fixture":
+			main._on_developer_command_requested("test_resonance")
+			_gear("deepcore")
+			var mole: Node=main.get_node("CompanionInterface").active_mole()
+			mole.autonomous_enabled=false
+			mole.recall()
+			w.player.set_facing(Vector2.DOWN)
+		"resonance_aim":
+			main._cancel_mine_hold()
+			main._on_joystick_movement(Vector2.ZERO)
+			fx.reset()
+			w.player.set_facing(Vector2(float(data.x),float(data.y)))
+			fx.charge=1.0
+		"resonance_fire":
+			fx.on_hit(0.1)
+		"resonance_freeze":
+			w.set_process(false)
+			w.set_physics_process(false)
+			w.player.set_physics_process(false)
+		"resonance_resume":
+			w.set_process(true)
+			w.set_physics_process(true)
+			w.player.set_physics_process(true)
+		"resonance_off":
+			fx.set_enabled(false)

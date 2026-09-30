@@ -1,9 +1,9 @@
-name: Verify Deep Events and treasury
+name: Verify Resonance Drill
 on:
   push:
-    branches: [codex/treasury-blue-flow-20260930]
+    branches: [codex/resonance-drill-20261001]
 permissions: {contents: read, actions: read}
-concurrency: {group: treasury-blue-flow, cancel-in-progress: true}
+concurrency: {group: resonance-drill, cancel-in-progress: true}
 jobs:
   verify:
     runs-on: macos-15
@@ -14,6 +14,8 @@ jobs:
           persist-credentials: false
           sparse-checkout: |
             .github/deep-treasury
+            .github/resonance-drill
+            assets/fx
             assets/treasury
             scripts
             tools
@@ -36,9 +38,9 @@ jobs:
       - uses: actions/setup-node@v4
         with: {node-version: '22'}
       - run: npm ci --ignore-scripts && npx playwright install chromium webkit
-      - run: node .github/deep-treasury/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/browser" dev
+      - run: node .github/resonance-drill/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/browser" dev
       - run: node .github/deep-treasury/startup.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/ordinary"
-        env: {EXPECTED_VERSION: '1.0.0-dev.15.33', CANDIDATE_SOURCE: '${{ github.sha }}'}
+        env: {EXPECTED_VERSION: '1.0.0-dev.15.34', CANDIDATE_SOURCE: '${{ github.sha }}'}
       - uses: actions/upload-artifact@v4
         if: always()
         with: {name: deep-treasury-evidence, path: '${{ runner.temp }}/evidence', retention-days: 30}

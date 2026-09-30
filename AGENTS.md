@@ -1,3 +1,5 @@
+Current task: [Resonance drill DEV15.34 prototype](docs/resonance-drill/HANDOFF.md). Approved concept; implement/test/publish DEV. Canonical base DEV15.33 f522b4f.
+
 Current task: [approved blue treasury labels and varied flight](docs/treasury-blue-flow/HANDOFF.md). Canonical base DEV15.32/56d00ce; earlier pending/blocked status below is historical and resolved.
 
 Current task: [Treasury growth DEV15.32](docs/treasury-growth/HANDOFF.md). Locally validated; public upload blocked by automatic approval review. Not published.

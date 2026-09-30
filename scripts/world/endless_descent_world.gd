@@ -3,6 +3,8 @@ extends Node2D
 
 const DeepEventsScript = preload("res://scripts/world/deep_events.gd")
 var deep_events: Node2D
+var resonance_drill: Node2D
+const ResonanceDrillScript = preload("res://scripts/world/resonance_drill.gd")
 
 signal context_changed(context: String)
 signal message_changed(message: String)
@@ -288,6 +290,9 @@ func _ready() -> void :
 	deep_events = DeepEventsScript.new()
 	add_child(deep_events)
 	deep_events.setup(self)
+	resonance_drill = ResonanceDrillScript.new()
+	add_child(resonance_drill)
+	resonance_drill.setup(self)
 	lit_draw_sections = LitDrawSectionsScript.new()
 	add_child(lit_draw_sections)
 	player.process_physics_priority = -10
@@ -336,6 +341,7 @@ func set_active(enabled: bool, entering: bool = false) -> void :
 
 
 func load_depth(next_depth: int, next_arrival: String = "from_above") -> bool:
+	resonance_drill.reset()
 	if next_depth < 0:
 		return false
 	_restore_carried_relic_from_state()
@@ -545,6 +551,7 @@ func _process(delta: float) -> void :
 	if not active:
 		return
 	deep_events.tick(delta)
+	resonance_drill.tick(delta)
 	_advance_resource_squashes()
 	_update_mining(delta)
 	_update_loose_drops(delta)
@@ -1583,6 +1590,7 @@ func _update_stream_depth() -> void:
 
 func _rebase_stream_window(next_start: int) -> void:
 	var shift: Vector2 = Vector2(0.0, float(window_start_depth - next_start) * CHUNK_HEIGHT)
+	resonance_drill.rebase(shift)
 	var previous_center: Vector2 = player.camera.get_screen_center_position() + shift
 	var position: Vector2 = player.global_position + shift
 	var facing: Vector2 = player.facing_vector
@@ -1984,6 +1992,7 @@ func _update_mining(delta: float) -> void :
 				_strike_resource(_swing_resource_index)
 		else:
 			_strike_wall(_swing_wall, progress)
+		resonance_drill.on_hit(_swing_duration)
 	if progress >= 1.0:
 		var overflow: = fposmod(maxf(0.0, mining_elapsed - _swing_duration), _swing_duration)
 		if _begin_mining_swing(true):
