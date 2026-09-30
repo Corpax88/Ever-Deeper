@@ -20,7 +20,7 @@ const server=http.createServer((req,res)=>{
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await chromium.launch({headless:true,args:['--use-gl=angle','--use-angle=metal','--enable-gpu']});
-const context=await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:3,hasTouch:true});
+const context=await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:3,hasTouch:true,recordVideo:{dir:path.join(output,"video"),size:{width:844,height:390}}});
 const page=await context.newPage(),cdp=await context.newCDPSession(page);page.setDefaultTimeout(90000);
 const checks=[],messages=[];let failed=null,runtime=null,id=0;
 const save=()=>fs.writeFileSync(path.join(output,'checks.json'),JSON.stringify(checks,null,2));

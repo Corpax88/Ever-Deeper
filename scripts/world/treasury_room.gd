@@ -43,6 +43,9 @@ func setup(owner_world: Node2D) -> void:
 	add_child(particle_canvas)
 	label_canvas = Node2D.new()
 	label_canvas.z_index = 1901
+	var steel_material: CanvasItemMaterial = CanvasItemMaterial.new()
+	steel_material.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
+	label_canvas.material = steel_material
 	label_canvas.draw.connect(_draw_labels)
 	add_child(label_canvas)
 
@@ -64,7 +67,8 @@ func material(kind: String) -> Texture2D:
 func bay(index: int) -> Vector2:
 	# One surrounding ring with a gap for the west passage; keep material IDs stable.
 	var angle: float = PI + 0.32 + (TAU - 0.64) * float(index) / float(Ledger.keys().size()-1)
-	return ZONE + Vector2(cos(angle)*735.0, sin(angle)*500.0)
+	# Use the room's existing vertical margin for captions below each pedestal.
+	return ZONE + Vector2(cos(angle)*735.0, sin(angle)*565.0)
 
 func enter() -> void:
 	if inside or not RunState.victory: return
@@ -269,8 +273,12 @@ func _build_visuals() -> void:
 		var group: Node2D = Node2D.new()
 		group.z_index = 10 + roundi(bay(i).y + 25)
 		add_child(group)
-		_sprite(texture("res://assets/treasury/alcove-v1.png"),bay(i)+Vector2(0,-42),Vector2(125,125),group)
+		_sprite(texture("res://assets/treasury/alcove-v1.png"),bay(i)+Vector2(0,-33.6),Vector2(100,100),group)
 		var contents: Node2D = Node2D.new()
+		# Uniform art scaling preserves the authored silhouette and makes room
+		# for both caption lines between adjacent alcoves along the sides.
+		contents.position = bay(i)*0.2
+		contents.scale = Vector2.ONE*0.8
 		group.add_child(contents)
 		display_nodes.append(contents)
 	queue_redraw()
@@ -340,12 +348,12 @@ func _draw_labels() -> void:
 	for i in Ledger.keys().size():
 		var kind: String = String(Ledger.keys()[i])
 		var label: String = "GOLD" if kind == Ledger.WALLET else "GOLD ORE" if kind == "gold" else String(Dictionary(GameData.data.ROCK_TYPES.get(kind,{})).get("label",kind.replace("_"," "))).to_upper()
-		var at: Vector2 = bay(i)+Vector2(0,37)
-		_steel_text(label,at,17)
+		var at: Vector2 = bay(i)+Vector2(0,24)
+		_steel_text(label,at,16)
 		var amount: int = int(RunState.treasury_totals.get(kind,0))
 		if amount > 0:
 			var value: String = str(amount) if amount < 1000000 else String.num_scientific(float(amount))
-			_steel_text(value,at+Vector2(0,17),16)
+			_steel_text(value,at+Vector2(0,14),14)
 
 func _shape_flight(packet: Dictionary) -> void:
 	# Visual randomness has its own RNG and never affects rewards or mining.
