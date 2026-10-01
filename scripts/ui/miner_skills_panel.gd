@@ -142,6 +142,8 @@ func show_map(source: Control) -> void:
 	plate.add_child(map_view)
 	map_view.z_index = 1
 	map_view.expanded = true
+	map_view.cartography = source.cartography
+	if map_view.cartography != null: map_view.cartography.refresh_known()
 	map_view.markers = source.markers.duplicate(true)
 	map_view.get_viewport().size_changed.disconnect(map_view._apply_layout)
 	map_view.set_process(false)

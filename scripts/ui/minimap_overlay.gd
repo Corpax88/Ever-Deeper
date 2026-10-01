@@ -7,6 +7,8 @@ const GOLD: = Color("e9c86d")
 const INK: = Color("07100b")
 const MAP_FILL: = Color(0.025, 0.055, 0.04, 0.16)
 
+var cartography: RefCounted
+var _display_world := Rect2()
 var expanded: bool = false
 var markers: Array = []
 var _biome_cards: Array[Control] = []
@@ -75,14 +77,17 @@ func debug_snapshot() -> Dictionary:
 		"redraw_hz": 1.0 / REDRAW_INTERVAL,
 		"transparent": true,
 		"organic_style": true,
-		"overlap_fade": true,
+		"overlap_fade": not expanded,
+		"terrain": cartography != null and cartography.texture != null,
+		"terrain_revision": cartography.revision if cartography != null else 0,
+		"display_world": _display_world,
 	}
 
 
 func _process(delta: float) -> void :
 	if not visible:
 		return
-	var target_alpha: = 0.24 if _player_overlaps_map() else 1.0
+	var target_alpha: = 0.24 if not expanded and _player_overlaps_map() else 1.0
 	modulate.a = move_toward(modulate.a, target_alpha, maxf(0.0, delta) * 3.6)
 	_elapsed += maxf(0.0, delta)
 	_redraw_elapsed += maxf(0.0, delta)
@@ -113,49 +118,79 @@ func _place_map(map_rect: Rect2) -> void:
 	queue_redraw()
 
 
-func _draw() -> void :
-	if _map_rect.size.x <= 1.0:
-		return
+func _draw() -> void:
+	if _map_rect.size.x <= 1.0: return
 	draw_style_box(_panel_style, _map_rect)
-	var font: = ThemeDB.fallback_font
-	var title_size: = 13 if _map_rect.size.x > 220.0 else 10
-	draw_string(font, _map_rect.position + Vector2(13, 18), _location_name, HORIZONTAL_ALIGNMENT_LEFT, _map_rect.size.x - 26.0, title_size, Color(GOLD, 0.76))
-	var content: = Rect2(_map_rect.position + Vector2(10, 27), _map_rect.size - Vector2(20, 37))
-	draw_rect(content, MAP_FILL, true)
-	if expanded:
-		content.position.y+=116
-		content.size.y=maxf(30,content.size.y-144)
-	var fitted: = _fit_world_rect(content.grow(-4.0))
-	draw_rect(fitted, Color(0.09, 0.12, 0.08, 0.12), true)
-	draw_rect(fitted, Color(GOLD, 0.18), false, 1.0)
+	var font := ThemeDB.fallback_font
+	draw_string(font, _map_rect.position+Vector2(13,18),_location_name,HORIZONTAL_ALIGNMENT_LEFT,_map_rect.size.x-26,13,Color("e9c86d"))
+	var content := Rect2(_map_rect.position+Vector2(10,27),_map_rect.size-Vector2(20,37))
 	if expanded:
 		_draw_biome_cards()
-		var legend_y: float = _map_rect.end.y-15
-		draw_circle(Vector2(_map_rect.position.x+22,legend_y-5),4,GOLD)
-		draw_string(font,Vector2(_map_rect.position.x+34,legend_y),"You",HORIZONTAL_ALIGNMENT_LEFT,-1,14,Color.WHITE)
-		draw_circle(Vector2(_map_rect.position.x+89,legend_y-5),4,Color("72dacf"))
-		draw_string(font,Vector2(_map_rect.position.x+101,legend_y),"Ore",HORIZONTAL_ALIGNMENT_LEFT,-1,14,Color.WHITE)
-		draw_rect(Rect2(_map_rect.position.x+151,legend_y-10,9,9),Color("b8a7ef"),false,2)
-		draw_string(font,Vector2(_map_rect.position.x+168,legend_y),"Entrance",HORIZONTAL_ALIGNMENT_LEFT,-1,14,Color.WHITE)
-		draw_string(font,Vector2(_map_rect.position.x+255,legend_y),"Diamond: objective",HORIZONTAL_ALIGNMENT_LEFT,-1,14,Color("a8e3bc"))
+		content.position.y+=108
+		content.size.y=maxf(30,content.size.y-188)
+		_draw_legend(font)
+	draw_rect(content,Color("101416"))
+	var has_terrain: bool = cartography!=null and cartography.texture!=null
+	_display_world=_world_rect
+	if has_terrain:
+		if expanded:
+			_display_world=cartography.explored_bounds.grow(cartography.tile*2).intersection(_world_rect)
+		else:
+			var extent: Vector2=Vector2(28,28*content.size.y/content.size.x)*cartography.tile
+			_display_world=Rect2(_player_position-extent*0.5,extent)
+	var fitted:=_fit_world_rect(content.grow(-2))
+	if has_terrain:
+		texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
+		var shown: Rect2=_display_world.intersection(cartography.bounds)
+		var destination:=_world_rect_to_map(shown,fitted)
+		draw_texture_rect_region(cartography.texture,destination,Rect2(shown.position/cartography.tile,shown.size/cartography.tile))
+	else:
+		draw_rect(fitted,Color("263433"))
+	draw_rect(content,Color("807362"),false,1)
 	for marker in markers:
-		var at: Vector2 = _world_to_map(Vector2(marker.position),fitted)
-		if String(marker.kind)=="entrance": draw_rect(Rect2(at-Vector2.ONE*3,Vector2.ONE*6),Color("b8a7ef"),false,1.5)
-		else: draw_circle(at,2.5,Color("72dacf"))
-	if _view_rect.has_area():
-		var view_on_map: = _world_rect_to_map(_view_rect, fitted)
-		draw_rect(view_on_map, Color(0.9, 0.82, 0.52, 0.24), false, 1.0)
+		var position: Vector2=Vector2(marker.position)
+		if not _display_world.has_point(position):
+			if String(marker.kind)=="entrance": _draw_edge_marker(position,fitted,Color("cbb7ff"))
+			continue
+		var at:=_world_to_map(position,fitted)
+		if String(marker.kind)=="entrance":
+			draw_rect(Rect2(at-Vector2.ONE*5,Vector2.ONE*10),INK)
+			draw_rect(Rect2(at-Vector2.ONE*4,Vector2.ONE*8),Color("cbb7ff"),false,2)
+		else:
+			draw_circle(at,4,INK)
+			draw_circle(at,2.5,Color("63eee0"))
 	if _has_objective:
-		_draw_objective(_world_to_map(_objective_position, fitted))
-	var player: = _world_to_map(_player_position, fitted)
-	var pulse: = 0.5 + sin(_elapsed * 4.2) * 0.5
-	draw_circle(player, 7.0 + pulse * 2.0, Color(GOLD, 0.1 + pulse * 0.08))
-	draw_circle(player, 4.2, GOLD)
-	draw_circle(player, 1.6, INK)
+		if _display_world.has_point(_objective_position): _draw_objective(_world_to_map(_objective_position,fitted))
+		else: _draw_edge_marker(_objective_position,fitted,Color("a8e3bc"))
+	var player:=_world_to_map(_player_position,fitted)
+	draw_circle(player,7,INK)
+	draw_circle(player,4.5,GOLD)
+	draw_circle(player,1.5,Color.WHITE)
 
+func _draw_edge_marker(position: Vector2, fitted: Rect2, color: Color) -> void:
+	var direction: Vector2=(position-_display_world.get_center()).normalized()
+	var half:=fitted.size*0.5-Vector2.ONE*7
+	var length: float=minf(half.x/maxf(absf(direction.x),0.001),half.y/maxf(absf(direction.y),0.001))
+	var at:=fitted.get_center()+direction*length
+	var side:=direction.orthogonal()*4
+	draw_colored_polygon(PackedVector2Array([at+direction*5,at-direction*4+side,at-direction*4-side]),color)
+
+func _draw_legend(font: Font) -> void:
+	var labels: Array=["You","Ore","Entrance","Passage","Wall","Bedrock","Objective","Unknown","Edge: direction"]
+	var colors: Array=[GOLD,Color("63eee0"),Color("cbb7ff"),Color("789491"),Color("55515a"),Color("a9a2ad"),Color("a8e3bc"),Color("101416"),Color("cbb7ff")]
+	var width: float=(_map_rect.size.x-30)/3
+	for i in labels.size():
+		var at:=_map_rect.position+Vector2(18+(i%3)*width,_map_rect.size.y-66+(i/3)*21)
+		if i==0: draw_circle(at+Vector2(4,-4),4,colors[i])
+		elif i==1: draw_circle(at+Vector2(4,-4),2.5,colors[i])
+		elif i==2: draw_rect(Rect2(at-Vector2(0,9),Vector2(9,9)),colors[i],false,1.5)
+		elif i==6: _draw_objective(at+Vector2(4,-4))
+		elif i==8: draw_colored_polygon(PackedVector2Array([at+Vector2(9,-4),at+Vector2(0,-9),at]),colors[i])
+		else: draw_rect(Rect2(at-Vector2(0,9),Vector2(9,9)),colors[i])
+		draw_string(font,at+Vector2(15,0),labels[i],HORIZONTAL_ALIGNMENT_LEFT,width-18,13,Color("ded7cc"))
 
 func _fit_world_rect(available: Rect2) -> Rect2:
-	var world_aspect: = _world_rect.size.x / maxf(_world_rect.size.y, 1.0)
+	var world_aspect: = _display_world.size.x / maxf(_display_world.size.y, 1.0)
 	var available_aspect: = available.size.x / maxf(available.size.y, 1.0)
 	var size: = available.size
 	if world_aspect > available_aspect:
@@ -198,7 +233,7 @@ func _draw_objective(position: Vector2) -> void :
 
 
 func _world_to_map(world_position: Vector2, map_rect: Rect2) -> Vector2:
-	var normalized: = (world_position - _world_rect.position) / _world_rect.size
+	var normalized: = (world_position - _display_world.position) / _display_world.size
 	normalized = normalized.clamp(Vector2.ZERO, Vector2.ONE)
 	return map_rect.position + normalized * map_rect.size
 

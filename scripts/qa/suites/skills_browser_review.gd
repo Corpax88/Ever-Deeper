@@ -33,6 +33,10 @@ var ore_escape_goal: Vector2
 var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind).begins_with("maps_"):
+		await _maps_command(data)
+		command_id=int(data.id)
+		return
 	if String(data.kind).begins_with("scale_"):
 		await _scale_command(data)
 		command_id=int(data.id)
@@ -267,6 +271,9 @@ func _frame() -> void:
 	state["actual_map"]={"markers":main._map_markers().size(),"known":WorldCatalog.WORLD_ORDER.map(func(w): return RunState.is_world_unlocked(w)),"expanded":is_instance_valid(panel.map_view) and panel.map_view.visible}
 	var active_world: Node={"surface":main.surface_world,"mine":main.mine_world,"depth":main.depth_world,"hub":main.hub_world,"deepheart":main.deepheart_world,"endless":main.endless_world}.get(main.phase,main.surface_world)
 	state["actual_map"]["world_active"]=active_world.is_visible_in_tree() and active_world.can_process()
+	var cart: RefCounted=main.exploration_map
+	state["cartography"]={"terrain":cart.texture!=null,"revision":cart.revision,"area":cart.area,"known":cart._known.size(),"explored_areas":RunState.map_explored.size(),"offset":[cart.offset.x,cart.offset.y],"player":[main._active_player_node().global_position.x,main._active_player_node().global_position.y],"shared":is_instance_valid(panel.map_view) and panel.map_view.cartography==cart}
+
 
 	state["deep_events"]=main.endless_world.deep_events.snapshot()
 	state["hub_context"]=main.hub_context
@@ -988,3 +995,26 @@ func _scale_command(data: Dictionary) -> void:
 		main.hub_world.restore_position(room.bay(index)+Vector2(0,130))
 		main.hub_world.player.camera.reset_smoothing()
 	await main.get_tree().process_frame
+
+func _maps_command(data: Dictionary) -> void:
+	match String(data.kind):
+		"maps_fixture":
+			main._dev_seed_victory_state()
+			if String(data.get("mine",""))=="endless": main._dev_jump_endless(int(data.get("depth",1)))
+			else: main._dev_jump_mine(String(data.mine),int(data.depth))
+			for i in 12: await main.get_tree().process_frame
+			main._update_minimap()
+		"maps_drill":
+			main._dev_grant_max_tools_state()
+			main.endless_world.resonance_drill.dev_override=false
+			RunState.treasury_goals.resonance_enabled=false
+			main.endless_world.player.set_facing(Vector2.DOWN)
+		"maps_refresh":
+			main._update_minimap()
+		"maps_save":
+			_require(RunState.save_game(),"map save")
+		"maps_load":
+			var previous: Dictionary=RunState.map_explored.duplicate(true)
+			_require(RunState.load_game(),"map load")
+			_require(RunState.map_explored==previous,"map exploration save parity")
+			main._update_minimap()

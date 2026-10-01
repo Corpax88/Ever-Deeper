@@ -121,6 +121,7 @@ var achievement_toast
 var treasury_goal_panel: Control
 var world_tap: Dictionary = {}
 var minimap_overlay
+var exploration_map = preload("res://scripts/ui/exploration_map.gd").new()
 var quick_tutorial
 var developer_menu
 var guide_director = GuideDirectorScript.new()
@@ -1419,7 +1420,10 @@ func _update_minimap() -> void :
 	var has_objective: bool = guide_overlay != null and guide_overlay.has_target and guide_overlay.target_camera == camera
 	if has_objective:
 		objective_position = Vector2(guide_overlay.target_world)
-	minimap_overlay.markers = _map_markers()
+	var map_world: Node = mine_world if phase == "mine" else depth_world if phase == "depth" else endless_world
+	exploration_map.update(map_world, phase, active_player.global_position)
+	minimap_overlay.cartography = exploration_map
+	minimap_overlay.markers = _map_markers().filter(func(marker): return exploration_map.discovered(Vector2(marker.position)))
 	minimap_overlay.set_snapshot(
 		phase,
 		location_name,

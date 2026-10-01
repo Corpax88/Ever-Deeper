@@ -149,6 +149,7 @@ var _stamina_rest: float = 0.0
 var _miner_level_cache: Dictionary = {}
 
 var overhaul_progress: Dictionary = {}
+var map_explored: Dictionary = {}
 var treasury_totals: Dictionary = {}
 var treasury_goals: Dictionary = preload("res://scripts/state/treasury_goals.gd").clean({})
 var treasury_inside: bool = false
@@ -2546,6 +2547,7 @@ func serialize() -> Dictionary:
 			"overhaul": _sanitize_overhaul(overhaul_progress),
 			"miner_skills": MinerSkills.clean(miner_skills),
 			"miner_skills_balance": MinerSkills.BALANCE_REVISION,
+			"map_explored": map_explored.duplicate(true),
 			"treasury": treasury_totals.duplicate(true),
 			"treasury_goals": preload("res://scripts/state/treasury_goals.gd").clean(treasury_goals),
 			"treasury_inside": treasury_inside,
@@ -2630,6 +2632,7 @@ func deserialize(raw: Variant) -> bool:
 		return false
 	var source: Dictionary = raw.state
 	_apply_defaults(false)
+	map_explored = preload("res://scripts/ui/exploration_map.gd").clean(source.get("map_explored", {}))
 	overhaul_progress = _sanitize_overhaul(source.get("overhaul", {}))
 	treasury_goals = preload("res://scripts/state/treasury_goals.gd").clean(source.get("treasury_goals",{}))
 	treasury_totals = preload("res://scripts/state/treasury_state.gd").clean(source.get("treasury", {}))
@@ -2981,6 +2984,7 @@ func _flush_queued_autosave() -> void :
 
 
 func _apply_defaults(emit_change: bool = true) -> void :
+	map_explored = {}
 	treasury_totals = {}
 	treasury_goals = preload("res://scripts/state/treasury_goals.gd").clean({})
 	treasury_inside = false
