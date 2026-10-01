@@ -908,8 +908,33 @@ func _scale_command(data: Dictionary) -> void:
 		_require(_place_moss(Vector2.UP),"scale depth-one mining target")
 		main.mine_world.player.camera.reset_smoothing()
 	elif mode == "scale_deep":
-		_mole_fixture("endless_ore")
-		main.endless_world.player.camera.reset_smoothing()
+		main._dev_jump_endless(1)
+		_gear("deepcore")
+		var world: Node2D = main.endless_world
+		var selected: Dictionary = {}
+		for resource in world.resources:
+			if not bool(resource.mined):
+				selected=resource
+				break
+		_require(not selected.is_empty(),"scale Deep authored resource exists")
+		if selected.is_empty(): return
+		# The continuous Deep keeps ore buried. Explicit QA reached pocket,
+		# rather than assuming a random seed offers an already walkable node.
+		var cell: Vector2i = Vector2i(selected.cell)
+		for y in range(-2,4):
+			for x in range(-3,4):
+				var at: Vector2i=cell+Vector2i(x,y)
+				if world._cell_diggable(at): world._set_floor(at,true)
+		world._update_buried_visibility()
+		world.queue_redraw()
+		world.restore_position(world._cell_center(cell+Vector2i(2,2)))
+		world.player.set_facing(Vector2(-1,-1).normalized())
+		world.player.camera.reset_smoothing()
+		var visual: Node2D=world.resource_visuals[String(selected.id)]
+		_require(visual.visible and world._is_floor(cell),"scale Deep node visibly exposed")
+		var mole: Node=main.get_node("CompanionInterface").active_mole()
+		mole.recall()
+		mole.autonomous_enabled=false
 	elif mode == "scale_drops":
 		# Real material textures in a clearly isolated scale fixture, beside the real hero.
 		var world: Node2D = main._active_player_node().get_parent()
