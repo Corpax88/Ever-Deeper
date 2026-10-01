@@ -1,3 +1,5 @@
+Published DEV15.45: https://corpax88.github.io/Ever-Deeper/dev/. Refresh and Continue; no reset. Publication36924806921 passed all27 public hashes, preserving LIVE1.0.4 and Worn. Receipt11193591808; rollback11194120111=DEV15.44. No pending jobs or approvals.
+
 # Bore Rush flow and continuous laser aim — DEV15.45
 
 User phone recording on 1 October 2026 exposed repeated held-Mine stalls,
@@ -42,7 +44,8 @@ claims. `tools/review_drill_mods.gd` also passes all63 prior mod gates.
 Mac run36923988208 passed: input/414core/71browser checks and ordinary
 WebKit startup. All28 final Mac images inspected, Apple Metal renderer, DPR2.
 All nine Mac package files equal the locally tested native package.
-Candidate11193870007, evidence11192689544. DEV publication pending. The first run36923586219
+Candidate11193870007, evidence11192689544. Publication
+1c264f7e3e9b11408a14fb9a228ae0b52146d938 / run36924806921 passed; all27 public file hashes verified. The first run36923586219
 passed core and gameplay advances but read a pre-release snapshot in the
 release test (QA samples every100ms). The test now observes a released frame
 before comparing stationary positions; native release checks remain strict.
@@ -50,8 +53,7 @@ Native capture harness yields back to the process frame before quitting, so
 its explicit completion marker is flushed after the final render callback. It includes real CDP touch:
 held-Mine off-centre mining, discovery pass/release, and simultaneous Mine plus
 joystick rotation through16 bearings. Existing input/core, mobile mod layouts,
-save/load and ordinary WebKit startup are retained. Images are inspected; publication receipt must be verified before calling
-DEV15.45 published.
+save/load and ordinary WebKit startup are retained. Images and public receipt are verified. DEV15.45 is published.
 
 ## Local recovery
 
