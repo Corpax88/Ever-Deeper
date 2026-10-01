@@ -338,7 +338,7 @@ func _frame() -> void:
 	state["exposure"]={}
 	for resource in rewards_world.resources:
 		if String(resource.id)!=exposure_id: continue
-		state["exposure"]={"id":exposure_id,"hp":int(resource.hp),"initial_hp":exposure_hp,"mined":bool(resource.mined),"floor":rewards_world._is_floor(Vector2i(resource.cell)),"visible":rewards_world.resource_visuals[exposure_id].visible,"claimed":(int(RunState.endless_floor_resource_state(int(resource.depth)).mined_mask)&(1<<int(resource.node_index)))!=0}
+		state["exposure"]={"id":exposure_id,"hp":int(resource.hp),"initial_hp":exposure_hp,"mined":bool(resource.mined),"floor":rewards_world._is_floor(Vector2i(resource.cell)),"visible":is_instance_valid(rewards_world.resource_visuals.get(exposure_id)) and rewards_world.resource_visuals[exposure_id].visible,"claimed":(int(RunState.endless_floor_resource_state(int(resource.depth)).mined_mask)&(1<<int(resource.node_index)))!=0}
 	state["reward_drops"]=reward_drops
 	state["reward_rock_drops"]=rock_drops
 	state["reward_node_drops"]=node_drops
