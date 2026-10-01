@@ -65,6 +65,8 @@ func resolve(proposal: Dictionary) -> Dictionary:
 
 
 func goal_for_state(discovery: Dictionary = {}) -> Dictionary:
+	var pinned: Dictionary=preload("res://scripts/state/treasury_goals.gd").hud_goal()
+	if not pinned.is_empty(): return pinned
 	var goal: Dictionary = _resolve_goal_for_state()
 	# Nearby, actually discovered opportunities take precedence while exploring.
 	# Carrying a relic, construction and a ready upgrade keep priority.

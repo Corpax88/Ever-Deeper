@@ -204,6 +204,8 @@ func _check_deep_treasury() -> void:
 	_check(ledger.land("wallet_gold",20)==1 and RunState.gold==19,"Final landing caps exactly and retains excess currency")
 	_check(goals.claim_resonance() and not goals.claim_resonance() and RunState.treasury_totals.wallet_gold==100000,"Claim grants mod exactly once and preserves full display")
 	goals.pin("wallet_gold")
+	main.premium_hud._refresh_progression_goal()
+	_check(main.premium_hud.progression_goal_snapshot().get("objective_id","")=="treasury:wallet_gold","Shared HUD state-change refresh retains pinned treasury goal")
 	var mod_saved: Dictionary=RunState.serialize()
 	RunState.treasury_goals={}
 	_check(RunState.deserialize(mod_saved) and RunState.treasury_goals.resonance_enabled and RunState.treasury_goals.pinned=="wallet_gold","Claim, enabled state and pinned goal survive save roundtrip")

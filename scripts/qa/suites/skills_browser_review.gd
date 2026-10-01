@@ -263,7 +263,7 @@ func _frame() -> void:
 	state["resonance"]["dug"]=RunState.endless_dug_cells(main.endless_world.current_depth).size()
 	state["resonance"]["variant"]=String(RunState.starforge_variant)
 	state["treasury"]=main.hub_world.treasury.snapshot()
-	state["treasury_goal"]={"open":goal_panel.visible,"kind":goal_panel.kind,"claim_disabled":goal_panel.claim_button.disabled,"claim_text":goal_panel.claim_button.text,"saved":RunState.treasury_goals.duplicate(true),"hud":main._progression_goal()}
+	state["treasury_goal"]={"open":goal_panel.visible,"kind":goal_panel.kind,"claim_disabled":goal_panel.claim_button.disabled,"claim_text":goal_panel.claim_button.text,"saved":RunState.treasury_goals.duplicate(true),"hud":main._progression_goal(),"rendered":main.premium_hud.progression_goal_snapshot()}
 	state["actual_map"]={"markers":main._map_markers().size(),"known":WorldCatalog.WORLD_ORDER.map(func(w): return RunState.is_world_unlocked(w)),"expanded":is_instance_valid(panel.map_view) and panel.map_view.visible}
 	var active_world: Node={"surface":main.surface_world,"mine":main.mine_world,"depth":main.depth_world,"hub":main.hub_world,"deepheart":main.deepheart_world,"endless":main.endless_world}.get(main.phase,main.surface_world)
 	state["actual_map"]["world_active"]=active_world.is_visible_in_tree() and active_world.can_process()

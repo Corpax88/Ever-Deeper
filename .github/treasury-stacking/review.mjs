@@ -130,7 +130,8 @@ try{
  await dual('touchStart',[mineTouch,steerTouch]);await dual('touchMove',[mineTouch,{x:steerTouch.x,y:steerTouch.y+32}]);
  await wait('earned mod charges through mining',s=>s.resonance.charge>.55,30000);await shot('earned-mod-charging');
  await wait('earned mod fires through mining',s=>s.resonance.bursts>burstsBefore,30000);await dual('touchEnd',[]);
- await wait('earned wave excavates',s=>s.resonance.excavated>0,15000);await shot('earned-mod-tunnel');
+ await wait('earned wave excavates',s=>s.resonance.excavated>0,15000);
+ check('pinned-goal-survives-mining',(await state()).treasury_goal.rendered.objective_id==='treasury:wallet_gold'&&(await state()).treasury_goal.rendered.title_text==='Resonance',{});await shot('earned-mod-tunnel');
  const errors=messages.filter(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m));check('no-runtime-errors',errors.length===0,{errors});
 }catch(e){failed=String(e.stack||e);console.error(failed);try{await shot('failure');}catch{}}
 finally{
