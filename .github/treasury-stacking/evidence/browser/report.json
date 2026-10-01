@@ -1,0 +1,506 @@
+{
+  "passed": true,
+  "error": null,
+  "source_commit": "5afb6af4bdcf59aa551476218c33be7668b7f012",
+  "version": "1.0.0-dev.15.38",
+  "flavor": "dev",
+  "files": {
+    "index.html": {
+      "size": 23145,
+      "sha256": "a74f8b40223f29b0b504daa6213a96c509b5b9e2e0d56a53cfe27278764dde5d"
+    },
+    "index.js": {
+      "size": 282403,
+      "sha256": "1c05fc40c7e418b0234c4e5ac39dfc7df1286e98443946e84b89a7394de6c753"
+    },
+    "index.pck": {
+      "size": 286439390,
+      "sha256": "fd4605654ef8f539ff5887e7668a7b00e22fb51e4046bc59d5a42fbe94e6882c"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 4571,
+      "sha256": "65bc52dba653b2c39735a621863ae7332dda9c65d3a1bd7891d356390110da7f"
+    }
+  },
+  "runtime": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+    "lost": false,
+    "dpr": 2
+  },
+  "checks": [
+    {
+      "name": "graphical-renderer",
+      "passed": true
+    },
+    {
+      "name": "01-hub-shop-door",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-02-empty-room",
+      "passed": true
+    },
+    {
+      "name": "02-empty-room",
+      "passed": true
+    },
+    {
+      "name": "all-resource-bays",
+      "passed": true
+    },
+    {
+      "name": "central-delivery-zone",
+      "passed": true
+    },
+    {
+      "name": "multiple-materials-simultaneously",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-03-airborne",
+      "passed": true
+    },
+    {
+      "name": "03-airborne",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-flow-02",
+      "passed": true
+    },
+    {
+      "name": "flow-02",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-flow-03",
+      "passed": true
+    },
+    {
+      "name": "flow-03",
+      "passed": true
+    },
+    {
+      "name": "partial-conservation",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-04-partial-delivery",
+      "passed": true
+    },
+    {
+      "name": "04-partial-delivery",
+      "passed": true
+    },
+    {
+      "name": "menu-pauses-delivery",
+      "passed": true
+    },
+    {
+      "name": "exit-cancels-undelivered",
+      "passed": true
+    },
+    {
+      "name": "05-left-with-remainder",
+      "passed": true
+    },
+    {
+      "name": "save-load-conservation",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-06-reloaded-partial",
+      "passed": true
+    },
+    {
+      "name": "06-reloaded-partial",
+      "passed": true
+    },
+    {
+      "name": "all-donations-exactly-once",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-07-complete",
+      "passed": true
+    },
+    {
+      "name": "07-complete",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-milestone-mixed",
+      "passed": true
+    },
+    {
+      "name": "milestone-mixed",
+      "passed": true
+    },
+    {
+      "name": "every-thousand-celebrated",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-1-26",
+      "passed": true
+    },
+    {
+      "name": "stack-1-26",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-556-26",
+      "passed": true
+    },
+    {
+      "name": "stack-556-26",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-10000-26",
+      "passed": true
+    },
+    {
+      "name": "stack-10000-26",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-50000-26",
+      "passed": true
+    },
+    {
+      "name": "stack-50000-26",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-0",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-0",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-1",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-1",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-2",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-2",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-3",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-3",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-4",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-4",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-5",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-5",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-6",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-6",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-7",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-7",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-8",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-8",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-9",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-9",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-10",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-10",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-11",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-11",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-12",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-12",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-13",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-13",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-14",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-14",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-15",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-15",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-16",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-16",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-17",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-17",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-18",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-18",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-19",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-19",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-20",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-20",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-21",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-21",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-22",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-22",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-23",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-23",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-24",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-24",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-25",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-25",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-stack-100000-26",
+      "passed": true
+    },
+    {
+      "name": "stack-100000-26",
+      "passed": true
+    },
+    {
+      "name": "incomplete-claim-locked",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-goal-locked",
+      "passed": true
+    },
+    {
+      "name": "goal-locked",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-goal-ready",
+      "passed": true
+    },
+    {
+      "name": "goal-ready",
+      "passed": true
+    },
+    {
+      "name": "claim-keeps-full-pile",
+      "passed": true
+    },
+    {
+      "name": "clear-treasury-hud-goal-claimed",
+      "passed": true
+    },
+    {
+      "name": "goal-claimed",
+      "passed": true
+    },
+    {
+      "name": "claimed-mod-and-pin-survive-save",
+      "passed": true
+    },
+    {
+      "name": "goal-pinned-hud",
+      "passed": true
+    },
+    {
+      "name": "first-world-three-hidden",
+      "passed": true
+    },
+    {
+      "name": "map-first-world",
+      "passed": true
+    },
+    {
+      "name": "all-four-unlocked-map",
+      "passed": true
+    },
+    {
+      "name": "map-all-worlds",
+      "passed": true
+    },
+    {
+      "name": "actual-resource-markers-scale_depth1",
+      "passed": true
+    },
+    {
+      "name": "map-scale_depth1",
+      "passed": true
+    },
+    {
+      "name": "actual-resource-markers-scale_deep",
+      "passed": true
+    },
+    {
+      "name": "map-scale_deep",
+      "passed": true
+    },
+    {
+      "name": "earned-mod-active-in-deep",
+      "passed": true
+    },
+    {
+      "name": "earned-mod-charging",
+      "passed": true
+    },
+    {
+      "name": "pinned-goal-survives-mining",
+      "passed": true
+    },
+    {
+      "name": "earned-mod-tunnel",
+      "passed": true
+    },
+    {
+      "name": "no-runtime-errors",
+      "passed": true
+    }
+  ],
+  "physical_iphone_verified": false,
+  "original_report_sha256": "fe6be3c041a2624ade8d3fa08237971021fa5d164400e6efae9bdc292f5c8fe3"
+}

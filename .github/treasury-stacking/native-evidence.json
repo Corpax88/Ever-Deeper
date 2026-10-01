@@ -1,0 +1,32 @@
+{
+  "actual_rendered": true,
+  "resolution": [
+    1688,
+    780
+  ],
+  "reviewed_materials": [
+    "stone",
+    "prismite",
+    "wallet_gold"
+  ],
+  "amounts": [
+    1,
+    555,
+    556,
+    10000,
+    30000,
+    60000,
+    100000
+  ],
+  "touch_checks": "native-touch-checks.json",
+  "native_driver": "native-touch-driver.gd",
+  "qa_readiness_only_parity": "qa-readiness-parity.json",
+  "notes": [
+    "Full gold stack visibly fills podium at unchanged hero scale.",
+    "Tiny deposits start a visible partial ingot; rows and six layers are consistent.",
+    "Goals use existing Skills art; full and claimed states inspected.",
+    "All-world and first-world map inspected; three blurred images until unlocked.",
+    "Native touch driver needs viewport-to-screen transform; corrected harness.",
+    "Mac final actual images still require review before accepted.json."
+  ]
+}
