@@ -119,6 +119,7 @@ var station_transaction_fx
 var resource_inventory
 var achievement_toast
 var treasury_goal_panel: Control
+var world_tap: Dictionary = {}
 var minimap_overlay
 var quick_tutorial
 var developer_menu
@@ -1094,6 +1095,7 @@ func _guide_candidate(key: String, position: Vector2, priority: float) -> Dictio
 
 
 func _input(event: InputEvent) -> void :
+	_handle_world_tap(event)
 	if event is InputEventScreenTouch:
 		var touch: = event as InputEventScreenTouch
 		if touch.index == mine_touch_index and ( not touch.pressed or touch.canceled):
@@ -1104,27 +1106,47 @@ func _input(event: InputEvent) -> void :
 			_cancel_mine_hold()
 
 
+func _world_tap_action(point: Vector2) -> String:
+	if not game_started or menu_open or inventory_open or orientation_guard_active or _shop_panel_is_open(): return ""
+	# Keep HUD buttons authoritative even where their screen bounds cover a bay.
+	for control in [premium_hud.menu_button,premium_hud.bag_button,premium_hud.guide_button,premium_hud.context_button,mine_button,get_node("CompanionInterface").button]:
+		if is_instance_valid(control) and control.is_visible_in_tree() and control.get_global_rect().has_point(point): return ""
+	if is_instance_valid(developer_menu) and (developer_menu.is_open() or (developer_menu.toggle_button.is_visible_in_tree() and developer_menu.toggle_button.get_global_rect().has_point(point))): return ""
+	if is_instance_valid(minimap_overlay) and minimap_overlay.visible and minimap_overlay._map_rect.has_point(point): return "map"
+	if phase=="hub" and hub_world.treasury.inside:
+		var world_point: Vector2=hub_world.get_canvas_transform().affine_inverse()*point
+		for i in hub_world.treasury.Ledger.keys().size():
+			if Rect2(hub_world.treasury.bay(i)+Vector2(-130,-170),Vector2(260,260)).has_point(world_point): return String(hub_world.treasury.Ledger.keys()[i])
+	return ""
+
+func _handle_world_tap(event: InputEvent) -> void:
+	var pointer: int=-1
+	if event is InputEventScreenTouch: pointer=event.index
+	elif not (event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT):
+		if event is InputEventScreenDrag or event is InputEventMouseMotion:
+			if not world_tap.is_empty() and event.position.distance_to(Vector2(world_tap.point))>12.0: world_tap.clear()
+		return
+	if event.pressed:
+		var action: String=_world_tap_action(event.position)
+		if not action.is_empty(): world_tap={"pointer":pointer,"point":event.position,"action":action,"started":Time.get_ticks_msec()}
+		return
+	if world_tap.is_empty() or int(world_tap.pointer)!=pointer: return
+	var pending: Dictionary=world_tap
+	world_tap={}
+	if (event is InputEventScreenTouch and event.canceled) or Time.get_ticks_msec()-int(pending.started)>450 or event.position.distance_to(Vector2(pending.point))>12.0: return
+	if _world_tap_action(event.position)!=String(pending.action): return
+	if pending.action=="map":
+		_open_miner_skills()
+		if miner_skills_panel.visible: miner_skills_panel.show_map(minimap_overlay)
+	else: treasury_goal_panel.open_goal(String(pending.action))
+	get_viewport().set_input_as_handled()
+
+
 func _unhandled_input(event: InputEvent) -> void :
 	if is_instance_valid(treasury_goal_panel) and treasury_goal_panel.visible:
 		if event.is_action_pressed("ui_cancel"): treasury_goal_panel.close_panel()
 		get_viewport().set_input_as_handled()
 		return
-	if game_started and not menu_open and not inventory_open and not orientation_guard_active and is_instance_valid(minimap_overlay) and minimap_overlay.visible:
-		var map_tap: bool = (event is InputEventScreenTouch and event.pressed) or (event is InputEventMouseButton and event.pressed and event.button_index==MOUSE_BUTTON_LEFT)
-		if map_tap and minimap_overlay._map_rect.has_point(event.position):
-			_open_miner_skills()
-			if miner_skills_panel.visible: miner_skills_panel.show_map(minimap_overlay)
-			get_viewport().set_input_as_handled()
-			return
-	if game_started and not menu_open and not inventory_open and not orientation_guard_active and phase=="hub" and hub_world.treasury.inside:
-		var tapped: bool = (event is InputEventScreenTouch and event.pressed) or (event is InputEventMouseButton and event.pressed and event.button_index==MOUSE_BUTTON_LEFT)
-		if tapped:
-			var point: Vector2 = hub_world.get_canvas_transform().affine_inverse() * event.position
-			for i in hub_world.treasury.Ledger.keys().size():
-				if Rect2(hub_world.treasury.bay(i)+Vector2(-130,-170),Vector2(260,260)).has_point(point):
-					treasury_goal_panel.open_goal(String(hub_world.treasury.Ledger.keys()[i]))
-					get_viewport().set_input_as_handled()
-					return
 	if orientation_guard_active:
 		get_viewport().set_input_as_handled()
 		return
