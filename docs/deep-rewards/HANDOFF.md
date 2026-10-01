@@ -1,4 +1,4 @@
-# Deep rewards DEV15.40 — accepted, publication in progress
+# Deep rewards DEV15.40 — published
 
 Mats approved ordinary Deep rock yielding stone, valuable materials from buried nodes / marked event deposits, and Unstable Seam doubling resources instead of drill speed on 1 October 2026. DEV publication is authorized. LIVE unchanged; rotation issue parked by user.
 
@@ -6,7 +6,7 @@ Base canonical maps 7611e680c3af26c8137f9b25ff9426f2e9d0a350 / tree bc2b49e52f97
 
 Ordinary terrain now yields stone with existing depth quantity; existing deterministic buried nodes/IDs/amounts remain. Ancient Core and Crystal Bloom keep marked event deposits. Unstable Seam doubles rock and node quantities in its existing420px radius for28seconds; no speed bonus. Node kind remains unchanged. Stone accepts atomic rock claims, visible drops and save sanitization; old valuable drops stay intact. No save reset. Existing hero/art/camera/mining/5x5/map retained.
 
-Local exact candidate:20 focused native checks (including3520 cell sample, actual excavation, node strike, persistence and no duplicate claims), input and414 premium-core passed. Four actual native images inspected, Godot4.7.2 Linux Xvfb/Mesa at1688x780. Browser QA/publication pending; no physical-phone/FPS claim. Focused QA .github/deep-rewards and tools/review_deep_rewards.gd. Scratch /workspace/scratch/555a9d2683e6.
+Local exact candidate:20 focused native checks (including3520 cell sample, actual excavation, node strike, persistence and no duplicate claims), input and414 premium-core passed. Four actual native images inspected, Godot4.7.2 Linux Xvfb/Mesa at1688x780. Final browser QA and publication passed; no physical-phone/FPS claim. Focused QA .github/deep-rewards and tools/review_deep_rewards.gd. Scratch /workspace/scratch/555a9d2683e6.
 
 
 Final tested source7610aff55a2a74f79f2fa1a9cacf1a39079d7766 on codex/deep-rewards-20261001. Mac36862409574 passed16 browser gates/captures, input,414premium-core and ordinary WebKit; all12 final images inspected. Actual Apple ANGLE Metal Paravirtual GPU,844x390CSS,DPR2. Candidate11162556440 digest52a16d9c9490fc3d269585c7c26d02a92d1d14b8d5713d87dc07c529473733c0; evidence11162601490 digest8233b01af7d8e23267354dbaf63fbf9b5e8246cd8ccc709a57ecb96e4e56a2f1. Full manifest equals local candidate-final3. Native production payload equality to final is recorded; only opt-in QA snapshot source differs from the earlier native pack. Existing invariant flag-order debt retained, not reported as passed.
@@ -14,3 +14,6 @@ Final tested source7610aff55a2a74f79f2fa1a9cacf1a39079d7766 on codex/deep-reward
 First36861622206 failed because test miner stood beyond wall reach; second36861928652 proved57cell mining but its assertion incorrectly mixed node drops with rock drops. Corrected classification retains actual valuable node rewards. Intermediate36862300061 cancelled for the explicit QA save/reload correction (startup fixture resets memory); final uses paused real save_game/load_game and separately ordinary WebKit startup/save flow. No gameplay payload changes during these harness fixes. No blanket retest needed after publication.
 
 Publication uses .github/deep-rewards/accepted.json and immutable candidate. Verify27public hashes, preserve LIVE1.0.3 and Worn. User should reloadDEV15.40, Continue existing save, mine The Deep: ordinary rock=stone, buried nodes and marked Ancient Core/Crystal Bloom events=valuable finds; Unstable Seam=2x rock/node yield in local420pxradius for28s. No progress reset. Physical-phone feel/balance remains user feedback. Rotation incident parked by user after rotating again fixed it. Do not start FPS/rotation work unsolicited.
+
+
+Published: d90515700efb720a445f5d07e828095d6550f218/run36863086732 succeeded. Receipt11163086773 verifies all27public hashes, LIVE9/Worn9 preserved. Rollback11163096584 contains previousDEV15.39. No jobs or approvals pending. Next: user reloadsDEV15.40 and checks feel on phone; do not repeat unchanged tests or publication.
