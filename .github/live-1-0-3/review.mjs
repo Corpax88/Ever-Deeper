@@ -79,6 +79,14 @@ try{
  const restored=await wait('saved production menu',s=>s?.version===version&&s.save_available&&s.menu,180000);
  check('production-save-reloaded',restored.seed===saved.seed&&restored.gold===saved.gold&&restored.skill_xp.mining===saved.skill_xp.mining&&!restored.dev_menu_present,{saved,restored});
  await tap('continue');await ready();await shot('production-reloaded-game');
+ async function walk(direction,predicate,label,vertical=0){
+  const s=await state(),jr=s.buttons.joystick,vp=page.viewportSize();
+  const start={x:(jr[0]+jr[2]*.20)/s.viewport[0]*vp.width,y:(jr[1]+jr[3]*.70)/s.viewport[1]*vp.height};
+  await touch('touchStart',start);await touch('touchMove',{x:start.x+32*direction,y:start.y+32*vertical});
+  await wait(label,predicate,10000);await touch('touchEnd',start);
+ }
+ await command('treasury_fixture');await ready();await shot('01-hub-shop-door');
+ await walk(1,s=>s.treasury.inside,'walk through east doorway');await delay(300);await shot('02-empty-room');
  await command('treasury_visual',{amount:100000,index:26});await delay(300);await shot('production-full-gold');await tap('gold_podium');
  await wait('production goal opens',s=>s.treasury_goal.open&&!s.treasury_goal.claim_disabled);await tap('treasury_claim');
  await wait('production claim',s=>s.treasury_goal.saved.resonance_claimed&&s.resonance.enabled);await tap('treasury_pin');await shot('production-goal-claimed');

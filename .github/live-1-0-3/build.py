@@ -54,7 +54,66 @@ for n,(o,s,d,f) in verified.items():
 assert not removed.intersection(verified) and 'override.cfg' not in verified
 (out/'index.pck').write_bytes(data)
 html=(src/'index.html').read_text();m=re.search(r'const GODOT_CONFIG = (\{[^\r\n]+\});',html);c=json.loads(m[1]);assert not c['args'];c['fileSizes']['index.pck']=len(data)
-html=html[:m.start(1)]+json.dumps(c,separators=(',',':'))+html[m.end(1):];(out/'index.html').write_text(html)
+html=html[:m.start(1)]+json.dumps(c,separators=(',',':'))+html[m.end(1):]
+# Retain the already-published LIVE loading rotation hotfix.
+css='''
+/* Keep the loader inside Safari's visible viewport during rotation/toolbars. */
+#status {
+ position: fixed;
+ right: auto;
+ bottom: auto;
+ width: 100%;
+ height: 100vh;
+ height: 100dvh;
+ overflow: hidden;
+ z-index: 1;
+}
+#status-progress {
+ bottom: max(10%, calc(env(safe-area-inset-bottom, 0px) + 12px));
+}
+'''
+script='''
+        <script>
+// Only the loading overlay follows visualViewport; the game owns its canvas.
+const disposeLoadingViewport = (() => {
+ const overlay = document.getElementById('status');
+ const viewport = window.visualViewport;
+ let frame = 0;
+ function sync() {
+  frame = 0;
+  const width = viewport ? viewport.width : window.innerWidth;
+  const height = viewport ? viewport.height : window.innerHeight;
+  if (width <= 0 || height <= 0) return;
+  overlay.style.width = width + 'px';
+  overlay.style.height = height + 'px';
+  overlay.style.left = (viewport ? viewport.offsetLeft : 0) + 'px';
+  overlay.style.top = (viewport ? viewport.offsetTop : 0) + 'px';
+ }
+ function schedule() { if (!frame) frame = requestAnimationFrame(sync); }
+ window.addEventListener('resize', schedule);
+ window.addEventListener('orientationchange', schedule);
+ viewport?.addEventListener('resize', schedule);
+ viewport?.addEventListener('scroll', schedule);
+ sync();
+ return () => {
+  cancelAnimationFrame(frame);
+  window.removeEventListener('resize', schedule);
+  window.removeEventListener('orientationchange', schedule);
+  viewport?.removeEventListener('resize', schedule);
+  viewport?.removeEventListener('scroll', schedule);
+ };
+})();
+        </script>
+'''
+assert html.count('\t\t</style>')==1
+html=html.replace('\t\t</style>',css+'\t\t</style>')
+marker='\t\t<script>\n// Opt-in diagnostics'
+assert html.count(marker)==1
+html=html.replace(marker,script+marker)
+marker="if (mode === 'hidden') {\n\t\t\tstatusOverlay.remove();"
+assert html.count(marker)==1
+html=html.replace(marker,"if (mode === 'hidden') {\n\t\t\tdisposeLoadingViewport();\n\t\t\tstatusOverlay.remove();")
+(out/'index.html').write_text(html)
 manifest={n:identity(out/n) for n in expected};(out/'manifest.json').write_text(json.dumps(manifest,indent=2))
 (out/'build-receipt.json').write_text(json.dumps({'source':os.environ.get('GITHUB_SHA'),'baseline':expected,'files':manifest,'changed_resources':list(replacements),'removed_resources':sorted(removed),'changed_project_settings':changed,'unchanged_resources':len(verified)-len(replacements),'all_retained_payloads_verified':True,'physical_iphone_verified':False},indent=2))
 print('LIVE_PACKAGE_PARITY_VERIFIED')
