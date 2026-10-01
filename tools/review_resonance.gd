@@ -37,11 +37,12 @@ func run() -> void:
 	var mole: Node=main.get_node("CompanionInterface").active_mole()
 	mole.autonomous_enabled=false
 	mole.recall()
-	state.starforge_variant=""
+	verify(state.starforge_variant=="crusher","actual max-tools Crusher equipped")
 	world.player.set_facing(Vector2.DOWN)
 	main.achievement_toast.hide()
 	await create_timer(1.0).timeout
 	await capture("01-ready")
+	var dug_before: int=state.endless_dug_cells(world.current_depth).size()
 	Input.action_press("move_down")
 	Input.action_press("mine")
 	var deadline: int=Time.get_ticks_msec()+25000
@@ -50,6 +51,7 @@ func run() -> void:
 	while Time.get_ticks_msec()<deadline and int(fx.bursts)<1:
 		await process_frame
 		if float(fx.charge)>0.65 and not charged:
+			verify(state.endless_dug_cells(world.current_depth).size()==dug_before,"Crusher leaves rock intact during charge")
 			charged=true
 			await capture("02-charging")
 	verify(int(fx.bursts)==1,"held mining automatically fires")

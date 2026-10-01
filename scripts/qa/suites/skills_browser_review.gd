@@ -249,6 +249,8 @@ func _frame() -> void:
 		var mole: Node2D=ui.active_mole()
 		state["ore_escape"]={"distance":mole.global_position.distance_to(ore_escape_origin),"remaining":mole.global_position.distance_to(ore_escape_goal),"checks":mole_checks,"mode":mole.mode}
 	state["resonance"]=main.endless_world.resonance_drill.snapshot()
+	state["resonance"]["dug"]=RunState.endless_dug_cells(main.endless_world.current_depth).size()
+	state["resonance"]["variant"]=String(RunState.starforge_variant)
 	state["treasury"]=main.hub_world.treasury.snapshot()
 	state["deep_events"]=main.endless_world.deep_events.snapshot()
 	state["hub_context"]=main.hub_context
@@ -859,7 +861,6 @@ func _resonance_command(data: Dictionary) -> void:
 	match String(data.kind):
 		"resonance_fixture":
 			main._on_developer_command_requested("test_resonance")
-			_gear("deepcore")
 			var mole: Node=main.get_node("CompanionInterface").active_mole()
 			mole.autonomous_enabled=false
 			mole.recall()

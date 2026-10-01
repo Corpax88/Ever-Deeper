@@ -5,7 +5,7 @@ import http from 'node:http';
 import {createHash} from 'node:crypto';
 const [web,output,flavor]=process.argv.slice(2);fs.mkdirSync(output,{recursive:true});
 const reference=process.env.NODE_ASSETS_REFERENCE==='1';
-const version='1.0.0-dev.15.34',files=JSON.parse(fs.readFileSync(path.join(web,'manifest.json')));
+const version='1.0.0-dev.15.35',files=JSON.parse(fs.readFileSync(path.join(web,'manifest.json')));
 for(const [name,want] of Object.entries(files)){
  const h=createHash('sha256');for await(const b of fs.createReadStream(path.join(web,name)))h.update(b);
  if(h.digest('hex')!==want.sha256||fs.statSync(path.join(web,name)).size!==want.size)throw Error('Candidate identity: '+name);
@@ -50,11 +50,12 @@ try{
  check('graphical-renderer',runtime.renderer&&!runtime.lost&&!/SwiftShader|llvmpipe|software/i.test(runtime.renderer),{runtime});
  check('defaults-off',!(await state()).resonance.enabled,{});
  await command('resonance_fixture');await ready();await delay(500);await shot('01-ready');
+ const beforeCharge=(await state()).resonance;check('real-crusher-equipped',beforeCharge.variant==='crusher',{beforeCharge});
  const s=await state(),v=page.viewportSize(),p={x:s.mine_button[0]/s.viewport[0]*v.width,y:s.mine_button[1]/s.viewport[1]*v.height},jr=s.buttons.joystick;
  const j={x:(jr[0]+jr[2]*.20)/s.viewport[0]*v.width,y:(jr[1]+jr[3]*.70)/s.viewport[1]*v.height};
  const touches=(type,points)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints:points.map((p,i)=>({id:i+1,...p,radiusX:5,radiusY:5,force:1}))});
  await touches('touchStart',[p,j]);await touches('touchMove',[p,{x:j.x,y:j.y+32}]);
- await wait('charge from actual touch mining',s=>s.resonance.charge>.55,30000);await shot('02-charging');
+ await wait('charge from actual touch mining',s=>s.resonance.charge>.55,30000);await shot('02-charging');check('intact-until-wave',(await state()).resonance.dug===beforeCharge.dug,{before:beforeCharge,after:(await state()).resonance});
  await wait('automatic burst',s=>s.resonance.bursts>=1,30000);
  await touches('touchEnd',[]);
  await wait('wave advances',s=>s.resonance.row>=5,10000);await command('resonance_freeze');await shot('03-wave-down');

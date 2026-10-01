@@ -1987,12 +1987,16 @@ func _update_mining(delta: float) -> void :
 	player.set_mining_visual(true, progress, 0.0, MINING_HIT_PROGRESS)
 	if not mining_hit and progress >= MINING_HIT_PROGRESS:
 		mining_hit = true
-		if _swing_resource_index >= 0:
+		if resonance_drill.enabled and int(RunState.drill_level) > 0:
+			# Resonance replaces the ordinary impact, including Crusher's 5x5.
+			# Keep the target intact while charging; only the moving wave digs.
+			resonance_drill.on_hit(_swing_duration)
+			AudioDirector.play_mining("deepstone", false, false)
+		elif _swing_resource_index >= 0:
 			if _swing_resource_index < resources.size() and String(resources[_swing_resource_index].id) == mining_target_id:
 				_strike_resource(_swing_resource_index)
 		else:
 			_strike_wall(_swing_wall, progress)
-		resonance_drill.on_hit(_swing_duration)
 	if progress >= 1.0:
 		var overflow: = fposmod(maxf(0.0, mining_elapsed - _swing_duration), _swing_duration)
 		if _begin_mining_swing(true):
