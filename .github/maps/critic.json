@@ -1,0 +1,124 @@
+{
+  "score": 8.4,
+  "scale": 10,
+  "rounds": 3,
+  "maximum_rounds": 3,
+  "scope": "Independent source and visual critique of upgraded minimap and expanded map for all four mine/Depth biomes and The Deep; preservation of approved surrounding art.",
+  "verdict": "Approved for the requested map upgrade: 8.4/10 after three rounds. Final Mac browser and ordinary WebKit gates completed; no remaining map release blocker identified.",
+  "round_history": [
+    {
+      "round": 1,
+      "score": 7.8,
+      "findings": [
+        "Discovery filter followed an early 128-marker truncation.",
+        "Meaningful live-excavation evidence was still missing.",
+        "Save sanitizer silently truncated exploration at 100000 cells."
+      ]
+    },
+    {
+      "round": 2,
+      "score": 8.4,
+      "findings": [
+        "Discovery now precedes entrance-first, nearest-first marker cap.",
+        "Actual bent excavation corridor is clearly reflected in both map scales.",
+        "Exploration survives streamed coordinate rebasing and save restoration; destructive cell cap removed."
+      ]
+    },
+    {
+      "round": 3,
+      "score": 8.4,
+      "findings": [
+        "Final Mac captures visibly confirm terrain expansion after actual touch mining and identical expanded geometry after restore.",
+        "All 40 browser checks pass, including map touch interaction, live excavation, paused save/reload and runtime error gate.",
+        "Ordinary WebKit startup completes on Apple GPU; input release and 414 core checks pass.",
+        "Publication script binds accepted bytes to reviewed evidence and validates protected LIVE/Worn hashes."
+      ]
+    }
+  ],
+  "evidence": {
+    "source_review": [
+      "game/scripts/ui/exploration_map.gd",
+      "game/scripts/ui/minimap_overlay.gd",
+      "game/scripts/ui/miner_skills_panel.gd",
+      "game/scripts/main.gd"
+    ],
+    "native_checks": {
+      "path": "native5/checks.json",
+      "passed": 169,
+      "total": 169,
+      "coverage": [
+        "real terrain excavation",
+        "shared map geometry",
+        "bent corridor",
+        "absolute-cell retention through streaming",
+        "save restore",
+        "legacy save",
+        "new game"
+      ]
+    },
+    "visuals_inspected": [
+      "native3/mossMine2-map.png",
+      "native3/starMine2-mini.png",
+      "native3/deep-mini.png",
+      "native5/deep-map.png",
+      "native5/deep-corridor-mini.png",
+      "mac2/browser/emberMine2-expanded.jpg",
+      "mac2/browser/mossMine1-mini.jpg",
+      "mac-final/browser/deep-before-mini.jpg",
+      "mac-final/browser/deep-after-mini.jpg",
+      "mac-final/browser/deep-expanded.jpg",
+      "mac-final/browser/deep-restored.jpg",
+      "mac-final/browser/moonMine2-expanded.jpg",
+      "mac-final/ordinary/02-after-new-game.png"
+    ],
+    "mac_browser_partial": {
+      "path": "mac2/browser/report.json",
+      "completed_checks": 34,
+      "passed_checks": 34,
+      "renderer": "Apple Metal via ANGLE",
+      "dpr": 2,
+      "status": "Partial; harness stopped at missing mine button lookup before browser mining checks."
+    },
+    "mac_browser_final": {
+      "path": "mac-final/browser/report.json",
+      "run": 36857883750,
+      "source": "7611e680c3af26c8137f9b25ff9426f2e9d0a350",
+      "passed": true,
+      "completed_checks": 40,
+      "passed_checks": 40,
+      "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+      "dpr": 2,
+      "physical_iphone_verified": false
+    },
+    "ordinary_webkit": {
+      "path": "mac-final/ordinary/report.json",
+      "completed_observation": true,
+      "failed": false,
+      "manifest_matches_browser": true,
+      "physical_iphone_verified": false
+    },
+    "core_final": {
+      "path": "mac-final/core/results.json",
+      "passed": true,
+      "input_release_passed": true,
+      "core_checks": 414
+    },
+    "publisher_review": {
+      "path": "publication/.github/maps/publish.py",
+      "finding": "Accepted manifest and reviewed-file hash binding, immutable artifact/run validation, candidate identity check, protected LIVE/Worn byte preservation, and 27-file public verification implemented. Publication success itself must be confirmed by receipt."
+    }
+  },
+  "strengths": [
+    "Actual traversable geometry and visible boundary walls replace empty rectangular diagrams.",
+    "Local minimap maintains useful scale while expanded view fits explored geometry.",
+    "Distinct player, ore, entrance and objective symbols with complete legend.",
+    "Shared cached terrain data avoids independent map drift and bounded discovery cannot see through walls.",
+    "Approved frame, character and surrounding artwork preserved."
+  ],
+  "limitations": [
+    "No direct physical iPhone Safari performance measurement reviewed; Apple Metal browser evidence is not equivalent.",
+    "Very large explored areas can become small in expanded fit-to-bounds view; zoom/pan is not implemented.",
+    "Deep expanded map displays the currently loaded terrain window; retained exploration outside it is not an all-depth atlas.",
+    "Exploration storage scales with explored cells; extreme-session memory and save latency are not established by these checks."
+  ]
+}

@@ -1,0 +1,284 @@
+{
+  "passed": true,
+  "failure": null,
+  "version": "1.0.0-dev.15.39",
+  "files": {
+    "index.html": {
+      "size": 23145,
+      "sha256": "accf58aa026489fd675bd86147014cd70dcc39ca3954f445e9d35bc49e4aa7c7"
+    },
+    "index.js": {
+      "size": 282403,
+      "sha256": "1c05fc40c7e418b0234c4e5ac39dfc7df1286e98443946e84b89a7394de6c753"
+    },
+    "index.pck": {
+      "size": 286449266,
+      "sha256": "85f5ae86dbaa05c6dba686c5e5cf77fc82bd0ecc0166612088151353d6e224a6"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 4571,
+      "sha256": "65bc52dba653b2c39735a621863ae7332dda9c65d3a1bd7891d356390110da7f"
+    }
+  },
+  "source": "7611e680c3af26c8137f9b25ff9426f2e9d0a350",
+  "runtime": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+    "lost": false,
+    "dpr": 2
+  },
+  "checks": [
+    {
+      "name": "graphical-renderer",
+      "passed": true,
+      "runtime": {
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+        "lost": false,
+        "dpr": 2
+      }
+    },
+    {
+      "name": "terrain-mossMine1",
+      "passed": true
+    },
+    {
+      "name": "mossMine1-mini",
+      "passed": true
+    },
+    {
+      "name": "shared-mossMine1",
+      "passed": true
+    },
+    {
+      "name": "mossMine1-expanded",
+      "passed": true
+    },
+    {
+      "name": "terrain-mossMine2",
+      "passed": true
+    },
+    {
+      "name": "mossMine2-mini",
+      "passed": true
+    },
+    {
+      "name": "shared-mossMine2",
+      "passed": true
+    },
+    {
+      "name": "mossMine2-expanded",
+      "passed": true
+    },
+    {
+      "name": "terrain-moonMine1",
+      "passed": true
+    },
+    {
+      "name": "moonMine1-mini",
+      "passed": true
+    },
+    {
+      "name": "shared-moonMine1",
+      "passed": true
+    },
+    {
+      "name": "moonMine1-expanded",
+      "passed": true
+    },
+    {
+      "name": "terrain-moonMine2",
+      "passed": true
+    },
+    {
+      "name": "moonMine2-mini",
+      "passed": true
+    },
+    {
+      "name": "shared-moonMine2",
+      "passed": true
+    },
+    {
+      "name": "moonMine2-expanded",
+      "passed": true
+    },
+    {
+      "name": "terrain-emberMine1",
+      "passed": true
+    },
+    {
+      "name": "emberMine1-mini",
+      "passed": true
+    },
+    {
+      "name": "shared-emberMine1",
+      "passed": true
+    },
+    {
+      "name": "emberMine1-expanded",
+      "passed": true
+    },
+    {
+      "name": "terrain-emberMine2",
+      "passed": true
+    },
+    {
+      "name": "emberMine2-mini",
+      "passed": true
+    },
+    {
+      "name": "shared-emberMine2",
+      "passed": true
+    },
+    {
+      "name": "emberMine2-expanded",
+      "passed": true
+    },
+    {
+      "name": "terrain-starMine1",
+      "passed": true
+    },
+    {
+      "name": "starMine1-mini",
+      "passed": true
+    },
+    {
+      "name": "shared-starMine1",
+      "passed": true
+    },
+    {
+      "name": "starMine1-expanded",
+      "passed": true
+    },
+    {
+      "name": "terrain-starMine2",
+      "passed": true
+    },
+    {
+      "name": "starMine2-mini",
+      "passed": true
+    },
+    {
+      "name": "shared-starMine2",
+      "passed": true
+    },
+    {
+      "name": "starMine2-expanded",
+      "passed": true
+    },
+    {
+      "name": "deep-before-mini",
+      "passed": true
+    },
+    {
+      "name": "actual-touch-mining-updates-map",
+      "passed": true,
+      "before": {
+        "area": "endless",
+        "explored_areas": 9,
+        "known": 34,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          1376,
+          224
+        ],
+        "revision": 9,
+        "shared": true,
+        "terrain": true
+      },
+      "after": {
+        "area": "endless",
+        "explored_areas": 9,
+        "known": 60,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          1376,
+          224
+        ],
+        "revision": 11,
+        "shared": true,
+        "terrain": true
+      }
+    },
+    {
+      "name": "deep-after-mini",
+      "passed": true
+    },
+    {
+      "name": "deep-expanded",
+      "passed": true
+    },
+    {
+      "name": "exploration-restored",
+      "passed": true,
+      "saved": {
+        "area": "endless",
+        "explored_areas": 9,
+        "known": 60,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          1376,
+          224
+        ],
+        "revision": 11,
+        "shared": true,
+        "terrain": true
+      },
+      "restored": {
+        "area": "endless",
+        "explored_areas": 9,
+        "known": 60,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          1376,
+          224
+        ],
+        "revision": 11,
+        "shared": true,
+        "terrain": true
+      }
+    },
+    {
+      "name": "deep-restored",
+      "passed": true
+    },
+    {
+      "name": "no-runtime-errors",
+      "passed": true
+    }
+  ],
+  "compaction": {
+    "omitted": "per-capture state dictionaries only; original retained in immutable evidence artifact11160566501",
+    "original_report_sha256": "08fba37f73a562cc82a21649a7bded6b41f35c2d98a309cea01b5a410d503785"
+  }
+}
