@@ -1,0 +1,6 @@
+# Original asset generation
+Built-in image_gen; three separate transparent PNGs, never concept crops. Character reference: assets/ui/skills/miner-mole-portrait-v1.png. User explicitly required its exact stocky round Pappa Hammer face, black square glasses, full brown beard, brown eyes, orange helmet/headlamp, cream shirt and brown leather. Initial concept Laser character was rejected; final Laser uses both this reference and final Bore Rush as identity references.
+Bore Rush prompt: full-body dad leaning into forward propulsion while gripping heavy brass-and-blue drill in both hands, motion conveyed by pose/boots/stone fragments, no laser, no wave, no text/background/UI.
+Laser prompt: same exact face and round body, planted stance, both hands on stationary drill, compact brass/crystal emitter attached atop barrel, one long thin cyan-white beam into distant rock fragments, no background/text/UI, preserve identity above all else.
+Emitter prompt: only the compact brass housing/crystal chamber/cyan right-facing lens with two mounting brackets from final Laser illustration; no hero/drill/beam/background/text/UI.
+Original PNGs are committed unmodified under assets/ui/mods/{bore-rush-pappa-v1,laser-pappa-v1,laser-emitter-v1}.png. Runtime uses existing backdrop and live text/progress/buttons. Final Mac captures are the integrated visual acceptance evidence.

@@ -1,3 +1,17 @@
+# Oppdatert 1. oktober 2026 — DEV15.44 publisert: Bore Rush og Laser
+
+DEV15.44 er publisert på https://corpax88.github.io/Ever-Deeper/dev/. Refresh og Continue; ingen reset. DEV TOOLS har BORE RUSH TEST og LASER TEST (session-only mod overrides, ingen gratis lagrede claims). Hold Mine for automatisk Bore Rush-fremdrift, styr retning, slipp for stopp. Laser har egen LASER ON/OFF-knapp over Mine; på gir lang 1-rute-stråle med gradvis graving, av gir vanlig drill. Boret står stille i lasermodus; kompakt visuelt påbygg. Begge miner avdekkede noder separat etter fjellet.
+
+Begge moddene har godkjent Resonance-lignende preview med korrekt Skills-Pappa Hammer, samlemål, pin/unpin på HUD, source hint, claim og av/på. Burrowsteel gir Bore Rush; Prismite gir Laser; eksisterende100000 podiemål. Én utstyrt mod om gangen; alle opptjente claims og innleverte verdier beholdes. Eksisterende Resonance-save migrerer additivt, Laser-valg lagres. De første konseptbildenes avvikende Laser-helt ble korrigert før bruk.
+
+Kanonisk kilde aa084fbdc75c9347e6f9a8f0e5a27c7639883495 på codex/drill-mods-20261001, Corpax88/Ever-Deeper. Bygger på eksaktDEV15.43. Native63 målrettede kontroller bestått: reelle skjulte noder, separate treff, 1-rute-bredde, stopp/slipp/meny/utgang, DEV-isolering, claims og ekte binær lagring/reload. Mac36920475575 bestått input,414core,38browser-kontroller og vanlig WebKit. Alle20 endelige Mac-bilder inspisert; faktiskAppleMetal/DPR2,667/844/932 bredder. Hele lokale/native manifestet matcher Mac byte-for-byte. Ingen fysisk-iPhone/FPS-påstand; FPS parkert; gammel invariant QA flag-order-feil beholdt ærlig.
+
+Kandidat11192001148, evidence11192016104. Publisering2edc19c1b13a5420310135ede95c2d81e7a1b8bd/run36921126602 lyktes. Kvittering11192840045 bekrefter27 offentlige filhasher og bevartLIVE1.0.4/Worn; rollback11192270570=DEV15.43. Main er bare publiseringsbærer: aldri bygg historiskmain-runtime. Detaljer påmain: docs/drill-mods/HANDOFF.md, .github/drill-mods/publication-receipt.json og fire kontaktark fra faktiske sluttbilder.
+
+Ingen ventende jobber eller godkjenninger. Ikke gjenta fullført uendret QA/publisering. Neste er brukerens telefonfølelse: prøv begge DEV-testvalg, styr Bore Rush og slipp, veksle Laser på/av, inspiser de to ressurs-podienes preview og tracking. LIVE/nettsideoppdatering ikke bestilt. Scratch /workspace/scratch/2cc6271f8659: game, runtime, candidate5, native6, mac-final, publication. Tidligere chat-scratch ble slettet underveis; runtime er gjenopprettet her. Lokal .git-HEAD er en eldre klone; bruk den eksakte eksterne kildecommitten som autoritet.
+
+---
+
 ## Accepted candidate — publishing
 Mac36920475575 passed input,414core,38browser checks and ordinary WebKit startup. All20 final Mac captures inspected; exact whole manifest matches native6/candidate5 (63checks). Candidate11192001148, digestsha256:527aea6c0359943ae9706f2d75218922c6d955b8864c10bc9e42e97b65217520; evidence11192016104. Sourceaa084fbdc75c9347e6f9a8f0e5a27c7639883495. DEV publication pending; no repeat approval needed.
 
