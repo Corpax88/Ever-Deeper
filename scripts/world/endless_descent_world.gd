@@ -2073,11 +2073,19 @@ func _nearest_resource_index() -> int:
 	return best_index
 
 
+func _exposed_node_ids() -> Dictionary:
+	var exposed: Dictionary = {}
+	for resource in resources:
+		if not bool(resource.mined) and _is_floor(Vector2i(resource.cell)):
+			exposed[String(resource.id)] = true
+	return exposed
+
+
 func _strike_resource(index: int, attack_power: int = -1, trigger_wave: bool = true) -> void:
 	if index < 0 or index >= resources.size():
 		return
 	var resource: Dictionary = resources[index]
-	if bool(resource.mined):
+	if bool(resource.mined) or not _is_floor(Vector2i(resource.cell)):
 		return
 	var tool: = _current_endless_tool()
 	resource.hp = maxi(0, int(resource.hp) - maxi(1, int(tool.get("power", 1)) if attack_power < 0 else attack_power))
@@ -3525,6 +3533,8 @@ func _emit_mined_reward(kind: String, amount: int, depth: int) -> void:
 func _apply_crusher_wave(center: Vector2i, tool: Dictionary) -> void:
 	if _wave_active:
 		return
+	# Snapshot before excavation: this attack reveals buried nodes, never mines them.
+	var exposed_before: Dictionary = _exposed_node_ids()
 	_wave_active = true
 	_wave_rewards.clear()
 	RunState.begin_state_batch()
@@ -3546,7 +3556,7 @@ func _apply_crusher_wave(center: Vector2i, tool: Dictionary) -> void:
 		var resource: Dictionary = resources[index]
 		var offset: Vector2i = Vector2i(resource.cell) - center
 		var distance: int = maxi(absi(offset.x), absi(offset.y))
-		if distance < 1 or distance > 2 or bool(resource.get("mined", false)):
+		if distance < 1 or distance > 2 or not exposed_before.has(String(resource.id)) or bool(resource.get("mined", false)):
 			continue
 		_strike_resource(index, maxi(1, roundi(float(power) * (0.72 if distance == 1 else 0.48))), false)
 	RunState.end_state_batch()
