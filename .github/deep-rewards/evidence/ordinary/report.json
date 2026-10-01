@@ -1,0 +1,1830 @@
+{
+  "kind": "ordinary-startup",
+  "source_commit": "7610aff55a2a74f79f2fa1a9cacf1a39079d7766",
+  "version": "1.0.0-dev.15.40",
+  "files": {
+    "index.html": {
+      "size": 23145,
+      "sha256": "2475a9cdc101a97f5148d00a6d013e163e5a79d583136d21e5cc62f7a7c08381"
+    },
+    "index.js": {
+      "size": 282403,
+      "sha256": "1c05fc40c7e418b0234c4e5ac39dfc7df1286e98443946e84b89a7394de6c753"
+    },
+    "index.pck": {
+      "size": 286450994,
+      "sha256": "08858299f0a987c4fcd0cd13afa1c0f7fad029c1f525615dae19ce1b7fe62920"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 4571,
+      "sha256": "65bc52dba653b2c39735a621863ae7332dda9c65d3a1bd7891d356390110da7f"
+    }
+  },
+  "normal_startup": true,
+  "fixture_args": [],
+  "physical_iphone": false,
+  "events": [
+    {
+      "event": "navigation",
+      "url": "http://127.0.0.1:49189/",
+      "at": 1790858104275
+    },
+    {
+      "event": "log",
+      "text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+      "at": 1790858109015
+    },
+    {
+      "event": "warning",
+      "text": "WebGL: non-portable extension enabled: WEBGL_polygon_mode",
+      "at": 1790858109095
+    },
+    {
+      "event": "log",
+      "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0) - Compatibility - Using Device: WebKit - WebKit WebGL",
+      "at": 1790858111548
+    },
+    {
+      "event": "navigation",
+      "url": "http://127.0.0.1:49189/",
+      "at": 1790858142883
+    },
+    {
+      "event": "log",
+      "text": "Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org",
+      "at": 1790858145826
+    },
+    {
+      "event": "warning",
+      "text": "WebGL: non-portable extension enabled: WEBGL_polygon_mode",
+      "at": 1790858145831
+    },
+    {
+      "event": "log",
+      "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0) - Compatibility - Using Device: WebKit - WebKit WebGL",
+      "at": 1790858146001
+    }
+  ],
+  "samples": [
+    {
+      "stage": "menu",
+      "at": 1790858119443,
+      "version": "1.0.0-dev.15.40",
+      "frames": 143,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47168 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1596080 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 509248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-0",
+      "at": 1790858125315,
+      "version": "1.0.0-dev.15.40",
+      "frames": 153,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47184 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1279408 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 605344 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-1",
+      "at": 1790858125887,
+      "version": "1.0.0-dev.15.40",
+      "frames": 180,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47440 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1281168 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 606256 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-2",
+      "at": 1790858126444,
+      "version": "1.0.0-dev.15.40",
+      "frames": 214,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47440 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1281232 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 606400 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-3",
+      "at": 1790858126979,
+      "version": "1.0.0-dev.15.40",
+      "frames": 247,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47440 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1281280 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 606720 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-4",
+      "at": 1790858127520,
+      "version": "1.0.0-dev.15.40",
+      "frames": 279,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47440 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1281440 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 606848 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-5",
+      "at": 1790858128100,
+      "version": "1.0.0-dev.15.40",
+      "frames": 312,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47440 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1281472 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 607184 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-6",
+      "at": 1790858128639,
+      "version": "1.0.0-dev.15.40",
+      "frames": 346,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47440 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1281472 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 607504 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-7",
+      "at": 1790858129223,
+      "version": "1.0.0-dev.15.40",
+      "frames": 379,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47440 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1281504 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 607568 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-8",
+      "at": 1790858129770,
+      "version": "1.0.0-dev.15.40",
+      "frames": 414,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47600 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1281680 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 607824 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-9",
+      "at": 1790858130335,
+      "version": "1.0.0-dev.15.40",
+      "frames": 447,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47600 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1281760 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 607840 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-10",
+      "at": 1790858130872,
+      "version": "1.0.0-dev.15.40",
+      "frames": 480,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47600 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1281792 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 608096 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-11",
+      "at": 1790858131422,
+      "version": "1.0.0-dev.15.40",
+      "frames": 513,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47600 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1281888 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 608128 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-12",
+      "at": 1790858131961,
+      "version": "1.0.0-dev.15.40",
+      "frames": 546,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47600 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1281936 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 608384 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-13",
+      "at": 1790858132497,
+      "version": "1.0.0-dev.15.40",
+      "frames": 578,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47600 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1282192 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 602288 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-14",
+      "at": 1790858133048,
+      "version": "1.0.0-dev.15.40",
+      "frames": 610,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47600 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1282272 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 602544 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-15",
+      "at": 1790858133577,
+      "version": "1.0.0-dev.15.40",
+      "frames": 643,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47600 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1282352 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 602544 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-16",
+      "at": 1790858134151,
+      "version": "1.0.0-dev.15.40",
+      "frames": 673,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47600 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1282352 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 602544 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-17",
+      "at": 1790858134783,
+      "version": "1.0.0-dev.15.40",
+      "frames": 712,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47552 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1282352 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 602544 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-18",
+      "at": 1790858135348,
+      "version": "1.0.0-dev.15.40",
+      "frames": 746,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47552 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1275824 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 598496 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-19",
+      "at": 1790858135935,
+      "version": "1.0.0-dev.15.40",
+      "frames": 779,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47552 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1275824 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599280 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-20",
+      "at": 1790858136538,
+      "version": "1.0.0-dev.15.40",
+      "frames": 815,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47552 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1198720 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599280 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-21",
+      "at": 1790858137122,
+      "version": "1.0.0-dev.15.40",
+      "frames": 850,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47552 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1132624 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-22",
+      "at": 1790858137677,
+      "version": "1.0.0-dev.15.40",
+      "frames": 885,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47552 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1122720 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599216 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-23",
+      "at": 1790858138351,
+      "version": "1.0.0-dev.15.40",
+      "frames": 923,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47312 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1115392 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599232 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-24",
+      "at": 1790858138911,
+      "version": "1.0.0-dev.15.40",
+      "frames": 958,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47312 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1115376 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-25",
+      "at": 1790858139467,
+      "version": "1.0.0-dev.15.40",
+      "frames": 992,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47456 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1115056 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-26",
+      "at": 1790858140048,
+      "version": "1.0.0-dev.15.40",
+      "frames": 1023,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47456 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1104992 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-27",
+      "at": 1790858140585,
+      "version": "1.0.0-dev.15.40",
+      "frames": 1058,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47456 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1087696 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-28",
+      "at": 1790858141123,
+      "version": "1.0.0-dev.15.40",
+      "frames": 1090,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47456 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1087696 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "new-game-29",
+      "at": 1790858141667,
+      "version": "1.0.0-dev.15.40",
+      "frames": 1123,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  47456 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1087696 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-0",
+      "at": 1790858155215,
+      "version": "1.0.0-dev.15.40",
+      "frames": 228,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42224 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1292144 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 603184 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-1",
+      "at": 1790858155811,
+      "version": "1.0.0-dev.15.40",
+      "frames": 261,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42592 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1294752 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 604368 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-2",
+      "at": 1790858156362,
+      "version": "1.0.0-dev.15.40",
+      "frames": 294,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42528 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1294944 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 604688 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-3",
+      "at": 1790858156903,
+      "version": "1.0.0-dev.15.40",
+      "frames": 327,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42528 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1295152 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 604752 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-4",
+      "at": 1790858157435,
+      "version": "1.0.0-dev.15.40",
+      "frames": 359,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42528 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1295312 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 605072 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-5",
+      "at": 1790858157983,
+      "version": "1.0.0-dev.15.40",
+      "frames": 391,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42528 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1295344 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 605152 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-6",
+      "at": 1790858158518,
+      "version": "1.0.0-dev.15.40",
+      "frames": 424,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42528 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1295440 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 605472 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-7",
+      "at": 1790858159054,
+      "version": "1.0.0-dev.15.40",
+      "frames": 456,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42528 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1295552 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 605536 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-8",
+      "at": 1790858159618,
+      "version": "1.0.0-dev.15.40",
+      "frames": 489,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42528 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1295696 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 605792 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-9",
+      "at": 1790858160160,
+      "version": "1.0.0-dev.15.40",
+      "frames": 522,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42528 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1295744 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 605824 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-10",
+      "at": 1790858160703,
+      "version": "1.0.0-dev.15.40",
+      "frames": 555,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42528 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1295920 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599968 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-11",
+      "at": 1790858161262,
+      "version": "1.0.0-dev.15.40",
+      "frames": 588,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42528 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1295952 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 600016 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-12",
+      "at": 1790858161852,
+      "version": "1.0.0-dev.15.40",
+      "frames": 624,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42528 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1295936 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 600272 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-13",
+      "at": 1790858162404,
+      "version": "1.0.0-dev.15.40",
+      "frames": 657,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42480 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1296272 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 600272 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-14",
+      "at": 1790858162936,
+      "version": "1.0.0-dev.15.40",
+      "frames": 689,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42480 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1296368 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 600816 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-15",
+      "at": 1790858163479,
+      "version": "1.0.0-dev.15.40",
+      "frames": 722,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42480 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1296400 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 596784 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-16",
+      "at": 1790858164050,
+      "version": "1.0.0-dev.15.40",
+      "frames": 754,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42480 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1296400 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 597296 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-17",
+      "at": 1790858164594,
+      "version": "1.0.0-dev.15.40",
+      "frames": 787,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42480 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1296448 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 597296 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-18",
+      "at": 1790858165130,
+      "version": "1.0.0-dev.15.40",
+      "frames": 820,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42480 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1296560 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 597296 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "confirmed-new-game-19",
+      "at": 1790858165671,
+      "version": "1.0.0-dev.15.40",
+      "frames": 852,
+      "wasm_bytes": [],
+      "renderer": "Apple GPU",
+      "lost": false,
+      "viewport": [
+        844,
+        390
+      ],
+      "dpr": 2,
+      "processes": [
+        " 2645  42480 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking.Development",
+        " 2646 1296640 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 597296 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    }
+  ],
+  "memory": [
+    {
+      "stage": "startup",
+      "at": 1790858120182,
+      "processes": [
+        " 2646 1615232 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 563696 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858120690,
+      "processes": [
+        " 2646 1556304 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 688976 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858121168,
+      "processes": [
+        " 2646 1556656 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 691728 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858121662,
+      "processes": [
+        " 2646 1553168 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 694032 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858122160,
+      "processes": [
+        " 2646 1550272 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 695920 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858122674,
+      "processes": [
+        " 2646 1456784 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 779792 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858123350,
+      "processes": [
+        " 2646 1306160 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 782352 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858123683,
+      "processes": [
+        " 2646 1278016 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 683664 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858124181,
+      "processes": [
+        " 2646 1278224 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 694240 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858124672,
+      "processes": [
+        " 2646 1278352 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 696816 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858125180,
+      "processes": [
+        " 2646 1278480 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 697696 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858125695,
+      "processes": [
+        " 2646 1280496 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 606160 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858126190,
+      "processes": [
+        " 2646 1281232 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 606384 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858126675,
+      "processes": [
+        " 2646 1281248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 606720 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858127173,
+      "processes": [
+        " 2646 1281328 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 606784 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858127682,
+      "processes": [
+        " 2646 1281440 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 607104 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858128180,
+      "processes": [
+        " 2646 1281488 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 607184 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858128677,
+      "processes": [
+        " 2646 1281472 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 607504 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858129181,
+      "processes": [
+        " 2646 1281504 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 607568 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858129672,
+      "processes": [
+        " 2646 1281680 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 607824 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858130176,
+      "processes": [
+        " 2646 1281728 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 607840 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858130679,
+      "processes": [
+        " 2646 1281760 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 607840 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858131186,
+      "processes": [
+        " 2646 1281824 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 608128 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858131681,
+      "processes": [
+        " 2646 1281904 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 608128 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858132182,
+      "processes": [
+        " 2646 1281936 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 608400 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858132687,
+      "processes": [
+        " 2646 1282240 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 602288 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858133191,
+      "processes": [
+        " 2646 1282320 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 602544 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858133687,
+      "processes": [
+        " 2646 1282352 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 602544 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858134212,
+      "processes": [
+        " 2646 1282352 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 602544 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858134724,
+      "processes": [
+        " 2646 1282352 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 602544 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858135226,
+      "processes": [
+        " 2646 1275824 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 602576 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858135710,
+      "processes": [
+        " 2646 1275824 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 598496 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858136235,
+      "processes": [
+        " 2646 1275824 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599280 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858136738,
+      "processes": [
+        " 2646 1150064 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858137218,
+      "processes": [
+        " 2646 1127824 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858137720,
+      "processes": [
+        " 2646 1121008 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599216 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858138275,
+      "processes": [
+        " 2646 1117552 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599232 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858138745,
+      "processes": [
+        " 2646 1115376 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599232 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858139223,
+      "processes": [
+        " 2646 1115056 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858139789,
+      "processes": [
+        " 2646 1115056 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858140234,
+      "processes": [
+        " 2646 1104992 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858140717,
+      "processes": [
+        " 2646 1087696 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858141219,
+      "processes": [
+        " 2646 1087696 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858141721,
+      "processes": [
+        " 2646 1087712 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858142236,
+      "processes": [
+        " 2646 1070144 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 510784 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858142724,
+      "processes": [
+        " 2646 1070144 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 510784 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858143236,
+      "processes": [
+        " 2646 1178448 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653  89520 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858143746,
+      "processes": [
+        " 2646 1224640 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653  89520 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858144228,
+      "processes": [
+        " 2646 1130432 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653  87888 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858144729,
+      "processes": [
+        " 2646 1274592 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653  87888 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858145274,
+      "processes": [
+        " 2646 1725248 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653  86672 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858145807,
+      "processes": [
+        " 2646 1945824 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653  81632 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858146428,
+      "processes": [
+        " 2646 1928816 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653  97872 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858146737,
+      "processes": [
+        " 2646 1927744 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 101824 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858147253,
+      "processes": [
+        " 2646 1912496 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 134288 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858147729,
+      "processes": [
+        " 2646 1856048 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 226592 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858148232,
+      "processes": [
+        " 2646 1836576 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 292240 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858148744,
+      "processes": [
+        " 2646 1819872 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 330144 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858149239,
+      "processes": [
+        " 2646 1820096 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 339616 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858149749,
+      "processes": [
+        " 2646 1836992 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 339616 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858150240,
+      "processes": [
+        " 2646 1824576 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 381600 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858150769,
+      "processes": [
+        " 2646 1737408 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 476848 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858151251,
+      "processes": [
+        " 2646 1689840 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 529744 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858151760,
+      "processes": [
+        " 2646 1665296 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 521136 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858152250,
+      "processes": [
+        " 2646 1665376 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 521280 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858152769,
+      "processes": [
+        " 2646 1645824 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 522176 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858153255,
+      "processes": [
+        " 2646 1667056 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 522192 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858153789,
+      "processes": [
+        " 2646 1586512 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 602304 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858154281,
+      "processes": [
+        " 2646 1474832 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 717936 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858154788,
+      "processes": [
+        " 2646 1291664 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 787696 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858155278,
+      "processes": [
+        " 2646 1293600 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 603664 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858155762,
+      "processes": [
+        " 2646 1294672 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 604304 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858156260,
+      "processes": [
+        " 2646 1294944 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 604368 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858156767,
+      "processes": [
+        " 2646 1295040 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 604688 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858157267,
+      "processes": [
+        " 2646 1295280 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 604752 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858157757,
+      "processes": [
+        " 2646 1295328 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 605072 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858158262,
+      "processes": [
+        " 2646 1295424 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 605152 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858158760,
+      "processes": [
+        " 2646 1295520 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 605472 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858159263,
+      "processes": [
+        " 2646 1295664 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 605536 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858159761,
+      "processes": [
+        " 2646 1295712 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 605792 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858160268,
+      "processes": [
+        " 2646 1295776 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599696 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858160764,
+      "processes": [
+        " 2646 1295936 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 599968 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858161300,
+      "processes": [
+        " 2646 1295952 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 600016 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858161797,
+      "processes": [
+        " 2646 1295936 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 600272 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858162294,
+      "processes": [
+        " 2646 1296256 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 600272 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858162795,
+      "processes": [
+        " 2646 1296384 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 600816 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858163293,
+      "processes": [
+        " 2646 1296400 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 596784 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858163795,
+      "processes": [
+        " 2646 1296400 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 597296 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858164309,
+      "processes": [
+        " 2646 1296448 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 597296 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858164799,
+      "processes": [
+        " 2646 1296480 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 597296 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858165298,
+      "processes": [
+        " 2646 1296608 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 597296 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    },
+    {
+      "stage": "startup",
+      "at": 1790858165815,
+      "processes": [
+        " 2646 1306432 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent.Development",
+        " 2653 597296 /Users/runner/Library/Caches/ms-playwright/webkit-2336/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU.Development"
+      ]
+    }
+  ],
+  "images": [
+    "01-ordinary-menu.png",
+    "02-after-new-game.png",
+    "03-after-escape.png",
+    "04-saved-run-menu.png",
+    "05-new-game-confirmation.png",
+    "06-confirmed-new-game.png"
+  ],
+  "browser": "26.5",
+  "fixApis": {
+    "audio": {
+      "enabled": true,
+      "cadenceHz": 60,
+      "active": 1,
+      "positionMessages": 870,
+      "configurationsSent": 3,
+      "configurationsReceived": 2,
+      "stalePositionMessages": 4,
+      "nodes": [
+        {
+          "id": 1,
+          "music": true,
+          "hz": 60,
+          "version": 1,
+          "confirmedVersion": 1,
+          "receivedHz": 60,
+          "positionMessages": 810,
+          "lastSamplePosition": 597120
+        }
+      ]
+    }
+  },
+  "completed_observation": true
+}

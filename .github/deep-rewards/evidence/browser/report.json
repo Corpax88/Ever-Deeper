@@ -1,0 +1,4256 @@
+{
+  "passed": true,
+  "failure": null,
+  "version": "1.0.0-dev.15.40",
+  "files": {
+    "index.html": {
+      "size": 23145,
+      "sha256": "2475a9cdc101a97f5148d00a6d013e163e5a79d583136d21e5cc62f7a7c08381"
+    },
+    "index.js": {
+      "size": 282403,
+      "sha256": "1c05fc40c7e418b0234c4e5ac39dfc7df1286e98443946e84b89a7394de6c753"
+    },
+    "index.pck": {
+      "size": 286450994,
+      "sha256": "08858299f0a987c4fcd0cd13afa1c0f7fad029c1f525615dae19ce1b7fe62920"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 4571,
+      "sha256": "65bc52dba653b2c39735a621863ae7332dda9c65d3a1bd7891d356390110da7f"
+    }
+  },
+  "source": "7610aff55a2a74f79f2fa1a9cacf1a39079d7766",
+  "runtime": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+    "lost": false,
+    "dpr": 2
+  },
+  "checks": [
+    {
+      "name": "graphical-renderer",
+      "passed": true,
+      "runtime": {
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+        "lost": false,
+        "dpr": 2
+      }
+    },
+    {
+      "name": "ordinary-before",
+      "passed": true,
+      "state": {
+        "active_rigs": 0,
+        "cycle": 0,
+        "drill_level": 3,
+        "error": "",
+        "fixture": "menu",
+        "gear": "deepcore",
+        "health": 32574,
+        "hit_phase": -1,
+        "id": 2,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1205.36364746094,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "gear": "",
+          "generations": 0,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 0
+        },
+        "native_canvas": {},
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 5,
+        "position": [
+          1376,
+          224
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 90,
+          "primitives": 2827
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 400,
+          "samples": 0
+        },
+        "swing": 0,
+        "target_valid": false,
+        "version": "1.0.0-dev.15.40",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true,
+        "actual_map": {
+          "expanded": false,
+          "known": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "markers": 2,
+          "world_active": true
+        },
+        "buttons": {
+          "continue": [
+            708.181823730469,
+            67.272705078125,
+            526,
+            92
+          ],
+          "dev_toggle": [
+            116,
+            182,
+            132,
+            58
+          ],
+          "gold_podium": [
+            -274.533630371094,
+            1973.22790527344,
+            24,
+            24
+          ],
+          "hud_bag": [
+            950.363647460938,
+            446.54541015625,
+            142,
+            142
+          ],
+          "hud_context": [
+            706.363647460938,
+            459.54541015625,
+            226,
+            116
+          ],
+          "hud_guide": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "hud_menu": [
+            116,
+            18,
+            120,
+            120
+          ],
+          "hud_mine": [
+            1110.36364746094,
+            422.54541015625,
+            190,
+            190
+          ],
+          "hud_mole": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "inventory": [
+            542.727294921875,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "inventory_close": [
+            118,
+            24,
+            132,
+            86
+          ],
+          "joystick": [
+            0,
+            0,
+            1416.36364746094,
+            654.54541015625
+          ],
+          "map": [
+            713.636413574219,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "minimap": [
+            700.363647460938,
+            18,
+            188,
+            96
+          ],
+          "mole_close": [
+            1186.95263671875,
+            54.9717903137207,
+            125.677337646484,
+            74.8079376220703
+          ],
+          "mole_tab_0": [
+            492.734954833984,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_1": [
+            736.110107421875,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_2": [
+            979.485290527344,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "new_game": [
+            708.181823730469,
+            173.272705078125,
+            526,
+            82
+          ],
+          "prospecting_row": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "settings": [
+            799.090942382812,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "settings_back": [
+            568.181823730469,
+            539.272705078125,
+            280,
+            82
+          ],
+          "shop_close": [
+            63.7363891601562,
+            22.6825180053711,
+            78.6629333496094,
+            78.6629333496094
+          ],
+          "skills": [
+            628.181823730469,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "skills_close": [
+            1325.45458984375,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "stat_carrying": [
+            775.323669433594,
+            359.090911865234,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_mining": [
+            775.323669433594,
+            200.909088134766,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_prospecting": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_running": [
+            775.323669433594,
+            280,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_stamina": [
+            775.323669433594,
+            520.909057617188,
+            551.236328125,
+            80
+          ],
+          "treasury_claim": [
+            36,
+            28,
+            175,
+            48
+          ],
+          "treasury_close": [
+            36,
+            28,
+            64,
+            48
+          ],
+          "treasury_pin": [
+            36,
+            28,
+            119,
+            48
+          ]
+        },
+        "cartography": {
+          "area": "endless",
+          "explored_areas": 1,
+          "known": 34,
+          "offset": [
+            0,
+            0
+          ],
+          "player": [
+            1376,
+            224
+          ],
+          "revision": 1,
+          "shared": false,
+          "terrain": true
+        },
+        "deep_dig": {
+          "checks": {},
+          "held": false,
+          "movement": [
+            0,
+            0
+          ]
+        },
+        "deep_events": {
+          "active_here": false,
+          "speed": 1,
+          "state": {
+            "kind": "",
+            "mined": 0,
+            "next": 2000000,
+            "remaining": 0,
+            "serial": 0,
+            "x": 0,
+            "y": 0
+          },
+          "visual_count": 0
+        },
+        "dev_drawer_open": false,
+        "developer_tools_visible": true,
+        "effort": 1,
+        "game_started": true,
+        "guide_open": false,
+        "hub_context": "",
+        "hub_player": [
+          430,
+          820
+        ],
+        "hud_caption": [
+          116,
+          138,
+          120,
+          33
+        ],
+        "hud_caption_text": "SKILLS",
+        "hud_caption_visible": true,
+        "hud_context": [
+          706.363647460938,
+          459.54541015625,
+          226,
+          116
+        ],
+        "hud_context_visible": true,
+        "hud_goal": [
+          900.363647460938,
+          18,
+          400,
+          76
+        ],
+        "hud_goal_visible": true,
+        "hud_gold": [
+          380,
+          18,
+          166,
+          112
+        ],
+        "hud_guide_visible": false,
+        "hud_map": [
+          700.363647460938,
+          18,
+          188,
+          96
+        ],
+        "hud_menu_icon": "res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png",
+        "hud_mine_visible": true,
+        "inventory_open": false,
+        "journal_tab": "together",
+        "map_open": false,
+        "mine_input_held": false,
+        "modal_active": false,
+        "mole_open": false,
+        "node_assets": {},
+        "physics_frame": 169,
+        "player_controls_enabled": true,
+        "prospecting": {
+          "checks": {},
+          "level": 0,
+          "results": {}
+        },
+        "resonance": {
+          "active": false,
+          "age": -1,
+          "blocked": false,
+          "bursts": 0,
+          "charge": 0,
+          "debris": 0,
+          "direction": [
+            1,
+            0
+          ],
+          "dug": 0,
+          "enabled": true,
+          "excavated": 0,
+          "rings": 0,
+          "row": 0,
+          "variant": "crusher"
+        },
+        "reward_drops": {},
+        "reward_node_drops": {},
+        "reward_rock_drops": {},
+        "reward_seam_multiplier": 1,
+        "reward_stone_cargo": 0,
+        "settings_open": false,
+        "shared_ui_roots": 1,
+        "shared_ui_saved": 0,
+        "shared_ui_visible": true,
+        "shop_open": false,
+        "skill_progress": [
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              236.036361694336,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              257.854553222656,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              315.127258300781,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              336.945465087891,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              394.218170166016,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              416.036376953125,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              473.309051513672,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              495.127258300781,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          }
+        ],
+        "skill_xp": {
+          "carrying": 0,
+          "mining": 0,
+          "prospecting": 1,
+          "running": 0,
+          "stamina": 100
+        },
+        "skills": [
+          {
+            "id": "mining",
+            "level": 0,
+            "maxed": false,
+            "name": "Mining",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "running",
+            "level": 0,
+            "maxed": false,
+            "name": "Running",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "carrying",
+            "level": 0,
+            "maxed": false,
+            "name": "Carrying",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "prospecting",
+            "level": 0,
+            "maxed": false,
+            "name": "Prospecting",
+            "next": 10,
+            "ratio": 0.1,
+            "xp": 1
+          }
+        ],
+        "skills_open": false,
+        "skills_plate": [
+          753.505493164062,
+          122.727272033691,
+          594.872680664062,
+          498.181793212891
+        ],
+        "stamina": 100,
+        "stamina_bar": 0,
+        "stamina_rest": 1.81666666666667,
+        "tooltip_id": "",
+        "tooltip_rect": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "tooltip_text": "",
+        "tooltip_visible": false,
+        "treasury": {
+          "active_kind": "",
+          "bay_count": 27,
+          "camera_center": [
+            0,
+            0
+          ],
+          "camera_zoom": [
+            1,
+            1
+          ],
+          "cancelled": 0,
+          "cargo": {
+            "ambercore": 0,
+            "astralite": 0,
+            "burrowsteel": 0,
+            "copper": 0,
+            "crownstone": 0,
+            "deep_alloy": 0,
+            "deepstone": 0,
+            "echo_crystal": 0,
+            "emberstone": 0,
+            "furnaceheart": 0,
+            "gold": 0,
+            "infernium": 0,
+            "lumenstone": 0,
+            "lunacore": 0,
+            "magmaite": 0,
+            "memory_silk": 0,
+            "moonglass": 0,
+            "phasecrystal": 0,
+            "prismite": 0,
+            "rootiron": 0,
+            "singularity": 0,
+            "starshard": 0,
+            "stone": 0,
+            "sunslag": 0,
+            "voidglass": 0,
+            "waystone": 0
+          },
+          "circular": true,
+          "delivering": false,
+          "flashes": {},
+          "inside": false,
+          "landings": 0,
+          "packet_kinds": [],
+          "packet_slots": [],
+          "packets": 0,
+          "player": [
+            430,
+            820
+          ],
+          "remaining_batches": 0,
+          "stack_capacity": 180,
+          "stack_slots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "totals": {},
+          "upgrades": 0,
+          "walk_through": true,
+          "wallet": 0,
+          "zone": [
+            2000,
+            1600
+          ]
+        },
+        "treasury_goal": {
+          "claim_disabled": false,
+          "claim_text": "CLAIM RESONANCE",
+          "hud": {
+            "detail": "Keep mining deeper. Relics expand your Hub.",
+            "hud_action": "Mine deeper · The Deep",
+            "hud_title": "Find relic 1 of 5",
+            "kind": "endless_explore",
+            "objective_id": "endless:explore:forge_heart",
+            "relic_id": "forge_heart",
+            "requirements": [],
+            "requirements_ready": false,
+            "station_id": "deepElevator",
+            "title": "Find relic 1 of 5"
+          },
+          "kind": "",
+          "open": false,
+          "rendered": {
+            "action_text": "Mine deeper · The Deep",
+            "action_visible": true,
+            "detail": "Keep mining deeper. Relics expand your Hub.",
+            "hud_action": "Mine deeper · The Deep",
+            "hud_title": "Find relic 1 of 5",
+            "input_blocking": false,
+            "kind": "endless_explore",
+            "objective_id": "endless:explore:forge_heart",
+            "panel_rect": "[P: (900.3636, 18.0), S: (400.0, 76.0)]",
+            "relic_id": "forge_heart",
+            "rendered_rows": [],
+            "requirements": [],
+            "requirements_ready": false,
+            "station_id": "deepElevator",
+            "title": "Find relic 1 of 5",
+            "title_text": "Find relic 1 of 5",
+            "visible": true
+          },
+          "saved": {
+            "pinned": "",
+            "resonance_claimed": false,
+            "resonance_enabled": false
+          }
+        }
+      }
+    },
+    {
+      "name": "real-5x5-mining",
+      "passed": true,
+      "before": {
+        "active": false,
+        "age": -1,
+        "blocked": false,
+        "bursts": 0,
+        "charge": 0,
+        "debris": 0,
+        "direction": [
+          1,
+          0
+        ],
+        "dug": 0,
+        "enabled": true,
+        "excavated": 0,
+        "rings": 0,
+        "row": 0,
+        "variant": "crusher"
+      },
+      "after": {
+        "active": false,
+        "age": -1,
+        "blocked": false,
+        "bursts": 1,
+        "charge": 0,
+        "debris": 3,
+        "direction": [
+          0,
+          1
+        ],
+        "dug": 57,
+        "enabled": true,
+        "excavated": 57,
+        "rings": 0,
+        "row": 12,
+        "variant": "crusher"
+      }
+    },
+    {
+      "name": "ordinary-stone-produced",
+      "passed": true,
+      "drops": {
+        "stone": 51
+      }
+    },
+    {
+      "name": "no-random-valuables-from-rock",
+      "passed": true,
+      "rock": {
+        "stone": 51
+      },
+      "nodes": {}
+    },
+    {
+      "name": "ordinary-after",
+      "passed": true,
+      "state": {
+        "active_rigs": 0,
+        "cycle": 0.0989,
+        "drill_level": 3,
+        "error": "",
+        "fixture": "menu",
+        "gear": "deepcore",
+        "health": 30602,
+        "hit_phase": 0.42,
+        "id": 2,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1205.36364746094,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "gear": "",
+          "generations": 0,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 0
+        },
+        "native_canvas": {},
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 5,
+        "position": [
+          1376,
+          280.666656494141
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 111,
+          "primitives": 2923
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 400,
+          "samples": 0
+        },
+        "swing": 43,
+        "target_valid": false,
+        "version": "1.0.0-dev.15.40",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true,
+        "actual_map": {
+          "expanded": false,
+          "known": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "markers": 1,
+          "world_active": true
+        },
+        "buttons": {
+          "continue": [
+            708.181823730469,
+            67.272705078125,
+            526,
+            92
+          ],
+          "dev_toggle": [
+            116,
+            182,
+            132,
+            58
+          ],
+          "gold_podium": [
+            -274.533630371094,
+            1940.56176757812,
+            24,
+            24
+          ],
+          "hud_bag": [
+            950.363647460938,
+            446.54541015625,
+            142,
+            142
+          ],
+          "hud_context": [
+            706.363647460938,
+            459.54541015625,
+            226,
+            116
+          ],
+          "hud_guide": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "hud_menu": [
+            116,
+            18,
+            120,
+            120
+          ],
+          "hud_mine": [
+            1110.36364746094,
+            422.54541015625,
+            190,
+            190
+          ],
+          "hud_mole": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "inventory": [
+            542.727294921875,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "inventory_close": [
+            118,
+            24,
+            132,
+            86
+          ],
+          "joystick": [
+            0,
+            0,
+            1416.36364746094,
+            654.54541015625
+          ],
+          "map": [
+            713.636413574219,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "minimap": [
+            700.363647460938,
+            18,
+            188,
+            96
+          ],
+          "mole_close": [
+            1186.95263671875,
+            54.9717903137207,
+            125.677337646484,
+            74.8079376220703
+          ],
+          "mole_tab_0": [
+            492.734954833984,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_1": [
+            736.110107421875,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_2": [
+            979.485290527344,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "new_game": [
+            708.181823730469,
+            173.272705078125,
+            526,
+            82
+          ],
+          "prospecting_row": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "settings": [
+            799.090942382812,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "settings_back": [
+            568.181823730469,
+            539.272705078125,
+            280,
+            82
+          ],
+          "shop_close": [
+            63.7363891601562,
+            22.6825180053711,
+            78.6629333496094,
+            78.6629333496094
+          ],
+          "skills": [
+            628.181823730469,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "skills_close": [
+            1325.45458984375,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "stat_carrying": [
+            775.323669433594,
+            359.090911865234,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_mining": [
+            775.323669433594,
+            200.909088134766,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_prospecting": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_running": [
+            775.323669433594,
+            280,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_stamina": [
+            775.323669433594,
+            520.909057617188,
+            551.236328125,
+            80
+          ],
+          "treasury_claim": [
+            36,
+            28,
+            175,
+            48
+          ],
+          "treasury_close": [
+            36,
+            28,
+            64,
+            48
+          ],
+          "treasury_pin": [
+            36,
+            28,
+            119,
+            48
+          ]
+        },
+        "cartography": {
+          "area": "endless",
+          "explored_areas": 1,
+          "known": 97,
+          "offset": [
+            0,
+            0
+          ],
+          "player": [
+            1376,
+            280.666656494141
+          ],
+          "revision": 9,
+          "shared": false,
+          "terrain": true
+        },
+        "deep_dig": {
+          "checks": {},
+          "held": false,
+          "movement": [
+            0,
+            0
+          ]
+        },
+        "deep_events": {
+          "active_here": false,
+          "speed": 1,
+          "state": {
+            "kind": "",
+            "mined": 57,
+            "next": 2000000,
+            "remaining": 0,
+            "serial": 0,
+            "x": 0,
+            "y": 0
+          },
+          "visual_count": 0
+        },
+        "dev_drawer_open": false,
+        "developer_tools_visible": true,
+        "effort": 1,
+        "game_started": true,
+        "guide_open": false,
+        "hub_context": "",
+        "hub_player": [
+          430,
+          820
+        ],
+        "hud_caption": [
+          116,
+          138,
+          120,
+          33
+        ],
+        "hud_caption_text": "SKILLS",
+        "hud_caption_visible": true,
+        "hud_context": [
+          706.363647460938,
+          459.54541015625,
+          226,
+          116
+        ],
+        "hud_context_visible": true,
+        "hud_goal": [
+          900.363647460938,
+          18,
+          400,
+          76
+        ],
+        "hud_goal_visible": true,
+        "hud_gold": [
+          380,
+          18,
+          166,
+          112
+        ],
+        "hud_guide_visible": false,
+        "hud_map": [
+          700.363647460938,
+          18,
+          188,
+          96
+        ],
+        "hud_menu_icon": "res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png",
+        "hud_mine_visible": true,
+        "inventory_open": false,
+        "journal_tab": "together",
+        "map_open": false,
+        "mine_input_held": false,
+        "modal_active": false,
+        "mole_open": false,
+        "node_assets": {},
+        "physics_frame": 538,
+        "player_controls_enabled": true,
+        "prospecting": {
+          "checks": {},
+          "level": 4,
+          "results": {}
+        },
+        "resonance": {
+          "active": false,
+          "age": -1,
+          "blocked": false,
+          "bursts": 1,
+          "charge": 0,
+          "debris": 0,
+          "direction": [
+            0,
+            1
+          ],
+          "dug": 57,
+          "enabled": true,
+          "excavated": 57,
+          "rings": 0,
+          "row": 12,
+          "variant": "crusher"
+        },
+        "reward_drops": {
+          "stone": 51
+        },
+        "reward_node_drops": {},
+        "reward_rock_drops": {
+          "stone": 51
+        },
+        "reward_seam_multiplier": 1,
+        "reward_stone_cargo": 6,
+        "settings_open": false,
+        "shared_ui_roots": 1,
+        "shared_ui_saved": 0,
+        "shared_ui_visible": true,
+        "shop_open": false,
+        "skill_progress": [
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              236.036361694336,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              257.854553222656,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              315.127258300781,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              336.945465087891,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              394.218170166016,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              416.036376953125,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              473.309051513672,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              495.127258300781,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          }
+        ],
+        "skill_xp": {
+          "carrying": 0,
+          "mining": 184,
+          "prospecting": 58,
+          "running": 0.885416507720947,
+          "stamina": 100
+        },
+        "skills": [
+          {
+            "id": "mining",
+            "level": 2,
+            "maxed": false,
+            "name": "Mining",
+            "next": 96,
+            "ratio": 0.166666666666667,
+            "xp": 16
+          },
+          {
+            "id": "running",
+            "level": 0,
+            "maxed": false,
+            "name": "Running",
+            "next": 80,
+            "ratio": 0.0110677063465118,
+            "xp": 0
+          },
+          {
+            "id": "carrying",
+            "level": 0,
+            "maxed": false,
+            "name": "Carrying",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "prospecting",
+            "level": 4,
+            "maxed": false,
+            "name": "Prospecting",
+            "next": 14,
+            "ratio": 0.857142857142857,
+            "xp": 12
+          }
+        ],
+        "skills_open": false,
+        "skills_plate": [
+          753.505493164062,
+          122.727272033691,
+          594.872680664062,
+          498.181793212891
+        ],
+        "stamina": 100,
+        "stamina_bar": 0,
+        "stamina_rest": 1.48333333333333,
+        "tooltip_id": "",
+        "tooltip_rect": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "tooltip_text": "",
+        "tooltip_visible": false,
+        "treasury": {
+          "active_kind": "",
+          "bay_count": 27,
+          "camera_center": [
+            0,
+            0
+          ],
+          "camera_zoom": [
+            1,
+            1
+          ],
+          "cancelled": 0,
+          "cargo": {
+            "ambercore": 0,
+            "astralite": 0,
+            "burrowsteel": 0,
+            "copper": 0,
+            "crownstone": 0,
+            "deep_alloy": 24,
+            "deepstone": 0,
+            "echo_crystal": 0,
+            "emberstone": 0,
+            "furnaceheart": 0,
+            "gold": 0,
+            "infernium": 0,
+            "lumenstone": 27,
+            "lunacore": 0,
+            "magmaite": 0,
+            "memory_silk": 0,
+            "moonglass": 0,
+            "phasecrystal": 0,
+            "prismite": 0,
+            "rootiron": 0,
+            "singularity": 0,
+            "starshard": 0,
+            "stone": 6,
+            "sunslag": 0,
+            "voidglass": 0,
+            "waystone": 0
+          },
+          "circular": true,
+          "delivering": false,
+          "flashes": {},
+          "inside": false,
+          "landings": 0,
+          "packet_kinds": [],
+          "packet_slots": [],
+          "packets": 0,
+          "player": [
+            430,
+            820
+          ],
+          "remaining_batches": 0,
+          "stack_capacity": 180,
+          "stack_slots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "totals": {},
+          "upgrades": 0,
+          "walk_through": true,
+          "wallet": 0,
+          "zone": [
+            2000,
+            1600
+          ]
+        },
+        "treasury_goal": {
+          "claim_disabled": false,
+          "claim_text": "CLAIM RESONANCE",
+          "hud": {
+            "detail": "Keep mining deeper. Relics expand your Hub.",
+            "hud_action": "Mine deeper · The Deep",
+            "hud_title": "Find relic 1 of 5",
+            "kind": "endless_explore",
+            "objective_id": "endless:explore:forge_heart",
+            "relic_id": "forge_heart",
+            "requirements": [],
+            "requirements_ready": false,
+            "station_id": "deepElevator",
+            "title": "Find relic 1 of 5"
+          },
+          "kind": "",
+          "open": false,
+          "rendered": {
+            "action_text": "Mine deeper · The Deep",
+            "action_visible": true,
+            "detail": "Keep mining deeper. Relics expand your Hub.",
+            "hud_action": "Mine deeper · The Deep",
+            "hud_title": "Find relic 1 of 5",
+            "input_blocking": false,
+            "kind": "endless_explore",
+            "objective_id": "endless:explore:forge_heart",
+            "panel_rect": "[P: (900.3636, 18.0), S: (400.0, 76.0)]",
+            "relic_id": "forge_heart",
+            "rendered_rows": [],
+            "requirements": [],
+            "requirements_ready": false,
+            "station_id": "deepElevator",
+            "title": "Find relic 1 of 5",
+            "title_text": "Find relic 1 of 5",
+            "visible": true
+          },
+          "saved": {
+            "pinned": "",
+            "resonance_claimed": false,
+            "resonance_enabled": false
+          }
+        }
+      }
+    },
+    {
+      "name": "active-unstable_seam",
+      "passed": true,
+      "event": {
+        "active_here": true,
+        "speed": 1,
+        "state": {
+          "kind": "unstable_seam",
+          "mined": 57,
+          "next": 2000000,
+          "remaining": 27.6141333333333,
+          "serial": 0,
+          "x": 21,
+          "y": 7
+        },
+        "visual_count": 15
+      }
+    },
+    {
+      "name": "double-yield-not-speed",
+      "passed": true,
+      "event": {
+        "active_here": true,
+        "speed": 1,
+        "state": {
+          "kind": "unstable_seam",
+          "mined": 57,
+          "next": 2000000,
+          "remaining": 27.6141333333333,
+          "serial": 0,
+          "x": 21,
+          "y": 7
+        },
+        "visual_count": 15
+      }
+    },
+    {
+      "name": "unstable_seam",
+      "passed": true,
+      "state": {
+        "active_rigs": 0,
+        "cycle": 0.0989,
+        "drill_level": 3,
+        "error": "",
+        "fixture": "menu",
+        "gear": "deepcore",
+        "health": 30602,
+        "hit_phase": 0.42,
+        "id": 3,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1205.36364746094,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "gear": "",
+          "generations": 0,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 0
+        },
+        "native_canvas": {},
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 5,
+        "position": [
+          1456.40661621094,
+          346.627105712891
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 116,
+          "primitives": 2958
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 400,
+          "samples": 0
+        },
+        "swing": 43,
+        "target_valid": false,
+        "version": "1.0.0-dev.15.40",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true,
+        "actual_map": {
+          "expanded": false,
+          "known": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "markers": 1,
+          "world_active": true
+        },
+        "buttons": {
+          "continue": [
+            708.181823730469,
+            67.272705078125,
+            526,
+            92
+          ],
+          "dev_toggle": [
+            116,
+            182,
+            132,
+            58
+          ],
+          "gold_podium": [
+            -326.443908691406,
+            1879.61059570312,
+            24,
+            24
+          ],
+          "hud_bag": [
+            950.363647460938,
+            446.54541015625,
+            142,
+            142
+          ],
+          "hud_context": [
+            706.363647460938,
+            459.54541015625,
+            226,
+            116
+          ],
+          "hud_guide": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "hud_menu": [
+            116,
+            18,
+            120,
+            120
+          ],
+          "hud_mine": [
+            1110.36364746094,
+            422.54541015625,
+            190,
+            190
+          ],
+          "hud_mole": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "inventory": [
+            542.727294921875,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "inventory_close": [
+            118,
+            24,
+            132,
+            86
+          ],
+          "joystick": [
+            0,
+            0,
+            1416.36364746094,
+            654.54541015625
+          ],
+          "map": [
+            713.636413574219,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "minimap": [
+            700.363647460938,
+            18,
+            188,
+            96
+          ],
+          "mole_close": [
+            1186.95263671875,
+            54.9717903137207,
+            125.677337646484,
+            74.8079376220703
+          ],
+          "mole_tab_0": [
+            492.734954833984,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_1": [
+            736.110107421875,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_2": [
+            979.485290527344,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "new_game": [
+            708.181823730469,
+            173.272705078125,
+            526,
+            82
+          ],
+          "prospecting_row": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "settings": [
+            799.090942382812,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "settings_back": [
+            568.181823730469,
+            539.272705078125,
+            280,
+            82
+          ],
+          "shop_close": [
+            63.7363891601562,
+            22.6825180053711,
+            78.6629333496094,
+            78.6629333496094
+          ],
+          "skills": [
+            628.181823730469,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "skills_close": [
+            1325.45458984375,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "stat_carrying": [
+            775.323669433594,
+            359.090911865234,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_mining": [
+            775.323669433594,
+            200.909088134766,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_prospecting": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_running": [
+            775.323669433594,
+            280,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_stamina": [
+            775.323669433594,
+            520.909057617188,
+            551.236328125,
+            80
+          ],
+          "treasury_claim": [
+            36,
+            28,
+            175,
+            48
+          ],
+          "treasury_close": [
+            36,
+            28,
+            64,
+            48
+          ],
+          "treasury_pin": [
+            36,
+            28,
+            119,
+            48
+          ]
+        },
+        "cartography": {
+          "area": "endless",
+          "explored_areas": 1,
+          "known": 104,
+          "offset": [
+            0,
+            0
+          ],
+          "player": [
+            1456.40661621094,
+            346.627105712891
+          ],
+          "revision": 10,
+          "shared": false,
+          "terrain": true
+        },
+        "deep_dig": {
+          "checks": {},
+          "held": false,
+          "movement": [
+            0,
+            0
+          ]
+        },
+        "deep_events": {
+          "active_here": true,
+          "speed": 1,
+          "state": {
+            "kind": "unstable_seam",
+            "mined": 57,
+            "next": 2000000,
+            "remaining": 27.3974666666667,
+            "serial": 0,
+            "x": 21,
+            "y": 7
+          },
+          "visual_count": 15
+        },
+        "dev_drawer_open": false,
+        "developer_tools_visible": true,
+        "effort": 1,
+        "game_started": true,
+        "guide_open": false,
+        "hub_context": "",
+        "hub_player": [
+          430,
+          820
+        ],
+        "hud_caption": [
+          116,
+          138,
+          120,
+          33
+        ],
+        "hud_caption_text": "SKILLS",
+        "hud_caption_visible": true,
+        "hud_context": [
+          706.363647460938,
+          459.54541015625,
+          226,
+          116
+        ],
+        "hud_context_visible": true,
+        "hud_goal": [
+          900.363647460938,
+          18,
+          400,
+          76
+        ],
+        "hud_goal_visible": true,
+        "hud_gold": [
+          380,
+          18,
+          166,
+          112
+        ],
+        "hud_guide_visible": false,
+        "hud_map": [
+          700.363647460938,
+          18,
+          188,
+          96
+        ],
+        "hud_menu_icon": "res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png",
+        "hud_mine_visible": true,
+        "inventory_open": false,
+        "journal_tab": "together",
+        "map_open": false,
+        "mine_input_held": false,
+        "modal_active": false,
+        "mole_open": false,
+        "node_assets": {},
+        "physics_frame": 578,
+        "player_controls_enabled": true,
+        "prospecting": {
+          "checks": {},
+          "level": 5,
+          "results": {}
+        },
+        "resonance": {
+          "active": false,
+          "age": -1,
+          "blocked": false,
+          "bursts": 1,
+          "charge": 0,
+          "debris": 0,
+          "direction": [
+            0,
+            1
+          ],
+          "dug": 57,
+          "enabled": true,
+          "excavated": 57,
+          "rings": 0,
+          "row": 12,
+          "variant": "crusher"
+        },
+        "reward_drops": {
+          "stone": 48
+        },
+        "reward_node_drops": {},
+        "reward_rock_drops": {
+          "stone": 48
+        },
+        "reward_seam_multiplier": 2,
+        "reward_stone_cargo": 9,
+        "settings_open": false,
+        "shared_ui_roots": 1,
+        "shared_ui_saved": 0,
+        "shared_ui_visible": true,
+        "shop_open": false,
+        "skill_progress": [
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              236.036361694336,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              257.854553222656,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              315.127258300781,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              336.945465087891,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              394.218170166016,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              416.036376953125,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              473.309051513672,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              495.127258300781,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          }
+        ],
+        "skill_xp": {
+          "carrying": 0,
+          "mining": 184,
+          "prospecting": 61,
+          "running": 0.885416507720947,
+          "stamina": 100
+        },
+        "skills": [
+          {
+            "id": "mining",
+            "level": 2,
+            "maxed": false,
+            "name": "Mining",
+            "next": 96,
+            "ratio": 0.166666666666667,
+            "xp": 16
+          },
+          {
+            "id": "running",
+            "level": 0,
+            "maxed": false,
+            "name": "Running",
+            "next": 80,
+            "ratio": 0.0110677063465118,
+            "xp": 0
+          },
+          {
+            "id": "carrying",
+            "level": 0,
+            "maxed": false,
+            "name": "Carrying",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "prospecting",
+            "level": 5,
+            "maxed": false,
+            "name": "Prospecting",
+            "next": 15,
+            "ratio": 0.0666666666666667,
+            "xp": 1
+          }
+        ],
+        "skills_open": false,
+        "skills_plate": [
+          753.505493164062,
+          122.727272033691,
+          594.872680664062,
+          498.181793212891
+        ],
+        "stamina": 100,
+        "stamina_bar": 0,
+        "stamina_rest": 2.15,
+        "tooltip_id": "",
+        "tooltip_rect": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "tooltip_text": "",
+        "tooltip_visible": false,
+        "treasury": {
+          "active_kind": "",
+          "bay_count": 27,
+          "camera_center": [
+            0,
+            0
+          ],
+          "camera_zoom": [
+            1,
+            1
+          ],
+          "cancelled": 0,
+          "cargo": {
+            "ambercore": 0,
+            "astralite": 0,
+            "burrowsteel": 0,
+            "copper": 0,
+            "crownstone": 0,
+            "deep_alloy": 24,
+            "deepstone": 0,
+            "echo_crystal": 0,
+            "emberstone": 0,
+            "furnaceheart": 0,
+            "gold": 0,
+            "infernium": 0,
+            "lumenstone": 27,
+            "lunacore": 0,
+            "magmaite": 0,
+            "memory_silk": 0,
+            "moonglass": 0,
+            "phasecrystal": 0,
+            "prismite": 0,
+            "rootiron": 0,
+            "singularity": 0,
+            "starshard": 0,
+            "stone": 9,
+            "sunslag": 0,
+            "voidglass": 0,
+            "waystone": 0
+          },
+          "circular": true,
+          "delivering": false,
+          "flashes": {},
+          "inside": false,
+          "landings": 0,
+          "packet_kinds": [],
+          "packet_slots": [],
+          "packets": 0,
+          "player": [
+            430,
+            820
+          ],
+          "remaining_batches": 0,
+          "stack_capacity": 180,
+          "stack_slots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "totals": {},
+          "upgrades": 0,
+          "walk_through": true,
+          "wallet": 0,
+          "zone": [
+            2000,
+            1600
+          ]
+        },
+        "treasury_goal": {
+          "claim_disabled": false,
+          "claim_text": "CLAIM RESONANCE",
+          "hud": {
+            "discovery_target": "(1586.624, 487.7211)",
+            "hud_action": "Mine toward the signal",
+            "hud_title": "A buried signal",
+            "kind": "endless_explore",
+            "objective_id": "endless:discovery:signal:forge_heart",
+            "requirements": [],
+            "requirements_ready": false,
+            "title": "A buried signal"
+          },
+          "kind": "",
+          "open": false,
+          "rendered": {
+            "action_text": "Mine toward the signal",
+            "action_visible": true,
+            "discovery_target": "(1586.624, 487.7211)",
+            "hud_action": "Mine toward the signal",
+            "hud_title": "A buried signal",
+            "input_blocking": false,
+            "kind": "endless_explore",
+            "objective_id": "endless:discovery:signal:forge_heart",
+            "panel_rect": "[P: (900.3636, 18.0), S: (400.0, 76.0)]",
+            "rendered_rows": [],
+            "requirements": [],
+            "requirements_ready": false,
+            "title": "A buried signal",
+            "title_text": "A buried signal",
+            "visible": true
+          },
+          "saved": {
+            "pinned": "",
+            "resonance_claimed": false,
+            "resonance_enabled": false
+          }
+        }
+      }
+    },
+    {
+      "name": "active-ancient_core",
+      "passed": true,
+      "event": {
+        "active_here": true,
+        "speed": 1.25,
+        "state": {
+          "kind": "ancient_core",
+          "mined": 57,
+          "next": 2000000,
+          "remaining": 27.6,
+          "serial": 0,
+          "x": 22,
+          "y": 8
+        },
+        "visual_count": 15
+      }
+    },
+    {
+      "name": "ancient_core",
+      "passed": true,
+      "state": {
+        "active_rigs": 0,
+        "cycle": 0.0989,
+        "drill_level": 3,
+        "error": "",
+        "fixture": "menu",
+        "gear": "deepcore",
+        "health": 30602,
+        "hit_phase": 0.42,
+        "id": 4,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1205.36364746094,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "gear": "",
+          "generations": 0,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 0
+        },
+        "native_canvas": {},
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 5,
+        "position": [
+          1456.40661621094,
+          346.627105712891
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 120,
+          "primitives": 3032
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 400,
+          "samples": 0
+        },
+        "swing": 43,
+        "target_valid": false,
+        "version": "1.0.0-dev.15.40",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true,
+        "actual_map": {
+          "expanded": false,
+          "known": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "markers": 1,
+          "world_active": true
+        },
+        "buttons": {
+          "continue": [
+            708.181823730469,
+            67.272705078125,
+            526,
+            92
+          ],
+          "dev_toggle": [
+            116,
+            182,
+            132,
+            58
+          ],
+          "gold_podium": [
+            -332.424987792969,
+            1874.69018554688,
+            24,
+            24
+          ],
+          "hud_bag": [
+            950.363647460938,
+            446.54541015625,
+            142,
+            142
+          ],
+          "hud_context": [
+            706.363647460938,
+            459.54541015625,
+            226,
+            116
+          ],
+          "hud_guide": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "hud_menu": [
+            116,
+            18,
+            120,
+            120
+          ],
+          "hud_mine": [
+            1110.36364746094,
+            422.54541015625,
+            190,
+            190
+          ],
+          "hud_mole": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "inventory": [
+            542.727294921875,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "inventory_close": [
+            118,
+            24,
+            132,
+            86
+          ],
+          "joystick": [
+            0,
+            0,
+            1416.36364746094,
+            654.54541015625
+          ],
+          "map": [
+            713.636413574219,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "minimap": [
+            700.363647460938,
+            18,
+            188,
+            96
+          ],
+          "mole_close": [
+            1186.95263671875,
+            54.9717903137207,
+            125.677337646484,
+            74.8079376220703
+          ],
+          "mole_tab_0": [
+            492.734954833984,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_1": [
+            736.110107421875,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_2": [
+            979.485290527344,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "new_game": [
+            708.181823730469,
+            173.272705078125,
+            526,
+            82
+          ],
+          "prospecting_row": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "settings": [
+            799.090942382812,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "settings_back": [
+            568.181823730469,
+            539.272705078125,
+            280,
+            82
+          ],
+          "shop_close": [
+            63.7363891601562,
+            22.6825180053711,
+            78.6629333496094,
+            78.6629333496094
+          ],
+          "skills": [
+            628.181823730469,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "skills_close": [
+            1325.45458984375,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "stat_carrying": [
+            775.323669433594,
+            359.090911865234,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_mining": [
+            775.323669433594,
+            200.909088134766,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_prospecting": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_running": [
+            775.323669433594,
+            280,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_stamina": [
+            775.323669433594,
+            520.909057617188,
+            551.236328125,
+            80
+          ],
+          "treasury_claim": [
+            36,
+            28,
+            175,
+            48
+          ],
+          "treasury_close": [
+            36,
+            28,
+            64,
+            48
+          ],
+          "treasury_pin": [
+            36,
+            28,
+            119,
+            48
+          ]
+        },
+        "cartography": {
+          "area": "endless",
+          "explored_areas": 1,
+          "known": 104,
+          "offset": [
+            0,
+            0
+          ],
+          "player": [
+            1456.40661621094,
+            346.627105712891
+          ],
+          "revision": 10,
+          "shared": false,
+          "terrain": true
+        },
+        "deep_dig": {
+          "checks": {},
+          "held": false,
+          "movement": [
+            0,
+            0
+          ]
+        },
+        "deep_events": {
+          "active_here": true,
+          "speed": 1.25,
+          "state": {
+            "kind": "ancient_core",
+            "mined": 57,
+            "next": 2000000,
+            "remaining": 27.4833333333334,
+            "serial": 0,
+            "x": 22,
+            "y": 8
+          },
+          "visual_count": 15
+        },
+        "dev_drawer_open": false,
+        "developer_tools_visible": true,
+        "effort": 1,
+        "game_started": true,
+        "guide_open": false,
+        "hub_context": "",
+        "hub_player": [
+          430,
+          820
+        ],
+        "hud_caption": [
+          116,
+          138,
+          120,
+          33
+        ],
+        "hud_caption_text": "SKILLS",
+        "hud_caption_visible": true,
+        "hud_context": [
+          706.363647460938,
+          459.54541015625,
+          226,
+          116
+        ],
+        "hud_context_visible": true,
+        "hud_goal": [
+          900.363647460938,
+          18,
+          400,
+          76
+        ],
+        "hud_goal_visible": true,
+        "hud_gold": [
+          380,
+          18,
+          166,
+          112
+        ],
+        "hud_guide_visible": false,
+        "hud_map": [
+          700.363647460938,
+          18,
+          188,
+          96
+        ],
+        "hud_menu_icon": "res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png",
+        "hud_mine_visible": true,
+        "inventory_open": false,
+        "journal_tab": "together",
+        "map_open": false,
+        "mine_input_held": false,
+        "modal_active": false,
+        "mole_open": false,
+        "node_assets": {},
+        "physics_frame": 612,
+        "player_controls_enabled": true,
+        "prospecting": {
+          "checks": {},
+          "level": 5,
+          "results": {}
+        },
+        "resonance": {
+          "active": false,
+          "age": -1,
+          "blocked": false,
+          "bursts": 1,
+          "charge": 0,
+          "debris": 0,
+          "direction": [
+            0,
+            1
+          ],
+          "dug": 57,
+          "enabled": true,
+          "excavated": 57,
+          "rings": 0,
+          "row": 12,
+          "variant": "crusher"
+        },
+        "reward_drops": {
+          "stone": 46
+        },
+        "reward_node_drops": {},
+        "reward_rock_drops": {
+          "stone": 46
+        },
+        "reward_seam_multiplier": 1,
+        "reward_stone_cargo": 11,
+        "settings_open": false,
+        "shared_ui_roots": 1,
+        "shared_ui_saved": 0,
+        "shared_ui_visible": true,
+        "shop_open": false,
+        "skill_progress": [
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              236.036361694336,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              257.854553222656,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              315.127258300781,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              336.945465087891,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              394.218170166016,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              416.036376953125,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              473.309051513672,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              495.127258300781,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          }
+        ],
+        "skill_xp": {
+          "carrying": 0,
+          "mining": 184,
+          "prospecting": 63,
+          "running": 0.885416507720947,
+          "stamina": 100
+        },
+        "skills": [
+          {
+            "id": "mining",
+            "level": 2,
+            "maxed": false,
+            "name": "Mining",
+            "next": 96,
+            "ratio": 0.166666666666667,
+            "xp": 16
+          },
+          {
+            "id": "running",
+            "level": 0,
+            "maxed": false,
+            "name": "Running",
+            "next": 80,
+            "ratio": 0.0110677063465118,
+            "xp": 0
+          },
+          {
+            "id": "carrying",
+            "level": 0,
+            "maxed": false,
+            "name": "Carrying",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "prospecting",
+            "level": 5,
+            "maxed": false,
+            "name": "Prospecting",
+            "next": 15,
+            "ratio": 0.2,
+            "xp": 3
+          }
+        ],
+        "skills_open": false,
+        "skills_plate": [
+          753.505493164062,
+          122.727272033691,
+          594.872680664062,
+          498.181793212891
+        ],
+        "stamina": 100,
+        "stamina_bar": 0,
+        "stamina_rest": 2.71666666666666,
+        "tooltip_id": "",
+        "tooltip_rect": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "tooltip_text": "",
+        "tooltip_visible": false,
+        "treasury": {
+          "active_kind": "",
+          "bay_count": 27,
+          "camera_center": [
+            0,
+            0
+          ],
+          "camera_zoom": [
+            1,
+            1
+          ],
+          "cancelled": 0,
+          "cargo": {
+            "ambercore": 0,
+            "astralite": 0,
+            "burrowsteel": 0,
+            "copper": 0,
+            "crownstone": 0,
+            "deep_alloy": 24,
+            "deepstone": 0,
+            "echo_crystal": 0,
+            "emberstone": 0,
+            "furnaceheart": 0,
+            "gold": 0,
+            "infernium": 0,
+            "lumenstone": 27,
+            "lunacore": 0,
+            "magmaite": 0,
+            "memory_silk": 0,
+            "moonglass": 0,
+            "phasecrystal": 0,
+            "prismite": 0,
+            "rootiron": 0,
+            "singularity": 0,
+            "starshard": 0,
+            "stone": 11,
+            "sunslag": 0,
+            "voidglass": 0,
+            "waystone": 0
+          },
+          "circular": true,
+          "delivering": false,
+          "flashes": {},
+          "inside": false,
+          "landings": 0,
+          "packet_kinds": [],
+          "packet_slots": [],
+          "packets": 0,
+          "player": [
+            430,
+            820
+          ],
+          "remaining_batches": 0,
+          "stack_capacity": 180,
+          "stack_slots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "totals": {},
+          "upgrades": 0,
+          "walk_through": true,
+          "wallet": 0,
+          "zone": [
+            2000,
+            1600
+          ]
+        },
+        "treasury_goal": {
+          "claim_disabled": false,
+          "claim_text": "CLAIM RESONANCE",
+          "hud": {
+            "discovery_target": "(1586.624, 487.7211)",
+            "hud_action": "Mine toward the signal",
+            "hud_title": "A buried signal",
+            "kind": "endless_explore",
+            "objective_id": "endless:discovery:signal:forge_heart",
+            "requirements": [],
+            "requirements_ready": false,
+            "title": "A buried signal"
+          },
+          "kind": "",
+          "open": false,
+          "rendered": {
+            "action_text": "Mine toward the signal",
+            "action_visible": true,
+            "discovery_target": "(1586.624, 487.7211)",
+            "hud_action": "Mine toward the signal",
+            "hud_title": "A buried signal",
+            "input_blocking": false,
+            "kind": "endless_explore",
+            "objective_id": "endless:discovery:signal:forge_heart",
+            "panel_rect": "[P: (900.3636, 18.0), S: (400.0, 76.0)]",
+            "rendered_rows": [],
+            "requirements": [],
+            "requirements_ready": false,
+            "title": "A buried signal",
+            "title_text": "A buried signal",
+            "visible": true
+          },
+          "saved": {
+            "pinned": "",
+            "resonance_claimed": false,
+            "resonance_enabled": false
+          }
+        }
+      }
+    },
+    {
+      "name": "active-crystal_bloom",
+      "passed": true,
+      "event": {
+        "active_here": true,
+        "speed": 1.25,
+        "state": {
+          "kind": "crystal_bloom",
+          "mined": 57,
+          "next": 2000000,
+          "remaining": 27.7166666666667,
+          "serial": 0,
+          "x": 22,
+          "y": 8
+        },
+        "visual_count": 15
+      }
+    },
+    {
+      "name": "crystal_bloom",
+      "passed": true,
+      "state": {
+        "active_rigs": 0,
+        "cycle": 0.0989,
+        "drill_level": 3,
+        "error": "",
+        "fixture": "menu",
+        "gear": "deepcore",
+        "health": 30602,
+        "hit_phase": 0.42,
+        "id": 5,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1205.36364746094,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "gear": "",
+          "generations": 0,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 0
+        },
+        "native_canvas": {},
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 5,
+        "position": [
+          1456.40661621094,
+          346.627105712891
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 120,
+          "primitives": 3052
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 400,
+          "samples": 0
+        },
+        "swing": 43,
+        "target_valid": false,
+        "version": "1.0.0-dev.15.40",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true,
+        "actual_map": {
+          "expanded": false,
+          "known": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "markers": 1,
+          "world_active": true
+        },
+        "buttons": {
+          "continue": [
+            708.181823730469,
+            67.272705078125,
+            526,
+            92
+          ],
+          "dev_toggle": [
+            116,
+            182,
+            132,
+            58
+          ],
+          "gold_podium": [
+            -332.531555175781,
+            1874.60241699219,
+            24,
+            24
+          ],
+          "hud_bag": [
+            950.363647460938,
+            446.54541015625,
+            142,
+            142
+          ],
+          "hud_context": [
+            706.363647460938,
+            459.54541015625,
+            226,
+            116
+          ],
+          "hud_guide": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "hud_menu": [
+            116,
+            18,
+            120,
+            120
+          ],
+          "hud_mine": [
+            1110.36364746094,
+            422.54541015625,
+            190,
+            190
+          ],
+          "hud_mole": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "inventory": [
+            542.727294921875,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "inventory_close": [
+            118,
+            24,
+            132,
+            86
+          ],
+          "joystick": [
+            0,
+            0,
+            1416.36364746094,
+            654.54541015625
+          ],
+          "map": [
+            713.636413574219,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "minimap": [
+            700.363647460938,
+            18,
+            188,
+            96
+          ],
+          "mole_close": [
+            1186.95263671875,
+            54.9717903137207,
+            125.677337646484,
+            74.8079376220703
+          ],
+          "mole_tab_0": [
+            492.734954833984,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_1": [
+            736.110107421875,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_2": [
+            979.485290527344,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "new_game": [
+            708.181823730469,
+            173.272705078125,
+            526,
+            82
+          ],
+          "prospecting_row": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "settings": [
+            799.090942382812,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "settings_back": [
+            568.181823730469,
+            539.272705078125,
+            280,
+            82
+          ],
+          "shop_close": [
+            63.7363891601562,
+            22.6825180053711,
+            78.6629333496094,
+            78.6629333496094
+          ],
+          "skills": [
+            628.181823730469,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "skills_close": [
+            1325.45458984375,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "stat_carrying": [
+            775.323669433594,
+            359.090911865234,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_mining": [
+            775.323669433594,
+            200.909088134766,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_prospecting": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_running": [
+            775.323669433594,
+            280,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_stamina": [
+            775.323669433594,
+            520.909057617188,
+            551.236328125,
+            80
+          ],
+          "treasury_claim": [
+            36,
+            28,
+            175,
+            48
+          ],
+          "treasury_close": [
+            36,
+            28,
+            64,
+            48
+          ],
+          "treasury_pin": [
+            36,
+            28,
+            119,
+            48
+          ]
+        },
+        "cartography": {
+          "area": "endless",
+          "explored_areas": 1,
+          "known": 104,
+          "offset": [
+            0,
+            0
+          ],
+          "player": [
+            1456.40661621094,
+            346.627105712891
+          ],
+          "revision": 10,
+          "shared": false,
+          "terrain": true
+        },
+        "deep_dig": {
+          "checks": {},
+          "held": false,
+          "movement": [
+            0,
+            0
+          ]
+        },
+        "deep_events": {
+          "active_here": true,
+          "speed": 1.25,
+          "state": {
+            "kind": "crystal_bloom",
+            "mined": 57,
+            "next": 2000000,
+            "remaining": 27.4636,
+            "serial": 0,
+            "x": 22,
+            "y": 8
+          },
+          "visual_count": 15
+        },
+        "dev_drawer_open": false,
+        "developer_tools_visible": true,
+        "effort": 1,
+        "game_started": true,
+        "guide_open": false,
+        "hub_context": "",
+        "hub_player": [
+          430,
+          820
+        ],
+        "hud_caption": [
+          116,
+          138,
+          120,
+          33
+        ],
+        "hud_caption_text": "SKILLS",
+        "hud_caption_visible": true,
+        "hud_context": [
+          706.363647460938,
+          459.54541015625,
+          226,
+          116
+        ],
+        "hud_context_visible": true,
+        "hud_goal": [
+          900.363647460938,
+          18,
+          400,
+          76
+        ],
+        "hud_goal_visible": true,
+        "hud_gold": [
+          380,
+          18,
+          166,
+          112
+        ],
+        "hud_guide_visible": false,
+        "hud_map": [
+          700.363647460938,
+          18,
+          188,
+          96
+        ],
+        "hud_menu_icon": "res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png",
+        "hud_mine_visible": true,
+        "inventory_open": false,
+        "journal_tab": "together",
+        "map_open": false,
+        "mine_input_held": false,
+        "modal_active": false,
+        "mole_open": false,
+        "node_assets": {},
+        "physics_frame": 646,
+        "player_controls_enabled": true,
+        "prospecting": {
+          "checks": {},
+          "level": 5,
+          "results": {}
+        },
+        "resonance": {
+          "active": false,
+          "age": -1,
+          "blocked": false,
+          "bursts": 1,
+          "charge": 0,
+          "debris": 0,
+          "direction": [
+            0,
+            1
+          ],
+          "dug": 57,
+          "enabled": true,
+          "excavated": 57,
+          "rings": 0,
+          "row": 12,
+          "variant": "crusher"
+        },
+        "reward_drops": {
+          "stone": 46
+        },
+        "reward_node_drops": {},
+        "reward_rock_drops": {
+          "stone": 46
+        },
+        "reward_seam_multiplier": 1,
+        "reward_stone_cargo": 11,
+        "settings_open": false,
+        "shared_ui_roots": 1,
+        "shared_ui_saved": 0,
+        "shared_ui_visible": true,
+        "shop_open": false,
+        "skill_progress": [
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              236.036361694336,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              257.854553222656,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              315.127258300781,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              336.945465087891,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              394.218170166016,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              416.036376953125,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              473.309051513672,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              495.127258300781,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          }
+        ],
+        "skill_xp": {
+          "carrying": 0,
+          "mining": 184,
+          "prospecting": 63,
+          "running": 0.885416507720947,
+          "stamina": 100
+        },
+        "skills": [
+          {
+            "id": "mining",
+            "level": 2,
+            "maxed": false,
+            "name": "Mining",
+            "next": 96,
+            "ratio": 0.166666666666667,
+            "xp": 16
+          },
+          {
+            "id": "running",
+            "level": 0,
+            "maxed": false,
+            "name": "Running",
+            "next": 80,
+            "ratio": 0.0110677063465118,
+            "xp": 0
+          },
+          {
+            "id": "carrying",
+            "level": 0,
+            "maxed": false,
+            "name": "Carrying",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "prospecting",
+            "level": 5,
+            "maxed": false,
+            "name": "Prospecting",
+            "next": 15,
+            "ratio": 0.2,
+            "xp": 3
+          }
+        ],
+        "skills_open": false,
+        "skills_plate": [
+          753.505493164062,
+          122.727272033691,
+          594.872680664062,
+          498.181793212891
+        ],
+        "stamina": 100,
+        "stamina_bar": 0,
+        "stamina_rest": 3.28333333333333,
+        "tooltip_id": "",
+        "tooltip_rect": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "tooltip_text": "",
+        "tooltip_visible": false,
+        "treasury": {
+          "active_kind": "",
+          "bay_count": 27,
+          "camera_center": [
+            0,
+            0
+          ],
+          "camera_zoom": [
+            1,
+            1
+          ],
+          "cancelled": 0,
+          "cargo": {
+            "ambercore": 0,
+            "astralite": 0,
+            "burrowsteel": 0,
+            "copper": 0,
+            "crownstone": 0,
+            "deep_alloy": 24,
+            "deepstone": 0,
+            "echo_crystal": 0,
+            "emberstone": 0,
+            "furnaceheart": 0,
+            "gold": 0,
+            "infernium": 0,
+            "lumenstone": 27,
+            "lunacore": 0,
+            "magmaite": 0,
+            "memory_silk": 0,
+            "moonglass": 0,
+            "phasecrystal": 0,
+            "prismite": 0,
+            "rootiron": 0,
+            "singularity": 0,
+            "starshard": 0,
+            "stone": 11,
+            "sunslag": 0,
+            "voidglass": 0,
+            "waystone": 0
+          },
+          "circular": true,
+          "delivering": false,
+          "flashes": {},
+          "inside": false,
+          "landings": 0,
+          "packet_kinds": [],
+          "packet_slots": [],
+          "packets": 0,
+          "player": [
+            430,
+            820
+          ],
+          "remaining_batches": 0,
+          "stack_capacity": 180,
+          "stack_slots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "totals": {},
+          "upgrades": 0,
+          "walk_through": true,
+          "wallet": 0,
+          "zone": [
+            2000,
+            1600
+          ]
+        },
+        "treasury_goal": {
+          "claim_disabled": false,
+          "claim_text": "CLAIM RESONANCE",
+          "hud": {
+            "discovery_target": "(1586.624, 487.7211)",
+            "hud_action": "Mine toward the signal",
+            "hud_title": "A buried signal",
+            "kind": "endless_explore",
+            "objective_id": "endless:discovery:signal:forge_heart",
+            "requirements": [],
+            "requirements_ready": false,
+            "title": "A buried signal"
+          },
+          "kind": "",
+          "open": false,
+          "rendered": {
+            "action_text": "Mine toward the signal",
+            "action_visible": true,
+            "discovery_target": "(1586.624, 487.7211)",
+            "hud_action": "Mine toward the signal",
+            "hud_title": "A buried signal",
+            "input_blocking": false,
+            "kind": "endless_explore",
+            "objective_id": "endless:discovery:signal:forge_heart",
+            "panel_rect": "[P: (900.3636, 18.0), S: (400.0, 76.0)]",
+            "rendered_rows": [],
+            "requirements": [],
+            "requirements_ready": false,
+            "title": "A buried signal",
+            "title_text": "A buried signal",
+            "visible": true
+          },
+          "saved": {
+            "pinned": "",
+            "resonance_claimed": false,
+            "resonance_enabled": false
+          }
+        }
+      }
+    },
+    {
+      "name": "save-reload-retains-drops",
+      "passed": true,
+      "before": {
+        "stone": 46
+      },
+      "after": {
+        "stone": 46
+      }
+    },
+    {
+      "name": "continued-save",
+      "passed": true,
+      "state": {
+        "active_rigs": 0,
+        "cycle": 0.0989,
+        "drill_level": 3,
+        "error": "",
+        "fixture": "menu",
+        "gear": "deepcore",
+        "health": 30602,
+        "hit_phase": 0.42,
+        "id": 8,
+        "impact": 0,
+        "impact_target_valid": false,
+        "menu": false,
+        "mine_button": [
+          1205.36364746094,
+          517.54541015625
+        ],
+        "mining": false,
+        "native": {
+          "active": false,
+          "failed": false,
+          "failure": "",
+          "gear": "",
+          "generations": 0,
+          "motion": {},
+          "surface_cache": 0,
+          "unreachable_contacts": 0,
+          "updates": 0
+        },
+        "native_canvas": {},
+        "persistence_active": false,
+        "phase": "endless",
+        "pickaxe_level": 5,
+        "position": [
+          1456.40661621094,
+          346.627105712891
+        ],
+        "progress": 0,
+        "render": {
+          "draw_calls": 116,
+          "primitives": 2942
+        },
+        "steering": {
+          "clipped": 0,
+          "done": false,
+          "margin": 400,
+          "samples": 0
+        },
+        "swing": 43,
+        "target_valid": false,
+        "version": "1.0.0-dev.15.40",
+        "viewport": [
+          1416.36364746094,
+          654.54541015625
+        ],
+        "world_active": true,
+        "actual_map": {
+          "expanded": false,
+          "known": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "markers": 1,
+          "world_active": true
+        },
+        "buttons": {
+          "continue": [
+            708.181823730469,
+            67.272705078125,
+            526,
+            92
+          ],
+          "dev_toggle": [
+            116,
+            182,
+            132,
+            58
+          ],
+          "gold_podium": [
+            -332.533508300781,
+            1874.60083007812,
+            24,
+            24
+          ],
+          "hud_bag": [
+            950.363647460938,
+            446.54541015625,
+            142,
+            142
+          ],
+          "hud_context": [
+            706.363647460938,
+            459.54541015625,
+            226,
+            116
+          ],
+          "hud_guide": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "hud_menu": [
+            116,
+            18,
+            120,
+            120
+          ],
+          "hud_mine": [
+            1110.36364746094,
+            422.54541015625,
+            190,
+            190
+          ],
+          "hud_mole": [
+            248,
+            18,
+            120,
+            120
+          ],
+          "inventory": [
+            542.727294921875,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "inventory_close": [
+            118,
+            24,
+            132,
+            86
+          ],
+          "joystick": [
+            0,
+            0,
+            1416.36364746094,
+            654.54541015625
+          ],
+          "map": [
+            713.636413574219,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "minimap": [
+            700.363647460938,
+            18,
+            188,
+            96
+          ],
+          "mole_close": [
+            1186.95263671875,
+            54.9717903137207,
+            125.677337646484,
+            74.8079376220703
+          ],
+          "mole_tab_0": [
+            492.734954833984,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_1": [
+            736.110107421875,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "mole_tab_2": [
+            979.485290527344,
+            132.772048950195,
+            227.416137695312,
+            74.8079376220703
+          ],
+          "new_game": [
+            708.181823730469,
+            173.272705078125,
+            526,
+            82
+          ],
+          "prospecting_row": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "settings": [
+            799.090942382812,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "settings_back": [
+            568.181823730469,
+            539.272705078125,
+            280,
+            82
+          ],
+          "shop_close": [
+            63.7363891601562,
+            22.6825180053711,
+            78.6629333496094,
+            78.6629333496094
+          ],
+          "skills": [
+            628.181823730469,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "skills_close": [
+            1325.45458984375,
+            16.3636360168457,
+            80,
+            80
+          ],
+          "stat_carrying": [
+            775.323669433594,
+            359.090911865234,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_mining": [
+            775.323669433594,
+            200.909088134766,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_prospecting": [
+            775.323669433594,
+            438.181793212891,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_running": [
+            775.323669433594,
+            280,
+            551.236328125,
+            76.3636322021484
+          ],
+          "stat_stamina": [
+            775.323669433594,
+            520.909057617188,
+            551.236328125,
+            80
+          ],
+          "treasury_claim": [
+            36,
+            28,
+            175,
+            48
+          ],
+          "treasury_close": [
+            36,
+            28,
+            64,
+            48
+          ],
+          "treasury_pin": [
+            36,
+            28,
+            119,
+            48
+          ]
+        },
+        "cartography": {
+          "area": "endless",
+          "explored_areas": 1,
+          "known": 104,
+          "offset": [
+            0,
+            0
+          ],
+          "player": [
+            1456.40661621094,
+            346.627105712891
+          ],
+          "revision": 11,
+          "shared": false,
+          "terrain": true
+        },
+        "deep_dig": {
+          "checks": {},
+          "held": false,
+          "movement": [
+            0,
+            0
+          ]
+        },
+        "deep_events": {
+          "active_here": false,
+          "speed": 1,
+          "state": {
+            "kind": "",
+            "mined": 57,
+            "next": 2000057,
+            "remaining": 0,
+            "serial": 0,
+            "x": 22,
+            "y": 8
+          },
+          "visual_count": 0
+        },
+        "dev_drawer_open": false,
+        "developer_tools_visible": true,
+        "effort": 1,
+        "game_started": true,
+        "guide_open": false,
+        "hub_context": "",
+        "hub_player": [
+          430,
+          820
+        ],
+        "hud_caption": [
+          116,
+          138,
+          120,
+          33
+        ],
+        "hud_caption_text": "SKILLS",
+        "hud_caption_visible": true,
+        "hud_context": [
+          706.363647460938,
+          459.54541015625,
+          226,
+          116
+        ],
+        "hud_context_visible": true,
+        "hud_goal": [
+          900.363647460938,
+          18,
+          400,
+          76
+        ],
+        "hud_goal_visible": true,
+        "hud_gold": [
+          380,
+          18,
+          166,
+          112
+        ],
+        "hud_guide_visible": false,
+        "hud_map": [
+          700.363647460938,
+          18,
+          188,
+          96
+        ],
+        "hud_menu_icon": "res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png",
+        "hud_mine_visible": true,
+        "inventory_open": false,
+        "journal_tab": "together",
+        "map_open": false,
+        "mine_input_held": false,
+        "modal_active": false,
+        "mole_open": false,
+        "node_assets": {},
+        "physics_frame": 735,
+        "player_controls_enabled": true,
+        "prospecting": {
+          "checks": {},
+          "level": 5,
+          "results": {}
+        },
+        "resonance": {
+          "active": false,
+          "age": -1,
+          "blocked": false,
+          "bursts": 1,
+          "charge": 0,
+          "debris": 0,
+          "direction": [
+            0,
+            1
+          ],
+          "dug": 57,
+          "enabled": true,
+          "excavated": 57,
+          "rings": 0,
+          "row": 12,
+          "variant": "crusher"
+        },
+        "reward_drops": {
+          "stone": 46
+        },
+        "reward_node_drops": {},
+        "reward_rock_drops": {
+          "stone": 46
+        },
+        "reward_seam_multiplier": 1,
+        "reward_stone_cargo": 11,
+        "settings_open": false,
+        "shared_ui_roots": 1,
+        "shared_ui_saved": 0,
+        "shared_ui_visible": true,
+        "shop_open": false,
+        "skill_progress": [
+          {
+            "level": "2",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              236.036361694336,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 2,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              257.854553222656,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 16.6666666666667
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              315.127258300781,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              336.945465087891,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 1.10677063465118
+          },
+          {
+            "level": "0",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              394.218170166016,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 0,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              416.036376953125,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 0
+          },
+          {
+            "level": "5",
+            "level_fits": true,
+            "level_rect": [
+              859.869140625,
+              473.309051513672,
+              394.872711181641,
+              15.4545450210571
+            ],
+            "level_value": 5,
+            "numeric_xp": false,
+            "xp_rect": [
+              859.869140625,
+              495.127258300781,
+              394.872711181641,
+              4.54545450210571
+            ],
+            "xp_value": 20
+          }
+        ],
+        "skill_xp": {
+          "carrying": 0,
+          "mining": 184,
+          "prospecting": 63,
+          "running": 0.885416507720947,
+          "stamina": 100
+        },
+        "skills": [
+          {
+            "id": "mining",
+            "level": 2,
+            "maxed": false,
+            "name": "Mining",
+            "next": 96,
+            "ratio": 0.166666666666667,
+            "xp": 16
+          },
+          {
+            "id": "running",
+            "level": 0,
+            "maxed": false,
+            "name": "Running",
+            "next": 80,
+            "ratio": 0.0110677063465118,
+            "xp": 0
+          },
+          {
+            "id": "carrying",
+            "level": 0,
+            "maxed": false,
+            "name": "Carrying",
+            "next": 80,
+            "ratio": 0,
+            "xp": 0
+          },
+          {
+            "id": "prospecting",
+            "level": 5,
+            "maxed": false,
+            "name": "Prospecting",
+            "next": 15,
+            "ratio": 0.2,
+            "xp": 3
+          }
+        ],
+        "skills_open": false,
+        "skills_plate": [
+          753.505493164062,
+          122.727272033691,
+          594.872680664062,
+          498.181793212891
+        ],
+        "stamina": 100,
+        "stamina_bar": 100,
+        "stamina_rest": 0.633333333333334,
+        "tooltip_id": "",
+        "tooltip_rect": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "tooltip_text": "",
+        "tooltip_visible": false,
+        "treasury": {
+          "active_kind": "",
+          "bay_count": 27,
+          "camera_center": [
+            0,
+            0
+          ],
+          "camera_zoom": [
+            1,
+            1
+          ],
+          "cancelled": 0,
+          "cargo": {
+            "ambercore": 0,
+            "astralite": 0,
+            "burrowsteel": 0,
+            "copper": 0,
+            "crownstone": 0,
+            "deep_alloy": 24,
+            "deepstone": 0,
+            "echo_crystal": 0,
+            "emberstone": 0,
+            "furnaceheart": 0,
+            "gold": 0,
+            "infernium": 0,
+            "lumenstone": 27,
+            "lunacore": 0,
+            "magmaite": 0,
+            "memory_silk": 0,
+            "moonglass": 0,
+            "phasecrystal": 0,
+            "prismite": 0,
+            "rootiron": 0,
+            "singularity": 0,
+            "starshard": 0,
+            "stone": 11,
+            "sunslag": 0,
+            "voidglass": 0,
+            "waystone": 0
+          },
+          "circular": true,
+          "delivering": false,
+          "flashes": {},
+          "inside": false,
+          "landings": 0,
+          "packet_kinds": [],
+          "packet_slots": [],
+          "packets": 0,
+          "player": [
+            430,
+            820
+          ],
+          "remaining_batches": 0,
+          "stack_capacity": 180,
+          "stack_slots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "totals": {},
+          "upgrades": 0,
+          "walk_through": true,
+          "wallet": 0,
+          "zone": [
+            2000,
+            1600
+          ]
+        },
+        "treasury_goal": {
+          "claim_disabled": false,
+          "claim_text": "CLAIM RESONANCE",
+          "hud": {
+            "discovery_target": "(1586.624, 487.7211)",
+            "hud_action": "Mine toward the signal",
+            "hud_title": "A buried signal",
+            "kind": "endless_explore",
+            "objective_id": "endless:discovery:signal:forge_heart",
+            "requirements": [],
+            "requirements_ready": false,
+            "title": "A buried signal"
+          },
+          "kind": "",
+          "open": false,
+          "rendered": {
+            "action_text": "Mine toward the signal",
+            "action_visible": true,
+            "discovery_target": "(1586.624, 487.7211)",
+            "hud_action": "Mine toward the signal",
+            "hud_title": "A buried signal",
+            "input_blocking": false,
+            "kind": "endless_explore",
+            "objective_id": "endless:discovery:signal:forge_heart",
+            "panel_rect": "[P: (900.3636, 18.0), S: (400.0, 76.0)]",
+            "rendered_rows": [],
+            "requirements": [],
+            "requirements_ready": false,
+            "title": "A buried signal",
+            "title_text": "A buried signal",
+            "visible": true
+          },
+          "saved": {
+            "pinned": "",
+            "resonance_claimed": false,
+            "resonance_enabled": false
+          }
+        }
+      }
+    },
+    {
+      "name": "no-runtime-errors",
+      "passed": true,
+      "errors": []
+    }
+  ]
+}
