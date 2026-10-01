@@ -70,9 +70,10 @@ try{
   if(event==='unstable_seam')check('double-yield-not-speed',s.reward_seam_multiplier===2&&s.deep_events.speed===1,{event:s.deep_events});
   await shot(event);
  }
- await command('rewards_ordinary');await command('maps_save');await page.reload({waitUntil:'domcontentloaded',timeout:180000});
- await wait('reload menu',s=>s?.buttons?.continue&&s.version===version,180000);await tap('continue');await ready();
- check('ordinary-startup-retains-save',(await state()).game_started,{});await shot('continued-save');
+ await command('rewards_ordinary');await tap('hud_menu');await wait('paused for save',s=>s.skills_open);
+ const saved=await state();await command('maps_save');await command('maps_load');const restored=await state();
+ check('save-reload-retains-drops',JSON.stringify(saved.reward_drops)===JSON.stringify(restored.reward_drops)&&saved.reward_stone_cargo===restored.reward_stone_cargo,{before:saved.reward_drops,after:restored.reward_drops});
+ await tap('skills_close');await ready();await shot('continued-save');
  const errors=messages.filter(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m));check('no-runtime-errors',errors.length===0,{errors});
 
 }catch(e){failed=String(e);console.error(e);}
