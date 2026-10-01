@@ -346,6 +346,7 @@ func _frame() -> void:
 	state["reward_seam_multiplier"]=main.endless_world.deep_events.node_amount(main.endless_world.player.global_position,1)
 
 	state["hub_context"]=main.hub_context
+	state["mod_preview"]={"panel":_bounds(goal_panel.panel),"art":_bounds(goal_panel.preview),"art_visible":goal_panel.preview.visible,"texture_ready":goal_panel.preview.texture!=null,"title":goal_panel.title.text,"description":goal_panel.detail.text,"progress":goal_panel.progress_bar.value,"progress_text":goal_panel.progress.text,"source":_bounds(goal_panel.source),"detail":_bounds(goal_panel.detail),"bar":_bounds(goal_panel.progress_bar),"count":_bounds(goal_panel.progress),"layer":goal_panel.z_index}
 	state["hud_goal_visible"]=main.premium_hud.progression_goal_panel.visible
 	state["hub_player"]=[main.hub_world.player.position.x,main.hub_world.player.position.y]
 	state["deep_dig"]={"checks":deep_checks,"held":main.endless_world.external_mine_held,"movement":[main.endless_world.player.external_movement.x,main.endless_world.player.external_movement.y]}
@@ -879,6 +880,8 @@ func _deep_command(kind: String) -> void:
 func _treasury_command(data: Dictionary) -> void:
 	var room: Node=main.hub_world.treasury
 	match String(data.kind):
+		"treasury_preview_other":
+			main.treasury_goal_panel.open_goal("copper")
 		"treasury_fixture":
 			main._dev_jump_hub()
 			main._dev_seed_victory_state()
