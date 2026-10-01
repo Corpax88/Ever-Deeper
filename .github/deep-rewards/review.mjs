@@ -51,8 +51,15 @@ try{
 
  await command('resonance_fixture');await ready();await command('rewards_ordinary');await delay(400);
  await shot('ordinary-before');
- async function mine(ms){const s=await state(),v=page.viewportSize(),p={x:s.mine_button[0]/s.viewport[0]*v.width,y:s.mine_button[1]/s.viewport[1]*v.height};await touch('touchStart',p);await delay(ms);await touch('touchEnd',p);await delay(250);}
- const before=await state();await mine(3500);const normal=await state();
+ async function mine(){
+  const s=await state(),v=page.viewportSize(),p={x:s.mine_button[0]/s.viewport[0]*v.width,y:s.mine_button[1]/s.viewport[1]*v.height},jr=s.buttons.joystick;
+  const j={x:(jr[0]+jr[2]*.20)/s.viewport[0]*v.width,y:(jr[1]+jr[3]*.70)/s.viewport[1]*v.height};
+  const touches=(type,points)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints:points.map((p,i)=>({id:i+1,...p,radiusX:5,radiusY:5,force:1}))});
+  await touches('touchStart',[p,j]);await touches('touchMove',[p,{x:j.x,y:j.y+32}]);
+  await wait('real mining burst',x=>x.resonance.bursts>s.resonance.bursts,30000);
+  await touches('touchEnd',[]);await wait('wave settles',x=>!x.resonance.active,15000);
+ }
+ const before=await state();await mine();const normal=await state();
  check('real-5x5-mining',normal.resonance.dug>before.resonance.dug,{before:before.resonance,after:normal.resonance});
  check('ordinary-stone-produced',normal.reward_stone_cargo+(normal.reward_drops.stone||0)>before.reward_stone_cargo+(before.reward_drops.stone||0),{drops:normal.reward_drops});
  check('no-random-valuables-from-rock',Object.keys(normal.reward_drops).every(k=>k==='stone'),{drops:normal.reward_drops});
@@ -66,6 +73,7 @@ try{
  await command('rewards_ordinary');await command('maps_save');await page.reload({waitUntil:'domcontentloaded',timeout:180000});
  await wait('reload menu',s=>s?.buttons?.continue&&s.version===version,180000);await tap('continue');await ready();
  check('ordinary-startup-retains-save',(await state()).game_started,{});await shot('continued-save');
+ const errors=messages.filter(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m));check('no-runtime-errors',errors.length===0,{errors});
 
 }catch(e){failed=String(e);console.error(e);}
 finally{
