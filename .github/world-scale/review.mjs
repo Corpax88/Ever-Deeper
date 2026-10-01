@@ -91,8 +91,9 @@ try{
  const milestone=(await state()).treasury;
  check('every-thousand-celebrated',milestone.upgrades-upgradesBefore===3&&milestone.totals.stone===3010&&milestone.totals.copper===20,{milestone});
 
- for(const amount of [999,1000,3000,10000]){
-  for(const index of [0,4,8,12,16,20,24,26]){
+ for(const amount of [999,1000,2000,3000,10000]){
+  const indices=[1000,2000,3000].includes(amount)?Array.from({length:27},(_,i)=>i):[0,4,8,12,16,20,24,26];
+  for(const index of indices){
    await command('treasury_visual',{amount,index});await delay(300);await shot('scale-treasury-'+amount+'-'+index);
   }
  }
