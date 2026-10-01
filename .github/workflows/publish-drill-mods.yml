@@ -1,4 +1,4 @@
-name: Publish Drill Mods DEV15.44
+name: Publish Bore and Laser Controls DEV15.45
 on:
   push:
     branches: [main]
@@ -36,7 +36,7 @@ jobs:
       - run: python3 .github/drill-mods/publish.py prepare "$RUNNER_TEMP/publication" "$RUNNER_TEMP/candidate"
         env: {GH_TOKEN: '${{ github.token }}'}
       - uses: actions/upload-artifact@v4
-        with: {name: dev15-43-before-drill-mods-rollback, path: '${{ runner.temp }}/publication/previous/dev', retention-days: 30}
+        with: {name: dev15-44-before-controls-rollback, path: '${{ runner.temp }}/publication/previous/dev', retention-days: 30}
       - uses: actions/upload-pages-artifact@v3
         with: {path: '${{ runner.temp }}/publication/site'}
   deploy:

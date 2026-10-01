@@ -11,7 +11,7 @@ def require(ok,why):
 def reviewed():
  r=read(HERE/'accepted.json');m=read(HERE/'accepted-manifest.json');before=read(HERE/'public-before.json')
  require(r['accepted'] and r['images_inspected'] and r['core_passed'],'Acceptance incomplete')
- require(r['version']=='1.0.0-dev.15.44' and r['destination']=='dev','Wrong release')
+ require(r['version']=='1.0.0-dev.15.45' and r['destination']=='dev','Wrong release')
  require(re.fullmatch('[0-9a-f]{40}',r['source']),'Invalid source')
  require(set(m)=={n[4:] for n in before if n.startswith('dev/') and not n.startswith('dev/worn/')},'Wrong candidate files')
  for n in m:
@@ -21,13 +21,15 @@ def reviewed():
  require(e['passed'] and e['version']==r['version'] and e['source']==r['source'] and e['files']==m,'Wrong drill mods test bytes')
  require(all(c['passed'] for c in e['checks']),'Failed drill mods tests')
  require({'graphical-renderer','laser-impacts','bore-advances','release-stops-bore','save-retains-mods','laser-toggle-off','laser-toggle-on'} <= {c['name'] for c in e['checks']},'Missing drill mods gates')
+ for name in ['bore-flow-offcentre-1-0','bore-flow-offcentre-0-1','bore-flow-boost-1-0','bore-flow-boost-0--1','laser-multitouch-release'] + ['laser-touch-angle-'+str(i) for i in range(16)]:
+  require(name in {c['name'] for c in e['checks']},'Missing flow regression '+name)
  for width in [667,932]:
   require('laser-layout-'+str(width) in {c['name'] for c in e['checks']},'Missing mobile layout')
  e=read(HERE/'evidence/ordinary/report.json')
  require(e.get('completed_observation') and not e.get('failure') and not e.get('crashed') and e['files']==m and e['version']==r['version'] and e['source_commit']==r['source'],'Startup not verified')
  require(read(HERE/'evidence/core/results.json')['passed'],'Core gameplay failed')
  n=read(HERE/'native-results.json')
- require(n['source']==r['source'] and len(n['checks'])>=63 and all(c['passed'] for c in n['checks']),'Native mod gates incomplete')
+ require(n['source']==r['source'] and len(n['checks'])>=131 and n['files']==m and all(c['passed'] for c in n['checks']),'Native mod gates incomplete')
  return r,m,before
 
 def fetch(name,p,want):

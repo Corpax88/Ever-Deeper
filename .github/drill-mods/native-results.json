@@ -1,11 +1,50 @@
 {
-  "source": "aa084fbdc75c9347e6f9a8f0e5a27c7639883495",
-  "runtime": "Godot4.7.2 Linux Xvfb Mesa llvmpipe",
-  "resolution": [
+  "source": "f79c19a8f534aa90616468c64a9fc1e1b9c2e491",
+  "runtime": "Godot 4.7.2 Linux Xvfb Mesa llvmpipe",
+  "viewport": [
     1688,
     780
   ],
-  "physical_iphone": false,
+  "files": {
+    "index.html": {
+      "size": 23145,
+      "sha256": "b3a55a7eabb86b4d141feeb45e350f43e1c9c17626557698361874deaf876f4f"
+    },
+    "index.js": {
+      "size": 282403,
+      "sha256": "1c05fc40c7e418b0234c4e5ac39dfc7df1286e98443946e84b89a7394de6c753"
+    },
+    "index.pck": {
+      "size": 296730498,
+      "sha256": "d58616aebfaa21eeeebb3ae809650d28a7cb7784426b29ed2e6d555b730df8f7"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 4571,
+      "sha256": "65bc52dba653b2c39735a621863ae7332dda9c65d3a1bd7891d356390110da7f"
+    }
+  },
+  "build_source": "d548e82afd2c69e30cb4f6185d6375e9ad46d391",
+  "source_difference": "Only external verification scripts changed in f79c19a8. Candidate resource bytes are identical; compare against accepted Mac manifest.",
   "checks": [
     {
       "name": "old-save-resonance-retained",
@@ -258,22 +297,394 @@
     {
       "name": "exit-clears-auto-motion",
       "passed": true
+    },
+    {
+      "details": {
+        "travel": 390.997192382812
+      },
+      "name": "offcentre-(1.0, 0.0)--24.0",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "no-wall-clipping-(1.0, 0.0)-24.0",
+      "passed": true
+    },
+    {
+      "details": {
+        "travel": 849.993896484375
+      },
+      "name": "offcentre-(1.0, 0.0)-0.0",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "no-wall-clipping-(1.0, 0.0)0.0",
+      "passed": true
+    },
+    {
+      "details": {
+        "travel": 515.662963867188
+      },
+      "name": "offcentre-(1.0, 0.0)-24.0",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "no-wall-clipping-(1.0, 0.0)24.0",
+      "passed": true
+    },
+    {
+      "details": {
+        "travel": 515.666809082031
+      },
+      "name": "offcentre-(-1.0, 0.0)--24.0",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "no-wall-clipping-(-1.0, 0.0)-24.0",
+      "passed": true
+    },
+    {
+      "details": {
+        "travel": 850.000366210938
+      },
+      "name": "offcentre-(-1.0, 0.0)-0.0",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "no-wall-clipping-(-1.0, 0.0)0.0",
+      "passed": true
+    },
+    {
+      "details": {
+        "travel": 390.999694824219
+      },
+      "name": "offcentre-(-1.0, 0.0)-24.0",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "no-wall-clipping-(-1.0, 0.0)24.0",
+      "passed": true
+    },
+    {
+      "details": {
+        "travel": 362.666870117188
+      },
+      "name": "offcentre-(0.0, -1.0)--24.0",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "no-wall-clipping-(0.0, -1.0)-24.0",
+      "passed": true
+    },
+    {
+      "details": {
+        "travel": 487.33349609375
+      },
+      "name": "offcentre-(0.0, -1.0)-0.0",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "no-wall-clipping-(0.0, -1.0)0.0",
+      "passed": true
+    },
+    {
+      "details": {
+        "travel": 510.000183105469
+      },
+      "name": "offcentre-(0.0, -1.0)-24.0",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "no-wall-clipping-(0.0, -1.0)24.0",
+      "passed": true
+    },
+    {
+      "details": {
+        "travel": 515.666748046875
+      },
+      "name": "offcentre-(0.0, 1.0)--24.0",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "no-wall-clipping-(0.0, 1.0)-24.0",
+      "passed": true
+    },
+    {
+      "details": {
+        "travel": 849.997680664062
+      },
+      "name": "offcentre-(0.0, 1.0)-0.0",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "no-wall-clipping-(0.0, 1.0)0.0",
+      "passed": true
+    },
+    {
+      "details": {
+        "travel": 362.667846679688
+      },
+      "name": "offcentre-(0.0, 1.0)-24.0",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "no-wall-clipping-(0.0, 1.0)24.0",
+      "passed": true
+    },
+    {
+      "details": {
+        "past_center": 345.739868164062,
+        "position": "(762.1313, 438.9366)"
+      },
+      "name": "boost-passed-(1.0, 0.0)",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "boost-solid-(1.0, 0.0)",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "boost-not-auto-claimed-(1.0, 0.0)",
+      "passed": true
+    },
+    {
+      "details": {
+        "past_center": 300.405578613281,
+        "position": "(115.9859, 326.8571)"
+      },
+      "name": "boost-passed-(-1.0, 0.0)",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "boost-solid-(-1.0, 0.0)",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "boost-not-auto-claimed-(-1.0, 0.0)",
+      "passed": true
+    },
+    {
+      "details": {
+        "past_center": 267.463348388672,
+        "position": "(517.263, 115.4335)"
+      },
+      "name": "boost-passed-(0.0, -1.0)",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "boost-solid-(0.0, -1.0)",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "boost-not-auto-claimed-(0.0, -1.0)",
+      "passed": true
+    },
+    {
+      "details": {
+        "past_center": 295.797454833984,
+        "position": "(315.52, 678.6943)"
+      },
+      "name": "boost-passed-(0.0, 1.0)",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "boost-solid-(0.0, 1.0)",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "boost-not-auto-claimed-(0.0, 1.0)",
+      "passed": true
+    },
+    {
+      "details": {
+        "delta": "(60.10437, 60.10437)"
+      },
+      "name": "analogue-diagonal",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "held-steering-turns",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "release-stops",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-0",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-1",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-2",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-3",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-4",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-5",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-6",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-7",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-8",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-9",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-10",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-11",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-12",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-13",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-14",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-15",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-16",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-17",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-18",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-19",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-20",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-21",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-22",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-360-23",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-diagonal-ray-first-hit",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-diagonal-not-instant",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-diagonal-single-cell-damage",
+      "passed": true
+    },
+    {
+      "details": {
+        "delta": "(60.10437, 60.10437)"
+      },
+      "name": "laser-diagonal-movement",
+      "passed": true
+    },
+    {
+      "details": {},
+      "name": "laser-release-stops",
+      "passed": true
     }
   ],
-  "captures": {
-    "prismite-0.png": "35ca5d8975a5443c79e58a5f4433bf618682e0436fa9bb40337fcb1b20b6d54a",
-    "laser-button.png": "d13a2ab3d6cd0ebd98e04cfd891397481a197ff3c180741db7eb9e7203b9068b",
-    "bore-advancing.png": "16219f22e5a18cdcc7f827da9c78eaf9af8baadd3eeff7d8ab9188a54b9b8967",
-    "node-revealed-laser.png": "5876e9660073130e50ae7ec5be548444d546b4493d28bae3cf67f2b81ea5da0b",
-    "node-revealed-bore_rush.png": "ed87e1182e200826949ca1b1db84f37f0b1dd8b2f9a9482bb134ea0d9e73464e",
-    "burrowsteel-100000.png": "fb8ed4a96cce13ffa988c54914baae76e4a0a223a4616dc31a57bbfbbeadeec4",
-    "laser-cutting.png": "fd2fe32419ad1aea0f9531c68568f3cd0edb5248b98b863cd08b2e0cdb4d8a7c",
-    "prismite-claimed.png": "390f6c5f186bbcf1c2ff83db0ce4cd668fbb827348b67a59011354b1a646d890",
-    "prismite-100000.png": "a8bdfa4bf143f96dda8a645b196e405f8a8f069b770a543411dc2c2b99f706e7",
-    "burrowsteel-56000.png": "9ff73b36339f6290bed73e84bba9b5267904d4391b5a944b31c2f6dd061b6c3b",
-    "prismite-56000.png": "528a1e19813ffc2529f6f361dc7ab920180c6ed82f57f016fc2d3a487c7b2915",
-    "burrowsteel-0.png": "f9b3530ba3de4e997ad5312937c62bfc88d3318b02fa4b7b554c1ed12e358c8a",
-    "final.png": "adb3c5a8f70fbe3b2d6898a8480affc30cbb779390a6d297541f7471ce77021d",
-    "burrowsteel-claimed.png": "6c82e5a355f30e59c3d99acfb930b1c61e2a94b7b48ccc491c7cdb09fab88c4b"
+  "completion_markers": [
+    "DRILL_MODS_OK",
+    "BORE_FLOW_OK"
+  ],
+  "harness_sha256": {
+    "review_drill_mods.gd": "dee62a2cfb8e6afb0e87161b4239856665d5c39307de9d2457dd3acf82c262fd",
+    "review_bore_flow.gd": "a0db7f066912859b2a8cf842e61b7289575b6c9f8b68fe30869548d60feb7942"
   }
 }
