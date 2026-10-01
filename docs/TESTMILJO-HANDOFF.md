@@ -1,3 +1,16 @@
+# DEV15.35 — resonance charge fix published
+
+1 October 2026. Mats reported that 5x5 mining cleared rock before the shot. Resonance now replaces ordinary hero impact while enabled: charge against intact rock, then let the advancing wave excavate. Disabled-mod mining remains unchanged. Previous QA incorrectly overrode the actual Crusher loadout; both native and browser regressions now retain the real DEV command's loadout and assert no dug cells during charge.
+
+Published https://corpax88.github.io/Ever-Deeper/dev/ (15.35). Canonical gameplay source8bc0fcc65a15a8852c7fcd405d0e1c5fb6c79e51 on codex/resonance-drill-20261001. Main is publication carrier; never rebuild its old gameplay. QA36815973823 passed20 browser gates, input/404 core and ordinary WebKit. Native14 checks passed;4 native and14 Mac screenshots inspected. Actual Mac Chromium ANGLE Metal Apple Paravirtual, DPR2. No physical-iPhone/FPS claim; old invariant debt retained.
+
+Publication082c0babf518ee8dcfdca455e8cbced9de9e3765 /36816337587 succeeded; receipt11141567620 verifies all27 public hashes, LIVE9/Worn9 retained. Candidate11141178271 digest6c1240d96b0106ef5188dfd17d8d1d7244f34f535246c42d67649baeffb0cf3d; evidence11141282844 digest3e491a28be2896987285c72f92fa29c17e79c0a4a79a80318c37d389736cdd22. Rollback11141686772 preserves15.34. No pending work, jobs or permissions; standing explicit upload/DEV authorization applies, LIVE separate.
+
+Test: refresh to15.35 → DEV TOOLS → RESONANCE TEST → CLOSE DEV. Hold direction into intact rock + MINE. Rock stays during charge and opens as the cyan wave arrives. Activation is session-only; no reset needed. Workshop progression/prices still undecided. Next: user phone feel feedback; do not rerun unchanged accepted tests. Detailed fix in docs/resonance-drill/CHARGE-FIX.md. Workspace game/,candidate-fix/,native-fix/,mac-charge/ under /workspace/scratch/c939c7fc2e13.
+
+---
+Earlier history follows.
+
 Latest verified release: [DEV15.34 resonance drill](resonance-drill/HANDOFF.md). Published/27 hashes verified by36794405091; source b8b2c8e, QA36793878581,14 Mac images inspected. No pending jobs or approval. ReloadDEV → DEV TOOLS → RESONANCE TEST. Physical-iPhone feel remains user feedback; LIVE separate.
 
 Latest: [Resonance Drill DEV15.34](docs/resonance-drill/HANDOFF.md). Approved source b8b2c8e, QA36793878581 passed and14 actual images inspected; immutable DEV publication pending. Upload authorization renewed by Mats1 October2026: “Godkjenner alltid”. Earlier blocks resolved; LIVE separate.
