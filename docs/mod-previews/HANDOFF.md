@@ -1,12 +1,12 @@
 # DEV15.42 — visual mod previews
 
-Accepted source `8b2bf3dd45adb455d2903aca7c775342439b1bdf`, branch `codex/mod-previews-20261001`. Mac run36891770508 succeeded:45 browser checks, input and414 premium-core checks; ordinary WebKit startup/new game/save reload passed. All16 actual captures inspected. Candidate11177077449, SHA256 c6798fab57f2b30d5980c62b2a14e733de23a1182268756e7559919bced7d15e. Evidence11177212044. Publication pending; do not claim public until receipt verifies27hashes.
+Accepted source `8b2bf3dd45adb455d2903aca7c775342439b1bdf`, branch `codex/mod-previews-20261001`. Mac run36891770508 succeeded:45 browser checks, input and414 premium-core checks; ordinary WebKit startup/new game/save reload passed. All16 actual captures inspected. Candidate11177077449, SHA256 c6798fab57f2b30d5980c62b2a14e733de23a1182268756e7559919bced7d15e. Evidence11177212044. Published at https://corpax88.github.io/Ever-Deeper/dev/. Publication6477fa715566311bca8e6f040f8a8385a5c36427/run36892527950 succeeded; receipt11178465494 verified all27public hashes and preserves LIVE1.0.4/Worn. Rollback11178455105 retains DEV15.41 and Worn.
 
 Correct Skills Pappa Hammer, reusable presentation catalog and live mod controls. Approved concept and original production PNGs remain in the exact source branch. Future mods follow [DESIGN-STANDARD.md](DESIGN-STANDARD.md). Only Resonance is defined. Claim, toggle, pin and save authority unchanged. No LIVE/website/FPS changes. Existing invariant QA flag documentation mismatch remains, not a passing check.
 
 Test route: `.github/workflows/mod-previews.yml`, macos-15, Godot4.7.2, Node22, Playwright1.62.0; actual Chromium ANGLE Apple Metal at844×390/667×375/932×430. Initial measured DPR2 despite requested3; resize screenshots have corresponding actual dimensions retained. Ordinary WebKit separate. Not physical iPhone or performance acceptance. No need to repeat accepted tests. See [test environment](../TESTMILJO-HANDOFF.md).
 
-Publisher `.github/mod-previews/publish.py` binds reviewed reports, immutable candidate digest/source/run, verifies existing public27hashes, preserves LIVE1.0.4 and Worn, and verifies public27hashes after deployment. Continue by checking Publish Mod Previews DEV15.42, then add its receipt/run here.
+Publisher `.github/mod-previews/publish.py` binds reviewed reports, immutable candidate digest/source/run, verifies existing public27hashes, preserves LIVE1.0.4 and Worn, and verifies public27hashes after deployment. No jobs or approval pending. Next: physical-phone feedback on the gold podium mod preview. Do not repeat accepted unchanged tests or publication.
 
 ## Historical checkpoint
 
