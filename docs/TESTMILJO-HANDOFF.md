@@ -1,3 +1,5 @@
+Current DEV15.36 candidate: [continuous mixed treasury flow](docs/treasury-flow/HANDOFF.md), source977bca363d0b8f35286fd881f81d94c8ad874e49 on codex/treasury-flow-20261001. QA36820194082 passed29 browser gates, input/404 core and ordinary WebKit. Native38 checks,16 Mac stills and sampled video inspected; manifest parity verified. Publishes the reviewed immutable artifact11143110846; no physical-iPhone/FPS claim. Existing assets and resonance charge fix retained. Main remains the publication carrier; never rebuild its historical runtime. Publication status belongs in .github/treasury-flow/publication-receipt.json when available.
+
 # DEV15.35 — resonance charge fix published
 
 1 October 2026. Mats reported that 5x5 mining cleared rock before the shot. Resonance now replaces ordinary hero impact while enabled: charge against intact rock, then let the advancing wave excavate. Disabled-mod mining remains unchanged. Previous QA incorrectly overrode the actual Crusher loadout; both native and browser regressions now retain the real DEV command's loadout and assert no dug cells during charge.
