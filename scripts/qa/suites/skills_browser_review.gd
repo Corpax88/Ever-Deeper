@@ -41,6 +41,22 @@ func _command(data: Dictionary) -> void:
 		await _scale_command(data)
 		command_id=int(data.id)
 		return
+	if String(data.kind).begins_with("rewards_"):
+		var w: Node=main.endless_world
+		var event: Dictionary=w.deep_events.state()
+		if String(data.kind)=="rewards_ordinary":
+			event.kind=""
+			event.remaining=0.0
+			event.next=int(event.mined)+2000000
+		elif String(data.kind)=="rewards_event":
+			event.kind=String(data.event)
+			event.remaining=28.0
+			var cell: Vector2i=w.absolute_cell(w._world_to_cell(w.player.global_position+Vector2(0,192)))
+			event.x=cell.x
+			event.y=cell.y
+		w.deep_events._refresh_visuals()
+		command_id=int(data.id)
+		return
 	if String(data.kind).begins_with("resonance_"):
 		_resonance_command(data)
 		command_id=int(data.id)
@@ -276,6 +292,15 @@ func _frame() -> void:
 
 
 	state["deep_events"]=main.endless_world.deep_events.snapshot()
+	var rewards_world: Node=main.endless_world
+	var reward_drops: Dictionary={}
+	for reward_depth in range(rewards_world.window_start_depth,rewards_world.window_start_depth+3):
+		for drop in RunState.endless_loose_drops(reward_depth).values():
+			reward_drops[String(drop.kind)]=int(reward_drops.get(String(drop.kind),0))+int(drop.amount)
+	state["reward_drops"]=reward_drops
+	state["reward_stone_cargo"]=int(RunState.cargo.get("stone",0))
+	state["reward_seam_multiplier"]=main.endless_world.deep_events.node_amount(main.endless_world.player.global_position,1)
+
 	state["hub_context"]=main.hub_context
 	state["hud_goal_visible"]=main.premium_hud.progression_goal_panel.visible
 	state["hub_player"]=[main.hub_world.player.position.x,main.hub_world.player.position.y]

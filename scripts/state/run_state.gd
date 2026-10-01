@@ -4604,7 +4604,7 @@ func mark_endless_dug(depth: int, cell: int) -> void:
 
 
 func claim_endless_rock_cell(depth: int, cell: int, resource_id: String, amount: int, loose: bool = false) -> Dictionary:
-	if not _endless_band_in_reach(depth) or cell < 0 or cell >= EndlessTerrainStateScript.CELL_COUNT or resource_id not in ENDLESS_RESOURCE_IDS or amount <= 0 or amount > MAX_MINE_LOOSE_DROP_AMOUNT:
+	if not _endless_band_in_reach(depth) or cell < 0 or cell >= EndlessTerrainStateScript.CELL_COUNT or (resource_id != "stone" and resource_id not in ENDLESS_RESOURCE_IDS) or amount <= 0 or amount > MAX_MINE_LOOSE_DROP_AMOUNT:
 		return {"ok": false, "reason": "invalid_rock_claim"}
 	var chunk: Dictionary = _endless_chunk(depth)
 	if EndlessTerrainStateScript.contains(String(chunk.get("dug", "")), cell):

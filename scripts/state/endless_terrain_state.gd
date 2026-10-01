@@ -86,6 +86,6 @@ static func _sanitize_drops(raw: Variant) -> Dictionary:
 		var kind: String = str(drop.get("kind", ""))
 		var amount: int = _bounded_mask(drop.get("amount", 0), 1000000)
 		var cell: int = _bounded_mask(drop.get("cell", -1), CELL_COUNT - 1)
-		if kind not in ["lumenstone", "deep_alloy", "memory_silk", "echo_crystal", "waystone"] or amount <= 0: continue
+		if kind not in ["stone", "lumenstone", "deep_alloy", "memory_silk", "echo_crystal", "waystone"] or amount <= 0: continue
 		result[key] = {"kind": kind, "amount": amount, "cell": cell}
 	return result

@@ -67,16 +67,11 @@ static func generate(world_seed: int, depth: int) -> Dictionary:
 	return {"cells": cells, "placement_cells": placement_cells, "rooms": rooms, "branches": branches, "entrance": entrance, "exit": exit_cell}
 
 
-static func ore_for_cell(world_seed: int, depth: int, index: int) -> Dictionary:
-	var value: int = absi(seed_for(world_seed, depth) ^ (index * 83492791)) & 2147483647
+static func ore_for_cell(_world_seed: int, depth: int, _index: int) -> Dictionary:
+	# Ordinary rock is stone. Valuable materials belong to buried nodes and
+	# temporary, visibly marked event deposits, not every excavation cell.
 	var richness: float = log(1.0 + float(maxi(1, depth))) / log(2.0)
-	var rare: bool = float(value % 1000) < minf(420.0, 95.0 + richness * 27.0)
-	var available: int = clampi(2 + depth / 3, 2, RESOURCE_IDS.size())
-	var kind: String = RESOURCE_IDS[(value / 1009) % available]
-	var amount: int = 1 + floori(richness * 0.7)
-	if rare:
-		amount *= 4 + (value / 1013) % 3
-	return {"kind": kind, "amount": amount, "rare": rare}
+	return {"kind": "stone", "amount": 1 + floori(richness * 0.7), "rare": false}
 
 
 static func node_yield(depth: int, variation: int) -> int:

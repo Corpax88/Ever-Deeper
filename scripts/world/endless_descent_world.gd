@@ -37,6 +37,7 @@ const CaveEdgeAssetDrawer = preload("res://scripts/world/cave_edge_asset_drawer.
 const CrusherDebrisScript = preload("res://scripts/world/crusher_debris.gd")
 
 const RESOURCE_TEXTURE_PATHS: = {
+	"stone": "res://assets/drops/stone-drop.png",
 	"lumenstone": "res://assets/endless/node-lumen-shard-v1.png",
 	"deep_alloy": "res://assets/endless/node-deep-alloy-v1.png",
 	"memory_silk": "res://assets/endless/node-memory-silk-v1.png",
@@ -2084,7 +2085,7 @@ func _strike_resource(index: int, attack_power: int = -1, trigger_wave: bool = t
 	var finished: = int(resource.hp) <= 0
 	if finished:
 		_pending_resource_squashes.erase(String(resource.id))
-		var collected_amount: int = int(resource.amount) * maxi(1, int(tool.get("yield_multiplier", 1)))
+		var collected_amount: int = deep_events.node_amount(Vector2(resource.position), int(resource.amount)) * maxi(1, int(tool.get("yield_multiplier", 1)))
 		var claim: Dictionary = RunState.claim_endless_resource_node(int(resource.get("depth", current_depth)), int(resource.get("node_index", index)), String(resource.kind), collected_amount, _chunk_cell_index(Vector2i(resource.cell)))
 		if not bool(claim.get("ok", false)):
 			if String(claim.get("reason", "")) == "already_claimed":

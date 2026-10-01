@@ -369,7 +369,7 @@ func _check_deep_treasury() -> void:
 		events._refresh_visuals()
 		await _treasury_capture("event-"+kind)
 		var enhanced: Dictionary=events.reward(w._world_to_cell(w.player.global_position),{"kind":"deepstone","amount":1})
-		_check((enhanced.kind!="deepstone" and int(enhanced.amount)>1) if kind!="unstable_seam" else events.speed()==2.0,"Event changes mining yield or speed: "+kind)
+		_check((enhanced.kind!="deepstone" and int(enhanced.amount)>1) if kind!="unstable_seam" else (enhanced.kind=="deepstone" and int(enhanced.amount)==2 and events.speed()==1.0),"Event changes mining yield: "+kind)
 	w.player.control_enabled=false
 	events.tick(5.0)
 	_check(float(RunState.deep_events.remaining)==28.0,"Menus pause Deep Event duration")

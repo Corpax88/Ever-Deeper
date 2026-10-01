@@ -63,7 +63,7 @@ func on_rock(cell: Vector2i) -> void:
 	s.x = absolute.x
 	s.y = absolute.y
 	RunState._queue_autosave()
-	world.message_changed.emit({"ancient_core":"ANCIENT CORE · a rich alloy vein awakens", "crystal_bloom":"CRYSTAL BLOOM · crystals surge through the stone", "unstable_seam":"UNSTABLE SEAM · the mountain yields to your drill"}[s.kind])
+	world.message_changed.emit({"ancient_core":"ANCIENT CORE · a rich alloy vein awakens", "crystal_bloom":"CRYSTAL BLOOM · crystals surge through the stone", "unstable_seam":"UNSTABLE SEAM · double resources in this seam"}[s.kind])
 	_refresh_visuals()
 
 func reward(cell: Vector2i, original: Dictionary) -> Dictionary:
@@ -77,11 +77,16 @@ func reward(cell: Vector2i, original: Dictionary) -> Dictionary:
 		"crystal_bloom":
 			result.kind = "lumenstone" if (cell.x+world.absolute_cell(cell).y)%2==0 else "echo_crystal"
 			result.amount = maxi(4,int(original.amount)*4)
+		"unstable_seam":
+			result.amount = int(original.amount) * 2
 	return result
+
+func node_amount(point: Vector2, amount: int) -> int:
+	return amount * 2 if active_here(point) and String(state().kind) == "unstable_seam" else amount
 
 func speed() -> float:
 	if not active_here(world.player.global_position): return 1.0
-	return 2.0 if String(state().kind)=="unstable_seam" else 1.25
+	return 1.0 if String(state().kind)=="unstable_seam" else 1.25
 
 func tick(delta: float) -> void:
 	if not world.active:
