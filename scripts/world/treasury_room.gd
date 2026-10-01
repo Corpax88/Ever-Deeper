@@ -17,7 +17,8 @@ var particles: Array[Dictionary] = []
 var batches: Array[Dictionary] = []
 var clock: float = 0.0
 var next_launch: float = 0.0
-var interval: float = 0.45
+var interval: float = 0.06
+var launch_order: Array[String] = []
 var landing_count: int = 0
 var cancelled_count: int = 0
 var textures: Dictionary = {}
@@ -122,6 +123,7 @@ func stop() -> void:
 	cancelled_count += particles.size()
 	particles.clear()
 	batches.clear()
+	launch_order.clear()
 	active_kind = ""
 	upgrade_flashes.clear()
 	delivering = false
@@ -141,13 +143,14 @@ func _refresh_camera() -> void:
 func start() -> void:
 	if not inside or delivering: return
 	batches.clear()
+	launch_order.clear()
 	# One bounded queue entry per resource, even with millions of items.
 	for kind in Ledger.keys():
 		var available: int = mini(Ledger.available(kind), Ledger.MAX_TOTAL - int(RunState.treasury_totals.get(kind,0)))
 		if available > 0:
 			batches.append({"kind":kind,"amount":available,"portion":clampi(ceili(float(available)/8.0),1,250)})
 	if batches.is_empty(): return
-	interval = 0.34
+	interval = 0.06
 	active_kind = ""
 	clock = 0.0
 	next_launch = 0.0
@@ -177,26 +180,41 @@ func tick(delta: float) -> void:
 		particle_canvas.queue_redraw()
 		return
 	clock += maxf(0.0, delta)
-	if not batches.is_empty() and clock >= next_launch and particles.size() < 16:
-		var batch: Dictionary = batches[0]
-		var kind: String = String(batch.kind)
-		# Finish every airborne packet before changing material or celebrating a tier.
-		if particles.is_empty() or (active_kind == kind and not bool(particles.back().get("milestone",false))):
-			active_kind = kind
-			var reserved: int = 0
-			for pending in particles: reserved += int(pending.amount)
-			var projected: int = int(RunState.treasury_totals.get(kind,0)) + reserved
-			var to_boundary: int = 1000 - projected % 1000
-			var amount: int = mini(mini(int(batch.amount),int(batch.portion)),to_boundary)
-			var packet: Dictionary = {"kind":kind,"amount":amount,"milestone":amount==to_boundary,
-				"origin":hub.player.global_position+Vector2(0,-38),"target":bay(Ledger.keys().find(kind))+Vector2(0,-17),"age":0.0}
-			_shape_flight(packet)
-			particles.append(packet)
-			batch.amount = int(batch.amount)-amount
-			if int(batch.amount) <= 0: batches.pop_front()
-			next_launch = clock + interval * flight_rng.randf_range(0.62,1.48)
+	if not batches.is_empty() and clock >= next_launch and particles.size() < 32:
+		# Shuffle a full round of remaining materials: mixed directions without starvation.
+		if launch_order.is_empty():
+			for batch in batches: launch_order.append(String(batch.kind))
+			for i in range(launch_order.size()-1,0,-1):
+				var j: int = flight_rng.randi_range(0,i)
+				var swap: String = launch_order[i]
+				launch_order[i] = launch_order[j]
+				launch_order[j] = swap
+			if launch_order.size()>1 and launch_order.back()==active_kind:
+				var swap: String = launch_order[0]
+				launch_order[0] = launch_order[-1]
+				launch_order[-1] = swap
+		var kind: String = launch_order.pop_back()
+		active_kind = kind
+		var batch_index: int = 0
+		while String(batches[batch_index].kind)!=kind: batch_index += 1
+		var batch: Dictionary = batches[batch_index]
+		var reserved: int = 0
+		for pending in particles:
+			if String(pending.kind)==kind: reserved += int(pending.amount)
+		var projected: int = int(RunState.treasury_totals.get(kind,0)) + reserved
+		var to_boundary: int = 1000 - projected % 1000
+		var amount: int = mini(mini(int(batch.amount),int(batch.portion)),to_boundary)
+		var packet: Dictionary = {"kind":kind,"amount":amount,"milestone":amount==to_boundary,
+			"origin":hub.player.global_position+Vector2(0,-38),"target":bay(Ledger.keys().find(kind))+Vector2(0,-17),"age":0.0}
+		_shape_flight(packet)
+		particles.append(packet)
+		batch.amount = int(batch.amount)-amount
+		if int(batch.amount) <= 0: batches.remove_at(batch_index)
+		# One visible item per launch, with no burst catch-up after a slow frame.
+		next_launch = clock + interval
 	var changed: bool = false
-	for i in range(particles.size()-1,-1,-1):
+	var i: int = 0
+	while i < particles.size():
 		particles[i].age = float(particles[i].age) + maxf(0.0,delta)
 		if float(particles[i].age) >= float(particles[i].get("duration",FLIGHT)):
 			var kind: String = String(particles[i].kind)
@@ -209,10 +227,11 @@ func tick(delta: float) -> void:
 					upgrades += 1
 					upgrade_flashes[kind] = UPGRADE_FLASH
 					AudioDirector.play_economy("upgrade")
-					next_launch = maxf(next_launch,clock+UPGRADE_FLASH)
 				else:
 					AudioDirector.play_pickup(kind, 1)
 			particles.remove_at(i)
+		else:
+			i += 1
 	if changed:
 		refresh_piles()
 		_update_flash_tints()
@@ -356,23 +375,14 @@ func _draw_labels() -> void:
 			_steel_text(value,at+Vector2(0,14),14)
 
 func _shape_flight(packet: Dictionary) -> void:
-	# Visual randomness has its own RNG and never affects rewards or mining.
-	var motes: Array[Dictionary] = []
-	var duration: float = 0.0
-	for i in 3:
-		var travel: float = flight_rng.randf_range(1.12,1.78)
-		var delay: float = flight_rng.randf_range(0.0,0.16)
-		motes.append({"travel":travel,"delay":delay,"bend":Vector2(flight_rng.randf_range(-78,78),-flight_rng.randf_range(85,205)),"offset":Vector2(flight_rng.randf_range(-13,13),flight_rng.randf_range(-8,6)),"ease":flight_rng.randf_range(0.85,1.18),"size":flight_rng.randf_range(27,36)})
-		duration = maxf(duration,travel+delay)
-	# The milestone must remain the final landing in its thousand, even when
-	# ordinary packets overtake. This preserves exact pile/flash/sound timing.
-	if bool(packet.milestone):
-		for pending in particles:
-			duration = maxf(duration,float(pending.get("duration",FLIGHT))-float(pending.age)+0.08)
-	# Make one visible mote land at the accounting boundary, not before it.
-	motes[2].travel = duration-float(motes[2].delay)
-	packet["duration"] = duration
-	packet["motes"] = motes
+	# Each launch is a single item, rather than a three-item pulse.
+	var travel: float = flight_rng.randf_range(1.12,1.78)
+	# Keep same-material landings in order without stopping the outgoing stream.
+	for pending in particles:
+		if String(pending.kind)==String(packet.kind):
+			travel = maxf(travel,float(pending.duration)-float(pending.age)+interval)
+	packet["duration"] = travel
+	packet["motes"] = [{"travel":travel,"delay":0.0,"bend":Vector2(flight_rng.randf_range(-115,115),-flight_rng.randf_range(65,205)),"offset":Vector2(flight_rng.randf_range(-13,13),flight_rng.randf_range(-8,6)),"ease":flight_rng.randf_range(0.85,1.18),"size":flight_rng.randf_range(27,36)}]
 
 func _draw_particles() -> void:
 	for packet in particles:
