@@ -1,21 +1,21 @@
 {
   "passed": true,
   "error": null,
-  "source_commit": "b8b2c8ec8c11dc918eccd959432ede2ca036e75d",
-  "version": "1.0.0-dev.15.34",
+  "source_commit": "8bc0fcc65a15a8852c7fcd405d0e1c5fb6c79e51",
+  "version": "1.0.0-dev.15.35",
   "flavor": "dev",
   "files": {
     "index.html": {
       "size": 23145,
-      "sha256": "e415cbbdf69d8539958b784872c3271896aa87c16bbf1acf755feea9b9361c47"
+      "sha256": "066340b15221724c5fcc5b807536999f64c17546b526f3f76addce5aae92b7ce"
     },
     "index.js": {
       "size": 282403,
       "sha256": "1c05fc40c7e418b0234c4e5ac39dfc7df1286e98443946e84b89a7394de6c753"
     },
     "index.pck": {
-      "size": 284345262,
-      "sha256": "1c9f9e1a02abd0584b943011ffacc8af8f4e841ac70af4677ff6a8430e656db6"
+      "size": 284345646,
+      "sha256": "f33e54670812c5f52561c866b2fcb9bcad3cb81b6f3ca65c2c94df7d8081b661"
     },
     "index.wasm": {
       "size": 39514754,
@@ -98,13 +98,13 @@
         "phase": "endless",
         "pickaxe_level": 5,
         "position": [
-          928,
+          1312,
           224
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 93,
-          "primitives": 2848
+          "draw_calls": 91,
+          "primitives": 2760
         },
         "steering": {
           "clipped": 0,
@@ -114,7 +114,7 @@
         },
         "swing": 0,
         "target_valid": false,
-        "version": "1.0.0-dev.15.34",
+        "version": "1.0.0-dev.15.35",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -366,7 +366,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 139,
+        "physics_frame": 141,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -384,10 +384,12 @@
             1,
             0
           ],
+          "dug": 0,
           "enabled": true,
           "excavated": 0,
           "rings": 0,
-          "row": 0
+          "row": 0,
+          "variant": "crusher"
         },
         "settings_open": false,
         "shared_ui_roots": 1,
@@ -526,7 +528,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 0,
-        "stamina_rest": 1.78333333333333,
+        "stamina_rest": 1.81666666666667,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -600,11 +602,33 @@
       }
     },
     {
+      "name": "real-crusher-equipped",
+      "passed": true,
+      "beforeCharge": {
+        "active": false,
+        "age": -1,
+        "blocked": false,
+        "bursts": 0,
+        "charge": 0,
+        "debris": 0,
+        "direction": [
+          1,
+          0
+        ],
+        "dug": 0,
+        "enabled": true,
+        "excavated": 0,
+        "rings": 0,
+        "row": 0,
+        "variant": "crusher"
+      }
+    },
+    {
       "name": "02-charging",
       "passed": true,
       "state": {
         "active_rigs": 0,
-        "cycle": 0.08,
+        "cycle": 0.0989,
         "drill_level": 3,
         "error": "",
         "fixture": "menu",
@@ -612,14 +636,14 @@
         "health": 32574,
         "hit_phase": 0.42,
         "id": 1,
-        "impact": 30,
-        "impact_target_valid": true,
+        "impact": 0,
+        "impact_target_valid": false,
         "menu": false,
         "mine_button": [
           1205.36364746094,
           517.54541015625
         ],
-        "mining": false,
+        "mining": true,
         "native": {
           "active": false,
           "failed": false,
@@ -636,13 +660,13 @@
         "phase": "endless",
         "pickaxe_level": 5,
         "position": [
-          928,
-          569.666442871094
+          1312,
+          224
         ],
-        "progress": 0,
+        "progress": 0.0991135827435132,
         "render": {
-          "draw_calls": 135,
-          "primitives": 4834
+          "draw_calls": 129,
+          "primitives": 4640
         },
         "steering": {
           "clipped": 0,
@@ -650,9 +674,9 @@
           "margin": 400,
           "samples": 0
         },
-        "swing": 30,
-        "target_valid": false,
-        "version": "1.0.0-dev.15.34",
+        "swing": 27,
+        "target_valid": true,
+        "version": "1.0.0-dev.15.35",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -841,7 +865,7 @@
           "speed": 1,
           "state": {
             "kind": "",
-            "mined": 15,
+            "mined": 0,
             "next": 96,
             "remaining": 0,
             "serial": 0,
@@ -904,11 +928,11 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 361,
+        "physics_frame": 305,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
-          "level": 2,
+          "level": 0,
           "results": {}
         },
         "resonance": {
@@ -916,16 +940,18 @@
           "age": -1,
           "blocked": false,
           "bursts": 0,
-          "charge": 0.6,
+          "charge": 0.618125,
           "debris": 0,
           "direction": [
             1,
             0
           ],
+          "dug": 0,
           "enabled": true,
           "excavated": 0,
           "rings": 0,
-          "row": 0
+          "row": 0,
+          "variant": "crusher"
         },
         "settings_open": false,
         "shared_ui_roots": 1,
@@ -1011,11 +1037,11 @@
           }
         ],
         "skill_xp": {
-          "carrying": 4.07291412353516,
-          "mining": 120,
-          "prospecting": 21,
-          "running": 5.40103816986084,
-          "stamina": 87.8016666666668
+          "carrying": 0,
+          "mining": 100,
+          "prospecting": 1,
+          "running": 0,
+          "stamina": 89.274866666667
         },
         "skills": [
           {
@@ -1024,8 +1050,8 @@
             "maxed": false,
             "name": "Mining",
             "next": 88,
-            "ratio": 0.454545454545455,
-            "xp": 40
+            "ratio": 0.227272727272727,
+            "xp": 20
           },
           {
             "id": "running",
@@ -1033,8 +1059,8 @@
             "maxed": false,
             "name": "Running",
             "next": 80,
-            "ratio": 0.0675129771232605,
-            "xp": 5
+            "ratio": 0,
+            "xp": 0
           },
           {
             "id": "carrying",
@@ -1042,17 +1068,17 @@
             "maxed": false,
             "name": "Carrying",
             "next": 80,
-            "ratio": 0.0509114265441895,
-            "xp": 4
+            "ratio": 0,
+            "xp": 0
           },
           {
             "id": "prospecting",
-            "level": 2,
+            "level": 0,
             "maxed": false,
             "name": "Prospecting",
-            "next": 12,
-            "ratio": 0,
-            "xp": 0
+            "next": 10,
+            "ratio": 0.1,
+            "xp": 1
           }
         ],
         "skills_open": false,
@@ -1062,9 +1088,9 @@
           594.872680664062,
           498.181793212891
         ],
-        "stamina": 87.8016666666668,
+        "stamina": 89.274866666667,
         "stamina_bar": 0,
-        "stamina_rest": 0.0333333333333333,
+        "stamina_rest": 0,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -1092,14 +1118,14 @@
             "burrowsteel": 0,
             "copper": 0,
             "crownstone": 0,
-            "deep_alloy": 12,
+            "deep_alloy": 0,
             "deepstone": 0,
             "echo_crystal": 0,
             "emberstone": 0,
             "furnaceheart": 0,
             "gold": 0,
             "infernium": 0,
-            "lumenstone": 8,
+            "lumenstone": 0,
             "lunacore": 0,
             "magmaite": 0,
             "memory_silk": 0,
@@ -1138,20 +1164,60 @@
       }
     },
     {
+      "name": "intact-until-wave",
+      "passed": true,
+      "before": {
+        "active": false,
+        "age": -1,
+        "blocked": false,
+        "bursts": 0,
+        "charge": 0,
+        "debris": 0,
+        "direction": [
+          1,
+          0
+        ],
+        "dug": 0,
+        "enabled": true,
+        "excavated": 0,
+        "rings": 0,
+        "row": 0,
+        "variant": "crusher"
+      },
+      "after": {
+        "active": false,
+        "age": -1,
+        "blocked": false,
+        "bursts": 0,
+        "charge": 0.618125,
+        "debris": 0,
+        "direction": [
+          1,
+          0
+        ],
+        "dug": 0,
+        "enabled": true,
+        "excavated": 0,
+        "rings": 0,
+        "row": 0,
+        "variant": "crusher"
+      }
+    },
+    {
       "name": "03-wave-down",
       "passed": true,
       "state": {
         "active_rigs": 0,
-        "cycle": 0.08,
+        "cycle": 0.0989,
         "drill_level": 3,
         "error": "",
         "fixture": "menu",
         "gear": "deepcore",
-        "health": 32574,
+        "health": 31624,
         "hit_phase": 0.42,
         "id": 2,
-        "impact": 51,
-        "impact_target_valid": true,
+        "impact": 0,
+        "impact_target_valid": false,
         "menu": false,
         "mine_button": [
           1205.36364746094,
@@ -1174,13 +1240,13 @@
         "phase": "endless",
         "pickaxe_level": 5,
         "position": [
-          928,
-          807.667297363281
+          1312,
+          246.666687011719
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 131,
-          "primitives": 3782
+          "draw_calls": 127,
+          "primitives": 3488
         },
         "steering": {
           "clipped": 0,
@@ -1188,9 +1254,9 @@
           "margin": 400,
           "samples": 0
         },
-        "swing": 51,
+        "swing": 43,
         "target_valid": false,
-        "version": "1.0.0-dev.15.34",
+        "version": "1.0.0-dev.15.35",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1379,7 +1445,7 @@
           "speed": 1,
           "state": {
             "kind": "",
-            "mined": 59,
+            "mined": 32,
             "next": 96,
             "remaining": 0,
             "serial": 0,
@@ -1442,28 +1508,30 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 538,
+        "physics_frame": 448,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
-          "level": 4,
+          "level": 0,
           "results": {}
         },
         "resonance": {
           "active": true,
-          "age": 0.4839,
+          "age": 0.45,
           "blocked": false,
           "bursts": 1,
           "charge": 0,
-          "debris": 62,
+          "debris": 61,
           "direction": [
             0,
             1
           ],
+          "dug": 32,
           "enabled": true,
-          "excavated": 34,
+          "excavated": 32,
           "rings": 7,
-          "row": 7
+          "row": 7,
+          "variant": "crusher"
         },
         "settings_open": false,
         "shared_ui_roots": 1,
@@ -1549,11 +1617,11 @@
           }
         ],
         "skill_xp": {
-          "carrying": 7.79167747497559,
-          "mining": 216,
-          "prospecting": 51,
-          "running": 9.11980152130127,
-          "stamina": 84.2874000000001
+          "carrying": 0,
+          "mining": 180,
+          "prospecting": 1,
+          "running": 0.354166984558105,
+          "stamina": 91.1613333333334
         },
         "skills": [
           {
@@ -1562,8 +1630,8 @@
             "maxed": false,
             "name": "Mining",
             "next": 96,
-            "ratio": 0.5,
-            "xp": 48
+            "ratio": 0.125,
+            "xp": 12
           },
           {
             "id": "running",
@@ -1571,8 +1639,8 @@
             "maxed": false,
             "name": "Running",
             "next": 80,
-            "ratio": 0.113997519016266,
-            "xp": 9
+            "ratio": 0.00442708730697632,
+            "xp": 0
           },
           {
             "id": "carrying",
@@ -1580,17 +1648,17 @@
             "maxed": false,
             "name": "Carrying",
             "next": 80,
-            "ratio": 0.0973959684371948,
-            "xp": 7
+            "ratio": 0,
+            "xp": 0
           },
           {
             "id": "prospecting",
-            "level": 4,
+            "level": 0,
             "maxed": false,
             "name": "Prospecting",
-            "next": 14,
-            "ratio": 0.357142857142857,
-            "xp": 5
+            "next": 10,
+            "ratio": 0.1,
+            "xp": 1
           }
         ],
         "skills_open": false,
@@ -1600,9 +1668,9 @@
           594.872680664062,
           498.181793212891
         ],
-        "stamina": 84.2874000000001,
+        "stamina": 91.1613333333334,
         "stamina_bar": 0,
-        "stamina_rest": 0.583333333333333,
+        "stamina_rest": 0.733333333333334,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -1630,14 +1698,14 @@
             "burrowsteel": 0,
             "copper": 0,
             "crownstone": 0,
-            "deep_alloy": 22,
+            "deep_alloy": 0,
             "deepstone": 0,
             "echo_crystal": 0,
             "emberstone": 0,
             "furnaceheart": 0,
             "gold": 0,
             "infernium": 0,
-            "lumenstone": 28,
+            "lumenstone": 0,
             "lunacore": 0,
             "magmaite": 0,
             "memory_silk": 0,
@@ -1680,19 +1748,21 @@
       "passed": true,
       "frozen": {
         "active": true,
-        "age": 0.4839,
+        "age": 0.45,
         "blocked": false,
         "bursts": 1,
         "charge": 0,
-        "debris": 62,
+        "debris": 61,
         "direction": [
           0,
           1
         ],
+        "dug": 32,
         "enabled": true,
-        "excavated": 34,
+        "excavated": 32,
         "rings": 7,
-        "row": 7
+        "row": 7,
+        "variant": "crusher"
       }
     },
     {
@@ -1700,16 +1770,16 @@
       "passed": true,
       "state": {
         "active_rigs": 0,
-        "cycle": 0.08,
+        "cycle": 0.0989,
         "drill_level": 3,
         "error": "",
         "fixture": "menu",
         "gear": "deepcore",
-        "health": 32574,
+        "health": 31624,
         "hit_phase": 0.42,
         "id": 3,
-        "impact": 51,
-        "impact_target_valid": true,
+        "impact": 0,
+        "impact_target_valid": false,
         "menu": false,
         "mine_button": [
           1205.36364746094,
@@ -1732,13 +1802,13 @@
         "phase": "endless",
         "pickaxe_level": 5,
         "position": [
-          928,
-          807.667297363281
+          1312,
+          246.666687011719
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 124,
-          "primitives": 3192
+          "draw_calls": 123,
+          "primitives": 3044
         },
         "steering": {
           "clipped": 0,
@@ -1746,9 +1816,9 @@
           "margin": 400,
           "samples": 0
         },
-        "swing": 51,
+        "swing": 43,
         "target_valid": false,
-        "version": "1.0.0-dev.15.34",
+        "version": "1.0.0-dev.15.35",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -1937,7 +2007,7 @@
           "speed": 1,
           "state": {
             "kind": "",
-            "mined": 84,
+            "mined": 57,
             "next": 96,
             "remaining": 0,
             "serial": 0,
@@ -2000,11 +2070,11 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 656,
+        "physics_frame": 555,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
-          "level": 4,
+          "level": 3,
           "results": {}
         },
         "resonance": {
@@ -2018,10 +2088,12 @@
             0,
             1
           ],
+          "dug": 57,
           "enabled": true,
-          "excavated": 59,
+          "excavated": 57,
           "rings": 0,
-          "row": 12
+          "row": 12,
+          "variant": "crusher"
         },
         "settings_open": false,
         "shared_ui_roots": 1,
@@ -2107,10 +2179,10 @@
           }
         ],
         "skill_xp": {
-          "carrying": 7.79167747497559,
-          "mining": 220,
-          "prospecting": 59,
-          "running": 9.11980152130127,
+          "carrying": 0,
+          "mining": 184,
+          "prospecting": 34,
+          "running": 0.354166984558105,
           "stamina": 100
         },
         "skills": [
@@ -2120,8 +2192,8 @@
             "maxed": false,
             "name": "Mining",
             "next": 96,
-            "ratio": 0.541666666666667,
-            "xp": 52
+            "ratio": 0.166666666666667,
+            "xp": 16
           },
           {
             "id": "running",
@@ -2129,8 +2201,8 @@
             "maxed": false,
             "name": "Running",
             "next": 80,
-            "ratio": 0.113997519016266,
-            "xp": 9
+            "ratio": 0.00442708730697632,
+            "xp": 0
           },
           {
             "id": "carrying",
@@ -2138,17 +2210,17 @@
             "maxed": false,
             "name": "Carrying",
             "next": 80,
-            "ratio": 0.0973959684371948,
-            "xp": 7
+            "ratio": 0,
+            "xp": 0
           },
           {
             "id": "prospecting",
-            "level": 4,
+            "level": 3,
             "maxed": false,
             "name": "Prospecting",
-            "next": 14,
-            "ratio": 0.928571428571429,
-            "xp": 13
+            "next": 13,
+            "ratio": 0.0769230769230769,
+            "xp": 1
           }
         ],
         "skills_open": false,
@@ -2160,7 +2232,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 0,
-        "stamina_rest": 2.55,
+        "stamina_rest": 2.51666666666666,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -2188,14 +2260,14 @@
             "burrowsteel": 0,
             "copper": 0,
             "crownstone": 0,
-            "deep_alloy": 25,
+            "deep_alloy": 2,
             "deepstone": 0,
             "echo_crystal": 0,
             "emberstone": 0,
             "furnaceheart": 0,
             "gold": 0,
             "infernium": 0,
-            "lumenstone": 33,
+            "lumenstone": 31,
             "lunacore": 0,
             "magmaite": 0,
             "memory_silk": 0,
@@ -2247,10 +2319,12 @@
           0,
           1
         ],
+        "dug": 57,
         "enabled": true,
-        "excavated": 59,
+        "excavated": 57,
         "rings": 0,
-        "row": 12
+        "row": 12,
+        "variant": "crusher"
       }
     },
     {
@@ -2258,16 +2332,16 @@
       "passed": true,
       "state": {
         "active_rigs": 0,
-        "cycle": 0.08,
+        "cycle": 0.0989,
         "drill_level": 3,
         "error": "",
         "fixture": "menu",
         "gear": "deepcore",
-        "health": 30650,
+        "health": 31624,
         "hit_phase": 0.42,
         "id": 6,
-        "impact": 51,
-        "impact_target_valid": true,
+        "impact": 0,
+        "impact_target_valid": false,
         "menu": false,
         "mine_button": [
           1205.36364746094,
@@ -2290,13 +2364,13 @@
         "phase": "endless",
         "pickaxe_level": 5,
         "position": [
-          928,
-          807.667297363281
+          1312,
+          246.666687011719
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 168,
-          "primitives": 3438
+          "draw_calls": 160,
+          "primitives": 3360
         },
         "steering": {
           "clipped": 0,
@@ -2304,9 +2378,9 @@
           "margin": 400,
           "samples": 0
         },
-        "swing": 51,
+        "swing": 43,
         "target_valid": false,
-        "version": "1.0.0-dev.15.34",
+        "version": "1.0.0-dev.15.35",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -2494,15 +2568,15 @@
           "active_here": false,
           "speed": 1,
           "state": {
-            "kind": "crystal_bloom",
-            "mined": 112,
-            "next": 318,
-            "remaining": 27.7332333333333,
-            "serial": 1,
-            "x": 21,
-            "y": 13
+            "kind": "",
+            "mined": 87,
+            "next": 96,
+            "remaining": 0,
+            "serial": 0,
+            "x": 0,
+            "y": 0
           },
-          "visual_count": 15
+          "visual_count": 0
         },
         "dev_drawer_open": false,
         "developer_tools_visible": true,
@@ -2558,28 +2632,30 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 721,
+        "physics_frame": 643,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
-          "level": 4,
+          "level": 3,
           "results": {}
         },
         "resonance": {
           "active": true,
-          "age": 0.4817,
+          "age": 0.524976666666667,
           "blocked": false,
           "bursts": 2,
           "charge": 0,
-          "debris": 56,
+          "debris": 60,
           "direction": [
             1,
             0
           ],
+          "dug": 87,
           "enabled": true,
           "excavated": 87,
           "rings": 7,
-          "row": 7
+          "row": 8,
+          "variant": "crusher"
         },
         "settings_open": false,
         "shared_ui_roots": 1,
@@ -2665,10 +2741,10 @@
           }
         ],
         "skill_xp": {
-          "carrying": 7.79167747497559,
-          "mining": 228,
-          "prospecting": 59,
-          "running": 9.11980152130127,
+          "carrying": 0,
+          "mining": 192,
+          "prospecting": 34,
+          "running": 0.354166984558105,
           "stamina": 100
         },
         "skills": [
@@ -2678,8 +2754,8 @@
             "maxed": false,
             "name": "Mining",
             "next": 96,
-            "ratio": 0.625,
-            "xp": 60
+            "ratio": 0.25,
+            "xp": 24
           },
           {
             "id": "running",
@@ -2687,8 +2763,8 @@
             "maxed": false,
             "name": "Running",
             "next": 80,
-            "ratio": 0.113997519016266,
-            "xp": 9
+            "ratio": 0.00442708730697632,
+            "xp": 0
           },
           {
             "id": "carrying",
@@ -2696,17 +2772,17 @@
             "maxed": false,
             "name": "Carrying",
             "next": 80,
-            "ratio": 0.0973959684371948,
-            "xp": 7
+            "ratio": 0,
+            "xp": 0
           },
           {
             "id": "prospecting",
-            "level": 4,
+            "level": 3,
             "maxed": false,
             "name": "Prospecting",
-            "next": 14,
-            "ratio": 0.928571428571429,
-            "xp": 13
+            "next": 13,
+            "ratio": 0.0769230769230769,
+            "xp": 1
           }
         ],
         "skills_open": false,
@@ -2718,7 +2794,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 0,
-        "stamina_rest": 3.63333333333333,
+        "stamina_rest": 3.98333333333332,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -2746,14 +2822,14 @@
             "burrowsteel": 0,
             "copper": 0,
             "crownstone": 0,
-            "deep_alloy": 25,
+            "deep_alloy": 2,
             "deepstone": 0,
             "echo_crystal": 0,
             "emberstone": 0,
             "furnaceheart": 0,
             "gold": 0,
             "infernium": 0,
-            "lumenstone": 33,
+            "lumenstone": 31,
             "lunacore": 0,
             "magmaite": 0,
             "memory_silk": 0,
@@ -2800,16 +2876,16 @@
       "passed": true,
       "state": {
         "active_rigs": 0,
-        "cycle": 0.08,
+        "cycle": 0.0989,
         "drill_level": 3,
         "error": "",
         "fixture": "menu",
         "gear": "deepcore",
-        "health": 30650,
+        "health": 31624,
         "hit_phase": 0.42,
         "id": 10,
-        "impact": 51,
-        "impact_target_valid": true,
+        "impact": 0,
+        "impact_target_valid": false,
         "menu": false,
         "mine_button": [
           1205.36364746094,
@@ -2832,13 +2908,13 @@
         "phase": "endless",
         "pickaxe_level": 5,
         "position": [
-          928,
-          807.667297363281
+          1312,
+          246.666687011719
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 202,
-          "primitives": 3306
+          "draw_calls": 177,
+          "primitives": 3144
         },
         "steering": {
           "clipped": 0,
@@ -2846,9 +2922,9 @@
           "margin": 400,
           "samples": 0
         },
-        "swing": 51,
+        "swing": 43,
         "target_valid": false,
-        "version": "1.0.0-dev.15.34",
+        "version": "1.0.0-dev.15.35",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -3037,12 +3113,12 @@
           "speed": 1,
           "state": {
             "kind": "crystal_bloom",
-            "mined": 155,
-            "next": 361,
-            "remaining": 26.2785000000001,
+            "mined": 137,
+            "next": 397,
+            "remaining": 26.5292333333334,
             "serial": 1,
-            "x": 21,
-            "y": 13
+            "x": 33,
+            "y": 4
           },
           "visual_count": 15
         },
@@ -3100,28 +3176,30 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 835,
+        "physics_frame": 762,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
-          "level": 5,
+          "level": 3,
           "results": {}
         },
         "resonance": {
           "active": true,
-          "age": 0.316666666666667,
+          "age": 0.514185714285714,
           "blocked": false,
           "bursts": 3,
           "charge": 0,
-          "debris": 36,
+          "debris": 60,
           "direction": [
             -1,
             0
           ],
+          "dug": 137,
           "enabled": true,
-          "excavated": 130,
-          "rings": 5,
-          "row": 5
+          "excavated": 137,
+          "rings": 8,
+          "row": 8,
+          "variant": "crusher"
         },
         "settings_open": false,
         "shared_ui_roots": 1,
@@ -3207,10 +3285,10 @@
           }
         ],
         "skill_xp": {
-          "carrying": 7.79167747497559,
-          "mining": 236,
-          "prospecting": 60,
-          "running": 9.11980152130127,
+          "carrying": 0,
+          "mining": 204,
+          "prospecting": 34,
+          "running": 0.354166984558105,
           "stamina": 100
         },
         "skills": [
@@ -3220,8 +3298,8 @@
             "maxed": false,
             "name": "Mining",
             "next": 96,
-            "ratio": 0.708333333333333,
-            "xp": 68
+            "ratio": 0.375,
+            "xp": 36
           },
           {
             "id": "running",
@@ -3229,8 +3307,8 @@
             "maxed": false,
             "name": "Running",
             "next": 80,
-            "ratio": 0.113997519016266,
-            "xp": 9
+            "ratio": 0.00442708730697632,
+            "xp": 0
           },
           {
             "id": "carrying",
@@ -3238,17 +3316,17 @@
             "maxed": false,
             "name": "Carrying",
             "next": 80,
-            "ratio": 0.0973959684371948,
-            "xp": 7
+            "ratio": 0,
+            "xp": 0
           },
           {
             "id": "prospecting",
-            "level": 5,
+            "level": 3,
             "maxed": false,
             "name": "Prospecting",
-            "next": 15,
-            "ratio": 0,
-            "xp": 0
+            "next": 13,
+            "ratio": 0.0769230769230769,
+            "xp": 1
           }
         ],
         "skills_open": false,
@@ -3260,7 +3338,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 0,
-        "stamina_rest": 5.53333333333332,
+        "stamina_rest": 5.96666666666665,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -3288,14 +3366,14 @@
             "burrowsteel": 0,
             "copper": 0,
             "crownstone": 0,
-            "deep_alloy": 26,
+            "deep_alloy": 2,
             "deepstone": 0,
             "echo_crystal": 0,
             "emberstone": 0,
             "furnaceheart": 0,
             "gold": 0,
             "infernium": 0,
-            "lumenstone": 33,
+            "lumenstone": 31,
             "lunacore": 0,
             "magmaite": 0,
             "memory_silk": 0,
@@ -3342,16 +3420,16 @@
       "passed": true,
       "state": {
         "active_rigs": 0,
-        "cycle": 0.08,
+        "cycle": 0.0989,
         "drill_level": 3,
         "error": "",
         "fixture": "menu",
         "gear": "deepcore",
-        "health": 30650,
+        "health": 31624,
         "hit_phase": 0.42,
         "id": 14,
-        "impact": 51,
-        "impact_target_valid": true,
+        "impact": 0,
+        "impact_target_valid": false,
         "menu": false,
         "mine_button": [
           1205.36364746094,
@@ -3374,13 +3452,13 @@
         "phase": "endless",
         "pickaxe_level": 5,
         "position": [
-          928,
-          807.667297363281
+          1312,
+          246.666687011719
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 218,
-          "primitives": 3276
+          "draw_calls": 188,
+          "primitives": 3022
         },
         "steering": {
           "clipped": 0,
@@ -3388,9 +3466,9 @@
           "margin": 400,
           "samples": 0
         },
-        "swing": 51,
+        "swing": 43,
         "target_valid": false,
-        "version": "1.0.0-dev.15.34",
+        "version": "1.0.0-dev.15.35",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -3579,12 +3657,12 @@
           "speed": 1,
           "state": {
             "kind": "crystal_bloom",
-            "mined": 200,
-            "next": 406,
-            "remaining": 24.5264333333335,
+            "mined": 157,
+            "next": 417,
+            "remaining": 25.0926000000001,
             "serial": 1,
-            "x": 21,
-            "y": 13
+            "x": 33,
+            "y": 4
           },
           "visual_count": 15
         },
@@ -3642,28 +3720,30 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 954,
+        "physics_frame": 878,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
-          "level": 5,
+          "level": 3,
           "results": {}
         },
         "resonance": {
           "active": true,
-          "age": 0.483133333333333,
-          "blocked": false,
+          "age": 0.316666666666667,
+          "blocked": true,
           "bursts": 4,
           "charge": 0,
-          "debris": 20,
+          "debris": 0,
           "direction": [
             0,
             -1
           ],
+          "dug": 157,
           "enabled": true,
-          "excavated": 175,
-          "rings": 7,
-          "row": 7
+          "excavated": 157,
+          "rings": 2,
+          "row": 3,
+          "variant": "crusher"
         },
         "settings_open": false,
         "shared_ui_roots": 1,
@@ -3749,10 +3829,10 @@
           }
         ],
         "skill_xp": {
-          "carrying": 7.79167747497559,
-          "mining": 252,
-          "prospecting": 61,
-          "running": 9.11980152130127,
+          "carrying": 0,
+          "mining": 208,
+          "prospecting": 34,
+          "running": 0.354166984558105,
           "stamina": 100
         },
         "skills": [
@@ -3762,8 +3842,8 @@
             "maxed": false,
             "name": "Mining",
             "next": 96,
-            "ratio": 0.875,
-            "xp": 84
+            "ratio": 0.416666666666667,
+            "xp": 40
           },
           {
             "id": "running",
@@ -3771,8 +3851,8 @@
             "maxed": false,
             "name": "Running",
             "next": 80,
-            "ratio": 0.113997519016266,
-            "xp": 9
+            "ratio": 0.00442708730697632,
+            "xp": 0
           },
           {
             "id": "carrying",
@@ -3780,16 +3860,16 @@
             "maxed": false,
             "name": "Carrying",
             "next": 80,
-            "ratio": 0.0973959684371948,
-            "xp": 7
+            "ratio": 0,
+            "xp": 0
           },
           {
             "id": "prospecting",
-            "level": 5,
+            "level": 3,
             "maxed": false,
             "name": "Prospecting",
-            "next": 15,
-            "ratio": 0.0666666666666667,
+            "next": 13,
+            "ratio": 0.0769230769230769,
             "xp": 1
           }
         ],
@@ -3802,7 +3882,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 0,
-        "stamina_rest": 7.51666666666665,
+        "stamina_rest": 7.89999999999998,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -3830,14 +3910,14 @@
             "burrowsteel": 0,
             "copper": 0,
             "crownstone": 0,
-            "deep_alloy": 27,
+            "deep_alloy": 2,
             "deepstone": 0,
             "echo_crystal": 0,
             "emberstone": 0,
             "furnaceheart": 0,
             "gold": 0,
             "infernium": 0,
-            "lumenstone": 33,
+            "lumenstone": 31,
             "lunacore": 0,
             "magmaite": 0,
             "memory_silk": 0,
@@ -3888,16 +3968,16 @@
       "passed": true,
       "state": {
         "active_rigs": 0,
-        "cycle": 0.08,
+        "cycle": 0.0989,
         "drill_level": 3,
         "error": "",
         "fixture": "menu",
         "gear": "",
-        "health": 30650,
+        "health": 31624,
         "hit_phase": 0.42,
         "id": 17,
-        "impact": 51,
-        "impact_target_valid": true,
+        "impact": 0,
+        "impact_target_valid": false,
         "menu": true,
         "mine_button": [
           1205.36364746094,
@@ -3920,13 +4000,13 @@
         "phase": "endless",
         "pickaxe_level": 5,
         "position": [
-          928,
-          807.667297363281
+          1312,
+          246.666687011719
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 109,
-          "primitives": 6804
+          "draw_calls": 108,
+          "primitives": 6482
         },
         "steering": {
           "clipped": 0,
@@ -3934,9 +4014,9 @@
           "margin": 400,
           "samples": 0
         },
-        "swing": 51,
+        "swing": 43,
         "target_valid": false,
-        "version": "1.0.0-dev.15.34",
+        "version": "1.0.0-dev.15.35",
         "viewport": [
           1416.36364746094,
           654.54541015625
@@ -4125,12 +4205,12 @@
           "speed": 1,
           "state": {
             "kind": "crystal_bloom",
-            "mined": 202,
-            "next": 408,
-            "remaining": 23.3709000000002,
+            "mined": 157,
+            "next": 417,
+            "remaining": 24.3907533333335,
             "serial": 1,
-            "x": 21,
-            "y": 13
+            "x": 33,
+            "y": 4
           },
           "visual_count": 15
         },
@@ -4188,16 +4268,16 @@
         "modal_active": true,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 1106,
+        "physics_frame": 1003,
         "player_controls_enabled": false,
         "prospecting": {
           "checks": {},
-          "level": 5,
+          "level": 3,
           "results": {}
         },
         "resonance": {
           "active": true,
-          "age": 0.2,
+          "age": 0.201848,
           "blocked": false,
           "bursts": 5,
           "charge": 0,
@@ -4206,10 +4286,12 @@
             1,
             0
           ],
+          "dug": 157,
           "enabled": true,
-          "excavated": 177,
+          "excavated": 157,
           "rings": 3,
-          "row": 3
+          "row": 3,
+          "variant": "crusher"
         },
         "settings_open": false,
         "shared_ui_roots": 1,
@@ -4234,7 +4316,7 @@
               394.872711181641,
               4.54545450210571
             ],
-            "xp_value": 87.5
+            "xp_value": 41.6666666666667
           },
           {
             "level": "0",
@@ -4253,7 +4335,7 @@
               394.872711181641,
               4.54545450210571
             ],
-            "xp_value": 11.3997519016266
+            "xp_value": 0.442708730697632
           },
           {
             "level": "0",
@@ -4272,10 +4354,10 @@
               394.872711181641,
               4.54545450210571
             ],
-            "xp_value": 9.73959684371948
+            "xp_value": 0
           },
           {
-            "level": "5",
+            "level": "3",
             "level_fits": true,
             "level_rect": [
               859.869140625,
@@ -4283,7 +4365,7 @@
               394.872711181641,
               15.4545450210571
             ],
-            "level_value": 5,
+            "level_value": 3,
             "numeric_xp": false,
             "xp_rect": [
               859.869140625,
@@ -4291,14 +4373,14 @@
               394.872711181641,
               4.54545450210571
             ],
-            "xp_value": 6.66666666666667
+            "xp_value": 7.69230769230769
           }
         ],
         "skill_xp": {
-          "carrying": 7.79167747497559,
-          "mining": 252,
-          "prospecting": 61,
-          "running": 9.11980152130127,
+          "carrying": 0,
+          "mining": 208,
+          "prospecting": 34,
+          "running": 0.354166984558105,
           "stamina": 100
         },
         "skills": [
@@ -4308,8 +4390,8 @@
             "maxed": false,
             "name": "Mining",
             "next": 96,
-            "ratio": 0.875,
-            "xp": 84
+            "ratio": 0.416666666666667,
+            "xp": 40
           },
           {
             "id": "running",
@@ -4317,8 +4399,8 @@
             "maxed": false,
             "name": "Running",
             "next": 80,
-            "ratio": 0.113997519016266,
-            "xp": 9
+            "ratio": 0.00442708730697632,
+            "xp": 0
           },
           {
             "id": "carrying",
@@ -4326,16 +4408,16 @@
             "maxed": false,
             "name": "Carrying",
             "next": 80,
-            "ratio": 0.0973959684371948,
-            "xp": 7
+            "ratio": 0,
+            "xp": 0
           },
           {
             "id": "prospecting",
-            "level": 5,
+            "level": 3,
             "maxed": false,
             "name": "Prospecting",
-            "next": 15,
-            "ratio": 0.0666666666666667,
+            "next": 13,
+            "ratio": 0.0769230769230769,
             "xp": 1
           }
         ],
@@ -4348,7 +4430,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 100,
-        "stamina_rest": 10.0500000000001,
+        "stamina_rest": 9.98333333333341,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -4376,14 +4458,14 @@
             "burrowsteel": 0,
             "copper": 0,
             "crownstone": 0,
-            "deep_alloy": 27,
+            "deep_alloy": 2,
             "deepstone": 0,
             "echo_crystal": 0,
             "emberstone": 0,
             "furnaceheart": 0,
             "gold": 0,
             "infernium": 0,
-            "lumenstone": 33,
+            "lumenstone": 31,
             "lunacore": 0,
             "magmaite": 0,
             "memory_silk": 0,

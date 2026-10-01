@@ -11,7 +11,7 @@ def require(ok,why):
 def reviewed():
  r=read(HERE/'accepted.json');m=read(HERE/'accepted-manifest.json');before=read(HERE/'public-before.json')
  require(r['accepted'] and r['images_inspected'] and r['core_passed'],'Acceptance incomplete')
- require(r['version']=='1.0.0-dev.15.34' and r['destination']=='dev','Wrong release')
+ require(r['version']=='1.0.0-dev.15.35' and r['destination']=='dev','Wrong release')
  require(re.fullmatch('[0-9a-f]{40}',r['source']),'Invalid source')
  require(set(m)=={n[4:] for n in before if n.startswith('dev/') and not n.startswith('dev/worn/')},'Wrong candidate files')
  for n in m:
@@ -20,7 +20,7 @@ def reviewed():
  e=read(HERE/'evidence/browser/report.json')
  require(e['passed'] and e['version']==r['version'] and e['source_commit']==r['source'] and e['files']==m,'Wrong The Deep test bytes')
  require(all(c['passed'] for c in e['checks']),'Failed The Deep tests')
- require({'graphical-renderer','defaults-off','bounded-effects','real-excavation','aim-right','aim-left','aim-up','menu-pauses-wave','opt-out-clears-effects','no-runtime-errors'} <= {c['name'] for c in e['checks']},'Missing resonance gates')
+ require({'real-crusher-equipped','intact-until-wave','graphical-renderer','defaults-off','bounded-effects','real-excavation','aim-right','aim-left','aim-up','menu-pauses-wave','opt-out-clears-effects','no-runtime-errors'} <= {c['name'] for c in e['checks']},'Missing resonance gates')
  e=read(HERE/'evidence/ordinary/report.json')
  require(e.get('completed_observation') and not e.get('failure') and not e.get('crashed') and e['files']==m and e['version']==r['version'] and e['source_commit']==r['source'],'Startup not verified')
  require(read(HERE/'evidence/core/results.json')['passed'],'Core gameplay failed')
