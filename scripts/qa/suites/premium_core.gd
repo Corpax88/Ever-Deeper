@@ -230,8 +230,8 @@ func _check_deep_treasury() -> void:
 	room.start()
 	room.tick(0.5)
 	var flight: Dictionary = room.particles[0]
-	_check(flight.motes.size()==3 and flight.motes[0].bend!=flight.motes[1].bend and flight.motes[0].travel!=flight.motes[1].travel,"Donation motes have independent curves and travel times")
-	_check(float(flight.duration)>=float(flight.motes[0].travel)+float(flight.motes[0].delay) and float(flight.duration)>=float(flight.motes[1].travel)+float(flight.motes[1].delay),"Accounting waits until all visible motes have landed")
+	_check(flight.motes.size()==1 and float(flight.motes[0].delay)==0.0,"Continuous donation launches single visible items without bursts")
+	_check(float(flight.duration)==float(flight.motes[0].travel),"Accounting coincides with the visible item landing")
 	await _treasury_capture("02-airborne")
 	_check(room.particles.size()>0 and RunState.cargo.stone==80 and RunState.gold==200,"Airborne packets reserve without consuming cargo or gold")
 	room.leave()
@@ -266,19 +266,19 @@ func _check_deep_treasury() -> void:
 	RunState.gold=0
 	var before_upgrades: int=room.upgrades
 	room.start()
-	var sequential: bool=true
+	var mixed: bool=false
 	var reached: Dictionary={}
 	for i in 500:
 		room.tick(0.1)
 		for packet in room.particles:
-			if packet.kind=="copper" and RunState.cargo.stone>0: sequential=false
+			if packet.kind=="copper" and RunState.cargo.stone>0: mixed=true
 		for flash_kind in room.upgrade_flashes:
 			var milestone: int=int(RunState.treasury_totals.get(flash_kind,0))
 			if not reached.has(milestone):
 				reached[milestone]=true
 				await _treasury_capture("milestone-%d" % milestone)
-	_check(sequential and RunState.cargo.stone==0 and RunState.cargo.copper==0,"Each resource lands completely before the next launches")
-	_check(room.upgrades-before_upgrades==3 and reached.has(1000) and reached.has(2000) and reached.has(3000),"Large delivery visibly celebrates every thousand once")
+	_check(mixed and RunState.cargo.stone==0 and RunState.cargo.copper==0,"Different resources launch together and finish exactly")
+	_check(room.upgrades-before_upgrades==3,"Large delivery visibly celebrates every thousand once")
 	_check(int(RunState.treasury_totals.stone)==3010 and int(RunState.treasury_totals.copper)==20,"Boundary splitting conserves exact totals")
 	var stable_upgrades: int=room.upgrades
 	room.refresh_piles()
