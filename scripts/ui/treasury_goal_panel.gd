@@ -178,10 +178,11 @@ func refresh() -> void:
 	title.text=String(data.get("title","COLLECTION"))
 	detail.text=String(data.get("description","Fill this podium, one piece at a time."))
 	if preview.visible: preview.texture=_png(String(data.art))
-	claim_button.visible=kind==Goals.Ledger.WALLET
+	var id: String=Goals.mod_id(kind)
+	claim_button.visible=not id.is_empty()
 	if claim_button.visible:
-		var claimed: bool=bool(RunState.treasury_goals.get("resonance_claimed",false))
-		claim_button.text=("RESONANCE: ON" if bool(RunState.treasury_goals.get("resonance_enabled",false)) else "RESONANCE: OFF") if claimed else "CLAIM RESONANCE" if stored>=Stack.GOAL else "FILL PODIUM TO UNLOCK"
+		var claimed: bool=bool(RunState.treasury_goals.get(id+"_claimed",false))
+		claim_button.text=(String(Goals.NAMES[id]).to_upper()+": "+("ON" if Goals.active_mod()==id else "OFF")) if claimed else "CLAIM "+String(Goals.NAMES[id]).to_upper() if stored>=Stack.GOAL else "FILL PODIUM TO UNLOCK"
 		claim_button.disabled=not claimed and stored<Stack.GOAL
 		claim_button.get_meta("frame").modulate=Color(0.45,0.45,0.45) if claim_button.disabled else Color.WHITE
 	elif stored>=Stack.GOAL:
@@ -202,10 +203,14 @@ func _number(value: int) -> String:
 	return result
 
 func _claim() -> void:
-	if bool(RunState.treasury_goals.get("resonance_claimed",false)): Goals.toggle_resonance()
-	else: Goals.claim_resonance()
+	var id: String=Goals.mod_id(kind)
+	if id.is_empty(): return
+	if bool(RunState.treasury_goals.get(id+"_claimed",false)): Goals.toggle(kind)
+	else: Goals.claim(kind)
 	main.endless_world.resonance_drill.dev_override=false
-	main.endless_world.resonance_drill.set_enabled(bool(RunState.treasury_goals.get("resonance_enabled",false)))
+	main.endless_world.resonance_drill.set_enabled(Goals.active_mod()=="resonance")
+	main.endless_world.drill_modes.dev_override=""
+	main.endless_world.drill_modes.reset()
 	refresh()
 
 func close_panel() -> void:

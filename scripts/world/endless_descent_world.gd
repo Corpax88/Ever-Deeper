@@ -5,6 +5,7 @@ const ResourceScale = preload("res://scripts/world/resource_scale.gd")
 const DeepEventsScript = preload("res://scripts/world/deep_events.gd")
 var deep_events: Node2D
 var resonance_drill: Node2D
+var drill_modes: Node2D
 const ResonanceDrillScript = preload("res://scripts/world/resonance_drill.gd")
 
 signal context_changed(context: String)
@@ -295,6 +296,9 @@ func _ready() -> void :
 	resonance_drill = ResonanceDrillScript.new()
 	add_child(resonance_drill)
 	resonance_drill.setup(self)
+	drill_modes=preload("res://scripts/world/drill_modes.gd").new()
+	add_child(drill_modes)
+	drill_modes.setup(self)
 	lit_draw_sections = LitDrawSectionsScript.new()
 	add_child(lit_draw_sections)
 	player.process_physics_priority = -10
@@ -345,6 +349,7 @@ func set_active(enabled: bool, entering: bool = false) -> void :
 func load_depth(next_depth: int, next_arrival: String = "from_above") -> bool:
 	resonance_drill.set_enabled(resonance_drill.dev_override or (bool(RunState.treasury_goals.get("resonance_claimed",false)) and bool(RunState.treasury_goals.get("resonance_enabled",false))))
 	resonance_drill.reset()
+	drill_modes.reset()
 	if next_depth < 0:
 		return false
 	_restore_carried_relic_from_state()
@@ -390,6 +395,7 @@ func set_external_movement(direction: Vector2) -> void :
 
 func set_mine_held(held: bool) -> void :
 	external_mine_held = held
+	if not held and is_instance_valid(drill_modes): drill_modes.reset()
 	if not held:
 		_cancel_mining()
 
@@ -552,11 +558,12 @@ func import_runtime_state(state: Dictionary) -> void :
 
 func _process(delta: float) -> void :
 	if not active:
+		if is_instance_valid(drill_modes): drill_modes.reset()
 		return
 	deep_events.tick(delta)
 	resonance_drill.tick(delta)
 	_advance_resource_squashes()
-	_update_mining(delta)
+	if not drill_modes.tick(delta): _update_mining(delta)
 	_update_loose_drops(delta)
 	_update_discoveries()
 	_update_buried_visibility()
@@ -1596,6 +1603,7 @@ func _update_stream_depth() -> void:
 func _rebase_stream_window(next_start: int) -> void:
 	var shift: Vector2 = Vector2(0.0, float(window_start_depth - next_start) * CHUNK_HEIGHT)
 	resonance_drill.rebase(shift)
+	drill_modes.reset()
 	var previous_center: Vector2 = player.camera.get_screen_center_position() + shift
 	var position: Vector2 = player.global_position + shift
 	var facing: Vector2 = player.facing_vector

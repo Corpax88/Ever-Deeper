@@ -21,6 +21,8 @@ var accumulated_distance: = 0.0
 var accumulated_time: = 0.0
 var facing_vector: = Vector2.DOWN
 var external_movement: = Vector2.ZERO
+var drill_motion_override: bool = false
+var drill_motion: Vector2 = Vector2.ZERO
 var motion_resolver: = Callable()
 var control_enabled: = true
 var mining_visual_active: = false
@@ -95,6 +97,8 @@ func _physics_process(delta: float) -> void :
 		movement = (Input.get_vector("move_left", "move_right", "move_up", "move_down") + external_movement).limit_length(1.0)
 	if movement.length_squared() > 0.0025:
 		_update_aim(movement, true)
+	if control_enabled and drill_motion_override:
+		movement = drill_motion
 	var before: = global_position
 	if motion_resolver.is_valid():
 		var has_motion_intent: = not movement.is_zero_approx()

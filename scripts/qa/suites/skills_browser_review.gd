@@ -38,6 +38,31 @@ var ore_escape_goal: Vector2
 var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind).begins_with("mods_"):
+		var goals=load("res://scripts/state/treasury_goals.gd")
+		if String(data.kind)=="mods_preview":
+			main._dev_seed_victory_state()
+			var resource: String=String(data.resource)
+			RunState.treasury_totals[resource]=int(data.amount)
+			main.treasury_goal_panel.open_goal(resource)
+		elif String(data.kind)=="mods_mining":
+			main._dev_jump_endless(1)
+			main._dev_grant_max_tools_state()
+			var w: Node=main.endless_world
+			w.resonance_drill.set_enabled(false)
+			goals._equip(String(data.mod))
+			var mole: Node=main.get_node("CompanionInterface").active_mole()
+			mole.autonomous_enabled=false;mole.recall()
+			for y in range(7,10):
+				for x in range(11,28): w._set_floor(Vector2i(x,y),x<14)
+			w.player.global_position=w._cell_center(Vector2i(12,8))
+			w.player.set_facing(Vector2.RIGHT);w.player.camera.reset_smoothing()
+			w.drill_modes.reset()
+			main.achievement_toast.hide()
+		elif String(data.kind)=="mods_save": RunState.flush_save()
+		elif String(data.kind)=="mods_reload": RunState.load_game()
+		command_id=int(data.id)
+		return
 	if String(data.kind)=="exposure_fixture":
 		main._dev_jump_endless(1)
 		main._on_developer_command_requested("test_resonance")
@@ -257,6 +282,7 @@ func _frame() -> void:
 		"hud_mole": _bounds(main.get_node("CompanionInterface").button),
 		"mole_close": _bounds(main.get_node("CompanionInterface").journal.content.get_node("CloseJournal"))}
 	var goal_panel: Control=main.treasury_goal_panel
+	bounds["laser"]=_bounds(main.laser_button)
 	bounds["treasury_pin"]=_bounds(goal_panel.pin_button)
 	bounds["treasury_claim"]=_bounds(goal_panel.claim_button)
 	bounds["treasury_close"]=_bounds(goal_panel.close_button)
@@ -318,6 +344,7 @@ func _frame() -> void:
 	state["resonance"]["dug"]=RunState.endless_dug_cells(main.endless_world.current_depth).size()
 	state["resonance"]["variant"]=String(RunState.starforge_variant)
 	state["treasury"]=main.hub_world.treasury.snapshot()
+	state["drill_mods"]={"effect":main.endless_world.drill_modes.snapshot(),"laser_visible":main.laser_button.visible,"laser_text":main.laser_button.text,"player":[main.endless_world.player.position.x,main.endless_world.player.position.y]}
 	state["treasury_goal"]={"open":goal_panel.visible,"kind":goal_panel.kind,"claim_disabled":goal_panel.claim_button.disabled,"claim_text":goal_panel.claim_button.text,"saved":RunState.treasury_goals.duplicate(true),"hud":main._progression_goal(),"rendered":main.premium_hud.progression_goal_snapshot()}
 	state["actual_map"]={"markers":main._map_markers().size(),"known":WorldCatalog.WORLD_ORDER.map(func(w): return RunState.is_world_unlocked(w)),"expanded":is_instance_valid(panel.map_view) and panel.map_view.visible}
 	var active_world: Node={"surface":main.surface_world,"mine":main.mine_world,"depth":main.depth_world,"hub":main.hub_world,"deepheart":main.deepheart_world,"endless":main.endless_world}.get(main.phase,main.surface_world)

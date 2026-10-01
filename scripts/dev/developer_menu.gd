@@ -113,6 +113,8 @@ const LOCATION_ACTIONS: = [
 
 const RESOURCE_ACTIONS: = [
 	{"label": "RESONANCE\nTEST", "command": "test_resonance"},
+	{"label": "BORE RUSH\nTEST", "command": "test_bore_rush"},
+	{"label": "LASER\nTEST", "command": "test_laser"},
 	{"label": "+200 EACH\nRESOURCE", "command": "grant_resources_200"},
 	{"label": "+10 000\nGOLD", "command": "grant_gold_10000"},
 	{"label": "MAX TOOLS\nPICKAXE + DRILL", "command": "grant_max_tools"},
@@ -146,6 +148,8 @@ const ALL_COMMAND_IDS: = [
 	"grant_gold_10000",
 	"grant_max_tools",
 	"test_resonance",
+	"test_bore_rush",
+	"test_laser",
 	"grant_all_relics",
 	"build_all_workshops",
 ]

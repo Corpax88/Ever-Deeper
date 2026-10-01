@@ -119,6 +119,7 @@ var station_transaction_fx
 var resource_inventory
 var achievement_toast
 var treasury_goal_panel: Control
+var laser_button: Button
 var world_tap: Dictionary = {}
 var minimap_overlay
 var exploration_map = preload("res://scripts/ui/exploration_map.gd").new()
@@ -179,6 +180,30 @@ func _ready() -> void :
 	treasury_goal_panel=preload("res://scripts/ui/treasury_goal_panel.gd").new()
 	$HUD.add_child(treasury_goal_panel)
 	treasury_goal_panel.setup(self)
+	laser_button=Button.new()
+	laser_button.text="LASER: ON"
+	laser_button.focus_mode=Control.FOCUS_NONE
+	laser_button.add_theme_font_override("font",preload("res://assets/ui/fonts/EBGaramond.ttf"))
+	var laser_atlas: AtlasTexture=AtlasTexture.new()
+	laser_atlas.atlas=load("res://assets/ui/skills/copper-button-v1.png")
+	laser_atlas.region=Rect2(104,128,1044,982)
+	for state in ["normal","hover","pressed"]:
+		laser_button.add_theme_stylebox_override(state,StyleBoxEmpty.new())
+	var laser_frame: NinePatchRect=NinePatchRect.new()
+	laser_frame.texture=laser_atlas
+	laser_frame.scale=Vector2.ONE*0.07
+	laser_frame.patch_margin_left=174;laser_frame.patch_margin_right=174;laser_frame.patch_margin_top=174;laser_frame.patch_margin_bottom=174
+	laser_frame.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	laser_frame.show_behind_parent=true
+	laser_button.add_child(laser_frame)
+	laser_button.set_meta("frame",laser_frame)
+	laser_button.pressed.connect(func():
+		_cancel_mine_hold()
+		if endless_world.drill_modes.dev_override=="laser": endless_world.drill_modes.dev_laser_on=not endless_world.drill_modes.dev_laser_on
+		else: preload("res://scripts/state/treasury_goals.gd").toggle_laser()
+		endless_world.drill_modes.reset())
+	$HUD.add_child(laser_button)
+	laser_button.hide()
 	_install_quick_tutorial()
 	_install_resource_inventory()
 	_install_miner_skills()
@@ -263,6 +288,9 @@ func _ready() -> void :
 
 
 func _process(delta: float) -> void :
+	if is_instance_valid(laser_button):
+		laser_button.visible=phase=="endless" and not menu_open and not orientation_guard_active and int(RunState.drill_level)>0 and (preload("res://scripts/state/treasury_goals.gd").active_mod()=="laser" or endless_world.drill_modes.dev_override=="laser")
+		laser_button.text="LASER: ON" if (endless_world.drill_modes.dev_laser_on if endless_world.drill_modes.dev_override=="laser" else bool(RunState.treasury_goals.get("laser_mode",false))) else "LASER: OFF"
 	if hub_world.treasury != null and hub_world.treasury.inside: hub_world.treasury.apply_hud()
 	_update_station_transaction_targets()
 	_enforce_shop_player_control()
@@ -386,7 +414,17 @@ func _on_developer_command_requested(command: String) -> void :
 		"grant_gold_10000":
 			RunState.gold += 10000
 			message = "+10 000 GOLD"
+		"test_bore_rush", "test_laser":
+			if phase != "endless": ok = _dev_jump_endless(1)
+			_dev_grant_max_tools_state()
+			endless_world.resonance_drill.set_enabled(false)
+			endless_world.drill_modes.dev_override="laser" if command=="test_laser" else "bore_rush"
+			endless_world.drill_modes.dev_laser_on=true
+			endless_world.drill_modes.reset()
+			message="LASER TEST · toggle Laser beside Mine" if command=="test_laser" else "BORE RUSH TEST · hold Mine and steer"
 		"test_resonance":
+			endless_world.drill_modes.dev_override=""
+			endless_world.drill_modes.reset()
 			if phase != "endless": ok = _dev_jump_endless(1)
 			_dev_grant_max_tools_state()
 			endless_world.resonance_drill.dev_override=true
@@ -1465,6 +1503,11 @@ func _layout_touch_actions(viewport_size: Vector2) -> void :
 	mine_button.custom_minimum_size = mine_rect.size
 	_place_control(mine_button, mine_rect)
 	mine_button.add_theme_constant_override("icon_max_width", int(mine_rect.size.x - 10))
+	if is_instance_valid(laser_button):
+		var laser_size: Vector2=Vector2(190,90) if metrics.iphone else Vector2(135,52)
+		_place_control(laser_button,Rect2(mine_rect.position-Vector2(0,laser_size.y+14),laser_size))
+		laser_button.get_meta("frame").size=laser_size/0.07
+		laser_button.add_theme_font_size_override("font_size",27 if metrics.iphone else 18)
 	var action_size: Vector2 = Vector2(238, 86) if metrics.iphone else Vector2(212, 58)
 	action_button.custom_minimum_size = action_size
 	_place_control(action_button, Rect2(mine_rect.position - Vector2(action_size.x + 20, -19), action_size))
@@ -3904,7 +3947,7 @@ func _update_achievement_toast_anchor() -> void :
 		for child in visual.get_children():
 			if child is Sprite2D and child.texture != null and child.is_visible_in_tree() and child.modulate.a > 0.01:
 				exclusions.append(child.get_global_transform_with_canvas() * child.get_rect())
-	var hud_controls: Array[Control] = [mine_button]
+	var hud_controls: Array[Control] = [mine_button,laser_button]
 	if premium_hud != null:
 		hud_controls.append_array([
 			premium_hud.menu_button, premium_hud.guide_button, premium_hud.gold_cluster,
