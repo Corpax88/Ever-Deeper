@@ -1,5 +1,6 @@
 class_name EndlessDescentWorld
 extends Node2D
+const ResourceScale = preload("res://scripts/world/resource_scale.gd")
 
 const DeepEventsScript = preload("res://scripts/world/deep_events.gd")
 var deep_events: Node2D
@@ -1094,7 +1095,9 @@ func _build_resource_visual(resource: Dictionary) -> void :
 	sprite.name = "PremiumNode"
 	sprite.texture = _load_texture(String(RESOURCE_TEXTURE_PATHS.get(kind, "")))
 	sprite.position = Vector2(0.0, -3.0)
-	_fit_sprite(sprite, Vector2(96.0, 96.0))
+	ResourceScale.fit(sprite, ResourceScale.NODE_SIZE)
+	var visible: Rect2 = ResourceScale.bounds(sprite.texture)
+	sprite.position.y = 34.0-visible.size.y*sprite.scale.y*0.5
 	root.add_child(sprite)
 	add_child(root)
 	root.visible = _is_floor(Vector2i(resource.cell))
@@ -1943,7 +1946,7 @@ func _show_site_cache_reward(site: Dictionary, kind: String) -> void :
 	reward.texture = _load_texture(String(RESOURCE_TEXTURE_PATHS.get(kind, "")))
 	reward.position = Vector2(0.0, -44.0)
 	reward.z_index = 8
-	_fit_sprite(reward, Vector2.ONE * 76.0)
+	ResourceScale.fit(reward, Vector2.ONE * ResourceScale.RARE_DROP_EXTENT)
 	visual.add_child(reward)
 	var tween: = create_tween()
 	tween.tween_property(reward, "position:y", -92.0, 0.42)
@@ -2855,7 +2858,7 @@ func _draw_permanent_wall_mass(cell: Vector2i, rect: Rect2) -> void:
 				_ore_textures[kind] = _load_texture(String(RESOURCE_TEXTURE_PATHS[kind]))
 			var ore: Texture2D = _ore_textures[kind]
 			if ore != null:
-				_draw_canvas.draw_texture_rect(ore, Rect2(rect.position + Vector2(12, 10), Vector2(40, 40)), false, Color(0.76, 0.80, 0.86, 0.80))
+				_draw_canvas.draw_texture_rect(ore, ResourceScale.draw_rect(ore, rect.get_center(), Vector2(46, 46)), false, Color(0.76, 0.80, 0.86, 0.80))
 	var damage: int = int(dig_damage.get(cell,0))
 	if damage>0:
 		var center: Vector2 = rect.get_center()
@@ -3650,7 +3653,7 @@ func _sync_loose_drops() -> void:
 			var cell: Vector2i = Vector2i(int(data.cell) % DeepLayout.CHUNK_COLS, int(data.cell) / DeepLayout.CHUNK_COLS + (depth-window_start_depth)*DeepLayout.CHUNK_ROWS)
 			var sprite: Sprite2D = Sprite2D.new()
 			sprite.texture = _load_texture(String(RESOURCE_TEXTURE_PATHS.get(String(data.kind), "")))
-			_fit_sprite(sprite, Vector2(32,32))
+			ResourceScale.fit(sprite, Vector2.ONE*ResourceScale.DROP_EXTENT)
 			sprite.position = _cell_center(cell)
 			sprite.z_index = actor_draw_depth(sprite.position) + 2
 			add_child(sprite)

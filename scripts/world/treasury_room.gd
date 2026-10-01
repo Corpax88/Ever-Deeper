@@ -1,10 +1,11 @@
 extends Node2D
 ## Visual packets are reservations only; landing is the sole accounting boundary.
 const Ledger = preload("res://scripts/state/treasury_state.gd")
-const SIZE: Vector2 = Vector2(1880, 1420)
-const ZONE: Vector2 = Vector2(940, 710)
-const EXIT: Vector2 = Vector2(70, 710)
-const ENTRY: Vector2 = Vector2(240, 710)
+const Scale = preload("res://scripts/world/resource_scale.gd")
+const SIZE: Vector2 = Vector2(4000, 3200)
+const ZONE: Vector2 = Vector2(2000, 1600)
+const EXIT: Vector2 = Vector2(70, 1600)
+const ENTRY: Vector2 = Vector2(310, 1600)
 const FLIGHT: float = 1.45
 const LABEL_FONT = preload("res://assets/ui/fonts/EBGaramond.ttf")
 var flight_rng: RandomNumberGenerator = RandomNumberGenerator.new()
@@ -39,11 +40,11 @@ func setup(owner_world: Node2D) -> void:
 	flight_rng.randomize()
 	visible = false
 	particle_canvas = Node2D.new()
-	particle_canvas.z_index = 1900
+	particle_canvas.z_index = 4000
 	particle_canvas.draw.connect(_draw_particles)
 	add_child(particle_canvas)
 	label_canvas = Node2D.new()
-	label_canvas.z_index = 1901
+	label_canvas.z_index = 4001
 	var steel_material: CanvasItemMaterial = CanvasItemMaterial.new()
 	steel_material.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
 	label_canvas.material = steel_material
@@ -57,6 +58,7 @@ func texture(path: String) -> Texture2D:
 		var im: Image = Image.load_from_file(path)
 		if im != null: result = ImageTexture.create_from_image(im)
 	elif ResourceLoader.exists(path): result = load(path) as Texture2D
+	if result != null: result.set_meta("scale_source", path)
 	textures[path] = result
 	return result
 
@@ -69,7 +71,7 @@ func bay(index: int) -> Vector2:
 	# One surrounding ring with a gap for the west passage; keep material IDs stable.
 	var angle: float = PI + 0.32 + (TAU - 0.64) * float(index) / float(Ledger.keys().size()-1)
 	# Use the room's existing vertical margin for captions below each pedestal.
-	return ZONE + Vector2(cos(angle)*735.0, sin(angle)*565.0)
+	return ZONE + Vector2(cos(angle)*1680.0, sin(angle)*1320.0)
 
 func enter() -> void:
 	if inside or not RunState.victory: return
@@ -242,10 +244,10 @@ func tick(delta: float) -> void:
 
 func collision(point: Vector2) -> bool:
 	if point.x >= 55 and point.x <= 280 and absf(point.y-EXIT.y)<65: return false
-	if ((point-ZONE)/Vector2(860,610)).length_squared()>1.0: return true
+	if ((point-ZONE)/Vector2(1855,1455)).length_squared()>1.0: return true
 	for i in Ledger.keys().size():
 		var p: Vector2 = bay(i)
-		if Rect2(p+Vector2(-57,-80),Vector2(114,115)).has_point(point): return true
+		if Rect2(p+Vector2(-128,-100),Vector2(256,150)).has_point(point): return true
 	return false
 
 func safe_position(point: Vector2) -> Vector2:
@@ -255,7 +257,10 @@ func _sprite(tex: Texture2D, at: Vector2, size: Vector2, parent_node: Node2D) ->
 	var sprite: Sprite2D = Sprite2D.new()
 	sprite.texture = tex
 	sprite.position = at
-	if tex != null: sprite.scale = size / tex.get_size()
+	if tex != null:
+		if String(tex.get_meta("scale_source", "")).begins_with("res://assets/treasury/") and not String(tex.get_meta("scale_source", "")).ends_with("delivery-plate-v1.png"):
+			Scale.fit(sprite, size)
+		else: sprite.scale = size / tex.get_size()
 	parent_node.add_child(sprite)
 	return sprite
 
@@ -268,36 +273,36 @@ func _build_visuals() -> void:
 	# The authored hub floor is clipped to the round chamber, never flattened into a backdrop/mockup.
 	var floor: Polygon2D = Polygon2D.new()
 	floor.texture = texture("res://assets/hub/hub-floor-v2.png")
+	floor.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	var outline: PackedVector2Array = PackedVector2Array()
 	var uv: PackedVector2Array = PackedVector2Array()
 	for i in 96:
 		var angle: float = TAU*float(i)/96.0
-		var point: Vector2 = ZONE+Vector2(cos(angle)*905,sin(angle)*655)
+		var point: Vector2 = ZONE+Vector2(cos(angle)*1900,sin(angle)*1500)
 		outline.append(point)
-		uv.append(point/SIZE*floor.texture.get_size())
+		uv.append(point/Vector2(1880,1420)*floor.texture.get_size())
 	floor.polygon=outline
 	floor.uv=uv
 	visual_root.add_child(floor)
 	_sprite(texture("res://assets/hub/hub-floor-v2.png"),EXIT+Vector2(75,0),Vector2(220,138),visual_root)
 	var wall: Texture2D = texture("res://assets/voidstar/wall.png")
-	for i in 64:
-		var angle: float = TAU*float(i)/64.0
-		if absf(angle-PI)<0.15: continue
-		var at: Vector2 = ZONE+Vector2(cos(angle)*905,sin(angle)*655)
-		var tangent: Vector2 = Vector2(-sin(angle)*905,cos(angle)*655)
-		var segment: Sprite2D = _sprite(wall,at,Vector2(tangent.length()*TAU/64.0+38,100),visual_root)
+	for i in 128:
+		var angle: float = TAU*float(i)/128.0
+		if absf(angle-PI)<0.065: continue
+		var at: Vector2 = ZONE+Vector2(cos(angle)*1900,sin(angle)*1500)
+		var tangent: Vector2 = Vector2(-sin(angle)*1900,cos(angle)*1500)
+		var segment: Sprite2D = _sprite(wall,at,Vector2(tangent.length()*TAU/128.0+38,100),visual_root)
 		segment.rotation=tangent.angle()
 	_sprite(texture("res://assets/treasury/delivery-plate-v1.png"),ZONE,Vector2(230,176),visual_root)
 	for i in Ledger.keys().size():
 		var group: Node2D = Node2D.new()
 		group.z_index = 10 + roundi(bay(i).y + 25)
 		add_child(group)
-		_sprite(texture("res://assets/treasury/alcove-v1.png"),bay(i)+Vector2(0,-33.6),Vector2(100,100),group)
+		_sprite(texture("res://assets/treasury/alcove-v1.png"),bay(i)+Vector2(0,-70),Vector2(250,250),group)
 		var contents: Node2D = Node2D.new()
-		# Uniform art scaling preserves the authored silhouette and makes room
-		# for both caption lines between adjacent alcoves along the sides.
-		contents.position = bay(i)*0.2
-		contents.scale = Vector2.ONE*0.8
+		# Life-sized exhibits get physical space; captions never shrink the treasure.
+		contents.position = Vector2.ZERO
+		contents.scale = Vector2.ONE
 		group.add_child(contents)
 		display_nodes.append(contents)
 	queue_redraw()
@@ -319,26 +324,25 @@ func refresh_piles() -> void:
 		var growth: float = float(amount % 1000)/1000.0
 		if tier == 0:
 			var count: int = 1+mini(6,int(growth*7.0))
-			var spread: float = lerpf(9.0,17.0,growth)
-			var size: float = lerpf(23.0,34.0,growth)
+			var spread: float = lerpf(18.0,32.0,growth)
+			var size: float = lerpf(34.0,48.0,growth)
 			for item in count:
-				var offset: Vector2 = Vector2(0,-14)
+				var offset: Vector2 = Vector2(0,-32)
 				if item > 0: offset += Vector2.from_angle(float(item)*2.39996)*sqrt(float(item))*spread*0.6
-				_sprite(material(kind),bay(i)+offset,Vector2.ONE*size,parent_node)
+				var sprite: Sprite2D = _sprite(material(kind),bay(i)+offset,Vector2.ONE*size,parent_node)
+				Scale.fit(sprite,Vector2.ONE*size)
 		else:
 			var tex: Texture2D = texture("res://assets/treasury/upgrades/%s-%d.png" % [kind,mini(tier,3)])
 			# Authored material-specific forms. Later thousands rearrange a bounded hoard.
 			var arrangement: int = maxi(0,tier-3) % 6
 			var copies: int = 1+arrangement
 			for item in copies:
-				var offset: Vector2 = Vector2(0,-24)
+				var offset: Vector2 = Vector2(0,-48)
 				if copies > 1:
-					offset += Vector2.from_angle(float(item)*TAU/float(copies)-PI*0.5)*Vector2(25,16)
-				var extent: float = lerpf(66.0,84.0,growth) if copies == 1 else lerpf(43.0,54.0,growth)
+					offset += Vector2.from_angle(float(item)*TAU/float(copies)-PI*0.5)*Vector2(43,25)
+				var extent: float = lerpf(156.0,188.0,growth) if copies == 1 else lerpf(108.0,126.0,growth)
 				var sprite: Sprite2D = _sprite(tex,bay(i)+offset,Vector2.ONE*extent,parent_node)
-				if tex != null:
-					var ratio: float = extent/maxf(tex.get_width(),tex.get_height())
-					sprite.scale=Vector2.ONE*ratio
+				if tex != null: Scale.fit(sprite,Vector2.ONE*extent)
 	queue_redraw()
 	label_canvas.queue_redraw()
 
@@ -367,12 +371,12 @@ func _draw_labels() -> void:
 	for i in Ledger.keys().size():
 		var kind: String = String(Ledger.keys()[i])
 		var label: String = "GOLD" if kind == Ledger.WALLET else "GOLD ORE" if kind == "gold" else String(Dictionary(GameData.data.ROCK_TYPES.get(kind,{})).get("label",kind.replace("_"," "))).to_upper()
-		var at: Vector2 = bay(i)+Vector2(0,24)
-		_steel_text(label,at,16)
+		var at: Vector2 = bay(i)+Vector2(0,63)
+		_steel_text(label,at,18)
 		var amount: int = int(RunState.treasury_totals.get(kind,0))
 		if amount > 0:
 			var value: String = str(amount) if amount < 1000000 else String.num_scientific(float(amount))
-			_steel_text(value,at+Vector2(0,14),14)
+			_steel_text(value,at+Vector2(0,18),16)
 
 func _shape_flight(packet: Dictionary) -> void:
 	# Each launch is a single item, rather than a three-item pulse.
@@ -382,7 +386,7 @@ func _shape_flight(packet: Dictionary) -> void:
 		if String(pending.kind)==String(packet.kind):
 			travel = maxf(travel,float(pending.duration)-float(pending.age)+interval)
 	packet["duration"] = travel
-	packet["motes"] = [{"travel":travel,"delay":0.0,"bend":Vector2(flight_rng.randf_range(-115,115),-flight_rng.randf_range(65,205)),"offset":Vector2(flight_rng.randf_range(-13,13),flight_rng.randf_range(-8,6)),"ease":flight_rng.randf_range(0.85,1.18),"size":flight_rng.randf_range(27,36)}]
+	packet["motes"] = [{"travel":travel,"delay":0.0,"bend":Vector2(flight_rng.randf_range(-115,115),-flight_rng.randf_range(65,205)),"offset":Vector2(flight_rng.randf_range(-13,13),flight_rng.randf_range(-8,6)),"ease":flight_rng.randf_range(0.85,1.18),"size":flight_rng.randf_range(30,36)}]
 
 func _draw_particles() -> void:
 	for packet in particles:
@@ -398,7 +402,7 @@ func _draw_particles() -> void:
 			var control: Vector2 = origin.lerp(end,0.5)+Vector2(mote.bend)
 			var at: Vector2 = (1-t)*(1-t)*origin+2*(1-t)*t*control+t*t*end
 			var extent: float = float(mote.size)
-			particle_canvas.draw_texture_rect(tex,Rect2(at-Vector2.ONE*extent*0.5,Vector2.ONE*extent),false)
+			particle_canvas.draw_texture_rect(tex,Scale.draw_rect(tex,at,Vector2.ONE*extent),false)
 
 func snapshot() -> Dictionary:
 	return {"active_kind":active_kind,"packet_kinds":particles.map(func(p: Dictionary): return p.kind),"upgrades":upgrades,"flashes":upgrade_flashes.duplicate(),"camera_zoom":[hub.player.camera.zoom.x,hub.player.camera.zoom.y],"camera_center":[hub.player.camera.get_screen_center_position().x,hub.player.camera.get_screen_center_position().y],"zone":[ZONE.x,ZONE.y],"player":[hub.player.global_position.x,hub.player.global_position.y],"circular":true,"walk_through":true,"inside":inside,"delivering":delivering,"packets":particles.size(),"remaining_batches":batches.size(),"landings":landing_count,"cancelled":cancelled_count,"totals":RunState.treasury_totals.duplicate(true),"wallet":RunState.gold,"cargo":RunState.cargo.duplicate(true),"bay_count":Ledger.keys().size()}

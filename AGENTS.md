@@ -1,3 +1,5 @@
+Current task: [approved hero-relative world scale DEV15.37](docs/world-scale/HANDOFF.md). Canonical base977bca3; final visual/browser gates and publication pending.
+
 Current task: [Resonance drill DEV15.34 prototype](docs/resonance-drill/HANDOFF.md). Approved concept; implement/test/publish DEV. Canonical base DEV15.33 f522b4f.
 
 Current task: [approved blue treasury labels and varied flight](docs/treasury-blue-flow/HANDOFF.md). Canonical base DEV15.32/56d00ce; earlier pending/blocked status below is historical and resolved.

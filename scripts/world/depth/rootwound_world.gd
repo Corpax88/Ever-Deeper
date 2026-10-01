@@ -1,5 +1,6 @@
 class_name RootwoundWorld
 extends Node2D
+const ResourceScale = preload("res://scripts/world/resource_scale.gd")
 
 const ShrineRespawn = preload("res://scripts/world/shrine_respawn.gd")
 
@@ -2588,15 +2589,17 @@ func _draw_resource_node(rock: Dictionary) -> void:
 	if texture == null:
 		return
 	var source_size: = Vector2(texture.get_size())
-	var max_width: = 101.0 if bool(rock.drill_gated) else 96.0
-	var scale_factor: = minf(max_width / source_size.x, 92.0 / source_size.y)
+	var visible_size: Vector2 = ResourceScale.NODE_SIZE * (1.06 if bool(rock.drill_gated) else 1.0)
+	var scale_factor: float = ResourceScale.factor(texture, visible_size)
 	var hit_pulse: = _resource_hit_pulse(position)
 	scale_factor *= 1.0 + hit_pulse * 0.075
 	var size: = source_size * scale_factor
 	var type_data: Dictionary = Dictionary(GameData.data.ROCK_TYPES[kind])
 	if bool(type_data.get("rare", false)) or bool(rock.drill_gated):
 		_draw_canvas.draw_circle(position, 52.0 + hit_pulse * 5.0, Color(Color(String(type_data.edge)), 0.09 + hit_pulse * 0.09))
-	_draw_canvas.draw_texture_rect(texture, Rect2(position - size * Vector2(0.5, 0.56), size), false, Color.WHITE)
+	var bounds: Rect2 = ResourceScale.bounds(texture)
+	var anchor: Vector2 = position + Vector2(0, 34)
+	_draw_canvas.draw_texture_rect(texture, Rect2(anchor - Vector2(bounds.get_center().x, bounds.end.y) * scale_factor, size), false, Color.WHITE)
 
 
 func _resource_visible_rect(margin: Vector2) -> Rect2:

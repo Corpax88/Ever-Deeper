@@ -1,4 +1,5 @@
 extends RefCounted
+const Scale = preload("res://scripts/world/resource_scale.gd")
 
 
 
@@ -39,8 +40,8 @@ const RARE_RESOURCES: = {
 	"infernium": true,
 }
 
-const NORMAL_VISIBLE_EXTENT: = 80.0
-const RARE_VISIBLE_EXTENT: = 92.0
+const NORMAL_VISIBLE_EXTENT: = 32.0
+const RARE_VISIBLE_EXTENT: = 38.0
 
 
 static func resource_key(kind: String) -> String:
@@ -59,7 +60,8 @@ static func optical_bounds(kind: String, texture: Texture2D) -> Rect2:
 	if texture == null:
 		return Rect2()
 	var fallback: = Rect2(Vector2.ZERO, Vector2(texture.get_size()))
-	var bounds: Rect2 = OPTICAL_BOUNDS.get(resource_key(kind), fallback)
+	var bounds: Rect2 = Scale.bounds(texture)
+	if bounds.size == Vector2.ZERO: bounds = OPTICAL_BOUNDS.get(resource_key(kind), fallback)
 	return bounds
 
 

@@ -1,3 +1,5 @@
+Current task: [approved hero-relative world scale DEV15.37](world-scale/HANDOFF.md). Canonical base977bca3; final visual/browser gates and publication pending.
+
 Latest task: [Resonance drill](resonance-drill/HANDOFF.md). Local exact-package Godot4.7.2 and Xvfb/Mesa recovered in /workspace/scratch/c939c7fc2e13/runtime; actual held-input and rendered evidence in native-final. Mac/browser acceptance pending.
 
 Current task: [Treasury growth DEV15.32](treasury-growth/HANDOFF.md). Locally validated; public upload blocked by automatic approval review. Not published.

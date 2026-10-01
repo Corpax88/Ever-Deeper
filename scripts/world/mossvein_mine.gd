@@ -1,4 +1,5 @@
 extends Node2D
+const ResourceScale = preload("res://scripts/world/resource_scale.gd")
 
 const ShrineRespawn = preload("res://scripts/world/shrine_respawn.gd")
 
@@ -2055,7 +2056,8 @@ func _draw_block(cell: Vector2i, block: Dictionary) -> void :
 	var seam: Texture2D = _resource_node_texture(kind) if role == "resource" else _resource_texture(kind)
 	if (kind != "stone" or role != "terrain") and open_sides.has(true) and kind != "bedrock":
 		var inset: = 2.0 if role == "resource" else 5.0
-		_draw_canvas.draw_texture_rect(seam, rect.grow( - inset), false, Color(0.98, 0.98, 0.96, 0.96))
+		var destination: Rect2 = ResourceScale.draw_rect(seam, rect.get_center(), rect.size-Vector2.ONE*inset*2.0) if role == "resource" else rect.grow(-inset)
+		_draw_canvas.draw_texture_rect(seam, destination, false, Color(0.98, 0.98, 0.96, 0.96))
 	var hp_ratio: = float(block.hp) / maxf(1.0, float(block.max_hp))
 	if kind != "bedrock" and hp_ratio < 0.999:
 		var center: = rect.get_center()

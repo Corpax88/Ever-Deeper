@@ -1,4 +1,5 @@
 extends Node2D
+const ResourceScale = preload("res://scripts/world/resource_scale.gd")
 
 const DropVisuals = preload("res://scripts/world/drop_visuals.gd")
 
@@ -200,10 +201,10 @@ const MOON_BLOOM_NODE_POSITIONS: = [
 ]
 const MOON_BLOOM_CENTER: = Vector2(2000, 595.3333)
 const MOON_BLOOM_GROUND_ANCHOR: = Vector2(2000, 660)
-# The 94px native clusters have a raised crown and an elliptical rock base.
+# Hero-relative clusters retain their raised crown and elliptical ground base.
 # Position remains the strike target; feet, sorting and collision share this base.
 const SURFACE_NODE_GROUND_OFFSET: = Vector2(0, 28)
-const SURFACE_NODE_GROUND_HALF_SIZE: = Vector2(34, 13)
+const SURFACE_NODE_GROUND_HALF_SIZE: = Vector2(48, 19)
 const MOON_BLOOM_NODE_CONTEXT_RADIUS: = 112.0
 const MOON_BLOOM_NODE_MAX_HP: = 42
 const MOON_BLOOM_TIME_LIMIT: = 18.0
@@ -888,10 +889,11 @@ func _build_moonglass_resource() -> void :
 		var sprite: = _create_world_asset(
 			MOON_BLOOM_NODE,
 			position,
-			Vector2(98, 94),
+			ResourceScale.NODE_SIZE,
 			47.0,
 			6
 		)
+		_fit_resource_node(sprite, position)
 		moon_bloom_sprites.append(sprite)
 		sprite.z_index = actor_draw_depth(position + SURFACE_NODE_GROUND_OFFSET)
 		moon_bloom_base_scales.append(sprite.scale)
@@ -967,10 +969,11 @@ func _build_timed_surface_resource(vein_id: String) -> void :
 		var sprite: = _create_world_asset(
 			node_texture,
 			position,
-			Vector2(98, 94),
+			ResourceScale.NODE_SIZE,
 			47.0,
 			6
 		)
+		_fit_resource_node(sprite, position)
 		sprites.append(sprite)
 		sprite.z_index = actor_draw_depth(position + SURFACE_NODE_GROUND_OFFSET)
 		base_scales.append(sprite.scale)
@@ -4566,8 +4569,8 @@ func _inside_surface_node(actor_position: Vector2, node_position: Vector2) -> bo
 
 func _layout_surface_node(sprite: Sprite2D, strike_position: Vector2, visual_scale: Vector2) -> void:
 	sprite.scale = visual_scale
-	var size: = Vector2(sprite.texture.get_size()) * visual_scale
-	sprite.position = strike_position + Vector2(-size.x * 0.5, 47.0 - size.y)
+	var bounds: Rect2 = ResourceScale.bounds(sprite.texture)
+	sprite.position = strike_position + Vector2(-bounds.get_center().x * visual_scale.x, 47.0 - bounds.end.y * visual_scale.y)
 
 
 func _surface_node_occupied(node_position: Vector2) -> bool:
@@ -5946,3 +5949,6 @@ func _companion_working_mountain(key: String) -> bool:
 
 func companion_hero_period(task: Dictionary = {}) -> float:
 	return float(_mountain_tool().get("cooldown",0.72))
+
+func _fit_resource_node(sprite: Sprite2D, strike_position: Vector2) -> void:
+	_layout_surface_node(sprite, strike_position, Vector2.ONE * ResourceScale.factor(sprite.texture, ResourceScale.NODE_SIZE))

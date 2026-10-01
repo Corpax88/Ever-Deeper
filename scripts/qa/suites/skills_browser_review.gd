@@ -33,6 +33,10 @@ var ore_escape_goal: Vector2
 var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind).begins_with("scale_"):
+		await _scale_command(data)
+		command_id=int(data.id)
+		return
 	if String(data.kind).begins_with("resonance_"):
 		_resonance_command(data)
 		command_id=int(data.id)
@@ -613,7 +617,7 @@ func _node_asset_fixture(mine_id: String) -> void:
 			if String(cavern.id)==String(rock.cavern_id):
 				cavern.discovered=true
 				for index in cavern.cells: world.concealed_cells.erase(int(index))
-	node_asset_origin=world._cell_center(cell+Vector2i(0,2))
+	node_asset_origin=world._cell_center(cell+Vector2i(2,2))
 	world.restore_position(node_asset_origin)
 	world.player.set_facing(Vector2.UP)
 	world.player.camera.reset_smoothing()
@@ -831,7 +835,7 @@ func _treasury_command(data: Dictionary) -> void:
 			for kind in room.Ledger.keys(): RunState.treasury_totals[kind]=int(data.amount)
 			room.refresh_piles()
 			var aim: Vector2=room.bay(int(data.get("index",0)))
-			main.hub_world.restore_position(room.ZONE+(aim-room.ZONE)*0.7)
+			main.hub_world.restore_position(aim+Vector2(155,110))
 			main.hub_world.player.camera.reset_smoothing()
 		"treasury_full":
 			room.stop()
@@ -883,3 +887,47 @@ func _resonance_command(data: Dictionary) -> void:
 			w.player.set_physics_process(true)
 		"resonance_off":
 			fx.set_enabled(false)
+
+
+func _scale_command(data: Dictionary) -> void:
+	main._cancel_mine_hold()
+	main._on_joystick_movement(Vector2.ZERO)
+	var mode: String = String(data.kind)
+	if mode == "scale_surface":
+		main._dev_seed_victory_state()
+		main._dev_jump_surface()
+		_gear("worn")
+		var world: Node2D = main.surface_world
+		var positions: Array = [Vector2(812,680),Vector2(2000,705),Vector2(3130,705),Vector2(4340,705)]
+		world.restore_position(positions[int(data.get("index",0))])
+		world.player.set_facing(Vector2.UP)
+		world.player.camera.reset_smoothing()
+	elif mode == "scale_depth1":
+		main._dev_jump_mine(String(data.mine_id),1)
+		_gear("deepcore")
+		_require(_place_moss(Vector2.UP),"scale depth-one mining target")
+		main.mine_world.player.camera.reset_smoothing()
+	elif mode == "scale_deep":
+		_mole_fixture("endless_ore")
+		main.endless_world.player.camera.reset_smoothing()
+	elif mode == "scale_drops":
+		# Real material textures in a clearly isolated scale fixture, beside the real hero.
+		var world: Node2D = main._active_player_node().get_parent()
+		var actor: Node2D = main._active_player_node()
+		var drop_style = load("res://scripts/world/drop_visuals.gd")
+		for i in RunState.RESOURCE_IDS.size():
+			var kind: String = String(RunState.RESOURCE_IDS[i])
+			var texture: Texture2D = load(RunState._resource_drop_texture_path(kind))
+			var sprite: Sprite2D = Sprite2D.new()
+			sprite.texture=texture
+			sprite.scale=drop_style.sprite_scale(kind,texture)
+			sprite.offset=drop_style.sprite_offset(kind,texture)
+			sprite.position=actor.position+Vector2(110+(i%7)*48,-100+(i/7)*48)
+			sprite.z_index=3500
+			world.add_child(sprite)
+	elif mode == "scale_walk_bay":
+		var room: Node=main.hub_world.treasury
+		var index: int=int(data.get("index",0))
+		main.hub_world.restore_position(room.bay(index)+Vector2(0,130))
+		main.hub_world.player.camera.reset_smoothing()
+	await main.get_tree().process_frame
