@@ -61,7 +61,9 @@ func _command(data: Dictionary) -> void:
 		event.kind=""
 		event.remaining=0.0
 		event.next=2000000
-		w.resonance_drill.reset()
+		RunState.treasury_goals.resonance_claimed=true
+		RunState.treasury_goals.resonance_enabled=true
+		w.resonance_drill.set_enabled(true)
 		main._update_minimap()
 		command_id=int(data.id)
 		return
