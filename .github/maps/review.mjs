@@ -62,7 +62,7 @@ try{
  await command('maps_fixture',{mine:'endless',depth:1});await ready();await command('maps_drill');await delay(400);
  await shot('deep-before-mini');
  const before=(await state()).cartography;
- const pos=await point('mine');await touch('touchStart',pos);await delay(4000);await touch('touchEnd',pos);await command('maps_refresh');
+ const ds=await state(),vp=page.viewportSize();const pos={x:ds.mine_button[0]/ds.viewport[0]*vp.width,y:ds.mine_button[1]/ds.viewport[1]*vp.height};await touch('touchStart',pos);await delay(4000);await touch('touchEnd',pos);await command('maps_refresh');
  const after=(await state()).cartography;
  check('actual-touch-mining-updates-map',after.revision>before.revision,{before,after});
  await shot('deep-after-mini');await tap('hud_map');await wait('deep map opens',s=>s.map_open);await shot('deep-expanded');await tap('skills_close');await ready();
