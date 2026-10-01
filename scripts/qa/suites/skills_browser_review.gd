@@ -835,7 +835,8 @@ func _treasury_command(data: Dictionary) -> void:
 			for kind in room.Ledger.keys(): RunState.treasury_totals[kind]=int(data.amount)
 			room.refresh_piles()
 			var aim: Vector2=room.bay(int(data.get("index",0)))
-			main.hub_world.restore_position(aim+Vector2(155,110))
+			main.hub_world.restore_position(aim+(room.ZONE-aim).normalized()*200.0+Vector2(0,40))
+			_require(main.hub_world.player.global_position.distance_to(aim)<320.0,"scale camera reaches requested bay")
 			main.hub_world.player.camera.reset_smoothing()
 		"treasury_full":
 			room.stop()
