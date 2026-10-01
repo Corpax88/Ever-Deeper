@@ -294,10 +294,18 @@ func _frame() -> void:
 	state["deep_events"]=main.endless_world.deep_events.snapshot()
 	var rewards_world: Node=main.endless_world
 	var reward_drops: Dictionary={}
+	var rock_drops: Dictionary={}
+	var node_drops: Dictionary={}
 	for reward_depth in range(rewards_world.window_start_depth,rewards_world.window_start_depth+3):
-		for drop in RunState.endless_loose_drops(reward_depth).values():
+		var pending: Dictionary=RunState.endless_loose_drops(reward_depth)
+		for drop_id in pending:
+			var drop: Dictionary=pending[drop_id]
+			var origin_drops: Dictionary=rock_drops if String(drop_id).begins_with("c") else node_drops
+			origin_drops[String(drop.kind)]=int(origin_drops.get(String(drop.kind),0))+int(drop.amount)
 			reward_drops[String(drop.kind)]=int(reward_drops.get(String(drop.kind),0))+int(drop.amount)
 	state["reward_drops"]=reward_drops
+	state["reward_rock_drops"]=rock_drops
+	state["reward_node_drops"]=node_drops
 	state["reward_stone_cargo"]=int(RunState.cargo.get("stone",0))
 	state["reward_seam_multiplier"]=main.endless_world.deep_events.node_amount(main.endless_world.player.global_position,1)
 

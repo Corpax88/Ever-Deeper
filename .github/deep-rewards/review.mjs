@@ -62,7 +62,7 @@ try{
  const before=await state();await mine();const normal=await state();
  check('real-5x5-mining',normal.resonance.dug>before.resonance.dug,{before:before.resonance,after:normal.resonance});
  check('ordinary-stone-produced',normal.reward_stone_cargo+(normal.reward_drops.stone||0)>before.reward_stone_cargo+(before.reward_drops.stone||0),{drops:normal.reward_drops});
- check('no-random-valuables-from-rock',Object.keys(normal.reward_drops).every(k=>k==='stone'),{drops:normal.reward_drops});
+ check('no-random-valuables-from-rock',Object.keys(normal.reward_rock_drops).length>0&&Object.keys(normal.reward_rock_drops).every(k=>k==='stone'),{rock:normal.reward_rock_drops,nodes:normal.reward_node_drops});
  await shot('ordinary-after');
  for(const event of ['unstable_seam','ancient_core','crystal_bloom']){
   await command('rewards_event',{event});await delay(250);const s=await state();
