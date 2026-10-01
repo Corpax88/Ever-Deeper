@@ -1,3 +1,5 @@
+Published https://corpax88.github.io/Ever-Deeper/dev/ at DEV15.36. Publication ffa3b63889cbab557111eb0609dd81190298ce1c /36820680031 succeeded; receipt11142936585 verifies27 public hashes, retaining LIVE9/Worn9. Rollback11142914084 preserves15.35. No jobs or permissions pending. Next: physical-phone feel feedback.
+
 # DEV15.36 continuous mixed treasury delivery
 
 Requested 1 October 2026: remove pulsed donation and one-material-at-a-time order. Launch one visible resource every 0.06 seconds while inventory remains. Shuffle each complete round of available types using the presentation RNG, so no resource is starved. Keep all 27 destinations, existing art, and amount/landing accounting. Upgrades flash while the outgoing stream continues.
