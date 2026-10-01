@@ -1,0 +1,13 @@
+# LIVE1.0.4 — node reveal hotfix
+
+Mats explicitly requested this bug fix on LIVE on 1 October 2026. This is a scoped backport on the exact published LIVE1.0.3 package, not promotion of unrelated DEV changes. Only the two gameplay scripts implementing reveal-before-mining, release version, and opt-in test fixtures change. Existing production save identity, loading rotation fix, artwork, economy and other 1544 retained payloads are byte-preserved.
+
+Rock must be removed before a hidden node can be damaged. Crusher snapshots exposed node IDs before excavation. Resonance snapshots once before the whole burst. Newly revealed nodes remain full HP and visible until a later attack. Held mining can continue to the next attack normally; no artificial timer or extra click is required.
+
+DEV15.41 is already published: source01d038834f6b8977ca008d0babf4f9c4ed9589a2 on codex/deep-node-reveal-20261001, QA36866530044, publication a63848bca2aab7a3bde362f00603dd3bdce973fe/run36867133121. Receipt11163883661 verifies27public hashes, rollback11164182758 retains DEV15.40. DEV has separate previously approved map/reward changes not included by this scoped LIVE backport.
+
+LIVE source9962e80b412ae462aae03be4e0b059c9d35dfcca on codex/live-1-0-4-20261001, derived from canonical LIVE1.0.3 source8b7f913b6a6703f2f238605e02a01df95ead7103. Main is a publication carrier; do not rebuild its historical runtime. Local input,414 premium-core,production flavor and341migration checks pass. Native28focused checks and9inspected images cover buried rejection, separate reveal/mine, save persistence and duplicate claims across direct/Crusher/Resonance. Native production payload parity with final candidate verified; only the QA suite changed afterward.
+
+First Mac36867382138 passed old-save continuation and production flavor but timed out waiting for Resonance: the fixture used a DEV override without granting the production earned mod. No failed candidate was published. The isolated fixture now grants the saved claimed/enabled flags; gameplay code unchanged. Final Mac36867669696 passed input,414core,production flavor,341migration,14browser checks/captures and ordinaryWebKit. All11final Mac images inspected. Old LIVE1.0.3 save continued with seed/gold/skills preserved. Candidate11164614080; evidence11164603995. LIVE publication pending.
+
+Existing LIVE progress continues; no DEV save copying, no reset. No physical-iPhone or FPS claim. Existing unrelated flag-order invariant debt is logged separately. Rotation issue is parked at Mats's request after rotating again fixed it. No new event notification work or website update was requested in this task.
