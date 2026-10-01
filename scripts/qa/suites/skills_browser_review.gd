@@ -1,6 +1,9 @@
 extends "res://scripts/qa/suites/dev14_review.gd"
 ## Explicit fixture only; browser uses actual touch against observed control bounds.
 func run() -> void:
+	if "--treasury-fit-native" in OS.get_cmdline_user_args():
+		await _native_fit()
+		return
 	super.run()
 
 var exposure_id: String = ""
@@ -880,6 +883,8 @@ func _deep_command(kind: String) -> void:
 func _treasury_command(data: Dictionary) -> void:
 	var room: Node=main.hub_world.treasury
 	match String(data.kind):
+		"treasury_clear_toasts":
+			main.achievement_toast.clear()
 		"treasury_preview_other":
 			main.treasury_goal_panel.open_goal("copper")
 		"treasury_fixture":
@@ -1101,3 +1106,49 @@ func _maps_command(data: Dictionary) -> void:
 			_require(RunState.load_game(),"map load")
 			_require(RunState.map_explored==previous,"map exploration save parity")
 			main._update_minimap()
+
+
+func _fit_capture(label: String) -> void:
+	await main.get_tree().create_timer(0.25).timeout
+	await RenderingServer.frame_post_draw
+	var out: String = OS.get_environment("TREASURY_FIT_OUT")
+	main.get_viewport().get_texture().get_image().save_png(out.path_join(label+".png"))
+
+func _native_fit() -> void:
+	RunState.reset_run(false)
+	main.game_started = true
+	main._hide_start_menu()
+	await _treasury_command({"kind":"treasury_fixture"})
+	if main.quick_tutorial != null: main.quick_tutorial.dismiss()
+	var room: Node = main.hub_world.treasury
+	await main.get_tree().create_timer(1.0).timeout
+	main.achievement_toast.clear()
+	await _fit_capture("entrance")
+	main._on_joystick_movement(Vector2.RIGHT)
+	await main.get_tree().create_timer(0.65).timeout
+	main._on_joystick_movement(Vector2.ZERO)
+	assert(room.inside,"walk-through entrance")
+	var stack = preload("res://scripts/world/treasury_stack.gd")
+	for kind in room.Ledger.keys():
+		for slot in stack.COUNT:
+			var foot: Vector2 = stack.footprint(slot,kind)
+			assert(absf(foot.x)<68 and absf(foot.y)<21,"platform footprint")
+			assert(stack.offset(slot,kind)==stack.offset(slot,kind),"stable positions")
+	for amount in [556,5000,30000,100000]:
+		for index in [0,3,26]:
+			await _treasury_command({"kind":"treasury_visual","amount":amount,"index":index})
+			await _fit_capture("bay-%02d-%d" % [index,amount])
+	for index in 27:
+		await _treasury_command({"kind":"treasury_visual","amount":100000,"index":index})
+		await _fit_capture("full-%02d" % index)
+	await _treasury_command({"kind":"treasury_save"})
+	await _treasury_command({"kind":"treasury_restore"})
+	assert(int(RunState.treasury_totals.wallet_gold)==100000,"save retained")
+	await _treasury_command({"kind":"treasury_exit_approach"})
+	main._on_joystick_movement(Vector2.LEFT)
+	await main.get_tree().create_timer(0.7).timeout
+	main._on_joystick_movement(Vector2.ZERO)
+	assert(not room.inside,"walk-through exit")
+	await _fit_capture("returned-hub")
+	print("TREASURY_FIT_OK")
+	main.get_tree().quit()

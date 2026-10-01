@@ -1,3 +1,5 @@
+Current task: [approved treasury entrance and podium fit](treasury-fit/HANDOFF.md). DEV15.43 candidate, 3 critic rounds; final gates pending.
+
 Current task: [approved hero-relative world scale DEV15.37](world-scale/HANDOFF.md). Canonical base977bca3; final visual/browser gates and publication pending.
 
 Latest task: [Resonance drill](resonance-drill/HANDOFF.md). Local exact-package Godot4.7.2 and Xvfb/Mesa recovered in /workspace/scratch/c939c7fc2e13/runtime; actual held-input and rendered evidence in native-final. Mac/browser acceptance pending.

@@ -1,3 +1,5 @@
+Current task: [approved treasury entrance and podium fit](docs/treasury-fit/HANDOFF.md). DEV15.43 candidate, 3 critic rounds; final gates pending.
+
 Current task: [DEV15.42 mod previews](docs/mod-previews/HANDOFF.md). Future mod windows must follow [approved visual standard](docs/mod-previews/DESIGN-STANDARD.md), using the Skills Pappa Hammer reference, not the Blender model.
 
 Current task: [approved treasury stacking, goals and map DEV15.38](docs/treasury-stacking/HANDOFF.md). Canonical base d7c42c3, QA and immutable DEV publication pending. User approved motion reference; 100 pieces was illustrative. Other mod definitions remain unspecified.

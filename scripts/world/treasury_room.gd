@@ -209,7 +209,7 @@ func tick(delta: float) -> void:
 		var to_boundary: int = Stack.boundary(slot) - projected
 		var amount: int = mini(int(batch.amount),to_boundary)
 		var packet: Dictionary = {"kind":kind,"amount":amount,"milestone":amount==to_boundary,
-			"origin":hub.player.global_position+Vector2(0,-38),"target":bay(Ledger.keys().find(kind))+Stack.offset(slot),"slot":slot,"extent":Stack.extent(kind,slot,projected+amount),"age":0.0}
+			"origin":hub.player.global_position+Vector2(0,-38),"target":bay(Ledger.keys().find(kind))+Stack.offset(slot,kind),"slot":slot,"extent":Stack.extent(kind,slot,projected+amount),"age":0.0}
 		_shape_flight(packet)
 		particles.append(packet)
 		batch.amount = int(batch.amount)-amount
@@ -326,9 +326,11 @@ func _draw_stack(index: int) -> void:
 	var amount: int = int(RunState.treasury_totals.get(kind,0))
 	var tex: Texture2D = material(kind)
 	if tex == null: return
-	for slot in Stack.filled(amount):
-		var at: Vector2 = bay(index) + Stack.offset(slot)
-		display_nodes[index].draw_texture_rect(tex,Scale.draw_rect(tex,at,Stack.extent(kind,slot,amount)),false)
+	for slot in Stack.draw_order(Stack.filled(amount),kind):
+		var at: Vector2 = bay(index) + Stack.offset(slot,kind)
+		display_nodes[index].draw_set_transform(at,Stack.turn(slot,kind))
+		display_nodes[index].draw_texture_rect(tex,Scale.draw_rect(tex,Vector2.ZERO,Stack.extent(kind,slot,amount)),false)
+		display_nodes[index].draw_set_transform(Vector2.ZERO)
 
 func _update_flash_tints() -> void:
 	for i in display_nodes.size():
@@ -386,7 +388,9 @@ func _draw_particles() -> void:
 			var control: Vector2 = origin.lerp(end,0.5)+Vector2(mote.bend)
 			var at: Vector2 = (1-t)*(1-t)*origin+2*(1-t)*t*control+t*t*end
 			var extent: Vector2 = (Vector2.ONE*float(mote.size)).lerp(Vector2(packet.extent),smoothstep(0.65,1.0,t))
-			particle_canvas.draw_texture_rect(tex,Scale.draw_rect(tex,at,extent),false)
+			particle_canvas.draw_set_transform(at,Stack.turn(int(packet.slot),String(packet.kind))*smoothstep(0.65,1.0,t))
+			particle_canvas.draw_texture_rect(tex,Scale.draw_rect(tex,Vector2.ZERO,extent),false)
+			particle_canvas.draw_set_transform(Vector2.ZERO)
 
 func snapshot() -> Dictionary:
 	return {"stack_capacity":Stack.COUNT,"stack_slots":Ledger.keys().map(func(k): return Stack.filled(int(RunState.treasury_totals.get(k,0)))),"packet_slots":particles.map(func(p): return {"kind":p.kind,"slot":p.slot,"target":[p.target.x,p.target.y],"extent":[p.extent.x,p.extent.y]}),"active_kind":active_kind,"packet_kinds":particles.map(func(p: Dictionary): return p.kind),"upgrades":upgrades,"flashes":upgrade_flashes.duplicate(),"camera_zoom":[hub.player.camera.zoom.x,hub.player.camera.zoom.y],"camera_center":[hub.player.camera.get_screen_center_position().x,hub.player.camera.get_screen_center_position().y],"zone":[ZONE.x,ZONE.y],"player":[hub.player.global_position.x,hub.player.global_position.y],"circular":true,"walk_through":true,"inside":inside,"delivering":delivering,"packets":particles.size(),"remaining_batches":batches.size(),"landings":landing_count,"cancelled":cancelled_count,"totals":RunState.treasury_totals.duplicate(true),"wallet":RunState.gold,"cargo":RunState.cargo.duplicate(true),"bay_count":Ledger.keys().size()}

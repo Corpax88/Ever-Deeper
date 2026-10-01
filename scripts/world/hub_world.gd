@@ -22,7 +22,7 @@ signal workshop_panel_requested(workshop_id: String)
 signal workshop_action_committed(transaction: Dictionary)
 
 const TreasuryRoom = preload("res://scripts/world/treasury_room.gd")
-const TREASURY_DOOR: Vector2 = Vector2(1390, 766)
+const TREASURY_DOOR: Vector2 = Vector2(1345, 766)
 const HUB_SHOP: Vector2 = Vector2(1100, 742)
 var treasury: Node2D
 
@@ -2109,8 +2109,10 @@ func _draw_ellipse_shape(center: Vector2, radii: Vector2, color: Color) -> void 
 
 
 func _draw_treasury_entrance() -> void:
-	# The rock jambs and continuous floor are drawn with the room wall; no portal.
-	_draw_canvas.draw_string(ThemeDB.fallback_font,TREASURY_DOOR+Vector2(-120,112),"TREASURY",HORIZONTAL_ALIGNMENT_LEFT,150,18,Color("f2d88c"))
+	# Static authored entrance: no extra live lights or per-frame pixel processing.
+	var tex: Texture2D = treasury.texture("res://assets/treasury/vault-entrance-v1.png")
+	var tint: Color = Color.WHITE if RunState.victory else Color(0.55,0.53,0.50,1.0)
+	_draw_texture_bounded(tex,TREASURY_DOOR+Vector2(-45,-80),Vector2(265,270),tint)
 
 func _draw_hub_shop() -> void:
 	_draw_texture_bounded(_premium_texture("res://assets/stations/ore-exchange-v1.png"),HUB_SHOP+Vector2(0,-30),Vector2(182,174))
