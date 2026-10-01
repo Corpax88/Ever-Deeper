@@ -1509,7 +1509,7 @@ func _resolve_motion(origin: Vector2, motion: Vector2) -> Vector2:
 	# must not cancel every wind-up; walking resumes when the target is gone.
 	var aim: Vector2 = _mining_input_direction()
 	var committed: bool = mining_active and (aim.is_zero_approx() or aim == _swing_input_direction)
-	if (external_mine_held or Input.is_action_pressed("mine")) and (committed or _nearest_resource_index() >= 0 or _nearest_diggable_wall().x >= 0):
+	if drill_modes.selected().is_empty() and (external_mine_held or Input.is_action_pressed("mine")) and (committed or _nearest_resource_index() >= 0 or _nearest_diggable_wall().x >= 0):
 		return origin
 	var result: = origin
 	var next_x: = Vector2(origin.x + motion.x, origin.y)

@@ -59,6 +59,29 @@ func _command(data: Dictionary) -> void:
 			w.player.set_facing(Vector2.RIGHT);w.player.camera.reset_smoothing()
 			w.drill_modes.reset()
 			main.achievement_toast.hide()
+		elif String(data.kind)=="mods_bore_flow":
+			main._dev_jump_endless(1);main._dev_grant_max_tools_state()
+			var w: Node=main.endless_world
+			w.resonance_drill.set_enabled(false);goals._equip("bore_rush")
+			var mole: Node=main.get_node("CompanionInterface").active_mole()
+			mole.autonomous_enabled=false;mole.recall()
+			w.set_mine_held(false)
+			var direction: Vector2=Vector2(float(data.get("dx",1)),float(data.get("dy",0)))
+			if bool(data.get("site",false)):
+				var site: Dictionary=w.discovery_sites[0]
+				var center: Vector2=Vector2(site.position)+Vector2(0,24)
+				var cell: Vector2i=w._world_to_cell(center)
+				for y in range(cell.y-5,cell.y+6):
+					for x in range(cell.x-6,cell.x+7): w._set_floor(Vector2i(x,y),true)
+				w.player.global_position=center-direction*150.0
+			else:
+				for y in range(3,18):
+					for x in range(8,29): w._set_floor(Vector2i(x,y),false)
+				for y in range(9,12):
+					for x in range(17,20): w._set_floor(Vector2i(x,y),true)
+				w.player.global_position=w._cell_center(Vector2i(18,10))+Vector2(-direction.y,direction.x)*24.0
+			w.player.set_facing(direction);w.player.camera.reset_smoothing()
+			w.drill_modes.reset();main.achievement_toast.hide()
 		elif String(data.kind)=="mods_save": RunState.flush_save()
 		elif String(data.kind)=="mods_reload": RunState.load_game()
 		command_id=int(data.id)
