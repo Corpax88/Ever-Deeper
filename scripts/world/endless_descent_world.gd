@@ -329,6 +329,7 @@ func set_active(enabled: bool, entering: bool = false) -> void :
 	player.control_enabled = enabled
 	player.camera.enabled = enabled
 	external_mine_held = false
+	if is_instance_valid(drill_modes): drill_modes.reset()
 	_cancel_mining()
 	if enabled:
 		_build_headlamp()

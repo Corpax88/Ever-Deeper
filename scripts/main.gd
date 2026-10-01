@@ -423,7 +423,7 @@ func _on_developer_command_requested(command: String) -> void :
 			endless_world.drill_modes.reset()
 			message="LASER TEST · toggle Laser beside Mine" if command=="test_laser" else "BORE RUSH TEST · hold Mine and steer"
 		"test_resonance":
-			endless_world.drill_modes.dev_override=""
+			endless_world.drill_modes.dev_override="resonance"
 			endless_world.drill_modes.reset()
 			if phase != "endless": ok = _dev_jump_endless(1)
 			_dev_grant_max_tools_state()
@@ -1148,7 +1148,7 @@ func _input(event: InputEvent) -> void :
 func _world_tap_action(point: Vector2) -> String:
 	if not game_started or menu_open or inventory_open or orientation_guard_active or _shop_panel_is_open(): return ""
 	# Keep HUD buttons authoritative even where their screen bounds cover a bay.
-	for control in [premium_hud.menu_button,premium_hud.bag_button,premium_hud.guide_button,premium_hud.context_button,mine_button,get_node("CompanionInterface").button]:
+	for control in [premium_hud.menu_button,premium_hud.bag_button,premium_hud.guide_button,premium_hud.context_button,mine_button,laser_button,get_node("CompanionInterface").button]:
 		if is_instance_valid(control) and control.is_visible_in_tree() and control.get_global_rect().has_point(point): return ""
 	if is_instance_valid(developer_menu) and (developer_menu.is_open() or (developer_menu.toggle_button.is_visible_in_tree() and developer_menu.toggle_button.get_global_rect().has_point(point))): return ""
 	if is_instance_valid(minimap_overlay) and minimap_overlay.visible and minimap_overlay._map_rect.has_point(point): return "map"
