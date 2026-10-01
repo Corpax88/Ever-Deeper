@@ -1,3 +1,5 @@
+Current task: DEV15.37 approved world scale, see docs/world-scale/HANDOFF.md. Canonical game source d7c42c367513ede867afefa34c795959fe1d536b; MacQA36835005359 accepted,140 images inspected. Immutable DEV publication in progress. Never rebuild historical main.
+
 # Current release — DEV15.28 solid The Deep and mining fixes (29 September 2026)
 
 Published and verified: cyan Hub overlay removed; held-direction mining corrected; persistent physical drops; solid terrain with discoveries revealed by excavation. Gameplay source a58b99b40128b7e5a8eb34e626146a551b0137ca on codex/deep-dig-20260929. Never rebuild historical main. Read docs/deep-dig/HANDOFF.md and publication-receipt.json. Validation 36617600791: native input/premium-core 231, 12 browser gates including 32 Deep checks, actual simultaneous two-finger touch, ordinary WebKit; 15 screenshots inspected. Publication 36618603249 verifies 27 public hashes; LIVE/Worn unchanged. FPS remains PARKED; no physical-iPhone claim.

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/runner/work/Ever-Deeper/Ever-Deeper/tools/check_invariants.py", line 26, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/runner/work/Ever-Deeper/Ever-Deeper/tools/check_invariants.py", line 16, in main
+    assert cases==documented,'QA flag order or arguments changed'
+           ^^^^^^^^^^^^^^^^^
+AssertionError: QA flag order or arguments changed
