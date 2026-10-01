@@ -65,10 +65,10 @@ try{
  const ds=await state(),vp=page.viewportSize();const pos={x:ds.mine_button[0]/ds.viewport[0]*vp.width,y:ds.mine_button[1]/ds.viewport[1]*vp.height};await touch('touchStart',pos);await delay(4000);await touch('touchEnd',pos);await command('maps_refresh');
  const after=(await state()).cartography;
  check('actual-touch-mining-updates-map',after.revision>before.revision,{before,after});
- await shot('deep-after-mini');await tap('hud_map');await wait('deep map opens',s=>s.map_open);await shot('deep-expanded');await tap('skills_close');await ready();
+ await shot('deep-after-mini');await tap('hud_map');await wait('deep map opens',s=>s.map_open&&s.skills_open);await shot('deep-expanded');
  await command('maps_save');const saved=(await state()).cartography;await command('maps_load');
  check('exploration-restored',(await state()).cartography.known===saved.known,{saved,restored:(await state()).cartography});
- await tap('hud_map');await wait('restored map opens',s=>s.map_open);await shot('deep-restored');
+ await tap('skills_close');await ready();await tap('hud_map');await wait('restored map opens',s=>s.map_open&&s.skills_open);await shot('deep-restored');
  check('no-runtime-errors',!messages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)),{});
 }catch(e){failed=String(e);console.error(e);}
 finally{
