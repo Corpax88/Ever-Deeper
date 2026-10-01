@@ -3,6 +3,8 @@ extends "res://scripts/qa/suites/dev14_review.gd"
 func run() -> void:
 	super.run()
 
+var exposure_id: String = ""
+var exposure_hp: int = 0
 var deep_checks: Dictionary = {}
 var deep_before: int = 0
 var deep_drop_key: String = ""
@@ -33,6 +35,36 @@ var ore_escape_goal: Vector2
 var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind)=="exposure_fixture":
+		main._dev_jump_endless(1)
+		main._on_developer_command_requested("test_resonance")
+		var w: Node=main.endless_world
+		var mole: Node=main.get_node("CompanionInterface").active_mole()
+		mole.autonomous_enabled=false
+		mole.recall()
+		for resource in w.resources:
+			if int(resource.depth)!=1 or bool(resource.mined) or w._is_floor(Vector2i(resource.cell)): continue
+			var cell: Vector2i=resource.cell
+			if cell.x<4 or cell.x>35 or cell.y<3: continue
+			exposure_id=String(resource.id)
+			exposure_hp=int(resource.hp)
+			for offset in [Vector2i.UP,Vector2i(-1,-1),Vector2i(1,-1),Vector2i(0,-2)]:
+				w._set_floor(cell+offset,true)
+			w.player.global_position=w._cell_center(cell+Vector2i.UP)
+			w.player.set_facing(Vector2.DOWN)
+			w._on_player_moved(w.player.global_position)
+			w.player.camera.reset_smoothing()
+			break
+		_require(not exposure_id.is_empty(),"buried browser node")
+		w._update_buried_visibility()
+		var event: Dictionary=w.deep_events.state()
+		event.kind=""
+		event.remaining=0.0
+		event.next=2000000
+		w.resonance_drill.reset()
+		main._update_minimap()
+		command_id=int(data.id)
+		return
 	if String(data.kind).begins_with("maps_"):
 		await _maps_command(data)
 		command_id=int(data.id)
@@ -303,6 +335,10 @@ func _frame() -> void:
 			var origin_drops: Dictionary=rock_drops if String(drop_id).begins_with("c") else node_drops
 			origin_drops[String(drop.kind)]=int(origin_drops.get(String(drop.kind),0))+int(drop.amount)
 			reward_drops[String(drop.kind)]=int(reward_drops.get(String(drop.kind),0))+int(drop.amount)
+	state["exposure"]={}
+	for resource in rewards_world.resources:
+		if String(resource.id)!=exposure_id: continue
+		state["exposure"]={"id":exposure_id,"hp":int(resource.hp),"initial_hp":exposure_hp,"mined":bool(resource.mined),"floor":rewards_world._is_floor(Vector2i(resource.cell)),"visible":rewards_world.resource_visuals[exposure_id].visible,"claimed":(int(RunState.endless_floor_resource_state(int(resource.depth)).mined_mask)&(1<<int(resource.node_index)))!=0}
 	state["reward_drops"]=reward_drops
 	state["reward_rock_drops"]=rock_drops
 	state["reward_node_drops"]=node_drops

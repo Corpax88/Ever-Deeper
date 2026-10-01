@@ -26,6 +26,7 @@ func run() -> void:
 		world.resources[index].mined = index >= 2
 		if index < 2:
 			world.resources[index].position = origin + Vector2(40 + index * 28, 0)
+			world.resources[index].cell = world._world_to_cell(world.resources[index].position)
 			world.resources[index].hp = 1
 	world.player.set_facing(Vector2.RIGHT)
 	world.player._actual_moving = false

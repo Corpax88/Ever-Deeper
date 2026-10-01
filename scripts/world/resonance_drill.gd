@@ -21,6 +21,7 @@ var bursts: int = 0
 var excavated: int = 0
 var clock: float = 0.0
 var blocked: bool = false
+var exposed_before_burst: Dictionary = {}
 var visual_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 func setup(owner_world: Node2D) -> void:
@@ -39,6 +40,7 @@ func set_enabled(value: bool) -> void:
 	reset()
 
 func reset() -> void:
+	exposed_before_burst.clear()
 	charge = 0.0
 	age = -1.0
 	rings.clear()
@@ -54,6 +56,7 @@ func on_hit(period: float) -> void:
 	direction = Vector2i(int(signf(facing.x)),0) if absf(facing.x)>absf(facing.y) else Vector2i(0,int(signf(facing.y)))
 	if direction == Vector2i.ZERO: return
 	origin = world._world_to_cell(world.player.global_position)
+	exposed_before_burst = world._exposed_node_ids()
 	age = 0.0
 	row = 0
 	blocked = false
@@ -96,11 +99,12 @@ func _advance_row() -> void:
 		if world._break_diggable_cell(cell):
 			count += 1
 			_spawn_debris(world._cell_center(cell))
-	# Exposed ore nodes use the same persisted claim path; no hidden free loot.
+	# Only ore exposed before this whole burst can be mined.
+	# Keep newly uncovered nodes intact through all rows, even if the wave stalls.
 	for i in world.resources.size():
 		var resource: Dictionary = world.resources[i]
 		var offset: Vector2i = Vector2i(resource.cell)-center
-		if (offset.x*direction.x+offset.y*direction.y)==0 and absi((offset.x*side.x+offset.y*side.y))<=HALF_WIDTH and world._is_floor(Vector2i(resource.cell)) and not bool(resource.mined):
+		if (offset.x*direction.x+offset.y*direction.y)==0 and absi((offset.x*side.x+offset.y*side.y))<=HALF_WIDTH and world._is_floor(Vector2i(resource.cell)) and not bool(resource.mined) and exposed_before_burst.has(String(resource.id)):
 			world._strike_resource(i,int(resource.hp),false)
 	RunState.end_state_batch()
 	world._wave_active = false

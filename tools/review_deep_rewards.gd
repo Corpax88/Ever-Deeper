@@ -82,6 +82,7 @@ func run() -> void:
 	var node_depth: int=int(resource.depth)
 	state.endless_current_depth=node_depth
 	var expected: int=state.prospecting_yield(String(resource.kind),int(resource.amount)*2*maxi(1,int(w._current_endless_tool().get("yield_multiplier",1))))
+	w._set_floor(node_cell,true)
 	w._strike_resource(0,999999,false)
 	var node_id: String="n%d" % int(resource.node_index)
 	verify(state.endless_loose_drops(node_depth)[node_id].amount==expected,"actual node strike applies double reward exactly once")
