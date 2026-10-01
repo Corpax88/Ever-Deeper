@@ -140,4 +140,5 @@ func run() -> void:
 	verify(not world.player.drill_motion_override,"exit-clears-auto-motion")
 	world.set_active(true)
 	await capture("final")
+	await process_frame
 	print("DRILL_MODS_OK");quit(0)

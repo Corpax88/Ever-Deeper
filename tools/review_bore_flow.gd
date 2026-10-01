@@ -111,6 +111,18 @@ func run() -> void:
 		verify(beam.dot(aim)>0.999,"laser-360-"+str(i))
 		if i in [3,9,15,21]: await capture("laser-angle-"+str(i))
 	world.player.external_movement=Vector2(1,1).normalized()
+	var diagonal: Vector2i=Vector2i(22,17)
+	world._set_floor(diagonal,false)
+	world._set_floor(diagonal+Vector2i.LEFT,false)
+	world._set_floor(diagonal+Vector2i.UP,false)
+	var ray: Dictionary=world.drill_modes._laser_target(world.player.global_position,world.player.external_movement)
+	verify(ray.get("cell",Vector2i.ZERO)==diagonal,"laser-diagonal-ray-first-hit")
+	world.drill_modes.target_key=""
+	world.drill_modes.tick(0.04)
+	verify(not world._is_floor(diagonal),"laser-diagonal-not-instant")
+	for i in 7: world.drill_modes.tick(0.04)
+	verify(world._is_floor(diagonal) and not world._is_floor(diagonal+Vector2i.LEFT) and not world._is_floor(diagonal+Vector2i.UP),"laser-diagonal-single-cell-damage")
+	world.player.external_movement=Vector2(1,1).normalized()
 	var laser_before: Vector2=world.player.global_position
 	# Nearby rock off the beam used to lock all movement, even with a laser.
 	world._set_floor(Vector2i(19,13),false)

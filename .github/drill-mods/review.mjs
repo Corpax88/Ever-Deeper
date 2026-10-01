@@ -70,8 +70,8 @@ try{
   await command('mods_preview',{resource:'prismite',amount:100000});await shot('preview-'+viewport.width);await tap('treasury_close');await ready();
  }
  await command('mods_mining',{mod:'bore_rush'});await delay(400);
- const before=(await state()).drill_mods.player;const bore=await point('hud_mine');await touch('touchStart',bore);await delay(1400);await shot('bore-moving');await touch('touchEnd',bore);
- s=await state();check('bore-advances',s.drill_mods.player[0]>before[0]+40,{});const stopped=s.drill_mods.player;await delay(350);s=await state();check('release-stops-bore',Math.abs(s.drill_mods.player[0]-stopped[0])<2,{});
+ const before=(await state()).drill_mods.player;const bore=await point('hud_mine');await touch('touchStart',bore);await delay(1400);await shot('bore-moving');await touch('touchEnd',bore);await delay(150); // QA state is sampled every 100ms; observe the released frame.
+ s=await state();check('bore-advances',s.drill_mods.player[0]>before[0]+40,{});const stopped=s.drill_mods.player;await delay(350);s=await state();check('release-stops-bore',Math.hypot(s.drill_mods.player[0]-stopped[0],s.drill_mods.player[1]-stopped[1])<2,{stopped,current:s.drill_mods.player});
  for(const fixture of [{site:false,dx:1,dy:0},{site:false,dx:0,dy:1},{site:true,dx:1,dy:0},{site:true,dx:0,dy:-1}]){
   await command('mods_bore_flow',fixture);await ready();await delay(300);
   const begin=(await state()).drill_mods.player,p=await point('hud_mine'),label=(fixture.site?'boost':'offcentre')+'-'+fixture.dx+'-'+fixture.dy;
