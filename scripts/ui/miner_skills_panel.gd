@@ -141,6 +141,8 @@ func show_map(source: Control) -> void:
 	map_view = load("res://scripts/ui/minimap_overlay.gd").new()
 	plate.add_child(map_view)
 	map_view.z_index = 1
+	map_view.expanded = true
+	map_view.markers = source.markers.duplicate(true)
 	map_view.get_viewport().size_changed.disconnect(map_view._apply_layout)
 	map_view.set_process(false)
 	map_view.set_snapshot(source._phase, source._location_name, source._player_position,

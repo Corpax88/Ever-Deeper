@@ -118,6 +118,7 @@ var commerce_panel
 var station_transaction_fx
 var resource_inventory
 var achievement_toast
+var treasury_goal_panel: Control
 var minimap_overlay
 var quick_tutorial
 var developer_menu
@@ -173,6 +174,9 @@ func _ready() -> void :
 	_install_commerce_panel()
 	_install_station_transaction_fx()
 	_install_minimap()
+	treasury_goal_panel=preload("res://scripts/ui/treasury_goal_panel.gd").new()
+	$HUD.add_child(treasury_goal_panel)
+	treasury_goal_panel.setup(self)
 	_install_quick_tutorial()
 	_install_resource_inventory()
 	_install_miner_skills()
@@ -383,6 +387,7 @@ func _on_developer_command_requested(command: String) -> void :
 		"test_resonance":
 			if phase != "endless": ok = _dev_jump_endless(1)
 			_dev_grant_max_tools_state()
+			endless_world.resonance_drill.dev_override=true
 			endless_world.resonance_drill.set_enabled(true)
 			message = "RESONANCE TEST · mine to charge · next hit blasts a tunnel"
 		"grant_max_tools":
@@ -835,6 +840,8 @@ func _close_inventory() -> void :
 
 
 func _progression_goal() -> Dictionary:
+	var pinned: Dictionary = preload("res://scripts/state/treasury_goals.gd").hud_goal()
+	if not pinned.is_empty(): return pinned
 	var discovery: Dictionary = {}
 	if phase == "endless" and is_instance_valid(endless_world):
 		discovery = endless_world.discovery_goal()
@@ -1098,6 +1105,26 @@ func _input(event: InputEvent) -> void :
 
 
 func _unhandled_input(event: InputEvent) -> void :
+	if is_instance_valid(treasury_goal_panel) and treasury_goal_panel.visible:
+		if event.is_action_pressed("ui_cancel"): treasury_goal_panel.close_panel()
+		get_viewport().set_input_as_handled()
+		return
+	if game_started and not menu_open and not inventory_open and not orientation_guard_active and is_instance_valid(minimap_overlay) and minimap_overlay.visible:
+		var map_tap: bool = (event is InputEventScreenTouch and event.pressed) or (event is InputEventMouseButton and event.pressed and event.button_index==MOUSE_BUTTON_LEFT)
+		if map_tap and minimap_overlay._map_rect.has_point(event.position):
+			_open_miner_skills()
+			if miner_skills_panel.visible: miner_skills_panel.show_map(minimap_overlay)
+			get_viewport().set_input_as_handled()
+			return
+	if game_started and not menu_open and not inventory_open and not orientation_guard_active and phase=="hub" and hub_world.treasury.inside:
+		var tapped: bool = (event is InputEventScreenTouch and event.pressed) or (event is InputEventMouseButton and event.pressed and event.button_index==MOUSE_BUTTON_LEFT)
+		if tapped:
+			var point: Vector2 = hub_world.get_canvas_transform().affine_inverse() * event.position
+			for i in hub_world.treasury.Ledger.keys().size():
+				if Rect2(hub_world.treasury.bay(i)+Vector2(-130,-170),Vector2(260,260)).has_point(point):
+					treasury_goal_panel.open_goal(String(hub_world.treasury.Ledger.keys()[i]))
+					get_viewport().set_input_as_handled()
+					return
 	if orientation_guard_active:
 		get_viewport().set_input_as_handled()
 		return
@@ -1269,6 +1296,7 @@ func _cancel_new_game() -> void :
 
 
 func _start_new_game() -> void :
+	endless_world.resonance_drill.dev_override=false
 	endless_world.resonance_drill.set_enabled(false)
 	tunnel_home_in_progress = false
 	_settle_commerce_before_world_change()
@@ -1369,6 +1397,7 @@ func _update_minimap() -> void :
 	var has_objective: bool = guide_overlay != null and guide_overlay.has_target and guide_overlay.target_camera == camera
 	if has_objective:
 		objective_position = Vector2(guide_overlay.target_world)
+	minimap_overlay.markers = _map_markers()
 	minimap_overlay.set_snapshot(
 		phase,
 		location_name,
@@ -4188,3 +4217,34 @@ func _open_miner_skills() -> void:
 func _close_miner_skills() -> void:
 	miner_skills_panel.close_panel()
 	_continue_from_menu()
+
+func _map_markers() -> Array:
+	var result: Array=[]
+	if phase=="surface":
+		for world_id in WorldCatalog.WORLD_ORDER:
+			if not RunState.is_world_unlocked(world_id): continue
+			var mine_id: String=WorldCatalog.MINE_BY_WORLD[world_id]
+			result.append({"kind":"entrance","position":surface_world._mine_entrance(mine_id)})
+		if surface_world.ore_mountain_hp>0: result.append({"kind":"ore","position":surface_world.MOSS_ORE_MOUNTAIN_POSITION})
+		for id in surface_world.surface_resource_mountains:
+			if surface_world._surface_resource_mountain_unlocked(id) and int(surface_world.surface_resource_mountains[id].hp)>0:
+				result.append({"kind":"ore","position":surface_world.SURFACE_RESOURCE_MOUNTAIN_CONFIGS[id].anchor})
+	elif phase=="mine":
+		result.append({"kind":"entrance","position":Vector2(float(mine_world.mine.entrance.x),float(mine_world.mine.entrance.y))})
+		if RunState.is_depth_entrance_discovered(mine_world.mine_id): result.append({"kind":"entrance","position":mine_world.depth_entrance})
+		for cell in mine_world.resource_guide_cells:
+			if not mine_world.blocks.has(cell): continue
+			for step in [Vector2i.UP,Vector2i.DOWN,Vector2i.LEFT,Vector2i.RIGHT]:
+				if not mine_world.blocks.has(cell+step):
+					result.append({"kind":"ore","position":mine_world._cell_center(cell)})
+					break
+	elif phase=="depth":
+		result.append({"kind":"entrance","position":depth_world.depth_entrance})
+		for i in depth_world.rocks.size():
+			if depth_world._rock_is_exposed(i) and not bool(depth_world.rocks[i].get("mined",false)):
+				result.append({"kind":"ore","position":depth_world.rocks[i].position})
+	elif phase=="endless":
+		for node in endless_world.resources:
+			if not bool(node.get("mined",false)) and endless_world._is_floor(Vector2i(node.cell)):
+				result.append({"kind":"ore","position":node.position})
+	return result.slice(0,128)

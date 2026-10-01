@@ -4,6 +4,7 @@ const NODE_SIZE: Vector2 = Vector2(136, 124)
 const DROP_EXTENT: float = 32.0
 const RARE_DROP_EXTENT: float = 38.0
 const BOUNDS: Dictionary = {
+	"res://assets/treasury/gold-ingot-v1.png": Rect2(108,53,1317,927),
 	"res://assets/drops/ambercore-drop.png": Rect2(23, 24, 75, 77),
 	"res://assets/drops/astralite-drop.png": Rect2(25, 14, 83, 97),
 	"res://assets/drops/burrowsteel-drop.png": Rect2(24, 19, 81, 86),

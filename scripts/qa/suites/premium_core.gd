@@ -186,6 +186,36 @@ func _check_deep_excavation() -> void:
 func _check_deep_treasury() -> void:
 	var ledger: GDScript = load("res://scripts/state/treasury_state.gd")
 	var original: Dictionary = RunState.serialize()
+	var stack: GDScript=load("res://scripts/world/treasury_stack.gd")
+	var goals: GDScript=load("res://scripts/state/treasury_goals.gd")
+	_check(stack.filled(0)==0 and stack.filled(1)==1 and stack.filled(100000)==180 and stack.filled(999999999)==180,"Empty, tiny, full and legacy amounts have bounded visible stacks")
+	var partition_ok: bool=true
+	var unique: Dictionary={}
+	for slot in stack.COUNT:
+		var boundary: int=stack.boundary(slot)
+		partition_ok=partition_ok and stack.filled(boundary)==slot+1 and (slot==179 or stack.filled(boundary+1)==slot+2)
+		unique[stack.offset(slot)]=true
+	_check(partition_ok and unique.size()==180,"Every one of 180 integer boundaries advances exactly once into a unique slot")
+	RunState.victory=true
+	RunState.treasury_goals=goals.clean({})
+	RunState.treasury_totals={"wallet_gold":99999}
+	_check(not goals.claim_resonance(),"Incomplete podium cannot grant mod")
+	RunState.gold=20
+	_check(ledger.land("wallet_gold",20)==1 and RunState.gold==19,"Final landing caps exactly and retains excess currency")
+	_check(goals.claim_resonance() and not goals.claim_resonance() and RunState.treasury_totals.wallet_gold==100000,"Claim grants mod exactly once and preserves full display")
+	goals.pin("wallet_gold")
+	var mod_saved: Dictionary=RunState.serialize()
+	RunState.treasury_goals={}
+	_check(RunState.deserialize(mod_saved) and RunState.treasury_goals.resonance_enabled and RunState.treasury_goals.pinned=="wallet_gold","Claim, enabled state and pinned goal survive save roundtrip")
+	goals.toggle_resonance()
+	_check(not RunState.treasury_goals.resonance_enabled and RunState.treasury_goals.resonance_claimed,"Disabling an earned mod retains ownership")
+	mod_saved.state.erase("treasury_goals")
+	_check(RunState.deserialize(mod_saved) and not RunState.treasury_goals.resonance_claimed and RunState.treasury_goals.pinned=="","Old save gains no ownership or pinned goal")
+	main.endless_world.resonance_drill.dev_override=false
+	main.endless_world.resonance_drill.set_enabled(true)
+	main.endless_world.load_depth(1)
+	_check(not main.endless_world.resonance_drill.enabled,"Loading an unclaimed save clears stale mod activation")
+	RunState.deserialize(original)
 	RunState.treasury_totals={}
 	RunState.cargo=RunState._empty_resource_store()
 	RunState.cargo.stone=80
@@ -205,17 +235,17 @@ func _check_deep_treasury() -> void:
 	legacy.state.erase("deep_events")
 	_check(RunState.deserialize(legacy) and RunState.treasury_totals.is_empty(),"Old schema-3 saves migrate to empty treasury without losing cargo")
 	_check(ledger.clean({"stone":-1,"copper":"900","unknown":5,"wallet_gold":400})=={"wallet_gold":400},"Treasury sanitizer rejects corrupt and unknown counts")
-	_check(ledger.stage(0)==0 and ledger.stage(999)==1 and ledger.stage(1000)==2 and ledger.stage(1999)==2 and ledger.stage(2000)==3 and ledger.stage(1000000)==1001,"Every thousand changes the pile variant without a maximum stage")
+	_check(ledger.stage(0)==0 and ledger.stage(999)==1 and ledger.stage(1000)==2 and ledger.stage(1999)==2 and ledger.stage(2000)==3 and ledger.stage(1000000)==1001,"Thousand milestones remain accounting celebrations")
 	RunState.treasury_totals.stone=ledger.MAX_TOTAL-2
 	RunState.cargo.stone=50
-	_check(ledger.land("stone",50)==2 and RunState.cargo.stone==48 and RunState.treasury_totals.stone==ledger.MAX_TOTAL,"Overflow cannot destroy undeliverable cargo")
+	_check(ledger.land("stone",50)==0 and RunState.cargo.stone==50 and RunState.treasury_totals.stone==ledger.MAX_TOTAL-2,"Legacy overflow above the new goal is preserved and further cargo is retained")
 	RunState.deserialize(original)
 	main._dev_jump_hub()
 	await main.get_tree().process_frame
 	var hub: Node=main.hub_world
 	var room: Node=hub.treasury
 	RunState.cargo=RunState._empty_resource_store()
-	RunState.cargo.stone=80
+	RunState.cargo.stone=8000
 	RunState.gold=200
 	RunState.treasury_totals={}
 	hub.set_process(false)
@@ -233,20 +263,20 @@ func _check_deep_treasury() -> void:
 	_check(flight.motes.size()==1 and float(flight.motes[0].delay)==0.0,"Continuous donation launches single visible items without bursts")
 	_check(float(flight.duration)==float(flight.motes[0].travel),"Accounting coincides with the visible item landing")
 	await _treasury_capture("02-airborne")
-	_check(room.particles.size()>0 and RunState.cargo.stone==80 and RunState.gold==200,"Airborne packets reserve without consuming cargo or gold")
+	_check(room.particles.size()>0 and RunState.cargo.stone==8000 and RunState.gold==200,"Airborne packets reserve without consuming cargo or gold")
 	room.leave()
-	_check(room.particles.is_empty() and room.batches.is_empty() and RunState.cargo.stone==80 and RunState.gold==200,"Exit cancels all undelivered packets without debit")
+	_check(room.particles.is_empty() and room.batches.is_empty() and RunState.cargo.stone==8000 and RunState.gold==200,"Exit cancels all undelivered packets without debit")
 	room.enter()
 	hub.player.global_position=room.ZONE
 	room.start()
 	hub.player.control_enabled=false
 	room.tick(4.0)
-	_check(room.particles.is_empty() and RunState.cargo.stone==80,"Menu pauses launch and accounting")
+	_check(room.particles.is_empty() and RunState.cargo.stone==8000,"Menu pauses launch and accounting")
 	hub.player.control_enabled=true
 	for i in 22: room.tick(0.1)
 	await _treasury_capture("03-partial")
 	var banked: int=int(RunState.treasury_totals.get("stone",0))
-	_check(banked>0 and banked<80 and int(RunState.cargo.stone)+banked==80,"Long delivery has meaningful partial progress and conserves total")
+	_check(banked>0 and banked<8000 and int(RunState.cargo.stone)+banked==8000,"Long delivery has meaningful partial progress and conserves total")
 	room.leave()
 	var pending_cargo: int=RunState.cargo.stone
 	for i in 100: room.tick(0.1)
@@ -255,7 +285,7 @@ func _check_deep_treasury() -> void:
 	hub.player.global_position=room.ZONE
 	room.start()
 	for i in 500: room.tick(0.1)
-	_check(RunState.cargo.stone==0 and RunState.gold==0 and int(RunState.treasury_totals.stone)==80 and int(RunState.treasury_totals.wallet_gold)==200,"Reentry delivers the remainder exactly once including wallet")
+	_check(RunState.cargo.stone==0 and RunState.gold==0 and int(RunState.treasury_totals.stone)==8000 and int(RunState.treasury_totals.wallet_gold)==200,"Reentry delivers the remainder exactly once including wallet")
 	_check(not room.delivering and room.particles.is_empty(),"Completed donation leaves no continuing particle work")
 	await _treasury_capture("04-complete")
 	room.stop()

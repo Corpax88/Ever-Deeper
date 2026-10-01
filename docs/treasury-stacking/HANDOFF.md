@@ -1,0 +1,15 @@
+# Treasury stacking / goals / map — DEV15.38 candidate
+
+Mats approved the row-by-row, layer-by-layer landing video and explicitly said 100 was illustrative: use enough pieces to fill the podium at sensible hero-relative scale. Continue and publish DEV after real graphical/input/save gates; existing public upload authorization remains applicable. LIVE promotion is separate.
+
+Voice handoff: Ever-Deeper-godkjent-skattekammer-stabling.txt (Library aba47f7ac79481918aa6812e09c7922c); approved motion reference skattekammer-stabling.mp4 (485cba5819b48191b1bf513bca0c7b49). No second mockup approval needed. Keep approved hero/camera/world size and original material forms. New single transparent gold ingot asset generated for this implementation, original generated exec-4f7d33a3-6594-4580-98a8-0c09ae0561d6.png; fixed alpha bounds recorded in ResourceScale. Other resource art reused unchanged.
+
+Implemented: 180 fixed slots (6 columns, 5 rows, 6 layers); every flying piece ends at its persistent slot; same-material landing order preserved within continuous mixed-resource stream. Small deliveries visibly start a partial slot and later deliveries fill it; displayed pieces and actual integer balances stay separate. 100000 is provisional collection goal, not final economy balance. Excess stays in inventory; legacy deposited totals above goal remain intact. New state fields are additive and sanitized.
+
+Full currency podium grants existing Resonance mod via actual tap, with preview and owned on/off toggle; no resource/pile removal (trophy behavior was undecided, no destructive assumption). Save/reload retains claim and pin; DEV test override is separate and new game clears it. All 26 material goals plus currency can be pinned with delivered/held progress and source hints. Only Resonance effect is defined; the other 26 podium mod definitions remain unprovided, so this milestone does not invent or claim all mod rewards.
+
+Minimap now shows actual exposed resources/entrances and opens Map on tap. Map retains existing approved Skills art; four biome images, three blurred/darkened until unlocked. Underground markers follow actual world visibility rules.
+
+Validation in progress: local input/premium-core passed, including exact cap, all 180 boundaries, unique slots, claim once, saved enable/pin, legacy migration, and stale mod reset. Native gold/material stacks and goal/map panels inspected. Final Mac graphical touch/mining/save tests and immutable DEV publication pending. Public remains DEV15.37 until receipt is recorded here. Known invariant debt: QA flag order or arguments changed; not counted as passing. Physical iPhone not verified. FPS investigation stays parked.
+
+Canonical source base d7c42c367513ede867afefa34c795959fe1d536b; main is publication carrier only. Build reuses immutable 15.28 package while overlaying all current owners and preserving payload parity. Do not rebuild historical main. Workflow: .github/workflows/treasury-stacking.yml; focused browser suite .github/treasury-stacking/review.mjs.

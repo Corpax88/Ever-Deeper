@@ -1,6 +1,7 @@
 extends Node2D
 ## Visual packets are reservations only; landing is the sole accounting boundary.
 const Ledger = preload("res://scripts/state/treasury_state.gd")
+const Stack = preload("res://scripts/world/treasury_stack.gd")
 const Scale = preload("res://scripts/world/resource_scale.gd")
 const SIZE: Vector2 = Vector2(4000, 3200)
 const ZONE: Vector2 = Vector2(2000, 1600)
@@ -64,7 +65,7 @@ func texture(path: String) -> Texture2D:
 
 func material(kind: String) -> Texture2D:
 	if kind == Ledger.WALLET:
-		return texture("res://assets/ui/gold-bars-v1.png") if ResourceLoader.exists("res://assets/ui/gold-bars-v1.png") else texture(RunState._resource_drop_texture_path("gold"))
+		return texture("res://assets/treasury/gold-ingot-v1.png")
 	return texture(RunState._resource_drop_texture_path(kind))
 
 func bay(index: int) -> Vector2:
@@ -148,7 +149,7 @@ func start() -> void:
 	launch_order.clear()
 	# One bounded queue entry per resource, even with millions of items.
 	for kind in Ledger.keys():
-		var available: int = mini(Ledger.available(kind), Ledger.MAX_TOTAL - int(RunState.treasury_totals.get(kind,0)))
+		var available: int = mini(Ledger.available(kind), maxi(0, Stack.GOAL - int(RunState.treasury_totals.get(kind,0))))
 		if available > 0:
 			batches.append({"kind":kind,"amount":available,"portion":clampi(ceili(float(available)/8.0),1,250)})
 	if batches.is_empty(): return
@@ -204,10 +205,11 @@ func tick(delta: float) -> void:
 		for pending in particles:
 			if String(pending.kind)==kind: reserved += int(pending.amount)
 		var projected: int = int(RunState.treasury_totals.get(kind,0)) + reserved
-		var to_boundary: int = 1000 - projected % 1000
-		var amount: int = mini(mini(int(batch.amount),int(batch.portion)),to_boundary)
+		var slot: int = Stack.next_slot(projected)
+		var to_boundary: int = Stack.boundary(slot) - projected
+		var amount: int = mini(int(batch.amount),to_boundary)
 		var packet: Dictionary = {"kind":kind,"amount":amount,"milestone":amount==to_boundary,
-			"origin":hub.player.global_position+Vector2(0,-38),"target":bay(Ledger.keys().find(kind))+Vector2(0,-17),"age":0.0}
+			"origin":hub.player.global_position+Vector2(0,-38),"target":bay(Ledger.keys().find(kind))+Stack.offset(slot),"slot":slot,"extent":Stack.extent(kind,slot,projected+amount),"age":0.0}
 		_shape_flight(packet)
 		particles.append(packet)
 		batch.amount = int(batch.amount)-amount
@@ -305,6 +307,7 @@ func _build_visuals() -> void:
 		contents.scale = Vector2.ONE
 		group.add_child(contents)
 		display_nodes.append(contents)
+		contents.draw.connect(_draw_stack.bind(i))
 	queue_redraw()
 
 func refresh_piles() -> void:
@@ -314,37 +317,18 @@ func refresh_piles() -> void:
 		var amount: int = int(RunState.treasury_totals.get(kind,0))
 		if last_totals.get(kind,-1) == amount: continue
 		last_totals[kind] = amount
-		var parent_node: Node2D = display_nodes[i]
-		for child in parent_node.get_children():
-			parent_node.remove_child(child)
-			child.queue_free()
-		var level: int = Ledger.stage(amount)
-		if level == 0: continue
-		var tier: int = level-1
-		var growth: float = float(amount % 1000)/1000.0
-		if tier == 0:
-			var count: int = 1+mini(6,int(growth*7.0))
-			var spread: float = lerpf(18.0,32.0,growth)
-			var size: float = lerpf(34.0,48.0,growth)
-			for item in count:
-				var offset: Vector2 = Vector2(0,-32)
-				if item > 0: offset += Vector2.from_angle(float(item)*2.39996)*sqrt(float(item))*spread*0.6
-				var sprite: Sprite2D = _sprite(material(kind),bay(i)+offset,Vector2.ONE*size,parent_node)
-				Scale.fit(sprite,Vector2.ONE*size)
-		else:
-			var tex: Texture2D = texture("res://assets/treasury/upgrades/%s-%d.png" % [kind,mini(tier,3)])
-			# Authored material-specific forms. Later thousands rearrange a bounded hoard.
-			var arrangement: int = maxi(0,tier-3) % 6
-			var copies: int = 1+arrangement
-			for item in copies:
-				var offset: Vector2 = Vector2(0,-48)
-				if copies > 1:
-					offset += Vector2.from_angle(float(item)*TAU/float(copies)-PI*0.5)*Vector2(43,25)
-				var extent: float = lerpf(156.0,188.0,growth) if copies == 1 else lerpf(108.0,126.0,growth)
-				var sprite: Sprite2D = _sprite(tex,bay(i)+offset,Vector2.ONE*extent,parent_node)
-				if tex != null: Scale.fit(sprite,Vector2.ONE*extent)
+		display_nodes[i].queue_redraw()
 	queue_redraw()
 	label_canvas.queue_redraw()
+
+func _draw_stack(index: int) -> void:
+	var kind: String = String(Ledger.keys()[index])
+	var amount: int = int(RunState.treasury_totals.get(kind,0))
+	var tex: Texture2D = material(kind)
+	if tex == null: return
+	for slot in Stack.filled(amount):
+		var at: Vector2 = bay(index) + Stack.offset(slot)
+		display_nodes[index].draw_texture_rect(tex,Scale.draw_rect(tex,at,Stack.extent(kind,slot,amount)),false)
 
 func _update_flash_tints() -> void:
 	for i in display_nodes.size():
@@ -375,7 +359,7 @@ func _draw_labels() -> void:
 		_steel_text(label,at,18)
 		var amount: int = int(RunState.treasury_totals.get(kind,0))
 		if amount > 0:
-			var value: String = str(amount) if amount < 1000000 else String.num_scientific(float(amount))
+			var value: String = "%d / %d" % [mini(amount,Stack.GOAL),Stack.GOAL]
 			_steel_text(value,at+Vector2(0,18),16)
 
 func _shape_flight(packet: Dictionary) -> void:
@@ -398,14 +382,14 @@ func _draw_particles() -> void:
 			var age: float = float(packet.age)-float(mote.delay)
 			if age < 0.0 or age >= float(mote.travel): continue
 			var t: float = pow(clampf(age/float(mote.travel),0.0,1.0),float(mote.ease))
-			var end: Vector2 = target+Vector2(mote.offset)
+			var end: Vector2 = target
 			var control: Vector2 = origin.lerp(end,0.5)+Vector2(mote.bend)
 			var at: Vector2 = (1-t)*(1-t)*origin+2*(1-t)*t*control+t*t*end
-			var extent: float = float(mote.size)
-			particle_canvas.draw_texture_rect(tex,Scale.draw_rect(tex,at,Vector2.ONE*extent),false)
+			var extent: Vector2 = (Vector2.ONE*float(mote.size)).lerp(Vector2(packet.extent),smoothstep(0.65,1.0,t))
+			particle_canvas.draw_texture_rect(tex,Scale.draw_rect(tex,at,extent),false)
 
 func snapshot() -> Dictionary:
-	return {"active_kind":active_kind,"packet_kinds":particles.map(func(p: Dictionary): return p.kind),"upgrades":upgrades,"flashes":upgrade_flashes.duplicate(),"camera_zoom":[hub.player.camera.zoom.x,hub.player.camera.zoom.y],"camera_center":[hub.player.camera.get_screen_center_position().x,hub.player.camera.get_screen_center_position().y],"zone":[ZONE.x,ZONE.y],"player":[hub.player.global_position.x,hub.player.global_position.y],"circular":true,"walk_through":true,"inside":inside,"delivering":delivering,"packets":particles.size(),"remaining_batches":batches.size(),"landings":landing_count,"cancelled":cancelled_count,"totals":RunState.treasury_totals.duplicate(true),"wallet":RunState.gold,"cargo":RunState.cargo.duplicate(true),"bay_count":Ledger.keys().size()}
+	return {"stack_capacity":Stack.COUNT,"stack_slots":Ledger.keys().map(func(k): return Stack.filled(int(RunState.treasury_totals.get(k,0)))),"packet_slots":particles.map(func(p): return {"kind":p.kind,"slot":p.slot,"target":[p.target.x,p.target.y],"extent":[p.extent.x,p.extent.y]}),"active_kind":active_kind,"packet_kinds":particles.map(func(p: Dictionary): return p.kind),"upgrades":upgrades,"flashes":upgrade_flashes.duplicate(),"camera_zoom":[hub.player.camera.zoom.x,hub.player.camera.zoom.y],"camera_center":[hub.player.camera.get_screen_center_position().x,hub.player.camera.get_screen_center_position().y],"zone":[ZONE.x,ZONE.y],"player":[hub.player.global_position.x,hub.player.global_position.y],"circular":true,"walk_through":true,"inside":inside,"delivering":delivering,"packets":particles.size(),"remaining_batches":batches.size(),"landings":landing_count,"cancelled":cancelled_count,"totals":RunState.treasury_totals.duplicate(true),"wallet":RunState.gold,"cargo":RunState.cargo.duplicate(true),"bay_count":Ledger.keys().size()}
 
 
 func specimen(kind: String) -> Texture2D:

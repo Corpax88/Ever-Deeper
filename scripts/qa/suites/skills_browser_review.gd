@@ -201,6 +201,13 @@ func _frame() -> void:
 		"hud_guide": _bounds(main.premium_hud.guide_button),
 		"hud_mole": _bounds(main.get_node("CompanionInterface").button),
 		"mole_close": _bounds(main.get_node("CompanionInterface").journal.content.get_node("CloseJournal"))}
+	var goal_panel: Control=main.treasury_goal_panel
+	bounds["treasury_pin"]=_bounds(goal_panel.pin_button)
+	bounds["treasury_claim"]=_bounds(goal_panel.claim_button)
+	bounds["treasury_close"]=_bounds(goal_panel.close_button)
+	bounds["minimap"]=_rect_bounds(main.minimap_overlay._map_rect)
+	var gold_at: Vector2=main.hub_world.get_canvas_transform()*(main.hub_world.treasury.bay(26)+Vector2(0,-30))
+	bounds["gold_podium"]=[gold_at.x-12,gold_at.y-12,24,24]
 	for row in panel.rows + [panel.stamina_row]:
 		bounds["stat_" + String(row.node.name).to_lower()] = _bounds(row.node)
 	for i in 4: bounds[["inventory", "skills", "map", "settings"][i]] = _bounds(panel.nav[i])
@@ -256,6 +263,9 @@ func _frame() -> void:
 	state["resonance"]["dug"]=RunState.endless_dug_cells(main.endless_world.current_depth).size()
 	state["resonance"]["variant"]=String(RunState.starforge_variant)
 	state["treasury"]=main.hub_world.treasury.snapshot()
+	state["treasury_goal"]={"open":goal_panel.visible,"kind":goal_panel.kind,"claim_disabled":goal_panel.claim_button.disabled,"claim_text":goal_panel.claim_button.text,"saved":RunState.treasury_goals.duplicate(true),"hud":main._progression_goal()}
+	state["actual_map"]={"markers":main._map_markers().size(),"known":WorldCatalog.WORLD_ORDER.map(func(w): return RunState.is_world_unlocked(w)),"expanded":is_instance_valid(panel.map_view) and panel.map_view.visible}
+
 	state["deep_events"]=main.endless_world.deep_events.snapshot()
 	state["hub_context"]=main.hub_context
 	state["hud_goal_visible"]=main.premium_hud.progression_goal_panel.visible
@@ -797,14 +807,33 @@ func _treasury_command(data: Dictionary) -> void:
 			await main.get_tree().process_frame
 			RunState.treasury_totals={}
 			RunState.cargo=RunState._empty_resource_store()
-			RunState.cargo.stone=800
-			RunState.cargo.copper=400
-			RunState.cargo.echo_crystal=180
-			RunState.cargo.prismite=240
-			RunState.cargo.starshard=320
-			RunState.gold=2000
+			RunState.cargo.stone=8000
+			RunState.cargo.copper=4000
+			RunState.cargo.echo_crystal=1800
+			RunState.cargo.prismite=2400
+			RunState.cargo.starshard=3200
+			RunState.gold=20000
 			main.hub_world.restore_position(main.hub_world.TREASURY_DOOR+Vector2(-65,0))
 			main.hub_world._refresh_backend_state()
+		"treasury_map_first":
+			if room.inside: room.leave()
+			main._dev_jump_surface()
+			RunState.area_unlocked=false
+			RunState.emberdeep_unlocked=false
+			RunState.fourth_unlocked=false
+			main._update_minimap()
+		"treasury_map_all":
+			main._dev_seed_victory_state()
+			main._update_minimap()
+		"treasury_earned_drill":
+			_require(bool(RunState.treasury_goals.get("resonance_claimed",false)),"mod earned through actual podium")
+			main.endless_world.resonance_drill.dev_override=false
+			main._dev_jump_endless(1)
+			main._dev_grant_max_tools_state()
+			var mole: Node=main.get_node("CompanionInterface").active_mole()
+			mole.autonomous_enabled=false
+			mole.recall()
+			main.endless_world.player.set_facing(Vector2.DOWN)
 		"treasury_door":
 			main.hub_world.restore_position(main.hub_world.TREASURY_DOOR+Vector2(-65,0))
 		"treasury_zone":

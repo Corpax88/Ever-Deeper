@@ -1,3 +1,5 @@
+Current task: [approved treasury stacking, goals and map DEV15.38](docs/treasury-stacking/HANDOFF.md). Canonical base d7c42c3, QA and immutable DEV publication pending. User approved motion reference; 100 pieces was illustrative. Other mod definitions remain unspecified.
+
 Current task: [approved hero-relative world scale DEV15.37](docs/world-scale/HANDOFF.md). Canonical base977bca3; final visual/browser gates and publication pending.
 
 Current task: [Resonance drill DEV15.34 prototype](docs/resonance-drill/HANDOFF.md). Approved concept; implement/test/publish DEV. Canonical base DEV15.33 f522b4f.

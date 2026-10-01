@@ -1,11 +1,12 @@
 extends Node2D
-## DEV opt-in prototype. Charge comes only from actual hero mining hits.
+## Earned treasury mod with a separate DEV test override. Charge comes only from actual hero mining hits.
 const CHARGE_SECONDS: float = 4.0
 const ROWS: int = 12
 const HALF_WIDTH: int = 2
 const ROW_TIME: float = 0.07
 const TAIL: float = 0.5
 var world: Node2D
+var dev_override: bool = false
 var enabled: bool = false
 var charge: float = 0.0
 var age: float = -1.0

@@ -7,6 +7,9 @@ const GOLD: = Color("e9c86d")
 const INK: = Color("07100b")
 const MAP_FILL: = Color(0.025, 0.055, 0.04, 0.16)
 
+var expanded: bool = false
+var markers: Array = []
+var _biome_cards: Array[Control] = []
 var _phase: = "surface"
 var _location_name: = "SURFACE"
 var _player_position: = Vector2.ZERO
@@ -119,10 +122,26 @@ func _draw() -> void :
 	draw_string(font, _map_rect.position + Vector2(13, 18), _location_name, HORIZONTAL_ALIGNMENT_LEFT, _map_rect.size.x - 26.0, title_size, Color(GOLD, 0.76))
 	var content: = Rect2(_map_rect.position + Vector2(10, 27), _map_rect.size - Vector2(20, 37))
 	draw_rect(content, MAP_FILL, true)
+	if expanded:
+		content.position.y+=116
+		content.size.y=maxf(30,content.size.y-144)
 	var fitted: = _fit_world_rect(content.grow(-4.0))
 	draw_rect(fitted, Color(0.09, 0.12, 0.08, 0.12), true)
 	draw_rect(fitted, Color(GOLD, 0.18), false, 1.0)
-	_draw_ambient_sparks(fitted)
+	if expanded:
+		_draw_biome_cards()
+		var legend_y: float = _map_rect.end.y-15
+		draw_circle(Vector2(_map_rect.position.x+22,legend_y-5),4,GOLD)
+		draw_string(font,Vector2(_map_rect.position.x+34,legend_y),"You",HORIZONTAL_ALIGNMENT_LEFT,-1,14,Color.WHITE)
+		draw_circle(Vector2(_map_rect.position.x+89,legend_y-5),4,Color("72dacf"))
+		draw_string(font,Vector2(_map_rect.position.x+101,legend_y),"Ore",HORIZONTAL_ALIGNMENT_LEFT,-1,14,Color.WHITE)
+		draw_rect(Rect2(_map_rect.position.x+151,legend_y-10,9,9),Color("b8a7ef"),false,2)
+		draw_string(font,Vector2(_map_rect.position.x+168,legend_y),"Entrance",HORIZONTAL_ALIGNMENT_LEFT,-1,14,Color.WHITE)
+		draw_string(font,Vector2(_map_rect.position.x+255,legend_y),"Diamond: objective",HORIZONTAL_ALIGNMENT_LEFT,-1,14,Color("a8e3bc"))
+	for marker in markers:
+		var at: Vector2 = _world_to_map(Vector2(marker.position),fitted)
+		if String(marker.kind)=="entrance": draw_rect(Rect2(at-Vector2.ONE*3,Vector2.ONE*6),Color("b8a7ef"),false,1.5)
+		else: draw_circle(at,2.5,Color("72dacf"))
 	if _view_rect.has_area():
 		var view_on_map: = _world_rect_to_map(_view_rect, fitted)
 		draw_rect(view_on_map, Color(0.9, 0.82, 0.52, 0.24), false, 1.0)
@@ -188,3 +207,42 @@ func _world_rect_to_map(world_rect: Rect2, map_rect: Rect2) -> Rect2:
 	var start: = _world_to_map(world_rect.position, map_rect)
 	var finish: = _world_to_map(world_rect.end, map_rect)
 	return Rect2(start, finish - start)
+
+func _draw_biome_cards() -> void:
+	if _biome_cards.is_empty():
+		var blur: Shader = Shader.new()
+		blur.code = "shader_type canvas_item; uniform float hidden = 0.0; void fragment(){ vec4 c=texture(TEXTURE,UV); if(hidden>0.5){ c=vec4(0.0); for(int x=-2;x<=2;x++){for(int y=-2;y<=2;y++){c+=texture(TEXTURE,clamp(UV+vec2(float(x),float(y))*0.035,vec2(0.0),vec2(1.0)))/25.0;}} float grey=dot(c.rgb,vec3(0.3,0.59,0.11));c.rgb=mix(c.rgb,vec3(grey),0.65)*0.3; } COLOR=c; }"
+		for world_id in WorldCatalog.WORLD_ORDER:
+			var card: Control = Control.new()
+			card.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			add_child(card)
+			var picture: TextureRect=TextureRect.new()
+			picture.name="Picture"
+			picture.texture=load(WorldCatalog.SURFACE_LAYOUTS[world_id].entrance_asset)
+			picture.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+			picture.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			picture.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			var veil: ShaderMaterial=ShaderMaterial.new()
+			veil.shader=blur
+			picture.material=veil
+			card.add_child(picture)
+			var label: Label=Label.new()
+			label.name="Name"
+			label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+			label.add_theme_font_size_override("font_size",13)
+			label.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			card.add_child(label)
+			_biome_cards.append(card)
+	for i in _biome_cards.size():
+		var id: String=WorldCatalog.WORLD_ORDER[i]
+		var known: bool = id=="mossvein" or RunState.is_world_unlocked(id)
+		var card: Control=_biome_cards[i]
+		var width: float=(_map_rect.size.x-30)/4
+		card.position=_map_rect.position+Vector2(10+i*width,27)
+		card.size=Vector2(width-5,108)
+		card.get_node("Picture").size=Vector2(width-5,77)
+		card.get_node("Picture").material.set_shader_parameter("hidden",0.0 if known else 1.0)
+		var label: Label=card.get_node("Name")
+		label.position=Vector2(0,76)
+		label.size=Vector2(width-5,32)
+		label.text=id.capitalize() if known else "UNDISCOVERED"

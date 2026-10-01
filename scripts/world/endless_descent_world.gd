@@ -342,6 +342,7 @@ func set_active(enabled: bool, entering: bool = false) -> void :
 
 
 func load_depth(next_depth: int, next_arrival: String = "from_above") -> bool:
+	resonance_drill.set_enabled(resonance_drill.dev_override or (bool(RunState.treasury_goals.get("resonance_claimed",false)) and bool(RunState.treasury_goals.get("resonance_enabled",false))))
 	resonance_drill.reset()
 	if next_depth < 0:
 		return false

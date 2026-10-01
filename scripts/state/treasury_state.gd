@@ -29,7 +29,7 @@ static func stage(amount: int) -> int:
 static func land(kind: String, requested: int) -> int:
 	if kind not in keys() or requested <= 0: return 0
 	var stored: int = int(RunState.treasury_totals.get(kind, 0))
-	var amount: int = mini(mini(requested, available(kind)), MAX_TOTAL - stored)
+	var amount: int = mini(mini(requested, available(kind)), maxi(0, preload("res://scripts/world/treasury_stack.gd").GOAL - stored))
 	if amount <= 0: return 0
 	# Debit and credit occur in one synchronous operation before save notification.
 	if kind == WALLET: RunState.gold -= amount

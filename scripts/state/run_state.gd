@@ -150,6 +150,7 @@ var _miner_level_cache: Dictionary = {}
 
 var overhaul_progress: Dictionary = {}
 var treasury_totals: Dictionary = {}
+var treasury_goals: Dictionary = preload("res://scripts/state/treasury_goals.gd").clean({})
 var treasury_inside: bool = false
 var deep_events: Dictionary = {}
 
@@ -2546,6 +2547,7 @@ func serialize() -> Dictionary:
 			"miner_skills": MinerSkills.clean(miner_skills),
 			"miner_skills_balance": MinerSkills.BALANCE_REVISION,
 			"treasury": treasury_totals.duplicate(true),
+			"treasury_goals": preload("res://scripts/state/treasury_goals.gd").clean(treasury_goals),
 			"treasury_inside": treasury_inside,
 			"deep_events": deep_events.duplicate(true),
 			"gold": gold,
@@ -2629,6 +2631,7 @@ func deserialize(raw: Variant) -> bool:
 	var source: Dictionary = raw.state
 	_apply_defaults(false)
 	overhaul_progress = _sanitize_overhaul(source.get("overhaul", {}))
+	treasury_goals = preload("res://scripts/state/treasury_goals.gd").clean(source.get("treasury_goals",{}))
 	treasury_totals = preload("res://scripts/state/treasury_state.gd").clean(source.get("treasury", {}))
 	treasury_inside = source.get("treasury_inside", false) == true and String(Dictionary(source.get("location", {})).get("scene", "")) == "hub"
 	deep_events = preload("res://scripts/world/deep_events.gd").clean(source.get("deep_events", {}))
@@ -2979,6 +2982,7 @@ func _flush_queued_autosave() -> void :
 
 func _apply_defaults(emit_change: bool = true) -> void :
 	treasury_totals = {}
+	treasury_goals = preload("res://scripts/state/treasury_goals.gd").clean({})
 	treasury_inside = false
 	deep_events = {}
 	miner_skills = MinerSkills.defaults()
