@@ -1423,7 +1423,7 @@ func _update_minimap() -> void :
 	var map_world: Node = mine_world if phase == "mine" else depth_world if phase == "depth" else endless_world
 	exploration_map.update(map_world, phase, active_player.global_position)
 	minimap_overlay.cartography = exploration_map
-	minimap_overlay.markers = _map_markers().filter(func(marker): return exploration_map.discovered(Vector2(marker.position)))
+	minimap_overlay.markers = _map_markers()
 	minimap_overlay.set_snapshot(
 		phase,
 		location_name,
@@ -4273,4 +4273,9 @@ func _map_markers() -> Array:
 		for node in endless_world.resources:
 			if not bool(node.get("mined",false)) and endless_world._is_floor(Vector2i(node.cell)):
 				result.append({"kind":"ore","position":node.position})
+	result = result.filter(func(marker): return exploration_map.discovered(Vector2(marker.position)))
+	var position: Vector2 = _active_player_node().global_position
+	result.sort_custom(func(a,b):
+		if String(a.kind)!=String(b.kind): return String(a.kind)=="entrance"
+		return Vector2(a.position).distance_squared_to(position)<Vector2(b.position).distance_squared_to(position))
 	return result.slice(0,128)

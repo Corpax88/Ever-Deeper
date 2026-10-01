@@ -31,7 +31,6 @@ static func clean(raw: Variant) -> Dictionary:
 			if parts.size()!=2 or not parts[0].is_valid_int() or not parts[1].is_valid_int(): continue
 			if int(parts[0])<0 or int(parts[0])>1024 or int(parts[1])<0 or int(parts[1])>10000000: continue
 			cells[String(cell)] = true
-			if cells.size()>=100000: break
 		result[String(key)] = cells
 		if result.size()>=16: break
 	return result

@@ -1008,7 +1008,18 @@ func _maps_command(data: Dictionary) -> void:
 			main._dev_grant_max_tools_state()
 			main.endless_world.resonance_drill.dev_override=false
 			RunState.treasury_goals.resonance_enabled=false
-			main.endless_world.player.set_facing(Vector2.DOWN)
+			var world: Node=main.endless_world
+			for y in range(2,9):
+				var found: bool=false
+				for x in range(5,35):
+					var cell:=Vector2i(x,y)
+					if world._is_floor(cell) and not world._is_floor(cell+Vector2i.DOWN) and world._position_walkable(world._cell_center(cell)):
+						world.player.global_position=world._cell_center(cell)
+						world._on_player_moved(world.player.global_position)
+						found=true
+						break
+				if found: break
+			world.player.set_facing(Vector2.DOWN)
 		"maps_refresh":
 			main._update_minimap()
 		"maps_save":

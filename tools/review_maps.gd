@@ -62,10 +62,32 @@ func run() -> void:
 	verify(world._break_diggable_cell(target),"excavate real terrain")
 	main._update_minimap()
 	verify(cart.image.get_pixelv(target)!=before and world._is_floor(target),"map updates after excavation")
+	# Excavate a meaningful bent corridor through the actual terrain API.
+	for y in range(4,17):
+		for x in range(14,17): world._break_diggable_cell(Vector2i(x,y))
+		world.player.global_position=world._cell_center(Vector2i(15,y))
+		main._update_minimap()
+	for x in range(16,25):
+		for y in range(14,17): world._break_diggable_cell(Vector2i(x,y))
+		world.player.global_position=world._cell_center(Vector2i(x,15))
+		main._update_minimap()
+	await capture("deep-corridor-mini")
 	main._open_miner_skills()
 	main.miner_skills_panel.show_map(main.minimap_overlay)
 	await capture("deep-map")
 	main._close_miner_skills()
+	var remembered: Dictionary=state.map_explored.endless.duplicate(true)
+	for next_depth in [2,3,4]:
+		var seam: int=(next_depth-world.window_start_depth)*world.DeepLayout.CHUNK_ROWS
+		for row in range(seam-2,seam+3):
+			for col in range(18,21): world._break_diggable_cell(Vector2i(col,row))
+		var point: Vector2=world._cell_center(Vector2i(19,seam+1))
+		world.player.global_position=point
+		world._on_player_moved(point)
+		main._update_minimap()
+	verify(cart.offset.y>0,"Deep streamed window rebased")
+	for key in remembered: verify(state.map_explored.endless.has(key),"retained absolute cell "+key)
+	await capture("deep-rebased-mini")
 	var saved: Dictionary=state.serialize()
 	var known: Dictionary=state.map_explored.duplicate(true)
 	verify(state.deserialize(saved),"load additive map save")
