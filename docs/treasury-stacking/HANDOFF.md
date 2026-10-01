@@ -1,0 +1,35 @@
+# DEV15.38 — published and verified
+
+DEV15.38 is published at https://corpax88.github.io/Ever-Deeper/dev/ and all 27 public hashes verified. Canonical gameplay `5afb6af4bdcf59aa551476218c33be7668b7f012` on `codex/treasury-stacking-20261001`; QA `36846647651` passed input, 414 core checks, 113 browser checks and ordinary WebKit; 57 final images inspected. Publication `ddf0deb312d0ebdd43f11fa9636968c1bceb80e5` / run `36847637116` succeeded; receipt `11154147013`, rollback `11153723737`. LIVE9/Worn9 retained. 180-slot layered stacks, all 27 saved collection goals and source hints, earned Resonance claim/toggle and actual map markers with blurred locked worlds. Other 26 mod effects remain undefined; 100000 is provisional goal balance. No pending jobs or approvals. No physical-iPhone/FPS claim; FPS remains parked; inherited QA flag-order invariant debt remains. Main is publication carrier only; do not rebuild its historical runtime or repeat accepted unchanged QA. See docs/treasury-stacking/HANDOFF.md.
+
+# DEV15.38 — final QA accepted; publication in progress
+
+Canonical gameplay: `5afb6af4bdcf59aa551476218c33be7668b7f012` on `codex/treasury-stacking-20261001`. Final QA run `36846647651` passed input, 414 core checks, 113 actual browser checks and ordinary WebKit startup. All 57 final captured images reviewed, including the pinned Resonance HUD during actual charged mining. Candidate artifact `11153881363`, digest `sha256:f7b353aa5fbc044df6acef54e653a1907603e6e3f602c464438fb7f0dd8326f0`; full evidence `11154070991`. Immutable publication commit `ddf0deb312d0ebdd43f11fa9636968c1bceb80e5`, run `36847637116`.
+
+Implemented 180 visible slots (6 columns × 5 rows × 6 layers), persistent piece-by-piece landings, all 27 collection goals, saved goal pinning/source hints, earned Resonance claim and on/off state, and actual ore/entrance map markers with blurred undiscovered worlds. 100000 is provisional goal balance. Full piles remain after claim. Other 26 mod effects remain undefined; this milestone does not invent them. DEV15.37 hero-relative world scale is retained.
+
+No physical iPhone or FPS claim. Historical invariant check remains known debt (QA flag order or arguments changed). Main is a publication carrier, never the canonical gameplay rebuild source. Earlier failure/pending records below are history, superseded by this header.
+
+---
+
+# Treasury stacking / goals / map — DEV15.38 candidate
+
+Mats approved the row-by-row, layer-by-layer landing video and explicitly said 100 was illustrative: use enough pieces to fill the podium at sensible hero-relative scale. Continue and publish DEV after real graphical/input/save gates; existing public upload authorization remains applicable. LIVE promotion is separate.
+
+Voice handoff: Ever-Deeper-godkjent-skattekammer-stabling.txt (Library aba47f7ac79481918aa6812e09c7922c); approved motion reference skattekammer-stabling.mp4 (485cba5819b48191b1bf513bca0c7b49). No second mockup approval needed. Keep approved hero/camera/world size and original material forms. New single transparent gold ingot asset generated for this implementation, original generated exec-4f7d33a3-6594-4580-98a8-0c09ae0561d6.png; fixed alpha bounds recorded in ResourceScale. Other resource art reused unchanged.
+
+Implemented: 180 fixed slots (6 columns, 5 rows, 6 layers); every flying piece ends at its persistent slot; same-material landing order preserved within continuous mixed-resource stream. Small deliveries visibly start a partial slot and later deliveries fill it; displayed pieces and actual integer balances stay separate. 100000 is provisional collection goal, not final economy balance. Excess stays in inventory; legacy deposited totals above goal remain intact. New state fields are additive and sanitized.
+
+Full currency podium grants existing Resonance mod via actual tap, with preview and owned on/off toggle; no resource/pile removal (trophy behavior was undecided, no destructive assumption). Save/reload retains claim and pin; DEV test override is separate and new game clears it. All 26 material goals plus currency can be pinned with delivered/held progress and source hints. Only Resonance effect is defined; the other 26 podium mod definitions remain unprovided, so this milestone does not invent or claim all mod rewards.
+
+Minimap now shows actual exposed resources/entrances and opens Map on tap. Map retains existing approved Skills art; four biome images, three blurred/darkened until unlocked. Underground markers follow actual world visibility rules.
+
+Validation in progress: local input/premium-core passed, including exact cap, all 180 boundaries, unique slots, claim once, saved enable/pin, legacy migration, and stale mod reset. Native gold/material stacks and goal/map panels inspected. Final Mac graphical touch/mining/save tests and immutable DEV publication pending. Public remains DEV15.37 until receipt is recorded here. Known invariant debt: QA flag order or arguments changed; not counted as passing. Physical iPhone not verified. FPS investigation stays parked.
+
+Canonical source base d7c42c367513ede867afefa34c795959fe1d536b; main is publication carrier only. Build reuses immutable 15.28 package while overlaying all current owners and preserving payload parity. Do not rebuild historical main. Workflow: .github/workflows/treasury-stacking.yml; focused browser suite .github/treasury-stacking/review.mjs.
+
+Touch correction: initial Mac756a551/run36844475450 and native actual touch caught MovementPad consuming podium presses. Main now observes short release gestures before GUI consumption and rejects dragging, long holds, canceled touches and HUD overlap. Source a882f16d5b28fe3f5416c75aa501d651a618f90b / run36844821644 is testing. Native final five checks pass: drag remains movement, real podium tap opens, earned claim, actual minimap taps for all/first worlds. The external native driver uses viewport-to-screen transform; initial map-driver coordinate failure was corrected without a production change.
+
+Final QA source009cb6409fd46d00626e78d4cacf2667c5cefd0c /36845509494 attempt2: browser touch/claim/toggle/save/map/earned mining passed; ordinary WebKit and final artifact pending. Earlier9368c81 probe incorrectly assumed Surface had an active field; corrected to common Node visibility/process contract. This is QA-only, verified byte parity against native input-reviewed game. First attempt of009cb hit a transient Godot headless dummy texture initialization error in unchanged Skills art; local input passed and clean retry passed core/browser. No production graphics changed for this retry.
+
+Visual gate caught a real live-HUD conflict in009cb: RunState.changed refreshed the HUD through its own GuideDirector, briefly replacing the pinned goal with the default relic task during mining. Fix5afb6af4bdcf59aa551476218c33be7668b7f012 makes GuideDirector honor the same pinned goal;414 local core checks pass, and final Mac36846647651 now also checks the actual rendered title/objective after real mining. Prior009cb had112 browser checks and57 inspected captures; it was NOT published because of this visual finding.
