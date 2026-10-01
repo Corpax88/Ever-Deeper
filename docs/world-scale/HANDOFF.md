@@ -31,4 +31,6 @@ Evidence bindings under .github/world-scale. Native-to-final QA-only package dif
 
 Final MacQA36835005359 succeeded:256 browser gates, input/404 core and ordinary WebKit.140 captures inspected, including97 treasury tier/sector views, allworld lifecycle states and6 ordinary startup/save views. Exact Mac manifest equals candidate-reviewed. Renderer Mac Chromium ANGLE Metal Apple Paravirtual,DPR2. Evidence11148718680, candidate11148573783; full digests in accepted.json. Evidence transport exceeded connector timeout, so completed evidence was repackaged as full-resolution quality95 JPG with original PNG hashes (transport36836020106/artifact11149486228), without changing/retesting the game. All140 derivatives hash-verified locally before review.
 
-DEV publication of the accepted immutable artifact is being completed; record receipt before calling public verification complete.
+DEV15.37 is published and all27 public hashes verified. Publication4c1a734050726bc14d4baba45d836b50dd86e507/run36836568643; receipt11150070032, rollback11149815728 preserves15.36. LIVE9/Worn9 retained. Canonical gameplay source d7c42c367513ede867afefa34c795959fe1d536b on codex/world-scale-20261001. No pending jobs or permissions. Main is publication carrier; do not rebuild historical runtime or repeat accepted unchanged QA. Details docs/world-scale/HANDOFF.md.
+
+Test https://corpax88.github.io/Ever-Deeper/dev/ after refreshing to15.37. Visit treasury and the surface/mines; no save reset required. Physical iPhone feel remains user feedback; no FPS certification.

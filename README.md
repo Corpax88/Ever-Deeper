@@ -1,4 +1,4 @@
-Current task: DEV15.37 approved world scale, see docs/world-scale/HANDOFF.md. Canonical game source d7c42c367513ede867afefa34c795959fe1d536b; MacQA36835005359 accepted,140 images inspected. Immutable DEV publication in progress. Never rebuild historical main.
+DEV15.37 is published and all27 public hashes verified. Publication4c1a734050726bc14d4baba45d836b50dd86e507/run36836568643; receipt11150070032, rollback11149815728 preserves15.36. LIVE9/Worn9 retained. Canonical gameplay source d7c42c367513ede867afefa34c795959fe1d536b on codex/world-scale-20261001. No pending jobs or permissions. Main is publication carrier; do not rebuild historical runtime or repeat accepted unchanged QA. Details docs/world-scale/HANDOFF.md.
 
 # Current release — DEV15.28 solid The Deep and mining fixes (29 September 2026)
 
