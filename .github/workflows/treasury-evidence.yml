@@ -1,0 +1,36 @@
+name: Treasury evidence transfer
+on:
+  push:
+    branches: [codex/treasury-evidence-20261001]
+permissions: {contents: read, actions: read}
+jobs:
+  split:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '11153735631'
+          run-id: '36845509494'
+          merge-multiple: true
+          github-token: '${{ github.token }}'
+          path: evidence
+      - run: |
+          python3 - <<'PY'
+          import pathlib,shutil,json,hashlib
+          root=pathlib.Path('evidence');sizes=[0,0,0]
+          manifest={}
+          for p in sorted(root.rglob('*'),key=lambda p:p.stat().st_size if p.is_file() else 0,reverse=True):
+            if not p.is_file():continue
+            i=sizes.index(min(sizes));name=str(p.relative_to(root));size=p.stat().st_size
+            target=pathlib.Path('part-'+str(i))/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,target);sizes[i]+=size
+            manifest[name]={'part':i,'size':size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+          assert max(sizes)<31*1024*1024,sizes
+          pathlib.Path('part-0/transfer-manifest.json').write_text(json.dumps(manifest,indent=2))
+          print(sizes)
+          PY
+      - uses: actions/upload-artifact@v4
+        with: {name: treasury-review-0, path: part-0, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        with: {name: treasury-review-1, path: part-1, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        with: {name: treasury-review-2, path: part-2, retention-days: 30}
