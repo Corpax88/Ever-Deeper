@@ -1,3 +1,5 @@
+Latest verified release: [DEV15.34 resonance drill](docs/resonance-drill/HANDOFF.md). Published/27 hashes verified by36794405091; source b8b2c8e, QA36793878581,14 Mac images inspected. No pending jobs or approval. ReloadDEV → DEV TOOLS → RESONANCE TEST. Physical-iPhone feel remains user feedback; LIVE separate.
+
 Latest: [Resonance Drill DEV15.34](docs/resonance-drill/HANDOFF.md). Approved source b8b2c8e, QA36793878581 passed and14 actual images inspected; immutable DEV publication pending. Upload authorization renewed by Mats1 October2026: “Godkjenner alltid”. Earlier blocks resolved; LIVE separate.
 
 Current verified release: [DEV15.33 blue treasury labels and varied flights](docs/treasury-blue-flow/HANDOFF.md). Published source f522b4f, QA36706422597 and publication36707340547 passed; all27 public hashes verified. No pending jobs. Earlier pending/blocked statuses below are historical.

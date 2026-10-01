@@ -1,3 +1,22 @@
+# DEV15.34 — Resonance Drill published and verified
+
+1 October2026. Public DEV https://corpax88.github.io/Ever-Deeper/dev/ now serves15.34. Publication b333097c4c2b610f77561b2d551c5304599ae4d8 /36794405091 succeeded. Receipt11133445742 verifies all27 public file hashes, preserving LIVE9/Worn9. Rollback11132997266 retains DEV15.33. No jobs or permission requests remain pending.
+
+Play: refresh DEV until the menu says15.34. DEV TOOLS → RESONANCE TEST (resources section) → CLOSE DEV. Hold a direction into rock and MINE. Ordinary mining charges the drill; the next hit releases textured cyan rings and stone debris, carving a five-wide, twelve-row tunnel. Activation is session-only; workshop progression/prices remain undecided. No save reset required; existing DEV save identity retained.
+
+Canonical game source b8b2c8ec8c11dc918eccd959432ede2ca036e75d, tree e8e16396378856a07eb70be1170e91e8f0e6456d on codex/resonance-drill-20261001, based on published15.33. Never rebuild historical main. Local matching runtime in /workspace/scratch/c939c7fc2e13/game; candidate-v3, native-final and mac-evidence alongside. Root main is the publication carrier.
+
+QA36793878581 succeeded: input,404 core checks,18 browser gates with genuine simultaneous touch, all four wave directions, pause and opt-out, ordinary WebKit startup/save/NewGame. All14 final Mac images and four native images inspected. Actual Chromium ANGLE Metal Apple Paravirtual renderer, reportedDPR2, viewport844x390. Native Godot4.7.2/Xvfb/Mesa twelve interaction gates cover automatic firing, walkable excavation, idle, pause, rebase and permanent boundaries. No physical-iPhone/FPS certification. Existing invariant debt remains; one local headless cleanup leak passed on one targeted unchanged repeat, both logs retained.
+
+Candidate11133211489 sha256:e189f9489eb31a77dcf6a7aa0e5a7057a4d6a18586e9b8622598df55a365abce; evidence11133006703 sha256:b87a8797532eda6c323b52d6a0ab8bb5025e3d44e7642ed08c76c93cdf187945. Mac manifests equal locally rendered package exactly. Immutable acceptance and receipt under .github/resonance-drill. Existing art, hero, treasury, LIVE/Worn retained.
+
+Mats renewed explicit approval1 October2026 with “Godkjenner alltid” in response to the exact public code/PNG upload, MacQA and DEV-publication request. Earlier automatic-review blockers below are historical and resolved. Standing Ever-Deeper upload/DEV authorization applies; LIVE promotion remains separate.
+
+Next: user tests the feel on iPhone. Do not repeat the accepted build/test/publication. Continue from this source for later workshop balance or VFX feedback.
+
+---
+Earlier history follows.
+
 # DEV15.34 accepted for publication
 
 QA36793878581 succeeded on canonical source b8b2c8ec8c11dc918eccd959432ede2ca036e75d. Native input/404 core checks,18 resonance browser gates with actual simultaneous touch, ordinary WebKit startup/save/NewGame passed. All14 final Mac PNGs inspected; actual Chromium ANGLE Metal Apple Paravirtual renderer, DPR2, viewport844x390. Local native12 interaction gates remain separate evidence. Browser manifests exactly match the local rendered candidate-v3. No physical-iPhone/FPS claim; existing invariant debt remains documented.
