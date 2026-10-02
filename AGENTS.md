@@ -1,3 +1,5 @@
+Current task: [Crusher Bore Rush animation](docs/bore-crusher/HANDOFF.md), canonical baseline f79c19a8. Do not rebuild main. Final candidate/critic gates pending.
+
 Current task: [approved treasury entrance and podium fit](docs/treasury-fit/HANDOFF.md). DEV15.43 candidate, 3 critic rounds; final gates pending.
 
 Current task: [DEV15.42 mod previews](docs/mod-previews/HANDOFF.md). Future mod windows must follow [approved visual standard](docs/mod-previews/DESIGN-STANDARD.md), using the Skills Pappa Hammer reference, not the Blender model.

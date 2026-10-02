@@ -3,6 +3,31 @@ extends "res://scripts/player/native_worn/task_motion.gd"
 var nominal_contacts: int = 0
 var unreachable_contacts: int = 0
 
+# Presentation-only overlay: preserve the authored walking legs and rigid grips.
+func bore_pose(weight: float) -> bool:
+	if weight <= 0.0: return true
+	var pose: Dictionary = shown.duplicate(true)
+	var b: Dictionary = pose.bones
+	var facing: Basis = Basis(Vector3(0,0,1), yaw)
+	var lean: Basis = facing * Basis(Vector3.RIGHT, 0.16) * facing.inverse()
+	var original_body: Transform3D = b.body
+	b.body.basis = lean * b.body.basis
+	var reference: Dictionary = bank.idle[0].bones
+	var tool_basis: Basis = facing * Basis(Vector3.RIGHT, 0.60) * reference.tool.basis
+	b.tool = Transform3D(tool_basis, root_position + facing * Vector3(-0.03,-0.48,0.88 + (original_body.origin.z-root_position.z-0.585)))
+	for side in SIDES:
+		b["upper."+side].origin = b.body * (original_body.affine_inverse() * shown.bones["upper."+side].origin)
+		b["hand."+side] = b.tool * (reference.tool.affine_inverse() * reference["hand."+side])
+		_solve_chain(b,shown.bones,shown.bones,0.0,"arm",side)
+	pose.release = 0.0
+	var blended: Dictionary = mix(shown,pose,weight)
+	if not _rigid(blended):
+		errors.append("Rejected disconnected Bore Rush pose")
+		return false
+	rig.shown = blended.bones
+	rig._apply(blended.bones)
+	return true
+
 func plan_contact(target: Vector2, surfaces: Array = [], _record_failure: bool = true) -> bool:
 	if not surfaces.is_empty():
 		if contact_cache.size() >= 128: contact_cache.clear()

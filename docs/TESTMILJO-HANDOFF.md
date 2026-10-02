@@ -1,3 +1,5 @@
+Current task: [Crusher Bore Rush animation](bore-crusher/HANDOFF.md). Actual native candidate and independent critic in progress; public DEV15.45 unchanged.
+
 Current task: [approved treasury entrance and podium fit](treasury-fit/HANDOFF.md). DEV15.43 candidate, 3 critic rounds; final gates pending.
 
 Current task: [approved hero-relative world scale DEV15.37](world-scale/HANDOFF.md). Canonical base977bca3; final visual/browser gates and publication pending.

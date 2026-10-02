@@ -60,6 +60,10 @@ func _command(data: Dictionary) -> void:
 			w.drill_modes.reset()
 			main.achievement_toast.hide()
 		elif String(data.kind)=="mods_bore_flow":
+			if bool(data.get("crusher",false)):
+				main._dev_build_all_workshops_state()
+				RunState.endless_workshops["tool_forge"].level=5
+				RunState.set_endless_tool_style("crusher")
 			main._dev_jump_endless(1);main._dev_grant_max_tools_state()
 			var w: Node=main.endless_world
 			w.resonance_drill.set_enabled(false);goals._equip("bore_rush")
