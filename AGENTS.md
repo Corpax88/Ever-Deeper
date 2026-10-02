@@ -1,4 +1,4 @@
-Current task: [Five mods DEV15.48](docs/five-mods/HANDOFF.md). Accepted source53eb67d, Mac37049694489 passed;39 native gates; critic8.2/10. Publication in progress. Permanent GitHub/DEV authorization applies across chats; do not ask again. Main is publication carrier only.
+Current verified release: [Five mods DEV15.48](docs/five-mods/HANDOFF.md). Published37050728203/receipt11245994213; all27public hashes pass. Source53eb67d,39native/76browser checks, critic8.2/10. No pending jobs/approvals; permanent GitHub/DEV authorization applies across chats. Do not rebuild main or rerun accepted unchanged gates.
 
 Current task: [Tool Forge icon](docs/forge-icon/HANDOFF.md). DEV15.47 candidate on codex/forge-icon-20261002, based on exact DEV15.46 source/package. Approved asset; eight native gates and actual images accepted. Browser/publication pending. Preserve LIVE/Worn; never rebuild historical main.
 
