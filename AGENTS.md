@@ -1,4 +1,14 @@
-Current task: [Tool Forge icon DEV15.47](docs/forge-icon/HANDOFF.md). Approved asset integrated; canonical bcf4358c8dee12427dd81b625f69a0c90c4f8804 on codex/forge-icon-20261002. Mac37016720756 passed input/414core/19browser and ordinaryWebKit; all13 final Mac images inspected,8 native checks, independent visual critic accepted. Immutable publication in progress; LIVE1.0.4/Worn protected. Main is publication carrier, never rebuild its runtime.
+# Oppdatert 2. oktober 2026 — DEV15.47: godkjent smieikon publisert
+
+Den godkjente transparente hakke/ambolt-PNGen brukes nå på Tool Forge-knappen ved smia i hubben. Tekst, trykkflate og handling beholdt; øvrige kontekstikoner uendret. Mats godkjente bildet og ba eksplisitt om implementering. Ingen save- eller gameplayendring. Oppdater DEV → Continue; gå bort til den bygde Tool Forge i hubben.
+
+Kanonisk kilde bcf4358c8dee12427dd81b625f69a0c90c4f8804 på codex/forge-icon-20261002 i Corpax88/Ever-Deeper, basert på eksakt DEV15.46. Mac37016720756 bestått input,414core,19browser-observasjoner og vanlig WebKit oppstart/lagring/reload. Faktisk AppleMetal/DPR2,667/844/932 mobilbredder; ekte touch åpner korrekt verksted. Alle13 Mac-sluttbilder inspisert. Native Godot4.7.2/Xvfb:8 kontroller bestått og3 kandidatbilder inspisert, pluss baseline-sammenligning. Uavhengig kritiker godkjente faktisk knapp og åpen smie, ingen blokkeringer. Ni pakkefiler matcher native/Mac. Ingen fysisk-iPhone/FPS-påstand; kjent invariant flag-order-testgjeld beholdt.
+
+Publisering54b77157a4bcc7fce54212aca4bf8938b7b8c61c/run37017501263 bestått. Kvittering11231710979 bekrefter27 offentlige filhasher; LIVE1.0.4 og Worn bevart. Kandidat11231660144/evidence11231445230; rollback11231465938 beholder DEV15.46. Ingen ventende jobber/godkjenninger. Main er publiseringsbærer, aldri bygg historisk main-runtime. Ikke gjenta uendrede godkjente tester. Detaljer docs/forge-icon/HANDOFF.md og .github/forge-icon/publication-receipt.json.
+
+Ikonretningene fra denne chatten er lagret i Ever-Deeper-ikonvalg-2026-10-02.txt. Bare smieikonet ble implementert nå; neste ikon krever eget bilde/godkjenning. Godkjent originalasset: assets/ui/tool-forge-approved-v1.png på kildegrenen.
+
+---
 
 DEV15.46 published and verified: publication02699fd32280d07aa87ecc40e443a38656c0b592/run36982408035; receipt11216152475 confirms27 public hashes, LIVE1.0.4 and Worn preserved. Rollback11215424940 retains DEV15.45. No pending jobs. Refresh → Continue; no reset. 
 
