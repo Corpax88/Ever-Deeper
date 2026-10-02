@@ -117,6 +117,12 @@ func advance(delta: float) -> bool:
 		bore_spin = fposmod(bore_spin + delta * TAU * 2.4, TAU)
 	else:
 		bore_spin = move_toward(wrapf(bore_spin,-PI,PI),0.0,delta*TAU*4.0)
+	if bore_active or bore_weight > 0.0:
+		# Rush impacts still mine normally, but must not inject a pickaxe swing
+		# into the braced two-handed pose. Consume the serial without its pose.
+		packet.mining = false
+		packet.mining_timing_valid = false
+		packet.impact_target_valid = false
 	packet.contact_surfaces = _surfaces(packet.target_position, String(packet.target_id)) if bool(packet.target_valid) else []
 	if not packet.contact_surfaces.is_empty():
 		last_target = packet.target_position
