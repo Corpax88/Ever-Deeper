@@ -28,6 +28,7 @@ var rings: Array = []
 var chips: Array = []
 var ring_texture: Texture2D
 var stone_texture: Texture2D
+var twin_meshes: Dictionary = {}
 var visual_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var drop_queue: Array = []
 var drop_cursor: int = 0
@@ -349,6 +350,34 @@ func _tool_piece(rect: Rect2, width: float, base: Vector2, angle: float, shift: 
 	draw_texture_rect_region(texture,Rect2(-pivot,extent),source)
 	draw_set_transform(Vector2.ZERO)
 
+func _twin_mesh(opened: float, phase: float) -> ArrayMesh:
+	# One continuous UV surface: tubes bend with their cutters, never tear apart.
+	# 221 vertices and <=84 cached phases; no per-frame image loading or lights.
+	var size: Vector2 = textures["twin_auger"].get_size()
+	var vertices: PackedVector3Array = PackedVector3Array()
+	var uv: PackedVector2Array = PackedVector2Array()
+	var indices: PackedInt32Array = PackedInt32Array()
+	var columns: int = 16
+	var rows: int = 12
+	for y in rows+1:
+		for x in columns+1:
+			var q: Vector2 = Vector2(float(x)/columns,float(y)/rows)
+			var p: Vector2 = (q-Vector2(0.12,0.5))*size
+			var side: float = smoothstep(0.10,0.28,absf(q.y-0.5))*signf(q.y-0.5)
+			p.y += side*opened*size.x*0.11*smoothstep(0.30,0.72,q.x)
+			var center: float = 0.20 if q.y<0.34 else (0.80 if q.y>0.66 else 0.50)
+			var spin: float = sin(phase+center*10.0)
+			p.y -= (q.y-center)*size.y*opened*(0.28+0.28*spin)*smoothstep(0.71,0.92,q.x)
+			vertices.append(Vector3(p.x,p.y,0)); uv.append(q)
+	for y in rows:
+		for x in columns:
+			var at: int = y*(columns+1)+x
+			indices.append_array(PackedInt32Array([at,at+1,at+columns+1,at+1,at+columns+2,at+columns+1]))
+	var arrays: Array = []; arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX]=vertices; arrays[Mesh.ARRAY_TEX_UV]=uv; arrays[Mesh.ARRAY_INDEX]=indices
+	var mesh: ArrayMesh = ArrayMesh.new(); mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
+	return mesh
+
 func _draw_tool(anchor: Dictionary) -> void:
 	var axis: Vector2 = Vector2(anchor.tip)-Vector2(anchor.base)
 	var angle: float = axis.angle()
@@ -356,20 +385,18 @@ func _draw_tool(anchor: Dictionary) -> void:
 	var base: Vector2 = Vector2(anchor.base)-axis.normalized()*kick*3.0
 	var turn: float = motion_clock*TAU*8.0
 	if mode=="twin_auger":
-		# Independent cone rolls and hinged side assemblies retain authored pixels.
-		_tool_piece(Rect2(0,0,0.40,1),width,base,angle)
-		_tool_piece(Rect2(0.40,0.34,0.27,0.32),width,base,angle)
-		var roll: float = 1.0-deployment*(0.34+0.34*sin(turn))
-		_tool_piece(Rect2(0.67,0.34,0.33,0.32),width,base,angle,Vector2.ZERO,0.0,roll)
-		for side in [-1,1]:
-			var row: float = 0.0 if side<0 else 0.66
-			var extension: Vector2 = Vector2(deployment*3.0,float(side)*deployment*12.0)
-			_tool_piece(Rect2(0.40,row,0.32,0.34),width,base,angle,extension)
-			var side_roll: float = 1.0-deployment*(0.34+0.34*sin(turn+float(side)*2.0))
-			_tool_piece(Rect2(0.72,row,0.28,0.34),width,base,angle,extension,0.0,side_roll)
+		var phase: int = int(fposmod(turn,TAU)/TAU*12.0)
+		var opened: int = roundi(deployment*6.0)
+		var mesh_key: int = opened*12+phase
+		if not twin_meshes.has(mesh_key): twin_meshes[mesh_key] = _twin_mesh(float(opened)/6.0,float(phase)/12.0*TAU)
+		var size: Vector2 = textures[mode].get_size()
+		var flip: float = -1.0 if cos(angle)<0.0 else 1.0
+		draw_set_transform(base,angle,Vector2(width/size.x,width/size.x*flip))
+		draw_mesh(twin_meshes[mesh_key],textures[mode])
+		draw_set_transform(Vector2.ZERO)
 	elif mode=="corebreaker":
 		_tool_piece(Rect2(0,0,0.55,1),width,base,angle)
-		var stroke: float = sin(clampf(core_pulse/0.14,0.0,1.0)*PI)*20.0
+		var stroke: float = sin(clampf(core_pulse/0.14,0.0,1.0)*PI)*(-20.0)
 		_tool_piece(Rect2(0.55,0,0.45,1),width,base,angle,Vector2(stroke,0))
 		if charge>0.0:
 			for i in 3:
