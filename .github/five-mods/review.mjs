@@ -82,6 +82,13 @@ try{
   s=await state();check('simultaneous-move-mine-'+mod,s.drill_mods.player[0]<from[0]-30,{});
   await shot('moving-'+mod);await fingers('touchEnd',[]);
  }
+ for(const mod of ['chainbreaker','corebreaker']){
+  await command('five_effect_fixture',{mod});await ready();await delay(250);
+  const p=await point('hud_mine');await touch('touchStart',p);await delay(270);await shot('effect-'+mod);
+  await delay(700);await touch('touchEnd',p);await delay(200);
+  const effect=(await state()).drill_mods.effect.five;
+  check('distinct-effect-'+mod,mod==='chainbreaker'?new Set(effect.log.filter(x=>x.kind==='chain').map(x=>x.id)).size>=5:effect.log.filter(x=>x.kind==='core').length===3,{effect});
+ }
  await command('mods_save');const saved=(await state()).treasury_goal.saved;await command('mods_reload');
  check('save-retains-five-mods',JSON.stringify(saved)===JSON.stringify((await state()).treasury_goal.saved),{});
 } catch(e){failed=e.stack||String(e);console.error(failed);}

@@ -65,6 +65,21 @@ func run() -> void:
 	world._set_floor(wall,false); world.resources.append(node_at("buried-twin",wall))
 	for i in 8: five._impact({"cell":wall,"point":world._cell_center(wall)},0.08)
 	check("twin-reveals-without-mining-node",world._is_floor(wall) and int(world.resources[0].hp) == 1022)
+	fresh(); five.mode = "ricochet"
+	for cell in [Vector2i(20,11),Vector2i(20,12),Vector2i(20,13)]:
+		world._set_floor(cell,false)
+		# Pre-damaged ordinary rock breaks on one real drill strike.
+		world.dig_damage[cell] = 519
+		world.resources.append(node_at("ricochet-buried-"+str(cell),cell))
+	five._launch(Vector2i(20,12))
+	for i in 80: five._update_projectile(0.01)
+	check("ricochet-three-distinct-rock-contacts",five.hits == 3 and five.projectile.is_empty())
+	var revealed: int = 0
+	var intact: bool = true
+	for ore in world.resources:
+		if world._is_floor(Vector2i(ore.cell)): revealed += 1
+		intact = intact and int(ore.hp) == 1022
+	check("ricochet-reveals-three-without-mining-buried-nodes",revealed == 3 and intact)
 	fresh(); state.endless_chunks.clear(); five.mode = "vortex"
 	var before: int = int(state.cargo.get("rootiron",0))
 	for i in 40: state._register_endless_drop(1,"vortex-"+str(i),world._chunk_cell_index(Vector2i(19,12)),"rootiron",2)

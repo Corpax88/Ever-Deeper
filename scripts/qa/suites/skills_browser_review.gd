@@ -38,6 +38,40 @@ var ore_escape_goal: Vector2
 var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind)=="five_effect_fixture":
+		main._on_developer_command_requested("test_"+String(data.mod))
+		var w: Node=main.endless_world
+		w.set_mine_held(false)
+		var mole: Node=main.get_node("CompanionInterface").active_mole()
+		mole.autonomous_enabled=false;mole.recall()
+		w._ground_props.clear();w.discovery_sites.clear()
+		for y in range(5,20):
+			for x in range(7,32): w._set_floor(Vector2i(x,y),true)
+		# Move real unmined resources, preserving their IDs, hardness and rewards.
+		var cells: Array[Vector2i]=[Vector2i(19,12),Vector2i(17,10),Vector2i(19,10),Vector2i(21,11),Vector2i(20,14),Vector2i(17,14)]
+		var placed: int=0
+		for index in w.resources.size():
+			var ore: Dictionary=w.resources[index]
+			if bool(ore.mined) or int(ore.depth)!=1: continue
+			ore.cell=cells[placed];ore.position=w._cell_center(cells[placed]);ore.hp=ore.max_hp
+			w.resources[index]=ore
+			var node_visual: Node2D=w.resource_visuals.get(String(ore.id)) as Node2D
+			if is_instance_valid(node_visual):
+				node_visual.position=ore.position;node_visual.z_index=w.actor_draw_depth(node_visual.position+Vector2(0,25))
+			else: w._build_resource_visual(ore)
+			placed+=1
+			if placed==cells.size(): break
+		RunState.drill_level=1;RunState.starforge_variant=""
+		# A real basic drill makes individual hard-node strikes observable.
+		if RunState.endless_workshops.has("tool_forge"): RunState.endless_workshops.tool_forge.level=0
+		w.player.global_position=w._cell_center(Vector2i(18,12))
+		w.player.set_facing(Vector2.RIGHT);w.player.camera.reset_smoothing();w.player.camera.force_update_scroll()
+		w.drill_modes.reset();w.drill_modes.tick(0.016)
+		w.drill_modes.five.hit_log.clear();w.drill_modes.five.hits=0
+		if String(data.mod)=="corebreaker": w.drill_modes.five.charge=3.0
+		w._update_buried_visibility();w.queue_redraw();main.achievement_toast.hide()
+		command_id=int(data.id)
+		return
 	if String(data.kind)=="five_fixture":
 		main._on_developer_command_requested("test_"+String(data.mod))
 		var w: Node=main.endless_world
