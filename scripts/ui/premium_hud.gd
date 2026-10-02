@@ -15,6 +15,7 @@ const MENU_CAPTION_FONT: = preload("res://assets/ui/fonts/EBGaramond.ttf")
 const MENU_ICON: = preload("res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png")
 const GUIDE_ICON: = preload("res://assets/ui/hud-guide-v1.png")
 const INTERACT_ICON: = preload("res://assets/ui/hud-interact-v1.png")
+const TOOL_FORGE_ICON: = preload("res://assets/ui/tool-forge-approved-v1.png")
 const BUILD_ICON: = preload("res://assets/ui/hud-build-v1.png")
 const GOLD_ICON: = preload("res://assets/ui/gold-bars-v1.png")
 const MOLE_ICON: = preload("res://assets/companion/mole-hud.png")
@@ -130,7 +131,9 @@ func set_context_action(label: String, enabled: bool) -> void :
 		context_button.visible = not caption.is_empty()
 		context_button.tooltip_text = label.replace("\n", " · ").capitalize()
 		var upper: = caption.to_upper()
-		if upper == "HOME":
+		if label.get_slice("\n", 0).strip_edges().to_upper() == "TOOL FORGE":
+			context_button.icon = TOOL_FORGE_ICON
+		elif upper == "HOME":
 			context_button.icon = MOLE_ICON
 		elif upper == "SELL":
 			context_button.icon = GOLD_ICON

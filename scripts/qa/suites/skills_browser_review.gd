@@ -38,6 +38,16 @@ var ore_escape_goal: Vector2
 var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind) == "forge_icon_fixture":
+		main._dev_seed_victory_state()
+		main._dev_build_all_workshops_state()
+		main._dev_jump_hub()
+		var station: String = String(data.get("station", "tool_forge"))
+		main.hub_world.restore_position(main.hub_world._workshop_position(station) + Vector2(0, 85))
+		main.hub_world.player.camera.reset_smoothing()
+		main.achievement_toast.hide()
+		command_id = int(data.id)
+		return
 	if String(data.kind).begins_with("mods_"):
 		var goals=load("res://scripts/state/treasury_goals.gd")
 		if String(data.kind)=="mods_preview":
@@ -352,6 +362,11 @@ func _frame() -> void:
 		"hud_menu_icon": main.premium_hud.menu_button.icon.resource_path,
 		"hud_context": _bounds(main.premium_hud.context_button),
 		"hud_context_visible": main.premium_hud.context_button.is_visible_in_tree(),
+		"hud_context_icon": main.premium_hud.context_button.icon.resource_path if main.premium_hud.context_button.icon != null else "",
+		"hud_context_text": main.premium_hud.context_button.text,
+		"hud_context_disabled": main.premium_hud.context_button.disabled,
+		"hub_context": main.hub_world.current_context(),
+		"commerce_id": main.commerce_context,
 		"hud_mine_visible": main.mine_button.is_visible_in_tree(),
 		"hud_gold": _bounds(main.premium_hud.gold_cluster),
 		"hud_map": _rect_bounds(main.premium_hud.minimap_layout_rect()),
