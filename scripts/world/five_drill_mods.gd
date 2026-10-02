@@ -19,7 +19,16 @@ var hits: int = 0
 var held_last: bool = false
 var direction: Vector2 = Vector2.RIGHT
 var textures: Dictionary = {}
+# Presentation state never drives damage, rewards or player displacement.
 var core_pulse: float = 0.0
+var motion_clock: float = 0.0
+var deployment: float = 0.0
+var kick: float = 0.0
+var rings: Array = []
+var chips: Array = []
+var ring_texture: Texture2D
+var stone_texture: Texture2D
+var visual_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var drop_queue: Array = []
 var drop_cursor: int = 0
 var flights: Dictionary = {}
@@ -28,6 +37,9 @@ var scanned_last: int = 0
 
 func setup(owner_world: Node2D) -> void:
 	world = owner_world
+	visual_rng.seed = 71549
+	ring_texture = ImageTexture.create_from_image(Image.load_from_file("res://assets/fx/resonance-ring-v1.png"))
+	stone_texture = load("res://assets/drops/stone-drop.png")
 	textures["ricochet-projectile"] = ImageTexture.create_from_image(Image.load_from_file("res://assets/ui/mods/ricochet-projectile-tool-v1.png"))
 	z_index = 1902
 	material = CanvasItemMaterial.new()
@@ -36,7 +48,8 @@ func setup(owner_world: Node2D) -> void:
 func cancel(clear_charge: bool = false) -> void:
 	target_key = ""; elapsed = 0.0; chain.clear(); projectile.clear()
 	core_id = ""; core_left = 0; arcs.clear(); held_last = false
-	if clear_charge: charge = 0.0
+	if clear_charge:
+		charge = 0.0; rings.clear(); chips.clear(); deployment = 0.0; kick = 0.0; core_pulse = 0.0
 	queue_redraw()
 
 func reset() -> void:
@@ -48,10 +61,18 @@ func tick(delta: float, selected: String, held: bool) -> void:
 		if not textures.has(mode):
 			var path: String = "res://assets/ui/mods/"+mode+"-tool-v1.png"
 			if FileAccess.file_exists(path): textures[mode] = ImageTexture.create_from_image(Image.load_from_file(path))
+	# World does not tick during menus. No independent timer survives pause.
+	motion_clock += minf(delta,0.05)
+	deployment = move_toward(deployment,1.0 if held and world.active and world.player.control_enabled else 0.0,minf(delta,0.05)/0.22)
+	kick = maxf(0.0,kick-delta*7.0)
 	core_pulse = maxf(0.0,core_pulse-delta)
+	for list in [rings,chips]:
+		for i in range(list.size()-1,-1,-1):
+			list[i].age += delta
+			if list[i].age>=list[i].life: list.remove_at(i)
 	for i in range(arcs.size()-1,-1,-1):
 		arcs[i].age += delta
-		if arcs[i].age>=0.22: arcs.remove_at(i)
+		if arcs[i].age>=0.38: arcs.remove_at(i)
 	var intent: Vector2 = world.player.external_movement+Input.get_vector("move_left","move_right","move_up","move_down")
 	direction = intent.normalized() if intent.length_squared()>0.0025 else world.player.animation_bearing.normalized()
 	if direction.is_zero_approx(): direction = Vector2.RIGHT
@@ -110,11 +131,15 @@ func _node(id: String) -> int:
 
 func _hit_node(index: int, kind: String) -> void:
 	var id: String = String(world.resources[index].id)
+	var point: Vector2 = world.resources[index].position
 	world._strike_resource(index,_power(),false); hits += 1
+	if kind=="chain": _burst(point,75.0,3)
+	elif kind=="core": _burst(point,110.0,5)
 	hit_log.append({"id":id,"kind":kind})
 	if hit_log.size()>256: hit_log.pop_front()
 
 func _impact(target: Dictionary, period: float) -> void:
+	kick = 1.0
 	if mode=="ricochet" and target.has("cell"):
 		_launch(Vector2i(target.cell)); return
 	if target.has("node"):
@@ -139,7 +164,10 @@ func _impact(target: Dictionary, period: float) -> void:
 				if not world._is_floor(world._world_to_cell(lane)): continue
 				if not world._clear_mining_line(world.player.global_position,lane): continue
 				if world._clear_mining_line(lane,world._cell_center(candidate),true): cells.append(candidate)
-			for candidate in cells: _wall(candidate,_power())
+			for candidate in cells:
+				_wall(candidate,_power())
+				_spawn_chips(world._cell_center(candidate),2)
+			if not cells.is_empty(): _burst(Vector2(target.point),90.0,0)
 		else:
 			_wall(cell,_power())
 			if mode=="vortex" and String(RunState.starforge_variant)=="crusher": world._apply_crusher_wave(cell,world._current_endless_tool())
@@ -147,6 +175,8 @@ func _impact(target: Dictionary, period: float) -> void:
 
 func _start_chain(first: int) -> void:
 	chain.clear(); chain_clock = 0.0; chain_from = Vector2(world.resources[first].position)
+	_add_arc(world.player.global_position,chain_from)
+	_burst(chain_from,80.0,3)
 	var view: Rect2 = world.get_viewport_rect()
 	var transform: Transform2D = world.get_viewport().get_canvas_transform()
 	# Snapshot ALL eligible IDs; camera movement never changes this queue.
@@ -162,7 +192,7 @@ func _update_chain(delta: float) -> void:
 	var index: int = _node(String(chain.pop_front()))
 	if index<0: return
 	var point: Vector2 = world.resources[index].position
-	arcs.append({"a":chain_from,"b":point,"age":0.0}); _hit_node(index,"chain"); chain_from = point
+	_add_arc(chain_from,point); _hit_node(index,"chain"); chain_from = point
 
 func _core_interval() -> float:
 	return minf(0.035,world._mining_cycle_duration()*0.4)
@@ -175,7 +205,7 @@ func _update_core(delta: float) -> void:
 	var index: int = _node(core_id)
 	if index<0 or world.player.global_position.distance_to(world.resources[index].position)>122.0 or not world._clear_mining_line(world.player.global_position,world.resources[index].position):
 		core_left = 0; core_id = ""; return
-	_hit_node(index,"core"); core_left -= 1; core_pulse = 0.1
+	_hit_node(index,"core"); core_left -= 1; core_pulse = 0.14; kick = 1.0
 	AudioDirector.play_mining("deepstone",true,false)
 
 func _launch(cell: Vector2i) -> void:
@@ -202,9 +232,9 @@ func _update_projectile(delta: float) -> void:
 	var after: Vector2 = before.move_toward(end,1200.0*delta)
 	if not world._clear_mining_line(before,after,true): projectile.clear(); return
 	projectile.position = after
-	if before.distance_to(after)>0.0: arcs.append({"a":before,"b":after,"age":0.0})
+	if before.distance_to(after)>0.0: _add_arc(before,after)
 	if after.distance_to(end)>1.0: return
-	_wall(cell,_power()); world._update_buried_visibility(); projectile.visited.append(cell)
+	_wall(cell,_power()); _burst(after,85.0,5); world._update_buried_visibility(); projectile.visited.append(cell)
 	if projectile.visited.size()>=3: projectile.clear(); return
 	var next: Vector2i = Vector2i(-1,-1)
 	var score: float = INF
@@ -233,6 +263,8 @@ func clear_drops() -> void:
 func rebase(shift: Vector2) -> void:
 	chain_from += shift
 	for arc in arcs: arc.a += shift; arc.b += shift
+	for list in [rings,chips]:
+		for item in list: item.position += shift
 	if not projectile.is_empty():
 		var cells: Vector2i = Vector2i(shift/world.TILE_SIZE)
 		projectile.position += shift; projectile.origin += shift; projectile.end += shift; projectile.cell += cells
@@ -265,7 +297,14 @@ func collect_vortex(delta: float) -> bool:
 		var distance: float = sprite.position.distance_to(world.player.global_position)
 		if distance>512.0 or float(flights[key])>1.2 or not world._clear_mining_line(sprite.position,world.player.global_position):
 			flights.erase(key); sprite.position = drop.origin; continue
-		sprite.position = sprite.position.move_toward(world.player.global_position,speed*minf(delta,0.05))
+		var radial: Vector2 = (world.player.global_position-sprite.position).normalized()
+		var curl: float = minf(0.8,distance/100.0)
+		var heading: Vector2 = (radial+radial.orthogonal()*curl).normalized()
+		var travel: float = speed*minf(delta,0.05)
+		var next: Vector2 = world.player.global_position if distance<=travel else sprite.position+heading*travel
+		# Curvature must never turn an otherwise valid pickup through a wall.
+		if not world._clear_mining_line(sprite.position,next): next = sprite.position.move_toward(world.player.global_position,travel)
+		sprite.position = next
 		if sprite.position.distance_to(world.player.global_position)>18.0: continue
 		var collected: Dictionary = RunState.collect_endless_drop(int(drop.depth),String(drop.id))
 		if not collected.is_empty(): world.resource_collected.emit(String(collected.kind),int(collected.amount),int(drop.depth))
@@ -275,35 +314,125 @@ func collect_vortex(delta: float) -> bool:
 		flights.erase(key)
 	return true
 
+func _add_arc(a: Vector2, b: Vector2) -> void:
+	# Bounded visual history; every Chainbreaker target still receives its hit.
+	if arcs.size()>=48: arcs.pop_front()
+	arcs.append({"a":a,"b":b,"age":0.0})
+
+func _spawn_chips(point: Vector2, count: int) -> void:
+	for i in count:
+		if chips.size()>=48: break
+		chips.append({"position":point,"velocity":Vector2(visual_rng.randf_range(-120.0,120.0),visual_rng.randf_range(-70.0,100.0)),"age":0.0,"life":0.48,"size":visual_rng.randf_range(12.0,24.0),"spin":visual_rng.randf_range(-5.0,5.0)})
+
+func _burst(point: Vector2, size: float, count: int) -> void:
+	if rings.size()>=18: rings.pop_front()
+	rings.append({"position":point,"age":0.0,"life":0.38,"size":size})
+	_spawn_chips(point,count)
+
+func _ring(point: Vector2, size: Vector2, angle: float, alpha: float) -> void:
+	draw_set_transform(point,angle)
+	draw_texture_rect(ring_texture,Rect2(-size*0.5,size),false,Color(1,1,1,clampf(alpha,0.0,1.0)))
+	draw_set_transform(Vector2.ZERO)
+
+func _tool_piece(rect: Rect2, width: float, base: Vector2, angle: float, shift: Vector2 = Vector2.ZERO, turn: float = 0.0, roll: float = 1.0) -> void:
+	var texture: Texture2D = textures[mode]
+	var size: Vector2 = texture.get_size()
+	var scale: float = width/size.x
+	var source: Rect2 = Rect2(rect.position*size,rect.size*size)
+	var pos: Vector2 = (source.position-Vector2(size.x*0.12,size.y*0.5))*scale
+	var extent: Vector2 = source.size*scale
+	var pivot: Vector2 = Vector2(0,extent.y*0.5)
+	var flip: float = -1.0 if cos(angle)<0.0 else 1.0
+	var local: Vector2 = pos+pivot+shift
+	local.y *= flip
+	draw_set_transform(base+local.rotated(angle),angle+turn*flip,Vector2(1,flip*roll))
+	draw_texture_rect_region(texture,Rect2(-pivot,extent),source)
+	draw_set_transform(Vector2.ZERO)
+
+func _draw_tool(anchor: Dictionary) -> void:
+	var axis: Vector2 = Vector2(anchor.tip)-Vector2(anchor.base)
+	var angle: float = axis.angle()
+	var width: float = clampf(axis.length()*2.1,56.0,110.0)
+	var base: Vector2 = Vector2(anchor.base)-axis.normalized()*kick*3.0
+	var turn: float = motion_clock*TAU*8.0
+	if mode=="twin_auger":
+		# Independent cone rolls and hinged side assemblies retain authored pixels.
+		_tool_piece(Rect2(0,0,0.40,1),width,base,angle)
+		_tool_piece(Rect2(0.40,0.34,0.27,0.32),width,base,angle)
+		var roll: float = 1.0-deployment*(0.34+0.34*sin(turn))
+		_tool_piece(Rect2(0.67,0.34,0.33,0.32),width,base,angle,Vector2.ZERO,0.0,roll)
+		for side in [-1,1]:
+			var row: float = 0.0 if side<0 else 0.66
+			var extension: Vector2 = Vector2(deployment*3.0,float(side)*deployment*12.0)
+			_tool_piece(Rect2(0.40,row,0.32,0.34),width,base,angle,extension)
+			var side_roll: float = 1.0-deployment*(0.34+0.34*sin(turn+float(side)*2.0))
+			_tool_piece(Rect2(0.72,row,0.28,0.34),width,base,angle,extension,0.0,side_roll)
+	elif mode=="corebreaker":
+		_tool_piece(Rect2(0,0,0.55,1),width,base,angle)
+		var stroke: float = sin(clampf(core_pulse/0.14,0.0,1.0)*PI)*20.0
+		_tool_piece(Rect2(0.55,0,0.45,1),width,base,angle,Vector2(stroke,0))
+		if charge>0.0:
+			for i in 3:
+				var strength: float = clampf(charge-float(i),0.0,1.0)
+				_ring(base+axis.normalized()*(20+i*9),Vector2(12,24+strength*14),angle,strength*(0.50+sin(motion_clock*9+i)*0.15))
+	else:
+		_tool_piece(Rect2(0,0,1,1),width,base,angle)
+		if deployment>0.0 and mode in ["chainbreaker","vortex"]:
+			_ring(base+axis.normalized()*width*0.45,Vector2(16,36+sin(motion_clock*12)*4),angle,deployment*0.8)
+
 func _draw() -> void:
 	if mode not in IDS or not world.active: return
-	var origin: Vector2 = world.player.global_position+Vector2(0,-45)
+	var origin: Vector2 = world.player.global_position
+	# The vortex is a textured rotating intake. It does not add dynamic lights.
+	if mode=="vortex" and (deployment>0.0 or not flights.is_empty()):
+		var intensity: float = maxf(deployment*0.32,minf(1.0,float(flights.size())/3.0))
+		for i in 3:
+			var size: float = 80.0+i*44.0
+			_ring(origin+Vector2(0,-15),Vector2(size,size*0.58),motion_clock*(1.5+i*0.25),intensity*(0.48-i*0.1))
+		for key in flights:
+			if not world.loose_drops.has(key): continue
+			var p: Vector2 = world.loose_drops[key].visual.position
+			_ring(p+Vector2(0,-8),Vector2(26,18),motion_clock*4,0.65)
 	var native: Node = world.player.visual.get("_native_worn")
 	var anchor: Dictionary = native.mod_anchor() if is_instance_valid(native) else {}
-	if textures.has(mode) and not anchor.is_empty():
-		var axis: Vector2 = Vector2(anchor.tip)-Vector2(anchor.base)
-		var width: float = clampf(axis.length()*1.6,38.0,82.0)
-		var height: float = width*float(textures[mode].get_height())/float(textures[mode].get_width())
-		if mode=="corebreaker": width += core_pulse*60.0
-		draw_set_transform(anchor.base,axis.angle(),Vector2(1,-1 if axis.x<0 else 1))
-		draw_texture_rect(textures[mode],Rect2(Vector2(-width*0.12,-height*0.5),Vector2(width,height)),false)
-		draw_set_transform(Vector2.ZERO)
+	if textures.has(mode) and not anchor.is_empty(): _draw_tool(anchor)
 	for arc in arcs:
 		var a: Vector2 = Vector2(arc.a)+Vector2(0,-24)
 		var b: Vector2 = Vector2(arc.b)+Vector2(0,-24)
-		var alpha: float = 1.0-float(arc.age)/0.22
-		var color: Color = Color(0.30,0.85,1.0,alpha) if mode=="chainbreaker" else Color(1.0,0.67,0.22,alpha)
+		var age: float = float(arc.age)
+		var alpha: float = pow(maxf(0.0,1.0-age/0.38),1.3)
+		var chain_effect: bool = mode=="chainbreaker"
+		var color: Color = Color(0.30,0.85,1.0,alpha) if chain_effect else Color(1.0,0.75,0.32,alpha)
 		var points: PackedVector2Array = PackedVector2Array()
-		for i in 9:
-			var t: float = float(i)/8.0
-			points.append(a.lerp(b,t)+Vector2(0,-sin(t*PI)*minf(48.0,a.distance_to(b)*0.15)))
-		draw_polyline(points,Color(color,alpha*0.2),8.0,true); draw_polyline(points,color,2.0,true)
+		for i in 17:
+			var t: float = float(i)/16.0
+			var jitter: float = sin(float(i)*2.7+floor(motion_clock*24.0))*5.0*sin(t*PI) if chain_effect else 0.0
+			points.append(a.lerp(b,t)+Vector2(jitter,-sin(t*PI)*minf(65.0,a.distance_to(b)*0.20)))
+		draw_polyline(points,Color(color,alpha*0.18),16.0,true)
+		draw_polyline(points,color,4.5,true)
+		draw_polyline(points,Color(1,1,0.92,alpha*0.9),1.5,true)
+		if chain_effect:
+			var head: float = minf(1.0,age/0.10)
+			var at: Vector2 = a.lerp(b,head)+Vector2(0,-sin(head*PI)*minf(65.0,a.distance_to(b)*0.20))
+			_ring(at,Vector2(37,37),motion_clock*7,alpha)
 	if not projectile.is_empty():
 		var at: Vector2 = Vector2(projectile.position)+Vector2(0,-24)
 		var toward: Vector2 = world._cell_center(projectile.cell)-Vector2(projectile.position)
-		draw_set_transform(at,toward.angle()); draw_texture_rect(textures["ricochet-projectile"],Rect2(-18,-9,36,18),false); draw_set_transform(Vector2.ZERO)
-	if mode=="corebreaker" and charge>0.0:
-		for i in 3: draw_circle(origin+Vector2(-12+i*7,-12),2.5,Color("ffc65a") if charge>=float(i+1) else Color("624a25"))
+		_ring(at,Vector2(36,26),toward.angle(),0.75)
+		draw_set_transform(at,toward.angle(),Vector2(1,0.82+0.18*sin(motion_clock*65)))
+		draw_texture_rect(textures["ricochet-projectile"],Rect2(-26,-13,52,26),false)
+		draw_set_transform(Vector2.ZERO)
+	for ring in rings:
+		var t: float = float(ring.age)/float(ring.life)
+		var size: float = float(ring.size)*(0.40+t*0.85)
+		_ring(Vector2(ring.position)+Vector2(0,-20),Vector2(size,size*0.65),t*0.4,(1.0-t)*0.9)
+	for chip in chips:
+		var t: float = float(chip.age)/float(chip.life)
+		var point: Vector2 = Vector2(chip.position)+Vector2(chip.velocity)*float(chip.age)+Vector2(0,-sin(t*PI)*42.0)
+		var size: float = float(chip.size)
+		draw_set_transform(point,float(chip.spin)*t)
+		draw_texture_rect(stone_texture,Rect2(Vector2.ONE*(-size*0.5),Vector2.ONE*size),false,Color(1,1,1,1-t*t))
+	draw_set_transform(Vector2.ZERO)
 
 func snapshot() -> Dictionary:
-	return {"flights":flights.size(),"scanned":scanned_last,"mode":mode,"hits":hits,"charge":charge,"chain_pending":chain.size(),"core_left":core_left,"projectile":not projectile.is_empty(),"log":hit_log.duplicate(true)}
+	return {"visual_clock":motion_clock,"deployment":deployment,"rings":rings.size(),"chips":chips.size(),"arcs":arcs.size(),"flights":flights.size(),"scanned":scanned_last,"mode":mode,"hits":hits,"charge":charge,"chain_pending":chain.size(),"core_left":core_left,"projectile":not projectile.is_empty(),"log":hit_log.duplicate(true)}
