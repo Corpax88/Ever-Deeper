@@ -8,11 +8,16 @@ func bore_pose(weight: float) -> bool:
 	if weight <= 0.0: return true
 	var pose: Dictionary = shown.duplicate(true)
 	var b: Dictionary = pose.bones
-	var facing: Basis = Basis(Vector3(0,0,1), yaw)
+	var reference: Dictionary = bank.idle[0].bones
+	# The displayed body can still be turning toward logical yaw. Keep the
+	# shaft aligned with that displayed heading so both grips stay reachable.
+	var displayed_forward: Vector3 = b.body.basis.z
+	var reference_forward: Vector3 = reference.body.basis.z
+	var displayed_yaw: float = atan2(displayed_forward.y,displayed_forward.x) - atan2(reference_forward.y,reference_forward.x)
+	var facing: Basis = Basis(Vector3(0,0,1), displayed_yaw)
 	var lean: Basis = facing * Basis(Vector3.RIGHT, 0.16) * facing.inverse()
 	var original_body: Transform3D = b.body
 	b.body.basis = lean * b.body.basis
-	var reference: Dictionary = bank.idle[0].bones
 	var tool_basis: Basis = facing * Basis(Vector3.RIGHT, 0.60) * reference.tool.basis
 	b.tool = Transform3D(tool_basis, root_position + facing * Vector3(-0.03,-0.48,0.88 + (original_body.origin.z-root_position.z-0.585)))
 	for side in SIDES:
