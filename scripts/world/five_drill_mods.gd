@@ -335,6 +335,13 @@ func _ring(point: Vector2, size: Vector2, angle: float, alpha: float) -> void:
 	draw_texture_rect(ring_texture,Rect2(-size*0.5,size),false,Color(1,1,1,clampf(alpha,0.0,1.0)))
 	draw_set_transform(Vector2.ZERO)
 
+func _floor_ring(point: Vector2, size: float, angle: float, alpha: float) -> void:
+	# Spin in the floor plane, then project; never rotate the flattened ellipse upright.
+	var flatten: Transform2D = Transform2D(Vector2(1,0),Vector2(0,0.58),point)
+	draw_set_transform_matrix(flatten*Transform2D(angle,Vector2.ZERO))
+	draw_texture_rect(ring_texture,Rect2(Vector2.ONE*(-size*0.5),Vector2.ONE*size),false,Color(1,1,1,alpha))
+	draw_set_transform(Vector2.ZERO)
+
 func _tool_piece(rect: Rect2, width: float, base: Vector2, angle: float, shift: Vector2 = Vector2.ZERO, turn: float = 0.0, roll: float = 1.0) -> void:
 	var texture: Texture2D = textures[mode]
 	var size: Vector2 = texture.get_size()
@@ -415,7 +422,7 @@ func _draw() -> void:
 		var intensity: float = maxf(deployment*0.32,minf(1.0,float(flights.size())/3.0))
 		for i in 3:
 			var size: float = 80.0+i*44.0
-			_ring(origin+Vector2(0,-15),Vector2(size,size*0.58),motion_clock*(1.5+i*0.25),intensity*(0.48-i*0.1))
+			_floor_ring(origin+Vector2(0,-15),size,motion_clock*(1.5+i*0.25),intensity*(0.48-i*0.1))
 		for key in flights:
 			if not world.loose_drops.has(key): continue
 			var p: Vector2 = world.loose_drops[key].visual.position

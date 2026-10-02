@@ -42,6 +42,69 @@ jobs:
       - run: node .github/mod-motion/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/browser" dev
       - run: node .github/deep-treasury/startup.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/ordinary"
         env: {EXPECTED_VERSION: '1.0.0-dev.15.49', CANDIDATE_SOURCE: '${{ github.sha }}'}
+      - name: Package bounded review transport
+        if: always()
+        run: |
+          python3 - <<'PYCODE'
+          import os,pathlib,zipfile,hashlib,json
+          root=pathlib.Path(os.environ['RUNNER_TEMP']); folder=root/'evidence'; output=root/'transport';output.mkdir()
+          archive=root/'review.zip'
+          with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in folder.rglob('*'):
+                  if p.is_file():z.write(p,str(p.relative_to(folder)))
+          raw=archive.read_bytes();parts=[]
+          for i,start in enumerate(range(0,len(raw),24*1024*1024)):
+              data=raw[start:start+24*1024*1024];name='part'+str(i)+'.bin';(output/name).write_bytes(data);parts.append({'name':name,'sha256':hashlib.sha256(data).hexdigest()})
+          (output/'index.json').write_text(json.dumps({'sha256':hashlib.sha256(raw).hexdigest(),'parts':parts}))
+          PYCODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mod-motion-review-part0
+          path: |
+            ${{ runner.temp }}/transport/part0.bin
+            ${{ runner.temp }}/transport/index.json
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mod-motion-review-part1
+          path: |
+            ${{ runner.temp }}/transport/part1.bin
+            ${{ runner.temp }}/transport/index.json
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mod-motion-review-part2
+          path: |
+            ${{ runner.temp }}/transport/part2.bin
+            ${{ runner.temp }}/transport/index.json
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mod-motion-review-part3
+          path: |
+            ${{ runner.temp }}/transport/part3.bin
+            ${{ runner.temp }}/transport/index.json
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mod-motion-review-part4
+          path: |
+            ${{ runner.temp }}/transport/part4.bin
+            ${{ runner.temp }}/transport/index.json
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mod-motion-review-part5
+          path: |
+            ${{ runner.temp }}/transport/part5.bin
+            ${{ runner.temp }}/transport/index.json
+          retention-days: 30
       - uses: actions/upload-artifact@v4
         if: always()
         with: {name: mod-motion-evidence, path: '${{ runner.temp }}/evidence', retention-days: 30}
