@@ -1,0 +1,200 @@
+{
+  "source": "53eb67d13ba58b5d70ec154a9bf4572dc86bd8e1",
+  "files": {
+    "index.html": {
+      "size": 23145,
+      "sha256": "1c35ad5d7860f26d8917defd8ae91abf2f0afe3c9e32d1aef8cc95b14b5e568d"
+    },
+    "index.js": {
+      "size": 282403,
+      "sha256": "1c05fc40c7e418b0234c4e5ac39dfc7df1286e98443946e84b89a7394de6c753"
+    },
+    "index.pck": {
+      "size": 316982630,
+      "sha256": "0108c260556a5a859a3168885a2cb74e51c5e5bdfd99e5d2fb0c2d3614ff3f92"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 4571,
+      "sha256": "65bc52dba653b2c39735a621863ae7332dda9c65d3a1bd7891d356390110da7f"
+    }
+  },
+  "runtime": "Godot4.7.2 Linux headless; no graphical/FPS claim",
+  "checks": [
+    {
+      "name": "chain-fixture-exceeds-three",
+      "passed": true
+    },
+    {
+      "name": "chain-all-snapshot-nodes-after-motion",
+      "passed": true
+    },
+    {
+      "name": "chain-excludes-buried-and-offscreen",
+      "passed": true
+    },
+    {
+      "name": "chain-rebase-preserves-snapshot-and-shifts-origin",
+      "passed": true
+    },
+    {
+      "name": "chain-continues-after-coordinate-rebase",
+      "passed": true
+    },
+    {
+      "name": "chain-release-cancels-pending-without-extra-hit",
+      "passed": true
+    },
+    {
+      "name": "core-three-hits-before-next-ordinary-hit-950",
+      "passed": true
+    },
+    {
+      "name": "core-three-hits-before-next-ordinary-hit-974",
+      "passed": true
+    },
+    {
+      "name": "core-three-hits-before-next-ordinary-hit-998",
+      "passed": true
+    },
+    {
+      "name": "core-three-hits-before-next-ordinary-hit-1022",
+      "passed": true
+    },
+    {
+      "name": "twin-reveals-without-mining-node",
+      "passed": true
+    },
+    {
+      "name": "ricochet-three-distinct-rock-contacts",
+      "passed": true
+    },
+    {
+      "name": "ricochet-reveals-three-without-mining-buried-nodes",
+      "passed": true
+    },
+    {
+      "name": "vortex-bounded-work",
+      "passed": true
+    },
+    {
+      "name": "vortex-save-during-flight",
+      "passed": true
+    },
+    {
+      "name": "vortex-load-during-flight",
+      "passed": true
+    },
+    {
+      "name": "vortex-reload-preserves-ledger",
+      "passed": true
+    },
+    {
+      "name": "vortex-reset-preserves-uncollected-ledger",
+      "passed": true
+    },
+    {
+      "name": "vortex-exact-once-loot",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-twin_auger-level-0",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-chainbreaker-level-0",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-ricochet-level-0",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-corebreaker-level-0",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-vortex-level-0",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-twin_auger-level-3",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-chainbreaker-level-3",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-ricochet-level-3",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-corebreaker-level-3",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-vortex-level-3",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-twin_auger-level-10",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-chainbreaker-level-10",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-ricochet-level-10",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-corebreaker-level-10",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-vortex-level-10",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-twin_auger-level-20",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-chainbreaker-level-20",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-ricochet-level-20",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-corebreaker-level-20",
+      "passed": true
+    },
+    {
+      "name": "controller-motion-parity-24-bearings-vortex-level-20",
+      "passed": true
+    }
+  ]
+}
