@@ -21,10 +21,10 @@ func run():
  state=root.get_node('RunState');state.initialize_persistence(output.path_join('save.json'));state.reset_run(false)
  main._dev_ensure_playing();main._dev_seed_victory_state();main._dev_jump_endless(1);main._dev_grant_max_tools_state()
  world=main.endless_world;world.resonance_drill.set_enabled(false)
- main._dev_build_all_workshops_state()
- state.endless_workshops['tool_forge'].level=5
+ var relic: String=state._relic_id_for_workshop('tool_forge')
+ state.endless_relics[relic]={'discovered':true,'collected':true,'placed':true,'found_depth':1}
+ state.endless_workshops['tool_forge']={'built':true,'level':5,'style':'original','delivered':0}
  state.set_endless_tool_style('crusher')
- main._dev_jump_endless(1)
  world.player.prepare_visual_cache()
  world.drill_modes.dev_override='bore_rush'
  main.achievement_toast.hide()

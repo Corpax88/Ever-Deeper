@@ -19,7 +19,8 @@ func bore_pose(weight: float) -> bool:
 	var original_body: Transform3D = b.body
 	b.body.basis = lean * b.body.basis
 	var tool_basis: Basis = facing * Basis(Vector3.RIGHT, 0.60) * reference.tool.basis
-	b.tool = Transform3D(tool_basis, root_position + facing * Vector3(-0.03,-0.48,0.88 + (original_body.origin.z-root_position.z-0.585)))
+	# Translation also follows the displayed pelvis, including walk/stop blends.
+	b.tool = Transform3D(tool_basis, original_body.origin + facing * Vector3(-0.03,-0.48,0.295))
 	for side in SIDES:
 		b["upper."+side].origin = b.body * (original_body.affine_inverse() * shown.bones["upper."+side].origin)
 		b["hand."+side] = b.tool * (reference.tool.affine_inverse() * reference["hand."+side])
