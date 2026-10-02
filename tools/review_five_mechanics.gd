@@ -53,6 +53,22 @@ func run() -> void:
 	for hit in five.hit_log: ids[String(hit.id)] = true
 	check("chain-all-snapshot-nodes-after-motion",ids.size() == expected and five.chain.is_empty())
 	check("chain-excludes-buried-and-offscreen",not ids.has("buried") and not ids.has("offscreen"))
+	five.hit_log.clear(); five._start_chain(0)
+	var pending: Array = five.chain.duplicate()
+	var old_from: Vector2 = five.chain_from
+	var shift: Vector2 = Vector2(0,world.TILE_SIZE)
+	five.rebase(shift)
+	for ore in world.resources:
+		ore.position = Vector2(ore.position)+shift
+		ore.cell = Vector2i(ore.cell)+Vector2i(0,1)
+	check("chain-rebase-preserves-snapshot-and-shifts-origin",five.chain == pending and five.chain_from.is_equal_approx(old_from+shift))
+	for i in expected+4: five._update_chain(0.1)
+	check("chain-continues-after-coordinate-rebase",five.hit_log.size() == pending.size())
+	five._start_chain(0); five.held_last = true
+	five.tick(0.016,"chainbreaker",false)
+	var cancelled_hits: int = five.hits
+	five._update_chain(1.0)
+	check("chain-release-cancels-pending-without-extra-hit",five.chain.is_empty() and five.hits == cancelled_hits)
 	for hp in [950,974,998,1022]:
 		fresh(); five.mode = "corebreaker"; five.charge = 3.0
 		world.resources.append(node_at("core",Vector2i(19,12),hp))
@@ -81,16 +97,45 @@ func run() -> void:
 		intact = intact and int(ore.hp) == 1022
 	check("ricochet-reveals-three-without-mining-buried-nodes",revealed == 3 and intact)
 	fresh(); state.endless_chunks.clear(); five.mode = "vortex"
-	var before: int = int(state.cargo.get("rootiron",0))
-	for i in 40: state._register_endless_drop(1,"vortex-"+str(i),world._chunk_cell_index(Vector2i(19,12)),"rootiron",2)
+	var before: int = int(state.cargo.get("deep_alloy",0))
+	for i in 40: state._register_endless_drop(1,"c"+str(i),world._chunk_cell_index(Vector2i(19,12)),"deep_alloy",2)
 	world._sync_loose_drops()
 	for i in 7: five.collect_vortex(0.016)
 	check("vortex-bounded-work",five.scanned_last <= 32 and five.flights.size() <= 12)
+	check("vortex-save-during-flight",state.save_game(output.path_join("in-flight.json")))
+	world._clear_loose_drop_visuals()
+	check("vortex-load-during-flight",state.load_game(output.path_join("in-flight.json")))
+	world._sync_loose_drops()
+	check("vortex-reload-preserves-ledger",state.endless_loose_drops(1).size()*2 + int(state.cargo.get("deep_alloy",0))-before == 80)
 	five.reset()
-	check("vortex-reset-preserves-uncollected-ledger",state.endless_loose_drops(1).size()*2 + int(state.cargo.get("rootiron",0))-before == 80)
+	check("vortex-reset-preserves-uncollected-ledger",state.endless_loose_drops(1).size()*2 + int(state.cargo.get("deep_alloy",0))-before == 80)
 	five.mode = "vortex"
 	for i in 300: five.collect_vortex(0.016)
-	check("vortex-exact-once-loot",state.endless_loose_drops(1).is_empty() and int(state.cargo.get("rootiron",0))-before == 80 and world.loose_drops.is_empty())
+	check("vortex-exact-once-loot",state.endless_loose_drops(1).is_empty() and int(state.cargo.get("deep_alloy",0))-before == 80 and world.loose_drops.is_empty())
+	# Compare actual controller physics to ordinary walking, with active mining.
+	# 24 bearings are grouped into one meaningful result per mode/speed level.
+	fresh(); world.player.control_enabled = true
+	for level in [0,3,10,20]:
+		state.set_movement_speed_level(level)
+		world.player.movement_speed = float(root.get_node("GameData").data.PLAYER_SPEED)*state.movement_speed_multiplier()
+		for mod in five.IDS:
+			var identical: bool = true
+			for bearing in 24:
+				var direction: Vector2 = Vector2.RIGHT.rotated(float(bearing)*TAU/24.0)
+				var start: Vector2 = world._cell_center(Vector2i(18,12))
+				world.resources.clear(); world.set_mine_held(false); world.drill_modes.dev_override = ""; world.drill_modes.reset()
+				world.player.global_position = start; world.player.external_movement = direction
+				for step in 6: world.player._physics_process(1.0/60.0)
+				var baseline: Vector2 = world.player.global_position-start
+				world.player.global_position = start; world.player.set_facing(direction)
+				var ore: Dictionary = node_at("motion",world._world_to_cell(start+direction*90.0))
+				ore.position = start+direction*90.0; world.resources.append(ore)
+				world.drill_modes.dev_override = mod; world.set_mine_held(true)
+				for step in 6:
+					world.drill_modes.tick(1.0/60.0); world.player._physics_process(1.0/60.0)
+				identical = identical and (world.player.global_position-start).distance_to(baseline)<0.01 and baseline.length()>0.0
+			check("controller-motion-parity-24-bearings-"+mod+"-level-"+str(level),identical)
+	world.player.external_movement = Vector2.ZERO; world.set_mine_held(false)
 	FileAccess.open(output.path_join("mechanics.json"),FileAccess.WRITE).store_string(JSON.stringify(checks,"\t"))
 	for result in checks:
 		if not bool(result.passed): quit(1); return
