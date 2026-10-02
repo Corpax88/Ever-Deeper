@@ -2,8 +2,8 @@ extends RefCounted
 const Ledger = preload("res://scripts/state/treasury_state.gd")
 const Stack = preload("res://scripts/world/treasury_stack.gd")
 
-const MODS: Dictionary = {"wallet_gold":"resonance", "burrowsteel":"bore_rush", "prismite":"laser"}
-const NAMES: Dictionary = {"resonance":"Resonance", "bore_rush":"Bore Rush", "laser":"Laser"}
+const MODS: Dictionary = {"wallet_gold":"resonance", "burrowsteel":"bore_rush", "prismite":"laser", "rootiron":"twin_auger", "echo_crystal":"chainbreaker", "phasecrystal":"ricochet", "deep_alloy":"corebreaker", "singularity":"vortex"}
+const NAMES: Dictionary = {"resonance":"Resonance", "bore_rush":"Bore Rush", "laser":"Laser", "twin_auger":"Twin Auger", "chainbreaker":"Chainbreaker", "ricochet":"Ricochet", "corebreaker":"Corebreaker", "vortex":"Vortex"}
 
 static func clean(raw: Variant) -> Dictionary:
 	var result: Dictionary = {"pinned":"", "laser_mode":false}

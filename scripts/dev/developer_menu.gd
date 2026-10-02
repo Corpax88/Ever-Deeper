@@ -113,6 +113,11 @@ const LOCATION_ACTIONS: = [
 
 const RESOURCE_ACTIONS: = [
 	{"label": "RESONANCE\nTEST", "command": "test_resonance"},
+	{"label":"TWIN AUGER\nTEST", "command":"test_twin_auger"},
+	{"label":"CHAINBREAKER\nTEST", "command":"test_chainbreaker"},
+	{"label":"RICOCHET\nTEST", "command":"test_ricochet"},
+	{"label":"COREBREAKER\nTEST", "command":"test_corebreaker"},
+	{"label":"VORTEX\nTEST", "command":"test_vortex"},
 	{"label": "BORE RUSH\nTEST", "command": "test_bore_rush"},
 	{"label": "LASER\nTEST", "command": "test_laser"},
 	{"label": "+200 EACH\nRESOURCE", "command": "grant_resources_200"},
@@ -148,6 +153,11 @@ const ALL_COMMAND_IDS: = [
 	"grant_gold_10000",
 	"grant_max_tools",
 	"test_resonance",
+	"test_twin_auger",
+	"test_chainbreaker",
+	"test_ricochet",
+	"test_corebreaker",
+	"test_vortex",
 	"test_bore_rush",
 	"test_laser",
 	"grant_all_relics",

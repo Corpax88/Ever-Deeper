@@ -1604,7 +1604,8 @@ func _update_stream_depth() -> void:
 func _rebase_stream_window(next_start: int) -> void:
 	var shift: Vector2 = Vector2(0.0, float(window_start_depth - next_start) * CHUNK_HEIGHT)
 	resonance_drill.rebase(shift)
-	drill_modes.reset()
+	if drill_modes.selected() in drill_modes.five.IDS: drill_modes.five.rebase(shift)
+	else: drill_modes.reset()
 	var previous_center: Vector2 = player.camera.get_screen_center_position() + shift
 	var position: Vector2 = player.global_position + shift
 	var facing: Vector2 = player.facing_vector
@@ -3659,6 +3660,7 @@ func _update_buried_visibility() -> void:
 
 
 func _clear_loose_drop_visuals() -> void:
+	if is_instance_valid(drill_modes) and is_instance_valid(drill_modes.five): drill_modes.five.clear_drops()
 	for drop in loose_drops.values():
 		if is_instance_valid(drop.visual): drop.visual.queue_free()
 	loose_drops.clear()
@@ -3679,9 +3681,11 @@ func _sync_loose_drops() -> void:
 			sprite.z_index = actor_draw_depth(sprite.position) + 2
 			add_child(sprite)
 			loose_drops[key] = {"id": id, "depth": depth, "visual": sprite, "age": 0.0, "origin": sprite.position}
+			if is_instance_valid(drill_modes.five): drill_modes.five.register_drop(key)
 
 
 func _update_loose_drops(delta: float) -> void:
+	if is_instance_valid(drill_modes.five) and drill_modes.five.collect_vortex(delta): return
 	for key in loose_drops.keys():
 		var drop: Dictionary = loose_drops[key]
 		var sprite: Sprite2D = drop.visual

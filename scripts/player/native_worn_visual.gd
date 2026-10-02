@@ -23,6 +23,7 @@ var cached_surface_key: String = ""
 var cached_surfaces: Array = []
 var bore_weight: float = 0.0
 var bore_spin: float = 0.0
+var mod_active: bool = false
 
 func setup(owner_visual: Node2D) -> void:
 	visual = owner_visual
@@ -97,21 +98,26 @@ func _surfaces(target: Vector2, target_id: String) -> Array:
 	return result
 
 func advance(delta: float) -> bool:
-	if failed or visual.active_gear not in Equipment.GEARS or not visual.is_visible_in_tree():
+	var owner_world: Node = player.get_parent()
+	var modes: Node = owner_world.get("drill_modes")
+	mod_active = is_instance_valid(modes) and modes.selected() in modes.five.IDS and owner_world.active
+	# Existing native hero and braced tool bone; normal gear resumes on unequip.
+	var target_gear: String = "crusher" if mod_active else visual.active_gear
+	if failed or target_gear not in Equipment.GEARS or not visual.is_visible_in_tree():
 		if is_instance_valid(rig): suspend()
 		return false
 	if not is_instance_valid(rig) and not _start(): return false
-	if equipment.current != visual.active_gear:
+	if equipment.current != target_gear:
 		bore_weight = 0.0
 		bore_spin = 0.0
-		if not equipment.equip(visual.active_gear): return _fail("Native pickaxe identity mismatch: " + visual.active_gear)
+		if not equipment.equip(target_gear): return _fail("Native pickaxe identity mismatch: " + target_gear)
 		_refresh_canvas_pass()
 		motion.cap_local = equipment.contact_cap(reference_cap)
 		motion.reference_cap = motion.bank.mine[21].bones.tool * motion.cap_local
 		motion.contact_cache.clear()
 		motion.serial = -1
 	var packet: Dictionary = player.animation_packet()
-	var bore_active: bool = equipment.current == "crusher" and player.drill_motion_override and player.control_enabled
+	var bore_active: bool = (equipment.current == "crusher" and player.drill_motion_override or mod_active) and player.control_enabled
 	bore_weight = move_toward(bore_weight, 1.0 if bore_active else 0.0, delta / 0.14)
 	if bore_active:
 		bore_spin = fposmod(bore_spin + delta * TAU * 2.4, TAU)
@@ -135,13 +141,26 @@ func advance(delta: float) -> bool:
 	if not motion.bore_pose(bore_weight): return _fail("Bore Rush pose rejected: " + str(motion.errors))
 	equipment.apply_pose()
 	equipment.apply_bore(bore_active or not is_zero_approx(bore_spin), bore_spin)
+	if mod_active and not equipment.verified: equipment._initialize()
+	if equipment.verified:
+		equipment.hero_mesh.mesh = equipment.body_mesh if mod_active or equipment.current != "worn" else equipment.original_mesh
+	if is_instance_valid(equipment.tool): equipment.tool.visible = not mod_active
 	rig.set_outfit(visual.OUTFIT_COLORS.get(visual.active_endless_outfit_style, visual.OUTFIT_COLORS.miner), visual.active_endless_outfit_style != "miner")
 	updates += 1
 	return true
 
 func snapshot() -> Dictionary:
 	return {"active":is_instance_valid(rig), "failed":failed, "failure":failure,
-		"bore_weight":bore_weight,"bore_spin":bore_spin,
+		"mod_active":mod_active,"bore_weight":bore_weight,"bore_spin":bore_spin,
 		"gear":equipment.current if equipment != null else "", "updates":updates, "generations":generations, "surface_cache":surface_cache.size(),
 		"motion":motion.snapshot() if motion != null else {},
 		"unreachable_contacts":motion.unreachable_contacts if motion != null else 0}
+
+func mod_anchor() -> Dictionary:
+	if not mod_active or not is_instance_valid(rig): return {}
+	var pose: Transform3D = rig.shown.tool
+	var base: Vector3 = pose * Vector3.ZERO - rig.root_native
+	var tip: Vector3 = pose * motion.cap_local - rig.root_native
+	var a: Vector2 = rig.sprite.to_global(rig.camera.unproject_position(rig.AXIS * base))
+	var b: Vector2 = rig.sprite.to_global(rig.camera.unproject_position(rig.AXIS * tip))
+	return {"base":a,"tip":b}

@@ -38,6 +38,21 @@ var ore_escape_goal: Vector2
 var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind)=="five_fixture":
+		main._on_developer_command_requested("test_"+String(data.mod))
+		var w: Node=main.endless_world
+		w.set_mine_held(false)
+		var mole: Node=main.get_node("CompanionInterface").active_mole()
+		mole.autonomous_enabled=false;mole.recall()
+		w._ground_props.clear();w.discovery_sites.clear()
+		for y in range(5,20):
+			for x in range(7,32): w._set_floor(Vector2i(x,y),x<20)
+		w.player.global_position=w._cell_center(Vector2i(18,12))
+		w.player.set_facing(Vector2.RIGHT);w.player.camera.reset_smoothing()
+		w.drill_modes.reset();main.achievement_toast.hide()
+		RunState.set_movement_speed_level(int(data.get("speed",3)))
+		command_id=int(data.id)
+		return
 	if String(data.kind) == "forge_icon_fixture":
 		main._dev_seed_victory_state()
 		main._dev_build_all_workshops_state()

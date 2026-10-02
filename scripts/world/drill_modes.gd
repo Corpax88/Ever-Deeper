@@ -3,6 +3,7 @@ extends Node2D
 const Goals = preload("res://scripts/state/treasury_goals.gd")
 const REACH: int = 12
 var world: Node2D
+var five: Node2D
 var target_key: String = ""
 var elapsed: float = 0.0
 var initial_hp: int = 1
@@ -19,12 +20,16 @@ var detour: Dictionary = {}
 
 func setup(owner_world: Node2D) -> void:
 	world=owner_world
+	five=preload("res://scripts/world/five_drill_mods.gd").new()
+	add_child(five)
+	five.setup(world)
 	emitter=ImageTexture.create_from_image(Image.load_from_file("res://assets/ui/mods/laser-emitter-v1.png"))
 	z_index=1901
 	material=CanvasItemMaterial.new()
 	material.light_mode=CanvasItemMaterial.LIGHT_MODE_UNSHADED
 
 func reset() -> void:
+	if is_instance_valid(five): five.cancel()
 	target_key=""
 	elapsed=0.0
 	firing=false
@@ -39,10 +44,18 @@ func selected() -> String:
 	var id: String=dev_override if not dev_override.is_empty() else Goals.active_mod()
 	if dev_override=="laser": return "laser" if dev_laser_on else ""
 	if id=="laser" and not bool(RunState.treasury_goals.get("laser_mode",false)): return ""
-	return id if id in ["bore_rush","laser"] else ""
+	return id if id in ["bore_rush","laser"] or id in five.IDS else ""
 
 func tick(delta: float) -> bool:
-	mode=selected()
+	var next: String=selected()
+	if next!=mode: reset()
+	mode=next
+	if mode in five.IDS:
+		world._cancel_mining()
+		world.player.drill_motion_override=false
+		five.tick(delta,mode,world.external_mine_held or Input.is_action_pressed("mine"))
+		return true
+	if not five.mode.is_empty(): five.reset()
 	if mode.is_empty():
 		reset()
 		return false
@@ -244,4 +257,4 @@ func _draw() -> void:
 	draw_circle(beam_end,5.0+sin(elapsed*60.0)*1.5,Color(1.0,0.72,0.25,0.8))
 
 func snapshot() -> Dictionary:
-	return {"mode":selected(),"firing":firing,"target":target_key,"elapsed":elapsed,"impacts":impacts,"range":REACH,"beam_start":[beam_start.x,beam_start.y],"beam_end":[beam_end.x,beam_end.y]}
+	return {"five":five.snapshot(),"mode":selected(),"firing":firing,"target":target_key,"elapsed":elapsed,"impacts":impacts,"range":REACH,"beam_start":[beam_start.x,beam_start.y],"beam_end":[beam_end.x,beam_end.y]}

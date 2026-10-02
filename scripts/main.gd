@@ -414,6 +414,14 @@ func _on_developer_command_requested(command: String) -> void :
 		"grant_gold_10000":
 			RunState.gold += 10000
 			message = "+10 000 GOLD"
+		"test_twin_auger", "test_chainbreaker", "test_ricochet", "test_corebreaker", "test_vortex":
+			if phase != "endless": ok = _dev_jump_endless(1)
+			_dev_grant_max_tools_state()
+			endless_world.resonance_drill.dev_override=false
+			endless_world.resonance_drill.set_enabled(false)
+			endless_world.drill_modes.reset()
+			endless_world.drill_modes.dev_override=command.trim_prefix("test_")
+			message=command.trim_prefix("test_").replace("_"," ").to_upper()+" TEST · hold Mine and steer"
 		"test_bore_rush", "test_laser":
 			if phase != "endless": ok = _dev_jump_endless(1)
 			_dev_grant_max_tools_state()
