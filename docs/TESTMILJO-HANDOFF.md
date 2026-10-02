@@ -1,3 +1,5 @@
+Current verified release: [Hero polish DEV15.50](docs/hero-polish/HANDOFF.md). Runtime6ceef595; Mac37066008459; publication37066999206/receipt11253066201 verifies27 public hashes. Eight native pickaxes: two-handed swing, fitted sleeves, matte cloth, grounded cadence. Critic8/10 for pose/fit/appearance; not a physical iPhone/FPS claim. No pending jobs/approvals; permanent GitHub/DEV authorization persists. Never rebuild historical main.
+
 Current task: [Crusher Bore Rush animation](bore-crusher/HANDOFF.md). Actual native candidate and independent critic in progress; public DEV15.45 unchanged.
 
 Current task: [approved treasury entrance and podium fit](treasury-fit/HANDOFF.md). DEV15.43 candidate, 3 critic rounds; final gates pending.
