@@ -29,4 +29,10 @@ void fragment() {
 		CLEARCOAT = response.g;
 		CLEARCOAT_ROUGHNESS = response.b;
 	}
+	// Restore a matte woven response while retaining all authored texture maps.
+	float fabric = texture(cloth_mask, UV).r;
+	ROUGHNESS = mix(ROUGHNESS, max(ROUGHNESS, 0.82), fabric);
+	SPECULAR *= mix(0.90, 0.48, fabric);
+	CLEARCOAT *= mix(0.68, 0.0, fabric);
+	CLEARCOAT_ROUGHNESS = max(CLEARCOAT_ROUGHNESS, 0.20);
 }

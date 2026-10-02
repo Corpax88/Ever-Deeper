@@ -175,6 +175,8 @@ func plan_contact(screen_target: Vector2, surfaces: Array = [], record_failure: 
 	# location stays exact; candidate scoring does not move the gameplay root.
 	var contact: Dictionary = bank.mine[21]
 	var hand_local: Transform3D = contact.bones.tool.affine_inverse()*contact.bones["hand.R"]
+	var support_local: Transform3D = contact.bones.tool.affine_inverse()*contact.bones["hand.L"]
+	var two_handed: bool = contact.release < .001
 	var best := INF
 	var best_tool := Transform3D.IDENTITY
 	var best_yaw := 0.0
@@ -212,6 +214,10 @@ func plan_contact(screen_target: Vector2, surfaces: Array = [], record_failure: 
 					var hand := tool*hand_local
 					var reach := shoulder.distance_to(hand.origin)
 					if reach > .698 or reach < .07 or hand.origin.z < .24: continue
+					if two_handed:
+						var support: Vector3 = tool*support_local.origin
+						var support_reach: float = (rotation*contact.bones["upper.L"].origin).distance_to(support)
+						if support_reach > .698 or support_reach < .07 or support.z < .24: continue
 					var score := nominal.origin.distance_squared_to(tool.origin)+pitch*pitch*.08+swivel*swivel*.08+pow(height-reference_cap.z,2)*.03
 					if score < best:
 						best = score
@@ -235,6 +241,7 @@ func aimed(at: float) -> Dictionary:
 	var tool: Transform3D = result.bones.tool
 	var changed := _transform(tool,correction*tool,weight)
 	var hand_relative: Transform3D = tool.affine_inverse()*result.bones["hand.R"]
+	var support_relative: Transform3D = tool.affine_inverse()*result.bones["hand.L"]
 	# During retargeted approach/withdrawal the original moving shoulder can
 	# leave the interpolated wrist outside its reach. Project the rigid tool,
 	# never a bone endpoint independently. Accepted contact plans stay inside.
@@ -245,10 +252,27 @@ func aimed(at: float) -> Dictionary:
 		var correction_position := shoulder+(wrist-shoulder).normalized()*.698-wrist
 		max_tool_retarget = maxf(max_tool_retarget,correction_position.length())
 		changed.origin += correction_position
+	if result.release < .001:
+		# Fit the whole rigid shaft to both wrist reach spheres. Never detach a
+		# wrist from its grip or lengthen a bone to accept a contact.
+		for attempt in 12:
+			var correction_position := Vector3.ZERO
+			for side in SIDES:
+				var relative: Transform3D = hand_relative if side == "R" else support_relative
+				var joint: Vector3 = result.bones["upper."+side].origin
+				var endpoint: Vector3 = changed*relative.origin
+				var offset: Vector3 = endpoint-joint
+				if offset.length() > .698: correction_position -= offset.normalized()*(offset.length()-.698)
+			if correction_position.length() < .000001: break
+			max_tool_retarget = maxf(max_tool_retarget,correction_position.length())
+			changed.origin += correction_position
 	var before: Dictionary = result.bones.duplicate(true)
 	result.bones.tool = changed
 	result.bones["hand.R"] = changed*hand_relative
 	_solve_chain(result.bones,before,before,0,"arm","R")
+	if result.release < .001:
+		result.bones["hand.L"] = changed*support_relative
+		_solve_chain(result.bones,before,before,0,"arm","L")
 	return result
 
 func _world(pose: Dictionary) -> Dictionary:
@@ -296,7 +320,8 @@ func advance(delta: float,packet: Dictionary) -> bool:
 		var clock_hit: float = clampf(float(packet.hit_phase), 0.01, 0.99)
 		phase = clock_progress / clock_hit * 0.42 if clock_progress <= clock_hit else 0.42 + (clock_progress - clock_hit) / (1.0 - clock_hit) * 0.58
 	elif mode == "walk":
-		gait = fposmod(gait+distance/float(metadata.stride_pixels),1)
+		var gait_step: float = ground(displacement).length()/float(metadata.stride_native) if metadata.has("stride_native") else distance/float(metadata.stride_pixels)
+		gait = fposmod(gait+gait_step,1)
 		phase = gait
 	else: phase = fposmod(phase+delta/3.6,1)
 	var wanted := _world(aimed(phase) if mode == "mine" and aim_ready else rotate_pose(sample(mode,phase),yaw))

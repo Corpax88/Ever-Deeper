@@ -4,6 +4,7 @@ const Rig = preload("res://scripts/player/native_worn/native_rig.gd")
 const Motion = preload("res://scripts/player/native_worn/runtime_motion.gd")
 const Equipment = preload("res://scripts/player/native_worn/pickaxe_equipment.gd")
 const Surface = preload("res://scripts/player/native_worn/contact_surface.gd")
+const ClothFit = preload("res://scripts/player/native_worn/cloth_fit.gd")
 const ASSETS = "res://assets/native-worn"
 var visual: Node2D
 var player: Node2D
@@ -61,6 +62,9 @@ func _start() -> bool:
 	reference_cap = motion.cap_local
 	equipment = Equipment.new()
 	equipment.setup(rig)
+	# Preserve the imported rest mesh; fit sleeve deformation to the working
+	# armature once per rig generation, before either equipment mesh is shown.
+	ClothFit.new().apply(self)
 	_refresh_canvas_pass()
 	generations += 1
 	return true
