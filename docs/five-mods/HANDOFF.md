@@ -1,4 +1,4 @@
-# Five mods — DEV15.48 accepted; publication in progress
+# Five mods — DEV15.48 published and verified
 
 Canonical runtime: 53eb67d13ba58b5d70ec154a9bf4572dc86bd8e1 on codex/five-mods-20261002 in Corpax88/Ever-Deeper. Main is publication carrier only.
 Approved Twin Auger, Chainbreaker, Ricochet, Corebreaker and Vortex implemented. All visible exposed Chainbreaker nodes are snapshotted without a target cap. Existing native hero and braced grip retained; approved PNG tool sprites and Skills-Pappa previews integrated.
@@ -9,7 +9,7 @@ Mac37049694489 succeeded: input release,414core,76 browser observations/checks, 
 Local final package equals all9 Mac file hashes. Focused39 native gates additionally pass: all-node snapshot, hidden/offscreen exclusion, rebase/release, Core cadence, Twin reveal separation, Ricochet3 contacts/reveal separation, Vortex bounded work/save/reload/exact loot and ordinary-controller parity in24 bearings at levels0/3/10/20 for each mod.
 Known pre-existing invariant QA flag-order assertion remains recorded, not passed. No physical iPhone/FPS or full animation-sequence certification. Small tool/effect distinctness at overview scale remains minor polish.
 
-Publication uses .github/workflows/publish-five-mods.yml and strict immutable publisher: exact run/source/artifact/digest, native and browser reports, before-manifest and all27 public hashes. LIVE1.0.4 and Worn protected. Do not claim published until receipt passes.
+Publication uses .github/workflows/publish-five-mods.yml and strict immutable publisher: exact run/source/artifact/digest, native and browser reports, before-manifest and all27 public hashes. LIVE1.0.4 and Worn protected. DEV15.48 is published and all27 public file hashes verified. Publication3e41fe5176554fece4c1d876255b9f675315c530/run37050728203; receipt11245994213; rollback11245649239 retainsDEV15.47. LIVE1.0.4 and Worn preserved. No pending jobs or approvals.
 Test after release: refresh DEV, Continue, DEV TOOLS → TWIN AUGER / CHAINBREAKER / RICOCHET / COREBREAKER / VORTEX TEST. Hold Mine and steer; release stops. Session overrides do not grant saved claims. Earned podium preview/claim/track/toggle supported.
 
 Authorization: Mats explicitly confirms permanent GitHub source-upload and gated DEV-publication authorization across future chats. Do not ask again. Native image and behavioral gates still apply.

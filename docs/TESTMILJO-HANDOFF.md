@@ -1,3 +1,5 @@
+Current release: [Five approved mods DEV15.48](docs/five-mods/HANDOFF.md). DEV15.48 is published and all27 public file hashes verified. Publication3e41fe5176554fece4c1d876255b9f675315c530/run37050728203; receipt11245994213; rollback11245649239 retainsDEV15.47. LIVE1.0.4 and Worn preserved. No pending jobs or approvals. Canonical gameplay53eb67d on codex/five-mods-20261002;39 native/76 browser checks,33 images, critic8.2/10. Main is publication carrier; do not rebuild old main or repeat accepted unchanged tests. Permanent GitHub upload/gatedDEV authorization applies across chats; do not ask again.
+
 # Oppdatert 2. oktober 2026 — DEV15.47: godkjent smieikon publisert
 
 Den godkjente transparente hakke/ambolt-PNGen brukes nå på Tool Forge-knappen ved smia i hubben. Tekst, trykkflate og handling beholdt; øvrige kontekstikoner uendret. Mats godkjente bildet og ba eksplisitt om implementering. Ingen save- eller gameplayendring. Oppdater DEV → Continue; gå bort til den bygde Tool Forge i hubben.
