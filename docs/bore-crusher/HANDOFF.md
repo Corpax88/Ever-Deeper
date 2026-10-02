@@ -1,4 +1,6 @@
-# Crusher skin during Bore Rush — DEV15.46 candidate
+DEV15.46 published and verified: publication02699fd32280d07aa87ecc40e443a38656c0b592/run36982408035; receipt11216152475 confirms27 public hashes, LIVE1.0.4 and Worn preserved. Rollback11215424940 retains DEV15.45. No pending jobs. Refresh → Continue; no reset. 
+
+# Crusher skin during Bore Rush — DEV15.46 published
 
 User confirmed DEV15.45 Rush flow on physical phone, then reported rigid pickaxe held forward when Crusher cosmetic is equipped. Approved direction: retain Crusher, rotate its head, lean forward with both hands. User requested independent critic before publication.
 
