@@ -61,8 +61,10 @@ func _command(data: Dictionary) -> void:
 			main.achievement_toast.hide()
 		elif String(data.kind)=="mods_bore_flow":
 			if bool(data.get("crusher",false)):
-				main._dev_build_all_workshops_state()
-				RunState.endless_workshops["tool_forge"].level=5
+				# Unlock only the cosmetic fixture; do not run hub/relic travel here.
+				var relic: String=RunState._relic_id_for_workshop("tool_forge")
+				RunState.endless_relics[relic]={"discovered":true,"collected":true,"placed":true,"found_depth":1}
+				RunState.endless_workshops["tool_forge"]={"built":true,"level":5,"style":"original","delivered":0}
 				RunState.set_endless_tool_style("crusher")
 			main._dev_jump_endless(1);main._dev_grant_max_tools_state()
 			var w: Node=main.endless_world
