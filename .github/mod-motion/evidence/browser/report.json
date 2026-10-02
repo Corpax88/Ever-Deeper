@@ -1,0 +1,745 @@
+{
+  "passed": true,
+  "failure": null,
+  "version": "1.0.0-dev.15.49",
+  "files": {
+    "index.html": {
+      "size": 23145,
+      "sha256": "96852ad6a35fddd44767a5bc7089931bd6a55979df16868f253de00c95de7016"
+    },
+    "index.js": {
+      "size": 282403,
+      "sha256": "1c05fc40c7e418b0234c4e5ac39dfc7df1286e98443946e84b89a7394de6c753"
+    },
+    "index.pck": {
+      "size": 316990886,
+      "sha256": "a6ee6055fadd66082b42fc54063c24203f674fd4db8694f88e53591829834852"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 4571,
+      "sha256": "65bc52dba653b2c39735a621863ae7332dda9c65d3a1bd7891d356390110da7f"
+    }
+  },
+  "source": "a329c45dd26d535e7cd224452e5845585c68b3bb",
+  "runtime": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+    "lost": false,
+    "dpr": 2
+  },
+  "checks": [
+    {
+      "name": "graphical-renderer",
+      "passed": true,
+      "runtime": {
+        "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+        "lost": false,
+        "dpr": 2
+      }
+    },
+    {
+      "name": "sequence-twin_auger-00",
+      "passed": true
+    },
+    {
+      "name": "sequence-twin_auger-01",
+      "passed": true
+    },
+    {
+      "name": "sequence-twin_auger-02",
+      "passed": true
+    },
+    {
+      "name": "sequence-twin_auger-03",
+      "passed": true
+    },
+    {
+      "name": "sequence-twin_auger-04",
+      "passed": true
+    },
+    {
+      "name": "sequence-twin_auger-05",
+      "passed": true
+    },
+    {
+      "name": "sequence-twin_auger-06",
+      "passed": true
+    },
+    {
+      "name": "sequence-twin_auger-07",
+      "passed": true
+    },
+    {
+      "name": "sequence-twin_auger-08",
+      "passed": true
+    },
+    {
+      "name": "sequence-twin_auger-09",
+      "passed": true
+    },
+    {
+      "name": "sequence-twin_auger-10",
+      "passed": true
+    },
+    {
+      "name": "sequence-twin_auger-11",
+      "passed": true
+    },
+    {
+      "name": "actual-touch-mines-twin_auger",
+      "passed": true,
+      "effect": {
+        "arcs": 0,
+        "chain_pending": 0,
+        "charge": 0,
+        "chips": 0,
+        "core_left": 0,
+        "deployment": 0.393939393939394,
+        "flights": 0,
+        "hits": 6,
+        "log": [
+          {
+            "id": "endless_d000001_node_002",
+            "kind": "direct"
+          }
+        ],
+        "mode": "twin_auger",
+        "projectile": false,
+        "rings": 0,
+        "scanned": 0,
+        "visual_clock": 3.94075555555555
+      }
+    },
+    {
+      "name": "manual-no-auto-rush-twin_auger",
+      "passed": true
+    },
+    {
+      "name": "release-stops-twin_auger",
+      "passed": true
+    },
+    {
+      "name": "simultaneous-move-mine-twin_auger",
+      "passed": true
+    },
+    {
+      "name": "moving-twin_auger",
+      "passed": true
+    },
+    {
+      "name": "sequence-chainbreaker-00",
+      "passed": true
+    },
+    {
+      "name": "sequence-chainbreaker-01",
+      "passed": true
+    },
+    {
+      "name": "sequence-chainbreaker-02",
+      "passed": true
+    },
+    {
+      "name": "sequence-chainbreaker-03",
+      "passed": true
+    },
+    {
+      "name": "sequence-chainbreaker-04",
+      "passed": true
+    },
+    {
+      "name": "sequence-chainbreaker-05",
+      "passed": true
+    },
+    {
+      "name": "sequence-chainbreaker-06",
+      "passed": true
+    },
+    {
+      "name": "sequence-chainbreaker-07",
+      "passed": true
+    },
+    {
+      "name": "sequence-chainbreaker-08",
+      "passed": true
+    },
+    {
+      "name": "sequence-chainbreaker-09",
+      "passed": true
+    },
+    {
+      "name": "sequence-chainbreaker-10",
+      "passed": true
+    },
+    {
+      "name": "sequence-chainbreaker-11",
+      "passed": true
+    },
+    {
+      "name": "actual-touch-mines-chainbreaker",
+      "passed": true,
+      "effect": {
+        "arcs": 0,
+        "chain_pending": 0,
+        "charge": 0,
+        "chips": 0,
+        "core_left": 0,
+        "deployment": 0.172121212121212,
+        "flights": 0,
+        "hits": 9,
+        "log": [
+          {
+            "id": "endless_d000001_node_002",
+            "kind": "direct"
+          },
+          {
+            "id": "endless_d000001_node_006",
+            "kind": "direct"
+          },
+          {
+            "id": "endless_d000001_node_009",
+            "kind": "direct"
+          }
+        ],
+        "mode": "chainbreaker",
+        "projectile": false,
+        "rings": 0,
+        "scanned": 0,
+        "visual_clock": 8.55373333333334
+      }
+    },
+    {
+      "name": "manual-no-auto-rush-chainbreaker",
+      "passed": true
+    },
+    {
+      "name": "release-stops-chainbreaker",
+      "passed": true
+    },
+    {
+      "name": "simultaneous-move-mine-chainbreaker",
+      "passed": true
+    },
+    {
+      "name": "moving-chainbreaker",
+      "passed": true
+    },
+    {
+      "name": "sequence-ricochet-00",
+      "passed": true
+    },
+    {
+      "name": "sequence-ricochet-01",
+      "passed": true
+    },
+    {
+      "name": "sequence-ricochet-02",
+      "passed": true
+    },
+    {
+      "name": "sequence-ricochet-03",
+      "passed": true
+    },
+    {
+      "name": "sequence-ricochet-04",
+      "passed": true
+    },
+    {
+      "name": "sequence-ricochet-05",
+      "passed": true
+    },
+    {
+      "name": "sequence-ricochet-06",
+      "passed": true
+    },
+    {
+      "name": "sequence-ricochet-07",
+      "passed": true
+    },
+    {
+      "name": "sequence-ricochet-08",
+      "passed": true
+    },
+    {
+      "name": "sequence-ricochet-09",
+      "passed": true
+    },
+    {
+      "name": "sequence-ricochet-10",
+      "passed": true
+    },
+    {
+      "name": "sequence-ricochet-11",
+      "passed": true
+    },
+    {
+      "name": "actual-touch-mines-ricochet",
+      "passed": true,
+      "effect": {
+        "arcs": 0,
+        "chain_pending": 0,
+        "charge": 0,
+        "chips": 0,
+        "core_left": 0,
+        "deployment": 0.621212121212121,
+        "flights": 0,
+        "hits": 18,
+        "log": [
+          {
+            "id": "endless_d000001_node_002",
+            "kind": "direct"
+          },
+          {
+            "id": "endless_d000001_node_006",
+            "kind": "direct"
+          },
+          {
+            "id": "endless_d000001_node_009",
+            "kind": "direct"
+          }
+        ],
+        "mode": "ricochet",
+        "projectile": false,
+        "rings": 0,
+        "scanned": 0,
+        "visual_clock": 13.0222000000002
+      }
+    },
+    {
+      "name": "manual-no-auto-rush-ricochet",
+      "passed": true
+    },
+    {
+      "name": "release-stops-ricochet",
+      "passed": true
+    },
+    {
+      "name": "simultaneous-move-mine-ricochet",
+      "passed": true
+    },
+    {
+      "name": "moving-ricochet",
+      "passed": true
+    },
+    {
+      "name": "sequence-corebreaker-00",
+      "passed": true
+    },
+    {
+      "name": "sequence-corebreaker-01",
+      "passed": true
+    },
+    {
+      "name": "sequence-corebreaker-02",
+      "passed": true
+    },
+    {
+      "name": "sequence-corebreaker-03",
+      "passed": true
+    },
+    {
+      "name": "sequence-corebreaker-04",
+      "passed": true
+    },
+    {
+      "name": "sequence-corebreaker-05",
+      "passed": true
+    },
+    {
+      "name": "sequence-corebreaker-06",
+      "passed": true
+    },
+    {
+      "name": "sequence-corebreaker-07",
+      "passed": true
+    },
+    {
+      "name": "sequence-corebreaker-08",
+      "passed": true
+    },
+    {
+      "name": "sequence-corebreaker-09",
+      "passed": true
+    },
+    {
+      "name": "sequence-corebreaker-10",
+      "passed": true
+    },
+    {
+      "name": "sequence-corebreaker-11",
+      "passed": true
+    },
+    {
+      "name": "actual-touch-mines-corebreaker",
+      "passed": true,
+      "effect": {
+        "arcs": 0,
+        "chain_pending": 0,
+        "charge": 0.0989,
+        "chips": 0,
+        "core_left": 0,
+        "deployment": 0.115050505050505,
+        "flights": 0,
+        "hits": 19,
+        "log": [
+          {
+            "id": "endless_d000001_node_002",
+            "kind": "direct"
+          },
+          {
+            "id": "endless_d000001_node_006",
+            "kind": "direct"
+          },
+          {
+            "id": "endless_d000001_node_009",
+            "kind": "direct"
+          }
+        ],
+        "mode": "corebreaker",
+        "projectile": false,
+        "rings": 0,
+        "scanned": 0,
+        "visual_clock": 17.444466666667
+      }
+    },
+    {
+      "name": "manual-no-auto-rush-corebreaker",
+      "passed": true
+    },
+    {
+      "name": "release-stops-corebreaker",
+      "passed": true
+    },
+    {
+      "name": "simultaneous-move-mine-corebreaker",
+      "passed": true
+    },
+    {
+      "name": "moving-corebreaker",
+      "passed": true
+    },
+    {
+      "name": "sequence-vortex-00",
+      "passed": true
+    },
+    {
+      "name": "sequence-vortex-01",
+      "passed": true
+    },
+    {
+      "name": "sequence-vortex-02",
+      "passed": true
+    },
+    {
+      "name": "sequence-vortex-03",
+      "passed": true
+    },
+    {
+      "name": "sequence-vortex-04",
+      "passed": true
+    },
+    {
+      "name": "sequence-vortex-05",
+      "passed": true
+    },
+    {
+      "name": "sequence-vortex-06",
+      "passed": true
+    },
+    {
+      "name": "sequence-vortex-07",
+      "passed": true
+    },
+    {
+      "name": "sequence-vortex-08",
+      "passed": true
+    },
+    {
+      "name": "sequence-vortex-09",
+      "passed": true
+    },
+    {
+      "name": "sequence-vortex-10",
+      "passed": true
+    },
+    {
+      "name": "sequence-vortex-11",
+      "passed": true
+    },
+    {
+      "name": "actual-touch-mines-vortex",
+      "passed": true,
+      "effect": {
+        "arcs": 0,
+        "chain_pending": 0,
+        "charge": 0,
+        "chips": 0,
+        "core_left": 0,
+        "deployment": 0.319090909090909,
+        "flights": 0,
+        "hits": 20,
+        "log": [
+          {
+            "id": "endless_d000001_node_002",
+            "kind": "direct"
+          },
+          {
+            "id": "endless_d000001_node_006",
+            "kind": "direct"
+          },
+          {
+            "id": "endless_d000001_node_009",
+            "kind": "direct"
+          }
+        ],
+        "mode": "vortex",
+        "projectile": false,
+        "rings": 0,
+        "scanned": 5,
+        "visual_clock": 21.4034333333334
+      }
+    },
+    {
+      "name": "manual-no-auto-rush-vortex",
+      "passed": true
+    },
+    {
+      "name": "release-stops-vortex",
+      "passed": true
+    },
+    {
+      "name": "simultaneous-move-mine-vortex",
+      "passed": true
+    },
+    {
+      "name": "moving-vortex",
+      "passed": true
+    },
+    {
+      "name": "effect-chainbreaker-00",
+      "passed": true
+    },
+    {
+      "name": "effect-chainbreaker-01",
+      "passed": true
+    },
+    {
+      "name": "effect-chainbreaker-02",
+      "passed": true
+    },
+    {
+      "name": "effect-chainbreaker-03",
+      "passed": true
+    },
+    {
+      "name": "effect-chainbreaker-04",
+      "passed": true
+    },
+    {
+      "name": "effect-chainbreaker-05",
+      "passed": true
+    },
+    {
+      "name": "effect-chainbreaker-06",
+      "passed": true
+    },
+    {
+      "name": "effect-chainbreaker-07",
+      "passed": true
+    },
+    {
+      "name": "effect-chainbreaker-08",
+      "passed": true
+    },
+    {
+      "name": "effect-chainbreaker-09",
+      "passed": true
+    },
+    {
+      "name": "effect-chainbreaker-10",
+      "passed": true
+    },
+    {
+      "name": "effect-chainbreaker-11",
+      "passed": true
+    },
+    {
+      "name": "distinct-effect-chainbreaker",
+      "passed": true,
+      "effect": {
+        "arcs": 0,
+        "chain_pending": 0,
+        "charge": 0,
+        "chips": 0,
+        "core_left": 0,
+        "deployment": 0.621212121212121,
+        "flights": 0,
+        "hits": 11,
+        "log": [
+          {
+            "id": "endless_d000001_node_000",
+            "kind": "direct"
+          },
+          {
+            "id": "endless_d000001_node_000",
+            "kind": "direct"
+          },
+          {
+            "id": "endless_d000001_node_001",
+            "kind": "chain"
+          },
+          {
+            "id": "endless_d000001_node_000",
+            "kind": "direct"
+          },
+          {
+            "id": "endless_d000001_node_003",
+            "kind": "chain"
+          },
+          {
+            "id": "endless_d000001_node_000",
+            "kind": "direct"
+          },
+          {
+            "id": "endless_d000001_node_004",
+            "kind": "chain"
+          },
+          {
+            "id": "endless_d000001_node_000",
+            "kind": "direct"
+          },
+          {
+            "id": "endless_d000001_node_005",
+            "kind": "chain"
+          },
+          {
+            "id": "endless_d000001_node_007",
+            "kind": "chain"
+          },
+          {
+            "id": "endless_d000001_node_008",
+            "kind": "chain"
+          }
+        ],
+        "mode": "chainbreaker",
+        "projectile": false,
+        "rings": 0,
+        "scanned": 5,
+        "visual_clock": 25.7989913333332
+      }
+    },
+    {
+      "name": "effect-corebreaker-00",
+      "passed": true
+    },
+    {
+      "name": "effect-corebreaker-01",
+      "passed": true
+    },
+    {
+      "name": "effect-corebreaker-02",
+      "passed": true
+    },
+    {
+      "name": "effect-corebreaker-03",
+      "passed": true
+    },
+    {
+      "name": "effect-corebreaker-04",
+      "passed": true
+    },
+    {
+      "name": "effect-corebreaker-05",
+      "passed": true
+    },
+    {
+      "name": "effect-corebreaker-06",
+      "passed": true
+    },
+    {
+      "name": "effect-corebreaker-07",
+      "passed": true
+    },
+    {
+      "name": "effect-corebreaker-08",
+      "passed": true
+    },
+    {
+      "name": "effect-corebreaker-09",
+      "passed": true
+    },
+    {
+      "name": "effect-corebreaker-10",
+      "passed": true
+    },
+    {
+      "name": "effect-corebreaker-11",
+      "passed": true
+    },
+    {
+      "name": "distinct-effect-corebreaker",
+      "passed": true,
+      "effect": {
+        "arcs": 0,
+        "chain_pending": 0,
+        "charge": 0.16,
+        "chips": 0,
+        "core_left": 0,
+        "deployment": 0.318181818181818,
+        "flights": 0,
+        "hits": 5,
+        "log": [
+          {
+            "id": "endless_d000001_node_001",
+            "kind": "core"
+          },
+          {
+            "id": "endless_d000001_node_001",
+            "kind": "core"
+          },
+          {
+            "id": "endless_d000001_node_001",
+            "kind": "core"
+          },
+          {
+            "id": "endless_d000001_node_001",
+            "kind": "direct"
+          },
+          {
+            "id": "endless_d000001_node_001",
+            "kind": "direct"
+          }
+        ],
+        "mode": "corebreaker",
+        "projectile": false,
+        "rings": 0,
+        "scanned": 5,
+        "visual_clock": 29.9695299999997
+      }
+    },
+    {
+      "name": "save-retains-five-mods",
+      "passed": true
+    }
+  ],
+  "raw_report_sha256": "25070162e94c408f84b96aaec772467794675ef6ad47a9befa399e55ba298579",
+  "raw_evidence_artifact": 11251117500
+}
