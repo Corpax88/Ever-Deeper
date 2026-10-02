@@ -1,3 +1,5 @@
+Current verified animation test: [DEV15.49](mod-motion/HANDOFF.md), source a329c45/Mac37062377003. AppleMetal/DPR2,113browser observations/checks and continuous54s actual-input video; ordinaryWebKit startup/save/reload; local39mechanics and full ordered sequences. Local authenticated Xvfb recovered with task-local libxkbfile and authorized socket access; exact paths in handoff. Publication37063409471/receipt11251293585 passed27public hashes. No physical-phone/FPS claim; known QA flag-order invariant debt remains. No pending jobs or approvals.
+
 Current task: [Crusher Bore Rush animation](bore-crusher/HANDOFF.md). Actual native candidate and independent critic in progress; public DEV15.45 unchanged.
 
 Current task: [approved treasury entrance and podium fit](treasury-fit/HANDOFF.md). DEV15.43 candidate, 3 critic rounds; final gates pending.

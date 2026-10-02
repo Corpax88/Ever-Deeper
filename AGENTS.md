@@ -1,3 +1,5 @@
+Current verified release: [DEV15.49 mod animation repair](docs/mod-motion/HANDOFF.md). Runtime a329c45 on codex/mod-motion-20261002; publication37063409471/receipt11251293585 verifies27 public hashes. Critic8.0/10 after three actual-motion rounds;113Mac browser checks,39native mechanics and input/414core pass. Continuous54s Mac video reviewed; no phone FPS claim. LIVE1.0.4/Worn preserved. No pending jobs or approvals. Main is publication carrier. [Test recovery](docs/TESTMILJO-HANDOFF.md). Do not rerun accepted unchanged work.
+
 Current verified release: [Five mods DEV15.48](docs/five-mods/HANDOFF.md). Published37050728203/receipt11245994213; all27public hashes pass. Source53eb67d,39native/76browser checks, critic8.2/10. No pending jobs/approvals; permanent GitHub/DEV authorization applies across chats. Do not rebuild main or rerun accepted unchanged gates.
 
 Current task: [Tool Forge icon](docs/forge-icon/HANDOFF.md). DEV15.47 candidate on codex/forge-icon-20261002, based on exact DEV15.46 source/package. Approved asset; eight native gates and actual images accepted. Browser/publication pending. Preserve LIVE/Worn; never rebuild historical main.
