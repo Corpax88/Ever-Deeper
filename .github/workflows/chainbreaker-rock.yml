@@ -1,0 +1,52 @@
+name: Verify Chainbreaker Rock
+on:
+  push:
+    branches: [codex/chainbreaker-rock-20261003]
+permissions: {contents: read, actions: read}
+concurrency: {group: chainbreaker-rock, cancel-in-progress: true}
+jobs:
+  verify:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/deep-treasury
+            .github/chainbreaker-rock
+            .github/five-mods
+            assets/treasury
+            scripts
+            tools
+            docs
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '11282502442'
+          merge-multiple: true
+          run-id: '37147089434'
+          github-token: '${{ github.token }}'
+          path: '${{ runner.temp }}/original'
+      - run: python3 .github/chainbreaker-rock/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/candidate"
+      - run: |
+          curl -L --fail --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot"
+          python3 tools/qa.py --godot "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --pack "$RUNNER_TEMP/candidate/index.pck" --cases input premium-core --output "$RUNNER_TEMP/evidence/core"
+      - run: |
+          mkdir -p "$RUNNER_TEMP/evidence/mechanics"
+          MODS_OUT="$RUNNER_TEMP/evidence/mechanics" "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --headless --path . --main-pack "$RUNNER_TEMP/candidate/index.pck" --script tools/review_chainbreaker_rock.gd > "$RUNNER_TEMP/evidence/mechanics/godot.log" 2>&1
+          grep 'CHAINBREAKER_ROCK_OK' "$RUNNER_TEMP/evidence/mechanics/godot.log"
+      - run: python3 tools/check_invariants.py > "$RUNNER_TEMP/evidence/core/invariants.log" 2>&1
+        continue-on-error: true
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npx playwright install chromium webkit
+      - run: node .github/chainbreaker-rock/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/browser" dev
+      - run: node .github/deep-treasury/startup.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/ordinary"
+        env: {EXPECTED_VERSION: '1.0.0-dev.15.52', CANDIDATE_SOURCE: '${{ github.sha }}'}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: chainbreaker-rock-evidence, path: '${{ runner.temp }}/evidence', retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        with: {name: chainbreaker-rock-candidate, path: '${{ runner.temp }}/candidate', retention-days: 30}
