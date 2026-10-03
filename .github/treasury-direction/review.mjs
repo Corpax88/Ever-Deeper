@@ -5,7 +5,7 @@ import http from 'node:http';
 import {createHash} from 'node:crypto';
 const [web,output,flavor]=process.argv.slice(2);fs.mkdirSync(output,{recursive:true});
 const reference=process.env.NODE_ASSETS_REFERENCE==='1';
-const version='1.0.0-dev.15.54',files=JSON.parse(fs.readFileSync(path.join(web,'manifest.json')));
+const version='1.0.0-dev.15.53',files=JSON.parse(fs.readFileSync(path.join(web,'manifest.json')));
 for(const [name,want] of Object.entries(files)){
  const h=createHash('sha256');for await(const b of fs.createReadStream(path.join(web,name)))h.update(b);
  if(h.digest('hex')!==want.sha256||fs.statSync(path.join(web,name)).size!==want.size)throw Error('Candidate identity: '+name);
@@ -20,7 +20,7 @@ const server=http.createServer((req,res)=>{
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await chromium.launch({headless:true,args:['--use-gl=angle','--use-angle=metal','--enable-gpu']});
-const context=await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:2,hasTouch:true,});
+const context=await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:3,hasTouch:true,});
 const page=await context.newPage(),cdp=await context.newCDPSession(page);page.setDefaultTimeout(90000);
 const checks=[],messages=[];let failed=null,runtime=null,id=0;
 const save=()=>fs.writeFileSync(path.join(output,'checks.json'),JSON.stringify(checks,null,2));
@@ -49,40 +49,35 @@ try{
  runtime=await page.evaluate(()=>{const g=document.querySelector('canvas').getContext('webgl2'),e=g.getExtension('WEBGL_debug_renderer_info');return {renderer:e?g.getParameter(e.UNMASKED_RENDERER_WEBGL):null,lost:g.isContextLost(),dpr:devicePixelRatio};});
  check('graphical-renderer',runtime.renderer&&!runtime.lost&&!/SwiftShader|llvmpipe|software/i.test(runtime.renderer),{runtime});
 
- for(const viewport of [{width:844,height:390},{width:667,height:375},{width:932,height:430}]){
-  await page.setViewportSize(viewport);
-  await command('mods_preview',{resource:'phasecrystal',amount:100000});await delay(250);
-  check('preview-visible-'+viewport.width,(await state()).treasury_goal.open,{});await shot('preview-ricochet-'+viewport.width);
-  await tap('treasury_close');await ready();
+
+ async function walk(direction,predicate,label,vertical=0){
+  const s=await state(),jr=s.buttons.joystick,vp=page.viewportSize();
+  const start={x:(jr[0]+jr[2]*.20)/s.viewport[0]*vp.width,y:(jr[1]+jr[3]*.70)/s.viewport[1]*vp.height};
+  await touch('touchStart',start);await touch('touchMove',{x:start.x+32*direction,y:start.y+32*vertical});
+  await wait(label,predicate,10000);await touch('touchEnd',start);
  }
- await page.setViewportSize({width:844,height:390});
- await command('ricochet_range_fixture');await ready();await delay(300);
- const p=await point('hud_mine'),begin=(await state()).drill_mods.player;
- await shot('range-before');await touch('touchStart',p);
- for(let frame=0;frame<12;frame++){await delay(100);await shot('long-flight-'+String(frame).padStart(2,'0'));}
- await wait('three distant rocks cleared',s=>s?.ricochet?.range_floor?.length===3&&s.ricochet.range_floor.every(Boolean));
- await touch('touchEnd',p);await delay(200);
- let s=await state();check('actual-touch-three-long-range-hits',s.drill_mods.effect.five.hits===3,{effect:s.drill_mods.effect.five,rocks:s.ricochet.range_floor});
- check('no-auto-movement',Math.hypot(s.drill_mods.player[0]-begin[0],s.drill_mods.player[1]-begin[1])<2,{});
- await command('ricochet_range_fixture');await ready();await delay(200);
- await touch('touchStart',p);await wait('projectile in flight',s=>s?.drill_mods?.effect?.five?.projectile);await touch('touchEnd',p);await delay(200);
- const afterRelease=(await state()).drill_mods.effect.five.hits;await delay(500);
- check('release-cancels-long-flight',(await state()).drill_mods.effect.five.hits===afterRelease&&!(await state()).drill_mods.effect.five.projectile,{});
- for(const [skin,gear] of [['crusher','crusher'],['comet','comet'],['crownseeker','crown'],['deepheart','ember']]){
-  let s=await command('ricochet_skin',{skin,mod:false});
-  check('same-frame-workshop-skin-'+skin,s.ricochet.skin_check.accepted&&s.ricochet.skin_check.shown===gear&&!s.ricochet.skin_check.failed,{skin:s.ricochet.skin_check});await shot('skin-'+skin);
-  s=await command('ricochet_skin',{skin,mod:true});
-  check('mod-preserves-saved-skin-'+skin,s.ricochet.saved_skin===skin&&s.ricochet.skin_check.mod_active,{skin:s.ricochet.skin_check});
-  await shot('mod-'+skin);
-  s=await command('ricochet_skin',{skin,mod:false});
-  check('immediate-skin-restore-'+skin,s.ricochet.skin_check.shown===gear&&!s.ricochet.skin_check.mod_active,{skin:s.ricochet.skin_check});await shot('restored-'+skin);
+ await command('treasury_fixture');await ready();await delay(1500);await command('treasury_clear_toasts');await shot('entrance');
+ await walk(1,s=>s.treasury.inside,'walk through east doorway');
+ await shot('interior-entry');await command('treasury_zone');await ready();
+ const before=await state();
+ await walk(1,s=>s.treasury.delivering,'start centre delivery');
+ await wait('mixed active flight',s=>new Set(s.treasury.packet_kinds).size>=3);
+ await shot('mixed-flight');
+ await wait('delivery completes',s=>!s.treasury.delivering&&s.treasury.packets===0,45000);
+ let s=await state();
+ check('exact-delivery-conservation',s.treasury.totals.wallet_gold===before.treasury.wallet&&s.treasury.wallet===0&&s.treasury.totals.stone===8000&&s.treasury.totals.copper===4000&&s.treasury.totals.echo_crystal===1800&&s.treasury.totals.prismite===2400&&s.treasury.totals.starshard===3200,{});
+ await command('treasury_save');const saved=(await state()).treasury.totals;await command('treasury_restore');
+ check('save-retains-every-pile',JSON.stringify(saved)===JSON.stringify((await state()).treasury.totals),{});
+ await command('treasury_visual',{amount:100000,index:26});await tap('gold_podium');await wait('podium opens',s=>s.treasury_goal.open);await shot('podium-interaction');await tap('treasury_close');await ready();
+ await command('treasury_exit_approach');await shot('exit-approach');await walk(-1,s=>!s.treasury.inside,'walk left through east-facing interior threshold');await shot('returned-hub');
+ for(const viewport of [{width:667,height:375},{width:932,height:430}]){
+  await page.setViewportSize(viewport);await delay(500);await command('treasury_door');await delay(350);await shot('entrance-'+viewport.width);
+  await walk(1,s=>s.treasury.inside,'enter at '+viewport.width);await command('treasury_clear_toasts');await shot('interior-'+viewport.width);
+  await walk(-1,s=>!s.treasury.inside,'leave horizontally at '+viewport.width);await shot('returned-'+viewport.width);
  }
- await command('mods_save');await command('mods_reload');
- check('saved-skin-survives-reload',(await state()).ricochet.saved_skin==='deepheart',{});
 } catch(e){failed=e.stack||String(e);console.error(failed);}
 finally{
  await context.close();await browser.close();server.close();
  fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,failure:failed,version,files,source:process.env.GITHUB_SHA,runtime,checks},null,2));
  if(failed)process.exitCode=1;
 }
-

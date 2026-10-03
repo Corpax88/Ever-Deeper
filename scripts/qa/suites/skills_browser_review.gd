@@ -1084,7 +1084,7 @@ func _treasury_command(data: Dictionary) -> void:
 		"treasury_zone":
 			main.hub_world.restore_position(room.DONATION+Vector2(-115,0))
 		"treasury_exit_approach":
-			main.hub_world.restore_position(Vector2(210,1660))
+			main.hub_world.restore_position(Vector2(410,1600))
 		"treasury_save":
 			RunState.set_location("hub",main.hub_world.player.global_position)
 			_require(RunState.flush_save(),"treasury actual save")

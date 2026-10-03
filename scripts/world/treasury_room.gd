@@ -5,9 +5,9 @@ const Stack = preload("res://scripts/world/treasury_stack.gd")
 const Scale = preload("res://scripts/world/resource_scale.gd")
 const SIZE: Vector2 = Vector2(4000, 3200)
 const ZONE: Vector2 = Vector2(2000, 1600)
-const EXIT: Vector2 = Vector2(175, 1510)
+const EXIT: Vector2 = Vector2(220, 1600)
 const DONATION: Vector2 = Vector2(600, 1430)
-const ENTRY: Vector2 = Vector2(410, 1660)
+const ENTRY: Vector2 = Vector2(410, 1600)
 const FLIGHT: float = 1.45
 const LABEL_FONT = preload("res://assets/ui/fonts/EBGaramond.ttf")
 var flight_rng: RandomNumberGenerator = RandomNumberGenerator.new()
@@ -174,7 +174,7 @@ func tick(delta: float) -> void:
 		return
 	# Menus pause the celebration and prohibit landing during blocked controls.
 	if not hub.player.control_enabled: return
-	if Rect2(EXIT-Vector2(52,30),Vector2(104,60)).has_point(hub.player.global_position):
+	if Rect2(EXIT-Vector2(25,40),Vector2(50,80)).has_point(hub.player.global_position):
 		leave()
 		return
 	var at_zone: bool = hub.player.global_position.distance_to(DONATION) < 85.0
@@ -258,9 +258,10 @@ func tick(delta: float) -> void:
 	particle_canvas.queue_redraw()
 
 func collision(point: Vector2) -> bool:
-	if Rect2(Vector2(280,1545),Vector2(65,95)).has_point(point): return true
-	if Rect2(Vector2(-25,1510),Vector2(115,110)).has_point(point): return true
-	if point.x >= 55 and point.x <= 280 and absf(point.y-EXIT.y)<150: return false
+	# East-facing mouth: horizontal approach; solid north/south jambs.
+	if point.x >= 55 and point.x <= 330:
+		if point.y >= 1545 and point.y <= 1655: return false
+		if point.y >= 1480 and point.y <= 1710: return true
 	if ((point-ZONE)/Vector2(1855,1455)).length_squared()>1.0: return true
 	for i in Ledger.keys().size():
 		var p: Vector2 = bay(i)
@@ -341,8 +342,8 @@ func _build_visuals() -> void:
 			pillar.z_index = roundi(at.y+60)
 			_add_warm_pool(at+Vector2(0,65),Vector2(360,240),0.22)
 	_add_warm_pool(Vector2(265,1600),Vector2(500,355),0.28)
-	var doorway: Sprite2D = _sprite(texture("res://assets/treasury/vault-exit-v1.png"),Vector2(155,1480),Vector2(420,400),self)
-	doorway.z_index = 1540
+	var doorway: Sprite2D = _sprite(texture("res://assets/treasury/vault-exit-east-v2.png"),Vector2(120,1460),Vector2(420,400),self)
+	doorway.z_index = 1620
 	_sprite(texture("res://assets/treasury/delivery-plate-v1.png"),DONATION,Vector2(230,176),visual_root)
 	for i in Ledger.keys().size():
 		var group: Node2D = Node2D.new()
