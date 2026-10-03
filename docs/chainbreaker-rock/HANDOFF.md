@@ -1,15 +1,17 @@
-# Chainbreaker rock — DEV15.52 candidate
+# Chainbreaker rock — DEV15.52 published and verified
 
 Mats requested Chainbreaker jumps through mountain rock as well as ore (3 October 2026). Implemented on canonical DEV15.51 runtime `3bf373333fe9ac8fa5e1a58667f358b077df9c5d`, not historical main. Source candidate `5d7a30fe98215af40ad2673dd8b141221f5fb4a0`, branch `codex/chainbreaker-rock-20261003`.
 
 Rock or ore starts one snapshot of all visible exposed ore and mineable rock-edge cells. Hops choose the closest surviving target every 0.1 seconds. There is no target count cap. Each snapshot target receives at most one chain strike. New rock layers and ore revealed during a chain wait for a later attack. Permanent walls, inaccessible depth bands and offscreen/interior rock are excluded. Node IDs and absolute terrain cells survive streaming rebases. Existing release, menu, mod-switch and movement ownership are retained. Preview text now explains rock and ore. Approved artwork, animation system, save format and other mod behavior are retained.
+
+Published at https://corpax88.github.io/Ever-Deeper/dev/. Refresh and Continue; no reset. All testing completed; do not repeat unchanged accepted matrices.
 
 ## Evidence
 
 - Linux Godot4.7.2: 51 mechanics checks passed, including mixed rock/ore, distinct targets, buried-node HP, late ore eligibility, offscreen/interior exclusions, stable rock queue, release, mod switch and existing five-mod movement/core/ricochet/Vortex behavior.
 - Actual Godot/Xvfb/Mesa llvmpipe render of exact candidate at1688x780:21 ordered frames; inspected rock-front break progression and blue arcs; maximum54 real strikes and0 pending on release. This is software/native evidence, not physical iPhone performance.
 - Local PCK325828798 bytes, SHA2566a383de0864cac7d00204ddbdf821f59476e63ba676b56717428763949e0599e. All unaffected baseline resource payloads compared byte-for-byte.
-- Mac acceptance37148602793 passed input,414core,51native mechanics and 30 browser checks/observations. Actual AppleMetal/DPR2 Chromium; ordinary AppleGPU WebKit startup/save/reload passed. All23 final Mac images inspected. Candidate11283079175; evidence11283248541. All9 Mac files match local candidate. Publication pending. Author review; no independent critic requested for this scoped change.
+- Mac acceptance37148602793 passed input,414core,51native mechanics and 30 browser checks/observations. Actual AppleMetal/DPR2 Chromium; ordinary AppleGPU WebKit startup/save/reload passed. All23 final Mac images inspected. Candidate11283079175; evidence11283248541. All9 Mac files match local candidate. Publication976f4ac7/run37148928099 succeeded; receipt11283360875 verifies all27 public hashes, LIVE1.0.4/Worn retained. Rollback11282583374 keeps DEV15.51. No pending jobs or permissions. Author review; no independent critic requested for this scoped change.
 - Old local invariant script reports QA flag-order mismatch. The same known flag-order invariant fails on Mac; it is not counted as passed.
 
 ## Recovery
