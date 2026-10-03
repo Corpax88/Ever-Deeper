@@ -43,7 +43,8 @@ var ore_escape_active: bool=false
 func _command(data: Dictionary) -> void:
 	if String(data.kind)=="ricochet_range_fixture":
 		main._dev_build_all_workshops_state();RunState.endless_workshops.tool_forge.level=5
-		# Workshop seeding finishes relic travel; re-enter the actual descent afterward.
+		# Seeding ends the saved descent; synchronize the visible phase before re-entry.
+		main._dev_jump_hub()
 		main._dev_jump_endless(1)
 		main._on_developer_command_requested("test_ricochet")
 		var w: Node=main.endless_world
