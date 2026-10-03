@@ -45,6 +45,7 @@ func _command(data: Dictionary) -> void:
 		var w: Node=main.endless_world
 		match String(data.action):
 			"skin": RunState.set_endless_tool_style(String(data.skin))
+			"speed": RunState.set_movement_speed_level(int(data.speed))
 			"earned":
 				w.drill_modes.dev_override=""
 				RunState.treasury_goals.ricochet_claimed=true

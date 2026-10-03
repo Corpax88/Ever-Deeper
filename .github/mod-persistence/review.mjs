@@ -61,11 +61,27 @@ try{
   await command('mod_lifecycle',{action:'skin',skin});await observe('dev-idle-'+skin);
   const p=await point('hud_mine');await touch('touchStart',p);await observe('dev-held-'+skin);await touch('touchEnd',p);await observe('dev-release-'+skin);
  }
+ const ls=await state(),jr=ls.buttons.joystick,vp=page.viewportSize();
+ const joy={x:(jr[0]+jr[2]*.20)/ls.viewport[0]*vp.width,y:(jr[1]+jr[3]*.70)/ls.viewport[1]*vp.height},fire=await point('hud_mine');
+ const fingers=async(type,points)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints:points.map(([id,p])=>({id,...p,radiusX:5,radiusY:5,force:1}))});
+ for(const speed of [3,10,20]){
+ await command('mod_lifecycle',{action:'speed',speed});
+ await fingers('touchStart',[[1,joy]]);await fingers('touchStart',[[1,joy],[7,fire]]);
+ for(let i=0;i<32;i++){
+  const angle=i*Math.PI*2/16;
+  await fingers('touchMove',[[1,{x:joy.x+32*Math.cos(angle),y:joy.y+32*Math.sin(angle)}],[7,fire]]);await delay(300);
+  const v=(await state()).mod_live;
+  check('moving-firing-'+speed+'-'+i,v.selected==='ricochet'&&v.native.active&&v.native.mod_active&&!v.native.failed&&!v.sprite_visible&&!v.tool_visible,{live:v});
+  if(i%4===0)await shot('turn-'+speed+'-'+i);
+ }
+ await fingers('touchEnd',[]);await observe('movement-stopped-'+speed);
+ }
  await command('mod_lifecycle',{action:'pause'});await delay(500);await command('mod_lifecycle',{action:'resume'});await ready();await observe('dev-resume');
  await command('mod_lifecycle',{action:'earned'});await observe('earned');
  await command('mods_save');await command('mods_reload');await observe('earned-save-load');
  await command('mod_lifecycle',{action:'travel'});await ready();await observe('earned-travel');
-} catch(e){failed=e.stack||String(e);console.error(failed);}
+ await command('mods_save');await page.reload({waitUntil:'domcontentloaded'});await wait('reload-menu',s=>s?.buttons,180000);await tap('continue');await ready();await observe('earned-scene-reload');
+} catch(e){failed=e.stack||String(e);console.error(failed);try{await page.screenshot({path:path.join(output,'failure.jpg')});fs.writeFileSync(path.join(output,'failure-state.json'),JSON.stringify(await state(),null,2));}catch{}}
 finally{
  await context.close();await browser.close();server.close();
  fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,failure:failed,version,files,source:process.env.GITHUB_SHA,runtime,checks},null,2));
