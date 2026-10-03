@@ -1,0 +1,69 @@
+name: Publish Ricochet Range and Skin DEV15.54
+on:
+  push:
+    branches: [main]
+    paths: ['.github/ricochet-range/accepted.json', '.github/workflows/publish-ricochet-range.yml']
+permissions: {contents: read, actions: read}
+concurrency: {group: pages-ever-deeper, cancel-in-progress: false}
+jobs:
+  package:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/ricochet-range
+            .github/workflows
+      - id: accepted
+        run: |
+          python3 - <<'PYCODE'
+          import json,os
+          r=json.load(open('.github/ricochet-range/accepted.json'))
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              print('run='+str(r['run']),file=f)
+              print('artifact='+str(r['artifact']),file=f)
+          PYCODE
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '${{ steps.accepted.outputs.artifact }}'
+          run-id: '${{ steps.accepted.outputs.run }}'
+          merge-multiple: true
+          github-token: '${{ github.token }}'
+          path: '${{ runner.temp }}/candidate'
+      - run: python3 .github/ricochet-range/publish.py prepare "$RUNNER_TEMP/publication" "$RUNNER_TEMP/candidate"
+        env: {GH_TOKEN: '${{ github.token }}'}
+      - uses: actions/upload-artifact@v4
+        with: {name: dev15-53-before-ricochet-range-rollback, path: '${{ runner.temp }}/publication/previous/dev', retention-days: 30}
+      - uses: actions/upload-pages-artifact@v3
+        with: {path: '${{ runner.temp }}/publication/site'}
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    permissions: {pages: write, id-token: write}
+    environment:
+      name: github-pages
+      url: '${{ steps.deployment.outputs.page_url }}'
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/ricochet-range
+            .github/workflows
+      - run: python3 .github/ricochet-range/publish.py verify "$RUNNER_TEMP/verified"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: ricochet-range-publication-receipt, path: '${{ runner.temp }}/verified/publication-receipt.json'}
+
+
+
