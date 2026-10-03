@@ -1043,9 +1043,9 @@ func _treasury_command(data: Dictionary) -> void:
 		"treasury_door":
 			main.hub_world.restore_position(main.hub_world.TREASURY_DOOR+Vector2(-65,0))
 		"treasury_zone":
-			main.hub_world.restore_position(room.ZONE+Vector2(-115,0))
+			main.hub_world.restore_position(room.DONATION+Vector2(-115,0))
 		"treasury_exit_approach":
-			main.hub_world.restore_position(room.EXIT+Vector2(70,0))
+			main.hub_world.restore_position(Vector2(210,1660))
 		"treasury_save":
 			RunState.set_location("hub",main.hub_world.player.global_position)
 			_require(RunState.flush_save(),"treasury actual save")
@@ -1062,7 +1062,7 @@ func _treasury_command(data: Dictionary) -> void:
 			RunState.cargo.copper=20
 			RunState.gold=0
 			room.refresh_piles()
-			main.hub_world.restore_position(room.ZONE+Vector2(-115,0))
+			main.hub_world.restore_position(room.DONATION+Vector2(-115,0))
 			room.armed=true
 		"treasury_visual":
 			room.stop()

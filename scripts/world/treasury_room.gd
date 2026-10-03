@@ -5,8 +5,9 @@ const Stack = preload("res://scripts/world/treasury_stack.gd")
 const Scale = preload("res://scripts/world/resource_scale.gd")
 const SIZE: Vector2 = Vector2(4000, 3200)
 const ZONE: Vector2 = Vector2(2000, 1600)
-const EXIT: Vector2 = Vector2(70, 1600)
-const ENTRY: Vector2 = Vector2(310, 1600)
+const EXIT: Vector2 = Vector2(175, 1510)
+const DONATION: Vector2 = Vector2(600, 1430)
+const ENTRY: Vector2 = Vector2(410, 1660)
 const FLIGHT: float = 1.45
 const LABEL_FONT = preload("res://assets/ui/fonts/EBGaramond.ttf")
 var flight_rng: RandomNumberGenerator = RandomNumberGenerator.new()
@@ -34,6 +35,8 @@ var hidden_hud: Array[Dictionary] = []
 var upgrades: int = 0
 var upgrade_flashes: Dictionary = {}
 var active_kind: String = ""
+var landing_glints: Array[Dictionary] = []
+var landing_pulses: Dictionary = {}
 const UPGRADE_FLASH: float = 0.65
 
 func setup(owner_world: Node2D) -> void:
@@ -129,6 +132,8 @@ func stop() -> void:
 	launch_order.clear()
 	active_kind = ""
 	upgrade_flashes.clear()
+	landing_glints.clear()
+	landing_pulses.clear()
 	delivering = false
 	particle_canvas.queue_redraw()
 
@@ -169,15 +174,20 @@ func tick(delta: float) -> void:
 		return
 	# Menus pause the celebration and prohibit landing during blocked controls.
 	if not hub.player.control_enabled: return
-	if hub.player.global_position.x < 110.0 and absf(hub.player.global_position.y-EXIT.y)<65.0:
+	if Rect2(EXIT-Vector2(52,30),Vector2(104,60)).has_point(hub.player.global_position):
 		leave()
 		return
-	var at_zone: bool = hub.player.global_position.distance_to(ZONE) < 85.0
+	var at_zone: bool = hub.player.global_position.distance_to(DONATION) < 85.0
 	if not at_zone: armed = true
 	if at_zone and armed and not delivering: start()
 	for kind in upgrade_flashes.keys():
 		upgrade_flashes[kind] = maxf(0.0,float(upgrade_flashes[kind])-maxf(0.0,delta))
 		if upgrade_flashes[kind] <= 0.0: upgrade_flashes.erase(kind)
+	for glint in landing_glints: glint.age = float(glint.age) + delta
+	landing_glints = landing_glints.filter(func(g: Dictionary): return float(g.age) < 0.38)
+	for kind in landing_pulses.keys():
+		landing_pulses[kind] = maxf(0.0, float(landing_pulses[kind]) - delta)
+		if landing_pulses[kind] <= 0: landing_pulses.erase(kind)
 	_update_flash_tints()
 	if not delivering:
 		particle_canvas.queue_redraw()
@@ -226,6 +236,9 @@ func tick(delta: float) -> void:
 			var amount: int = Ledger.land(kind, int(particles[i].amount))
 			if amount > 0:
 				landing_count += 1
+				landing_glints.append({"at":particles[i].target,"age":0.0})
+				if landing_glints.size() > 24: landing_glints.pop_front()
+				landing_pulses[kind] = 0.25
 				changed = true
 				if Ledger.stage(before+amount) > maxi(1,Ledger.stage(before)):
 					upgrades += 1
@@ -245,7 +258,9 @@ func tick(delta: float) -> void:
 	particle_canvas.queue_redraw()
 
 func collision(point: Vector2) -> bool:
-	if point.x >= 55 and point.x <= 280 and absf(point.y-EXIT.y)<65: return false
+	if Rect2(Vector2(280,1545),Vector2(65,95)).has_point(point): return true
+	if Rect2(Vector2(-25,1510),Vector2(115,110)).has_point(point): return true
+	if point.x >= 55 and point.x <= 280 and absf(point.y-EXIT.y)<150: return false
 	if ((point-ZONE)/Vector2(1855,1455)).length_squared()>1.0: return true
 	for i in Ledger.keys().size():
 		var p: Vector2 = bay(i)
@@ -272,9 +287,24 @@ func _build_visuals() -> void:
 	visual_root.z_index = -1
 	visual_root.draw.connect(func(): visual_root.draw_rect(Rect2(Vector2(-3000,-3000),Vector2(7500,7500)),Color("08090e")))
 	add_child(visual_root)
+	# Dim rock apron grounds the masonry in the cavern.
+	var apron: Polygon2D = Polygon2D.new()
+	apron.texture=texture("res://assets/voidstar/wall.png")
+	apron.texture_repeat=CanvasItem.TEXTURE_REPEAT_ENABLED
+	var edge: PackedVector2Array=PackedVector2Array()
+	var edge_uv: PackedVector2Array=PackedVector2Array()
+	for i in 128:
+		var angle: float=TAU*float(i)/128.0
+		var point: Vector2=ZONE+Vector2(cos(angle)*2050,sin(angle)*1640)
+		edge.append(point)
+		edge_uv.append(point/Vector2(320,240)*apron.texture.get_size())
+	apron.polygon=edge
+	apron.uv=edge_uv
+	apron.modulate=Color(0.24,0.27,0.34)
+	visual_root.add_child(apron)
 	# The authored hub floor is clipped to the round chamber, never flattened into a backdrop/mockup.
 	var floor: Polygon2D = Polygon2D.new()
-	floor.texture = texture("res://assets/hub/hub-floor-v2.png")
+	floor.texture = texture("res://assets/treasury/slate-floor-v1.png")
 	floor.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	var outline: PackedVector2Array = PackedVector2Array()
 	var uv: PackedVector2Array = PackedVector2Array()
@@ -282,20 +312,38 @@ func _build_visuals() -> void:
 		var angle: float = TAU*float(i)/96.0
 		var point: Vector2 = ZONE+Vector2(cos(angle)*1900,sin(angle)*1500)
 		outline.append(point)
-		uv.append(point/Vector2(1880,1420)*floor.texture.get_size())
+		uv.append(point/Vector2(760,650)*floor.texture.get_size())
+	floor.modulate = Color(0.79,0.82,0.88)
 	floor.polygon=outline
 	floor.uv=uv
 	visual_root.add_child(floor)
-	_sprite(texture("res://assets/hub/hub-floor-v2.png"),EXIT+Vector2(75,0),Vector2(220,138),visual_root)
-	var wall: Texture2D = texture("res://assets/voidstar/wall.png")
-	for i in 128:
-		var angle: float = TAU*float(i)/128.0
-		if absf(angle-PI)<0.065: continue
+	# Authored low masonry and static amber pools: no new dynamic lights.
+	var wall: Texture2D = texture("res://assets/treasury/low-wall-v1.png")
+	for i in 64:
+		var angle: float = TAU*float(i)/64.0
+		if absf(angle-PI)<0.12: continue
 		var at: Vector2 = ZONE+Vector2(cos(angle)*1900,sin(angle)*1500)
 		var tangent: Vector2 = Vector2(-sin(angle)*1900,cos(angle)*1500)
-		var segment: Sprite2D = _sprite(wall,at,Vector2(tangent.length()*TAU/128.0+38,100),visual_root)
-		segment.rotation=tangent.angle()
-	_sprite(texture("res://assets/treasury/delivery-plate-v1.png"),ZONE,Vector2(230,176),visual_root)
+		var segment: Sprite2D = _sprite(wall,at,Vector2(tangent.length()*TAU/64.0+24,60),visual_root)
+		segment.rotation = fposmod(tangent.angle()+PI*0.5,PI)-PI*0.5
+		segment.modulate = Color(0.76,0.79,0.87)
+	for at in [Vector2(95,1330),Vector2(95,1750)]:
+		var join: Sprite2D = _sprite(wall,at,Vector2(330,100),visual_root)
+		join.rotation=PI*0.5
+	var paths: Node2D = Node2D.new()
+	paths.draw.connect(_draw_inlays.bind(paths))
+	visual_root.add_child(paths)
+	for i in Ledger.keys().size():
+		_add_warm_pool(bay(i)+Vector2(0,20),Vector2(345,245),0.16)
+		if i%3 == 1:
+			var at: Vector2 = ZONE+((bay(i)+bay(i+1))*0.5-ZONE)*1.08+Vector2(0,-40)
+			var pillar: Sprite2D = _sprite(texture("res://assets/treasury/lantern-pillar-v1.png"),at,Vector2(90,160),self)
+			pillar.z_index = roundi(at.y+60)
+			_add_warm_pool(at+Vector2(0,65),Vector2(360,240),0.22)
+	_add_warm_pool(Vector2(265,1600),Vector2(500,355),0.28)
+	var doorway: Sprite2D = _sprite(texture("res://assets/treasury/vault-exit-v1.png"),Vector2(155,1480),Vector2(420,400),self)
+	doorway.z_index = 1540
+	_sprite(texture("res://assets/treasury/delivery-plate-v1.png"),DONATION,Vector2(230,176),visual_root)
 	for i in Ledger.keys().size():
 		var group: Node2D = Node2D.new()
 		group.z_index = 10 + roundi(bay(i).y + 25)
@@ -334,15 +382,15 @@ func _draw_stack(index: int) -> void:
 
 func _update_flash_tints() -> void:
 	for i in display_nodes.size():
-		var pulse: float = float(upgrade_flashes.get(String(Ledger.keys()[i]),0.0))/UPGRADE_FLASH
+		var pulse: float = maxf(float(upgrade_flashes.get(String(Ledger.keys()[i]),0.0))/UPGRADE_FLASH, float(landing_pulses.get(String(Ledger.keys()[i]),0.0))*0.75)
 		display_nodes[i].modulate = Color(1.0+pulse*1.5,1.0+pulse*1.2,1.0+pulse*0.7)
 
 func _draw() -> void:
 	if not inside: return
 	var font: Font = ThemeDB.fallback_font
-	draw_string(font,ZONE+Vector2(-160,175),"TREASURY   ·   GOLD HELD: %d" % RunState.gold,HORIZONTAL_ALIGNMENT_LEFT,400,20,Color("f5d890"))
-	draw_string(font,ZONE+Vector2(-90,85),"DONATE CARGO + GOLD",HORIZONTAL_ALIGNMENT_LEFT,200,15,Color("efd887"))
-	draw_string(font,EXIT+Vector2(-24,48),"HUB",HORIZONTAL_ALIGNMENT_LEFT,70,16,Color("efd887"))
+	draw_string(font,DONATION+Vector2(-65,107),"GOLD HELD: %d" % RunState.gold,HORIZONTAL_ALIGNMENT_LEFT,200,13,Color("bca980"))
+	draw_string(font,DONATION+Vector2(-90,85),"DONATE CARGO + GOLD",HORIZONTAL_ALIGNMENT_LEFT,200,15,Color("efd887"))
+
 
 func _steel_text(value: String, at: Vector2, size: int) -> void:
 	var width: float = LABEL_FONT.get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,size).x
@@ -392,8 +440,37 @@ func _draw_particles() -> void:
 			particle_canvas.draw_texture_rect(tex,Scale.draw_rect(tex,Vector2.ZERO,extent),false)
 			particle_canvas.draw_set_transform(Vector2.ZERO)
 
+	for glint in landing_glints:
+		var t: float = float(glint.age)/0.38
+		var at: Vector2 = glint.at
+		var color: Color = Color(1.0,0.76,0.36,(1.0-t)*0.85)
+		for j in 4:
+			var direction: Vector2 = Vector2.from_angle(float(j)*PI*0.5+PI*0.25)
+			particle_canvas.draw_line(at+direction*(3.0+t*7.0),at+direction*(8.0+t*13.0),color,1.8,true)
+
+func _add_warm_pool(at: Vector2, size: Vector2, strength: float) -> void:
+	var gradient: Gradient = Gradient.new()
+	gradient.set_color(0,Color(1.0,0.62,0.22,strength))
+	gradient.set_color(1,Color(1.0,0.62,0.22,0.0))
+	var tex: GradientTexture2D = GradientTexture2D.new()
+	tex.gradient=gradient
+	tex.width=128
+	tex.height=128
+	tex.fill=GradientTexture2D.FILL_RADIAL
+	tex.fill_from=Vector2(0.5,0.5)
+	tex.fill_to=Vector2(1,0.5)
+	_sprite(tex,at,size,visual_root)
+
+func _draw_inlays(canvas: Node2D) -> void:
+	for ring in [Vector2(1450,1100),Vector2(1456,1106)]:
+		var points: PackedVector2Array=PackedVector2Array()
+		for i in 145:
+			var a: float=PI+0.14+(TAU-0.28)*float(i)/144.0
+			points.append(ZONE+Vector2(cos(a),sin(a))*ring)
+		canvas.draw_polyline(points,Color(0.38,0.28,0.14,0.48),2.0,true)
+
 func snapshot() -> Dictionary:
-	return {"stack_capacity":Stack.COUNT,"stack_slots":Ledger.keys().map(func(k): return Stack.filled(int(RunState.treasury_totals.get(k,0)))),"packet_slots":particles.map(func(p): return {"kind":p.kind,"slot":p.slot,"target":[p.target.x,p.target.y],"extent":[p.extent.x,p.extent.y]}),"active_kind":active_kind,"packet_kinds":particles.map(func(p: Dictionary): return p.kind),"upgrades":upgrades,"flashes":upgrade_flashes.duplicate(),"camera_zoom":[hub.player.camera.zoom.x,hub.player.camera.zoom.y],"camera_center":[hub.player.camera.get_screen_center_position().x,hub.player.camera.get_screen_center_position().y],"zone":[ZONE.x,ZONE.y],"player":[hub.player.global_position.x,hub.player.global_position.y],"circular":true,"walk_through":true,"inside":inside,"delivering":delivering,"packets":particles.size(),"remaining_batches":batches.size(),"landings":landing_count,"cancelled":cancelled_count,"totals":RunState.treasury_totals.duplicate(true),"wallet":RunState.gold,"cargo":RunState.cargo.duplicate(true),"bay_count":Ledger.keys().size()}
+	return {"stack_capacity":Stack.COUNT,"stack_slots":Ledger.keys().map(func(k): return Stack.filled(int(RunState.treasury_totals.get(k,0)))),"packet_slots":particles.map(func(p): return {"kind":p.kind,"slot":p.slot,"target":[p.target.x,p.target.y],"extent":[p.extent.x,p.extent.y]}),"active_kind":active_kind,"packet_kinds":particles.map(func(p: Dictionary): return p.kind),"upgrades":upgrades,"flashes":upgrade_flashes.duplicate(),"camera_zoom":[hub.player.camera.zoom.x,hub.player.camera.zoom.y],"camera_center":[hub.player.camera.get_screen_center_position().x,hub.player.camera.get_screen_center_position().y],"zone":[DONATION.x,DONATION.y],"room_center":[ZONE.x,ZONE.y],"player":[hub.player.global_position.x,hub.player.global_position.y],"circular":true,"walk_through":true,"inside":inside,"delivering":delivering,"packets":particles.size(),"remaining_batches":batches.size(),"landings":landing_count,"cancelled":cancelled_count,"totals":RunState.treasury_totals.duplicate(true),"wallet":RunState.gold,"cargo":RunState.cargo.duplicate(true),"bay_count":Ledger.keys().size()}
 
 
 func specimen(kind: String) -> Texture2D:
