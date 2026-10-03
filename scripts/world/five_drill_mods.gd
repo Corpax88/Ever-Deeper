@@ -154,6 +154,8 @@ func _impact(target: Dictionary, period: float) -> void:
 			if mode=="corebreaker": charge = minf(3.0,charge+period)
 	else:
 		var cell: Vector2i = target.cell
+		if mode=="chainbreaker" and chain.is_empty():
+			_start_chain_at(world._cell_center(cell),"",world.absolute_cell(cell))
 		if mode=="twin_auger":
 			# Snapshot a single exposed front. Side cutters have parallel approach lanes.
 			var cells: Array[Vector2i] = []
@@ -175,25 +177,61 @@ func _impact(target: Dictionary, period: float) -> void:
 		if mode=="corebreaker": charge = minf(3.0,charge+period)
 
 func _start_chain(first: int) -> void:
-	chain.clear(); chain_clock = 0.0; chain_from = Vector2(world.resources[first].position)
+	_start_chain_at(Vector2(world.resources[first].position),String(world.resources[first].id))
+
+func _start_chain_at(point: Vector2, first_id: String = "", first_cell: Vector2i = Vector2i(-1,-1)) -> void:
+	chain.clear(); chain_clock = 0.0; chain_from = point
 	_add_arc(world.player.global_position,chain_from)
 	_burst(chain_from,80.0,3)
 	var view: Rect2 = world.get_viewport_rect()
 	var transform: Transform2D = world.get_viewport().get_canvas_transform()
-	# Snapshot ALL eligible IDs; camera movement never changes this queue.
+	# Snapshot exposed ore and the visible rock front BEFORE the initiating hit.
+	# Newly revealed ore needs a later attack. Stable IDs/absolute cells survive rebases.
 	for node in world.resources:
-		if String(node.id)==String(world.resources[first].id) or bool(node.mined): continue
+		if String(node.id)==first_id or bool(node.mined): continue
 		if world._is_floor(Vector2i(node.cell)) and view.has_point(transform*Vector2(node.position)): chain.append(String(node.id))
+	var bounds: Rect2 = transform.affine_inverse()*view
+	var low: Vector2i = world._world_to_cell(bounds.position)-Vector2i.ONE
+	var high: Vector2i = world._world_to_cell(bounds.end)+Vector2i.ONE
+	for y in range(maxi(0,low.y),mini(world.GRID_SIZE.y-1,high.y)+1):
+		for x in range(maxi(0,low.x),mini(world.GRID_SIZE.x-1,high.x)+1):
+			var cell: Vector2i = Vector2i(x,y)
+			if world.absolute_cell(cell)==first_cell or not _chain_rock(cell): continue
+			if view.has_point(transform*world._cell_center(cell)): chain.append(world.absolute_cell(cell))
+
+func _chain_rock(cell: Vector2i) -> bool:
+	return world._cell_diggable(cell) and not world._is_floor(cell) and world._has_floor_neighbor(cell) and RunState._endless_band_in_reach(world.depth_at_position(world._cell_center(cell)))
 
 func _update_chain(delta: float) -> void:
 	if chain.is_empty(): return
 	chain_clock += delta
 	if chain_clock<0.1: return
 	chain_clock = 0.0
-	var index: int = _node(String(chain.pop_front()))
-	if index<0: return
-	var point: Vector2 = world.resources[index].position
-	_add_arc(chain_from,point); _hit_node(index,"chain"); chain_from = point
+	# Nearby hops make the mixed chain readable; each snapshotted target is hit once.
+	var best: int = -1
+	var distance: float = INF
+	var point: Vector2
+	for i in range(chain.size()-1,-1,-1):
+		if chain[i] is Vector2i:
+			var cell: Vector2i = chain[i]-world.absolute_cell(Vector2i.ZERO)
+			if not _chain_rock(cell): chain.remove_at(i); continue
+		else:
+			var index: int = _node(String(chain[i]))
+			if index<0: chain.remove_at(i); continue
+	# Invalid entries were removed above; select from the surviving stable queue.
+	for i in chain.size():
+		var candidate: Vector2 = world._cell_center(chain[i]-world.absolute_cell(Vector2i.ZERO)) if chain[i] is Vector2i else Vector2(world.resources[_node(String(chain[i]))].position)
+		var next_distance: float = chain_from.distance_squared_to(candidate)
+		if next_distance<distance: best = i; distance = next_distance; point = candidate
+	if best<0: return
+	var target = chain[best]
+	chain.remove_at(best)
+	_add_arc(chain_from,point)
+	if target is Vector2i:
+		_wall(target-world.absolute_cell(Vector2i.ZERO),_power())
+		_burst(point,75.0,3); world._update_buried_visibility()
+	else: _hit_node(_node(String(target)),"chain")
+	chain_from = point
 
 func _core_interval() -> float:
 	return minf(0.035,world._mining_cycle_duration()*0.4)

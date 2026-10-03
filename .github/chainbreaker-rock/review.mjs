@@ -5,7 +5,7 @@ import http from 'node:http';
 import {createHash} from 'node:crypto';
 const [web,output,flavor]=process.argv.slice(2);fs.mkdirSync(output,{recursive:true});
 const reference=process.env.NODE_ASSETS_REFERENCE==='1';
-const version='1.0.0-dev.15.53',files=JSON.parse(fs.readFileSync(path.join(web,'manifest.json')));
+const version='1.0.0-dev.15.52',files=JSON.parse(fs.readFileSync(path.join(web,'manifest.json')));
 for(const [name,want] of Object.entries(files)){
  const h=createHash('sha256');for await(const b of fs.createReadStream(path.join(web,name)))h.update(b);
  if(h.digest('hex')!==want.sha256||fs.statSync(path.join(web,name)).size!==want.size)throw Error('Candidate identity: '+name);
@@ -20,7 +20,7 @@ const server=http.createServer((req,res)=>{
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const browser=await chromium.launch({headless:true,args:['--use-gl=angle','--use-angle=metal','--enable-gpu']});
-const context=await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:3,hasTouch:true,});
+const context=await browser.newContext({viewport:{width:844,height:390},deviceScaleFactor:2,hasTouch:true,});
 const page=await context.newPage(),cdp=await context.newCDPSession(page);page.setDefaultTimeout(90000);
 const checks=[],messages=[];let failed=null,runtime=null,id=0;
 const save=()=>fs.writeFileSync(path.join(output,'checks.json'),JSON.stringify(checks,null,2));
@@ -49,35 +49,53 @@ try{
  runtime=await page.evaluate(()=>{const g=document.querySelector('canvas').getContext('webgl2'),e=g.getExtension('WEBGL_debug_renderer_info');return {renderer:e?g.getParameter(e.UNMASKED_RENDERER_WEBGL):null,lost:g.isContextLost(),dpr:devicePixelRatio};});
  check('graphical-renderer',runtime.renderer&&!runtime.lost&&!/SwiftShader|llvmpipe|software/i.test(runtime.renderer),{runtime});
 
-
- async function walk(direction,predicate,label,vertical=0){
-  const s=await state(),jr=s.buttons.joystick,vp=page.viewportSize();
-  const start={x:(jr[0]+jr[2]*.20)/s.viewport[0]*vp.width,y:(jr[1]+jr[3]*.70)/s.viewport[1]*vp.height};
-  await touch('touchStart',start);await touch('touchMove',{x:start.x+32*direction,y:start.y+32*vertical});
-  await wait(label,predicate,10000);await touch('touchEnd',start);
+ const mods=[['echo_crystal','chainbreaker']];
+ for(const viewport of [{width:844,height:390},{width:667,height:375},{width:932,height:430}]){
+  await page.setViewportSize(viewport);
+  for(const [resource,mod] of mods){
+   await command('mods_preview',{resource,amount:100000});await delay(250);
+   check('preview-visible-'+mod+viewport.width,(await state()).treasury_goal.open,{});
+   await shot('preview-'+mod+'-'+viewport.width);
+   if(viewport.width===844){
+    await tap('treasury_claim');check('claim-'+mod,(await state()).treasury_goal.saved[mod+'_claimed'],{});
+    await tap('treasury_pin');check('track-'+mod,(await state()).treasury_goal.saved.pinned===resource,{});
+   }
+   await tap('treasury_close');await ready();
+  }
  }
- await command('treasury_fixture');await ready();await delay(1500);await command('treasury_clear_toasts');await shot('entrance');
- await walk(1,s=>s.treasury.inside,'walk through east doorway');
- await shot('interior-entry');await command('treasury_zone');await ready();
- const before=await state();
- await walk(1,s=>s.treasury.delivering,'start centre delivery');
- await wait('mixed active flight',s=>new Set(s.treasury.packet_kinds).size>=3);
- await shot('mixed-flight');
- await wait('delivery completes',s=>!s.treasury.delivering&&s.treasury.packets===0,45000);
- let s=await state();
- check('exact-delivery-conservation',s.treasury.totals.wallet_gold===before.treasury.wallet&&s.treasury.wallet===0&&s.treasury.totals.stone===8000&&s.treasury.totals.copper===4000&&s.treasury.totals.echo_crystal===1800&&s.treasury.totals.prismite===2400&&s.treasury.totals.starshard===3200,{});
- await command('treasury_save');const saved=(await state()).treasury.totals;await command('treasury_restore');
- check('save-retains-every-pile',JSON.stringify(saved)===JSON.stringify((await state()).treasury.totals),{});
- await command('treasury_visual',{amount:100000,index:26});await tap('gold_podium');await wait('podium opens',s=>s.treasury_goal.open);await shot('podium-interaction');await tap('treasury_close');await ready();
- await command('treasury_exit_approach');await shot('exit-approach');await walk(-1,s=>!s.treasury.inside,'walk left through east-facing interior threshold');await shot('returned-hub');
- for(const viewport of [{width:667,height:375},{width:932,height:430}]){
-  await page.setViewportSize(viewport);await delay(500);await command('treasury_door');await delay(350);await shot('entrance-'+viewport.width);
-  await walk(1,s=>s.treasury.inside,'enter at '+viewport.width);await command('treasury_clear_toasts');await shot('interior-'+viewport.width);
-  await walk(-1,s=>!s.treasury.inside,'leave horizontally at '+viewport.width);await shot('returned-'+viewport.width);
+ await page.setViewportSize({width:844,height:390});
+ for(const [,mod] of mods){
+  await command('five_fixture',{mod,speed:3});await ready();await delay(400);
+  const begin=(await state()).drill_mods.player,p=await point('hud_mine');
+  await touch('touchStart',p);for(let frame=0;frame<12;frame++){await delay(100);await shot('rock-chain-'+frame);}await touch('touchEnd',p);await delay(200);
+  let s=await state();
+  check('rock-hit-chains-to-additional-rock',s.drill_mods.effect.five.hits>=4&&s.drill_mods.effect.five.hits-s.drill_mods.effect.five.log.length>=4,{effect:s.drill_mods.effect.five});
+  check('actual-touch-mines-'+mod,s.drill_mods.effect.five.hits>0,{effect:s.drill_mods.effect.five});
+  check('manual-no-auto-rush-'+mod,Math.hypot(s.drill_mods.player[0]-begin[0],s.drill_mods.player[1]-begin[1])<2,{});
+  const hits=s.drill_mods.effect.five.hits;await delay(250);
+  check('release-stops-'+mod,(await state()).drill_mods.effect.five.hits===hits,{});
+  const v=page.viewportSize(),jr=s.buttons.joystick;
+  const joy={x:(jr[0]+jr[2]*.2)/s.viewport[0]*v.width,y:(jr[1]+jr[3]*.7)/s.viewport[1]*v.height};
+  const fingers=async(type,points)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints:points.map(([id,p])=>({id,...p,radiusX:5,radiusY:5,force:1}))});
+  await fingers('touchStart',[[1,joy]]);await fingers('touchStart',[[1,joy],[7,p]]);
+  const from=(await state()).drill_mods.player;
+  await fingers('touchMove',[[1,{x:joy.x-32,y:joy.y}],[7,p]]);await delay(450);
+  s=await state();check('simultaneous-move-mine-'+mod,s.drill_mods.player[0]<from[0]-30,{});
+  await shot('moving-'+mod);await fingers('touchEnd',[]);
  }
+ for(const mod of ['chainbreaker']){
+  await command('five_effect_fixture',{mod});await ready();await delay(250);
+  const p=await point('hud_mine');await touch('touchStart',p);await delay(270);await shot('effect-'+mod);
+  await delay(700);await touch('touchEnd',p);await delay(200);
+  const effect=(await state()).drill_mods.effect.five;
+  check('distinct-effect-'+mod,mod==='chainbreaker'?new Set(effect.log.filter(x=>x.kind==='chain').map(x=>x.id)).size>=5:effect.log.filter(x=>x.kind==='core').length===3,{effect});
+ }
+ await command('mods_save');const saved=(await state()).treasury_goal.saved;await command('mods_reload');
+ check('save-retains-five-mods',JSON.stringify(saved)===JSON.stringify((await state()).treasury_goal.saved),{});
 } catch(e){failed=e.stack||String(e);console.error(failed);}
 finally{
  await context.close();await browser.close();server.close();
  fs.writeFileSync(path.join(output,'report.json'),JSON.stringify({passed:!failed,failure:failed,version,files,source:process.env.GITHUB_SHA,runtime,checks},null,2));
  if(failed)process.exitCode=1;
 }
+
