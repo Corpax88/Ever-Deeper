@@ -6,6 +6,9 @@ func run() -> void:
 		return
 	super.run()
 
+var ricochet_skin_check: Dictionary = {}
+var ricochet_range_cells: Array[Vector2i] = []
+
 var exposure_id: String = ""
 var exposure_hp: int = 0
 var deep_checks: Dictionary = {}
@@ -38,6 +41,36 @@ var ore_escape_goal: Vector2
 var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind)=="ricochet_range_fixture":
+		main._on_developer_command_requested("test_ricochet")
+		main._dev_build_all_workshops_state();RunState.endless_workshops.tool_forge.level=5
+		var w: Node=main.endless_world
+		w.set_mine_held(false);w.drill_modes.reset();w.drill_modes.five.reset()
+		var mole: Node=main.get_node("CompanionInterface").active_mole();mole.autonomous_enabled=false;mole.recall()
+		w._ground_props.clear();w.discovery_sites.clear();w.resources.clear();w.dig_damage.clear()
+		for visual in w.resource_visuals.values():
+			if is_instance_valid(visual):visual.queue_free()
+		w.resource_visuals.clear()
+		for y in range(1,32):
+			for x in range(1,39):w._set_floor(Vector2i(x,y),true)
+		ricochet_range_cells=[Vector2i(25,12),Vector2i(25,7),Vector2i(20,7)]
+		for cell in ricochet_range_cells:w._set_floor(cell,false);w.dig_damage[cell]=519
+		w.player.global_position=w._cell_center(Vector2i(18,12));w.player.set_facing(Vector2.RIGHT)
+		w.player.camera.reset_smoothing();w.player.camera.force_update_scroll();w.drill_modes.tick(0.016)
+		w.drill_modes.five.hits=0;w.drill_modes.five.hit_log.clear()
+		w._update_buried_visibility();w.queue_redraw();main.achievement_toast.hide()
+		command_id=int(data.id);return
+	if String(data.kind)=="ricochet_skin":
+		var w: Node=main.endless_world
+		w.set_mine_held(false)
+		w.drill_modes.dev_override="ricochet" if bool(data.get("mod",false)) else ""
+		preload("res://scripts/state/treasury_goals.gd")._equip("")
+		var accepted: bool=RunState.set_endless_tool_style(String(data.skin))
+		w.player.visual._refresh_equipment()
+		var native: Node=w.player.visual._native_worn
+		native.advance(0.016)
+		ricochet_skin_check={"accepted":accepted,"saved":RunState.endless_tool_style,"wanted":w.player.visual._wanted_gear,"atlas":w.player.visual.active_gear,"shown":native.equipment.current,"mod_active":native.mod_active,"failed":native.failed}
+		command_id=int(data.id);return
 	if String(data.kind)=="five_effect_fixture":
 		main._on_developer_command_requested("test_"+String(data.mod))
 		var w: Node=main.endless_world
@@ -437,6 +470,9 @@ func _frame() -> void:
 	state["resonance"]["dug"]=RunState.endless_dug_cells(main.endless_world.current_depth).size()
 	state["resonance"]["variant"]=String(RunState.starforge_variant)
 	state["treasury"]=main.hub_world.treasury.snapshot()
+	var range_floor: Array=[]
+	for cell in ricochet_range_cells:range_floor.append(main.endless_world._is_floor(cell))
+	state["ricochet"]={"skin_check":ricochet_skin_check,"range_floor":range_floor,"saved_skin":RunState.endless_tool_style}
 	state["drill_mods"]={"effect":main.endless_world.drill_modes.snapshot(),"laser_visible":main.laser_button.visible,"laser_text":main.laser_button.text,"player":[main.endless_world.player.position.x,main.endless_world.player.position.y]}
 	state["treasury_goal"]={"open":goal_panel.visible,"kind":goal_panel.kind,"claim_disabled":goal_panel.claim_button.disabled,"claim_text":goal_panel.claim_button.text,"saved":RunState.treasury_goals.duplicate(true),"hud":main._progression_goal(),"rendered":main.premium_hud.progression_goal_snapshot()}
 	state["actual_map"]={"markers":main._map_markers().size(),"known":WorldCatalog.WORLD_ORDER.map(func(w): return RunState.is_world_unlocked(w)),"expanded":is_instance_valid(panel.map_view) and panel.map_view.visible}

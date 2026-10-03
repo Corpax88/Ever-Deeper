@@ -1,6 +1,10 @@
 extends Node2D
 ## Locomotion always belongs to the unchanged player controller.
 const IDS = ["twin_auger", "chainbreaker", "ricochet", "corebreaker", "vortex"]
+const RICOCHET_REACH: float = 512.0
+const RICOCHET_BOUNCE_REACH: float = 384.0
+const RICOCHET_SPEED: float = 1200.0
+const RICOCHET_LIFETIME: float = (RICOCHET_REACH+RICOCHET_BOUNCE_REACH*2.0)/RICOCHET_SPEED+0.25
 var world: Node2D
 var mode: String = ""
 var target_key: String = ""
@@ -84,7 +88,7 @@ func tick(delta: float, selected: String, held: bool) -> void:
 	var step: float = minf(delta,0.05)
 	_update_chain(step); _update_core(step); _update_projectile(step)
 	if not projectile.is_empty() or core_left>0: queue_redraw(); return
-	var target: Dictionary = _target(256.0 if mode=="ricochet" else 122.0)
+	var target: Dictionary = _target(RICOCHET_REACH if mode=="ricochet" else 122.0)
 	var key: String = String(target.get("key",""))
 	if key!=target_key: target_key = key; elapsed = 0.0
 	if target.is_empty(): world.player.set_mining_visual(false,0.0); queue_redraw(); return
@@ -250,8 +254,10 @@ func _update_core(delta: float) -> void:
 func _launch(cell: Vector2i) -> void:
 	var eligible: Array[Vector2i] = []
 	var center: Vector2i = world._world_to_cell(world.player.global_position)
-	for y in range(center.y-7,center.y+8):
-		for x in range(center.x-7,center.x+8):
+	# Snapshot the whole possible three-contact route, including long bounces.
+	var radius: int = ceili((RICOCHET_REACH+RICOCHET_BOUNCE_REACH*2.0)/world.TILE_SIZE)+1
+	for y in range(maxi(0,center.y-radius),mini(world.GRID_SIZE.y-1,center.y+radius)+1):
+		for x in range(maxi(0,center.x-radius),mini(world.GRID_SIZE.x-1,center.x+radius)+1):
 			var at: Vector2i = Vector2i(x,y)
 			if world._cell_diggable(at) and not world._is_floor(at) and world._has_floor_neighbor(at): eligible.append(at)
 	projectile = {"position":world.player.global_position,"cell":cell,"eligible":eligible,"visited":[],"age":0.0,"origin":world.player.global_position,"end":_contact(cell,world.player.global_position)}
@@ -264,11 +270,11 @@ func _contact(cell: Vector2i, from: Vector2) -> Vector2:
 func _update_projectile(delta: float) -> void:
 	if projectile.is_empty(): return
 	projectile.age += delta
-	if float(projectile.age)>0.8: projectile.clear(); return
+	if float(projectile.age)>RICOCHET_LIFETIME: projectile.clear(); return
 	var cell: Vector2i = projectile.cell
 	var end: Vector2 = projectile.end
 	var before: Vector2 = projectile.position
-	var after: Vector2 = before.move_toward(end,1200.0*delta)
+	var after: Vector2 = before.move_toward(end,RICOCHET_SPEED*delta)
 	if not world._clear_mining_line(before,after,true): projectile.clear(); return
 	projectile.position = after
 	if before.distance_to(after)>0.0: _add_arc(before,after)
@@ -281,7 +287,7 @@ func _update_projectile(delta: float) -> void:
 		if projectile.visited.has(candidate) or world._is_floor(candidate): continue
 		var point: Vector2 = _contact(candidate,after)
 		var distance: float = after.distance_to(point)
-		if distance>192.0 or distance>=score or not world._clear_mining_line(after,point,true): continue
+		if distance>RICOCHET_BOUNCE_REACH or distance>=score or not world._clear_mining_line(after,point,true): continue
 		next = candidate; score = distance
 	if next.x<0: projectile.clear()
 	else: projectile.cell = next; projectile.end = _contact(next,after)

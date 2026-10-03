@@ -107,6 +107,10 @@ func advance(delta: float) -> bool:
 	mod_active = is_instance_valid(modes) and modes.selected() in modes.five.IDS and owner_world.active
 	# Existing native hero and braced tool bone; normal gear resumes on unequip.
 	var target_gear: String = "crusher" if mod_active else visual.active_gear
+	# Native models are already available; do not show the previous pickaxe
+	# while unrelated fallback sprite atlases load after a workshop selection.
+	if not mod_active and visual._wanted_gear in Equipment.GEARS:
+		target_gear = visual._wanted_gear
 	if failed or target_gear not in Equipment.GEARS or not visual.is_visible_in_tree():
 		if is_instance_valid(rig): suspend()
 		return false
