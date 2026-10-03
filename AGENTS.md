@@ -1,3 +1,5 @@
+Current task: [DEV15.52 treasury door direction](docs/treasury-direction/HANDOFF.md). Native10 passed; east-facing PNG and leftward exit. Mac/DEV publication pending; previous release DEV15.51.
+
 Current verified release: [Hero polish DEV15.50](docs/hero-polish/HANDOFF.md). Runtime6ceef595; Mac37066008459; publication37066999206/receipt11253066201 verifies27 public hashes. Eight native pickaxes: two-handed swing, fitted sleeves, matte cloth, grounded cadence. Critic8/10 for pose/fit/appearance; not a physical iPhone/FPS claim. No pending jobs/approvals; permanent GitHub/DEV authorization persists. Never rebuild historical main.
 
 Current verified release: [Five mods DEV15.48](docs/five-mods/HANDOFF.md). Published37050728203/receipt11245994213; all27public hashes pass. Source53eb67d,39native/76browser checks, critic8.2/10. No pending jobs/approvals; permanent GitHub/DEV authorization applies across chats. Do not rebuild main or rerun accepted unchanged gates.
