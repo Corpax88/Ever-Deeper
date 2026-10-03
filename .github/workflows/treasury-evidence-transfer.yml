@@ -1,0 +1,23 @@
+name: Transfer Treasury Evidence
+on:
+  push:
+    branches: [codex/treasury-evidence-20261003]
+permissions: {contents: read, actions: read}
+jobs:
+  transfer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '11282577326'
+          merge-multiple: true
+          run-id: '37147089434'
+          github-token: '${{ github.token }}'
+          path: '${{ runner.temp }}/evidence'
+      - uses: actions/upload-artifact@v4
+        with: {name: treasury-browser-evidence, path: '${{ runner.temp }}/evidence/browser', retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        with: {name: treasury-ordinary-evidence, path: '${{ runner.temp }}/evidence/ordinary', retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        with: {name: treasury-core-evidence, path: '${{ runner.temp }}/evidence/core', retention-days: 30}
