@@ -1,6 +1,6 @@
 # DEV15.51 — Treasury atmosphere
 
-3 October 2026. Source and all four production assets are secured on GitHub. Mac acceptance passed and all 31 final captures were inspected. DEV-only publication is now prepared; check the publication workflow and receipt before calling it live. Final critic round was explicitly waived by Mats. Existing GitHub and tested DEV authorization applies; do not ask again.
+3 October 2026. Source and all four production assets are secured on GitHub. Mac acceptance passed and all 31 final captures were inspected. DEV15.51 is published and all27 public file hashes are verified. Publication e24feb0a337dd7635228e62a3e971a270b974599 / run37147664027, receipt11282866638; LIVE1.0.4 and Worn retained. Rollback11282652963 keeps DEV15.50. No pending jobs or approvals. Final critic round was explicitly waived by Mats. Existing GitHub and tested DEV authorization applies; do not ask again.
 
 ## Canonical candidate
 
@@ -23,6 +23,6 @@ Historical native evidence has10 passing interaction checks, exit0 and no script
 
 Raw Mac evidence11282577326 is35MB. Executor download limit is32MiB; signed direct URLs returned403. Evidence-only transfer37147428123 on codex/treasury-evidence-20261003 split it without re-running the game: browser11283256299, ordinary11282862176, core11282922077. Download with the GitHub artifact tool followed by download_file using its returned file_id; verify each artifact digest. Source/asset uploads succeeded through GitHub create_blob/create_tree/create_commit/update_ref; read base64 in chunks below the1MiB shell-output cap. The approved artwork is already uploaded: do not regenerate.
 
-Publisher .github/treasury-atmosphere/publish.py checks source/run/artifact identity, every reviewed file, exact candidate hashes and current public baseline; preserves LIVE1.0.4/Worn and retains DEV15.50 rollback. After successful publication verify27 public hashes, add receipt and final status to this handoff and entry docs.
+Publisher .github/treasury-atmosphere/publish.py checks source/run/artifact identity, every reviewed file, exact candidate hashes and current public baseline; preserves LIVE1.0.4/Worn and retains DEV15.50 rollback. Publication completed: receipt .github/treasury-atmosphere/publication-receipt.json verifies27 public hashes. Do not repeat accepted unchanged tests or publication.
 
 Player check after publication: reload https://corpax88.github.io/Ever-Deeper/dev/, choose Continue (no reset), enter treasury, donate mixed cargo, inspect nearby landings and walk back through the interior arch.
