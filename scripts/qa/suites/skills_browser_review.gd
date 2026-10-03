@@ -41,6 +41,19 @@ var ore_escape_goal: Vector2
 var ore_escape_active: bool=false
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind)=="mod_lifecycle":
+		var w: Node=main.endless_world
+		match String(data.action):
+			"skin": RunState.set_endless_tool_style(String(data.skin))
+			"earned":
+				w.drill_modes.dev_override=""
+				RunState.treasury_goals.ricochet_claimed=true
+				preload("res://scripts/state/treasury_goals.gd")._equip("ricochet")
+			"pause": main._open_start_menu()
+			"resume": main._continue_from_menu()
+			"travel":
+				main._dev_jump_hub();main._dev_jump_endless(1)
+		command_id=int(data.id);return
 	if String(data.kind)=="ricochet_range_fixture":
 		main._dev_build_all_workshops_state();RunState.endless_workshops.tool_forge.level=5
 		# Seeding ends the saved descent; synchronize the visible phase before re-entry.
@@ -475,6 +488,9 @@ func _frame() -> void:
 	state["treasury"]=main.hub_world.treasury.snapshot()
 	var range_floor: Array=[]
 	for cell in ricochet_range_cells:range_floor.append(main.endless_world._is_floor(cell))
+	var rv: Node=main.endless_world.player.visual
+	var rn: Node=rv._native_worn
+	state["mod_live"]={"selected":main.endless_world.drill_modes.selected(),"saved":preload("res://scripts/state/treasury_goals.gd").active_mod(),"override":main.endless_world.drill_modes.dev_override,"native":rv.native_worn_snapshot(),"sprite_visible":rv._sprite.visible,"tool_visible":is_instance_valid(rn) and is_instance_valid(rn.equipment) and is_instance_valid(rn.equipment.tool) and rn.equipment.tool.visible,"skin":RunState.endless_tool_style,"five_mode":main.endless_world.drill_modes.five.mode}
 	state["ricochet"]={"skin_check":ricochet_skin_check,"range_floor":range_floor,"saved_skin":RunState.endless_tool_style}
 	state["drill_mods"]={"effect":main.endless_world.drill_modes.snapshot(),"laser_visible":main.laser_button.visible,"laser_text":main.laser_button.text,"player":[main.endless_world.player.position.x,main.endless_world.player.position.y]}
 	state["treasury_goal"]={"open":goal_panel.visible,"kind":goal_panel.kind,"claim_disabled":goal_panel.claim_button.disabled,"claim_text":goal_panel.claim_button.text,"saved":RunState.treasury_goals.duplicate(true),"hud":main._progression_goal(),"rendered":main.premium_hud.progression_goal_snapshot()}
