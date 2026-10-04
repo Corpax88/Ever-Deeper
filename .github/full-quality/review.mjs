@@ -145,6 +145,32 @@ try{
    await command('maps_fixture',{mine,depth});await ready();await delay(250);await shot(mine+'-'+depth+'-844');await map(mine+'-'+depth+'-844');
   }
  });
+ await group('Deepheart-final-sequence',async()=>{
+  await page.setViewportSize({width:844,height:390});await closeModal();
+  await command('quality_finale',{action:'setup'});await ready();await shot('finale-01-chamber');
+  check('finale-starts-uncompleted',!(await state()).quality.finale.victory&&(await state()).quality.finale.world.opened.length===0,{});
+  for(const seal of ['mossvein','moonglass','emberdeep','starfall']){
+   await command('quality_finale',{action:'seal',seal});await wait('seal context '+seal,s=>s.quality.finale.context==='deepheart_seal:'+seal);
+   const mine=await point('hud_mine');await touch('touchStart',mine);
+   try{await delay(300);await shot('finale-02-mining-'+seal);await wait('real seal opens '+seal,s=>s.quality.finale.world.opened.includes(seal),20000);}
+   finally{await touch('touchEnd',mine);}
+  }
+  check('all-four-real-seals-open',(await state()).quality.finale.world.all_open,{});
+  await command('quality_finale',{action:'core'});await wait('core available',s=>s.quality.finale.context==='deepheart_core');await shot('finale-03-ready-core');
+  await tap('hud_context');await wait('finale starts',s=>s.quality.finale.world.finale_active);await shot('finale-04-attunement');await delay(1500);await shot('finale-05-resonance');
+  await wait('real victory conclusion',s=>s.quality.finale.conclusion&&s.quality.finale.victory,10000);
+  for(const viewport of [{width:844,height:390},{width:667,height:375},{width:932,height:430}]){
+   await page.setViewportSize(viewport);await delay(250);const s=await state();
+   for(const name of ['conclusion_to_hub','conclusion_stay']){
+    const r=s.buttons[name],size=[r[2]*viewport.width/s.viewport[0],r[3]*viewport.height/s.viewport[1]];
+    check('conclusion-'+name+'-44-css-'+viewport.width,size.every(x=>x>=43.95),{size});
+   }
+   await shot('finale-06-conclusion-'+viewport.width);
+  }
+  await tap('conclusion_to_hub');await wait('real conclusion returns Hub',s=>s.phase==='hub'&&s.quality.finale.conclusion_seen&&!s.quality.finale.conclusion);await ready();await shot('finale-07-hub-return');
+  await command('quality_finale',{action:'elevator'});await wait('postgame elevator context',s=>s.hub_context==='deepElevator');await tap('hud_context');
+  await wait('real postgame Deep entry',s=>s.phase==='endless'&&s.quality.finale.endless.active);await ready();await shot('finale-08-Deep-unlocked');
+ });
  check('runtime-errors-absent',!messages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)),{});
 }catch(e){failures.push({group:'startup-or-global',error:String(e.stack||e)});console.error(e);try{await shot('fatal-failure');}catch{}}
 finally{report.passed=failures.length===0;report.browser=browser.version();save();await context.close();await browser.close();await new Promise(r=>server.close(r));}

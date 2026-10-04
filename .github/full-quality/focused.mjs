@@ -124,6 +124,46 @@ try{
    await tap('settings_back');await wait('settings returns Skills',s=>s.skills_open&&!s.settings_open);await shot('settings-return-skills-'+width);
    await tap('skills_close');await ready();
   });
+  await group('achievement-focus-'+width,async()=>{
+   await closeModal();await command('surface');await ready();
+   for(const [index,label] of [[0,'early'],[22,'middle'],[28,'threefold-star'],[-1,'last']]){
+    await command('quality_achievement',{index});
+    await wait('achievement toast',s=>s.quality.geometry.achievement.toast.visible);
+    if(width===844)await shot('achievement-'+label+'-toast-'+width);
+    await tap('achievement_toast');
+    await wait('highlighted achievement',s=>{const a=s.quality.geometry.achievement;return a.detail_visible&&a.highlighted===a.result.requested&&a.row.length===4;});
+    await delay(350);
+    const s=await state(),a=s.quality.geometry.achievement,row=cssRect(a.row,s),scroll=cssRect(a.scroll,s);
+    check('achievement-'+label+'-row-visible-'+width,contains(scroll,row),{row,scroll,id:a.highlighted,scroll_value:a.scroll_value});
+    check('achievement-'+label+'-world-paused-'+width,!s.player_controls_enabled,{phase:s.phase});
+    await shot('achievement-'+label+'-focused-'+width);
+    await tap('settings_back');await wait('ledger Back returns pause',s=>s.quality.geometry.achievement.main_visible&&!s.quality.geometry.achievement.detail_visible);
+    await tap('continue');await ready();
+   }
+   await command('quality_achievement',{index:28,cancel:true});await delay(450);
+   const a=(await state()).quality.geometry.achievement;
+   check('achievement-Back-before-deferred-'+width,a.result.cancelled_before_deferred&&a.main_visible&&!a.detail_visible&&a.highlighted===''&&a.row.length===0,{achievement:a,fixture:'Back signal before deferred focus'});
+   await tap('continue');await ready();
+  });
+  await group('feedback-placement-'+width,async()=>{
+   await closeModal();await command('maps_fixture',{mine:'endless',depth:1});await ready();
+   await command('quality_feedback');await delay(450);
+   let s=await state(),f=s.quality.feedback;await shot('feedback-simultaneous-'+width);
+   check('feedback-native-hero-bounds-'+width,f.hero.length>0,{hero:f.hero});
+   check('feedback-three-visible-pickups-'+width,f.pickups.length===3,{pickup:f.pickup});
+   const notices=f.pickups.map(r=>cssRect(r,s));
+   if(f.skill.visible)notices.push(cssRect(f.skill_rect,s));
+   if(f.toast.visible)notices.push(cssRect(f.toast_rect,s));
+   for(const [index,rect] of notices.entries()){
+    check('feedback-'+index+'-onscreen-'+width,contains(cssRect(f.safe_rect,s),rect),{rect,safe:f.safe_rect});
+    for(const hero of f.hero)check('feedback-'+index+'-clear-hero-'+width,!overlap(rect,cssRect(hero,s)),{rect,hero});
+   }
+   for(let i=0;i<notices.length;i++)for(let j=i+1;j<notices.length;j++)check('feedback-'+i+'-'+j+'-separate-'+width,!overlap(notices[i],notices[j]),{notices});
+   check('feedback-toast-clear-or-queued-'+width,f.toast.visible?f.toast.placement_clear:f.toast.active&&f.toast.suspended,{toast:f.toast});
+   await tap('hud_map');await wait('feedback map modal',s=>s.skills_open&&s.map_open);s=await state();f=s.quality.feedback;
+   check('feedback-notices-suspended-on-map-'+width,!f.toast.visible&&!f.skill.visible&&f.toast.active,{toast:f.toast,skill:f.skill});await shot('feedback-suspended-map-'+width);
+   await tap('skills_close');await ready();await command('quality_feedback',{clear:true});
+  });
   await group('journal-controls-'+width,async()=>{
    await closeModal();await command('surface');await ready();await tap('hud_mole');await wait('journal',s=>s.mole_open);
    for(const [index,tab] of [[1,'skills'],[2,'how'],[0,'together']]){
@@ -180,7 +220,7 @@ try{
     }
    }
    await command('quality_preview_state',{resource:'copper',amount:100000});await wait('generic goal',s=>s.treasury_goal.open);await delay(150);
-   const s=await state();previewGeometry('copper-'+width,s);check('generic-copper-no-claim-'+width,!s.quality.geometry.preview.claim.visible,{});await shot('copper-complete-'+width);
+   const s=await state();previewGeometry('copper-'+width,s);check('generic-copper-no-claim-'+width,!s.quality.geometry.preview.claim.visible,{});check('generic-complete-cannot-repin-'+width,s.quality.geometry.preview.pin.disabled&&s.treasury_goal.saved.pinned!=='copper',{goals:s.treasury_goal.saved});await shot('copper-complete-'+width);
    await tap('treasury_close');await ready();
   });
   await group('full-map-'+width,async()=>{

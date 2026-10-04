@@ -71,6 +71,68 @@ if not production:
             source=source.replace(old,new)
         replacements[name]=source.encode()
         replacements[name+'.remap']=('[remap]\npath="res://'+name+'"\n').encode()
+    # The retained world fixture predates buried-ore shielding. Excavate its
+    # generated target using real wall damage before testing ore/claim integrity.
+    # Keep every original assertion; apply this fixture repair to baseline too.
+    name='scripts/qa/suites/one_point_zero_world.gd'
+    assert hashlib.sha256(script(name)).hexdigest()=='3c2a9cf8e8d405769634d47714ac34f965af35bf425d1ed403c1ed36da017bf6','Published world fixture changed'
+    source_bytes=(ROOT/name).read_bytes()
+    assert hashlib.sha256(source_bytes).hexdigest()=='5874695159de50ae7598d4edae81ad3f8029f96be1e0985df53673af75e96fe3','Canonical published world fixture source changed'
+    source=source_bytes.decode()
+    old='\tvar target_id: String = String(resource.id)\n\tfor _hit in 80:'
+    new='''\tvar target_id: String = String(resource.id)
+\tvar target_cell: Vector2i = Vector2i(resource.cell)
+\tfor _wall_hit in 520:
+\t\tif world._is_floor(target_cell):
+\t\t\tbreak
+\t\tworld._strike_wall(target_cell, 1.0)
+\tif not _check(world._is_floor(target_cell), "Real terrain damage exposes generated deposit"):
+\t\treturn false
+\tfor _hit in 80:'''
+    assert source.count(old)==1,'World claim integrity fixture owner changed'
+    source=source.replace(old,new)
+    old='\tvar site_index: int = int(site.index)\n\tvar result: Dictionary = world.qa_complete_site_activity(site_index, "overload")'
+    new='''\tvar site_index: int = int(site.index)
+\tvar site_points: Array = [Vector2(site.position) + Vector2(world.SITE_PAD_OFFSET, 36.0)]
+\tsite_points.append_array(site.rune_positions)
+\tfor point in site_points:
+\t\tvar cell: Vector2i = world._world_to_cell(Vector2(point))
+\t\tfor _wall_hit in 520:
+\t\t\tif world._is_floor(cell):
+\t\t\t\tbreak
+\t\t\tworld._strike_wall(cell, 1.0)
+\t\tif not _check(world._is_floor(cell), "Real terrain damage exposes cache approach and runes"):
+\t\t\treturn false
+\tvar result: Dictionary = world.qa_complete_site_activity(site_index, "overload")'''
+    assert source.count(old)==1,'World cache approach fixture owner changed'
+    source=source.replace(old,new)
+    old='\tvar position: Vector2 = Vector2(site.position)\n\tworld.player.global_position = position + Vector2(128, 0)'
+    new='''\tvar position: Vector2 = Vector2(site.position)
+\tvar site_cell: Vector2i = world._world_to_cell(position)
+\tfor _wall_hit in 520:
+\t\tif world._is_floor(site_cell):
+\t\t\tbreak
+\t\tworld._strike_wall(site_cell, 1.0)
+\t_check(world._is_floor(site_cell), "Guidance fixture exposes cache through actual terrain damage")
+\tsaved_cells = world.floor_cells.duplicate()
+\tworld.player.global_position = position + Vector2(128, 0)'''
+    assert source.count(old)==1,'World guidance fixture owner changed'
+    source=source.replace(old,new)
+    old='\tworld.restore_position(Vector2(world.native_relic_position))\n\tworld._update_discoveries()'
+    new='''\tvar relic_cell: Vector2i = world._world_to_cell(Vector2(world.native_relic_position))
+\tfor dx in range(-1, 2):
+\t\tfor dy in range(-1, 2):
+\t\t\tvar cell: Vector2i = relic_cell + Vector2i(dx, dy)
+\t\t\tfor _wall_hit in 520:
+\t\t\t\tif world._is_floor(cell):
+\t\t\t\t\tbreak
+\t\t\t\tworld._strike_wall(cell, 1.0)
+\t_check(world._is_floor(relic_cell), "Generated relic is exposed by actual terrain damage")
+\tworld.restore_position(Vector2(world.native_relic_position))
+\tworld._update_discoveries()'''
+    assert source.count(old)==1,'World relic fixture owner changed'
+    replacements[name]=source.replace(old,new).encode()
+    replacements[name+'.remap']=('[remap]\npath="res://'+name+'"\n').encode()
 data=bytearray(original[:base]);after={}
 for name in sorted(set(entries)|set(replacements)):
     payload=replacements[name] if name in replacements else raw(name)

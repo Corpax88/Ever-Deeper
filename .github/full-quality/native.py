@@ -1,9 +1,14 @@
 """Native focused regressions against exact production PCK in isolated save roots."""
 from pathlib import Path
-import json,os,re,subprocess,sys,time
+import hashlib,json,os,re,subprocess,sys,time
 engine,pck,out=map(Path,sys.argv[1:4]);out.mkdir(parents=True,exist_ok=True)
 qa_pck=Path(sys.argv[4]) if len(sys.argv)>4 else None
 root=Path(__file__).resolve().parents[2]
+def identity(path):
+    return {'size':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+metadata={'source':os.environ.get('GITHUB_SHA'),'production_pck':identity(pck),'qa_pck':identity(qa_pck) if qa_pck else None,'engine_version':subprocess.check_output([str(engine),'--version'],text=True).strip()}
+def save_report():
+    (out/'report.json').write_text(json.dumps(dict(metadata,passed=all(x['passed'] for x in report),checks=report),indent=2))
 cases=[
  ('save-retry','tools/review_save_retry.gd','EVER_DEEPER_SAVE_RETRY_OK'),
  ('save-status','tools/review_save_status.gd','EVER_DEEPER_SAVE_STATUS_OK'),
@@ -22,6 +27,7 @@ cases=[
  ('notification-modals','tools/review_notification_modals.gd','NOTIFICATION_MODALS_OK'),
  ('treasury-seam-integrity','tools/review_treasury_seam_integrity.gd','TREASURY_SEAM_INTEGRITY_OK'),
  ('treasury-hunt-rate','tools/review_treasury_hunt_rate.gd','TREASURY_HUNT_RATE_OK'),
+ ('completed-collection','tools/review_completed_collection.gd','COMPLETED_COLLECTION_OK'),
 ]
 overrides=json.loads((root/'.github/full-quality/overrides.json').read_text())
 if 'scripts/progression/achievement_service.gd' not in overrides:
@@ -47,15 +53,15 @@ for name,script,marker in cases:
     log=log_path.read_text(errors='replace')
     passed=not reason and process.returncode==0 and marker in log and not re.search(r'SCRIPT ERROR|Parse Error',log)
     entry={'name':name,'passed':passed,'exit_code':process.returncode,'reason':reason,'seconds':time.monotonic()-started,'script':script,'marker':marker}
-    report.append(entry);(out/'report.json').write_text(json.dumps({'passed':all(x['passed'] for x in report),'checks':report},indent=2))
+    report.append(entry);save_report()
     print(json.dumps(entry),flush=True)
 if qa_pck:
-    # This pack differs from production only in review fixtures and the two
-    # explicitly guarded completed-goal expectations in the retained suite.
+    # QA-only guarded repairs retain the premium/world assertions while
+    # accounting for completed goals and excavating the buried ore target.
     dest=out/'mandatory-core';dest.mkdir(parents=True,exist_ok=True)
-    result=subprocess.run([sys.executable,str(root/'tools/qa.py'),'--godot',str(engine),'--pack',str(qa_pck),'--cases','input','premium-core','--output',str(dest)],cwd=root)
+    result=subprocess.run([sys.executable,str(root/'tools/qa.py'),'--godot',str(engine),'--pack',str(qa_pck),'--cases','input','premium-core','endgame','one-point-zero-world','--output',str(dest)],cwd=root)
     results=json.loads((dest/'results.json').read_text()) if (dest/'results.json').exists() else {'cases':[]}
     for row in results['cases']: report.append(dict(row,name='retained-'+row['case']))
     if not results['cases']: report.append({'name':'mandatory-core','passed':False,'exit_code':result.returncode})
-    (out/'report.json').write_text(json.dumps({'passed':all(x['passed'] for x in report),'checks':report},indent=2))
+    save_report()
 sys.exit(0 if all(x['passed'] for x in report) else 1)

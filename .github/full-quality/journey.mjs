@@ -123,10 +123,27 @@ try{
   s=await state();check('gate-still-locked-before-action',!s.quality.journey.moonglass_unlocked,{journey:s.quality.journey});const gateGold=s.quality.journey.gold;await shot('journey-08-gate-ready');
   await tap('hud_context');await wait('actual gate unlock',s=>s.quality.journey.moonglass_unlocked);s=await state();check('gate-paid-and-opened',s.quality.journey.gold<gateGold,{before:gateGold,after:s.quality.journey.gold});await shot('journey-09-first-frontier');
  });
+ await group('actual-touch-finale-to-Deep',async()=>{
+  await closeModal();await command('quality_finale',{action:'setup'});await ready();
+  let s=await state();check('finale-prerequisites-only',s.phase==='deepheart'&&!s.quality.finale.victory&&!s.quality.finale.conclusion,{finale:s.quality.finale});
+  for(const seal of ['mossvein','moonglass','emberdeep','starfall']){
+   await command('quality_finale',{action:'seal',seal});await wait('seal context '+seal,s=>s.quality.finale.context==='deepheart_seal:'+seal);
+   await heldMineUntil('real mining opens '+seal,s=>s.quality.finale.seal_state[seal].opened,45000);
+   s=await state();check(seal+'-opened-by-hits',s.quality.finale.seal_state[seal].hits>0,{seal:s.quality.finale.seal_state[seal]});await shot('finale-seal-'+seal);
+  }
+  await command('quality_finale',{action:'core'});await wait('core context',s=>s.quality.finale.context==='deepheart_core');await shot('finale-core-ready');
+  await tap('hud_context');await wait('real finale conclusion',s=>s.quality.finale.victory&&s.quality.finale.conclusion,20000);
+  for(const viewport of [{width:667,height:375},{width:844,height:390},{width:932,height:430}]){
+   await page.setViewportSize(viewport);await delay(250);s=await state();
+   check('conclusion-pauses-player-'+viewport.width,!s.player_controls_enabled&&s.quality.finale.conclusion,{phase:s.phase});await shot('finale-conclusion-'+viewport.width);
+  }
+  await page.setViewportSize({width:844,height:390});await delay(250);await tap('conclusion_to_hub');await wait('real conclusion returns Hub',s=>s.phase==='hub'&&!s.quality.finale.conclusion&&s.quality.finale.conclusion_seen);await ready();await shot('finale-returned-Hub');
+  await command('quality_finale',{action:'elevator'});await wait('Hub Deep elevator',s=>s.hub_context==='deepElevator');await tap('hud_context');await wait('real elevator reaches Deep',s=>s.phase==='endless');await ready();await shot('finale-first-Deep');
+ });
  for(const [label,mine,depth,mining] of [['surface','surface',0,false],['depth','mossMine',2,true],['Deep','endless',1,true]])await group('performance-'+label,async()=>{
   await closeModal();if(mine==='surface')await command('surface');else await command('maps_fixture',{mine,depth});await ready();await profile(label,mining);
  });
  check('runtime-errors-absent',!messages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)),{});
 }catch(e){failures.push({group:'startup-or-global',error:String(e.stack||e)});console.error(e);try{await shot('fatal-failure');}catch{}}
-finally{report.passed=failures.length===0;report.browser=browser.version();report.fixture_limits='Only player placement and declared purchase gold are seeded in the fresh journey; mining targets, damage, mined cargo, sale, equipment upgrades and gate actions execute production code. Performance uses Mac hosted GPU with review observations, not a physical iPhone.';save();await context.close();await browser.close();await new Promise(r=>server.close(r));}
+finally{report.passed=failures.length===0;report.browser=browser.version();report.fixture_limits='Only player placement and declared purchase gold are seeded in the fresh journey; finale seeds prerequisites and position while seals, activation, conclusion and Deep entry use actual touch; mining targets, damage, mined cargo, sale, equipment upgrades and gate actions execute production code. Performance uses Mac hosted GPU with review observations, not a physical iPhone.';save();await context.close();await browser.close();await new Promise(r=>server.close(r));}
 if(failures.length)process.exitCode=1;

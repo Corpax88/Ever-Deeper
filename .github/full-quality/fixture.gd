@@ -2,6 +2,7 @@ extends "res://scripts/qa/suites/full_quality_base.gd"
 ## QA-only fixture: original published runtime and original QA base are retained.
 var quality_mod_result: Dictionary={}
 var quality_journey_result: Dictionary={}
+var quality_achievement_result: Dictionary={}
 var quality_profile_active: bool=false
 var quality_profile_started: int=0
 var quality_profile_tick: int=0
@@ -24,6 +25,55 @@ func run() -> void:
 
 func _command(data: Dictionary) -> void:
 	match String(data.kind):
+		"quality_feedback":
+			main.achievement_toast.clear()
+			var skill: Node=main.achievement_toast.get_node("SkillLevelToast")
+			skill.clear()
+			var pickup: Node=main._active_player_node().get_node("ResourcePickupBurst")
+			while not pickup.entries.is_empty(): pickup._remove_entry(0)
+			if not bool(data.get("clear",false)):
+				# Seed presentation events only; owners retain their real timing/layout.
+				RunState.miner_skill_increased.emit("mining",2)
+				pickup.show_pickup("rootiron",350)
+				pickup.show_pickup("prismite",410)
+				pickup.show_pickup("singularity",390)
+				main._on_achievement_unlocked(main.premium_menu.achievement_service.definitions()[28])
+				main._update_achievement_toast_anchor()
+			command_id=int(data.id)
+			return
+		"quality_achievement":
+			var definitions: Array=main.premium_menu.achievement_service.definitions()
+			var selected: int=int(data.get("index",0))
+			if selected < 0: selected=definitions.size()-1
+			var definition: Dictionary=definitions[selected]
+			main.achievement_toast.clear()
+			quality_achievement_result={"requested":String(definition.id),"index":selected,"count":definitions.size(),"cancelled_before_deferred":false}
+			if bool(data.get("cancel",false)):
+				# Deterministic signal-level race; ordinary focus uses real touch.
+				main._on_achievement_toast_activated(String(definition.id))
+				main.premium_menu.detail_card.get_node("Back").pressed.emit()
+				quality_achievement_result.cancelled_before_deferred=true
+			else:
+				main._on_achievement_unlocked(definition)
+			command_id=int(data.id)
+			return
+		"quality_finale":
+			main._cancel_mine_hold()
+			main._on_joystick_movement(Vector2.ZERO)
+			match String(data.action):
+				"setup":
+					RunState.reset_run(false)
+					main._dev_jump_deepheart()
+				"seal":
+					main.deepheart_world.restore_position(Vector2(main.deepheart_world.SEAL_POSITIONS[String(data.seal)])+Vector2(0,135))
+				"core":
+					main.deepheart_world.restore_position(main.deepheart_world.CORE_CONTEXT_POSITION)
+				"elevator":
+					main.hub_world.restore_position(main.hub_world.DEEP_ELEVATOR_POSITION+Vector2(0,112))
+			main._active_player_node().camera.reset_smoothing()
+			main._refresh_hud()
+			command_id=int(data.id)
+			return
 		"quality_journey":
 			main._cancel_mine_hold()
 			main._on_joystick_movement(Vector2.ZERO)
@@ -178,17 +228,39 @@ func _frame() -> void:
 	if main.premium_menu.detail_card.has_node("Controls"):
 		buttons["settings_controls"] = _screen_bounds(main.premium_menu.detail_card.get_node("Controls"))
 	buttons["shop_primary"]=_screen_bounds(main.commerce_panel.primary_button)
+	buttons["conclusion_to_hub"]=_screen_bounds(main.conclusion_continue_button)
+	buttons["conclusion_stay"]=_screen_bounds(main.conclusion_hub_button)
+	buttons["achievement_toast"]=_screen_bounds(main.achievement_toast._activation_target)
 	var ui: Dictionary = {
 		"tutorial": main.quick_tutorial.debug_snapshot(),
 		"commerce": main.commerce_panel.interaction_snapshot(),
 		"cargo": RunState.cargo.duplicate(),
 		"menu_detail_title": main.premium_menu.detail_title.text,
 		"geometry": _quality_geometry(),
+		"feedback": _quality_feedback(),
 		"mod": _quality_mod_snapshot()
 	}
 	ui["journey"]={"result":quality_journey_result,"gold":RunState.gold,"pickaxe":RunState.pickaxe_level,"mined":RunState.total_mined_resources(),"surface_context":main.surface_context,"exit_context":main.mine_exit_context,"transaction":main.commerce_transaction.duplicate(true),"moonglass_unlocked":RunState.area_unlocked,"world_seed":RunState.world_seed}
 	ui["profile"]=quality_profile_result
+	ui["finale"]={"world":main.deepheart_world.debug_snapshot(),"context":main.deepheart_context,"victory":RunState.victory,"conclusion":main.conclusion_overlay.visible,"conclusion_seen":RunState.conclusion_seen,"seals":RunState.deepheart_seal_status(),"seal_state":main.deepheart_world.seal_state.duplicate(true),"endless":RunState.endless_descent_status()}
 	JavaScriptBridge.eval("Object.assign(window.DEV14_STATE.buttons,"+JSON.stringify(buttons)+");window.DEV14_STATE.quality="+JSON.stringify(ui),true)
+
+func _quality_feedback() -> Dictionary:
+	var player: Node=main._active_player_node()
+	var pickup: Node=player.get_node("ResourcePickupBurst")
+	var skill: Node=main.achievement_toast.get_node("SkillLevelToast")
+	var visual: Node=player.get_node("Visual")
+	var hero: Array=[]
+	for rect in visual.feedback_screen_rects(): hero.append(_quality_rect(rect))
+	var pickups: Array=[]
+	for rect in pickup.screen_rects(): pickups.append(_quality_rect(rect))
+	var exclusions: Array=[]
+	for rect in main.achievement_toast._screen_exclusions: exclusions.append(_quality_rect(rect))
+	return {"hero":hero,"pickups":pickups,"pickup":pickup.debug_snapshot(),"skill":skill.snapshot(),"skill_rect":_quality_rect(skill.reserved_screen_rect()),
+		"toast":main.achievement_toast.debug_snapshot(),"toast_rect":_screen_bounds(main.achievement_toast._toast),"safe_rect":_quality_rect(main.achievement_toast.safe_screen_rect()),"exclusions":exclusions}
+
+func _quality_rect(rect: Rect2) -> Array:
+	return [rect.position.x,rect.position.y,rect.size.x,rect.size.y]
 
 func _quality_stats(values: Array[float]) -> Dictionary:
 	if values.is_empty(): return {}
@@ -233,6 +305,12 @@ func _quality_geometry() -> Dictionary:
 	}
 	var menu: Control=main.premium_menu
 	result["menu"]={"panel":_screen_bounds(menu.detail_card),"back":_screen_bounds(menu.detail_card.get_node("Back")),"labels":[]}
+	result["achievement"]={"result":quality_achievement_result,"highlighted":menu.achievement_highlight_id,"detail_visible":menu.detail_view.is_visible_in_tree(),"main_visible":menu.main_view.is_visible_in_tree(),"toast":main.achievement_toast.debug_snapshot(),"row":[],"scroll":[],"scroll_value":0}
+	if is_instance_valid(menu.achievement_scroll):
+		result.achievement.scroll=_screen_bounds(menu.achievement_scroll)
+		result.achievement.scroll_value=menu.achievement_scroll.scroll_vertical
+		var row: Control=menu.achievement_rows.get(menu.achievement_highlight_id) as Control
+		if is_instance_valid(row): result.achievement.row=_screen_bounds(row)
 	for label in menu.detail_body.find_children("*","Label",true,false):
 		if label.is_visible_in_tree(): result.menu.labels.append(_label_geometry(label))
 	var journal: Control=main.get_node("CompanionInterface").journal
