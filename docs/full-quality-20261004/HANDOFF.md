@@ -1,10 +1,8 @@
-# Final candidate freeze — 4 October 2026
+# Final acceptance corrections — 4 October 2026
 
-The user requested clearer minute-by-minute status after a long review. Stop adding new review topics. Production changes are frozen at `685a7d71e37710ea5569b06247728506e96ba484`. Full Mac/native acceptance run `37216455072` is queued/running; inspect its live state instead of starting another run. Public DEV remains15.54; no15.55 publication or overall9.5 claim yet.
+Public DEV remains 15.54. Integrated run 37216455072 failed focused achievement/feedback checks and fresh mining journey; no publication or 9.5 claim. All 22 native groups passed. Fixes restore the hidden QA achievement parent and real tap route; select natural eligible ore and physically collect it; increase production pickup ink spacing from 44 to 58. Native and five Mac browser gates now run independently with all prior gates and artifact identities preserved. Root is validating final pickup geometry before retriggering the full frozen suite. Give user concise status at least every minute.
 
-Saved: save retries/status, achievements recovery, modal/navigation/mobile fixes, tracked rich material seams, completed collection retirement, native hero feedback placement, commerce text fit and Deep north viewport margin. First Mac candidate reports are preserved. Corrected simulated100k hunts finish across three loadouts; search/return/donation and human enjoyment remain unmeasured. Final gates:18 native probes plus4 retained suites; breadth, mobile focus, earned Ricochet lifecycle, actual mining/transaction/finale route and ordinary production WebKit. Publish only their exact accepted production artifact; preserve LIVE/Worn. Guarded publisher is ready.
-
-Local git was reinitialized after an expired parent worktree; its commits differ from durable remote history. Continue connector Git-object checkpoints on codex/full-quality-20261004; never push the local root history.
+Source is checkpointed through GitHub connector on codex/full-quality-20261004. Local git history differs: never push it. Publish only exact accepted production artifact; preserve LIVE/Worn. Guarded publisher is ready.
 
 ---
 
