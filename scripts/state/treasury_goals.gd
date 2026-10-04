@@ -15,6 +15,9 @@ static func clean(raw: Variant) -> Dictionary:
 		result[id+"_enabled"] = not active_found and result[id+"_claimed"] and raw.get(id+"_enabled",false) is bool and raw.get(id+"_enabled",false)
 		active_found = active_found or result[id+"_enabled"]
 	result.laser_mode = result.laser_enabled and raw.get("laser_mode",false) is bool and raw.get("laser_mode",false)
+	var pinned_mod: String = mod_id(String(result.pinned))
+	if not pinned_mod.is_empty() and bool(result.get(pinned_mod+"_claimed",false)):
+		result.pinned = ""
 	return result
 
 static func mod_id(kind: String) -> String:
@@ -29,6 +32,8 @@ static func claim(kind: String) -> bool:
 	var id: String = mod_id(kind)
 	if id.is_empty() or not RunState.victory or int(RunState.treasury_totals.get(kind,0)) < Stack.GOAL or bool(RunState.treasury_goals.get(id+"_claimed",false)): return false
 	RunState.treasury_goals[id+"_claimed"] = true
+	if String(RunState.treasury_goals.get("pinned","")) == kind:
+		RunState.treasury_goals.pinned = ""
 	_equip(id)
 	RunState.flush_save()
 	return true
@@ -66,6 +71,8 @@ static func sources(kind: String) -> String:
 
 static func pin(kind: String) -> void:
 	if kind not in Ledger.keys() or not RunState.victory: return
+	var id: String = mod_id(kind)
+	if not id.is_empty() and bool(RunState.treasury_goals.get(id+"_claimed",false)): return
 	RunState.treasury_goals.pinned = "" if RunState.treasury_goals.get("pinned", "") == kind else kind
 	RunState._state_changed()
 
@@ -78,6 +85,8 @@ static func toggle_resonance() -> void:
 static func hud_goal() -> Dictionary:
 	var kind: String = String(RunState.treasury_goals.get("pinned",""))
 	if kind not in Ledger.keys() or not RunState.victory: return {}
+	var id: String = mod_id(kind)
+	if not id.is_empty() and bool(RunState.treasury_goals.get(id+"_claimed",false)): return {}
 	var delivered: int = mini(Stack.GOAL,int(RunState.treasury_totals.get(kind,0)))
 	var held: int = Ledger.available(kind)
 	var ready: bool = delivered >= Stack.GOAL
