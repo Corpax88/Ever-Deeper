@@ -1,3 +1,7 @@
+# DEV15.55 accepted; publication37219705191 active
+
+Main publication commit `21df1a283554e2f0ef1908bef1a794a3444bdf3c` promotes exact accepted artifact from source `befb9eabfc1ff424fe20c4db34eeea19cc8b0301` / acceptance37219089950. Offline publisher guard passed all16artifact/6report/3receipt/9file bindings; independent visual review accepted every assigned scope. Watch publication package/deploy/verify; do not trigger another build or deploy. After success download publication receipt and verify27hashes/LIVE-Worn preservation, then update current release headers. No additional permission needed; standing authorization was used. All earlier pending/blocker sections below are preserved history.
+
 # Accepted DEV15.55 — publication in progress
 
 Exactsource `befb9eabfc1ff424fe20c4db34eeea19cc8b0301`, run `37219089950`: all six required jobs pass. Native22groups, candidate49checks/161images, focused1868/136, Ricochet276/43, journey39/24, ordinary WebKit6images/no fixture arguments. Root and independent critics inspected representative final screenshots in every browser group, including allthree ending widths and actual Hub/Deep return. No remaining material blocker was found in reviewed scopes. This is not a numerical9.5 score or physical-iPhone claim.
