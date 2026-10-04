@@ -8,6 +8,7 @@ const DESIGN = Vector2(1000,720)
 var main: Node
 var kind: String = ""
 var panel: Control
+var panel_frame: NinePatchRect
 var heading: Label
 var title: Label
 var progress: Label
@@ -15,6 +16,7 @@ var detail: Label
 var source: Label
 var preview: TextureRect
 var preview_back: TextureRect
+var collection_icon: TextureRect
 var progress_bar: ProgressBar
 var pin_button: Button
 var claim_button: Button
@@ -36,6 +38,7 @@ func setup(owner_main: Node) -> void:
 	panel.size=DESIGN
 	add_child(panel)
 	var frame: NinePatchRect=NinePatchRect.new()
+	panel_frame=frame
 	var atlas: AtlasTexture=AtlasTexture.new()
 	atlas.atlas=load("res://assets/ui/skills/iron-panel-v1.png")
 	atlas.region=Rect2(25,33,1095,1276)
@@ -66,6 +69,12 @@ func setup(owner_main: Node) -> void:
 	preview.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	panel.add_child(preview)
 	_place(preview,Rect2(48,146,904,240))
+	collection_icon=TextureRect.new()
+	collection_icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	collection_icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	collection_icon.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	panel.add_child(collection_icon)
+	collection_icon.hide()
 	detail = _label(25,Rect2(52,391,896,40))
 	detail.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	progress_bar=ProgressBar.new()
@@ -95,6 +104,9 @@ func setup(owner_main: Node) -> void:
 func _place(control: Control, rect: Rect2) -> void:
 	control.position=rect.position
 	control.size=rect.size
+	if control.has_meta("frame"):
+		var frame: NinePatchRect=control.get_meta("frame")
+		frame.size=control.size/frame.scale
 
 func _label(font_size: int, rect: Rect2) -> Label:
 	var label: Label=Label.new()
@@ -153,9 +165,71 @@ func _button(text: String, rect: Rect2, action: Callable, primary: bool=false) -
 
 func _layout() -> void:
 	var viewport_size: Vector2=get_viewport_rect().size
+	if viewport_size.x<=1.0 or viewport_size.y<=1.0: return
+	var landscape: bool=viewport_size.x/viewport_size.y>=1.5
+	var design: Vector2=DESIGN
 	var zoom: float=minf((viewport_size.x-32.0)/DESIGN.x,(viewport_size.y-24.0)/DESIGN.y)
+	if landscape:
+		# Use the phone's width for the artwork and controls instead of shrinking
+		# a portrait card. At the shortest supported 375px landscape height these
+		# 92-unit controls still render above 44px after the canvas transform.
+		zoom=minf((viewport_size.y-24.0)/720.0,(viewport_size.x-64.0)/1200.0)
+		design=Vector2(minf(1640.0,(viewport_size.x-64.0)/zoom),720.0)
+	panel.size=design
 	panel.scale=Vector2.ONE*zoom
-	panel.position=(viewport_size-DESIGN*zoom)*0.5
+	panel.position=(viewport_size-design*zoom)*0.5
+	panel_frame.size=design/panel_frame.scale
+	if landscape:
+		_layout_landscape(design)
+	else:
+		_layout_portrait()
+
+func _layout_landscape(design: Vector2) -> void:
+	var gap: float=36.0
+	var left_width: float=(design.x-96.0-gap)*0.55
+	var right_x: float=48.0+left_width+gap
+	var right_width: float=design.x-right_x-48.0
+	_place(heading,Rect2(48,22,design.x-96,38))
+	_place(title,Rect2(48,60,design.x-96,82))
+	title.add_theme_font_size_override("font_size",62)
+	_place(preview_back,Rect2(48,158,left_width,380))
+	_place(preview,Rect2(52,162,left_width-8,372))
+	var icon_extent: float=minf(left_width-80.0,290.0)
+	_place(collection_icon,Rect2(48+(left_width-icon_extent)*0.5,190,icon_extent,icon_extent))
+	_place(detail,Rect2(right_x,157,right_width,118))
+	detail.add_theme_font_size_override("font_size",29)
+	_place(progress_bar,Rect2(right_x+10,288,right_width-20,20))
+	_place(progress,Rect2(right_x,320,right_width,44))
+	progress.add_theme_font_size_override("font_size",29)
+	_place(claim_button,Rect2(right_x,378,right_width,96))
+	_place(pin_button,Rect2(right_x,486,right_width,92))
+	_place(close_button,Rect2(right_x,590,right_width,92))
+	claim_button.add_theme_font_size_override("font_size",30)
+	pin_button.add_theme_font_size_override("font_size",29)
+	close_button.add_theme_font_size_override("font_size",29)
+	_place(source,Rect2(52,554,left_width-8,118))
+	source.add_theme_font_size_override("font_size",29)
+
+func _layout_portrait() -> void:
+	_place(heading,Rect2(48,29,904,36))
+	_place(title,Rect2(45,60,910,82))
+	title.add_theme_font_size_override("font_size",66)
+	_place(preview_back,Rect2(44,146,912,240))
+	_place(preview,Rect2(48,146,904,240))
+	_place(collection_icon,Rect2(390,158,220,220))
+	_place(detail,Rect2(52,391,896,40))
+	detail.add_theme_font_size_override("font_size",25)
+	_place(progress_bar,Rect2(86,438,828,18))
+	_place(progress,Rect2(55,463,890,34))
+	progress.add_theme_font_size_override("font_size",27)
+	_place(claim_button,Rect2(230,501,540,62))
+	_place(pin_button,Rect2(267,569,466,46))
+	_place(close_button,Rect2(277,621,446,40))
+	claim_button.add_theme_font_size_override("font_size",30)
+	pin_button.add_theme_font_size_override("font_size",25)
+	close_button.add_theme_font_size_override("font_size",25)
+	_place(source,Rect2(55,666,890,27))
+	source.add_theme_font_size_override("font_size",20)
 
 func open_goal(resource: String) -> void:
 	if resource not in Goals.Ledger.keys() or main.menu_open: return
@@ -175,6 +249,10 @@ func refresh() -> void:
 	var data: Dictionary=Catalog.preview(kind)
 	preview.visible=not data.is_empty()
 	preview_back.visible=preview.visible
+	collection_icon.visible=data.is_empty()
+	if collection_icon.visible:
+		var resource_path: String=RunState._resource_drop_texture_path(kind)
+		collection_icon.texture=load(resource_path) if ResourceLoader.exists(resource_path) else null
 	title.text=String(data.get("title","COLLECTION"))
 	detail.text=String(data.get("description","Fill this podium, one piece at a time."))
 	if preview.visible: preview.texture=_png(String(data.art))
@@ -187,12 +265,9 @@ func refresh() -> void:
 		claim_button.get_meta("frame").modulate=Color(0.45,0.45,0.45) if claim_button.disabled else Color.WHITE
 	elif stored>=Stack.GOAL:
 		detail.text="COLLECTION COMPLETE"
-	# Unspecified future rewards keep the existing collection view; no invented mod.
-	if data.is_empty():
-		_place(detail,Rect2(70,238,860,100))
-	else:
-		_place(detail,Rect2(52,391,896,40))
+	# An ordinary material uses its real resource icon, never an invented mod.
 	pin_button.text="UNTRACK GOAL" if RunState.treasury_goals.get("pinned","")==kind else "TRACK GOAL"
+	_layout()
 
 func _number(value: int) -> String:
 	var digits: String=str(value)
