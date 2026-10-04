@@ -1,18 +1,46 @@
-# DEV15.56 quality round — accepted; publication starting
+# DEV15.56 quality round — published and verified
 
-Exact accepted source is `deaa7088d75d473b0c16951bc05f19c4db7800c4` on `codex/quality2-20261004`; final acceptance run `37227129258` completed successfully. Production artifact `11312268748`: PCK327914622bytes, SHA256 `8de6ebae373816a37159327218f90cb9cb0419eae91eb9d833cba0810e0ac5de`. QA PCK327972226bytes, SHA256 `e631ec15ffeac6d5388f0a5aad214f384da13dcc61d679984f169f729afb3fcd`.
+Published 4 October 2026: https://corpax88.github.io/Ever-Deeper/dev/.
+All 27 public file identities passed after deployment; all nine LIVE and nine Worn files are unchanged. This review and publication round has no pending jobs.
 
-All six groups passed: native24, candidate49, focused7143, Ricochet276, journey45 and ordinary production startup. The five browser groups captured410 images on real Apple GPU; root and independent critics inspected83 unique final-source images across all changed presentation scopes. Reports, review scope, image hashes and remaining small presentation limits are saved in `evidence/final-mac-{reports,review}.json`. Do not conflate captured and inspected counts. D1 parity62, D2 target/overlap99, deferred-notice resumption6/6 and10/10, Surface21 and Deepheart33 local checks are separately documented.
+The exact accepted runtime source is `deaa7088d75d473b0c16951bc05f19c4db7800c4` on `codex/quality2-20261004`, from QA run `37227129258`. Production artifact: `11312268748`. Production PCK: 327914622 bytes, SHA256 `8de6ebae373816a37159327218f90cb9cb0419eae91eb9d833cba0810e0ac5de`. QA PCK: 327972226 bytes, SHA256 `e631ec15ffeac6d5388f0a5aad214f384da13dcc61d679984f169f729afb3fcd`. Later branch commits contain review evidence and publication recovery, with no further game changes. Main is a publication carrier; never export its historical runtime.
 
-All production fixes are frozen: tracked Treasury material protection and surplus sales; concrete source/donation/podium guidance; readable reward cards and replacement state; shared D1/D2 unlit target labels; cave-camera helmet headroom; Surface actions clear of the hero; phase-correct Deepheart guidance. Approved assets, engine and save identities are inherited unchanged.
+## Changes delivered
 
-`.github/quality2/accepted.json` binds exactly17 immutable artifacts, six report hashes, three receipt hashes and both nine-file manifests. The guarded local validator passed. Nine local production files match the CI receipt byte-for-byte; the publisher downloads the actual immutable CI production artifact. Publication plumbing is staged on main at `422b88379bd83a2fb09014398d65cdb91081f1d8`. The next action is the authorized accepted.json publication commit, followed by package/deploy/public verification. Public DEV remains15.55 until that completes. Never export main.
+- Assay preserves outstanding materials for the explicitly tracked Treasury goal and sells surplus.
+- Goal guidance identifies the available source/depth, return route, donation plate and reward podium. An explicitly started rune activity can temporarily take arrow priority.
+- Reward cards explain delivered, held and remaining quantities, claim/equip and the single active mod, including replacement.
+- D1 and D2 share readable, unlit target labels. The old Depth 2 small lit text is removed; target selection, resource colors, damage and art remain intact.
+- Downward cave-camera framing leaves room for the complete helmet below the HUD.
+- Surface actions use the vacant Mine slot and leave the hero visible.
+- Deepheart guidance changes to opening the seal or attuning the core after arrival.
 
-Publication37228068188 failed before deploy on a public-site request timeout after accepted bytes/evidence passed. Publisher-only recovery adds three bounded transient retries and atomic verified downloads; size/hash mismatches still fail. Four targeted transport/guard tests and an independent publisher review pass. The same accepted game source, artifacts and all six reports are unchanged. Second publication run37228372436, commit a7581f261fac33c673ce48bfcc071a02a86572b1, is running; see `evidence/publication-recovery.json`.
+Approved assets, engine and save identities are inherited unchanged. The publisher verifies every unlisted PCK payload, all accepted distribution bytes and the protected public files.
 
-The first failed Mac run remains preserved below: five groups passed; focused failed two exact-sale timeouts because autonomous companions added ore during an isolated fixture. The final fixture pauses companions only for that sale and restores them; sale expectations are unchanged. Local12-check fixture evidence and all final real sale/donation/claim/save checks passed. Older deferred-notice fixture assumptions and corrected narrow evidence are likewise retained honestly.
+## Verification
 
-No overall9.5/10, human pacing/enjoyment or physical-iPhone performance score is established by these gates. Earlier chronological notes below are superseded by this status.
+| Group | Passing checks | Captured images |
+|---|---:|---:|
+| Native production regressions | 24 required gates | 0 |
+| Broad mobile candidate | 49 | 161 |
+| Focused changes | 7143 | 176 |
+| Ricochet lifecycle | 276 | 43 |
+| Actual-input journey and finale | 45 | 24 |
+| Ordinary production startup | Passed, no fixture arguments | 6 |
+
+The browser runs used real Apple GPU. Root and independent critics inspected 83 unique final-source images from the 410 captures; the counts are deliberately separate. [Final report identities](evidence/final-mac-reports.json) and [scoped critic decisions/image hashes](evidence/final-mac-review.json) preserve the exact evidence. Local rendered checks additionally cover Surface actions (21), Deepheart guidance (33), D1 parity (62), D2 target/overlap cases (99), and deferred-notice resumption (6/6 and 10/10). Earlier failed fixture assumptions remain documented alongside the corrected narrow evidence.
+
+## Publication and recovery
+
+Publication commit `a7581f261fac33c673ce48bfcc071a02a86572b1`, run `37228372436`, passed package, deploy and public verification. Publication receipt artifact: `11312432458`; staging receipt: `11313435604`. DEV15.55 rollback artifact: `11313191443`. The publisher promoted the immutable reviewed production artifact, with no build from main. [Publication identities](evidence/publication.json), [public receipt](evidence/publication-receipt.json) and [staging receipt](evidence/staging-receipt.json) are saved.
+
+The first publication, `37228068188`, stopped before deployment on a public-site request timeout. A publisher-only repair adds three bounded transient retries and atomic verified downloads. Exact size/hash mismatches still fail preparation. Four focused transfer/guard regressions and an independent publisher review passed; all game source, artifact bindings and six reports remained unchanged. See [recovery evidence](evidence/publication-recovery.json).
+
+## Limits and continuation
+
+The reviewed changes have no material blockers in their inspected scope. Small existing text compression and temporary background exit-label overlap are recorded in the critic report. Automated checks and screenshots do not establish an overall 9.5/10, unassisted human pacing/enjoyment or physical-iPhone performance. FPS/rotation investigations remain parked. Historical source-snapshot and retired layout failures are retained honestly, with unchanged-baseline comparisons; they are not counted as green gates.
+
+All code changes and logical checkpoints are saved on the work branch. Continue from this exact runtime and its preserved assets/saves; do not repeat unchanged accepted matrices or publication. The earlier chronological notes below are historical.
 
 ---
 

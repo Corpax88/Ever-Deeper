@@ -41,8 +41,9 @@ the matrix. Browser evidence is split into at most four 28 MiB parts and each
 part is uploaded independently under a `quality2-` name. The split step fails
 if evidence outgrows the uploaded slots.
 
-`accepted.json` is intentionally absent until the exact run, all reports and
-images have been accepted. The publisher requires six report hashes, all
+`accepted.json` binds the accepted source `deaa7088d75d473b0c16951bc05f19c4db7800c4`,
+QA run `37227129258` and the independently inspected final images. Publication
+`37228372436` is complete and all 27 public file hashes passed. The publisher requires six report hashes, all
 three build receipts, all immutable artifact digests and both nine-file
 distribution manifests. It verifies the required native gates, real Apple GPU
 browser evidence, ordinary startup, source/run identity and every captured
