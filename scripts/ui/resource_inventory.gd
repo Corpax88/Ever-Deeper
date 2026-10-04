@@ -154,7 +154,7 @@ func _build_interface() -> void :
 	summary_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	summary_row.add_child(summary_label)
 
-	var protected_note: = _label("GOLD MARKS MATERIALS RESERVED FOR YOUR NEXT UPGRADE", 11, MUTED, HORIZONTAL_ALIGNMENT_LEFT)
+	var protected_note: = _label("GOLD MARKS MATERIALS KEPT FOR UPGRADES OR YOUR TRACKED GOAL", 11, MUTED, HORIZONTAL_ALIGNMENT_LEFT)
 	protected_note.name = "ProtectedNote"
 	protected_note.custom_minimum_size.y = 28
 	protected_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -419,9 +419,9 @@ func _resource_card(resource_id: String, amount: int, protected_amount: int) -> 
 	amount_label.name = "Amount"
 	copy.add_child(amount_label)
 	if protected_amount > 0:
-		var badge: = _label("CRAFT %d RESERVED" % protected_amount, 15 if iphone else 10, GOLD, HORIZONTAL_ALIGNMENT_LEFT)
+		var badge: = _label("%d RESERVED" % protected_amount, 15 if iphone else 10, GOLD, HORIZONTAL_ALIGNMENT_LEFT)
 		badge.name = "ProtectedBadge"
-		badge.tooltip_text = "This material will not be sold while your next upgrade needs it."
+		badge.tooltip_text = "This material will not be sold while an upgrade or your tracked goal needs it."
 		copy.add_child(badge)
 	else:
 		var value: = int(rock.get("value", 0))

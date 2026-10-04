@@ -917,6 +917,16 @@ func _protected_progress_cargo() -> Dictionary:
 			int(protected.get(resource_id, 0)),
 			mini(remaining, int(cargo.get(resource_id, 0)))
 		)
+	# Tracking is an explicit choice to keep this material for its podium.
+	# Existing upgrade reservations can overlap it; neither purpose adds a
+	# second charge against the same pieces, and surplus stays sellable.
+	var pinned: String = String(treasury_goals.get("pinned", ""))
+	if victory and pinned in RESOURCE_IDS:
+		var goals: Script = load("res://scripts/state/treasury_goals.gd")
+		var mod_id: String = goals.mod_id(pinned)
+		if mod_id.is_empty() or not bool(treasury_goals.get(mod_id + "_claimed", false)):
+			var remaining: int = maxi(0, preload("res://scripts/world/treasury_stack.gd").GOAL - int(treasury_totals.get(pinned, 0)))
+			protected[pinned] = maxi(int(protected.get(pinned, 0)), mini(remaining, int(cargo.get(pinned, 0))))
 	return protected
 
 
