@@ -1,6 +1,9 @@
 class_name CinematicCamera2D
 extends Camera2D
 
+# Keep the authored 160px hero below the HUD's 114px lower edge, with 12px air.
+# Cave lookahead may use the remaining space without covering the helmet.
+const CAVE_MINIMUM_FOOT_Y: float = 286.0
 
 
 
@@ -60,7 +63,7 @@ func _physics_process(delta: float) -> void :
 	var response_weight: float = 1.0 - exp( - lookahead_response * delta)
 	_lookahead_x = lerpf(_lookahead_x, target_lookahead, response_weight)
 	var vertical_weight: float = 1.0 - exp( - headlamp_lookahead_response * delta)
-	_headlamp_lookahead_y = lerpf(_headlamp_lookahead_y, _headlamp_target_y, vertical_weight)
+	_headlamp_lookahead_y = lerpf(_headlamp_lookahead_y, _limit_headlamp_lookahead(_headlamp_target_y), vertical_weight)
 	_apply_rig_position()
 
 
@@ -109,14 +112,22 @@ func _refresh_vertical_framing(force: bool = false) -> void :
 
 
 func _apply_rig_position() -> void :
-	position = Vector2(_lookahead_x, _framing_y + _headlamp_lookahead_y)
+	position = Vector2(_lookahead_x, _framing_y + _limit_headlamp_lookahead(_headlamp_lookahead_y))
+
+
+func _limit_headlamp_lookahead(value: float) -> float:
+	if not _cave_headlamp_framing or value <= 0.0:
+		return value
+	var available_pixels: float = maxf(0.0, get_viewport_rect().size.y * 0.5 - CAVE_MINIMUM_FOOT_Y)
+	var downward_limit: float = available_pixels / maxf(absf(zoom.y), 0.001)
+	return minf(value, downward_limit)
 
 
 func headlamp_framing_snapshot() -> Dictionary:
 	return {
 		"enabled": _cave_headlamp_framing,
-		"target_y": _headlamp_target_y,
-		"lookahead_y": _headlamp_lookahead_y,
+		"target_y": _limit_headlamp_lookahead(_headlamp_target_y),
+		"lookahead_y": _limit_headlamp_lookahead(_headlamp_lookahead_y),
 		"base_framing_y": _framing_y,
 		"maximum_forward_room": 360.0 + headlamp_vertical_lookahead,
 	}
