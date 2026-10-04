@@ -23,3 +23,9 @@ Two updated 667 images in `feedback-spacing/render` were inspected: simultaneous
 Evidence limits remain explicit: hosted Mac/native rendering does not establish physical iPhone performance. Simulated 100,000-unit hunts establish route feasibility, excluding search, mistakes, return travel and donation; unassisted hunt duration, fatigue and enjoyment remain unmeasured. Assertion counts do not support an overall 9.5 rating.
 
 Native report inspected at `final-acceptance/artifacts/full-quality-native/report.json` beneath the session workspace. Supporting inspected images are the two feedback PNGs in `evidence/native-feedback/`, plus `camera-boundary/final-render/north-crusher-667.png` and `commerce-finish/final-render/{tool-forge-ready-667,lift_workshop-667}.png` beneath the session workspace.
+
+## Supplemental correction resolved
+
+The frame-by-frame follow-up against production PCK `36fbd73847dd8d08a1b9b90a8315559c8a6cea05cd71132b97436799b9ec10d3` passes29/29. At667 the initially deferred achievement visibly resumes at3509ms and completes at9602ms; at844 it displays immediately and completes normally. Independent checks cover clear placement, phase advancement, pickup/skill expiry and normal completion. Original failed samples remain preserved. The root and independent critic inspected actual updated frames.
+
+An additional inherited QA-only suppression was found: dev14 cleared notices every frame. The narrow virtual guard preserves default clearing outside deliberate notice commands; real-input preflight verified20 inherited frames and four achievement IDs, focused-row bounds and Back cancellation. Final exact-source acceptance is run37218310565 at198e40661a5972ecc72dedc615e8dce36364aad7; acceptance remains pending. Production bytes are unchanged by the QA correction.
