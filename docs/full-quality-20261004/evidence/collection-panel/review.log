@@ -1,0 +1,113 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.2 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+WARNING: Trying to play stream (-9223371732214083784) as a sample (-9223371992109939200), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _start_music_track (res://scripts/audio/audio_director.gd:295)
+         [1] _start_ambience (res://scripts/audio/audio_director.gd:286)
+         [2] _play (res://scripts/audio/audio_director.gd:352)
+         [3] play_ui (res://scripts/audio/audio_director.gd:204)
+         [4] _open_start_menu (res://scripts/main.gd:1259)
+         [5] open_goal (res://scripts/ui/treasury_goal_panel.gd:239)
+         [6] run (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:26)
+WARNING: Trying to play stream (-9223371732146974918) as a sample (-9223371992227379719), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_ui (res://scripts/audio/audio_director.gd:204)
+         [2] _open_start_menu (res://scripts/main.gd:1259)
+         [3] open_goal (res://scripts/ui/treasury_goal_panel.gd:239)
+         [4] run (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:26)
+WARNING: Trying to play stream (-9223371730989347036) as a sample (-9223371992143493634), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_discovery (res://scripts/audio/audio_director.gd:224)
+         [2] _on_achievement_unlocked (res://scripts/main.gd:3979)
+         [3] evaluate (res://scripts/progression/achievement_service.gd:74)
+         [4] _flush_queued_evaluation (res://scripts/progression/achievement_service.gd:91)
+WARNING: Trying to play stream (-9223371730720911556) as a sample (-9223371992260934153), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_ui (res://scripts/audio/audio_director.gd:206)
+         [2] _continue_from_menu (res://scripts/main.gd:1320)
+         [3] close_panel (res://scripts/ui/treasury_goal_panel.gd:308)
+         [4] run (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:33)
+         [5] capture (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:9)
+WARNING: Trying to play stream (-9223371727382247367) as a sample (-9223371992260934153), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_ui (res://scripts/audio/audio_director.gd:206)
+         [2] _continue_from_menu (res://scripts/main.gd:1320)
+         [3] close_panel (res://scripts/ui/treasury_goal_panel.gd:308)
+         [4] run (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:41)
+         [5] capture (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:9)
+WARNING: Trying to play stream (-9223371726090401713) as a sample (-9223371992260934153), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_ui (res://scripts/audio/audio_director.gd:206)
+         [2] _continue_from_menu (res://scripts/main.gd:1320)
+         [3] close_panel (res://scripts/ui/treasury_goal_panel.gd:308)
+         [4] run (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:41)
+         [5] capture (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:9)
+WARNING: Trying to play stream (-9223371724848885996) as a sample (-9223371992311265804), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_ui (res://scripts/audio/audio_director.gd:206)
+         [2] _continue_from_menu (res://scripts/main.gd:1320)
+         [3] close_panel (res://scripts/ui/treasury_goal_panel.gd:308)
+         [4] run (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:41)
+         [5] capture (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:9)
+WARNING: Trying to play stream (-9223371723607373758) as a sample (-9223371992260934153), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_ui (res://scripts/audio/audio_director.gd:206)
+         [2] _continue_from_menu (res://scripts/main.gd:1320)
+         [3] close_panel (res://scripts/ui/treasury_goal_panel.gd:308)
+         [4] run (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:41)
+         [5] capture (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:9)
+WARNING: Trying to play stream (-9223371722365858027) as a sample (-9223371992311265804), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_ui (res://scripts/audio/audio_director.gd:206)
+         [2] _continue_from_menu (res://scripts/main.gd:1320)
+         [3] close_panel (res://scripts/ui/treasury_goal_panel.gd:308)
+         [4] run (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:41)
+         [5] capture (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:9)
+WARNING: Trying to play stream (-9223371721124343975) as a sample (-9223371992260934153), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_ui (res://scripts/audio/audio_director.gd:206)
+         [2] _continue_from_menu (res://scripts/main.gd:1320)
+         [3] close_panel (res://scripts/ui/treasury_goal_panel.gd:308)
+         [4] run (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:41)
+         [5] capture (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:9)
+WARNING: Trying to play stream (-9223371719882830054) as a sample (-9223371992260934153), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_ui (res://scripts/audio/audio_director.gd:206)
+         [2] _continue_from_menu (res://scripts/main.gd:1320)
+         [3] close_panel (res://scripts/ui/treasury_goal_panel.gd:308)
+         [4] run (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:41)
+         [5] capture (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:9)
+WARNING: Trying to play stream (-9223371718641317647) as a sample (-9223371992311265804), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_ui (res://scripts/audio/audio_director.gd:206)
+         [2] _continue_from_menu (res://scripts/main.gd:1320)
+         [3] close_panel (res://scripts/ui/treasury_goal_panel.gd:308)
+         [4] run (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:41)
+         [5] capture (/workspace/scratch/72d2364e7fd1/ux-ui-review/collection.gd:9)
+UX_COLLECTION_PANEL_OK

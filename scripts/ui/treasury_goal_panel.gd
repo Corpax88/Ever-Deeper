@@ -3,6 +3,7 @@ extends Control
 const Goals = preload("res://scripts/state/treasury_goals.gd")
 const Stack = preload("res://scripts/world/treasury_stack.gd")
 const Catalog = preload("res://scripts/ui/mod_preview_catalog.gd")
+const ResourceScale = preload("res://scripts/world/resource_scale.gd")
 const FONT = preload("res://assets/ui/fonts/EBGaramond.ttf")
 const DESIGN = Vector2(1000,720)
 var main: Node
@@ -253,8 +254,17 @@ func refresh() -> void:
 	preview_back.visible=preview.visible
 	collection_icon.visible=data.is_empty()
 	if collection_icon.visible:
-		var resource_path: String=RunState._resource_drop_texture_path(kind)
-		collection_icon.texture=load(resource_path) if ResourceLoader.exists(resource_path) else null
+		# The podium's authored specimen retains detail at card size; a tiny
+		# pickup sprite was visibly soft when enlarged for this preview.
+		var specimen: Texture2D=main.hub_world.treasury.specimen(kind)
+		if specimen != null:
+			var atlas: AtlasTexture=AtlasTexture.new()
+			atlas.atlas=specimen
+			atlas.region=ResourceScale.bounds(specimen)
+			collection_icon.texture=atlas
+		else:
+			var resource_path: String=RunState._resource_drop_texture_path(kind)
+			collection_icon.texture=load(resource_path) if ResourceLoader.exists(resource_path) else null
 	title.text=String(data.get("title","COLLECTION"))
 	detail.text=String(data.get("description","Fill this podium, one piece at a time."))
 	if preview.visible: preview.texture=_png(String(data.art))
@@ -267,9 +277,10 @@ func refresh() -> void:
 		claim_button.get_meta("frame").modulate=Color(0.45,0.45,0.45) if claim_button.disabled else Color.WHITE
 	elif stored>=Stack.GOAL:
 		detail.text="COLLECTION COMPLETE"
-	# An ordinary material uses its real resource icon, never an invented mod.
-	pin_button.disabled=not id.is_empty() and bool(RunState.treasury_goals.get(id+"_claimed",false))
-	pin_button.text="MOD UNLOCKED" if pin_button.disabled else "UNTRACK GOAL" if RunState.treasury_goals.get("pinned","")==kind else "TRACK GOAL"
+	var collection_complete: bool=Goals.completed_collection(kind,RunState.treasury_totals)
+	var mod_claimed: bool=not id.is_empty() and bool(RunState.treasury_goals.get(id+"_claimed",false))
+	pin_button.disabled=collection_complete or mod_claimed
+	pin_button.text="COLLECTION COMPLETE" if collection_complete else "MOD UNLOCKED" if mod_claimed else "UNTRACK GOAL" if RunState.treasury_goals.get("pinned","")==kind else "TRACK GOAL"
 	pin_button.get_meta("frame").modulate=Color(0.45,0.45,0.45) if pin_button.disabled else Color.WHITE
 	_layout()
 
