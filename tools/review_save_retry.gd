@@ -84,11 +84,16 @@ func review() -> void:
 	state._flush_queued_autosave(superseded_serial)
 	check("stale callback cannot rotate valid backup",FileAccess.get_file_as_bytes(save_path+".bak")==backup and not state._autosave_pending)
 
+	state.gold=606
+	state._state_changed()
+	var previous_run_serial: int=state._autosave_timer_serial
 	obstruct()
 	state.start_new_run()
 	var new_seed: int=state.world_seed
 	check("failed new-run checkpoint remains pending",state._autosave_pending and state.last_save_error!=OK)
 	unblock()
+	state._flush_queued_autosave(previous_run_serial)
+	check("old-run callback cannot consume new-run retry",saved_gold()==505 and state._autosave_pending)
 	await create_timer(state.AUTOSAVE_BATCH_SECONDS+0.4,true,false,true).timeout
 	check("new-run checkpoint automatically recovers",saved_gold()==0 and int(Dictionary(document().get("state",{})).get("world_seed",-1))==new_seed)
 	finish()
