@@ -1,0 +1,150 @@
+[
+	{
+		"detail": {},
+		"name": "Deep entrance is actually walkable",
+		"passed": true
+	},
+	{
+		"detail": {
+			"camera_center": [
+				992.0,
+				303.271484375
+			],
+			"camera_position": [
+				0.0,
+				111.998748779297
+			],
+			"case": "deep-down",
+			"framing": {
+				"base_framing_y": 0.0,
+				"enabled": true,
+				"lookahead_y": 111.998746105698,
+				"maximum_forward_room": 472.0,
+				"target_y": 112.0
+			},
+			"hero": [
+				500.374084472656,
+				126.614540100098,
+				160.0,
+				160.0
+			],
+			"hero_map_intersection": false,
+			"limits": [
+				0,
+				-256,
+				2560,
+				4224
+			],
+			"map": [
+				599.636352539062,
+				18.0,
+				188.0,
+				96.0
+			],
+			"phase": "endless",
+			"player": [
+				992.0,
+				224.0
+			],
+			"viewport": [
+				1163.63635253906,
+				654.54541015625
+			],
+			"zoom": [
+				1.0,
+				1.0
+			]
+		},
+		"name": "deep-down whole hero remains inside viewport",
+		"passed": true
+	},
+	{
+		"detail": {},
+		"name": "deep-down camera does not change world limits",
+		"passed": true
+	},
+	{
+		"detail": {},
+		"name": "deep-down camera does not move player",
+		"passed": true
+	},
+	{
+		"detail": {},
+		"name": "deep-down cave framing remains active",
+		"passed": true
+	},
+	{
+		"detail": {
+			"camera_center": [
+				992.0,
+				144.747741699219
+			],
+			"camera_position": [
+				0.0,
+				-111.979522705078
+			],
+			"case": "deep-up",
+			"framing": {
+				"base_framing_y": 0.0,
+				"enabled": true,
+				"lookahead_y": -111.979521086785,
+				"maximum_forward_room": 472.0,
+				"target_y": -112.0
+			},
+			"hero": [
+				497.949279785156,
+				282.853454589844,
+				160.0,
+				160.0
+			],
+			"hero_map_intersection": false,
+			"limits": [
+				0,
+				-256,
+				2560,
+				4224
+			],
+			"map": [
+				599.636352539062,
+				18.0,
+				188.0,
+				96.0
+			],
+			"phase": "endless",
+			"player": [
+				992.0,
+				224.0
+			],
+			"viewport": [
+				1163.63635253906,
+				654.54541015625
+			],
+			"zoom": [
+				1.0,
+				1.0
+			]
+		},
+		"name": "deep-up whole hero remains inside viewport",
+		"passed": true
+	},
+	{
+		"detail": {},
+		"name": "deep-up camera does not change world limits",
+		"passed": true
+	},
+	{
+		"detail": {},
+		"name": "deep-up camera does not move player",
+		"passed": true
+	},
+	{
+		"detail": {},
+		"name": "deep-up cave framing remains active",
+		"passed": true
+	},
+	{
+		"detail": {},
+		"name": "deep UP reverses DOWN lookahead",
+		"passed": true
+	}
+]
