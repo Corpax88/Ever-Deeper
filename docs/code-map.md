@@ -13,6 +13,8 @@ Read this map, then the named owner. You should not need to read the whole game 
 | Surface routes, mining, ambient art | `scripts/world/surface_world.gd` | Surface parallax and transition components |
 | Depth 1 blocks, barriers, drops | `scripts/world/mossvein_mine.gd` | `cave_edge_asset_drawer.gd` |
 | Depth 2 geology and gates | `scripts/world/depth/rootwound_world.gd` | `rootwound_layout.gd` |
+| Readable D1/D2 mining target text | `scripts/ui/mining_target_label.gd` | Both mine owners provide target state; `scripts/main.gd` coordinates target/notice exclusions |
+| Cave camera headroom | `scripts/camera/cinematic_camera_2d.gd` | Bounds downward lookahead using viewport and zoom; Surface framing is unchanged |
 | Base hub and current workshops | `scripts/world/hub_world.gd` | `station_transaction_fx.gd`, RunState |
 | Continuous The Deep, relics and rope | `scripts/world/endless_descent_world.gd` | `endless_deep_layout.gd`, `scripts/state/endless_terrain_state.gd`, RunState |
 | Shop entries, costs and descriptions | `scripts/ui/commerce_catalog.gd` | RunState is the transaction authority |
@@ -26,6 +28,9 @@ Read this map, then the named owner. You should not need to read the whole game 
 | Menu, HUD, inventory and tutorial | `scripts/ui/` | Named components own their presentation |
 | Achievements, guide and progression | `scripts/progression/` | RunState persistence |
 | Live next-goal resource requirements | `scripts/progression/progression_goal.gd` | `guide_director.gd`, `scripts/ui/progression_goal_panel.gd`; costs remain in RunState/GameData |
+| Tracked Treasury routes and sale reservation | `scripts/state/treasury_goals.gd`, `scripts/state/run_state.gd` | Route uses unlocked sources/current phase; the transaction protects outstanding tracked materials and sells surplus |
+| Treasury reward cards and active mod explanation | `scripts/ui/treasury_goal_panel.gd` | Delivered/held/remaining, claim/equip/replacement; RunState owns transactions and persistence |
+| Surface contextual action placement | `scripts/ui/premium_hud.gd` | `scripts/main.gd` uses the vacant Mine slot when the Surface action is available |
 | Sound and music | `scripts/audio/audio_director.gd` | Authored audio assets |
 | FPS, frame-time captures and physical DEV meter | `tools/run_performance.py`, `scripts/qa/suites/mobile_performance.gd` | `docs/performance.md`; meter in `scripts/dev/developer_menu.gd` |
 | Automatic DEV lighting comparison | `scripts/dev/render_probe.gd`, `tools/render-probe-web.mjs` | Seven-stage, two-minute test; `docs/performance-diagnosis/render-probe/README.md` |
