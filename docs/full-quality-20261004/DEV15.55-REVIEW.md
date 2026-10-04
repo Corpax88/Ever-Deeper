@@ -1,3 +1,7 @@
+# Visual publication blocker found during final review
+
+Root inspected final run37218310565 `journey/finale-conclusion-667.jpg`: ending content and both actions extend beyond right viewport despite functional journey assertions passing.844/932 fit. Do not publish this candidate even if CI passes. final_acceptance owns narrow main.gd conclusion layout + fixture geometry; journey_fix owns stronger journey.mjs bounds checks. Require actual rendered667/844/932 verification then fresh exact-source acceptance. No other scope expansion. Minute-by-minute user updates continue.
+
 # Ever-Deeper DEV15.55 review
 
 Status: final acceptance running; not published. Source `198e40661a5972ecc72dedc615e8dce36364aad7`, run `37218310565`. Production PCK SHA256 `36fbd73847dd8d08a1b9b90a8315559c8a6cea05cd71132b97436799b9ec10d3` (327889218 bytes).
