@@ -3,6 +3,15 @@
 from pathlib import Path
 import hashlib,json,re
 ROOT=Path(__file__).resolve().parents[1]
+def declares_method(path,method,seen=None):
+    """A registered suite may inherit its entry point from another suite."""
+    seen=set() if seen is None else seen
+    if path in seen or not path.is_file(): return False
+    seen.add(path)
+    text=path.read_text()
+    if re.search(r'^func '+re.escape(method)+r'\(',text,re.M): return True
+    parent=re.search(r'^extends "res://([^"\n]+)"',text,re.M)
+    return bool(parent and declares_method(ROOT/parent[1],method,seen))
 def main():
     expected=json.loads((ROOT/'docs/unchanged-files.json').read_text())
     failures=[]
@@ -16,7 +25,7 @@ def main():
     assert cases==documented,'QA flag order or arguments changed'
     for entry in cases:
         path=ROOT/('scripts/main.gd' if entry['suite']=='main' else 'scripts/qa/suites/'+entry['suite']+'.gd')
-        assert re.search(r'^func '+re.escape(entry['method'])+r'\(',path.read_text(),re.M),entry
+        assert declares_method(path,entry['method']),entry
     catalog=(ROOT/'scripts/world/world_catalog.gd').read_text()
     assert 'const MINE_ORDER: = ["mossMine", "moonMine", "emberMine", "starMine"]' in catalog
     for name in ['main.gd','state/run_state.gd','world/surface_world.gd','world/depth/rootwound_world.gd']:

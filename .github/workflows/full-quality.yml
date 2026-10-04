@@ -1,10 +1,10 @@
 name: Full Ever-Deeper Quality Review
 on:
+  workflow_dispatch:
   push:
     branches: [codex/full-quality-20261004]
     paths:
-      - '.github/full-quality/**'
-      - '.github/workflows/full-quality.yml'
+      - '.github/full-quality/run.json'
 permissions: {contents: read, actions: read}
 concurrency: {group: full-quality-20261004, cancel-in-progress: false}
 env:
@@ -41,7 +41,7 @@ jobs:
           "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --version
       - name: Focused native regressions against exact production pack
         continue-on-error: true
-        run: python3 .github/full-quality/native.py "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" "$RUNNER_TEMP/production/index.pck" "$RUNNER_TEMP/evidence/native"
+        run: python3 .github/full-quality/native.py "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" "$RUNNER_TEMP/production/index.pck" "$RUNNER_TEMP/evidence/native" "$RUNNER_TEMP/candidate/index.pck"
       - uses: actions/upload-artifact@v4
         if: always()
         with: {name: full-quality-native, path: '${{ runner.temp }}/evidence/native', retention-days: 30}

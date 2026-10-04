@@ -58,6 +58,38 @@
   "ordered_cases": [
     {
       "flags": [
+        "--qa-telemetry-review"
+      ],
+      "method": "run",
+      "suite": "telemetry_review",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-fps-review"
+      ],
+      "method": "run",
+      "suite": "fps_review",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-production-browser"
+      ],
+      "method": "run",
+      "suite": "production_browser_review",
+      "surface": false
+    },
+    {
+      "flags": [
+        "--qa-wayfarer-browser"
+      ],
+      "method": "run",
+      "suite": "wayfarer_browser_review",
+      "surface": false
+    },
+    {
+      "flags": [
         "--qa-skills-browser"
       ],
       "method": "run",

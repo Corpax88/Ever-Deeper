@@ -28,7 +28,7 @@ overrides=json.loads(Path(sys.argv[3]).read_text()) if len(sys.argv)>3 else []
 production=len(sys.argv)>4 and sys.argv[4]=='production'
 version=os.environ.get('CANDIDATE_VERSION','1.0.0-dev.15.55')
 for name in overrides:
-    assert (name.startswith(('scripts/','shaders/')) or name=='data/ever_deeper_v0381.json') and '..' not in Path(name).parts,name
+    assert (name.startswith(('scripts/','shaders/')) or name in ('data/ever_deeper_v0381.json','data/source_manifest.json')) and '..' not in Path(name).parts,name
     replacements[name]=(ROOT/name).read_bytes()
     if name=='data/ever_deeper_v0381.json':
         before=json.loads(raw(name));current=json.loads(replacements[name])
@@ -39,6 +39,11 @@ for name in overrides:
         for key,description in [('quick_step','Reach Running level 1.'),('roadrunner','Reach Running level 10.')]:
             expected['ACHIEVEMENT_BY_ID'][key]['description']=description
         assert current==expected,'Unreviewed game data change'
+    if name=='data/source_manifest.json':
+        assert 'data/ever_deeper_v0381.json' in overrides,'Manifest requires reviewed data overlay'
+        expected=json.loads(raw(name))
+        expected['game_data_sha256']=hashlib.sha256((ROOT/'data/ever_deeper_v0381.json').read_bytes()).hexdigest()
+        assert json.loads(replacements[name])==expected,'Unreviewed source manifest change'
     if name=='scripts/ui/premium_menu.gd':
         source=replacements[name].decode()
         source,count=re.subn(r'(const DEV_RELEASE_VERSION: = )"[^"]+"',lambda m:m[1]+json.dumps(version),source)
@@ -50,6 +55,22 @@ if not production:
     replacements['scripts/qa/suites/full_quality_base.gd']=script('scripts/qa/suites/skills_browser_review.gd')
     replacements['scripts/qa/suites/skills_browser_review.gd']=(ROOT/'.github/full-quality/fixture.gd').read_bytes()
     replacements['scripts/qa/suites/skills_browser_review.gd.remap']=b'[remap]\npath="res://scripts/qa/suites/skills_browser_review.gd"\n'
+    if 'scripts/state/treasury_goals.gd' in overrides:
+        # Retain the existing premium suite; update only its two assertions
+        # that intentionally required a completed mod to obscure future goals.
+        name='scripts/qa/suites/premium_core.gd'
+        source=script(name).decode()
+        edits={
+            '_check(main.premium_hud.progression_goal_snapshot().get("objective_id","")=="treasury:wallet_gold","Shared HUD state-change refresh retains pinned treasury goal")':
+            '_check(RunState.treasury_goals.pinned=="" and not String(main.premium_hud.progression_goal_snapshot().get("objective_id","")).begins_with("treasury:") and not main.premium_hud.progression_goal_snapshot().is_empty(),"Shared HUD resumes progression after completed treasury goal")',
+            '_check(RunState.deserialize(mod_saved) and RunState.treasury_goals.resonance_enabled and RunState.treasury_goals.pinned=="wallet_gold","Claim, enabled state and pinned goal survive save roundtrip")':
+            '_check(RunState.deserialize(mod_saved) and RunState.treasury_goals.resonance_claimed and RunState.treasury_goals.resonance_enabled and RunState.treasury_goals.pinned=="","Claim and enabled state survive roundtrip with completed goal retired")',
+        }
+        for old,new in edits.items():
+            assert source.count(old)==1,'Premium contract owner changed'
+            source=source.replace(old,new)
+        replacements[name]=source.encode()
+        replacements[name+'.remap']=('[remap]\npath="res://'+name+'"\n').encode()
 data=bytearray(original[:base]);after={}
 for name in sorted(set(entries)|set(replacements)):
     payload=replacements[name] if name in replacements else raw(name)
