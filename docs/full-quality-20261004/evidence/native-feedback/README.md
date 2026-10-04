@@ -1,0 +1,7 @@
+# Native hero feedback placement
+
+Actual native-rendered 667 and 844 landscape frames exercise the real nested hero rig, three pickup messages, a skill increase, a queued achievement and the active joystick. All 16 checks pass. The achievement pauses its phase while the view is crowded, then resumes visibly after other notices expire. Root inspected both simultaneous frames and the resumed 667 frame. The physical iPhone remains untested.
+
+Hero exclusion uses the displayed native viewport rectangle, with the existing fallback sprites retained. Skill, pickup and achievement notices share ordered exclusions; the interactive achievement additionally protects the steering zone. The stamina bar and active joystick are included. Hero art, motion and gameplay values are unchanged. Dummy-audio warnings in the rendered log are environment-specific; no script errors occurred.
+
+The presentation fixture selects Crusher directly to exercise the native rig; earned ownership remains covered separately by the browser lifecycle suite. Initial attempts used an incoherent partial base and then the original 2D drill, so they did not establish native acceptance. The completed run uses the full explicit production overlay shown in package-receipt.json. A subsequent diagnostic-only snapshot change reports the already existing crowded suspension truthfully; final integrated native/browser gates bind the complete final source.

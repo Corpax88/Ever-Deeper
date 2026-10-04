@@ -35,6 +35,7 @@ var _anchor_is_normalized: = true
 var _last_safe_rect: = Rect2()
 var _screen_exclusions: Array[Rect2] = []
 var _placement = FeedbackPlacementScript.new()
+var _placement_blocked: bool = false
 var _needs_current_anchor: = false
 
 var _toast: Control
@@ -119,7 +120,8 @@ func debug_snapshot() -> Dictionary:
 		"presentation": "achievement_png_and_title",
 		"process_always": process_mode == Node.PROCESS_MODE_ALWAYS,
 		"active": _phase != Phase.IDLE,
-		"suspended": presentation_obstructed(),
+		"suspended": presentation_obstructed() or _placement_blocked,
+		"placement_blocked": _placement_blocked,
 		"visible": _toast != null and _toast.is_visible_in_tree(),
 		"active_id": String(_active_definition.get("id", "")),
 		"active_title": String(_active_definition.get("title", "")),
@@ -213,7 +215,7 @@ func _build_interface() -> void :
 func _process(delta: float) -> void :
 	# Keep earned notices queued while a full-screen panel owns the player's
 	# attention and touch input. Resume the same phase when play continues.
-	var obstructed: bool = presentation_obstructed()
+	var obstructed: bool = presentation_obstructed() or _placement_blocked
 	if _toast != null:
 		_toast.visible = _phase != Phase.IDLE and not obstructed
 	if obstructed:
@@ -360,6 +362,8 @@ func _apply_layout(viewport_size: Vector2, native_insets: Vector4) -> void :
 		desired_center = viewport_size * _screen_anchor
 	var desired_position: = desired_center - toast_size * 0.5
 	desired_position = _placement.place(desired_position, toast_size, _last_safe_rect, _screen_exclusions)
+	_placement_blocked = not _placement.is_clear(Rect2(desired_position, toast_size), _screen_exclusions)
+	if _placement_blocked: _toast.hide()
 	_place(_toast, Rect2(desired_position, toast_size))
 	_place(_activation_target, Rect2(Vector2.ZERO, toast_size))
 	_activation_target.custom_minimum_size = toast_size

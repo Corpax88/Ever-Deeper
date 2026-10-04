@@ -26,6 +26,14 @@ var bore_weight: float = 0.0
 var bore_spin: float = 0.0
 var mod_active: bool = false
 
+func feedback_screen_rect() -> Rect2:
+	# The displayed native viewport includes head, body and equipped tool. Its
+	# canvas transform keeps feedback clear through camera zoom and movement.
+	if not is_instance_valid(rig) or not rig.is_visible_in_tree(): return Rect2()
+	var sprite: Sprite2D = rig.sprite
+	if not is_instance_valid(sprite) or sprite.texture == null or not sprite.is_visible_in_tree(): return Rect2()
+	return sprite.get_global_transform_with_canvas() * sprite.get_rect()
+
 func setup(owner_visual: Node2D) -> void:
 	visual = owner_visual
 	player = visual.get_parent()

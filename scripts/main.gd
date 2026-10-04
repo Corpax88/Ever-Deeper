@@ -3992,15 +3992,15 @@ func _update_achievement_toast_anchor() -> void :
 	var feedback: ResourcePickupBurst = active_player.get_node_or_null("ResourcePickupBurst") as ResourcePickupBurst
 	var pickup_active: bool = feedback != null and not feedback.entries.is_empty()
 	var toast_active: bool = achievement_toast != null and achievement_toast.is_presenting()
-	if not pickup_active and not toast_active:
+	var skill: Node = achievement_toast.get_node_or_null("SkillLevelToast") if achievement_toast != null else null
+	var skill_active: bool = skill != null and not skill.active.is_empty()
+	if not pickup_active and not toast_active and not skill_active:
 		return
 	var player_screen_position: Vector2 = active_player.get_global_transform_with_canvas().origin
 	var exclusions: Array[Rect2] = []
 	var visual: Node = active_player.get_node_or_null("Visual")
-	if visual != null:
-		for child in visual.get_children():
-			if child is Sprite2D and child.texture != null and child.is_visible_in_tree() and child.modulate.a > 0.01:
-				exclusions.append(child.get_global_transform_with_canvas() * child.get_rect())
+	if visual != null and visual.has_method("feedback_screen_rects"):
+		exclusions.append_array(visual.feedback_screen_rects())
 	var hud_controls: Array[Control] = [mine_button,laser_button]
 	if premium_hud != null:
 		hud_controls.append_array([
@@ -4017,16 +4017,28 @@ func _update_achievement_toast_anchor() -> void :
 			hud_controls.append(companion_interface.activity)
 	if developer_menu != null:
 		hud_controls.append(developer_menu.get("toggle_button") as Control)
+	if premium_hud != null:
+		hud_controls.append(premium_hud.get_node_or_null("StaminaMeter") as Control)
 	for control in hud_controls:
 		if is_instance_valid(control) and control.is_visible_in_tree() and control.modulate.a > 0.01:
 			exclusions.append(control.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, control.size))
+	if is_instance_valid(movement_pad) and movement_pad.is_visible_in_tree() and movement_pad.active_pointer != -2:
+		var radius: float = movement_pad.outer_radius + 4.0
+		exclusions.append(movement_pad.get_global_transform_with_canvas() * Rect2(movement_pad.origin - Vector2.ONE * radius, Vector2.ONE * radius * 2.0))
+	var safe_rect: Rect2 = achievement_toast.safe_screen_rect() if achievement_toast != null else get_viewport().get_visible_rect().grow(-18.0)
+	if skill_active:
+		skill.set_screen_constraints(safe_rect, exclusions)
+		var skill_rect: Rect2 = skill.reserved_screen_rect()
+		if skill_rect.has_area(): exclusions.append(skill_rect)
 	if pickup_active:
-		var safe_rect: Rect2 = achievement_toast.safe_screen_rect() if achievement_toast != null else get_viewport().get_visible_rect().grow(-18.0)
 		feedback.set_screen_constraints(safe_rect, exclusions)
 	if toast_active:
 		exclusions = exclusions.duplicate()
 		if pickup_active:
 			exclusions.append_array(feedback.screen_rects())
+		# Achievement notices accept taps; leave future steering touches free.
+		if is_instance_valid(movement_pad) and movement_pad.is_visible_in_tree():
+			exclusions.append(movement_pad.get_global_transform_with_canvas() * movement_pad.movement_zone_rect(movement_pad.size))
 		achievement_toast.set_screen_anchor(player_screen_position + Vector2(0.0, -112.0), exclusions)
 
 
@@ -4320,6 +4332,7 @@ func _install_miner_skills() -> void:
 	training.main = self
 	add_child(training)
 	var meter = preload("res://scripts/ui/stamina_meter.gd").new()
+	meter.name = "StaminaMeter"
 	premium_hud.add_child(meter)
 
 

@@ -54,6 +54,16 @@ var _flow_visible: bool = false
 var _flow_distance: float = 0.0
 var _native_worn: Node
 
+func feedback_screen_rects() -> Array[Rect2]:
+	var rects: Array[Rect2] = []
+	for child in get_children():
+		if child is Sprite2D and child.texture != null and child.is_visible_in_tree() and child.modulate.a > 0.01:
+			rects.append(child.get_global_transform_with_canvas() * child.get_rect())
+	if is_instance_valid(_native_worn):
+		var native_rect: Rect2 = _native_worn.feedback_screen_rect()
+		if native_rect.has_area(): rects.append(native_rect)
+	return rects
+
 func _ready() -> void:
 	process_priority = 1000
 	_sprite = Sprite2D.new()
