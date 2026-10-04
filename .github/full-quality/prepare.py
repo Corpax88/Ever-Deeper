@@ -25,14 +25,31 @@ def script(name):
     return raw(name)
 replacements={}
 overrides=json.loads(Path(sys.argv[3]).read_text()) if len(sys.argv)>3 else []
+production=len(sys.argv)>4 and sys.argv[4]=='production'
+version=os.environ.get('CANDIDATE_VERSION','1.0.0-dev.15.55')
 for name in overrides:
-    assert name.startswith(('scripts/','shaders/')) and '..' not in Path(name).parts,name
+    assert (name.startswith(('scripts/','shaders/')) or name=='data/ever_deeper_v0381.json') and '..' not in Path(name).parts,name
     replacements[name]=(ROOT/name).read_bytes()
+    if name=='data/ever_deeper_v0381.json':
+        before=json.loads(raw(name));current=json.loads(replacements[name])
+        expected=json.loads(raw(name))
+        for item in expected['ACHIEVEMENT_DEFINITIONS']:
+            if item['id']=='quick_step': item['description']='Reach Running level 1.'
+            if item['id']=='roadrunner': item['description']='Reach Running level 10.'
+        for key,description in [('quick_step','Reach Running level 1.'),('roadrunner','Reach Running level 10.')]:
+            expected['ACHIEVEMENT_BY_ID'][key]['description']=description
+        assert current==expected,'Unreviewed game data change'
+    if name=='scripts/ui/premium_menu.gd':
+        source=replacements[name].decode()
+        source,count=re.subn(r'(const DEV_RELEASE_VERSION: = )"[^"]+"',lambda m:m[1]+json.dumps(version),source)
+        assert count==1,'Version owner changed'
+        replacements[name]=source.encode()
     if name.endswith('.gd'): replacements[name+'.remap']=('[remap]\npath="res://'+name+'"\n').encode()
 # Extend exact baseline QA suite without importing unrelated source drift.
-replacements['scripts/qa/suites/full_quality_base.gd']=script('scripts/qa/suites/skills_browser_review.gd')
-replacements['scripts/qa/suites/skills_browser_review.gd']=(ROOT/'.github/full-quality/fixture.gd').read_bytes()
-replacements['scripts/qa/suites/skills_browser_review.gd.remap']=b'[remap]\npath="res://scripts/qa/suites/skills_browser_review.gd"\n'
+if not production:
+    replacements['scripts/qa/suites/full_quality_base.gd']=script('scripts/qa/suites/skills_browser_review.gd')
+    replacements['scripts/qa/suites/skills_browser_review.gd']=(ROOT/'.github/full-quality/fixture.gd').read_bytes()
+    replacements['scripts/qa/suites/skills_browser_review.gd.remap']=b'[remap]\npath="res://scripts/qa/suites/skills_browser_review.gd"\n'
 data=bytearray(original[:base]);after={}
 for name in sorted(set(entries)|set(replacements)):
     payload=replacements[name] if name in replacements else raw(name)
@@ -53,5 +70,5 @@ config['fileSizes']['index.pck']=len(data)
 (out/'index.html').write_text(html[:m.start(1)]+json.dumps(config,separators=(',',':'))+html[m.end(1):])
 manifest={name:identity(out/name) for name in WEB}
 (out/'manifest.json').write_text(json.dumps(manifest,indent=2))
-(out/'qa-build-receipt.json').write_text(json.dumps({'baseline_pck':BASE,'baseline_source':'be3a698e0ad8bedb91e877b9932a7bb05b80684a','qa_source':os.environ.get('GITHUB_SHA'),'overrides':overrides,'replaced':list(replacements),'retained_payloads_verified':True,'files':manifest},indent=2))
+(out/'qa-build-receipt.json').write_text(json.dumps({'baseline_pck':BASE,'baseline_source':'be3a698e0ad8bedb91e877b9932a7bb05b80684a','qa_source':os.environ.get('GITHUB_SHA'),'overrides':overrides,'production':production,'version':version if 'scripts/ui/premium_menu.gd' in overrides else '1.0.0-dev.15.54','replaced':list(replacements),'retained_payloads_verified':True,'files':manifest},indent=2))
 print('FULL_QUALITY_QA_PACKAGE_VERIFIED',manifest['index.pck'])

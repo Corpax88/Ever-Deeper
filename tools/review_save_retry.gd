@@ -6,6 +6,7 @@ var output_dir: String = "user://quality-save-retry"
 var save_path: String
 var checks: Array = []
 var expect_baseline: bool = false
+var status_events: Array[int]=[]
 
 func _initialize() -> void:
 	call_deferred("review")
@@ -37,10 +38,13 @@ func review() -> void:
 	save_path=output_dir.path_join("save-retry-%d.sav" % Time.get_ticks_usec())
 	state=root.get_node("RunState")
 	state.initialize_persistence(save_path)
+	if state.has_signal("persistence_status_changed"):
+		state.persistence_status_changed.connect(func(error: int): status_events.append(error))
 	state.gold=101
 	check("first good generation",state.flush_save())
 	state.gold=202
 	check("second good generation",state.flush_save())
+	if not expect_baseline: check("ordinary saves have no failure notification",status_events.is_empty())
 	var primary: PackedByteArray=FileAccess.get_file_as_bytes(save_path)
 	var backup: PackedByteArray=FileAccess.get_file_as_bytes(save_path+".bak")
 	obstruct()
@@ -51,6 +55,7 @@ func review() -> void:
 	check("failed autosave preserves primary",FileAccess.get_file_as_bytes(save_path)==primary)
 	check("failed autosave preserves backup",FileAccess.get_file_as_bytes(save_path+".bak")==backup)
 	check("failed autosave remains pending",state._autosave_pending)
+	if not expect_baseline: check("actual failure is signalled once",status_events.size()==1 and status_events[0]!=OK)
 	unblock()
 	await create_timer(state.AUTOSAVE_BATCH_SECONDS+0.4,true,false,true).timeout
 	check("automatic recovery commits without another mutation",saved_gold()==303)
@@ -58,6 +63,7 @@ func review() -> void:
 	if expect_baseline:
 		finish()
 		return
+	check("recovery is signalled once",status_events.size()==2 and status_events[-1]==OK)
 
 	# Explicit checkpoints must keep the same recovery guarantees. Repeated
 	# failures invalidate old callbacks rather than multiply active retry chains.
@@ -67,12 +73,14 @@ func review() -> void:
 	state.gold=404
 	for attempt in 3:
 		check("explicit failure %d is reported" % attempt,not state.flush_save())
+	check("repeated error does not spam notifications",status_events.size()==3 and status_events[-1]!=OK)
 	check("explicit failure remains pending",state._autosave_pending)
 	check("explicit failures preserve both generations",FileAccess.get_file_as_bytes(save_path)==primary and FileAccess.get_file_as_bytes(save_path+".bak")==backup)
 	var superseded_serial: int=state._autosave_timer_serial
 	unblock()
 	await create_timer(state.AUTOSAVE_BATCH_SECONDS+0.4,true,false,true).timeout
 	check("explicit failure automatically recovers",saved_gold()==404 and not state._autosave_pending)
+	check("second recovery is signalled once",status_events.size()==4 and status_events[-1]==OK)
 	check("repeated failures commit only one backup generation",FileAccess.get_file_as_bytes(save_path+".bak")==primary)
 
 	state.gold=505
@@ -96,6 +104,7 @@ func review() -> void:
 	check("old-run callback cannot consume new-run retry",saved_gold()==505 and state._autosave_pending)
 	await create_timer(state.AUTOSAVE_BATCH_SECONDS+0.4,true,false,true).timeout
 	check("new-run checkpoint automatically recovers",saved_gold()==0 and int(Dictionary(document().get("state",{})).get("world_seed",-1))==new_seed)
+	check("new-run error and recovery have one event each",status_events.size()==6 and status_events[-1]==OK)
 	finish()
 
 func finish() -> void:

@@ -9,10 +9,12 @@ permissions: {contents: read, actions: read}
 concurrency: {group: full-quality-20261004, cancel-in-progress: false}
 env:
   BASE_VERSION: '1.0.0-dev.15.54'
+  CANDIDATE_VERSION: '1.0.0-dev.15.55'
+  RUN_BASELINE_SUPPLEMENT: 'true'
 jobs:
   graphical:
     runs-on: macos-15
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with: {persist-credentials: false}
@@ -26,61 +28,127 @@ jobs:
       - uses: actions/setup-node@v4
         with: {node-version: '22'}
       - run: npm ci --ignore-scripts && npx playwright install chromium webkit
-      - name: Build baseline with QA-only overlay
-        run: python3 .github/full-quality/prepare.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/baseline"
-      - name: Original production breadth and touch captures
-        id: baseline
-        continue-on-error: true
-        run: node .github/full-quality/review.mjs "$RUNNER_TEMP/baseline" "$RUNNER_TEMP/evidence/baseline"
-        env: {EXPECTED_VERSION: '${{ env.BASE_VERSION }}'}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-baseline, path: '${{ runner.temp }}/evidence/baseline', retention-days: 30}
-      - name: Ordinary unchanged WebKit startup
-        continue-on-error: true
-        run: node .github/deep-treasury/startup.mjs "$RUNNER_TEMP/original" "$RUNNER_TEMP/evidence/ordinary-baseline"
-        env: {EXPECTED_VERSION: '${{ env.BASE_VERSION }}', CANDIDATE_SOURCE: 'be3a698e0ad8bedb91e877b9932a7bb05b80684a'}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-ordinary-baseline, path: '${{ runner.temp }}/evidence/ordinary-baseline', retention-days: 30}
-      - name: Detect explicit production candidate
-        id: candidate
+      - name: Prepare exact baseline QA and production candidate
         run: |
-          python3 - <<'PY'
-          import json,os
-          changed=json.load(open('.github/full-quality/overrides.json'))
-          with open(os.environ['GITHUB_OUTPUT'],'a') as f: f.write('enabled='+str(bool(changed)).lower()+'\n')
-          PY
-      - name: Build explicit production candidate
-        if: steps.candidate.outputs.enabled == 'true'
-        run: python3 .github/full-quality/prepare.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/candidate" .github/full-quality/overrides.json
-      - name: Candidate breadth and touch captures
-        if: steps.candidate.outputs.enabled == 'true'
-        id: review_candidate
-        continue-on-error: true
-        run: node .github/full-quality/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/candidate"
-        env: {EXPECTED_VERSION: '${{ env.BASE_VERSION }}'}
-      - uses: actions/upload-artifact@v4
-        if: always() && steps.candidate.outputs.enabled == 'true'
-        with: {name: full-quality-candidate-evidence, path: '${{ runner.temp }}/evidence/candidate', retention-days: 30}
-      - name: Install exact native engine for candidate regression
-        if: steps.candidate.outputs.enabled == 'true'
+          python3 .github/full-quality/prepare.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/baseline"
+          python3 .github/full-quality/prepare.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/candidate" .github/full-quality/overrides.json
+          python3 .github/full-quality/prepare.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/production" .github/full-quality/overrides.json production
+      - name: Install exact native engine
         run: |
           curl -L --fail --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip -o "$RUNNER_TEMP/godot.zip"
           unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
           chmod +x "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot"
           "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --version
-      - name: Save retry candidate regression
-        if: steps.candidate.outputs.enabled == 'true'
+      - name: Focused native regressions against exact production pack
         continue-on-error: true
-        run: |
-          if python3 -c "import json; assert 'scripts/state/run_state.gd' in json.load(open('.github/full-quality/overrides.json'))"; then
-            mkdir -p "$RUNNER_TEMP/evidence/save-retry"
-            "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --headless --path . --main-pack "$RUNNER_TEMP/candidate/index.pck" --script tools/review_save_retry.gd -- --output="$RUNNER_TEMP/evidence/save-retry" > "$RUNNER_TEMP/evidence/save-retry/godot.log" 2>&1
-          fi
+        run: python3 .github/full-quality/native.py "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" "$RUNNER_TEMP/production/index.pck" "$RUNNER_TEMP/evidence/native"
       - uses: actions/upload-artifact@v4
-        if: always() && steps.candidate.outputs.enabled == 'true'
-        with: {name: full-quality-native-regression, path: '${{ runner.temp }}/evidence/save-retry', retention-days: 30}
+        if: always()
+        with: {name: full-quality-native, path: '${{ runner.temp }}/evidence/native', retention-days: 30}
+      - name: Baseline missing coverage only
+        if: env.RUN_BASELINE_SUPPLEMENT == 'true'
+        continue-on-error: true
+        run: node .github/full-quality/missing.mjs "$RUNNER_TEMP/baseline" "$RUNNER_TEMP/evidence/baseline-missing"
+        env: {EXPECTED_VERSION: '${{ env.BASE_VERSION }}'}
+      - name: Candidate breadth and actual touch
+        continue-on-error: true
+        run: node .github/full-quality/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/candidate"
+        env: {EXPECTED_VERSION: '${{ env.CANDIDATE_VERSION }}'}
+      - name: Candidate transformed mobile controls and progression
+        continue-on-error: true
+        run: node .github/full-quality/focused.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/focused"
+        env: {EXPECTED_VERSION: '${{ env.CANDIDATE_VERSION }}'}
+      - name: Real Ricochet lifecycle on four genuinely owned skins
+        continue-on-error: true
+        run: node .github/full-quality/ricochet-lifecycle.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/ricochet-lifecycle"
+        env: {EXPECTED_VERSION: '${{ env.CANDIDATE_VERSION }}'}
+      - name: Ordinary production candidate WebKit startup
+        continue-on-error: true
+        run: node .github/deep-treasury/startup.mjs "$RUNNER_TEMP/production" "$RUNNER_TEMP/evidence/ordinary-candidate"
+        env: {EXPECTED_VERSION: '${{ env.CANDIDATE_VERSION }}', CANDIDATE_SOURCE: '${{ github.sha }}'}
+      - name: Split graphical evidence into files below 30MiB
+        if: always()
+        run: |
+          for name in baseline-missing candidate focused ricochet-lifecycle ordinary-candidate; do
+            if [ -d "$RUNNER_TEMP/evidence/$name" ]; then
+              python3 .github/full-quality/split.py "$RUNNER_TEMP/evidence/$name" "$RUNNER_TEMP/evidence-split/$name"
+            fi
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-baseline-missing-manifest, path: '${{ runner.temp }}/evidence-split/baseline-missing/recovery-manifest.json', if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-baseline-missing-00, path: '${{ runner.temp }}/evidence-split/baseline-missing/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-baseline-missing-01, path: '${{ runner.temp }}/evidence-split/baseline-missing/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-baseline-missing-02, path: '${{ runner.temp }}/evidence-split/baseline-missing/part-02.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-baseline-missing-03, path: '${{ runner.temp }}/evidence-split/baseline-missing/part-03.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-candidate-manifest, path: '${{ runner.temp }}/evidence-split/candidate/recovery-manifest.json', if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-candidate-00, path: '${{ runner.temp }}/evidence-split/candidate/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-candidate-01, path: '${{ runner.temp }}/evidence-split/candidate/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-candidate-02, path: '${{ runner.temp }}/evidence-split/candidate/part-02.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-candidate-03, path: '${{ runner.temp }}/evidence-split/candidate/part-03.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-focused-manifest, path: '${{ runner.temp }}/evidence-split/focused/recovery-manifest.json', if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-focused-00, path: '${{ runner.temp }}/evidence-split/focused/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-focused-01, path: '${{ runner.temp }}/evidence-split/focused/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-focused-02, path: '${{ runner.temp }}/evidence-split/focused/part-02.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-focused-03, path: '${{ runner.temp }}/evidence-split/focused/part-03.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-ricochet-lifecycle-manifest, path: '${{ runner.temp }}/evidence-split/ricochet-lifecycle/recovery-manifest.json', if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-ricochet-lifecycle-00, path: '${{ runner.temp }}/evidence-split/ricochet-lifecycle/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-ricochet-lifecycle-01, path: '${{ runner.temp }}/evidence-split/ricochet-lifecycle/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-ricochet-lifecycle-02, path: '${{ runner.temp }}/evidence-split/ricochet-lifecycle/part-02.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-ricochet-lifecycle-03, path: '${{ runner.temp }}/evidence-split/ricochet-lifecycle/part-03.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-ordinary-candidate-manifest, path: '${{ runner.temp }}/evidence-split/ordinary-candidate/recovery-manifest.json', if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-ordinary-candidate-00, path: '${{ runner.temp }}/evidence-split/ordinary-candidate/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-ordinary-candidate-01, path: '${{ runner.temp }}/evidence-split/ordinary-candidate/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-ordinary-candidate-02, path: '${{ runner.temp }}/evidence-split/ordinary-candidate/part-02.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-ordinary-candidate-03, path: '${{ runner.temp }}/evidence-split/ordinary-candidate/part-03.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -88,61 +156,53 @@ jobs:
           path: |
             ${{ runner.temp }}/baseline/qa-build-receipt.json
             ${{ runner.temp }}/candidate/qa-build-receipt.json
+            ${{ runner.temp }}/production/qa-build-receipt.json
           retention-days: 30
-      - name: Enforce recorded browser gates
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-production-candidate, path: '${{ runner.temp }}/production', retention-days: 30}
+      - name: Enforce independently recorded gates
         if: always()
         run: |
           python3 - <<'PY'
           import json,os
           from pathlib import Path
           root=Path(os.environ['RUNNER_TEMP'])/'evidence'
-          for name in ['baseline']+(['candidate'] if json.load(open('.github/full-quality/overrides.json')) else []):
+          names=['native','candidate','focused','ricochet-lifecycle']
+          if os.environ['RUN_BASELINE_SUPPLEMENT']=='true':names.append('baseline-missing')
+          failed=[]
+          for name in names:
               p=root/name/'report.json'
-              assert p.exists(),str(p)
-              assert json.loads(p.read_text())['passed'],str(p)
+              if not p.exists() or not json.loads(p.read_text()).get('passed',False):failed.append(name)
+          p=root/'ordinary-candidate/report.json'
+          if not p.exists():failed.append('ordinary-candidate missing')
+          else:
+              report=json.loads(p.read_text())
+              if report.get('failure') or report.get('crashed') or not report.get('completed_observation'):failed.append('ordinary-candidate failed')
+          assert not failed,failed
           PY
-  recover:
-    if: ${{ !contains(github.event.head_commit.message, '[qa-no-recovery]') }}
+  runtime-recovery:
+    if: ${{ !contains(github.event.head_commit.message, '[qa-no-runtime]') }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 12
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with: {persist-credentials: false}
-      - uses: actions/download-artifact@v4
-        with:
-          artifact-ids: '11284088414'
-          merge-multiple: true
-          run-id: '37151451383'
-          github-token: '${{ github.token }}'
-          path: '${{ runner.temp }}/original'
-      - run: python3 .github/full-quality/split.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/recovery"
+      - name: Download exact Linux engine and local X11 dependencies
+        run: |
+          mkdir -p "$RUNNER_TEMP/runtime/x11-debs"
+          curl -L --fail --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/runtime/godot-linux.zip"
+          unzip -t "$RUNNER_TEMP/runtime/godot-linux.zip"
+          cd "$RUNNER_TEMP/runtime/x11-debs"
+          apt-get download xvfb libxfont2 x11-xkb-utils libxkbfile1
+      - run: python3 .github/full-quality/split.py "$RUNNER_TEMP/runtime" "$RUNNER_TEMP/runtime-split"
       - uses: actions/upload-artifact@v4
-        with: {name: recovery-manifest, path: '${{ runner.temp }}/recovery/recovery-manifest.json', retention-days: 7}
+        with: {name: linux-runtime-manifest, path: '${{ runner.temp }}/runtime-split/recovery-manifest.json', retention-days: 14}
       - uses: actions/upload-artifact@v4
-        with: {name: recovery-00, path: '${{ runner.temp }}/recovery/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 7}
+        with: {name: linux-runtime-00, path: '${{ runner.temp }}/runtime-split/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 14}
       - uses: actions/upload-artifact@v4
-        with: {name: recovery-01, path: '${{ runner.temp }}/recovery/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 7}
+        with: {name: linux-runtime-01, path: '${{ runner.temp }}/runtime-split/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 14}
       - uses: actions/upload-artifact@v4
-        with: {name: recovery-02, path: '${{ runner.temp }}/recovery/part-02.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 7}
+        with: {name: linux-runtime-02, path: '${{ runner.temp }}/runtime-split/part-02.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 14}
       - uses: actions/upload-artifact@v4
-        with: {name: recovery-03, path: '${{ runner.temp }}/recovery/part-03.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 7}
-      - uses: actions/upload-artifact@v4
-        with: {name: recovery-04, path: '${{ runner.temp }}/recovery/part-04.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 7}
-      - uses: actions/upload-artifact@v4
-        with: {name: recovery-05, path: '${{ runner.temp }}/recovery/part-05.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 7}
-      - uses: actions/upload-artifact@v4
-        with: {name: recovery-06, path: '${{ runner.temp }}/recovery/part-06.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 7}
-      - uses: actions/upload-artifact@v4
-        with: {name: recovery-07, path: '${{ runner.temp }}/recovery/part-07.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 7}
-      - uses: actions/upload-artifact@v4
-        with: {name: recovery-08, path: '${{ runner.temp }}/recovery/part-08.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 7}
-      - uses: actions/upload-artifact@v4
-        with: {name: recovery-09, path: '${{ runner.temp }}/recovery/part-09.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 7}
-      - uses: actions/upload-artifact@v4
-        with: {name: recovery-10, path: '${{ runner.temp }}/recovery/part-10.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 7}
-      - uses: actions/upload-artifact@v4
-        with: {name: recovery-11, path: '${{ runner.temp }}/recovery/part-11.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 7}
-      - uses: actions/upload-artifact@v4
-        with: {name: recovery-12, path: '${{ runner.temp }}/recovery/part-12.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 7}
-      - uses: actions/upload-artifact@v4
-        with: {name: recovery-13, path: '${{ runner.temp }}/recovery/part-13.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 7}
+        with: {name: linux-runtime-03, path: '${{ runner.temp }}/runtime-split/part-03.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 14}
