@@ -1,0 +1,42 @@
+# Full quality review — active checkpoint, 4 October 2026
+
+Mats authorized a critic team to review all of Ever-Deeper, improve toward 9.5/10, remove obsolete code where useful, and save each change. Continue the work autonomously. Standing source upload and tested DEV publication authorization applies. This is an active review, **not an achieved 9.5 rating or a published release**.
+
+## Canonical runtime and storage
+
+- Repository `Corpax88/Ever-Deeper`; work branch `codex/full-quality-20261004`. Latest durable checkpoints are on that branch. Local and connector commit hashes differ; root checkpoints explicit files through Git objects. Do not push divergent local history.
+- Public DEV remains **15.54**, source `be3a698e0ad8bedb91e877b9932a7bb05b80684a`. Main is a publication carrier with historical runtime; never rebuild it.
+- Immutable base export artifact `11284088414`, run `37151451383`; PCK327687342 bytes, SHA256 `7637ed10116bca208f841c11ea8d9359f4057b925fe2bc20bc1cda9ec267f56d`.
+- Exact baseline recovered locally in `/workspace/scratch/72d2364e7fd1/baseline-recovery/original`; root worktree `/workspace/scratch/72d2364e7fd1/game`; Godot `/workspace/scratch/72d2364e7fd1/runtime/Godot_v4.7.2-stable_linux.x86_64` (4.7.2.stable.official.ed1daf0bf). Scratch paths may expire; Git/Actions receipts are canonical.
+- Sparse source assets are expected. `.github/full-quality/prepare.py` overlays an explicit file list on the immutable original PCK and verifies every retained payload. Production and QA exports are separate. Do not rebuild from the sparse source or publish the QA pack.
+
+## Implemented and checkpointed
+
+| Area | Changes | Evidence / remaining gate |
+|---|---|---|
+| Save reliability | Dirty run saves retry every6s, stale callbacks invalidated, actual failure/recovery UI |33 save-retry,11 status assertions pass natively against exact first candidate |
+| Mod lifecycle | New game clears both DEV override owners; claimed goals retire their own pins |10 real lifecycle and18 goal assertions pass; four owned skins in browser still pending |
+| Mobile UI | Landscape mod cards, fullscreen map,667px menu/Bag/journal sizing, parent-aware Back, Controls help |Actual broad baseline reviewed; integrated browser capture pending |
+| Onboarding | Fresh New Game primary, useful goal action visible, replayable unfinished tutorial with current Skills control |Integrated touch/browser gate pending |
+| Laser | Actual work drains stamina independently of animation |Native regression passes; empty aim/release/menu rest retained |
+| Deep pickup | Paid Chamber radius applies to normal pickup and Vortex |Native real-drop regression passes, including walls and exact-once collection |
+| Corebreaker | Charged strokes continue through a short front after target breaks; newly revealed ore remains intact |Native focused regression passes; retained five-mod suite has one unresolved Chainbreaker rebase assertion |
+| Running achievements | Current Running1/10 or legacy paid speed earns existing lifetime records |11/11 native assertions pass; four description leaves and matching data hash only |
+| Lifetime achievements | Verified temporary write, last-good backup, bounded retry, corrupt-primary recovery |23/23 real disk-fault assertions pass; quiet parser rerun clean |
+| Companion training | Earthshaker feedback does not fabricate a hero swing or Mining XP |Reproduced before fix,4/4 real-world assertions pass after; Tunnel Home same flag included in next map checkpoint |
+
+See the focused change reports and `reliability-native-evidence/` here for receipts. Native tests establish mechanics/state, not graphical or physical-phone acceptance.
+
+## Current team work and next actions
+
+1. QA: first integrated candidate source `911962378a803fa8e2058a5bf1c07b05426ae42d`, run `37191530141`. Native bootstrap failure in completed-goals was fixed in the external test and exact unchanged candidate passed18/18. Six other native cases pass. Investigate retained Chainbreaker coordinate-rebase failure without weakening the requirement.
+2. Gameplay: targeted seven-material hunts in fresh Deep bands, preserving approved100,000 goals. Separate deterministic saved descriptors, legacy-band safeguards and authentic claims first; checkpoint before world integration. Actual acquisition duration remains unmeasured. See `targeted-resource-hunt-plan.md` and `economy-baseline.md`.
+3. UX: replace stale Treasury map snapshot with actual room geometry/podiums and meaningful Surface routes using authored world data. Clear reusable map metadata on every opening; verify actual captures.
+4. Reliability: achievement recovery done; further state-lifetime read-only audit. Add G8/data/recovery/companion source and tests to the second integrated wave.
+5. Final gates: input and premium-core (update only two obsolete claimed-pin expectations in QA overlay), real fresh mine/sell/upgrade/gate journey, truthful earned Ricochet lifecycle/skins, maps/journal/control geometry, ordinary production WebKit, save/reload and comparative gameplay windows. Inspect resulting images and iterate actual failures.
+6. Independent final critique must cover the actual candidate, including remaining missing rewards/content and feel. Unknowns stay unknown; do not derive9.5 from assertion counts. Physical iPhone performance is not established by Mac/Metal.
+7. Only after candidate acceptance, publish the **tested production bytes** to DEV, preserve LIVE/Worn and rollback, verify public hashes, then update this handoff. No release has been published in this review yet.
+
+## Baseline evidence already recovered
+
+Mac baseline run `37190866635` (`dcc480c8fac4229b1db0d61b1134c83e5ab7bc96`) produced124 actual images at667/844/932 CSS widths with real touch and Apple Metal, plus ordinary WebKit startup/save images. Nine assertions were wrong fixture assumptions (Surface terrain, Treasury commerce, old exit) and were corrected transparently. No baseline script errors. Critic reports distinguish inspected frames from total captures. Do not repeat this baseline matrix unchanged.

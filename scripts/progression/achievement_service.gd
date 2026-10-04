@@ -250,7 +250,9 @@ func _read_record_document(path: String) -> Variant:
 	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return null
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	var parser: JSON = JSON.new()
+	if parser.parse(file.get_as_text()) != OK: return null
+	var parsed: Variant = parser.data
 	if not parsed is Dictionary or not parsed.get("records") is Dictionary:
 		return null
 	var restored: Dictionary = {}

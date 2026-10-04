@@ -1,3 +1,5 @@
+Current task — **4 October 2026 full quality review**: [active handoff](full-quality-20261004/HANDOFF.md). Work branch `codex/full-quality-20261004`, critic team and exact-package graphical/native QA active. Public DEV15.54 remains unchanged; canonical source `be3a698e0ad8bedb91e877b9932a7bb05b80684a`. Current review targets9.5/10 but has not established that score. Read this active handoff before the older historical statuses below. Never rebuild main. Source checkpoints and tested DEV publication remain authorized; preserve LIVE/Worn.
+
 Current verified release: [Hero polish DEV15.50](docs/hero-polish/HANDOFF.md). Runtime6ceef595; Mac37066008459; publication37066999206/receipt11253066201 verifies27 public hashes. Eight native pickaxes: two-handed swing, fitted sleeves, matte cloth, grounded cadence. Critic8/10 for pose/fit/appearance; not a physical iPhone/FPS claim. No pending jobs/approvals; permanent GitHub/DEV authorization persists. Never rebuild historical main.
 
 Current task: [Crusher Bore Rush animation](bore-crusher/HANDOFF.md). Actual native candidate and independent critic in progress; public DEV15.45 unchanged.

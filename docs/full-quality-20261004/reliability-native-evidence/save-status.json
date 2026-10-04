@@ -1,0 +1,50 @@
+{
+  "checks": [
+    {
+      "name": "fresh menu has no save-error warning",
+      "passed": true
+    },
+    {
+      "name": "real write obstruction created",
+      "passed": true
+    },
+    {
+      "name": "failed new-run write does not claim disk save",
+      "passed": true
+    },
+    {
+      "name": "pause remains available from memory",
+      "passed": true
+    },
+    {
+      "name": "failed menu write does not claim disk save",
+      "passed": true
+    },
+    {
+      "name": "visible menu reports actual retry",
+      "passed": true
+    },
+    {
+      "name": "fallback menu does not promise autosave",
+      "passed": true
+    },
+    {
+      "name": "real write obstruction removed",
+      "passed": true
+    },
+    {
+      "name": "automatic recovery commits a real file",
+      "passed": true
+    },
+    {
+      "name": "menu clears warning after recovery",
+      "passed": true
+    },
+    {
+      "name": "recovery status is honest",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "scope": "Real isolated headless new-game and pause-menu disk failure/recovery; graphical text fit needs final mobile capture"
+}

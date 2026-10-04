@@ -1,0 +1,47 @@
+{
+  "checks": [
+    {
+      "name": "actual developer command selects Ricochet",
+      "passed": true
+    },
+    {
+      "name": "pause resume preserves test selection",
+      "passed": true
+    },
+    {
+      "name": "release preserves selection and cancels projectile",
+      "passed": true
+    },
+    {
+      "name": "real earned podium selection clears test override",
+      "passed": true
+    },
+    {
+      "name": "earned selection survives travel",
+      "passed": true
+    },
+    {
+      "name": "new game clears Ricochet test override",
+      "passed": true
+    },
+    {
+      "name": "new game clears transient five mod charge",
+      "passed": true
+    },
+    {
+      "name": "new run returns to ordinary tool on reentry",
+      "passed": true
+    },
+    {
+      "name": "new game clears laser override and test toggle",
+      "passed": true
+    },
+    {
+      "name": "new game retains Resonance reset",
+      "passed": true
+    }
+  ],
+  "main_sha256": "3b615ad6c801873456a4f599e7f936d81efb47a24817d1e920d39fdeb937b78e",
+  "passed": true,
+  "scope": "Real headless main, DEV command and podium lifecycle; not native weapon appearance or phone reproduction"
+}

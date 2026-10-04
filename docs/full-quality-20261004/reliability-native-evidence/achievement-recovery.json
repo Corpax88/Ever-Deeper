@@ -1,0 +1,98 @@
+{
+  "checks": [
+    {
+      "name": "first lifetime record commits",
+      "passed": true
+    },
+    {
+      "name": "second lifetime record commits",
+      "passed": true
+    },
+    {
+      "name": "JSON schema and old timestamps retained",
+      "passed": true
+    },
+    {
+      "name": "temporary-path obstruction created",
+      "passed": true
+    },
+    {
+      "name": "failed write 0 is reported",
+      "passed": true
+    },
+    {
+      "name": "failed write 1 is reported",
+      "passed": true
+    },
+    {
+      "name": "failed write 2 is reported",
+      "passed": true
+    },
+    {
+      "name": "failed writes retain previous primary and backup",
+      "passed": true
+    },
+    {
+      "name": "failed writes retain new in-memory record for retry",
+      "passed": true
+    },
+    {
+      "name": "temporary-path obstruction removed",
+      "passed": true
+    },
+    {
+      "name": "automatic retry commits without new achievement",
+      "passed": true
+    },
+    {
+      "name": "retry rotates one valid backup only",
+      "passed": true
+    },
+    {
+      "name": "superseded retry cannot rotate committed generations",
+      "passed": true
+    },
+    {
+      "name": "truncated primary recovers previous lifetime records",
+      "passed": true
+    },
+    {
+      "name": "backup recovery schedules primary repair",
+      "passed": true
+    },
+    {
+      "name": "repair obstruction created",
+      "passed": true
+    },
+    {
+      "name": "failed repair preserves good backup",
+      "passed": true
+    },
+    {
+      "name": "repair obstruction removed",
+      "passed": true
+    },
+    {
+      "name": "repair commits recovered document",
+      "passed": true
+    },
+    {
+      "name": "corrupt primary never replaces recovery backup",
+      "passed": true
+    },
+    {
+      "name": "invalid timestamp recovers backup without partial record merge",
+      "passed": true
+    },
+    {
+      "name": "second corruption can be repaired",
+      "passed": true
+    },
+    {
+      "name": "uncommitted temporary document is never loaded",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "scope": "Real isolated JSON disk faults, bounded retry and previous-good-generation recovery; cannot recover both generations lost or browser storage evicted"
+}

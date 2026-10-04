@@ -1,0 +1,140 @@
+{
+  "checks": [
+    {
+      "name": "first good generation",
+      "passed": true
+    },
+    {
+      "name": "second good generation",
+      "passed": true
+    },
+    {
+      "name": "ordinary saves have no failure notification",
+      "passed": true
+    },
+    {
+      "name": "temporary-path obstruction created",
+      "passed": true
+    },
+    {
+      "name": "autosave reports actual disk failure",
+      "passed": true
+    },
+    {
+      "name": "failed autosave preserves primary",
+      "passed": true
+    },
+    {
+      "name": "failed autosave preserves backup",
+      "passed": true
+    },
+    {
+      "name": "failed autosave remains pending",
+      "passed": true
+    },
+    {
+      "name": "actual failure is signalled once",
+      "passed": true
+    },
+    {
+      "name": "temporary-path obstruction removed",
+      "passed": true
+    },
+    {
+      "name": "automatic recovery commits without another mutation",
+      "passed": true
+    },
+    {
+      "name": "successful recovery clears pending and error",
+      "passed": true
+    },
+    {
+      "name": "recovery is signalled once",
+      "passed": true
+    },
+    {
+      "name": "temporary-path obstruction created",
+      "passed": true
+    },
+    {
+      "name": "explicit failure 0 is reported",
+      "passed": true
+    },
+    {
+      "name": "explicit failure 1 is reported",
+      "passed": true
+    },
+    {
+      "name": "explicit failure 2 is reported",
+      "passed": true
+    },
+    {
+      "name": "repeated error does not spam notifications",
+      "passed": true
+    },
+    {
+      "name": "explicit failure remains pending",
+      "passed": true
+    },
+    {
+      "name": "explicit failures preserve both generations",
+      "passed": true
+    },
+    {
+      "name": "temporary-path obstruction removed",
+      "passed": true
+    },
+    {
+      "name": "explicit failure automatically recovers",
+      "passed": true
+    },
+    {
+      "name": "second recovery is signalled once",
+      "passed": true
+    },
+    {
+      "name": "repeated failures commit only one backup generation",
+      "passed": true
+    },
+    {
+      "name": "stale callback cannot commit newer dirty work",
+      "passed": true
+    },
+    {
+      "name": "explicit success still commits new state",
+      "passed": true
+    },
+    {
+      "name": "stale callback cannot rotate valid backup",
+      "passed": true
+    },
+    {
+      "name": "temporary-path obstruction created",
+      "passed": true
+    },
+    {
+      "name": "failed new-run checkpoint remains pending",
+      "passed": true
+    },
+    {
+      "name": "temporary-path obstruction removed",
+      "passed": true
+    },
+    {
+      "name": "old-run callback cannot consume new-run retry",
+      "passed": true
+    },
+    {
+      "name": "new-run checkpoint automatically recovers",
+      "passed": true
+    },
+    {
+      "name": "new-run error and recovery have one event each",
+      "passed": true
+    }
+  ],
+  "expected_baseline_failure": false,
+  "passed": true,
+  "run_state_sha256": "8cb452b1ac569c1a8a859472a1159dcf02aa97b8406a9ec133dff6d7fb340c70",
+  "scope": "Native real isolated filesystem failure, bounded retry and good-generation protection; not browser storage or phone evidence"
+}
