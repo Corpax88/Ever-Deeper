@@ -127,6 +127,7 @@ var quick_tutorial
 var developer_menu
 var guide_director = GuideDirectorScript.new()
 var inventory_open: = false
+var _inventory_return_to_skills: = false
 var tutorial_open: = false
 var orientation_guard_active: = false
 var guide_update_elapsed: = GUIDE_UPDATE_INTERVAL
@@ -337,6 +338,7 @@ func _install_premium_menu() -> void :
 	premium_menu.continue_requested.connect(_continue_from_menu)
 	premium_menu.new_game_requested.connect(_request_new_game)
 	premium_menu.new_game_confirmed.connect(_start_new_game)
+	premium_menu.settings_back_to_skills.connect(_return_to_skills_from_settings)
 
 
 func _install_developer_menu() -> void :
@@ -488,7 +490,7 @@ func _dev_ensure_playing() -> void :
 	if menu_open:
 		_hide_start_menu()
 	if inventory_open:
-		_close_inventory()
+		_close_inventory(false)
 	if quick_tutorial != null:
 		quick_tutorial.dismiss()
 
@@ -862,12 +864,17 @@ func _asset_button_style(color: Color) -> StyleBoxFlat:
 	return style
 
 
-func _open_inventory() -> void :
-	if deepheart_presentation or tunnel_home_in_progress or automated_mode or menu_open or inventory_open or conclusion_overlay.visible or _shop_panel_is_open() or not commerce_transaction.is_empty() or not game_started:
+func _open_inventory(return_to_skills: bool = false) -> void :
+	var from_skills: bool = return_to_skills and menu_open and miner_skills_panel != null and miner_skills_panel.visible
+	if deepheart_presentation or tunnel_home_in_progress or automated_mode or (menu_open and not from_skills) or inventory_open or conclusion_overlay.visible or _shop_panel_is_open() or not commerce_transaction.is_empty() or not game_started:
 		return
 	AudioDirector.play_ui("open")
 	_cancel_held_input()
 	_deactivate_worlds()
+	_inventory_return_to_skills = from_skills
+	if from_skills:
+		miner_skills_panel.close_panel()
+		menu_open = false
 	inventory_open = true
 	resource_inventory.open_inventory(
 		Dictionary(RunState.cargo),
@@ -878,13 +885,20 @@ func _open_inventory() -> void :
 	guide_overlay.clear_target()
 
 
-func _close_inventory() -> void :
+func _close_inventory(return_to_parent: bool = true) -> void :
 	if not inventory_open:
 		return
 	AudioDirector.play_ui("cancel")
+	var return_to_skills: bool = return_to_parent and _inventory_return_to_skills
+	_inventory_return_to_skills = false
 	inventory_open = false
 	resource_inventory.close_inventory()
-	_resume_current_phase()
+	if return_to_skills:
+		menu_open = true
+		premium_menu.visible = false
+		miner_skills_panel.open_panel()
+	else:
+		_resume_current_phase()
 
 
 func _progression_goal() -> Dictionary:
@@ -1225,6 +1239,8 @@ func _unhandled_input(event: InputEvent) -> void :
 	if not event.is_action_pressed("ui_cancel"):
 		return
 	get_viewport().set_input_as_handled()
+	if premium_menu != null and premium_menu.visible and premium_menu.navigate_back():
+		return
 	if new_game_confirm.visible:
 		new_game_confirm.visible = false
 		AudioDirector.play_ui("cancel")
@@ -1313,6 +1329,7 @@ func _continue_from_menu() -> void :
 
 
 func _hide_start_menu() -> void :
+	_inventory_return_to_skills = false
 	if miner_skills_panel != null: miner_skills_panel.close_panel()
 	menu_open = false
 	start_menu.visible = false
@@ -4020,7 +4037,7 @@ func _on_achievement_toast_activated(achievement_id: String) -> void :
 	if conclusion_overlay.visible or automated_mode:
 		return
 	if inventory_open:
-		_close_inventory()
+		_close_inventory(false)
 	if not menu_open:
 		_open_start_menu()
 	if menu_open and premium_menu != null:
@@ -4278,14 +4295,11 @@ func _install_miner_skills() -> void:
 		if is_instance_valid(developer_menu): developer_menu.visible = not miner_skills_panel.visible
 	)
 	miner_skills_panel.close_requested.connect(_close_miner_skills)
-	miner_skills_panel.inventory_requested.connect(func():
-		_close_miner_skills()
-		_open_inventory()
-	)
+	miner_skills_panel.inventory_requested.connect(_open_inventory.bind(true))
 	miner_skills_panel.settings_requested.connect(func():
 		miner_skills_panel.close_panel()
 		premium_menu.visible = true
-		premium_menu._show_settings()
+		premium_menu._show_settings(true)
 	)
 	miner_skills_panel.map_requested.connect(func(): miner_skills_panel.show_map(minimap_overlay))
 	var training = preload("res://scripts/progression/miner_training.gd").new()
@@ -4310,6 +4324,11 @@ func _open_miner_skills() -> void:
 func _close_miner_skills() -> void:
 	miner_skills_panel.close_panel()
 	_continue_from_menu()
+
+
+func _return_to_skills_from_settings() -> void:
+	if not menu_open or not game_started: return
+	miner_skills_panel.open_panel()
 
 func _map_markers() -> Array:
 	var result: Array=[]

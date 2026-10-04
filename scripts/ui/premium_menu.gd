@@ -4,6 +4,7 @@ extends Control
 signal continue_requested
 signal new_game_requested
 signal new_game_confirmed
+signal settings_back_to_skills
 
 const LOGO: = preload("res://assets/branding/ever-deeper-logo.png")
 const GOLD: = Color("d7b45a")
@@ -45,6 +46,7 @@ var achievement_rows: Dictionary = {}
 var achievement_highlight_id: = ""
 var achievement_highlight_tween: Tween
 var _pause_mode: = false
+var _settings_parent_is_skills: = false
 var audio_director: Node
 var achievement_service: Node
 
@@ -72,6 +74,7 @@ func open_menu(has_save: bool, location: String, is_pause: bool, storage_uncerta
 	# GUI picking follows sibling order, not z_index. Keep the modal above the HUD.
 	move_to_front()
 	_pause_mode = is_pause
+	_settings_parent_is_skills = false
 	visible = true
 	main_view.visible = true
 	detail_view.visible = false
@@ -121,6 +124,22 @@ func is_confirming() -> bool:
 func cancel_confirmation() -> void :
 	confirm_view.visible = false
 	audio_director.play_ui("cancel")
+
+
+func navigate_back() -> bool:
+	if is_confirming():
+		cancel_confirmation()
+		return true
+	if not visible or not detail_view.visible:
+		return false
+	audio_director.play_ui("cancel")
+	if detail_title.text == "SETTINGS" and _settings_parent_is_skills:
+		_clear_detail_body()
+		visible = false
+		settings_back_to_skills.emit()
+	else:
+		_show_main_view()
+	return true
 
 
 func _build_backdrop() -> void :
@@ -305,10 +324,7 @@ func _build_detail_view() -> void :
 	back.name = "Back"
 	back.position = Vector2(410, 526)
 	back.size = Vector2(220, 52)
-	back.pressed.connect( func():
-		audio_director.play_ui("cancel")
-		_show_main_view()
-	)
+	back.pressed.connect(navigate_back)
 	card.add_child(back)
 
 
@@ -524,6 +540,7 @@ func _place(control: Control, rect: Rect2) -> void :
 
 
 func _show_main_view() -> void :
+	_settings_parent_is_skills = false
 	_clear_detail_body()
 	detail_view.visible = false
 	main_view.visible = true
@@ -543,7 +560,8 @@ func _refresh_main_action() -> void:
 		continue_button.grab_focus()
 
 
-func _show_settings() -> void :
+func _show_settings(from_skills: bool = false) -> void :
+	_settings_parent_is_skills = from_skills
 	main_view.visible = false
 	detail_view.visible = true
 	detail_title.text = "SETTINGS"
