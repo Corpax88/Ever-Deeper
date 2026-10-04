@@ -2673,8 +2673,8 @@ func deserialize(raw: Variant) -> bool:
 	_apply_defaults(false)
 	map_explored = preload("res://scripts/ui/exploration_map.gd").clean(source.get("map_explored", {}))
 	overhaul_progress = _sanitize_overhaul(source.get("overhaul", {}))
-	treasury_goals = preload("res://scripts/state/treasury_goals.gd").clean(source.get("treasury_goals",{}))
 	treasury_totals = preload("res://scripts/state/treasury_state.gd").clean(source.get("treasury", {}))
+	treasury_goals = preload("res://scripts/state/treasury_goals.gd").clean(source.get("treasury_goals",{}),treasury_totals)
 	treasury_inside = source.get("treasury_inside", false) == true and String(Dictionary(source.get("location", {})).get("scene", "")) == "hub"
 	deep_events = preload("res://scripts/world/deep_events.gd").clean(source.get("deep_events", {}))
 	gold = _nonnegative_int(source.get("gold"), 0)

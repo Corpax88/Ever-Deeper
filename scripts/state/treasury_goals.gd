@@ -6,7 +6,7 @@ const Seams = preload("res://scripts/state/treasury_seams.gd")
 const MODS: Dictionary = {"wallet_gold":"resonance", "burrowsteel":"bore_rush", "prismite":"laser", "rootiron":"twin_auger", "echo_crystal":"chainbreaker", "phasecrystal":"ricochet", "deep_alloy":"corebreaker", "singularity":"vortex"}
 const NAMES: Dictionary = {"resonance":"Resonance", "bore_rush":"Bore Rush", "laser":"Laser", "twin_auger":"Twin Auger", "chainbreaker":"Chainbreaker", "ricochet":"Ricochet", "corebreaker":"Corebreaker", "vortex":"Vortex"}
 
-static func clean(raw: Variant) -> Dictionary:
+static func clean(raw: Variant, totals: Dictionary = {}) -> Dictionary:
 	var result: Dictionary = {"pinned":"", "laser_mode":false}
 	if not raw is Dictionary: raw = {}
 	if raw.get("pinned", "") is String and raw.get("pinned", "") in Ledger.keys(): result.pinned = raw.pinned
@@ -19,7 +19,15 @@ static func clean(raw: Variant) -> Dictionary:
 	var pinned_mod: String = mod_id(String(result.pinned))
 	if not pinned_mod.is_empty() and bool(result.get(pinned_mod+"_claimed",false)):
 		result.pinned = ""
+	if completed_collection(String(result.pinned),totals): result.pinned = ""
 	return result
+
+static func completed_collection(kind: String, totals: Dictionary) -> bool:
+	return not kind.is_empty() and mod_id(kind).is_empty() and int(totals.get(kind,0)) >= Stack.GOAL
+
+static func retire_completed_collection_pin() -> void:
+	if completed_collection(String(RunState.treasury_goals.get("pinned","")),RunState.treasury_totals):
+		RunState.treasury_goals.pinned = ""
 
 static func mod_id(kind: String) -> String:
 	return String(MODS.get(kind,""))
@@ -80,6 +88,7 @@ static func _original_sources(kind: String) -> String:
 
 static func pin(kind: String) -> void:
 	if kind not in Ledger.keys() or not RunState.victory: return
+	if completed_collection(kind,RunState.treasury_totals): return
 	var id: String = mod_id(kind)
 	if not id.is_empty() and bool(RunState.treasury_goals.get(id+"_claimed",false)): return
 	RunState.treasury_goals.pinned = "" if RunState.treasury_goals.get("pinned", "") == kind else kind
@@ -94,6 +103,7 @@ static func toggle_resonance() -> void:
 static func hud_goal() -> Dictionary:
 	var kind: String = String(RunState.treasury_goals.get("pinned",""))
 	if kind not in Ledger.keys() or not RunState.victory: return {}
+	if completed_collection(kind,RunState.treasury_totals): return {}
 	var id: String = mod_id(kind)
 	if not id.is_empty() and bool(RunState.treasury_goals.get(id+"_claimed",false)): return {}
 	var delivered: int = mini(Stack.GOAL,int(RunState.treasury_totals.get(kind,0)))

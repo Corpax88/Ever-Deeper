@@ -35,5 +35,8 @@ static func land(kind: String, requested: int) -> int:
 	if kind == WALLET: RunState.gold -= amount
 	else: RunState.cargo[kind] = available(kind) - amount
 	RunState.treasury_totals[kind] = stored + amount
+	# Goals already owns the collection/mod distinction. Resolve lazily because
+	# its static catalog also preloads this ledger.
+	load("res://scripts/state/treasury_goals.gd").retire_completed_collection_pin()
 	RunState._state_changed()
 	return amount
