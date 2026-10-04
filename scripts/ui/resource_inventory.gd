@@ -9,7 +9,7 @@ const GOLD_BRIGHT: = Color("ffe3a0")
 const MINT: = Color("a8e3bc")
 const MUTED: = Color("789384")
 const CARD: = Color("0c2117")
-const IPHONE_LANDSCAPE_ASPECT: = 1.95
+const IPHONE_LANDSCAPE_ASPECT: = 1.65
 
 var item_grid: GridContainer
 var summary_label: Label
@@ -208,7 +208,8 @@ func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void :
 	var kicker: Label = inventory_card.get_node("Layout/Header/Titles/Kicker") as Label
 	var equipped_kicker: Label = inventory_card.get_node("Layout/EquippedTool/Row/EquippedCopy/Kicker") as Label
 	if iphone:
-		_place(inventory_card, Rect2(118, 24, viewport_size.x - 236, viewport_size.y - 48))
+		var side_inset: float = 118.0 if viewport_size.x / viewport_size.y >= 1.95 else 32.0
+		_place(inventory_card, Rect2(side_inset, 24, viewport_size.x - side_inset * 2.0, viewport_size.y - 48))
 		layout.add_theme_constant_override("separation", 8)
 		header.custom_minimum_size.y = 76
 		close_button.custom_minimum_size = Vector2(132, 86)
@@ -267,7 +268,8 @@ func apply_iphone_layout_for_test(viewport_size: Vector2) -> Dictionary:
 
 func layout_snapshot(viewport_size: Vector2) -> Dictionary:
 	var iphone: = viewport_size.x / maxf(viewport_size.y, 1.0) >= IPHONE_LANDSCAPE_ASPECT
-	var card_rect: = Rect2(118, 24, viewport_size.x - 236, viewport_size.y - 48) if iphone else Rect2(viewport_size * Vector2(0.035, 0.07), viewport_size * Vector2(0.93, 0.895))
+	var side_inset: float = 118.0 if viewport_size.x / maxf(viewport_size.y, 1.0) >= 1.95 else 32.0
+	var card_rect: = Rect2(side_inset, 24, viewport_size.x - side_inset * 2.0, viewport_size.y - 48) if iphone else Rect2(viewport_size * Vector2(0.035, 0.07), viewport_size * Vector2(0.93, 0.895))
 	return {
 		"iphone": iphone,
 		"safe_rect": Rect2(110, 18, viewport_size.x - 220, viewport_size.y - 36),

@@ -143,7 +143,8 @@ func _label(parent: Node,text_value: String,font_size: int,bold: bool=false) -> 
 	var l=Label.new()
 	l.text=text_value
 	l.add_theme_font_override("font",TITLE if bold else FONT)
-	l.add_theme_font_size_override("font_size",font_size)
+	# The authored journal is 1420 units wide: 26 is readable even at667px.
+	l.add_theme_font_size_override("font_size",maxi(font_size,26))
 	l.add_theme_color_override("font_color",INK)
 	l.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	parent.add_child(l)
@@ -161,9 +162,9 @@ func _style(color: Color) -> StyleBoxFlat:
 func _button(parent: Node,text_value: String,callback: Callable) -> Button:
 	var b=Button.new()
 	b.text=text_value
-	b.custom_minimum_size=Vector2(0,75)
+	b.custom_minimum_size=Vector2(0,96)
 	b.add_theme_font_override("font",FONT)
-	b.add_theme_font_size_override("font_size",18)
+	b.add_theme_font_size_override("font_size",26)
 	b.add_theme_color_override("font_color",INK)
 	b.add_theme_color_override("font_hover_color",INK)
 	b.add_theme_color_override("font_pressed_color",INK)
@@ -193,10 +194,10 @@ func _layout() -> void:
 	points.position=Vector2(130,509);points.size=Vector2(315,26)
 	tally.position=Vector2(175,545);tally.size=Vector2(250,32)
 	for i in tabs.size():
-		tabs[i].position=Vector2(494+i*244,130);tabs[i].size=Vector2(228,75)
+		tabs[i].position=Vector2(494+i*244,130);tabs[i].size=Vector2(228,96)
 	var close_button: Button=content.get_node("CloseJournal")
-	close_button.position=Vector2(1190,52);close_button.size=Vector2(126,75)
-	body.position=Vector2(495,210);body.size=Vector2(808,350)
+	close_button.position=Vector2(1248,28);close_button.size=Vector2(126,96)
+	body.position=Vector2(495,238);body.size=Vector2(808,322)
 	notice.position=Vector2(492,566);notice.size=Vector2(808,36)
 
 func is_open() -> bool: return visible
@@ -242,31 +243,48 @@ func select_tab(id: String) -> void:
 func _together() -> void:
 	var heading=_label(body,"Your little helper, ready to go.",25,true)
 	heading.position=Vector2(0,0)
-	var description=_label(body,"I use my learned skills as we explore and mine.\nCommands are optional. You choose when we go home.",19)
-	description.position=Vector2(0,42);description.size=Vector2(800,44)
-	status=_label(body,"",20,true);status.position=Vector2(0,88);status.size=Vector2(790,28)
+	var description=_label(body,"Learned skills help automatically. Commands are optional.",26)
+	description.position=Vector2(0,42);description.size=Vector2(800,36)
+	status=_label(body,"",26,true);status.position=Vector2(0,80);status.size=Vector2(790,32)
+	var command_scroll=preload("res://scripts/ui/touch_scroll_container.gd").new()
+	command_scroll.position=Vector2(0,120);command_scroll.size=Vector2(808,202)
+	command_scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	body.add_child(command_scroll)
+	var commands=GridContainer.new();commands.columns=2
+	commands.custom_minimum_size.x=792
+	commands.add_theme_constant_override("h_separation",10)
+	commands.add_theme_constant_override("v_separation",10)
+	command_scroll.add_child(commands)
 	var home_label: String = "Tunnel Home" if RunState.current_scene == "endless" else "Lead me home"
 	var definitions=[['fetch','Come here','Always ready'],['shake','Dig together','8-second recharge'],['ore_nose','Find ore','Sniff out a vein'],['homeward',home_label,'Bring your attached relic'],['echo','Find passage','Point the way deeper']]
 	for i in definitions.size():
 		var row: Array=definitions[i]
 		var skill_id: String=row[0]
 		var owned: bool=Skills.has_skill(skill_id)
-		var b=_button(body,String(row[1]) if owned else String(row[1])+" · learn first",func(): command_requested.emit(skill_id))
+		var b=_button(commands,String(row[1]) if owned else String(row[1])+" · learn first",func(): command_requested.emit(skill_id))
 		b.name="Command_"+skill_id
-		b.position=Vector2((i%2)*406,120+(i/2)*77)
-		b.size=Vector2(394,75)
+		b.custom_minimum_size=Vector2(391,96)
 		b.disabled=not owned
 		if skill_id=="shake": b.tooltip_text="I help automatically while you mine. You can also ask me to dig here."
 
 func _how() -> void:
+	var help_scroll=preload("res://scripts/ui/touch_scroll_container.gd").new()
+	help_scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	help_scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	body.add_child(help_scroll)
+	var paragraphs=VBoxContainer.new();paragraphs.custom_minimum_size.x=780
+	paragraphs.add_theme_constant_override("separation",12)
+	help_scroll.add_child(paragraphs)
 	var lines=[
 		["1. Your shadow with little paws", "I follow and light nearby tunnels automatically. Loose ore goes straight into your backpack."],
 		["2. Your work is my cue", "Mine a wall and I use Earthshaker and Teamwork when ready. Explore and I sniff out ore and point the way deeper."],
 		["3. Learn it once. Feel it every trip.", "Learned skills help automatically. I stay close, finish fetching and return when you move on. Mining earns paw points."],
 		["4. A little nudge, if you want", "Tap a spot or use Together for an optional command. Tunnel Home waits for your choice; I never take you away mid-dig."]]
 	for i in lines.size():
-		var h=_label(body,lines[i][0],21,true);h.position=Vector2(0,i*88)
-		var d=_label(body,lines[i][1],17);d.position=Vector2(0,i*88+31);d.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;d.set_deferred("size",Vector2(800,53))
+		_label(paragraphs,lines[i][0],28,true)
+		var d=_label(paragraphs,lines[i][1],26)
+		d.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+		d.custom_minimum_size.x=780
 
 func _skills() -> void:
 	scroll=preload("res://scripts/ui/touch_scroll_container.gd").new()
@@ -336,7 +354,7 @@ func _update_live() -> void:
 		if status!=null:
 			status.text=mole.status_text()
 			if Skills.has_skill("shake"): status.text+="  ·  "+("Auto dig ready" if mole.shake_cooldown<=0.0 else "Auto dig · %ds" % ceili(mole.shake_cooldown))
-		var shake_button=body.get_node_or_null("Command_shake")
+		var shake_button=body.find_child("Command_shake",true,false)
 		if shake_button!=null and Skills.has_skill("shake"):
 			shake_button.disabled=mole.shake_cooldown>0.0
 			shake_button.text="Dig together" if mole.shake_cooldown<=0.0 else "Resting paws · %ds" % ceili(mole.shake_cooldown)
