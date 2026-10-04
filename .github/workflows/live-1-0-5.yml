@@ -14,9 +14,9 @@ jobs:
         with: {persist-credentials: false}
       - uses: actions/download-artifact@v4
         with:
-          artifact-ids: '11312268748'
+          artifact-ids: '11316683314'
           merge-multiple: true
-          run-id: '37227129258'
+          run-id: '37239148524'
           github-token: '${{ github.token }}'
           path: '${{ runner.temp }}/original'
       - uses: actions/download-artifact@v4
@@ -26,7 +26,7 @@ jobs:
           run-id: '36867669696'
           github-token: '${{ github.token }}'
           path: '${{ runner.temp }}/legacy'
-      - run: python3 .github/live-1-0-5/build.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/candidate"
+      - run: python3 .github/live-1-0-5/share-engine.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/candidate"
       - run: |
           curl -L --fail --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip -o "$RUNNER_TEMP/godot.zip"
           unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
