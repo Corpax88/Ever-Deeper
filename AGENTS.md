@@ -1,3 +1,9 @@
+Current LIVE release: [LIVE1.0.5](docs/live-1-0-5/HANDOFF.md), published and verified5October2026. Promotes all approved DEV15.56 content; existing LIVE saves continue, DEV remains separate. Source858659174db5a359e4c461526b819e200de1e398, QA37239741887, artifact11317221752. Publicationfe352c8d3ee8c7cbb26cb3963f6a8a3e8ae4bde0/run37240619358; receipt11317322246 verifies26 public files and preserves all9DEV15.56/all9Worn. LIVE shares unchanged dev/index.wasm, dev/index.js and DEV audio worklets; redundant root index.wasm is intentionally omitted. Future publishers must retain this dependency and use26-file baselines. Prior LIVE1.0.4 rollback11317731276 is self-contained.
+
+Mac input/414core/production flavor/341migration/25browser observations and ordinaryWebKit passed;16final captures inspected. Linux fallback fixture XP-persistence failure reproduces on unchanged LIVE1.0.4; documented, not counted green. No physical-iPhone/FPS claim. Website published: source141993fc3db781cd884268d90c0d1377a4cb6a17, Site version9/deployment appgdep_6ac2d5b6116c8191a1bbac2d8aa36597. No pending jobs in this release task. Main remains publication carrier; never export historical main or repeat accepted unchanged work.
+
+---
+
 # Standing release rule — update the website with every release
 
 Mats requires every newly published Ever-Deeper DEV or LIVE update to be documented and published on the existing website in the same release task, without a separate request. Follow [the website release workflow](docs/WEBSITE-RELEASE.md). Include the current version, actual changes and known limits; preserve historical content and current audience. Confirm successful Site publication and record its receipt before marking the release task fully complete. If blocked, report the unfinished website step accurately. This instruction was added on 4 October 2026 and supersedes older separate-request website notes below.
