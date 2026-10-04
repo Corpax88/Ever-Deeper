@@ -1,5 +1,6 @@
 """Publish accepted DEV15.56 artifact bytes; never export the main checkout."""
 import hashlib
+import http.client
 import io
 import json
 import os
@@ -10,6 +11,7 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
 import urllib.request
+import urllib.error
 import zipfile
 
 HERE = Path(__file__).resolve().parent
@@ -191,15 +193,33 @@ def validate(artifacts):
 
 def fetch(name, path, want):
     path.parent.mkdir(parents=True, exist_ok=True)
-    request = urllib.request.Request(PUBLIC + name, headers={'Cache-Control': 'no-cache'})
-    h, size = hashlib.sha256(), 0
-    with urllib.request.urlopen(request, timeout=120) as src, path.open('wb') as out:
-        while block := src.read(1024 * 1024):
-            size += len(block)
-            require(size <= want['size'], 'Unexpected public size: ' + name)
-            h.update(block)
-            out.write(block)
-    require({'size': size, 'sha256': h.hexdigest()} == want, 'Public content changed: ' + name)
+    partial = path.with_name(path.name + '.download')
+    for attempt in range(3):
+        request = urllib.request.Request(PUBLIC + name, headers={'Cache-Control': 'no-cache'})
+        h, size = hashlib.sha256(), 0
+        try:
+            print('QUALITY2_FETCH', name, 'attempt', attempt + 1, flush=True)
+            with urllib.request.urlopen(request, timeout=45) as src, partial.open('wb') as out:
+                while block := src.read(1024 * 1024):
+                    size += len(block)
+                    require(size <= want['size'], 'Unexpected public size: ' + name)
+                    h.update(block)
+                    out.write(block)
+                out.flush()
+                os.fsync(out.fileno())
+            require({'size': size, 'sha256': h.hexdigest()} == want, 'Public content changed: ' + name)
+            os.replace(partial, path)
+            print('QUALITY2_FETCH_VERIFIED', name, flush=True)
+            return
+        except (urllib.error.URLError, TimeoutError, ConnectionError, http.client.IncompleteRead) as error:
+            if isinstance(error, urllib.error.HTTPError) and error.code not in (429, 500, 502, 503, 504):
+                raise
+            print('QUALITY2_FETCH_RETRY', name, type(error).__name__, flush=True)
+            if attempt == 2:
+                raise RuntimeError('Public transfer failed after three attempts: ' + name) from error
+            time.sleep(2 ** attempt)
+        finally:
+            partial.unlink(missing_ok=True)
 
 
 def prepare(work, artifacts):
