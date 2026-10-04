@@ -5,7 +5,7 @@ const Stack = preload("res://scripts/world/treasury_stack.gd")
 const Catalog = preload("res://scripts/ui/mod_preview_catalog.gd")
 const ResourceScale = preload("res://scripts/world/resource_scale.gd")
 const FONT = preload("res://assets/ui/fonts/EBGaramond.ttf")
-const DESIGN = Vector2(1000,720)
+const DESIGN = Vector2(1000,940)
 var main: Node
 var kind: String = ""
 var panel: Control
@@ -15,6 +15,7 @@ var title: Label
 var progress: Label
 var detail: Label
 var source: Label
+var equipped: Label
 var preview: TextureRect
 var preview_back: TextureRect
 var collection_icon: TextureRect
@@ -93,6 +94,7 @@ func setup(owner_main: Node) -> void:
 	panel.add_child(progress_bar)
 	_place(progress_bar,Rect2(86,438,828,18))
 	progress = _label(27,Rect2(55,463,890,34))
+	equipped = _label(26,Rect2(52,795,896,48))
 	claim_button = _button("CLAIM RESONANCE",Rect2(230,501,540,62),_claim,true)
 	pin_button = _button("TRACK GOAL",Rect2(267,569,466,46),func(): Goals.pin(kind); refresh())
 	close_button = _button("CLOSE",Rect2(277,621,446,40),close_panel)
@@ -202,16 +204,18 @@ func _layout_landscape(design: Vector2) -> void:
 	_place(detail,Rect2(right_x,157,right_width,118))
 	detail.add_theme_font_size_override("font_size",29)
 	_place(progress_bar,Rect2(right_x+10,288,right_width-20,20))
-	_place(progress,Rect2(right_x,320,right_width,44))
-	progress.add_theme_font_size_override("font_size",29)
-	_place(claim_button,Rect2(right_x,378,right_width,96))
-	_place(pin_button,Rect2(right_x,486,right_width,92))
-	_place(close_button,Rect2(right_x,590,right_width,92))
+	_place(progress,Rect2(right_x,314,right_width,78))
+	progress.add_theme_font_size_override("font_size",27)
+	_place(claim_button,Rect2(right_x,400,right_width,92))
+	_place(pin_button,Rect2(right_x,502,right_width,92))
+	_place(close_button,Rect2(right_x,604,right_width,92))
 	claim_button.add_theme_font_size_override("font_size",30)
 	pin_button.add_theme_font_size_override("font_size",29)
 	close_button.add_theme_font_size_override("font_size",29)
-	_place(source,Rect2(52,554,left_width-8,118))
-	source.add_theme_font_size_override("font_size",29)
+	_place(equipped,Rect2(52,546,left_width-8,70))
+	equipped.add_theme_font_size_override("font_size",24)
+	source.add_theme_font_size_override("font_size",24 if equipped.visible else 29)
+	_place(source,Rect2(52,622 if equipped.visible else 554,left_width-8,80 if equipped.visible else 118))
 
 func _layout_portrait() -> void:
 	_place(heading,Rect2(48,29,904,36))
@@ -220,19 +224,21 @@ func _layout_portrait() -> void:
 	_place(preview_back,Rect2(44,146,912,240))
 	_place(preview,Rect2(48,146,904,240))
 	_place(collection_icon,Rect2(390,158,220,220))
-	_place(detail,Rect2(52,391,896,40))
+	_place(detail,Rect2(52,395,896,92))
 	detail.add_theme_font_size_override("font_size",25)
-	_place(progress_bar,Rect2(86,438,828,18))
-	_place(progress,Rect2(55,463,890,34))
+	_place(progress_bar,Rect2(86,497,828,18))
+	_place(progress,Rect2(55,524,890,80))
 	progress.add_theme_font_size_override("font_size",27)
-	_place(claim_button,Rect2(230,501,540,62))
-	_place(pin_button,Rect2(267,569,466,46))
-	_place(close_button,Rect2(277,621,446,40))
+	_place(claim_button,Rect2(230,605,540,62))
+	_place(pin_button,Rect2(267,678,466,46))
+	_place(close_button,Rect2(277,735,446,44))
 	claim_button.add_theme_font_size_override("font_size",30)
 	pin_button.add_theme_font_size_override("font_size",25)
 	close_button.add_theme_font_size_override("font_size",25)
-	_place(source,Rect2(55,666,890,27))
+	_place(equipped,Rect2(52,795,896,66))
+	equipped.add_theme_font_size_override("font_size",23)
 	source.add_theme_font_size_override("font_size",20)
+	_place(source,Rect2(55,866,890,58))
 
 func open_goal(resource: String) -> void:
 	if resource not in Goals.Ledger.keys() or main.menu_open: return
@@ -246,7 +252,9 @@ func open_goal(resource: String) -> void:
 func refresh() -> void:
 	heading.text=Goals.label(kind).to_upper()+" · TREASURY"
 	var stored: int=int(RunState.treasury_totals.get(kind,0))
-	progress.text="%s / %s delivered" % [_number(mini(stored,Stack.GOAL)),_number(Stack.GOAL)]
+	var remaining: int=maxi(0,Stack.GOAL-stored)
+	var held: int=Goals.Ledger.available(kind)
+	progress.text="%s / %s delivered\n%s held · %s" % [_number(mini(stored,Stack.GOAL)),_number(Stack.GOAL),_number(held),_number(remaining)+" to deliver" if remaining>0 else "Podium full"]
 	progress_bar.value=clampi(stored,0,Stack.GOAL)
 	source.text="Find it: "+Goals.sources(kind)
 	var data: Dictionary=Catalog.preview(kind)
@@ -265,18 +273,21 @@ func refresh() -> void:
 		else:
 			var resource_path: String=RunState._resource_drop_texture_path(kind)
 			collection_icon.texture=load(resource_path) if ResourceLoader.exists(resource_path) else null
-	title.text=String(data.get("title","COLLECTION"))
-	detail.text=String(data.get("description","Fill this podium, one piece at a time."))
+	title.text=String(data.get("title",Goals.label(kind).to_upper()+" COLLECTION"))
+	detail.text=String(data.get("description","Fill this podium to complete a permanent display in your Treasury."))
 	if preview.visible: preview.texture=_png(String(data.art))
 	var id: String=Goals.mod_id(kind)
 	claim_button.visible=not id.is_empty()
+	equipped.visible=claim_button.visible
 	if claim_button.visible:
 		var claimed: bool=bool(RunState.treasury_goals.get(id+"_claimed",false))
-		claim_button.text=(String(Goals.NAMES[id]).to_upper()+": "+("ON" if Goals.active_mod()==id else "OFF")) if claimed else "CLAIM "+String(Goals.NAMES[id]).to_upper() if stored>=Stack.GOAL else "FILL PODIUM TO UNLOCK"
+		var active: String=Goals.active_mod()
+		claim_button.text=("UNEQUIP" if active==id else "EQUIP") if claimed else "CLAIM & EQUIP" if stored>=Stack.GOAL else "FILL PODIUM TO UNLOCK"
+		equipped.text="Equipped: %s\n%s" % [String(Goals.NAMES.get(active,"None")),"One mod at a time; equipping replaces it." if not active.is_empty() and active!=id else "One mod at a time."]
 		claim_button.disabled=not claimed and stored<Stack.GOAL
 		claim_button.get_meta("frame").modulate=Color(0.45,0.45,0.45) if claim_button.disabled else Color.WHITE
 	elif stored>=Stack.GOAL:
-		detail.text="COLLECTION COMPLETE"
+		detail.text="Your permanent Treasury display is complete. This collection stays on show."
 	var collection_complete: bool=Goals.completed_collection(kind,RunState.treasury_totals)
 	var mod_claimed: bool=not id.is_empty() and bool(RunState.treasury_goals.get(id+"_claimed",false))
 	pin_button.disabled=collection_complete or mod_claimed
@@ -295,8 +306,14 @@ func _number(value: int) -> String:
 func _claim() -> void:
 	var id: String=Goals.mod_id(kind)
 	if id.is_empty(): return
-	if bool(RunState.treasury_goals.get(id+"_claimed",false)): Goals.toggle(kind)
-	else: Goals.claim(kind)
+	if bool(RunState.treasury_goals.get(id+"_claimed",false)):
+		Goals.toggle(kind)
+		AudioDirector.play_ui("confirm")
+	else:
+		if not Goals.claim(kind):
+			AudioDirector.play_blocked()
+			return
+		AudioDirector.play_economy("upgrade")
 	main.endless_world.resonance_drill.dev_override=false
 	main.endless_world.resonance_drill.set_enabled(Goals.active_mod()=="resonance")
 	main.endless_world.drill_modes.dev_override=""
