@@ -708,12 +708,12 @@ func _add_volume_control(title: String, value: int, y: float) -> HSlider:
 
 
 func show_achievements(highlight_id: String = "") -> void :
-	achievement_highlight_id = highlight_id
 	achievement_service.evaluate()
 	main_view.visible = false
 	detail_view.visible = true
 	detail_title.text = "ACHIEVEMENTS"
 	_clear_detail_body()
+	achievement_highlight_id = highlight_id
 	achievement_count_label = _label("", 24 if _iphone_layout_active() else 10, GOLD, HORIZONTAL_ALIGNMENT_CENTER)
 	achievement_count_label.position = Vector2(0, -6)
 	achievement_count_label.size = Vector2(880, 28)

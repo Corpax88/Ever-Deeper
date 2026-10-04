@@ -1,0 +1,37 @@
+{
+  "scope": "Native headless structural map regression; no visual acceptance",
+  "source_checkpoint": "56c3158 (remote e7a1a7ab)",
+  "base": {
+    "size": 327754614,
+    "sha256": "6ae03b7870593a88b3f15d77a5d6cb615ea36942b2b22445db5f8514d0cc96b7"
+  },
+  "candidate": {
+    "size": 327765494,
+    "sha256": "8fd0bb4d938cb6e087c675c4db567448f88a6c1e9b9ed1aa18059892fef2d2c7"
+  },
+  "source_payloads": {
+    "scripts/main.gd": {
+      "size": 179220,
+      "sha256": "2b68cbd7c5f0e4a3e7f6fa3e40b5933fc825749f8b8b19e10746a372345a6cac"
+    },
+    "scripts/ui/miner_skills_panel.gd": {
+      "size": 19272,
+      "sha256": "2fde5b4b373a98e8548586b277d0f11537301f85b34a4220e93e351d8853737f"
+    },
+    "scripts/ui/minimap_overlay.gd": {
+      "size": 17278,
+      "sha256": "6cf39c5fa1a99c2279331315c5b869e2038210db7eb8d178b25b0bbab460bfd6"
+    }
+  },
+  "all_other_payloads_byte_verified_retained": true,
+  "engine": "Godot 4.7.2 stable official ed1daf0bf",
+  "engine_mode": "headless Linux",
+  "checks": 13,
+  "passed": true,
+  "fixture": {
+    "size": 3380,
+    "sha256": "27dbf26b5b893b8324ffcf917e55cfa8aa95ccf5b6117530ee88e816665e3f87"
+  },
+  "isolated_data": "/workspace/scratch/72d2364e7fd1/ux-map-check/isolated-data",
+  "command": "XDG_DATA_HOME=/workspace/scratch/72d2364e7fd1/ux-map-check/isolated-data /workspace/scratch/72d2364e7fd1/runtime/Godot_v4.7.2-stable_linux.x86_64 --headless --path /workspace/scratch/72d2364e7fd1/game --main-pack /workspace/scratch/72d2364e7fd1/ux-map-check/index.pck --script /workspace/scratch/72d2364e7fd1/ux-map-check/review.gd --log-file /workspace/scratch/72d2364e7fd1/ux-map-check/review.log"
+}
