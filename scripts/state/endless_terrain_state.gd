@@ -6,6 +6,7 @@ extends RefCounted
 const CELL_COUNT: int = 880
 const HEX_COUNT: int = CELL_COUNT / 4
 const HEX: String = "0123456789abcdef"
+const TreasurySeams = preload("res://scripts/state/treasury_seams.gd")
 
 
 static func empty_chunk() -> Dictionary:
@@ -40,7 +41,7 @@ static func mark(mask: String, cell: int) -> String:
 	return padded.substr(0, digit) + HEX[value] + padded.substr(digit + 1)
 
 
-static func sanitize(raw: Variant, max_depth: int) -> Dictionary:
+static func sanitize(raw: Variant, max_depth: int, world_seed: int = 0) -> Dictionary:
 	var result: Dictionary = {}
 	if not raw is Dictionary:
 		return result
@@ -58,13 +59,18 @@ static func sanitize(raw: Variant, max_depth: int) -> Dictionary:
 			if HEX.find(digit) < 0:
 				valid = false
 				break
-		result[str(int(id))] = {
+		var seam: Dictionary = TreasurySeams.clean(source.get("treasury_seam", {}))
+		var chunk: Dictionary = {
 			"dug": mask if valid else "",
 			"nodes": _bounded_mask(source.get("nodes", 0), 2147483647),
 			"sites": _bounded_mask(source.get("sites", 0), 255),
 			"seen": _bounded_mask(source.get("seen", 0), 15),
-			"drops": _sanitize_drops(source.get("drops", {})),
+			"drops": {},
 		}
+		# An invalid stored descriptor remains a tombstone: revisits cannot reroll it.
+		if source.has("treasury_seam"): chunk["treasury_seam"] = seam
+		chunk.drops = _sanitize_drops(source.get("drops", {}), chunk, world_seed, int(id))
+		result[str(int(id))] = chunk
 	return result
 
 
@@ -74,16 +80,22 @@ static func _bounded_mask(raw: Variant, maximum: int) -> int:
 	return 0
 
 
-static func _sanitize_drops(raw: Variant) -> Dictionary:
+static func _sanitize_drops(raw: Variant, chunk: Dictionary, world_seed: int, depth: int) -> Dictionary:
 	var result: Dictionary = {}
 	if not raw is Dictionary: return result
 	for key in raw:
 		if not key is String or key.length() < 2 or key[0] not in ["c", "n"] or not key.substr(1).is_valid_int(): continue
 		var index: int = int(key.substr(1))
 		if index < 0 or index >= (CELL_COUNT if key[0] == "c" else 31): continue
+		if key != "%s%d" % [key[0], index]: continue
 		if not raw[key] is Dictionary: continue
 		var drop: Dictionary = raw[key]
 		var kind: String = str(drop.get("kind", ""))
+		if key[0] == "n" and TreasurySeams.reserved_node(index):
+			if not TreasurySeams.valid_drop(drop, chunk.get("treasury_seam", {}), world_seed, depth, index): continue
+			if (int(chunk.nodes) & (1 << index)) == 0 or not contains(String(chunk.dug), int(drop.cell)): continue
+			result[key] = {"kind":kind, "amount":int(drop.amount), "cell":int(drop.cell)}
+			continue
 		var amount: int = _bounded_mask(drop.get("amount", 0), 1000000)
 		var cell: int = _bounded_mask(drop.get("cell", -1), CELL_COUNT - 1)
 		if kind not in ["stone", "lumenstone", "deep_alloy", "memory_silk", "echo_crystal", "waystone"] or amount <= 0: continue

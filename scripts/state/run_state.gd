@@ -8,6 +8,7 @@ signal persistence_status_changed(error: int)
 
 const MossveinProgressionScript: = preload("res://scripts/progression/mossvein_progression.gd")
 const EndlessTerrainStateScript = preload("res://scripts/state/endless_terrain_state.gd")
+const TreasurySeams = preload("res://scripts/state/treasury_seams.gd")
 
 const SaveCodecScript = preload("res://scripts/state/run_save_codec.gd")
 const SAVE_SCHEMA_ID: String = SaveCodecScript.SCHEMA_ID
@@ -191,6 +192,7 @@ var endless_current_depth: = 0
 var endless_deepest_depth: = 0
 var endless_deepest_metres: int = 0
 var endless_start_depth_checkpoint: = 1
+var endless_treasury_seam_start_depth: int = 1
 var endless_chunks: Dictionary = {}
 var endless_stream_anchor: Dictionary = {}
 var endless_relics: Dictionary = _default_endless_relics()
@@ -1131,6 +1133,29 @@ func endless_floor_resource_state(depth: int) -> Dictionary:
 	}
 
 
+func bind_endless_treasury_seam(depth: int, candidates_by_slot: Array) -> Dictionary:
+	if not victory or not endless_descent_active or depth < 1 or depth > ENDLESS_MAX_SAVED_DEPTH or absi(depth - endless_current_depth) > 2:
+		return {}
+	var key: String = str(depth)
+	# Any existing journal predates this binding. A saved descriptor, including an
+	# invalid-descriptor tombstone, always wins over the currently selected goal.
+	if endless_chunks.has(key):
+		return TreasurySeams.clean(Dictionary(endless_chunks[key]).get("treasury_seam", {}))
+	if depth < endless_treasury_seam_start_depth: return {}
+	var kind: String = String(treasury_goals.get("pinned", ""))
+	if not TreasurySeams.MOD_BY_KIND.has(kind): return {}
+	var mod_id: String = String(TreasurySeams.MOD_BY_KIND[kind])
+	if bool(treasury_goals.get(mod_id + "_claimed", false)): return {}
+	if int(treasury_totals.get(kind, 0)) + int(cargo.get(kind, 0)) >= TreasurySeams.GOAL: return {}
+	var seam: Dictionary = TreasurySeams.generate(world_seed, depth, kind, candidates_by_slot)
+	if seam.is_empty(): return {}
+	var chunk: Dictionary = EndlessTerrainStateScript.empty_chunk()
+	chunk["treasury_seam"] = seam
+	endless_chunks[key] = chunk
+	_state_changed()
+	return seam.duplicate(true)
+
+
 func mark_endless_resource_node_mined(depth: int, node_index: int) -> bool:
 	if not _endless_band_in_reach(depth) or node_index < 0 or node_index >= 31:
 		return false
@@ -1146,7 +1171,14 @@ func mark_endless_resource_node_mined(depth: int, node_index: int) -> bool:
 
 
 func claim_endless_resource_node(depth: int, node_index: int, resource_id: String, amount: int, drop_cell: int = -1) -> Dictionary:
-	if not _endless_band_in_reach(depth) or resource_id not in ENDLESS_RESOURCE_IDS or amount <= 0 or amount > MAX_MINE_LOOSE_DROP_AMOUNT:
+	if not _endless_band_in_reach(depth) or amount <= 0 or amount > MAX_MINE_LOOSE_DROP_AMOUNT:
+		return {"ok": false, "reason": "invalid_node_claim"}
+	if TreasurySeams.reserved_node(node_index):
+		var chunk: Dictionary = _endless_chunk(depth)
+		var deposit: Dictionary = TreasurySeams.deposit(chunk.get("treasury_seam", {}), world_seed, depth, node_index)
+		if deposit.is_empty() or String(deposit.kind) != resource_id or int(deposit.cell) != drop_cell or not TreasurySeams.valid_amount(int(deposit.amount), amount) or not EndlessTerrainStateScript.contains(String(chunk.get("dug", "")), drop_cell):
+			return {"ok": false, "reason": "invalid_treasury_deposit"}
+	elif resource_id not in ENDLESS_RESOURCE_IDS:
 		return {"ok": false, "reason": "invalid_node_claim"}
 	begin_state_batch()
 	var claimed: bool = mark_endless_resource_node_mined(depth, node_index)
@@ -2590,6 +2622,7 @@ func serialize() -> Dictionary:
 				"deepest_depth": endless_deepest_depth if saved_victory else 0,
 				"deepest_metres": endless_deepest_metres if saved_victory else 0,
 				"start_depth_checkpoint": endless_start_depth_checkpoint if saved_victory else 1,
+				"treasury_seam_start_depth": endless_treasury_seam_start_depth if saved_victory else 1,
 				"chunks": endless_chunks.duplicate(true) if saved_victory else {},
 				"stream_anchor": endless_stream_anchor.duplicate(true) if saved_victory else {},
 				"relics": endless_relics.duplicate(true) if saved_victory else _default_endless_relics(),
@@ -2749,7 +2782,11 @@ func deserialize(raw: Variant) -> bool:
 			),
 			1
 		), 1, ENDLESS_MAX_SAVED_DEPTH)
-		endless_chunks = EndlessTerrainStateScript.sanitize(endless_source.get("chunks", {}), ENDLESS_MAX_SAVED_DEPTH)
+		# Missing in pre-feature saves: preserve every previously reached band,
+		# including untouched bands which have no excavation journal yet.
+		var old_frontier: int = maxi(endless_current_depth, endless_deepest_depth) + 1
+		endless_treasury_seam_start_depth = clampi(_nonnegative_int(endless_source.get("treasury_seam_start_depth", old_frontier), old_frontier), 1, ENDLESS_MAX_SAVED_DEPTH + 1)
+		endless_chunks = EndlessTerrainStateScript.sanitize(endless_source.get("chunks", {}), ENDLESS_MAX_SAVED_DEPTH, _nonnegative_int(source.get("world_seed"), 0))
 		endless_stream_anchor = _sanitize_endless_stream_anchor(endless_source.get("stream_anchor", {}))
 		endless_relics = _sanitize_endless_relics(endless_source.get("relics", {}))
 		carried_relic = _sanitize_carried_relic(
@@ -3051,6 +3088,7 @@ func _apply_defaults(emit_change: bool = true) -> void :
 	endless_deepest_depth = 0
 	endless_deepest_metres = 0
 	endless_start_depth_checkpoint = 1
+	endless_treasury_seam_start_depth = 1
 	endless_chunks = {}
 	endless_stream_anchor = {}
 	endless_relics = _default_endless_relics()
@@ -3317,6 +3355,7 @@ func _normalize_endless_state() -> void :
 		endless_deepest_depth = 0
 		endless_deepest_metres = 0
 		endless_start_depth_checkpoint = 1
+		endless_treasury_seam_start_depth = 1
 		endless_chunks = {}
 		endless_stream_anchor = {}
 		endless_relics = _default_endless_relics()
@@ -4799,6 +4838,10 @@ func collect_endless_drop(depth: int, id: String) -> Dictionary:
 	var drops: Dictionary = Dictionary(chunk.get("drops", {}))
 	if not drops.has(id): return {}
 	var drop: Dictionary = drops[id]
+	if id.begins_with("n") and id.substr(1).is_valid_int() and TreasurySeams.reserved_node(int(id.substr(1))):
+		var node_index: int = int(id.substr(1))
+		if id != "n%d" % node_index or not TreasurySeams.valid_drop(drop, chunk.get("treasury_seam", {}), world_seed, depth, node_index): return {}
+		if (int(chunk.get("nodes", 0)) & (1 << node_index)) == 0 or not EndlessTerrainStateScript.contains(String(chunk.get("dug", "")), int(drop.cell)): return {}
 	begin_state_batch()
 	drops.erase(id)
 	chunk["drops"] = drops
