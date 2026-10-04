@@ -528,8 +528,9 @@ func guide_target(kind: String = "") -> Vector2:
 
 func treasury_hunt_action(kind: String) -> String:
 	if not TreasurySeams.MOD_BY_KIND.has(kind): return "Mine · The Deep"
+	var target: Vector2 = guide_target(kind)
 	for resource in resources:
-		if not bool(resource.get("mined", false)) and String(resource.kind) == kind:
+		if not bool(resource.get("mined", false)) and String(resource.kind) == kind and Vector2(resource.position) == target:
 			return "Rich vein · follow the marker" if bool(resource.get("treasury_seam", false)) else "Ore · follow the marker"
 	return "New ground · keep descending"
 

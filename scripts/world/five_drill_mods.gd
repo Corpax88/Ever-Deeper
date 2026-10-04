@@ -145,7 +145,10 @@ func _node(id: String) -> int:
 func _hit_node(index: int, kind: String) -> void:
 	var id: String = String(world.resources[index].id)
 	var point: Vector2 = world.resources[index].position
+	var cell: Vector2i = world.resources[index].cell
 	world._strike_resource(index,_power(),false); hits += 1
+	if mode=="corebreaker" and kind=="direct" and String(RunState.starforge_variant)=="crusher":
+		world._apply_crusher_wave(cell,world._current_endless_tool())
 	if kind=="chain": _burst(point,75.0,3)
 	elif kind=="core": _burst(point,110.0,5)
 	hit_log.append({"id":id,"kind":kind})
@@ -183,7 +186,7 @@ func _impact(target: Dictionary, period: float) -> void:
 			if not cells.is_empty(): _burst(Vector2(target.point),90.0,0)
 		else:
 			_wall(cell,_power())
-			if mode=="vortex" and String(RunState.starforge_variant)=="crusher": world._apply_crusher_wave(cell,world._current_endless_tool())
+			if mode in ["vortex","corebreaker"] and String(RunState.starforge_variant)=="crusher": world._apply_crusher_wave(cell,world._current_endless_tool())
 		if mode=="corebreaker": charge = minf(3.0,charge+period)
 
 func _start_chain(first: int) -> void:
