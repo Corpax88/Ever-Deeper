@@ -12,9 +12,11 @@ Mac input,414core,production flavor,341migration and25browser observations passe
 
 LIVE loads its own index.pck but uses the exact preserved dev/index.wasm, dev/index.js and two dev audio worklets. Root index.wasm is intentionally omitted, reducing the site to1,070,382,849bytes below the1GiB gate;26 unique public files replace27. Existing DEV/Worn bytes are unchanged. Future publishers must preserve this dependency, and an engine upgrade needs LIVE compatibility review. Prior LIVE rollback is self-contained and includes its own WASM. Do not reuse older27-file publisher assumptions.
 
-## Website
+## Website — complete
 
-Game publication is complete. The mandatory matching website update is in progress on existing Site appgprj_6abcf3a6e07481918afb1c03f29caec0. Do not repeat the accepted game tests or publication. Complete the Site update and record its source/version/deployment receipt here.
+The corresponding website update is published at https://ever-deeper-game.corpax88.chatgpt.site. Source141993fc3db781cd884268d90c0d1377a4cb6a17, saved version9, deployment appgdep_6ac2d5b6116c8191a1bbac2d8aa36597 succeeded. 82 release records and238 local links checked; existing gallery/media/styles/scripts preserved. Browser visual QA was not run under the managed Sites limitation. Receipt: website-publication.json.
+
+No pending publication or test jobs in this release task. Next: Mats refreshes LIVE, chooses Continue and tests phone feel. Do not reset or copy DEV saves. Do not repeat completed unchanged tests or publication. Older in-progress notes below are historical.
 
 ---
 
