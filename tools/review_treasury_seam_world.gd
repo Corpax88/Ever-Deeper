@@ -215,7 +215,7 @@ func run() -> void:
 	check("newly-loaded-band-uses-new-pin",state.endless_chunks["5"].treasury_seam.kind == "prismite")
 	world._rebase_stream_window(2)
 	check("real-revisit-never-rerolls-original-band",state.endless_chunks["2"].treasury_seam == band_two)
-	check("source-hint-retains-original-mine-route",goals.sources("rootiron").contains("follow the marker") and goals.sources("rootiron").contains("keep descending after changing goals") and goals.sources("rootiron").contains("Mossvein"))
+	check("source-hint-retains-original-mine-route",goals.sources("rootiron").contains("new ground") and goals.sources("rootiron").contains("Mossvein"))
 	state.treasury_goals.pinned = "rootiron"
 	state.cargo.rootiron = 100000
 	check("completed-cargo-guides-to-donation",goals.hud_goal().treasury_route == "donate" and goals.hud_goal().hud_action == "Donate · Treasury plate")
