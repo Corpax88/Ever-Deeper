@@ -76,6 +76,7 @@ var _gold_signature: = 0
 var _cargo_signature: = 0
 var _state_signature_valid: = false
 var _iphone_layout_active: = false
+var _context_uses_mine_slot: = false
 
 
 func _ready() -> void :
@@ -147,6 +148,13 @@ func set_context_action(label: String, enabled: bool) -> void :
 		_fit_context_contents()
 	if enabled_changed:
 		context_button.disabled = not enabled
+
+
+func set_context_uses_mine_slot(enabled: bool) -> void:
+	if _context_uses_mine_slot == enabled:
+		return
+	_context_uses_mine_slot = enabled
+	_apply_platform_safe_area()
 
 
 func set_objective(title: String, detail: String) -> void :
@@ -364,6 +372,12 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 		context_size.x,
 		context_size.y
 	)
+	if iphone and _context_uses_mine_slot:
+		# Surface travel has no mining button. Use that free action slot so
+		# descending never covers the miner standing at the lower entrance.
+		context_rect.position.x = mine_rect.end.x - context_size.x
+		bag_rect.position.x = context_rect.position.x - action_gap - bag_size
+		bag_count_rect.position = bag_rect.end - badge_size + Vector2(4, 3)
 	var goal_width: = (400.0 if wide else 340.0) if iphone else 286.0
 	var goal_rows: int = ceili(float(_progression_row_count) / 2.0) if _progression_row_count > 1 else _progression_row_count
 	# Reserve the next-action line even when costs are present; otherwise the

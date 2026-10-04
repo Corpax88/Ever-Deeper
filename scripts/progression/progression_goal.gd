@@ -52,7 +52,7 @@ static func decorate(goal: Dictionary) -> Dictionary:
 		ready = ready and bool(row.ready)
 	result["requirements_ready"] = ready
 	result["hud_title"] = _short_title(goal)
-	result["hud_action"] = _action(goal)
+	result["hud_action"] = action_for_phase(goal)
 	return result
 
 
@@ -87,7 +87,15 @@ static func _short_title(goal: Dictionary) -> String:
 	return title
 
 
-static func _action(goal: Dictionary) -> String:
+static func action_for_phase(goal: Dictionary, phase: String = "") -> String:
+	# State-driven HUD refreshes use the saved scene; the live guide supplies
+	# its active phase during travel, before the location checkpoint is written.
+	var active_phase: = String(RunState.current_scene) if phase.is_empty() else phase
+	var objective_id: = String(goal.get("objective_id", ""))
+	if objective_id.begins_with("endgame:seal:"):
+		return "Hold MINE · open the seal" if active_phase == "deepheart" else "Deepheart passage · Hub"
+	if objective_id == "endgame:core":
+		return "Attune the core" if active_phase == "deepheart" else "Deepheart passage · Hub"
 	if goal.has("hud_action"):
 		return String(goal.hud_action)
 	var kind: = String(goal.get("kind", ""))

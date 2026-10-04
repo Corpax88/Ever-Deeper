@@ -916,7 +916,10 @@ func _progression_goal() -> Dictionary:
 		if not endless_world.site_activity.is_empty() and not discovery.is_empty():
 			return discovery
 	if not pinned.is_empty(): return pinned
-	return guide_director.goal_for_state(discovery)
+	var goal: Dictionary = guide_director.goal_for_state(discovery)
+	if not goal.is_empty():
+		goal["hud_action"] = preload("res://scripts/progression/progression_goal.gd").action_for_phase(goal, phase)
+	return goal
 
 
 func _update_visual_guide() -> void :
@@ -3807,6 +3810,8 @@ func _refresh_context_button() -> void :
 	if premium_hud != null:
 		premium_hud.set_context_action(label, enabled)
 	mine_button.visible = phase in ["mine", "depth", "endless"] or (phase == "deepheart" and deepheart_context.begins_with("deepheart_seal:")) or (phase == "surface" and surface_context in ["ore_mountain", "moonglass_mountain", "emberdeep_mountain", "starfall_mountain", "moonglass_resource", "ember_resource", "starfall_resource"])
+	if premium_hud != null:
+		premium_hud.set_context_uses_mine_slot(phase == "surface" and not mine_button.visible and not label.is_empty())
 	_refresh_context_card()
 
 
@@ -4078,7 +4083,8 @@ func _update_achievement_toast_anchor() -> void :
 	var visual: Node = active_player.get_node_or_null("Visual")
 	if visual != null and visual.has_method("feedback_screen_rects"):
 		exclusions.append_array(visual.feedback_screen_rects())
-	var target_label: Control = mine_world.get_node_or_null("TargetLabel") if phase == "mine" else null
+	var target_world: Node = mine_world if phase == "mine" else depth_world if phase == "depth" else null
+	var target_label: Control = target_world.get_node_or_null("TargetLabel") if is_instance_valid(target_world) else null
 	if is_instance_valid(target_label) and target_label.is_visible_in_tree():
 		exclusions.append((target_label.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, target_label.size)).grow(4.0))
 	var hud_controls: Array[Control] = [mine_button,laser_button]

@@ -1,6 +1,10 @@
-# DEV15.56 quality round — exact-source acceptance running
+# DEV15.56 quality round — visual review follow-ups in progress
 
-Current acceptance source: `53fa6ed3127fa63d1cba2c5749440a47eb2c4a22`, run `37225490928`. All implementation and local preflight are saved. Production PCK327912226bytes, SHA256 `81e6b222db8db7f15387965d27846e3da72bcb92da0e9ac876c3caec7b7a2860`; QA PCK327964838bytes, SHA256 `49e4ddd8c5e76e70af464a55977359a444e77df9e455221e63d596b96a19c40f`. Do not trigger a second run or mutate runtime while this one is being assessed.
+Mac review of source53fa6ed found three concrete older polish issues worth resolving before release: Depth2 retains the small lit target text; the Core still says to visit the Hub passage after arrival; Surface DESCEND covers the miner's lower body. The next candidate will include the same verified target-label treatment in Depth2, phase-correct finale guidance, and use of the vacant Mine action slot for non-mining Surface actions. These scoped follow-ups supersede the previous runtime freeze below. Run37225490928 remains the before-version evidence; no acceptance or publication has been created. Root coordinates the single replacement run after native rendering and fixture checks.
+
+---
+
+First acceptance source: `53fa6ed3127fa63d1cba2c5749440a47eb2c4a22`, run `37225490928`. Production PCK327912226bytes, SHA256 `81e6b222db8db7f15387965d27846e3da72bcb92da0e9ac876c3caec7b7a2860`; QA PCK327964838bytes, SHA256 `49e4ddd8c5e76e70af464a55977359a444e77df9e455221e63d596b96a19c40f`.
 
 All five implementation scopes below have passed their local checks. Final reward typography uses font29 and clears the retained13.8 CSSpx readability threshold; target/notice integration passes14 checks. Cross-world camera review passes44 checks plus10 at the actual Deep entry, with exactly unchanged Surface framing. The integrated local fixture executes all new commands and snapshot functions without script errors. Eighteen native groups passed initially; two old generic-return text assertions were replaced by stronger explicit donation/claim route assertions and pass on targeted rerun. All four mandatory core groups pass. The extra legacy layout test fails at the same retired four-column assertion in both published DEV15.55 and candidate; see `evidence/preflight/`.
 
