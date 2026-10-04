@@ -86,7 +86,7 @@ func open_menu(has_save: bool, location: String, is_pause: bool, storage_uncerta
 	)
 	set_save_status(storage_uncertain,save_error)
 	_refresh_achievement_count()
-	continue_button.grab_focus()
+	_refresh_main_action()
 
 
 func set_save_status(storage_uncertain: bool, save_error: int = OK) -> void:
@@ -528,7 +528,19 @@ func _show_main_view() -> void :
 	detail_view.visible = false
 	main_view.visible = true
 	_refresh_achievement_count()
-	continue_button.grab_focus()
+	_refresh_main_action()
+
+
+func _refresh_main_action() -> void:
+	var new_game: Button = main_card.get_node("NewGame")
+	for button in [continue_button, new_game]:
+		var primary: bool = (button == new_game) == continue_button.disabled
+		button.add_theme_color_override("font_color", GOLD_BRIGHT if primary else Color("e6d7a7"))
+		button.add_theme_stylebox_override("normal", _panel_style(Color("183322") if primary else Color("10261a"), Color(GOLD, 0.76 if primary else 0.42), 12, 2 if primary else 1))
+	if continue_button.disabled:
+		new_game.grab_focus()
+	else:
+		continue_button.grab_focus()
 
 
 func _show_settings() -> void :
