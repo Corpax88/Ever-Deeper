@@ -1,0 +1,279 @@
+{
+  "checks": [
+    {
+      "name": "authored ore exposed through actual terrain mining",
+      "passed": true
+    },
+    {
+      "name": "667 notice target found",
+      "passed": true
+    },
+    {
+      "name": "667 blocked achievement is retained",
+      "passed": true
+    },
+    {
+      "name": "667 deferred phase does not expire",
+      "passed": true
+    },
+    {
+      "name": "667 retained notice reaches real ascent context",
+      "passed": true
+    },
+    {
+      "name": "667 returned D1 entrance is legal floor",
+      "passed": true
+    },
+    {
+      "name": "667 returned D1 exit context is real",
+      "passed": true
+    },
+    {
+      "name": "667 normal return frees achievement slot",
+      "passed": true
+    },
+    {
+      "name": "667 deferred achievement resumes visibly",
+      "passed": true
+    },
+    {
+      "name": "667 target clear hides label",
+      "passed": true
+    }
+  ],
+  "excavation": {
+    "authored_rock_index": 84,
+    "ordinary_strikes": 9,
+    "rock": {
+      "broken": false,
+      "cavern_id": "",
+      "cell": "(31, 69)",
+      "deposit_id": "mossMine_depth2_vein_15",
+      "drill_gated": false,
+      "hp": 480,
+      "id": 1084,
+      "max_hp": 480,
+      "max_shell": 95,
+      "pocket_reward_id": "",
+      "position": "(1512.0, 3336.0)",
+      "rare_find": false,
+      "required_pickaxe": 2,
+      "requires_deep_tool": true,
+      "requires_drill_level": 0,
+      "respawn_remaining": 0.0,
+      "respawn_until_unix": 0.0,
+      "shell": 95,
+      "state_id": "rock:84",
+      "type": "rootiron"
+    },
+    "route_cells": 16
+  },
+  "passed": true,
+  "records": [
+    {
+      "achievement": {
+        "active": true,
+        "active_id": "first_chip",
+        "active_title": "First Chip",
+        "anchor_mode": "logical_pixels",
+        "asset": "res://assets/achievements/first_chip.png",
+        "fade_seconds": 0.55,
+        "has_background": false,
+        "has_panel": false,
+        "hold_seconds": 3.0,
+        "icon_loaded": true,
+        "icon_scale_x": 1.0,
+        "last_reflow": {
+          "expanded_obstacle": "[P: (722.7273, 183.0115), S: (196.0, 196.0)]",
+          "obstacle_index": 0,
+          "previous_expanded_obstacle": "[P: (722.7273, 183.0115), S: (196.0, 196.0)]",
+          "previous_rect": "[P: (589.8546, 173.0), S: (520.0, 120.0)]",
+          "retained_rect": "[P: (589.8546, 173.0), S: (520.0, 120.0)]",
+          "time_msec": 10274
+        },
+        "minimum_touch_target": 96.0,
+        "phase": "spin",
+        "phase_elapsed": 0.0,
+        "placement_blocked": true,
+        "placement_clear": false,
+        "presentation": "achievement_png_and_title",
+        "process_always": true,
+        "queue_size": 0,
+        "queued_ids": [],
+        "safe_rect": "[P: (18.0, 18.0), S: (1176.727, 645.8182)]",
+        "screen_anchor": "(820.7273, 213.6365)",
+        "screen_exclusions": [
+          "[P: (740.7273, 201.0115), S: (160.0, 160.0)]",
+          "[P: (643.7273, 369.6365), S: (226.0, 42.0)]",
+          "[P: (648.7273, 18.0), S: (188.0, 96.0)]",
+          "[P: (998.7273, 449.8182), S: (190.0, 190.0)]",
+          "[P: (24.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (288.0, 18.0), S: (166.0, 112.0)]",
+          "[P: (838.7273, 473.8182), S: (142.0, 142.0)]",
+          "[P: (848.7273, 18.0), S: (340.0, 123.0)]",
+          "[P: (24.0, 593.8182), S: (558.7273, 50.0)]",
+          "[P: (156.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (24.0, 182.0), S: (132.0, 58.0)]",
+          "[P: (0.0, 245.4545), S: (557.8546, 436.3636)]"
+        ],
+        "spin_seconds": 0.92,
+        "suspended": true,
+        "toast_rect": "[P: (589.8546, 173.0), S: (519.9999, 120.0)]",
+        "touch_target": "(520.0, 120.0)",
+        "touch_target_valid": true,
+        "transparent": true,
+        "upright": true,
+        "visible": false
+      },
+      "image": "achievement-667.png",
+      "label": "[P: (647.7273, 373.6365), S: (218.0, 34.0)]",
+      "pickups": [],
+      "skill": {
+        "active": {},
+        "clear_of_hud": true,
+        "icon_loaded": true,
+        "ignores_input": true,
+        "opacity": 0.0,
+        "queued": [],
+        "rect": [
+          348.727172851562,
+          162.0,
+          360.0,
+          86.0
+        ],
+        "shown": 1,
+        "text": "Prospecting  ·  4",
+        "visible": false
+      }
+    },
+    {
+      "achievement": {
+        "active": true,
+        "active_id": "first_chip",
+        "active_title": "First Chip",
+        "anchor_mode": "logical_pixels",
+        "asset": "res://assets/achievements/first_chip.png",
+        "fade_seconds": 0.55,
+        "has_background": false,
+        "has_panel": false,
+        "hold_seconds": 3.0,
+        "icon_loaded": true,
+        "icon_scale_x": 1.0,
+        "last_reflow": {},
+        "minimum_touch_target": 96.0,
+        "phase": "hold",
+        "phase_elapsed": 0.134986,
+        "placement_blocked": false,
+        "placement_clear": true,
+        "presentation": "achievement_png_and_title",
+        "process_always": true,
+        "queue_size": 0,
+        "queued_ids": [],
+        "safe_rect": "[P: (18.0, 18.0), S: (1176.727, 645.8182)]",
+        "screen_anchor": "(230.0, 194.8182)",
+        "screen_exclusions": [
+          "[P: (150.0, 182.1931), S: (160.0, 160.0)]",
+          "[P: (385.0, 293.8182), S: (164.0, 42.0)]",
+          "[P: (648.7273, 18.0), S: (188.0, 96.0)]",
+          "[P: (998.7273, 449.8182), S: (190.0, 190.0)]",
+          "[P: (24.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (288.0, 18.0), S: (166.0, 112.0)]",
+          "[P: (838.7273, 473.8182), S: (142.0, 142.0)]",
+          "[P: (594.7273, 486.8182), S: (226.0, 116.0)]",
+          "[P: (848.7273, 18.0), S: (340.0, 123.0)]",
+          "[P: (24.0, 593.8182), S: (558.7273, 50.0)]",
+          "[P: (156.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (24.0, 182.0), S: (132.0, 58.0)]",
+          "[P: (0.0, 245.4545), S: (557.8546, 436.3636)]"
+        ],
+        "spin_seconds": 0.92,
+        "suspended": false,
+        "toast_rect": "[P: (589.8546, 173.0), S: (519.9999, 120.0)]",
+        "touch_target": "(520.0, 120.0)",
+        "touch_target_valid": true,
+        "transparent": true,
+        "upright": true,
+        "visible": true
+      },
+      "facing": "(0.0, -1.0)",
+      "from_position": "(1528.0, 3288.0)",
+      "hero": [
+        "[P: (150.0, 182.1931), S: (160.0, 160.0)]"
+      ],
+      "image": "achievement-resumed-667.png",
+      "legal_step": true,
+      "resumed_world_phase": "mine",
+      "target_cleared_before_movement": {
+        "active": true,
+        "active_id": "first_chip",
+        "active_title": "First Chip",
+        "anchor_mode": "logical_pixels",
+        "asset": "res://assets/achievements/first_chip.png",
+        "fade_seconds": 0.55,
+        "has_background": false,
+        "has_panel": false,
+        "hold_seconds": 3.0,
+        "icon_loaded": true,
+        "icon_scale_x": 1.0,
+        "last_reflow": {
+          "expanded_obstacle": "[P: (722.7273, 183.0115), S: (196.0, 196.0)]",
+          "obstacle_index": 0,
+          "previous_expanded_obstacle": "[P: (722.7273, 183.0115), S: (196.0, 196.0)]",
+          "previous_rect": "[P: (589.8546, 173.0), S: (520.0, 120.0)]",
+          "retained_rect": "[P: (589.8546, 173.0), S: (520.0, 120.0)]",
+          "time_msec": 11335
+        },
+        "minimum_touch_target": 96.0,
+        "phase": "spin",
+        "phase_elapsed": 0.0,
+        "placement_blocked": true,
+        "placement_clear": false,
+        "presentation": "achievement_png_and_title",
+        "process_always": true,
+        "queue_size": 0,
+        "queued_ids": [],
+        "safe_rect": "[P: (18.0, 18.0), S: (1176.727, 645.8182)]",
+        "screen_anchor": "(820.7273, 213.6365)",
+        "screen_exclusions": [
+          "[P: (740.7273, 201.0115), S: (160.0, 160.0)]",
+          "[P: (648.7273, 18.0), S: (188.0, 96.0)]",
+          "[P: (998.7273, 449.8182), S: (190.0, 190.0)]",
+          "[P: (24.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (288.0, 18.0), S: (166.0, 112.0)]",
+          "[P: (838.7273, 473.8182), S: (142.0, 142.0)]",
+          "[P: (848.7273, 18.0), S: (340.0, 123.0)]",
+          "[P: (24.0, 593.8182), S: (558.7273, 50.0)]",
+          "[P: (156.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (24.0, 182.0), S: (132.0, 58.0)]",
+          "[P: (0.0, 245.4545), S: (557.8546, 436.3636)]"
+        ],
+        "spin_seconds": 0.92,
+        "suspended": true,
+        "toast_rect": "[P: (589.8546, 173.0), S: (519.9999, 120.0)]",
+        "touch_target": "(520.0, 120.0)",
+        "touch_target_valid": true,
+        "transparent": true,
+        "upright": true,
+        "visible": false
+      },
+      "to_position": "(1752.0, 2808.0)",
+      "walked_cells": [
+        "(1512.0, 3240.0)",
+        "(1560.0, 3240.0)",
+        "(1608.0, 3240.0)",
+        "(1656.0, 3240.0)",
+        "(1704.0, 3240.0)",
+        "(1752.0, 3240.0)",
+        "(1752.0, 3192.0)",
+        "(1752.0, 3144.0)",
+        "(1752.0, 3096.0)",
+        "(1752.0, 3048.0)",
+        "(1752.0, 3000.0)",
+        "(1752.0, 2952.0)",
+        "(1752.0, 2904.0)",
+        "(1752.0, 2856.0)",
+        "(1752.0, 2808.0)"
+      ]
+    }
+  ]
+}

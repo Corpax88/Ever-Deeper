@@ -1,0 +1,227 @@
+{
+  "passed": true,
+  "scope": "Only the six 844px checks in the original report. Its separate 667px fixture failures are superseded by resume-667/report.json.",
+  "source_report": "resume-before-context-fix/report.json",
+  "checks": [
+    {
+      "name": "844 notice target found",
+      "passed": true
+    },
+    {
+      "name": "844 blocked achievement is retained",
+      "passed": true
+    },
+    {
+      "name": "844 deferred phase does not expire",
+      "passed": true
+    },
+    {
+      "name": "844 legal movement frees achievement slot",
+      "passed": true
+    },
+    {
+      "name": "844 deferred achievement resumes visibly",
+      "passed": true
+    },
+    {
+      "name": "844 target clear hides label",
+      "passed": true
+    }
+  ],
+  "records": [
+    {
+      "achievement": {
+        "active": true,
+        "active_id": "first_chip",
+        "active_title": "First Chip",
+        "anchor_mode": "logical_pixels",
+        "asset": "res://assets/achievements/first_chip.png",
+        "fade_seconds": 0.55,
+        "has_background": false,
+        "has_panel": false,
+        "hold_seconds": 3.0,
+        "icon_loaded": true,
+        "icon_scale_x": 1.0,
+        "last_reflow": {
+          "expanded_obstacle": "[P: (1039.089, 249.4805), S: (196.0, 196.0)]",
+          "obstacle_index": 0,
+          "previous_expanded_obstacle": "[P: (1039.089, 249.6841), S: (196.0, 196.0)]",
+          "previous_rect": "[P: (578.0, 144.9338), S: (520.0, 120.0)]",
+          "retained_rect": "[P: (578.0, 144.7302), S: (520.0, 120.0)]",
+          "time_msec": 56745
+        },
+        "minimum_touch_target": 96.0,
+        "phase": "spin",
+        "phase_elapsed": 0.0,
+        "placement_blocked": true,
+        "placement_clear": false,
+        "presentation": "achievement_png_and_title",
+        "process_always": true,
+        "queue_size": 0,
+        "queued_ids": [],
+        "safe_rect": "[P: (116.0, 18.0), S: (1302.545, 653.0909)]",
+        "screen_anchor": "(1142.545, 279.0251)",
+        "screen_exclusions": [
+          "[P: (1057.089, 267.4805), S: (160.0, 160.0)]",
+          "[P: (972.0454, 435.0251), S: (213.0, 42.0)]",
+          "[P: (818.5454, 18.0), S: (188.0, 96.0)]",
+          "[P: (1228.545, 477.0909), S: (190.0, 190.0)]",
+          "[P: (116.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (380.0, 18.0), S: (166.0, 112.0)]",
+          "[P: (1068.545, 501.0909), S: (142.0, 142.0)]",
+          "[P: (1018.545, 18.0), S: (400.0, 123.0)]",
+          "[P: (116.0, 621.0909), S: (680.0, 50.0)]",
+          "[P: (248.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (116.0, 182.0), S: (132.0, 58.0)]",
+          "[P: (0.0, 255.2727), S: (705.8909, 453.8182)]"
+        ],
+        "spin_seconds": 0.92,
+        "suspended": true,
+        "toast_rect": "[P: (578.0, 144.7302), S: (520.0, 120.0)]",
+        "touch_target": "(520.0, 120.0)",
+        "touch_target_valid": true,
+        "transparent": true,
+        "upright": true,
+        "visible": false
+      },
+      "image": "achievement-844.png",
+      "label": "[P: (976.0454, 439.0251), S: (205.0, 34.0)]",
+      "pickups": [],
+      "skill": {
+        "active": {},
+        "clear_of_hud": true,
+        "icon_loaded": true,
+        "ignores_input": true,
+        "opacity": 0.0,
+        "queued": [],
+        "rect": [
+          348.727294921875,
+          168.0,
+          360.0,
+          86.0
+        ],
+        "shown": 1,
+        "text": "Prospecting  \u00b7  4",
+        "visible": false
+      }
+    },
+    {
+      "achievement": {
+        "active": true,
+        "active_id": "first_chip",
+        "active_title": "First Chip",
+        "anchor_mode": "logical_pixels",
+        "asset": "res://assets/achievements/first_chip.png",
+        "fade_seconds": 0.55,
+        "has_background": false,
+        "has_panel": false,
+        "hold_seconds": 3.0,
+        "icon_loaded": true,
+        "icon_scale_x": 1.0,
+        "last_reflow": {},
+        "minimum_touch_target": 96.0,
+        "phase": "hold",
+        "phase_elapsed": 0.0,
+        "placement_blocked": false,
+        "placement_clear": true,
+        "presentation": "achievement_png_and_title",
+        "process_always": true,
+        "queue_size": 0,
+        "queued_ids": [],
+        "safe_rect": "[P: (116.0, 18.0), S: (1302.545, 653.0909)]",
+        "screen_anchor": "(1366.545, 278.0059)",
+        "screen_exclusions": [
+          "[P: (1292.002, 266.4612), S: (160.0, 160.0)]",
+          "[P: (818.5454, 18.0), S: (188.0, 96.0)]",
+          "[P: (1228.545, 477.0909), S: (190.0, 190.0)]",
+          "[P: (116.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (380.0, 18.0), S: (166.0, 112.0)]",
+          "[P: (1068.545, 501.0909), S: (142.0, 142.0)]",
+          "[P: (1018.545, 18.0), S: (400.0, 123.0)]",
+          "[P: (116.0, 621.0909), S: (680.0, 50.0)]",
+          "[P: (248.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (116.0, 182.0), S: (132.0, 58.0)]",
+          "[P: (0.0, 255.2727), S: (705.8909, 453.8182)]"
+        ],
+        "spin_seconds": 0.92,
+        "suspended": false,
+        "toast_rect": "[P: (740.0016, 218.0059), S: (520.0, 120.0)]",
+        "touch_target": "(520.0, 120.0)",
+        "touch_target_valid": true,
+        "transparent": true,
+        "upright": true,
+        "visible": true
+      },
+      "facing": "(1.0, 0.0)",
+      "from_position": "(1528.0, 3288.0)",
+      "hero": [
+        "[P: (1292.002, 266.4612), S: (160.0, 160.0)]"
+      ],
+      "image": "achievement-resumed-844.png",
+      "legal_step": true,
+      "resumed_world_phase": "depth",
+      "target_cleared_before_movement": {
+        "active": true,
+        "active_id": "first_chip",
+        "active_title": "First Chip",
+        "anchor_mode": "logical_pixels",
+        "asset": "res://assets/achievements/first_chip.png",
+        "fade_seconds": 0.55,
+        "has_background": false,
+        "has_panel": false,
+        "hold_seconds": 3.0,
+        "icon_loaded": true,
+        "icon_scale_x": 1.0,
+        "last_reflow": {
+          "expanded_obstacle": "[P: (1039.089, 248.6008), S: (196.0, 196.0)]",
+          "obstacle_index": 0,
+          "previous_expanded_obstacle": "[P: (1039.089, 248.6311), S: (196.0, 196.0)]",
+          "previous_rect": "[P: (578.0, 145.6838), S: (520.0, 120.0)]",
+          "retained_rect": "[P: (578.0, 145.6536), S: (520.0, 120.0)]",
+          "time_msec": 57637
+        },
+        "minimum_touch_target": 96.0,
+        "phase": "spin",
+        "phase_elapsed": 0.0,
+        "placement_blocked": true,
+        "placement_clear": false,
+        "presentation": "achievement_png_and_title",
+        "process_always": true,
+        "queue_size": 0,
+        "queued_ids": [],
+        "safe_rect": "[P: (116.0, 18.0), S: (1302.545, 653.0909)]",
+        "screen_anchor": "(1142.545, 278.1455)",
+        "screen_exclusions": [
+          "[P: (1057.089, 266.6008), S: (160.0, 160.0)]",
+          "[P: (818.5454, 18.0), S: (188.0, 96.0)]",
+          "[P: (1228.545, 477.0909), S: (190.0, 190.0)]",
+          "[P: (116.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (380.0, 18.0), S: (166.0, 112.0)]",
+          "[P: (1068.545, 501.0909), S: (142.0, 142.0)]",
+          "[P: (1018.545, 18.0), S: (400.0, 123.0)]",
+          "[P: (116.0, 621.0909), S: (680.0, 50.0)]",
+          "[P: (248.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (116.0, 182.0), S: (132.0, 58.0)]",
+          "[P: (0.0, 255.2727), S: (705.8909, 453.8182)]"
+        ],
+        "spin_seconds": 0.92,
+        "suspended": true,
+        "toast_rect": "[P: (578.0, 146.0), S: (520.0, 120.0)]",
+        "touch_target": "(520.0, 120.0)",
+        "touch_target_valid": true,
+        "transparent": true,
+        "upright": true,
+        "visible": false
+      },
+      "to_position": "(1752.0, 3240.0)",
+      "walked_cells": [
+        "(1512.0, 3240.0)",
+        "(1560.0, 3240.0)",
+        "(1608.0, 3240.0)",
+        "(1656.0, 3240.0)",
+        "(1704.0, 3240.0)",
+        "(1752.0, 3240.0)"
+      ]
+    }
+  ]
+}
