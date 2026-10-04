@@ -12,12 +12,13 @@ const DISPLAY_SECONDS: = 9.0
 const MINE_ICON: = preload("res://assets/tools/pickaxe-iron.png")
 const INTERACT_ICON: = preload("res://assets/ui/hud-interact-v1.png")
 const BAG_ICON: = preload("res://assets/ui/bag-premium-v1.png")
-const MENU_ICON: = preload("res://assets/ui/hud-menu-v1.png")
+const MENU_ICON: = preload("res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png")
 
 var _touch_mode: = false
 var _strip: HBoxContainer
 var _open_serial: = 0
 var _premium_hud: Control
+var _fade: Tween
 
 
 func _ready() -> void :
@@ -40,6 +41,8 @@ func has_been_seen() -> bool:
 
 
 func open(touch_mode: bool) -> void :
+	if _fade != null and _fade.is_valid():
+		_fade.kill()
 	_touch_mode = touch_mode
 	_open_serial += 1
 	_rebuild_strip()
@@ -52,7 +55,8 @@ func open(touch_mode: bool) -> void :
 
 func dismiss() -> void :
 	if visible:
-		_finish()
+		# A menu interruption is not evidence that the controls were read.
+		_finish(false)
 
 
 func debug_snapshot() -> Dictionary:
@@ -80,7 +84,7 @@ func _rebuild_strip() -> void :
 		_add_icon_hint(MINE_ICON, "HOLD TO MINE")
 		_add_icon_hint(INTERACT_ICON, "ACTION")
 		_add_icon_hint(BAG_ICON, "BAG")
-		_add_icon_hint(MENU_ICON, "MENU")
+		_add_icon_hint(MENU_ICON, "SKILLS")
 	else:
 		_add_key_hint("WASD", "MOVE")
 		_add_key_hint("SPACE", "HOLD TO MINE")
@@ -174,18 +178,22 @@ func _on_hud_layout_changed(_available_rect: Rect2) -> void:
 func _begin_fade(serial: int) -> void :
 	if serial != _open_serial or not visible:
 		return
-	var tween: = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	tween.tween_property(self, "modulate:a", 0.0, 0.55)
-	tween.tween_callback(_finish)
+	_fade = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_fade.tween_property(self, "modulate:a", 0.0, 0.55)
+	_fade.tween_callback(_finish)
 
 
-func _finish() -> void :
+func _finish(mark_seen: bool = true) -> void :
 	if not visible:
 		return
 	_open_serial += 1
-	var config: = ConfigFile.new()
-	config.set_value("tutorial", SEEN_KEY, true)
-	config.save(_save_path())
+	if _fade != null and _fade.is_valid():
+		_fade.kill()
+	_fade = null
+	if mark_seen:
+		var config: = ConfigFile.new()
+		config.set_value("tutorial", SEEN_KEY, true)
+		config.save(_save_path())
 	visible = false
 	modulate = Color.WHITE
 	closed.emit()
