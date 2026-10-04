@@ -1,0 +1,113 @@
+{
+	"checks": [
+		{
+			"name": "actual pinned phase-crystal deposit exists",
+			"passed": true
+		},
+		{
+			"name": "descriptor committed before any extraction",
+			"passed": true
+		},
+		{
+			"name": "actual covering rock excavates",
+			"passed": true
+		},
+		{
+			"name": "real Crown extraction includes one actual Prospecting bonus",
+			"passed": true
+		},
+		{
+			"name": "real write obstruction created",
+			"passed": true
+		},
+		{
+			"name": "deposit save failure is reported and remains dirty",
+			"passed": true
+		},
+		{
+			"name": "failed extraction checkpoint preserves both disk generations",
+			"passed": true
+		},
+		{
+			"name": "failed-write retry window keeps same descriptor and one pending deposit",
+			"passed": true
+		},
+		{
+			"name": "real write obstruction removed",
+			"passed": true
+		},
+		{
+			"name": "automatic retry commits without another mining action",
+			"passed": true
+		},
+		{
+			"name": "actual disk reload retains pending drop and old selection identity",
+			"passed": true
+		},
+		{
+			"name": "actual pickup after repin and claim credits exact saved amount once",
+			"passed": true
+		},
+		{
+			"name": "duplicate delivery cannot credit another amount",
+			"passed": true
+		},
+		{
+			"name": "collection checkpoint and reload retain depletion",
+			"passed": true
+		},
+		{
+			"name": "same authored node remains depleted after second reload",
+			"passed": true
+		},
+		{
+			"name": "noncanonical drop key rejected n024",
+			"passed": true
+		},
+		{
+			"name": "noncanonical drop key rejected n+24",
+			"passed": true
+		},
+		{
+			"name": "noncanonical drop key rejected n24 ",
+			"passed": true
+		},
+		{
+			"name": "noncanonical drop key rejected n-24",
+			"passed": true
+		},
+		{
+			"name": "malformed descriptor rejects only its deposit and retains ordinary loot { \"revision\": true }",
+			"passed": true
+		},
+		{
+			"name": "malformed descriptor rejects only its deposit and retains ordinary loot { \"revision\": nan }",
+			"passed": true
+		},
+		{
+			"name": "malformed descriptor rejects only its deposit and retains ordinary loot { \"cells\": [inf, 451, 731] }",
+			"passed": true
+		},
+		{
+			"name": "malformed descriptor rejects only its deposit and retains ordinary loot { \"cells\": [171, 451, 880] }",
+			"passed": true
+		},
+		{
+			"name": "malformed descriptor rejects only its deposit and retains ordinary loot { \"cells\": [171, 451, 171] }",
+			"passed": true
+		},
+		{
+			"name": "legacy future preloaded journal restores byte-equivalent authority",
+			"passed": true
+		},
+		{
+			"name": "legacy preloaded journal cannot be overwritten by new binding",
+			"passed": true
+		},
+		{
+			"name": "legacy reached unjournaled band cannot receive retrofit",
+			"passed": true
+		}
+	],
+	"passed": true
+}

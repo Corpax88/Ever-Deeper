@@ -251,6 +251,7 @@ func _draw_navigation(fitted: Rect2) -> void:
 
 func _draw_marker_labels(font: Font, fitted: Rect2, content: Rect2) -> void:
 	var occupied: Array[Rect2] = []
+	var placed: Array[Dictionary] = []
 	for marker in markers:
 		if not _display_world.has_point(Vector2(marker.position)): continue
 		occupied.append(Rect2(_world_to_map(Vector2(marker.position),fitted)-Vector2.ONE*12,Vector2.ONE*24))
@@ -275,10 +276,17 @@ func _draw_marker_labels(font: Font, fitted: Rect2, content: Rect2) -> void:
 				break
 		if not label_rect.has_area(): continue
 		occupied.append(label_rect)
-		var join: Vector2 = at.clamp(label_rect.position,label_rect.end)
-		draw_line(at,join,Color("807362"),1.5,true)
-		draw_rect(label_rect,Color("101416"))
-		draw_string(font,label_rect.position+Vector2(8,27),label,HORIZONTAL_ALIGNMENT_LEFT,extent.x-16,26,Color("ded7cc"))
+		placed.append({"at":at,"rect":label_rect,"label":label})
+	# Leaders belong behind every caption, including a neighbouring label
+	# already placed earlier (the close Assay/Forge pair on the full surface).
+	for entry in placed:
+		var rect: Rect2 = entry.rect
+		var at: Vector2 = entry.at
+		draw_line(at,at.clamp(rect.position,rect.end),Color("807362"),1.5,true)
+	for entry in placed:
+		var rect: Rect2 = entry.rect
+		draw_rect(rect,Color("101416"))
+		draw_string(font,rect.position+Vector2(8,27),String(entry.label),HORIZONTAL_ALIGNMENT_LEFT,rect.size.x-16,26,Color("ded7cc"))
 
 
 func _draw_navigation_legend(font: Font) -> void:

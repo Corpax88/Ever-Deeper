@@ -31,7 +31,9 @@ The original candidate1 consumed a real worm, opened the menu and started New Ga
 
 ## Remaining acceptance limits
 
-The earlier 337 Ricochet checks are not four-skin evidence: their own snapshots all reported `original`, because the fixture failed to establish appearance prerequisites and ignored the selection return. The corrected fixture now requires a genuinely built/upgraded Tool Forge, accepted selection and matching saved skin for every case. Its actual browser results must be reviewed before closing the user's appearance complaint.
+The earlier 337 Ricochet checks are not four-skin evidence: their own snapshots all reported `original`, because the fixture failed to establish appearance prerequisites and ignored the selection return. The corrected fixture requires a genuinely built/upgraded Tool Forge, accepted selection and matching saved skin for every case.
+
+The corrected Mac Apple Metal run now passes **275 assertions with 42 captures**, source `911962378a803fa8e2058a5bf1c07b05426ae42d`, QA PCK `223867028acb48a904ad405348199e0dd86d332d23c3befa19fd5538485a55d2`. Six representative frames and their state documents were inspected. The Comet and Deepheart turn frames show the braced Ricochet, with both the fallback sprite and old native pickaxe hidden; earned reload reports saved Deepheart/Ricochet, and unequip reports restored `ember` gear. Travel/reload/unequip frames clip the hero at the top boundary (player y approximately25), so those frames cannot certify the final restored appearance. QA has been asked to capture an interior saved position while preserving this boundary observation. This is verified state persistence plus partial visual acceptance, not a claim to have reproduced/fixed every form of the user's complaint.
 
 Lifetime achievement failures now retry and retain a good generation, but their dedicated error field does not feed the expedition save-status hint. The new warning/recovery UI is tested for RunState writes. Neither mechanism can recover both generations being removed or a browser origin being evicted.
 
