@@ -36,7 +36,7 @@ func run() -> void:
 	state.treasury_totals = {"wallet_gold":100000,"prismite":100000}
 
 	Goals.pin("wallet_gold")
-	check("ready-unclaimed-goal-still-guides-home",Goals.hud_goal().get("hud_action","")=="Return to your podium")
+	check("ready-unclaimed-goal-guides-to-claim",Goals.hud_goal().get("treasury_route","")=="claim" and Goals.hud_goal().get("hud_action","")=="Claim mod · your podium")
 	check("real-mod-claim-succeeds",Goals.claim("wallet_gold"))
 	check("claim-clears-matching-goal",state.treasury_goals.pinned=="" and Goals.hud_goal().is_empty())
 	check("claimed-mod-remains-equipped",Goals.active_mod()=="resonance")

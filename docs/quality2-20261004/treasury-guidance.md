@@ -1,0 +1,15 @@
+# Treasury guidance correction
+
+Tracked Treasury goals previously fell through ordinary progression routing. A Prismite goal pointed from the Hub to the surface lift and from the Surface to Mossvein, despite its rich veins being in The Deep. Once enough material was carried, the action said to return while the arrow still pointed deeper.
+
+`treasury_goals.gd` now describes an explicit gathering, sale, donation or claim route. `main.gd` follows that route to the actual world destination. Rich material goals use The Deep; ordinary collections use an unlocked catalog mine and accessible depth. A named collection never falls back to pointing at unrelated ore. Currency uses the real Assay sale snapshot and a sellable ordinary resource source. Carrying enough leads to the Treasury entrance and donation plate; a full, unclaimed mod leads to its correct podium. From The Deep, return steps show the existing Tunnel Home action without a misleading downward arrow.
+
+An explicitly started discovery path temporarily shows its next seal while retaining the collection pin. Nearby unopened discoveries do not interrupt that pin. Completing or cancelling the activity restores it. Base progression, resource yields, prices, reward claims and save formats are unchanged. The Assay status also acknowledges protection of tracked goals.
+
+The focused route probe passed 29/29 checks using actual goal, route, donation, sale and claim owners plus instantiated world transitions. It passed both in a native rendered run and in explicit headless assertion mode. Four actual 667-width captures were inspected: Hub elevator target, the ready-haul Home instruction, the donation plate, and the claim-podium direction. New action labels were shortened after capture inspection so they remain readable at this width. This does not represent a physical-phone or complete gameplay acceptance.
+
+Evidence lives in `evidence/treasury-routes/`. `package-receipt.json` binds the exact accepted DEV15.55 base PCK `59ece4e280ea8a0964c263855ff2147aaee040cb5172061019c6d24008a0a52b` and scoped candidate `d3644e038c53bc34f1bac17be0fa4985496221f0577910a744b8f0a1d7da8ba0`; only `main.gd` and `treasury_goals.gd` plus their remaps were replaced. Other agents' later notice/camera/UI/reserve changes require integrated verification.
+
+Two earlier probe attempts passed 27/29 checks. Their discovery fixture used walkable-position restoration while the selected generated room was still buried, so it never started the activity. The final fixture positions the hero at the actual generated choice pad and calls the real start-activity authority. It does not claim to prove travel or excavation into that room. Both failed check reports are retained; no production rule was relaxed.
+
+CI invokes `tools/review_treasury_routes.gd` with `--route-assertions-only` when using the headless renderer. It runs the same assertions and skips only PNG capture; `mode.json` states this distinction. The retained completion probe now checks the explicit claim action instead of the old generic return string.

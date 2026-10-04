@@ -1,0 +1,1352 @@
+[
+	{
+		"case": "deep gathering",
+		"goal": {
+			"depth": 1,
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Rich veins · The Deep",
+			"hud_title": "Laser",
+			"kind": "treasury_goal",
+			"mine_id": "",
+			"objective_id": "treasury:prismite",
+			"requirements": [
+				{
+					"id": "treasury:prismite",
+					"name": "Prismite",
+					"owned": 0,
+					"pending_sale": 0,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "prismite",
+					"texture_path": "res://assets/drops/prismite-drop.png"
+				}
+			],
+			"resource_id": "prismite",
+			"route_resource_id": "prismite",
+			"title": "Laser",
+			"treasury_route": "endless"
+		},
+		"phase": "endless",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "endless:treasury:prismite",
+					"position": "(928.0, 2784.0)",
+					"priority": 0.0
+				}
+			],
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Rich veins · The Deep",
+			"objective_id": "treasury:prismite",
+			"title": "Laser",
+			"waypoint_id": "endless:treasury:prismite"
+		}
+	},
+	{
+		"case": "hub gathering",
+		"goal": {
+			"depth": 1,
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Rich veins · The Deep",
+			"hud_title": "Laser",
+			"kind": "treasury_goal",
+			"mine_id": "",
+			"objective_id": "treasury:prismite",
+			"requirements": [
+				{
+					"id": "treasury:prismite",
+					"name": "Prismite",
+					"owned": 0,
+					"pending_sale": 0,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "prismite",
+					"texture_path": "res://assets/drops/prismite-drop.png"
+				}
+			],
+			"resource_id": "prismite",
+			"route_resource_id": "prismite",
+			"title": "Laser",
+			"treasury_route": "endless"
+		},
+		"phase": "hub",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "hub:deep_elevator",
+					"position": "(720.0, 142.0)",
+					"priority": 0.0
+				}
+			],
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Enter The Deep · Hub",
+			"objective_id": "treasury:prismite",
+			"title": "Laser",
+			"waypoint_id": "hub:deep_elevator"
+		}
+	},
+	{
+		"case": "surface gathering",
+		"goal": {
+			"depth": 1,
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Rich veins · The Deep",
+			"hud_title": "Laser",
+			"kind": "treasury_goal",
+			"mine_id": "",
+			"objective_id": "treasury:prismite",
+			"requirements": [
+				{
+					"id": "treasury:prismite",
+					"name": "Prismite",
+					"owned": 0,
+					"pending_sale": 0,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "prismite",
+					"texture_path": "res://assets/drops/prismite-drop.png"
+				}
+			],
+			"resource_id": "prismite",
+			"route_resource_id": "prismite",
+			"title": "Laser",
+			"treasury_route": "endless"
+		},
+		"phase": "surface",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "surface:hub_entrance",
+					"position": "(4200.0, 650.0)",
+					"priority": 0.0
+				}
+			],
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Rich veins · The Deep",
+			"objective_id": "treasury:prismite",
+			"title": "Laser",
+			"waypoint_id": "surface:hub_entrance"
+		}
+	},
+	{
+		"case": "surface ready",
+		"goal": {
+			"depth": 1,
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Donate · Treasury plate",
+			"hud_title": "Laser",
+			"kind": "treasury_goal",
+			"mine_id": "",
+			"objective_id": "treasury:prismite",
+			"requirements": [
+				{
+					"id": "treasury:prismite",
+					"name": "Prismite",
+					"owned": 0,
+					"pending_sale": 100000,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "prismite",
+					"texture_path": "res://assets/drops/prismite-drop.png"
+				}
+			],
+			"resource_id": "prismite",
+			"route_resource_id": "prismite",
+			"title": "Laser",
+			"treasury_route": "donate"
+		},
+		"phase": "surface",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "surface:hub_entrance",
+					"position": "(4200.0, 650.0)",
+					"priority": 0.0
+				}
+			],
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Donate · Treasury plate",
+			"objective_id": "treasury:prismite",
+			"title": "Laser",
+			"waypoint_id": "surface:hub_entrance"
+		}
+	},
+	{
+		"case": "deep ready",
+		"goal": {
+			"depth": 1,
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Donate · Treasury plate",
+			"hud_title": "Laser",
+			"kind": "treasury_goal",
+			"mine_id": "",
+			"objective_id": "treasury:prismite",
+			"requirements": [
+				{
+					"id": "treasury:prismite",
+					"name": "Prismite",
+					"owned": 0,
+					"pending_sale": 100000,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "prismite",
+					"texture_path": "res://assets/drops/prismite-drop.png"
+				}
+			],
+			"resource_id": "prismite",
+			"route_resource_id": "prismite",
+			"title": "Laser",
+			"treasury_route": "donate"
+		},
+		"phase": "endless",
+		"proposal": {
+			"candidates": [],
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Tunnel Home · donate",
+			"objective_id": "treasury:prismite",
+			"title": "Laser",
+			"waypoint_id": "endless:treasury:prismite"
+		}
+	},
+	{
+		"case": "hub ready",
+		"goal": {
+			"depth": 1,
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Donate · Treasury plate",
+			"hud_title": "Laser",
+			"kind": "treasury_goal",
+			"mine_id": "",
+			"objective_id": "treasury:prismite",
+			"requirements": [
+				{
+					"id": "treasury:prismite",
+					"name": "Prismite",
+					"owned": 0,
+					"pending_sale": 100000,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "prismite",
+					"texture_path": "res://assets/drops/prismite-drop.png"
+				}
+			],
+			"resource_id": "prismite",
+			"route_resource_id": "prismite",
+			"title": "Laser",
+			"treasury_route": "donate"
+		},
+		"phase": "hub",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "hub:treasury",
+					"position": "(1345.0, 766.0)",
+					"priority": 0.0
+				}
+			],
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Donate · Treasury plate",
+			"objective_id": "treasury:prismite",
+			"title": "Laser",
+			"waypoint_id": "hub:treasury"
+		}
+	},
+	{
+		"case": "treasury donation",
+		"goal": {
+			"depth": 1,
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Donate · Treasury plate",
+			"hud_title": "Laser",
+			"kind": "treasury_goal",
+			"mine_id": "",
+			"objective_id": "treasury:prismite",
+			"requirements": [
+				{
+					"id": "treasury:prismite",
+					"name": "Prismite",
+					"owned": 0,
+					"pending_sale": 100000,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "prismite",
+					"texture_path": "res://assets/drops/prismite-drop.png"
+				}
+			],
+			"resource_id": "prismite",
+			"route_resource_id": "prismite",
+			"title": "Laser",
+			"treasury_route": "donate"
+		},
+		"phase": "hub",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "treasury:donation",
+					"position": "(600.0, 1430.0)",
+					"priority": 0.0
+				}
+			],
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Donate · Treasury plate",
+			"objective_id": "treasury:prismite",
+			"title": "Laser",
+			"waypoint_id": "treasury:donation"
+		}
+	},
+	{
+		"case": "treasury claim",
+		"goal": {
+			"depth": 1,
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Claim mod · your podium",
+			"hud_title": "Laser",
+			"kind": "treasury_goal",
+			"mine_id": "",
+			"objective_id": "treasury:prismite",
+			"requirements": [
+				{
+					"id": "treasury:prismite",
+					"name": "Prismite",
+					"owned": 100000,
+					"pending_sale": 0,
+					"ready": true,
+					"required": 100000,
+					"resource_id": "prismite",
+					"texture_path": "res://assets/drops/prismite-drop.png"
+				}
+			],
+			"resource_id": "prismite",
+			"route_resource_id": "prismite",
+			"title": "Laser",
+			"treasury_route": "claim"
+		},
+		"phase": "hub",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "treasury:podium:prismite",
+					"position": "(3640.584, 1315.744)",
+					"priority": 0.0
+				}
+			],
+			"detail": "The Deep · track this goal for rich veins in new ground\nMoonglass · Depth 2",
+			"hud_action": "Claim mod · your podium",
+			"objective_id": "treasury:prismite",
+			"title": "Laser",
+			"waypoint_id": "treasury:podium:prismite"
+		}
+	},
+	{
+		"case": "wallet sell in Hub",
+		"goal": {
+			"depth": 1,
+			"detail": "Sell ore at the Hub shop",
+			"hud_action": "Sell ore · Hub shop",
+			"hud_title": "Resonance",
+			"kind": "treasury_goal",
+			"mine_id": "",
+			"objective_id": "treasury:wallet_gold",
+			"requirements": [
+				{
+					"id": "treasury:wallet_gold",
+					"name": "Gold",
+					"owned": 0,
+					"pending_sale": 0,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "wallet_gold",
+					"texture_path": "res://assets/ui/gold-bars-v1.png"
+				}
+			],
+			"resource_id": "wallet_gold",
+			"route_resource_id": "wallet_gold",
+			"title": "Resonance",
+			"treasury_route": "sell"
+		},
+		"phase": "hub",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "hub:shop",
+					"position": "(1100.0, 742.0)",
+					"priority": 0.0
+				}
+			],
+			"detail": "Sell ore at the Hub shop",
+			"hud_action": "Sell ore · Hub shop",
+			"objective_id": "treasury:wallet_gold",
+			"title": "Resonance",
+			"waypoint_id": "hub:shop"
+		}
+	},
+	{
+		"case": "wallet sold",
+		"goal": {
+			"depth": 1,
+			"detail": "Sell ore at the Hub shop",
+			"hud_action": "Donate · Treasury plate",
+			"hud_title": "Resonance",
+			"kind": "treasury_goal",
+			"mine_id": "",
+			"objective_id": "treasury:wallet_gold",
+			"requirements": [
+				{
+					"id": "treasury:wallet_gold",
+					"name": "Gold",
+					"owned": 0,
+					"pending_sale": 100000,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "wallet_gold",
+					"texture_path": "res://assets/ui/gold-bars-v1.png"
+				}
+			],
+			"resource_id": "wallet_gold",
+			"route_resource_id": "wallet_gold",
+			"title": "Resonance",
+			"treasury_route": "donate"
+		},
+		"phase": "hub",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "hub:treasury",
+					"position": "(1345.0, 766.0)",
+					"priority": 0.0
+				}
+			],
+			"detail": "Sell ore at the Hub shop",
+			"hud_action": "Donate · Treasury plate",
+			"objective_id": "treasury:wallet_gold",
+			"title": "Resonance",
+			"waypoint_id": "hub:treasury"
+		}
+	},
+	{
+		"case": "wallet empty",
+		"goal": {
+			"depth": 1,
+			"detail": "Sell ore at the Hub shop",
+			"hud_action": "Mine & sell · Starfall",
+			"hud_title": "Resonance",
+			"kind": "treasury_goal",
+			"mine_id": "starMine",
+			"objective_id": "treasury:wallet_gold",
+			"requirements": [
+				{
+					"id": "treasury:wallet_gold",
+					"name": "Gold",
+					"owned": 0,
+					"pending_sale": 0,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "wallet_gold",
+					"texture_path": "res://assets/ui/gold-bars-v1.png"
+				}
+			],
+			"resource_id": "wallet_gold",
+			"route_resource_id": "crownstone",
+			"title": "Resonance",
+			"treasury_route": "mine"
+		},
+		"phase": "hub",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "hub:surface_lift",
+					"position": "(240.0, 820.0)",
+					"priority": 0.0
+				}
+			],
+			"detail": "Sell ore at the Hub shop",
+			"hud_action": "Mine & sell · Starfall",
+			"objective_id": "treasury:wallet_gold",
+			"title": "Resonance",
+			"waypoint_id": "hub:surface_lift"
+		}
+	},
+	{
+		"case": "wallet mine",
+		"goal": {
+			"depth": 1,
+			"detail": "Sell ore at the Hub shop",
+			"hud_action": "Mine & sell · Starfall",
+			"hud_title": "Resonance",
+			"kind": "treasury_goal",
+			"mine_id": "starMine",
+			"objective_id": "treasury:wallet_gold",
+			"requirements": [
+				{
+					"id": "treasury:wallet_gold",
+					"name": "Gold",
+					"owned": 0,
+					"pending_sale": 0,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "wallet_gold",
+					"texture_path": "res://assets/ui/gold-bars-v1.png"
+				}
+			],
+			"resource_id": "wallet_gold",
+			"route_resource_id": "crownstone",
+			"title": "Resonance",
+			"treasury_route": "mine"
+		},
+		"phase": "surface",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "surface:mine:starMine",
+					"position": "(3740.0, 664.0)",
+					"priority": 0.0
+				}
+			],
+			"detail": "Sell ore at the Hub shop",
+			"hud_action": "Mine & sell · Starfall",
+			"objective_id": "treasury:wallet_gold",
+			"title": "Resonance",
+			"waypoint_id": "surface:mine:starMine"
+		}
+	},
+	{
+		"case": "ordinary Depth 1",
+		"goal": {
+			"depth": 1,
+			"detail": "Moonglass · Depth 1 / Emberdeep · Depth 1",
+			"hud_action": "Mine · Moonglass Depth 1",
+			"hud_title": "Moonglass collection",
+			"kind": "treasury_goal",
+			"mine_id": "moonMine",
+			"objective_id": "treasury:moonglass",
+			"requirements": [
+				{
+					"id": "treasury:moonglass",
+					"name": "Moonglass",
+					"owned": 0,
+					"pending_sale": 0,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "moonglass",
+					"texture_path": "res://assets/drops/moonglass-drop.png"
+				}
+			],
+			"resource_id": "moonglass",
+			"route_resource_id": "moonglass",
+			"title": "Moonglass collection",
+			"treasury_route": "mine"
+		},
+		"phase": "surface",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "surface:mine:moonMine",
+					"position": "(1430.0, 666.0)",
+					"priority": 0.0
+				}
+			],
+			"detail": "Moonglass · Depth 1 / Emberdeep · Depth 1",
+			"hud_action": "Mine · Moonglass Depth 1",
+			"objective_id": "treasury:moonglass",
+			"title": "Moonglass collection",
+			"waypoint_id": "surface:mine:moonMine"
+		}
+	},
+	{
+		"case": "ordinary target ore",
+		"goal": {
+			"depth": 1,
+			"detail": "Moonglass · Depth 1 / Emberdeep · Depth 1",
+			"hud_action": "Mine · Moonglass Depth 1",
+			"hud_title": "Moonglass collection",
+			"kind": "treasury_goal",
+			"mine_id": "moonMine",
+			"objective_id": "treasury:moonglass",
+			"requirements": [
+				{
+					"id": "treasury:moonglass",
+					"name": "Moonglass",
+					"owned": 0,
+					"pending_sale": 0,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "moonglass",
+					"texture_path": "res://assets/drops/moonglass-drop.png"
+				}
+			],
+			"resource_id": "moonglass",
+			"route_resource_id": "moonglass",
+			"title": "Moonglass collection",
+			"treasury_route": "mine"
+		},
+		"phase": "mine",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "mine:moonMine:cell:26:6",
+					"position": "(1272.0, 312.0)",
+					"priority": 1828793.0
+				},
+				{
+					"key": "mine:moonMine:cell:5:8",
+					"position": "(264.0, 408.0)",
+					"priority": 596825.0
+				},
+				{
+					"key": "mine:moonMine:cell:17:8",
+					"position": "(840.0, 408.0)",
+					"priority": 962009.0
+				},
+				{
+					"key": "mine:moonMine:cell:29:11",
+					"position": "(1416.0, 552.0)",
+					"priority": 1789145.0
+				},
+				{
+					"key": "mine:moonMine:cell:15:15",
+					"position": "(744.0, 744.0)",
+					"priority": 449177.0
+				},
+				{
+					"key": "mine:moonMine:cell:6:17",
+					"position": "(312.0, 840.0)",
+					"priority": 121529.0
+				},
+				{
+					"key": "mine:moonMine:cell:26:18",
+					"position": "(1272.0, 888.0)",
+					"priority": 1160633.0
+				},
+				{
+					"key": "mine:moonMine:cell:15:24",
+					"position": "(744.0, 1176.0)",
+					"priority": 259097.0
+				},
+				{
+					"key": "mine:moonMine:cell:7:38",
+					"position": "(360.0, 1848.0)",
+					"priority": 461849.0
+				},
+				{
+					"key": "mine:moonMine:cell:7:39",
+					"position": "(360.0, 1896.0)",
+					"priority": 528281.0
+				},
+				{
+					"key": "mine:moonMine:cell:7:40",
+					"position": "(360.0, 1944.0)",
+					"priority": 599321.0
+				},
+				{
+					"key": "mine:moonMine:cell:6:41",
+					"position": "(312.0, 1992.0)",
+					"priority": 665273.0
+				},
+				{
+					"key": "mine:moonMine:cell:16:41",
+					"position": "(792.0, 1992.0)",
+					"priority": 969593.0
+				},
+				{
+					"key": "mine:moonMine:cell:7:42",
+					"position": "(360.0, 2040.0)",
+					"priority": 755225.0
+				},
+				{
+					"key": "mine:moonMine:cell:17:42",
+					"position": "(840.0, 2040.0)",
+					"priority": 1105625.0
+				},
+				{
+					"key": "mine:moonMine:cell:7:43",
+					"position": "(360.0, 2088.0)",
+					"priority": 840089.0
+				},
+				{
+					"key": "mine:moonMine:cell:18:43",
+					"position": "(888.0, 2088.0)",
+					"priority": 1250873.0
+				},
+				{
+					"key": "mine:moonMine:cell:6:44",
+					"position": "(312.0, 2136.0)",
+					"priority": 919865.0
+				},
+				{
+					"key": "mine:moonMine:cell:7:45",
+					"position": "(360.0, 2184.0)",
+					"priority": 1023641.0
+				},
+				{
+					"key": "mine:moonMine:cell:20:45",
+					"position": "(984.0, 2184.0)",
+					"priority": 1569017.0
+				},
+				{
+					"key": "mine:moonMine:cell:21:46",
+					"position": "(1032.0, 2232.0)",
+					"priority": 1741913.0
+				},
+				{
+					"key": "mine:moonMine:cell:30:48",
+					"position": "(1464.0, 2328.0)",
+					"priority": 2828345.0
+				},
+				{
+					"key": "mine:moonMine:cell:27:49",
+					"position": "(1320.0, 2376.0)",
+					"priority": 2607641.0
+				},
+				{
+					"key": "mine:moonMine:cell:28:49",
+					"position": "(1368.0, 2376.0)",
+					"priority": 2714105.0
+				},
+				{
+					"key": "mine:moonMine:cell:29:49",
+					"position": "(1416.0, 2376.0)",
+					"priority": 2825177.0
+				},
+				{
+					"key": "mine:moonMine:cell:31:49",
+					"position": "(1512.0, 2376.0)",
+					"priority": 3061145.0
+				},
+				{
+					"key": "mine:moonMine:cell:32:49",
+					"position": "(1560.0, 2376.0)",
+					"priority": 3186041.0
+				},
+				{
+					"key": "mine:moonMine:cell:6:50",
+					"position": "(312.0, 2424.0)",
+					"priority": 1553465.0
+				},
+				{
+					"key": "mine:moonMine:cell:7:50",
+					"position": "(360.0, 2424.0)",
+					"priority": 1563161.0
+				},
+				{
+					"key": "mine:moonMine:cell:8:50",
+					"position": "(408.0, 2424.0)",
+					"priority": 1577465.0
+				},
+				{
+					"key": "mine:moonMine:cell:6:51",
+					"position": "(312.0, 2472.0)",
+					"priority": 1675193.0
+				},
+				{
+					"key": "mine:moonMine:cell:8:51",
+					"position": "(408.0, 2472.0)",
+					"priority": 1699193.0
+				},
+				{
+					"key": "mine:moonMine:cell:27:51",
+					"position": "(1320.0, 2472.0)",
+					"priority": 2846489.0
+				},
+				{
+					"key": "mine:moonMine:cell:26:52",
+					"position": "(1272.0, 2520.0)",
+					"priority": 2870969.0
+				},
+				{
+					"key": "mine:moonMine:cell:25:53",
+					"position": "(1224.0, 2568.0)",
+					"priority": 2904665.0
+				},
+				{
+					"key": "mine:moonMine:cell:23:55",
+					"position": "(1128.0, 2664.0)",
+					"priority": 2999705.0
+				},
+				{
+					"key": "mine:moonMine:cell:25:55",
+					"position": "(1224.0, 2664.0)",
+					"priority": 3180377.0
+				},
+				{
+					"key": "mine:moonMine:cell:22:56",
+					"position": "(1080.0, 2712.0)",
+					"priority": 3061049.0
+				},
+				{
+					"key": "mine:moonMine:cell:20:58",
+					"position": "(984.0, 2808.0)",
+					"priority": 3211385.0
+				},
+				{
+					"key": "mine:moonMine:cell:22:58",
+					"position": "(1080.0, 2808.0)",
+					"priority": 3364409.0
+				},
+				{
+					"key": "mine:moonMine:cell:20:60",
+					"position": "(984.0, 2904.0)",
+					"priority": 3533177.0
+				},
+				{
+					"key": "mine:moonMine:cell:20:61",
+					"position": "(984.0, 2952.0)",
+					"priority": 3700985.0
+				},
+				{
+					"key": "mine:moonMine:cell:20:62",
+					"position": "(984.0, 3000.0)",
+					"priority": 3873401.0
+				},
+				{
+					"key": "mine:moonMine:cell:21:63",
+					"position": "(1032.0, 3048.0)",
+					"priority": 4124633.0
+				},
+				{
+					"key": "mine:moonMine:cell:20:64",
+					"position": "(984.0, 3096.0)",
+					"priority": 4232057.0
+				},
+				{
+					"key": "mine:moonMine:cell:20:65",
+					"position": "(984.0, 3144.0)",
+					"priority": 4418297.0
+				},
+				{
+					"key": "mine:moonMine:cell:15:66",
+					"position": "(744.0, 3192.0)",
+					"priority": 4307225.0
+				},
+				{
+					"key": "mine:moonMine:cell:17:66",
+					"position": "(840.0, 3192.0)",
+					"priority": 4414169.0
+				},
+				{
+					"key": "mine:moonMine:cell:21:66",
+					"position": "(1032.0, 3192.0)",
+					"priority": 4683353.0
+				},
+				{
+					"key": "mine:moonMine:cell:12:67",
+					"position": "(600.0, 3240.0)",
+					"priority": 4376825.0
+				},
+				{
+					"key": "mine:moonMine:cell:14:67",
+					"position": "(696.0, 3240.0)",
+					"priority": 4456121.0
+				},
+				{
+					"key": "mine:moonMine:cell:20:67",
+					"position": "(984.0, 3240.0)",
+					"priority": 4804601.0
+				},
+				{
+					"key": "mine:moonMine:cell:20:68",
+					"position": "(984.0, 3288.0)",
+					"priority": 5004665.0
+				},
+				{
+					"key": "mine:moonMine:cell:12:69",
+					"position": "(600.0, 3336.0)",
+					"priority": 4781561.0
+				},
+				{
+					"key": "mine:moonMine:cell:11:70",
+					"position": "(552.0, 3384.0)",
+					"priority": 4958105.0
+				},
+				{
+					"key": "mine:moonMine:cell:7:78",
+					"position": "(360.0, 3768.0)",
+					"priority": 6713369.0
+				},
+				{
+					"key": "mine:moonMine:cell:6:79",
+					"position": "(312.0, 3816.0)",
+					"priority": 6954425.0
+				},
+				{
+					"key": "mine:moonMine:cell:5:80",
+					"position": "(264.0, 3864.0)",
+					"priority": 7204697.0
+				},
+				{
+					"key": "mine:moonMine:cell:5:82",
+					"position": "(264.0, 3960.0)",
+					"priority": 7729241.0
+				},
+				{
+					"key": "mine:moonMine:cell:22:93",
+					"position": "(1080.0, 4488.0)",
+					"priority": 11656889.0
+				},
+				{
+					"key": "mine:moonMine:cell:21:94",
+					"position": "(1032.0, 4536.0)",
+					"priority": 11897945.0
+				},
+				{
+					"key": "mine:moonMine:cell:18:95",
+					"position": "(888.0, 4584.0)",
+					"priority": 12013625.0
+				},
+				{
+					"key": "mine:moonMine:cell:20:95",
+					"position": "(984.0, 4584.0)",
+					"priority": 12148217.0
+				},
+				{
+					"key": "mine:moonMine:cell:7:96",
+					"position": "(360.0, 4632.0)",
+					"priority": 11931929.0
+				},
+				{
+					"key": "mine:moonMine:cell:8:96",
+					"position": "(408.0, 4632.0)",
+					"priority": 11946233.0
+				},
+				{
+					"key": "mine:moonMine:cell:9:96",
+					"position": "(456.0, 4632.0)",
+					"priority": 11965145.0
+				},
+				{
+					"key": "mine:moonMine:cell:7:97",
+					"position": "(360.0, 4680.0)",
+					"priority": 12265625.0
+				},
+				{
+					"key": "mine:moonMine:cell:9:97",
+					"position": "(456.0, 4680.0)",
+					"priority": 12298841.0
+				},
+				{
+					"key": "mine:moonMine:cell:18:97",
+					"position": "(888.0, 4680.0)",
+					"priority": 12676409.0
+				},
+				{
+					"key": "mine:moonMine:cell:15:99",
+					"position": "(744.0, 4776.0)",
+					"priority": 13190297.0
+				},
+				{
+					"key": "mine:moonMine:cell:16:100",
+					"position": "(792.0, 4824.0)",
+					"priority": 13588985.0
+				},
+				{
+					"key": "mine:moonMine:cell:16:101",
+					"position": "(792.0, 4872.0)",
+					"priority": 13941113.0
+				},
+				{
+					"key": "mine:moonMine:cell:17:101",
+					"position": "(840.0, 4872.0)",
+					"priority": 13996889.0
+				},
+				{
+					"key": "mine:moonMine:cell:15:102",
+					"position": "(744.0, 4920.0)",
+					"priority": 14246681.0
+				},
+				{
+					"key": "mine:moonMine:cell:14:103",
+					"position": "(696.0, 4968.0)",
+					"priority": 14561465.0
+				},
+				{
+					"key": "mine:moonMine:cell:19:103",
+					"position": "(936.0, 4968.0)",
+					"priority": 14840345.0
+				},
+				{
+					"key": "mine:moonMine:cell:20:104",
+					"position": "(984.0, 5016.0)",
+					"priority": 15275897.0
+				},
+				{
+					"key": "mine:moonMine:cell:12:105",
+					"position": "(600.0, 5064.0)",
+					"priority": 15218681.0
+				},
+				{
+					"key": "mine:moonMine:cell:14:105",
+					"position": "(696.0, 5064.0)",
+					"priority": 15297977.0
+				}
+			],
+			"detail": "Moonglass · Depth 1 / Emberdeep · Depth 1",
+			"hud_action": "Mine · Moonglass Depth 1",
+			"objective_id": "treasury:moonglass",
+			"title": "Moonglass collection",
+			"waypoint_id": "mine:moonMine:resource:moonglass"
+		}
+	},
+	{
+		"case": "ordinary requested seam exhausted",
+		"goal": {
+			"depth": 1,
+			"detail": "Moonglass · Depth 1 / Emberdeep · Depth 1",
+			"hud_action": "Mine · Moonglass Depth 1",
+			"hud_title": "Moonglass collection",
+			"kind": "treasury_goal",
+			"mine_id": "moonMine",
+			"objective_id": "treasury:moonglass",
+			"requirements": [
+				{
+					"id": "treasury:moonglass",
+					"name": "Moonglass",
+					"owned": 0,
+					"pending_sale": 0,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "moonglass",
+					"texture_path": "res://assets/drops/moonglass-drop.png"
+				}
+			],
+			"resource_id": "moonglass",
+			"route_resource_id": "moonglass",
+			"title": "Moonglass collection",
+			"treasury_route": "mine"
+		},
+		"phase": "mine",
+		"proposal": {
+			"candidates": [],
+			"detail": "Moonglass · Depth 1 / Emberdeep · Depth 1",
+			"hud_action": "Explore · find Moonglass",
+			"objective_id": "treasury:moonglass",
+			"title": "Moonglass collection",
+			"waypoint_id": "mine:moonMine:resource:moonglass"
+		}
+	},
+	{
+		"case": "ordinary Depth 2 surface",
+		"goal": {
+			"depth": 2,
+			"detail": "Mossvein · Depth 2",
+			"hud_action": "Mine · Mossvein Depth 2",
+			"hud_title": "Ambercore collection",
+			"kind": "treasury_goal",
+			"mine_id": "mossMine",
+			"objective_id": "treasury:ambercore",
+			"requirements": [
+				{
+					"id": "treasury:ambercore",
+					"name": "Ambercore",
+					"owned": 0,
+					"pending_sale": 0,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "ambercore",
+					"texture_path": "res://assets/drops/ambercore-drop.png"
+				}
+			],
+			"resource_id": "ambercore",
+			"route_resource_id": "ambercore",
+			"title": "Ambercore collection",
+			"treasury_route": "mine"
+		},
+		"phase": "surface",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "surface:mine:mossMine",
+					"position": "(930.0, 900.0)",
+					"priority": 0.0
+				}
+			],
+			"detail": "Mossvein · Depth 2",
+			"hud_action": "Mine · Mossvein Depth 2",
+			"objective_id": "treasury:ambercore",
+			"title": "Ambercore collection",
+			"waypoint_id": "surface:mine:mossMine"
+		}
+	},
+	{
+		"case": "ordinary Depth 2 shaft",
+		"goal": {
+			"depth": 2,
+			"detail": "Mossvein · Depth 2",
+			"hud_action": "Mine · Mossvein Depth 2",
+			"hud_title": "Ambercore collection",
+			"kind": "treasury_goal",
+			"mine_id": "mossMine",
+			"objective_id": "treasury:ambercore",
+			"requirements": [
+				{
+					"id": "treasury:ambercore",
+					"name": "Ambercore",
+					"owned": 0,
+					"pending_sale": 0,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "ambercore",
+					"texture_path": "res://assets/drops/ambercore-drop.png"
+				}
+			],
+			"resource_id": "ambercore",
+			"route_resource_id": "ambercore",
+			"title": "Ambercore collection",
+			"treasury_route": "mine"
+		},
+		"phase": "mine",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "mine:mossMine:shaft",
+					"position": "(1752.0, 2808.0)",
+					"priority": 0.0
+				}
+			],
+			"detail": "Mossvein · Depth 2",
+			"hud_action": "Mine · Mossvein Depth 2",
+			"objective_id": "treasury:ambercore",
+			"title": "Ambercore collection",
+			"waypoint_id": "mine:mossMine:shaft"
+		}
+	},
+	{
+		"case": "ordinary Depth 2 resource",
+		"goal": {
+			"depth": 2,
+			"detail": "Mossvein · Depth 2",
+			"hud_action": "Mine · Mossvein Depth 2",
+			"hud_title": "Ambercore collection",
+			"kind": "treasury_goal",
+			"mine_id": "mossMine",
+			"objective_id": "treasury:ambercore",
+			"requirements": [
+				{
+					"id": "treasury:ambercore",
+					"name": "Ambercore",
+					"owned": 0,
+					"pending_sale": 0,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "ambercore",
+					"texture_path": "res://assets/drops/ambercore-drop.png"
+				}
+			],
+			"resource_id": "ambercore",
+			"route_resource_id": "ambercore",
+			"title": "Ambercore collection",
+			"treasury_route": "mine"
+		},
+		"phase": "depth",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "depth:mossMine:mossMine_depth2_vein_4:20",
+					"position": "(1608.0, 840.0)",
+					"priority": 4365472.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_vein_4:21",
+					"position": "(1656.0, 888.0)",
+					"priority": 4148128.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_vein_4:22",
+					"position": "(1704.0, 888.0)",
+					"priority": 4132384.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_vein_4:23",
+					"position": "(1752.0, 840.0)",
+					"priority": 4318240.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_vein_8:41",
+					"position": "(984.0, 1368.0)",
+					"priority": 3135904.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_vein_8:42",
+					"position": "(936.0, 1416.0)",
+					"priority": 3074464.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_vein_8:43",
+					"position": "(888.0, 1464.0)",
+					"priority": 3022240.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_vein_8:44",
+					"position": "(888.0, 1560.0)",
+					"priority": 2752672.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_vein_8:45",
+					"position": "(792.0, 1560.0)",
+					"priority": 2945440.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_vein_8:46",
+					"position": "(744.0, 1608.0)",
+					"priority": 2920864.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_vein_12:63",
+					"position": "(1080.0, 2136.0)",
+					"priority": 1192096.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_vein_12:64",
+					"position": "(1032.0, 2184.0)",
+					"priority": 1195168.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_vein_12:65",
+					"position": "(1080.0, 2232.0)",
+					"priority": 1051552.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_vein_12:66",
+					"position": "(1080.0, 2280.0)",
+					"priority": 988192.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_vein_12:67",
+					"position": "(1032.0, 2328.0)",
+					"priority": 1005088.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_pocket_reward_2_deposit:85",
+					"position": "(408.0, 1560.0)",
+					"priority": 3900832.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_pocket_reward_2_deposit:86",
+					"position": "(456.0, 1512.0)",
+					"priority": 3897760.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_pocket_reward_2_deposit:87",
+					"position": "(504.0, 1560.0)",
+					"priority": 3634336.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_cavern_4_rare_find:93",
+					"position": "(1128.0, 2520.0)",
+					"priority": 669472.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_pocket_reward_6_deposit:94",
+					"position": "(696.0, 3624.0)",
+					"priority": 1819168.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_pocket_reward_6_deposit:95",
+					"position": "(744.0, 3576.0)",
+					"priority": 1645600.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_pocket_reward_6_deposit:96",
+					"position": "(792.0, 3624.0)",
+					"priority": 1607968.0
+				},
+				{
+					"key": "depth:mossMine:mossMine_depth2_cavern_8_rare_find:102",
+					"position": "(504.0, 4536.0)",
+					"priority": 4420000.0
+				}
+			],
+			"detail": "Mossvein · Depth 2",
+			"hud_action": "Mine · Mossvein Depth 2",
+			"objective_id": "treasury:ambercore",
+			"title": "Ambercore collection",
+			"waypoint_id": "depth:mossMine:resource:ambercore"
+		}
+	},
+	{
+		"case": "locked collection",
+		"goal": {
+			"depth": 1,
+			"detail": "Moonglass · Depth 1 / Emberdeep · Depth 1",
+			"hud_action": "Find an accessible source · Moonglass",
+			"hud_title": "Moonglass collection",
+			"kind": "treasury_goal",
+			"mine_id": "",
+			"objective_id": "treasury:moonglass",
+			"requirements": [
+				{
+					"id": "treasury:moonglass",
+					"name": "Moonglass",
+					"owned": 0,
+					"pending_sale": 0,
+					"ready": false,
+					"required": 100000,
+					"resource_id": "moonglass",
+					"texture_path": "res://assets/drops/moonglass-drop.png"
+				}
+			],
+			"resource_id": "moonglass",
+			"route_resource_id": "moonglass",
+			"title": "Moonglass collection",
+			"treasury_route": "unavailable"
+		},
+		"phase": "surface",
+		"proposal": {
+			"candidates": [],
+			"detail": "Moonglass · Depth 1 / Emberdeep · Depth 1",
+			"hud_action": "Find an accessible source · Moonglass",
+			"objective_id": "treasury:moonglass",
+			"title": "Moonglass collection",
+			"waypoint_id": "surface:treasury:moonglass"
+		}
+	},
+	{
+		"case": "activity preflight",
+		"current_depth": 3,
+		"player": "(360.6886, 1776.097)",
+		"site": {
+			"base_reward": 52,
+			"choice": "",
+			"depth": 3,
+			"discovered": true,
+			"id": "endless_d000003_site_00",
+			"index": 12,
+			"position": "(432.6886, 1740.097)",
+			"resolved": false,
+			"reward_kind": "lumenstone",
+			"rune_positions": [
+				"(432.6886, 1646.097)",
+				"(526.6886, 1740.097)",
+				"(432.6886, 1834.097)",
+				"(338.6886, 1740.097)"
+			],
+			"site_index": 0,
+			"title": "LOST CAMP",
+			"variant": 3
+		},
+		"started": true
+	},
+	{
+		"case": "active discovery",
+		"goal": {
+			"discovery_target": "(432.6886, 1646.097)",
+			"hud_action": "Follow the lit seals",
+			"hud_title": "Lost Camp",
+			"kind": "endless_explore",
+			"objective_id": "endless:discovery:endless_d000003_site_00:rune:0",
+			"title": "Lost Camp"
+		},
+		"phase": "endless",
+		"proposal": {
+			"candidates": [
+				{
+					"key": "endless:discovery:endless_d000003_site_00:rune:0",
+					"position": "(432.6886, 1646.097)",
+					"priority": 0.0
+				}
+			],
+			"detail": "",
+			"objective_id": "endless:discovery:endless_d000003_site_00:rune:0",
+			"title": "Lost Camp",
+			"waypoint_id": "endless:discovery:endless_d000003_site_00:rune:0"
+		}
+	}
+]

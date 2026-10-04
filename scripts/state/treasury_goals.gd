@@ -100,6 +100,60 @@ static func claim_resonance() -> bool:
 static func toggle_resonance() -> void:
 	toggle(Ledger.WALLET)
 
+static func collection_source(kind: String) -> Dictionary:
+	# Prefer the current mine when the same material occurs in several areas.
+	# The catalog describes real deposits; never substitute an unrelated ore.
+	var candidates: Array[Dictionary] = []
+	for world_id in WorldCatalog.WORLD_ORDER:
+		if not RunState.is_world_unlocked(String(world_id)): continue
+		for depth in [1, 2]:
+			if depth == 2 and not bool(Dictionary(RunState.depth_entry_status(String(WorldCatalog.MINE_BY_WORLD[world_id]))).get("can_enter", false)): continue
+			var section: Dictionary = WorldCatalog.MINE_ASSETS[world_id]["depth%d" % depth]
+			if Dictionary(section.get("nodes", {})).has(kind):
+				candidates.append({"mine_id":String(WorldCatalog.MINE_BY_WORLD[world_id]), "depth":depth, "area":String(world_id).capitalize(), "resource_id":kind})
+	for candidate in candidates:
+		if String(candidate.mine_id) == String(RunState.current_scene) and int(candidate.depth) == int(RunState.current_depth): return candidate
+	for candidate in candidates:
+		if String(candidate.mine_id) == String(RunState.current_scene): return candidate
+	return candidates[0] if not candidates.is_empty() else {}
+
+static func _wallet_mining_source() -> Dictionary:
+	# Currency comes from sellable ore, not the zero-value Deep materials.
+	# Prefer the richest accessible ordinary deposit; do not spend or grant cargo.
+	var best: Dictionary = {}
+	var best_value: int = 0
+	for world_id in WorldCatalog.WORLD_ORDER:
+		if not RunState.is_world_unlocked(String(world_id)): continue
+		var section: Dictionary = WorldCatalog.MINE_ASSETS[world_id].depth1
+		for resource_id in Dictionary(section.nodes):
+			var value: int = int(Dictionary(GameData.data.ROCK_TYPES.get(resource_id, {})).get("value", 0))
+			if value <= best_value: continue
+			best_value = value
+			best = {"mine_id":String(WorldCatalog.MINE_BY_WORLD[world_id]), "depth":1, "area":String(world_id).capitalize(), "resource_id":String(resource_id)}
+	return best
+
+static func _route(kind: String, delivered: int, held: int) -> Dictionary:
+	if delivered >= Stack.GOAL:
+		return {"treasury_route":"claim", "hud_action":"Claim mod · your podium"}
+	if delivered + held >= Stack.GOAL:
+		return {"treasury_route":"donate", "hud_action":"Donate · Treasury plate"}
+	if kind == Ledger.WALLET:
+		var sale_value: int = int(Dictionary(RunState.assay_sale_snapshot()).get("total", 0))
+		if sale_value > 0 and (String(RunState.current_scene) == "hub" or delivered + held + sale_value >= Stack.GOAL):
+			return {"treasury_route":"sell", "hud_action":"Sell ore · Hub shop", "sale_value":sale_value}
+		var source: Dictionary = _wallet_mining_source()
+		if source.is_empty(): return {"treasury_route":"unavailable", "hud_action":"Find sellable ore"}
+		source["treasury_route"] = "mine"
+		source["hud_action"] = "Mine & sell · " + String(source.area)
+		return source
+	if _has_rich_vein_goal(kind) or kind in RunState.ENDLESS_RESOURCE_IDS:
+		return {"treasury_route":"endless", "hud_action":"Rich veins · The Deep" if _has_rich_vein_goal(kind) else "Mine · The Deep"}
+	var source: Dictionary = collection_source(kind)
+	if source.is_empty(): return {"treasury_route":"unavailable", "hud_action":"Find an accessible source · " + label(kind)}
+	source["treasury_route"] = "mine"
+	source["hud_action"] = "Mine · %s Depth %d" % [String(source.area), int(source.depth)]
+	return source
+
 static func hud_goal() -> Dictionary:
 	var kind: String = String(RunState.treasury_goals.get("pinned",""))
 	if kind not in Ledger.keys() or not RunState.victory: return {}
@@ -109,10 +163,14 @@ static func hud_goal() -> Dictionary:
 	var delivered: int = mini(Stack.GOAL,int(RunState.treasury_totals.get(kind,0)))
 	var held: int = Ledger.available(kind)
 	var ready: bool = delivered >= Stack.GOAL
-	var action: String = "The Deep · rich veins in new ground" if _has_rich_vein_goal(kind) else sources(kind)
-	if delivered + held >= Stack.GOAL: action = "Return to your podium"
-	return {"objective_id":"treasury:"+kind,"kind":"treasury_goal", "resource_id":kind,
+	var route: Dictionary = _route(kind, delivered, held)
+	var goal: Dictionary = {"objective_id":"treasury:"+kind,"kind":"treasury_goal", "resource_id":kind,
 		"title":String(NAMES.get(mod_id(kind),label(kind)+" collection")), "hud_title":String(NAMES.get(mod_id(kind),label(kind)+" collection")),
-		"hud_action":action,"detail":sources(kind),
+		"hud_action":String(route.hud_action),"detail":sources(kind),
 		"requirements":[{"id":"treasury:"+kind,"resource_id":kind,"name":label(kind),"owned":delivered,"pending_sale":mini(held,Stack.GOAL-delivered),"required":Stack.GOAL,"ready":ready,
 		"texture_path":RunState.GOLD_TEXTURE_PATH if kind==Ledger.WALLET else RunState._resource_drop_texture_path(kind)}]}
+	goal["treasury_route"] = String(route.treasury_route)
+	goal["route_resource_id"] = String(route.get("resource_id", kind))
+	goal["mine_id"] = String(route.get("mine_id", ""))
+	goal["depth"] = int(route.get("depth", 1))
+	return goal

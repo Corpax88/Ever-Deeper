@@ -908,22 +908,27 @@ func _close_inventory(return_to_parent: bool = true) -> void :
 
 func _progression_goal() -> Dictionary:
 	var pinned: Dictionary = preload("res://scripts/state/treasury_goals.gd").hud_goal()
-	if not pinned.is_empty(): return pinned
 	var discovery: Dictionary = {}
 	if phase == "endless" and is_instance_valid(endless_world):
 		discovery = endless_world.discovery_goal()
+		# Choosing a discovery path starts a real, finite task. Keep its next
+		# seal visible without clearing the player's longer-term collection pin.
+		if not endless_world.site_activity.is_empty() and not discovery.is_empty():
+			return discovery
+	if not pinned.is_empty(): return pinned
 	return guide_director.goal_for_state(discovery)
 
 
 func _update_visual_guide() -> void :
 	if guide_overlay == null or menu_open or inventory_open or not game_started:
 		return
-	if hub_world.treasury != null and hub_world.treasury.inside:
-		guide_overlay.clear_target()
-		hub_world.treasury.apply_hud()
-		return
+	var in_treasury: bool = hub_world.treasury != null and hub_world.treasury.inside
+	if in_treasury: hub_world.treasury.apply_hud()
 	guide_route_update_count += 1
 	var goal: Dictionary = _progression_goal()
+	if in_treasury and String(goal.get("kind", "")) != "treasury_goal":
+		guide_overlay.clear_target()
+		return
 	if goal.is_empty():
 		guide_director.reset()
 		guide_overlay.clear_target()
@@ -933,7 +938,7 @@ func _update_visual_guide() -> void :
 	var proposal: = _guide_route_proposal(goal)
 	if proposal.has("hud_action"):
 		goal["hud_action"] = proposal.hud_action
-	if premium_hud != null:
+	if premium_hud != null and not in_treasury:
 		premium_hud.set_progression_goal(goal)
 	var resolved: Dictionary = guide_director.resolve(proposal)
 	if resolved.is_empty() or String(resolved.get("target_key", "")).is_empty():
@@ -986,6 +991,8 @@ func _guide_route_proposal(goal: Dictionary) -> Dictionary:
 		"candidates": [],
 	}
 	var kind: = String(goal.get("kind", ""))
+	if kind == "treasury_goal":
+		return _treasury_guide_proposal(goal, proposal)
 	var target_mine: = String(goal.get("mine_id", "mossMine"))
 	if target_mine.is_empty() or target_mine not in MINE_IDS:
 		target_mine = "mossMine"
@@ -1029,6 +1036,64 @@ func _guide_route_proposal(goal: Dictionary) -> Dictionary:
 				target_kind = "relic"
 			proposal.waypoint_id = "endless:%s" % (target_kind if not target_kind.is_empty() else "deeper")
 			proposal.candidates = [_guide_candidate(proposal.waypoint_id, Vector2(endless_world.guide_target(target_kind)), 0.0)]
+	return proposal
+
+
+func _treasury_guide_proposal(goal: Dictionary, proposal: Dictionary) -> Dictionary:
+	var route: String = String(goal.get("treasury_route", ""))
+	var kind: String = String(goal.get("resource_id", ""))
+	var target: Vector2 = Vector2.ZERO
+	var key: String = ""
+	proposal["hud_action"] = String(goal.get("hud_action", ""))
+	if phase == "hub":
+		if hub_world.treasury.inside:
+			if route == "claim":
+				var index: int = hub_world.treasury.Ledger.keys().find(kind)
+				if index >= 0:
+					target = hub_world.treasury.bay(index)
+					key = "treasury:podium:" + kind
+			elif route == "donate":
+				target = hub_world.treasury.DONATION
+				key = "treasury:donation"
+			else:
+				target = hub_world.treasury.EXIT
+				key = "treasury:exit"
+		elif route in ["donate", "claim"]:
+			target = hub_world.TREASURY_DOOR
+			key = "hub:treasury"
+		elif route == "endless":
+			target = hub_world.DEEP_ELEVATOR_POSITION
+			key = "hub:deep_elevator"
+			proposal["hud_action"] = "Enter The Deep · Hub"
+		elif route == "sell":
+			target = hub_world.HUB_SHOP
+			key = "hub:shop"
+		elif route == "mine":
+			target = hub_world.SURFACE_LIFT
+			key = "hub:surface_lift"
+	elif phase == "endless":
+		if route == "endless":
+			target = endless_world.guide_target(kind)
+			key = "endless:treasury:" + kind
+		else:
+			proposal["hud_action"] = "Tunnel Home · " + ("claim mod" if route == "claim" else "donate" if route == "donate" else "sell ore" if route == "sell" else "visit mines")
+	elif phase == "deepheart":
+		return _deepheart_guide_proposal(proposal)
+	elif route == "mine":
+		var mining_goal: Dictionary = goal.duplicate()
+		mining_goal["resource_id"] = String(goal.get("route_resource_id", kind))
+		var mine_id: String = String(goal.get("mine_id", ""))
+		var mining_kind: String = "depth_resource" if int(goal.get("depth", 1)) == 2 else "mine_resource"
+		if phase == "surface": return _surface_guide_proposal(mining_goal, proposal, mining_kind, mine_id)
+		if phase == "mine": return _mine_guide_proposal(mining_goal, proposal, mining_kind, mine_id)
+		if phase == "depth": return _depth_guide_proposal(mining_goal, proposal, mining_kind, mine_id)
+	elif route != "unavailable":
+		if phase == "surface": return _surface_guide_proposal(goal, proposal, "hub", "")
+		if phase == "mine": return _mine_guide_proposal(goal, proposal, "hub", "")
+		if phase == "depth": return _depth_guide_proposal(goal, proposal, "hub", "")
+	if not key.is_empty():
+		proposal["waypoint_id"] = key
+		proposal["candidates"] = [_guide_candidate(key, target, 0.0)]
 	return proposal
 
 
@@ -1087,6 +1152,13 @@ func _mine_guide_proposal(goal: Dictionary, proposal: Dictionary, kind: String, 
 	var requested_resource: = String(goal.get("resource_id", ""))
 	proposal.waypoint_id = "mine:%s:resource:%s" % [current_mine_id, requested_resource]
 	proposal.candidates = mine_world.guide_resource_candidates(requested_resource)
+	if String(goal.get("kind", "")) == "treasury_goal" and not requested_resource.is_empty():
+		# The ordinary guide may fall back to any ore. A named collection must
+		# never point to a different material when its own seam is exhausted.
+		proposal.candidates = Array(proposal.candidates).filter(func(candidate: Dictionary) -> bool:
+			var cell: Vector2i = Vector2i(Vector2(candidate.position) / float(mine_world.TILE_SIZE))
+			return String(Dictionary(mine_world.blocks.get(cell, {})).get("kind", "")) == requested_resource)
+		if Array(proposal.candidates).is_empty(): proposal["hud_action"] = "Explore · find " + preload("res://scripts/state/treasury_goals.gd").label(requested_resource)
 	return proposal
 
 
@@ -3507,7 +3579,7 @@ func _assay_status() -> String:
 	if sellable_pieces > 0:
 		return "Assay · %d sellable ore · %d gold ready" % [sellable_pieces, sale_value]
 	if RunState.cargo_count() > 0:
-		return "Assay · upgrade materials are protected"
+		return "Assay · upgrade and tracked goal materials are protected"
 	return "Assay · your ore pouch is empty"
 
 
@@ -4006,6 +4078,9 @@ func _update_achievement_toast_anchor() -> void :
 	var visual: Node = active_player.get_node_or_null("Visual")
 	if visual != null and visual.has_method("feedback_screen_rects"):
 		exclusions.append_array(visual.feedback_screen_rects())
+	var target_label: Control = mine_world.get_node_or_null("TargetLabel") if phase == "mine" else null
+	if is_instance_valid(target_label) and target_label.is_visible_in_tree():
+		exclusions.append((target_label.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, target_label.size)).grow(4.0))
 	var hud_controls: Array[Control] = [mine_button,laser_button]
 	if premium_hud != null:
 		hud_controls.append_array([
