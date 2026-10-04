@@ -122,12 +122,11 @@ func _draw() -> void:
 	if _map_rect.size.x <= 1.0: return
 	draw_style_box(_panel_style, _map_rect)
 	var font := ThemeDB.fallback_font
-	draw_string(font, _map_rect.position+Vector2(13,18),_location_name,HORIZONTAL_ALIGNMENT_LEFT,_map_rect.size.x-26,13,Color("e9c86d"))
+	draw_string(font, _map_rect.position+Vector2(16,32) if expanded else _map_rect.position+Vector2(13,18),_location_name,HORIZONTAL_ALIGNMENT_LEFT,_map_rect.size.x-(32 if expanded else 26),28 if expanded else 13,Color("e9c86d"))
 	var content := Rect2(_map_rect.position+Vector2(10,27),_map_rect.size-Vector2(20,37))
 	if expanded:
 		_draw_biome_cards()
-		content.position.y+=108
-		content.size.y=maxf(30,content.size.y-188)
+		content=_expanded_content_rect()
 		_draw_legend(font)
 	draw_rect(content,Color("101416"))
 	var has_terrain: bool = cartography!=null and cartography.texture!=null
@@ -154,40 +153,50 @@ func _draw() -> void:
 			continue
 		var at:=_world_to_map(position,fitted)
 		if String(marker.kind)=="entrance":
-			draw_rect(Rect2(at-Vector2.ONE*5,Vector2.ONE*10),INK)
-			draw_rect(Rect2(at-Vector2.ONE*4,Vector2.ONE*8),Color("cbb7ff"),false,2)
+			var radius: float=8.0 if expanded else 4.0
+			draw_rect(Rect2(at-Vector2.ONE*(radius+1),Vector2.ONE*(radius+1)*2),INK)
+			draw_rect(Rect2(at-Vector2.ONE*radius,Vector2.ONE*radius*2),Color("cbb7ff"),false,2)
 		else:
-			draw_circle(at,4,INK)
-			draw_circle(at,2.5,Color("63eee0"))
+			draw_circle(at,6.5 if expanded else 4,INK)
+			draw_circle(at,4.5 if expanded else 2.5,Color("63eee0"))
 	if _has_objective:
 		if _display_world.has_point(_objective_position): _draw_objective(_world_to_map(_objective_position,fitted))
 		else: _draw_edge_marker(_objective_position,fitted,Color("a8e3bc"))
 	var player:=_world_to_map(_player_position,fitted)
-	draw_circle(player,7,INK)
-	draw_circle(player,4.5,GOLD)
-	draw_circle(player,1.5,Color.WHITE)
+	draw_circle(player,11 if expanded else 7,INK)
+	draw_circle(player,8 if expanded else 4.5,GOLD)
+	draw_circle(player,2.5 if expanded else 1.5,Color.WHITE)
+
+func _expanded_rail_width() -> float:
+	return clampf(_map_rect.size.x*0.20,180.0,252.0)
+
+func _expanded_content_rect() -> Rect2:
+	var rail: float=_expanded_rail_width()
+	return Rect2(_map_rect.position+Vector2(rail+28,48),(_map_rect.size-Vector2(rail+44,132)).max(Vector2.ONE*30))
 
 func _draw_edge_marker(position: Vector2, fitted: Rect2, color: Color) -> void:
 	var direction: Vector2=(position-_display_world.get_center()).normalized()
-	var half:=fitted.size*0.5-Vector2.ONE*7
+	var radius: float=9.0 if expanded else 5.0
+	var half:=fitted.size*0.5-Vector2.ONE*(radius+2)
 	var length: float=minf(half.x/maxf(absf(direction.x),0.001),half.y/maxf(absf(direction.y),0.001))
 	var at:=fitted.get_center()+direction*length
-	var side:=direction.orthogonal()*4
-	draw_colored_polygon(PackedVector2Array([at+direction*5,at-direction*4+side,at-direction*4-side]),color)
+	var side:=direction.orthogonal()*(radius-1)
+	draw_colored_polygon(PackedVector2Array([at+direction*radius,at-direction*(radius-1)+side,at-direction*(radius-1)-side]),color)
 
 func _draw_legend(font: Font) -> void:
-	var labels: Array=["You","Ore","Entrance","Passage","Wall","Bedrock","Objective","Unknown","Edge: direction"]
+	var labels: Array=["You","Ore","Entrance","Passage","Wall","Bedrock","Objective","Unknown","Off-map"]
 	var colors: Array=[GOLD,Color("63eee0"),Color("cbb7ff"),Color("789491"),Color("55515a"),Color("a9a2ad"),Color("a8e3bc"),Color("101416"),Color("cbb7ff")]
-	var width: float=(_map_rect.size.x-30)/3
+	var content: Rect2=_expanded_content_rect()
+	var width: float=content.size.x/5
 	for i in labels.size():
-		var at:=_map_rect.position+Vector2(18+(i%3)*width,_map_rect.size.y-66+(i/3)*21)
-		if i==0: draw_circle(at+Vector2(4,-4),4,colors[i])
-		elif i==1: draw_circle(at+Vector2(4,-4),2.5,colors[i])
-		elif i==2: draw_rect(Rect2(at-Vector2(0,9),Vector2(9,9)),colors[i],false,1.5)
-		elif i==6: _draw_objective(at+Vector2(4,-4))
-		elif i==8: draw_colored_polygon(PackedVector2Array([at+Vector2(9,-4),at+Vector2(0,-9),at]),colors[i])
-		else: draw_rect(Rect2(at-Vector2(0,9),Vector2(9,9)),colors[i])
-		draw_string(font,at+Vector2(15,0),labels[i],HORIZONTAL_ALIGNMENT_LEFT,width-18,13,Color("ded7cc"))
+		var at:=Vector2(content.position.x+(i%5)*width,_map_rect.end.y-48+(i/5)*34)
+		if i==0: draw_circle(at+Vector2(8,-8),8,colors[i])
+		elif i==1: draw_circle(at+Vector2(8,-8),4.5,colors[i])
+		elif i==2: draw_rect(Rect2(at-Vector2(0,16),Vector2(16,16)),colors[i],false,2)
+		elif i==6: _draw_objective(at+Vector2(8,-8))
+		elif i==8: draw_colored_polygon(PackedVector2Array([at+Vector2(17,-8),at+Vector2(0,-16),at]),colors[i])
+		else: draw_rect(Rect2(at-Vector2(0,16),Vector2(16,16)),colors[i])
+		draw_string(font,at+Vector2(25,0),labels[i],HORIZONTAL_ALIGNMENT_LEFT,width-28,26,Color("ded7cc"))
 
 func _fit_world_rect(available: Rect2) -> Rect2:
 	var world_aspect: = _display_world.size.x / maxf(_display_world.size.y, 1.0)
@@ -222,11 +231,12 @@ func _player_overlaps_map() -> bool:
 
 
 func _draw_objective(position: Vector2) -> void :
+	var radius: float=9.0 if expanded else 5.0
 	var diamond: = PackedVector2Array([
-		position + Vector2(0, -5),
-		position + Vector2(5, 0),
-		position + Vector2(0, 5),
-		position + Vector2(-5, 0),
+		position + Vector2(0, -radius),
+		position + Vector2(radius, 0),
+		position + Vector2(0, radius),
+		position + Vector2(-radius, 0),
 	])
 	draw_colored_polygon(diamond, Color(0.58, 0.95, 0.72, 0.9))
 	draw_polyline(PackedVector2Array([diamond[0], diamond[1], diamond[2], diamond[3], diamond[0]]), Color.WHITE, 1.0)
@@ -264,7 +274,7 @@ func _draw_biome_cards() -> void:
 			var label: Label=Label.new()
 			label.name="Name"
 			label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-			label.add_theme_font_size_override("font_size",13)
+			label.add_theme_font_size_override("font_size",26)
 			label.mouse_filter=Control.MOUSE_FILTER_IGNORE
 			card.add_child(label)
 			_biome_cards.append(card)
@@ -272,12 +282,13 @@ func _draw_biome_cards() -> void:
 		var id: String=WorldCatalog.WORLD_ORDER[i]
 		var known: bool = id=="mossvein" or RunState.is_world_unlocked(id)
 		var card: Control=_biome_cards[i]
-		var width: float=(_map_rect.size.x-30)/4
-		card.position=_map_rect.position+Vector2(10+i*width,27)
-		card.size=Vector2(width-5,108)
-		card.get_node("Picture").size=Vector2(width-5,77)
+		var width: float=_expanded_rail_width()-12.0
+		var height: float=(_map_rect.size.y-66.0)/4.0
+		card.position=_map_rect.position+Vector2(10,48+i*height)
+		card.size=Vector2(width,height-8)
+		card.get_node("Picture").size=Vector2(width,height-43)
 		card.get_node("Picture").material.set_shader_parameter("hidden",0.0 if known else 1.0)
 		var label: Label=card.get_node("Name")
-		label.position=Vector2(0,76)
-		label.size=Vector2(width-5,32)
-		label.text=id.capitalize() if known else "UNDISCOVERED"
+		label.position=Vector2(0,height-43)
+		label.size=Vector2(width,35)
+		label.text=id.capitalize() if known else "Undiscovered"

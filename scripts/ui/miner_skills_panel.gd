@@ -207,7 +207,14 @@ func _layout() -> void:
 	_size_frame(resources, Vector2(330, 78))
 	close_button.position = Vector2(w - 100, 18)
 	close_button.size = Vector2(88, 88)
-	if square:
+	portrait.visible = not _map_active
+	title.visible = not _map_active
+	if _map_active:
+		# Cartography owns the screen below navigation. Returning to Skills
+		# restores the approved portrait and stat-panel composition below.
+		plate.position = Vector2(26 if square else 58, 124)
+		_size_frame(plate, Vector2(w - (52 if square else 116), h - 148))
+	elif square:
 		portrait.position = Vector2(w * 0.105, 476)
 		portrait.size = Vector2(w * 0.46, 634)
 		plate.position = Vector2(w * 0.575, 482)
@@ -226,7 +233,7 @@ func _layout() -> void:
 		_layout_row(rows[i], Rect2(24, 86 + i * row_height, pw - 48, row_height - 3))
 	_layout_row(stamina_row, Rect2(24, ph - 110, pw - 48, 88))
 	if is_instance_valid(map_view):
-		map_view._map_rect = Rect2(32, 94, pw - 64, ph - 130)
+		map_view._map_rect = Rect2(26, 22, pw - 52, ph - 44)
 		map_view.queue_redraw()
 
 func _make_row(parent: Control, id: String) -> Dictionary:
