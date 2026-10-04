@@ -12,7 +12,7 @@ const GOLD_BRIGHT: = Color("ffe3a0")
 const MINT: = Color("a8e3bc")
 const MUTED: = Color("789384")
 const INK: = Color("07120d")
-const IPHONE_LANDSCAPE_ASPECT: = 1.95
+const IPHONE_LANDSCAPE_ASPECT: = 1.65
 const DEV_RELEASE_VERSION: = "1.0.0-dev.15.13"
 
 
@@ -36,6 +36,7 @@ var detail_title: Label
 var detail_body: Control
 var continue_button: Button
 var achievements_button: Button
+var controls_button: Button
 var save_hint: Label
 var menu_kicker: Label
 var music_slider: HSlider
@@ -133,7 +134,9 @@ func navigate_back() -> bool:
 	if not visible or not detail_view.visible:
 		return false
 	audio_director.play_ui("cancel")
-	if detail_title.text == "SETTINGS" and _settings_parent_is_skills:
+	if detail_title.text == "CONTROLS":
+		_show_settings(_settings_parent_is_skills)
+	elif detail_title.text == "SETTINGS" and _settings_parent_is_skills:
 		_clear_detail_body()
 		visible = false
 		settings_back_to_skills.emit()
@@ -326,6 +329,11 @@ func _build_detail_view() -> void :
 	back.size = Vector2(220, 52)
 	back.pressed.connect(navigate_back)
 	card.add_child(back)
+	controls_button = _menu_button("CONTROLS", false)
+	controls_button.name = "Controls"
+	controls_button.pressed.connect(_show_controls)
+	controls_button.hide()
+	card.add_child(controls_button)
 
 
 func _build_confirmation() -> void :
@@ -393,6 +401,7 @@ func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void :
 		_layout_iphone_landscape(viewport_size)
 	else:
 		_layout_design_landscape(viewport_size)
+	_update_detail_footer()
 
 
 func apply_iphone_layout_for_test(viewport_size: Vector2) -> Dictionary:
@@ -430,6 +439,7 @@ func minimum_touch_targets_are_valid(minimum_height: float = 44.0) -> bool:
 		achievements_button,
 		main_card.get_node("Settings"),
 		detail_card.get_node("Back"),
+		controls_button,
 		confirm_card.get_node("Cancel"),
 		confirm_card.get_node("Confirm"),
 	]:
@@ -453,10 +463,10 @@ func _layout_iphone_landscape(viewport_size: Vector2) -> void :
 	_place(main_card.get_node("Version"), Rect2(580, 530, 526, 38))
 	continue_button.add_theme_font_size_override("font_size", 26)
 	for button in [main_card.get_node("NewGame"), achievements_button, main_card.get_node("Settings")]:
-		(button as Button).add_theme_font_size_override("font_size", 21)
-	menu_kicker.add_theme_font_size_override("font_size", 17)
-	(main_card.get_node("Premise") as Label).add_theme_font_size_override("font_size", 20)
-	save_hint.add_theme_font_size_override("font_size", 15)
+		(button as Button).add_theme_font_size_override("font_size", 26)
+	menu_kicker.add_theme_font_size_override("font_size", 22)
+	(main_card.get_node("Premise") as Label).add_theme_font_size_override("font_size", 26)
+	save_hint.add_theme_font_size_override("font_size", 21)
 	(main_card.get_node("Version") as Label).add_theme_font_size_override("font_size", 17)
 
 	_center_card(detail_card, viewport_size, Vector2(1120, 620))
@@ -567,51 +577,117 @@ func _show_settings(from_skills: bool = false) -> void :
 	detail_title.text = "SETTINGS"
 	_clear_detail_body()
 	music_slider = _add_volume_control("MUSIC", audio_director.music_volume_percent(), 0)
-	sfx_slider = _add_volume_control("SOUND EFFECTS", audio_director.sfx_volume_percent(), 120)
-	var title := _label("GRAPHICS", 20 if _iphone_layout_active() else 11, MINT, HORIZONTAL_ALIGNMENT_LEFT)
-	title.position = Vector2(20, 250)
-	title.size = Vector2(840, 30)
+	sfx_slider = _add_volume_control("SOUND EFFECTS", audio_director.sfx_volume_percent(), 140 if _iphone_layout_active() else 120)
+	var title := _label("GRAPHICS", 26 if _iphone_layout_active() else 11, MINT, HORIZONTAL_ALIGNMENT_LEFT)
+	title.position = Vector2(20, 274 if _iphone_layout_active() else 250)
+	title.size = Vector2(840, 34)
 	detail_body.add_child(title)
 	var group := ButtonGroup.new()
 	var selected: int = int(JavaScriptBridge.eval("window.devicePixelRatio", true)) if OS.has_feature("web") else 2
 	for index in range(3):
 		var option := _menu_button(["Performance", "Balanced", "Quality"][index], false)
 		option.name = "Graphics%d" % (index + 1)
-		option.position = Vector2(4 + index * 294, 288)
-		option.size = Vector2(284, 76)
-		option.add_theme_font_size_override("font_size", 23 if _iphone_layout_active() else 14)
+		option.position = Vector2(4 + index * 294, 314 if _iphone_layout_active() else 288)
+		option.size = Vector2(284, 82 if _iphone_layout_active() else 76)
+		option.add_theme_font_size_override("font_size", 26 if _iphone_layout_active() else 14)
 		option.toggle_mode = true
 		option.button_group = group
 		option.button_pressed = selected == index + 1
 		option.pressed.connect(_set_graphics_profile.bind(index + 1))
 		detail_body.add_child(option)
+	_update_detail_footer()
 	music_slider.grab_focus()
+
+
+func _show_controls() -> void:
+	audio_director.play_ui("open")
+	main_view.visible = false
+	detail_view.visible = true
+	detail_title.text = "CONTROLS"
+	_clear_detail_body()
+	var entries: Array = [
+		["Move", "res://assets/ui/skills/icons/running.svg", "Drag the left side.\nWASD / arrow keys."],
+		["Mine", "res://assets/tools/pickaxe-iron.png", "Hold Mine to dig.\nSpace on keyboard."],
+		["Action", "res://assets/ui/hud-interact-v1.png", "Tap the nearby action.\nE / F on keyboard."],
+		["Bag", "res://assets/ui/bag-premium-v1.png", "Tap Bag to inspect\nresources and gear."],
+		["Skills & Map", "res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png", "Tap Skills for stats,\nMap and Settings."],
+		["Your mole", "res://assets/companion/mole-hud.png", "Tap your mole icon\nto open its journal."],
+	]
+	for i in entries.size():
+		var entry: Array = entries[i]
+		var row: Control = Control.new()
+		row.name = "Help" + String(entry[0]).replace(" ", "").replace("&", "")
+		row.position = Vector2((i % 2) * 452, (i / 2) * 136)
+		row.size = Vector2(428, 128)
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		detail_body.add_child(row)
+		var icon: TextureRect = TextureRect.new()
+		icon.texture = load(String(entry[1]))
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.position = Vector2(4, 24)
+		icon.size = Vector2(82, 82)
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(icon)
+		var title: Label = _label(String(entry[0]), 28, GOLD_BRIGHT, HORIZONTAL_ALIGNMENT_LEFT)
+		title.position = Vector2(102, 8)
+		title.size = Vector2(322, 34)
+		row.add_child(title)
+		var copy: Label = _label(String(entry[2]), 26, MINT, HORIZONTAL_ALIGNMENT_LEFT)
+		copy.position = Vector2(102, 46)
+		copy.size = Vector2(322, 76)
+		copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		row.add_child(copy)
+	_update_detail_footer()
+	(detail_card.get_node("Back") as Button).grab_focus()
+
+
+func _update_detail_footer() -> void:
+	if controls_button == null: return
+	var iphone: bool = _iphone_layout_active()
+	var back: Button = detail_card.get_node("Back")
+	var settings: bool = detail_title.text == "SETTINGS"
+	var height: float = 82.0 if iphone else 52.0
+	var y: float = 522.0 if iphone else 526.0
+	controls_button.visible = settings
+	if settings:
+		var width: float = 400.0
+		var left: float = (detail_card.size.x - width * 2.0 - 28.0) * 0.5
+		_place(controls_button, Rect2(left, y, width, height))
+		_place(back, Rect2(left + width + 28.0, y, width, height))
+	else:
+		_place(back, Rect2((detail_card.size.x - 280.0) * 0.5, y, 280, height))
+	back.add_theme_font_size_override("font_size", 26 if iphone else 14)
+	controls_button.add_theme_font_size_override("font_size", 26 if iphone else 14)
+	var subtitle: Label = detail_card.get_node("Subtitle")
+	subtitle.text = "AUDIO & DISPLAY" if settings else "TOUCH & KEYBOARD · ESC GOES BACK" if detail_title.text == "CONTROLS" else "EXPEDITION LEDGER"
+	subtitle.add_theme_font_size_override("font_size", 22 if iphone else 12)
 
 
 func _add_volume_control(title: String, value: int, y: float) -> HSlider:
 	var iphone: = _iphone_layout_active()
 	var panel: = Panel.new()
 	panel.position = Vector2(4, y)
-	panel.size = Vector2(872, 112 if iphone else 104)
+	panel.size = Vector2(872, 126 if iphone else 104)
 	panel.add_theme_stylebox_override("panel", _panel_style(Color("10251a"), Color(GOLD, 0.45), 13, 1))
 	detail_body.add_child(panel)
-	var title_label: = _label(title, 20 if iphone else 11, MINT, HORIZONTAL_ALIGNMENT_LEFT)
+	var title_label: = _label(title, 26 if iphone else 11, MINT, HORIZONTAL_ALIGNMENT_LEFT)
 	title_label.position = Vector2(16, 12)
-	title_label.size = Vector2(620, 25)
+	title_label.size = Vector2(620, 30)
 	panel.add_child(title_label)
-	var value_label: = _label("%d%%" % value, 20 if iphone else 11, GOLD_BRIGHT, HORIZONTAL_ALIGNMENT_RIGHT)
+	var value_label: = _label("%d%%" % value, 26 if iphone else 11, GOLD_BRIGHT, HORIZONTAL_ALIGNMENT_RIGHT)
 	value_label.name = "Value"
 	value_label.position = Vector2(780, 12)
-	value_label.size = Vector2(68, 25)
+	value_label.size = Vector2(68, 30)
 	panel.add_child(value_label)
 	var slider: = HSlider.new()
-	slider.position = Vector2(16, 40 if iphone else 45)
-	slider.size = Vector2(820, 66 if iphone else 48)
+	slider.position = Vector2(16, 42 if iphone else 45)
+	slider.size = Vector2(820, 80 if iphone else 48)
 	slider.min_value = 0
 	slider.max_value = 100
 	slider.step = 1
 	slider.value = value
-	slider.custom_minimum_size.y = 66 if iphone else 48
+	slider.custom_minimum_size.y = 80 if iphone else 48
 	slider.value_changed.connect( func(next_value: float):
 		value_label.text = "%d%%" % roundi(next_value)
 		audio_director.unlock_from_user_gesture()
@@ -638,7 +714,7 @@ func show_achievements(highlight_id: String = "") -> void :
 	detail_view.visible = true
 	detail_title.text = "ACHIEVEMENTS"
 	_clear_detail_body()
-	achievement_count_label = _label("", 18 if _iphone_layout_active() else 10, GOLD, HORIZONTAL_ALIGNMENT_CENTER)
+	achievement_count_label = _label("", 24 if _iphone_layout_active() else 10, GOLD, HORIZONTAL_ALIGNMENT_CENTER)
 	achievement_count_label.position = Vector2(0, -6)
 	achievement_count_label.size = Vector2(880, 28)
 	detail_body.add_child(achievement_count_label)
@@ -658,6 +734,7 @@ func show_achievements(highlight_id: String = "") -> void :
 		list.add_child(row)
 		achievement_rows[String(definition.id)] = row
 	_refresh_achievement_count()
+	_update_detail_footer()
 	if not achievement_highlight_id.is_empty():
 		call_deferred("_focus_highlighted_achievement")
 
@@ -666,7 +743,7 @@ func _achievement_row(definition: Dictionary) -> Control:
 	var iphone: = _iphone_layout_active()
 	var unlocked: bool = bool(achievement_service.is_unlocked(String(definition.id)))
 	var row: = PanelContainer.new()
-	row.custom_minimum_size = Vector2(864, 92 if iphone else 76)
+	row.custom_minimum_size = Vector2(864, 126 if iphone else 76)
 	row.add_theme_stylebox_override("panel", _panel_style(
 		Color("12291d") if unlocked else Color("0b1711"),
 		Color(GOLD, 0.58) if unlocked else Color("304238"), 11, 1
@@ -675,7 +752,7 @@ func _achievement_row(definition: Dictionary) -> Control:
 	line.add_theme_constant_override("separation", 10)
 	row.add_child(line)
 	var icon: = TextureRect.new()
-	icon.custom_minimum_size = Vector2(78, 78) if iphone else Vector2(64, 64)
+	icon.custom_minimum_size = Vector2(94, 94) if iphone else Vector2(64, 64)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	var asset_path: = "res://%s" % String(definition.asset)
@@ -687,14 +764,14 @@ func _achievement_row(definition: Dictionary) -> Control:
 	copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	copy.add_theme_constant_override("separation", 2)
 	line.add_child(copy)
-	var title: = _label(String(definition.title).to_upper(), 18 if iphone else 10, GOLD_BRIGHT if unlocked else Color("7e8c82"), HORIZONTAL_ALIGNMENT_LEFT)
-	title.custom_minimum_size.y = 22
+	var title: = _label(String(definition.title).to_upper(), 27 if iphone else 10, GOLD_BRIGHT if unlocked else Color("bdc8bd"), HORIZONTAL_ALIGNMENT_LEFT)
+	title.custom_minimum_size.y = 32 if iphone else 22
 	copy.add_child(title)
-	var description: = _label(String(definition.description), 15 if iphone else 8, Color("a8bbaa") if unlocked else Color("59685e"), HORIZONTAL_ALIGNMENT_LEFT)
+	var description: = _label(String(definition.description), 26 if iphone else 8, Color("c0cdbf") if unlocked else Color("a1afa4"), HORIZONTAL_ALIGNMENT_LEFT)
 	description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	description.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	copy.add_child(description)
-	var state: = _label("UNLOCKED" if unlocked else "LOCKED", 13 if iphone else 7, GOLD if unlocked else Color("45564b"), HORIZONTAL_ALIGNMENT_LEFT)
+	var state: = _label("UNLOCKED" if unlocked else "LOCKED", 22 if iphone else 7, GOLD if unlocked else Color("97aa9b"), HORIZONTAL_ALIGNMENT_LEFT)
 	copy.add_child(state)
 	return row
 
