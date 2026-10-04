@@ -12,12 +12,12 @@ env:
   CANDIDATE_VERSION: '1.0.0-dev.15.55'
   RUN_BASELINE_SUPPLEMENT: 'false'
 jobs:
-  graphical:
+  native:
     runs-on: macos-15
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-        with: {persist-credentials: false}
+        with: {ref: '${{ github.sha }}', persist-credentials: false}
       - uses: actions/download-artifact@v4
         with:
           artifact-ids: '11284088414'
@@ -25,9 +25,6 @@ jobs:
           run-id: '37151451383'
           github-token: '${{ github.token }}'
           path: '${{ runner.temp }}/original'
-      - uses: actions/setup-node@v4
-        with: {node-version: '22'}
-      - run: npm ci --ignore-scripts && npx playwright install chromium webkit
       - name: Prepare exact baseline QA and production candidate
         run: |
           python3 .github/full-quality/prepare.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/baseline"
@@ -45,123 +42,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with: {name: full-quality-native, path: '${{ runner.temp }}/evidence/native', retention-days: 30}
-      - name: Baseline missing coverage only
-        if: env.RUN_BASELINE_SUPPLEMENT == 'true'
-        continue-on-error: true
-        run: node .github/full-quality/missing.mjs "$RUNNER_TEMP/baseline" "$RUNNER_TEMP/evidence/baseline-missing"
-        env: {EXPECTED_VERSION: '${{ env.BASE_VERSION }}'}
-      - name: Candidate breadth and actual touch
-        continue-on-error: true
-        run: node .github/full-quality/review.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/candidate"
-        env: {EXPECTED_VERSION: '${{ env.CANDIDATE_VERSION }}'}
-      - name: Candidate transformed mobile controls and progression
-        continue-on-error: true
-        run: node .github/full-quality/focused.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/focused"
-        env: {EXPECTED_VERSION: '${{ env.CANDIDATE_VERSION }}'}
-      - name: Real Ricochet lifecycle on four genuinely owned skins
-        continue-on-error: true
-        run: node .github/full-quality/ricochet-lifecycle.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/ricochet-lifecycle"
-        env: {EXPECTED_VERSION: '${{ env.CANDIDATE_VERSION }}'}
-      - name: Fresh mining economy journey and rendered frame windows
-        continue-on-error: true
-        run: node .github/full-quality/journey.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/journey"
-        env: {EXPECTED_VERSION: '${{ env.CANDIDATE_VERSION }}'}
-      - name: Ordinary production candidate WebKit startup
-        continue-on-error: true
-        run: node .github/deep-treasury/startup.mjs "$RUNNER_TEMP/production" "$RUNNER_TEMP/evidence/ordinary-candidate"
-        env: {EXPECTED_VERSION: '${{ env.CANDIDATE_VERSION }}', CANDIDATE_SOURCE: '${{ github.sha }}'}
-      - name: Split graphical evidence into files below 30MiB
-        if: always()
-        run: |
-          for name in baseline-missing candidate focused ricochet-lifecycle journey ordinary-candidate; do
-            if [ -d "$RUNNER_TEMP/evidence/$name" ]; then
-              python3 .github/full-quality/split.py "$RUNNER_TEMP/evidence/$name" "$RUNNER_TEMP/evidence-split/$name"
-            fi
-          done
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-baseline-missing-manifest, path: '${{ runner.temp }}/evidence-split/baseline-missing/recovery-manifest.json', if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-baseline-missing-00, path: '${{ runner.temp }}/evidence-split/baseline-missing/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-baseline-missing-01, path: '${{ runner.temp }}/evidence-split/baseline-missing/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-baseline-missing-02, path: '${{ runner.temp }}/evidence-split/baseline-missing/part-02.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-baseline-missing-03, path: '${{ runner.temp }}/evidence-split/baseline-missing/part-03.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-candidate-manifest, path: '${{ runner.temp }}/evidence-split/candidate/recovery-manifest.json', if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-candidate-00, path: '${{ runner.temp }}/evidence-split/candidate/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-candidate-01, path: '${{ runner.temp }}/evidence-split/candidate/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-candidate-02, path: '${{ runner.temp }}/evidence-split/candidate/part-02.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-candidate-03, path: '${{ runner.temp }}/evidence-split/candidate/part-03.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-focused-manifest, path: '${{ runner.temp }}/evidence-split/focused/recovery-manifest.json', if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-focused-00, path: '${{ runner.temp }}/evidence-split/focused/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-focused-01, path: '${{ runner.temp }}/evidence-split/focused/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-focused-02, path: '${{ runner.temp }}/evidence-split/focused/part-02.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-focused-03, path: '${{ runner.temp }}/evidence-split/focused/part-03.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-ricochet-lifecycle-manifest, path: '${{ runner.temp }}/evidence-split/ricochet-lifecycle/recovery-manifest.json', if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-ricochet-lifecycle-00, path: '${{ runner.temp }}/evidence-split/ricochet-lifecycle/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-ricochet-lifecycle-01, path: '${{ runner.temp }}/evidence-split/ricochet-lifecycle/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-ricochet-lifecycle-02, path: '${{ runner.temp }}/evidence-split/ricochet-lifecycle/part-02.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-ricochet-lifecycle-03, path: '${{ runner.temp }}/evidence-split/ricochet-lifecycle/part-03.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-ordinary-candidate-manifest, path: '${{ runner.temp }}/evidence-split/ordinary-candidate/recovery-manifest.json', if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-ordinary-candidate-00, path: '${{ runner.temp }}/evidence-split/ordinary-candidate/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-ordinary-candidate-01, path: '${{ runner.temp }}/evidence-split/ordinary-candidate/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-ordinary-candidate-02, path: '${{ runner.temp }}/evidence-split/ordinary-candidate/part-02.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-ordinary-candidate-03, path: '${{ runner.temp }}/evidence-split/ordinary-candidate/part-03.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-journey-manifest, path: '${{ runner.temp }}/evidence-split/journey/recovery-manifest.json', if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-journey-00, path: '${{ runner.temp }}/evidence-split/journey/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: full-quality-journey-01, path: '${{ runner.temp }}/evidence-split/journey/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -174,25 +54,96 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with: {name: full-quality-production-candidate, path: '${{ runner.temp }}/production', retention-days: 30}
-      - name: Enforce independently recorded gates
+      - name: Enforce independently recorded native gates
         if: always()
         run: |
           python3 - <<'PY'
           import json,os
           from pathlib import Path
-          root=Path(os.environ['RUNNER_TEMP'])/'evidence'
-          names=['native','candidate','focused','ricochet-lifecycle','journey']
-          if os.environ['RUN_BASELINE_SUPPLEMENT']=='true':names.append('baseline-missing')
-          failed=[]
-          for name in names:
-              p=root/name/'report.json'
-              if not p.exists() or not json.loads(p.read_text()).get('passed',False):failed.append(name)
-          p=root/'ordinary-candidate/report.json'
-          if not p.exists():failed.append('ordinary-candidate missing')
+          p=Path(os.environ['RUNNER_TEMP'])/'evidence/native/report.json'
+          assert p.exists() and json.loads(p.read_text()).get('passed',False), 'native failed or missing'
+          PY
+  graphical:
+    name: Graphical (${{ matrix.group }})
+    runs-on: macos-15
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {group: candidate, script: .github/full-quality/review.mjs, pack: candidate}
+          - {group: focused, script: .github/full-quality/focused.mjs, pack: candidate}
+          - {group: ricochet-lifecycle, script: .github/full-quality/ricochet-lifecycle.mjs, pack: candidate}
+          - {group: journey, script: .github/full-quality/journey.mjs, pack: candidate}
+          - {group: ordinary-candidate, script: .github/deep-treasury/startup.mjs, pack: production}
+          - {group: baseline-missing, script: .github/full-quality/missing.mjs, pack: baseline}
+    steps:
+      - uses: actions/checkout@v4
+        if: matrix.group != 'baseline-missing' || env.RUN_BASELINE_SUPPLEMENT == 'true'
+        with: {ref: '${{ github.sha }}', persist-credentials: false}
+      - uses: actions/download-artifact@v4
+        if: matrix.group != 'baseline-missing' || env.RUN_BASELINE_SUPPLEMENT == 'true'
+        with:
+          artifact-ids: '11284088414'
+          merge-multiple: true
+          run-id: '37151451383'
+          github-token: '${{ github.token }}'
+          path: '${{ runner.temp }}/original'
+      - name: Prepare exact baseline QA and production candidate
+        if: matrix.group != 'baseline-missing' || env.RUN_BASELINE_SUPPLEMENT == 'true'
+        run: |
+          python3 .github/full-quality/prepare.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/baseline"
+          python3 .github/full-quality/prepare.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/candidate" .github/full-quality/overrides.json
+          python3 .github/full-quality/prepare.py "$RUNNER_TEMP/original" "$RUNNER_TEMP/production" .github/full-quality/overrides.json production
+      - uses: actions/setup-node@v4
+        if: matrix.group != 'baseline-missing' || env.RUN_BASELINE_SUPPLEMENT == 'true'
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npx playwright install chromium webkit
+        if: matrix.group != 'baseline-missing' || env.RUN_BASELINE_SUPPLEMENT == 'true'
+      - name: Run all original checks in this browser group
+        if: matrix.group != 'baseline-missing' || env.RUN_BASELINE_SUPPLEMENT == 'true'
+        continue-on-error: true
+        run: node "$REVIEW_SCRIPT" "$RUNNER_TEMP/$REVIEW_PACK" "$RUNNER_TEMP/evidence/$REVIEW_GROUP"
+        env:
+          REVIEW_SCRIPT: '${{ matrix.script }}'
+          REVIEW_PACK: '${{ matrix.pack }}'
+          REVIEW_GROUP: '${{ matrix.group }}'
+          EXPECTED_VERSION: "${{ matrix.group == 'baseline-missing' && env.BASE_VERSION || env.CANDIDATE_VERSION }}"
+          CANDIDATE_SOURCE: '${{ github.sha }}'
+      - name: Split graphical evidence into files below 30MiB
+        if: always() && (matrix.group != 'baseline-missing' || env.RUN_BASELINE_SUPPLEMENT == 'true')
+        run: python3 .github/full-quality/split.py "$RUNNER_TEMP/evidence/$REVIEW_GROUP" "$RUNNER_TEMP/evidence-split/$REVIEW_GROUP"
+        env: {REVIEW_GROUP: '${{ matrix.group }}'}
+      - uses: actions/upload-artifact@v4
+        if: always() && (matrix.group != 'baseline-missing' || env.RUN_BASELINE_SUPPLEMENT == 'true')
+        with: {name: 'full-quality-${{ matrix.group }}-manifest', path: '${{ runner.temp }}/evidence-split/${{ matrix.group }}/recovery-manifest.json', if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always() && (matrix.group != 'baseline-missing' || env.RUN_BASELINE_SUPPLEMENT == 'true')
+        with: {name: 'full-quality-${{ matrix.group }}-00', path: '${{ runner.temp }}/evidence-split/${{ matrix.group }}/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always() && (matrix.group != 'baseline-missing' || env.RUN_BASELINE_SUPPLEMENT == 'true')
+        with: {name: 'full-quality-${{ matrix.group }}-01', path: '${{ runner.temp }}/evidence-split/${{ matrix.group }}/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always() && (matrix.group != 'baseline-missing' || env.RUN_BASELINE_SUPPLEMENT == 'true')
+        with: {name: 'full-quality-${{ matrix.group }}-02', path: '${{ runner.temp }}/evidence-split/${{ matrix.group }}/part-02.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always() && (matrix.group != 'baseline-missing' || env.RUN_BASELINE_SUPPLEMENT == 'true')
+        with: {name: 'full-quality-${{ matrix.group }}-03', path: '${{ runner.temp }}/evidence-split/${{ matrix.group }}/part-03.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - name: Enforce independently recorded browser gates
+        if: always() && (matrix.group != 'baseline-missing' || env.RUN_BASELINE_SUPPLEMENT == 'true')
+        env: {REVIEW_GROUP: '${{ matrix.group }}'}
+        run: |
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          name=os.environ['REVIEW_GROUP']
+          p=Path(os.environ['RUNNER_TEMP'])/'evidence'/name/'report.json'
+          assert p.exists(), name+' report missing'
+          report=json.loads(p.read_text())
+          if name=='ordinary-candidate':
+              assert not report.get('failure') and not report.get('crashed') and report.get('completed_observation'), 'ordinary-candidate failed'
           else:
-              report=json.loads(p.read_text())
-              if report.get('failure') or report.get('crashed') or not report.get('completed_observation'):failed.append('ordinary-candidate failed')
-          assert not failed,failed
+              assert report.get('passed',False), name+' failed'
           PY
   runtime-recovery:
     if: ${{ !contains(github.event.head_commit.message, '[qa-no-runtime]') }}
