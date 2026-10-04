@@ -2253,7 +2253,7 @@ func _start_assay_transaction() -> void :
 		match String(begun.get("reason", "empty")):
 			"protected":
 				AudioDirector.play_ui("confirm")
-				_set_status("Assay skipped · upgrade and workshop materials stay protected")
+				_set_status("Assay skipped · upgrade and tracked goal materials stay protected")
 			_:
 				AudioDirector.play_blocked()
 				_set_status("Assay ready · bring mined resources through the station")
