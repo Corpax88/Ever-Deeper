@@ -104,7 +104,7 @@ func set_mobile_layout(iphone: bool) -> void:
 	if _title == null:
 		return
 	_title.add_theme_font_size_override("font_size", 22 if iphone else 18)
-	_action.add_theme_font_size_override("font_size", 18 if iphone else 15)
+	_action.add_theme_font_size_override("font_size", 22 if iphone else 15)
 	var compact_grid: bool = iphone and _row_controls.size() > 1
 	_rows.columns = 2 if compact_grid else 1
 	_update_action_visibility()
@@ -139,9 +139,9 @@ func snapshot() -> Dictionary:
 
 
 func _update_action_visibility() -> void:
-	# The guide retains directions and full resource names; the mobile ledger
-	# keeps every live cost within the top band, including five-part recipes.
-	_action.visible = not _action.text.is_empty() and (not _iphone or Array(_goal.get("requirements", [])).is_empty())
+	# The retired compass no longer exposes these directions. Keep the next
+	# destination visible beside the live cost, including pinned mod goals.
+	_action.visible = not _action.text.is_empty()
 
 
 func _rebuild_rows(requirements: Array) -> void:

@@ -366,7 +366,9 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 	)
 	var goal_width: = (400.0 if wide else 340.0) if iphone else 286.0
 	var goal_rows: int = ceili(float(_progression_row_count) / 2.0) if _progression_row_count > 1 else _progression_row_count
-	var goal_height: = maxf(76.0, 50.0 + 42.0 * goal_rows) if iphone else (62.0 + 27.0 * _progression_row_count)
+	# Reserve the next-action line even when costs are present; otherwise the
+	# container expands below its measured HUD bounds on mobile.
+	var goal_height: = maxf(76.0, 78.0 + 42.0 * goal_rows) if iphone else (62.0 + 27.0 * _progression_row_count)
 	var progression_rect: = Rect2(viewport_size.x - right - goal_width, top if iphone else gold_rect.end.y + 10.0, goal_width, goal_height)
 	var minimap_size: = Vector2(188, 96) if iphone else Vector2(184, 106)
 	var minimap_rect: = Rect2(progression_rect.position.x - gap - minimap_size.x, progression_rect.position.y, minimap_size.x, minimap_size.y)
