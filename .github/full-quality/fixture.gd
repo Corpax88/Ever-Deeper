@@ -278,6 +278,7 @@ func _frame() -> void:
 	ui["journey"]={"result":quality_journey_result,"gold":RunState.gold,"pickaxe":RunState.pickaxe_level,"mined":RunState.total_mined_resources(),"surface_context":main.surface_context,"exit_context":main.mine_exit_context,"transaction":main.commerce_transaction.duplicate(true),"moonglass_unlocked":RunState.area_unlocked,"world_seed":RunState.world_seed}
 	ui["profile"]=quality_profile_result
 	ui["finale"]={"world":main.deepheart_world.debug_snapshot(),"context":main.deepheart_context,"victory":RunState.victory,"conclusion":main.conclusion_overlay.visible,"conclusion_seen":RunState.conclusion_seen,"seals":RunState.deepheart_seal_status(),"seal_state":main.deepheart_world.seal_state.duplicate(true),"endless":RunState.endless_descent_status()}
+	ui.finale.geometry=_quality_conclusion_geometry()
 	JavaScriptBridge.eval("Object.assign(window.DEV14_STATE.buttons,"+JSON.stringify(buttons)+");window.DEV14_STATE.quality="+JSON.stringify(ui),true)
 
 func _quality_feedback() -> Dictionary:
@@ -329,6 +330,15 @@ func _label_geometry(label: Label) -> Dictionary:
 	return {"rect":_screen_bounds(label),"text":label.text,"visible":label.is_visible_in_tree(),
 		"font_viewport":label.get_theme_font_size("font_size")*transform.y.length(),
 		"lines":label.get_line_count(),"visible_lines":label.get_visible_line_count()}
+
+func _quality_conclusion_geometry() -> Dictionary:
+	var card: Control=main.conclusion_card
+	var result: Dictionary={"viewport":_quality_rect(main.get_viewport().get_visible_rect()),"card":_screen_bounds(card),"visible":card.is_visible_in_tree(),"labels":[],"buttons":[]}
+	for child in card.get_children():
+		if child is Label: result.labels.append(_label_geometry(child))
+	for button in [main.conclusion_continue_button,main.conclusion_hub_button]:
+		result.buttons.append({"rect":_screen_bounds(button),"text":button.text,"visible":button.is_visible_in_tree(),"disabled":button.disabled})
+	return result
 
 func _quality_geometry() -> Dictionary:
 	var goal: Control = main.premium_hud.progression_goal_panel

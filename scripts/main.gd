@@ -1586,11 +1586,16 @@ func _layout_starforge_panel(viewport_size: Vector2) -> void :
 
 
 func _layout_conclusion(viewport_size: Vector2) -> void :
-	var iphone: = _is_iphone_landscape(viewport_size)
-	if not iphone:
+	# The 667px landscape phone is narrower than the HUD's iPhone-aspect
+	# threshold. Keep the card and its authored two-column children together.
+	if viewport_size.x <= viewport_size.y:
+		conclusion_card.scale = Vector2.ONE
 		_place_control(conclusion_card, Rect2((viewport_size.x - 374) * 0.5, (viewport_size.y - 552) * 0.5, 374, 552))
 		return
 	var rect: Rect2 = _iphone_layout_metrics(viewport_size).conclusion as Rect2
+	var fit_scale: float = minf(1.0, minf((viewport_size.x - 32.0) / rect.size.x, (viewport_size.y - 32.0) / rect.size.y))
+	conclusion_card.scale = Vector2.ONE * fit_scale
+	rect.position = (viewport_size - rect.size * fit_scale) * 0.5
 	_place_control(conclusion_card, rect)
 	var kicker: Label = conclusion_card.get_node("Kicker") as Label
 	var title: Label = conclusion_card.get_node("Title") as Label

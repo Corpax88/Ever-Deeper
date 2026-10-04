@@ -74,6 +74,20 @@ async function heldMineUntil(label,predicate,timeout=25000){
  const p=await point('hud_mine');await touch('touchStart',p);
  try{return await wait(label,predicate,timeout);}finally{await touch('touchEnd',p);}
 }
+function containsRect(outer,inner,tolerance=.75){
+ return Array.isArray(outer)&&Array.isArray(inner)&&outer.length===4&&inner.length===4&&inner[2]>0&&inner[3]>0&&inner[0]>=outer[0]-tolerance&&inner[1]>=outer[1]-tolerance&&inner[0]+inner[2]<=outer[0]+outer[2]+tolerance&&inner[1]+inner[3]<=outer[1]+outer[3]+tolerance;
+}
+async function conclusionLayout(viewport){
+ await page.setViewportSize(viewport);
+ let previous='',stableSince=0;
+ return wait('conclusion stable layout '+viewport.width,s=>{
+  const geometry=s?.quality?.finale?.geometry;
+  if(!geometry?.visible||!geometry.viewport||Math.abs(geometry.viewport[2]/geometry.viewport[3]-viewport.width/viewport.height)>.01)return false;
+  const fingerprint=JSON.stringify(geometry);
+  if(fingerprint!==previous){previous=fingerprint;stableSince=Date.now();return false;}
+  return Date.now()-stableSince>=300;
+ },5000);
+}
 async function profile(label,mining=false){
  await ready();await delay(1500);
  let start=null;
@@ -136,10 +150,15 @@ try{
   await command('quality_finale',{action:'core'});await wait('core context',s=>s.quality.finale.context==='deepheart_core');await shot('finale-core-ready');
   await tap('hud_context');await wait('real finale conclusion',s=>s.quality.finale.victory&&s.quality.finale.conclusion,20000);
   for(const viewport of [{width:667,height:375},{width:844,height:390},{width:932,height:430}]){
-   await page.setViewportSize(viewport);await delay(250);s=await state();
-   check('conclusion-pauses-player-'+viewport.width,!s.player_controls_enabled&&s.quality.finale.conclusion,{phase:s.phase});await shot('finale-conclusion-'+viewport.width);
+   s=await conclusionLayout(viewport);
+   const geometry=s.quality.finale.geometry;
+   check('conclusion-pauses-player-'+viewport.width,!s.player_controls_enabled&&s.quality.finale.conclusion,{phase:s.phase});
+   check('conclusion-card-contained-'+viewport.width,containsRect(geometry.viewport,geometry.card),{geometry});
+   check('conclusion-text-and-stats-contained-'+viewport.width,geometry.labels.length>0&&geometry.labels.every(label=>label.visible&&containsRect(geometry.viewport,label.rect)&&containsRect(geometry.card,label.rect)&&label.visible_lines>=label.lines),{labels:geometry.labels});
+   check('conclusion-both-actions-contained-'+viewport.width,geometry.buttons.length===2&&geometry.buttons.every(button=>button.visible&&!button.disabled&&containsRect(geometry.viewport,button.rect)&&containsRect(geometry.card,button.rect)),{buttons:geometry.buttons});
+   await shot('finale-conclusion-'+viewport.width);
   }
-  await page.setViewportSize({width:844,height:390});await delay(250);await tap('conclusion_to_hub');await wait('real conclusion returns Hub',s=>s.phase==='hub'&&!s.quality.finale.conclusion&&s.quality.finale.conclusion_seen);await ready();await shot('finale-returned-Hub');
+  await conclusionLayout({width:844,height:390});await tap('conclusion_to_hub');await wait('real conclusion returns Hub',s=>s.phase==='hub'&&!s.quality.finale.conclusion&&s.quality.finale.conclusion_seen);await ready();await shot('finale-returned-Hub');
   await command('quality_finale',{action:'elevator'});await wait('Hub Deep elevator',s=>s.hub_context==='deepElevator');await tap('hud_context');await wait('real elevator reaches Deep',s=>s.phase==='endless');await ready();await shot('finale-first-Deep');
  });
  for(const [label,mine,depth,mining] of [['surface','surface',0,false],['depth','mossMine',2,true],['Deep','endless',1,true]])await group('performance-'+label,async()=>{
