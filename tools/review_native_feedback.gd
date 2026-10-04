@@ -65,9 +65,12 @@ func run() -> void:
 		check(str(width)+" all pickups remain present",pickup_rects.size()==3)
 		for index in pickup_rects.size():
 			check(str(width)+" pickup "+str(index)+" clears hero and skill",not pickup_rects[index].intersects(hero) and not pickup_rects[index].intersects(skill_rect))
+			for other in range(index+1,pickup_rects.size()):
+				check(str(width)+" pickup ink frames "+str(index)+" and "+str(other)+" stay separate",not pickup_rects[index].intersects(pickup_rects[other]))
 		var toast_rect: Rect2=toast._toast.get_global_transform_with_canvas()*Rect2(Vector2.ZERO,toast._toast.size)
 		var steering: Rect2=main.movement_pad.get_global_transform_with_canvas()*main.movement_pad.movement_zone_rect(main.movement_pad.size)
-		if toast._toast.is_visible_in_tree():
+		var was_deferred: bool=not toast._toast.is_visible_in_tree()
+		if not was_deferred:
 			check(str(width)+" achievement clears hero skill and steering",not toast_rect.intersects(hero) and not toast_rect.intersects(skill_rect) and not toast_rect.intersects(steering))
 			for rect in pickup_rects: check(str(width)+" achievement clears pickup",not toast_rect.intersects(rect))
 		else:
@@ -77,12 +80,33 @@ func run() -> void:
 		root.get_texture().get_image().save_png(output.path_join("feedback-"+str(width)+".png"))
 		FileAccess.open(output.path_join("geometry-"+str(width)+".json"),FileAccess.WRITE).store_string(JSON.stringify({"hero":hero,"skill":skill.snapshot(),"pickups":pickup_rects,"achievement":toast.debug_snapshot(),"steering":steering},"  "))
 		main.movement_pad.cancel()
-		await create_timer(4.0).timeout
-		main._update_achievement_toast_anchor()
-		await process_frame
-		await RenderingServer.frame_post_draw
-		check(str(width)+" deferred achievement resumes after other notices expire",feedback.entries.is_empty() and skill.active.is_empty() and toast._toast.is_visible_in_tree() and toast._phase_elapsed>0.0)
-		root.get_texture().get_image().save_png(output.path_join("feedback-resumed-"+str(width)+".png"))
+		# A clear slot can open before every notice expires (including when
+		# steering is released). Observe rendered resumption independently of
+		# notice expiry; waiting for both at once can miss the entire toast.
+		var resumed: bool=false
+		var notices_expired: bool=false
+		var timeline: Array=[]
+		var observation_start: int=Time.get_ticks_msec()
+		var deadline: int=observation_start+20000
+		while Time.get_ticks_msec()<deadline:
+			await process_frame
+			main._update_achievement_toast_anchor()
+			await RenderingServer.frame_post_draw
+			var snapshot: Dictionary=toast.debug_snapshot()
+			var visible: bool=toast._toast.is_visible_in_tree()
+			var clear: bool=not toast._placement_blocked and bool(snapshot.placement_clear)
+			var expired_now: bool=feedback.entries.is_empty() and skill.active.is_empty()
+			notices_expired=notices_expired or expired_now
+			timeline.append({"msec":Time.get_ticks_msec()-observation_start,"visible":visible,"clear":clear,"phase":snapshot.phase,"phase_elapsed":toast._phase_elapsed,"pickups":feedback.entries.size(),"skill_active":not skill.active.is_empty(),"presenting":toast.is_presenting()})
+			if visible and clear and toast._phase_elapsed>0.0 and not resumed:
+				resumed=true
+				root.get_texture().get_image().save_png(output.path_join("feedback-resumed-"+str(width)+".png"))
+			if notices_expired and not toast.is_presenting(): break
+		FileAccess.open(output.path_join("timeline-"+str(width)+".json"),FileAccess.WRITE).store_string(JSON.stringify({"initially_deferred":was_deferred,"frames":timeline},"  "))
+		check(str(width)+" achievement observed visible with advancing phase and clear placement",resumed)
+		check(str(width)+" pickups and skill independently expire",notices_expired)
+		check(str(width)+" achievement completes normally",not toast.is_presenting())
+
 	var passed: bool=true
 	for row in checks: passed=passed and row.passed
 	FileAccess.open(output.path_join("checks.json"),FileAccess.WRITE).store_string(JSON.stringify({"passed":passed,"checks":checks},"  "))
