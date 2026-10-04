@@ -1,0 +1,58 @@
+{
+  "workflow_run": 37191530141,
+  "source": "911962378a803fa8e2058a5bf1c07b05426ae42d",
+  "baseline_source": "be3a698e0ad8bedb91e877b9932a7bb05b80684a",
+  "real_renderer": "ANGLE Metal Renderer: Apple Paravirtual device",
+  "physical_iphone": false,
+  "groups": {
+    "candidate": {
+      "passed": true,
+      "checks": 40,
+      "captures": 148,
+      "failures": []
+    },
+    "focused": {
+      "passed": false,
+      "checks": 1688,
+      "captures": 93,
+      "failures": [
+        {
+          "group": "goal-lines-844",
+          "error": "Error: actual-pinned-source-844\n    at check (file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/full-quality/focused.mjs:36:99)\n    at file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/full-quality/focused.mjs:129:28\n    at async group (file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/full-quality/focused.mjs:54:6)\n    at async file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/full-quality/focused.mjs:116:3"
+        },
+        {
+          "group": "goal-lines-667",
+          "error": "Error: actual-pinned-source-667\n    at check (file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/full-quality/focused.mjs:36:99)\n    at file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/full-quality/focused.mjs:129:28\n    at async group (file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/full-quality/focused.mjs:54:6)\n    at async file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/full-quality/focused.mjs:116:3"
+        },
+        {
+          "group": "goal-lines-932",
+          "error": "Error: actual-pinned-source-932\n    at check (file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/full-quality/focused.mjs:36:99)\n    at file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/full-quality/focused.mjs:129:28\n    at async group (file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/full-quality/focused.mjs:54:6)\n    at async file:///Users/runner/work/Ever-Deeper/Ever-Deeper/.github/full-quality/focused.mjs:116:3"
+        }
+      ]
+    },
+    "ricochet-lifecycle": {
+      "passed": true,
+      "checks": 275,
+      "captures": 42,
+      "failures": []
+    },
+    "baseline-missing": {
+      "passed": true,
+      "checks": 28,
+      "captures": 39,
+      "failures": []
+    },
+    "ordinary-candidate": {
+      "passed": true,
+      "checks": 0,
+      "captures": 6,
+      "failures": null
+    }
+  },
+  "fixture_diagnoses": [
+    "focused: three assertions incorrectly assumed Prismite came from The Deep; published source correctly reads Moonglass \u00b7 Depth 2. All other1685 checks passed. Next fixture accepts the authored current or newly introduced rich-vein route explicitly.",
+    "native completed-goals: top-level preload preceded autoload registration. Deferred load repaired; exact unchanged production PCK passed18 checks.",
+    "native retained-five: mixed queue had62 ore IDs plus one rock contact; old assertion compared all63 to ore-only log. Corrected check preserves all63 hits and62 node hits, then passes39.",
+    "Existing premium-core: two expectations required pinning an already-claimed mod. QA-only exact two-line correction requires retired pin, retained claim/enabled state, nonempty next HUD progression; both retained input and premium-core gates pass."
+  ]
+}

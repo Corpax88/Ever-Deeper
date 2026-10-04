@@ -1,0 +1,774 @@
+{
+  "version": "1.0.0-dev.15.54",
+  "files": {
+    "index.html": {
+      "size": 23145,
+      "sha256": "49ba6f293c3cbde61fe6589f7c0bcea0690ec12538fa0f2364f5b20961d46f0c"
+    },
+    "index.js": {
+      "size": 282403,
+      "sha256": "1c05fc40c7e418b0234c4e5ac39dfc7df1286e98443946e84b89a7394de6c753"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.pck": {
+      "size": 327695806,
+      "sha256": "0527b553c1eb4c52d977909f5e3cfd1ca92d8eb7a8941484c51de95c2e51ca97"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 4571,
+      "sha256": "65bc52dba653b2c39735a621863ae7332dda9c65d3a1bd7891d356390110da7f"
+    }
+  },
+  "source": "911962378a803fa8e2058a5bf1c07b05426ae42d",
+  "base_source": "be3a698e0ad8bedb91e877b9932a7bb05b80684a",
+  "physical_iphone": false,
+  "checks": [
+    {
+      "name": "surface-locked-844-map-world-data",
+      "passed": true,
+      "phase": "surface",
+      "cartography": {
+        "area": "",
+        "explored_areas": 0,
+        "known": 0,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          240,
+          680
+        ],
+        "revision": 0,
+        "shared": true,
+        "terrain": false
+      }
+    },
+    {
+      "name": "surface-unlocked-844-map-world-data",
+      "passed": true,
+      "phase": "surface",
+      "cartography": {
+        "area": "",
+        "explored_areas": 0,
+        "known": 0,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          600,
+          650
+        ],
+        "revision": 0,
+        "shared": true,
+        "terrain": false
+      }
+    },
+    {
+      "name": "mossMine-1-844-map-world-data",
+      "passed": true,
+      "phase": "mine",
+      "cartography": {
+        "area": "mine:mossMine",
+        "explored_areas": 1,
+        "known": 46,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          230,
+          640
+        ],
+        "revision": 1,
+        "shared": true,
+        "terrain": true
+      }
+    },
+    {
+      "name": "mossMine-2-844-map-world-data",
+      "passed": true,
+      "phase": "depth",
+      "cartography": {
+        "area": "depth:mossMine",
+        "explored_areas": 2,
+        "known": 134,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          308,
+          3924
+        ],
+        "revision": 2,
+        "shared": true,
+        "terrain": true
+      }
+    },
+    {
+      "name": "endless-1-844-map-world-data",
+      "passed": true,
+      "phase": "endless",
+      "cartography": {
+        "area": "endless",
+        "explored_areas": 3,
+        "known": 34,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          1056,
+          224
+        ],
+        "revision": 3,
+        "shared": true,
+        "terrain": true
+      }
+    },
+    {
+      "name": "missing-maps-844",
+      "passed": true
+    },
+    {
+      "name": "treasury-inspect-authority-844",
+      "passed": true
+    },
+    {
+      "name": "missing-commerce-844",
+      "passed": true
+    },
+    {
+      "name": "missing-treasury-exit-844",
+      "passed": true
+    },
+    {
+      "name": "surface-locked-667-map-world-data",
+      "passed": true,
+      "phase": "surface",
+      "cartography": {
+        "area": "",
+        "explored_areas": 3,
+        "known": 34,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          240,
+          680
+        ],
+        "revision": 3,
+        "shared": true,
+        "terrain": false
+      }
+    },
+    {
+      "name": "surface-unlocked-667-map-world-data",
+      "passed": true,
+      "phase": "surface",
+      "cartography": {
+        "area": "",
+        "explored_areas": 3,
+        "known": 34,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          600,
+          650
+        ],
+        "revision": 3,
+        "shared": true,
+        "terrain": false
+      }
+    },
+    {
+      "name": "mossMine-1-667-map-world-data",
+      "passed": true,
+      "phase": "mine",
+      "cartography": {
+        "area": "mine:mossMine",
+        "explored_areas": 3,
+        "known": 46,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          230,
+          640
+        ],
+        "revision": 4,
+        "shared": true,
+        "terrain": true
+      }
+    },
+    {
+      "name": "mossMine-2-667-map-world-data",
+      "passed": true,
+      "phase": "depth",
+      "cartography": {
+        "area": "depth:mossMine",
+        "explored_areas": 3,
+        "known": 134,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          308,
+          3924
+        ],
+        "revision": 5,
+        "shared": true,
+        "terrain": true
+      }
+    },
+    {
+      "name": "endless-1-667-map-world-data",
+      "passed": true,
+      "phase": "endless",
+      "cartography": {
+        "area": "endless",
+        "explored_areas": 3,
+        "known": 34,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          1056,
+          224
+        ],
+        "revision": 6,
+        "shared": true,
+        "terrain": true
+      }
+    },
+    {
+      "name": "missing-maps-667",
+      "passed": true
+    },
+    {
+      "name": "treasury-inspect-authority-667",
+      "passed": true
+    },
+    {
+      "name": "missing-commerce-667",
+      "passed": true
+    },
+    {
+      "name": "missing-treasury-exit-667",
+      "passed": true
+    },
+    {
+      "name": "surface-locked-932-map-world-data",
+      "passed": true,
+      "phase": "surface",
+      "cartography": {
+        "area": "",
+        "explored_areas": 3,
+        "known": 34,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          240,
+          680
+        ],
+        "revision": 6,
+        "shared": true,
+        "terrain": false
+      }
+    },
+    {
+      "name": "surface-unlocked-932-map-world-data",
+      "passed": true,
+      "phase": "surface",
+      "cartography": {
+        "area": "",
+        "explored_areas": 3,
+        "known": 34,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          600,
+          650
+        ],
+        "revision": 6,
+        "shared": true,
+        "terrain": false
+      }
+    },
+    {
+      "name": "mossMine-1-932-map-world-data",
+      "passed": true,
+      "phase": "mine",
+      "cartography": {
+        "area": "mine:mossMine",
+        "explored_areas": 3,
+        "known": 46,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          230,
+          640
+        ],
+        "revision": 7,
+        "shared": true,
+        "terrain": true
+      }
+    },
+    {
+      "name": "mossMine-2-932-map-world-data",
+      "passed": true,
+      "phase": "depth",
+      "cartography": {
+        "area": "depth:mossMine",
+        "explored_areas": 3,
+        "known": 134,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          308,
+          3924
+        ],
+        "revision": 8,
+        "shared": true,
+        "terrain": true
+      }
+    },
+    {
+      "name": "endless-1-932-map-world-data",
+      "passed": true,
+      "phase": "endless",
+      "cartography": {
+        "area": "endless",
+        "explored_areas": 3,
+        "known": 34,
+        "offset": [
+          0,
+          0
+        ],
+        "player": [
+          1056,
+          224
+        ],
+        "revision": 9,
+        "shared": true,
+        "terrain": true
+      }
+    },
+    {
+      "name": "missing-maps-932",
+      "passed": true
+    },
+    {
+      "name": "treasury-inspect-authority-932",
+      "passed": true
+    },
+    {
+      "name": "missing-commerce-932",
+      "passed": true
+    },
+    {
+      "name": "missing-treasury-exit-932",
+      "passed": true
+    },
+    {
+      "name": "runtime-errors-absent",
+      "passed": true
+    }
+  ],
+  "images": [
+    {
+      "file": "surface-locked-844-expanded-map.jpg",
+      "state": "surface-locked-844-expanded-map.json",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "dpr": 2
+    },
+    {
+      "file": "surface-unlocked-844-expanded-map.jpg",
+      "state": "surface-unlocked-844-expanded-map.json",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "dpr": 2
+    },
+    {
+      "file": "mossMine-1-844.jpg",
+      "state": "mossMine-1-844.json",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "dpr": 2
+    },
+    {
+      "file": "mossMine-1-844-expanded-map.jpg",
+      "state": "mossMine-1-844-expanded-map.json",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "dpr": 2
+    },
+    {
+      "file": "mossMine-2-844.jpg",
+      "state": "mossMine-2-844.json",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "dpr": 2
+    },
+    {
+      "file": "mossMine-2-844-expanded-map.jpg",
+      "state": "mossMine-2-844-expanded-map.json",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "dpr": 2
+    },
+    {
+      "file": "endless-1-844.jpg",
+      "state": "endless-1-844.json",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "dpr": 2
+    },
+    {
+      "file": "endless-1-844-expanded-map.jpg",
+      "state": "endless-1-844-expanded-map.json",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "dpr": 2
+    },
+    {
+      "file": "commerce-lift_workshop-844.jpg",
+      "state": "commerce-lift_workshop-844.json",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "dpr": 2
+    },
+    {
+      "file": "treasury-chamber-inspect-844.jpg",
+      "state": "treasury-chamber-inspect-844.json",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "dpr": 2
+    },
+    {
+      "file": "treasury-expanded-map-844.jpg",
+      "state": "treasury-expanded-map-844.json",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "dpr": 2
+    },
+    {
+      "file": "treasury-correct-exit-approach-844.jpg",
+      "state": "treasury-correct-exit-approach-844.json",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "dpr": 2
+    },
+    {
+      "file": "treasury-returned-844.jpg",
+      "state": "treasury-returned-844.json",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "dpr": 2
+    },
+    {
+      "file": "surface-locked-667-expanded-map.jpg",
+      "state": "surface-locked-667-expanded-map.json",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "dpr": 2
+    },
+    {
+      "file": "surface-unlocked-667-expanded-map.jpg",
+      "state": "surface-unlocked-667-expanded-map.json",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "dpr": 2
+    },
+    {
+      "file": "mossMine-1-667.jpg",
+      "state": "mossMine-1-667.json",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "dpr": 2
+    },
+    {
+      "file": "mossMine-1-667-expanded-map.jpg",
+      "state": "mossMine-1-667-expanded-map.json",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "dpr": 2
+    },
+    {
+      "file": "mossMine-2-667.jpg",
+      "state": "mossMine-2-667.json",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "dpr": 2
+    },
+    {
+      "file": "mossMine-2-667-expanded-map.jpg",
+      "state": "mossMine-2-667-expanded-map.json",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "dpr": 2
+    },
+    {
+      "file": "endless-1-667.jpg",
+      "state": "endless-1-667.json",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "dpr": 2
+    },
+    {
+      "file": "endless-1-667-expanded-map.jpg",
+      "state": "endless-1-667-expanded-map.json",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "dpr": 2
+    },
+    {
+      "file": "commerce-lift_workshop-667.jpg",
+      "state": "commerce-lift_workshop-667.json",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "dpr": 2
+    },
+    {
+      "file": "treasury-chamber-inspect-667.jpg",
+      "state": "treasury-chamber-inspect-667.json",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "dpr": 2
+    },
+    {
+      "file": "treasury-expanded-map-667.jpg",
+      "state": "treasury-expanded-map-667.json",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "dpr": 2
+    },
+    {
+      "file": "treasury-correct-exit-approach-667.jpg",
+      "state": "treasury-correct-exit-approach-667.json",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "dpr": 2
+    },
+    {
+      "file": "treasury-returned-667.jpg",
+      "state": "treasury-returned-667.json",
+      "viewport": {
+        "width": 667,
+        "height": 375
+      },
+      "dpr": 2
+    },
+    {
+      "file": "surface-locked-932-expanded-map.jpg",
+      "state": "surface-locked-932-expanded-map.json",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "dpr": 2
+    },
+    {
+      "file": "surface-unlocked-932-expanded-map.jpg",
+      "state": "surface-unlocked-932-expanded-map.json",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "dpr": 2
+    },
+    {
+      "file": "mossMine-1-932.jpg",
+      "state": "mossMine-1-932.json",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "dpr": 2
+    },
+    {
+      "file": "mossMine-1-932-expanded-map.jpg",
+      "state": "mossMine-1-932-expanded-map.json",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "dpr": 2
+    },
+    {
+      "file": "mossMine-2-932.jpg",
+      "state": "mossMine-2-932.json",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "dpr": 2
+    },
+    {
+      "file": "mossMine-2-932-expanded-map.jpg",
+      "state": "mossMine-2-932-expanded-map.json",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "dpr": 2
+    },
+    {
+      "file": "endless-1-932.jpg",
+      "state": "endless-1-932.json",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "dpr": 2
+    },
+    {
+      "file": "endless-1-932-expanded-map.jpg",
+      "state": "endless-1-932-expanded-map.json",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "dpr": 2
+    },
+    {
+      "file": "commerce-lift_workshop-932.jpg",
+      "state": "commerce-lift_workshop-932.json",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "dpr": 2
+    },
+    {
+      "file": "treasury-chamber-inspect-932.jpg",
+      "state": "treasury-chamber-inspect-932.json",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "dpr": 2
+    },
+    {
+      "file": "treasury-expanded-map-932.jpg",
+      "state": "treasury-expanded-map-932.json",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "dpr": 2
+    },
+    {
+      "file": "treasury-correct-exit-approach-932.jpg",
+      "state": "treasury-correct-exit-approach-932.json",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "dpr": 2
+    },
+    {
+      "file": "treasury-returned-932.jpg",
+      "state": "treasury-returned-932.json",
+      "viewport": {
+        "width": 932,
+        "height": 430
+      },
+      "dpr": 2
+    }
+  ],
+  "failures": [],
+  "passed": true,
+  "browser": "151.0.7922.34",
+  "runtime": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple Paravirtual device, Unspecified Version)",
+    "lost": false,
+    "dpr": 2
+  }
+}

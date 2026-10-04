@@ -16,6 +16,12 @@ cases=[
  ('running-achievements','tools/review_running_achievements.gd','EVER_DEEPER_RUNNING_ACHIEVEMENTS_OK'),
  ('achievement-recovery','tools/review_achievement_recovery.gd','EVER_DEEPER_ACHIEVEMENT_RECOVERY_OK'),
  ('companion-training','tools/review_companion_training.gd','COMPANION_TRAINING_OK'),
+ ('companion-new-run','tools/review_companion_new_run.gd','EVER_DEEPER_COMPANION_NEW_RUN_OK'),
+ ('treasury-seams','tools/review_treasury_seams.gd','TREASURY_SEAMS_OK'),
+ ('treasury-seam-world','tools/review_treasury_seam_world.gd','TREASURY_SEAM_WORLD_OK'),
+ ('notification-modals','tools/review_notification_modals.gd','NOTIFICATION_MODALS_OK'),
+ ('treasury-seam-integrity','tools/review_treasury_seam_integrity.gd','TREASURY_SEAM_INTEGRITY_OK'),
+ ('treasury-hunt-rate','tools/review_treasury_hunt_rate.gd','TREASURY_HUNT_RATE_OK'),
 ]
 overrides=json.loads((root/'.github/full-quality/overrides.json').read_text())
 if 'scripts/progression/achievement_service.gd' not in overrides:

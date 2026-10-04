@@ -93,6 +93,17 @@ try{
    await observe(label+'-travel',skin,earned);await shot(label+'-travel');
   }
  }
+ // Retain the actual boundary observation, then move normally to an interior
+ // checkpoint so the reload/unequip captures show the complete hero.
+ await shot('earned-before-interior-checkpoint');
+ {
+  const s=await state(),r=s.buttons.joystick,v=page.viewportSize();
+  const joy={x:(r[0]+r[2]*.20)/s.viewport[0]*v.width,y:(r[1]+r[3]*.70)/s.viewport[1]*v.height};
+  await touch('touchStart',joy);await touch('touchMove',{x:joy.x,y:joy.y+32});
+  try{await wait('walk to interior checkpoint',s=>s.position[1]>=360,10000);}finally{await touch('touchEnd',joy);}
+  await delay(450);const framed=await state(),p=framed.quality.mod.hero_screen;
+  check('saved-checkpoint-hero-in-frame',p[0]>100&&p[0]<framed.viewport[0]-100&&p[1]>140&&p[1]<framed.viewport[1]-70,{position:framed.position,hero_screen:p});
+ }
  await command('quality_mod_action',{action:'checkpoint'});
  check('earned-checkpoint-committed',(await state()).quality.mod.result.saved,{live:(await state()).quality.mod});
  await delay(1800);

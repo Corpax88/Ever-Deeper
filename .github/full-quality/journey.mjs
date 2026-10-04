@@ -70,82 +70,63 @@ async function closeModal(){
  }
  throw Error('Modal did not return to gameplay');
 }
-async function map(label){
- await tap('hud_map');await wait('expanded map',s=>s.skills_open&&s.map_open);await shot(label+'-expanded-map');
- const s=await state();check(label+'-map-world-data',s.phase==='surface'?s.actual_map.known.length===4:s.phase==='hub'||s.cartography.terrain,{phase:s.phase,cartography:s.cartography});
- await tap('skills_close');await ready();
+async function heldMineUntil(label,predicate,timeout=25000){
+ const p=await point('hud_mine');await touch('touchStart',p);
+ try{return await wait(label,predicate,timeout);}finally{await touch('touchEnd',p);}
+}
+async function profile(label,mining=false){
+ await ready();await delay(1500);
+ let start=null;
+ if(mining){start=await point('hud_mine');await touch('touchStart',start);}
+ else {
+  const s=await state(),r=s.buttons.joystick,v=page.viewportSize();start={x:(r[0]+r[2]*.20)/s.viewport[0]*v.width,y:(r[1]+r[3]*.70)/s.viewport[1]*v.height};
+  await touch('touchStart',start);await touch('touchMove',{x:start.x+26,y:start.y});
+ }
+ try{
+  await command('quality_profile',{action:'begin'});
+  const browserFrames=await page.evaluate(()=>new Promise(resolve=>{const values=[];let first=0,last=0;function frame(now){if(!first)first=now;if(last)values.push(now-last);last=now;if(now-first<8000)requestAnimationFrame(frame);else resolve(values);}requestAnimationFrame(frame);}));
+  await command('quality_profile',{action:'end'});
+  const s=await state(),metrics=s.quality.profile;
+  check(label+'-representative-window',metrics.seconds>=8&&metrics.frames>100&&s.actual_map.world_active&&!s.menu,{metrics});
+  report.performance??=[];report.performance.push({label,metrics,browser_frames_ms:browserFrames,physical_iphone:false});save();
+  check(label+'-mac-render-budget',metrics.fps>=45&&metrics.frame_ms.p95<=50&&metrics.frame_ms.over_250ms<=2,{metrics});
+ }finally{await touch('touchEnd',start);}
+ await shot('performance-'+label);
 }
 try{
  await page.goto('http://127.0.0.1:'+server.address().port,{waitUntil:'domcontentloaded',timeout:180000});
- await wait('fixture ready',s=>s?.version===version&&s?.quality,180000);
- await shot('000-first-menu-844');
+ await wait('journey ready',s=>s?.version===version&&s?.quality?.journey,180000);
  await tap('new_game');await ready();
  runtime=await page.evaluate(()=>{const g=document.querySelector('canvas').getContext('webgl2'),e=g.getExtension('WEBGL_debug_renderer_info');return {renderer:e?g.getParameter(e.UNMASKED_RENDERER_WEBGL):null,lost:g.isContextLost(),dpr:devicePixelRatio,userAgent:navigator.userAgent};});
  check('real-gpu-renderer',runtime.renderer&&!runtime.lost&&!/SwiftShader|llvmpipe|software/i.test(runtime.renderer),{runtime});
- let previous=0;
- for(const second of [0,1,3,6,10]){await delay((second-previous)*1000);await shot('001-first-run-'+second+'s-844');previous=second;}
- // Prove actual held touch moves the unchanged first-run player.
- const before=(await state()).position;
- const s=await state(),v=page.viewportSize(),r=s.buttons.joystick;
- const p={x:(r[0]+r[2]*.20)/s.viewport[0]*v.width,y:(r[1]+r[3]*.70)/s.viewport[1]*v.height};
- await touch('touchStart',p);await touch('touchMove',{x:p.x+36,y:p.y});await delay(700);await touch('touchEnd',p);
- const after=(await state()).position;
- check('first-run-real-touch-movement',Math.hypot(after[0]-before[0],after[1]-before[1])>10,{before,after});await shot('002-first-run-after-touch-844');
- for(const viewport of [{width:844,height:390},{width:667,height:375},{width:932,height:430}]){
-  const w=viewport.width;await page.setViewportSize(viewport);await delay(350);
-  await group('menus-'+w,async()=>{
-   await closeModal();await command('surface');await ready();await shot('surface-'+w);
-   await tap('hud_menu');await wait('skills',s=>s.skills_open);await shot('skills-'+w);
-   await tap('settings');await wait('settings',s=>s.settings_open);await shot('settings-'+w);
-   await tap('settings_back');await wait('settings parent',s=>s.menu&&!s.settings_open);
-   if((await state()).skills_open){await shot('settings-return-skills-'+w);await tap('skills_close');await ready();await command('pause');}
-   await shot('pause-menu-'+w);
-   await tap('menu_achievements');await delay(300);await shot('achievements-'+w);
-   await tap('settings_back');await tap('continue');await ready();
-   await command('quality_inventory');await tap('hud_bag');await wait('inventory',s=>s.inventory_open);await shot('inventory-full-'+w);
-   await tap('inventory_close');await ready();await tap('hud_mole');await wait('mole journal',s=>s.mole_open);await shot('mole-journal-'+w);
-   await tap('mole_close');await ready();
-  });
-  await group('maps-'+w,async()=>{
-   await closeModal();await command('treasury_map_first');await ready();await shot('surface-locked-worlds-'+w);await map('surface-locked-'+w);
-   await command('treasury_map_all');await command('surface');await ready();await map('surface-unlocked-'+w);
-   for(const [mine,depth] of [['mossMine',1],['mossMine',2],['endless',1]]){
-    await command('maps_fixture',{mine,depth});await ready();await delay(250);await shot(mine+'-'+depth+'-'+w);await map(mine+'-'+depth+'-'+w);
-   }
-  });
-  await group('commerce-'+w,async()=>{
-   await closeModal();
-   for(const family of ['forge','starforge','depth_forge']){
-    await command('quality_commerce',{family});await wait(family,s=>s.shop_open);await shot('commerce-'+family+'-'+w);await tap('shop_close');await ready();
-   }
-   for(const station of ['tool_forge','light_lab','wardrobe','lift_workshop']){
-    await command('forge_icon_fixture',{station});await ready();await delay(200);await tap('hud_context');await wait(station,s=>s.shop_open);await shot('commerce-'+station+'-'+w);
-    await tap('shop_close');await ready();
-   }
-  });
-  await group('treasury-'+w,async()=>{
-   await closeModal();await command('treasury_fixture');await ready();await delay(500);await shot('treasury-approach-'+w);
-   await walk(1,s=>s.treasury.inside,'treasury enter');await shot('treasury-inside-entry-'+w);
-   await tap('hud_menu');await wait('treasury skills',s=>s.skills_open);await tap('map');await wait('treasury map',s=>s.map_open);await shot('treasury-expanded-map-'+w);await tap('skills_close');await ready();
-   await command('treasury_zone');await ready();await walk(1,s=>s.treasury.delivering,'delivery start');await delay(450);await shot('treasury-mixed-flight-'+w);
-   for(const [index,amount] of [[0,5000],[3,30000],[26,100000]]){await command('treasury_visual',{index,amount});await delay(250);await shot('treasury-podium-'+index+'-'+amount+'-'+w);}
-   await tap('gold_podium');await wait('podium goal',s=>s.treasury_goal.open);await shot('treasury-earned-goal-'+w);await tap('treasury_close');await ready();
-   await command('quality_exit');await shot('treasury-exit-approach-'+w);await walk(-1,s=>!s.treasury.inside,'treasury exit');await shot('treasury-returned-'+w);
-  });
-  await group('previews-'+w,async()=>{
-   await closeModal();
-   for(const resource of ['wallet_gold','burrowsteel','prismite','rootiron','echo_crystal','phasecrystal','deep_alloy','singularity','copper']){
-    await command('mods_preview',{resource,amount:100000});await wait('preview '+resource,s=>s.treasury_goal.open);await delay(180);await shot('mod-preview-'+resource+'-'+w);await tap('treasury_close');await ready();
-   }
-  });
- }
- await group('other-biomes',async()=>{
-  await page.setViewportSize({width:844,height:390});await closeModal();
-  for(const mine of ['moonMine','emberMine','starMine'])for(const depth of [1,2]){
-   await command('maps_fixture',{mine,depth});await ready();await delay(250);await shot(mine+'-'+depth+'-844');await map(mine+'-'+depth+'-844');
+ await group('fresh-mine-sell-upgrade-gate',async()=>{
+  let s=await state();check('new-run-is-unprogressed',s.quality.journey.pickaxe===1&&s.quality.journey.mined===0&&!s.quality.journey.moonglass_unlocked,{journey:s.quality.journey});
+  await command('quality_journey',{step:'entrance'});await wait('real mine entrance context',s=>s.quality.journey.surface_context==='enter:mossMine');await shot('journey-01-mine-entrance');
+  await tap('hud_context');await wait('actual mine entry',s=>s.phase==='mine'&&s.actual_map.world_active);await ready();
+  await command('quality_journey',{step:'target'});s=await state();
+  check('natural-first-target-preserved',s.quality.journey.result.natural_target_found&&s.quality.journey.result.block.hp>0,{target:s.quality.journey.result});
+  const mined=s.quality.journey.mined;await shot('journey-02-natural-first-target');
+  await heldMineUntil('actual mining yields cargo',s=>s.quality.journey.mined>mined&&Object.values(s.quality.cargo).reduce((a,b)=>a+b,0)>0);
+  s=await state();check('first-swing-earned-skill',s.skill_xp.mining>0,{xp:s.skill_xp,mined:s.quality.journey.mined,cargo:s.quality.cargo});await shot('journey-03-first-earned-ore');
+  await command('quality_journey',{step:'exit'});await wait('mine exit available',s=>s.quality.journey.exit_context);await tap('hud_context');await wait('actual surface return',s=>s.phase==='surface');await ready();
+  const goldBefore=(await state()).quality.journey.gold;
+  await command('quality_journey',{step:'assay_approach'});s=await state();check('assay-starts-outside-trigger',s.quality.journey.surface_context!=='sell',{journey:s.quality.journey});await shot('journey-04-assay-approach');
+  await walk(-1,s=>s.quality.journey.surface_context==='sell','real touch enters assay');
+  await wait('real automatic assay completes',s=>s.quality.journey.gold>goldBefore&&Object.keys(s.quality.journey.transaction).length===0,20000);
+  s=await state();check('earned-ore-converts-to-gold',s.quality.journey.gold>goldBefore,{before:goldBefore,after:s.quality.journey.gold,trigger:'held joystick enters automatic Assay'});await shot('journey-05-first-sale');
+  for(const level of [2,3]){
+   await command('quality_journey',{step:'forge'});await wait('forge context',s=>s.quality.journey.surface_context==='forge');await tap('hud_context');await wait('forge opens',s=>s.shop_open&&s.quality.commerce.panel_id==='forge');
+   s=await state();check('forge-'+level+'-actual-affordability',s.quality.commerce.action_enabled&&s.quality.commerce.selected_affordable,{commerce:s.quality.commerce,fixture:s.quality.journey.result});await shot('journey-06-forge-ready-'+level);
+   await tap('shop_primary');await wait('paid forge equips '+level,s=>s.quality.journey.pickaxe===level&&Object.keys(s.quality.journey.transaction).length===0,20000);await ready();await shot('journey-07-forge-complete-'+level);
   }
+  await command('quality_journey',{step:'gate'});await wait('locked gate action',s=>s.quality.journey.surface_context==='gate:moonglass');
+  s=await state();check('gate-still-locked-before-action',!s.quality.journey.moonglass_unlocked,{journey:s.quality.journey});const gateGold=s.quality.journey.gold;await shot('journey-08-gate-ready');
+  await tap('hud_context');await wait('actual gate unlock',s=>s.quality.journey.moonglass_unlocked);s=await state();check('gate-paid-and-opened',s.quality.journey.gold<gateGold,{before:gateGold,after:s.quality.journey.gold});await shot('journey-09-first-frontier');
+ });
+ for(const [label,mine,depth,mining] of [['surface','surface',0,false],['depth','mossMine',2,true],['Deep','endless',1,true]])await group('performance-'+label,async()=>{
+  await closeModal();if(mine==='surface')await command('surface');else await command('maps_fixture',{mine,depth});await ready();await profile(label,mining);
  });
  check('runtime-errors-absent',!messages.some(m=>/SCRIPT ERROR|Parse Error|PAGEERROR|^error: ERROR:/.test(m)),{});
 }catch(e){failures.push({group:'startup-or-global',error:String(e.stack||e)});console.error(e);try{await shot('fatal-failure');}catch{}}
-finally{report.passed=failures.length===0;report.browser=browser.version();save();await context.close();await browser.close();await new Promise(r=>server.close(r));}
+finally{report.passed=failures.length===0;report.browser=browser.version();report.fixture_limits='Only player placement and declared purchase gold are seeded in the fresh journey; mining targets, damage, mined cargo, sale, equipment upgrades and gate actions execute production code. Performance uses Mac hosted GPU with review observations, not a physical iPhone.';save();await context.close();await browser.close();await new Promise(r=>server.close(r));}
 if(failures.length)process.exitCode=1;

@@ -1,6 +1,13 @@
 extends "res://scripts/qa/suites/full_quality_base.gd"
 ## QA-only fixture: original published runtime and original QA base are retained.
 var quality_mod_result: Dictionary={}
+var quality_journey_result: Dictionary={}
+var quality_profile_active: bool=false
+var quality_profile_started: int=0
+var quality_profile_tick: int=0
+var quality_profile_frames: Array[float]=[]
+var quality_profile_cpu: Array[float]=[]
+var quality_profile_result: Dictionary={}
 
 func run() -> void:
 	if "--quality-mod-persistence" in OS.get_cmdline_user_args():
@@ -17,6 +24,49 @@ func run() -> void:
 
 func _command(data: Dictionary) -> void:
 	match String(data.kind):
+		"quality_journey":
+			main._cancel_mine_hold()
+			main._on_joystick_movement(Vector2.ZERO)
+			quality_journey_result={"step":String(data.step),"seeded":{}}
+			match String(data.step):
+				"entrance":
+					main.surface_world.restore_position(main.surface_world._mine_entrance("mossMine"))
+				"target":
+					quality_journey_result["natural_target_found"]=_place_moss(Vector2.RIGHT)
+					var cell: Vector2i=main.mine_world._find_mine_target()
+					quality_journey_result["target"]=[cell.x,cell.y]
+					quality_journey_result["block"]=Dictionary(main.mine_world.blocks.get(cell,{})).duplicate(true)
+				"exit":
+					main.mine_world.restore_position(main.mine_world._entry_spawn())
+				"assay_approach":
+					main.surface_world.restore_position(main.surface_world.station_interaction_position("sell")+Vector2(140,0))
+				"forge":
+					var cost: int=int(RunState.next_pickaxe().cost)
+					quality_journey_result.seeded={"gold_added":maxi(0,cost-RunState.gold)}
+					RunState.gold=maxi(RunState.gold,cost)
+					main.surface_world.restore_position(main.surface_world.station_interaction_position("forge"))
+				"gate":
+					var requirement: Dictionary=main._gate_requirements("moonglass")
+					quality_journey_result.seeded={"gold_added":maxi(0,int(requirement.gold)-RunState.gold)}
+					RunState.gold=maxi(RunState.gold,int(requirement.gold))
+					main.surface_world.restore_position(main.surface_world.gate_interaction_position("moonglass"))
+			main._active_player_node().camera.reset_smoothing()
+			main._refresh_hud()
+			command_id=int(data.id)
+			return
+		"quality_profile":
+			if String(data.action)=="begin":
+				quality_profile_frames.clear()
+				quality_profile_cpu.clear()
+				quality_profile_started=Time.get_ticks_usec()
+				quality_profile_tick=quality_profile_started
+				quality_profile_active=true
+			else:
+				quality_profile_active=false
+				var elapsed: float=float(Time.get_ticks_usec()-quality_profile_started)/1000000.0
+				quality_profile_result={"frames":quality_profile_frames.size(),"seconds":elapsed,"fps":float(quality_profile_frames.size())/maxf(.001,elapsed),"frame_ms":_quality_stats(quality_profile_frames),"cpu_ms":_quality_stats(quality_profile_cpu),"draw_calls":Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)}
+			command_id=int(data.id)
+			return
 		"quality_mod_setup":
 			main._dev_seed_victory_state()
 			var built: bool=main._dev_build_all_workshops_state()
@@ -114,6 +164,11 @@ func _command(data: Dictionary) -> void:
 	await super._command(data)
 
 func _frame() -> void:
+	if quality_profile_active:
+		var now: int=Time.get_ticks_usec()
+		quality_profile_frames.append(float(now-quality_profile_tick)/1000.0)
+		quality_profile_cpu.append(float(Performance.get_monitor(Performance.TIME_PROCESS))*1000.0)
+		quality_profile_tick=now
 	super._frame()
 	if sample_clock != 0.0: return
 	var buttons: Dictionary = {
@@ -122,6 +177,7 @@ func _frame() -> void:
 	}
 	if main.premium_menu.detail_card.has_node("Controls"):
 		buttons["settings_controls"] = _screen_bounds(main.premium_menu.detail_card.get_node("Controls"))
+	buttons["shop_primary"]=_screen_bounds(main.commerce_panel.primary_button)
 	var ui: Dictionary = {
 		"tutorial": main.quick_tutorial.debug_snapshot(),
 		"commerce": main.commerce_panel.interaction_snapshot(),
@@ -130,16 +186,31 @@ func _frame() -> void:
 		"geometry": _quality_geometry(),
 		"mod": _quality_mod_snapshot()
 	}
+	ui["journey"]={"result":quality_journey_result,"gold":RunState.gold,"pickaxe":RunState.pickaxe_level,"mined":RunState.total_mined_resources(),"surface_context":main.surface_context,"exit_context":main.mine_exit_context,"transaction":main.commerce_transaction.duplicate(true),"moonglass_unlocked":RunState.area_unlocked,"world_seed":RunState.world_seed}
+	ui["profile"]=quality_profile_result
 	JavaScriptBridge.eval("Object.assign(window.DEV14_STATE.buttons,"+JSON.stringify(buttons)+");window.DEV14_STATE.quality="+JSON.stringify(ui),true)
+
+func _quality_stats(values: Array[float]) -> Dictionary:
+	if values.is_empty(): return {}
+	var sorted: Array[float]=values.duplicate()
+	sorted.sort()
+	var sum: float=0.0
+	var stalls: int=0
+	for value in values:
+		sum+=value
+		if value>250.0: stalls+=1
+	return {"mean":sum/values.size(),"p50":sorted[int((sorted.size()-1)*.50)],"p95":sorted[int((sorted.size()-1)*.95)],"p99":sorted[int((sorted.size()-1)*.99)],"max":sorted.back(),"over_250ms":stalls}
 
 func _quality_mod_snapshot() -> Dictionary:
 	var world: Node=main.endless_world
 	var visual: Node=world.player.visual
 	var native: Node=visual.get("_native_worn")
+	var hero_screen: Vector2=world.player.get_global_transform_with_canvas()*Vector2.ZERO
 	return {"result":quality_mod_result,"skin":RunState.endless_tool_style,"forge_level":RunState._built_workshop_level("tool_forge"),
 		"selected":world.drill_modes.selected(),"saved":preload("res://scripts/state/treasury_goals.gd").active_mod(),"override":world.drill_modes.dev_override,
 		"native":visual.native_worn_snapshot(),"sprite_visible":visual._sprite.visible,"tool_visible":is_instance_valid(native) and is_instance_valid(native.equipment) and is_instance_valid(native.equipment.tool) and native.equipment.tool.visible,
-		"five_mode":world.drill_modes.five.mode,"save_available":main.save_available,"save_error":RunState.last_save_error,"load_status":RunState.last_load_status}
+		"five_mode":world.drill_modes.five.mode,"save_available":main.save_available,"save_error":RunState.last_save_error,"load_status":RunState.last_load_status,
+		"hero_screen":[hero_screen.x,hero_screen.y]}
 
 func _screen_bounds(control: Control) -> Array:
 	var rect: Rect2 = control.get_global_transform_with_canvas() * Rect2(Vector2.ZERO,control.size)
@@ -160,6 +231,15 @@ func _quality_geometry() -> Dictionary:
 		"controls":{},"preview":{},
 		"skills":{"plate":_screen_bounds(skills.plate),"portrait_visible":skills.portrait.is_visible_in_tree(),"map":skills._map_active}
 	}
+	var menu: Control=main.premium_menu
+	result["menu"]={"panel":_screen_bounds(menu.detail_card),"back":_screen_bounds(menu.detail_card.get_node("Back")),"labels":[]}
+	for label in menu.detail_body.find_children("*","Label",true,false):
+		if label.is_visible_in_tree(): result.menu.labels.append(_label_geometry(label))
+	var journal: Control=main.get_node("CompanionInterface").journal
+	result["journal"]={"tab":journal.tab,"commands":{},"status":journal.status.text if is_instance_valid(journal.status) else "",
+		"paper":_screen_bounds(journal.paper),"body":_screen_bounds(journal.body),"mood":_label_geometry(journal.mood),"notice":_label_geometry(journal.notice)}
+	for button in journal.body.find_children("Command_*","Button",true,false):
+		result.journal.commands[String(button.name)]={"rect":_screen_bounds(button),"disabled":button.disabled,"visible":button.is_visible_in_tree()}
 	for pair in [["menu",main.premium_hud.menu_button],["mine",main.mine_button],["bag",main.premium_hud.bag_button],["context",main.premium_hud.context_button],["mole",main.get_node("CompanionInterface").button]]:
 		result.controls[pair[0]]={"rect":_screen_bounds(pair[1]),"visible":pair[1].is_visible_in_tree()}
 	result.preview={"panel":_screen_bounds(panel.panel),"detail":_label_geometry(panel.detail),"source":_label_geometry(panel.source),"title":_label_geometry(panel.title),

@@ -56,14 +56,19 @@ async function group(name,fn){
  save();
 }
 async function closeModal(){
- const s=await state();
- if(s?.treasury_goal?.open)await tap('treasury_close');
- if(s?.shop_open)await tap('shop_close');
- if(s?.mole_open)await tap('mole_close');
- if(s?.inventory_open)await tap('inventory_close');
- if(s?.settings_open){await tap('settings_back');await tap('continue');}
- else if(s?.skills_open)await tap('skills_close');
- else if(s?.menu)await tap('continue');
+ // Parent navigation can expose another modal; inspect each resulting state.
+ for(let remaining=6;remaining>0;remaining--){
+  const s=await state();
+  if(s?.treasury_goal?.open)await tap('treasury_close');
+  else if(s?.shop_open)await tap('shop_close');
+  else if(s?.mole_open)await tap('mole_close');
+  else if(s?.inventory_open)await tap('inventory_close');
+  else if(s?.settings_open)await tap('settings_back');
+  else if(s?.skills_open)await tap('skills_close');
+  else if(s?.menu)await tap('continue');
+  else return;
+ }
+ throw Error('Modal did not return to gameplay');
 }
 async function map(label){
  await tap('hud_map');await wait('expanded map',s=>s.skills_open&&s.map_open);await shot(label+'-expanded-map');
@@ -108,10 +113,33 @@ try{
    await tap('settings');await wait('Skills settings',s=>s.settings_open);
    if((await state()).buttons.settings_controls){
     await tap('settings_controls');await wait('controls',s=>s.quality.menu_detail_title==='CONTROLS');await shot('controls-'+width);
+    const s=await state(),g=s.quality.geometry.menu,back=cssRect(g.back,s),panel=cssRect(g.panel,s);
+    check('controls-back-44-css-'+width,back[2]>=43.95&&back[3]>=43.95,{back});
+    for(const [index,label] of g.labels.entries()){
+     const rect=cssRect(label.rect,s),font=label.font_viewport*viewport.height/s.viewport[1];
+     check('controls-copy-readable-'+index+'-'+width,font>=12&&contains(panel,rect)&&label.visible_lines>=label.lines,{rect,font,text:label.text});
+    }
     await tap('settings_back');await wait('controls returns settings',s=>s.quality.menu_detail_title==='SETTINGS');
    }
    await tap('settings_back');await wait('settings returns Skills',s=>s.skills_open&&!s.settings_open);await shot('settings-return-skills-'+width);
    await tap('skills_close');await ready();
+  });
+  await group('journal-controls-'+width,async()=>{
+   await closeModal();await command('surface');await ready();await tap('hud_mole');await wait('journal',s=>s.mole_open);
+   for(const [index,tab] of [[1,'skills'],[2,'how'],[0,'together']]){
+    await tap('mole_tab_'+index);await wait('journal '+tab,s=>s.quality.geometry.journal.tab===tab);await shot('journal-'+tab+'-'+width);
+   }
+   let s=await state(),g=s.quality.geometry.journal;
+   const paper=cssRect(g.paper,s),body=cssRect(g.body,s),mood=cssRect(g.mood.rect,s),notice=cssRect(g.notice.rect,s);
+   check('journal-copy-fits-paper-'+width,contains(paper,mood)&&contains(paper,notice)&&g.mood.visible_lines>=g.mood.lines&&g.notice.visible_lines>=g.notice.lines,{paper,mood,notice});
+   check('journal-copy-separate-'+width,!overlap(mood,body)&&!overlap(notice,body),{mood,notice,body});
+   for(const [name,button] of Object.entries(g.commands)){
+    const rect=cssRect(button.rect,s);check('journal-'+name+'-44-css-'+width,rect[2]>=43.95&&rect[3]>=43.95,{rect});
+   }
+   check('journal-status-present-'+width,!!g.status,{status:g.status});
+   const fetch=g.commands.Command_fetch,rect=cssRect(fetch.rect,s);check('journal-come-here-ready-'+width,!fetch.disabled,{fetch});
+   await page.touchscreen.tap(rect[0]+rect[2]/2,rect[1]+rect[3]/2);await wait('command closes journal',s=>!s.mole_open);await ready();
+   check('journal-command-releases-input-'+width,!(await state()).mine_input_held,{});
   });
   await group('goal-lines-'+width,async()=>{
    await closeModal();
@@ -126,7 +154,7 @@ try{
     await page.touchscreen.tap(rect[0]+rect[2]/2,rect[1]+rect[3]/2);await delay(180);
     check('goal-'+scenario+'-'+width+'-tap-keeps-playing',!(await state()).menu&&(await state()).player_controls_enabled,{});
     if(scenario==='recipe')check('actual-multi-resource-recipe-'+width,g.snapshot.requirements.length>=2,{requirements:g.snapshot.requirements});
-    if(scenario==='pinned')check('actual-pinned-source-'+width,g.action.text.includes('Deep'),{action:g.action.text});
+    if(scenario==='pinned')check('actual-pinned-source-'+width,g.snapshot.resource_id==='prismite'&&['Moonglass · Depth 2','The Deep · rich veins in new ground'].includes(g.action.text),{action:g.action.text});
    }
   });
   await group('mod-actions-'+width,async()=>{
@@ -168,6 +196,23 @@ try{
     await tap('skills');await wait('skills restored',s=>!s.map_open&&s.skills_open);s=await state();
     check(mine+'-'+depth+'-'+width+'-skills-art-restored',s.quality.geometry.skills.portrait_visible,{});
     await tap('map');await wait('map reopens',s=>s.map_open&&s.skills_open);await tap('skills_close');await ready();
+   }
+   await command('treasury_map_first');await ready();await tap('hud_map');await wait('locked surface map',s=>s.map_open);
+   let s=await state(),snapshot=s.quality.geometry.skills.map_snapshot;
+   check('surface-locked-routes-'+width,snapshot.phase==='surface'&&snapshot.navigation_routes===2&&snapshot.navigation_areas===3,{snapshot});
+   await shot('surface-authored-locked-'+width);await tap('skills_close');await ready();
+   await command('treasury_map_all');await command('surface');await ready();await tap('hud_map');await wait('unlocked surface map',s=>s.map_open);
+   s=await state();snapshot=s.quality.geometry.skills.map_snapshot;
+   check('surface-unlocked-routes-'+width,snapshot.phase==='surface'&&snapshot.navigation_routes===11,{snapshot});
+   await shot('surface-authored-unlocked-'+width);await tap('skills_close');await ready();
+   await command('treasury_fixture');await ready();await walk(1,s=>s.treasury.inside,'treasury enter');
+   for(const distant of [false,true]){
+    if(distant)await command('treasury_visual',{index:26,amount:100000});
+    await tap('hud_menu');await wait('treasury Skills',s=>s.skills_open);await tap('map');await wait('treasury fresh map',s=>s.map_open);
+    s=await state();snapshot=s.quality.geometry.skills.map_snapshot;
+    check('treasury-map-live-'+distant+'-'+width,snapshot.phase==='treasury'&&snapshot.marker_count===29&&snapshot.navigation_areas===1&&snapshot.navigation_routes===0&&!snapshot.terrain&&snapshot.player_inside,{snapshot});
+    await shot('treasury-fresh-map-'+(distant?'distant':'entry')+'-'+width);
+    await tap('skills');await wait('treasury Skills restored',s=>s.skills_open&&!s.map_open);await tap('skills_close');await ready();
    }
   });
  }

@@ -10,7 +10,7 @@ concurrency: {group: full-quality-20261004, cancel-in-progress: false}
 env:
   BASE_VERSION: '1.0.0-dev.15.54'
   CANDIDATE_VERSION: '1.0.0-dev.15.55'
-  RUN_BASELINE_SUPPLEMENT: 'true'
+  RUN_BASELINE_SUPPLEMENT: 'false'
 jobs:
   graphical:
     runs-on: macos-15
@@ -62,6 +62,10 @@ jobs:
         continue-on-error: true
         run: node .github/full-quality/ricochet-lifecycle.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/ricochet-lifecycle"
         env: {EXPECTED_VERSION: '${{ env.CANDIDATE_VERSION }}'}
+      - name: Fresh mining economy journey and rendered frame windows
+        continue-on-error: true
+        run: node .github/full-quality/journey.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/journey"
+        env: {EXPECTED_VERSION: '${{ env.CANDIDATE_VERSION }}'}
       - name: Ordinary production candidate WebKit startup
         continue-on-error: true
         run: node .github/deep-treasury/startup.mjs "$RUNNER_TEMP/production" "$RUNNER_TEMP/evidence/ordinary-candidate"
@@ -69,7 +73,7 @@ jobs:
       - name: Split graphical evidence into files below 30MiB
         if: always()
         run: |
-          for name in baseline-missing candidate focused ricochet-lifecycle ordinary-candidate; do
+          for name in baseline-missing candidate focused ricochet-lifecycle journey ordinary-candidate; do
             if [ -d "$RUNNER_TEMP/evidence/$name" ]; then
               python3 .github/full-quality/split.py "$RUNNER_TEMP/evidence/$name" "$RUNNER_TEMP/evidence-split/$name"
             fi
@@ -151,6 +155,15 @@ jobs:
         with: {name: full-quality-ordinary-candidate-03, path: '${{ runner.temp }}/evidence-split/ordinary-candidate/part-03.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
       - uses: actions/upload-artifact@v4
         if: always()
+        with: {name: full-quality-journey-manifest, path: '${{ runner.temp }}/evidence-split/journey/recovery-manifest.json', if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-journey-00, path: '${{ runner.temp }}/evidence-split/journey/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: full-quality-journey-01, path: '${{ runner.temp }}/evidence-split/journey/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: full-quality-package-receipts
           path: |
@@ -168,7 +181,7 @@ jobs:
           import json,os
           from pathlib import Path
           root=Path(os.environ['RUNNER_TEMP'])/'evidence'
-          names=['native','candidate','focused','ricochet-lifecycle']
+          names=['native','candidate','focused','ricochet-lifecycle','journey']
           if os.environ['RUN_BASELINE_SUPPLEMENT']=='true':names.append('baseline-missing')
           failed=[]
           for name in names:
