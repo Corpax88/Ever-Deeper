@@ -1,5 +1,6 @@
 extends Node2D
 const ResourceScale = preload("res://scripts/world/resource_scale.gd")
+const MiningTargetLabel = preload("res://scripts/ui/mining_target_label.gd")
 
 const ShrineRespawn = preload("res://scripts/world/shrine_respawn.gd")
 
@@ -2450,10 +2451,8 @@ func _draw_wall_corner_caps(cell: Vector2i, open_sides: Array[bool]) -> void :
 
 
 func _draw_target() -> void :
-	var target_label: Label = get_node_or_null("TargetLabel")
 	if current_target.x < 0 or not blocks.has(current_target):
-		if target_label != null:
-			target_label.hide()
+		MiningTargetLabel.hide_for(self)
 		return
 	var block: Dictionary = Dictionary(blocks[current_target])
 	var rect: = Rect2(Vector2(current_target) * TILE_SIZE, Vector2.ONE * TILE_SIZE).grow(-4)
@@ -2474,57 +2473,7 @@ func _draw_target() -> void :
 	var contact: = _target_contact_point(current_target)
 	_draw_canvas.draw_circle(contact, 4.0 + pulse * 1.5, Color(color, 0.22))
 	_draw_canvas.draw_circle(contact, 2.0, Color(color, 0.95))
-	var label: = _target_label(block)
-	# These words explain the current strike or why mining is blocked. Draw in
-	# viewport space so camera zoom cannot shrink them into the rock texture.
-	# Keep the authored resource colors on the target brackets above.
-	var canvas: = _draw_canvas.get_global_transform_with_canvas()
-	var target_screen: Rect2 = canvas * rect
-	var font: Font = ThemeDB.fallback_font
-	var font_size: = 24
-	var text_size: = font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
-	var safe_screen: = get_viewport_rect().grow(-12.0)
-	var gap: = 9.0
-	var above: = Vector2(target_screen.get_center().x - text_size.x * 0.5, target_screen.position.y - text_size.y - gap)
-	var below: = Vector2(above.x, target_screen.end.y + gap)
-	var right: = Vector2(target_screen.end.x + gap, target_screen.get_center().y - text_size.y * 0.5)
-	var left: = Vector2(target_screen.position.x - text_size.x - gap, right.y)
-	var hero_rects: Array[Rect2] = player.visual.feedback_screen_rects()
-	var label_position: = above
-	for candidate in [above, below, right, left]:
-		var candidate_position: = Vector2(
-			clampf(candidate.x, safe_screen.position.x, safe_screen.end.x - text_size.x),
-			clampf(candidate.y, safe_screen.position.y, safe_screen.end.y - text_size.y)
-		)
-		var clear: = true
-		for hero_rect in hero_rects:
-			if Rect2(candidate_position, text_size).grow(4.0).intersects(hero_rect):
-				clear = false
-				break
-		if clear:
-			label_position = candidate_position
-			break
-	if target_label == null:
-		target_label = Label.new()
-		target_label.name = "TargetLabel"
-		target_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		target_label.z_as_relative = false
-		target_label.z_index = RenderingServer.CANVAS_ITEM_Z_MAX - 1
-		var text_material: = CanvasItemMaterial.new()
-		text_material.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
-		target_label.material = text_material
-		target_label.add_theme_font_override("font", font)
-		target_label.add_theme_font_size_override("font_size", font_size)
-		target_label.add_theme_color_override("font_color", Color("f4e8be"))
-		target_label.add_theme_color_override("font_outline_color", Color("101512"))
-		target_label.add_theme_constant_override("outline_size", 4)
-		add_child(target_label)
-	target_label.text = label
-	target_label.size = text_size
-	var label_canvas: = get_global_transform_with_canvas()
-	target_label.position = label_canvas.affine_inverse() * label_position
-	target_label.scale = Vector2(1.0 / label_canvas.x.length(), 1.0 / label_canvas.y.length())
-	target_label.show()
+	MiningTargetLabel.present(self, _draw_canvas.get_global_transform_with_canvas(), rect, _target_label(block), player.visual.feedback_screen_rects())
 
 
 func _target_uses_filled_highlight(block: Dictionary) -> bool:

@@ -1,6 +1,7 @@
 class_name RootwoundWorld
 extends Node2D
 const ResourceScale = preload("res://scripts/world/resource_scale.gd")
+const MiningTargetLabel = preload("res://scripts/ui/mining_target_label.gd")
 
 const ShrineRespawn = preload("res://scripts/world/shrine_respawn.gd")
 
@@ -2800,6 +2801,7 @@ func _draw_impact(impact: Dictionary) -> void :
 
 func _draw_target() -> void :
 	if current_target_kind.is_empty():
+		MiningTargetLabel.hide_for(self)
 		return
 	var color: = Color("f0c47d")
 	var center: = Vector2.ZERO
@@ -2823,10 +2825,12 @@ func _draw_target() -> void :
 		label = _rock_target_label(rock)
 		radius = 39.0
 	else:
+		MiningTargetLabel.hide_for(self)
 		return
 	_draw_canvas.draw_arc(center, radius, - PI * 0.82, PI * 0.82, 28, Color(color, 0.78), 2.2)
 	_draw_canvas.draw_circle(_target_contact_point(), 3.5, Color(color, 0.96))
-	_draw_canvas.draw_string(ThemeDB.fallback_font, center + Vector2(-72, - radius - 10), label, HORIZONTAL_ALIGNMENT_CENTER, 144, 10, color)
+	var target_rect: = Rect2(center - Vector2.ONE * radius, Vector2.ONE * radius * 2.0)
+	MiningTargetLabel.present(self, _draw_canvas.get_global_transform_with_canvas(), target_rect, label, player.visual.feedback_screen_rects())
 
 
 func _rock_target_label(rock: Dictionary) -> String:
