@@ -1,3 +1,15 @@
+# DEV15.55 published and verified — 4 October 2026
+
+Public DEV: https://corpax88.github.io/Ever-Deeper/dev/ . Publication `21df1a283554e2f0ef1908bef1a794a3444bdf3c`, run `37219705191`, receipt artifact `11309982166`: all27 public file hashes verified, nine LIVE and nine Worn files unchanged. Rollback artifact `11309701543` preserves DEV15.54. No pending jobs or approvals.
+
+Canonical runtime source `befb9eabfc1ff424fe20c4db34eeea19cc8b0301` on `codex/full-quality-20261004`; full acceptance run `37219089950` passes all six groups. Production PCK327889602bytes, SHA256 `59ece4e280ea8a0964c263855ff2147aaee040cb5172061019c6d24008a0a52b`. Published exact tested artifact11309746162; historical main was not rebuilt. Accepted native22groups; candidate49checks/161images, focused1868/136, Ricochet276/43, journey39/24, ordinary WebKit6images. Representative actual final images reviewed by root and independent critics in each scope, including allthree finale widths and actual Hub/Deep return. Accepted.json binds16artifacts/6reports/3receipts; publication-receipt.json binds public bytes.
+
+This round improves save recovery, progression correctness, mobile navigation/readability, resource/skill/achievement placement, material collection, commerce fit and narrow-screen finale layout. Failed attempts and their fixture repairs remain documented below. All earlier pending and blocker sections are chronological history, not current work. Do not rerun unchanged accepted checks or redeploy. Standing GitHub/DEV authorization persists. Give concise minute-by-minute updates during future active work; user was frustrated by a long silence.
+
+Overall9.5/10 is not established by these tests. Physical-iPhone performance and unassisted human enjoyment/pacing remain unmeasured; the documented extreme-north minimap/helmet overlap remains. Do not invent a quality score or erase these limits. No new automatic task is pending.
+
+---
+
 # Accepted DEV15.55 — publication in progress
 
 Exactsource `befb9eabfc1ff424fe20c4db34eeea19cc8b0301`, run `37219089950`: all six required jobs pass. Native22groups, candidate49checks/161images, focused1868/136, Ricochet276/43, journey39/24, ordinary WebKit6images/no fixture arguments. Root and independent critics inspected representative final screenshots in every browser group, including allthree ending widths and actual Hub/Deep return. No remaining material blocker was found in reviewed scopes. This is not a numerical9.5 score or physical-iPhone claim.
