@@ -55,3 +55,35 @@ Read: project rules at end of `AGENTS.md`, `README.md`, `docs/code-map.md`, appr
 ## Implementation handoff
 
 Root authorized UX-01 then UX-02 as separate logical changes, with a durable checkpoint after each. Root owns UX-03 and coordinates separate follow-ups. This reviewer owns only `scripts/ui/treasury_goal_panel.gd`, `scripts/ui/miner_skills_panel.gd` and `scripts/ui/minimap_overlay.gd`. The independent QA engineer owns test-suite changes. No source change or visual acceptance is claimed by this report.
+
+## Expanded baseline inspection, later on 4 October
+
+Root recovered the exact baseline into `/workspace/scratch/72d2364e7fd1/baseline-recovery/evidence` on Mac Apple Metal at DPR2. I individually inspected these additional 26 full-size images (not just a contact sheet):
+
+- `skills-844.jpg`, `settings-667.jpg`, `inventory-full-667.jpg`, `achievements-667.jpg`, `mole-journal-667.jpg`.
+- All eight `mod-preview-<resource>-844.jpg` images for wallet_gold, burrowsteel, prismite, rootiron, echo_crystal, phasecrystal, deep_alloy and singularity.
+- `surface-locked-844-expanded-map.jpg`, `moonMine-1-844-expanded-map.jpg`, `starMine-2-844-expanded-map.jpg`.
+- `commerce-tool_forge-844.jpg`, `commerce-forge-667.jpg`, `commerce-light_lab-844.jpg`, `commerce-wardrobe-844.jpg`.
+- `treasury-inside-entry-844.jpg`, `treasury-podium-26-100000-844.jpg`, `treasury-approach-667.jpg`.
+- `moonMine-2-844.jpg`, `emberMine-1-844.jpg`, `001-first-run-1s-844.jpg`.
+
+This actual-image evidence confirms UX-01/02/03/04. All eight mod illustrations use the correct Skills dad and provide distinct meaningful effect art. Commerce framing and typography are coherent within that family, and the treasury's actual gold pile fits its authored podium; neither needs generic replacement.
+
+New findings:
+
+| ID | Priority | Actual evidence | Required follow-up |
+|---|---|---|---|
+| UX-09 | P1 | `settings-667.jpg` and `achievements-667.jpg`: the aspect <1.95 branch uses desktop typography, leaving approximately 6–8 CSS px detail text and a Back target near 30 CSS px high. `inventory-full-667.jpg` similarly uses small body labels/Close. | Make landscape-phone details readable at 667 as well as 844/932. Verify CSS font/target sizes, not the nominal Godot dimensions. |
+| UX-10 | P1 | `mole-journal-667.jpg`: most command, tab and Close hitboxes are about 35 CSS px high. | Increase actual hitbox height to at least 44 CSS px while retaining the authored parchment, mole and hierarchy; verify all journal tabs and long skill rows. |
+| UX-11 | P1 navigation usefulness | `surface-locked-844-expanded-map.jpg`: surface map is a flat rectangle with a few unnamed markers and an underground terrain legend. Enlarging it alone will not explain the surface road, forge, assay or world entrances. | Use real surface landmarks/routes and a surface-appropriate legend; never fake unknown underground terrain. |
+| UX-12 | P1 candidate investigation | Main stops updating minimap inside the treasury, while the Skills Map route remains available. This can expose stale Hub cartography. No treasury→Skills→Map image inspected yet, so this is a source risk, not a claimed visual reproduction. | Capture the actual route and show treasury-relevant position/exit/podium information or an explicit unavailable state; do not show another area's map as current. |
+
+The three initial baseline harness failures reported by QA were fixture assumptions (surface without underground cartography, non-commerce treasury workshop, stale exit coordinates). They are not counted here as production regressions. Independent gameplay/performance review remains separate, and no overall 9.5 acceptance is claimed.
+
+Source work completed after the initial review: UX-01 landscape reward layout and UX-02 fullscreen map were checkpointed by root and await actual candidate image acceptance. Root also assigned parent-aware navigation in `main.gd` and `premium_menu.gd`, saved for a separate checkpoint. Controls replay follows after that checkpoint. These are implementations under review, not evidence that the findings are resolved.
+
+## Surface and Treasury map candidate
+
+Root subsequently checkpointed Controls replay and the 667 Settings/achievement layout. The next isolated change refreshes the map snapshot when opened while paused; surface maps now use existing authored route arrays and camp/pocket rectangles, known station/mine labels and a surface legend. Treasury maps use the actual room floor polygon, actual 27 bay positions and existing resource art, Exit/Donate markers, current player position and the pinned resource. The renderer reserves biome cards for surface/underground areas and keeps locked surface regions hidden. Navigation metadata is explicit and reset for each new expanded view; original mini markers are deep-copied.
+
+An isolated overlay of the exact candidate1 production PCK retained every unrelated payload byte and replaced only `main.gd`, `miner_skills_panel.gd`, `minimap_overlay.gd` and their remaps. Ordinary native headless startup and 13 focused state checks passed without script errors. Evidence: `/workspace/scratch/72d2364e7fd1/ux-map-check/startup.log`, `review.log`, `checks.json` and `review.gd`. The sequence covers locked Surface → Treasury with tracked Gold → fully unlocked Surface → Moonglass D2, including pause/close, actual bounds/positions, 27 podiums, floor polygon, no marker mutations and no stale navigation metadata. This is structural validation only; target 667/844/932 rendered capture and actual touch review remain required.

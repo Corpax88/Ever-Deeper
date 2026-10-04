@@ -6,11 +6,15 @@ const IPHONE_LANDSCAPE_ASPECT: = 1.95
 const GOLD: = Color("e9c86d")
 const INK: = Color("07100b")
 const MAP_FILL: = Color(0.025, 0.055, 0.04, 0.16)
+const ResourceScale = preload("res://scripts/world/resource_scale.gd")
 
 var cartography: RefCounted
 var _display_world := Rect2()
 var expanded: bool = false
 var markers: Array = []
+var navigation_routes: Array = []
+var navigation_areas: Array = []
+var navigation_bounds: Rect2 = Rect2()
 var _biome_cards: Array[Control] = []
 var _phase: = "surface"
 var _location_name: = "SURFACE"
@@ -81,6 +85,10 @@ func debug_snapshot() -> Dictionary:
 		"terrain": cartography != null and cartography.texture != null,
 		"terrain_revision": cartography.revision if cartography != null else 0,
 		"display_world": _display_world,
+		"navigation_routes": navigation_routes.size(),
+		"navigation_areas": navigation_areas.size(),
+		"marker_count": markers.size(),
+		"navigation_bounds": navigation_bounds,
 	}
 
 
@@ -125,12 +133,13 @@ func _draw() -> void:
 	draw_string(font, _map_rect.position+Vector2(16,32) if expanded else _map_rect.position+Vector2(13,18),_location_name,HORIZONTAL_ALIGNMENT_LEFT,_map_rect.size.x-(32 if expanded else 26),28 if expanded else 13,Color("e9c86d"))
 	var content := Rect2(_map_rect.position+Vector2(10,27),_map_rect.size-Vector2(20,37))
 	if expanded:
-		_draw_biome_cards()
+		if _phase != "treasury": _draw_biome_cards()
 		content=_expanded_content_rect()
 		_draw_legend(font)
 	draw_rect(content,Color("101416"))
 	var has_terrain: bool = cartography!=null and cartography.texture!=null
 	_display_world=_world_rect
+	if expanded and navigation_bounds.has_area(): _display_world=navigation_bounds
 	if has_terrain:
 		if expanded:
 			_display_world=cartography.explored_bounds.grow(cartography.tile*2).intersection(_world_rect)
@@ -143,6 +152,8 @@ func _draw() -> void:
 		var shown: Rect2=_display_world.intersection(cartography.bounds)
 		var destination:=_world_rect_to_map(shown,fitted)
 		draw_texture_rect_region(cartography.texture,destination,Rect2(shown.position/cartography.tile,shown.size/cartography.tile))
+	elif expanded and (not navigation_routes.is_empty() or not navigation_areas.is_empty()):
+		_draw_navigation(fitted)
 	else:
 		draw_rect(fitted,Color("263433"))
 	draw_rect(content,Color("807362"),false,1)
@@ -156,11 +167,26 @@ func _draw() -> void:
 			var radius: float=8.0 if expanded else 4.0
 			draw_rect(Rect2(at-Vector2.ONE*(radius+1),Vector2.ONE*(radius+1)*2),INK)
 			draw_rect(Rect2(at-Vector2.ONE*radius,Vector2.ONE*radius*2),Color("cbb7ff"),false,2)
+		elif expanded and String(marker.kind)=="podium":
+			draw_circle(at,18,INK)
+			draw_arc(at,17,0,TAU,24,Color("807362"),1.5,true)
+			var icon: Texture2D = marker.get("icon")
+			if icon != null:
+				draw_texture_rect(icon,ResourceScale.draw_rect(icon,at,Vector2.ONE*28),false)
+		elif expanded and String(marker.kind) in ["station","locked"]:
+			var color: Color = GOLD if String(marker.kind)=="station" else Color("84938f")
+			draw_rect(Rect2(at-Vector2.ONE*10,Vector2.ONE*20),INK)
+			draw_rect(Rect2(at-Vector2.ONE*7,Vector2.ONE*14),color)
 		else:
 			draw_circle(at,6.5 if expanded else 4,INK)
 			draw_circle(at,4.5 if expanded else 2.5,Color("63eee0"))
+	if expanded: _draw_marker_labels(font,fitted,content)
 	if _has_objective:
-		if _display_world.has_point(_objective_position): _draw_objective(_world_to_map(_objective_position,fitted))
+		if _display_world.has_point(_objective_position):
+			var objective_at: Vector2 = _world_to_map(_objective_position,fitted)
+			if expanded and _phase == "treasury":
+				draw_arc(objective_at,22,0,TAU,32,Color("a8e3bc"),3,true)
+			else: _draw_objective(objective_at)
 		else: _draw_edge_marker(_objective_position,fitted,Color("a8e3bc"))
 	var player:=_world_to_map(_player_position,fitted)
 	draw_circle(player,11 if expanded else 7,INK)
@@ -168,6 +194,7 @@ func _draw() -> void:
 	draw_circle(player,2.5 if expanded else 1.5,Color.WHITE)
 
 func _expanded_rail_width() -> float:
+	if _phase == "treasury": return 0.0
 	return clampf(_map_rect.size.x*0.20,180.0,252.0)
 
 func _expanded_content_rect() -> Rect2:
@@ -184,6 +211,9 @@ func _draw_edge_marker(position: Vector2, fitted: Rect2, color: Color) -> void:
 	draw_colored_polygon(PackedVector2Array([at+direction*radius,at-direction*(radius-1)+side,at-direction*(radius-1)-side]),color)
 
 func _draw_legend(font: Font) -> void:
+	if _phase in ["surface","treasury"]:
+		_draw_navigation_legend(font)
+		return
 	var labels: Array=["You","Ore","Entrance","Passage","Wall","Bedrock","Objective","Unknown","Off-map"]
 	var colors: Array=[GOLD,Color("63eee0"),Color("cbb7ff"),Color("789491"),Color("55515a"),Color("a9a2ad"),Color("a8e3bc"),Color("101416"),Color("cbb7ff")]
 	var content: Rect2=_expanded_content_rect()
@@ -196,6 +226,76 @@ func _draw_legend(font: Font) -> void:
 		elif i==6: _draw_objective(at+Vector2(8,-8))
 		elif i==8: draw_colored_polygon(PackedVector2Array([at+Vector2(17,-8),at+Vector2(0,-16),at]),colors[i])
 		else: draw_rect(Rect2(at-Vector2(0,16),Vector2(16,16)),colors[i])
+		draw_string(font,at+Vector2(25,0),labels[i],HORIZONTAL_ALIGNMENT_LEFT,width-28,26,Color("ded7cc"))
+
+
+func _draw_navigation(fitted: Rect2) -> void:
+	for area in navigation_areas:
+		if area.has("rect"):
+			draw_rect(_world_rect_to_map(Rect2(area.rect),fitted),Color("263433"))
+		elif area.has("polygon"):
+			var outline: PackedVector2Array = PackedVector2Array()
+			for point in area.polygon: outline.append(_world_to_map(Vector2(point),fitted))
+			if outline.size() >= 3:
+				draw_colored_polygon(outline,Color("263433"))
+				outline.append(outline[0])
+				draw_polyline(outline,Color("807362"),2,true)
+	for route in navigation_routes:
+		var points: PackedVector2Array = PackedVector2Array()
+		for point in route.points: points.append(_world_to_map(Vector2(point),fitted))
+		if points.size() < 2: continue
+		var width: float = maxf(4.0,float(route.half_width)*2.0*fitted.size.x/_display_world.size.x)
+		draw_polyline(points,Color("789491"),width+2,true)
+		draw_polyline(points,Color("405954"),width,true)
+
+
+func _draw_marker_labels(font: Font, fitted: Rect2, content: Rect2) -> void:
+	var occupied: Array[Rect2] = []
+	for marker in markers:
+		if not _display_world.has_point(Vector2(marker.position)): continue
+		occupied.append(Rect2(_world_to_map(Vector2(marker.position),fitted)-Vector2.ONE*12,Vector2.ONE*24))
+	occupied.append(Rect2(_world_to_map(_player_position,fitted)-Vector2.ONE*14,Vector2.ONE*28))
+	var safe: Rect2 = content.grow(-8)
+	for marker in markers:
+		var label: String = String(marker.get("label",""))
+		if label.is_empty() or not _display_world.has_point(Vector2(marker.position)): continue
+		var at: Vector2 = _world_to_map(Vector2(marker.position),fitted)
+		var extent: Vector2 = Vector2(font.get_string_size(label,HORIZONTAL_ALIGNMENT_LEFT,-1,26).x+16,36)
+		var preferred: Vector2 = Vector2(marker.get("label_offset",Vector2(0,-46)))
+		var label_rect: Rect2 = Rect2()
+		for shift in [Vector2.ZERO,Vector2(0,-42),Vector2(0,42),Vector2(0,-84),Vector2(0,84),Vector2(-100,0),Vector2(100,0)]:
+			var candidate: Rect2 = Rect2((at+preferred+shift-extent*0.5).clamp(safe.position,safe.end-extent),extent)
+			var clear: bool = true
+			for used in occupied:
+				if candidate.grow(4).intersects(used):
+					clear = false
+					break
+			if clear:
+				label_rect = candidate
+				break
+		if not label_rect.has_area(): continue
+		occupied.append(label_rect)
+		var join: Vector2 = at.clamp(label_rect.position,label_rect.end)
+		draw_line(at,join,Color("807362"),1.5,true)
+		draw_rect(label_rect,Color("101416"))
+		draw_string(font,label_rect.position+Vector2(8,27),label,HORIZONTAL_ALIGNMENT_LEFT,extent.x-16,26,Color("ded7cc"))
+
+
+func _draw_navigation_legend(font: Font) -> void:
+	var treasury: bool = _phase == "treasury"
+	var labels: Array = ["You","Podium","Exit","Donate","Tracked"] if treasury else ["You","Ore","Mine / Hub","Station","Road","Locked gate","Objective"]
+	var colors: Array = [GOLD,Color("807362"),Color("cbb7ff"),GOLD,Color("a8e3bc")] if treasury else [GOLD,Color("63eee0"),Color("cbb7ff"),GOLD,Color("789491"),Color("84938f"),Color("a8e3bc")]
+	var content: Rect2 = _expanded_content_rect()
+	var width: float = content.size.x/4.0
+	for i in labels.size():
+		var at: Vector2 = Vector2(content.position.x+(i%4)*width,_map_rect.end.y-48+(i/4)*34)
+		if i == 0 or i == 1:
+			draw_circle(at+Vector2(8,-8),8 if i == 0 or treasury else 4.5,colors[i])
+		elif labels[i] in ["Objective","Tracked"]:
+			if treasury: draw_arc(at+Vector2(8,-8),9,0,TAU,24,colors[i],2,true)
+			else: _draw_objective(at+Vector2(8,-8))
+		elif labels[i] == "Road": draw_line(at+Vector2(0,-8),at+Vector2(18,-8),colors[i],4,true)
+		else: draw_rect(Rect2(at-Vector2(0,16),Vector2(16,16)),colors[i],i != 2,2)
 		draw_string(font,at+Vector2(25,0),labels[i],HORIZONTAL_ALIGNMENT_LEFT,width-28,26,Color("ded7cc"))
 
 func _fit_world_rect(available: Rect2) -> Rect2:

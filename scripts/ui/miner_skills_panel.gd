@@ -123,7 +123,9 @@ func close_panel() -> void:
 func show_skills() -> void:
 	_hide_stat_tip()
 	_map_active = false
-	if is_instance_valid(map_view): map_view.queue_free()
+	if is_instance_valid(map_view):
+		map_view.hide()
+		map_view.queue_free()
 	map_view = null
 	title.text = "Skills"
 	for row in rows: row.node.visible = true
@@ -142,6 +144,9 @@ func show_map(source: Control) -> void:
 	plate.add_child(map_view)
 	map_view.z_index = 1
 	map_view.expanded = true
+	map_view.navigation_routes = []
+	map_view.navigation_areas = []
+	map_view.navigation_bounds = Rect2()
 	map_view.cartography = source.cartography
 	if map_view.cartography != null: map_view.cartography.refresh_known()
 	map_view.markers = source.markers.duplicate(true)

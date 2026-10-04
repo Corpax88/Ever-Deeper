@@ -1198,7 +1198,7 @@ func _handle_world_tap(event: InputEvent) -> void:
 	if _world_tap_action(event.position)!=String(pending.action): return
 	if pending.action=="map":
 		_open_miner_skills()
-		if miner_skills_panel.visible: miner_skills_panel.show_map(minimap_overlay)
+		if miner_skills_panel.visible: _show_expanded_map()
 	else: treasury_goal_panel.open_goal(String(pending.action))
 	get_viewport().set_input_as_handled()
 
@@ -1445,13 +1445,20 @@ func _on_quick_tutorial_closed() -> void :
 	tutorial_open = false
 
 
-func _update_minimap() -> void :
+func _update_minimap(for_expanded_map: bool = false) -> void :
 	if minimap_overlay == null:
 		return
 	if hub_world.treasury != null and hub_world.treasury.inside:
+		if for_expanded_map:
+			var treasury = hub_world.treasury
+			minimap_overlay.cartography = null
+			minimap_overlay.markers = []
+			minimap_overlay.set_snapshot("treasury", "TREASURY", hub_world.player.global_position,
+				Rect2(Vector2.ZERO, treasury.SIZE), Rect2())
+			return
 		minimap_overlay.hide_map()
 		return
-	if deepheart_presentation or not game_started or menu_open or inventory_open or conclusion_overlay.visible or orientation_guard_active:
+	if deepheart_presentation or not game_started or ((menu_open or inventory_open) and not for_expanded_map) or conclusion_overlay.visible or orientation_guard_active:
 		minimap_overlay.hide_map()
 		return
 	var active_player: Node2D = _active_player_node()
@@ -3098,7 +3105,7 @@ func request_tunnel_home() -> bool:
 	endless_world.set_process(false)
 	endless_world.set_physics_process(false)
 	mole.begin_tunnel_home()
-	AudioDirector.play_mining("stone", true, false)
+	AudioDirector.play_mining("stone", true, false, false)
 	_refresh_context_button()
 	_complete_tunnel_home()
 	return true
@@ -4301,7 +4308,7 @@ func _install_miner_skills() -> void:
 		premium_menu.visible = true
 		premium_menu._show_settings(true)
 	)
-	miner_skills_panel.map_requested.connect(func(): miner_skills_panel.show_map(minimap_overlay))
+	miner_skills_panel.map_requested.connect(_show_expanded_map)
 	var training = preload("res://scripts/progression/miner_training.gd").new()
 	training.name = "MinerTraining"
 	training.main = self
@@ -4329,6 +4336,94 @@ func _close_miner_skills() -> void:
 func _return_to_skills_from_settings() -> void:
 	if not menu_open or not game_started: return
 	miner_skills_panel.open_panel()
+
+
+func _show_expanded_map() -> void:
+	if not miner_skills_panel.visible or not game_started: return
+	# Menus pause normal HUD updates. Take one current snapshot on entry so
+	# returning from a room or travelling cannot display the previous location.
+	_update_minimap(true)
+	miner_skills_panel.show_map(minimap_overlay)
+	minimap_overlay.hide_map()
+	var map_view: Control = miner_skills_panel.map_view
+	if hub_world.treasury != null and hub_world.treasury.inside:
+		_configure_treasury_map(map_view)
+	elif phase == "surface":
+		_configure_surface_map(map_view)
+	map_view.queue_redraw()
+
+
+func _configure_surface_map(map_view: Control) -> void:
+	map_view.navigation_routes = [
+		{"points": PackedVector2Array(surface_world.MOSS_MAIN_ROUTE), "half_width": surface_world.MOSS_MAIN_ROUTE_HALF_WIDTH},
+		{"points": PackedVector2Array(surface_world.MOSS_MINE_BRANCH_ROUTE), "half_width": surface_world.MOSS_BRANCH_ROUTE_HALF_WIDTH},
+	]
+	map_view.navigation_areas = [
+		{"rect": surface_world.MOSS_CAMP_TERRACE_RECT},
+		{"rect": surface_world.MOSS_MINE_POCKET_RECT},
+		{"rect": surface_world.MOSS_WAYFARER_ACCESS_RECT},
+	]
+	var known_right: float = surface_world.MOSS_GATE_ANCHOR.x
+	for world_id in WorldCatalog.WORLD_ORDER:
+		if not RunState.is_world_unlocked(world_id): continue
+		var mine_id: String = WorldCatalog.MINE_BY_WORLD[world_id]
+		var entrance: Vector2 = surface_world._mine_entrance(mine_id)
+		for marker in map_view.markers:
+			if String(marker.kind) == "entrance" and Vector2(marker.position).is_equal_approx(entrance):
+				marker["label"] = world_id.capitalize() + " Mine"
+				marker["label_offset"] = Vector2(0, 70 if world_id in ["mossvein", "emberdeep", "starfall"] else -62)
+		if world_id == "mossvein": continue
+		var road: Array = surface_world.LATER_MAIN_ROUTES[world_id]
+		known_right = maxf(known_right, Vector2(road[-1]).x)
+		map_view.navigation_routes.append({"points": PackedVector2Array(road), "half_width": surface_world.LATER_MAIN_ROUTE_HALF_WIDTH})
+		var branch: Array = Array(surface_world.LATER_MINE_BRANCH_ROUTES[mine_id]).duplicate()
+		branch.append(entrance)
+		map_view.navigation_routes.append({"points": PackedVector2Array(branch), "half_width": surface_world.LATER_MAIN_ROUTE_HALF_WIDTH})
+		var vein_id: String = WorldCatalog.SURFACE_LAYOUTS[world_id].surface_vein_id
+		if surface_world.LATER_RESOURCE_ACCESS_ROUTES.has(vein_id):
+			map_view.navigation_routes.append({"points": PackedVector2Array(surface_world.LATER_RESOURCE_ACCESS_ROUTES[vein_id]), "half_width": surface_world.LATER_MAIN_ROUTE_HALF_WIDTH})
+	map_view.markers.append({"kind": "station", "position": surface_world._station_position("sell"), "label": "Assay", "label_offset": Vector2(0, -56)})
+	map_view.markers.append({"kind": "station", "position": surface_world._station_position("forge"), "label": "Forge", "label_offset": Vector2(0, -104)})
+	if RunState.is_world_unlocked("starfall"):
+		map_view.markers.append({"kind": "station", "position": surface_world._station_position("starforge"), "label": "Starforge", "label_offset": Vector2(-18, -112)})
+	if RunState.is_hub_unlocked():
+		map_view.markers.append({"kind": "entrance", "position": surface_world.STARFALL_HUB_LIFT_POSITION, "label": "Base Hub", "label_offset": Vector2(0, -56)})
+	for boundary in surface_world.BOUNDARIES:
+		if not RunState.is_world_unlocked(String(boundary.id)):
+			map_view.markers.append({"kind": "locked", "position": Vector2(float(boundary.x), surface_world.GATE_Y), "label": "Locked gate", "label_offset": Vector2(0, -60)})
+			break
+	# Frame the known travel corridor instead of an empty 4480×1280 rectangle.
+	var bounds: Rect2 = Rect2(0, 330, known_right + 95, 750)
+	bounds = bounds.expand(surface_world.player.global_position).intersection(Rect2(Vector2.ZERO, surface_world._world_size()))
+	map_view.navigation_bounds = bounds
+
+
+func _configure_treasury_map(map_view: Control) -> void:
+	var treasury = hub_world.treasury
+	var kinds: Array = preload("res://scripts/state/treasury_state.gd").keys()
+	var pinned: String = String(RunState.treasury_goals.get("pinned", ""))
+	var objective: Vector2 = Vector2.ZERO
+	map_view.markers = [
+		{"kind": "entrance", "position": treasury.EXIT, "label": "Exit to Hub", "label_offset": Vector2(-50, 64)},
+		{"kind": "station", "position": treasury.DONATION, "label": "Donate", "label_offset": Vector2(70, -40)},
+	]
+	for index in kinds.size():
+		var kind: String = String(kinds[index])
+		var at: Vector2 = treasury.bay(index)
+		var marker: Dictionary = {"kind": "podium", "position": at, "resource": kind, "icon": treasury.material(kind)}
+		if kind == pinned:
+			objective = at
+			marker["label"] = preload("res://scripts/state/treasury_goals.gd").label(kind)
+			marker["label_offset"] = (treasury.ZONE - at).normalized() * 88.0
+		map_view.markers.append(marker)
+	# Reuse the actual chamber floor outline; no guessed Hub bounds or stale fog.
+	if is_instance_valid(treasury.visual_root):
+		for child in treasury.visual_root.get_children():
+			if child is Polygon2D and child.texture != null and String(child.texture.get_meta("scale_source", "")).ends_with("slate-floor-v1.png"):
+				map_view.navigation_areas.append({"polygon": child.polygon})
+	map_view.set_snapshot("treasury", "TREASURY · %d PODIUMS" % kinds.size(), hub_world.player.global_position,
+		Rect2(Vector2.ZERO, treasury.SIZE), Rect2(), objective, pinned in kinds)
+
 
 func _map_markers() -> Array:
 	var result: Array=[]
