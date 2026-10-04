@@ -1,3 +1,7 @@
+# Finale correction validated; exact-source final run active
+
+Final source `befb9eabfc1ff424fe20c4db34eeea19cc8b0301`, run `37219089950`. Final PCK expected SHA256 `59ece4e280ea8a0964c263855ff2147aaee040cb5172061019c6d24008a0a52b`,327889602 bytes. All six groups of prior run37218310565 passed, but actual667 finaleimage blocked visual acceptance. Narrow landscape layout and proportional fit now pass51/51 native bounds/line/action checks at667/844/932; allthree actualimages inspected. Browser journey now enforces visible text, stats and bothactions atthosewidths. Publish only after currentrun and images accepted. Previous blocker section below is history; no9.5 claim. Give concise user status everyminute.
+
 # Visual publication blocker found during final review
 
 Root inspected final run37218310565 `journey/finale-conclusion-667.jpg`: ending content and both actions extend beyond right viewport despite functional journey assertions passing.844/932 fit. Do not publish this candidate even if CI passes. final_acceptance owns narrow main.gd conclusion layout + fixture geometry; journey_fix owns stronger journey.mjs bounds checks. Require actual rendered667/844/932 verification then fresh exact-source acceptance. No other scope expansion. Minute-by-minute user updates continue.
