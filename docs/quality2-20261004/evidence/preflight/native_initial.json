@@ -1,0 +1,192 @@
+{
+  "source": null,
+  "production_pck": {
+    "size": 327912226,
+    "sha256": "81e6b222db8db7f15387965d27846e3da72bcb92da0e9ac876c3caec7b7a2860"
+  },
+  "qa_pck": null,
+  "engine_version": "4.7.2.stable.official.ed1daf0bf",
+  "passed": false,
+  "checks": [
+    {
+      "name": "save-retry",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 19.568550598996808,
+      "script": "tools/review_save_retry.gd",
+      "marker": "EVER_DEEPER_SAVE_RETRY_OK"
+    },
+    {
+      "name": "save-status",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 10.546128588997817,
+      "script": "tools/review_save_status.gd",
+      "marker": "EVER_DEEPER_SAVE_STATUS_OK"
+    },
+    {
+      "name": "mod-lifecycle",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.213618404995941,
+      "script": "tools/review_mod_lifecycle.gd",
+      "marker": "EVER_DEEPER_MOD_LIFECYCLE_OK"
+    },
+    {
+      "name": "laser-stamina",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.112766848003957,
+      "script": "tools/review_laser_stamina.gd",
+      "marker": "LASER_STAMINA_OK"
+    },
+    {
+      "name": "completed-goals",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.015946335006447,
+      "script": "tools/review_treasury_goal_completion.gd",
+      "marker": "TREASURY_GOAL_COMPLETION_OK"
+    },
+    {
+      "name": "pickup-bonus",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.11142903399741,
+      "script": "tools/review_deep_pickup_bonus.gd",
+      "marker": "DEEP_PICKUP_BONUS_OK"
+    },
+    {
+      "name": "corebreaker-burst",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.214758639005595,
+      "script": "tools/review_corebreaker_burst.gd",
+      "marker": "COREBREAKER_BURST_OK"
+    },
+    {
+      "name": "retained-five-mechanics",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 5.0163044719956815,
+      "script": "tools/review_five_mechanics.gd",
+      "marker": "FIVE_MECHANICS_OK"
+    },
+    {
+      "name": "running-achievements",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 2.6113308489948395,
+      "script": "tools/review_running_achievements.gd",
+      "marker": "EVER_DEEPER_RUNNING_ACHIEVEMENTS_OK"
+    },
+    {
+      "name": "achievement-recovery",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 7.2233144260026165,
+      "script": "tools/review_achievement_recovery.gd",
+      "marker": "EVER_DEEPER_ACHIEVEMENT_RECOVERY_OK"
+    },
+    {
+      "name": "companion-training",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.012476969997806,
+      "script": "tools/review_companion_training.gd",
+      "marker": "COMPANION_TRAINING_OK"
+    },
+    {
+      "name": "companion-new-run",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.515806077004527,
+      "script": "tools/review_companion_new_run.gd",
+      "marker": "EVER_DEEPER_COMPANION_NEW_RUN_OK"
+    },
+    {
+      "name": "treasury-seams",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.1147517659992445,
+      "script": "tools/review_treasury_seams.gd",
+      "marker": "TREASURY_SEAMS_OK"
+    },
+    {
+      "name": "treasury-seam-world",
+      "passed": false,
+      "exit_code": 1,
+      "reason": "",
+      "seconds": 5.016290432999085,
+      "script": "tools/review_treasury_seam_world.gd",
+      "marker": "TREASURY_SEAM_WORLD_OK"
+    },
+    {
+      "name": "notification-modals",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.013556540005084,
+      "script": "tools/review_notification_modals.gd",
+      "marker": "NOTIFICATION_MODALS_OK"
+    },
+    {
+      "name": "treasury-seam-integrity",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 10.232386515002872,
+      "script": "tools/review_treasury_seam_integrity.gd",
+      "marker": "TREASURY_SEAM_INTEGRITY_OK"
+    },
+    {
+      "name": "treasury-hunt-rate",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 10.234271913999692,
+      "script": "tools/review_treasury_hunt_rate.gd",
+      "marker": "TREASURY_HUNT_RATE_OK"
+    },
+    {
+      "name": "completed-collection",
+      "passed": false,
+      "exit_code": 1,
+      "reason": "",
+      "seconds": 4.012763755999913,
+      "script": "tools/review_completed_collection.gd",
+      "marker": "COMPLETED_COLLECTION_OK"
+    },
+    {
+      "name": "treasury-sale-reserve",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.112591172000975,
+      "script": "tools/qa_treasury_sale_reserve.gd",
+      "marker": "TREASURY_SALE_RESERVE_OK"
+    },
+    {
+      "name": "treasury-routes",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 5.216635602999304,
+      "script": "tools/review_treasury_routes.gd",
+      "marker": "TREASURY_ROUTES_OK"
+    }
+  ]
+}

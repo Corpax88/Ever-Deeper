@@ -1,0 +1,63 @@
+{
+  "passed": false,
+  "cases": [
+    {
+      "case": "input",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.41,
+      "marker": "EVER_DEEPER_INPUT_RELEASE_OK",
+      "completion": [
+        "EVER_DEEPER_INPUT_RELEASE_OK hide=true matching_touch=true canceled_touch=true unrelated_touch_ignored=true mouse=true worlds=5 focus_pause=true"
+      ],
+      "log": "/workspace/scratch/72d2364e7fd1/quality2/core-preflight/input.log"
+    },
+    {
+      "case": "premium-core",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 6.22,
+      "marker": "EVER_DEEPER_ONE_POINT_ZERO_PREMIUM_CORE_OK",
+      "completion": [
+        "EVER_DEEPER_ONE_POINT_ZERO_PREMIUM_CORE_OK checks=414"
+      ],
+      "log": "/workspace/scratch/72d2364e7fd1/quality2/core-preflight/premium-core.log"
+    },
+    {
+      "case": "endgame",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.32,
+      "marker": "EVER_DEEPER_ENDGAME_OK",
+      "completion": [
+        "EVER_DEEPER_ENDGAME_OK seals=4 endless=unlocked gateway=true persistence=true conclusion=true deepheart_reentry=blocked"
+      ],
+      "log": "/workspace/scratch/72d2364e7fd1/quality2/core-preflight/endgame.log"
+    },
+    {
+      "case": "one-point-zero-world",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 13.55,
+      "marker": "EVER_DEEPER_ONE_POINT_ZERO_WORLD_OK",
+      "completion": [
+        "EVER_DEEPER_ONE_POINT_ZERO_WORLD_OK checks=473"
+      ],
+      "log": "/workspace/scratch/72d2364e7fd1/quality2/core-preflight/one-point-zero-world.log"
+    },
+    {
+      "case": "layout",
+      "passed": false,
+      "exit_code": -15,
+      "reason": "runtime error",
+      "seconds": 3.95,
+      "marker": "EVER_DEEPER_IPHONE_LAYOUT_OK",
+      "completion": [],
+      "log": "/workspace/scratch/72d2364e7fd1/quality2/core-preflight/layout.log"
+    }
+  ]
+}
