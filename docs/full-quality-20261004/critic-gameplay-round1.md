@@ -43,3 +43,9 @@ Regression entry: `tools/review_treasury_goal_completion.gd` checks actual claim
 The actual Deep pickup paths now share the authoritative earned Treasure Chamber bonus with other worlds. Normal base140 and Vortex base256 stay unchanged; building the Chamber adds72 to each, preserving Vortex's116px advantage. Occlusion, pickup speed, flight limits, amount accounting and save schema remain unchanged. The state helper is shared by the existing general pickup radius rather than duplicating the entitlement rule in rendering code.
 
 `tools/review_deep_pickup_bonus.gd` exercises real saved loose drops at192px and320px: no unearned attraction, earned attraction, exact-once credit and blocked-through-wall behavior for normal/Vortex. Runtime execution remains pending QA.
+
+## G5 Corebreaker implementation checkpoint
+
+Kept three rapid piston strokes, charge time, existing tool art, normal attack power and all node HP. At full charge, rock or ore can start the burst; if a target breaks, remaining strokes continue along the committed short straight front. Each stroke stops at an intact obstruction; ore exposed during this burst remains intact and blocks further follow-through until a later player attack. Release/reset cancels; the origin follows a coordinate rebase; no accumulated catch-up burst after a long frame. Pending strokes retain the normal mining stance/stamina flag. Preview copy now describes the actual follow-through.
+
+`tools/review_corebreaker_burst.gd` checks real max-level Crusher/Comet/Crownseeker, useful two-cell follow-through after one-hit ore, lower-power three hits on one hard node, rock initiation, reveal separation, cancellation, one-hit-per-update bounds, coordinate rebase and permanent boundary. Existing five-mod mechanics remains an additional regression gate. Candidate runtime/render validation is still pending; no overall quality rating is inferred.

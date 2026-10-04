@@ -3,7 +3,7 @@ extends RefCounted
 ## Future entries must follow docs/mod-previews/DESIGN-STANDARD.md.
 const PREVIEWS: Dictionary = {
 	"singularity": {"title":"VORTEX", "art":"res://assets/ui/mods/vortex-pappa-v1.png", "description":"Loose resources catch up while you move and mine."},
-	"deep_alloy": {"title":"COREBREAKER", "art":"res://assets/ui/mods/corebreaker-pappa-v1.png", "description":"Mine to charge. Strike one ore node up to three times."},
+	"deep_alloy": {"title":"COREBREAKER", "art":"res://assets/ui/mods/corebreaker-pappa-v1.png", "description":"Mine to charge three rapid piston strikes. Broken targets let the burst bore straight ahead."},
 	"phasecrystal": {"title":"RICOCHET", "art":"res://assets/ui/mods/ricochet-pappa-v1.png", "description":"Fire a long-range drill that bounces between three exposed rock faces."},
 	"echo_crystal": {"title":"CHAINBREAKER", "art":"res://assets/ui/mods/chainbreaker-pappa-v1.png", "description":"Hit rock or ore to chain through ALL visible rock edges and exposed ore nodes."},
 	"rootiron": {"title":"TWIN AUGER", "art":"res://assets/ui/mods/twin_auger-pappa-v1.png", "description":"Two side augers widen each rock hit. Hold Mine and steer."},

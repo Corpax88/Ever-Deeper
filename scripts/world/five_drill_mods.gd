@@ -16,6 +16,10 @@ var chain_from: Vector2
 var core_id: String = ""
 var core_left: int = 0
 var core_clock: float = 0.0
+var core_origin: Vector2 = Vector2.ZERO
+var core_direction: Vector2 = Vector2.RIGHT
+var core_reach: float = 0.0
+var core_exposed: Dictionary = {}
 var projectile: Dictionary = {}
 var arcs: Array = []
 var hit_log: Array = []
@@ -53,6 +57,7 @@ func setup(owner_world: Node2D) -> void:
 func cancel(clear_charge: bool = false) -> void:
 	target_key = ""; elapsed = 0.0; chain.clear(); projectile.clear()
 	core_id = ""; core_left = 0; arcs.clear(); held_last = false
+	core_exposed.clear()
 	if clear_charge:
 		charge = 0.0; rings.clear(); chips.clear(); deployment = 0.0; kick = 0.0; core_pulse = 0.0
 	queue_redraw()
@@ -87,7 +92,10 @@ func tick(delta: float, selected: String, held: bool) -> void:
 	held_last = true; world.player.set_facing(direction)
 	var step: float = minf(delta,0.05)
 	_update_chain(step); _update_core(step); _update_projectile(step)
-	if not projectile.is_empty() or core_left>0: queue_redraw(); return
+	if core_left>0:
+		world.player.set_mining_visual(true,minf(core_clock/_core_interval(),1.0),0.0,0.5)
+		queue_redraw(); return
+	if not projectile.is_empty(): queue_redraw(); return
 	var target: Dictionary = _target(RICOCHET_REACH if mode=="ricochet" else 122.0)
 	var key: String = String(target.get("key",""))
 	if key!=target_key: target_key = key; elapsed = 0.0
@@ -147,15 +155,13 @@ func _impact(target: Dictionary, period: float) -> void:
 	kick = 1.0
 	if mode=="ricochet" and target.has("cell"):
 		_launch(Vector2i(target.cell)); return
+	if mode=="corebreaker" and charge>=3.0:
+		_start_core(target); return
 	if target.has("node"):
 		var i: int = int(target.node)
-		if mode=="corebreaker" and charge>=3.0:
-			charge = 0.0; core_id = String(world.resources[i].id); core_left = 3; core_clock = _core_interval()
-			_update_core(0.0)
-		else:
-			if mode=="chainbreaker" and chain.is_empty(): _start_chain(i)
-			_hit_node(i,"direct")
-			if mode=="corebreaker": charge = minf(3.0,charge+period)
+		if mode=="chainbreaker" and chain.is_empty(): _start_chain(i)
+		_hit_node(i,"direct")
+		if mode=="corebreaker": charge = minf(3.0,charge+period)
 	else:
 		var cell: Vector2i = target.cell
 		if mode=="chainbreaker" and chain.is_empty():
@@ -240,15 +246,46 @@ func _update_chain(delta: float) -> void:
 func _core_interval() -> float:
 	return minf(0.035,world._mining_cycle_duration()*0.4)
 
+func _start_core(target: Dictionary) -> void:
+	charge = 0.0
+	core_id = String(world.resources[int(target.node)].id) if target.has("node") else ""
+	core_origin = world.player.global_position
+	var point: Vector2 = Vector2(world.resources[int(target.node)].position) if target.has("node") else world._cell_center(Vector2i(target.cell))
+	core_direction = (point-core_origin).normalized()
+	if core_direction.is_zero_approx(): core_direction = direction
+	core_reach = core_origin.distance_to(point)+world.TILE_SIZE*2.0
+	# Three normal-power piston strokes. A destroyed target no longer wastes
+	# the remaining strokes, but newly revealed ore still needs a later attack.
+	core_exposed = world._exposed_node_ids()
+	core_left = 3
+	core_clock = _core_interval()
+	_update_core(0.0)
+
 func _update_core(delta: float) -> void:
 	if core_left<=0: return
 	core_clock += delta
 	if core_clock<_core_interval(): return
 	core_clock = 0.0
-	var index: int = _node(core_id)
-	if index<0 or world.player.global_position.distance_to(world.resources[index].position)>122.0 or not world._clear_mining_line(world.player.global_position,world.resources[index].position):
+	if world.player.global_position.distance_to(core_origin)>world.TILE_SIZE*0.5:
 		core_left = 0; core_id = ""; return
-	_hit_node(index,"core"); core_left -= 1; core_pulse = 0.14; kick = 1.0
+	var index: int = _node(core_id) if not core_id.is_empty() else -1
+	var target: Dictionary = {"node":index} if index>=0 else world.drill_modes._laser_target(core_origin,core_direction)
+	if index<0:
+		core_id = ""
+		if not target.has("cell") or float(target.distance)>core_reach:
+			core_left = 0; return
+		index = int(target.node)
+	if index>=0:
+		var node: Dictionary = world.resources[index]
+		if not core_exposed.has(String(node.id)) or not world._clear_mining_line(core_origin,Vector2(node.position)):
+			core_left = 0; return
+		_hit_node(index,"core")
+	else:
+		var cell: Vector2i = target.cell
+		_wall(cell,_power())
+		_burst(world._cell_center(cell),110.0,5)
+		world._update_buried_visibility()
+	core_left -= 1; core_pulse = 0.14; kick = 1.0
 	AudioDirector.play_mining("deepstone",true,false)
 
 func _launch(cell: Vector2i) -> void:
@@ -307,6 +344,7 @@ func clear_drops() -> void:
 
 func rebase(shift: Vector2) -> void:
 	chain_from += shift
+	core_origin += shift
 	for arc in arcs: arc.a += shift; arc.b += shift
 	for list in [rings,chips]:
 		for item in list: item.position += shift
