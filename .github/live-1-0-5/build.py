@@ -38,6 +38,19 @@ text=text.replace(old,old[:-1]+', "drops": {}}')
 text=text.replace('\tvar saved: Dictionary = RunState.serialize()\n\tvar expected:', '\tRunState.deep_events = {"kind": "", "mined": 8, "next": 96, "remaining": 0.0, "serial": 1, "x": 0, "y": 0}\n\tvar saved: Dictionary = RunState.serialize()\n\tvar expected:')
 replacements[active]=text.encode()
 replacements[n+'.remap']=('[remap]\npath="res://'+n+'"\n').encode()
+n='scripts/qa/suites/premium_core.gd';name=n
+source=raw(target(n)).decode()
+edits={
+    '_check(main.premium_hud.progression_goal_snapshot().get("objective_id","")=="treasury:wallet_gold","Shared HUD state-change refresh retains pinned treasury goal")':
+    '_check(RunState.treasury_goals.pinned=="" and not String(main.premium_hud.progression_goal_snapshot().get("objective_id","")).begins_with("treasury:") and not main.premium_hud.progression_goal_snapshot().is_empty(),"Shared HUD resumes progression after completed treasury goal")',
+    '_check(RunState.deserialize(mod_saved) and RunState.treasury_goals.resonance_enabled and RunState.treasury_goals.pinned=="wallet_gold","Claim, enabled state and pinned goal survive save roundtrip")':
+    '_check(RunState.deserialize(mod_saved) and RunState.treasury_goals.resonance_claimed and RunState.treasury_goals.resonance_enabled and RunState.treasury_goals.pinned=="","Claim and enabled state survive roundtrip with completed goal retired")',
+}
+for old,new in edits.items():
+    assert source.count(old)==1,'Premium contract owner changed'
+    source=source.replace(old,new)
+replacements[name]=source.encode()
+replacements[name+'.remap']=('[remap]\npath="res://'+name+'"\n').encode()
 removed={n for n in entries if n.startswith(('scripts/dev/developer_menu.','scripts/dev/render_probe.'))}
 assert len(removed)==6
 # Repack from the original header; omit removed resources and stale old payloads.
