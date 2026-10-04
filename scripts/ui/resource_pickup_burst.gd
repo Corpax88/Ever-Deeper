@@ -7,6 +7,7 @@ const APPEAR_SECONDS: = 0.18
 const HOLD_SECONDS: = 2.75
 const FADE_SECONDS: = 0.75
 const TEXT_FONT_SIZE: = 28
+const STACK_SPACING: = 58.0
 const FeedbackPlacementScript = preload("res://scripts/ui/feedback_placement.gd")
 
 const RESOURCE_NAMES: = {
@@ -145,7 +146,7 @@ func _placement_footprint() -> Rect2:
 		# Reserve the existing maximum 6% pulse and 12px rise, so the stack's
 		# normal animation does not change its chosen side of the hero.
 		var local: Rect2 = Transform2D.IDENTITY.scaled(Vector2.ONE * 1.06) * (label.get_transform() * ink)
-		local.position += Vector2(0.0, -106.0 - 44.0 * float(entries.size() - 1 - index) - 12.0)
+		local.position += Vector2(0.0, -106.0 - STACK_SPACING * float(entries.size() - 1 - index) - 12.0)
 		local.size.y += 12.0
 		var projected: Rect2 = base_canvas * local
 		union = union.merge(projected) if union.has_area() else projected
@@ -169,7 +170,7 @@ func _process(delta: float) -> void :
 		var root: = entry.root as Node2D
 		var stack_index: = entries.size() - 1 - index
 		var rise: = 12.0 * minf(1.0, age / HOLD_SECONDS)
-		root.position = Vector2(0.0, -106.0 - float(stack_index) * 44.0 - rise)
+		root.position = Vector2(0.0, -106.0 - float(stack_index) * STACK_SPACING - rise)
 		var pop_scale: = 1.0
 		if age < APPEAR_SECONDS:
 			pop_scale = lerpf(0.9, 1.0, smoothstep(0.0, APPEAR_SECONDS, age))
