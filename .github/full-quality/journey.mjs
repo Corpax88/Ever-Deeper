@@ -104,9 +104,11 @@ try{
   await command('quality_journey',{step:'entrance'});await wait('real mine entrance context',s=>s.quality.journey.surface_context==='enter:mossMine');await shot('journey-01-mine-entrance');
   await tap('hud_context');await wait('actual mine entry',s=>s.phase==='mine'&&s.actual_map.world_active);await ready();
   await command('quality_journey',{step:'target'});s=await state();
-  check('natural-first-target-preserved',s.quality.journey.result.natural_target_found&&s.quality.journey.result.block.hp>0,{target:s.quality.journey.result});
+  check('natural-first-target-preserved',s.quality.journey.result.natural_target_found&&s.quality.journey.result.block.hp>0&&s.quality.journey.result.block.role==='resource'&&s.quality.journey.result.block.requires_tool<=s.quality.journey.pickaxe,{target:s.quality.journey.result});
   const mined=s.quality.journey.mined;await shot('journey-02-natural-first-target');
-  await heldMineUntil('actual mining yields cargo',s=>s.quality.journey.mined>mined&&Object.values(s.quality.cargo).reduce((a,b)=>a+b,0)>0);
+  await heldMineUntil('actual mining breaks natural ore',s=>s.quality.journey.mined>mined);
+  // Fresh pickup radius is shorter than mining reach: walk into the real drop.
+  await walk(1,s=>Object.values(s.quality.cargo).reduce((a,b)=>a+b,0)>0,'actual movement collects mined cargo');
   s=await state();check('first-swing-earned-skill',s.skill_xp.mining>0,{xp:s.skill_xp,mined:s.quality.journey.mined,cargo:s.quality.cargo});await shot('journey-03-first-earned-ore');
   await command('quality_journey',{step:'exit'});await wait('mine exit available',s=>s.quality.journey.exit_context);await tap('hud_context');await wait('actual surface return',s=>s.phase==='surface');await ready();
   const goldBefore=(await state()).quality.journey.gold;

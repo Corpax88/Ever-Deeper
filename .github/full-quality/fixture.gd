@@ -23,6 +23,23 @@ func run() -> void:
 		return
 	super.run()
 
+func _quality_journey_place_ore() -> bool:
+	# Preserve generated ore and HP; only place the fresh player beside a
+	# real exposed node the original pickaxe can target.
+	var world: Node2D=main.mine_world
+	for cell in world.blocks:
+		var block: Dictionary=Dictionary(world.blocks[cell])
+		if String(block.get("role","")) != "resource" or int(block.get("requires_tool",0)) > RunState.pickaxe_level: continue
+		for distance in [64.0,80.0,96.0]:
+			var position: Vector2=world._cell_center(cell)-Vector2.RIGHT*distance
+			world.restore_position(position)
+			if world.player.global_position.distance_to(position)>2.0: continue
+			world.player.set_facing(Vector2.RIGHT)
+			if world._find_mine_target()==cell:
+				world.target_dirty=true
+				return true
+	return false
+
 func _command(data: Dictionary) -> void:
 	match String(data.kind):
 		"quality_boundary":
@@ -34,6 +51,7 @@ func _command(data: Dictionary) -> void:
 			command_id=int(data.id)
 			return
 		"quality_feedback":
+			main.achievement_toast.show()
 			main.achievement_toast.clear()
 			var skill: Node=main.achievement_toast.get_node("SkillLevelToast")
 			skill.clear()
@@ -50,6 +68,10 @@ func _command(data: Dictionary) -> void:
 			command_id=int(data.id)
 			return
 		"quality_achievement":
+			# General visual fixtures hide this parent. Restore ordinary notice
+			# presentation and the real tap route for this interaction review.
+			main.achievement_toast.show()
+			main.automated_mode=false
 			var definitions: Array=main.premium_menu.achievement_service.definitions()
 			var selected: int=int(data.get("index",0))
 			if selected < 0: selected=definitions.size()-1
@@ -90,7 +112,7 @@ func _command(data: Dictionary) -> void:
 				"entrance":
 					main.surface_world.restore_position(main.surface_world._mine_entrance("mossMine"))
 				"target":
-					quality_journey_result["natural_target_found"]=_place_moss(Vector2.RIGHT)
+					quality_journey_result["natural_target_found"]=_quality_journey_place_ore()
 					var cell: Vector2i=main.mine_world._find_mine_target()
 					quality_journey_result["target"]=[cell.x,cell.y]
 					quality_journey_result["block"]=Dictionary(main.mine_world.blocks.get(cell,{})).duplicate(true)
