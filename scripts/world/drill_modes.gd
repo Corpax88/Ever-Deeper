@@ -8,6 +8,7 @@ var target_key: String = ""
 var elapsed: float = 0.0
 var initial_hp: int = 1
 var firing: bool = false
+var mining_work_active: bool = false
 var beam_start: Vector2
 var beam_end: Vector2
 var impacts: int = 0
@@ -33,6 +34,7 @@ func reset() -> void:
 	target_key=""
 	elapsed=0.0
 	firing=false
+	mining_work_active=false
 	bore_heading=Vector2.ZERO
 	detour.clear()
 	if is_instance_valid(world) and is_instance_valid(world.player):
@@ -46,7 +48,15 @@ func selected() -> String:
 	if id=="laser" and not bool(RunState.treasury_goals.get("laser_mode",false)): return ""
 	return id if id in ["bore_rush","laser"] or id in five.IDS else ""
 
+func is_mining_work_active() -> bool:
+	# Laser work has no pickaxe animation. Recheck live controls so a physics
+	# sample immediately after release, modal entry or unequip cannot drain.
+	return mining_work_active and mode=="laser" and selected()=="laser" \
+		and world.active and world.player.control_enabled and int(RunState.drill_level)>0 \
+		and (world.external_mine_held or Input.is_action_pressed("mine"))
+
 func tick(delta: float) -> bool:
+	mining_work_active=false
 	var next: String=selected()
 	if next!=mode: reset()
 	mode=next
@@ -77,6 +87,7 @@ func tick(delta: float) -> bool:
 	beam_end=world.player.global_position+Vector2(0,-48)+direction*maxf(32.0,float(target.distance))
 	firing=true
 	var found: bool=target.has("cell")
+	mining_work_active=found
 	var node_index: int=int(target.get("node",-1))
 	# Small aim adjustments inside the same target do not restart its damage.
 	var key: String=str(target.cell)+":"+str(node_index) if found else ""

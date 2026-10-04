@@ -25,4 +25,7 @@ func _physics_process(delta: float) -> void:
 	if main.menu_open or main.inventory_open or main._shop_panel_is_open() or main._companion_panel_is_open():
 		RunState.advance_miner_training(delta, 0.0, false)
 		return
-	RunState.advance_miner_training(delta, distance, bool(player.mining_visual_active))
+	var mining: bool = bool(player.mining_visual_active)
+	if main.phase == "endless" and is_instance_valid(main.endless_world.drill_modes):
+		mining = mining or main.endless_world.drill_modes.is_mining_work_active()
+	RunState.advance_miner_training(delta, distance, mining)
