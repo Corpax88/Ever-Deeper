@@ -243,6 +243,7 @@ var last_save_error: = OK
 var _persistence_enabled: = false
 var _save_path: = DEFAULT_SAVE_PATH
 var _autosave_pending: = false
+var _autosave_timer_serial: int = 0
 
 
 
@@ -2927,8 +2928,14 @@ func load_game(path: String = "") -> bool:
 
 
 func flush_save() -> bool:
+	# Explicit checkpoints supersede queued callbacks, including failed retries.
+	# A failed write must remain dirty even if the player makes no further change.
+	_autosave_timer_serial += 1
 	_autosave_pending = false
-	return save_game()
+	var saved: bool = save_game()
+	if not saved:
+		_queue_autosave()
+	return saved
 
 
 func reset_run(persist: bool = true) -> void :
@@ -2943,7 +2950,7 @@ func start_new_run() -> void :
 	last_load_status = "new_game"
 	changed.emit()
 	if _persistence_enabled:
-		save_game()
+		flush_save()
 
 
 func _state_changed() -> void :
@@ -2972,15 +2979,21 @@ func _queue_autosave() -> void :
 	if not _persistence_enabled or _autosave_pending:
 		return
 	_autosave_pending = true
-	get_tree().create_timer(AUTOSAVE_BATCH_SECONDS, true, false, true).timeout.connect(_flush_queued_autosave)
+	_autosave_timer_serial += 1
+	get_tree().create_timer(AUTOSAVE_BATCH_SECONDS, true, false, true).timeout.connect(
+		_flush_queued_autosave.bind(_autosave_timer_serial)
+	)
 
 
-func _flush_queued_autosave() -> void :
+func _flush_queued_autosave(timer_serial: int = -1) -> void :
+	if timer_serial >= 0 and timer_serial != _autosave_timer_serial:
+		return
 	if not _autosave_pending:
 		return
-	_autosave_pending = false
 	if _persistence_enabled:
-		save_game()
+		flush_save()
+	else:
+		_autosave_pending = false
 
 
 func _apply_defaults(emit_change: bool = true) -> void :
