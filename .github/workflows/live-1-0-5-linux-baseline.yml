@@ -1,0 +1,27 @@
+name: Diagnose unchanged LIVE1.0.4 Linux fixture persistence
+on:
+  push:
+    branches: [codex/live-1-0-5-20261005]
+    paths: ['.github/live-1-0-5/legacy-linux.json']
+permissions: {contents: read, actions: read}
+jobs:
+  legacy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '11164614080'
+          merge-multiple: true
+          run-id: '36867669696'
+          github-token: '${{ github.token }}'
+          path: '${{ runner.temp }}/legacy'
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npx playwright install --with-deps chromium
+      - run: node .github/live-1-0-5/legacy-linux.mjs "$RUNNER_TEMP/legacy" "$RUNNER_TEMP/evidence" "$RUNNER_TEMP/legacy"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: live-1-0-4-linux-baseline, path: '${{ runner.temp }}/evidence', retention-days: 30}
