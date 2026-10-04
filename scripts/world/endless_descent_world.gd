@@ -33,6 +33,7 @@ var _biome_boundary_noise: NoiseTexture2D
 var _ground_props: Dictionary = {}
 
 const DeepLayout = preload("res://scripts/world/endless_deep_layout.gd")
+const TreasurySeams = preload("res://scripts/state/treasury_seams.gd")
 const HeadlampBeamScript = preload("res://scripts/lighting/headlamp_beam.gd")
 const CaveEdgeAssetDrawer = preload("res://scripts/world/cave_edge_asset_drawer.gd")
 const CrusherDebrisScript = preload("res://scripts/world/crusher_debris.gd")
@@ -44,6 +45,11 @@ const RESOURCE_TEXTURE_PATHS: = {
 	"memory_silk": "res://assets/endless/node-memory-silk-v1.png",
 	"echo_crystal": "res://assets/endless/node-echo-crystal-v1.png",
 	"waystone": "res://assets/endless/node-waystone-v1.png",
+	"rootiron": "res://assets/rootwound/rootiron-node.png",
+	"burrowsteel": "res://assets/rootwound/burrowsteel-node.png",
+	"prismite": "res://assets/prismatic/prismite-node.png",
+	"phasecrystal": "res://assets/prismatic/phasecrystal-node.png",
+	"singularity": "res://assets/voidstar/singularity-node.png",
 }
 const RELIC_TEXTURE_PATHS: = {
 	"forge_heart": "res://assets/endless/relic-forge-heart-v1.png",
@@ -692,6 +698,8 @@ func _generate_stream_window(start_depth: int) -> void:
 		_generate_native_relic(rng)
 		_generate_resonance_hazards()
 		_apply_resolved_site_outcomes()
+		# Additive deposits use their own RNG only after ordinary content is fixed.
+		_generate_treasury_seam()
 		for resource in resources:
 			resource["depth"] = current_depth
 			if old_hp.has(String(resource.id)):
@@ -964,6 +972,47 @@ func _generate_resource_nodes(rng: RandomNumberGenerator) -> void :
 		resources.append(resource)
 		if not mined:
 			_build_resource_visual(resource)
+
+
+func _generate_treasury_seam() -> void:
+	var candidates: Array = [[], [], []]
+	var occupied: Dictionary = {}
+	for resource in resources: occupied[Vector2i(resource.cell)] = true
+	var slot: int = 0
+	for room in rooms:
+		if not bool(room.get("main", false)) or slot >= TreasurySeams.SLOT_COUNT: continue
+		var center: Vector2i = Vector2i(room.cell)
+		for y in range(-2, 3):
+			for x in range(-2, 3):
+				var cell: Vector2i = center + Vector2i(x, y)
+				if not _cell_diggable(cell) or _is_floor(cell) or occupied.has(cell): continue
+				if _base_floor_cells[_cell_index(cell)] == 0: continue
+				if cell.distance_to(up_shaft_cell) < 3.2 or cell.distance_to(down_shaft_cell) < 3.2: continue
+				var clear: bool = native_relic_id.is_empty() or _cell_center(cell).distance_to(native_relic_position) >= 176.0
+				for site in discovery_sites:
+					if _cell_center(cell).distance_to(Vector2(site.position)) < 176.0: clear = false; break
+				if clear: candidates[slot].append(_chunk_cell_index(cell))
+		slot += 1
+	# The first binding journals exact cells. Reloads never rerun placement choices,
+	# and existing unbound journals are refused by the RunState authority.
+	var seam: Dictionary = RunState.bind_endless_treasury_seam(current_depth, candidates)
+	if seam.is_empty(): return
+	var mask: int = int(RunState.endless_floor_resource_state(current_depth).mined_mask)
+	for node_index in range(TreasurySeams.FIRST_NODE, TreasurySeams.FIRST_NODE + TreasurySeams.SLOT_COUNT):
+		var deposit: Dictionary = TreasurySeams.deposit(seam, int(RunState.world_seed), current_depth, node_index)
+		if deposit.is_empty(): continue
+		var local_index: int = int(deposit.cell)
+		var cell: Vector2i = Vector2i(local_index % DeepLayout.CHUNK_COLS, local_index / DeepLayout.CHUNK_COLS + (current_depth-window_start_depth)*DeepLayout.CHUNK_ROWS)
+		var hardness: int = 950 + ((node_index + current_depth) % 4) * 24
+		var resource: Dictionary = {
+			"id":"endless_d%06d_node_%03d" % [current_depth,node_index], "node_index":node_index,
+			"kind":String(deposit.kind), "cell":cell, "position":_cell_center(cell), "amount":int(deposit.amount),
+			"hp":hardness, "max_hp":hardness, "mined":(mask & (1 << node_index)) != 0,
+			"revealed":false, "treasury_seam":true, "hint_stage":0,
+			"phase":float((node_index*37+current_depth*11)%100)*0.061,
+		}
+		resources.append(resource)
+		if not bool(resource.mined): _build_resource_visual(resource)
 
 
 func _index_ground_props() -> void:
@@ -1746,6 +1795,16 @@ func _set_context(next: String) -> void :
 
 
 func _update_discoveries() -> void :
+	for resource in resources:
+		if not bool(resource.get("treasury_seam", false)) or bool(resource.mined): continue
+		var stage: int = 2 if _is_floor(Vector2i(resource.cell)) else 1
+		if int(resource.get("hint_stage", 0)) >= stage: continue
+		var point: Vector2 = Vector2(resource.position)
+		if player.global_position.distance_to(point) > RESOURCE_DISCOVERY_RADIUS or not _clear_mining_line(player.global_position, point, true): continue
+		resource["hint_stage"] = stage
+		var label: String = String(Dictionary(GameData.data.ROCK_TYPES.get(String(resource.kind), {})).get("label", String(resource.kind).replace("_", " ")))
+		message_changed.emit("RICH %s · %s" % [label.to_upper(), "mine the ore" if stage == 2 else "dig here"])
+		break
 	for index in discovery_sites.size():
 		var site: Dictionary = discovery_sites[index]
 		if bool(site.discovered):
@@ -3675,7 +3734,10 @@ func _sync_loose_drops() -> void:
 			var data: Dictionary = stored[id]
 			var cell: Vector2i = Vector2i(int(data.cell) % DeepLayout.CHUNK_COLS, int(data.cell) / DeepLayout.CHUNK_COLS + (depth-window_start_depth)*DeepLayout.CHUNK_ROWS)
 			var sprite: Sprite2D = Sprite2D.new()
-			sprite.texture = _load_texture(String(RESOURCE_TEXTURE_PATHS.get(String(data.kind), "")))
+			var kind: String = String(data.kind)
+			var texture_path: String = String(RESOURCE_TEXTURE_PATHS.get(kind, ""))
+			if TreasurySeams.MOD_BY_KIND.has(kind): texture_path = RunState._resource_drop_texture_path(kind)
+			sprite.texture = _load_texture(texture_path)
 			ResourceScale.fit(sprite, Vector2.ONE*ResourceScale.DROP_EXTENT)
 			sprite.position = _cell_center(cell)
 			sprite.z_index = actor_draw_depth(sprite.position) + 2

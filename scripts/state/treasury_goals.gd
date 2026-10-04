@@ -1,6 +1,7 @@
 extends RefCounted
 const Ledger = preload("res://scripts/state/treasury_state.gd")
 const Stack = preload("res://scripts/world/treasury_stack.gd")
+const Seams = preload("res://scripts/state/treasury_seams.gd")
 
 const MODS: Dictionary = {"wallet_gold":"resonance", "burrowsteel":"bore_rush", "prismite":"laser", "rootiron":"twin_auger", "echo_crystal":"chainbreaker", "phasecrystal":"ricochet", "deep_alloy":"corebreaker", "singularity":"vortex"}
 const NAMES: Dictionary = {"resonance":"Resonance", "bore_rush":"Bore Rush", "laser":"Laser", "twin_auger":"Twin Auger", "chainbreaker":"Chainbreaker", "ricochet":"Ricochet", "corebreaker":"Corebreaker", "vortex":"Vortex"}
@@ -59,6 +60,14 @@ static func label(kind: String) -> String:
 	return String(Dictionary(GameData.data.ROCK_TYPES.get(kind,{})).get("label",kind.replace("_"," ").capitalize()))
 
 static func sources(kind: String) -> String:
+	var original: String = _original_sources(kind)
+	if _has_rich_vein_goal(kind): return "The Deep · track this goal for rich veins in new ground\n" + original
+	return original
+
+static func _has_rich_vein_goal(kind: String) -> bool:
+	return RunState.victory and Seams.MOD_BY_KIND.has(kind) and not bool(RunState.treasury_goals.get(mod_id(kind)+"_claimed",false))
+
+static func _original_sources(kind: String) -> String:
 	if kind == Ledger.WALLET: return "Sell ore at the Hub shop"
 	if kind in RunState.ENDLESS_RESOURCE_IDS: return "The Deep · buried veins and caches"
 	var places: PackedStringArray = []
@@ -90,8 +99,10 @@ static func hud_goal() -> Dictionary:
 	var delivered: int = mini(Stack.GOAL,int(RunState.treasury_totals.get(kind,0)))
 	var held: int = Ledger.available(kind)
 	var ready: bool = delivered >= Stack.GOAL
+	var action: String = "The Deep · rich veins in new ground" if _has_rich_vein_goal(kind) else sources(kind)
+	if delivered + held >= Stack.GOAL: action = "Return to your podium"
 	return {"objective_id":"treasury:"+kind,"kind":"treasury_goal", "resource_id":kind,
 		"title":String(NAMES.get(mod_id(kind),label(kind)+" collection")), "hud_title":String(NAMES.get(mod_id(kind),label(kind)+" collection")),
-		"hud_action":"Return to your podium" if ready else sources(kind),"detail":sources(kind),
+		"hud_action":action,"detail":sources(kind),
 		"requirements":[{"id":"treasury:"+kind,"resource_id":kind,"name":label(kind),"owned":delivered,"pending_sale":mini(held,Stack.GOAL-delivered),"required":Stack.GOAL,"ready":ready,
 		"texture_path":RunState.GOLD_TEXTURE_PATH if kind==Ledger.WALLET else RunState._resource_drop_texture_path(kind)}]}
