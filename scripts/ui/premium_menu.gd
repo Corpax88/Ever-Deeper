@@ -779,6 +779,13 @@ func _achievement_row(definition: Dictionary) -> Control:
 func _focus_highlighted_achievement() -> void :
 	if achievement_scroll == null or achievement_highlight_id.is_empty():
 		return
+	var requested_scroll: ScrollContainer = achievement_scroll
+	var requested_id: String = achievement_highlight_id
+	# Nested containers finish sizing after this deferred call. Scrolling earlier
+	# uses provisional row positions and can jump past the selected achievement.
+	await get_tree().process_frame
+	if not is_instance_valid(requested_scroll) or requested_scroll != achievement_scroll or requested_id != achievement_highlight_id or not is_visible_in_tree() or not detail_view.visible:
+		return
 	var row: Control = achievement_rows.get(achievement_highlight_id) as Control
 	if row == null or not is_instance_valid(row):
 		return
