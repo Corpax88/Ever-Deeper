@@ -1,6 +1,6 @@
 # Final candidate freeze — 4 October 2026
 
-The user requested clearer minute-by-minute status after a long review. Stop adding new review topics. Production changes are now frozen for the next full Mac/native run. Public DEV remains15.54; no15.55 publication or overall9.5 claim yet.
+The user requested clearer minute-by-minute status after a long review. Stop adding new review topics. Production changes are frozen at `685a7d71e37710ea5569b06247728506e96ba484`. Full Mac/native acceptance run `37216455072` is queued/running; inspect its live state instead of starting another run. Public DEV remains15.54; no15.55 publication or overall9.5 claim yet.
 
 Saved: save retries/status, achievements recovery, modal/navigation/mobile fixes, tracked rich material seams, completed collection retirement, native hero feedback placement, commerce text fit and Deep north viewport margin. First Mac candidate reports are preserved. Corrected simulated100k hunts finish across three loadouts; search/return/donation and human enjoyment remain unmeasured. Final gates:18 native probes plus4 retained suites; breadth, mobile focus, earned Ricochet lifecycle, actual mining/transaction/finale route and ordinary production WebKit. Publish only their exact accepted production artifact; preserve LIVE/Worn. Guarded publisher is ready.
 
