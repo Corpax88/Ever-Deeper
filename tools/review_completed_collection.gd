@@ -45,7 +45,7 @@ func run() -> void:
 	check("other-collection-completion-preserves-current-pin",ledger.land("stone",1) == 1 and state.treasury_goals.pinned == "prismite")
 	state.cargo.prismite = 1
 	state.treasury_totals.prismite = 99999
-	check("unclaimed-mod-completion-still-guides-to-claim",ledger.land("prismite",1) == 1 and state.treasury_goals.pinned == "prismite" and goals.hud_goal().hud_action == "Return to your podium")
+	check("unclaimed-mod-completion-still-guides-to-claim",ledger.land("prismite",1) == 1 and state.treasury_goals.pinned == "prismite" and goals.hud_goal().treasury_route == "claim" and goals.hud_goal().hud_action == "Claim mod · your podium")
 	check("claimed-mod-still-clears-pin",goals.claim("prismite") and state.treasury_goals.pinned == "")
 	FileAccess.open(output.path_join("checks.json"),FileAccess.WRITE).store_string(JSON.stringify(checks,"\t"))
 	for row in checks:

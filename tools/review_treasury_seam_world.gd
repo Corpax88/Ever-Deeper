@@ -218,7 +218,7 @@ func run() -> void:
 	check("source-hint-retains-original-mine-route",goals.sources("rootiron").contains("new ground") and goals.sources("rootiron").contains("Mossvein"))
 	state.treasury_goals.pinned = "rootiron"
 	state.cargo.rootiron = 100000
-	check("completed-cargo-guides-to-donation",goals.hud_goal().hud_action == "Return to your podium")
+	check("completed-cargo-guides-to-donation",goals.hud_goal().treasury_route == "donate" and goals.hud_goal().hud_action == "Donate · Treasury plate")
 	for row in checks:
 		if not row.passed: quit(1); return
 	print("TREASURY_SEAM_WORLD_OK "+str(checks.size()))
