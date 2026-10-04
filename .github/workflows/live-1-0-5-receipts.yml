@@ -1,0 +1,38 @@
+name: Preserve LIVE1.0.5 candidate receipts
+on:
+  push:
+    branches: [codex/live-1-0-5-20261005]
+    paths: ['.github/live-1-0-5/recovery.json']
+permissions: {contents: read, actions: read}
+jobs:
+  receipts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/live-1-0-5
+      - id: input
+        run: |
+          python3 - <<'PY'
+          import json,os
+          r=json.load(open('.github/live-1-0-5/recovery.json'))
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              print('run='+str(r['run']),file=f)
+              print('artifact='+str(r['artifact']),file=f)
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '${{ steps.input.outputs.artifact }}'
+          run-id: '${{ steps.input.outputs.run }}'
+          merge-multiple: true
+          github-token: '${{ github.token }}'
+          path: '${{ runner.temp }}/candidate'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: live-1-0-5-receipts
+          path: |
+            ${{ runner.temp }}/candidate/manifest.json
+            ${{ runner.temp }}/candidate/build-receipt.json
+          retention-days: 30
