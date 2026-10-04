@@ -1,3 +1,9 @@
+# Standing release rule — update the website with every release
+
+Mats requires every newly published Ever-Deeper DEV or LIVE update to be documented and published on the existing website in the same release task, without a separate request. Follow [the website release workflow](docs/WEBSITE-RELEASE.md). Include the current version, actual changes and known limits; preserve historical content and current audience. Confirm successful Site publication and record its receipt before marking the release task fully complete. If blocked, report the unfinished website step accurately. This instruction was added on 4 October 2026 and supersedes older separate-request website notes below.
+
+---
+
 Current verified release: [DEV15.56 quality review](https://github.com/Corpax88/Ever-Deeper/blob/codex/quality2-20261004/docs/quality2-20261004/HANDOFF.md). Published 4 October 2026 at https://corpax88.github.io/Ever-Deeper/dev/. Exact runtime source `deaa7088d75d473b0c16951bc05f19c4db7800c4` on `codex/quality2-20261004`; accepted QA run `37227129258`, immutable production artifact `11312268748`, publication `a7581f261fac33c673ce48bfcc071a02a86572b1` / run `37228372436`. All 27 public file hashes verified; all nine LIVE and nine Worn files preserved. DEV15.55 rollback artifact: `11313191443`.
 
 This release protects tracked Treasury materials during sales, clarifies source/donation/reward routes and equipment, shares readable D1/D2 target labels, preserves cave-camera helmet space, places Surface actions clear of the hero and fixes finale guidance. All six QA groups passed, with 410 captured browser images and 83 unique final-source images inspected by root and independent critics. No physical-iPhone performance or overall 9.5/10 claim. Earlier failed fixtures and the first publication's pre-deploy network timeout remain documented; recovery kept every byte and acceptance guard.
