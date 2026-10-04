@@ -1,0 +1,356 @@
+{
+  "checks": [
+    {
+      "name": "known crowded bedrock target located",
+      "passed": true
+    },
+    {
+      "name": "achievement actually presented",
+      "passed": true
+    },
+    {
+      "name": "achievement achievement clears target label",
+      "passed": false
+    },
+    {
+      "name": "skill actually presented",
+      "passed": true
+    },
+    {
+      "name": "skill skill clears target label",
+      "passed": true
+    },
+    {
+      "name": "pickup pickup clears target label",
+      "passed": true
+    },
+    {
+      "name": "pickup pickup clears target label",
+      "passed": false
+    },
+    {
+      "name": "pickup pickup clears target label",
+      "passed": false
+    },
+    {
+      "name": "simultaneous achievement clears target label",
+      "passed": false
+    },
+    {
+      "name": "simultaneous skill clears target label",
+      "passed": true
+    },
+    {
+      "name": "simultaneous pickup clears target label",
+      "passed": true
+    },
+    {
+      "name": "simultaneous pickup clears target label",
+      "passed": true
+    },
+    {
+      "name": "simultaneous pickup clears target label",
+      "passed": true
+    }
+  ],
+  "passed": false,
+  "records": [
+    {
+      "achievement": {
+        "active": true,
+        "active_id": "first_chip",
+        "active_title": "First Chip",
+        "anchor_mode": "logical_pixels",
+        "asset": "res://assets/achievements/first_chip.png",
+        "fade_seconds": 0.55,
+        "has_background": false,
+        "has_panel": false,
+        "hold_seconds": 3.0,
+        "icon_loaded": true,
+        "icon_scale_x": 0.999787449836731,
+        "last_reflow": {},
+        "minimum_touch_target": 96.0,
+        "phase": "spin",
+        "phase_elapsed": 0.811490333333333,
+        "placement_blocked": false,
+        "placement_clear": true,
+        "presentation": "achievement_png_and_title",
+        "process_always": true,
+        "queue_size": 0,
+        "queued_ids": [],
+        "safe_rect": "[P: (18.0, 18.0), S: (1176.727, 645.8182)]",
+        "screen_anchor": "(536.0, 194.8182)",
+        "screen_exclusions": [
+          "[P: (455.9999, 182.1931), S: (160.0, 160.0)]",
+          "[P: (648.7273, 18.0), S: (188.0, 96.0)]",
+          "[P: (998.7273, 449.8182), S: (190.0, 190.0)]",
+          "[P: (24.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (288.0, 18.0), S: (166.0, 112.0)]",
+          "[P: (838.7273, 473.8182), S: (142.0, 142.0)]",
+          "[P: (848.7273, 18.0), S: (340.0, 123.0)]",
+          "[P: (24.0, 593.8182), S: (558.7273, 50.0)]",
+          "[P: (156.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (24.0, 182.0), S: (132.0, 58.0)]",
+          "[P: (0.0, 245.4545), S: (557.8546, 436.3636)]"
+        ],
+        "spin_seconds": 0.92,
+        "suspended": false,
+        "toast_rect": "[P: (647.9999, 173.0), S: (520.0001, 120.0)]",
+        "touch_target": "(520.0, 120.0)",
+        "touch_target_valid": true,
+        "transparent": true,
+        "upright": true,
+        "visible": true
+      },
+      "label": "[P: (629.0, 289.8182), S: (112.0, 34.0)]",
+      "pickups": [],
+      "skill": {
+        "active": {},
+        "clear_of_hud": true,
+        "icon_loaded": false,
+        "ignores_input": true,
+        "opacity": 1.0,
+        "queued": [],
+        "rect": [
+          426.363647460938,
+          140.0,
+          360.0,
+          86.0
+        ],
+        "shown": 0,
+        "text": "",
+        "visible": false
+      },
+      "state": "achievement"
+    },
+    {
+      "achievement": {
+        "active": false,
+        "active_id": "",
+        "active_title": "",
+        "anchor_mode": "logical_pixels",
+        "asset": "",
+        "fade_seconds": 0.55,
+        "has_background": false,
+        "has_panel": false,
+        "hold_seconds": 3.0,
+        "icon_loaded": true,
+        "icon_scale_x": 1.0,
+        "last_reflow": {},
+        "minimum_touch_target": 96.0,
+        "phase": "idle",
+        "phase_elapsed": 0.0,
+        "placement_blocked": false,
+        "placement_clear": true,
+        "presentation": "achievement_png_and_title",
+        "process_always": true,
+        "queue_size": 0,
+        "queued_ids": [],
+        "safe_rect": "[P: (18.0, 18.0), S: (1176.727, 645.8182)]",
+        "screen_anchor": "(536.0, 194.8182)",
+        "screen_exclusions": [
+          "[P: (455.9999, 182.1931), S: (160.0, 160.0)]",
+          "[P: (648.7273, 18.0), S: (188.0, 96.0)]",
+          "[P: (998.7273, 449.8182), S: (190.0, 190.0)]",
+          "[P: (24.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (288.0, 18.0), S: (166.0, 112.0)]",
+          "[P: (838.7273, 473.8182), S: (142.0, 142.0)]",
+          "[P: (848.7273, 18.0), S: (340.0, 123.0)]",
+          "[P: (24.0, 593.8182), S: (558.7273, 50.0)]",
+          "[P: (156.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (24.0, 182.0), S: (132.0, 58.0)]",
+          "[P: (0.0, 245.4545), S: (557.8546, 436.3636)]"
+        ],
+        "spin_seconds": 0.92,
+        "suspended": false,
+        "toast_rect": "[P: (647.9999, 173.0), S: (520.0001, 120.0)]",
+        "touch_target": "(520.0, 120.0)",
+        "touch_target_valid": true,
+        "transparent": true,
+        "upright": true,
+        "visible": false
+      },
+      "label": "[P: (629.0, 289.8182), S: (112.0, 34.0)]",
+      "pickups": [],
+      "skill": {
+        "active": {
+          "id": "mining",
+          "level": 2
+        },
+        "clear_of_hud": true,
+        "icon_loaded": true,
+        "ignores_input": true,
+        "opacity": 1.0,
+        "queued": [],
+        "rect": [
+          647.999938964844,
+          173.0,
+          360.0,
+          86.0
+        ],
+        "shown": 1,
+        "text": "Mining  ·  2",
+        "visible": true
+      },
+      "state": "skill"
+    },
+    {
+      "achievement": {
+        "active": false,
+        "active_id": "",
+        "active_title": "",
+        "anchor_mode": "logical_pixels",
+        "asset": "",
+        "fade_seconds": 0.55,
+        "has_background": false,
+        "has_panel": false,
+        "hold_seconds": 3.0,
+        "icon_loaded": true,
+        "icon_scale_x": 1.0,
+        "last_reflow": {},
+        "minimum_touch_target": 96.0,
+        "phase": "idle",
+        "phase_elapsed": 0.0,
+        "placement_blocked": false,
+        "placement_clear": true,
+        "presentation": "achievement_png_and_title",
+        "process_always": true,
+        "queue_size": 0,
+        "queued_ids": [],
+        "safe_rect": "[P: (18.0, 18.0), S: (1176.727, 645.8182)]",
+        "screen_anchor": "(536.0, 194.8182)",
+        "screen_exclusions": [
+          "[P: (455.9999, 182.1931), S: (160.0, 160.0)]",
+          "[P: (648.7273, 18.0), S: (188.0, 96.0)]",
+          "[P: (998.7273, 449.8182), S: (190.0, 190.0)]",
+          "[P: (24.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (288.0, 18.0), S: (166.0, 112.0)]",
+          "[P: (838.7273, 473.8182), S: (142.0, 142.0)]",
+          "[P: (848.7273, 18.0), S: (340.0, 123.0)]",
+          "[P: (24.0, 593.8182), S: (558.7273, 50.0)]",
+          "[P: (156.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (24.0, 182.0), S: (132.0, 58.0)]",
+          "[P: (0.0, 245.4545), S: (557.8546, 436.3636)]"
+        ],
+        "spin_seconds": 0.92,
+        "suspended": false,
+        "toast_rect": "[P: (647.9999, 173.0), S: (520.0001, 120.0)]",
+        "touch_target": "(520.0, 120.0)",
+        "touch_target_valid": true,
+        "transparent": true,
+        "upright": true,
+        "visible": false
+      },
+      "label": "[P: (629.0, 289.8182), S: (112.0, 34.0)]",
+      "pickups": [
+        "[P: (689.34, 182.9905), S: (159.0, 51.0)]",
+        "[P: (654.84, 240.9905), S: (228.0, 51.0)]",
+        "[P: (704.34, 298.9905), S: (129.0, 51.0)]"
+      ],
+      "skill": {
+        "active": {},
+        "clear_of_hud": true,
+        "icon_loaded": true,
+        "ignores_input": true,
+        "opacity": 1.0,
+        "queued": [],
+        "rect": [
+          647.999938964844,
+          173.0,
+          360.0,
+          86.0
+        ],
+        "shown": 1,
+        "text": "Mining  ·  2",
+        "visible": false
+      },
+      "state": "pickup"
+    },
+    {
+      "achievement": {
+        "active": true,
+        "active_id": "first_chip",
+        "active_title": "First Chip",
+        "anchor_mode": "logical_pixels",
+        "asset": "res://assets/achievements/first_chip.png",
+        "fade_seconds": 0.55,
+        "has_background": false,
+        "has_panel": false,
+        "hold_seconds": 3.0,
+        "icon_loaded": true,
+        "icon_scale_x": 0.999323904514313,
+        "last_reflow": {
+          "expanded_obstacle": "[P: (629.9999, 155.0), S: (396.0, 128.0)]",
+          "obstacle_index": 10,
+          "previous_expanded_obstacle": "[P: (-18.0, 227.4545), S: (593.8546, 472.3636)]",
+          "previous_rect": "[P: (647.9999, 173.0), S: (520.0, 120.0)]",
+          "retained_rect": "[P: (647.9999, 173.0), S: (520.0, 120.0)]",
+          "time_msec": 12862
+        },
+        "minimum_touch_target": 96.0,
+        "phase": "spin",
+        "phase_elapsed": 0.788407,
+        "placement_blocked": false,
+        "placement_clear": true,
+        "presentation": "achievement_png_and_title",
+        "process_always": true,
+        "queue_size": 0,
+        "queued_ids": [],
+        "safe_rect": "[P: (18.0, 18.0), S: (1176.727, 645.8182)]",
+        "screen_anchor": "(536.0, 194.8182)",
+        "screen_exclusions": [
+          "[P: (455.9999, 182.1931), S: (160.0, 160.0)]",
+          "[P: (648.7273, 18.0), S: (188.0, 96.0)]",
+          "[P: (998.7273, 449.8182), S: (190.0, 190.0)]",
+          "[P: (24.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (288.0, 18.0), S: (166.0, 112.0)]",
+          "[P: (838.7273, 473.8182), S: (142.0, 142.0)]",
+          "[P: (848.7273, 18.0), S: (340.0, 123.0)]",
+          "[P: (24.0, 593.8182), S: (558.7273, 50.0)]",
+          "[P: (156.0, 18.0), S: (120.0, 120.0)]",
+          "[P: (24.0, 182.0), S: (132.0, 58.0)]",
+          "[P: (647.9999, 173.0), S: (360.0, 92.0)]",
+          "[P: (223.66, 282.6329), S: (159.0, 51.0)]",
+          "[P: (189.16, 340.6329), S: (228.0, 51.0)]",
+          "[P: (238.66, 398.6329), S: (129.0, 51.0)]",
+          "[P: (0.0, 245.4545), S: (557.8546, 436.3636)]"
+        ],
+        "spin_seconds": 0.92,
+        "suspended": false,
+        "toast_rect": "[P: (647.9999, 297.0), S: (520.0001, 120.0)]",
+        "touch_target": "(520.0, 120.0)",
+        "touch_target_valid": true,
+        "transparent": true,
+        "upright": true,
+        "visible": true
+      },
+      "label": "[P: (629.0, 289.8182), S: (112.0, 34.0)]",
+      "pickups": [
+        "[P: (223.66, 282.0897), S: (159.0, 51.0)]",
+        "[P: (189.16, 340.0897), S: (228.0, 51.0)]",
+        "[P: (238.66, 398.0897), S: (129.0, 51.0)]"
+      ],
+      "skill": {
+        "active": {
+          "id": "mining",
+          "level": 2
+        },
+        "clear_of_hud": true,
+        "icon_loaded": true,
+        "ignores_input": true,
+        "opacity": 1.0,
+        "queued": [],
+        "rect": [
+          647.999938964844,
+          173.0,
+          360.0,
+          86.0
+        ],
+        "shown": 2,
+        "text": "Mining  ·  2",
+        "visible": true
+      },
+      "state": "simultaneous"
+    }
+  ]
+}
