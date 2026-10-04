@@ -119,7 +119,7 @@ func _ready() -> void:
 	portrait.tooltip_text="Give your mole a little love"
 	portrait.pressed.connect(_pet)
 	content.add_child(portrait)
-	mood=_label(content,"Your little mining buddy",20,true)
+	mood=_label(content,"Your mining buddy",26,true)
 	mood.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	points=_label(content,"",18)
 	points.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
@@ -190,15 +190,15 @@ func _layout() -> void:
 	content.size=Vector2(1420,650)
 	title_label.position=Vector2(180,78);title_label.size=Vector2(900,44)
 	portrait.position=Vector2(158,168);portrait.size=Vector2(265,290)
-	mood.position=Vector2(165,466);mood.size=Vector2(265,31)
+	mood.position=Vector2(130,466);mood.size=Vector2(315,36)
 	points.position=Vector2(130,509);points.size=Vector2(315,26)
 	tally.position=Vector2(175,545);tally.size=Vector2(250,32)
 	for i in tabs.size():
 		tabs[i].position=Vector2(494+i*244,130);tabs[i].size=Vector2(228,96)
 	var close_button: Button=content.get_node("CloseJournal")
 	close_button.position=Vector2(1248,28);close_button.size=Vector2(126,96)
-	body.position=Vector2(495,238);body.size=Vector2(808,322)
-	notice.position=Vector2(492,566);notice.size=Vector2(808,36)
+	body.position=Vector2(495,238);body.size=Vector2(808,300)
+	notice.position=Vector2(492,548);notice.size=Vector2(808,36)
 
 func is_open() -> bool: return visible
 
@@ -243,11 +243,11 @@ func select_tab(id: String) -> void:
 func _together() -> void:
 	var heading=_label(body,"Your little helper, ready to go.",25,true)
 	heading.position=Vector2(0,0)
-	var description=_label(body,"Learned skills help automatically. Commands are optional.",26)
+	var description=_label(body,"Learned skills help automatically.",30)
 	description.position=Vector2(0,42);description.size=Vector2(800,36)
 	status=_label(body,"",26,true);status.position=Vector2(0,80);status.size=Vector2(790,32)
 	var command_scroll=preload("res://scripts/ui/touch_scroll_container.gd").new()
-	command_scroll.position=Vector2(0,120);command_scroll.size=Vector2(808,202)
+	command_scroll.position=Vector2(0,120);command_scroll.size=Vector2(808,180)
 	command_scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
 	body.add_child(command_scroll)
 	var commands=GridContainer.new();commands.columns=2
@@ -281,8 +281,8 @@ func _how() -> void:
 		["3. Learn it once. Feel it every trip.", "Learned skills help automatically. I stay close, finish fetching and return when you move on. Mining earns paw points."],
 		["4. A little nudge, if you want", "Tap a spot or use Together for an optional command. Tunnel Home waits for your choice; I never take you away mid-dig."]]
 	for i in lines.size():
-		_label(paragraphs,lines[i][0],28,true)
-		var d=_label(paragraphs,lines[i][1],26)
+		_label(paragraphs,lines[i][0],30,true)
+		var d=_label(paragraphs,lines[i][1],30)
 		d.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 		d.custom_minimum_size.x=780
 
@@ -299,7 +299,7 @@ func _skills() -> void:
 		var owned: bool=Skills.has_skill(skill_id)
 		var passive: bool=skill_id!="homeward"
 		_label(stack,String(skill.name)+("   ·   Always helping" if owned and passive else "   ·   Command ready" if owned else ""),21,true)
-		var detail=_label(stack,String(skill.detail),17);detail.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;detail.custom_minimum_size.x=725
+		var detail=_label(stack,String(skill.detail),30);detail.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART;detail.custom_minimum_size.x=725
 		if owned: continue
 		var prereq: String=String(skill.requires)
 		var locked: bool=not prereq.is_empty() and not Skills.has_skill(prereq)
@@ -341,7 +341,7 @@ func _update_live() -> void:
 	if not visible or owner_ui==null: return
 	var mole: MoleCompanion=owner_ui.active_mole()
 	points.text="%d paw points" % Skills.bond()
-	mood.text="Loves being with you" if pet_reaction >= 0 else "Your little mining buddy"
+	mood.text="Happy little paws" if pet_reaction >= 0 else "Your mining buddy"
 	if mole!=null:
 		var ore_total: int=0
 		var dig_total: int=0
@@ -358,4 +358,4 @@ func _update_live() -> void:
 		if shake_button!=null and Skills.has_skill("shake"):
 			shake_button.disabled=mole.shake_cooldown>0.0
 			shake_button.text="Dig together" if mole.shake_cooldown<=0.0 else "Resting paws · %ds" % ceili(mole.shake_cooldown)
-	notice.text=response if not response.is_empty() else "10 paw skills · swipe up for more. Mine together to earn paw points." if tab=="skills" else "Tap your buddy for a little love. Mine together to earn paw points."
+	notice.text=response if not response.is_empty() else "10 paw skills · swipe up to explore." if tab=="skills" else "Tap your buddy to play · mine for paw points."
