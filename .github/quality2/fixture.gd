@@ -13,6 +13,7 @@ var quality_profile_result: Dictionary={}
 var quality2_sale_result: Dictionary={}
 var quality2_route_result: Dictionary={}
 var quality2_target_result: Dictionary={}
+var quality2_sale_moles: Array[Dictionary]=[]
 
 func run() -> void:
 	if "--quality-mod-persistence" in OS.get_cmdline_user_args():
@@ -68,6 +69,60 @@ func _quality2_natural_ore() -> bool:
 				return true
 	return false
 
+func _quality2_natural_depth_target(kind: String) -> bool:
+	var world: Node2D=main.depth_world
+	var candidates: Array=[]
+	if kind=="ore":
+		for index in world.rocks.size():
+			var rock: Dictionary=world.rocks[index]
+			if world._rock_is_exposed(index) and int(rock.requires_drill_level)==0:
+				candidates.append({"position":Vector2(rock.position),"kind":"rock","rock_index":index,"cell":Vector2i(rock.cell)})
+	else:
+		for row in world.rows:
+			for col in world.cols:
+				var cell: Vector2i=Vector2i(col,row)
+				if world._terrain_is_solid(cell) and not world._terrain_is_bedrock(cell):
+					candidates.append({"position":world._cell_center(cell),"kind":"terrain","cell":cell,"rock_index":-1})
+	var entrance: Vector2=world.entry_spawn()
+	candidates.sort_custom(func(a,b): return a.position.distance_squared_to(entrance)<b.position.distance_squared_to(entrance))
+	for candidate in candidates:
+		for direction in [Vector2.RIGHT,Vector2.LEFT,Vector2.DOWN,Vector2.UP]:
+			for distance in [64.0,80.0,96.0]:
+				var position: Vector2=candidate.position-direction*distance
+				if world._player_collides(position): continue
+				world.restore_position(position)
+				if world.player.global_position.distance_to(position)>2.0: continue
+				world.player.set_facing(direction)
+				var selected: Dictionary=world._find_mine_target()
+				if String(selected.get("kind",""))!=String(candidate.kind): continue
+				if candidate.kind=="rock" and int(selected.get("rock_index",-1))!=int(candidate.rock_index): continue
+				if candidate.kind=="terrain" and Vector2i(selected.get("cell",Vector2i(-1,-1)))!=Vector2i(candidate.cell): continue
+				world._apply_target(selected)
+				world.target_dirty=false
+				var cell: Vector2i=Vector2i(candidate.cell)
+				quality2_target_result={"depth":2,"case":kind,"cell":[cell.x,cell.y],"target_kind":String(candidate.kind),"rock_index":int(candidate.rock_index),"natural_selection":true}
+				return true
+	return false
+
+func _quality2_restore_sale_companions() -> void:
+	for saved in quality2_sale_moles:
+		if not is_instance_valid(saved.node): continue
+		saved.node.autonomous_enabled=bool(saved.autonomous)
+		saved.node.set_physics_process(bool(saved.physics))
+	quality2_sale_moles.clear()
+
+func _quality2_pause_sale_companions() -> void:
+	_quality2_restore_sale_companions()
+	# This accounting fixture has a declared haul. Autonomous ore added during
+	# the sale would change that haul; isolate companions, not sale arithmetic.
+	for world in [main.surface_world,main.mine_world,main.depth_world,main.hub_world,main.deepheart_world,main.endless_world]:
+		var mole: Node=world.get_node_or_null("MoleCompanion")
+		if not is_instance_valid(mole): continue
+		quality2_sale_moles.append({"node":mole,"physics":mole.is_physics_processing(),"autonomous":mole.autonomous_enabled})
+		mole.recall()
+		mole.autonomous_enabled=false
+		mole.set_physics_process(false)
+
 func _quality2_route_fixture(scenario: String) -> void:
 	var goals: Script=preload("res://scripts/state/treasury_goals.gd")
 	if scenario=="cancel-rune":
@@ -116,6 +171,7 @@ func _quality2_route_fixture(scenario: String) -> void:
 	main._update_visual_guide()
 
 func _command(data: Dictionary) -> void:
+	if String(data.kind) not in ["quality2_sale","treasury_zone","treasury_save","treasury_restore"]: _quality2_restore_sale_companions()
 	quality_notice_active=(String(data.kind)=="quality_achievement" and not bool(data.get("cancel",false))) or (String(data.kind)=="quality_feedback" and not bool(data.get("clear",false)))
 	match String(data.kind):
 		"quality2_sale":
@@ -127,13 +183,14 @@ func _command(data: Dictionary) -> void:
 				RunState.reset_run(false)
 				main._dev_seed_victory_state()
 				main._dev_jump_surface()
+				_quality2_pause_sale_companions()
 				RunState.cargo=RunState._empty_resource_store()
 				RunState.cargo.phasecrystal=225
 				RunState.cargo.copper=9
 				RunState.gold=17
 				RunState.treasury_totals={"phasecrystal":99800}
 				RunState.treasury_goals=preload("res://scripts/state/treasury_goals.gd").clean({})
-				quality2_sale_result={"seeded_cargo":{"phasecrystal":225,"copper":9},"seeded_gold":17,"seeded_delivered":99800,
+				quality2_sale_result={"seeded_cargo":{"phasecrystal":225,"copper":9},"seeded_gold":17,"seeded_delivered":99800,"isolated_companions":quality2_sale_moles.size(),
 					"expected_sale":25*int(GameData.data.ROCK_TYPES.phasecrystal.value)+9*int(GameData.data.ROCK_TYPES.copper.value)}
 				main.treasury_goal_panel.open_goal("phasecrystal")
 			elif String(data.action)=="open":
@@ -163,16 +220,32 @@ func _command(data: Dictionary) -> void:
 			main._cancel_mine_hold()
 			main._on_joystick_movement(Vector2.ZERO)
 			RunState.reset_run(false)
-			main._dev_jump_mine("mossMine",1)
+			var depth: int=int(data.get("depth",1))
+			main._dev_jump_mine("mossMine",depth)
 			quality2_target_result={"natural_selection":false}
-			var found: bool=_quality2_natural_ore()
+			if depth==2:
+				RunState.drill_level=0
+				RunState.starforge_variant="crusher"
+			var found: bool=_quality2_natural_depth_target(String(data.get("target","terrain"))) if depth==2 else _quality2_natural_ore()
 			quality2_target_result["found"]=found
 			var mole: Node=main.get_node("CompanionInterface").active_mole()
 			mole.autonomous_enabled=false
 			mole.recall()
-			main.mine_world.player.camera.reset_smoothing()
-			main.mine_world.player.camera.force_update_scroll()
-			main.mine_world.queue_redraw()
+			var world: Node2D=main.depth_world if depth==2 else main.mine_world
+			world.player.camera.reset_smoothing()
+			world.player.camera.force_update_scroll()
+			world.queue_redraw()
+			main._refresh_hud()
+			command_id=int(data.id)
+			return
+		"quality2_surface_context":
+			main._cancel_mine_hold()
+			main._on_joystick_movement(Vector2.ZERO)
+			RunState.reset_run(false)
+			main._dev_jump_surface()
+			main.surface_world.restore_position(main.surface_world._mine_entrance("mossMine"))
+			main.surface_world.player.camera.reset_smoothing()
+			main.surface_world.player.camera.force_update_scroll()
 			main._refresh_hud()
 			command_id=int(data.id)
 			return
@@ -445,18 +518,33 @@ func _quality2_hero_frame(player: Node) -> Array:
 
 func _quality2_target_snapshot() -> Dictionary:
 	var result: Dictionary={"fixture":quality2_target_result,"visible":false}
-	if main.phase!="mine": return result
-	var world: Node=main.mine_world
+	if main.phase not in ["mine","depth"]: return result
+	var world: Node=main.depth_world if main.phase=="depth" else main.mine_world
 	var label: Label=world.get_node_or_null("TargetLabel")
 	if not is_instance_valid(label): return result
 	result["visible"]=label.is_visible_in_tree()
 	result["label"]=_label_geometry(label)
 	result["ink"]=_quality_rect((label.get_global_transform_with_canvas()*Rect2(Vector2.ZERO,label.size)).grow(4.0))
 	result["unshaded"]=label.material is CanvasItemMaterial and label.material.light_mode==CanvasItemMaterial.LIGHT_MODE_UNSHADED
-	var cell: Vector2i=world.current_target
-	result["cell"]=[cell.x,cell.y]
-	result["natural_selection"]=world._find_mine_target()==cell
-	result["block"]=Dictionary(world.blocks.get(cell,{})).duplicate(true)
+	if main.phase=="mine":
+		var cell: Vector2i=world.current_target
+		result["depth"]=1
+		result["cell"]=[cell.x,cell.y]
+		result["natural_selection"]=world._find_mine_target()==cell
+		result["block"]=Dictionary(world.blocks.get(cell,{})).duplicate(true)
+	else:
+		var cell: Vector2i=world.current_target_cell
+		var selected: Dictionary=world._find_mine_target()
+		result["depth"]=2
+		result["cell"]=[cell.x,cell.y]
+		result["target_kind"]=String(world.current_target_kind)
+		result["natural_selection"]=String(selected.get("kind",""))==String(world.current_target_kind) and Vector2i(selected.get("cell",Vector2i(-1,-1)))==cell and int(selected.get("rock_index",-1))==int(world.current_target_rock)
+		if world.current_target_kind=="rock" and world.current_target_rock>=0:
+			var rock: Dictionary=world.rocks[world.current_target_rock]
+			result["block"]={"role":"resource","kind":String(rock.type),"hp":int(rock.hp),"shell":int(rock.shell),"broken":bool(rock.broken),"exposed":world._rock_is_exposed(world.current_target_rock)}
+		elif world.current_target_kind=="terrain" and world._cell_in_bounds(cell):
+			result["block"]={"role":"terrain","kind":"deepstone","hp":int(world.terrain_hp[world._cell_index(cell)]),"bedrock":world._terrain_is_bedrock(cell)}
+		else: result["block"]={}
 	return result
 
 func _quality2_route_snapshot() -> Dictionary:
@@ -556,7 +644,7 @@ func _quality_geometry() -> Dictionary:
 	for button in journal.body.find_children("Command_*","Button",true,false):
 		result.journal.commands[String(button.name)]={"rect":_screen_bounds(button),"disabled":button.disabled,"visible":button.is_visible_in_tree()}
 	for pair in [["menu",main.premium_hud.menu_button],["mine",main.mine_button],["bag",main.premium_hud.bag_button],["context",main.premium_hud.context_button],["mole",main.get_node("CompanionInterface").button]]:
-		result.controls[pair[0]]={"rect":_screen_bounds(pair[1]),"visible":pair[1].is_visible_in_tree()}
+		result.controls[pair[0]]={"rect":_screen_bounds(pair[1]),"visible":pair[1].is_visible_in_tree(),"text":pair[1].text if pair[1] is Button else ""}
 	result.preview={"panel":_screen_bounds(panel.panel),"heading":_label_geometry(panel.heading),"detail":_label_geometry(panel.detail),"source":_label_geometry(panel.source),"title":_label_geometry(panel.title),"equipped":_label_geometry(panel.equipped),"progress":_label_geometry(panel.progress),"bar":_screen_bounds(panel.progress_bar),
 		"claim":{"rect":_screen_bounds(panel.claim_button),"text":panel.claim_button.text,"visible":panel.claim_button.is_visible_in_tree(),"disabled":panel.claim_button.disabled},
 		"pin":{"rect":_screen_bounds(panel.pin_button),"text":panel.pin_button.text,"visible":panel.pin_button.is_visible_in_tree(),"disabled":panel.pin_button.disabled},

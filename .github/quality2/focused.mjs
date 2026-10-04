@@ -129,6 +129,17 @@ try{
    await tap('settings_back');await wait('settings returns Skills',s=>s.skills_open&&!s.settings_open);await shot('settings-return-skills-'+width);
    await tap('skills_close');await ready();
   });
+  await group('surface-DESCEND-clears-hero-'+width,async()=>{
+   await closeModal();await command('quality2_surface_context');await ready();
+   await wait('actual surface DESCEND action',s=>s.quality.journey.surface_context==='enter:mossMine'&&s.quality.geometry.controls.context.visible&&s.quality.geometry.controls.context.text==='DESCEND');await delay(350);
+   const s=await state(),controls=s.quality.geometry.controls,contextRect=cssRect(controls.context.rect,s),bag=cssRect(controls.bag.rect,s),hero=cssRect(s.quality.feedback.hero_frame,s);
+   check('surface-DESCEND-uses-free-mining-slot-'+width,!controls.mine.visible&&controls.context.text==='DESCEND',{controls});
+   check('surface-DESCEND-clears-whole-hero-'+width,hero[2]>0&&!overlap(contextRect,hero),{contextRect,hero});
+   check('surface-DESCEND-clear-of-Bag-'+width,!overlap(contextRect,bag),{contextRect,bag});
+   check('surface-DESCEND-touch-target-fits-'+width,contextRect[2]>=43.95&&contextRect[3]>=43.95&&contains([0,0,viewport.width,viewport.height],contextRect),{contextRect});await shot('surface-DESCEND-clear-hero-'+width);
+   await tap('hud_context');await wait('actual DESCEND enters first mine',s=>s.phase==='mine'&&s.actual_map.world_active);await ready();
+   check('surface-DESCEND-preserves-real-travel-'+width,(await state()).quality.geometry.controls.mine.visible,{phase:(await state()).phase});
+  });
   await group('achievement-focus-'+width,async()=>{
    await closeModal();await command('surface');await ready();
    for(const [index,label] of [[0,'early'],[22,'middle'],[28,'threefold-star'],[-1,'last']]){
@@ -209,6 +220,7 @@ try{
   });
   await group('tracked-Assay-and-Bag-'+width,async()=>{
    await closeModal();await command('quality2_sale',{action:'setup'});await wait('seeded collection card',s=>s.treasury_goal.open);
+   check('tracked-sale-declared-haul-isolated-'+width,(await state()).quality.sale.fixture.isolated_companions>0,{fixture:(await state()).quality.sale.fixture});
    await tap('treasury_pin');await wait('actual TRACK protects cargo',s=>s.quality.sale.pin==='phasecrystal');
    let s=await state(),sale=s.quality.sale,row=sale.snapshot.rows.find(r=>r.kind==='phasecrystal');
    check('tracked-reserve-before-sale-'+width,row.protected===200&&row.sellable===25&&sale.delivered===99800,{row,sale});
@@ -275,6 +287,28 @@ try{
    for(let a=0;a<notices.length;a++)for(let b=a+1;b<notices.length;b++)check('natural-target-notices-'+a+'-'+b+'-separate-'+width,!overlap(notices[a],notices[b]),{a:notices[a],b:notices[b]});
    for(const hero of f.hero)check('natural-target-words-clear-hero-'+width,!overlap(ink,cssRect(hero,s)),{ink,hero});
    await shot('natural-target-simultaneous-notices-'+width);await command('quality_feedback',{clear:true});
+  });
+  await group('depth2-target-and-notices-'+width,async()=>{
+   await closeModal();await command('quality2_target',{depth:2,target:'terrain'});await ready();await wait('natural D2 terrain label',s=>s.phase==='depth'&&s.quality.target.visible&&s.quality.target.fixture.found);await delay(350);
+   let s=await state(),target=s.quality.target,ink=cssRect(target.ink,s);const beforeHP=target.block.hp;
+   check('depth2-target-is-real-solid-Deepstone-'+width,target.depth===2&&target.natural_selection&&target.target_kind==='terrain'&&target.block.kind==='deepstone'&&target.block.hp>0&&!target.block.bedrock,{target});
+   check('depth2-target-words-explain-actual-hit-'+width,target.label.text.includes('DEEPSTONE')&&target.label.text.includes('HIT'),{text:target.label.text});
+   check('depth2-target-text-unshaded-and-unscaled-'+width,target.unshaded&&Math.abs(target.label.font_viewport-24)<.1&&target.label.height_fits&&target.label.width_fits,{target});
+   check('depth2-target-ink-onscreen-'+width,contains([0,0,viewport.width,viewport.height],ink),{ink});await shot('depth2-natural-dark-target-'+width);
+   await command('quality_feedback');await delay(450);s=await state();target=s.quality.target;ink=cssRect(target.ink,s);const f=s.quality.feedback;
+   check('depth2-target-stays-real-during-notices-'+width,target.visible&&target.natural_selection&&target.block.hp===beforeHP,{target,beforeHP});
+   check('depth2-three-real-pickup-labels-'+width,f.pickups.length===3,{pickup:f.pickup});
+   check('depth2-skill-event-retained-'+width,f.skill.active.id==='mining',{skill:f.skill});
+   check('depth2-achievement-shown-or-safely-queued-'+width,f.toast.active&&(f.toast.visible?f.toast.placement_clear:f.toast.suspended),{toast:f.toast});
+   const notices=f.pickups.map(r=>cssRect(r,s));if(f.skill.visible)notices.push(cssRect(f.skill_rect,s));if(f.toast.visible)notices.push(cssRect(f.toast_rect,s));
+   for(const [index,rect] of notices.entries()){
+    check('depth2-notice-'+index+'-clear-target-'+width,!overlap(rect,ink),{rect,ink});
+    check('depth2-notice-'+index+'-onscreen-'+width,contains(cssRect(f.safe_rect,s),rect),{rect});
+    for(const hero of f.hero)check('depth2-notice-'+index+'-clear-hero-'+width,!overlap(rect,cssRect(hero,s)),{rect,hero});
+   }
+   for(let a=0;a<notices.length;a++)for(let b=a+1;b<notices.length;b++)check('depth2-notices-'+a+'-'+b+'-separate-'+width,!overlap(notices[a],notices[b]),{a:notices[a],b:notices[b]});
+   for(const hero of f.hero)check('depth2-target-clears-hero-'+width,!overlap(ink,cssRect(hero,s)),{ink,hero});
+   await shot('depth2-target-simultaneous-notices-'+width);await command('quality_feedback',{clear:true});
   });
   if(width===844)await group('tracked-route-and-active-rune',async()=>{
    await closeModal();

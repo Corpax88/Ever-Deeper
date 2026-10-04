@@ -142,12 +142,17 @@ try{
  await group('actual-touch-finale-to-Deep',async()=>{
   await closeModal();await command('quality_finale',{action:'setup'});await ready();
   let s=await state();check('finale-prerequisites-only',s.phase==='deepheart'&&!s.quality.finale.victory&&!s.quality.finale.conclusion,{finale:s.quality.finale});
+  await wait('inside Deepheart explains the current task',s=>s.quality.geometry.goal.snapshot.action_text==='Hold MINE · open the seal');
+  s=await state();check('finale-in-room-action-does-not-send-player-back',s.quality.geometry.goal.action.visible&&s.quality.geometry.goal.action.text==='Hold MINE · open the seal'&&!s.quality.geometry.goal.action.text.includes('Hub'),{goal:s.quality.geometry.goal});
   for(const seal of ['mossvein','moonglass','emberdeep','starfall']){
    await command('quality_finale',{action:'seal',seal});await wait('seal context '+seal,s=>s.quality.finale.context==='deepheart_seal:'+seal);
+   s=await state();check(seal+'-visible-current-seal-action',s.quality.geometry.goal.snapshot.action_text==='Hold MINE · open the seal'&&s.quality.geometry.goal.action.visible,{goal:s.quality.geometry.goal});
    await heldMineUntil('real mining opens '+seal,s=>s.quality.finale.seal_state[seal].opened,45000);
    s=await state();check(seal+'-opened-by-hits',s.quality.finale.seal_state[seal].hits>0,{seal:s.quality.finale.seal_state[seal]});await shot('finale-seal-'+seal);
   }
-  await command('quality_finale',{action:'core'});await wait('core context',s=>s.quality.finale.context==='deepheart_core');await shot('finale-core-ready');
+  await command('quality_finale',{action:'core'});await wait('core context',s=>s.quality.finale.context==='deepheart_core');
+  await wait('completed seals update the visible action',s=>s.quality.geometry.goal.snapshot.action_text==='Attune the core');
+  s=await state();check('finale-ready-core-has-correct-visible-action',s.quality.geometry.goal.action.visible&&s.quality.geometry.goal.action.text==='Attune the core',{goal:s.quality.geometry.goal});await shot('finale-core-ready');
   await tap('hud_context');await wait('real finale conclusion',s=>s.quality.finale.victory&&s.quality.finale.conclusion,20000);
   for(const viewport of [{width:667,height:375},{width:844,height:390},{width:932,height:430}]){
    s=await conclusionLayout(viewport);
