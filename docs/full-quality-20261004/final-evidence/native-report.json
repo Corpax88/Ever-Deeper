@@ -1,0 +1,229 @@
+{
+  "source": "685a7d71e37710ea5569b06247728506e96ba484",
+  "production_pck": {
+    "size": 327880150,
+    "sha256": "a1815ee001a20ce7f79301c91484683b7ea8395dd6029e3fdda61f7a671f5294"
+  },
+  "qa_pck": {
+    "size": 327919386,
+    "sha256": "e21310524ccd2397a36771483e3ab08ceb69c03e1e7e7d63952b3c9bd2cf7740"
+  },
+  "engine_version": "4.7.2.stable.official.ed1daf0bf",
+  "passed": true,
+  "checks": [
+    {
+      "name": "save-retry",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 19.670718417000003,
+      "script": "tools/review_save_retry.gd",
+      "marker": "EVER_DEEPER_SAVE_RETRY_OK"
+    },
+    {
+      "name": "save-status",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 11.656711540999993,
+      "script": "tools/review_save_status.gd",
+      "marker": "EVER_DEEPER_SAVE_STATUS_OK"
+    },
+    {
+      "name": "mod-lifecycle",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.740913625000019,
+      "script": "tools/review_mod_lifecycle.gd",
+      "marker": "EVER_DEEPER_MOD_LIFECYCLE_OK"
+    },
+    {
+      "name": "laser-stamina",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.501614541999999,
+      "script": "tools/review_laser_stamina.gd",
+      "marker": "LASER_STAMINA_OK"
+    },
+    {
+      "name": "completed-goals",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 3.9109038339999813,
+      "script": "tools/review_treasury_goal_completion.gd",
+      "marker": "TREASURY_GOAL_COMPLETION_OK"
+    },
+    {
+      "name": "pickup-bonus",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.4111450409999975,
+      "script": "tools/review_deep_pickup_bonus.gd",
+      "marker": "DEEP_PICKUP_BONUS_OK"
+    },
+    {
+      "name": "corebreaker-burst",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.675632667000002,
+      "script": "tools/review_corebreaker_burst.gd",
+      "marker": "COREBREAKER_BURST_OK"
+    },
+    {
+      "name": "retained-five-mechanics",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 5.310292791999984,
+      "script": "tools/review_five_mechanics.gd",
+      "marker": "FIVE_MECHANICS_OK"
+    },
+    {
+      "name": "running-achievements",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 2.7333908330000156,
+      "script": "tools/review_running_achievements.gd",
+      "marker": "EVER_DEEPER_RUNNING_ACHIEVEMENTS_OK"
+    },
+    {
+      "name": "achievement-recovery",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 7.3249394590000065,
+      "script": "tools/review_achievement_recovery.gd",
+      "marker": "EVER_DEEPER_ACHIEVEMENT_RECOVERY_OK"
+    },
+    {
+      "name": "companion-training",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.879189542000006,
+      "script": "tools/review_companion_training.gd",
+      "marker": "COMPANION_TRAINING_OK"
+    },
+    {
+      "name": "companion-new-run",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.919360875000024,
+      "script": "tools/review_companion_new_run.gd",
+      "marker": "EVER_DEEPER_COMPANION_NEW_RUN_OK"
+    },
+    {
+      "name": "treasury-seams",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.9524961669999925,
+      "script": "tools/review_treasury_seams.gd",
+      "marker": "TREASURY_SEAMS_OK"
+    },
+    {
+      "name": "treasury-seam-world",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 5.816698957999989,
+      "script": "tools/review_treasury_seam_world.gd",
+      "marker": "TREASURY_SEAM_WORLD_OK"
+    },
+    {
+      "name": "notification-modals",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.102943374999995,
+      "script": "tools/review_notification_modals.gd",
+      "marker": "NOTIFICATION_MODALS_OK"
+    },
+    {
+      "name": "treasury-seam-integrity",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 10.414207291999986,
+      "script": "tools/review_treasury_seam_integrity.gd",
+      "marker": "TREASURY_SEAM_INTEGRITY_OK"
+    },
+    {
+      "name": "treasury-hunt-rate",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 10.424486125000016,
+      "script": "tools/review_treasury_hunt_rate.gd",
+      "marker": "TREASURY_HUNT_RATE_OK"
+    },
+    {
+      "name": "completed-collection",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.631430582999997,
+      "script": "tools/review_completed_collection.gd",
+      "marker": "COMPLETED_COLLECTION_OK"
+    },
+    {
+      "case": "input",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 5.25,
+      "marker": "EVER_DEEPER_INPUT_RELEASE_OK",
+      "completion": [
+        "EVER_DEEPER_INPUT_RELEASE_OK hide=true matching_touch=true canceled_touch=true unrelated_touch_ignored=true mouse=true worlds=5 focus_pause=true"
+      ],
+      "log": "/Users/runner/work/_temp/evidence/native/mandatory-core/input.log",
+      "name": "retained-input"
+    },
+    {
+      "case": "premium-core",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 6.96,
+      "marker": "EVER_DEEPER_ONE_POINT_ZERO_PREMIUM_CORE_OK",
+      "completion": [
+        "EVER_DEEPER_ONE_POINT_ZERO_PREMIUM_CORE_OK checks=414"
+      ],
+      "log": "/Users/runner/work/_temp/evidence/native/mandatory-core/premium-core.log",
+      "name": "retained-premium-core"
+    },
+    {
+      "case": "endgame",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 4.83,
+      "marker": "EVER_DEEPER_ENDGAME_OK",
+      "completion": [
+        "EVER_DEEPER_ENDGAME_OK seals=4 endless=unlocked gateway=true persistence=true conclusion=true deepheart_reentry=blocked"
+      ],
+      "log": "/Users/runner/work/_temp/evidence/native/mandatory-core/endgame.log",
+      "name": "retained-endgame"
+    },
+    {
+      "case": "one-point-zero-world",
+      "passed": true,
+      "exit_code": 0,
+      "reason": "",
+      "seconds": 14.2,
+      "marker": "EVER_DEEPER_ONE_POINT_ZERO_WORLD_OK",
+      "completion": [
+        "EVER_DEEPER_ONE_POINT_ZERO_WORLD_OK checks=473"
+      ],
+      "log": "/Users/runner/work/_temp/evidence/native/mandatory-core/one-point-zero-world.log",
+      "name": "retained-one-point-zero-world"
+    }
+  ]
+}
