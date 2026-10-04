@@ -16,13 +16,14 @@ Provisional reliability: **7.5/10**, with one concrete persistence fault and a d
 - Fix: retain the dirty request until a commit succeeds, retry at the existing bounded six-second cadence, invalidate stale timer callbacks after an explicit flush, and expose failure through existing save/menu state. Do not change schema, namespace, save payload or backup rotation.
 - Test: obstruction → failure → unchanged good generations → obstruction removal → automatic commit without another mutation; explicit-flush failure; repeated failure bounded to one schedule; successful flush invalidates older callback; backup recovery and existing migration gate.
 
-## R2 — Developer test override survives a new run and outranks equipped mods (P2, confirmed code path; DEV only)
+## R2 — Developer test override survives a new run/preset (P2, confirmed code path; DEV only)
 
 - `scripts/main.gd:415–435` assigns `endless_world.drill_modes.dev_override` for each test mod.
 - `scripts/world/drill_modes.gd:46–51` gives this override priority over `TreasuryGoals.active_mod()`.
-- `_start_new_game()` at `scripts/main.gd:1371` resets only `resonance_drill.dev_override`. Neither `drill_modes.reset()` nor the five-mod reset clears the override. Podium `_equip()` changes saved mod flags but never clears the test override.
-- Repro: select DEV TOOLS → Ricochet Test; start a fresh run/preset; reach/grant The Deep and equip a different earned mod. The saved selection and actual selected mode disagree; old Ricochet remains selected until another test override or browser reload. Test overrides are intentionally transient and are not persisted.
-- Fix: explicit override lifecycle at new-game/reset and ordinary earned equip; keep menu pause, travel and input release from accidentally unequipping a legitimate selection. Add clear indication or exit action if test modes remain separate.
+- `_start_new_game()` at `scripts/main.gd:1371` resets only `resonance_drill.dev_override`. Neither `drill_modes.reset()` nor the five-mod reset clears the override.
+- Repro: select DEV TOOLS → Ricochet Test; start a fresh run/preset; reach/grant The Deep again. The new run has no saved mod selection, but old Ricochet remains selected until another test override, an ordinary podium selection, or browser reload. Test overrides are intentionally transient and are not persisted.
+- Correction after additional source review: the real `treasury_goal_panel._claim()` already clears both overrides after ordinary claim/toggle. The raw state helper `_equip()` does not, but that is not the player's UI path and is not a demonstrated production bug. Do not introduce a redundant signal/refactor for that path.
+- Fix: clear the drill test override, laser toggle and transient five-mod state at new-game/reset. Keep menu pause, travel and input release from accidentally unequipping a legitimate selection.
 - Test: new run removes every test override; ordinary earned selection wins after testing; ordinary pause/resume/travel preserves the earned selection; release cancels damage while selected weapon presentation remains.
 
 ## R3 — Reload test failure is a QA lifecycle error, not demonstrated save loss (P2 evidence defect)
@@ -51,4 +52,4 @@ Current ownership boundaries (`RunState` for accounting, world for simulation, v
 
 ## Next checkpoint
 
-Root assigned this critic ownership of `run_state.gd` and a focused save retry QA file. Repair R1, capture baseline failure and candidate pass, then hand off for exact-package verification. R2 and UI save-failure communication need coordination with the main/UI owners.
+R1 implementation retains failed work and uses timer serials so superseded callbacks cannot consume a newer dirty request; new-run writes use the same recovery. Focused test: `tools/review_save_retry.gd`, with `--expect-missing-retry` for the unmodified baseline. R2 clears developer mode/effects at new-game only. Both need current candidate runtime verification; UI save-failure communication is still a separate open item. No claim that the intermittent Ricochet complaint is fixed.

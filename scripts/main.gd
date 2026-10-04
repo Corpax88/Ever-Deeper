@@ -1367,6 +1367,10 @@ func _cancel_new_game() -> void :
 func _start_new_game() -> void :
 	endless_world.resonance_drill.dev_override=false
 	endless_world.resonance_drill.set_enabled(false)
+	endless_world.drill_modes.dev_override=""
+	endless_world.drill_modes.dev_laser_on=true
+	endless_world.drill_modes.reset()
+	endless_world.drill_modes.five.reset()
 	tunnel_home_in_progress = false
 	_settle_commerce_before_world_change()
 	AudioDirector.play_ui("confirm")
