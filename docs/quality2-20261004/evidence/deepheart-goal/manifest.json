@@ -1,0 +1,92 @@
+{
+  "date": "2026-10-04",
+  "scope": "Deepheart seal/core action text by active phase; no balance changes",
+  "baseline_source": "53fa6ed3127fa63d1cba2c5749440a47eb2c4a22",
+  "baseline_pck_sha256": "81e6b222db8db7f15387965d27846e3da72bcb92da0e9ac876c3caec7b7a2860",
+  "candidate_pck_sha256": "504877f37dfa4db3e93cf09746dc2b3442db0aac3ac83beb1c6f60f37badb340",
+  "native_runtime": "Godot 4.7.2 Linux X11, Mesa llvmpipe; no physical-iPhone claim",
+  "capture_pixels": [
+    1334,
+    750
+  ],
+  "display_width_at_2x": 667,
+  "production_owners": [
+    "scripts/progression/progression_goal.gd",
+    "scripts/main.gd::_progression_goal"
+  ],
+  "overlay_includes_parallel_root_changes": [
+    "scripts/main.gd::_refresh_context_button",
+    "scripts/main.gd::_update_achievement_toast_anchor",
+    "scripts/ui/premium_hud.gd"
+  ],
+  "probe": "tools/review_deepheart_goal.gd",
+  "probe_sha256": "82caa774e21c350d1176af5831cc2707ccc393593e6c9f1c3f53f6c42115f143",
+  "result": {
+    "checks": 33,
+    "failed": 0,
+    "before_reproduced_old_actions": true,
+    "all_six_images_visually_inspected": true
+  },
+  "fixture": "Isolated save; prerequisites via existing DEV helpers; canonical RunState.open_deepheart_seal opens each seal; final victory via canonical state owner. This targeted test reviews guidance, not mining timing.",
+  "visual_review": "All action text fits without ellipsis at667. Ready core no longer sends the player to Hub. Authored art, lighting and hero are preserved. Before/after common composition has no guidance-related regression.",
+  "files": {
+    "before/report.json": {
+      "sha256": "3ad847f19d2c6e59c2504aac8e4ade523bf83bbc80b60f39eb19ad2aafb987ed",
+      "size": 4520
+    },
+    "before/godot.log": {
+      "sha256": "66415d0cf25e88cd4e3a7fded6c03aa1d119bca9a9abc7c7e278671b6d0f3106",
+      "size": 3535
+    },
+    "before/seal-mossvein-667.png": {
+      "sha256": "ba9dfc7a26ff938776451c9139d73f10e605470a4592347bd6794ed2bad8510b",
+      "size": 1258419,
+      "name": "seal-mossvein-667.png",
+      "original_path": "/workspace/scratch/72d2364e7fd1/deepheart-goal-review/before/seal-mossvein-667.png",
+      "storage": "Original native render capture; no duplicate retained in docs."
+    },
+    "before/seal-starfall-667.png": {
+      "sha256": "0780eaa866ee73097562a189b0ec8b3fc8762759d7162d03dd92f66ca8b1ff7b",
+      "size": 1563804,
+      "name": "seal-starfall-667.png",
+      "original_path": "/workspace/scratch/72d2364e7fd1/deepheart-goal-review/before/seal-starfall-667.png",
+      "storage": "Original native render capture; no duplicate retained in docs."
+    },
+    "before/core-ready-667.png": {
+      "sha256": "a19df116fe77e8a931964207b1dd781e3d3a911affdd4001f65c8cbd4af6e2d3",
+      "size": 1478679,
+      "name": "core-ready-667.png",
+      "original_path": "/workspace/scratch/72d2364e7fd1/deepheart-goal-review/before/core-ready-667.png",
+      "storage": "Original native render capture; no duplicate retained in docs."
+    },
+    "after/report.json": {
+      "sha256": "a244f136033166ec092687432384611eac72686135acef8fb59489d14635e217",
+      "size": 4519
+    },
+    "after/godot.log": {
+      "sha256": "d86d910a402fe6c4feeb5106d2353a37f7e127476da91f6762471a21035745da",
+      "size": 3517
+    },
+    "after/seal-mossvein-667.png": {
+      "sha256": "b66a2564e00317b9168919189edd3808d2589aef7e3ff73b3f31f44f5f1256b6",
+      "size": 1258956,
+      "name": "seal-mossvein-667.png",
+      "original_path": "/workspace/scratch/72d2364e7fd1/deepheart-goal-review/after/seal-mossvein-667.png",
+      "storage": "Original native render capture; no duplicate retained in docs."
+    },
+    "after/seal-starfall-667.png": {
+      "sha256": "afb2bc861021cc41271a65e4f9c1deea984dc8cd2adde4cf983be155202c35ad",
+      "size": 1565157,
+      "name": "seal-starfall-667.png",
+      "original_path": "/workspace/scratch/72d2364e7fd1/deepheart-goal-review/after/seal-starfall-667.png",
+      "storage": "Original native render capture; no duplicate retained in docs."
+    },
+    "after/core-ready-667.png": {
+      "sha256": "2280bfe5a98b78b2dffbf94f3e172bd4a8b2a3f2f1435dac88fbbebf759e0ecf",
+      "size": 1476929,
+      "name": "core-ready-667.png",
+      "original_path": "/workspace/scratch/72d2364e7fd1/deepheart-goal-review/after/core-ready-667.png",
+      "storage": "Original native render capture; no duplicate retained in docs."
+    }
+  }
+}
