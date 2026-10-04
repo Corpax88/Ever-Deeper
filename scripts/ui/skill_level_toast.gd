@@ -97,6 +97,8 @@ func clear() -> void:
 func _process(delta: float) -> void:
 	var main: Node = get_tree().current_scene
 	var obstructed: bool = get_tree().paused or not main.game_started or main.menu_open or main.inventory_open or main._shop_panel_is_open()
+	if get_parent().has_method("presentation_obstructed"):
+		obstructed = obstructed or get_parent().presentation_obstructed()
 	if main.miner_skills_panel != null: obstructed = obstructed or main.miner_skills_panel.visible
 	visible = not obstructed
 	if obstructed: return

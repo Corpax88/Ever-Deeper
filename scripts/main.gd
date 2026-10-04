@@ -290,6 +290,11 @@ func _ready() -> void :
 
 
 func _process(delta: float) -> void :
+	_set_developer_menu_shop_suppressed(inventory_open or _shop_panel_is_open() \
+		or (treasury_goal_panel != null and treasury_goal_panel.visible) \
+		or (miner_skills_panel != null and miner_skills_panel.visible) \
+		or (premium_menu != null and premium_menu.detail_view.visible) \
+		or conclusion_overlay.visible or orientation_guard_active)
 	if is_instance_valid(laser_button):
 		laser_button.visible=phase=="endless" and not menu_open and not orientation_guard_active and int(RunState.drill_level)>0 and (preload("res://scripts/state/treasury_goals.gd").active_mod()=="laser" or endless_world.drill_modes.dev_override=="laser")
 		laser_button.text="LASER: ON" if (endless_world.drill_modes.dev_laser_on if endless_world.drill_modes.dev_override=="laser" else bool(RunState.treasury_goals.get("laser_mode",false))) else "LASER: OFF"
@@ -2072,7 +2077,7 @@ func _on_commerce_closed() -> void :
 func _set_developer_menu_shop_suppressed(suppressed: bool) -> void :
 	if developer_menu == null or not is_instance_valid(developer_menu):
 		return
-	if suppressed and developer_menu.has_method("close_menu"):
+	if suppressed and developer_menu.has_method("close_menu") and developer_menu.is_open():
 		developer_menu.close_menu()
 	var dev_toggle: Control = developer_menu.get("toggle_button") as Control
 	if dev_toggle != null:

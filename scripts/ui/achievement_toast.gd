@@ -119,6 +119,8 @@ func debug_snapshot() -> Dictionary:
 		"presentation": "achievement_png_and_title",
 		"process_always": process_mode == Node.PROCESS_MODE_ALWAYS,
 		"active": _phase != Phase.IDLE,
+		"suspended": presentation_obstructed(),
+		"visible": _toast != null and _toast.is_visible_in_tree(),
 		"active_id": String(_active_definition.get("id", "")),
 		"active_title": String(_active_definition.get("title", "")),
 		"asset": _asset_path(_active_definition),
@@ -209,6 +211,13 @@ func _build_interface() -> void :
 
 
 func _process(delta: float) -> void :
+	# Keep earned notices queued while a full-screen panel owns the player's
+	# attention and touch input. Resume the same phase when play continues.
+	var obstructed: bool = presentation_obstructed()
+	if _toast != null:
+		_toast.visible = _phase != Phase.IDLE and not obstructed
+	if obstructed:
+		return
 	if _phase == Phase.IDLE:
 		return
 	_phase_elapsed += maxf(0.0, delta)
@@ -231,6 +240,19 @@ func _process(delta: float) -> void :
 				_finish_current()
 
 
+func presentation_obstructed() -> bool:
+	if not is_inside_tree(): return false
+	if get_tree().paused: return true
+	var main: Node = get_tree().current_scene
+	# Standalone layout reviews have no gameplay owner.
+	if main == null or not main.has_method("_active_player_node"): return false
+	return not main.game_started or main.menu_open or main.inventory_open \
+		or main.orientation_guard_active or main.deepheart_presentation \
+		or main.conclusion_overlay.visible or main._shop_panel_is_open() \
+		or main._companion_panel_is_open() \
+		or (main.treasury_goal_panel != null and main.treasury_goal_panel.visible)
+
+
 func _start_next() -> void :
 	if _queue.is_empty():
 		_active_definition.clear()
@@ -250,7 +272,7 @@ func _start_next() -> void :
 	_icon.texture = _load_icon(_active_definition)
 	_icon.visible = _icon.texture != null
 	_activation_target.tooltip_text = "Open achievement · %s" % String(_active_definition.get("title", "Achievement"))
-	_toast.visible = true
+	_toast.visible = not presentation_obstructed()
 	_toast.modulate = Color.WHITE
 	_apply_safe_layout()
 	_update_spin()
