@@ -173,8 +173,10 @@ func _layout() -> void:
 		# Use the phone's width for the artwork and controls instead of shrinking
 		# a portrait card. At the shortest supported 375px landscape height these
 		# 92-unit controls still render above 44px after the canvas transform.
-		zoom=minf((viewport_size.y-24.0)/720.0,(viewport_size.x-64.0)/1200.0)
-		design=Vector2(minf(1640.0,(viewport_size.x-64.0)/zoom),720.0)
+		var side_inset: float=116.0 if viewport_size.x/viewport_size.y>=1.95 else 32.0
+		var available_width: float=viewport_size.x-side_inset*2.0
+		zoom=minf((viewport_size.y-24.0)/720.0,available_width/1200.0)
+		design=Vector2(minf(1640.0,available_width/zoom),720.0)
 	panel.size=design
 	panel.scale=Vector2.ONE*zoom
 	panel.position=(viewport_size-design*zoom)*0.5
@@ -266,7 +268,9 @@ func refresh() -> void:
 	elif stored>=Stack.GOAL:
 		detail.text="COLLECTION COMPLETE"
 	# An ordinary material uses its real resource icon, never an invented mod.
-	pin_button.text="UNTRACK GOAL" if RunState.treasury_goals.get("pinned","")==kind else "TRACK GOAL"
+	pin_button.disabled=not id.is_empty() and bool(RunState.treasury_goals.get(id+"_claimed",false))
+	pin_button.text="MOD UNLOCKED" if pin_button.disabled else "UNTRACK GOAL" if RunState.treasury_goals.get("pinned","")==kind else "TRACK GOAL"
+	pin_button.get_meta("frame").modulate=Color(0.45,0.45,0.45) if pin_button.disabled else Color.WHITE
 	_layout()
 
 func _number(value: int) -> String:
