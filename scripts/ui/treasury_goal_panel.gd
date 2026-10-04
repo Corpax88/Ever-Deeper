@@ -204,18 +204,18 @@ func _layout_landscape(design: Vector2) -> void:
 	_place(detail,Rect2(right_x,157,right_width,118))
 	detail.add_theme_font_size_override("font_size",29)
 	_place(progress_bar,Rect2(right_x+10,288,right_width-20,20))
-	_place(progress,Rect2(right_x,314,right_width,78))
-	progress.add_theme_font_size_override("font_size",27)
+	progress.add_theme_font_size_override("font_size",29)
+	_place(progress,Rect2(right_x,312,right_width,84))
 	_place(claim_button,Rect2(right_x,400,right_width,92))
 	_place(pin_button,Rect2(right_x,502,right_width,92))
 	_place(close_button,Rect2(right_x,604,right_width,92))
 	claim_button.add_theme_font_size_override("font_size",30)
 	pin_button.add_theme_font_size_override("font_size",29)
 	close_button.add_theme_font_size_override("font_size",29)
-	_place(equipped,Rect2(52,546,left_width-8,70))
-	equipped.add_theme_font_size_override("font_size",24)
-	source.add_theme_font_size_override("font_size",24 if equipped.visible else 29)
-	_place(source,Rect2(52,622 if equipped.visible else 554,left_width-8,80 if equipped.visible else 118))
+	equipped.add_theme_font_size_override("font_size",29)
+	_place(equipped,Rect2(52,546,left_width-8,44))
+	source.add_theme_font_size_override("font_size",29)
+	_place(source,Rect2(52,600 if equipped.visible else 554,left_width-8,100 if equipped.visible else 118))
 
 func _layout_portrait() -> void:
 	_place(heading,Rect2(48,29,904,36))
@@ -256,7 +256,7 @@ func refresh() -> void:
 	var held: int=Goals.Ledger.available(kind)
 	progress.text="%s / %s delivered\n%s held · %s" % [_number(mini(stored,Stack.GOAL)),_number(Stack.GOAL),_number(held),_number(remaining)+" to deliver" if remaining>0 else "Podium full"]
 	progress_bar.value=clampi(stored,0,Stack.GOAL)
-	source.text="Find it: "+Goals.sources(kind)
+	source.text="Find it: "+Goals.sources(kind).replace("track this goal for rich veins","track for rich veins")
 	var data: Dictionary=Catalog.preview(kind)
 	preview.visible=not data.is_empty()
 	preview_back.visible=preview.visible
@@ -283,7 +283,7 @@ func refresh() -> void:
 		var claimed: bool=bool(RunState.treasury_goals.get(id+"_claimed",false))
 		var active: String=Goals.active_mod()
 		claim_button.text=("UNEQUIP" if active==id else "EQUIP") if claimed else "CLAIM & EQUIP" if stored>=Stack.GOAL else "FILL PODIUM TO UNLOCK"
-		equipped.text="Equipped: %s\n%s" % [String(Goals.NAMES.get(active,"None")),"One mod at a time; equipping replaces it." if not active.is_empty() and active!=id else "One mod at a time."]
+		equipped.text="Equipped: %s · %s" % [String(Goals.NAMES.get(active,"None")),"One mod; equip replaces it" if not active.is_empty() and active!=id else "One mod at a time"]
 		claim_button.disabled=not claimed and stored<Stack.GOAL
 		claim_button.get_meta("frame").modulate=Color(0.45,0.45,0.45) if claim_button.disabled else Color.WHITE
 	elif stored>=Stack.GOAL:

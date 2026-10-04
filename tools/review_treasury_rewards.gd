@@ -33,6 +33,7 @@ func tap(button: Button) -> void:
 func geometry(label: String) -> void:
 	var canvas: Rect2=Rect2(Vector2.ZERO,Vector2(root.size))
 	var rects: Dictionary={}
+	var fonts_css: Dictionary={}
 	for name in ["heading","title","detail","progress_bar","progress","equipped","source","claim_button","pin_button","close_button"]:
 		var control: Control=card.get(name)
 		if not control.is_visible_in_tree(): continue
@@ -42,6 +43,11 @@ func geometry(label: String) -> void:
 		if control is Label:
 			var font: Font=control.get_theme_font("font")
 			var font_size: int=control.get_theme_font_size("font_size")
+			# The two review windows are rendered at 2 device pixels per CSS pixel.
+			var css_font: float=float(font_size)*rect.size.y/control.size.y/2.0
+			fonts_css[name]=css_font
+			if name in ["title","detail","progress","equipped","source"]:
+				check(label+" "+name+" readable CSS font",css_font>=13.8)
 			check(label+" "+name+" text height fits",control.get_line_count()*font.get_height(font_size)<=control.size.y+1)
 			if control.autowrap_mode==TextServer.AUTOWRAP_OFF:
 				for line in control.text.split("\n"):
@@ -53,7 +59,7 @@ func geometry(label: String) -> void:
 			# Abutting header bounds share an edge; canvas scaling can round that
 			# common edge by a few millionths of a pixel.
 			if a<b: check(label+" "+a+" separate from "+b,not rects[a].grow(-0.05).intersects(rects[b].grow(-0.05)))
-	snapshots.append({"case":label,"title":card.title.text,"detail":card.detail.text,"progress":card.progress.text,"equipped":card.equipped.text,"source":card.source.text,"claim":card.claim_button.text,"rects":rects})
+	snapshots.append({"case":label,"title":card.title.text,"detail":card.detail.text,"progress":card.progress.text,"equipped":card.equipped.text,"source":card.source.text,"claim":card.claim_button.text,"rects":rects,"fonts_css":fonts_css})
 
 func capture(label: String) -> void:
 	await settle()
@@ -89,18 +95,19 @@ func run() -> void:
 	main.get_node("MinerTraining").set_process(false)
 	main.achievement_toast.clear()
 	card=main.treasury_goal_panel
+	var readability_only: bool=OS.get_environment("TREASURY_REWARDS_SCOPE")=="readability"
 	for width in [667,844]:
 		root.size=Vector2i(width*2,750 if width==667 else 780)
 		root.content_scale_size=root.size
 		await settle()
 		state.treasury_goals=goals.clean({})
-		for amount in [56000,95000,100000]:
+		for amount in ([56000] if readability_only else [56000,95000,100000]):
 			await open("copper",amount,8000 if amount==56000 else 5000)
 			check(str(width)+" collection material and real reward "+str(amount),card.title.text=="COPPER COLLECTION" and card.detail.text.to_lower().contains("permanent") and not card.claim_button.visible)
 			check(str(width)+" accurate delivered and held "+str(amount),card.progress.text.contains(card._number(amount)+" / 100,000 delivered") and card.progress.text.contains("8,000 held" if amount==56000 else "5,000 held"))
 			check(str(width)+" no active-mod claim for collection "+str(amount),not card.equipped.visible and card.pin_button.disabled==(amount==100000))
 			await capture(str(width)+"-collection-"+str(amount))
-		for kind in goals.MODS:
+		for kind in (["deep_alloy","rootiron","prismite"] if readability_only else goals.MODS.keys()):
 			await open(kind,56000,12345)
 			check(str(width)+" locked mod "+kind,card.claim_button.disabled and card.claim_button.text=="FILL PODIUM TO UNLOCK")
 			await capture(str(width)+"-mod-"+kind)
@@ -120,8 +127,13 @@ func run() -> void:
 		await tap(card.claim_button)
 		check(str(width)+" actual touch replaces only active mod",goals.active_mod()=="twin_auger" and not bool(state.treasury_goals.resonance_enabled) and bool(state.treasury_goals.resonance_claimed))
 		await capture(str(width)+"-replacement-active")
+		# The longest active mod name must also fit the replacement notice.
+		state.treasury_goals=goals.clean({"chainbreaker_claimed":true,"chainbreaker_enabled":true})
+		await open("deep_alloy",100000,12345)
+		check(str(width)+" longest replacement status is explicit",card.equipped.text.contains("Equipped: Chainbreaker") and card.equipped.text.contains("replaces it"))
+		await capture(str(width)+"-replace-chainbreaker")
 		# Every material title is dynamic; check the full real catalog for fit.
-		for kind in goals.Ledger.keys():
+		for kind in ([] if readability_only else goals.Ledger.keys()):
 			await open(kind,34000,90123)
 			geometry(str(width)+"-catalog-"+kind)
 		card.close_panel()
