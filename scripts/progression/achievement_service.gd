@@ -27,6 +27,7 @@ func _ready() -> void :
 	_load_records()
 	definition_cache = Array(GameData.data.get("ACHIEVEMENT_DEFINITIONS", [])).duplicate(true)
 	RunState.changed.connect(_queue_evaluation)
+	RunState.miner_skill_increased.connect(_on_miner_skill_increased)
 	call_deferred("evaluate")
 
 
@@ -84,6 +85,10 @@ func _queue_evaluation() -> void :
 	get_tree().create_timer(EVALUATION_BATCH_SECONDS, true, false, true).timeout.connect(_flush_queued_evaluation)
 
 
+func _on_miner_skill_increased(id: String, _level: int) -> void:
+	if id == "running": _queue_evaluation()
+
+
 func _flush_queued_evaluation() -> void :
 	if not evaluation_pending:
 		return
@@ -139,8 +144,8 @@ func _condition_met(id: String, metrics: Dictionary) -> bool:
 		"vein_runner": return vein_total >= 1
 		"fourfold_veins": return _completed_all_veins(vein_counts)
 		"vein_veteran": return vein_total >= 10
-		"quick_step": return int(RunState.movement_speed_level) >= 1
-		"roadrunner": return int(RunState.movement_speed_level) >= 10
+		"quick_step": return RunState.miner_skill_level("running") >= 1 or int(RunState.movement_speed_level) >= 1
+		"roadrunner": return RunState.miner_skill_level("running") >= 10 or int(RunState.movement_speed_level) >= 10
 		"mineral_crown": return _all_mined(Array(RunState.RESOURCE_IDS))
 		"ever_deeper": return bool(RunState.victory)
 	return false
