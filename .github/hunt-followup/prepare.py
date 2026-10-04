@@ -1,4 +1,4 @@
-"""Scoped source/QA overlays over the immutable published DEV15.55 package.
+"""Scoped source/QA overlays over the immutable published DEV15.56 package.
 
 Production source in this checkout is intentionally ignored for the baseline.
 Explicit future candidate overrides can be supplied as a JSON path list.

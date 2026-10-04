@@ -1,4 +1,4 @@
-"""Publish accepted DEV15.56 artifact bytes; never export the main checkout."""
+"""Publish accepted DEV15.57 artifact bytes; never export the main checkout."""
 import hashlib
 import http.client
 import io
@@ -90,7 +90,7 @@ def acceptance():
     before = read(before_path)
     require(set(before) == WEB | {'dev/' + n for n in WEB} | {'dev/worn/' + n for n in WEB}, 'Wrong public baseline')
     require(before['dev/index.html'] == BASE_HTML and before['dev/index.pck'] == BASE_PCK,
-            'Wrong currently published DEV15.55 baseline')
+            'Wrong currently published DEV15.56 baseline')
     for name in WEB - {'index.html', 'index.pck'}:
         require(accepted['production_manifest'][name] == before['dev/' + name], 'Unreviewed engine/asset change: ' + name)
         require(accepted['qa_manifest'][name] == before['dev/' + name], 'QA engine/asset mismatch: ' + name)
@@ -106,7 +106,7 @@ def check_actions(accepted):
             return json.load(stream)
     run = api('runs/' + str(accepted['run']))
     require(run['head_sha'] == accepted['source'] and run['status'] == 'completed'
-            and run['conclusion'] == 'success' and run['path'] == '.github/workflows/quality2.yml', 'Unaccepted QA run')
+            and run['conclusion'] == 'success' and run['path'] == '.github/workflows/hunt-followup.yml', 'Unaccepted QA run')
     for bound in accepted['artifacts']:
         actual = api('artifacts/' + str(bound['id']))
         require(not actual['expired'] and actual['name'] == bound['name'] and actual['digest'] == bound['digest']
