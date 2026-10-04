@@ -57,6 +57,21 @@ func _ready() -> void:
 func _exit_tree() -> void:
 	if is_instance_valid(ui_root): ui_root.queue_free()
 
+func reset_for_new_run() -> void:
+	worm_power_remaining=0.0
+	touch_start=Vector2(INF,INF)
+	touch_index=-1
+	gesture_dragged=false
+	last_world_identity=""
+	last_touch_msec=-10000
+	web_canceled_touches.clear()
+	activity.text=""
+	for phase in ["surface","mine","depth","hub","deepheart","endless"]:
+		var world: Node=main.get(phase+"_world")
+		if not is_instance_valid(world): continue
+		var mole: Node=world.get_node_or_null("MoleCompanion")
+		if mole!=null: mole.reset_for_new_run()
+
 func _layout() -> void:
 	var size: Vector2=get_viewport().get_visible_rect().size
 	var layout: Dictionary = main.premium_hud.layout_snapshot(size)

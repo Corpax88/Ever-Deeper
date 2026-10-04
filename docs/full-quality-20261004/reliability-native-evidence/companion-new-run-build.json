@@ -1,0 +1,31 @@
+{
+  "source_commit": "2cce9df1f0425eb41a637e1601c0cba136a16ba1",
+  "base_candidate1": {
+    "size": 327754614,
+    "sha256": "6ae03b7870593a88b3f15d77a5d6cb615ea36942b2b22445db5f8514d0cc96b7"
+  },
+  "candidate": {
+    "size": 327756534,
+    "sha256": "15038153c35dbec5dca1a948272c35fd49456ce167ef99d8eeb5d0d981f8b4e3"
+  },
+  "overrides": {
+    "scripts/companion/companion_interface.gd": "527fa8a9a2263bd25a6601fecfea839172f5f52d9db3277be22d6a76560d8ce7",
+    "scripts/companion/mole_companion.gd": "62893c25816a7a802d34fe942248f31e23b2872d7d3dd6cca4aa31459701aca1",
+    "scripts/companion/earthworms.gd": "3c3a74fec5fe7247f6a82a04ff485c2ac97866ed11ca1d10b21de4998ef7ec8b",
+    "scripts/main.gd": "af05c680149e5313249dd754a84919f422a51847ce9acff83e1c78ee9e8dc509",
+    "scripts/companion/companion_interface.gd.remap": "b702ca2f6d7f4198cdb55d37587b8f054ba951161d8f1fa203bc603a1e3686b7",
+    "scripts/companion/mole_companion.gd.remap": "f7c0983305426b2e3a6d956c290aa3388a2c56184d94af6d02b99eae79585ee6",
+    "scripts/companion/earthworms.gd.remap": "90815f046db30791f5bea9f587432a2a150f809268e56ce704efe28cb09d8a4e",
+    "scripts/main.gd.remap": "cb18b074f049c232fff64ba2ec33b8ad4b7675a687e80986e44562ca2122cd7e"
+  },
+  "main_scope": "Only New Game reset hook over candidate1 main; final integrated candidate separately required",
+  "retained_resource_count": 1587,
+  "retained_payloads_verified": true,
+  "test_sha256": "1252c56f2aa35a28fc5e2f74bb9ec982a163d2f8385c35c20f216b33f6144cc8",
+  "test_result": {
+    "passed": true,
+    "checks": 30,
+    "final_run": "second-run",
+    "test_correction": "Enabled ordinary menu after isolated startup; asserts menu really opens before checking pause retention"
+  }
+}

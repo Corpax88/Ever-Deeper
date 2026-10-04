@@ -55,6 +55,10 @@ func run() -> void:
 	check("chain-excludes-buried-and-offscreen",not ids.has("buried") and not ids.has("offscreen"))
 	five.hit_log.clear(); five._start_chain(0)
 	var pending: Array = five.chain.duplicate()
+	var pending_nodes: int = 0
+	for target in pending:
+		if target is String: pending_nodes += 1
+	var rebase_hits_before: int = five.hits
 	var old_from: Vector2 = five.chain_from
 	var shift: Vector2 = Vector2(0,world.TILE_SIZE)
 	five.rebase(shift)
@@ -63,7 +67,8 @@ func run() -> void:
 		ore.cell = Vector2i(ore.cell)+Vector2i(0,1)
 	check("chain-rebase-preserves-snapshot-and-shifts-origin",five.chain == pending and five.chain_from.is_equal_approx(old_from+shift))
 	for i in expected+4: five._update_chain(0.1)
-	check("chain-continues-after-coordinate-rebase",five.hit_log.size() == pending.size())
+	# The approved mixed chain includes rock contacts; only ore uses hit_log.
+	check("chain-continues-after-coordinate-rebase",five.hit_log.size() == pending_nodes and five.hits-rebase_hits_before == pending.size() and five.chain.is_empty())
 	five._start_chain(0); five.held_last = true
 	five.tick(0.016,"chainbreaker",false)
 	var cancelled_hits: int = five.hits

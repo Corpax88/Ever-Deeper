@@ -1391,6 +1391,7 @@ func _start_new_game() -> void :
 	endless_world.drill_modes.five.reset()
 	tunnel_home_in_progress = false
 	_settle_commerce_before_world_change()
+	get_node("CompanionInterface").reset_for_new_run()
 	AudioDirector.play_ui("confirm")
 	AudioDirector.set_environment("surface")
 	_dismiss_deepheart_conclusion(false)

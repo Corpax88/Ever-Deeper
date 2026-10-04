@@ -20,6 +20,16 @@ func _ready() -> void:
 	texture=ImageTexture.create_from_image(picture)
 	spawn_clock=rng.randf_range(4.0,8.0)
 
+func reset_for_new_run() -> void:
+	for worm in worms:
+		if is_instance_valid(worm):
+			remove_child(worm)
+			worm.queue_free()
+	worms.clear()
+	spawn_clock=rng.randf_range(4.0,8.0)
+	eaten=0
+	spawned=0
+
 func controller() -> Node:
 	return get_tree().current_scene.get_node_or_null("CompanionInterface")
 

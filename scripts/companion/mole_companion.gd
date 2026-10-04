@@ -240,6 +240,53 @@ func _update_companion_actions(delta: float) -> void:
 		action = "walk" if moving else "idle"
 	_draw_pose()
 
+func reset_for_new_run() -> void:
+	# World nodes are reused across expeditions. Rejoin the newly placed hero
+	# on the next active tick rather than carrying work into a different seed.
+	recall()
+	was_active=false
+	autonomous_enabled=true
+	facing=Vector2.DOWN
+	task_point=Vector2.ZERO
+	action_clock=0.0
+	animation_clock=0.0
+	think_clock=0.0
+	shake_cooldown=0.0
+	assist_cooldown=0.0
+	auto_work_clock=1.0
+	work_hits=0
+	collected_total=0
+	dug_total=0
+	path_searches=0
+	separation_ticks=0
+	trapped_ticks=0
+	failed_loot.clear()
+	auto_feedback_cooldown=0.0
+	path_cooldown=0.0
+	sniff_clock=3.0
+	echo_clock=5.0
+	last_sniff=Vector2(INF,INF)
+	last_echo_origin=Vector2(INF,INF)
+	guide_kind=""
+	guide_point=Vector2(INF,INF)
+	guide_time=0.0
+	marker_time=0.0
+	feeling="Right beside you"
+	feedback=""
+	feedback_time=0.0
+	hold_time=0.0
+	idle_clock=0.0
+	moving=false
+	observed_hero=Vector2(INF,INF)
+	hero_before_step=Vector2.ZERO
+	observed_velocity=Vector2.ZERO
+	observation_active=false
+	follow_step_ran=false
+	separation.reset()
+	if is_instance_valid(marker): marker.visible=false
+	if is_instance_valid(bubble): bubble.visible=false
+	if is_instance_valid(worm_patch): worm_patch.reset_for_new_run()
+
 func _spawn_beside_hero() -> void:
 	global_position = hero.global_position
 	for offset in [Vector2(-46,28),Vector2(46,28),Vector2(0,48),Vector2(0,-48),Vector2.ZERO]:
