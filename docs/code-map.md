@@ -1,8 +1,26 @@
+Current DEV release: [DEV15.57 hunt follow-up](https://github.com/Corpax88/Ever-Deeper/blob/codex/hunt-followup-20261005/docs/hunt-followup/HANDOFF.md), published and verified 5 October 2026 at https://corpax88.github.io/Ever-Deeper/dev/. Refresh and Continue; no reset. Guide crosses into new ground after a collection-goal change; contextual HUD follows the nearest actual resource. Corebreaker keeps ordinary Crusher spread while charging; three-stroke burst unchanged.
+
+Canonical runtime `b8b7e0428c9aa2626861917f98b1b4b7d296f9e3`, branch `codex/hunt-followup-20261005`; immutable production11316807146, QA37240230778 (all six groups passed). 413 browser captures; 32 unique final images explicitly inspected by root and independent critic. Publicationfd2f470b1386bd51818de7b69951d6135ee5d611 /37241152216; receipt11316852747 verifies all26 public hashes, all8 LIVE1.0.5 and9 Worn files preserved. DEV15.56 rollback11317033596. LIVE still shares unchanged DEV WASM/JS/audio; root index.wasm intentionally absent. Future publishers must preserve this26-file/shared-engine contract.
+
+Website updated: sourceeb0dcdf3605497ff7c5ae965c19da1f0a20df283, Site version10, deploymentappgdep_6ac2d7b5df648191af806b5d587e02f2 succeeded. 83 release records, all historical records/media preserved;241 local links checked. No pending jobs or approval requests. Main is publication carrier: never export historical main or repeat unchanged accepted tests/publication. Preserve approved assets/saves and parked FPS/rotation work. Human collection pacing, full mod balance, physical iPhone performance and an overall9.5 rating remain unverified. Historical statuses below do not supersede this entry.
+
+---
+
+DEV15.57 owners: `scripts/world/endless_descent_world.gd` (`guide_target`, `treasury_hunt_action`), `scripts/main.gd` (Treasury route HUD action), `scripts/world/five_drill_mods.gd` (ordinary charging wave), `scripts/ui/mod_preview_catalog.gd` (Core card copy). Source-card wording remains DEV15.56. Regression owners: `tools/review_hunt_boundary.gd` (14) and `tools/review_core_charging.gd` (21); original seam-world105 and Core burst gates retained. `.github/hunt-followup` binds exact published artifacts.
+
 Current verified release: [DEV15.56 quality review](https://github.com/Corpax88/Ever-Deeper/blob/codex/quality2-20261004/docs/quality2-20261004/HANDOFF.md). Published 4 October 2026 at https://corpax88.github.io/Ever-Deeper/dev/. Exact runtime source `deaa7088d75d473b0c16951bc05f19c4db7800c4` on `codex/quality2-20261004`; accepted QA run `37227129258`, immutable production artifact `11312268748`, publication `a7581f261fac33c673ce48bfcc071a02a86572b1` / run `37228372436`. All 27 public file hashes verified; all nine LIVE and nine Worn files preserved. DEV15.55 rollback artifact: `11313191443`.
 
 This release protects tracked Treasury materials during sales, clarifies source/donation/reward routes and equipment, shares readable D1/D2 target labels, preserves cave-camera helmet space, places Surface actions clear of the hero and fixes finale guidance. All six QA groups passed, with 410 captured browser images and 83 unique final-source images inspected by root and independent critics. No physical-iPhone performance or overall 9.5/10 claim. Earlier failed fixtures and the first publication's pre-deploy network timeout remain documented; recovery kept every byte and acceptance guard.
 
 This review and publication round has no pending jobs. Canonical runtime and current component ownership are on the release branch. Main is a publication carrier: do not export its historical runtime or repeat unchanged accepted tests/publication. Preserve approved assets, saves and the parked FPS/rotation investigations. Earlier status entries below are historical.
+
+LIVE1.0.3 is published at https://corpax88.github.io/Ever-Deeper/ under Mats's explicit 1 October request. Publication0f508915a108bbf55f1b2dac2e699c57f82e1a69/run36854969249 succeeded; receipt11158481002 verifies all27 public hashes, preserving DEV15.38/Worn nine each. Previous LIVE1.0.2 rollback11158985394. Canonical production source8b7f913b6a6703f2f238605e02a01df95ead7103 on codex/live-1-0-3-20261001; immutable DEV15.38 promotion plus version/flavor and retained loading-rotation fix. QA36854385131 passed input,414 core,341 migration,production flavor,38 Chromium checks and ordinary WebKit. All21 final captures inspected. Existing LIVE1.0.2 save continues; no DEV save copying. Candidate11157241499; browser11158195999/core11156982110. Main is publication carrier, never rebuild its historical runtime.
+
+Public website https://ever-deeper-game.corpax88.chatgpt.site updated successfully: six new release records (63 total), history milestone, current LIVE link and three real DEV15.38 images (39 gallery steps). Site appgprj_6abcf3a6e07481918afb1c03f29caec0, source e295a033d7337126f67898fd340a7c8e91cbb609, version5, deployment appgdep_6abe4364b02c819195c6b2db5829e453 succeeded. Source checkout /workspace/sites/ever-deeper-game; retain existing public audience and preserve historical gallery. No recurring automation requested. See docs/live-1-0-3/HANDOFF.md.
+
+No pending jobs or approvals. Other26 mod effects remain undefined;100000 target provisional. No physical-iPhone/FPS claim; FPS remains parked. Existing QA flag-order invariant debt remains. Do not repeat accepted unchanged matrices or publication. Next is player feedback on LIVE feel, or defining further mod effects when requested.
+
+DEV15.38 is published at https://corpax88.github.io/Ever-Deeper/dev/ and all 27 public hashes verified. Canonical gameplay `5afb6af4bdcf59aa551476218c33be7668b7f012` on `codex/treasury-stacking-20261001`; QA `36846647651` passed input, 414 core checks, 113 browser checks and ordinary WebKit; 57 final images inspected. Publication `ddf0deb312d0ebdd43f11fa9636968c1bceb80e5` / run `36847637116` succeeded; receipt `11154147013`, rollback `11153723737`. LIVE9/Worn9 retained. 180-slot layered stacks, all 27 saved collection goals and source hints, earned Resonance claim/toggle and actual map markers with blurred locked worlds. Other 26 mod effects remain undefined; 100000 is provisional goal balance. No pending jobs or approvals. No physical-iPhone/FPS claim; FPS remains parked; inherited QA flag-order invariant debt remains. Main is publication carrier only; do not rebuild its historical runtime or repeat accepted unchanged QA. See docs/treasury-stacking/HANDOFF.md.
 
 Current verified release: [DEV15.17 CPU and audio fixes](docs/full-fps-audit/FIXES-V2-RESULTS.md), source21e415af523d497f6ec37706e42694b7f9c5302b on codex/fps-fixes-20260928. Validation36413947044 passed both Mac workers (94 gates each), exact sampled images, actual contour replay across two resource IDs, six core cases and clean ordinary startup/save flow. Four scoped reductions: fresh-pose copies, unchanged music gains, music position messages and per-search companion collision work. Mining FPS +7.75%/+10.37%, total +5.00%/−1.76%; surface and motion-helper timing remain mixed. Not a complete FPS fix or physical-phone acceptance. Depth-prepass remains parked; FBO/contact-hoist/sync experiments excluded. Preserve approved game/hero/lighting/resolution/saves, LIVE and Worn. Published by fe50e75345a394a7c7979f8429d27961c4ebf86d /36415959436 using reviewed immutable artifact10967022774; all27 public hashes pass, LIVE/Worn preserved. No jobs remain pending. Main is publication carrier; do not rebuild its historical runtime or repeat completed unchanged matrices.
 
@@ -19,9 +37,7 @@ Read this map, then the named owner. You should not need to read the whole game 
 | Surface routes, mining, ambient art | `scripts/world/surface_world.gd` | Surface parallax and transition components |
 | Depth 1 blocks, barriers, drops | `scripts/world/mossvein_mine.gd` | `cave_edge_asset_drawer.gd` |
 | Depth 2 geology and gates | `scripts/world/depth/rootwound_world.gd` | `rootwound_layout.gd` |
-| Readable D1/D2 mining target text | `scripts/ui/mining_target_label.gd` | Both mine owners provide target state; `scripts/main.gd` coordinates target/notice exclusions |
-| Cave camera headroom | `scripts/camera/cinematic_camera_2d.gd` | Bounds downward lookahead using viewport and zoom; Surface framing is unchanged |
-| Base hub and current workshops | `scripts/world/hub_world.gd` | `station_transaction_fx.gd`, RunState |
+| Base hub and workshop placement | `scripts/world/hub_world.gd` | `station_transaction_fx.gd`, `belt_network.gd` |
 | Continuous The Deep, relics and rope | `scripts/world/endless_descent_world.gd` | `endless_deep_layout.gd`, `scripts/state/endless_terrain_state.gd`, RunState |
 | Shop entries, costs and descriptions | `scripts/ui/commerce_catalog.gd` | RunState is the transaction authority |
 | Shop layout, browsing and touch | `scripts/ui/commerce_panel.gd` | `inertial_carousel.gd`, `swipe_pager.gd` |
@@ -34,9 +50,6 @@ Read this map, then the named owner. You should not need to read the whole game 
 | Menu, HUD, inventory and tutorial | `scripts/ui/` | Named components own their presentation |
 | Achievements, guide and progression | `scripts/progression/` | RunState persistence |
 | Live next-goal resource requirements | `scripts/progression/progression_goal.gd` | `guide_director.gd`, `scripts/ui/progression_goal_panel.gd`; costs remain in RunState/GameData |
-| Tracked Treasury routes and sale reservation | `scripts/state/treasury_goals.gd`, `scripts/state/run_state.gd` | Route uses unlocked sources/current phase; the transaction protects outstanding tracked materials and sells surplus |
-| Treasury reward cards and active mod explanation | `scripts/ui/treasury_goal_panel.gd` | Delivered/held/remaining, claim/equip/replacement; RunState owns transactions and persistence |
-| Surface contextual action placement | `scripts/ui/premium_hud.gd` | `scripts/main.gd` uses the vacant Mine slot when the Surface action is available |
 | Sound and music | `scripts/audio/audio_director.gd` | Authored audio assets |
 | FPS, frame-time captures and physical DEV meter | `tools/run_performance.py`, `scripts/qa/suites/mobile_performance.gd` | `docs/performance.md`; meter in `scripts/dev/developer_menu.gd` |
 | Automatic DEV lighting comparison | `scripts/dev/render_probe.gd`, `tools/render-probe-web.mjs` | Seven-stage, two-minute test; `docs/performance-diagnosis/render-probe/README.md` |
@@ -70,10 +83,6 @@ public/debug APIs, active fallbacks and legacy save support remain.
 
 `scripts/lighting/lit_floor_chunks.gd` and `lit_draw_sections.gd` bound lighting work
 for the hub and Depth 2 while the world owners retain drawing and gameplay state.
-Depth workshop clock updates can redraw their existing dynamic section through
-`LitDrawSections.redraw_dynamic`; terrain/camera/gameplay changes still rebuild
-the normal draw request. The rejected receiver-mask controller lives only in
-`tools/light_receiver_pilot/`, explicitly substituted by its review harness.
 `headlamp_beam.gd` removes only transparent texture margins with a compensated offset.
 `scripts/qa/suites/lighting_release_review.gd` compares the exported package with
 the original draw paths and reconstructed original cone, including mining and corners.

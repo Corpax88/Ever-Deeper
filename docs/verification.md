@@ -1,3 +1,11 @@
+Current DEV release: [DEV15.57 hunt follow-up](https://github.com/Corpax88/Ever-Deeper/blob/codex/hunt-followup-20261005/docs/hunt-followup/HANDOFF.md), published and verified 5 October 2026 at https://corpax88.github.io/Ever-Deeper/dev/. Refresh and Continue; no reset. Guide crosses into new ground after a collection-goal change; contextual HUD follows the nearest actual resource. Corebreaker keeps ordinary Crusher spread while charging; three-stroke burst unchanged.
+
+Canonical runtime `b8b7e0428c9aa2626861917f98b1b4b7d296f9e3`, branch `codex/hunt-followup-20261005`; immutable production11316807146, QA37240230778 (all six groups passed). 413 browser captures; 32 unique final images explicitly inspected by root and independent critic. Publicationfd2f470b1386bd51818de7b69951d6135ee5d611 /37241152216; receipt11316852747 verifies all26 public hashes, all8 LIVE1.0.5 and9 Worn files preserved. DEV15.56 rollback11317033596. LIVE still shares unchanged DEV WASM/JS/audio; root index.wasm intentionally absent. Future publishers must preserve this26-file/shared-engine contract.
+
+Website updated: sourceeb0dcdf3605497ff7c5ae965c19da1f0a20df283, Site version10, deploymentappgdep_6ac2d7b5df648191af806b5d587e02f2 succeeded. 83 release records, all historical records/media preserved;241 local links checked. No pending jobs or approval requests. Main is publication carrier: never export historical main or repeat unchanged accepted tests/publication. Preserve approved assets/saves and parked FPS/rotation work. Human collection pacing, full mod balance, physical iPhone performance and an overall9.5 rating remain unverified. Historical statuses below do not supersede this entry.
+
+---
+
 Current verified release: [DEV15.56 quality review](https://github.com/Corpax88/Ever-Deeper/blob/codex/quality2-20261004/docs/quality2-20261004/HANDOFF.md). Published 4 October 2026 at https://corpax88.github.io/Ever-Deeper/dev/. Exact runtime source `deaa7088d75d473b0c16951bc05f19c4db7800c4` on `codex/quality2-20261004`; accepted QA run `37227129258`, immutable production artifact `11312268748`, publication `a7581f261fac33c673ce48bfcc071a02a86572b1` / run `37228372436`. All 27 public file hashes verified; all nine LIVE and nine Worn files preserved. DEV15.55 rollback artifact: `11313191443`.
 
 This release protects tracked Treasury materials during sales, clarifies source/donation/reward routes and equipment, shares readable D1/D2 target labels, preserves cave-camera helmet space, places Surface actions clear of the hero and fixes finale guidance. All six QA groups passed, with 410 captured browser images and 83 unique final-source images inspected by root and independent critics. No physical-iPhone performance or overall 9.5/10 claim. Earlier failed fixtures and the first publication's pre-deploy network timeout remain documented; recovery kept every byte and acceptance guard.
@@ -8,21 +16,10 @@ Current verified release: [DEV15.17 CPU and audio fixes](docs/full-fps-audit/FIX
 
 # Verification
 
-Published status: [DEV11 review and remaining limits](premium-polish/dev11-feedback-20260917/PUBLISHED.md).
-Its exact 8f5680d export passed all15 current core cases, both flavor checks,
-nine Chromium suites, Mac WebKit gameplay/pause, commerce residency,
-hazard lifecycle and simultaneous feedback. All14 workflow jobs passed.
-Publication35188991326 verified all18 public files and preserved LIVE0.46.9.
-DEV12 adds the accepted Moss north orientation, with its actual-production
-A/B/A2 triplet required by the immutable-package workflow. That new package
-has not yet passed or been published. See its [handoff](premium-polish/dev12-north-edge-20260917/HANDOFF.md).
-Stable50FPS, physical-iPhone acceptance, final animation and overall9/10 remain open.
-The historical protected player_visual hash mismatch is retained honestly.
-
 ## Current source gate
 
 GitHub Actions runs `Godot source checks` for source pull requests and changes on main.
-It imports the event's tested commit, checks protected files and runs the fifteen current cases;
+It imports the event's tested commit, checks protected files and runs the fourteen current cases;
 logs are attached even when a check fails. The larger `Verify complete source cleanup`
 workflow is a one-time baseline comparison, separate from this reusable source gate.
 
@@ -65,7 +62,7 @@ exercise the corresponding active paths. These failures are recorded as remainin
 
 ## 1.0 candidate acceptance
 
-`.github/workflows/one-point-zero.yml` runs the fifteen active cases against source
+`.github/workflows/one-point-zero.yml` runs the fourteen active cases against source
 and the exact DEV PCK, verifies both export flavors, and checks hero motion, audio
 playback and mobile WebKit touch. `tools/review_one_point_zero.gd` captures the same
 PCK at mobile resolution for independent inspection. The protected version and mine
@@ -84,9 +81,7 @@ setting, scene, game-data file, player/light implementation and the project conf
 Shaders and their resource identities are also protected. These hashes establish parity for
 this structural cleanup; update them only alongside an intentional, reviewed game change.
 It also checks that every QA entry resolves to a real method, and validates the fixed
-mine ordering/mapping owner. The original cleanup preserved save serialization; the current
-premium branch deliberately replaces it with one version-3 binary codec and rejects old saves.
-See `premium-polish/save-schema-three/HANDOFF-20260916.md` for exact evidence and limits.
+mine ordering/mapping owner. Save serialization and migration functions are unchanged.
 
 Removed helpers were private, disconnected render/presentation implementations. Full-token
 references, scene bindings, string calls and engine callback names were checked before
