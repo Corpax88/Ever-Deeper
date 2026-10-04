@@ -1,20 +1,16 @@
 {
   "passed": true,
   "error": null,
-  "source_commit": "ffada087232e059f87cb9e6c44e532e2a1dbbb79",
+  "source_commit": "858659174db5a359e4c461526b819e200de1e398",
   "version": "1.0.5",
   "files": {
     "index.html": {
-      "size": 24719,
-      "sha256": "1ff00551aab316c815bb752bcda311e1521198248a1e02ac88207bec471b9e9f"
+      "size": 24750,
+      "sha256": "063576b164ee5d3777ef71ac92e449bcc62bd39287e5902d45b4e9c1af28a1f0"
     },
     "index.js": {
       "size": 282403,
       "sha256": "1c05fc40c7e418b0234c4e5ac39dfc7df1286e98443946e84b89a7394de6c753"
-    },
-    "index.wasm": {
-      "size": 39514754,
-      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
     },
     "index.pck": {
       "size": 327857414,
@@ -37,6 +33,22 @@
       "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
     },
     "index.audio.position.worklet.js": {
+      "size": 4571,
+      "sha256": "65bc52dba653b2c39735a621863ae7332dda9c65d3a1bd7891d356390110da7f"
+    },
+    "dev/index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "dev/index.js": {
+      "size": 282403,
+      "sha256": "1c05fc40c7e418b0234c4e5ac39dfc7df1286e98443946e84b89a7394de6c753"
+    },
+    "dev/index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "dev/index.audio.position.worklet.js": {
       "size": 4571,
       "sha256": "65bc52dba653b2c39735a621863ae7332dda9c65d3a1bd7891d356390110da7f"
     }
@@ -75,7 +87,7 @@
           "gear": "worn",
           "generations": 1,
           "motion": {
-            "age": 1.9375,
+            "age": 2.29435151515151,
             "aim_ready": false,
             "bounded_transition_frames": 0,
             "duration": 0.12,
@@ -85,7 +97,7 @@
             "max_reach_error_scope": "Includes rejected transition search probes",
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.538194444444446,
+            "phase": 0.637319865319867,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -93,7 +105,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 91
+          "updates": 105
         },
         "native_canvas": {
           "items": 0,
@@ -109,8 +121,8 @@
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 98,
-          "primitives": 175124
+          "draw_calls": 81,
+          "primitives": 174670
         },
         "steering": {
           "clipped": 0,
@@ -409,7 +421,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 146,
+        "physics_frame": 180,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -571,7 +583,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 72,
-        "stamina_rest": 1.95,
+        "stamina_rest": 2.31666666666666,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -777,7 +789,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -809,7 +821,7 @@
           "gear": "worn",
           "generations": 1,
           "motion": {
-            "age": 1.9375,
+            "age": 2.29435151515151,
             "aim_ready": false,
             "bounded_transition_frames": 0,
             "duration": 0.12,
@@ -819,7 +831,7 @@
             "max_reach_error_scope": "Includes rejected transition search probes",
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.538194444444446,
+            "phase": 0.637319865319867,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -827,7 +839,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 91
+          "updates": 105
         },
         "native_canvas": {
           "items": 0,
@@ -843,8 +855,8 @@
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 98,
-          "primitives": 175124
+          "draw_calls": 81,
+          "primitives": 174670
         },
         "steering": {
           "clipped": 0,
@@ -1143,7 +1155,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 146,
+        "physics_frame": 180,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -1305,7 +1317,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 72,
-        "stamina_rest": 1.95,
+        "stamina_rest": 2.31666666666666,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -1511,7 +1523,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       },
       "migrated": {
@@ -2090,7 +2102,7 @@
           "mining": 21424,
           "prospecting": 3020,
           "running": 6280,
-          "stamina": 74.9166666666667
+          "stamina": 76.1666666666667
         },
         "skills": [
           {
@@ -2137,7 +2149,7 @@
           594.872680664062,
           498.181793212891
         ],
-        "stamina": 74.9166666666667,
+        "stamina": 76.1666666666667,
         "stamina_bar": 0,
         "stamina_rest": 0,
         "tooltip_id": "",
@@ -2364,7 +2376,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -2947,7 +2959,7 @@
           "mining": 21424,
           "prospecting": 3020,
           "running": 6280,
-          "stamina": 74.9166666666667
+          "stamina": 76.1666666666667
         },
         "skills": [
           {
@@ -2994,7 +3006,7 @@
           594.872680664062,
           498.181793212891
         ],
-        "stamina": 74.9166666666667,
+        "stamina": 76.1666666666667,
         "stamina_bar": 0,
         "stamina_rest": 0,
         "tooltip_id": "",
@@ -3221,7 +3233,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -3681,7 +3693,7 @@
         "modal_active": true,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 22,
+        "physics_frame": 36,
         "player_controls_enabled": false,
         "prospecting": {
           "checks": {},
@@ -3804,7 +3816,7 @@
           "mining": 21424,
           "prospecting": 3020,
           "running": 6280,
-          "stamina": 74.9166666666667
+          "stamina": 76.1666666666667
         },
         "skills": [
           {
@@ -3851,7 +3863,7 @@
           594.872680664062,
           498.181793212891
         ],
-        "stamina": 74.9166666666667,
+        "stamina": 76.1666666666667,
         "stamina_bar": 0,
         "stamina_rest": 0,
         "tooltip_id": "",
@@ -4078,7 +4090,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -4113,7 +4125,7 @@
           "generations": 1,
           "mod_active": false,
           "motion": {
-            "age": 0.3849,
+            "age": 0.460666666666667,
             "aim_ready": false,
             "bounded_transition_frames": 0,
             "duration": 0.12,
@@ -4123,7 +4135,7 @@
             "max_reach_error_scope": "Includes rejected transition search probes",
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.106916666666667,
+            "phase": 0.127962962962963,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -4131,7 +4143,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 9
+          "updates": 10
         },
         "native_canvas": {
           "items": 0,
@@ -4147,8 +4159,8 @@
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 103,
-          "primitives": 175718
+          "draw_calls": 86,
+          "primitives": 175256
         },
         "steering": {
           "clipped": 0,
@@ -4558,7 +4570,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 50,
+        "physics_frame": 76,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -4681,7 +4693,7 @@
           "mining": 21424,
           "prospecting": 3020,
           "running": 6280,
-          "stamina": 74.9166666666667
+          "stamina": 79.9166666666668
         },
         "skills": [
           {
@@ -4728,9 +4740,9 @@
           594.872680664062,
           498.181793212891
         ],
-        "stamina": 74.9166666666667,
+        "stamina": 79.9166666666668,
         "stamina_bar": 0,
-        "stamina_rest": 0.4,
+        "stamina_rest": 0.55,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -4955,7 +4967,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -4999,7 +5011,7 @@
           "generations": 2,
           "mod_active": false,
           "motion": {
-            "age": 2.32115,
+            "age": 2.31460476190476,
             "aim_ready": false,
             "bounded_transition_frames": 0,
             "duration": 0.12,
@@ -5009,7 +5021,7 @@
             "max_reach_error_scope": "Includes rejected transition search probes",
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.366986111111111,
+            "phase": 0.36516798941799,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -5017,7 +5029,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 74
+          "updates": 71
         },
         "native_canvas": {
           "items": 0,
@@ -5444,7 +5456,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 133,
+        "physics_frame": 165,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -5616,7 +5628,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 0,
-        "stamina_rest": 1.78333333333333,
+        "stamina_rest": 2.03333333333333,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -5841,7 +5853,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -5876,7 +5888,7 @@
           "generations": 2,
           "mod_active": false,
           "motion": {
-            "age": 2.32115,
+            "age": 2.41460476190476,
             "aim_ready": false,
             "bounded_transition_frames": 0,
             "duration": 0.12,
@@ -5886,7 +5898,7 @@
             "max_reach_error_scope": "Includes rejected transition search probes",
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.366986111111111,
+            "phase": 0.392945767195768,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -5894,7 +5906,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 74
+          "updates": 77
         },
         "native_canvas": {
           "items": 0,
@@ -6321,7 +6333,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 133,
+        "physics_frame": 172,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -6493,7 +6505,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 0,
-        "stamina_rest": 1.78333333333333,
+        "stamina_rest": 2.15,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -6718,7 +6730,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -6755,7 +6767,7 @@
           "motion": {},
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 82
+          "updates": 87
         },
         "native_canvas": {},
         "persistence_active": true,
@@ -7178,7 +7190,7 @@
         "modal_active": true,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 157,
+        "physics_frame": 218,
         "player_controls_enabled": false,
         "prospecting": {
           "checks": {},
@@ -7350,7 +7362,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 100,
-        "stamina_rest": 2.18333333333333,
+        "stamina_rest": 2.91666666666666,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -7575,7 +7587,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -7614,7 +7626,7 @@
           "generations": 3,
           "mod_active": false,
           "motion": {
-            "age": 2.758,
+            "age": 3.2174,
             "aim_ready": false,
             "bounded_transition_frames": 0,
             "duration": 0.12,
@@ -7624,7 +7636,7 @@
             "max_reach_error_scope": "Includes rejected transition search probes",
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.488333333333334,
+            "phase": 0.615944444444445,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -7632,7 +7644,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 169
+          "updates": 171
         },
         "native_canvas": {
           "items": 0,
@@ -7648,8 +7660,8 @@
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 107,
-          "primitives": 175298
+          "draw_calls": 90,
+          "primitives": 174836
         },
         "steering": {
           "clipped": 0,
@@ -7685,7 +7697,7 @@
           ],
           "dev_toggle": [],
           "gold_podium": [
-            336.205505371094,
+            336.499420166016,
             1571.81958007812,
             24,
             24
@@ -8059,7 +8071,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 268,
+        "physics_frame": 357,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -8231,7 +8243,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 100,
-        "stamina_rest": 4.03333333333332,
+        "stamina_rest": 5.23333333333332,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -8456,7 +8468,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -8470,7 +8482,7 @@
         "error": "",
         "fixture": "surface",
         "gear": "worn",
-        "health": 360,
+        "health": 356,
         "hit_phase": -1,
         "id": 3,
         "impact": 0,
@@ -8491,7 +8503,7 @@
           "generations": 3,
           "mod_active": false,
           "motion": {
-            "age": 2.87466666666666,
+            "age": 3.32066666666667,
             "aim_ready": false,
             "bounded_transition_frames": 0,
             "duration": 0.12,
@@ -8501,7 +8513,7 @@
             "max_reach_error_scope": "Includes rejected transition search probes",
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.520740740740741,
+            "phase": 0.64462962962963,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -8509,7 +8521,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 176
+          "updates": 177
         },
         "native_canvas": {
           "items": 0,
@@ -8525,8 +8537,8 @@
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 107,
-          "primitives": 175298
+          "draw_calls": 91,
+          "primitives": 174838
         },
         "steering": {
           "clipped": 0,
@@ -8562,7 +8574,7 @@
           ],
           "dev_toggle": [],
           "gold_podium": [
-            336.396636962891,
+            336.5224609375,
             1571.81958007812,
             24,
             24
@@ -8936,7 +8948,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 275,
+        "physics_frame": 363,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -9108,7 +9120,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 100,
-        "stamina_rest": 4.14999999999999,
+        "stamina_rest": 5.33333333333332,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -9314,7 +9326,7 @@
         "depth_context": "",
         "purchased_speed_level": 0,
         "quarry_approach_clear": true,
-        "quarry_hp": 360,
+        "quarry_hp": 356,
         "quarry_position": [
           812,
           600
@@ -9333,7 +9345,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -9347,7 +9359,7 @@
         "error": "",
         "fixture": "surface",
         "gear": "",
-        "health": 360,
+        "health": 356,
         "hit_phase": -1,
         "id": 3,
         "impact": 0,
@@ -9370,7 +9382,7 @@
           "motion": {},
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 180
+          "updates": 186
         },
         "native_canvas": {},
         "persistence_active": true,
@@ -9793,7 +9805,7 @@
         "modal_active": true,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 294,
+        "physics_frame": 390,
         "player_controls_enabled": false,
         "prospecting": {
           "checks": {},
@@ -9965,7 +9977,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 100,
-        "stamina_rest": 4.46666666666666,
+        "stamina_rest": 5.78333333333332,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -10171,7 +10183,7 @@
         "depth_context": "",
         "purchased_speed_level": 0,
         "quarry_approach_clear": true,
-        "quarry_hp": 360,
+        "quarry_hp": 356,
         "quarry_position": [
           812,
           600
@@ -10190,7 +10202,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -10229,7 +10241,7 @@
           "generations": 4,
           "mod_active": false,
           "motion": {
-            "age": 2.68043333333333,
+            "age": 2.99035555555556,
             "aim_ready": false,
             "bounded_transition_frames": 0,
             "duration": 0.12,
@@ -10239,7 +10251,7 @@
             "max_reach_error_scope": "Includes rejected transition search probes",
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.466787037037038,
+            "phase": 0.552876543209877,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -10247,7 +10259,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 264
+          "updates": 262
         },
         "native_canvas": {
           "items": 0,
@@ -10263,8 +10275,8 @@
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 108,
-          "primitives": 175220
+          "draw_calls": 92,
+          "primitives": 174760
         },
         "steering": {
           "clipped": 0,
@@ -10300,7 +10312,7 @@
           ],
           "dev_toggle": [],
           "gold_podium": [
-            336.886260986328,
+            336.814239501953,
             1571.81958007812,
             24,
             24
@@ -10674,7 +10686,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 401,
+        "physics_frame": 516,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -10846,7 +10858,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 100,
-        "stamina_rest": 6.24999999999998,
+        "stamina_rest": 7.88333333333331,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -11071,7 +11083,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -11106,7 +11118,7 @@
           "generations": 4,
           "mod_active": false,
           "motion": {
-            "age": 2.7971,
+            "age": 3.08245555555556,
             "aim_ready": false,
             "bounded_transition_frames": 0,
             "duration": 0.12,
@@ -11116,7 +11128,7 @@
             "max_reach_error_scope": "Includes rejected transition search probes",
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.499194444444445,
+            "phase": 0.57845987654321,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 0,
@@ -11124,7 +11136,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 271
+          "updates": 268
         },
         "native_canvas": {
           "items": 0,
@@ -11140,8 +11152,8 @@
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 108,
-          "primitives": 175220
+          "draw_calls": 92,
+          "primitives": 174760
         },
         "steering": {
           "clipped": 0,
@@ -11177,7 +11189,7 @@
           ],
           "dev_toggle": [],
           "gold_podium": [
-            336.69384765625,
+            336.677185058594,
             1571.81958007812,
             24,
             24
@@ -11551,7 +11563,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 408,
+        "physics_frame": 522,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -11723,7 +11735,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 100,
-        "stamina_rest": 6.36666666666665,
+        "stamina_rest": 7.98333333333331,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -11948,7 +11960,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -11985,7 +11997,7 @@
           "motion": {},
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 277
+          "updates": 278
         },
         "native_canvas": {},
         "persistence_active": true,
@@ -12408,7 +12420,7 @@
         "modal_active": true,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 429,
+        "physics_frame": 551,
         "player_controls_enabled": false,
         "prospecting": {
           "checks": {},
@@ -12580,7 +12592,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 100,
-        "stamina_rest": 6.71666666666665,
+        "stamina_rest": 8.46666666666667,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -12805,7 +12817,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -12848,7 +12860,7 @@
           "generations": 1,
           "mod_active": false,
           "motion": {
-            "age": 0.360866666666667,
+            "age": 0.476533333333334,
             "aim_ready": false,
             "bounded_transition_frames": 0,
             "duration": 0.12,
@@ -12858,7 +12870,7 @@
             "max_reach_error_scope": "Includes rejected transition search probes",
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.100240740740741,
+            "phase": 0.13237037037037,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -12866,7 +12878,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 9
+          "updates": 11
         },
         "native_canvas": {
           "items": 0,
@@ -13293,7 +13305,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 566,
+        "physics_frame": 707,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -13465,7 +13477,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 100,
-        "stamina_rest": 9.00000000000003,
+        "stamina_rest": 11.0666666666668,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -13671,7 +13683,7 @@
         "depth_context": "",
         "purchased_speed_level": 0,
         "quarry_approach_clear": true,
-        "quarry_hp": 352,
+        "quarry_hp": 354,
         "quarry_position": [
           812,
           600
@@ -13690,7 +13702,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -13725,7 +13737,7 @@
           "generations": 1,
           "mod_active": false,
           "motion": {
-            "age": 0.360866666666667,
+            "age": 0.549288888888889,
             "aim_ready": false,
             "bounded_transition_frames": 0,
             "duration": 0.12,
@@ -13735,7 +13747,7 @@
             "max_reach_error_scope": "Includes rejected transition search probes",
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.100240740740741,
+            "phase": 0.15258024691358,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -13743,7 +13755,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 9
+          "updates": 14
         },
         "native_canvas": {
           "items": 0,
@@ -14170,7 +14182,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 566,
+        "physics_frame": 712,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -14342,7 +14354,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 100,
-        "stamina_rest": 9.00000000000003,
+        "stamina_rest": 11.1500000000001,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -14548,7 +14560,7 @@
         "depth_context": "",
         "purchased_speed_level": 0,
         "quarry_approach_clear": true,
-        "quarry_hp": 352,
+        "quarry_hp": 354,
         "quarry_position": [
           812,
           600
@@ -14567,7 +14579,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       },
       "hit": {
@@ -14598,7 +14610,7 @@
           "generations": 1,
           "mod_active": false,
           "motion": {
-            "age": 1.08904444444444,
+            "age": 1.22034444444444,
             "aim_ready": true,
             "bounded_transition_frames": 0,
             "duration": 0.12,
@@ -14608,7 +14620,7 @@
             "max_reach_error_scope": "Includes rejected transition search probes",
             "max_tool_retarget": 0,
             "mode": "mine",
-            "phase": 0.537281057098766,
+            "phase": 0.700112364969136,
             "support_release": 0,
             "swing_serial": 2,
             "transitions": 2,
@@ -14616,7 +14628,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 78
+          "updates": 79
         },
         "native_canvas": {
           "items": 0,
@@ -14630,7 +14642,7 @@
           824,
           408
         ],
-        "progress": 0.489413580246914,
+        "progress": 0.66908950617284,
         "render": {
           "draw_calls": 220,
           "primitives": 176741
@@ -15043,7 +15055,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 637,
+        "physics_frame": 793,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -15166,7 +15178,7 @@
           "mining": 21432,
           "prospecting": 3021,
           "running": 6280,
-          "stamina": 96.4986666666668
+          "stamina": 95.9600000000002
         },
         "skills": [
           {
@@ -15213,7 +15225,7 @@
           594.872680664062,
           498.181793212891
         ],
-        "stamina": 96.4986666666668,
+        "stamina": 95.9600000000002,
         "stamina_bar": 100,
         "stamina_rest": 0,
         "tooltip_id": "",
@@ -15421,7 +15433,7 @@
         "depth_context": "",
         "purchased_speed_level": 0,
         "quarry_approach_clear": true,
-        "quarry_hp": 352,
+        "quarry_hp": 354,
         "quarry_position": [
           812,
           600
@@ -15440,7 +15452,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -15475,7 +15487,7 @@
           "generations": 1,
           "mod_active": false,
           "motion": {
-            "age": 1.76716666666667,
+            "age": 1.9012,
             "aim_ready": true,
             "bounded_transition_frames": 0,
             "duration": 0.12,
@@ -15485,7 +15497,7 @@
             "max_reach_error_scope": "Includes rejected transition search probes",
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.488739872685187,
+            "phase": 0.495385416666667,
             "support_release": 0,
             "swing_serial": 2,
             "transitions": 3,
@@ -15493,7 +15505,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 205
+          "updates": 175
         },
         "native_canvas": {
           "items": 0,
@@ -15509,8 +15521,8 @@
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 217,
-          "primitives": 176311
+          "draw_calls": 220,
+          "primitives": 176317
         },
         "steering": {
           "clipped": 0,
@@ -15920,7 +15932,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 765,
+        "physics_frame": 918,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -16092,7 +16104,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 100,
-        "stamina_rest": 1.76666666666667,
+        "stamina_rest": 1.88333333333333,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -16298,7 +16310,7 @@
         "depth_context": "",
         "purchased_speed_level": 0,
         "quarry_approach_clear": true,
-        "quarry_hp": 352,
+        "quarry_hp": 354,
         "quarry_position": [
           812,
           600
@@ -16317,7 +16329,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -16352,7 +16364,7 @@
           "generations": 1,
           "mod_active": false,
           "motion": {
-            "age": 1.76716666666667,
+            "age": 1.9012,
             "aim_ready": true,
             "bounded_transition_frames": 0,
             "duration": 0.12,
@@ -16362,7 +16374,7 @@
             "max_reach_error_scope": "Includes rejected transition search probes",
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.488739872685187,
+            "phase": 0.495385416666667,
             "support_release": 0,
             "swing_serial": 2,
             "transitions": 3,
@@ -16370,7 +16382,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 205
+          "updates": 175
         },
         "native_canvas": {
           "items": 0,
@@ -16386,8 +16398,8 @@
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 217,
-          "primitives": 176311
+          "draw_calls": 220,
+          "primitives": 176317
         },
         "steering": {
           "clipped": 0,
@@ -16797,7 +16809,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 765,
+        "physics_frame": 918,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -16969,7 +16981,7 @@
         ],
         "stamina": 100,
         "stamina_bar": 100,
-        "stamina_rest": 1.76666666666667,
+        "stamina_rest": 1.88333333333333,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -17175,7 +17187,7 @@
         "depth_context": "",
         "purchased_speed_level": 0,
         "quarry_approach_clear": true,
-        "quarry_hp": 352,
+        "quarry_hp": 354,
         "quarry_position": [
           812,
           600
@@ -17194,7 +17206,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       },
       "restored": {
@@ -18047,7 +18059,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
@@ -18082,7 +18094,7 @@
           "generations": 1,
           "mod_active": false,
           "motion": {
-            "age": 0.444333333333333,
+            "age": 0.661166666666667,
             "aim_ready": false,
             "bounded_transition_frames": 0,
             "duration": 0.12,
@@ -18092,7 +18104,7 @@
             "max_reach_error_scope": "Includes rejected transition search probes",
             "max_tool_retarget": 0,
             "mode": "idle",
-            "phase": 0.123425925925926,
+            "phase": 0.183657407407408,
             "support_release": 0,
             "swing_serial": -1,
             "transitions": 1,
@@ -18100,7 +18112,7 @@
           },
           "surface_cache": 0,
           "unreachable_contacts": 0,
-          "updates": 8
+          "updates": 12
         },
         "native_canvas": {
           "items": 0,
@@ -18116,8 +18128,8 @@
         ],
         "progress": 0,
         "render": {
-          "draw_calls": 236,
-          "primitives": 177221
+          "draw_calls": 217,
+          "primitives": 176331
         },
         "steering": {
           "clipped": 0,
@@ -18527,7 +18539,7 @@
         "modal_active": false,
         "mole_open": false,
         "node_assets": {},
-        "physics_frame": 53,
+        "physics_frame": 74,
         "player_controls_enabled": true,
         "prospecting": {
           "checks": {},
@@ -18650,7 +18662,7 @@
           "mining": 21432,
           "prospecting": 3021,
           "running": 6280,
-          "stamina": 96.9802666666669
+          "stamina": 100
         },
         "skills": [
           {
@@ -18697,9 +18709,9 @@
           594.872680664062,
           498.181793212891
         ],
-        "stamina": 96.9802666666669,
+        "stamina": 100,
         "stamina_bar": 0,
-        "stamina_rest": 0.466666666666667,
+        "stamina_rest": 0.683333333333334,
         "tooltip_id": "",
         "tooltip_rect": [
           0,
@@ -18924,7 +18936,7 @@
         "save_error": 0,
         "save_file_present": true,
         "save_path": "user://ever_deeper_run_v3.sav",
-        "seed": 3811095301,
+        "seed": 2920485243,
         "user_dir_name": "Ever Deeper- Godot Production Port"
       }
     },
