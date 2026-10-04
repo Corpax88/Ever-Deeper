@@ -1,6 +1,6 @@
 # Review proposal: rich veins for a tracked mod goal
 
-Status: root reviewed and authorized implementation on2026-10-04. Phase1 generator/save authority is implemented in a separate checkpoint; world integration, visual inspection and timed balance validation remain gates. The proposed completion time is not a measured result.
+Status: root reviewed and authorized implementation on 2026-10-04. Generator/save authority and world integration are separately checkpointed. Native and rendered world checks pass, and three real-physics oracle routes collect 100,000 units. See `treasury-hunt-validation.md` for exact evidence and limitations. Mobile candidate verification and an unassisted player hunt remain gates; the proposed human completion time is not a measured result.
 
 ## Player experience
 
