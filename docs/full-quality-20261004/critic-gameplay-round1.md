@@ -37,3 +37,9 @@ Implemented explicit laser work accounting in `drill_modes.gd` and consumption b
 Successful mod claims clear only their own pin before the existing save transaction. Save cleanup retires an old claimed-mod pin; stale in-memory state no longer overrides the next useful guide objective. Already claimed mods cannot be re-pinned. Their panel explicitly shows disabled MOD UNLOCKED instead of a nonfunctional TRACK GOAL. Unrelated pins, unclaimed goals and collection-only goals remain available.
 
 Regression entry: `tools/review_treasury_goal_completion.gd` checks actual claim, duplicate rejection, unrelated pin preservation, save/load, legacy normalization, guide fallback and both panel states. Runtime/render validation remains pending; root checkpoints each logical change.
+
+## G7 implementation checkpoint
+
+The actual Deep pickup paths now share the authoritative earned Treasure Chamber bonus with other worlds. Normal base140 and Vortex base256 stay unchanged; building the Chamber adds72 to each, preserving Vortex's116px advantage. Occlusion, pickup speed, flight limits, amount accounting and save schema remain unchanged. The state helper is shared by the existing general pickup radius rather than duplicating the entitlement rule in rendering code.
+
+`tools/review_deep_pickup_bonus.gd` exercises real saved loose drops at192px and320px: no unearned attraction, earned attraction, exact-once credit and blocked-through-wall behavior for normal/Vortex. Runtime execution remains pending QA.

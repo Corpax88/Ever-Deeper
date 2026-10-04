@@ -319,6 +319,7 @@ func rebase(shift: Vector2) -> void:
 func collect_vortex(delta: float) -> bool:
 	if mode!="vortex" or not world.active or not world.player.control_enabled: return false
 	pickup_clock += delta; scanned_last = 0
+	var pickup_radius: float = world.loose_drop_pickup_radius(256.0)
 	# Indexed registry + swap removal: at most 32 constant-time candidate steps.
 	for i in mini(32,drop_queue.size()):
 		if drop_queue.is_empty(): break
@@ -330,7 +331,7 @@ func collect_vortex(delta: float) -> bool:
 		if flights.size()>=12 or flights.has(key): continue
 		var drop: Dictionary = world.loose_drops[key]
 		if pickup_clock-float(drop.get("vortex_born",0.0))<0.08: continue
-		if drop.visual.position.distance_to(world.player.global_position)>256.0: continue
+		if drop.visual.position.distance_to(world.player.global_position)>pickup_radius: continue
 		if world._clear_mining_line(drop.visual.position,world.player.global_position): flights[key] = 0.0
 	var velocity: float = world.player.animation_actual_motion.length()*float(Engine.physics_ticks_per_second)
 	var speed: float = maxf(600.0,velocity+400.0)

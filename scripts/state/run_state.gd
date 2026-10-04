@@ -685,7 +685,11 @@ func resource_pickup_radius(base_radius: float = 48.0, resource_id: String = "")
 	if resource_id == "singularity":
 		return maxf(0.0, base_radius)
 	var safe_level: = clampi(drill_level, 0, Array(_game_data().DRILLS).size() - 1)
-	return maxf(0.0, base_radius) + float(safe_level) * DRILL_PICKUP_RADIUS_STEP + float(_built_workshop_level("treasure_chamber")) * 72.0
+	return maxf(0.0, base_radius) + float(safe_level) * DRILL_PICKUP_RADIUS_STEP + endless_pickup_bonus()
+
+
+func endless_pickup_bonus() -> float:
+	return float(_built_workshop_level("treasure_chamber")) * 72.0
 
 
 func attune_tool_with_starforge(tool: Dictionary) -> Dictionary:

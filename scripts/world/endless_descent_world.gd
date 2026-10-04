@@ -3684,8 +3684,13 @@ func _sync_loose_drops() -> void:
 			if is_instance_valid(drill_modes.five): drill_modes.five.register_drop(key)
 
 
+func loose_drop_pickup_radius(base_radius: float = 140.0) -> float:
+	return maxf(0.0, base_radius) + RunState.endless_pickup_bonus()
+
+
 func _update_loose_drops(delta: float) -> void:
 	if is_instance_valid(drill_modes.five) and drill_modes.five.collect_vortex(delta): return
+	var pickup_radius: float = loose_drop_pickup_radius()
 	for key in loose_drops.keys():
 		var drop: Dictionary = loose_drops[key]
 		var sprite: Sprite2D = drop.visual
@@ -3694,7 +3699,7 @@ func _update_loose_drops(delta: float) -> void:
 			sprite.position = Vector2(drop.origin) + Vector2(0, -sin(float(drop.age)/0.55*PI)*18.0)
 			continue
 		var distance: float = sprite.position.distance_to(player.global_position)
-		if distance > 140.0 or not _clear_mining_line(sprite.position, player.global_position): continue
+		if distance > pickup_radius or not _clear_mining_line(sprite.position, player.global_position): continue
 		sprite.position = sprite.position.move_toward(player.global_position, 260.0*delta)
 		if sprite.position.distance_to(player.global_position) <= 18.0:
 			var collected: Dictionary = RunState.collect_endless_drop(int(drop.depth), String(drop.id))
