@@ -1,6 +1,14 @@
-# DEV15.56 quality round — visual review follow-ups in progress
+# DEV15.56 quality round — final integrated acceptance running
 
-Mac review of source53fa6ed found three concrete older polish issues worth resolving before release: Depth2 retains the small lit target text; the Core still says to visit the Hub passage after arrival; Surface DESCEND covers the miner's lower body. The next candidate will include the same verified target-label treatment in Depth2, phase-correct finale guidance, and use of the vacant Mine action slot for non-mining Surface actions. These scoped follow-ups supersede the previous runtime freeze below. Run37225490928 remains the before-version evidence; no acceptance or publication has been created. Root coordinates the single replacement run after native rendering and fixture checks.
+Current source is `deaa7088d75d473b0c16951bc05f19c4db7800c4` on `codex/quality2-20261004`; final acceptance run `37227129258`. Production PCK is327914622bytes, SHA256 `8de6ebae373816a37159327218f90cb9cb0419eae91eb9d833cba0810e0ac5de`. QA PCK is327972226bytes, SHA256 `e631ec15ffeac6d5388f0a5aad214f384da13dcc61d679984f169f729afb3fcd`.
+
+All scoped production fixes are frozen. The final candidate includes shared readable D1/D2 target text, phase-correct Deepheart guidance and Surface actions in the vacant Mine slot, alongside protected tracked materials, concrete Treasury routes/reward cards and cave-camera headroom. New local rendered checks pass: Surface21, Deepheart33, D1 behavior parity62. D2 deferred-notice review is finishing. The integrated final fixture starts and executes all new commands without script errors.
+
+The final Mac run currently has four completed green groups: native24, candidate49 with161 images, Ricochet276 with43 images, and ordinary production startup with6 images. Journey and focused browser groups are still running; no acceptance exists. Downloaded evidence ZIPs, split parts and report archives are hash-verified. All nine local production files match the CI production receipt exactly; immutable production artifact is `11312268748`. Independent visual inspection is in progress. Publication plumbing is staged on main at `422b88379bd83a2fb09014398d65cdb91081f1d8`, but public DEV remains15.55 and no publication is triggered.
+
+The first Mac run below is retained honestly: five groups passed; focused failed two exact-sale timeouts because an autonomous companion added Surface ore during the isolated sale fixture. The protected-material behavior and the844 continuous haul passed. The final fixture pauses companions only for that isolated sale and restores them afterwards; exact sale expectations are unchanged, and a12-check native delta confirms cargo stability and restoration. Do not treat the first run as accepted or overwrite its evidence.
+
+Next: finish both browser groups, inspect final exact-source affected images, preserve critic evidence, bind all six reports and immutable artifacts in accepted.json, run the guarded validator, publish only the accepted DEV bytes, and verify all27 public file identities. Do not export main. The earlier chronological notes below are superseded by this status.
 
 ---
 
