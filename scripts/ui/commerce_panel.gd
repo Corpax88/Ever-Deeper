@@ -737,6 +737,7 @@ func _build_footer() -> void :
 	primary_copy.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	primary_button.add_child(primary_copy)
 	primary_copy.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	primary_button.resized.connect(_fit_primary_copy)
 	_make_metallic(primary_copy)
 	_make_metallic(title_label)
 
@@ -952,8 +953,6 @@ func _refresh_overview() -> void :
 	if not description.is_empty() and (not single_item or stats.is_empty() or bool(item.get("show_description", false))):
 		var description_label: = _label(description, 15, STEEL, HORIZONTAL_ALIGNMENT_LEFT)
 		description_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		description_label.max_lines_visible = 2
-		description_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		overview_content.add_child(description_label)
 	_add_progress_overview(item)
 
@@ -977,10 +976,9 @@ func _refresh_overview() -> void :
 		overview_content.add_child(_section_label(String(item.get("future_unlock_label", "Next unlock"))))
 		var teaser_plate: = PanelContainer.new()
 		teaser_plate.add_theme_stylebox_override("panel", _forged_plate_style(Color("111214"), IRON_EDGE, 7))
-		var teaser: = _label(future_unlock, 10, STEEL, HORIZONTAL_ALIGNMENT_LEFT)
+		var teaser: = _label(future_unlock, 15, STEEL, HORIZONTAL_ALIGNMENT_LEFT)
+		teaser.name = "NextStepCopy"
 		teaser.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		teaser.max_lines_visible = 2
-		teaser.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		teaser_plate.add_child(teaser)
 		overview_content.add_child(teaser_plate)
 
@@ -1246,6 +1244,9 @@ func _apply_responsive_layout(size_override: Vector2 = Vector2.ZERO) -> void:
 	for child in catalog_strip.get_children():
 		if child is Button: child.custom_minimum_size = Vector2((inner.x-right-56*k)/3.0, cards_h-10*k)
 	_apply_font_scale(self, 1.50*k)
+	var title_width: float = title_label.get_theme_font("font").get_string_size(title_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, title_label.get_theme_font_size("font_size")).x
+	title_plaque.custom_minimum_size.x = clampf(title_width + 64*k, inner.x*0.40, inner.x*0.62)
+	_fit_primary_copy()
 	call_deferred("_ensure_selected_visible")
 
 
@@ -1528,7 +1529,7 @@ func _card_style(item: Dictionary, selected: bool, pressed: bool) -> StyleBox:
 
 
 func _section_label(text_value: String) -> Label:
-	var label: = _label(_display_text(text_value), 10, _accent_bright, HORIZONTAL_ALIGNMENT_LEFT, true)
+	var label: = _label(_display_text(text_value), 14, _accent_bright, HORIZONTAL_ALIGNMENT_LEFT, true)
 	label.custom_minimum_size.y = 20
 	return label
 
@@ -1795,7 +1796,10 @@ func _process(delta: float) -> void:
 	# text layout six times on every animation frame.
 	if primary_button.get_theme_constant("outline_size") != 0:
 		primary_button.add_theme_constant_override("outline_size", 0)
-	primary_copy.text = primary_button.text.to_upper()
+	var action_text: String = primary_button.text.to_upper()
+	if primary_copy.text != action_text:
+		primary_copy.text = action_text
+		_fit_primary_copy()
 	primary_copy.modulate = Color(1,1,1,0.48) if primary_button.disabled else Color.WHITE
 	for color_name in [&"font_color", &"font_hover_color", &"font_pressed_color", &"font_focus_color", &"font_disabled_color"]:
 		if primary_button.get_theme_color(color_name) != Color(1,1,1,0):
@@ -1806,6 +1810,20 @@ func _process(delta: float) -> void:
 	var extent: float = hero_medallion.custom_minimum_size.x
 	hero_icon.offset_top = extent * 0.08 + bob
 	hero_icon.offset_bottom = -extent * 0.08 + bob
+
+
+func _fit_primary_copy() -> void:
+	if primary_copy == null or primary_button == null or frame == null: return
+	var k: float = clampf(frame.size.y / 650.0, 0.48, 1.12)
+	var inset: float = 28*k
+	primary_copy.offset_left = inset
+	primary_copy.offset_right = -inset
+	var preferred: int = maxi(10, roundi(30.0 * 1.50 * k))
+	var text_width: float = primary_copy.get_theme_font("font").get_string_size(primary_copy.text, HORIZONTAL_ALIGNMENT_LEFT, -1, preferred).x
+	var available: float = maxf(1.0, primary_button.size.x - inset*2.0)
+	var fitted: int = preferred if text_width <= available else maxi(10, floori(preferred * available / text_width))
+	primary_copy.add_theme_font_size_override("font_size", fitted)
+
 
 func _make_metallic(label: Label) -> void:
 	var material: = ShaderMaterial.new()
