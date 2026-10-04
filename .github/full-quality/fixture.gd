@@ -3,6 +3,7 @@ extends "res://scripts/qa/suites/full_quality_base.gd"
 var quality_mod_result: Dictionary={}
 var quality_journey_result: Dictionary={}
 var quality_achievement_result: Dictionary={}
+var quality_notice_active: bool=false
 var quality_profile_active: bool=false
 var quality_profile_started: int=0
 var quality_profile_tick: int=0
@@ -40,7 +41,11 @@ func _quality_journey_place_ore() -> bool:
 				return true
 	return false
 
+func _review_clear_toasts() -> bool:
+	return not quality_notice_active
+
 func _command(data: Dictionary) -> void:
+	quality_notice_active=(String(data.kind)=="quality_achievement" and not bool(data.get("cancel",false))) or (String(data.kind)=="quality_feedback" and not bool(data.get("clear",false)))
 	match String(data.kind):
 		"quality_boundary":
 			main._dev_jump_endless(1)

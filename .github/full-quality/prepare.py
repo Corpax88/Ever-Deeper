@@ -55,6 +55,16 @@ if not production:
     replacements['scripts/qa/suites/full_quality_base.gd']=script('scripts/qa/suites/skills_browser_review.gd')
     replacements['scripts/qa/suites/skills_browser_review.gd']=(ROOT/'.github/full-quality/fixture.gd').read_bytes()
     replacements['scripts/qa/suites/skills_browser_review.gd.remap']=b'[remap]\npath="res://scripts/qa/suites/skills_browser_review.gd"\n'
+    # The inherited visual review clears notices every frame. Keep that
+    # default, with a virtual opt-out used only by deliberate notice commands.
+    name='scripts/qa/suites/dev14_review.gd'
+    source=script(name).decode()
+    old='\tif main.achievement_toast != null: main.achievement_toast.clear()'
+    assert source.count(old)==1,'Inherited visual notice suppression changed'
+    source=source.replace(old,'\tif _review_clear_toasts() and main.achievement_toast != null: main.achievement_toast.clear()')
+    source+='\nfunc _review_clear_toasts() -> bool:\n\treturn true\n'
+    replacements[name]=source.encode()
+    replacements[name+'.remap']=('[remap]\npath="res://'+name+'"\n').encode()
     if 'scripts/state/treasury_goals.gd' in overrides:
         # Retain the existing premium suite; update only its two assertions
         # that intentionally required a completed mod to obscure future goals.
