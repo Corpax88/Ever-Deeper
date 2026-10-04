@@ -487,7 +487,7 @@ func _update_action(delta: float) -> void:
 		if not assist_action: shake_cooldown=8.0 if count>0 else 1.0
 		if count>0:
 			_react("Teamwork!" if assist_action else "%d blocks!" % count,2.2,automatic_task)
-			AudioDirector.play_mining("stone",true,false)
+			AudioDirector.play_mining("stone",true,false,false)
 	if action_clock>=(0.72 if action=="pickup" else 0.84): recall()
 
 func _draw_pose() -> void:

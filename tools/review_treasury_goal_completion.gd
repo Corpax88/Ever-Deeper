@@ -1,6 +1,6 @@
 extends SceneTree
 ## Real claim/save/load and panel state; run with MODS_OUT=<evidence dir>.
-const Goals = preload("res://scripts/state/treasury_goals.gd")
+var Goals: Script
 var main: Node
 var state: Node
 var checks: Array = []
@@ -19,6 +19,9 @@ func run() -> void:
 	if output.is_empty(): output = "/tmp/ever-deeper-treasury-goal"
 	DirAccess.make_dir_recursive_absolute(output)
 	await process_frame
+	# SceneTree scripts parse before project autoload names are registered.
+	# Load the real helper after startup so its RunState reference resolves.
+	Goals = load("res://scripts/state/treasury_goals.gd")
 	main = load("res://scenes/main/main.tscn").instantiate()
 	root.add_child(main)
 	current_scene = main
