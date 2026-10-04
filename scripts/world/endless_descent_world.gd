@@ -512,7 +512,9 @@ func guide_target(kind: String = "") -> Vector2:
 		return down_shaft_position
 	if kind == "relic" and native_relic_discovered and not native_relic_id.is_empty():
 		return native_relic_position
-	var target: Vector2 = down_shaft_position
+	# The last row is still inside the current band. A tracked hunt with no
+	# local ore must guide THROUGH the boundary, not stop at the retired shaft.
+	var target: Vector2 = down_shaft_position + Vector2(0, TILE_SIZE * 2) if TreasurySeams.MOD_BY_KIND.has(kind) else down_shaft_position
 	var nearest: float = INF
 	for resource in resources:
 		if bool(resource.get("mined", false)) or (not kind.is_empty() and String(resource.kind) != kind):
@@ -522,6 +524,14 @@ func guide_target(kind: String = "") -> Vector2:
 			nearest = distance
 			target = Vector2(resource.position)
 	return target
+
+
+func treasury_hunt_action(kind: String) -> String:
+	if not TreasurySeams.MOD_BY_KIND.has(kind): return "Mine · The Deep"
+	for resource in resources:
+		if not bool(resource.get("mined", false)) and String(resource.kind) == kind:
+			return "Rich vein · follow the marker" if bool(resource.get("treasury_seam", false)) else "Ore · follow the marker"
+	return "New ground · keep descending"
 
 
 func get_runtime_contract() -> Dictionary:

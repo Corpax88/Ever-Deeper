@@ -1078,6 +1078,7 @@ func _treasury_guide_proposal(goal: Dictionary, proposal: Dictionary) -> Diction
 		if route == "endless":
 			target = endless_world.guide_target(kind)
 			key = "endless:treasury:" + kind
+			proposal["hud_action"] = endless_world.treasury_hunt_action(kind)
 		else:
 			proposal["hud_action"] = "Tunnel Home · " + ("claim mod" if route == "claim" else "donate" if route == "donate" else "sell ore" if route == "sell" else "visit mines")
 	elif phase == "deepheart":

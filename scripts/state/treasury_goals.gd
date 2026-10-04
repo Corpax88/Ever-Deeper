@@ -69,7 +69,7 @@ static func label(kind: String) -> String:
 
 static func sources(kind: String) -> String:
 	var original: String = _original_sources(kind)
-	if _has_rich_vein_goal(kind): return "The Deep · track this goal for rich veins in new ground\n" + original
+	if _has_rich_vein_goal(kind): return "The Deep · follow the marker; keep descending after changing goals\n" + original
 	return original
 
 static func _has_rich_vein_goal(kind: String) -> bool:
