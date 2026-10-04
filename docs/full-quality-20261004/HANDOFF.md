@@ -1,3 +1,11 @@
+# Accepted DEV15.55 — publication in progress
+
+Exactsource `befb9eabfc1ff424fe20c4db34eeea19cc8b0301`, run `37219089950`: all six required jobs pass. Native22groups, candidate49checks/161images, focused1868/136, Ricochet276/43, journey39/24, ordinary WebKit6images/no fixture arguments. Root and independent critics inspected representative final screenshots in every browser group, including allthree ending widths and actual Hub/Deep return. No remaining material blocker was found in reviewed scopes. This is not a numerical9.5 score or physical-iPhone claim.
+
+Accepted production PCK:327889602bytes, SHA256 `59ece4e280ea8a0964c263855ff2147aaee040cb5172061019c6d24008a0a52b`. QA PCK327930854bytes, SHA256 `d21fc2688079b039f827e606fe7760b2b35f6ccab0e737e4e6088a234d43ece3`. `.github/full-quality/accepted.json` binds all16 artifacts, all6 original reports and3 receipts. Guarded offline validation passed. Promote only exact tested production artifact11309746162; never rebuild main or publish QA. Preserve all LIVE/Worn files. Publication/public27hash verification still pending; public DEV15.54 until verified.
+
+All earlier sections below are chronological review history, including resolved failures. No new testing scope or duplicate acceptance runs needed. Continue minute-by-minute user status during publication.
+
 # Finale correction validated; exact-source final run active
 
 Final source `befb9eabfc1ff424fe20c4db34eeea19cc8b0301`, run `37219089950`. Final PCK expected SHA256 `59ece4e280ea8a0964c263855ff2147aaee040cb5172061019c6d24008a0a52b`,327889602 bytes. All six groups of prior run37218310565 passed, but actual667 finaleimage blocked visual acceptance. Narrow landscape layout and proportional fit now pass51/51 native bounds/line/action checks at667/844/932; allthree actualimages inspected. Browser journey now enforces visible text, stats and bothactions atthosewidths. Publish only after currentrun and images accepted. Previous blocker section below is history; no9.5 claim. Give concise user status everyminute.
