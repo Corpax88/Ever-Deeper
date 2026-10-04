@@ -252,6 +252,7 @@ func _ready() -> void :
 	_connect_optional_signal(endless_world, "world_rebased", "_on_endless_world_rebased")
 	RunState.changed.connect(_queue_hud_refresh)
 	RunState.resource_collected.connect(_on_resource_collected)
+	RunState.persistence_status_changed.connect(_on_save_status_changed)
 
 
 	AchievementService.evaluate()
@@ -484,7 +485,6 @@ func _dev_start_clean_run() -> void :
 func _dev_ensure_playing() -> void :
 	if not game_started:
 		game_started = true
-		save_available = true
 	if menu_open:
 		_hide_start_menu()
 	if inventory_open:
@@ -1244,8 +1244,7 @@ func _open_start_menu() -> void :
 	AudioDirector.set_environment("menu")
 	if game_started and persistence_active:
 		_checkpoint_location()
-		RunState.flush_save()
-		save_available = true
+		if RunState.flush_save(): save_available = true
 	_cancel_mine_hold()
 	button_move = Vector2.ZERO
 	movement_pad.cancel()
@@ -1258,7 +1257,7 @@ func _open_start_menu() -> void :
 	_refresh_start_menu()
 	start_menu.visible = false
 	premium_menu.modulate.a = 0.0
-	premium_menu.open_menu(save_available or game_started, _menu_location_label(), game_started, web_storage_uncertain)
+	premium_menu.open_menu(save_available or game_started, _menu_location_label(), game_started, web_storage_uncertain, RunState.last_save_error)
 	var tween: = create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	tween.tween_property(premium_menu, "modulate:a", 1.0, 0.18)
@@ -1268,7 +1267,9 @@ func _refresh_start_menu() -> void :
 	var can_continue: = save_available or game_started
 	continue_button.disabled = not can_continue
 	menu_hint.text = (
-		"PROGRESS MAY NOT SURVIVE A CLOSED TAB\nIN THIS BROWSER"
+		"COULD NOT SAVE · RETRYING AUTOMATICALLY"
+		if RunState.last_save_error != OK
+		else "PROGRESS MAY NOT SURVIVE A CLOSED TAB\nIN THIS BROWSER"
 		if web_storage_uncertain
 		else "YOUR EXPEDITION SAVES AUTOMATICALLY\nUSE MENU ANY TIME TO PAUSE"
 	)
@@ -1387,7 +1388,7 @@ func _start_new_game() -> void :
 			"carried_relic_discovery_depth": -1,
 		})
 	_apply_global_movement_speed()
-	save_available = true
+	save_available = RunState.persistence_enabled() and RunState.last_save_error == OK
 	game_started = true
 	phase = "surface"
 	current_mine_id = "mossMine"
@@ -1412,7 +1413,7 @@ func _start_new_game() -> void :
 	_set_status("A fresh expedition begins · follow the lower road")
 	_refresh_hud()
 	RunState.set_location("surface", surface_world.player.global_position)
-	RunState.flush_save()
+	if RunState.flush_save(): save_available = true
 	call_deferred("_maybe_show_quick_tutorial")
 
 
@@ -3894,6 +3895,17 @@ func _depth_cargo_resources(mine_id: String) -> Array[String]:
 	if result.size() < 3:
 		result.append(String(profile.secondary))
 	return result
+
+
+func _on_save_status_changed(error: int) -> void:
+	if error == OK:
+		save_available = true
+		_set_status("Saving restored · progress saved")
+	else:
+		_set_status("Could not save · retrying automatically")
+	if premium_menu != null:
+		premium_menu.set_save_status(web_storage_uncertain,error)
+	_refresh_start_menu()
 
 
 func _set_status(message: String) -> void :

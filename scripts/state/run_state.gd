@@ -4,6 +4,7 @@ signal changed
 signal miner_skill_increased(id: String, level: int)
 signal miner_skills_restored
 signal resource_collected(resource_id: String, amount: int)
+signal persistence_status_changed(error: int)
 
 const MossveinProgressionScript: = preload("res://scripts/progression/mossvein_progression.gd")
 const EndlessTerrainStateScript = preload("res://scripts/state/endless_terrain_state.gd")
@@ -2932,9 +2933,12 @@ func flush_save() -> bool:
 	# A failed write must remain dirty even if the player makes no further change.
 	_autosave_timer_serial += 1
 	_autosave_pending = false
+	var previous_error: int = last_save_error
 	var saved: bool = save_game()
 	if not saved:
 		_queue_autosave()
+	if last_save_error != previous_error:
+		persistence_status_changed.emit(last_save_error)
 	return saved
 
 

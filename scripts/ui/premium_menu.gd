@@ -68,7 +68,7 @@ func _ready() -> void :
 	visible = false
 
 
-func open_menu(has_save: bool, location: String, is_pause: bool, storage_uncertain: bool) -> void :
+func open_menu(has_save: bool, location: String, is_pause: bool, storage_uncertain: bool, save_error: int = OK) -> void :
 	# GUI picking follows sibling order, not z_index. Keep the modal above the HUD.
 	move_to_front()
 	_pause_mode = is_pause
@@ -84,13 +84,20 @@ func open_menu(has_save: bool, location: String, is_pause: bool, storage_uncerta
 		else ("CONTINUE\n%s" % location) if has_save
 		else "CONTINUE\nNO EXPEDITION FOUND"
 	)
+	set_save_status(storage_uncertain,save_error)
+	_refresh_achievement_count()
+	continue_button.grab_focus()
+
+
+func set_save_status(storage_uncertain: bool, save_error: int = OK) -> void:
 	save_hint.text = (
-		"THIS BROWSER MAY NOT KEEP PROGRESS AFTER THE TAB CLOSES"
+		"COULD NOT SAVE · RETRYING AUTOMATICALLY"
+		if save_error != OK
+		else "THIS BROWSER MAY NOT KEEP PROGRESS AFTER THE TAB CLOSES"
 		if storage_uncertain
 		else "YOUR EXPEDITION SAVES AUTOMATICALLY"
 	)
-	_refresh_achievement_count()
-	continue_button.grab_focus()
+	save_hint.add_theme_color_override("font_color",GOLD_BRIGHT if save_error != OK else MUTED)
 
 
 func close_menu() -> void :
