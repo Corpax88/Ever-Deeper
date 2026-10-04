@@ -14,10 +14,15 @@ const DEEP_RESOURCES: = [
 	"phasecrystal", "magmaite", "furnaceheart", "infernium", "voidglass", "singularity",
 ]
 const EVALUATION_BATCH_SECONDS: = 0.2
+const SAVE_RETRY_SECONDS: = 6.0
 
 var records: Dictionary = {}
 var definition_cache: Array = []
 var evaluation_pending: = false
+var last_save_error: int = OK
+var last_load_status: String = "not_initialized"
+var _record_save_pending: bool = false
+var _record_save_timer_serial: int = 0
 
 
 func _ready() -> void :
@@ -226,23 +231,92 @@ func _completed_all_veins(counts: Dictionary) -> bool:
 
 
 func _load_records() -> void :
-	var storage_path: = _storage_path()
-	if not FileAccess.file_exists(storage_path):
+	var path: String = _storage_path()
+	var document: Variant = _read_record_document(path)
+	var recovered: bool = false
+	if document == null:
+		document = _read_record_document(path + ".bak")
+		recovered = document != null
+	if document == null:
+		last_load_status = "corrupt" if FileAccess.file_exists(path) or FileAccess.file_exists(path + ".bak") else "missing"
 		return
-	var file: = FileAccess.open(storage_path, FileAccess.READ)
+	records.merge(Dictionary(document.records), true)
+	last_load_status = "recovered_backup" if recovered else "loaded"
+	if recovered: _queue_record_save()
+
+
+func _read_record_document(path: String) -> Variant:
+	if not FileAccess.file_exists(path): return null
+	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
 	if file == null:
-		return
-	var parsed = JSON.parse_string(file.get_as_text())
-	if parsed is Dictionary:
-		for id in Dictionary(parsed).get("records", {}):
-			if Dictionary(GameData.data.ACHIEVEMENT_BY_ID).has(String(id)):
-				records[String(id)] = maxi(0, int(Dictionary(parsed).records[id]))
+		return null
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary or not parsed.get("records") is Dictionary:
+		return null
+	var restored: Dictionary = {}
+	for id in parsed.records:
+		if not Dictionary(GameData.data.ACHIEVEMENT_BY_ID).has(String(id)): continue
+		var timestamp: Variant = parsed.records[id]
+		if not (timestamp is int or timestamp is float) or not is_finite(float(timestamp)): return null
+		restored[String(id)] = maxi(0, int(timestamp))
+	return {"records":restored}
 
 
-func _save_records() -> void :
-	var file: = FileAccess.open(_storage_path(), FileAccess.WRITE)
-	if file != null:
-		file.store_string(JSON.stringify({"records": records}))
+func _save_records() -> bool:
+	_record_save_timer_serial += 1
+	_record_save_pending = false
+	last_save_error = OK
+	var saved: bool = _write_records(_storage_path())
+	if not saved: _queue_record_save()
+	return saved
+
+
+func _write_records(path: String) -> bool:
+	var temporary: String = path + ".tmp"
+	var backup: String = path + ".bak"
+	var payload: PackedByteArray = JSON.stringify({"records":records}).to_utf8_buffer()
+	var file: FileAccess = FileAccess.open(temporary, FileAccess.WRITE)
+	if file == null:
+		last_save_error = FileAccess.get_open_error()
+		return false
+	file.store_buffer(payload)
+	file.flush()
+	last_save_error = file.get_error()
+	file = null
+	if last_save_error != OK or FileAccess.get_file_as_bytes(temporary) != payload or _read_record_document(temporary) == null:
+		if last_save_error == OK: last_save_error = ERR_FILE_CORRUPT
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(temporary))
+		return false
+	# Only a valid committed primary can replace the previous good generation.
+	var rotate: bool = _read_record_document(path) != null
+	if rotate:
+		if FileAccess.file_exists(backup):
+			last_save_error = DirAccess.remove_absolute(ProjectSettings.globalize_path(backup))
+			if last_save_error != OK:
+				DirAccess.remove_absolute(ProjectSettings.globalize_path(temporary))
+				return false
+		last_save_error = DirAccess.rename_absolute(ProjectSettings.globalize_path(path), ProjectSettings.globalize_path(backup))
+		if last_save_error != OK:
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(temporary))
+			return false
+	last_save_error = DirAccess.rename_absolute(ProjectSettings.globalize_path(temporary), ProjectSettings.globalize_path(path))
+	if last_save_error != OK:
+		if rotate: DirAccess.rename_absolute(ProjectSettings.globalize_path(backup), ProjectSettings.globalize_path(path))
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(temporary))
+		return false
+	return true
+
+
+func _queue_record_save() -> void:
+	if _record_save_pending: return
+	_record_save_pending = true
+	_record_save_timer_serial += 1
+	get_tree().create_timer(SAVE_RETRY_SECONDS, true, false, true).timeout.connect(_retry_record_save.bind(_record_save_timer_serial))
+
+
+func _retry_record_save(serial: int) -> void:
+	if not _record_save_pending or serial != _record_save_timer_serial: return
+	_save_records()
 
 
 func _storage_path() -> String:
