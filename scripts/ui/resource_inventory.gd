@@ -411,7 +411,9 @@ func _resource_card(resource_id: String, amount: int, protected_amount: int) -> 
 	copy.add_theme_constant_override("separation", 1)
 	row.add_child(copy)
 	var name_label: = _label(String(rock.get("label", resource_id)).to_upper(), 18 if iphone else 11, MINT, HORIZONTAL_ALIGNMENT_LEFT)
-	name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	name_label.name = "ResourceName"
+	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	name_label.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
 	copy.add_child(name_label)
 	var amount_label: = _label("× %d" % amount, 27 if iphone else 18, GOLD_BRIGHT, HORIZONTAL_ALIGNMENT_LEFT)
 	amount_label.name = "Amount"
