@@ -146,7 +146,9 @@ try{
    await tap('continue');await ready();
   });
   await group('feedback-placement-'+width,async()=>{
-   await closeModal();await command('maps_fixture',{mine:'endless',depth:1});await ready();
+   await closeModal();await command('quality_boundary');await ready();await delay(250);
+   const edge=await state();check('north-boundary-native-hero-visible-'+width,edge.quality.feedback.hero.length>0&&edge.quality.feedback.hero.every(r=>contains([0,0,viewport.width,viewport.height],cssRect(r,edge))),{hero:edge.quality.feedback.hero});await shot('north-boundary-hero-'+width);
+   await command('maps_fixture',{mine:'endless',depth:1});await ready();
    await command('quality_feedback');await delay(450);
    let s=await state(),f=s.quality.feedback;await shot('feedback-simultaneous-'+width);
    check('feedback-native-hero-bounds-'+width,f.hero.length>0,{hero:f.hero});

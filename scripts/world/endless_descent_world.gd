@@ -101,6 +101,7 @@ const GRID_SIZE: = Vector2i(40, 66)
 const CHUNK_HEIGHT: float = 22.0 * TILE_SIZE
 const WORLD_SIZE: = Vector2(GRID_SIZE) * TILE_SIZE
 const PLAYER_RADIUS: = 23.0
+const NORTH_CAMERA_MARGIN: = TILE_SIZE * 4.0
 const PLAYER_SPAWN_OFFSET: = Vector2(0.0, 62.0)
 const SHAFT_CONTEXT_RADIUS: = 108.0
 const RESOURCE_MINING_RANGE: = 122.0
@@ -1550,6 +1551,10 @@ func _configure_player(position: Vector2) -> void :
 	if RunState.has_method("movement_speed_multiplier"):
 		speed *= float(RunState.movement_speed_multiplier())
 	player.configure(position, WORLD_SIZE, speed, _resolve_motion)
+	# The hero is anchored at his feet. Keep his head and raised tool visible
+	# when the valid walking position is only one body radius from the north edge.
+	player.camera.limit_top = -roundi(NORTH_CAMERA_MARGIN)
+	player.camera.reset_smoothing()
 	player.z_index = actor_draw_depth(position)
 
 
@@ -2727,6 +2732,8 @@ func _draw() -> void :
 	min_cell.y = clampi(min_cell.y, 0, GRID_SIZE.y - 1)
 	max_cell.x = clampi(max_cell.x, 0, GRID_SIZE.x - 1)
 	max_cell.y = clampi(max_cell.y, 0, GRID_SIZE.y - 1)
+	if visible_rect.position.y < 0.0:
+		_draw_north_camera_margin(min_cell.x, max_cell.x)
 	if lit_draw_sections.enabled:
 		_draw_partitioned_deep(min_cell, max_cell)
 		return
@@ -2763,6 +2770,17 @@ func _draw() -> void :
 	_select_draw_stratum(maxi(1, current_depth))
 	for impact in _crusher_impacts:
 		CrusherDebrisScript.draw_burst(_draw_canvas, impact)
+
+
+func _draw_north_camera_margin(first_col: int, last_col: int) -> void:
+	# Reuse the authored bedrock above the finite viewport boundary. This is
+	# scenery only: no generated cell, collision, mining or save state is added.
+	_select_draw_stratum(window_start_depth)
+	for row in range(-ceili(NORTH_CAMERA_MARGIN / TILE_SIZE), 0):
+		for col in range(first_col, last_col + 1):
+			var cell: = Vector2i(col, row)
+			_draw_permanent_wall_mass(cell, Rect2(Vector2(cell) * TILE_SIZE, Vector2.ONE * TILE_SIZE))
+	_select_draw_stratum(maxi(1, current_depth))
 
 
 func _draw_partitioned_deep(first: Vector2i, last: Vector2i) -> void:

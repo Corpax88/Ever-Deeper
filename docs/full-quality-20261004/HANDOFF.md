@@ -1,3 +1,13 @@
+# Final candidate freeze — 4 October 2026
+
+The user requested clearer minute-by-minute status after a long review. Stop adding new review topics. Production changes are now frozen for the next full Mac/native run. Public DEV remains15.54; no15.55 publication or overall9.5 claim yet.
+
+Saved: save retries/status, achievements recovery, modal/navigation/mobile fixes, tracked rich material seams, completed collection retirement, native hero feedback placement, commerce text fit and Deep north viewport margin. First Mac candidate reports are preserved. Corrected simulated100k hunts finish across three loadouts; search/return/donation and human enjoyment remain unmeasured. Final gates:18 native probes plus4 retained suites; breadth, mobile focus, earned Ricochet lifecycle, actual mining/transaction/finale route and ordinary production WebKit. Publish only their exact accepted production artifact; preserve LIVE/Worn. Guarded publisher is ready.
+
+Local git was reinitialized after an expired parent worktree; its commits differ from durable remote history. Continue connector Git-object checkpoints on codex/full-quality-20261004; never push the local root history.
+
+---
+
 # Full quality review — active checkpoint, 4 October 2026
 
 Mats authorized a critic team to review all of Ever-Deeper, improve toward 9.5/10, remove obsolete code where useful, and save each change. Continue the work autonomously. Standing source upload and tested DEV publication authorization applies. This is an active review, **not an achieved 9.5 rating or a published release**.

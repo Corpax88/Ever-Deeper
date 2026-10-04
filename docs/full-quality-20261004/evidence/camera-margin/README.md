@@ -1,0 +1,3 @@
+# Deep north camera margin
+
+Eleven rendered checks pass at 667/844/932 widths with original and native tool variants. The Deep camera now reserves four authored bedrock tiles above its north edge so the feet-anchored hero is not clipped by the viewport. Collision, generated geology, saved chunks and Hub camera limits remain unchanged. Root inspected the final Crusher667 image; all hero geometry is inside the screen. The fixed minimap can still overlap the helmet near this extreme boundary; this is retained as a limited visual issue, not hidden by the geometry checks or a claimed9.5 rating. Original full images remain in camera-boundary/final-render and the integrated browser capture repeats this boundary.

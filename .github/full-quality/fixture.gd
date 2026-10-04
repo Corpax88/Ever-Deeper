@@ -25,6 +25,14 @@ func run() -> void:
 
 func _command(data: Dictionary) -> void:
 	match String(data.kind):
+		"quality_boundary":
+			main._dev_jump_endless(1)
+			main.endless_world.restore_position(Vector2(1280,25.5))
+			main.endless_world.player.camera.reset_smoothing()
+			main.endless_world.player.camera.force_update_scroll()
+			main._refresh_hud()
+			command_id=int(data.id)
+			return
 		"quality_feedback":
 			main.achievement_toast.clear()
 			var skill: Node=main.achievement_toast.get_node("SkillLevelToast")
@@ -251,7 +259,8 @@ func _quality_feedback() -> Dictionary:
 	var skill: Node=main.achievement_toast.get_node("SkillLevelToast")
 	var visual: Node=player.get_node("Visual")
 	var hero: Array=[]
-	for rect in visual.feedback_screen_rects(): hero.append(_quality_rect(rect))
+	if visual.has_method("feedback_screen_rects"):
+		for rect in visual.feedback_screen_rects(): hero.append(_quality_rect(rect))
 	var pickups: Array=[]
 	for rect in pickup.screen_rects(): pickups.append(_quality_rect(rect))
 	var exclusions: Array=[]
