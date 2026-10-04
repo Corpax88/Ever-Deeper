@@ -1,3 +1,23 @@
+# Release complete: DEV15.57 + website version10
+
+DEV https://corpax88.github.io/Ever-Deeper/dev/ and website https://ever-deeper-game.corpax88.chatgpt.site are published and verified. No reset; refresh and Continue. All six final Mac QA groups passed and independent critic approved the scoped changes. No pending work in this release task; do not repeat unchanged accepted tests or publication.
+
+Website source `eb0dcdf3605497ff7c5ae965c19da1f0a20df283`, version10, deployment `appgdep_6ac2d7b5df648191af806b5d587e02f2` succeeded.83release records,82historical records preserved,39gallery steps unchanged,241local links checked. Existing public audience and LIVE1.0.5 content retained. Browser Site visual QA not performed under the managed Sites limitation; game Mac captures are separately verified. Full receipt: evidence/website-publication.json.
+
+--- Verified game publication ---
+
+# DEV15.57 published and verified — 5 October 2026
+
+Play https://corpax88.github.io/Ever-Deeper/dev/ — refresh and choose Continue; no reset. Guide now crosses into new ground after changing collection goals; its HUD describes the nearest actual target. Corebreaker retains ordinary Crusher spread while charging; the existing three-stroke burst remains unchanged. Approved art, saves and19collection podiums retained.
+
+Runtime `b8b7e0428c9aa2626861917f98b1b4b7d296f9e3`; exact production artifact11316807146 / PCK327915614bytes / SHA256`5a97a3346dfb623d36b80bfb4b37feb8651ca48b60b6a91430a4202a103d7c79`. All6Mac QA groups passed in37240230778.413captured browser images;32unique final images inspected byroot+independentcritic with explicit scopedapproval. See visual-review.json and finalreports (focusedreport compressedlosslessly).
+
+Publication `fd2f470b1386bd51818de7b69951d6135ee5d611` /37241152216 succeeded; receipt11316852747 verifies ALL26publicfilehashes,8LIVE1.0.5 and9Worn unchanged. Shared DEVenginebytes unchanged; rootWASM intentionally absent. DEV15.56 rollback11317033596. Main is publicationcarrier only; neverexporthistoricalmain or repeat accepted unchanged QA/publication. No pending game jobs. Website update is also published; the release task is complete. No pending jobs or approvals.
+
+The600second agent-guided hunt demonstrated0→73543Rootiron after theboundaryfix. Timer clamps software-rendered frame delta; not human completion time. No physicaliPhone/FPS/fullbalance/overall9.5claim. FPS/rotation remain parked. Suggested next work is human playtesting of collection pacing and choosing mods; no redundant SurveyPulse or speculative newart added.
+
+--- Historical work log ---
+
 # DEV15.57 accepted — game publication pending
 
 Exact runtime b8b7e0428c9aa2626861917f98b1b4b7d296f9e3; final QA37240230778 succeeded. Immutable production11316807146 (327915614bytes, SHA256 5a97a3346dfb623d36b80bfb4b37feb8651ca48b60b6a91430a4202a103d7c79). All6groups: native26, broad49, focused7152, Ricochet276, journey45, ordinary startup;413total browser captures. root+independentcritic inspected32 unique final images, explicitly listed/hashed in visual-review.json. Scoped critic acceptance complete. All17immutable artifacts,6reports,3receipts and both9-file manifests bound in accepted.json.
@@ -48,3 +68,5 @@ Final run native26/26 and real-input journey45checks/24captures passed. root ins
 Concurrent LIVE1.0.5 promotion completed successfully in run37240619358, receipt11317322246. It preserves DEV15.56/Worn but removes root index.wasm and uses the unchanged dev/index.wasm. Publisher baseline refreshed ONLY from its passed immutable26-file receipt, asserting all18DEV/Worn identities unchanged. Preserve all8LIVE plus9Worn files and rootWASM absence; verify all26public hashes. Do not restore oldLIVE1.0.4 or its obsolete duplicateWASM. Native/QA packages remain identical because all9DEVbaseline files are unchanged. This is release-race reconciliation, not a newgame change or relaxed identity check.
 
 Final ordinaryWebKit production startup passed,6actual images inspected byroot (freshmenu,newgame,pause,savedmenu,replaceconfirmation,newgame). Critic independently inspected6finalRicochet lifecycle captures: earned-before-interior-checkpoint, earned-crusher-turn-4, earned-comet-turn-12, earned-crownseeker-travel, earned-reloaded, normal-deepheart-restored. No scoped blocker; inherited brief reloadtutorialoverlay is not a newregression. Broad final49checks/161images passed; root inspected final667Core/Twin claimcards, inventory, Deepmap, earnedResonancecard and returnedHub. Focusedfinal group stillpending.
+
+Explicit acceptance checkpoint143676b570cf6db9e6e74df5df26af367436443e. Publicationfd2f470b1386bd51818de7b69951d6135ee5d611 / run37241152216 started after all6finalgroups and finalcriticacceptance. Local publisher.validate passed every boundreport/receipt/capture/package check; local production bytes reconstructed only for preflight and bit-identical to immutable artifact. Real publisher downloads accepted artifact11316807146 directly. Website checkout refreshed from concurrent LIVE publication, source141993fc3db781cd884268d90c0d1377a4cb6a17/version9 with82releases. Preserve LIVE1.0.5 historical wording when addingDEV15.57.
