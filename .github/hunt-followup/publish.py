@@ -21,8 +21,10 @@ BASE_VERSION = '1.0.0-dev.15.56'
 BASE_SOURCE = 'deaa7088d75d473b0c16951bc05f19c4db7800c4'
 BASE_PCK = {'size': 327914622, 'sha256': '8de6ebae373816a37159327218f90cb9cb0419eae91eb9d833cba0810e0ac5de'}
 BASE_HTML = {'size': 23145, 'sha256': 'd18c1eddb76078ac04c63084f691faa40266903008498a435cfebbb47d855bbf'}
-BEFORE_SHA = '53a302c263a8f9afcdaf7dac1fa04e42efa8640b9e939185c95215126e6e3335'
+BEFORE_SHA = '0bac324f30a56d5dca19cdf8cc07bde0e70fc9135d6b5afd5befabe57a877395'
 WEB = {'index.html', 'index.js', 'index.wasm', 'index.pck', 'index.png', 'index.icon.png', 'index.apple-touch-icon.png', 'index.audio.worklet.js', 'index.audio.position.worklet.js'}
+# LIVE1.0.5 shares the unchanged DEV engine WASM; preserve its verified8 files.
+LIVE_WEB = WEB - {'index.wasm'}
 BROWSER = ('candidate', 'focused', 'ricochet-lifecycle', 'journey', 'ordinary-candidate')
 REPORTS = ('native',) + BROWSER
 NATIVE_GATES = {
@@ -88,7 +90,7 @@ def acceptance():
     before_path = HERE / 'public-before.json'
     require(ident(before_path)['sha256'] == BEFORE_SHA, 'Protected LIVE/Worn baseline changed')
     before = read(before_path)
-    require(set(before) == WEB | {'dev/' + n for n in WEB} | {'dev/worn/' + n for n in WEB}, 'Wrong public baseline')
+    require(set(before) == LIVE_WEB | {'dev/' + n for n in WEB} | {'dev/worn/' + n for n in WEB}, 'Wrong public baseline')
     require(before['dev/index.html'] == BASE_HTML and before['dev/index.pck'] == BASE_PCK,
             'Wrong currently published DEV15.56 baseline')
     for name in WEB - {'index.html', 'index.pck'}:
@@ -235,7 +237,7 @@ def prepare(work, artifacts):
         shutil.copy2(production / name, work / 'site/dev' / name)
     (work / 'site/.nojekyll').write_text('')
     protected = {name: value for name, value in before.items() if not name.startswith('dev/') or name.startswith('dev/worn/')}
-    require(len(protected) == 18 and all(ident(work / 'site' / n) == v for n, v in protected.items()), 'LIVE/Worn preservation failed')
+    require(len(protected) == 17 and not (work / 'site/index.wasm').exists() and all(ident(work / 'site' / n) == v for n, v in protected.items()), 'LIVE/Worn preservation failed')
     require(sum(p.stat().st_size for p in (work / 'site').rglob('*') if p.is_file()) < 1024 ** 3, 'Pages package exceeds 1GiB')
     rollback = work / 'rollback-dev'
     rollback.mkdir()
@@ -243,7 +245,7 @@ def prepare(work, artifacts):
         shutil.copy2(work / 'previous/dev' / name, rollback / name)
     (rollback / 'rollback-manifest.json').write_text(json.dumps({n: before['dev/' + n] for n in sorted(WEB)}, indent=2))
     (work / 'staging-receipt.json').write_text(json.dumps({'version': VERSION, 'source': accepted['source'], 'run': accepted['run'], 'accepted_sha256': ident(HERE / 'accepted.json')['sha256'], 'files': accepted['production_manifest'], 'protected_files': protected}, indent=2))
-    print('QUALITY2_DEV15_56_STAGED_LIVE_AND_WORN_UNCHANGED')
+    print('HUNT_DEV15_57_STAGED_LIVE1_0_5_AND_WORN_UNCHANGED')
 
 
 def verify(work):
@@ -267,11 +269,11 @@ def verify(work):
             time.sleep(10)
     receipt = {'passed': not pending, 'version': VERSION, 'source': accepted['source'], 'run': accepted['run'],
                'accepted_sha256': ident(HERE / 'accepted.json')['sha256'], 'artifacts': accepted['artifacts'],
-               'files': expected, 'unverified': pending, 'live_preserved': 9, 'worn_preserved': 9,
+               'files': expected, 'unverified': pending, 'live_preserved': 8, 'worn_preserved': 9,
                'physical_iphone_verified': False}
     (work / 'publication-receipt.json').write_text(json.dumps(receipt, indent=2))
     require(not pending, 'Public hashes incomplete: ' + ', '.join(pending))
-    print('QUALITY2_PUBLIC_VERIFIED_27_FILES')
+    print('HUNT_PUBLIC_VERIFIED_26_FILES')
 
 
 if __name__ == '__main__':
