@@ -97,7 +97,7 @@ static func _action(goal: Dictionary) -> String:
 	var area: String = {"mossMine": "Mossvein", "moonMine": "Moonglass", "emberMine": "Emberdeep", "starMine": "Starfall"}.get(mine_id, "Mossvein")
 	match kind:
 		"station", "assay":
-			return "Sell ore · %s" % area if station == "sell" else "Visit the Forge"
+			return "Sell ore · Surface Assay" if station == "sell" else "Visit the Forge"
 		"gate":
 			return "Open the passage"
 		"mine_resource":
