@@ -1,0 +1,89 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.2 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+WARNING: Trying to play stream (-9223371690254268361) as a sample (-9223371988217625088), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _start_music_track (res://scripts/audio/audio_director.gd:295)
+         [1] _start_ambience (res://scripts/audio/audio_director.gd:286)
+         [2] _play (res://scripts/audio/audio_director.gd:352)
+         [3] play_ui (res://scripts/audio/audio_director.gd:204)
+         [4] _open_start_menu (res://scripts/main.gd:1339)
+         [5] open_goal (res://scripts/ui/treasury_goal_panel.gd:245)
+         [6] _command (res://scripts/qa/suites/skills_browser_review.gd:195)
+         [7] run (/workspace/scratch/72d2364e7fd1/game/tools/review_quality2_fixture.gd:22)
+         [8] settle (/workspace/scratch/72d2364e7fd1/game/tools/review_quality2_fixture.gd:7)
+WARNING: Trying to play stream (-9223371690187157690) as a sample (-9223371988335065607), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_ui (res://scripts/audio/audio_director.gd:204)
+         [2] _open_start_menu (res://scripts/main.gd:1339)
+         [3] open_goal (res://scripts/ui/treasury_goal_panel.gd:245)
+         [4] _command (res://scripts/qa/suites/skills_browser_review.gd:195)
+         [5] run (/workspace/scratch/72d2364e7fd1/game/tools/review_quality2_fixture.gd:22)
+         [6] settle (/workspace/scratch/72d2364e7fd1/game/tools/review_quality2_fixture.gd:7)
+WARNING: Trying to play stream (-9223371688375218381) as a sample (-9223371988251179522), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_discovery (res://scripts/audio/audio_director.gd:224)
+         [2] _on_achievement_unlocked (res://scripts/main.gd:4067)
+         [3] evaluate (res://scripts/progression/achievement_service.gd:80)
+         [4] _flush_queued_evaluation (res://scripts/progression/achievement_service.gd:101)
+WARNING: Trying to play stream (-9223371687284699357) as a sample (-9223371988368620041), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_ui (res://scripts/audio/audio_director.gd:206)
+         [2] _continue_from_menu (res://scripts/main.gd:1400)
+         [3] close_panel (res://scripts/ui/treasury_goal_panel.gd:325)
+         [4] run (/workspace/scratch/72d2364e7fd1/game/tools/review_quality2_fixture.gd:25)
+         [5] settle (/workspace/scratch/72d2364e7fd1/game/tools/review_quality2_fixture.gd:7)
+QUALITY2_FIXTURE_SCENARIO source
+QUALITY2_FIXTURE_SCENARIO deep-source
+QUALITY2_FIXTURE_SCENARIO return
+QUALITY2_FIXTURE_SCENARIO hub-donation
+QUALITY2_FIXTURE_SCENARIO donation
+QUALITY2_FIXTURE_SCENARIO podium
+WARNING: Trying to play stream (-9223371606267521524) as a sample (-9223371988536392211), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_mining (res://scripts/audio/audio_director.gd:178)
+         [2] _strike_wall (res://scripts/world/endless_descent_world.gd:3669)
+         [3] _quality2_route_fixture (res://scripts/qa/suites/skills_browser_review.gd:161)
+         [4] _command (res://scripts/qa/suites/skills_browser_review.gd:216)
+         [5] run (/workspace/scratch/72d2364e7fd1/game/tools/review_quality2_fixture.gd:30)
+         [6] settle (/workspace/scratch/72d2364e7fd1/game/tools/review_quality2_fixture.gd:7)
+WARNING: Trying to play stream (-9223371602861746950) as a sample (-9223371988251179522), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_discovery (res://scripts/audio/audio_director.gd:224)
+         [2] _on_endless_discovery_found (res://scripts/main.gd:3234)
+         [3] _update_discoveries (res://scripts/world/endless_descent_world.gd:1827)
+         [4] _process (res://scripts/world/endless_descent_world.gd:576)
+QUALITY2_FIXTURE_SCENARIO rune
+QUALITY2_FIXTURE_SCENARIO cancel-rune
+WARNING: Trying to play stream (-9223371588785663000) as a sample (-9223371988251179522), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_discovery (res://scripts/audio/audio_director.gd:224)
+         [2] _on_achievement_unlocked (res://scripts/main.gd:4067)
+         [3] _command (res://scripts/qa/suites/skills_browser_review.gd:275)
+         [4] run (/workspace/scratch/72d2364e7fd1/game/tools/review_quality2_fixture.gd:37)
+         [5] settle (/workspace/scratch/72d2364e7fd1/game/tools/review_quality2_fixture.gd:7)
+WARNING: Trying to play stream (-9223371574323703907) as a sample (-9223371988251179522), but the driver doesn't support sample playback.
+     at: start_sample_playback (servers/audio/audio_server.cpp:200)
+     GDScript backtrace (most recent call first):
+         [0] _play (res://scripts/audio/audio_director.gd:361)
+         [1] play_discovery (res://scripts/audio/audio_director.gd:224)
+         [2] _on_achievement_unlocked (res://scripts/main.gd:4067)
+         [3] _command (res://scripts/qa/suites/skills_browser_review.gd:275)
+         [4] run (/workspace/scratch/72d2364e7fd1/game/tools/review_quality2_fixture.gd:45)
+         [5] settle (/workspace/scratch/72d2364e7fd1/game/tools/review_quality2_fixture.gd:7)
+QUALITY2_FIXTURE_RUNTIME_OK
