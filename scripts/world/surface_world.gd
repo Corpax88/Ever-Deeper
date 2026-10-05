@@ -1950,6 +1950,7 @@ func _configure_surface_draw_depth() -> void:
 	for station in ["ASSAY_flytt_hele_denne", "FORGE_flytt_hele_denne"]:
 		var root: Node2D = get_node("Flyttbare_Stasjoner/" + station)
 		root.get_node("Bilde").z_index = actor_draw_depth(root.position + Vector2(0, 4))
+		_configure_shop_sign(root, "SELL" if station.begins_with("ASSAY") else "FORGE")
 	for mine_id in MINE_IDS:
 		entrance_nodes[mine_id].z_index = actor_draw_depth(_mine_entrance(mine_id) - Vector2(0, 14))
 	starfall_hub_lift_sprite.z_index = actor_draw_depth(STARFALL_HUB_LIFT_POSITION + Vector2(0, 60))
@@ -1960,6 +1961,33 @@ func _configure_surface_draw_depth() -> void:
 		portal_generator_nodes[id].front.z_index = actor_draw_depth(anchor + Vector2(0, 37))
 		# Transition children retain their relative back/front offsets.
 		portal_transitions[id].z_index = actor_draw_depth(anchor) - 10
+
+
+func _configure_shop_sign(station: Node2D, title: String) -> void:
+	# Keep both signs attached to the authored shop, with no input surface.
+	var label: Label = station.get_node("Navn")
+	label.text = title
+	label.position = Vector2(-68, -76)
+	label.size = Vector2(136, 34)
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.z_index = 2100
+	label.add_theme_font_override("font", preload("res://assets/ui/fonts/ChakraPetch-SemiBold.ttf"))
+	label.add_theme_font_size_override("font_size", 24)
+	label.add_theme_color_override("font_color", Color("ffdc4d"))
+	label.add_theme_color_override("font_outline_color", Color("08121c"))
+	label.add_theme_constant_override("outline_size", 4)
+	var material: = CanvasItemMaterial.new()
+	material.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
+	label.material = material
+	var plaque: = StyleBoxFlat.new()
+	plaque.bg_color = Color("16202be8")
+	plaque.border_color = Color("c79845")
+	plaque.set_border_width_all(2)
+	plaque.set_corner_radius_all(6)
+	plaque.content_margin_top = 3
+	plaque.content_margin_bottom = 3
+	label.add_theme_stylebox_override("normal", plaque)
 
 
 func _on_player_moved(world_position: Vector2) -> void :

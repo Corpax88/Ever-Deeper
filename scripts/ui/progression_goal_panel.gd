@@ -3,9 +3,9 @@ extends PanelContainer
 
 ## A read-only HUD surface. All children deliberately pass touches to the world.
 const TITLE_FONT: = preload("res://assets/ui/fonts/ChakraPetch-SemiBold.ttf")
-const GOLD: = Color("ffe3a0")
-const MINT: = Color("a8e3bc")
-const CREAM: = Color("e7e6d2")
+const GOLD: = Color("ffdc4d")
+const WHITE: = Color("ffffff")
+const CREAM: = Color("ffffff")
 
 var _title: Label
 var _action: Label
@@ -35,7 +35,7 @@ func _ready() -> void:
 	_title.add_theme_font_override("font", TITLE_FONT)
 	_title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_content.add_child(_title)
-	_action = _label(MINT)
+	_action = _label(WHITE)
 	_action.name = "NextAction"
 	_action.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_content.add_child(_action)
@@ -90,7 +90,7 @@ func present(goal: Dictionary) -> void:
 		if counter.text != amount:
 			counter.text = amount
 		if ready != bool(controls.get("ready", not ready)):
-			counter.add_theme_color_override("font_color", MINT if ready else GOLD)
+			counter.add_theme_color_override("font_color", WHITE if ready else GOLD)
 			controls["ready"] = ready
 			_row_controls[id] = controls
 	_rows.visible = not requirements.is_empty()
@@ -201,8 +201,8 @@ func _label(color: Color) -> Label:
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.add_theme_font_override("font", TITLE_FONT)
 	label.add_theme_color_override("font_color", color)
-	label.add_theme_color_override("font_outline_color", Color("101512"))
-	label.add_theme_constant_override("outline_size", 4)
+	label.add_theme_color_override("font_outline_color", Color("08121c"))
+	label.add_theme_constant_override("outline_size", 6)
 	label.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.8))
 	label.add_theme_constant_override("shadow_offset_y", 1)
 	return label

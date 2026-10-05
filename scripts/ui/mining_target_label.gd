@@ -55,9 +55,9 @@ static func present(world: Node2D, canvas: Transform2D, world_rect: Rect2, text:
 		label.material = text_material
 		label.add_theme_font_override("font", font)
 		label.add_theme_font_size_override("font_size", font_size)
-		label.add_theme_color_override("font_color", Color("f4e8be"))
-		label.add_theme_color_override("font_outline_color", Color("101512"))
-		label.add_theme_constant_override("outline_size", 4)
+		label.add_theme_color_override("font_color", Color("ffdc4d"))
+		label.add_theme_color_override("font_outline_color", Color("08121c"))
+		label.add_theme_constant_override("outline_size", 6)
 		world.add_child(label)
 	label.text = text
 	label.size = text_size
