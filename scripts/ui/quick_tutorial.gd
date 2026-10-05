@@ -123,8 +123,8 @@ func goal_override(goal: Dictionary) -> Dictionary:
 	var action := ""
 	match _step:
 		0: action = "Drag the left side to move" if _touch_mode else "Use WASD / arrows to move"
-		1: action = ("Tap DESCEND" if _touch_mode else "Press E / F to enter") if String(_main.surface_context).begins_with("enter:") else ("Follow the gold marker" if String(_main.phase) == "surface" else "Follow the marker back to a mine")
-		2: action = ("Hold MINE beside ore" if _touch_mode else "Hold SPACE beside ore") if String(_main.phase) in ["mine", "depth", "endless"] else "Follow the marker to a mine"
+		1: action = ("Tap DESCEND" if _touch_mode else "Press E / F to enter") if String(_main.surface_context).begins_with("enter:") else "Follow the gold marker"
+		2: action = ("Hold MINE beside ore" if _touch_mode else "Hold SPACE beside ore") if String(_main.phase) in ["mine", "depth", "endless"] else "Follow the gold marker"
 		3: action = "Tap BAG to inspect your ore"
 		4: action = String(goal.get("hud_action", "Mine & sell · Mossvein"))
 	result["objective_id"] = "onboarding:" + str(_step)
