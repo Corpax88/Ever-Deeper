@@ -1,3 +1,13 @@
+Current DEV release: [DEV15.60 text and shop signs](https://github.com/Corpax88/Ever-Deeper/blob/codex/text-signs-20261005/docs/text-signs/HANDOFF.md), published and verified 6 October 2026 at https://corpax88.github.io/Ever-Deeper/dev/. Bright gold/white outlined text and matching SELL/FORGE signs above shop entrances. Refresh → Continue, no reset.
+
+Canonical source `9f7cc3dda596ed856dd8416dc3c30a56fb7a26cb`, branch `codex/text-signs-20261005`; production11373248422, QA37379725587. Mac41checks per actual667×375/844×390/932×430,36nativePNG images; input and ordinary Apple WebKit passed. Exact root/critic image lists recorded. First SELL placement behind DEV TOOLS rejected and fixed; no physical-iPhone/FPS claim.
+
+Publication93a00df8e9809853b719cffdc0b57b33f031be4d/run37380518641; receipt11373194367 verifies26publicfiles, preserving8LIVE1.0.5/9Worn and sharedDEVengine. Rollback11373357052 contains15.59 despite inherited15-58 artifact name. Main is publication carrier, never export its historical runtime.
+
+Website source7fd51fdc14cab3095158329908c863fd56f74c29/version13/deploymentappgdep_6ac42092934c8191bbd4a1f53e2a461c succeeded.86release records,85historical retained,244local links/assets/anchors verified. No pending jobs/approvals. Preserve approved assets/saves and parked FPS/rotation. Do not repeat accepted unchanged work. Historical statuses below do not supersede this entry.
+
+---
+
 Current DEV release: [DEV15.59 wall and quest visibility](https://github.com/Corpax88/Ever-Deeper/blob/codex/wall-focus-20261005/docs/wall-focus/HANDOFF.md), published and verified 5 October 2026 at https://corpax88.github.io/Ever-Deeper/dev/. Wall progress and 10/10 completion appear at the wall; transparent outlined quest text is mid-right. Refresh → Continue, no reset.
 
 Canonical source `4e5cb9339bf2be49596d2ab7ced2f92e13639786`, branch `codex/wall-focus-20261005`; production11371552790, QA37375569164. Actual Mac667×375/844×390/932×430 each passed37checks with30exact-size PNGs; retained input and ordinary Apple WebKit passed. Root/critic actual-image lists are recorded. Earlier Mac-size claims were rejected and remain documented; no physical-iPhone/FPS or human gaze claim.
