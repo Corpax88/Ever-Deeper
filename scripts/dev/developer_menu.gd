@@ -600,6 +600,9 @@ func _apply_layout(viewport_size: Vector2, safe_insets: Vector4) -> void :
 		var caption_rect: Rect2 = hud_layout.menu_caption
 		origin.x = maxf(origin.x, menu_rect.position.x)
 		origin.y = maxf(safe_insets.y, caption_rect.end.y) + outer_gap
+	# Keep the world shop roof signs clear; development controls use the open top strip.
+	if hud != null and (main_menu == null or not main_menu.visible):
+		origin = Vector2(viewport_size.x * 0.52, safe_insets.y + outer_gap)
 	toggle_button.position = origin
 	toggle_button.size = toggle_size
 

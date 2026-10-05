@@ -1964,30 +1964,40 @@ func _configure_surface_draw_depth() -> void:
 
 
 func _configure_shop_sign(station: Node2D, title: String) -> void:
-	# Keep both signs attached to the authored shop, with no input surface.
+	# World-owned lettering floats above the roof, never across the shop art.
 	var label: Label = station.get_node("Navn")
 	label.text = title
-	label.position = Vector2(-68, -76)
-	label.size = Vector2(136, 34)
+	label.position = Vector2(-76, -166)
+	label.size = Vector2(152, 34)
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	label.z_index = 2100
-	label.add_theme_font_override("font", preload("res://assets/ui/fonts/ChakraPetch-SemiBold.ttf"))
-	label.add_theme_font_size_override("font_size", 24)
-	label.add_theme_color_override("font_color", Color("ffdc4d"))
-	label.add_theme_color_override("font_outline_color", Color("08121c"))
-	label.add_theme_constant_override("outline_size", 4)
-	var material: = CanvasItemMaterial.new()
-	material.light_mode = CanvasItemMaterial.LIGHT_MODE_UNSHADED
+	label.add_theme_font_override("font", preload("res://assets/ui/fonts/DejaVuSerif-Bold.ttf"))
+	label.add_theme_font_size_override("font_size", 26)
+	label.add_theme_color_override("font_color", Color("b4e5ff"))
+	label.add_theme_color_override("font_outline_color", Color("102b44"))
+	label.add_theme_constant_override("outline_size", 5)
+	label.add_theme_color_override("font_shadow_color", Color("07121e"))
+	label.add_theme_constant_override("shadow_offset_y", 3)
+	label.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+	var shader: = Shader.new()
+	shader.code = """shader_type canvas_item;
+render_mode unshaded;
+varying float face_y;
+void vertex() { face_y = VERTEX.y / 34.0; }
+void fragment() {
+ vec4 glyph = texture(TEXTURE, UV) * COLOR;
+ // Tint only the bright glyph, retaining its dark outline and drop shadow.
+ float face = smoothstep(0.32, 0.65, min(COLOR.r, min(COLOR.g, COLOR.b)));
+ float y = clamp(face_y, 0.0, 1.0);
+ vec3 steel = mix(vec3(0.22,0.48,0.69), vec3(0.76,0.93,1.0), 1.0-y);
+ steel += vec3(0.15,0.17,0.18) * exp(-pow((y-0.36)*22.0,2.0));
+ glyph.rgb = mix(glyph.rgb, steel * texture(TEXTURE, UV).rgb, face);
+ COLOR = glyph;
+}"""
+	var material: = ShaderMaterial.new()
+	material.shader = shader
 	label.material = material
-	var plaque: = StyleBoxFlat.new()
-	plaque.bg_color = Color("16202be8")
-	plaque.border_color = Color("c79845")
-	plaque.set_border_width_all(2)
-	plaque.set_corner_radius_all(6)
-	plaque.content_margin_top = 3
-	plaque.content_margin_bottom = 3
-	label.add_theme_stylebox_override("normal", plaque)
 
 
 func _on_player_moved(world_position: Vector2) -> void :
