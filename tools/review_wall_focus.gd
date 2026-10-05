@@ -3,19 +3,25 @@ var main: Node
 var state: Node
 var out: String
 var checks: Array=[]
+var capture_sizes: Array=[]
 func _initialize() -> void: run.call_deferred()
 func check(label: String, ok: bool) -> void:
  checks.append({"name":label,"passed":ok})
- FileAccess.open(out.path_join("report.json"),FileAccess.WRITE).store_string(JSON.stringify({"checks":checks,"passed":checks.all(func(c):return c.passed)},"\t"))
+ FileAccess.open(out.path_join("report.json"),FileAccess.WRITE).store_string(JSON.stringify({"checks":checks,"passed":checks.all(func(c):return c.passed),"actual_viewport":[root.size.x,root.size.y],"capture_sizes":capture_sizes},"\t"))
  if not ok: print("CHECK_FAILED ",label)
 func settle() -> void: await create_timer(0.4).timeout
 func shot(label: String) -> void:
  if main.phase == "mine": main.mine_world.queue_redraw()
  if main.phase == "depth": main.depth_world.queue_redraw()
  await settle();await RenderingServer.frame_post_draw
- root.get_texture().get_image().save_png(out.path_join(label+".png"))
+ var frame: Image=root.get_texture().get_image()
+ capture_sizes.append([frame.get_width(),frame.get_height()])
+ frame.save_png(out.path_join(label+".png"))
 func run() -> void:
  out=OS.get_environment("WALL_OUT");DirAccess.make_dir_recursive_absolute(out)
+ var expected: PackedStringArray=OS.get_environment("WALL_EXPECTED_SIZE").split(",")
+ if expected.size()==2:
+  check("actual framebuffer matches requested mobile size",root.size==Vector2i(int(expected[0]),int(expected[1])))
  state=root.get_node("RunState")
  main=load("res://scenes/main/main.tscn").instantiate();root.add_child(main);current_scene=main
  await create_timer(2.0).timeout;main._start_new_game();await settle()

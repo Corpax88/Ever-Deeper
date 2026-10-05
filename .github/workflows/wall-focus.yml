@@ -40,13 +40,13 @@ jobs:
         with: {name: wall-focus-production, path: '${{ runner.temp }}/candidate', retention-days: 30}
       - uses: actions/upload-artifact@v4
         if: always()
-        with: {name: wall-focus-1334, path: '${{ runner.temp }}/evidence/1334', retention-days: 30}
+        with: {name: wall-focus-667, path: '${{ runner.temp }}/evidence/667', retention-days: 30}
       - uses: actions/upload-artifact@v4
         if: always()
-        with: {name: wall-focus-1688, path: '${{ runner.temp }}/evidence/1688', retention-days: 30}
+        with: {name: wall-focus-844, path: '${{ runner.temp }}/evidence/844', retention-days: 30}
       - uses: actions/upload-artifact@v4
         if: always()
-        with: {name: wall-focus-1864, path: '${{ runner.temp }}/evidence/1864', retention-days: 30}
+        with: {name: wall-focus-932, path: '${{ runner.temp }}/evidence/932', retention-days: 30}
       - uses: actions/upload-artifact@v4
         if: always()
         with: {name: wall-focus-input, path: '${{ runner.temp }}/evidence/input', retention-days: 30}
