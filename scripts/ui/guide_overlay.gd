@@ -4,6 +4,8 @@ extends Control
 const REDRAW_INTERVAL: = 1.0 / 30.0
 const IPHONE_LANDSCAPE_ASPECT: = 1.95
 
+var action_control: Button
+var action_elapsed := 0.0
 var target_camera: Camera2D
 var target_world: = Vector2.ZERO
 var accent: = Color("e9c86d")
@@ -35,7 +37,15 @@ func set_world_target(camera: Camera2D, world_position: Vector2, color: Color = 
 		_request_redraw()
 
 
+func set_action_control(control: Button) -> void:
+	if action_control != control:
+		action_control = control
+		action_elapsed = 0.0
+		_request_redraw()
+
+
 func clear_target() -> void :
+	action_control = null
 	if not has_target and target_camera == null:
 		return
 	has_target = false
@@ -49,6 +59,7 @@ func _process(delta: float) -> void :
 	redraw_elapsed += maxf(0.0, delta)
 	if redraw_elapsed < REDRAW_INTERVAL:
 		return
+	action_elapsed += redraw_elapsed
 	elapsed += redraw_elapsed
 	redraw_elapsed = fmod(redraw_elapsed, REDRAW_INTERVAL)
 	_request_redraw()
@@ -69,6 +80,18 @@ func _request_redraw() -> void :
 
 func _draw() -> void :
 	if not has_target or not is_instance_valid(target_camera):
+		return
+	if is_instance_valid(action_control) and action_control.is_visible_in_tree() and not action_control.disabled:
+		var rect: Rect2 = action_control.get_global_rect().grow(6.0)
+		var box := StyleBoxFlat.new()
+		box.bg_color = Color.TRANSPARENT
+		box.border_color = Color(0.015, 0.02, 0.018, 0.9)
+		box.set_border_width_all(6)
+		box.set_corner_radius_all(18)
+		draw_style_box(box, rect)
+		box.border_color = Color(accent, 0.85 + 0.15 * sin(action_elapsed * TAU) if action_elapsed < 2.0 else 0.85)
+		box.set_border_width_all(2)
+		draw_style_box(box, rect)
 		return
 	var viewport_size: = get_viewport_rect().size
 	var center: = target_camera.get_screen_center_position()
@@ -102,6 +125,9 @@ func safe_rect_for_viewport(viewport_size: Vector2) -> Rect2:
 func _draw_world_marker(position: Vector2, pulse: float) -> void :
 	var radius: = 19.0 + pulse * 3.0
 	draw_circle(position, radius + 10.0, Color(accent, 0.045 + pulse * 0.035))
+	# A dark keyline keeps the semantic gold visible on bright stone and foliage.
+	for angles in [Vector2(-0.7, -0.3), Vector2(0.3, 0.7), Vector2(0.8, 1.2), Vector2(-0.2, 0.2)]:
+		draw_arc(position, radius, PI * angles.x, PI * angles.y, 10, Color(0.015, 0.02, 0.018, 0.9), 6.0)
 	draw_arc(position, radius, - PI * 0.7, - PI * 0.3, 10, Color(accent, 0.82), 2.2)
 	draw_arc(position, radius, PI * 0.3, PI * 0.7, 10, Color(accent, 0.82), 2.2)
 	draw_arc(position, radius, PI * 0.8, PI * 1.2, 10, Color(accent, 0.82), 2.2)
@@ -124,4 +150,5 @@ func _draw_edge_marker(position: Vector2, direction: Vector2, pulse: float) -> v
 		var offset: = float(offset_value)
 		var tip: Vector2 = position + forward * (12.0 + offset)
 		var back: Vector2 = position - forward * (8.0 - offset)
+		draw_polyline(PackedVector2Array([back + side * 8.0, tip, back - side * 8.0]), Color(0.015, 0.02, 0.018, 0.9), 7.0)
 		draw_polyline(PackedVector2Array([back + side * 8.0, tip, back - side * 8.0]), Color(accent, 0.72 + pulse * 0.26), 3.0)

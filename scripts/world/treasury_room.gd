@@ -488,7 +488,10 @@ func specimen(kind: String) -> Texture2D:
 
 func apply_hud() -> void:
 	if not inside: return
-	for saved in hidden_hud:
-		if is_instance_valid(saved.node): saved.node.hide()
 	var main: Node=hub.get_parent()
+	for saved in hidden_hud:
+		if not is_instance_valid(saved.node): continue
+		if main.quick_tutorial != null and main.quick_tutorial.keeps_hud_control(saved.node):
+			saved.node.show()
+		else: saved.node.hide()
 	main.premium_hud.context_button.position=Vector2(20,get_viewport_rect().size.y-190)

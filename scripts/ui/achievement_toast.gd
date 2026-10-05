@@ -243,6 +243,8 @@ func _process(delta: float) -> void :
 
 
 func presentation_obstructed() -> bool:
+	var tutorial: Node = get_parent().get_node_or_null("QuickTutorial")
+	if tutorial != null and tutorial.has_method("prioritizes_learning") and tutorial.prioritizes_learning(): return true
 	if not is_inside_tree(): return false
 	if get_tree().paused: return true
 	var main: Node = get_tree().current_scene

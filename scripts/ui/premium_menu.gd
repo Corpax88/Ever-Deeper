@@ -1,6 +1,7 @@
 class_name PremiumMenu
 extends Control
 
+signal guidance_requested
 signal continue_requested
 signal new_game_requested
 signal new_game_confirmed
@@ -13,7 +14,7 @@ const MINT: = Color("a8e3bc")
 const MUTED: = Color("789384")
 const INK: = Color("07120d")
 const IPHONE_LANDSCAPE_ASPECT: = 1.65
-const DEV_RELEASE_VERSION: = "1.0.0-dev.15.13"
+const DEV_RELEASE_VERSION: = "1.0.0-dev.15.58"
 
 
 static func release_version() -> String:
@@ -331,7 +332,9 @@ func _build_detail_view() -> void :
 	card.add_child(back)
 	controls_button = _menu_button("CONTROLS", false)
 	controls_button.name = "Controls"
-	controls_button.pressed.connect(_show_controls)
+	controls_button.pressed.connect(func():
+		if detail_title.text == "CONTROLS": guidance_requested.emit()
+		else: _show_controls())
 	controls_button.hide()
 	card.add_child(controls_button)
 
@@ -649,8 +652,11 @@ func _update_detail_footer() -> void:
 	var settings: bool = detail_title.text == "SETTINGS"
 	var height: float = 82.0 if iphone else 52.0
 	var y: float = 522.0 if iphone else 526.0
-	controls_button.visible = settings
-	if settings:
+	var controls: bool = detail_title.text == "CONTROLS"
+	controls_button.text = "REPLAY GUIDE" if controls else "CONTROLS"
+	controls_button.visible = settings or controls
+	controls_button.disabled = controls and continue_button.disabled
+	if settings or controls:
 		var width: float = 400.0
 		var left: float = (detail_card.size.x - width * 2.0 - 28.0) * 0.5
 		_place(controls_button, Rect2(left, y, width, height))

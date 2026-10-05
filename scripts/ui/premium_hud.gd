@@ -178,6 +178,9 @@ func set_objective(title: String, detail: String) -> void :
 
 
 func set_progression_goal(goal: Dictionary) -> void:
+	var tutorial: Node = get_parent().get_node_or_null("QuickTutorial")
+	if tutorial != null and tutorial.has_method("goal_override"):
+		goal = tutorial.goal_override(goal)
 	set_objective(String(goal.get("title", "")), String(goal.get("detail", "")))
 	if progression_goal_panel == null:
 		return

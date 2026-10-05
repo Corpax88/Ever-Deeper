@@ -1,0 +1,145 @@
+name: Ever-Deeper Visual guidance DEV15.58
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/visual-guidance-20261005]
+    paths:
+      - '.github/visual-guidance/run.json'
+permissions: {contents: read, actions: read}
+concurrency: {group: visual-guidance-20261005, cancel-in-progress: true}
+env:
+  BASE_VERSION: '1.0.0-dev.15.57'
+  CANDIDATE_VERSION: '1.0.0-dev.15.58'
+jobs:
+  native:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ github.sha }}', persist-credentials: false}
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '11316807146'
+          merge-multiple: true
+          run-id: '37240230778'
+          github-token: '${{ github.token }}'
+          path: '${{ runner.temp }}/original'
+      - name: Prepare exact baseline QA and production candidate
+        run: |
+          python3 .github/visual-guidance/prepare.py "$RUNNER_TEMP/original/index.pck" "$RUNNER_TEMP/baseline" baseline
+          python3 .github/visual-guidance/prepare.py "$RUNNER_TEMP/original/index.pck" "$RUNNER_TEMP/candidate" qa
+          python3 .github/visual-guidance/prepare.py "$RUNNER_TEMP/original/index.pck" "$RUNNER_TEMP/production" production
+      - name: Install exact native engine
+        run: |
+          curl -L --fail --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot"
+          "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --version
+      - name: Focused native regressions against exact production pack
+        continue-on-error: true
+        run: python3 .github/visual-guidance/native.py "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" "$RUNNER_TEMP/production/index.pck" "$RUNNER_TEMP/evidence/native" "$RUNNER_TEMP/candidate/index.pck"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: visual-guidance-native, path: '${{ runner.temp }}/evidence/native', retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: visual-guidance-package-receipts
+          path: |
+            ${{ runner.temp }}/baseline/qa-build-receipt.json
+            ${{ runner.temp }}/candidate/qa-build-receipt.json
+            ${{ runner.temp }}/production/qa-build-receipt.json
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: visual-guidance-production-candidate, path: '${{ runner.temp }}/production', retention-days: 30}
+      - name: Enforce independently recorded native gates
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json,os,runpy
+          from pathlib import Path
+          p=Path(os.environ['RUNNER_TEMP'])/'evidence/native/report.json'
+          assert p.exists(), 'native report missing'
+          report=json.loads(p.read_text())
+          required=runpy.run_path('.github/visual-guidance/publish.py',run_name='release_contract')['NATIVE_GATES']
+          assert report.get('passed') is True and report.get('checks'), 'native failed or empty'
+          assert required <= {row['name'] for row in report['checks']}, 'required native gate missing'
+          assert all(row.get('passed') is True for row in report['checks']), 'native gate failed'
+          PY
+  graphical:
+    name: Graphical (${{ matrix.group }})
+    runs-on: macos-15
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {group: candidate, script: .github/hunt-followup/review.mjs, pack: candidate}
+          - {group: focused, script: .github/hunt-followup/focused.mjs, pack: candidate}
+          - {group: ricochet-lifecycle, script: .github/hunt-followup/ricochet-lifecycle.mjs, pack: candidate}
+          - {group: journey, script: .github/hunt-followup/journey.mjs, pack: candidate}
+          - {group: guidance, script: .github/visual-guidance/review.mjs, pack: candidate}
+          - {group: ordinary-candidate, script: .github/hunt-followup/startup.mjs, pack: production}
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ github.sha }}', persist-credentials: false}
+      - uses: actions/download-artifact@v4
+        with:
+          artifact-ids: '11316807146'
+          merge-multiple: true
+          run-id: '37240230778'
+          github-token: '${{ github.token }}'
+          path: '${{ runner.temp }}/original'
+      - name: Prepare exact baseline QA and production candidate
+        run: |
+          python3 .github/visual-guidance/prepare.py "$RUNNER_TEMP/original/index.pck" "$RUNNER_TEMP/baseline" baseline
+          python3 .github/visual-guidance/prepare.py "$RUNNER_TEMP/original/index.pck" "$RUNNER_TEMP/candidate" qa
+          python3 .github/visual-guidance/prepare.py "$RUNNER_TEMP/original/index.pck" "$RUNNER_TEMP/production" production
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npx playwright install chromium webkit
+      - name: Run all original checks in this browser group
+        continue-on-error: true
+        run: node "$REVIEW_SCRIPT" "$RUNNER_TEMP/$REVIEW_PACK" "$RUNNER_TEMP/evidence/$REVIEW_GROUP"
+        env:
+          REVIEW_SCRIPT: '${{ matrix.script }}'
+          REVIEW_PACK: '${{ matrix.pack }}'
+          REVIEW_GROUP: '${{ matrix.group }}'
+          EXPECTED_VERSION: "${{ env.CANDIDATE_VERSION }}"
+          CANDIDATE_SOURCE: '${{ github.sha }}'
+      - name: Split graphical evidence into files below 30MiB
+        if: always()
+        run: python3 .github/hunt-followup/split.py "$RUNNER_TEMP/evidence/$REVIEW_GROUP" "$RUNNER_TEMP/evidence-split/$REVIEW_GROUP"
+        env: {REVIEW_GROUP: '${{ matrix.group }}'}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'visual-guidance-${{ matrix.group }}-manifest', path: '${{ runner.temp }}/evidence-split/${{ matrix.group }}/recovery-manifest.json', if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'visual-guidance-${{ matrix.group }}-00', path: '${{ runner.temp }}/evidence-split/${{ matrix.group }}/part-00.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'visual-guidance-${{ matrix.group }}-01', path: '${{ runner.temp }}/evidence-split/${{ matrix.group }}/part-01.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'visual-guidance-${{ matrix.group }}-02', path: '${{ runner.temp }}/evidence-split/${{ matrix.group }}/part-02.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: 'visual-guidance-${{ matrix.group }}-03', path: '${{ runner.temp }}/evidence-split/${{ matrix.group }}/part-03.bin', compression-level: 0, if-no-files-found: ignore, retention-days: 30}
+      - name: Enforce independently recorded browser gates
+        if: always()
+        env: {REVIEW_GROUP: '${{ matrix.group }}'}
+        run: |
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          name=os.environ['REVIEW_GROUP']
+          p=Path(os.environ['RUNNER_TEMP'])/'evidence'/name/'report.json'
+          assert p.exists(), name+' report missing'
+          report=json.loads(p.read_text())
+          if name=='ordinary-candidate':
+              assert not report.get('failure') and not report.get('crashed') and report.get('completed_observation'), 'ordinary-candidate failed'
+          else:
+              assert report.get('passed',False), name+' failed'
+          PY

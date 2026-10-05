@@ -341,6 +341,7 @@ func _install_premium_menu() -> void :
 	premium_menu.name = "PremiumMenu"
 	$HUD.add_child(premium_menu)
 	premium_menu.continue_requested.connect(_continue_from_menu)
+	premium_menu.guidance_requested.connect(_replay_guidance)
 	premium_menu.new_game_requested.connect(_request_new_game)
 	premium_menu.new_game_confirmed.connect(_start_new_game)
 	premium_menu.settings_back_to_skills.connect(_return_to_skills_from_settings)
@@ -886,7 +887,7 @@ func _open_inventory(return_to_skills: bool = false) -> void :
 		Dictionary(RunState.protected_progress_cargo())
 	)
 	if quick_tutorial != null:
-		quick_tutorial.dismiss()
+		quick_tutorial.on_bag_opened()
 	guide_overlay.clear_target()
 
 
@@ -907,6 +908,9 @@ func _close_inventory(return_to_parent: bool = true) -> void :
 
 
 func _progression_goal() -> Dictionary:
+	if quick_tutorial != null:
+		var lesson: Dictionary = quick_tutorial.routing_goal()
+		if not lesson.is_empty(): return lesson
 	var pinned: Dictionary = preload("res://scripts/state/treasury_goals.gd").hud_goal()
 	var discovery: Dictionary = {}
 	if phase == "endless" and is_instance_valid(endless_world):
@@ -929,7 +933,7 @@ func _update_visual_guide() -> void :
 	if in_treasury: hub_world.treasury.apply_hud()
 	guide_route_update_count += 1
 	var goal: Dictionary = _progression_goal()
-	if in_treasury and String(goal.get("kind", "")) != "treasury_goal":
+	if in_treasury and String(goal.get("kind", "")) != "treasury_goal" and String(goal.get("objective_id", "")) != "learn:mine":
 		guide_overlay.clear_target()
 		return
 	if goal.is_empty():
@@ -943,6 +947,9 @@ func _update_visual_guide() -> void :
 		goal["hud_action"] = proposal.hud_action
 	if premium_hud != null and not in_treasury:
 		premium_hud.set_progression_goal(goal)
+	if quick_tutorial != null and quick_tutorial.owns_world_focus():
+		guide_overlay.clear_target()
+		return
 	var resolved: Dictionary = guide_director.resolve(proposal)
 	if resolved.is_empty() or String(resolved.get("target_key", "")).is_empty():
 		guide_overlay.clear_target()
@@ -973,7 +980,28 @@ func _update_visual_guide() -> void :
 	if target == Vector2.ZERO or not is_instance_valid(camera):
 		guide_overlay.clear_target()
 	else:
-		guide_overlay.set_world_target(camera, target, color)
+		# Gold consistently means next action, independent of biome/ore colors.
+		guide_overlay.set_world_target(camera, target, Color("ffe3a0"))
+		guide_overlay.set_action_control(_matching_guide_control(String(resolved.target_key)))
+
+
+func _matching_guide_control(key: String, allow_lesson: bool = false) -> Control:
+	# Hand attention from the world marker to the matching, usable action only.
+	# Unrelated nearby stations and disabled/hidden actions never receive a cue.
+	if premium_hud == null or (not allow_lesson and quick_tutorial != null and quick_tutorial.prioritizes_learning()): return null
+	var button: Button = premium_hud.context_button
+	if not button.is_visible_in_tree() or button.disabled: return null
+	var matches := false
+	match phase:
+		"surface":
+			matches = key == "surface:station:" + surface_context or (surface_context.begins_with("enter:") and key == "surface:mine:" + surface_context.trim_prefix("enter:"))
+		"mine":
+			matches = (mine_exit_context and key == "mine:%s:exit" % current_mine_id) or (mine_depth_context and key == "mine:%s:shaft" % current_mine_id)
+		"depth": matches = depth_context == "depthExit" and key == "depth:%s:exit" % current_mine_id
+		"hub":
+			var contexts: Dictionary = {"hub:surface_lift":"hubExit", "hub:deep_elevator":"deepElevator", "hub:relic_pedestal":"relicPedestal", "hub:treasury":"treasuryEnter", "treasury:exit":"treasuryExit"}
+			matches = String(contexts.get(key,"!")) == hub_context or (key.begins_with("hub:workshop:") and key.trim_prefix("hub:") == hub_context)
+	return button if matches else null
 
 
 func mobile_guide_performance_snapshot() -> Dictionary:
@@ -994,6 +1022,13 @@ func _guide_route_proposal(goal: Dictionary) -> Dictionary:
 		"candidates": [],
 	}
 	var kind: = String(goal.get("kind", ""))
+	if objective_id == "learn:mine":
+		if phase == "hub" and hub_world.treasury.inside:
+			proposal.candidates = [_guide_candidate("learn:treasury_exit", hub_world.treasury.EXIT, 0.0)]
+			return proposal
+		if phase == "deepheart":
+			proposal.candidates = [_guide_candidate("learn:deepheart_exit", deepheart_world.EXIT_POSITION, 0.0)]
+			return proposal
 	if kind == "treasury_goal":
 		return _treasury_guide_proposal(goal, proposal)
 	var target_mine: = String(goal.get("mine_id", "mossMine"))
@@ -1478,6 +1513,7 @@ func _start_new_game() -> void :
 	_dismiss_deepheart_conclusion(false)
 	new_game_confirm.visible = false
 	RunState.start_new_run()
+	if quick_tutorial != null: quick_tutorial.reset_for_new_run()
 	deepheart_world.reset_runtime_state()
 	if endless_world.has_method("import_runtime_state"):
 		endless_world.import_runtime_state({
@@ -1521,6 +1557,13 @@ func _maybe_show_quick_tutorial() -> void :
 		return
 	tutorial_open = true
 	quick_tutorial.open(DisplayServer.is_touchscreen_available())
+
+
+func _replay_guidance() -> void:
+	if not game_started and not save_available: return
+	_continue_from_menu()
+	tutorial_open = true
+	quick_tutorial.replay(DisplayServer.is_touchscreen_available())
 
 
 func _on_quick_tutorial_closed() -> void :
@@ -4089,6 +4132,8 @@ func _update_achievement_toast_anchor() -> void :
 	if is_instance_valid(target_label) and target_label.is_visible_in_tree():
 		exclusions.append((target_label.get_global_transform_with_canvas() * Rect2(Vector2.ZERO, target_label.size)).grow(4.0))
 	var hud_controls: Array[Control] = [mine_button,laser_button]
+	if quick_tutorial != null and quick_tutorial.is_teaching():
+		exclusions.append(quick_tutorial.debug_snapshot().skip_rect)
 	if premium_hud != null:
 		hud_controls.append_array([
 			premium_hud.menu_button, premium_hud.guide_button, premium_hud.gold_cluster,
