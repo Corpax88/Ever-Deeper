@@ -76,7 +76,7 @@ jobs:
       matrix:
         include:
           - {group: candidate, script: .github/hunt-followup/review.mjs, pack: candidate}
-          - {group: focused, script: .github/hunt-followup/focused.mjs, pack: candidate}
+          - {group: focused, script: .github/visual-guidance/focused.mjs, pack: candidate}
           - {group: ricochet-lifecycle, script: .github/hunt-followup/ricochet-lifecycle.mjs, pack: candidate}
           - {group: journey, script: .github/hunt-followup/journey.mjs, pack: candidate}
           - {group: guidance, script: .github/visual-guidance/review.mjs, pack: candidate}

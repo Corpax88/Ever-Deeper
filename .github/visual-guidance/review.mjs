@@ -126,6 +126,10 @@ try{
  check('touch-help-not-keyboard',(await state()).guidance.touch_mode);
  await views('01-move');
  await delay(11000);check('eleven-seconds-idle-does-not-complete',(await state()).guidance.step===0);
+ await command('quality_achievement',{index:0});await delay(900);
+ const deferred=(await state()).guidance.achievement;
+ check('earned-notice-retained-and-suspended-during-learning',deferred.active&&deferred.suspended&&!deferred.visible,{deferred});
+ await shot('01-deferred-achievement');
  await page.keyboard.press('Escape');await wait('pause',s=>s.menu);await tap('continue');await ready();
  check('pause-retains-move',(await state()).guidance.step===0);
  await walk(1,s=>s.guidance.step===1,'touch movement completes first task');
@@ -141,6 +145,9 @@ try{
  await wait('actual pickup reaches Bag task',s=>s.guidance.step===3);
  await views('04-bag');await tap('hud_bag');await wait('Bag teaches without losing progress',s=>s.inventory_open&&s.guidance.step===4&&s.guidance.running);
  await shot('05-open-bag');await tap('inventory_close');await ready();await wait('upgrade lesson returns',s=>s.guidance.visible&&s.guidance.step===4);
+ await wait('earned notice resumes after core lessons',s=>s.guidance.achievement.visible);
+ check('same-earned-notice-preserved',(await state()).guidance.achievement.active_id===deferred.active_id);
+ await shot('06-resumed-achievement');
  await views('06-upgrade');
  await page.keyboard.press('Escape');await wait('saved menu',s=>s.menu);await delay(1500);
  await page.reload({waitUntil:'domcontentloaded',timeout:180000});await wait('reloaded menu',s=>s?.guidance&&s.menu,180000);await tap('continue');await ready();await wait('persistent exact lesson',s=>s.guidance.step===4&&s.guidance.visible);await shot('07-reloaded-lesson');
