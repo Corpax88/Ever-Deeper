@@ -1,3 +1,21 @@
+# DEV15.58 — published and verified
+
+Published5October2026 at https://corpax88.github.io/Ever-Deeper/dev/. Refresh and Continue. To try the guide on an existing expedition: Settings → Controls → Replay Guide; no reset. The beginner course teaches movement, entering a mine, actual ore collection, Bag and first upgrade. Developed expeditions replay four core tasks without demanding a redundant upgrade.
+
+Research and critic decisions: [RESEARCH.md](RESEARCH.md). Accepted runtime1f49bc8a1a3f4c8a99eafea1747f0cc00a224a2f on codex/visual-guidance-20261005. Immutable production artifact11366866551; PCK327926274bytes, SHA256a6a800c810eb09304d896783dec1310313b72498fcdab388fbc12ed60d075c21. Every unlisted original resource payload is unchanged. The seven production overrides preserve existing art, saves and progression.
+
+QA37360610341 passed all7groups:27native gates,38onboarding assertions,7153focused UI assertions,49general,276mod-lifecycle and45journey assertions, plus ordinary production startup.433actual browser captures; see evidence/visual-review.json for explicitly inspected files and prior same-production review. Critic8/10 for this scope. The test runner corrections are documented below: no original ordinary-notification check was removed, and teaching suppression is distinguished from legitimate safe-placement delay. Earlier failed/cancelled runs remain failures, not release evidence.
+
+Publicationa09f409a7af400b02444dfa93673aa410433d4ce/run37362378235 succeeded. Artifact11366753732 contains the public receipt (copied to evidence/publication-receipt.json): all26public hashes verified, all8LIVE1.0.5 and9Worn files preserved. Rollback11367117878 retains DEV15.57. LIVE depends on unchanged DEV engine files; root index.wasm intentionally absent. Never export historical main.
+
+Website https://ever-deeper-game.corpax88.chatgpt.site updated successfully: source410364817376276568418f1fffd9cc37e8433326, Site version11, deploymentappgdep_6ac3f9dc2de48191967a092efdf540ca.84release records with all83historical entries/media preserved;242local links and anchors checked. Receipt: evidence/website-receipt.json.
+
+No pending jobs or approvals. No human eye-tracking, physical-iPhone performance or overall9.5claim. Existing target/companion text can still add visual noise. Further tests should address new evidence or changes, not rerun this accepted unchanged matrix. Source/acceptance/receipts are committed; scratch paths below are recovery details only.
+
+## Historical checkpoints
+
+The following records describe earlier intermediate states and do not supersede the completed status above.
+
 # DEV15.58 — QA accepted, publication in progress
 
 All7 frozen QA groups passed on1f49bc8a1a3f4c8a99eafea1747f0cc00a224a2f/run37360610341. Native27gates; browser49+7153+276+45+38checks and ordinary startup.433actual captures, scoped critic8/10; final visual and exact report/artifact bindings in .github/visual-guidance/accepted.json. Production artifact11366866551, PCK327926274bytes SHA256a6a800c810eb09304d896783dec1310313b72498fcdab388fbc12ed60d075c21. Public release submitted bya09f409a7af400b02444dfa93673aa410433d4ce; verification pending. Site source410364817376276568418f1fffd9cc37e8433326 saved as version11 but not yet deployed. Earlier checkpoint history follows.
