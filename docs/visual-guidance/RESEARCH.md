@@ -20,4 +20,5 @@ Skip is explicit. Settings → Controls → Replay Guide is available with an ex
 
 1. Research/code: confirmed timer-based five-hint problem. Initial candidate's clean goal-panel capture accepted as an improvement; rejected Bag dismissal, pre-pickup completion and incorrect ENTER wording.
 2. Six rendered native states: readable; no hero overlap. Corrected remaining Forge-cue suppression, replay route/state handling, non-mining instruction and Treasury HUD competition.
-3. Final frozen Mac review remains pending. No final quality score, physical-iPhone claim or publication acceptance yet.
+3. Seven rendered edge checks pass, including the real matching Forge button and Treasury route/Bag visibility. Shortened the Treasury route instruction after the critic found clipping.
+4. The critic explicitly inspected all18 first Mac screenshots at667/844/932 plus the corrected Treasury capture: no further scoped blockers;8/10 for onboarding/attention. Existing target/companion text still adds scene noise and is not claimed resolved. Root inspected representative actual Mac images. Final source-bound Mac acceptance follows below in HANDOFF.md. No physical-iPhone, gaze measurement or overall UI9.5 claim.

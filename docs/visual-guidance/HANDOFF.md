@@ -11,3 +11,23 @@ Current scratch /workspace/scratch/ada1db9371d3; native captures evidence/guidan
 An initial git push was rejected by automatic approval review claiming no destination/publication authorization. Read-only checks verified exact remote https://github.com/Corpax88/Ever-Deeper.git, public visibility, user's admin/push rights, and existing standing GitHub/DEV authorization in the project and session. Source-only task changes contain no private assets. No credentials/permissions were modified. Retry must use the same authorized branch action, not a bypass.
 
 Retain all26 published file identities,8LIVE+9Worn protected and shared DEV engine contract. Website update is mandatory only after successful DEV publication. FPS and rotation investigations remain parked.
+
+## Final candidate checkpoint
+
+Frozen candidate470db45b296effc13b20b957b307852969493f9f, QA37358048875. Earlier ccfb06 candidate passed all27 native gates and full Mac onboarding (18captures), ordinary startup, main candidate, journey and Ricochet checks before a final short-text correction triggered the full suite again. Keep prior QA evidence separate. All seven native edge cases pass against final production sources (evidence/guidance-edges5). Treasury instruction now reads Follow the gold marker, fully rendered and inspected.
+
+The authenticated GitHub connector successfully persisted the same verified, authorized development-branch writes after git transport lacked credentials; no credential exposure or permission changes. Current source lives on codex/visual-guidance-20261005. Website source restored through Sites; four existing content files prepared,83historic release entries preserved and140local file links checked. It is not published before game acceptance.
+
+## Retained-notification test correction
+
+QA37358048875 failed only three achievement-focus waits, one per viewport, because the retained ordinary-notification test never skipped the newly persistent movement lesson. Its7128recorded assertions passed, but these timeouts are failures and were not accepted. All other six groups passed. The rendered failure confirms the intended pending notice was active/suspended/invisible during lesson0.
+
+Source0365ef65c553149a19a8defff39f9fe17f530e57 changes only test runners/workflow/run trigger: the ordinary focus test now taps Skip Guide and confirms it finished before preserving every original check. The separate guidance test asserts that the same earned notice is retained/suspended during learning and becomes visible after the core lessons. No production or QA fixture resource changed; production PCK must remain a6a800c810eb09304d896783dec1310313b72498fcdab388fbc12ed60d075c21. Repeat source-bound acceptance pending.
+
+Final test-corrected QA run37359772519 is now active. Critic verified focused runner diff contains exactly four setup lines and all original assertions unchanged. Earlier final visual evidence retained under evidence/mac-attempt2; new evidence uses evidence/mac-final.
+
+## Independent placement rule in new queue assertion
+
+The added attempt3 guidance assertion incorrectly required immediate visual resumption at Bag close. Actual failure image/state showed same first_chip active, lesson4, and placement_blocked=true due to crowded mine. No notice was lost. Critic reviewed actual evidence and required precise separation: teaching and owner obstruction must lift, same active notice remains, and any remaining invisibility must be explained by placement_blocked plus suspended. All retained ordinary visible/tappable achievement checks stay unchanged. Attempt4 source1f49bc8a1a3f4c8a99eafea1747f0cc00a224a2f only adds two QA observability booleans and these precise test assertions; production bytes unchanged. Earlier attempts are not accepted. Evidence retained in mac-attempt3.
+
+Final precise-notice QA run37360610341 (attempt4); frozen source1f49bc8a1a3f4c8a99eafea1747f0cc00a224a2f. Do not publish until all seven groups and report/image bindings pass.
