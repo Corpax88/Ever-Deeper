@@ -93,7 +93,7 @@ def acceptance():
     before = read(before_path)
     require(set(before) == LIVE_WEB | {'dev/' + n for n in WEB} | {'dev/worn/' + n for n in WEB}, 'Wrong public baseline')
     require(before['dev/index.html'] == BASE_HTML and before['dev/index.pck'] == BASE_PCK,
-            'Wrong currently published DEV15.56 baseline')
+            'Wrong currently published DEV15.57 baseline')
     for name in WEB - {'index.html', 'index.pck'}:
         require(accepted['production_manifest'][name] == before['dev/' + name], 'Unreviewed engine/asset change: ' + name)
         require(accepted['qa_manifest'][name] == before['dev/' + name], 'QA engine/asset mismatch: ' + name)

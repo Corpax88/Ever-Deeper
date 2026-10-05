@@ -1,3 +1,7 @@
+# DEV15.58 — QA accepted, publication in progress
+
+All7 frozen QA groups passed on1f49bc8a1a3f4c8a99eafea1747f0cc00a224a2f/run37360610341. Native27gates; browser49+7153+276+45+38checks and ordinary startup.433actual captures, scoped critic8/10; final visual and exact report/artifact bindings in .github/visual-guidance/accepted.json. Production artifact11366866551, PCK327926274bytes SHA256a6a800c810eb09304d896783dec1310313b72498fcdab388fbc12ed60d075c21. Public release submitted bya09f409a7af400b02444dfa93673aa410433d4ce; verification pending. Site source410364817376276568418f1fffd9cc37e8433326 saved as version11 but not yet deployed. Earlier checkpoint history follows.
+
 # Visual guidance / DEV15.58 candidate — not published
 
 User requested research about where the eye looks in games, implementation in Ever-Deeper, clearer onboarding and an independent critic. Current public baseline remains DEV15.57 (runtime b8b7e0428c9aa2626861917f98b1b4b7d296f9e3), LIVE1.0.5. Source checkout is based on its documentation head406eeef. Never export historical main.
