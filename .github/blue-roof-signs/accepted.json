@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "accepted": true,
+  "images_inspected": true,
+  "critic_accepted": true,
+  "reviewer": "author",
+  "version": "1.0.0-dev.15.61",
+  "destination": "dev",
+  "source": "0016ba09ad62c33c6f076c4c4f05200262ee99c2",
+  "run": 37382590475,
+  "artifacts": [
+    {
+      "id": 11376221880,
+      "name": "blue-roof-signs-production",
+      "digest": "sha256:e065b4ea2e4abee1acc78bd7e0a72423c4e86617756f966cc8adf5175aeb61da"
+    },
+    {
+      "id": 11376157091,
+      "name": "blue-roof-signs-input",
+      "digest": "sha256:351044d13ca7ec5aac290d225fda4740c32af9d3ef1154384a4647af80735465"
+    },
+    {
+      "id": 11376097132,
+      "name": "blue-roof-signs-844",
+      "digest": "sha256:11bf358efe8cc8dabf1246c0715f7e45e400a9d8b274cae410dd68f1ab9e341c"
+    },
+    {
+      "id": 11375767433,
+      "name": "blue-roof-signs-667",
+      "digest": "sha256:8a0182ff90c8d81e6194655215aeba6ff8a85eb476d33f4ec66662953d6cbc1a"
+    },
+    {
+      "id": 11375752397,
+      "name": "blue-roof-signs-932",
+      "digest": "sha256:5d95e0617b69f3cfc172d609c368a4a8f75f8d9babd6524de62f60f71acef154"
+    },
+    {
+      "id": 11375392711,
+      "name": "blue-roof-signs-webkit",
+      "digest": "sha256:c1abb50faabbb1bb38d15f66fae21319631e5e30175120668427026fda6d7e9d"
+    }
+  ],
+  "report_sha256": {
+    "667": "4df6fed8506e4cdeb4a270b0d9c0646f136a1dc186acecfbc4db68da9eeaec55",
+    "844": "82d94c4da02ec6c008fb4419608961bd85984a080dd678a3b7929f2a2e8ab81b",
+    "932": "c7af5467c3fb00e585db1c12dd712c61f24559d400c6b6701417832d52fc30a9",
+    "input": "aa1c62958ad51e4c0ee14255a28dfb3de043a9a2c503b233e56573d292cd747c",
+    "webkit": "fd870705f78d3bebee7e2392a896fb7f0cff6ab71340f44d64e9fc0e265318f5"
+  },
+  "production_manifest": {
+    "index.html": {
+      "size": 23145,
+      "sha256": "3d682dcf748cdba1589d30bf3ffea433570fd77b4a61b3ea9f3c8ae6115e6564"
+    },
+    "index.js": {
+      "size": 282403,
+      "sha256": "1c05fc40c7e418b0234c4e5ac39dfc7df1286e98443946e84b89a7394de6c753"
+    },
+    "index.wasm": {
+      "size": 39514754,
+      "sha256": "fc74679e3b97f76878947fcd4fbe1268cbfa6188182a2e33bbc3f5dc9bfa57d0"
+    },
+    "index.pck": {
+      "size": 327930210,
+      "sha256": "4449265dcfc32757fac807d92ec1cfdabf3c827002fd9ba6764993ff60be984f"
+    },
+    "index.png": {
+      "size": 1981427,
+      "sha256": "c0167be478bcbc291bb752bb503d9f0ba527b64d93a62523ad915c9ad96b8d3f"
+    },
+    "index.icon.png": {
+      "size": 470687,
+      "sha256": "290a6f61f9e48f2e30becbf93da69a002e839742cbeb556d36bd409b8fbf3bec"
+    },
+    "index.apple-touch-icon.png": {
+      "size": 66421,
+      "sha256": "27408d8b450ea9b0664fa639129e01dd79bdee7dfb494319cd06106d64e647d5"
+    },
+    "index.audio.worklet.js": {
+      "size": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    "index.audio.position.worklet.js": {
+      "size": 4571,
+      "sha256": "65bc52dba653b2c39735a621863ae7332dda9c65d3a1bd7891d356390110da7f"
+    }
+  },
+  "visual_review": {
+    "accepted": true,
+    "reviewer": "author",
+    "independent_critic": false,
+    "source": "0016ba09ad62c33c6f076c4c4f05200262ee99c2",
+    "images_inspected": [
+      "667/09-shop-sell.png",
+      "667/09-shop-forge.png",
+      "667/01-surface-quest.png",
+      "844/09-shop-sell.png",
+      "844/09-shop-forge.png",
+      "844/01-surface-quest.png",
+      "932/09-shop-sell.png",
+      "932/09-shop-forge.png",
+      "932/01-surface-quest.png"
+    ],
+    "findings": [
+      "Both signs clear the roof silhouette and shop art.",
+      "Blue steel lettering is legible at667,844,932 viewport widths.",
+      "Development toggle clears shop signs and retained HUD.",
+      "Actual station approaches retain SELL/FORGE interactions."
+    ],
+    "limits": [
+      "No physical iPhone or FPS measurement."
+    ]
+  }
+}
