@@ -2841,6 +2841,8 @@ func _rock_target_label(rock: Dictionary) -> String:
 		return "STARFORGE REQUIRED"
 	if int(rock.required_pickaxe) > int(RunState.pickaxe_level):
 		return "%s REQUIRED" % String(GameData.data.PICKAXES[int(rock.required_pickaxe)].name).to_upper()
+	if bool(rock.drill_gated):
+		return "WALL · %d / 10 HITS" % RunState.barrier_hits(mine_id + ":d2:" + String(rock.deposit_id))
 	var tool: = _current_tool()
 	var hits: = 0
 	var shell: = int(rock.shell)
@@ -3246,7 +3248,8 @@ func _strike_drill_gate(rock_index: int, companion: bool = false) -> bool:
 	if hits == 10: _restore_open_gate_seams(gate_id)
 	_append_impact({"position":Vector2(rock.position),"age":0.0,"life":0.42,"broken":hits==10,"style":""})
 	AudioDirector.play_mining(String(rock.type),hits==10,false,not companion)
-	message_changed.emit("PASSAGE OPEN" if hits == 10 else "WALL · %d / 10 strikes" % hits)
+	if hits == 10:
+		MiningTargetLabel.passage_open(self, _draw_canvas.get_global_transform_with_canvas(), Rect2(Vector2(rock.position) - Vector2(36,36), Vector2(72,72)), player.visual.feedback_screen_rects())
 	target_dirty = true
 	_request_redraw()
 	return true

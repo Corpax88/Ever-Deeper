@@ -20,9 +20,7 @@ var _content: VBoxContainer
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var style: = StyleBoxFlat.new()
-	style.bg_color = Color(0.015, 0.055, 0.035, 0.76)
-	style.set_corner_radius_all(11)
+	var style: = StyleBoxEmpty.new()
 	style.content_margin_left = 12.0
 	style.content_margin_right = 12.0
 	style.content_margin_top = 9.0
@@ -203,6 +201,8 @@ func _label(color: Color) -> Label:
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.add_theme_font_override("font", TITLE_FONT)
 	label.add_theme_color_override("font_color", color)
+	label.add_theme_color_override("font_outline_color", Color("101512"))
+	label.add_theme_constant_override("outline_size", 4)
 	label.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.8))
 	label.add_theme_constant_override("shadow_offset_y", 1)
 	return label

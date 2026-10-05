@@ -179,7 +179,8 @@ func _refresh() -> void:
 	_premium_hud.set_progression_goal(_main._progression_goal())
 	var panel: Control = _premium_hud.progression_goal_panel
 	_skip.size = Vector2(152, 70)
-	_skip.position = Vector2(panel.position.x + panel.size.x - _skip.size.x, panel.position.y + panel.size.y + 8.0)
+	# Keep the opt-out above the relocated quest, away from mining and Bag.
+	_skip.position = Vector2(panel.position.x + panel.size.x - _skip.size.x, panel.position.y - _skip.size.y - 8.0)
 	_focus = Rect2()
 	var control: Control
 	match _step:

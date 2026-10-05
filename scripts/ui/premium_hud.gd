@@ -386,11 +386,12 @@ func _layout_metrics(viewport_size: Vector2, native_insets: Vector4) -> Dictiona
 	# Reserve the next-action line even when costs are present; otherwise the
 	# container expands below its measured HUD bounds on mobile.
 	var goal_height: = maxf(76.0, 78.0 + 42.0 * goal_rows) if iphone else (62.0 + 27.0 * _progression_row_count)
-	var progression_rect: = Rect2(viewport_size.x - right - goal_width, top if iphone else gold_rect.end.y + 10.0, goal_width, goal_height)
+	# Keep the quest in the right-hand sightline, above the action controls.
+	var goal_top: = maxf(top + top_button_size + gap, minf((viewport_size.y - goal_height) * 0.5, minf(mine_rect.position.y, context_rect.position.y) - goal_height - 12.0))
+	var progression_rect: = Rect2(viewport_size.x - right - goal_width, goal_top, goal_width, goal_height)
 	var minimap_size: = Vector2(188, 96) if iphone else Vector2(184, 106)
-	var minimap_rect: = Rect2(progression_rect.position.x - gap - minimap_size.x, progression_rect.position.y, minimap_size.x, minimap_size.y)
-	if iphone and minimap_rect.position.x < gold_rect.end.x + gap:
-		minimap_rect.position = Vector2(progression_rect.end.x - minimap_size.x, progression_rect.end.y + gap)
+	# The map stays in the top-right corner, independently of the quest.
+	var minimap_rect: = Rect2(viewport_size.x - right - minimap_size.x, top, minimap_size.x, minimap_size.y)
 	var onboarding_top: = maxf(progression_rect.end.y, minimap_rect.end.y) + 12.0
 	# The expanded guide belongs to the goal column, away from the hero and
 	# travel lane. It must not become a wide opaque banner across the world.

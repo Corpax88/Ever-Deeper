@@ -14,7 +14,7 @@ const MINT: = Color("a8e3bc")
 const MUTED: = Color("789384")
 const INK: = Color("07120d")
 const IPHONE_LANDSCAPE_ASPECT: = 1.65
-const DEV_RELEASE_VERSION: = "1.0.0-dev.15.58"
+const DEV_RELEASE_VERSION: = "1.0.0-dev.15.59"
 
 
 static func release_version() -> String:

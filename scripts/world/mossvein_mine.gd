@@ -2488,6 +2488,9 @@ func _target_label(block: Dictionary) -> String:
 	var required: = int(block.get("requires_tool", 0))
 	if required > RunState.pickaxe_level:
 		return "%s REQUIRED" % String(GameData.data.PICKAXES[required].name).to_upper()
+	var role: = String(block.get("role", ""))
+	if _is_barrier_role(role):
+		return "WALL · %d / 10 HITS" % RunState.barrier_hits(mine_id + ":d1:" + role)
 	var tool: = _current_tool()
 	var hits: = 0
 	var shell: = int(block.get("shell", 0))
@@ -2916,7 +2919,8 @@ func _strike_barrier_group(target: Vector2i, block: Dictionary, companion: bool 
 		var amount: int = RunState.prospecting_yield(String(block.kind), 1)
 		_spawn_drop(target,String(block.kind),amount)
 		RunState.record_mined(String(block.kind),amount)
-	message_changed.emit("PASSAGE OPEN" if hits == 10 else "WALL · %d / 10 strikes" % hits)
+	if hits == 10:
+		MiningTargetLabel.passage_open(self, _draw_canvas.get_global_transform_with_canvas(), Rect2(Vector2(target) * TILE_SIZE + Vector2.ONE * TILE_SIZE * 0.5 - Vector2(36,36), Vector2(72,72)), player.visual.feedback_screen_rects())
 	target_dirty = true
 	_request_redraw()
 
