@@ -1,3 +1,13 @@
+Current DEV release: [DEV15.61 blue roof signs](https://github.com/Corpax88/Ever-Deeper/blob/codex/blue-roof-signs-20261006/docs/blue-roof-signs/HANDOFF.md), published and verified 6 October 2026 at https://corpax88.github.io/Ever-Deeper/dev/. SELL/FORGE sit above roofs with blue steel serif lettering; DEV toggle moved to the clear top strip. Refresh → Continue, no reset.
+
+Canonical source0016ba09ad62c33c6f076c4c4f05200262ee99c2, branch codex/blue-roof-signs-20261006. QA37382590475 passed41checks at each actual667×375/844×390/932×430, retained input and ordinary Apple WebKit startup/save. Nine affected-state images inspected by author; no independent critic or physical-iPhone/FPS claim. Six artifact ZIP digests verified, production11376221880 matches local candidate.
+
+Publication7dc3097166db3c79554b12708887f7e05ba1a283/run37383498915 passed; receipt11375303644 verifies26publicfiles, preserves8LIVE1.0.5/9Worn/sharedDEVengine. Rollback11375773312 contains15.60 despite inherited15-58 artifact name. Main remains publication carrier only.
+
+Website source730f58cdbee07f616a6cc3833add53d98a81873a/version14/deploymentappgdep_6ac426fd9d2881919691224c37f3356f succeeded.87release records,86historical preserved,245local links checked. No pending jobs/approvals. Preserve approved assets/saves and parked FPS/rotation. Do not repeat accepted unchanged work.
+
+---
+
 Current DEV release: [DEV15.60 text and shop signs](https://github.com/Corpax88/Ever-Deeper/blob/codex/text-signs-20261005/docs/text-signs/HANDOFF.md), published and verified 6 October 2026 at https://corpax88.github.io/Ever-Deeper/dev/. Bright gold/white outlined text and matching SELL/FORGE signs above shop entrances. Refresh → Continue, no reset.
 
 Canonical source `9f7cc3dda596ed856dd8416dc3c30a56fb7a26cb`, branch `codex/text-signs-20261005`; production11373248422, QA37379725587. Mac41checks per actual667×375/844×390/932×430,36nativePNG images; input and ordinary Apple WebKit passed. Exact root/critic image lists recorded. First SELL placement behind DEV TOOLS rejected and fixed; no physical-iPhone/FPS claim.
