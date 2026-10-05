@@ -9,3 +9,6 @@ Local Linux Godot4.7.2 under authenticated Xvfb/Mesa passes41checks at667×375,1
 Exact15.59 baseline artifact11371552790/run37375569164; prepare.py verifies every retained payload. Publication must preserve26-file public contract,8LIVE1.0.5/9Worn plus shared unchanged DEV engine; main is publication carrier only, never export its historical runtime. Existing protected-file invariant debt unchanged from15.59, not counted green.
 
 Site source7fd51fdc14cab3095158329908c863fd56f74c29 saved as version13, not yet deployed.86release records preserve all85historical entries;244local links/assets/anchors checked. Deploy only after game public hashes pass. Status below will supersede this checkpoint.
+
+## Final QA
+Mac run37379725587 succeeded. All three native groups passed41checks and12PNG images each; every PNG matches667×375,844×390 or932×430. Five downloaded ZIP digests match GitHub artifact metadata. Input and ordinary Apple WebKit new-game/save/reload passed; source and production manifest agree. Final production artifact11373248422. Actual root image review is stored in root-review.json; final critic review follows. Publication remains pending.
