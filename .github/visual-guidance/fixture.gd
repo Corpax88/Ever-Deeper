@@ -45,6 +45,8 @@ func _frame() -> void:
 	g["world_target"]=main.guide_director.locked_target_key
 	g["local_action"]=is_instance_valid(main.guide_overlay.action_control)
 	g["achievement"]=main.achievement_toast.debug_snapshot()
+	g["learning_blocks_notices"]=t.prioritizes_learning()
+	g["notification_owner_obstructed"]=main.achievement_toast.presentation_obstructed()
 	g["texts"]={}
 	for pair in [["title",main.premium_hud.progression_goal_panel._title],["action",main.premium_hud.progression_goal_panel._action]]:
 		var label: Label=pair[1]
