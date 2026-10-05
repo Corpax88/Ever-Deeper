@@ -1,3 +1,13 @@
+Current DEV release: [DEV15.59 wall and quest visibility](https://github.com/Corpax88/Ever-Deeper/blob/codex/wall-focus-20261005/docs/wall-focus/HANDOFF.md), published and verified 5 October 2026 at https://corpax88.github.io/Ever-Deeper/dev/. Wall progress and 10/10 completion appear at the wall; transparent outlined quest text is mid-right. Refresh → Continue, no reset.
+
+Canonical source `4e5cb9339bf2be49596d2ab7ced2f92e13639786`, branch `codex/wall-focus-20261005`; production11371552790, QA37375569164. Actual Mac667×375/844×390/932×430 each passed37checks with30exact-size PNGs; retained input and ordinary Apple WebKit passed. Root/critic actual-image lists are recorded. Earlier Mac-size claims were rejected and remain documented; no physical-iPhone/FPS or human gaze claim.
+
+Publication5f28a68ddec294a55db507617fb5694cd2376680/run37376834552 succeeded; receipt11371618905 verifies all26public files and preserves8LIVE1.0.5/9Worn. DEV15.58 rollback11371768408. Shared DEV engine unchanged, root index.wasm intentionally absent. Main is publication carrier only: never export its historical runtime.
+
+Website source6171ed3df22f4e80f322b5bbe9986fdee8e43fe2/version12/deploymentappgdep_6ac418cd3f648191b6201857dd445e47 succeeded.85release records;84historical retained,244local links checked. No pending jobs/approvals. Do not repeat accepted unchanged work. Preserve assets/saves and parked FPS/rotation work. Historical statuses below do not supersede this entry.
+
+---
+
 Current DEV release: [DEV15.58 visual guidance](https://github.com/Corpax88/Ever-Deeper/blob/codex/visual-guidance-20261005/docs/visual-guidance/HANDOFF.md), published and verified 5 October 2026 at https://corpax88.github.io/Ever-Deeper/dev/. One contextual task at a time, actual-action completion, matching gold world/control focus, deferred early-learning achievement/skill notices, persistent beginner progress and Settings → Controls → Replay Guide. No reset needed; developed-save replay preserves progression.
 
 Canonical runtime `1f49bc8a1a3f4c8a99eafea1747f0cc00a224a2f`, branch `codex/visual-guidance-20261005`; immutable production11366866551, QA37360610341 (all7groups passed:27native gates,38onboarding,7153focused,49general,276mod-lifecycle,45journey and ordinary startup).433captured browser images; exact root/critic inspection list and scoped8/10 review are preserved. Earlier failed test assumptions and cancelled runs remain documented; never count them as passing.

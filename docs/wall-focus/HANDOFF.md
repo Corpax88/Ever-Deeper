@@ -1,3 +1,15 @@
+# DEV15.59 — published and verified, 5 October 2026
+
+Wall progress now appears at the target wall as 0/10 through 9/10, with local 10/10 passage-open feedback. Quest text has no background box and sits mid-right, with an outline for contrast. Minimap remains top-right and Skip clears the quest. Saves, ten-hit mechanics, tool requirements and approved assets are unchanged. Refresh DEV and Continue; no reset needed.
+
+Canonical source `4e5cb9339bf2be49596d2ab7ced2f92e13639786` on `codex/wall-focus-20261005`; runtime payload unchanged from602878cf. Exact production artifact11371552790, successful Mac QA37375569164. Native667×375,844×390,932×430 each passed37checks; all30PNG sizes verified. Retained input and ordinary Apple WebKit startup/save/reload passed. Root and critic inspected actual final images; exact lists are in root-review.json and critic-review.json. No physical-iPhone performance or human eye-tracking claim.
+
+Publication commit5f28a68ddec294a55db507617fb5694cd2376680/run37376834552 succeeded. Receipt artifact11371618905 verifies all26public file identities, preserving8LIVE1.0.5 and9Worn files plus unchanged shared DEV engine. Rollback artifact11371768408 retains DEV15.58. Production PCK327928258bytes, SHA256 dac0bb17dd40eff5449ab1a844134b0e5282aea8a0951f742537162d9a39e087. Main remains a publication carrier; never export its historical runtime.
+
+Website source6171ed3df22f4e80f322b5bbe9986fdee8e43fe2, version12, deploymentappgdep_6ac418cd3f648191b6201857dd445e47 succeeded at https://ever-deeper-game.corpax88.chatgpt.site.85release records, all84historical records preserved;244local links checked. No pending jobs or approvals. Do not repeat accepted unchanged tests or publication. Preserve parked FPS/rotation work. Bright Surface at667px is the weakest contrast but reviewed as readable; existing narrow secondary hint truncation remains.
+
+## Historical work log — superseded status, retained test limitations
+
 # DEV15.59 — wall hits and quest visibility
 
 Candidate source4e5cb9339bf2be49596d2ab7ced2f92e13639786 (runtime unchanged from602878cf5a8bddff7cb2faecfe8636ba99db5639) on codex/wall-focus-20261005; based on verified DEV15.58/d564e79. QA37374874149 completed but native-size evidence rejected: requested1334/1688/1864 windows were clamped to1024×654/656. No publication accepted. Corrected QA uses667×375,844×390,932×430 with actual framebuffer and image-size assertions; production bytes remain identical. Not yet published.
