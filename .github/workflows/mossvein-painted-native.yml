@@ -1,0 +1,62 @@
+name: Restore approved native hero assets
+on:
+  push:
+    branches: [codex/mossvein-painted-20261114]
+    paths: ['.github/workflows/mossvein-painted-native.yml']
+permissions: {contents: read}
+concurrency: {group: mossvein-painted-native, cancel-in-progress: true}
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - name: Recover packed public hero resources without rebuilding
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/native" "$RUNNER_TEMP/parts"
+          curl -L --fail --retry 2 https://corpax88.github.io/Ever-Deeper/dev/index.pck -o "$RUNNER_TEMP/public.pck"
+          python3 - "$RUNNER_TEMP/public.pck" "$RUNNER_TEMP/native" <<'PY'
+          import sys,hashlib,json
+          from pathlib import Path
+          sys.path.insert(0,'.github/five-mods')
+          from pack_helpers import unpack
+          p=Path(sys.argv[1]);data=p.read_bytes();base,entries=unpack(data);root=Path(sys.argv[2])
+          found={}
+          for name,(offset,size,*_) in entries.items():
+              if name.startswith(('assets/native-worn/','assets/native-pickaxes/')):
+                  dst=root/name;dst.parent.mkdir(parents=True,exist_ok=True);raw=data[base+offset:base+offset+size];dst.write_bytes(raw);found[name]=hashlib.sha256(raw).hexdigest()
+          assert len(found)>=21
+          (root/'native-provenance.json').write_text(json.dumps({'carrier_sha256':hashlib.sha256(data).hexdigest(),'source_commit':'0016ba09ad62c33c6f076c4c4f05200262ee99c2','files':found},indent=2))
+          print('Extracted native resources:',len(found))
+          PY
+          tar -czf "$RUNNER_TEMP/native.tar.gz" -C "$RUNNER_TEMP/native" .
+          split -d -b 24000000 "$RUNNER_TEMP/native.tar.gz" "$RUNNER_TEMP/parts/native.part"
+          sha256sum "$RUNNER_TEMP/native.tar.gz" "$RUNNER_TEMP/parts/"* > "$RUNNER_TEMP/parts/SHA256SUMS"
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-native-manifest, path: '${{ runner.temp }}/parts/SHA256SUMS', retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-native-00, path: '${{ runner.temp }}/parts/native.part00', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-native-01, path: '${{ runner.temp }}/parts/native.part01', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-native-02, path: '${{ runner.temp }}/parts/native.part02', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-native-03, path: '${{ runner.temp }}/parts/native.part03', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-native-04, path: '${{ runner.temp }}/parts/native.part04', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-native-05, path: '${{ runner.temp }}/parts/native.part05', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-native-06, path: '${{ runner.temp }}/parts/native.part06', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-native-07, path: '${{ runner.temp }}/parts/native.part07', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-native-08, path: '${{ runner.temp }}/parts/native.part08', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-native-09, path: '${{ runner.temp }}/parts/native.part09', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-native-10, path: '${{ runner.temp }}/parts/native.part10', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-native-11, path: '${{ runner.temp }}/parts/native.part11', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
