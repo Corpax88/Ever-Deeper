@@ -1,0 +1,94 @@
+name: Restore Mossvein art workspace
+on:
+  push:
+    branches: [codex/mossvein-painted-20261114]
+    paths: ['.github/workflows/mossvein-painted-restore.yml']
+permissions: {contents: read}
+concurrency: {group: mossvein-painted-restore, cancel-in-progress: true}
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - name: Package exact source and matching Linux engine
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/restore/source" "$RUNNER_TEMP/parts"
+          git archive HEAD | tar -x -C "$RUNNER_TEMP/restore/source"
+          curl -L --fail --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/restore/godot.zip"
+          printf '%s\n' "$GITHUB_SHA" > "$RUNNER_TEMP/restore/SOURCE_REVISION"
+          tar -czf "$RUNNER_TEMP/restore.tar.gz" -C "$RUNNER_TEMP/restore" .
+          split -d -b 24000000 "$RUNNER_TEMP/restore.tar.gz" "$RUNNER_TEMP/parts/source.part"
+          sha256sum "$RUNNER_TEMP/restore.tar.gz" "$RUNNER_TEMP/parts/"* > "$RUNNER_TEMP/parts/SHA256SUMS"
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-manifest, path: '${{ runner.temp }}/parts/SHA256SUMS', retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-00, path: '${{ runner.temp }}/parts/source.part00', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-01, path: '${{ runner.temp }}/parts/source.part01', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-02, path: '${{ runner.temp }}/parts/source.part02', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-03, path: '${{ runner.temp }}/parts/source.part03', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-04, path: '${{ runner.temp }}/parts/source.part04', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-05, path: '${{ runner.temp }}/parts/source.part05', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-06, path: '${{ runner.temp }}/parts/source.part06', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-07, path: '${{ runner.temp }}/parts/source.part07', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-08, path: '${{ runner.temp }}/parts/source.part08', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-09, path: '${{ runner.temp }}/parts/source.part09', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-10, path: '${{ runner.temp }}/parts/source.part10', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-11, path: '${{ runner.temp }}/parts/source.part11', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-12, path: '${{ runner.temp }}/parts/source.part12', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-13, path: '${{ runner.temp }}/parts/source.part13', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-14, path: '${{ runner.temp }}/parts/source.part14', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-15, path: '${{ runner.temp }}/parts/source.part15', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-16, path: '${{ runner.temp }}/parts/source.part16', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-17, path: '${{ runner.temp }}/parts/source.part17', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-18, path: '${{ runner.temp }}/parts/source.part18', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-19, path: '${{ runner.temp }}/parts/source.part19', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-20, path: '${{ runner.temp }}/parts/source.part20', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-21, path: '${{ runner.temp }}/parts/source.part21', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-22, path: '${{ runner.temp }}/parts/source.part22', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-23, path: '${{ runner.temp }}/parts/source.part23', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-24, path: '${{ runner.temp }}/parts/source.part24', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-25, path: '${{ runner.temp }}/parts/source.part25', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-26, path: '${{ runner.temp }}/parts/source.part26', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-27, path: '${{ runner.temp }}/parts/source.part27', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-28, path: '${{ runner.temp }}/parts/source.part28', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-29, path: '${{ runner.temp }}/parts/source.part29', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-30, path: '${{ runner.temp }}/parts/source.part30', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-31, path: '${{ runner.temp }}/parts/source.part31', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-32, path: '${{ runner.temp }}/parts/source.part32', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
+      - uses: actions/upload-artifact@v4
+        with: {name: mossvein-source-33, path: '${{ runner.temp }}/parts/source.part33', if-no-files-found: ignore, compression-level: 0, retention-days: 14}
