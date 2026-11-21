@@ -43,8 +43,8 @@ const MOSS_PORTAL_LANTERN_POSITIONS: = [
 	Vector2(1007, 503), Vector2(1180, 577),
 ]
 const MOSS_MAIN_ROUTE: = [
-	Vector2(30, 650), Vector2(210, 650), Vector2(410, 650),
-	Vector2(620, 650), Vector2(840, 650), Vector2(990, 680), Vector2(1110, MOSS_MAIN_Y),
+	Vector2(30, 650), Vector2(210, 650), Vector2(410, 669),
+	Vector2(620, 643), Vector2(740, 648), Vector2(840, 650), Vector2(990, 680), Vector2(1110, MOSS_MAIN_Y),
 ]
 const MOSS_MINE_BRANCH_ROUTE: = [
 	MOSS_MINE_BRANCH_JUNCTION,
@@ -360,10 +360,10 @@ const MINE_IDS: = WorldCatalog.MINE_ORDER
 @onready var player: CharacterBody2D = $Player
 @onready var surface_parallax: SurfaceParallax = $SurfaceParallax
 
-const MOSS_ORE_MOUNTAIN: = preload("res://assets/surface/v2/copper-mountain-0.png")
-const MOSS_ORE_MOUNTAIN_DAMAGE_1: = preload("res://assets/surface/v2/copper-mountain-1.png")
-const MOSS_ORE_MOUNTAIN_DAMAGE_2: = preload("res://assets/surface/v2/copper-mountain-2.png")
-const MOSS_ORE_MOUNTAIN_DAMAGE_3: = preload("res://assets/surface/v2/copper-mountain-3.png")
+const MOSS_ORE_MOUNTAIN: = preload("res://assets/surface/painted/copper-0.png")
+const MOSS_ORE_MOUNTAIN_DAMAGE_1: = preload("res://assets/surface/painted/copper-1.png")
+const MOSS_ORE_MOUNTAIN_DAMAGE_2: = preload("res://assets/surface/painted/copper-2.png")
+const MOSS_ORE_MOUNTAIN_DAMAGE_3: = preload("res://assets/surface/painted/copper-3.png")
 const MOON_ORE_MOUNTAIN: = preload("res://assets/surface/moonglass-ore-mountain-v1.png")
 const MOON_ORE_MOUNTAIN_DAMAGE_1: = preload("res://assets/surface/moonglass-ore-mountain-damaged-1.png")
 const MOON_ORE_MOUNTAIN_DAMAGE_2: = preload("res://assets/surface/moonglass-ore-mountain-damaged-2.png")
@@ -845,6 +845,18 @@ func _build_surface_art() -> void :
 	moon_shelf.name = "MoonglassTerrace"
 	surface_mine_branch_sprites["moonMine"] = moon_shelf
 	_create_sprite(preload("res://assets/surface/v2/moss-road-shelf.png"), Rect2(-40, 425, 1400, 620), 3)
+	# Follow the same corridor as movement, including the fork beside the quarry.
+	for route in [MOSS_MAIN_ROUTE, MOSS_MINE_BRANCH_ROUTE]:
+		var trail := Line2D.new()
+		trail.points = PackedVector2Array(route)
+		trail.width = 82.0
+		trail.joint_mode = Line2D.LINE_JOINT_ROUND
+		trail.texture = MOSS_CAMP_PATH
+		trail.texture_mode = Line2D.LINE_TEXTURE_TILE
+		trail.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+		trail.material = preload("res://shaders/moss_trail.tres")
+		trail.z_index = 4
+		add_child(trail)
 	_build_mossvein_portal_clearing()
 	_add_surface_decor()
 

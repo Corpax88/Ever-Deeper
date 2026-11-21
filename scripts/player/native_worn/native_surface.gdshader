@@ -20,13 +20,14 @@ void fragment() {
 	vec3 orm = texture(orm_map, UV).rgb;
 	AO = orm.r;
 	AO_LIGHT_AFFECT = ao_direct;
-	ROUGHNESS = orm.g;
-	METALLIC = orm.b;
+	NORMAL_MAP_DEPTH = 0.40;
+	ROUGHNESS = max(orm.g, 0.72);
+	METALLIC = orm.b * 0.35;
 	SPECULAR = 0.5;
 	if (native_response) {
 		vec3 response = texture(response_map, UV).rgb;
-		SPECULAR = response.r;
-		CLEARCOAT = response.g;
+		SPECULAR = response.r * 0.45;
+		CLEARCOAT = response.g * 0.15;
 		CLEARCOAT_ROUGHNESS = response.b;
 	}
 	// Restore a matte woven response while retaining all authored texture maps.

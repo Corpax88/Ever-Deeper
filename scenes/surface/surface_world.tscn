@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://bou4jvnhyhev7" path="res://assets/surface/mossvein-environment-decor.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://bm70ofxo7ewe3" path="res://assets/surface/mossvein-mushroom-cluster.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://bq7w7qbdnjm1w" path="res://assets/surface/assay-station.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://dv0ui350n2ouh" path="res://assets/surface/forge-station.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/surface/painted/forge.png" id="6"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="7"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_camp_left"]
@@ -103,7 +103,7 @@ position = Vector2(328, 505)
 [node name="Bilde" type="Sprite2D" parent="Flyttbare_Stasjoner/FORGE_flytt_hele_denne" unique_id=390616032]
 z_index = 5
 texture_filter = 2
-position = Vector2(0, -44.1)
+position = Vector2(0, -27)
 scale = Vector2(0.379149, 0.379149)
 texture = ExtResource("6")
 
