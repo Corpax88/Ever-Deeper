@@ -4,17 +4,24 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'.github/five-mods'))
 from pack_helpers import unpack,identity
 src,out=map(Path,sys.argv[1:3]);out.mkdir(parents=True,exist_ok=True)
-qa=False
 original=src.read_bytes()
-assert len(original)==327930210
+baseline_sha=hashlib.sha256(original).hexdigest()
+assert baseline_sha=='3eb3eb38bad290acf1f55d346f1711aa5a0ff6cf22ebccf38c97e552bb3e9df3', 'Expected the published DEV15.61 package'
 base,entries=unpack(original)
 def raw(n):
  o,s,*_=entries[n];return original[base+o:base+o+s]
-overrides=['scripts/world/surface_world.gd','scripts/player/native_worn/native_surface.gdshader','shaders/moss_trail.gdshader','shaders/moss_trail.tres','scenes/surface/surface_world.tscn','scenes/surface/surface_parallax.tscn']
+overrides = [
+ 'scripts/world/surface_world.gd',
+ 'scripts/ui/premium_menu.gd',
+ 'scenes/surface/surface_world.tscn',
+ 'scenes/surface/surface_parallax.tscn',
+]
 replacements={n:(ROOT/n).read_bytes() for n in overrides}
 for n in overrides:
  if n+'.remap' in entries: replacements[n+'.remap']=('[remap]\npath="res://'+n+'"\n').encode()
-for png in (ROOT/'assets/surface/painted').glob('*.png'):
+for png in sorted((ROOT/'assets/surface/painted').glob('*.png')):
+ if png.relative_to(ROOT).as_posix()+'.import' in entries:
+  continue
  imp=Path(str(png)+'.import')
  path=re.search(r'^path="res://([^"]+)"',imp.read_text(),re.M)[1]
  for file in [imp,ROOT/path]:
@@ -30,7 +37,7 @@ b,e=unpack(data)
 for n,(o,s,*_) in e.items(): assert data[b+o:b+o+s]==replacements.get(n,raw(n) if n in entries else b'')
 p=out/'index.pck';p.write_bytes(data)
 assert identity(p)=={'size':len(data),'sha256':hashlib.sha256(data).hexdigest()}
-(out/'receipt.json').write_text(json.dumps({'baseline_sha256':hashlib.sha256(original).hexdigest(),'overrides':overrides,'retained_verified':True,'pck':identity(p)},indent=2))
+(out/'receipt.json').write_text(json.dumps({'baseline_sha256':baseline_sha,'overrides':overrides,'retained_verified':True,'pck':identity(p)},indent=2))
 # Web shell and engine bytes are copied unchanged from the same immutable artifact.
 web=['index.html','index.js','index.wasm','index.pck','index.png','index.icon.png','index.apple-touch-icon.png','index.audio.worklet.js','index.audio.position.worklet.js']
 import shutil
@@ -42,5 +49,5 @@ if (src.parent/'index.html').exists():
  (out/'index.html').write_text(html[:m.start(1)]+json.dumps(cfg,separators=(',',':'))+html[m.end(1):])
  manifest={n:identity(out/n) for n in web}
  (out/'manifest.json').write_text(json.dumps(manifest,indent=2))
- (out/'qa-build-receipt.json').write_text(json.dumps({'baseline_pck':identity(src),'baseline_source':'0016ba09ad62c33c6f076c4c4f05200262ee99c2','qa_source':os.environ.get('GITHUB_SHA'),'overrides':overrides,'production':not qa,'version':'1.0.0-dev.15.61','replaced':list(replacements),'retained_payloads_verified':True,'files':manifest},indent=2))
+ (out/'qa-build-receipt.json').write_text(json.dumps({'baseline_pck':identity(src),'baseline_source':'bfabeabc7ccf78521151f964dc0a6ed542127916','qa_source':os.environ.get('GITHUB_SHA'),'overrides':overrides,'production':True,'version':'1.0.0-dev.15.62','replaced':list(replacements),'retained_payloads_verified':True,'files':manifest},indent=2))
 print(identity(p))

@@ -3,10 +3,10 @@
 [ext_resource type="Script" uid="uid://cyj4ogk2gua8x" path="res://scripts/world/surface_parallax.gd" id="1"]
 [ext_resource type="Script" uid="uid://dh5m66ieuw87e" path="res://scripts/world/surface_parallax_layer.gd" id="2"]
 [ext_resource type="Shader" uid="uid://bym0yvgu0supe" path="res://shaders/surface_parallax_world_clip.gdshader" id="3"]
-[ext_resource type="Texture2D" uid="uid://mt4nppcp8k3t" path="res://assets/surface/moss-moon-parallax-background.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/surface/painted/forest.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://c4t3uddjeingy" path="res://assets/surface/mossvein-parallax-midground-v1.png" id="5"]
 [ext_resource type="Texture2D" uid="uid://d1xrbch6lpa3o" path="res://assets/surface/moss-moon-parallax-foreground.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://b5bqgnoe7hfm5" path="res://assets/surface/mossvein-parallax-foreground-v1.png" id="7"]
+[ext_resource type="Texture2D" path="res://assets/surface/painted/forest-frame.png" id="7"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_world_clip"]
 shader = ExtResource("3")
@@ -25,8 +25,8 @@ extra_cull_margin = 480.0
 [node name="MossMoonPanorama" type="Sprite2D" parent="FarSky" unique_id=1455044467]
 texture_filter = 2
 material = SubResource("ShaderMaterial_world_clip")
-position = Vector2(1120, 373.333)
-scale = Vector2(1.03131, 1.03131)
+position = Vector2(1420, 522)
+scale = Vector2(2.25, 2.25)
 texture = ExtResource("4")
 
 [node name="FarCanopy" type="Node2D" parent="." unique_id=887771296]
@@ -53,7 +53,7 @@ scroll_factor = 0.08
 extra_cull_margin = 320.0
 
 [node name="MossveinMidground" type="Sprite2D" parent="MidForest" unique_id=1565495520]
-self_modulate = Color(0.67, 0.73, 0.60, 0.48)
+self_modulate = Color(0.67, 0.73, 0.60, 0.19)
 texture_filter = 2
 material = SubResource("ShaderMaterial_world_clip")
 position = Vector2(991.5, 883.5)
@@ -85,7 +85,7 @@ fade_out_end_x = 2240.0
 hide_when_faded = true
 
 [node name="ContinuousForestFloor" type="Sprite2D" parent="NearSilhouette" unique_id=616005256]
-self_modulate = Color(0.76, 0.84, 0.82, 0.58)
+self_modulate = Color(0.76, 0.84, 0.82, 0.23)
 texture_filter = 2
 position = Vector2(875.8, 906.667)
 scale = Vector2(1.03131, 1.03131)

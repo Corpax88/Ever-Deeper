@@ -34,7 +34,7 @@ jobs:
       - run: npm ci --ignore-scripts && npx playwright install webkit
       - name: Ordinary WebKit startup and save
         run: node .github/hunt-followup/startup.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/webkit"
-        env: {EXPECTED_VERSION: '1.0.0-dev.15.61', CANDIDATE_SOURCE: '${{ github.sha }}'}
+        env: {EXPECTED_VERSION: '1.0.0-dev.15.62', CANDIDATE_SOURCE: '${{ github.sha }}'}
       - uses: actions/upload-artifact@v4
         if: always()
-        with: {name: moss-test-evidence, path: '${{ runner.temp }}/evidence', retention-days: 30}
+        with: {name: moss-painted-finish-evidence, path: '${{ runner.temp }}/evidence', retention-days: 30}

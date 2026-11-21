@@ -263,7 +263,7 @@ const MOSS_GROUND: = preload("res://assets/surface/mossvein-ground.png")
 const MOSS_ENVIRONMENT_DECOR: = preload("res://assets/surface/mossvein-environment-decor.png")
 const MOSS_ROOT_HOLLOW: = preload("res://assets/surface/mossvein-root-hollow.png")
 const MOSS_MUSHROOM_CLUSTER: = preload("res://assets/surface/mossvein-mushroom-cluster.png")
-const MOSS_MINE_RAMP: = preload("res://assets/surface/mossvein-mine-ramp.png")
+const MOSS_MINE_RAMP: = preload("res://assets/surface/painted/mine-ramp.png")
 const MOSS_GLOWMOTH: = preload("res://assets/ambient/mossvein-glowmoth.png")
 const MOSS_DRIFT: = preload("res://assets/world-life/mossvein-drift.png")
 const MOSS_RESPONSE: = preload("res://assets/world-life/mossvein-response.png")
@@ -280,12 +280,12 @@ const LATER_SURFACE_DRIFT_TEXTURES: = {
 const MOON_GROUND: = preload("res://assets/surface/moonglass-ground.png")
 const EMBER_GROUND: = preload("res://assets/surface/emberdeep-ground.png")
 const STAR_GROUND: = preload("res://assets/surface/starfall-ground.png")
-const MOON_TERRACE: = preload("res://assets/surface/v2/moon-road-shelf.png")
+const MOON_TERRACE: = preload("res://assets/surface/painted/moon-road-shelf.png")
 const EMBER_TERRACE: = preload("res://assets/surface/v3/ember-road-shelf.png")
 const STAR_TERRACE: = preload("res://assets/surface/v3/star-road-shelf.png")
 const MOSS_ROAD_TEXTURE: = preload("res://assets/surface/road-mossvein.png")
 const ENTRANCE_TEXTURES: = {
-	"mossMine": preload("res://assets/entrances/mossvein-entrance.png"),
+	"mossMine": preload("res://assets/surface/painted/mine-entrance.png"),
 	"moonMine": preload("res://assets/entrances/moonglass-entrance.png"),
 	"emberMine": preload("res://assets/entrances/emberdeep-entrance.png"),
 	"starMine": preload("res://assets/entrances/starfall-entrance.png")
@@ -305,7 +305,7 @@ const GATE_TEXTURES: = {
 	"starfall": preload("res://assets/surface/starfall-seal.png")
 }
 const PORTAL_ARCH_TEXTURES: = {
-	"moonglass": preload("res://assets/surface/v2/moonglass-port.png"),
+	"moonglass": preload("res://assets/surface/painted/moonglass-arch.png"),
 	"emberdeep": preload("res://assets/surface/v3/ember-port.png"),
 	"starfall": preload("res://assets/surface/v3/star-port.png"),
 }
@@ -328,8 +328,9 @@ const PORTAL_SEAM_COLORS: = {
 		"destination": Color("a879ff"),
 	},
 }
-const MOSS_CAMP_YARD: = preload("res://assets/surface/mossvein-camp-yard.png")
+const MOSS_CAMP_YARD: = preload("res://assets/surface/painted/camp-yard.png")
 const MOSS_CAMP_PATH: = preload("res://assets/surface/mossvein-camp-path.png")
+const MOON_GATE_CRYSTALS: = preload("res://assets/surface/painted/moon-crystals.png")
 const MOON_CRYSTALS: = preload("res://assets/surface/moonglass-crystals.png")
 const MOON_BLOOM: = preload("res://assets/surface/moonglass-bloom-bed.png")
 const EMBER_SLAG: = preload("res://assets/surface/emberdeep-slag-clusters.png")
@@ -808,7 +809,7 @@ func hub_guide_position() -> Vector2:
 func _draw() -> void :
 
 
-	draw_rect(Rect2(0, 0, 2240, 1280), Color(0.05, 0.09, 0.07, 0.18), true)
+	draw_rect(Rect2(0, 0, 2240, 1280), Color(0.05, 0.09, 0.07, 0.12), true)
 	draw_rect(Rect2(2240, 0, 1120, 1280), Color("1e1716"), true)
 	draw_rect(Rect2(3360, 0, 1120, 1280), Color("131323"), true)
 
@@ -844,19 +845,7 @@ func _build_surface_art() -> void :
 	var moon_shelf: = _create_sprite(MOON_TERRACE, Rect2(1070, 425, 1220, 620), 3)
 	moon_shelf.name = "MoonglassTerrace"
 	surface_mine_branch_sprites["moonMine"] = moon_shelf
-	_create_sprite(preload("res://assets/surface/v2/moss-road-shelf.png"), Rect2(-40, 425, 1400, 620), 3)
-	# Follow the same corridor as movement, including the fork beside the quarry.
-	for route in [MOSS_MAIN_ROUTE, MOSS_MINE_BRANCH_ROUTE]:
-		var trail := Line2D.new()
-		trail.points = PackedVector2Array(route)
-		trail.width = 82.0
-		trail.joint_mode = Line2D.LINE_JOINT_ROUND
-		trail.texture = MOSS_CAMP_PATH
-		trail.texture_mode = Line2D.LINE_TEXTURE_TILE
-		trail.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
-		trail.material = preload("res://shaders/moss_trail.tres")
-		trail.z_index = 4
-		add_child(trail)
+	_create_sprite(preload("res://assets/surface/painted/road-shelf.png"), Rect2(-40, 425, 1400, 620), 3)
 	_build_mossvein_portal_clearing()
 	_add_surface_decor()
 
@@ -1248,7 +1237,7 @@ func _build_mossvein_portal_clearing() -> void :
 	# The complete arch and terrain shelf replace the cropped full-height wall.
 	# No backdrop rectangle or floating generator remains at this boundary.
 	var moon_shoulder: = _create_world_asset(
-		MOON_CRYSTALS,
+		MOON_GATE_CRYSTALS,
 		MOSS_GATE_ANCHOR + Vector2(260, 0),
 		Vector2(250, 104),
 		137.0,
@@ -1296,7 +1285,7 @@ func _build_mossvein_portal_clearing() -> void :
 
 
 	var moon_foreground: = _create_world_asset(
-		MOON_CRYSTALS,
+		MOON_GATE_CRYSTALS,
 		MOSS_GATE_ANCHOR + Vector2(292, 0),
 		Vector2(188, 78),
 		184.0,

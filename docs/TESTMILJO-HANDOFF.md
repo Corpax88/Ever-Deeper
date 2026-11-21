@@ -1,3 +1,5 @@
+[Mossvein · DEV15.62-kandidaten](mossvein-painted/FINISH.md) dokumenterer den aktive Mac- og Godot-ruten for overflategrafikken.
+
 Current DEV release: [DEV15.60 text and shop signs](https://github.com/Corpax88/Ever-Deeper/blob/codex/text-signs-20261005/docs/text-signs/HANDOFF.md), published and verified 6 October 2026 at https://corpax88.github.io/Ever-Deeper/dev/. Bright gold/white outlined text and matching SELL/FORGE signs above shop entrances. Refresh → Continue, no reset.
 
 Canonical source `9f7cc3dda596ed856dd8416dc3c30a56fb7a26cb`, branch `codex/text-signs-20261005`; production11373248422, QA37379725587. Mac41checks per actual667×375/844×390/932×430,36nativePNG images; input and ordinary Apple WebKit passed. Exact root/critic image lists recorded. First SELL placement behind DEV TOOLS rejected and fixed; no physical-iPhone/FPS claim.

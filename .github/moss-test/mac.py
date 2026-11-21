@@ -6,6 +6,8 @@ for width,height in [(667,375),(844,390),(932,430)]:
  dest=out/str(width);dest.mkdir(exist_ok=True)
  env=dict(os.environ,WALL_OUT=str(dest),XDG_DATA_HOME=str(dest/'isolated-data'),WALL_EXPECTED_SIZE=f'{width},{height}')
  cmd=[str(engine),'--path',str(root),'--main-pack',str(pck),'--resolution',f'{width}x{height}','--script',str(root/'.github/moss-test/review.gd')]
+ if sys.platform == 'linux':
+  cmd.extend(['--audio-driver', 'Dummy'])
  proc=subprocess.run(cmd,env=env,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=180)
  (dest/'godot.log').write_text(proc.stdout)
  report=json.loads((dest/'report.json').read_text())
