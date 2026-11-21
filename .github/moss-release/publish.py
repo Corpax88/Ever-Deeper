@@ -9,7 +9,7 @@ spec = importlib.util.spec_from_file_location("pages", here.parent / "visual-gui
 pages = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pages)
 pages.HERE = here
-pages.VERSION = "DEV15.61 Mossvein"
+pages.VERSION = "DEV15.62 Mossvein"
 accepted = json.loads((here / "accepted.json").read_text())
 before = accepted["before"]
 pages.acceptance = lambda: (accepted, before)
@@ -17,6 +17,13 @@ pages.acceptance = lambda: (accepted, before)
 def check_actions(record):
     run = json.loads(subprocess.check_output(["gh", "api", f"repos/Corpax88/Ever-Deeper/actions/runs/{record['run']}"]))
     assert run["conclusion"] == "success" and run["head_sha"] == record["source"]
+    assert run["path"] == ".github/workflows/moss-test.yml"
+    for evidence in record["artifacts"]:
+        artifact = json.loads(subprocess.check_output([
+            "gh", "api", f"repos/Corpax88/Ever-Deeper/actions/artifacts/{evidence['id']}"
+        ]))
+        assert artifact["digest"] == evidence["digest"] and not artifact["expired"]
+        assert artifact["workflow_run"]["id"] == record["run"]
 
 def validate(candidate):
     assert len(before) == 26 and len(accepted["production_manifest"]) == 9
