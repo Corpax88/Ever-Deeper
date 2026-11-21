@@ -26,14 +26,30 @@ for png in sorted((ROOT/'assets/surface/painted').glob('*.png')):
  path=re.search(r'^path="res://([^"]+)"',imp.read_text(),re.M)[1]
  for file in [imp,ROOT/path]:
   replacements[file.relative_to(ROOT).as_posix()]=file.read_bytes()
+# These three textures have no users after the Surface repaint. Keep their
+# source art in Git, but omit their retired import payloads from the DEV pack.
+retired = {
+ 'assets/surface/v2/moss-road-shelf.png',
+ 'assets/surface/moss-moon-parallax-background.png',
+ 'assets/surface/mossvein-parallax-foreground-v1.png',
+}
+removed = set()
+for png in sorted(retired):
+ imported = png + '.import'
+ target = re.search(r'^path="res://([^"]+)"', raw(imported).decode(), re.M)[1]
+ assert target in entries
+ removed.update((imported, target))
+assert removed.isdisjoint(replacements)
+expected_entries = (set(entries) - removed) | set(replacements)
 data=bytearray(original[:base]);after={}
-for name in sorted(set(entries)|set(replacements)):
+for name in sorted(expected_entries):
  payload=replacements.get(name,raw(name) if name in entries else b'')
  data+=b'\0'*(-len(data)%32);after[name]=(len(data)-base,len(payload),hashlib.md5(payload).digest(),0);data+=payload
 struct.pack_into('<Q',data,32,len(data));data+=struct.pack('<I',len(after))
 for name,(o,s,d,f) in after.items():
  key=name.encode();key+=b'\0'*(-len(key)%4);data+=struct.pack('<I',len(key))+key+struct.pack('<QQ16sI',o,s,d,f)
 b,e=unpack(data)
+assert set(e)==expected_entries
 for n,(o,s,*_) in e.items(): assert data[b+o:b+o+s]==replacements.get(n,raw(n) if n in entries else b'')
 p=out/'index.pck';p.write_bytes(data)
 assert identity(p)=={'size':len(data),'sha256':hashlib.sha256(data).hexdigest()}
@@ -49,5 +65,5 @@ if (src.parent/'index.html').exists():
  (out/'index.html').write_text(html[:m.start(1)]+json.dumps(cfg,separators=(',',':'))+html[m.end(1):])
  manifest={n:identity(out/n) for n in web}
  (out/'manifest.json').write_text(json.dumps(manifest,indent=2))
- (out/'qa-build-receipt.json').write_text(json.dumps({'baseline_pck':identity(src),'baseline_source':'bfabeabc7ccf78521151f964dc0a6ed542127916','qa_source':os.environ.get('GITHUB_SHA'),'overrides':overrides,'production':True,'version':'1.0.0-dev.15.62','replaced':list(replacements),'retained_payloads_verified':True,'files':manifest},indent=2))
+ (out/'qa-build-receipt.json').write_text(json.dumps({'baseline_pck':identity(src),'baseline_source':'bfabeabc7ccf78521151f964dc0a6ed542127916','qa_source':os.environ.get('GITHUB_SHA'),'overrides':overrides,'production':True,'version':'1.0.0-dev.15.62','replaced':list(replacements),'retired':sorted(removed),'retained_payloads_verified':True,'files':manifest},indent=2))
 print(identity(p))
