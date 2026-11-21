@@ -1,0 +1,79 @@
+name: Publish reviewed Mossvein DEV
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/moss-release/accepted.json']
+permissions: {contents: read, actions: read}
+concurrency: {group: pages-ever-deeper, cancel-in-progress: false}
+jobs:
+  package:
+    if: github.ref == 'refs/heads/main'
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/moss-release
+            .github/visual-guidance
+      - uses: actions/checkout@v4
+        with:
+          ref: 468b1aa8c7eeb522e7fe0827fc985b12f9428d84
+          path: reviewed
+          persist-credentials: false
+      - name: Reproduce reviewed distribution
+        working-directory: reviewed
+        run: |
+          mkdir -p "$RUNNER_TEMP/base"
+          for name in index.html index.js index.wasm index.pck index.png index.icon.png index.apple-touch-icon.png index.audio.worklet.js index.audio.position.worklet.js; do
+            curl -fsSL --retry 2 "https://corpax88.github.io/Ever-Deeper/dev/$name" -o "$RUNNER_TEMP/base/$name"
+          done
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --headless --editor --import > "$RUNNER_TEMP/import.log"
+          python3 .github/moss-test/prepare.py "$RUNNER_TEMP/base/index.pck" "$RUNNER_TEMP/candidate"
+      - name: Verify evidence, immutable artifacts and all previous public bytes
+        run: python3 .github/moss-release/publish.py prepare "$RUNNER_TEMP/publication" "$RUNNER_TEMP/candidate"
+        env: {GH_TOKEN: '${{ github.token }}'}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mossvein-dev-rollback
+          path: '${{ runner.temp }}/publication/rollback-dev'
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mossvein-staging-receipt
+          path: '${{ runner.temp }}/publication/staging-receipt.json'
+          retention-days: 30
+      - uses: actions/upload-pages-artifact@v3
+        with: {path: '${{ runner.temp }}/publication/site'}
+  deploy:
+    needs: package
+    runs-on: ubuntu-latest
+    permissions: {pages: write, id-token: write}
+    environment:
+      name: github-pages
+      url: '${{ steps.deployment.outputs.page_url }}'
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+  verify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            .github/moss-release
+            .github/visual-guidance
+      - run: python3 .github/moss-release/publish.py verify "$RUNNER_TEMP/verified"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mossvein-publication-receipt
+          path: '${{ runner.temp }}/verified/publication-receipt.json'
+          retention-days: 30
