@@ -13,6 +13,9 @@ const GuideDirectorScript = preload("res://scripts/progression/guide_director.gd
 const AchievementToastScript = preload("res://scripts/ui/achievement_toast.gd")
 const MinimapOverlayScript = preload("res://scripts/ui/minimap_overlay.gd")
 const QuickTutorialScript = preload("res://scripts/ui/quick_tutorial.gd")
+const MaraQuests := preload("res://scripts/progression/mara_quests.gd")
+var mara := MaraQuests.new()
+var mara_in_range := false
 const WorldCatalogScript = preload("res://scripts/world/world_catalog.gd")
 const QaLauncher = preload("res://scripts/qa/qa_launcher.gd")
 const DEV_BUILD_FEATURE: = "ever_deeper_dev"
@@ -205,6 +208,7 @@ func _ready() -> void :
 		endless_world.drill_modes.reset())
 	$HUD.add_child(laser_button)
 	laser_button.hide()
+	mara.install({"surface": surface_world, "hub": hub_world, "deepheart": deepheart_world})
 	_install_quick_tutorial()
 	_install_resource_inventory()
 	_install_miner_skills()
@@ -922,6 +926,9 @@ func _progression_goal() -> Dictionary:
 	if not pinned.is_empty(): return pinned
 	var camp_goal := _camp_quest_goal()
 	if not camp_goal.is_empty(): return camp_goal
+	var mara_goal := _mara_progression_goal()
+	if not mara_goal.is_empty():
+		return mara_goal
 	var goal: Dictionary = guide_director.goal_for_state(discovery)
 	if not goal.is_empty():
 		goal["hud_action"] = preload("res://scripts/progression/progression_goal.gd").action_for_phase(goal, phase)
@@ -929,16 +936,12 @@ func _progression_goal() -> Dictionary:
 
 
 func _camp_quest_goal() -> Dictionary:
+	if mara.current.get("id") != "first_haul":
+		return {}
 	match RunState.camp_quest:
 		RunState.CampQuest.OFFER, RunState.CampQuest.RETURN_TO_MARA:
 			var returning: bool = RunState.camp_quest == RunState.CampQuest.RETURN_TO_MARA
-			if not returning and RunState.pickaxe_level > 1:
-				return {}
-			return {
-				"objective_id": "camp:mara_return" if returning else "camp:mara_meet",
-				"kind": "station", "station_id": "mara", "title": "Return to Mara" if returning else "Meet Mara",
-				"hud_action": "Tap TALK or press E" if surface_context == "mara" and phase == "surface" else "Find her by the camp road",
-			}
+			return _mara_meeting_goal("Return to Mara" if returning else "Meet Mara")
 		RunState.CampQuest.ACTIVE:
 			var sale: Dictionary = RunState.assay_sale_snapshot()
 			var remaining: int = RunState.CAMP_QUEST_ORE - RunState.camp_ore_sold
@@ -960,7 +963,64 @@ func _camp_quest_goal() -> Dictionary:
 	return {}
 
 
+func _mara_meeting_goal(title: String) -> Dictionary:
+	var meeting_phase := String(mara.current.phase)
+	var directions := "Find her by the camp road"
+	if mara_in_range:
+		directions = "Tap TALK or press E"
+	elif phase == "endless":
+		directions = "Tunnel Home to the Hub"
+	elif phase in ["mine", "depth"]:
+		directions = "Head back to the surface"
+	elif meeting_phase == "hub":
+		directions = "Meet her in the Hub"
+	elif meeting_phase == "deepheart":
+		directions = "Meet her in Deepheart"
+	return {
+		"objective_id": "mara:meet:" + String(mara.current.id),
+		"kind": "mara", "meeting_phase": meeting_phase,
+		"title": title, "hud_action": directions,
+	}
+
+
+func _mara_progression_goal() -> Dictionary:
+	if mara.current.is_empty() or mara.current.id == "first_haul":
+		return {}
+	# Secondary conversations stay available in-person as players explore.
+	# Use the existing guide for shopping, recipes and the actual action.
+	if not mara.accepted():
+		return _mara_meeting_goal("Talk to Mara")
+	if mara.current.id == "shaft":
+		return {
+			"objective_id": "mara:shaft", "kind": "depth_resource",
+			"mine_id": mara.current.mine, "title": "Enter the hidden shaft",
+			"hud_action": "Use DESCEND at the shaft",
+		}
+	return {}
+
+
+func _refresh_mara() -> void:
+	var previous_id: String = mara.current.get("id", "")
+	mara.refresh()
+	var player := _active_player_node()
+	var can_talk: bool = (
+		not mara.current.is_empty() and phase == String(mara.current.phase)
+		and not (phase == "hub" and hub_world.treasury != null and hub_world.treasury.inside)
+		and is_instance_valid(player) and player.global_position.distance_to(mara.approach()) <= MaraQuests.TALK_RADIUS
+	)
+	if can_talk == mara_in_range and (not can_talk or previous_id == mara.current.id):
+		return
+	mara_in_range = can_talk
+	_refresh_context_button()
+
+
 func _talk_to_mara() -> void:
+	if mara.current.id != "first_haul":
+		RunState.accept_mara_quest(String(mara.current.id))
+		AudioDirector.play_ui("confirm")
+		_set_status("Mara · " + String(mara.current.dialogue))
+		_update_visual_guide()
+		return
 	var previous: int = RunState.camp_quest
 	RunState.advance_camp_quest()
 	AudioDirector.play_ui("confirm")
@@ -981,6 +1041,7 @@ func _update_visual_guide() -> void :
 		return
 	var in_treasury: bool = hub_world.treasury != null and hub_world.treasury.inside
 	if in_treasury: hub_world.treasury.apply_hud()
+	_refresh_mara()
 	guide_route_update_count += 1
 	var goal: Dictionary = _progression_goal()
 	if in_treasury and String(goal.get("kind", "")) != "treasury_goal" and String(goal.get("objective_id", "")) != "learn:mine":
@@ -1041,6 +1102,8 @@ func _matching_guide_control(key: String, allow_lesson: bool = false) -> Control
 	if premium_hud == null or (not allow_lesson and quick_tutorial != null and quick_tutorial.prioritizes_learning()): return null
 	var button: Button = premium_hud.context_button
 	if not button.is_visible_in_tree() or button.disabled: return null
+	if key == "mara:meeting" and mara_in_range:
+		return button
 	var matches := false
 	match phase:
 		"surface":
@@ -1072,8 +1135,23 @@ func _guide_route_proposal(goal: Dictionary) -> Dictionary:
 		"candidates": [],
 	}
 	var kind: = String(goal.get("kind", ""))
+	if kind == "mara":
+		var meeting_phase := String(goal.meeting_phase)
+		if phase == meeting_phase and not (phase == "hub" and hub_world.treasury != null and hub_world.treasury.inside):
+			proposal.waypoint_id = "mara:meeting"
+			var position := mara.approach()
+			if phase == "surface":
+				position = surface_world._nearest_safe_restore_position(position)
+			proposal.candidates = [_guide_candidate("mara:meeting", position, 0.0)]
+			return proposal
+		if phase == "deepheart":
+			proposal.candidates = [_guide_candidate("deepheart:exit", deepheart_world.EXIT_POSITION, 0.0)]
+			return proposal
+		kind = "station" if meeting_phase == "surface" else "hub_elevator"
+		if phase == "endless":
+			return proposal
 	if objective_id == "learn:mine":
-		if phase == "hub" and hub_world.treasury.inside:
+		if phase == "hub" and hub_world.treasury != null and hub_world.treasury.inside:
 			proposal.candidates = [_guide_candidate("learn:treasury_exit", hub_world.treasury.EXIT, 0.0)]
 			return proposal
 		if phase == "deepheart":
@@ -1305,8 +1383,6 @@ func _depth_guide_proposal(goal: Dictionary, proposal: Dictionary, kind: String,
 
 
 func _surface_station_guide_position(station_id: String) -> Vector2:
-	if station_id == "mara":
-		return surface_world.MARA_APPROACH
 	if station_id in ["sell", "forge"]:
 		return surface_world.station_interaction_position(station_id)
 	if station_id == "hubEntrance":
@@ -2746,6 +2822,10 @@ func _on_endless_context_changed(context: String) -> void :
 func _perform_context() -> void :
 	if tunnel_home_in_progress or menu_open or inventory_open or orientation_guard_active or _companion_panel_is_open() or conclusion_overlay.visible or _shop_panel_is_open() or not commerce_transaction.is_empty():
 		return
+	_refresh_mara()
+	if mara_in_range:
+		_talk_to_mara()
+		return
 	if phase == "deepheart":
 		deepheart_world.interact()
 		return
@@ -2785,8 +2865,6 @@ func _perform_context() -> void :
 		_try_unlock_gate(surface_context.trim_prefix("gate:"))
 		return
 	match surface_context:
-		"mara":
-			_talk_to_mara()
 		"hubEntrance":
 			_enter_hub()
 		"sell":
@@ -3889,7 +3967,6 @@ func _refresh_context_button() -> void :
 		else:
 			label = {
 				"sell": "SELL ORE" if automated_mode else "",
-				"mara": "TALK",
 				"forge": "FORGE",
 				"starforge": "BROWSE",
 			}.get(surface_context, "")
@@ -3900,6 +3977,9 @@ func _refresh_context_button() -> void :
 					"forge": label = "FORGING"
 					"wayfarer": label = "TUNING"
 					"starforge": label = "ATTUNING"
+	if mara_in_range and commerce_transaction.is_empty():
+		label = "TALK"
+		enabled = true
 	action_button.text = label
 
 
@@ -3917,15 +3997,15 @@ func _refresh_context_card() -> void :
 	var title: = ""
 	var detail: = ""
 	var hint: = ""
-	if phase == "surface":
+	if mara_in_range and commerce_transaction.is_empty():
+		title = "MARA"
+		detail = String(mara.current.get("title", ""))
+		hint = "PRESS E OR TAP TALK"
+	elif phase == "surface":
 		if surface_context == "sell":
 			title = "SELL ORE"
 			detail = _assay_status()
 			hint = "WALK THROUGH · RESOURCES SELL AUTOMATICALLY"
-		elif surface_context == "mara":
-			title = "MARA"
-			detail = "Mossvein camp forewoman"
-			hint = "PRESS E OR TAP TALK"
 		elif surface_context == "forge":
 			title = "MOSSVEIN FORGE"
 			detail = _forge_status().trim_prefix("Forge · ")
@@ -4021,6 +4101,7 @@ func _flush_hud_refresh() -> void :
 
 
 func _refresh_hud() -> void :
+	_refresh_mara()
 	_update_presented_gold_labels()
 	cargo_label.text = _cargo_summary()
 	if phase == "depth":

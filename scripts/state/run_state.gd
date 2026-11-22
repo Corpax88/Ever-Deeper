@@ -171,6 +171,13 @@ enum CampQuest { OFFER, ACTIVE, RETURN_TO_MARA, COMPLETE }
 const CAMP_QUEST_ORE := 3
 var camp_quest: int = CampQuest.OFFER
 var camp_ore_sold := 0
+const MARA_QUEST_IDS := [
+	"forge", "shaft", "moonglass", "emberdeep", "mastery", "starfall", "starforge",
+	"hub", "drill", "singularity", "elevator", "deepheart", "the_deep", "first_relic",
+	"workshop:tool_forge", "workshop:light_lab", "workshop:wardrobe",
+	"workshop:treasure_chamber", "workshop:lift_workshop",
+]
+var mara_quests_seen: Dictionary = {}
 var starforge_variant: = ""
 var starforge_unlocked: Dictionary = _default_starforge_unlocked()
 
@@ -435,6 +442,13 @@ func begin_assay_sale() -> Dictionary:
 	var transaction: = _create_commerce_transaction("assay_sale", snapshot)
 	_active_assay_transaction_id = String(transaction.id)
 	return _commerce_begin_result(transaction, false)
+
+
+func accept_mara_quest(id: String) -> void:
+	if id not in MARA_QUEST_IDS or bool(mara_quests_seen.get(id, false)):
+		return
+	mara_quests_seen[id] = true
+	_state_changed()
 
 
 func advance_camp_quest() -> void:
@@ -2630,6 +2644,7 @@ func serialize() -> Dictionary:
 			"total_gold_earned": total_gold_earned,
 			"camp_quest": camp_quest,
 			"camp_ore_sold": camp_ore_sold,
+			"mara_quests_seen": mara_quests_seen.duplicate(),
 			"starforge_variant": starforge_variant,
 			"starforge_unlocked": starforge_unlocked.duplicate(true),
 			"cargo": cargo.duplicate(true),
@@ -2746,6 +2761,7 @@ func deserialize(raw: Variant) -> bool:
 	var legacy_camp_quest := CampQuest.COMPLETE if pickaxe_level > 1 else CampQuest.OFFER
 	camp_quest = mini(CampQuest.COMPLETE, _nonnegative_int(source.get("camp_quest"), legacy_camp_quest))
 	camp_ore_sold = mini(CAMP_QUEST_ORE, _nonnegative_int(source.get("camp_ore_sold"), 0))
+	mara_quests_seen = _sanitize_bool_map(source.get("mara_quests_seen"), MARA_QUEST_IDS)
 	cargo = _sanitize_resource_store(source.get("cargo", {}))
 	mined = _sanitize_resource_store(source.get("mined", {}))
 	miner_skills = MinerSkills.restore(source.get("miner_skills", {"mining": float(total_swings) * 4.0, "prospecting": float(total_mined_resources())}), source.get("miner_skills_balance", 1))
@@ -3102,6 +3118,7 @@ func _apply_defaults(emit_change: bool = true) -> void :
 	total_gold_earned = 0
 	camp_quest = CampQuest.OFFER
 	camp_ore_sold = 0
+	mara_quests_seen.clear()
 	starforge_variant = ""
 	starforge_unlocked = _default_starforge_unlocked()
 	cargo = _empty_resource_store()
