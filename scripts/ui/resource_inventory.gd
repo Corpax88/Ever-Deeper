@@ -4,11 +4,13 @@ extends Control
 signal close_requested
 
 const DropVisuals = preload("res://scripts/world/drop_visuals.gd")
-const GOLD: = Color("d7b45a")
-const GOLD_BRIGHT: = Color("ffe3a0")
-const MINT: = Color("a8e3bc")
-const MUTED: = Color("789384")
-const CARD: = Color("0c2117")
+const PaintedPalette = preload("res://scripts/ui/painted_palette.gd")
+
+const GOLD: = PaintedPalette.BRASS
+const GOLD_BRIGHT: = PaintedPalette.LIGHT_BRASS
+const MINT: = PaintedPalette.PALE_MOSS
+const MUTED: = PaintedPalette.MUTED_MOSS
+const CARD: = PaintedPalette.RAISED_SLATE
 const IPHONE_LANDSCAPE_ASPECT: = 1.65
 
 var item_grid: GridContainer
@@ -74,7 +76,7 @@ func _build_interface() -> void :
 	card.offset_top = 0.0
 	card.offset_right = 0.0
 	card.offset_bottom = 0.0
-	card.add_theme_stylebox_override("panel", _panel_style(Color("07150e"), GOLD, 18, 2, 14))
+	card.add_theme_stylebox_override("panel", _panel_style(PaintedPalette.SLATE, GOLD, 18, 2, 14))
 	add_child(card)
 
 	var layout: = VBoxContainer.new()

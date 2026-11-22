@@ -19,9 +19,11 @@ const TOOL_FORGE_ICON: = preload("res://assets/ui/tool-forge-approved-v1.png")
 const BUILD_ICON: = preload("res://assets/ui/hud-build-v1.png")
 const GOLD_ICON: = preload("res://assets/ui/gold-bars-v1.png")
 const MOLE_ICON: = preload("res://assets/companion/mole-hud.png")
-const GOLD: = Color("d7b45a")
-const GOLD_BRIGHT: = Color("ffe3a0")
-const MINT: = Color("a8e3bc")
+const PaintedPalette = preload("res://scripts/ui/painted_palette.gd")
+
+const GOLD: = PaintedPalette.BRASS
+const GOLD_BRIGHT: = PaintedPalette.LIGHT_BRASS
+const MINT: = PaintedPalette.PALE_MOSS
 const IPHONE_LANDSCAPE_ASPECT: = 1.5
 const IPHONE_TOUCH_TARGET: = 112.0
 const IPHONE_TOP_BUTTON_SIZE: = 120.0

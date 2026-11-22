@@ -8,13 +8,16 @@ signal new_game_confirmed
 signal settings_back_to_skills
 
 const LOGO: = preload("res://assets/branding/ever-deeper-logo.png")
-const GOLD: = Color("d7b45a")
-const GOLD_BRIGHT: = Color("ffe3a0")
-const MINT: = Color("a8e3bc")
-const MUTED: = Color("789384")
+const MENU_FOREST: = preload("res://assets/surface/painted/forest.png")
+const PaintedPalette = preload("res://scripts/ui/painted_palette.gd")
+
+const GOLD: = PaintedPalette.BRASS
+const GOLD_BRIGHT: = PaintedPalette.LIGHT_BRASS
+const MINT: = PaintedPalette.PALE_MOSS
+const MUTED: = PaintedPalette.MUTED_MOSS
 const INK: = Color("07120d")
 const IPHONE_LANDSCAPE_ASPECT: = 1.65
-const DEV_RELEASE_VERSION: = "1.0.0-dev.15.63"
+const DEV_RELEASE_VERSION: = "1.0.0-dev.15.64"
 
 
 static func release_version() -> String:
@@ -149,23 +152,17 @@ func navigate_back() -> bool:
 func _build_backdrop() -> void :
 	var background: = ColorRect.new()
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	background.color = Color("06110c")
+	background.color = Color("111a16")
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(background)
-	var upper_glow: = ColorRect.new()
-	upper_glow.anchor_right = 1.0
-	upper_glow.offset_bottom = 270.0
-	upper_glow.color = Color(0.05, 0.2, 0.11, 0.42)
-	upper_glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(upper_glow)
-	var lower_glow: = ColorRect.new()
-	lower_glow.anchor_top = 1.0
-	lower_glow.anchor_right = 1.0
-	lower_glow.anchor_bottom = 1.0
-	lower_glow.offset_top = -180.0
-	lower_glow.color = Color(0.09, 0.105, 0.035, 0.18)
-	lower_glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(lower_glow)
+	var scenery := TextureRect.new()
+	scenery.texture = MENU_FOREST
+	scenery.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	scenery.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	scenery.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	scenery.modulate = Color(0.49, 0.54, 0.48, 0.72)
+	scenery.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(scenery)
 	var top_line: = ColorRect.new()
 	top_line.anchor_right = 1.0
 	top_line.offset_left = 24.0
@@ -192,7 +189,7 @@ func _build_main_view() -> void :
 	card.offset_top = -300.0
 	card.offset_right = 520.0
 	card.offset_bottom = 300.0
-	card.add_theme_stylebox_override("panel", _panel_style(Color("0b1d14"), GOLD, 18, 2))
+	card.add_theme_stylebox_override("panel", _panel_style(PaintedPalette.SLATE, GOLD, 18, 2))
 	main_view.add_child(card)
 
 	var logo: = TextureRect.new()
@@ -279,7 +276,7 @@ func _build_main_view() -> void :
 	rule.color = Color(GOLD, 0.26)
 	rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	card.add_child(rule)
-	var version: = _label(release_label(), 7, Color("53685b"), HORIZONTAL_ALIGNMENT_CENTER)
+	var version: = _label(release_label(), 7, Color("95a592"), HORIZONTAL_ALIGNMENT_CENTER)
 	version.name = "Version"
 	version.position = Vector2(552, 512)
 	version.size = Vector2(434, 30)
@@ -308,7 +305,7 @@ func _build_detail_view() -> void :
 	card.offset_top = -300.0
 	card.offset_right = 520.0
 	card.offset_bottom = 300.0
-	card.add_theme_stylebox_override("panel", _panel_style(Color("0b1d14"), GOLD, 18, 2))
+	card.add_theme_stylebox_override("panel", _panel_style(PaintedPalette.SLATE, GOLD, 18, 2))
 	detail_view.add_child(card)
 	detail_title = _label("SETTINGS", 21, GOLD_BRIGHT, HORIZONTAL_ALIGNMENT_CENTER)
 	detail_title.position = Vector2(48, 22)
@@ -359,7 +356,7 @@ func _build_confirmation() -> void :
 	card.offset_top = -155.0
 	card.offset_right = 260.0
 	card.offset_bottom = 155.0
-	card.add_theme_stylebox_override("panel", _panel_style(Color("101d15"), GOLD, 17, 2))
+	card.add_theme_stylebox_override("panel", _panel_style(Color("272e26"), GOLD, 17, 2))
 	confirm_view.add_child(card)
 	var kicker: = _label("A NEW DESCENT", 9, GOLD, HORIZONTAL_ALIGNMENT_CENTER)
 	kicker.name = "Kicker"
@@ -566,7 +563,7 @@ func _refresh_main_action() -> void:
 	for button in [continue_button, new_game]:
 		var primary: bool = (button == new_game) == continue_button.disabled
 		button.add_theme_color_override("font_color", GOLD_BRIGHT if primary else Color("e6d7a7"))
-		button.add_theme_stylebox_override("normal", _panel_style(Color("183322") if primary else Color("10261a"), Color(GOLD, 0.76 if primary else 0.42), 12, 2 if primary else 1))
+		button.add_theme_stylebox_override("normal", _panel_style(Color("3b4935") if primary else PaintedPalette.RAISED_SLATE, Color(GOLD, 0.76 if primary else 0.42), 12, 2 if primary else 1))
 	if continue_button.disabled:
 		new_game.grab_focus()
 	else:
@@ -675,7 +672,7 @@ func _add_volume_control(title: String, value: int, y: float) -> HSlider:
 	var panel: = Panel.new()
 	panel.position = Vector2(4, y)
 	panel.size = Vector2(872, 126 if iphone else 104)
-	panel.add_theme_stylebox_override("panel", _panel_style(Color("10251a"), Color(GOLD, 0.45), 13, 1))
+	panel.add_theme_stylebox_override("panel", _panel_style(Color("313c32"), Color(GOLD, 0.45), 13, 1))
 	detail_body.add_child(panel)
 	var title_label: = _label(title, 26 if iphone else 11, MINT, HORIZONTAL_ALIGNMENT_LEFT)
 	title_label.position = Vector2(16, 12)
@@ -751,8 +748,8 @@ func _achievement_row(definition: Dictionary) -> Control:
 	var row: = PanelContainer.new()
 	row.custom_minimum_size = Vector2(864, 126 if iphone else 76)
 	row.add_theme_stylebox_override("panel", _panel_style(
-		Color("12291d") if unlocked else Color("0b1711"),
-		Color(GOLD, 0.58) if unlocked else Color("304238"), 11, 1
+		Color("344133") if unlocked else Color("222c25"),
+		Color(GOLD, 0.58) if unlocked else Color("526154"), 11, 1
 	))
 	var line: = HBoxContainer.new()
 	line.add_theme_constant_override("separation", 10)
@@ -843,9 +840,9 @@ func _menu_button(text_value: String, primary: bool) -> Button:
 	button.add_theme_font_size_override("font_size", 14 if primary else 12)
 	button.add_theme_color_override("font_color", GOLD_BRIGHT if primary else Color("e6d7a7"))
 	button.add_theme_color_override("font_disabled_color", Color("59655d"))
-	button.add_theme_stylebox_override("normal", _panel_style(Color("183322") if primary else Color("10261a"), Color(GOLD, 0.76 if primary else 0.42), 12, 2 if primary else 1))
-	button.add_theme_stylebox_override("hover", _panel_style(Color("234b31"), GOLD, 12, 2))
-	button.add_theme_stylebox_override("pressed", _panel_style(Color("0c1b13"), GOLD_BRIGHT, 12, 2))
+	button.add_theme_stylebox_override("normal", _panel_style(Color("3b4935") if primary else PaintedPalette.RAISED_SLATE, Color(GOLD, 0.76 if primary else 0.42), 12, 2 if primary else 1))
+	button.add_theme_stylebox_override("hover", _panel_style(Color("526447"), GOLD, 12, 2))
+	button.add_theme_stylebox_override("pressed", _panel_style(Color("212b23"), GOLD_BRIGHT, 12, 2))
 	button.add_theme_stylebox_override("focus", _panel_style(Color(0, 0, 0, 0), GOLD_BRIGHT, 12, 2))
 	return button
 
