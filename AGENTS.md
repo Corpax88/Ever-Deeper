@@ -1,4 +1,6 @@
-[DEV15.66 · Møt Mara underveis](docs/mara-progression/HANDOFF.md) er gjeldende DEV-versjon.
+[DEV15.67 · Mara og handlingsikoner](docs/mara-icons/HANDOFF.md) er gjeldende DEV-versjon.
+
+Forrige utgave var [DEV15.66 · Møt Mara underveis](docs/mara-progression/HANDOFF.md).
 
 Forrige utgave var [DEV15.65 · Første oppdrag med Mara](docs/camp-quest/HANDOFF.md).
 
