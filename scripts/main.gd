@@ -948,9 +948,9 @@ func _camp_quest_goal() -> Dictionary:
 			if ready:
 				action = "Walk past the SELL stall"
 			elif phase == "mine":
-				action = "Hold MINE or Space beside ore"
+				action = "Hold MINE or Space"
 			else:
-				action = "Follow the ramp into Mossvein Mine"
+				action = "Take the ramp to the mine"
 			return {
 				"objective_id": "camp:sell" if ready else "camp:mine",
 				"kind": "station" if ready else "mine_resource", "station_id": "sell" if ready else "",

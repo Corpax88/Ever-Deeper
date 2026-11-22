@@ -48,6 +48,7 @@ func run() -> void:
 	await capture("01-meet-mara")
 	game.premium_hud.context_button.pressed.emit()
 	checks["TALK accepts task and routes to mine"] = state.camp_quest == state.CampQuest.ACTIVE and game._progression_goal().objective_id == "camp:mine"
+	checks["surface guidance uses the short ramp direction"] = game._progression_goal().hud_action == "Take the ramp to the mine"
 	await capture("02-first-haul")
 	var accepted: Dictionary = state.serialize()
 	checks["accepted task survives save roundtrip"] = state.deserialize(accepted) and state.camp_quest == state.CampQuest.ACTIVE
