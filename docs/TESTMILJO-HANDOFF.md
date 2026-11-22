@@ -1,4 +1,6 @@
-[DEV15.65 · Første oppdrag med Mara](camp-quest/HANDOFF.md) er gjeldende DEV-versjon.
+[DEV15.66 · Møt Mara underveis](mara-progression/HANDOFF.md) er gjeldende DEV-versjon.
+
+Forrige utgave var [DEV15.65 · Første oppdrag med Mara](camp-quest/HANDOFF.md).
 
 Forrige utgave: [DEV15.64 · håndmalt verden](painted-world/HANDOFF.md) er gjeldende DEV-versjon.
 
