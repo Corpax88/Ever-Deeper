@@ -1,4 +1,6 @@
-[DEV15.63 · Mossvein-stier og kollisjon](docs/mossvein-painted/WALK.md) er den gjeldende DEV-versjonen. [Testoppsett](docs/TESTMILJO-HANDOFF.md).
+[DEV15.64 · håndmalt verden](docs/painted-world/HANDOFF.md) er gjeldende DEV-versjon.
+
+Forrige utgave: [DEV15.63 · Mossvein-stier og kollisjon](docs/mossvein-painted/WALK.md). [Testoppsett](docs/TESTMILJO-HANDOFF.md).
 
 [Mossvein · grafikkoppfølgingen](docs/mossvein-painted/FINISH.md) har kilde og grafisk testoppsett for DEV15.62-kandidaten. [Miljøoverlevering](docs/TESTMILJO-HANDOFF.md).
 

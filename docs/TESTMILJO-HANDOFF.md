@@ -1,4 +1,6 @@
-[DEV15.63 · Mossvein-stier og kollisjon](mossvein-painted/WALK.md) er den gjeldende DEV-versjonen.
+[DEV15.64 · håndmalt verden](painted-world/HANDOFF.md) er gjeldende DEV-versjon.
+
+Forrige utgave: [DEV15.63 · Mossvein-stier og kollisjon](mossvein-painted/WALK.md).
 
 [Mossvein · DEV15.62-kandidaten](mossvein-painted/FINISH.md) dokumenterer den aktive Mac- og Godot-ruten for overflategrafikken.
 
