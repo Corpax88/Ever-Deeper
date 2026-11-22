@@ -17,7 +17,7 @@ const MINT: = PaintedPalette.PALE_MOSS
 const MUTED: = PaintedPalette.MUTED_MOSS
 const INK: = Color("07120d")
 const IPHONE_LANDSCAPE_ASPECT: = 1.65
-const DEV_RELEASE_VERSION: = "1.0.0-dev.15.64"
+const DEV_RELEASE_VERSION: = "1.0.0-dev.15.65"
 
 
 static func release_version() -> String:

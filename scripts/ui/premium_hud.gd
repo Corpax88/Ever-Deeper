@@ -138,7 +138,7 @@ func set_context_action(label: String, enabled: bool) -> void :
 			context_button.icon = TOOL_FORGE_ICON
 		elif upper == "HOME":
 			context_button.icon = MOLE_ICON
-		elif upper == "SELL":
+		elif upper in ["SELL", "SELLING"]:
 			context_button.icon = GOLD_ICON
 		elif upper in ["FORGE", "UPGRADE", "POWER", "DELIVER", "LOAD", "BUILD"]:
 			context_button.icon = BUILD_ICON

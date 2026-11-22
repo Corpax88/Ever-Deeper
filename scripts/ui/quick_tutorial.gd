@@ -51,6 +51,10 @@ func has_been_seen() -> bool:
 	# Existing developed expeditions must not be forced through beginner lessons.
 	return bool(config.get_value("tutorial", SEEN_KEY, false)) or int(RunState.pickaxe_level) > 1
 
+func has_pending_replay() -> bool:
+	return _paused and _replay
+
+
 func reset_for_new_run() -> void:
 	_running = false
 	visible = false

@@ -920,10 +920,60 @@ func _progression_goal() -> Dictionary:
 		if not endless_world.site_activity.is_empty() and not discovery.is_empty():
 			return discovery
 	if not pinned.is_empty(): return pinned
+	var camp_goal := _camp_quest_goal()
+	if not camp_goal.is_empty(): return camp_goal
 	var goal: Dictionary = guide_director.goal_for_state(discovery)
 	if not goal.is_empty():
 		goal["hud_action"] = preload("res://scripts/progression/progression_goal.gd").action_for_phase(goal, phase)
 	return goal
+
+
+func _camp_quest_goal() -> Dictionary:
+	match RunState.camp_quest:
+		RunState.CampQuest.OFFER, RunState.CampQuest.RETURN_TO_MARA:
+			var returning: bool = RunState.camp_quest == RunState.CampQuest.RETURN_TO_MARA
+			if not returning and RunState.pickaxe_level > 1:
+				return {}
+			return {
+				"objective_id": "camp:mara_return" if returning else "camp:mara_meet",
+				"kind": "station", "station_id": "mara", "title": "Return to Mara" if returning else "Meet Mara",
+				"hud_action": "Tap TALK or press E" if surface_context == "mara" and phase == "surface" else "Find her by the camp road",
+			}
+		RunState.CampQuest.ACTIVE:
+			var sale: Dictionary = RunState.assay_sale_snapshot()
+			var remaining: int = RunState.CAMP_QUEST_ORE - RunState.camp_ore_sold
+			var pieces_to_find: int = maxi(0, remaining - int(sale.sellable_pieces))
+			var ready := pieces_to_find == 0
+			var action: String
+			if ready:
+				action = "Walk past the SELL stall"
+			elif phase == "mine":
+				action = "Hold MINE or Space beside ore"
+			else:
+				action = "Follow the ramp into Mossvein Mine"
+			return {
+				"objective_id": "camp:sell" if ready else "camp:mine",
+				"kind": "station" if ready else "mine_resource", "station_id": "sell" if ready else "",
+				"mine_id": "mossMine", "title": "Sell your ore" if ready else "Collect %d ore" % pieces_to_find,
+				"hud_action": action,
+			}
+	return {}
+
+
+func _talk_to_mara() -> void:
+	var previous: int = RunState.camp_quest
+	RunState.advance_camp_quest()
+	AudioDirector.play_ui("confirm")
+	match previous:
+		RunState.CampQuest.OFFER:
+			_set_status("Mara · Mine three pieces of ore and sell them here at camp.")
+		RunState.CampQuest.ACTIVE:
+			_set_status("Mara · Follow the ramp down. Walk past SELL with your ore.")
+		RunState.CampQuest.RETURN_TO_MARA:
+			_set_status("Mara · First haul done! Take your gold to the forge.")
+		_:
+			_set_status("Mara · Stop by the forge whenever you need a better pickaxe.")
+	_update_visual_guide()
 
 
 func _update_visual_guide() -> void :
@@ -1255,6 +1305,8 @@ func _depth_guide_proposal(goal: Dictionary, proposal: Dictionary, kind: String,
 
 
 func _surface_station_guide_position(station_id: String) -> Vector2:
+	if station_id == "mara":
+		return surface_world.MARA_APPROACH
 	if station_id in ["sell", "forge"]:
 		return surface_world.station_interaction_position(station_id)
 	if station_id == "hubEntrance":
@@ -1545,15 +1597,14 @@ func _start_new_game() -> void :
 	_hide_start_menu()
 	surface_world.set_active(true)
 	objective_label.text = _surface_objective()
-	_set_status("A fresh expedition begins · follow the lower road")
+	_set_status("")
 	_refresh_hud()
 	RunState.set_location("surface", surface_world.player.global_position)
 	if RunState.flush_save(): save_available = true
-	call_deferred("_maybe_show_quick_tutorial")
 
 
 func _maybe_show_quick_tutorial() -> void :
-	if automated_mode or tutorial_open or quick_tutorial == null or quick_tutorial.has_been_seen():
+	if automated_mode or tutorial_open or quick_tutorial == null or not quick_tutorial.has_pending_replay():
 		return
 	tutorial_open = true
 	quick_tutorial.open(DisplayServer.is_touchscreen_available())
@@ -2300,10 +2351,10 @@ func _start_assay_transaction() -> void :
 		match String(begun.get("reason", "empty")):
 			"protected":
 				AudioDirector.play_ui("confirm")
-				_set_status("Assay skipped · upgrade and tracked goal materials stay protected")
+				_set_status("No ore sold · upgrade and tracked materials are protected")
 			_:
 				AudioDirector.play_blocked()
-				_set_status("Assay ready · bring mined resources through the station")
+				_set_status("Bring ore to the stall to sell it")
 		return
 	commerce_presented_gold = int(begun.get("gold_before", RunState.gold))
 	commerce_transaction = {
@@ -2314,7 +2365,7 @@ func _start_assay_transaction() -> void :
 		"station": "sell",
 	}
 	_set_status(
-		"Assay receiving %d resources · gold is counted as each bar returns" %
+		"Selling %d ore · gold arrives as each bar returns" %
 		int(begun.get("sellable_pieces", 0))
 	)
 	_refresh_hud()
@@ -2515,13 +2566,13 @@ func _on_station_transaction_completed(
 			if succeeded:
 				AudioDirector.play_economy("sell")
 				_set_status(
-					"Assay complete · +%d gold from %d resources · protected materials kept safe" % [
-						int(result.get("earned", 0)),
+					"Sold %d ore for %d gold · protected materials kept safe" % [
 						int(result.get("sellable_pieces", 0)),
+						int(result.get("earned", 0)),
 					]
 				)
 			else:
-				_set_status("Assay interrupted · resources remained in your pouch")
+				_set_status("Sale interrupted · your ore stayed in your pouch")
 		"forge":
 			var result: Dictionary = Dictionary(RunState.commit_forge_purchase(String(transaction.get("state_id", ""))))
 			succeeded = bool(result.get("ok", false))
@@ -2734,6 +2785,8 @@ func _perform_context() -> void :
 		_try_unlock_gate(surface_context.trim_prefix("gate:"))
 		return
 	match surface_context:
+		"mara":
+			_talk_to_mara()
 		"hubEntrance":
 			_enter_hub()
 		"sell":
@@ -3624,10 +3677,10 @@ func _assay_status() -> String:
 		sellable_pieces += sellable
 		sale_value += sellable * int(rock.get("value", 0))
 	if sellable_pieces > 0:
-		return "Assay · %d sellable ore · %d gold ready" % [sellable_pieces, sale_value]
+		return "%d ore for %d gold" % [sellable_pieces, sale_value]
 	if RunState.cargo_count() > 0:
-		return "Assay · upgrade and tracked goal materials are protected"
-	return "Assay · your ore pouch is empty"
+		return "Upgrade and tracked materials are protected"
+	return "Your ore pouch is empty"
 
 
 func _starforge_status() -> String:
@@ -3836,13 +3889,14 @@ func _refresh_context_button() -> void :
 		else:
 			label = {
 				"sell": "SELL ORE" if automated_mode else "",
+				"mara": "TALK",
 				"forge": "FORGE",
 				"starforge": "BROWSE",
 			}.get(surface_context, "")
 			if not commerce_transaction.is_empty():
 				enabled = false
 				match String(commerce_transaction.get("kind", "")):
-					"assay": label = "ASSAYING"
+					"assay": label = "SELLING"
 					"forge": label = "FORGING"
 					"wayfarer": label = "TUNING"
 					"starforge": label = "ATTUNING"
@@ -3865,9 +3919,13 @@ func _refresh_context_card() -> void :
 	var hint: = ""
 	if phase == "surface":
 		if surface_context == "sell":
-			title = "ASSAY STATION"
-			detail = _assay_status().trim_prefix("Assay · ")
+			title = "SELL ORE"
+			detail = _assay_status()
 			hint = "WALK THROUGH · RESOURCES SELL AUTOMATICALLY"
+		elif surface_context == "mara":
+			title = "MARA"
+			detail = "Mossvein camp forewoman"
+			hint = "PRESS E OR TAP TALK"
 		elif surface_context == "forge":
 			title = "MOSSVEIN FORGE"
 			detail = _forge_status().trim_prefix("Forge · ")
@@ -4533,7 +4591,7 @@ func _configure_surface_map(map_view: Control) -> void:
 		var vein_id: String = WorldCatalog.SURFACE_LAYOUTS[world_id].surface_vein_id
 		if surface_world.LATER_RESOURCE_ACCESS_ROUTES.has(vein_id):
 			map_view.navigation_routes.append({"points": PackedVector2Array(surface_world.LATER_RESOURCE_ACCESS_ROUTES[vein_id]), "half_width": surface_world.LATER_MAIN_ROUTE_HALF_WIDTH})
-	map_view.markers.append({"kind": "station", "position": surface_world._station_position("sell"), "label": "Assay", "label_offset": Vector2(0, -56)})
+	map_view.markers.append({"kind": "station", "position": surface_world._station_position("sell"), "label": "Sell Ore", "label_offset": Vector2(0, -56)})
 	map_view.markers.append({"kind": "station", "position": surface_world._station_position("forge"), "label": "Forge", "label_offset": Vector2(0, -104)})
 	if RunState.is_world_unlocked("starfall"):
 		map_view.markers.append({"kind": "station", "position": surface_world._station_position("starforge"), "label": "Starforge", "label_offset": Vector2(-18, -112)})

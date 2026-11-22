@@ -504,7 +504,7 @@ func _run_smoke_test() -> void :
 	main.surface_world.restore_position(main.surface_world.station_interaction_position("sell"))
 	assert (main.surface_context == "sell" and main.action_button.text == "SELL ORE")
 	assert ( not main.context_card.visible and main.premium_hud.context_button.visible and main.premium_hud.context_button.text == "SELL")
-	assert (main.premium_hud.context_button.tooltip_text.contains("ASSAY STATION"))
+	assert (main.premium_hud.context_button.tooltip_text.contains("SELL ORE"))
 	var expected_sale= 3 * int(GameData.data.ROCK_TYPES.stone.value) + 2 * int(GameData.data.ROCK_TYPES.copper.value)
 	main._perform_context()
 	assert (main.station_transaction_fx.busy and String(main.commerce_transaction.get("kind", "")) == "assay")

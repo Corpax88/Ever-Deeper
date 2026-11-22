@@ -166,6 +166,11 @@ var movement_speed_level: = 0
 var total_swings: = 0
 var precision_hits: = 0
 var total_gold_earned: = 0
+
+enum CampQuest { OFFER, ACTIVE, RETURN_TO_MARA, COMPLETE }
+const CAMP_QUEST_ORE := 3
+var camp_quest: int = CampQuest.OFFER
+var camp_ore_sold := 0
 var starforge_variant: = ""
 var starforge_unlocked: Dictionary = _default_starforge_unlocked()
 
@@ -432,6 +437,16 @@ func begin_assay_sale() -> Dictionary:
 	return _commerce_begin_result(transaction, false)
 
 
+func advance_camp_quest() -> void:
+	if camp_quest == CampQuest.OFFER:
+		camp_quest = CampQuest.ACTIVE
+	elif camp_quest == CampQuest.RETURN_TO_MARA:
+		camp_quest = CampQuest.COMPLETE
+	else:
+		return
+	_state_changed()
+
+
 func commit_assay_sale(transaction_id: String) -> Dictionary:
 	var transaction: Dictionary = _commerce_transactions.get(transaction_id, {})
 	if not transaction is Dictionary or Dictionary(transaction).is_empty():
@@ -467,6 +482,10 @@ func commit_assay_sale(transaction_id: String) -> Dictionary:
 	var gold_before_commit: = gold
 	gold += earned
 	total_gold_earned += earned
+	if camp_quest == CampQuest.ACTIVE and earned > 0:
+		camp_ore_sold = mini(CAMP_QUEST_ORE, camp_ore_sold + int(snapshot.get("sellable_pieces", 0)))
+		if camp_ore_sold == CAMP_QUEST_ORE:
+			camp_quest = CampQuest.RETURN_TO_MARA
 	transaction["state"] = "committed"
 	transaction["result"] = {
 		"earned": earned,
@@ -2609,6 +2628,8 @@ func serialize() -> Dictionary:
 			"total_swings": total_swings,
 			"precision_hits": precision_hits,
 			"total_gold_earned": total_gold_earned,
+			"camp_quest": camp_quest,
+			"camp_ore_sold": camp_ore_sold,
 			"starforge_variant": starforge_variant,
 			"starforge_unlocked": starforge_unlocked.duplicate(true),
 			"cargo": cargo.duplicate(true),
@@ -2722,6 +2743,9 @@ func deserialize(raw: Variant) -> bool:
 	total_swings = _nonnegative_int(source.get("total_swings"), 0)
 	precision_hits = _nonnegative_int(source.get("precision_hits"), 0)
 	total_gold_earned = _nonnegative_int(source.get("total_gold_earned"), gold)
+	var legacy_camp_quest := CampQuest.COMPLETE if pickaxe_level > 1 else CampQuest.OFFER
+	camp_quest = mini(CampQuest.COMPLETE, _nonnegative_int(source.get("camp_quest"), legacy_camp_quest))
+	camp_ore_sold = mini(CAMP_QUEST_ORE, _nonnegative_int(source.get("camp_ore_sold"), 0))
 	cargo = _sanitize_resource_store(source.get("cargo", {}))
 	mined = _sanitize_resource_store(source.get("mined", {}))
 	miner_skills = MinerSkills.restore(source.get("miner_skills", {"mining": float(total_swings) * 4.0, "prospecting": float(total_mined_resources())}), source.get("miner_skills_balance", 1))
@@ -3076,6 +3100,8 @@ func _apply_defaults(emit_change: bool = true) -> void :
 	total_swings = 0
 	precision_hits = 0
 	total_gold_earned = 0
+	camp_quest = CampQuest.OFFER
+	camp_ore_sold = 0
 	starforge_variant = ""
 	starforge_unlocked = _default_starforge_unlocked()
 	cargo = _empty_resource_store()

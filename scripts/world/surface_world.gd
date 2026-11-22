@@ -146,6 +146,9 @@ const MOSS_MINE_SURFACE: = [
 ]
 const MOSS_WALK_SURFACES: = [MOSS_ROAD_SURFACE, MOSS_CAMP_SURFACE, MOSS_MINE_SURFACE]
 const PLAYER_START: = Vector2(240, 680)
+const MARA_POSITION := Vector2(445, 629)
+const MARA_APPROACH := MARA_POSITION + Vector2(-31, 48)
+const MARA_SPRITE := preload("res://assets/surface/painted/mara.png")
 const MOSS_CAMP_YARD_RECT: = Rect2(20, 370, 480, 330)
 const MOSS_CAMP_CONNECTOR_RECT: = Rect2(185, 510, 110, 120)
 const MOSS_WAYFARER_ACCESS_RECT: = Rect2(747, 494, 106, 178)
@@ -581,6 +584,10 @@ func _ready() -> void :
 	_build_moonglass_resource()
 	_build_timed_surface_resources()
 	_build_stations()
+	_create_world_asset(MARA_SPRITE, MARA_POSITION, Vector2(110, 143), 0.0, 11)
+	var mara_name := _create_label("MARA", MARA_POSITION + Vector2(-45, -151), Vector2(90, 18), Color("ffe3a0"))
+	mara_name.z_index = actor_draw_depth(MARA_POSITION) + 1
+	mara_name.add_theme_font_size_override("font_size", 15)
 	_build_starfall_hub_lift()
 	_build_entrances()
 	_build_gates()
@@ -4343,6 +4350,7 @@ func _nearest_surface_station_context(world_position: Vector2) -> String:
 	var candidates: Array[Dictionary] = [
 		{"id": "sell", "position": station_interaction_position("sell"), "radius": SURFACE_STATION_INTERACT_RADIUS},
 		{"id": "forge", "position": station_interaction_position("forge"), "radius": SURFACE_STATION_INTERACT_RADIUS},
+		{"id": "mara", "position": MARA_APPROACH, "radius": 58.0},
 	]
 	if RunState.fourth_unlocked:
 		candidates.append({
