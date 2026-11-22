@@ -67,7 +67,9 @@ def main(engine, baseline, output):
             metadata = (project / (path + ".import")).read_text()
             targets = set(re.findall(r'"res://(\.godot/imported/[^"]+\.ctex)"', metadata))
             assert len(targets) == 1, path
-            replacements[path + ".import"] = metadata.encode()
+            # New editor imports allocate a random UID. The runtime preloads
+            # these two textures by path so the generated UID is unnecessary.
+            replacements[path + ".import"] = re.sub(r'^uid=.*\n', '', metadata, flags=re.M).encode()
             for target in targets:
                 replacements[target] = (project / target).read_bytes()
 
