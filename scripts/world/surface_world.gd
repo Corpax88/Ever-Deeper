@@ -15,14 +15,14 @@ const GATE_INTERACTION_RADIUS: = 132.0
 const MOSS_MAIN_Y: = 650.0
 const MOSS_CAMP_ANCHOR: = Vector2(240, MOSS_MAIN_Y)
 const MOSS_QUARRY_FOCUS: = Vector2(812, MOSS_MAIN_Y)
-const MOSS_MINE_BRANCH_JUNCTION: = Vector2(650, 680)
+const MOSS_MINE_BRANCH_JUNCTION: = Vector2(680, 650)
 const MOSS_MINE_ENTRANCE: = Vector2(930, 900)
-const MOSS_MINE_RETURN_POSITION: = Vector2(760, 790)
+const MOSS_MINE_RETURN_POSITION: = Vector2(774, 780)
 const DEFAULT_MINE_RETURN_OFFSET: = Vector2(126, 0)
 const MOSS_WAYFARER_POSITION: = Vector2(812, 515)
 const MOSS_MINE_RAMP_POSITION: = Vector2(620, 576)
 const MOSS_MINE_RAMP_SCALE: = Vector2(0.304, 0.463)
-const MOSS_RAMP_SOURCE_START: = Vector2(99, 225)
+const MOSS_RAMP_SOURCE_START: = Vector2(197, 160)
 const MOSS_RAMP_SOURCE_END: = Vector2(1020, 700)
 const MOSS_MINE_INTERACTION_RADIUS: = 164.0
 const LATER_MINE_INTERACTION_RADIUS: = 132.0
@@ -43,15 +43,17 @@ const MOSS_PORTAL_LANTERN_POSITIONS: = [
 	Vector2(1007, 503), Vector2(1180, 577),
 ]
 const MOSS_MAIN_ROUTE: = [
-	Vector2(30, 650), Vector2(210, 650), Vector2(410, 669),
-	Vector2(620, 643), Vector2(740, 648), Vector2(840, 650), Vector2(990, 680), Vector2(1110, MOSS_MAIN_Y),
+	Vector2(30, 644), Vector2(210, 644), Vector2(410, 648),
+	Vector2(620, 647), Vector2(740, 655), Vector2(840, 662), Vector2(990, 663), Vector2(1110, MOSS_MAIN_Y),
 ]
 const MOSS_MINE_BRANCH_ROUTE: = [
 	MOSS_MINE_BRANCH_JUNCTION,
-	Vector2(700, 730),
-	Vector2(760, 790),
-	Vector2(820, 850),
-	Vector2(875, 890),
+	Vector2(724, 683),
+	Vector2(751, 736),
+	Vector2(775, 783),
+	Vector2(803, 836),
+	Vector2(838, 880),
+	Vector2(875, 898),
 	MOSS_MINE_ENTRANCE,
 ]
 const LATER_MINE_BRANCH_ROUTES: = {
@@ -119,9 +121,30 @@ const SURFACE_ROUTE_STEER_INPUT_RESET_DOT: = 0.55
 const SURFACE_ROUTE_STEER_CENTER_TIE: = 0.5
 const SURFACE_ROUTE_STEER_DIRECT_RESET_STEPS: = 10
 const SURFACE_ROUTE_NEAREST_MARGIN: = MINE_LANDING_RADIUS + SURFACE_MOTION_SUBSTEP
-const MOSS_CAMP_TERRACE_RECT: = Rect2(24, 390, 490, 360)
-const MOSS_MINE_POCKET_RECT: = Rect2(790, 760, 280, 230)
-const MOSS_WALKABLE_BOTTOM: = 1015.0
+# Foot positions follow the tops of the painted surfaces. The cliff faces
+# and the space beside the mine ramp are foreground art, outside these outlines.
+const MOSS_ROAD_SURFACE: = [
+	Vector2(24, 602), Vector2(205, 604), Vector2(338, 612), Vector2(500, 608),
+	Vector2(636, 609), Vector2(721, 620), Vector2(850, 622), Vector2(977, 627),
+	Vector2(1065, 619), Vector2(1110, 622), Vector2(1110, 696), Vector2(995, 712),
+	Vector2(868, 713), Vector2(742, 700), Vector2(605, 698), Vector2(475, 700),
+	Vector2(346, 695), Vector2(230, 695), Vector2(24, 695),
+]
+const MOSS_CAMP_SURFACE: = [
+	Vector2(61, 456), Vector2(102, 419), Vector2(169, 405), Vector2(282, 400),
+	Vector2(398, 412), Vector2(448, 453), Vector2(468, 501), Vector2(453, 543),
+	Vector2(384, 570), Vector2(296, 595), Vector2(276, 643), Vector2(220, 643),
+	Vector2(212, 590), Vector2(136, 573), Vector2(76, 548), Vector2(49, 502),
+]
+const MOSS_MINE_SURFACE: = [
+	Vector2(652, 648), Vector2(710, 651), Vector2(741, 680), Vector2(758, 726),
+	Vector2(784, 778), Vector2(811, 826), Vector2(842, 864), Vector2(886, 870),
+	Vector2(961, 868), Vector2(1023, 871), Vector2(1052, 885), Vector2(1057, 904),
+	Vector2(1036, 922), Vector2(987, 930), Vector2(902, 930), Vector2(851, 914),
+	Vector2(820, 888), Vector2(791, 854), Vector2(757, 794), Vector2(732, 747),
+	Vector2(712, 703), Vector2(690, 677), Vector2(649, 672),
+]
+const MOSS_WALK_SURFACES: = [MOSS_ROAD_SURFACE, MOSS_CAMP_SURFACE, MOSS_MINE_SURFACE]
 const PLAYER_START: = Vector2(240, 680)
 const MOSS_CAMP_YARD_RECT: = Rect2(20, 370, 480, 330)
 const MOSS_CAMP_CONNECTOR_RECT: = Rect2(185, 510, 110, 120)
@@ -130,6 +153,7 @@ const MOSS_ORE_MOUNTAIN_POSITION: = Vector2(MOSS_WAYFARER_POSITION.x, 600)
 const MOSS_ORE_MOUNTAIN_FOCUS: = MOSS_QUARRY_FOCUS
 const MOSS_ORE_MOUNTAIN_COLLISION_CENTER: = MOSS_ORE_MOUNTAIN_POSITION + Vector2(0, -35)
 const MOSS_ORE_MOUNTAIN_COLLISION_HALF_SIZE: = Vector2(198, 51)
+const MOSS_ORE_BASE: = Vector2(812, 582)
 const MOSS_ORE_MOUNTAIN_MINING_RANGE: = 132.0
 const MOSS_ORE_MOUNTAIN_TARGET_HYSTERESIS: = 22.0
 const MOSS_ORE_MOUNTAIN_INPUT_BUFFER: = 0.16
@@ -246,7 +270,6 @@ const SURFACE_LOOSE_DROP_SOURCE_LIMIT: = 28
 const SURFACE_LOOSE_DROP_TOTAL_LIMIT: = 72
 const SURFACE_STATION_INTERACT_RADIUS: = 112.0
 const SURFACE_STATION_APPROACH_OFFSET: = Vector2(0, 140)
-const SURFACE_STATION_FOOTPRINT: = Vector2(110, 72)
 const ORE_DROP_LANDING_OFFSETS: = [
 	Vector2(-132, 18), Vector2(132, 18),
 	Vector2(-98, 32), Vector2(98, 32),
@@ -533,6 +556,7 @@ var surface_route_steer_input_direction: = Vector2.ZERO
 var surface_route_direct_steps: = 0
 var surface_route_corridors: Array[Dictionary] = []
 var surface_solid_footprints: Array[Dictionary] = []
+var moss_walk_polygons: Array[PackedVector2Array] = []
 var surface_route_broadphase_rejects: = 0
 var surface_route_segment_checks: = 0
 var surface_drop_budget_enforcing: = false
@@ -693,6 +717,8 @@ func _nearest_safe_restore_position(position: Vector2) -> Vector2:
 	if not _surface_collides(position):
 		return position
 	var route_position: = _nearest_surface_route_point(position)
+	if position.x <= MOSS_GATE_ANCHOR.x:
+		route_position = _nearest_moss_walk_point(position)
 	if not _surface_collides(route_position):
 		return route_position
 	for step in range(1, 25):
@@ -827,7 +853,8 @@ func _build_surface_art() -> void :
 
 
 	_build_mossvein_mine_branch()
-	moss_camp_yard_sprite = _create_sprite(MOSS_CAMP_YARD, MOSS_CAMP_YARD_RECT, 2)
+	moss_camp_yard_sprite = _create_sprite(MOSS_CAMP_YARD, MOSS_CAMP_YARD_RECT, 4)
+	_blend_moss_path(moss_camp_yard_sprite, Vector2(636, 671), false)
 	moss_camp_connector_sprite = _create_sprite(MOSS_CAMP_PATH, MOSS_CAMP_CONNECTOR_RECT, 2)
 	moss_wayfarer_access_sprite = _create_sprite(MOSS_CAMP_PATH, MOSS_WAYFARER_ACCESS_RECT, 2)
 	moss_wayfarer_access_sprite.name = "MossveinWayfarerAccess"
@@ -857,11 +884,20 @@ func _build_mossvein_mine_branch() -> void :
 	moss_mine_branch_sprite.centered = false
 	moss_mine_branch_sprite.position = MOSS_MINE_RAMP_POSITION
 	moss_mine_branch_sprite.scale = MOSS_MINE_RAMP_SCALE
-	moss_mine_branch_sprite.modulate = Color(0.96, 0.98, 0.92, 1.0)
+	# Feather the uphill end into the road beneath it and keep the lower ledge opaque.
+	_blend_moss_path(moss_mine_branch_sprite, Vector2(648, 697), true)
 	moss_mine_branch_sprite.z_index = 4
 	moss_mine_branch_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	add_child(moss_mine_branch_sprite)
 	surface_mine_branch_sprites["mossMine"] = moss_mine_branch_sprite
+
+
+func _blend_moss_path(sprite: Sprite2D, blend_y: Vector2, fade_in: bool) -> void:
+	var material: = ShaderMaterial.new()
+	material.shader = preload("res://shaders/moss_path_join.gdshader")
+	material.set_shader_parameter("blend_y", blend_y)
+	material.set_shader_parameter("fade_in", fade_in)
+	sprite.material = material
 
 
 func _build_ore_mountain() -> void :
@@ -4474,6 +4510,10 @@ func _resolve_surface_route_tangent_step(origin: Vector2, intent: Vector2, dista
 
 
 func _resolve_surface_solid_slide_step(origin: Vector2, motion: Vector2) -> Vector2:
+	if origin.x < MOSS_GATE_ANCHOR.x:
+		var slide: = _slide_on_surface_ellipse(origin, motion, MOSS_ORE_BASE, _moss_ore_collision_radii())
+		if not slide.is_equal_approx(origin):
+			return slide
 	for footprint in surface_solid_footprints:
 		var slide: = _slide_on_surface_ellipse(origin, motion, Vector2(footprint.center), Vector2(footprint.radii))
 		if not slide.is_equal_approx(origin):
@@ -4534,18 +4574,22 @@ func _inside_surface_ellipse(position: Vector2, center: Vector2, radii: Vector2)
 
 func _build_surface_collision_footprints() -> void:
 	surface_solid_footprints.clear()
-	for station in ["sell", "forge"]:
-		surface_solid_footprints.append({"center": _station_position(station) + Vector2(0, 4), "radii": SURFACE_STATION_FOOTPRINT})
+	surface_solid_footprints.append({"center": _station_position("sell") + Vector2(0, 5), "radii": Vector2(86, 48)})
+	surface_solid_footprints.append({"center": _station_position("forge") + Vector2(4, -4), "radii": Vector2(81, 48)})
+	surface_solid_footprints.append({"center": MOSS_MINE_ENTRANCE + Vector2(0, -44), "radii": Vector2(64, 33)})
 	# Grow the native stations upward/backward while retaining their current
 	# front clearance on the travel lane and their opaque artwork baselines.
 	surface_solid_footprints.append({"center": _station_position("starforge") + Vector2(0, 28.4), "radii": Vector2(88.8, 45.6)})
 	for boundary in BOUNDARIES:
 		var anchor: = Vector2(float(boundary.x), GATE_Y)
+		if String(boundary.id) == "moonglass":
+			surface_solid_footprints.append({"center": anchor + Vector2(-85, -51), "radii": Vector2(47, 29)})
+			surface_solid_footprints.append({"center": anchor + Vector2(108, 34), "radii": Vector2(51, 29)})
+			continue
 		for foot in [anchor + Vector2(-82, -42), anchor + Vector2(115, 37)]:
 			surface_solid_footprints.append({"center": foot, "radii": Vector2(58, 43)})
 	for side in [-1.0, 1.0]:
 		surface_solid_footprints.append({"center": STARFALL_HUB_LIFT_POSITION + Vector2(side * 80.0, 60), "radii": Vector2(48, 36)})
-	surface_solid_footprints.append({"center": MOSS_ORE_MOUNTAIN_COLLISION_CENTER, "radii": MOSS_ORE_MOUNTAIN_COLLISION_HALF_SIZE + Vector2.ONE * PLAYER_RADIUS})
 	for mountain in SURFACE_RESOURCE_MOUNTAIN_COLLISIONS.values():
 		surface_solid_footprints.append({"center": mountain.center, "radii": Vector2(mountain.half_size) + Vector2.ONE * PLAYER_RADIUS})
 
@@ -4574,7 +4618,16 @@ func route_steering_snapshot() -> Dictionary:
 	}
 
 
+func _moss_ore_collision_radii() -> Vector2:
+	# The rubble sprite occupies less space than the intact mountain.
+	if ore_mountain_hp <= MOSS_ORE_MOUNTAIN_MAX_HP / 4.0:
+		return Vector2(147, 24)
+	return Vector2(205, 38)
+
+
 func _surface_collides(position: Vector2) -> bool:
+	if position.x < MOSS_GATE_ANCHOR.x and _inside_surface_ellipse(position, MOSS_ORE_BASE, _moss_ore_collision_radii()):
+		return true
 	for node in moon_bloom_nodes:
 		if int(node.hp) > 0 and _inside_surface_node(position, Vector2(node.position)):
 			return true
@@ -4587,13 +4640,11 @@ func _surface_collides(position: Vector2) -> bool:
 			return true
 	if not _is_on_surface_route(position):
 		return true
-	if position.x <= MOSS_GATE_ANCHOR.x + BOUNDARY_HALF_WIDTH + PLAYER_RADIUS and position.y > MOSS_WALKABLE_BOTTOM:
-		return true
-
 	for boundary_value in BOUNDARIES:
 		var boundary: Dictionary = Dictionary(boundary_value)
 		var boundary_x: = float(boundary.x)
-		if absf(position.x - boundary_x) > BOUNDARY_HALF_WIDTH + PLAYER_RADIUS:
+		var boundary_width: = PLAYER_RADIUS if String(boundary.id) == "moonglass" else BOUNDARY_HALF_WIDTH + PLAYER_RADIUS
+		if absf(position.x - boundary_x) > boundary_width:
 			continue
 		if not _is_boundary_unlocked(boundary):
 			return true
@@ -4842,33 +4893,26 @@ func station_interaction_position(station_id: String) -> Vector2:
 
 
 func _is_on_surface_route(position: Vector2) -> bool:
-	if MOSS_CAMP_TERRACE_RECT.has_point(position):
-		return true
-	if MOSS_WAYFARER_ACCESS_RECT.has_point(position):
-		return true
-	if MOSS_MINE_POCKET_RECT.has_point(position):
-		return true
+	if position.x <= MOSS_GATE_ANCHOR.x:
+		return _is_on_mossvein_route(position)
 	for corridor_value in surface_route_corridors:
 		var corridor: Dictionary = corridor_value
-		if not Rect2(corridor.bounds).has_point(position):
+		if bool(corridor.mossvein) or not Rect2(corridor.bounds).has_point(position):
 			surface_route_broadphase_rejects += 1
 			continue
 		if _distance_to_route(position, Array(corridor.route)) <= float(corridor.half_width):
 			return true
 	for mine_id_value in MINE_IDS:
-		if position.distance_to(_mine_entrance(String(mine_id_value))) <= MINE_LANDING_RADIUS:
+		if mine_id_value != "mossMine" and position.distance_to(_mine_entrance(String(mine_id_value))) <= MINE_LANDING_RADIUS:
 			return true
 	return false
 
 
 func _is_on_mossvein_route(position: Vector2) -> bool:
-	return (
-		MOSS_CAMP_TERRACE_RECT.has_point(position)
-		or MOSS_WAYFARER_ACCESS_RECT.has_point(position)
-		or MOSS_MINE_POCKET_RECT.has_point(position)
-		or _distance_to_route(position, MOSS_MAIN_ROUTE) <= MOSS_MAIN_ROUTE_HALF_WIDTH
-		or _distance_to_route(position, MOSS_MINE_BRANCH_ROUTE) <= MOSS_BRANCH_ROUTE_HALF_WIDTH
-	)
+	for polygon in moss_walk_polygons:
+		if Geometry2D.is_point_in_polygon(position, polygon):
+			return true
+	return false
 
 
 func _surface_walk_routes() -> Array:
@@ -4879,14 +4923,17 @@ func _surface_walk_routes() -> Array:
 
 
 func _build_surface_route_corridors() -> void :
+	moss_walk_polygons.clear()
+	for outline in MOSS_WALK_SURFACES:
+		moss_walk_polygons.append(PackedVector2Array(outline))
 	surface_route_corridors.clear()
-	_append_surface_route_corridor(MOSS_MAIN_ROUTE, MOSS_MAIN_ROUTE_HALF_WIDTH)
-	_append_surface_route_corridor(MOSS_MINE_BRANCH_ROUTE, MOSS_BRANCH_ROUTE_HALF_WIDTH)
+	_append_surface_route_corridor(MOSS_MAIN_ROUTE, MOSS_MAIN_ROUTE_HALF_WIDTH, true)
+	_append_surface_route_corridor(MOSS_MINE_BRANCH_ROUTE, MOSS_BRANCH_ROUTE_HALF_WIDTH, true)
 	for route_value in LATER_MAIN_ROUTES.values():
 		_append_surface_route_corridor(Array(route_value), LATER_MAIN_ROUTE_HALF_WIDTH)
 
 
-func _append_surface_route_corridor(route: Array, half_width: float) -> void :
+func _append_surface_route_corridor(route: Array, half_width: float, mossvein: bool = false) -> void :
 	if route.is_empty():
 		return
 	var minimum: = Vector2(route[0])
@@ -4898,6 +4945,7 @@ func _append_surface_route_corridor(route: Array, half_width: float) -> void :
 	var route_bounds: = Rect2(minimum, maximum - minimum)
 	surface_route_corridors.append({
 		"route": route,
+		"mossvein": mossvein,
 		"half_width": half_width,
 		"route_bounds": route_bounds,
 		"bounds": route_bounds.grow(half_width),
@@ -4927,16 +4975,22 @@ func _nearest_surface_route_point(position: Vector2) -> Vector2:
 			nearest = candidate
 			nearest_distance = distance
 			route_upper_bound = minf(route_upper_bound, distance)
-	for rect in [
-		MOSS_CAMP_TERRACE_RECT, MOSS_WAYFARER_ACCESS_RECT, MOSS_MINE_POCKET_RECT,
-	]:
-		var walk_rect: = Rect2(rect)
-		var candidate: = position.clamp(walk_rect.position, walk_rect.end)
-		var distance: = position.distance_squared_to(candidate)
-		if distance < nearest_distance:
-			nearest = candidate
-			nearest_distance = distance
 	return nearest.clamp(Vector2.ONE * PLAYER_RADIUS, _world_size() - Vector2.ONE * PLAYER_RADIUS)
+
+
+func _nearest_moss_walk_point(position: Vector2) -> Vector2:
+	var nearest: = PLAYER_START
+	var nearest_distance: = INF
+	for polygon in moss_walk_polygons:
+		if Geometry2D.is_point_in_polygon(position, polygon):
+			return position
+		for index in range(polygon.size()):
+			var candidate: = Geometry2D.get_closest_point_to_segment(position, polygon[index], polygon[(index + 1) % polygon.size()])
+			var distance: = position.distance_squared_to(candidate)
+			if distance < nearest_distance:
+				nearest = candidate
+				nearest_distance = distance
+	return nearest
 
 
 func _nearest_surface_route_tangent(position: Vector2) -> Vector2:

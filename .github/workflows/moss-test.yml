@@ -23,7 +23,6 @@ jobs:
           for f in index.html index.js index.wasm index.pck index.png index.icon.png index.apple-touch-icon.png index.audio.worklet.js index.audio.position.worklet.js; do
             curl -fsSL --retry 2 "https://corpax88.github.io/Ever-Deeper/dev/$f" -o "$RUNNER_TEMP/original/$f"
           done
-          "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" --headless --editor --import > "$RUNNER_TEMP/import.log"
           python3 .github/moss-test/prepare.py "$RUNNER_TEMP/original/index.pck" "$RUNNER_TEMP/candidate"
       - name: Render Mossvein and exercise mining at three mobile aspects
         run: python3 .github/moss-test/mac.py "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" "$RUNNER_TEMP/candidate/index.pck" "$RUNNER_TEMP/evidence"
@@ -34,7 +33,7 @@ jobs:
       - run: npm ci --ignore-scripts && npx playwright install webkit
       - name: Ordinary WebKit startup and save
         run: node .github/hunt-followup/startup.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/webkit"
-        env: {EXPECTED_VERSION: '1.0.0-dev.15.62', CANDIDATE_SOURCE: '${{ github.sha }}'}
+        env: {EXPECTED_VERSION: '1.0.0-dev.15.63', CANDIDATE_SOURCE: '${{ github.sha }}'}
       - uses: actions/upload-artifact@v4
         if: always()
-        with: {name: moss-painted-finish-evidence, path: '${{ runner.temp }}/evidence', retention-days: 30}
+        with: {name: moss-walk-evidence, path: '${{ runner.temp }}/evidence', retention-days: 30}

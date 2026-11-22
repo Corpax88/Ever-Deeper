@@ -6,41 +6,19 @@ from pack_helpers import unpack,identity
 src,out=map(Path,sys.argv[1:3]);out.mkdir(parents=True,exist_ok=True)
 original=src.read_bytes()
 baseline_sha=hashlib.sha256(original).hexdigest()
-assert baseline_sha=='3eb3eb38bad290acf1f55d346f1711aa5a0ff6cf22ebccf38c97e552bb3e9df3', 'Expected the published DEV15.61 package'
+assert baseline_sha=='00cb1a0249be72b16fa41d4bb3605c1369a86b12a490aff1d7c4c9acd6d990a7', 'Expected the published DEV15.62 package'
 base,entries=unpack(original)
 def raw(n):
  o,s,*_=entries[n];return original[base+o:base+o+s]
 overrides = [
  'scripts/world/surface_world.gd',
  'scripts/ui/premium_menu.gd',
- 'scenes/surface/surface_world.tscn',
- 'scenes/surface/surface_parallax.tscn',
+ 'shaders/moss_path_join.gdshader',
 ]
 replacements={n:(ROOT/n).read_bytes() for n in overrides}
 for n in overrides:
  if n+'.remap' in entries: replacements[n+'.remap']=('[remap]\npath="res://'+n+'"\n').encode()
-for png in sorted((ROOT/'assets/surface/painted').glob('*.png')):
- if png.relative_to(ROOT).as_posix()+'.import' in entries:
-  continue
- imp=Path(str(png)+'.import')
- path=re.search(r'^path="res://([^"]+)"',imp.read_text(),re.M)[1]
- for file in [imp,ROOT/path]:
-  replacements[file.relative_to(ROOT).as_posix()]=file.read_bytes()
-# These three textures have no users after the Surface repaint. Keep their
-# source art in Git, but omit their retired import payloads from the DEV pack.
-retired = {
- 'assets/surface/v2/moss-road-shelf.png',
- 'assets/surface/moss-moon-parallax-background.png',
- 'assets/surface/mossvein-parallax-foreground-v1.png',
-}
-removed = set()
-for png in sorted(retired):
- imported = png + '.import'
- target = re.search(r'^path="res://([^"]+)"', raw(imported).decode(), re.M)[1]
- assert target in entries
- removed.update((imported, target))
-assert removed.isdisjoint(replacements)
-expected_entries = (set(entries) - removed) | set(replacements)
+expected_entries = set(entries) | set(replacements)
 data=bytearray(original[:base]);after={}
 for name in sorted(expected_entries):
  payload=replacements.get(name,raw(name) if name in entries else b'')
@@ -65,5 +43,5 @@ if (src.parent/'index.html').exists():
  (out/'index.html').write_text(html[:m.start(1)]+json.dumps(cfg,separators=(',',':'))+html[m.end(1):])
  manifest={n:identity(out/n) for n in web}
  (out/'manifest.json').write_text(json.dumps(manifest,indent=2))
- (out/'qa-build-receipt.json').write_text(json.dumps({'baseline_pck':identity(src),'baseline_source':'bfabeabc7ccf78521151f964dc0a6ed542127916','qa_source':os.environ.get('GITHUB_SHA'),'overrides':overrides,'production':True,'version':'1.0.0-dev.15.62','replaced':list(replacements),'retired':sorted(removed),'retained_payloads_verified':True,'files':manifest},indent=2))
+ (out/'qa-build-receipt.json').write_text(json.dumps({'baseline_pck':identity(src),'baseline_source':'186095564ca58af25f20b38298589c1a390d5339','qa_source':os.environ.get('GITHUB_SHA'),'overrides':overrides,'production':True,'version':'1.0.0-dev.15.63','replaced':list(replacements),'retained_payloads_verified':True,'files':manifest},indent=2))
 print(identity(p))
