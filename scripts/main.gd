@@ -14,6 +14,8 @@ const AchievementToastScript = preload("res://scripts/ui/achievement_toast.gd")
 const MinimapOverlayScript = preload("res://scripts/ui/minimap_overlay.gd")
 const QuickTutorialScript = preload("res://scripts/ui/quick_tutorial.gd")
 const MaraQuests := preload("res://scripts/progression/mara_quests.gd")
+const MaraDialogue := preload("res://scripts/ui/mara_dialogue.gd")
+var mara_dialogue := MaraDialogue.new()
 var mara := MaraQuests.new()
 var mara_in_range := false
 const WorldCatalogScript = preload("res://scripts/world/world_catalog.gd")
@@ -209,6 +211,7 @@ func _ready() -> void :
 	$HUD.add_child(laser_button)
 	laser_button.hide()
 	mara.install({"surface": surface_world, "hub": hub_world, "deepheart": deepheart_world})
+	$HUD.add_child(mara_dialogue)
 	_install_quick_tutorial()
 	_install_resource_inventory()
 	_install_miner_skills()
@@ -294,6 +297,12 @@ func _ready() -> void :
 
 
 func _process(delta: float) -> void :
+	if mara_dialogue.visible:
+		mara_dialogue.follow(delta, (
+			mara_dialogue.speaker == mara.actors.get(phase)
+			and not (menu_open or inventory_open or orientation_guard_active
+				or conclusion_overlay.visible or deepheart_presentation or _shop_panel_is_open())
+		), _active_player_node())
 	_set_developer_menu_shop_suppressed(inventory_open or _shop_panel_is_open() \
 		or (treasury_goal_panel != null and treasury_goal_panel.visible) \
 		or (miner_skills_panel != null and miner_skills_panel.visible) \
@@ -1016,24 +1025,23 @@ func _refresh_mara() -> void:
 
 func _talk_to_mara() -> void:
 	mara.greet(phase)
-	if mara.current.id != "first_haul":
-		RunState.accept_mara_quest(String(mara.current.id))
-		AudioDirector.play_ui("confirm")
-		_set_status("Mara · " + String(mara.current.dialogue))
-		_update_visual_guide()
-		return
-	var previous: int = RunState.camp_quest
-	RunState.advance_camp_quest()
 	AudioDirector.play_ui("confirm")
-	match previous:
-		RunState.CampQuest.OFFER:
-			_set_status("Mara · Mine three pieces of ore and sell them here at camp.")
-		RunState.CampQuest.ACTIVE:
-			_set_status("Mara · Follow the ramp down. Walk past SELL with your ore.")
-		RunState.CampQuest.RETURN_TO_MARA:
-			_set_status("Mara · First haul done! Take your gold to the forge.")
-		_:
-			_set_status("Mara · Stop by the forge whenever you need a better pickaxe.")
+	var line: String
+	if mara.current.id != "first_haul":
+		line = String(mara.current.dialogue)
+		RunState.accept_mara_quest(String(mara.current.id))
+	else:
+		match RunState.camp_quest:
+			RunState.CampQuest.OFFER:
+				line = "Mine three pieces of ore and sell them here at camp."
+			RunState.CampQuest.ACTIVE:
+				line = "Follow the ramp down. Walk past SELL with your ore."
+			RunState.CampQuest.RETURN_TO_MARA:
+				line = "First haul done! Take your gold to the forge."
+			_:
+				line = "Stop by the forge whenever you need a better pickaxe."
+		RunState.advance_camp_quest()
+	mara_dialogue.speak(mara.actors[phase], line)
 	_update_visual_guide()
 
 
