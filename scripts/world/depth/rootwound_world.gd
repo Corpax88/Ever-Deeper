@@ -87,7 +87,9 @@ const UNIQUE_CAVERN_NAMES: = {
 	],
 }
 
-const LAMP_TEXTURE: = preload("res://assets/entrances/depth-work-lamp.png")
+const LAMP_TEXTURE: = preload("res://assets/lighting/mine-oil-lantern.png")
+const LAMP_HEIGHT: = 66.0
+const LAMP_FLAME_OFFSET: = Vector2(0, -25)
 const DEPTH_EDGE_ASSET_PATHS: = {
 	"mossMine": "res://assets/rootwound/cave-edge-loop-v1.png",
 	"moonMine": "res://assets/prismatic/cave-edge-loop-v1.png",
@@ -2893,10 +2895,10 @@ func _rebuild_landmark_light_specs() -> void :
 	landmark_light_specs.append({
 		"id": "%s:depth_exit" % mine_id,
 		"kind": "depth_exit",
-		"position": depth_entrance + Vector2(-44, -25),
+		"position": depth_entrance + Vector2(-92, 48),
 		"radius": 238.0,
 		"energy": 1.08,
-		"color": headlamp_color,
+		"color": Color("ffc56c").lerp(headlamp_color, 0.25),
 		"with_lamp": true,
 	})
 	var sell: = Vector2(float(station_positions.sell.x), float(station_positions.sell.y))
@@ -2904,20 +2906,20 @@ func _rebuild_landmark_light_specs() -> void :
 	landmark_light_specs.append({
 		"id": "%s:sell" % mine_id,
 		"kind": "sell",
-		"position": sell + Vector2(0, -18),
+		"position": sell + Vector2(114, 48),
 		"radius": 188.0,
 		"energy": 0.86,
-		"color": accent_color,
-		"with_lamp": false,
+		"color": Color("ffc56c").lerp(accent_color, 0.22),
+		"with_lamp": true,
 	})
 	landmark_light_specs.append({
 		"id": "%s:forge" % mine_id,
 		"kind": "forge",
-		"position": forge + Vector2(0, -18),
+		"position": forge + Vector2(-114, 48),
 		"radius": 206.0,
 		"energy": 0.98,
-		"color": edge_color,
-		"with_lamp": false,
+		"color": Color("ffc56c").lerp(edge_color, 0.24),
+		"with_lamp": true,
 	})
 	for cavern in caverns:
 		if bool(cavern.discovered):
@@ -3012,11 +3014,15 @@ func _add_landmark_light(spec: Dictionary) -> void :
 	if bool(spec.with_lamp):
 		var lamp: = Sprite2D.new()
 		lamp.texture = LAMP_TEXTURE
-		lamp.scale = Vector2.ONE * 0.16
-		lamp.position = Vector2.ZERO
+		lamp.scale = Vector2.ONE * (LAMP_HEIGHT / LAMP_TEXTURE.get_height())
+		lamp.position.y = -LAMP_HEIGHT * 0.5
+		lamp.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 		lamp.z_index = 8
 		anchor.add_child(lamp)
-	anchor.add_child(_make_light(float(spec.radius), float(spec.energy), Color(spec.color)))
+	var light := _make_light(float(spec.radius), float(spec.energy), Color(spec.color))
+	if bool(spec.with_lamp):
+		light.position = LAMP_FLAME_OFFSET
+	anchor.add_child(light)
 
 
 func _make_light(radius: float, energy: float, color: Color) -> PointLight2D:

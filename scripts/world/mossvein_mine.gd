@@ -48,7 +48,9 @@ const MAX_VISIBLE_WORK_LIGHTS: = 4
 const WORK_LIGHT_CULL_RADIUS: = 620.0
 const WORK_LIGHT_REFRESH_DISTANCE: = 150.0
 
-const LAMP_TEXTURE: = preload("res://assets/entrances/depth-work-lamp.png")
+const LAMP_TEXTURE: = preload("res://assets/lighting/mine-oil-lantern.png")
+const LAMP_HEIGHT: = 68.0
+const LAMP_FLAME_OFFSET: = Vector2(0, -26)
 const MINE_ASSETS: = {
 	"mossMine": {
 		"floor": "res://assets/mossvein/cave-floor.png", "wall": "res://assets/mossvein/cave-edge-loop-v2.png",
@@ -2525,9 +2527,6 @@ func _draw_depth_entrance() -> void :
 	var size: = texture_size * scale_factor
 	_draw_canvas.draw_circle(depth_entrance + Vector2(0, 35), 62.0, Color(0.0, 0.0, 0.0, 0.48))
 	_draw_canvas.draw_texture_rect(depth_shaft_texture, Rect2(depth_entrance + Vector2( - size.x * 0.5, 40.0 - size.y), size), false)
-	if mine_id in ["mossMine", "moonMine"]:
-		var lamp_size: = Vector2(70, 48)
-		_draw_canvas.draw_texture_rect(LAMP_TEXTURE, Rect2(depth_entrance + Vector2(29, -57) - lamp_size * 0.5, lamp_size), false, Color(1.0, 0.96, 0.82, 0.98))
 	var color: = Color(String(Dictionary(GameData.data.MINE_DEPTH_PROFILES[mine_id]).detail))
 	var selected: = depth_near
 	if selected:
@@ -2630,31 +2629,23 @@ func _rebuild_work_lamps() -> void :
 func _rebuild_work_light_anchors() -> void :
 	work_light_anchors.clear()
 	var accent: = Color(String(mine.detail))
-	var route_positions: Array = {
-		"mossMine": [Vector2(455, 420), Vector2(930, 410), Vector2(1450, 300)],
-		"moonMine": [Vector2(330, 1000), Vector2(790, 720), Vector2(1320, 430)],
-		"emberMine": [Vector2(335, 890), Vector2(900, 650), Vector2(1510, 410)],
-		"starMine": [Vector2(360, 680), Vector2(1260, 650), Vector2(1950, 420)]
-	}.get(mine_id, [])
-	for index in route_positions.size():
-		work_light_anchors.append({
-			"id": "route:%d" % index,
-			"kind": "route",
-			"position": Vector2(route_positions[index]),
-			"radius": 220.0,
-			"energy": 0.92,
-			"color": Color("ffc56c"),
-			"with_lamp": true,
-		})
+	var entrance := Vector2(float(mine.entrance.x), float(mine.entrance.y))
+	var entrance_shoulder := Vector2(111, 32) if mine_id == "emberMine" else Vector2(108, 67)
+	_add_route_lamp("quarry_entrance", entrance + entrance_shoulder, 225.0)
+	for barrier_value in mine.barriers:
+		var barrier: Dictionary = Dictionary(barrier_value)
+		var shoulder := Vector2(float(barrier.x) - 76.0, float(barrier.y) + float(barrier.h) * 0.72)
+		if not _player_collides(shoulder):
+			_add_route_lamp(String(barrier.id), shoulder, 190.0)
 	if RunState.is_depth_entrance_discovered(mine_id):
 		work_light_anchors.append({
 			"id": "depth_entrance",
 			"kind": "depth",
-			"position": depth_entrance + Vector2(29, -57),
+			"position": depth_entrance + Vector2(86, 47),
 			"radius": 245.0,
 			"energy": 1.08,
-			"color": accent,
-			"with_lamp": mine_id in ["mossMine", "moonMine"],
+			"color": Color("ffc56c").lerp(accent, 0.22),
+			"with_lamp": true,
 		})
 	for cavern_id_value in cavern_by_id:
 		var cavern_id: = String(cavern_id_value)
@@ -2670,6 +2661,18 @@ func _rebuild_work_light_anchors() -> void :
 			"color": accent,
 			"with_lamp": false,
 		})
+
+
+func _add_route_lamp(id: String, position: Vector2, radius: float) -> void:
+	work_light_anchors.append({
+		"id": "route:%s" % id,
+		"kind": "route",
+		"position": position,
+		"radius": radius,
+		"energy": 0.92,
+		"color": Color("ffc56c").lerp(Color(String(mine.detail)), 0.2),
+		"with_lamp": true,
+	})
 
 
 func _refresh_visible_work_lights(force: bool = false) -> void :
@@ -2712,11 +2715,13 @@ func _refresh_visible_work_lights(force: bool = false) -> void :
 		if bool(anchor.with_lamp):
 			var sprite: = Sprite2D.new()
 			sprite.texture = LAMP_TEXTURE
-			sprite.scale = Vector2.ONE * 0.16
+			sprite.scale = Vector2.ONE * (LAMP_HEIGHT / LAMP_TEXTURE.get_height())
+			sprite.position.y = -LAMP_HEIGHT * 0.5
+			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 			lamp.add_child(sprite)
 		_add_light(
 			lamp,
-			Vector2.ZERO,
+			LAMP_FLAME_OFFSET if bool(anchor.with_lamp) else Vector2.ZERO,
 			float(anchor.radius),
 			float(anchor.energy),
 			Color(anchor.color)

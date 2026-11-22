@@ -107,7 +107,7 @@ const PORTAL_TEXTURE: = preload("res://assets/voidstar/depth-portal.png")
 const HUB_FLOOR_TEXTURE: = preload("res://assets/hub/hub-floor-v2.png")
 const HUB_WALL_TEXTURE: = preload("res://assets/voidstar/wall.png")
 const HUB_ROUTE_TEXTURE: = preload("res://assets/starfall/route-marker.png")
-const HUB_LAMP_TEXTURE: = preload("res://assets/entrances/depth-work-lamp.png")
+const HUB_LAMP_TEXTURE: = preload("res://assets/lighting/timber-post-lantern.png")
 const DEEP_ELEVATOR_TERMINAL_TEXTURE: = preload("res://assets/hub/deep-elevator-terminal.png")
 const TOOL_FORGE_WORKSHOP_TEXTURE_PATH: = "res://assets/endless/workshop-tool-forge-v1.png"
 const LIGHT_LAB_WORKSHOP_TEXTURE_PATH: = "res://assets/endless/workshop-light-lab-v1.png"
@@ -121,11 +121,13 @@ const MEMORY_LOOM_RELIC_TEXTURE_PATH: = "res://assets/endless/relic-memory-loom-
 const ECHO_COFFER_RELIC_TEXTURE_PATH: = "res://assets/endless/relic-echo-coffer-v1.png"
 const WAYFINDER_CORE_RELIC_TEXTURE_PATH: = "res://assets/endless/relic-wayfinder-core-v1.png"
 const FOUNDATION_LIGHT_POSITIONS: = [
-	Vector2(420, 170),
-	Vector2(1020, 170),
-	Vector2(600, 825),
-	Vector2(1040, 825),
+	DEEP_ELEVATOR + Vector2(-157, 49),
+	DEEP_ELEVATOR + Vector2(157, 49),
+	SURFACE_LIFT + Vector2(120, -15),
+	HUB_SHOP + Vector2(-107, 37),
 ]
+const HUB_LAMP_SIZE: = Vector2(56, 102)
+const HUB_LAMP_FLAME_OFFSET: = Vector2(26, -47)
 
 @onready var player: CharacterBody2D = $Player
 @onready var darkness: CanvasModulate = $Darkness
@@ -386,7 +388,7 @@ func runtime_contract() -> Dictionary:
 			"floor": "res://assets/hub/hub-floor-v2.png",
 			"wall_frame": "res://assets/voidstar/wall.png",
 			"route_inlay": "res://assets/starfall/route-marker.png",
-			"foundation_lamp": "res://assets/entrances/depth-work-lamp.png",
+			"foundation_lamp": "res://assets/lighting/timber-post-lantern.png",
 		},
 		"lighting": lighting_snapshot(),
 	}
@@ -408,7 +410,7 @@ func lighting_snapshot() -> Dictionary:
 	for position_value in FOUNDATION_LIGHT_POSITIONS:
 		sources.append({
 			"kind": "hubSconce",
-			"position": Vector2(position_value),
+			"position": Vector2(position_value) + HUB_LAMP_FLAME_OFFSET,
 			"radius": 248.0,
 			"color": Color("ffc77d"),
 			"intensity": 0.66,
@@ -1344,7 +1346,7 @@ func _build_lighting() -> void :
 	)
 	for index in range(FOUNDATION_LIGHT_POSITIONS.size()):
 		_add_world_light(
-			Vector2(FOUNDATION_LIGHT_POSITIONS[index]),
+			Vector2(FOUNDATION_LIGHT_POSITIONS[index]) + HUB_LAMP_FLAME_OFFSET,
 			248.0,
 			Color("ffc77d"),
 			"FoundationSconce_%d" % index
@@ -1653,7 +1655,8 @@ func _draw_partitioned_hub() -> void:
 	lit_draw_sections.add(_draw_ground_border)
 	lit_draw_sections.add(_draw_hub_wall_frame)
 	for position_value in FOUNDATION_LIGHT_POSITIONS:
-		lit_draw_sections.add(_draw_foundation_sconce.bind(Vector2(position_value)))
+		var position := Vector2(position_value)
+		lit_draw_sections.add(_draw_foundation_sconce.bind(position), null, actor_draw_depth(position))
 	lit_draw_sections.add(_draw_deep_elevator.bind(active_context == "deepElevator"), null, actor_draw_depth(DEEP_ELEVATOR + Vector2(0, 50)))
 	lit_draw_sections.add(_draw_lift.bind(SURFACE_LIFT, false, active_context == "hubExit"), null, actor_draw_depth(SURFACE_LIFT))
 	if RunState.victory:
@@ -1702,7 +1705,7 @@ func _draw_foundation_sconces() -> void :
 func _draw_foundation_sconce(at: Vector2) -> void:
 	_draw_painted_span(HUB_ROUTE_TEXTURE, at + Vector2(0, 6), 58.0, 0.0, Color(0.9, 0.85, 0.78, 1.0))
 	_draw_ellipse_shape(at + Vector2(0, 6), Vector2(23, 7), Color(0, 0, 0, 0.4))
-	_draw_texture_grounded(HUB_LAMP_TEXTURE, at + Vector2(0, 7), Vector2(43, 30), Color(1.0, 0.88, 0.68, 1.0))
+	_draw_hub_texture_rect(HUB_LAMP_TEXTURE, Rect2(at + Vector2(-17, -HUB_LAMP_SIZE.y), HUB_LAMP_SIZE), Color.WHITE)
 
 
 func _draw_stations() -> void :

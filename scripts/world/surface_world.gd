@@ -72,6 +72,14 @@ const LATER_MINE_RETURN_POSITIONS: = {
 	"emberMine": Vector2(2460, 664),
 	"starMine": Vector2(3740, 664),
 }
+const ENTRANCE_LANTERN: = preload("res://assets/lighting/timber-post-lantern.png")
+const ENTRANCE_LANTERN_SIZE: = Vector2(50, 92)
+const ENTRANCE_LANTERN_OFFSETS: = {
+	"mossMine": Vector2(-106, 14),
+	"moonMine": Vector2(109, 12),
+	"emberMine": Vector2(-112, 14),
+	"starMine": Vector2(109, 12),
+}
 const MINE_ENTRANCE_MAX_SIZES: = {
 	"mossMine": Vector2(190, 155),
 	"moonMine": Vector2(190, 165),
@@ -1810,6 +1818,18 @@ func _build_entrances() -> void :
 		var label: = _create_label(String(mine_data.name), _mine_entrance(mine_id) + Vector2(-92, 62), Vector2(184, 24), Color(String(mine_data.detail)))
 		entrance_nodes["%s_label" % mine_id] = label
 
+		var lantern_feet := _mine_entrance(mine_id) + Vector2(ENTRANCE_LANTERN_OFFSETS[mine_id])
+		var lantern := _create_sprite(
+			ENTRANCE_LANTERN,
+			Rect2(lantern_feet + Vector2(-15, -ENTRANCE_LANTERN_SIZE.y), ENTRANCE_LANTERN_SIZE),
+			6
+		)
+		entrance_nodes["%s_lantern" % mine_id] = lantern
+		entrance_nodes["%s_lantern_glow" % mine_id] = _create_portal_glow(
+			lantern_feet + Vector2(23, -41), _gold_glow_texture(), Vector2(118, 100),
+			Color(1.0, 0.72, 0.32, 0.24), 7
+		)
+
 
 func _build_gates() -> void :
 	for boundary_value in BOUNDARIES:
@@ -1861,8 +1881,10 @@ func _refresh_unlock_visibility() -> void :
 		var unlocked: = _is_mine_unlocked(mine_id)
 		if entrance_nodes.has(mine_id):
 			entrance_nodes[mine_id].visible = unlocked
-		if entrance_nodes.has("%s_label" % mine_id):
-			entrance_nodes["%s_label" % mine_id].visible = unlocked
+		for suffix in ["label", "lantern", "lantern_glow"]:
+			var key := "%s_%s" % [mine_id, suffix]
+			if entrance_nodes.has(key):
+				entrance_nodes[key].visible = unlocked
 	for boundary_value in BOUNDARIES:
 		var boundary: Dictionary = Dictionary(boundary_value)
 		var gate_id: = String(boundary.id)
