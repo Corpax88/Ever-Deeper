@@ -12,13 +12,9 @@ const ProgressionGuideScript: = preload("res://scripts/progression/guide_directo
 
 const BAG_ICON: = preload("res://assets/ui/bag-premium-v1.png")
 const MENU_CAPTION_FONT: = preload("res://assets/ui/fonts/EBGaramond.ttf")
-const MENU_ICON: = preload("res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png")
+const ActionIcons := preload("res://scripts/ui/action_icons.gd")
 const GUIDE_ICON: = preload("res://assets/ui/hud-guide-v1.png")
-const INTERACT_ICON: = preload("res://assets/ui/hud-interact-v1.png")
-const TOOL_FORGE_ICON: = preload("res://assets/ui/tool-forge-approved-v1.png")
-const BUILD_ICON: = preload("res://assets/ui/hud-build-v1.png")
 const GOLD_ICON: = preload("res://assets/ui/gold-bars-v1.png")
-const MOLE_ICON: = preload("res://assets/companion/mole-hud.png")
 const PaintedPalette = preload("res://scripts/ui/painted_palette.gd")
 
 const GOLD: = PaintedPalette.BRASS
@@ -35,9 +31,6 @@ const IPHONE_MINE_BOTTOM: = 42.0
 const IPHONE_BAG_SIZE: = 142.0
 const IPHONE_BAG_ICON_MAX: = 132
 const IPHONE_SECONDARY_ICON_MAX: = 120
-const IPHONE_CONTEXT_BUILD_ICON_MAX: = 116
-const IPHONE_CONTEXT_GUIDE_ICON_MAX: = 116
-const IPHONE_CONTEXT_GOLD_ICON_MAX: = 108
 const IPHONE_CONTEXT_SIZE: = Vector2(226.0, 116.0)
 const DEFAULT_CONTEXT_SIZE: = Vector2(158.0, 64.0)
 const IPHONE_GOLD_ICON_SIZE: = 72.0
@@ -133,19 +126,7 @@ func set_context_action(label: String, enabled: bool) -> void :
 		context_button.text = caption
 		context_button.visible = not caption.is_empty()
 		context_button.tooltip_text = label.replace("\n", " · ").capitalize()
-		var upper: = caption.to_upper()
-		if label.get_slice("\n", 0).strip_edges().to_upper() == "TOOL FORGE":
-			context_button.icon = TOOL_FORGE_ICON
-		elif upper == "HOME":
-			context_button.icon = MOLE_ICON
-		elif upper in ["SELL", "SELLING"]:
-			context_button.icon = GOLD_ICON
-		elif upper in ["FORGE", "UPGRADE", "POWER", "DELIVER", "LOAD", "BUILD"]:
-			context_button.icon = BUILD_ICON
-		elif upper in ["DESCEND", "ASCEND", "RETURN", "EXIT"]:
-			context_button.icon = GUIDE_ICON
-		else:
-			context_button.icon = INTERACT_ICON
+		context_button.icon = ActionIcons.for_action(label)
 		context_button.add_theme_constant_override("icon_max_width", _context_icon_max_width())
 		_fit_context_contents()
 	if enabled_changed:
@@ -452,18 +433,7 @@ func button_icon_visual_size(button: Button) -> Vector2:
 
 
 func _context_icon_max_width() -> int:
-	if not _iphone_layout_active:
-		return 68
-	var upper: = _compact_context_caption(_context_label).to_upper()
-	if upper == "HOME":
-		return IPHONE_CONTEXT_GUIDE_ICON_MAX
-	if upper == "SELL":
-		return IPHONE_CONTEXT_GOLD_ICON_MAX
-	if upper in ["FORGE", "UPGRADE", "POWER", "DELIVER", "LOAD", "BUILD"]:
-		return IPHONE_CONTEXT_BUILD_ICON_MAX
-	if upper in ["DESCEND", "ASCEND", "RETURN", "EXIT"]:
-		return IPHONE_CONTEXT_GUIDE_ICON_MAX
-	return IPHONE_SECONDARY_ICON_MAX
+	return 104 if _iphone_layout_active else 68
 
 
 func _fit_context_contents() -> void:
@@ -484,7 +454,7 @@ func _on_display_orientation_changed(_orientation: int) -> void :
 
 
 func _build_icon_chrome() -> void :
-	menu_button = _icon_button("MenuButton", MENU_ICON, "Skills · Map · Settings")
+	menu_button = _icon_button("MenuButton", ActionIcons.SKILLS, "Skills · Map · Settings")
 	menu_button.offset_left = 8.0
 	menu_button.offset_top = 8.0
 	menu_button.offset_right = 56.0

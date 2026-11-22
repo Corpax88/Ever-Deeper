@@ -1,6 +1,7 @@
 extends RefCounted
 
 const SPRITE := preload("res://assets/surface/painted/mara.png")
+const IDLE_SHADER := preload("res://shaders/mara_idle.gdshader")
 const WorldCatalog := preload("res://scripts/world/world_catalog.gd")
 const CAMP := Vector2(445, 629)
 const MOON := Vector2(1930, 657)
@@ -16,6 +17,8 @@ const GRAY := Color("b7b7b7")
 var current: Dictionary = {}
 var actors: Dictionary = {}
 var _last_presentation: Array = []
+var _greeting: Tween
+var _greeting_material: ShaderMaterial
 
 
 func install(worlds: Dictionary) -> void:
@@ -24,7 +27,13 @@ func install(worlds: Dictionary) -> void:
 		actor.name = "Mara"
 		actor.hide()
 		var art := Sprite2D.new()
+		art.name = "Art"
 		art.texture = SPRITE
+		if not bool(ProjectSettings.get_setting("accessibility/reduced_motion", false)):
+			var motion := ShaderMaterial.new()
+			motion.shader = IDLE_SHADER
+			motion.set_shader_parameter("greeting", 0.0)
+			art.material = motion
 		art.centered = false
 		art.scale = Vector2.ONE * minf(110.0 / SPRITE.get_width(), 143.0 / SPRITE.get_height())
 		var size := Vector2(SPRITE.get_size()) * art.scale.x
@@ -45,6 +54,24 @@ func install(worlds: Dictionary) -> void:
 		actor.add_child(quest_mark)
 		worlds[phase].add_child(actor)
 		actors[phase] = actor
+
+
+func greet(phase: String) -> void:
+	var actor: Node2D = actors.get(phase)
+	if not is_instance_valid(actor) or not actor.is_visible_in_tree():
+		return
+	var art: Sprite2D = actor.get_node("Art")
+	var motion := art.material as ShaderMaterial
+	if motion == null:
+		return
+	if _greeting != null and _greeting.is_running():
+		_greeting.kill()
+		_greeting_material.set_shader_parameter("greeting", 0.0)
+	_greeting_material = motion
+	_greeting = actor.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	var pose := func(amount: float) -> void: motion.set_shader_parameter("greeting", amount)
+	_greeting.tween_method(pose, 0.0, 1.0, 0.22)
+	_greeting.tween_method(pose, 1.0, 0.0, 0.38)
 
 
 func refresh() -> void:

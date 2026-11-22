@@ -1,0 +1,39 @@
+name: Ever-Deeper Mara animation and action icons QA
+on:
+  push:
+    branches: [codex/mossvein-painted-20261114]
+    paths: ['.github/mara-icons/**', '.github/workflows/mara-icons.yml']
+permissions: {contents: read}
+concurrency: {group: ever-deeper-mara-icons-qa, cancel-in-progress: true}
+jobs:
+  review:
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: false}
+      - name: Install Godot 4.7.2
+        run: |
+          curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot"
+          echo "GODOT_BIN=$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
+      - name: Prepare candidate from verified DEV15.66
+        run: |
+          mkdir -p "$RUNNER_TEMP/original" "$RUNNER_TEMP/evidence"
+          for name in index.html index.js index.wasm index.pck index.png index.icon.png index.apple-touch-icon.png index.audio.worklet.js index.audio.position.worklet.js; do
+            curl -fsSL --retry 2 "https://corpax88.github.io/Ever-Deeper/dev/$name" -o "$RUNNER_TEMP/original/$name"
+          done
+          python3 .github/mara-icons/package.py "$GODOT_BIN" "$RUNNER_TEMP/original/index.pck" "$RUNNER_TEMP/candidate"
+          cp "$RUNNER_TEMP/candidate/"{manifest.json,qa-build-receipt.json} "$RUNNER_TEMP/evidence/"
+      - name: Render Mara and action icons on three mobile viewports
+        run: python3 .github/mara-icons/mac.py "$GODOT_BIN" "$RUNNER_TEMP/candidate/index.pck" "$RUNNER_TEMP/evidence"
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm ci --ignore-scripts && npx playwright install webkit
+      - name: Ordinary WebKit startup and save
+        run: node .github/hunt-followup/startup.mjs "$RUNNER_TEMP/candidate" "$RUNNER_TEMP/evidence/webkit"
+        env: {EXPECTED_VERSION: '1.0.0-dev.15.67', CANDIDATE_SOURCE: '${{ github.sha }}'}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: mara-icons-evidence, path: '${{ runner.temp }}/evidence', retention-days: 30}

@@ -17,7 +17,7 @@ const MINT: = PaintedPalette.PALE_MOSS
 const MUTED: = PaintedPalette.MUTED_MOSS
 const INK: = Color("07120d")
 const IPHONE_LANDSCAPE_ASPECT: = 1.65
-const DEV_RELEASE_VERSION: = "1.0.0-dev.15.66"
+const DEV_RELEASE_VERSION: = "1.0.0-dev.15.67"
 
 
 static func release_version() -> String:
@@ -608,9 +608,9 @@ func _show_controls() -> void:
 	var entries: Array = [
 		["Move", "res://assets/ui/skills/icons/running.svg", "Drag the left side.\nWASD / arrow keys."],
 		["Mine", "res://assets/tools/pickaxe-iron.png", "Hold Mine to dig.\nSpace on keyboard."],
-		["Action", "res://assets/ui/hud-interact-v1.png", "Tap the nearby action.\nE / F on keyboard."],
+		["Action", "res://assets/ui/actions/talk.png", "Tap the nearby action.\nE / F on keyboard."],
 		["Bag", "res://assets/ui/bag-premium-v1.png", "Tap Bag to inspect\nresources and gear."],
-		["Skills & Map", "res://assets/ui/skills/icons/skills-knot-blue-steel-v1.png", "Tap Skills for stats,\nMap and Settings."],
+		["Skills & Map", "res://assets/ui/actions/skills.png", "Tap Skills for stats,\nMap and Settings."],
 		["Your mole", "res://assets/companion/mole-hud.png", "Tap your mole icon\nto open its journal."],
 	]
 	for i in entries.size():

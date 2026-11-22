@@ -1015,6 +1015,7 @@ func _refresh_mara() -> void:
 
 
 func _talk_to_mara() -> void:
+	mara.greet(phase)
 	if mara.current.id != "first_haul":
 		RunState.accept_mara_quest(String(mara.current.id))
 		AudioDirector.play_ui("confirm")
