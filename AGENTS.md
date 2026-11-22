@@ -1,4 +1,6 @@
-[DEV15.64 · håndmalt verden](docs/painted-world/HANDOFF.md) er gjeldende DEV-versjon.
+[DEV15.65 · Første oppdrag med Mara](docs/camp-quest/HANDOFF.md) er gjeldende DEV-versjon.
+
+Forrige utgave: [DEV15.64 · håndmalt verden](docs/painted-world/HANDOFF.md) er gjeldende DEV-versjon.
 
 Forrige utgave: [DEV15.63 · Mossvein-stier og kollisjon](docs/mossvein-painted/WALK.md). [Testoppsett](docs/TESTMILJO-HANDOFF.md).
 
