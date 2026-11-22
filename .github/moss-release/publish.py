@@ -9,7 +9,7 @@ spec = importlib.util.spec_from_file_location("pages", here.parent / "visual-gui
 pages = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pages)
 pages.HERE = here
-pages.VERSION = "DEV15.62 Mossvein"
+pages.VERSION = "DEV15.63 Mossvein"
 accepted = json.loads((here / "accepted.json").read_text())
 before = accepted["before"]
 pages.acceptance = lambda: (accepted, before)
