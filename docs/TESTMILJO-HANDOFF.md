@@ -1,4 +1,6 @@
-[DEV15.67 · Mara og handlingsikoner](mara-icons/HANDOFF.md) er gjeldende DEV-versjon.
+[DEV15.68 · Snakkeboble hos Mara](mara-dialogue/HANDOFF.md) er gjeldende DEV-versjon.
+
+Forrige utgave var [DEV15.67 · Mara og handlingsikoner](mara-icons/HANDOFF.md).
 
 Forrige utgave var [DEV15.66 · Møt Mara underveis](mara-progression/HANDOFF.md).
 
