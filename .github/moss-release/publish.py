@@ -9,7 +9,7 @@ spec = importlib.util.spec_from_file_location("pages", here.parent / "visual-gui
 pages = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(pages)
 pages.HERE = here
-pages.VERSION = "DEV15.64 Painted World"
+pages.VERSION = "DEV15.65 First Haul"
 accepted = json.loads((here / "accepted.json").read_text())
 before = accepted["before"]
 pages.acceptance = lambda: (accepted, before)
@@ -17,7 +17,7 @@ pages.acceptance = lambda: (accepted, before)
 def check_actions(record):
     run = json.loads(subprocess.check_output(["gh", "api", f"repos/Corpax88/Ever-Deeper/actions/runs/{record['run']}"]))
     assert run["conclusion"] == "success" and run["head_sha"] == record["source"]
-    assert run["path"] == ".github/workflows/painted-world.yml"
+    assert run["path"] == ".github/workflows/camp-quest.yml"
     for evidence in record["artifacts"]:
         artifact = json.loads(subprocess.check_output([
             "gh", "api", f"repos/Corpax88/Ever-Deeper/actions/artifacts/{evidence['id']}"
