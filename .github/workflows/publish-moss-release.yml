@@ -1,4 +1,4 @@
-name: Publish reviewed Ever-Deeper DEV15.65
+name: Publish reviewed Ever-Deeper DEV15.66
 on:
   workflow_dispatch:
   push:
@@ -20,7 +20,7 @@ jobs:
             .github/visual-guidance
       - uses: actions/checkout@v4
         with:
-          ref: 5f0389e80a85dd7836f2162b673834068b6d612f
+          ref: f5f628532970220218c989550a93515cd6b41249
           path: reviewed
           persist-credentials: false
       - name: Reproduce reviewed distribution
@@ -32,7 +32,7 @@ jobs:
           done
           curl -fsSL --retry 2 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip -o "$RUNNER_TEMP/godot.zip"
           unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
-          python3 .github/camp-quest/package.py "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" "$RUNNER_TEMP/base/index.pck" "$RUNNER_TEMP/candidate"
+          python3 .github/mara-progression/package.py "$RUNNER_TEMP/godot/Godot.app/Contents/MacOS/Godot" "$RUNNER_TEMP/base/index.pck" "$RUNNER_TEMP/candidate"
       - name: Verify evidence, immutable artifacts and all previous public bytes
         run: python3 .github/moss-release/publish.py prepare "$RUNNER_TEMP/publication" "$RUNNER_TEMP/candidate"
         env: {GH_TOKEN: '${{ github.token }}'}
