@@ -1,6 +1,6 @@
-[DEV15.69 · Gruvelykter og veibelysning](docs/area-lighting/HANDOFF.md) dekker lykter i gruver, hub og ved gruveinngangene. [Testoppsett](docs/TESTMILJO-HANDOFF.md).
+[DEV15.69 · Gruvelykter og veibelysning](docs/area-lighting/HANDOFF.md) er gjeldende DEV-versjon. [Testoppsett](docs/TESTMILJO-HANDOFF.md).
 
-[DEV15.68 · Snakkeboble hos Mara](docs/mara-dialogue/HANDOFF.md) er gjeldende DEV-versjon.
+Forrige utgave var [DEV15.68 · Snakkeboble hos Mara](docs/mara-dialogue/HANDOFF.md).
 
 Forrige utgave var [DEV15.67 · Mara og handlingsikoner](docs/mara-icons/HANDOFF.md).
 

@@ -1,4 +1,6 @@
-[DEV15.68 · Snakkeboble hos Mara](mara-dialogue/HANDOFF.md) er gjeldende DEV-versjon.
+[DEV15.69 · Gruvelykter og veibelysning](area-lighting/HANDOFF.md) er gjeldende DEV-versjon. Bygg og gjenta plasseringssjekken med `.github/area-lighting/package.py` og `.github/area-lighting/render.py` på Godot 4.7.2. Bruk DEV15.68-rollback som pakkegrunnlag. Mac/ANGLE Metal og lokal Linux/Mesa llvmpipe bestod 95 kontroller i hver av 667×375, 844×390 og 932×430. Ordinær WebKit-oppstart og lagring bestod. Se overleveringen for verifiserte kilder, testbilder, hasher og publiseringskvitteringer.
+
+Forrige utgave var [DEV15.68 · Snakkeboble hos Mara](mara-dialogue/HANDOFF.md).
 
 Forrige utgave var [DEV15.67 · Mara og handlingsikoner](mara-icons/HANDOFF.md).
 
