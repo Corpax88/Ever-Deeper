@@ -1,3 +1,5 @@
+[DEV15.63 · Mossvein-stier og kollisjon](docs/mossvein-painted/WALK.md) er den gjeldende DEV-versjonen. [Testoppsett](docs/TESTMILJO-HANDOFF.md).
+
 [Mossvein · DEV15.62-kandidaten](docs/mossvein-painted/FINISH.md) fortsetter fra publisert DEV15.61. [Testoppsett](docs/TESTMILJO-HANDOFF.md).
 
 Current task (28 September 2026): [FPS audit round 2](docs/full-fps-audit/ROUND2-HANDOFF.md). Mats explicitly parked the depth-prepass candidate and requested other candidates. Published DEV remains15.16; no production change in this investigation. Use the immutable baseline and current QA evidence referenced there; older release notes below are historical.

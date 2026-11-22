@@ -1,3 +1,5 @@
+[DEV15.63 · Mossvein-stier og kollisjon](docs/mossvein-painted/WALK.md) er den gjeldende DEV-versjonen. [Testoppsett](docs/TESTMILJO-HANDOFF.md).
+
 [Mossvein · grafikkoppfølgingen](docs/mossvein-painted/FINISH.md) har kilde og grafisk testoppsett for DEV15.62-kandidaten. [Miljøoverlevering](docs/TESTMILJO-HANDOFF.md).
 
 Current DEV release: [DEV15.60 text and shop signs](https://github.com/Corpax88/Ever-Deeper/blob/codex/text-signs-20261005/docs/text-signs/HANDOFF.md), published and verified 6 October 2026 at https://corpax88.github.io/Ever-Deeper/dev/. Bright gold/white outlined text and matching SELL/FORGE signs above shop entrances. Refresh → Continue, no reset.
